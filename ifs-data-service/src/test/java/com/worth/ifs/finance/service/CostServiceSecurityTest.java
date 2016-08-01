@@ -6,6 +6,7 @@ import com.worth.ifs.application.security.ApplicationLookupStrategy;
 import com.worth.ifs.application.security.ApplicationPermissionRules;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
+import com.worth.ifs.file.service.FileAndContents;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.domain.CostField;
 import com.worth.ifs.finance.handler.item.CostHandler;
@@ -17,7 +18,6 @@ import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.security.*;
 import com.worth.ifs.finance.transactional.CostService;
 import com.worth.ifs.user.resource.UserResource;
-import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.access.method.P;
@@ -118,6 +118,7 @@ public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService
                 () -> {
                     verify(applicationRules).compAdminCanSeeApplicationFinancesTotals(isA(ApplicationResource.class), isA(UserResource.class));
                     verify(applicationRules).consortiumCanSeeTheApplicationFinanceTotals(isA(ApplicationResource.class), isA(UserResource.class));
+                    verify(applicationRules).assessorCanSeeTheApplicationFinancesTotals(isA(ApplicationResource.class), isA(UserResource.class));
                 });
     }
 
@@ -385,6 +386,11 @@ public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService
         public ServiceResult<ApplicationFinanceResource> addCost(ApplicationFinanceResourceId applicationFinanceResourceId) {
             return null;
         }
+        
+        @Override
+		public ServiceResult<CostItem> addCostWithoutPersisting(Long applicationFinanceId, Long questionId) {
+			return null;
+		}
 
         @Override
         public ServiceResult<ApplicationFinanceResource> getApplicationFinanceById(Long applicationFinanceId) {
@@ -427,9 +433,10 @@ public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService
         }
 
         @Override
-        public ServiceResult<Pair<FileEntryResource, Supplier<InputStream>>> getFileContents(@P("applicationFinanceId") long applicationFinance) {
+        public ServiceResult<FileAndContents> getFileContents(@P("applicationFinanceId") long applicationFinance) {
             return null;
         }
+
     }
 }
 

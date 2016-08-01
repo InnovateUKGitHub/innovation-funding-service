@@ -1,0 +1,269 @@
+/*--- Ensure content is centralised for ie8 ---*/
+
+/*#content{
+	margin: 0 auto;
+}*/
+
+/*--- Text alignment ---*/
+
+.aligncentre{
+	text-align: center;
+}
+
+.alignleft{
+	text-align: left;
+}
+
+/*--- Extra margins ---*/
+
+.extra-margin-bottom{
+	margin-bottom: 30px;
+}
+
+.collapsible{
+	.question.extra-margin{
+		margin-top: 30px;
+	}
+}
+
+/*--- Inline lists ---*/
+
+.list-inline{
+	li{
+		display: inline;
+	}
+}
+
+
+/*--- Assign team dropdown js issue ---*/
+
+.assign-team{
+	display: none;
+}
+
+
+/*--- Table overflows for small screens ---*/
+.total-cost{
+	.heading-medium{
+		margin-left: 20px; 
+	}
+}
+
+.sub-header{
+	.link-back{
+		margin-top: 5px;
+	}
+}
+
+/*--- Table overflows for small screens ---*/
+
+.table-overflow{
+	overflow: auto;
+	width: 100%;
+	table{
+		max-width: 100%;
+	}
+}
+
+table{
+	tfoot{
+		border-top: 3px solid $black;
+	}
+}
+
+/*--- Table overflows for wide tables with fixed columns ---*/
+
+.table-overflow-fixed-cols{
+	border: 1px solid red;
+	overflow-x:scroll;
+    overflow-y:visible;
+    width:100%;
+    margin-left: 240px;
+
+	.fixed{
+		position: fixed;
+	    left: 5px;
+	    background: red;
+	}
+
+
+}
+
+
+
+/*--- Full width pages for comp administrators ---*/
+
+.full-width{
+	#content{
+		max-width: 95%;
+		min-width: 960px;
+
+		@include media-down(tablet){
+			min-width: 90%;
+		}
+
+		.phase-banner,
+		.sub-header,
+		.hgroup,
+		.centralise,
+		.user-feedback,
+		.inline-nav{
+			@extend %site-width-container;
+  			@extend %contain-floats;
+  			box-sizing: border-box;
+		}
+
+		.inline-nav{
+			margin-bottom: 30px;
+		}
+
+		.user-feedback{
+			margin-top: 30px;
+		}
+
+
+	}
+}
+
+/*--- Contrain areas within full width layout ---*/
+.full-width{
+	.constrain-width{
+		max-width: 1400px;
+		margin: 0 auto;
+
+		&.extra-margin{
+			margin-top: 30px;
+		}
+	}
+}
+
+
+/*--- Boxed content ---*/
+
+.boxed{
+	border: 1px solid $border-colour;
+	padding: 20px;
+	clear: both;
+	overflow: auto;
+}
+
+/*--- highlight content ---*/
+
+.highlight-panel{
+	background: $highlight-colour;
+	padding: 20px 0;
+
+	.button{
+		margin-right: 20px !important;
+	} 
+}
+
+.grid-row{
+	&.highlight-panel{
+		margin: 0;
+
+		 &.extra-margin{
+		 	@extend .extra-margin;
+		 }
+
+		 .button{
+		 	margin-right: 10px;
+		 }
+	}
+}
+
+/*--- Underlining ---*/
+
+.grid-row{
+	&.sorting{
+		border-bottom: 1px solid $secondary-text-colour;
+	}
+}
+
+.heading-large{
+	&.underline{
+		border-bottom: 4px solid $black;
+	}
+}
+
+.heading-medium{
+	&.underline{
+		border-bottom: 1px solid $black;
+	}
+}
+
+ul.underline{
+	li{
+		border-top: 1px solid $black;
+
+		&:first-child{
+			border-top: none;
+		}
+	}
+}
+
+		
+/*--- Controlling visibility of hidden panels for js and non-js ---*/
+
+%hidden-blocks-js{
+	display: none;
+
+	.no-js &{
+		display: block;
+	}
+}
+
+#org-results{
+	@extend %hidden-blocks-js;
+}
+
+#manual-company-input{
+	@extend %hidden-blocks-js;
+}
+
+#address-details{
+	@extend %hidden-blocks-js;
+}
+
+#selected-academic-organisation{
+	@extend %hidden-blocks-js;
+}
+
+#finance-other-funding{
+	@extend %hidden-blocks-js;
+}
+
+#finance-other-funding{
+	@extend %hidden-blocks-js;
+}
+
+#org-role-size{
+	@extend %hidden-blocks-js;
+}
+
+#admin-support-1,
+#admin-support-3,
+#admin-support-4
+{
+	@extend %hidden-blocks-js;
+}
+
+/*--- Clearfix ---*/
+
+.cf:before,
+.cf:after {
+    content: " "; /* 1 */
+    display: table; /* 2 */
+}
+
+.cf:after {
+    clear: both;
+}
+
+/**
+ * For IE 6/7 only
+ * Include this rule to trigger hasLayout and contain floats.
+ */
+.cf {
+    *zoom: 1;
+}

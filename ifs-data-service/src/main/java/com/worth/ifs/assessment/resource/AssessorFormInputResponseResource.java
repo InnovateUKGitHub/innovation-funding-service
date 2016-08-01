@@ -16,17 +16,19 @@ public class AssessorFormInputResponseResource {
     private Long question;
     private Long formInput;
     private String value;
+    private Integer formInputMaxWordCount;
     private LocalDateTime updatedDate;
 
     public AssessorFormInputResponseResource() {
     }
 
-    public AssessorFormInputResponseResource(Long id, Long assessment, Long question, Long formInput, String value, LocalDateTime updatedDate) {
+    public AssessorFormInputResponseResource(Long id, Long assessment, Long question, Long formInput, String value, Integer formInputMaxWordCount, LocalDateTime updatedDate) {
         this.id = id;
         this.assessment = assessment;
         this.question = question;
         this.formInput = formInput;
         this.value = value;
+        this.formInputMaxWordCount = formInputMaxWordCount;
         this.updatedDate = updatedDate;
     }
 
@@ -68,6 +70,14 @@ public class AssessorFormInputResponseResource {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public Integer getFormInputMaxWordCount() {
+        return formInputMaxWordCount;
+    }
+
+    public void setFormInputMaxWordCount(Integer formInputMaxWordCount) {
+        this.formInputMaxWordCount = formInputMaxWordCount;
     }
 
     public LocalDateTime getUpdatedDate() {

@@ -15,8 +15,8 @@ public class OtherFundingCostCategory implements CostCategory {
     public static final String OTHER_FUNDING = "Other Funding";
     private OtherFunding otherFunding;
 
-    List<CostItem> costs = new ArrayList<>();
-    BigDecimal total = BigDecimal.ZERO;
+    private List<CostItem> costs = new ArrayList<>();
+    private BigDecimal total = BigDecimal.ZERO;
 
     @Override
     public List<CostItem> getCosts() {
@@ -61,7 +61,7 @@ public class OtherFundingCostCategory implements CostCategory {
     public void addCost(CostItem costItem) {
         if(costItem != null) {
             OtherFunding otherFundingCost = (OtherFunding) costItem;
-            if (otherFundingCost.getFundingSource().equals(OTHER_FUNDING)) {
+            if (OTHER_FUNDING.equals(otherFundingCost.getFundingSource())) {
                 otherFunding = (OtherFunding) costItem;
             } else if (costItem != null) {
                 costs.add(costItem);

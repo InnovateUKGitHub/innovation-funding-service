@@ -15,11 +15,11 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Technology inspired'}, ${(param.status != null and param.status[0] == 'accepted' ? '/prototypes/1627-admin-view-project-status-grid?status=setup&#38;stage=2' : '/prototypes/1627-admin-view-project-status-grid?status=setup')})" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Finance checks'}, ${'/prototypes/1199-project-finances'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 	
-	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Project details'}, ${'Eligibility'})" th:remove="tag" />
+	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Aptrans Ltd'}, ${'Eligibility'})" th:with="partner=lead" th:remove="tag" />
 
 	<!-- <div th:include="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:with="page='project-setup', status='closed'" th:remove="tag" /> -->
 	
@@ -27,7 +27,7 @@
 
 	<th:block th:if="${param.status != null and param.status[0] == 'approved'}">
 		<div class="success-alert">
-			The partner finance eligibility has been approved
+			The partner finance eligibility has been approved by Paul Davidson, 27/07/2016
 		</div>
 	</th:block>
 
@@ -38,110 +38,23 @@
 			<thead>
 				<tr>
 					<th scope="col">Total costs</th>
-					<th scope="col">% grant</th>
-					<th scope="col">Funding sought</th>
-					<th scope="col">Other public sector funding</th>
-					<th scope="col">Contribution to project</th>
+					<th scope="col" class="numeric">% grant</th>
+					<th scope="col" class="numeric">Funding sought</th>
+					<th scope="col" class="numeric">Other public sector funding</th>
+					<th scope="col" class="numeric">Contribution to project</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr>
 					<td>&pound;286,283</td>
-					<td>55%</td>
-					<td>&pound;180,399</td>
-					<td>20,000</td>
-					<td>&pound;85,885</td>
+					<td class="numeric">55%</td>
+					<td class="numeric">&pound;180,399</td>
+					<td class="numeric">20,000</td>
+					<td class="numeric">&pound;85,885</td>
 				</tr>
 			</tbody>
 		</table>
 	</div>
-
-	<div class="extra-margin" th:unless="${param.status != null and param.status[0] == 'approved' or param.status != null and param.status[0] == 'changeGrant'}">
-		<a th:href="@{'?status=changeGrant'}">Change % grant</a>
-	</div>
-
-	<th:block th:if="${param.status != null and param.status[0] == 'changeGrant'}">
-	
-		<form>
-
-			<fieldset class="panel-indent">
-				<legend class="visuallyhidden">Change % grant</legend>
-				<div class="cf">
-					<div class="form-group">
-						<label for="change-grant-percent" class="form-label-bold">
-							Change % grant
-							<span class="form-hint">When Changing the % grant the revised funding level must be below the level originally applied for</span>
-						</label>
-						<input class="form-control width-small" id="change-grant-percent" name="change-grant-percent" type="number" th:value="${(param.action != null and param.action[0] == 'grantUpdated' ? '40' : '55')}" /> <strong><a th:href="@{'?status=changeGrant&#38;action=grantUpdated'}">Update</a></strong>
-					</div>
-				</div>
-
-				<th:block th:if="${param.action != null and param.action[0] == 'grantUpdated'}">
-
-					<hr />
-
-					<dl class="standard-definition-list">
-						<dt>Proposed funding</dt>
-						<dd>&pound;160,000</dd>
-					</dl>
-
-				</th:block>
-
-				<hr />
-
-				<div class="grid-row">
-					<div class="column-half">
-						<a th:href="${#httpServletRequest.requestURI}">Cancel</a>
-					</div>
-
-					<div class="column-half alignright">
-						<a href="#" data-js-modal="change-grant" class="button">Change % grant</a>
-					</div>
-
-					<div class="change-grant" role="dialog" aria-hidden="true" style="margin-top: -174px;">
-				        <button class="js-close close" aria-label="Close Popup">X</button>
-				        <div>
-
-							<h2 class="heading-medium no-margin">Change % grant</h2>
-
-							<p>This will approve the applicants project costs.</p>
-
-							<dl class="standard-definition-list">
-								<dt>Grant requested</dt>
-								<dd>55%</dd>
-
-								<dt>Funding sought</dt>
-								<dd>&pound;180,399</dd>
-
-								<dt>Current funding</dt>
-								<dd>&pound;160,000</dd>
-
-							</dl>
-
-							<hr />
-
-				        	<div class="alignright-button">
-								
-								<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
-
-								<input type="hidden" id="status" name="status" value="grantChanged" />
-
-				        		<button class="button" th:formaction="@{${#httpServletRequest.requestURI}}">Change % grant</button>
-				        	</div>
-
-				        </div>
-				    </div>
-
-
-				</div>
-
-
-			</fieldset>
-
-		</form>
-
-	</th:block>
-
 	
 	<th:block th:if="${param.status != null and param.status[0] == 'grantChanged' or param.action != null and param.action[0] == 'grantChanged'}">
 		<div class="panel-indent">
@@ -162,11 +75,11 @@
 
 			<h3 class="heading-medium">Project finance overview</h3>
 
-			<p>These finances where initially submitted at the application stage. All changes made to the finances are will be viewable by the applicants as soon as the changes are saved.</p>
+			<p>These finances were initially submitted at the application stage. All saved changes to finances will be viewable by the applicants.</p>
 
-			<p>All changes must be discussed with the applicant, by raising queries through IFS, before they are made.</p>
+			<p>All potential changes must be discussed with the lead applicant. You can do this by raising queries through IFS.</p>
 
-			<a href="#">Review all changes to project finances</a>
+			<a href="/prototypes/1581-changes-finances">Review all changes to project finances</a>
 
 		</th:block>
 
@@ -240,9 +153,96 @@
 
 	    <div th:include="prototypes/fragments/finance-review-questions :: finance-question-other-funding" th:remove="tag" />
 
+		<!-- <div class="extra-margin" th:unless="${param.status != null and param.status[0] == 'approved' or param.status != null and param.status[0] == 'changeGrant'}">
+			<a th:href="@{'?status=changeGrant#change-grant'}">Change % grant</a>
+		</div>
+
+		<th:block th:if="${param.status != null and param.status[0] == 'changeGrant'}">
+		
+			<form>
+
+				<fieldset class="panel-indent" id="change-grant">
+					<legend class="visuallyhidden">Change % grant</legend>
+					<div class="cf">
+						<div class="form-group">
+							<label for="change-grant-percent" class="form-label-bold">
+								Change % grant
+								<span class="form-hint">When changing the % grant, the revised funding level must be below the level originally applied for</span>
+							</label>
+							<input class="form-control width-small" id="change-grant-percent" name="change-grant-percent" type="number" th:value="${(param.action != null and param.action[0] == 'grantUpdated' ? '40' : '55')}" /> <strong><a th:href="@{'?status=changeGrant&#38;action=grantUpdated'}">Update</a></strong>
+						</div>
+					</div>
+
+					<th:block th:if="${param.action != null and param.action[0] == 'grantUpdated'}">
+
+						<hr />
+
+						<dl class="standard-definition-list">
+							<dt>Proposed funding</dt>
+							<dd>&pound;160,000</dd>
+						</dl>
+
+					</th:block>
+
+					<hr />
+
+					<div class="grid-row">
+						<div class="column-half">
+							<a th:href="${#httpServletRequest.requestURI}">Cancel</a>
+						</div>
+
+						<div class="column-half alignright">
+							<a href="#" data-js-modal="change-grant" class="button">Change % grant</a>
+						</div>
+
+						<div class="change-grant" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+					        <button class="js-close close" aria-label="Close Popup">X</button>
+					        <div>
+
+								<h2 class="heading-medium no-margin">Change % grant</h2>
+
+								<p>This will approve the applicant's project costs.</p>
+
+								<dl class="standard-definition-list">
+									<dt>Grant requested</dt>
+									<dd>55%</dd>
+
+									<dt>Funding sought</dt>
+									<dd>&pound;180,399</dd>
+
+									<dt>Current funding</dt>
+									<dd>&pound;160,000</dd>
+
+								</dl>
+
+								<hr />
+
+					        	<div class="alignright-button">
+									
+									<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
+
+									<input type="hidden" id="status" name="status" value="grantChanged" />
+
+					        		<button class="button" th:formaction="@{${#httpServletRequest.requestURI}}">Change % grant</button>
+					        	</div>
+
+					        </div>
+					    </div>
+
+
+					</div>
+
+
+				</fieldset>
+
+			</form>
+
+		</th:block> -->
+
 
 	    <div class="extra-margin">
-	    	<a href="#" class="button button-secondary">Queries</a>
+	    	<a href="/prototypes/3807-finance-queries" class="button button-secondary">Queries</a>
+	    	<a href="/prototypes/3990-finance-notes" class="button button-secondary">Notes</a>
 	    </div>
 		
 		
@@ -259,21 +259,22 @@
 			    </label>
 		    </div>
 
-	    	<input class="button" data-js-modal="approve-eligibility" type="submit" value="Approve eligible costs" />
+	    	<button data-js-modal="approve-eligibility-modal" id="approve-eligibility" class="button" type="submit" disabled="disabled">Approve eligible costs</button>
 
-		    <div class="approve-eligibility" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+		    <div class="approve-eligibility-modal" role="dialog" aria-hidden="true" style="margin-top: -174px;">
 		        <button class="js-close close" aria-label="Close Popup">X</button>
 		        <div>
 
 					<h2 class="heading-medium no-margin">Approve eligible costs</h2>
 
-					<p>This will approve the applicants project costs.</p>
+					<p>This partner will now be marked as eligible for this project, please state the eligibility RAG rating</p>
 
 					<form>
 
 						<div class="form-group">
-			                <label for="rag-rating" class="form-label">Please select the RAG rating before approving</label>
-			                <select name="rag-rating" id="rag-rating" class="form-control width-medium">
+			                <label for="rag-rating" class="form-label">RAG rating</label>
+			                <select id="rag-rating" name="rag-rating" class="form-control" >
+			                	<option value="">--</option>
 			                	<option value="Green">Green</option>
 			                	<option value="Amber">Amber</option>
 			                	<option value="Red">Red</option>
@@ -352,6 +353,14 @@
 			jQuery("#admin-support-2").hide();
 			jQuery("#admin-support-3").hide();
 			jQuery("#admin-support-4").show();
+		}
+	});
+
+	jQuery('input#costs-reviewed').on('click',function(e){ 
+		if ( jQuery(this).is(':checked') ) {
+			jQuery("#approve-eligibility").removeAttr('disabled');
+		}else{
+			jQuery("#approve-eligibility").attr('disabled','disabled');
 		}
 	});
 

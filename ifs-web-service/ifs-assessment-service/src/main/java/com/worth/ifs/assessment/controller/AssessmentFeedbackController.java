@@ -13,11 +13,14 @@ import com.worth.ifs.assessment.model.AssessmentFeedbackNavigationModelPopulator
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
 import com.worth.ifs.assessment.service.AssessmentService;
+import com.worth.ifs.assessment.service.AssessorFormInputResponseService;
 import com.worth.ifs.assessment.viewmodel.AssessmentFeedbackViewModel;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.form.resource.FormInputResource;
+import com.worth.ifs.form.service.FormInputService;
 import com.worth.ifs.model.OrganisationDetailsModelPopulator;
 import com.worth.ifs.user.resource.ProcessRoleResource;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,18 +33,27 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
+import static com.worth.ifs.util.CollectionFunctions.simpleToMap;
+import static com.worth.ifs.util.MapFunctions.toListOfPairs;
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toMap;
 
 @Controller
 @RequestMapping("/{assessmentId}")
 public class AssessmentFeedbackController extends AbstractApplicationController {
 
-    private static String APPLICATION_DETAILS = "assessment-application-details";
-    private static String QUESTION = "assessment-question";
+    private static String APPLICATION_DETAILS = "assessment/application-details";
+    private static String QUESTION = "assessment/application-question";
 
     @Autowired
     private AssessmentService assessmentService;
+
+    @Autowired
+    private FormInputService formInputService;
+
+    @Autowired
+    private AssessorFormInputResponseService assessorFormInputResponseService;
 
     @Autowired
     private AssessmentFeedbackModelPopulator assessmentFeedbackModelPopulator;
@@ -80,36 +92,17 @@ public class AssessmentFeedbackController extends AbstractApplicationController 
         return QUESTION;
     }
 
-    @RequestMapping(value = "/question/{questionId}/feedback-value", method = RequestMethod.POST)
+    @RequestMapping(value = "/formInput/{formInputId}", method = RequestMethod.POST)
     public
     @ResponseBody
-    JsonNode updateFeedbackValue(
+    JsonNode updateFormInputResponse(
             Model model,
             HttpServletResponse response,
-            @ModelAttribute(MODEL_ATTRIBUTE_FORM) Form form,
-            BindingResult bindingResult,
             @PathVariable("assessmentId") Long assessmentId,
-            @PathVariable("questionId") Long questionId) {
+            @PathVariable("formInputId") Long formInputId,
+            @RequestParam("value") String value) {
         // TODO validation
-        //ServiceResult<Void> result = assessmentFeedbackService.updateFeedbackValue(assessmentId, questionId, form.getValue());
-        ServiceResult<Void> result = serviceSuccess();
-        // TODO handle service errors
-        return createJsonObjectNode(result.isSuccess(), asList());
-    }
-
-    @RequestMapping(value = "/question/{questionId}/feedback-score", method = RequestMethod.POST)
-    public
-    @ResponseBody
-    JsonNode updateScore(
-            Model model,
-            HttpServletResponse response,
-            @ModelAttribute(MODEL_ATTRIBUTE_FORM) Form form,
-            BindingResult bindingResult,
-            @PathVariable("assessmentId") Long assessmentId,
-            @PathVariable("questionId") Long questionId) {
-        // TODO validation
-        //ServiceResult<Void> result = assessmentFeedbackService.updateFeedbackScore(assessmentId, questionId, form.getScore());
-        ServiceResult<Void> result = serviceSuccess();
+        ServiceResult<Void> result = assessorFormInputResponseService.updateFormInputResponse(assessmentId, formInputId, value);
         // TODO handle service errors
         return createJsonObjectNode(result.isSuccess(), asList());
     }
@@ -122,8 +115,16 @@ public class AssessmentFeedbackController extends AbstractApplicationController 
             BindingResult bindingResult,
             @PathVariable("assessmentId") Long assessmentId,
             @PathVariable("questionId") Long questionId) {
+        // TODO possiby get the form inputs from assessmentFormInputs in the view model?
         // TODO validation
-        //ServiceResult<Void> result = assessmentFeedbackService.updateAssessmentFeedback(assessmentId, questionId, form.getValue(), form.getScore());
+        List<FormInputResource> formInputs = formInputService.findAssessmentInputsByQuestion(questionId);
+        List<Pair<Long, String>> formInputResponses = getFormInputResponses(form, formInputs);
+        formInputResponses.stream().forEach(responsePair -> {
+            Long formInputId = responsePair.getLeft();
+            String value = responsePair.getRight();
+            // TODO INFUND-4105 optimise this to save multiple responses at a time
+            assessorFormInputResponseService.updateFormInputResponse(assessmentId, formInputId, value);
+        });
         // TODO handle service errors
         return "redirect:/" + assessmentId;
     }
@@ -164,6 +165,16 @@ public class AssessmentFeedbackController extends AbstractApplicationController 
 
     private List<FormInputResource> getApplicationFormInputs(Long questionId) {
         return formInputService.findApplicationInputsByQuestion(questionId);
+    }
+
+    private List<Pair<Long, String>> getFormInputResponses(Form form, List<FormInputResource> formInputs) {
+        // Convert the Form map to be keyed by Long rather than String
+        List<Pair<Long, String>> responses = toListOfPairs(form.getFormInput().entrySet()
+                .stream()
+                .collect(toMap(keyEntry -> Long.valueOf(keyEntry.getKey()), Map.Entry::getValue)));
+        // Filter the responses to include only those for which a form input exist
+        Map<Long, FormInputResource> formInputResourceMap = simpleToMap(formInputs, FormInputResource::getId);
+        return simpleFilter(responses, responsePair -> formInputResourceMap.containsKey(responsePair.getLeft()));
     }
 
     private ObjectNode createJsonObjectNode(boolean success, List<String> errors) {

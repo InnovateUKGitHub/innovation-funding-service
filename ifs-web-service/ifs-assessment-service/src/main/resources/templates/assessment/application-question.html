@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+    <head>
+        <div th:include="fragments/layout :: head" th:with="pageTitle=${#strings.isEmpty(model.questionShortName) ? 'Assessment' : model.questionShortName}" th:remove="tag" />
+    </head>
+
+    <body th:with="context='assessment'" class="assessment assessment-form">
+        <div th:include="fragments/layout :: body-start" th:remove="tag" />
+        <div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+        <main id="content">
+            <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+            <div th:include="fragments/assessment :: assessment-header-sub" th:with="linkTitle='Back to assessment overview',linkClass='link-back',linkUrl=@{${navigation.overviewUrl}},daysPercentage=${model.daysLeftPercentage},daysLeft=${model.daysLeft}" th:remove="tag" />
+
+            <div class="page-title">
+                <div th:include="fragments/elements :: application-title (application=${model.application})" th:remove="tag" />
+                <h1 class="heading-xlarge" th:text="${model.questionShortName}" />
+            </div>
+
+            <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" enctype="multipart/form-data" th:object="${form}" novalidate="novalidate" class="form-serialize-js">
+                <button class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">Save the form</button>
+
+                <p class="form-hint" th:text="|Please review the answer provided and score the answer out of ${model.maximumScore} points.|" th:if="${model.scoreFormInputExists}" />
+                <p class="form-hint" th:if="${model.scopeFormInputExists}">Please indicate whether this application is in scope for this competition.</p>
+
+                <div class="form-group">
+                    <h2 class="heading-medium">
+                        <span th:if="${model.questionNumber != null}" th:text="${model.questionNumber} + '. '" th:remove="tag" />
+                        <span th:text="${model.questionName}" th:remove="tag" />
+                    </h2>
+
+                    <p th:text="${model.applicantResponse}" />
+                </div>
+
+                <div th:if="${model.appendixExists}">
+                    <div th:replace="question-type/form-elements :: readonly-file-download (filename=${model.appendixDetails.filename}, filesizeKbytes=${model.appendixDetails.filesizeKbytes}, fileDescription=${model.appendixFileDescription}+':', downloadURL=@{/})" />
+                </div>
+
+                <div class="question" th:each="field : ${model.assessmentFormInputs}" th:id="'form-input-'+${field.id}">
+                    <div th:replace="fragments/assessment-types :: ${field.formInputTypeTitle} (field=${field})" />
+                </div>
+
+                <input type="hidden" id="application_id" th:value="${model.application.id}" />
+
+                <button type="submit" class="button-secondary app-submit-btn" name="submit-section">Save and return to assessment overview</button>
+            </form>
+            <input type="hidden" id="cacheTest" value="" />
+
+            <ul class="pagination" th:unless="${#strings.isEmpty(navigation.previousUrl) and #strings.isEmpty(navigation.nextUrl)}">
+                <li class="prev" th:unless="${#strings.isEmpty(navigation.previousUrl)}">
+                    <a th:href="@{${navigation.previousUrl}}" rel="prev" title="Navigate to previous part">
+                        <span class="pagination-label">Previous</span>
+                        <span class="pagination-part-title" th:text="${navigation.previousText}" />
+                    </a>
+                </li>
+                <li class="next" th:unless="${#strings.isEmpty(navigation.nextUrl)}">
+                    <a th:href="@{${navigation.nextUrl}}" rel="next" title="Navigate to next part">
+                        <span class="pagination-label">Next</span>
+                        <span class="pagination-part-title" th:text="${navigation.nextText}" />
+                    </a>
+                </li>
+            </ul>
+
+            <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+        </main>
+
+        <div th:include="fragments/layout :: footer" th:remove="tag" />
+        <div th:include="fragments/layout :: body-end" th:remove="tag" />
+    </body>
+</html>

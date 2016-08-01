@@ -17,7 +17,8 @@ public class AssessorFormInputResponseResourceBuilderTest {
         Long expectedAssessment = 2L;
         Long expectedQuestion = 3L;
         Long expectedFormInput = 4L;
-        String expectedValue = "Blah";
+        String expectedValue = "Feedback";
+        Integer expectedFormInputMaxWordCount = 100;
         LocalDateTime expectedUpdatedDate = LocalDateTime.parse("2016-07-12T16:10:50.21");
 
         AssessorFormInputResponseResource assessorFormInputResponse = newAssessorFormInputResponseResource()
@@ -26,6 +27,7 @@ public class AssessorFormInputResponseResourceBuilderTest {
                 .withQuestion(expectedQuestion)
                 .withFormInput(expectedFormInput)
                 .withValue(expectedValue)
+                .withFormInputMaxWordCount(expectedFormInputMaxWordCount)
                 .withUpdatedDate(expectedUpdatedDate)
                 .build();
 
@@ -34,6 +36,7 @@ public class AssessorFormInputResponseResourceBuilderTest {
         assertEquals(expectedQuestion, assessorFormInputResponse.getQuestion());
         assertEquals(expectedFormInput, assessorFormInputResponse.getFormInput());
         assertEquals(expectedValue, assessorFormInputResponse.getValue());
+        assertEquals(expectedFormInputMaxWordCount, assessorFormInputResponse.getFormInputMaxWordCount());
         assertEquals(expectedUpdatedDate, assessorFormInputResponse.getUpdatedDate());
     }
 
@@ -44,6 +47,7 @@ public class AssessorFormInputResponseResourceBuilderTest {
         Long[] expectedQuestions = {5L, 6L};
         Long[] expectedFormInputs = {7L, 8L};
         String[] expectedValues = {"Sample message 1", "Sample message 2"};
+        Integer[] expectedFormInputMaxWordCounts = {100, 200};
         LocalDateTime[] expectedUpdatedDates = {LocalDateTime.parse("2016-07-12T16:10:50.21"), LocalDateTime.parse("2016-07-12T16:15:25.42")};
 
         List<AssessorFormInputResponseResource> assessorFormInputResponses = newAssessorFormInputResponseResource()
@@ -52,6 +56,7 @@ public class AssessorFormInputResponseResourceBuilderTest {
                 .withQuestion(expectedQuestions)
                 .withFormInput(expectedFormInputs)
                 .withValue(expectedValues)
+                .withFormInputMaxWordCount(expectedFormInputMaxWordCounts)
                 .withUpdatedDate(expectedUpdatedDates)
                 .build(2);
 
@@ -61,6 +66,7 @@ public class AssessorFormInputResponseResourceBuilderTest {
         assertEquals(expectedQuestions[0], first.getQuestion());
         assertEquals(expectedFormInputs[0], first.getFormInput());
         assertEquals(expectedValues[0], first.getValue());
+        assertEquals(expectedFormInputMaxWordCounts[0], first.getFormInputMaxWordCount());
         assertEquals(expectedUpdatedDates[0], first.getUpdatedDate());
 
         AssessorFormInputResponseResource second = assessorFormInputResponses.get(1);
@@ -69,6 +75,7 @@ public class AssessorFormInputResponseResourceBuilderTest {
         assertEquals(expectedQuestions[1], second.getQuestion());
         assertEquals(expectedFormInputs[1], second.getFormInput());
         assertEquals(expectedValues[1], second.getValue());
+        assertEquals(expectedFormInputMaxWordCounts[1], second.getFormInputMaxWordCount());
         assertEquals(expectedUpdatedDates[1], second.getUpdatedDate());
     }
 

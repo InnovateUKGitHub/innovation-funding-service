@@ -48,13 +48,15 @@ Finance fields are empty
     [Tags]    HappyPath
     Then the Funding levels value should be empty
 
-User presses back button should get the correct version of the page
+User pressing back button should get the correct version of the page
+    [Documentation]    INFUND-2695
+    [Tags]
     [Setup]    The user adds three material rows
-    When the user clicks the button/link    link=Please refer to our guide to project costs for further information.
+    When the user navigates to another page
     And the user should see the text in the page    Guide on eligible project costs and completing the finance form
     And the user goes back to the previous page
     Then the user should see the element    css=#material-costs-table tbody tr:nth-of-type(3) td:nth-of-type(2) input
-    [Teardown]    and the user removes the materials rows
+    [Teardown]    the user removes the materials rows
 
 *** Keywords ***
 the Applicant should see all the "Your Finance" Sections
@@ -68,27 +70,28 @@ the Applicant should see all the "Your Finance" Sections
 
 the user adds three material rows
     the user clicks the button/link    jQuery=button:contains("Materials")
-    Focus    jQuery=button:contains('Add another materials cost')
-    the user clicks the button/link    jQuery=button:contains('Add another materials cost')
     the user should see the element    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
+    Input Text    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    01
     Focus    jQuery=button:contains('Add another materials cost')
     the user clicks the button/link    jQuery=button:contains('Add another materials cost')
     the user should see the element    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input
+    Input Text    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    01
     Focus    jQuery=button:contains('Add another materials cost')
     the user clicks the button/link    jQuery=button:contains('Add another materials cost')
     the user should see the element    css=#material-costs-table tbody tr:nth-of-type(3) td:nth-of-type(2) input
+    Input Text    css=#material-costs-table tbody tr:nth-of-type(3) td:nth-of-type(2) input    01
+    Mouse Out    css=#material-costs-table tbody tr:nth-of-type(3) td:nth-of-type(2) input
     Focus    link=Please refer to our guide to project costs for further information.
 
 the user removes the materials rows
     [Documentation]    INFUND-2965
     the user clicks the button/link    jQuery=#material-costs-table button:contains("Remove")
-    the user should not see the element    css=#material-costs-table tbody tr:nth-of-type(3) td:nth-of-type(2) input
+    the user should not see the element    css=#material-costs-table tbody tr:nth-of-type(4) td:nth-of-type(2) input
     Focus    jQuery=#material-costs-table button:contains("Remove")
+    the user clicks the button/link    jQuery=#material-costs-table button:contains("Remove")
+    the user should not see the element    css=#material-costs-table tbody tr:nth-of-type(3) td:nth-of-type(2) input
     the user clicks the button/link    jQuery=#material-costs-table button:contains("Remove")
     the user should not see the element    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input
-    Focus    jQuery=#material-costs-table button:contains("Remove")
-    the user clicks the button/link    jQuery=#material-costs-table button:contains("Remove")
-    the user should not see the element    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
     the user clicks the button/link    jQuery=button:contains("Materials")
 
 the Funding levels value should be empty
@@ -100,3 +103,7 @@ the Funding levels value should be empty
 the working days per year should be 232 by default
     ${Days_value} =    Get Value    css=[name^="labour-labourDaysYearly"]
     Should Be Equal As Strings    ${Days_value}    232
+
+the user navigates to another page
+    the user clicks the button/link    link=Please refer to our guide to project costs for further information.
+    Run Keyword And Ignore Error    Confirm Action

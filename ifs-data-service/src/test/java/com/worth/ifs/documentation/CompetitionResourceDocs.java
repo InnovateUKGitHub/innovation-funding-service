@@ -1,14 +1,14 @@
 package com.worth.ifs.documentation;
 
+import com.worth.ifs.competition.builder.CompetitionResourceBuilder;
+import org.springframework.restdocs.payload.FieldDescriptor;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
 import static com.google.common.primitives.Longs.asList;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-
-import java.time.LocalDateTime;
-
-import org.springframework.restdocs.payload.FieldDescriptor;
-
-import com.worth.ifs.competition.builder.CompetitionResourceBuilder;
 
 public class CompetitionResourceDocs {
     public static final FieldDescriptor[] competitionResourceFields = {
@@ -27,6 +27,7 @@ public class CompetitionResourceDocs {
             fieldWithPath("academicGrantPercentage").description("grant claim percentage for the academics"),
             fieldWithPath("milestones").description("List of milestone ids"),
             fieldWithPath("competitionType").description("the competition type this competition belongs to"),
+            fieldWithPath("competitionTypeName").description("the name of the competition type this competition belongs to"),
             fieldWithPath("executive").description("the user id of the competition executive"),
             fieldWithPath("leadTechnologist").description("the user id of the competition leadTechnologist"),
             fieldWithPath("innovationSector").description("the Innovation sector this competition belongs to"),
@@ -44,8 +45,9 @@ public class CompetitionResourceDocs {
             fieldWithPath("sectionSetupStatus").description("the completion status of competition setup sections"),
             fieldWithPath("activityCode").description("the activity code entered during competition setup"),
             fieldWithPath("innovateBudget").description("the innovate budget entered during competition setup"),
-            fieldWithPath("coFunders").description("the co-funders entered during competition setup"),
-            fieldWithPath("coFundersBudget").description("the co-funders budget entered during competition setup")
+            fieldWithPath("funder").description("the funder entered during competition setup"),
+            fieldWithPath("funderBudget").description("the funder budget entered during competition setup"),
+            fieldWithPath("coFunders").description("the Co-Funders for this competition")
     };
 
     public static final CompetitionResourceBuilder competitionResourceBuilder = newCompetitionResource()
@@ -72,6 +74,6 @@ public class CompetitionResourceDocs {
             .withBudgetCode("BUDGET-456")
             .withActivityCode("Activity-Code")
             .withInnovateBudget("INNOVATE-Budget")
-            .withCoFunders("Cofunder, Cofunder")
-            .withCoFundersBudget("1234, 23423");
+            .withFunder("funder, funder")
+            .withFunderBudget(new BigDecimal(1234), new BigDecimal(23423));
 }

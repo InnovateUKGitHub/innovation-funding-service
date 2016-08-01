@@ -1,7 +1,9 @@
+
 package com.worth.ifs.project.domain;
 
 import com.worth.ifs.address.domain.Address;
 import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.resource.UserRoleType;
 
@@ -44,6 +46,14 @@ public class Project {
 
     @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProjectUser> projectUsers = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name="collaborationAgreementFileEntryId", referencedColumnName="id")
+    private FileEntry collaborationAgreement;
+
+    @ManyToOne
+    @JoinColumn(name="exploitationPlanFileEntryId", referencedColumnName="id")
+    private FileEntry exploitationPlan;
 
     public Project() {}
 
@@ -142,5 +152,21 @@ public class Project {
 
     public void setSubmittedDate(LocalDateTime submittedDate) {
         this.submittedDate = submittedDate;
+    }
+
+    public FileEntry getCollaborationAgreement() {
+        return collaborationAgreement;
+    }
+
+    public void setCollaborationAgreement(FileEntry collaborationAgreement) {
+        this.collaborationAgreement = collaborationAgreement;
+    }
+
+    public FileEntry getExploitationPlan() {
+        return exploitationPlan;
+    }
+
+    public void setExploitationPlan(FileEntry exploitationPlan) {
+        this.exploitationPlan = exploitationPlan;
     }
 }

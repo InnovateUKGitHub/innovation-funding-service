@@ -78,6 +78,10 @@ public class SectionBuilder extends BaseBuilder<Section, SectionBuilder> {
     public SectionBuilder withDisplayInAssessmentApplicationSummary(boolean displayInSummary) {
         return with(section -> setField("displayInAssessmentApplicationSummary", displayInSummary, section));
     }
+    
+    public SectionBuilder withChildSections(List<Section> childSections) {
+    	return with(section -> setField("childSections", childSections, section));
+    }
 
     public SectionBuilder withCompetitionAndPriority(Competition competition, Integer priority) {
         return with(section -> {

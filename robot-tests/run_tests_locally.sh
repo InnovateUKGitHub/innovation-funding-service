@@ -46,7 +46,7 @@ function resetDB {
     `mysql -u${mysqlUser} -p${mysqlPassword} -e"DROP DATABASE ifs"`
     `mysql -u${mysqlUser} -p${mysqlPassword} -e"CREATE DATABASE ifs CHARACTER SET utf8"`
     cd ../ifs-data-service
-    ./gradlew flywayClean flywayMigrate
+    ./gradlew clean processResources flywayClean flywayMigrate
 }
 
 function clearDownFileRepository {
@@ -279,11 +279,11 @@ unset startServersInDebugMode
 unset testMailboxOneExists
 
 
-browser="Firefox"
+browser="GoogleChrome"
 
 
 testDirectory='IFS_acceptance_tests/tests/*'
-while getopts ":q :t :h :p :r :d: :D :x :c" opt ; do
+while getopts ":q :t :h :p :r :d: :D :x :f" opt ; do
     case $opt in
         q)
          quickTest=1
@@ -309,8 +309,8 @@ while getopts ":q :t :h :p :r :d: :D :x :c" opt ; do
         D)
          startServersInDebugMode=true
         ;;
-        c)
-         browser="GoogleChrome"
+        f)
+         browser="Firefox"
         ;;
         \?)
          coloredEcho "Invalid option: -$OPTARG" red >&2

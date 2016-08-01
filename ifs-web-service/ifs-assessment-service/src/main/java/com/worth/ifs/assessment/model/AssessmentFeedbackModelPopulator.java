@@ -50,13 +50,15 @@ public class AssessmentFeedbackModelPopulator {
         CompetitionResource competition = getCompetition(application.getCompetition());
         QuestionResource question = getQuestion(questionId);
         List<FormInputResource> applicationFormInputs = getApplicationFormInputs(questionId);
-        boolean appendixFormInputExists = applicationFormInputs.size() > 1;
         FormInputResource applicationFormInput = applicationFormInputs.get(0);
         Map<Long, FormInputResponseResource> applicantResponses = getApplicantResponses(application.getId(), applicationFormInputs);
         FormInputResponseResource applicantResponse = applicantResponses.get(applicationFormInput.getId());
         String applicantResponseValue = applicantResponse != null ? applicantResponse.getValue() : null;
         List<FormInputResource> assessmentFormInputs = getAssessmentFormInputs(questionId);
         Map<Long, AssessorFormInputResponseResource> assessorResponses = getAssessorResponses(assessmentId, questionId);
+        boolean appendixFormInputExists = hasFormInputWithType(applicationFormInputs, "fileupload");
+        boolean scoreFormInputExists = hasFormInputWithType(assessmentFormInputs, "assessor_score");
+        boolean scopeFormInputExists = hasFormInputWithType(assessmentFormInputs, "assessor_application_in_scope");
 
         if (appendixFormInputExists) {
             FormInputResource appendixFormInput = applicationFormInputs.get(1);
@@ -64,11 +66,11 @@ public class AssessmentFeedbackModelPopulator {
             boolean applicantAppendixResponseExists = applicantAppendixResponse != null;
             if (applicantAppendixResponseExists) {
                 FileDetailsViewModel appendixDetails = new FileDetailsViewModel(applicantAppendixResponse.getFilename(), applicantAppendixResponse.getFilesizeBytes());
-                return new AssessmentFeedbackViewModel(competition.getAssessmentDaysLeft(), competition.getAssessmentDaysLeftPercentage(), competition, application, question.getId(), question.getQuestionNumber(), question.getShortName(), question.getName(), question.getAssessorMaximumScore(), applicantResponseValue, assessmentFormInputs, assessorResponses, true, appendixDetails);
+                return new AssessmentFeedbackViewModel(competition.getAssessmentDaysLeft(), competition.getAssessmentDaysLeftPercentage(), competition, application, question.getId(), question.getQuestionNumber(), question.getShortName(), question.getName(), question.getAssessorMaximumScore(), applicantResponseValue, assessmentFormInputs, assessorResponses, scoreFormInputExists, scopeFormInputExists, true, appendixDetails);
             }
         }
 
-        return new AssessmentFeedbackViewModel(competition.getAssessmentDaysLeft(), competition.getAssessmentDaysLeftPercentage(), competition, application, question.getId(), question.getQuestionNumber(), question.getShortName(), question.getName(), question.getAssessorMaximumScore(), applicantResponseValue, assessmentFormInputs, assessorResponses);
+        return new AssessmentFeedbackViewModel(competition.getAssessmentDaysLeft(), competition.getAssessmentDaysLeftPercentage(), competition, application, question.getId(), question.getQuestionNumber(), question.getShortName(), question.getName(), question.getAssessorMaximumScore(), applicantResponseValue, assessmentFormInputs, assessorResponses, scoreFormInputExists, scopeFormInputExists);
     }
 
     private CompetitionResource getCompetition(Long competitionId) {
@@ -103,21 +105,7 @@ public class AssessmentFeedbackModelPopulator {
                 AssessorFormInputResponseResource::getFormInput);
     }
 
-    /*
-    private int getFeedbackWordsRemaining(int feedbackWordsLimit, AssessmentFeedbackResource assessmentFeedback) {
-        String feedback = assessmentFeedback.getFeedback();
-
-        if (feedbackWordsLimit <= 0 || feedback == null) {
-            return 0;
-        }
-
-        // clean any HTML markup from the feedback
-        Document doc = Jsoup.parse(feedback);
-        String cleaned = doc.text();
-
-        int feedbackLength = cleaned.split("\\s+").length;
-        int wordsRemaining = feedbackWordsLimit - feedbackLength;
-
-        return max(0, wordsRemaining);
-    }*/
+    private boolean hasFormInputWithType(List<FormInputResource> formInputs, String type) {
+        return formInputs.stream().anyMatch(formInput -> type.equals(formInput.getFormInputTypeTitle()));
+    }
 }

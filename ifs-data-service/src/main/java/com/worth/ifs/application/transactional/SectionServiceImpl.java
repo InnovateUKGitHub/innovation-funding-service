@@ -13,8 +13,10 @@ import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.domain.ApplicationFinance;
+import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
+import com.worth.ifs.form.resource.FormInputScope;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -184,9 +186,10 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
 
             List<Question> questions = section.fetchAllChildQuestions();
             for (Question question : questions) {
-                if (question.getFormInputs().stream().anyMatch(input -> input.getWordCount() != null && input.getWordCount() > 0)) {
+                List<FormInput> formInputs = simpleFilter(question.getFormInputs(), input -> FormInputScope.APPLICATION.equals(input.getScope()));
+                if (formInputs.stream().anyMatch(input -> input.getWordCount() != null && input.getWordCount() > 0)) {
                     // if there is a maxWordCount, ensure that no responses have gone over the limit
-                    sectionIncomplete = question.getFormInputs().stream().anyMatch(input -> {
+                    sectionIncomplete = formInputs.stream().anyMatch(input -> {
                         List<FormInputResponse> responses = formInputResponseRepository.findByApplicationIdAndFormInputId(application.getId(), input.getId());
                         return responses.stream().anyMatch(response -> response.getWordCountLeft() < 0);
                     });
@@ -270,7 +273,7 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
         List<Section> sections;
         // if no parent defined, just check all sections.
         if (parentSection == null) {
-            sections = sectionRepository.findByCompetitionId(application.getCompetition().getId());
+            sections = sectionRepository.findByCompetitionIdOrderByParentSectionIdAscPriorityAsc(application.getCompetition().getId());
         } else {
             sections = parentSection.getChildSections();
         }
@@ -360,7 +363,7 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
 
     @Override
     public ServiceResult<List<SectionResource>> getByCompetionId(final Long competitionId) {
-        return find(sectionRepository.findByCompetitionId(competitionId), notFoundError(Section.class, competitionId)).
+        return find(sectionRepository.findByCompetitionIdOrderByParentSectionIdAscPriorityAsc(competitionId), notFoundError(Section.class, competitionId)).
                 andOnSuccessReturn(r -> simpleMap(r, sectionMapper::mapToResource));
     }
 
