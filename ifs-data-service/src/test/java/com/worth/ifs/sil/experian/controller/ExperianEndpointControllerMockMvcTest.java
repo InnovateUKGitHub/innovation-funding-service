@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.springframework.test.web.servlet.MvcResult;
 
 import static com.worth.ifs.sil.experian.controller.ExperianEndpointController.validationErrors;
+import static com.worth.ifs.sil.experian.controller.ExperianEndpointController.verificationResults;
 import static com.worth.ifs.util.JsonMappingUtil.toJson;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -33,8 +34,24 @@ public class ExperianEndpointControllerMockMvcTest extends BaseControllerMockMVC
                         ).
                         andExpect(status().isOk()).
                         andReturn();
-                result.getResponse();
             } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    @Test
+    public void testExperianVerify() throws Exception {
+        verificationResults.keySet().forEach(accountDetails -> {
+            String requestBody = toJson(accountDetails);
+            try{
+                MvcResult result = mockMvc.perform(
+                        post("/silstub/experianVerify").
+                                header("Content-Type", "application/json").
+                                header("IFS_AUTH_TOKEN", "123abc").
+                                content(requestBody)
+                ).andExpect(status().isOk()).andReturn();
+            } catch (Exception e){
                 e.printStackTrace();
             }
         });
