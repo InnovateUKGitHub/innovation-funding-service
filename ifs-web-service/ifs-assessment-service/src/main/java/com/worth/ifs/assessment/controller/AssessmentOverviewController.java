@@ -24,9 +24,9 @@ import java.util.concurrent.ExecutionException;
 public class AssessmentOverviewController extends AbstractApplicationController {
 
     private static final Log LOG = LogFactory.getLog(AssessmentOverviewController.class);
-    private static final String OVERVIEW = "assessor-application-overview";
-    private static final String FINANCES_SUMMARY = "assessor-finances-summary";
-    private static final String DASHBOARD = "assessor/assessor-dashboard";
+    private static final String OVERVIEW = "assessment/application-overview";
+    private static final String FINANCES_SUMMARY = "assessment/application-finances-summary";
+    private static final String DASHBOARD = "assessor-dashboard";
 
 
     @Autowired

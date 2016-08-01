@@ -37,6 +37,9 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
     public CompetitionBuilder withEndDate(LocalDateTime endDate) {
         return with(competition -> setField("endDate", endDate, competition));
     }
+    public CompetitionBuilder withAssessmentStartDate(LocalDateTime startDate) {
+        return with(competition -> setField("assessmentStartDate", startDate, competition));
+    }
     public CompetitionBuilder withAssessmentEndDate(LocalDateTime endDate) {
         return with(competition -> setField("assessmentEndDate", endDate, competition));
     }
@@ -76,7 +79,12 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
     		return withStatus(Status.COMPETITION_SETUP_FINISHED)
                     .withStartDate(now.minusDays(1L))
     				.withEndDate(now.plusDays(1L));
-    	} else if(Status.IN_ASSESSMENT.equals(status)) {
+    	} else if(Status.CLOSED.equals(status)) {
+            return withStatus(Status.COMPETITION_SETUP_FINISHED)
+                    .withStartDate(now.minusDays(2L))
+                    .withEndDate(now.minusDays(1L))
+    				.withAssessmentStartDate(now.plusDays(1L));
+        } else if(Status.IN_ASSESSMENT.equals(status)) {
     		return withStatus(Status.COMPETITION_SETUP_FINISHED)
                     .withStartDate(now.minusDays(2L))
     				.withEndDate(now.minusDays(1L))

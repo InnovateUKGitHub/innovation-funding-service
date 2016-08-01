@@ -27,6 +27,7 @@ public class CompetitionResourceDocs {
             fieldWithPath("academicGrantPercentage").description("grant claim percentage for the academics"),
             fieldWithPath("milestones").description("List of milestone ids"),
             fieldWithPath("competitionType").description("the competition type this competition belongs to"),
+            fieldWithPath("competitionTypeName").description("the name of the competition type this competition belongs to"),
             fieldWithPath("executive").description("the user id of the competition executive"),
             fieldWithPath("leadTechnologist").description("the user id of the competition leadTechnologist"),
             fieldWithPath("innovationSector").description("the Innovation sector this competition belongs to"),
