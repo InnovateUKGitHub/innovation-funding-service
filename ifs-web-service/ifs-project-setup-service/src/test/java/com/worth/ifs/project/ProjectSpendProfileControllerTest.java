@@ -42,10 +42,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         when(competitionService.getById(applicationResource.getCompetition())).thenReturn(competitionResource);
 
         // Assert that the view model is populated with the correct values
-        ProjectSpendProfileViewModel viewModel = new ProjectSpendProfileViewModel(projectResource.getId(),
-                projectResource.getTargetStartDate(),
-                projectResource.getDurationInMonths(),
-                competitionResource);
+        ProjectSpendProfileViewModel viewModel = new ProjectSpendProfileViewModel(projectResource, competitionResource);
 
         mockMvc.perform(get("/project/{projectId}/spend-profile", projectResource.getId()))
                 .andExpect(status().isOk())
@@ -70,4 +67,3 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
     }
 }
-

@@ -1,6 +1,7 @@
 package com.worth.ifs.project.viewmodel;
 
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.project.resource.ProjectResource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -12,19 +13,25 @@ import java.time.LocalDate;
 public class ProjectSpendProfileViewModel {
 
     private Long projectId;
+    private String projectName;
     private LocalDate targetProjectStartDate;
     private Long durationInMonths;
     private CompetitionResource competition;
 
-    public ProjectSpendProfileViewModel(Long projectId, LocalDate targetProjectStartDate, Long durationInMonths, CompetitionResource competition) {
-        this.projectId = projectId;
-        this.targetProjectStartDate = targetProjectStartDate;
-        this.durationInMonths = durationInMonths;
+    public ProjectSpendProfileViewModel(ProjectResource project, CompetitionResource competition) {
+        this.projectId = project.getId();
+        this.projectName = project.getName();
+        this.targetProjectStartDate = project.getTargetStartDate();
+        this.durationInMonths = project.getDurationInMonths();
         this.competition = competition;
     }
 
     public Long getProjectId() {
         return projectId;
+    }
+
+    public String getProjectName() {
+        return projectName;
     }
 
     public LocalDate getTargetProjectStartDate() {
@@ -62,4 +69,3 @@ public class ProjectSpendProfileViewModel {
                 .toHashCode();
     }
 }
-

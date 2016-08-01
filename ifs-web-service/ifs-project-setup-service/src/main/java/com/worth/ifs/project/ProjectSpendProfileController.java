@@ -48,9 +48,6 @@ public class ProjectSpendProfileController {
         ApplicationResource application = applicationService.getById(projectResource.getApplication());
         CompetitionResource competition = competitionService.getById(application.getCompetition());
 
-        return new ProjectSpendProfileViewModel(projectId,
-                projectResource.getTargetStartDate(),
-                projectResource.getDurationInMonths(),
-                competition);
+        return new ProjectSpendProfileViewModel(projectResource, competition);
     }
 }
