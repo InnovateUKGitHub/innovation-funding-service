@@ -3,6 +3,7 @@ package com.worth.ifs.competition.service;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.competition.resource.CompetitionCountResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.CompetitionTypeResource;
@@ -33,6 +34,26 @@ public class CompetitionsRestServiceImpl extends BaseRestService implements Comp
     @Override
     public RestResult<List<CompetitionResource>> getAll() {
         return getWithRestResult(competitionsRestURL + "/findAll", competitionResourceListType());
+    }
+
+    @Override
+    public RestResult<List<CompetitionResource>> findLiveCompetitions() {
+        return getWithRestResult(competitionsRestURL + "/live", competitionResourceListType());
+    }
+
+    @Override
+    public RestResult<List<CompetitionResource>> findProjectSetupCompetitions() {
+        return getWithRestResult(competitionsRestURL + "/projectSetup", competitionResourceListType());
+    }
+
+    @Override
+    public RestResult<List<CompetitionResource>> findUpcomingCompetitions() {
+        return getWithRestResult(competitionsRestURL + "/upcoming", competitionResourceListType());
+    }
+
+    @Override
+    public RestResult<CompetitionCountResource> countCompetitions() {
+        return getWithRestResult(competitionsRestURL + "/count", CompetitionCountResource.class);
     }
 
     @Override

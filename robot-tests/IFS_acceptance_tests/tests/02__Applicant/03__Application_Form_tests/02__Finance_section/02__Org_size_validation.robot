@@ -25,13 +25,13 @@ Org size must be selected
     And The user clicks the button/link    jQuery=button:contains("Save and return to application overview")
     Then the 'your finances' section cannot be successfully saved with the message    ${no_org_selected_message}
 
-Small org should can't be more than70%
+Small org can't be more than 70%
     [Documentation]    INFUND-1100
     [Tags]    HappyPath
     When the applicant enters organisation size details    SMALL    82
     Then the 'your finances' section cannot be successfully saved with the message    ${incorrect_funding_level_message}
 
-Small org should be up to 70%
+Small org can be up to 70%
     [Documentation]    INFUND-1100
     [Tags]    HappyPath
     When the applicant enters organisation size details    SMALL    68

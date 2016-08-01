@@ -1,6 +1,7 @@
 package com.worth.ifs.competition.controller;
 
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.competition.resource.CompetitionCountResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.transactional.CompetitionService;
@@ -37,6 +38,29 @@ public class CompetitionController {
         return competitionService.findAll().toGetResponse();
     }
 
+
+    /***
+     * Get methods for the competition dashboard.
+     */
+    @RequestMapping(value="/live", method= RequestMethod.GET)
+    public RestResult<List<CompetitionResource>> live() {
+        return competitionService.findLiveCompetitions().toGetResponse();
+    }
+
+    @RequestMapping(value="/projectSetup", method= RequestMethod.GET)
+    public RestResult<List<CompetitionResource>> projectSetup() {
+        return competitionService.findProjectSetupCompetitions().toGetResponse();
+    }
+
+    @RequestMapping(value="/upcoming", method= RequestMethod.GET)
+    public RestResult<List<CompetitionResource>> upcoming() {
+        return competitionService.findUpcomingCompetitions().toGetResponse();
+    }
+
+    @RequestMapping(value="/count", method= RequestMethod.GET)
+    public RestResult<CompetitionCountResource> count() {
+        return competitionService.countCompetitions().toGetResponse();
+    }
 
     /****
      * Competition Setup methods
