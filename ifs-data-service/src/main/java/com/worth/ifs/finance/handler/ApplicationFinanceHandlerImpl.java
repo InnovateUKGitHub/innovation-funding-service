@@ -1,5 +1,6 @@
 package com.worth.ifs.finance.handler;
 
+import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.mapper.ApplicationFinanceMapper;
 import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
@@ -45,7 +46,7 @@ public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler 
 
         if(applicationFinance!=null) {
             applicationFinanceResource = applicationFinanceMapper.mapToResource(applicationFinance);
-            setFinanceDetails(applicationFinanceResource);
+            setFinanceDetails(applicationFinanceResource, applicationFinance.getApplication().getCompetition());
         }
         return applicationFinanceResource;
     }
@@ -90,10 +91,10 @@ public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler 
         return researchParticipation.setScale(2, BigDecimal.ROUND_HALF_UP);
     }
 
-    private void setFinanceDetails(ApplicationFinanceResource applicationFinanceResource) {
+    private void setFinanceDetails(ApplicationFinanceResource applicationFinanceResource, Competition competition) {
         Organisation organisation = organisationRepository.findOne(applicationFinanceResource.getOrganisation());
         OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(organisation.getOrganisationType().getName());
-        Map<CostType, CostCategory> costs = organisationFinanceHandler.getOrganisationFinances(applicationFinanceResource.getId());
+        Map<CostType, CostCategory> costs = organisationFinanceHandler.getOrganisationFinances(applicationFinanceResource.getId(), competition);
         applicationFinanceResource.setFinanceOrganisationDetails(costs);
     }
 }

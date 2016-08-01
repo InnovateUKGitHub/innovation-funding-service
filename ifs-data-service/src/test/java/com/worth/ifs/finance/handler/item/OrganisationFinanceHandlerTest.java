@@ -1,8 +1,10 @@
 package com.worth.ifs.finance.handler.item;
 
+import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.transactional.QuestionService;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.domain.CostField;
@@ -26,7 +28,9 @@ import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import java.math.BigDecimal;
 import java.util.*;
 
+import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
+import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
 import static com.worth.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.junit.Assert.assertEquals;
@@ -44,6 +48,8 @@ public class OrganisationFinanceHandlerTest {
     CostFieldRepository costFieldRepository;
     @Mock
     QuestionService questionService;
+    private Competition competition;
+    private Application application;
     private ApplicationFinance applicationFinance;
     private HashMap<CostType, Question> costTypeQuestion;
     private LabourCost labour;
@@ -59,7 +65,9 @@ public class OrganisationFinanceHandlerTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
 
-        applicationFinance = newApplicationFinance().build();
+        competition = newCompetition().build();
+        application = newApplication().withCompetition(competition).build();
+        applicationFinance = newApplicationFinance().withApplication(application).build();
         costTypeQuestion = new HashMap<CostType, Question>();
 
         for (CostType costType : CostType.values()) {
@@ -132,31 +140,31 @@ public class OrganisationFinanceHandlerTest {
 
     @Test
     public void testGetOrganisationFinancesMaterials() throws Exception {
-        Map<CostType, CostCategory> organisationFinances = handler.getOrganisationFinances(applicationFinance.getId());
+        Map<CostType, CostCategory> organisationFinances = handler.getOrganisationFinances(applicationFinance.getId(), competition);
 
         assertEquals("Testing equality for; " + CostType.MATERIALS.getType(), new BigDecimal(500), organisationFinances.get(CostType.MATERIALS).getTotal());
     }
 
     @Test
     public void testGetOrganisationFinancesOtherCosts() throws Exception {
-        Map<CostType, CostCategory> organisationFinances = handler.getOrganisationFinances(applicationFinance.getId());
+        Map<CostType, CostCategory> organisationFinances = handler.getOrganisationFinances(applicationFinance.getId(), competition);
         assertEquals("Testing equality for; "+ CostType.OTHER_COSTS.getType(), new BigDecimal(0), organisationFinances.get(CostType.OTHER_COSTS).getTotal());
     }
 
     @Test
     public void testGetOrganisationFinancesCapitalUsage() throws Exception {
-        Map<CostType, CostCategory> organisationFinances = handler.getOrganisationFinances(applicationFinance.getId());
+        Map<CostType, CostCategory> organisationFinances = handler.getOrganisationFinances(applicationFinance.getId(), competition);
         assertEquals("Testing equality for; "+ CostType.CAPITAL_USAGE.getType(), new BigDecimal(20000).setScale(2), organisationFinances.get(CostType.CAPITAL_USAGE).getTotal().setScale(2));
     }
     @Test
     public void testGetOrganisationFinancesSubcontractingCost() throws Exception {
-        Map<CostType, CostCategory> organisationFinances = handler.getOrganisationFinances(applicationFinance.getId());
+        Map<CostType, CostCategory> organisationFinances = handler.getOrganisationFinances(applicationFinance.getId(), competition);
         assertEquals("Testing equality for; "+ CostType.SUBCONTRACTING_COSTS.getType(), new BigDecimal(11).setScale(2), organisationFinances.get(CostType.SUBCONTRACTING_COSTS).getTotal().setScale(2));
     }
 
     @Test
     public void testGetOrganisationFinancesLabour() throws Exception {
-        Map<CostType, CostCategory> organisationFinances = handler.getOrganisationFinances(applicationFinance.getId());
+        Map<CostType, CostCategory> organisationFinances = handler.getOrganisationFinances(applicationFinance.getId(), competition);
         LabourCostCategory labourCategory = (LabourCostCategory) organisationFinances.get(CostType.LABOUR);
         labourCategory.getWorkingDaysPerYearCostItem().setLabourDays(25);
         labourCategory.calculateTotal();

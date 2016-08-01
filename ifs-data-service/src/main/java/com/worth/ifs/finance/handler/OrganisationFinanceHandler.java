@@ -16,7 +16,7 @@ import java.util.Map;
  */
 public interface OrganisationFinanceHandler {
     Iterable<Cost> initialiseCostType(ApplicationFinance applicationFinance, CostType costType);
-    Map<CostType,CostCategory> getOrganisationFinances(Long applicationFinanceId);
+    Map<CostType,CostCategory> getOrganisationFinances(Long applicationFinanceId, Competition competition);
     Map<CostType,CostCategory> getOrganisationFinanceTotals(Long id, Competition competition);
     Cost costItemToCost(CostItem costItem);
     CostItem costToCostItem(Cost cost);

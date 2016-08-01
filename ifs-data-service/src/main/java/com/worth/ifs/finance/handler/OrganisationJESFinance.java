@@ -1,6 +1,5 @@
 package com.worth.ifs.finance.handler;
 
-import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
@@ -40,16 +39,16 @@ public class OrganisationJESFinance implements OrganisationFinanceHandler {
     }
 
     @Override
-    public Map<CostType, CostCategory> getOrganisationFinances(Long applicationFinanceId) {
+    public Map<CostType, CostCategory> getOrganisationFinances(Long applicationFinanceId, Competition competition) {
         List<Cost> costs = costRepository.findByApplicationFinanceId(applicationFinanceId);
         Map<CostType, CostCategory> costCategories = createCostCategories();
+        costCategories = setGrantClaimPercentage(costCategories, competition);
         return addCostsToCategories(costCategories, costs);
     }
 
     @Override
     public Map<CostType, CostCategory> getOrganisationFinanceTotals(Long applicationFinanceId, Competition competition) {
-    	Map<CostType, CostCategory> costCategories = getOrganisationFinances(applicationFinanceId);
-    	costCategories = setGrantClaimPercentage(costCategories, competition);
+    	Map<CostType, CostCategory> costCategories = getOrganisationFinances(applicationFinanceId, competition);
     	costCategories = calculateTotals(costCategories);
         return resetCosts(costCategories);
     }
