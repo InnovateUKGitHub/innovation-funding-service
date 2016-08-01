@@ -140,7 +140,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         return true;
     }
 
-    private String getInviteUrl(String baseUrl, Invite invite) {
+    private String getInviteUrl(String baseUrl, ApplicationInvite invite) {
         return String.format("%s/accept-invite/%s", baseUrl, invite.getHash());
     }
 
@@ -176,7 +176,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
     @Override
     public ServiceResult<ApplicationInvite> findOne(Long id) {
-        return find(inviteRepository.findOne(id), notFoundError(Invite.class, id));
+        return find(inviteRepository.findOne(id), notFoundError(ApplicationInvite.class, id));
     }
 
     @Override
@@ -284,7 +284,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
                     if(u.isPresent()){
                         return serviceSuccess();
                     }else{
-                        return serviceFailure(CommonErrors.notFoundError(Invite.class, hash));
+                        return serviceFailure(CommonErrors.notFoundError(ApplicationInvite.class, hash));
                     }
                 })
                 .andOnSuccessReturnVoid();

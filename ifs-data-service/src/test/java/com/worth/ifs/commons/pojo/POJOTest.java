@@ -33,7 +33,7 @@ import com.worth.ifs.finance.domain.CostField;
 import com.worth.ifs.finance.domain.CostValue;
 import com.worth.ifs.form.domain.FormInputType;
 import com.worth.ifs.form.domain.FormValidator;
-import com.worth.ifs.invite.domain.Invite;
+import com.worth.ifs.invite.domain.ApplicationInvite;
 import com.worth.ifs.invite.domain.InviteOrganisation;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
 import com.worth.ifs.project.domain.Project;
@@ -66,10 +66,10 @@ public class POJOTest {
             AlertResource.class,
             AssessorFormInputResponse.class,
             AssessorFormInputResponseResource.class,
-            Invite.class,
             Address.class,
             OrganisationType.class,
             Application.class,
+            ApplicationInvite.class,
             ApplicationStatus.class,
             FileEntry.class,
             CostField.class,

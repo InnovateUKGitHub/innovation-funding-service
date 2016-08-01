@@ -46,7 +46,7 @@ public class InviteBuilder extends BaseBuilder<ApplicationInvite, InviteBuilder>
 
         // add back-refs to InviteOrganisations
         InviteOrganisation inviteOrganisation = invite.getOwner();
-        if (inviteOrganisation != null && !simpleMap(inviteOrganisation.getInvites(), Invite::getId).contains(invite.getId())) {
+        if (inviteOrganisation != null && !simpleMap(inviteOrganisation.getInvites(), ApplicationInvite::getId).contains(invite.getId())) {
             inviteOrganisation.getInvites().add(invite);
         }
     }

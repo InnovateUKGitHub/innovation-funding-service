@@ -1,7 +1,6 @@
 package com.worth.ifs.invite.security;
 
 import com.worth.ifs.invite.domain.ApplicationInvite;
-import com.worth.ifs.invite.domain.Invite;
 import com.worth.ifs.invite.domain.InviteOrganisation;
 import com.worth.ifs.invite.repository.InviteOrganisationRepository;
 import com.worth.ifs.invite.resource.InviteResource;
@@ -18,7 +17,7 @@ import static com.worth.ifs.security.SecurityRuleUtil.checkProcessRole;
 import static com.worth.ifs.user.resource.UserRoleType.COLLABORATOR;
 
 /**
- * Permission rules for {@link Invite} and {@link InviteResource} for permissioning
+ * Permission rules for {@link ApplicationInvite} and {@link InviteResource} for permissioning
  */
 @Component
 @PermissionRules

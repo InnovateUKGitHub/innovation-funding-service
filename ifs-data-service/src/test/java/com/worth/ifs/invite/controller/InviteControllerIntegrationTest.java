@@ -10,7 +10,6 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.invite.domain.ApplicationInvite;
-import com.worth.ifs.invite.domain.Invite;
 import com.worth.ifs.invite.repository.InviteRepository;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
@@ -132,7 +131,7 @@ public class InviteControllerIntegrationTest extends BaseControllerIntegrationTe
         // Check if the invite is created and we have a hash
         assertEquals(inviteSize + 1, controller.getInvitesByApplication(APPLICATION_ID).getSuccessObject().iterator().next().getInviteResources().size());
 
-        Invite inviteCreated = getCreatedInvite(testEmail, APPLICATION_ID);
+        ApplicationInvite inviteCreated = getCreatedInvite(testEmail, APPLICATION_ID);
         assertNotNull(inviteCreated.getHash());
 
         // Accept the invite with for the user
@@ -164,12 +163,12 @@ public class InviteControllerIntegrationTest extends BaseControllerIntegrationTe
         return newInvites;
     }
 
-    private Invite getCreatedInvite(String userEmail, long applicationId) {
-        Invite inviteMatching = null;
+    private ApplicationInvite getCreatedInvite(String userEmail, long applicationId) {
+        ApplicationInvite inviteMatching = null;
 
         List<ApplicationInvite> invites = inviteRepository.findByApplicationId(applicationId);
         invites.get(0).getHash();
-        for (Invite invite : invites) {
+        for (ApplicationInvite invite : invites) {
             if(invite.getEmail().equals(userEmail)) {
                 inviteMatching = invite;
                 break;

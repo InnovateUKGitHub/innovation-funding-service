@@ -94,7 +94,7 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
         ProcessRole processRole1 = newProcessRole().with(id(1L)).withApplication(application).withUser(leadApplicant).withRole(role1).withOrganisation(leadOrganisation).build();
         application.setProcessRoles(asList(processRole1));
 
-        Invite invite = newInvite().withApplication(application).build();
+        ApplicationInvite invite = newInvite().withApplication(application).build();
         Errors errors = new BeanPropertyBindingResult(invite, invite.getClass().getName());
         localValidatorFactory.validate(invite, errors);
 

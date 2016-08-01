@@ -14,11 +14,12 @@ import javax.persistence.*;
 * The Invite is used for saving invites into the database. Data about the Invitee and related Application and organisation is saved through this entity.
 * */
 @Table(
-    uniqueConstraints= @UniqueConstraint(columnNames={"applicationId", "email"})
+        // Does this constraint still hold?
+    uniqueConstraints= @UniqueConstraint(columnNames={"type", "target_id", "email"})
 )
-//@DiscriminatorColumn(name="type", discriminatorType=DiscriminatorType.STRING)
+@DiscriminatorColumn(name="type", discriminatorType=DiscriminatorType.STRING)
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
-@MappedSuperclass
+@Entity
 public abstract class Invite<O, T> {
     private static final CharSequence HASH_SALT = "b80asdf00poiasd07hn";
 
@@ -30,14 +31,6 @@ public abstract class Invite<O, T> {
     @NotBlank
     @Email
     private  String email; // invitee
-
-//    @ManyToOne
-//    @JoinColumn(name = "applicationId", referencedColumnName = "id")
-//    private Application application;
-
-//    @ManyToOne
-//    @JoinColumn(name = "inviteOrganisationId", referencedColumnName = "id")
-//    private InviteOrganisation inviteOrganisation;
 
     @ManyToOne
     @JoinColumn(name = "email", referencedColumnName = "email", insertable = false, updatable = false)
