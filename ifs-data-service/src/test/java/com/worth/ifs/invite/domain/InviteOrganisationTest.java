@@ -16,7 +16,7 @@ public class InviteOrganisationTest {
 
     String name;
     Organisation organisation;
-    List<Invite> invites;
+    List<ApplicationInvite> invites;
     Long id;
 
     @Before

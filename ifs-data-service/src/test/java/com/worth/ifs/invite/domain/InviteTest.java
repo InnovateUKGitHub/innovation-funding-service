@@ -10,8 +10,8 @@ import static com.worth.ifs.application.builder.ApplicationBuilder.newApplicatio
 import static com.worth.ifs.invite.builder.InviteOrganisationBuilder.newInviteOrganisation;
 
 public class InviteTest {
-    Invite setInvite;
-    Invite constructedInvite;
+    ApplicationInvite setInvite;
+    ApplicationInvite constructedInvite;
     Long inviteId;
     String name;
     String email;
@@ -30,16 +30,16 @@ public class InviteTest {
         inviteOrganisation = newInviteOrganisation().build();
         status = InviteStatusConstants.ACCEPTED;
 
-        setInvite = new Invite();
+        setInvite = new ApplicationInvite();
         setInvite.setId(inviteId);
         setInvite.setName(name);
         setInvite.setEmail(email);
-        setInvite.setApplication(application);
+        setInvite.setTarget(application);
         setInvite.setHash(hash);
-        setInvite.setInviteOrganisation(inviteOrganisation);
+        setInvite.setOwner(inviteOrganisation);
         setInvite.setStatus(status);
 
-        constructedInvite = new Invite(name, email, application, inviteOrganisation, hash, status);
+        constructedInvite = new ApplicationInvite(name, email, application, inviteOrganisation, hash, status);
     }
 
     @Test
@@ -47,9 +47,9 @@ public class InviteTest {
         Assert.assertEquals(inviteId, setInvite.getId());
         Assert.assertEquals(name, setInvite.getName());
         Assert.assertEquals(email, setInvite.getEmail());
-        Assert.assertEquals(application, setInvite.getApplication());
+        Assert.assertEquals(application, setInvite.getTarget());
         Assert.assertEquals(hash, setInvite.getHash());
-        Assert.assertEquals(inviteOrganisation, setInvite.getInviteOrganisation());
+        Assert.assertEquals(inviteOrganisation, setInvite.getOwner());
         Assert.assertEquals(status, setInvite.getStatus());
     }
 
@@ -57,9 +57,9 @@ public class InviteTest {
     public void constructedInviteShouldReturnCorrectAttributes() throws Exception {
         Assert.assertEquals(name, constructedInvite.getName());
         Assert.assertEquals(email, constructedInvite.getEmail());
-        Assert.assertEquals(application, constructedInvite.getApplication());
+        Assert.assertEquals(application, constructedInvite.getTarget());
         Assert.assertEquals(hash, constructedInvite.getHash());
-        Assert.assertEquals(inviteOrganisation, constructedInvite.getInviteOrganisation());
+        Assert.assertEquals(inviteOrganisation, constructedInvite.getOwner());
         Assert.assertEquals(status, constructedInvite.getStatus());
     }
 }

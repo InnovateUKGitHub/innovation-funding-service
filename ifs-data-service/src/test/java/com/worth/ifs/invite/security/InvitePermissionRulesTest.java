@@ -4,7 +4,7 @@ package com.worth.ifs.invite.security;
 import com.worth.ifs.BasePermissionRulesTest;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.invite.domain.Invite;
+import com.worth.ifs.invite.domain.ApplicationInvite;
 import com.worth.ifs.invite.domain.InviteOrganisation;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.user.builder.OrganisationBuilder;
@@ -29,12 +29,12 @@ public class InvitePermissionRulesTest extends BasePermissionRulesTest<InvitePer
 
     private UserResource leadApplicant;
     private UserResource collaborator;
-    private Invite invite;
+    private ApplicationInvite invite;
     private InviteResource inviteResource;
 
     private UserResource otherLeadApplicant;
     private UserResource otherCollaborator;
-    private Invite otherInvite;
+    private ApplicationInvite otherInvite;
 
 
     @Override

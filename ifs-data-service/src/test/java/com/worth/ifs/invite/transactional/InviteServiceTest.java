@@ -2,9 +2,9 @@ package com.worth.ifs.invite.transactional;
 
 import com.worth.ifs.BaseUnitTestMocksTest;
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.commons.service.ServiceFailure;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.invite.domain.ApplicationInvite;
 import com.worth.ifs.invite.domain.Invite;
 import com.worth.ifs.invite.domain.InviteOrganisation;
 import com.worth.ifs.invite.mapper.InviteMapper;
@@ -26,7 +26,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.http.HttpStatus;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
@@ -36,7 +35,6 @@ import java.util.*;
 import static com.worth.ifs.BuilderAmendFunctions.id;
 import static com.worth.ifs.LambdaMatcher.lambdaMatches;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
-import static com.worth.ifs.commons.error.CommonErrors.badRequestError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -77,7 +75,7 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
 
     @Before
     public void setup() {
-        when(inviteRepositoryMock.save(any(Invite.class))).thenReturn(new Invite());
+        when(inviteRepositoryMock.save(any(ApplicationInvite.class))).thenReturn(new ApplicationInvite());
         ServiceResult<Void> result = serviceSuccess();
         when(notificationService.sendNotification(any(), eq(NotificationMedium.EMAIL))).thenReturn(result);
 
@@ -113,7 +111,7 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
         ProcessRole processRole1 = newProcessRole().with(id(1L)).withApplication(application).withUser(leadApplicant).withRole(role1).withOrganisation(leadOrganisation).build();
         application.setProcessRoles(asList(processRole1));
 
-        Invite invite = newInvite().withApplication(application).build();
+        ApplicationInvite invite = newInvite().withApplication(application).build();
         invite.setName("Nico");
         invite.setEmail("email-invalid");
         Errors errors = new BeanPropertyBindingResult(invite, invite.getClass().getName());
@@ -133,11 +131,11 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
         ProcessRole processRole1 = newProcessRole().with(id(1L)).withApplication(application).withUser(leadApplicant).withRole(role1).withOrganisation(leadOrganisation).build();
         application.setProcessRoles(asList(processRole1));
 
-        Invite invite = newInvite().withApplication(application).build();
+        ApplicationInvite invite = newInvite().withApplication(application).build();
         invite.setName("Nico");
         invite.setEmail("nico@test.nl");
         InviteOrganisation inviteOrganisation = new InviteOrganisation("SomeOrg", null, Arrays.asList(invite));
-        invite.setInviteOrganisation(inviteOrganisation);
+        invite.setOwner(inviteOrganisation);
 
         List<ServiceResult<Void>> results = inviteService.inviteCollaborators("http:localhost:189809", Arrays.asList(invite));
         assertEquals(1, results.size());
@@ -153,7 +151,7 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
         ProcessRole processRole1 = newProcessRole().with(id(1L)).withApplication(application).withUser(leadApplicant).withRole(role1).withOrganisation(leadOrganisation).build();
         application.setProcessRoles(asList(processRole1));
 
-        Invite invite = newInvite().withApplication(application).build();
+        ApplicationInvite invite = newInvite().withApplication(application).build();
         invite.setName("Nico");
         invite.setEmail("nicotest.nl");
 
@@ -186,9 +184,9 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
 
         when(inviteOrganisationRepositoryMock.findAll(isA(List.class))).thenReturn(newInviteOrganisation().build(inviteResources.size()));
 
-        List<Invite> savedInvites = newInvite().build(5);
+        List<ApplicationInvite> savedInvites = newInvite().build(5);
 
-        List<Invite> saveInvitesExpectations = argThat(lambdaMatches(invites -> {
+        List<ApplicationInvite> saveInvitesExpectations = argThat(lambdaMatches(invites -> {
             assertEquals(5, invites.size());
             assertEquals("testname", invites.get(0).getName());
             return true;
@@ -275,7 +273,7 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
         ProcessRole leadApplicantProcessRole = newProcessRole().withUser(user).withRole(leadApplicantRole).withOrganisation(organisation).build();
         Application application = newApplication().withCompetition(competition).withProcessRoles(leadApplicantProcessRole).build();
         InviteOrganisation inviteOrganisation = newInviteOrganisation().build();
-        Invite invite = newInvite().withInviteOrganisation(inviteOrganisation).withApplication(application).build();
+        ApplicationInvite invite = newInvite().withInviteOrganisation(inviteOrganisation).withApplication(application).build();
         InviteResource inviteResource = newInviteResource().withOrganisation(1L).withApplication(application.getId()).build();
 
 
@@ -347,7 +345,7 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
 
         ServiceResult<InviteOrganisationResource> organisationInvite = inviteService.getInviteOrganisationByHash("an organisation hash");
         assertTrue(organisationInvite.isFailure());
-        assertTrue(organisationInvite.getFailure().is(notFoundError(Invite.class, "an organisation hash")));
+        assertTrue(organisationInvite.getFailure().is(notFoundError(ApplicationInvite.class, "an organisation hash")));
     }
 
 

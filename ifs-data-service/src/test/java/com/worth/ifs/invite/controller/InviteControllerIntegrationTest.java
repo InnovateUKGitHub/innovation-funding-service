@@ -9,6 +9,7 @@ import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
+import com.worth.ifs.invite.domain.ApplicationInvite;
 import com.worth.ifs.invite.domain.Invite;
 import com.worth.ifs.invite.repository.InviteRepository;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
@@ -166,7 +167,7 @@ public class InviteControllerIntegrationTest extends BaseControllerIntegrationTe
     private Invite getCreatedInvite(String userEmail, long applicationId) {
         Invite inviteMatching = null;
 
-        List<Invite> invites = inviteRepository.findByApplicationId(applicationId);
+        List<ApplicationInvite> invites = inviteRepository.findByApplicationId(applicationId);
         invites.get(0).getHash();
         for (Invite invite : invites) {
             if(invite.getEmail().equals(userEmail)) {

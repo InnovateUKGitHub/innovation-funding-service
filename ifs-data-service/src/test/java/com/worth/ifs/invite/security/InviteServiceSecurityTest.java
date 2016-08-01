@@ -2,6 +2,7 @@ package com.worth.ifs.invite.security;
 
 import com.worth.ifs.BaseServiceSecurityTest;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.invite.domain.ApplicationInvite;
 import com.worth.ifs.invite.domain.Invite;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
@@ -47,16 +48,16 @@ public class InviteServiceSecurityTest extends BaseServiceSecurityTest<InviteSer
     public void testInviteCollaborators() {
         final int nInvites = 2;
         final String baseUrl = "test";
-        final List<Invite> invites = newInvite().build(nInvites);
+        final List<ApplicationInvite> invites = newInvite().build(nInvites);
         service.inviteCollaborators(baseUrl, invites);
-        verify(invitePermissionRules, times(nInvites)).leadApplicantCanInviteToTheApplication(any(Invite.class), any(UserResource.class));
-        verify(invitePermissionRules, times(nInvites)).collaboratorCanInviteToApplicationForTheirOrganisation(any(Invite.class), any(UserResource.class));
+        verify(invitePermissionRules, times(nInvites)).leadApplicantCanInviteToTheApplication(any(ApplicationInvite.class), any(UserResource.class));
+        verify(invitePermissionRules, times(nInvites)).collaboratorCanInviteToApplicationForTheirOrganisation(any(ApplicationInvite.class), any(UserResource.class));
     }
 
     @Test
     public void testInviteCollaboratorToApp() {
         final String baseUrl = "test";
-        final Invite invite = newInvite().build();
+        final ApplicationInvite invite = newInvite().build();
         assertAccessDenied(
                 () -> service.inviteCollaboratorToApplication(baseUrl, invite),
                 () -> {
@@ -82,8 +83,8 @@ public class InviteServiceSecurityTest extends BaseServiceSecurityTest<InviteSer
         assertAccessDenied(
                 () -> service.findOne(inviteId),
                 () -> {
-                    verify(invitePermissionRules).collaboratorCanReadInviteForTheirApplicationForTheirOrganisation(any(Invite.class), any(UserResource.class));
-                    verify(invitePermissionRules).leadApplicantReadInviteToTheApplication(any(Invite.class), any(UserResource.class));
+                    verify(invitePermissionRules).collaboratorCanReadInviteForTheirApplicationForTheirOrganisation(any(ApplicationInvite.class), any(UserResource.class));
+                    verify(invitePermissionRules).leadApplicantReadInviteToTheApplication(any(ApplicationInvite.class), any(UserResource.class));
                 });
     }
 
@@ -115,17 +116,17 @@ public class InviteServiceSecurityTest extends BaseServiceSecurityTest<InviteSer
         static final int ARRAY_SIZE_FOR_POST_FILTER_TESTS = 2;
 
         @Override
-        public List<ServiceResult<Void>> inviteCollaborators(String baseUrl, List<Invite> invites) {
+        public List<ServiceResult<Void>> inviteCollaborators(String baseUrl, List<ApplicationInvite> invites) {
             return new ArrayList<>();
         }
 
         @Override
-        public ServiceResult<Void> inviteCollaboratorToApplication(String baseUrl, Invite invite) {
+        public ServiceResult<Void> inviteCollaboratorToApplication(String baseUrl, ApplicationInvite invite) {
             return null;
         }
 
         @Override
-        public ServiceResult<Invite> findOne(Long id) {
+        public ServiceResult<ApplicationInvite> findOne(Long id) {
             return serviceSuccess(newInvite().build());
         }
 

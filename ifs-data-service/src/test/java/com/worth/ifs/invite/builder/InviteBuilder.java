@@ -3,6 +3,7 @@ package com.worth.ifs.invite.builder;
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.Builder;
 import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.invite.domain.ApplicationInvite;
 import com.worth.ifs.invite.domain.Invite;
 import com.worth.ifs.invite.domain.InviteOrganisation;
 
@@ -13,9 +14,9 @@ import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Collections.emptyList;
 
-public class InviteBuilder extends BaseBuilder<Invite, InviteBuilder> {
+public class InviteBuilder extends BaseBuilder<ApplicationInvite, InviteBuilder> {
 
-    private InviteBuilder(List<BiConsumer<Integer, Invite>> multiActions) {
+    private InviteBuilder(List<BiConsumer<Integer, ApplicationInvite>> multiActions) {
         super(multiActions);
     }
 
@@ -24,7 +25,7 @@ public class InviteBuilder extends BaseBuilder<Invite, InviteBuilder> {
     }
 
     @Override
-    protected InviteBuilder createNewBuilderWithActions(List<BiConsumer<Integer, Invite>> actions) {
+    protected InviteBuilder createNewBuilderWithActions(List<BiConsumer<Integer, ApplicationInvite>> actions) {
         return new InviteBuilder(actions);
     }
 
@@ -33,25 +34,25 @@ public class InviteBuilder extends BaseBuilder<Invite, InviteBuilder> {
     }
 
     public InviteBuilder withApplication(Application... applications) {
-        return withArray((application, invite) -> invite.setApplication(application), applications);
+        return withArray((application, invite) -> invite.setTarget(application), applications);
     }
 
     public InviteBuilder withInviteOrganisation(InviteOrganisation... organisations) {
-        return withArray((organisation, invite) -> invite.setInviteOrganisation(organisation), organisations);
+        return withArray((organisation, invite) -> invite.setOwner(organisation), organisations);
     }
 
     @Override
-    public void postProcess(int index, Invite invite) {
+    public void postProcess(int index, ApplicationInvite invite) {
 
         // add back-refs to InviteOrganisations
-        InviteOrganisation inviteOrganisation = invite.getInviteOrganisation();
+        InviteOrganisation inviteOrganisation = invite.getOwner();
         if (inviteOrganisation != null && !simpleMap(inviteOrganisation.getInvites(), Invite::getId).contains(invite.getId())) {
             inviteOrganisation.getInvites().add(invite);
         }
     }
 
     @Override
-    protected Invite createInitial() {
-        return new Invite();
+    protected ApplicationInvite createInitial() {
+        return new ApplicationInvite();
     }
 }

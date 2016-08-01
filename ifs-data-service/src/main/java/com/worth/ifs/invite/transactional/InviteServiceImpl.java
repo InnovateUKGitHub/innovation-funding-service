@@ -9,6 +9,7 @@ import com.worth.ifs.commons.service.BaseEitherBackedResult;
 import com.worth.ifs.commons.service.ServiceFailure;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
+import com.worth.ifs.invite.domain.ApplicationInvite;
 import com.worth.ifs.invite.domain.Invite;
 import com.worth.ifs.invite.domain.InviteOrganisation;
 import com.worth.ifs.invite.mapper.InviteMapper;
@@ -92,11 +93,11 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     }
 
     @Override
-    public List<ServiceResult<Void>> inviteCollaborators(String baseUrl, List<Invite> invites) {
+    public List<ServiceResult<Void>> inviteCollaborators(String baseUrl, List<ApplicationInvite> invites) {
         return invites.stream().map(invite -> processCollaboratorInvite(baseUrl, invite)).collect(Collectors.toList());
     }
 
-    private ServiceResult<Void> processCollaboratorInvite(String baseUrl, Invite invite) {
+    private ServiceResult<Void> processCollaboratorInvite(String baseUrl, ApplicationInvite invite) {
         Errors errors = new BeanPropertyBindingResult(invite, invite.getClass().getName());
         validator.validate(invite, errors);
 
@@ -128,13 +129,13 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         }
     }
 
-    private boolean handleInviteSuccess(Invite i) {
+    private boolean handleInviteSuccess(ApplicationInvite i) {
         i.setStatus(InviteStatusConstants.SEND);
         inviteRepository.save(i);
         return true;
     }
 
-    private boolean handleInviteError(Invite i, ServiceFailure failure) {
+    private boolean handleInviteError(ApplicationInvite i, ServiceFailure failure) {
         LOG.error(String.format("Invite failed %s , %s (error count: %s)", i.getId(), i.getEmail(), failure.getErrors().size()));
         return true;
     }
@@ -144,37 +145,37 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     }
 
     @Override
-    public ServiceResult<Void> inviteCollaboratorToApplication(String baseUrl, Invite invite) {
+    public ServiceResult<Void> inviteCollaboratorToApplication(String baseUrl, ApplicationInvite invite) {
         NotificationSource from = systemNotificationSource;
         NotificationTarget to = new ExternalUserNotificationTarget(invite.getName(), invite.getEmail());
 
         Map<String, Object> notificationArguments = new HashMap<>();
-        if(StringUtils.isNotEmpty(invite.getApplication().getName())){
-            notificationArguments.put("applicationName", invite.getApplication().getName());
+        if(StringUtils.isNotEmpty(invite.getTarget().getName())){
+            notificationArguments.put("applicationName", invite.getTarget().getName());
         }
-        notificationArguments.put("competitionName", invite.getApplication().getCompetition().getName());
+        notificationArguments.put("competitionName", invite.getTarget().getCompetition().getName());
         notificationArguments.put("inviteUrl", getInviteUrl(baseUrl, invite));
-        if(invite.getInviteOrganisation().getOrganisation() != null){
-            notificationArguments.put("inviteOrganisationName", invite.getInviteOrganisation().getOrganisation().getName());
+        if(invite.getOwner().getOrganisation() != null){
+            notificationArguments.put("inviteOrganisationName", invite.getOwner().getOrganisation().getName());
         }else{
-            notificationArguments.put("inviteOrganisationName", invite.getInviteOrganisation().getOrganisationName());
+            notificationArguments.put("inviteOrganisationName", invite.getOwner().getOrganisationName());
         }
-        notificationArguments.put("leadOrganisation", invite.getApplication().getLeadOrganisation().getName());
-        notificationArguments.put("leadApplicant", invite.getApplication().getLeadApplicant().getName());
+        notificationArguments.put("leadOrganisation", invite.getTarget().getLeadOrganisation().getName());
+        notificationArguments.put("leadApplicant", invite.getTarget().getLeadApplicant().getName());
 
-        if(invite.getApplication().getLeadApplicant().getTitle() != null){
-          notificationArguments.put("leadApplicantTitle", invite.getApplication().getLeadApplicant().getTitle());
+        if(invite.getTarget().getLeadApplicant().getTitle() != null){
+          notificationArguments.put("leadApplicantTitle", invite.getTarget().getLeadApplicant().getTitle());
         } else {
           notificationArguments.put("leadApplicantTitle","");
         }
-        notificationArguments.put("leadApplicantEmail", invite.getApplication().getLeadApplicant().getEmail());
+        notificationArguments.put("leadApplicantEmail", invite.getTarget().getLeadApplicant().getEmail());
 
         Notification notification = new Notification(from, singletonList(to), Notifications.INVITE_COLLABORATOR, notificationArguments);
         return notificationService.sendNotification(notification, EMAIL);
     }
 
     @Override
-    public ServiceResult<Invite> findOne(Long id) {
+    public ServiceResult<ApplicationInvite> findOne(Long id) {
         return find(inviteRepository.findOne(id), notFoundError(Invite.class, id));
     }
 
@@ -193,9 +194,9 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         }
 
         return assembleInviteOrganisationFromResource(inviteOrganisationResource).andOnSuccessReturn(newInviteOrganisation -> {
-            List<Invite> newInvites = assembleInvitesFromInviteOrganisationResource(inviteOrganisationResource, newInviteOrganisation);
+            List<ApplicationInvite> newInvites = assembleInvitesFromInviteOrganisationResource(inviteOrganisationResource, newInviteOrganisation);
             inviteOrganisationRepository.save(newInviteOrganisation);
-            Iterable<Invite> savedInvites = inviteRepository.save(newInvites);
+            Iterable<ApplicationInvite> savedInvites = inviteRepository.save(newInvites);
             InviteResultsResource sentInvites = sendInvites(newArrayList(savedInvites));
             return sentInvites;
         });
@@ -203,7 +204,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
     @Override
     public ServiceResult<InviteOrganisationResource> getInviteOrganisationByHash(String hash) {
-        return getByHash(hash).andOnSuccessReturn(invite -> inviteOrganisationMapper.mapToResource(inviteOrganisationRepository.findOne(invite.getInviteOrganisation().getId())));
+        return getByHash(hash).andOnSuccessReturn(invite -> inviteOrganisationMapper.mapToResource(inviteOrganisationRepository.findOne(invite.getOwner().getId())));
     }
 
     @Override
@@ -211,7 +212,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         Set<InviteOrganisation> inviteOrganisations = new HashSet();
 
         for(InviteOrganisation inviteOrganisation : inviteOrganisationRepository.findByInvitesApplicationId(applicationId)) {
-            List<Invite> invitesFiltered = inviteOrganisation.getInvites().stream().filter(invite -> invite.getApplication().getId().equals(applicationId)).collect(Collectors.toList());
+            List<ApplicationInvite> invitesFiltered = inviteOrganisation.getInvites().stream().filter(invite -> invite.getTarget().getId().equals(applicationId)).collect(Collectors.toList());
             inviteOrganisation.setInvites(invitesFiltered);
             inviteOrganisations.add(inviteOrganisation);
         }
@@ -234,7 +235,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         }
 
 
-        List<Invite> invites = simpleMap(inviteResources, invite -> mapInviteResourceToInvite(invite, null));
+        List<ApplicationInvite> invites = simpleMap(inviteResources, invite -> mapInviteResourceToInvite(invite, null));
         inviteRepository.save(invites);
         return serviceSuccess(sendInvites(invites));
     }
@@ -247,8 +248,8 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
             if(invite.getEmail().equalsIgnoreCase(user.getEmail())){
                 invite.setStatus(InviteStatusConstants.ACCEPTED);
 
-                if(invite.getInviteOrganisation().getOrganisation()==null && !user.getOrganisations().isEmpty()){
-                    invite.getInviteOrganisation().setOrganisation(user.getOrganisations().get(0));
+                if(invite.getOwner().getOrganisation()==null && !user.getOrganisations().isEmpty()){
+                    invite.getOwner().setOrganisation(user.getOrganisations().get(0));
                 }
                 invite = inviteRepository.save(invite);
                 initializeInvitee(invite, user);
@@ -261,10 +262,10 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         });
     }
 
-    private void initializeInvitee(Invite invite, User user) {
-        Application application = invite.getApplication();
+    private void initializeInvitee(ApplicationInvite invite, User user) {
+        Application application = invite.getTarget();
         Role role = roleRepository.findOneByName(COLLABORATOR.getName());
-        Organisation organisation = invite.getInviteOrganisation().getOrganisation();
+        Organisation organisation = invite.getOwner().getOrganisation();
         ProcessRole processRole = new ProcessRole(user, application, role, organisation);
         processRoleRepository.save(processRole);
     }
@@ -289,20 +290,20 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
                 .andOnSuccessReturnVoid();
     }
 
-    protected Supplier<ServiceResult<Invite>> invite(final String hash) {
+    protected Supplier<ServiceResult<ApplicationInvite>> invite(final String hash) {
         return () -> getByHash(hash);
     }
 
-    private ServiceResult<Invite> getByHash(String hash) {
-        return find(inviteRepository.getByHash(hash), notFoundError(Invite.class, hash));
+    private ServiceResult<ApplicationInvite> getByHash(String hash) {
+        return find(inviteRepository.getByHash(hash), notFoundError(ApplicationInvite.class, hash));
     }
 
-    private ServiceResult<List<Invite>> findByApplicationId(Long applicationId) {
+    private ServiceResult<List<ApplicationInvite>> findByApplicationId(Long applicationId) {
         LOG.debug("Invites found by application id: " + applicationId + " are: " + inviteRepository.findByApplicationId(applicationId).stream().count());
         return serviceSuccess(inviteRepository.findByApplicationId(applicationId));
     }
 
-    private InviteResultsResource sendInvites(List<Invite> invites) {
+    private InviteResultsResource sendInvites(List<ApplicationInvite> invites) {
         List<ServiceResult<Void>> results = inviteCollaborators(webBaseUrl, invites);
 
         long failures = results.stream().filter(BaseEitherBackedResult::isFailure).count();
@@ -334,8 +335,8 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         }
     }
 
-    private List<Invite> assembleInvitesFromInviteOrganisationResource(InviteOrganisationResource inviteOrganisationResource, InviteOrganisation newInviteOrganisation) {
-        List<Invite> invites = new ArrayList<>();
+    private List<ApplicationInvite> assembleInvitesFromInviteOrganisationResource(InviteOrganisationResource inviteOrganisationResource, InviteOrganisation newInviteOrganisation) {
+        List<ApplicationInvite> invites = new ArrayList<>();
         inviteOrganisationResource.getInviteResources().forEach(inviteResource ->
                 invites.add(mapInviteResourceToInvite(inviteResource, newInviteOrganisation))
         );
@@ -343,16 +344,16 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         return invites;
     }
 
-    private Invite mapInviteResourceToInvite(InviteResource inviteResource, InviteOrganisation newInviteOrganisation) {
+    private ApplicationInvite mapInviteResourceToInvite(InviteResource inviteResource, InviteOrganisation newInviteOrganisation) {
         Application application = applicationRepository.findOne(inviteResource.getApplication());
         if (newInviteOrganisation == null && inviteResource.getInviteOrganisation() != null) {
             newInviteOrganisation = inviteOrganisationRepository.findOne(inviteResource.getInviteOrganisation());
         }
-        Invite invite = new Invite(inviteResource.getName(), inviteResource.getEmail(), application, newInviteOrganisation, null, InviteStatusConstants.CREATED);
+        ApplicationInvite invite = new ApplicationInvite(inviteResource.getName(), inviteResource.getEmail(), application, newInviteOrganisation, null, InviteStatusConstants.CREATED);
         if(newInviteOrganisation.getOrganisation()!= null){
             List<InviteOrganisation> existingOrgInvite = inviteOrganisationRepository.findByOrganisationId(newInviteOrganisation.getOrganisation().getId());
             if(!existingOrgInvite.isEmpty()){
-                invite.setInviteOrganisation(existingOrgInvite.get(0));
+                invite.setOwner(existingOrgInvite.get(0));
             }
         }
 

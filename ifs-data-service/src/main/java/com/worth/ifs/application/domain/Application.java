@@ -31,6 +31,7 @@ import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputResponse;
+import com.worth.ifs.invite.domain.ApplicationInvite;
 import com.worth.ifs.invite.domain.Invite;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -71,7 +72,7 @@ public class Application {
     private Competition competition;
 
     @OneToMany(mappedBy="application")
-    private List<Invite> invites;
+    private List<ApplicationInvite> invites;
 
     @Enumerated(EnumType.STRING)
     private FundingDecisionStatus fundingDecision;
@@ -201,7 +202,7 @@ public class Application {
     }
 
     @JsonIgnore
-    public List<Invite> getInvites() {
+    public List<ApplicationInvite> getInvites() {
         return this.invites;
     }
 
@@ -210,7 +211,7 @@ public class Application {
         return Objects.equals(applicationStatus.getId(), ApplicationStatusConstants.OPEN.getId());
     }
 
-    public void setInvites(List<Invite> invites) {
+    public void setInvites(List<ApplicationInvite> invites) {
         this.invites = invites;
     }
 

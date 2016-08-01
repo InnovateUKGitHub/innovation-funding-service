@@ -2,6 +2,7 @@ package com.worth.ifs.invite.mapper;
 
 import com.worth.ifs.application.mapper.ApplicationMapper;
 import com.worth.ifs.commons.mapper.BaseMapper;
+import com.worth.ifs.invite.domain.ApplicationInvite;
 import com.worth.ifs.invite.domain.Invite;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.user.mapper.UserMapper;
@@ -17,7 +18,7 @@ import org.mapstruct.Mappings;
         UserMapper.class
     }
 )
-public abstract class InviteMapper extends BaseMapper<Invite, InviteResource, Long> {
+public abstract class InviteMapper extends BaseMapper<ApplicationInvite, InviteResource, Long> {
 
     @Mappings({
             @Mapping(source = "application.competition.name", target = "competitionName"),
@@ -34,7 +35,7 @@ public abstract class InviteMapper extends BaseMapper<Invite, InviteResource, Lo
             @Mapping(source = "user.id", target = "user"),
     })
     @Override
-    public abstract InviteResource mapToResource(Invite domain);
+    public abstract InviteResource mapToResource(ApplicationInvite domain);
 
     public Long mapInviteToId(Invite object) {
         if (object == null) {

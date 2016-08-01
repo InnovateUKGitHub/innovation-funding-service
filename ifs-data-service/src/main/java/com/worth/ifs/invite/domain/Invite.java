@@ -16,26 +16,28 @@ import javax.persistence.*;
 @Table(
     uniqueConstraints= @UniqueConstraint(columnNames={"applicationId", "email"})
 )
-@Entity
-public class Invite {
+//@DiscriminatorColumn(name="type", discriminatorType=DiscriminatorType.STRING)
+@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
+@MappedSuperclass
+public abstract class Invite<O, T> {
     private static final CharSequence HASH_SALT = "b80asdf00poiasd07hn";
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @NotBlank
-    private String name;
+    private  String name;
     @NotBlank
     @Email
-    private String email;
+    private  String email; // invitee
 
-    @ManyToOne
-    @JoinColumn(name = "applicationId", referencedColumnName = "id")
-    private Application application;
+//    @ManyToOne
+//    @JoinColumn(name = "applicationId", referencedColumnName = "id")
+//    private Application application;
 
-    @ManyToOne
-    @JoinColumn(name = "inviteOrganisationId", referencedColumnName = "id")
-    private InviteOrganisation inviteOrganisation;
+//    @ManyToOne
+//    @JoinColumn(name = "inviteOrganisationId", referencedColumnName = "id")
+//    private InviteOrganisation inviteOrganisation;
 
     @ManyToOne
     @JoinColumn(name = "email", referencedColumnName = "email", insertable = false, updatable = false)
@@ -50,11 +52,11 @@ public class Invite {
     	// no-arg constructor
     }
 
-    public Invite(String name, String email, Application application, InviteOrganisation inviteOrganisation, String hash, InviteStatusConstants status) {
+    public Invite(final String name, final String email, final String hash, final InviteStatusConstants status) {
         this.name = name;
         this.email = email;
-        this.application = application;
-        this.inviteOrganisation = inviteOrganisation;
+//        this.application = application;
+//        this.inviteOrganisation = inviteOrganisation;
         this.hash = hash;
         this.status = status;
     }
@@ -83,21 +85,21 @@ public class Invite {
         this.email = email;
     }
 
-    public Application getApplication() {
-        return application;
-    }
+//    public Application getApplication() {
+//        return application;
+//    }
 
-    public void setApplication(Application application) {
-        this.application = application;
-    }
+//    public void setApplication(Application application) {
+//        this.application = application;
+//    }
 
-    public InviteOrganisation getInviteOrganisation() {
-        return inviteOrganisation;
-    }
+//    public InviteOrganisation getInviteOrganisation() {
+//        return inviteOrganisation;
+//    }
 
-    public void setInviteOrganisation(InviteOrganisation inviteOrganisation) {
-        this.inviteOrganisation = inviteOrganisation;
-    }
+//    public void setInviteOrganisation(InviteOrganisation inviteOrganisation) {
+//        this.inviteOrganisation = inviteOrganisation;
+//    }
 
     public String getHash() {
         return hash;
@@ -132,4 +134,12 @@ public class Invite {
         }
         return hash;
     }
+
+    public abstract O getOwner(); // 'owner'
+
+    public abstract void setOwner(O inviter);
+
+    public abstract T getTarget(); // the thing we're being invited to
+
+    public abstract void setTarget(T target);
 }

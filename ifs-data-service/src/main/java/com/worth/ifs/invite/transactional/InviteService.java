@@ -1,6 +1,7 @@
 package com.worth.ifs.invite.transactional;
 
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.invite.domain.ApplicationInvite;
 import com.worth.ifs.invite.domain.Invite;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
@@ -18,13 +19,13 @@ import java.util.Set;
 public interface InviteService {
 
     @PreFilter(filterTarget = "invites", value = "hasPermission(filterObject, 'SEND')")
-    List<ServiceResult<Void>> inviteCollaborators(String baseUrl, @P("invites") List<Invite> invites);
+    List<ServiceResult<Void>> inviteCollaborators(String baseUrl, @P("invites") List<ApplicationInvite> invites);
 
     @PreAuthorize("hasPermission(#invite, 'SEND')")
-    ServiceResult<Void> inviteCollaboratorToApplication(String baseUrl, @P("invite") Invite invite);
+    ServiceResult<Void> inviteCollaboratorToApplication(String baseUrl, @P("invite") ApplicationInvite invite);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
-    ServiceResult<Invite> findOne(Long id);
+    ServiceResult<ApplicationInvite> findOne(Long id);
 
     @PreAuthorize("hasPermission(#inviteOrganisationResource, 'SEND')")
     ServiceResult<InviteResultsResource> createApplicationInvites(@P("inviteOrganisationResource") final InviteOrganisationResource inviteOrganisationResource);
