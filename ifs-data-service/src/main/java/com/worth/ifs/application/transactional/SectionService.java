@@ -67,6 +67,6 @@ public interface SectionService {
     ServiceResult<SectionResource> getSectionByQuestionId(final Long questionId);
 
     @PostFilter("hasPermission(filterObject, 'READ')")
-    ServiceResult<List<SectionResource>> getByCompetionId(final Long CompetitionId);
+    ServiceResult<List<SectionResource>> getByCompetitionId(final Long CompetitionId);
 
 }

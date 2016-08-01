@@ -362,7 +362,7 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
     }
 
     @Override
-    public ServiceResult<List<SectionResource>> getByCompetionId(final Long competitionId) {
+    public ServiceResult<List<SectionResource>> getByCompetitionId(final Long competitionId) {
         return find(sectionRepository.findByCompetitionIdOrderByParentSectionIdAscPriorityAsc(competitionId), notFoundError(Section.class, competitionId)).
                 andOnSuccessReturn(r -> simpleMap(r, sectionMapper::mapToResource));
     }

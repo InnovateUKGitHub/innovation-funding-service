@@ -607,24 +607,36 @@
         These match the template for the competition type you chose - to change questions you can change the competition type in 'Initial details'
     </div>
 
+    <p>Template: Programme 10 questions</p>
+
+    <h2 class="heading-large">Questions</h2>
+
     <form th:action="@{(${editable} ? '' : 'application/edit')}" method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
 
-        <fieldset th:if="${editable}" id="section-5-edit">
+        <fieldset id="section-5-edit">
 
             <legend class="visuallyhidden">Application questions</legend>
+
+            <ul class="list-overview application-questions">
+
+                <li><h2 class="heading-medium">Application details</h2></li>
+                <li><h2 class="heading-medium">Project summary</h2></li>
+                <li><h2 class="heading-medium">Public description</h2></li>
+                <li><h2 class="heading-medium">Scope</h2></li>
+
+                <th:block th:each="question : ${questions}">
+                    <th:block th:include="fragments/competition-setup :: application-question(question)" />
+                </th:block>
+
+            </ul>
         </fieldset>
 
-
-        <fieldset th:if="${!editable}" id="section-5-">
-
-            <dl class="standard-definition-list">
-
-            </dl>
-
-            <button type="submit" class="button">Edit</button>
-        </fieldset>
-
+        <div class="extra-margin">
+            <button th:if="${editable}" type="submit" class="button">Done</button>
+            <button th:if="${!editable}" type="submit" class="button">Edit</button>
+        </div>
     </form>
+
     <ul class="pagination">
         <li class="prev">
             <a rel="prev" title="Navigate to prev part" th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${competition.id},sectionPath='milestones')}">

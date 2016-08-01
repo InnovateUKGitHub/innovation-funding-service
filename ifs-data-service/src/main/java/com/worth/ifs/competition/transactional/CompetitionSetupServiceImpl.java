@@ -252,7 +252,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 	private List<Question> createQuestions(Competition competition, Section section, List<QuestionTemplate> questions) {
 		return questions.stream().map(createQuestion(competition, section)).collect(Collectors.toList());
 	}
-
+x
 	private Function<QuestionTemplate, Question> createQuestion(Competition competition, Section section) {
 		return (QuestionTemplate questionTemplate) -> {
 			Question question = new Question();
