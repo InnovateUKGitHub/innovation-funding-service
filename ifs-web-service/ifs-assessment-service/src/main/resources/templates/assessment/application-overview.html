@@ -25,8 +25,35 @@
         <p class="form-hint" th:text="${section.assessorGuidanceDescription}" />
         <ul th:with="currentUser=${#authentication.getDetails()}" class="list-overview">
             <div th:if="${subSections.get(section.id).size() ==0}" th:remove="tag">
-                <div th:replace="single-section-details :: sectionDetails (section=${section}, sectionQuestions=${sectionQuestions}, assessmentId=${assessmentId}, questionFeedback=${questionFeedback})"></div>
+                <ul th:with="section=${section}, sectionQuestions=${sectionQuestions}, assessmentId=${assessmentId}, questionFeedback=${questionFeedback}" th:remove="tag">
+                    <div th:each="question : ${sectionQuestions.get(section.id)}" th:remove="tag">
+                        <li th:with="currentRow=${questionFeedback?.get(question.id)}" class="grid-row section" th:id="'form-input-'+${question.getId()}">
+                            <div class="column-two-thirds">
+                                <h3 class="heading-small">
+                                    <a th:href="@{/{assessmentId}/question/{questionId}(assessmentId=${assessmentId},questionId=${question.id})}"
+                                       th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.shortName}" />
+                                </h3>
+                            </div>
+                            <div class="column-third">
+                                <span th:unless="${currentRow == null or section.name == 'Project details'}" th:remove="tag">
+                                    <span th:if="${currentRow.assessedScore != null}" th:remove="tag">
+                                        <div class="score"> Score <div th:text="${currentRow.assessedScore}" th:remove="tag" /> / <div th:text="${currentRow.maximumScore}" th:remove="tag" /></div>
+                                    </span>
+                                    <img class="section-status" th:if="${currentRow.hasBeenCompleted}" th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-done-right.png')}" width="30" height="30" th:alt="'The &quot;'+${question.shortName}+'&quot; section has been assessed'" />
+                                </span>
+                                <span th:if="${section.name == 'Project details'}" th:remove="tag">
+                                    <p th:unless="${currentRow.hasInput}" class="form-hint">No score required</p>
+                                    <span th:if="${currentRow.hasScope}" th:remove="tag">
+                                        <div class="score"> In scope? <strong th:text="${currentRow.scopeResponse}" /></div>
+                                        <img class="section-status" th:if="${currentRow.hasBeenCompleted}" th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-done-right.png')}" width="30" height="30" th:alt="'The &quot;'+${question.shortName}+'&quot; section has been assessed'" />
+                                    </span>
+                                </span>
+                            </div>
+                        </li>
+                    </div>
+                </ul>
             </div>
+
             <!--/* finances overview */-->
             <div th:unless="${subSections.get(section.id).size() ==0 }" th:each="childSection : ${subSections.get(section.id)}" th:remove="tag">
                 <li class="grid-row section" th:if="${childSection.name == 'Finances overview'}">
