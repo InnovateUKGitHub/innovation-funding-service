@@ -2,7 +2,6 @@ package com.worth.ifs.bankdetails.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
-import com.worth.ifs.user.resource.OrganisationTypeResource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotBlank;
@@ -31,11 +30,21 @@ public class BankDetailsResource {
     @NotNull(message = "Organisation id is mandatory")
     private Long organisation;
 
-    private OrganisationTypeResource organisationType;
+    private String organisationTypeName;
 
     private String companyName;
 
     private String registrationNumber;
+
+    private short companyNameScore;
+
+    private boolean registrationNumberMatched;
+
+    private short addressScore;
+
+    private boolean manualApproval;
+
+    private boolean verified;
 
     public Long getId() {
         return id;
@@ -85,14 +94,6 @@ public class BankDetailsResource {
         this.organisation = organisation;
     }
 
-    public OrganisationTypeResource getOrganisationType() {
-        return organisationType;
-    }
-
-    public void setOrganisationType(OrganisationTypeResource organisationType) {
-        this.organisationType = organisationType;
-    }
-
     public String getCompanyName() {
         return companyName;
     }
@@ -111,7 +112,57 @@ public class BankDetailsResource {
 
     @JsonIgnore
     public boolean isApproved(){
-        return true;
+        // Note that this criteria is temporary and will be adusted when we decide on thresholds.
+        // It will likely be moved into a property file so it can be adjusted without code change.
+        return manualApproval || (verified && registrationNumberMatched && companyNameScore > 6 && addressScore > 6);
+    }
+
+    public String getOrganisationTypeName() {
+        return organisationTypeName;
+    }
+
+    public void setOrganisationTypeName(String organisationTypeName) {
+        this.organisationTypeName = organisationTypeName;
+    }
+
+    public short getCompanyNameScore() {
+        return companyNameScore;
+    }
+
+    public void setCompanyNameScore(short companyNameScore) {
+        this.companyNameScore = companyNameScore;
+    }
+
+    public boolean getRegistrationNumberMatched() {
+        return registrationNumberMatched;
+    }
+
+    public void setRegistrationNumberMatched(boolean registrationNumberMatched) {
+        this.registrationNumberMatched = registrationNumberMatched;
+    }
+
+    public short getAddressScore() {
+        return addressScore;
+    }
+
+    public void setAddressScore(short addressScore) {
+        this.addressScore = addressScore;
+    }
+
+    public boolean isManualApproval() {
+        return manualApproval;
+    }
+
+    public void setManualApproval(boolean manualApproval) {
+        this.manualApproval = manualApproval;
+    }
+
+    public boolean isVerified() {
+        return verified;
+    }
+
+    public void setVerified(boolean verified) {
+        this.verified = verified;
     }
 
     @Override
@@ -123,13 +174,18 @@ public class BankDetailsResource {
         BankDetailsResource that = (BankDetailsResource) o;
 
         return new EqualsBuilder()
+                .append(companyNameScore, that.companyNameScore)
+                .append(registrationNumberMatched, that.registrationNumberMatched)
+                .append(addressScore, that.addressScore)
+                .append(manualApproval, that.manualApproval)
+                .append(verified, that.verified)
                 .append(id, that.id)
                 .append(sortCode, that.sortCode)
                 .append(accountNumber, that.accountNumber)
                 .append(project, that.project)
                 .append(organisationAddress, that.organisationAddress)
                 .append(organisation, that.organisation)
-                .append(organisationType, that.organisationType)
+                .append(organisationTypeName, that.organisationTypeName)
                 .append(companyName, that.companyName)
                 .append(registrationNumber, that.registrationNumber)
                 .isEquals();
@@ -144,9 +200,14 @@ public class BankDetailsResource {
                 .append(project)
                 .append(organisationAddress)
                 .append(organisation)
-                .append(organisationType)
+                .append(organisationTypeName)
                 .append(companyName)
                 .append(registrationNumber)
+                .append(companyNameScore)
+                .append(registrationNumberMatched)
+                .append(addressScore)
+                .append(manualApproval)
+                .append(verified)
                 .toHashCode();
     }
 }

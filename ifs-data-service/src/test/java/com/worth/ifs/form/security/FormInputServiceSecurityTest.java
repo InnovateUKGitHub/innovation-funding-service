@@ -3,10 +3,7 @@ package com.worth.ifs.form.security;
 import com.worth.ifs.BaseServiceSecurityTest;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.form.domain.FormInputResponse;
-import com.worth.ifs.form.resource.FormInputResource;
-import com.worth.ifs.form.resource.FormInputResponseCommand;
-import com.worth.ifs.form.resource.FormInputResponseResource;
-import com.worth.ifs.form.resource.FormInputTypeResource;
+import com.worth.ifs.form.resource.*;
 import com.worth.ifs.form.transactional.FormInputService;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -93,7 +90,17 @@ public class FormInputServiceSecurityTest extends BaseServiceSecurityTest<FormIn
         }
 
         @Override
+        public ServiceResult<List<FormInputResource>> findByQuestionIdAndScope(Long questionId, FormInputScope scope) {
+            return null;
+        }
+
+        @Override
         public ServiceResult<List<FormInputResource>> findByCompetitionId(Long competitionId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<List<FormInputResource>> findByCompetitionIdAndScope(Long competitionId, FormInputScope scope) {
             return null;
         }
 

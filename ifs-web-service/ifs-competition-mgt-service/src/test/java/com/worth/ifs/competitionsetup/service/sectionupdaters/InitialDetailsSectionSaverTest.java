@@ -1,20 +1,19 @@
 package com.worth.ifs.competitionsetup.service.sectionupdaters;
 
-import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.verify;
-
-import java.time.LocalDateTime;
-
+import com.worth.ifs.application.service.CompetitionService;
+import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competitionsetup.form.InitialDetailsForm;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.worth.ifs.application.service.CompetitionService;
-import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competitionsetup.form.InitialDetailsForm;
+import java.time.LocalDateTime;
+
+import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class InitialDetailsSectionSaverTest {
@@ -29,14 +28,12 @@ public class InitialDetailsSectionSaverTest {
 	public void testSaveCompetitionSetupSection() {
 		InitialDetailsForm competitionSetupForm = new InitialDetailsForm();
 		competitionSetupForm.setTitle("title");
-		competitionSetupForm.setBudgetCode("budgetCode");
 		competitionSetupForm.setExecutiveUserId(1L);
 		competitionSetupForm.setOpeningDateDay(1);
 		competitionSetupForm.setOpeningDateMonth(12);
 		competitionSetupForm.setOpeningDateYear(2000);
 		competitionSetupForm.setCompetitionTypeId(2L);
 		competitionSetupForm.setLeadTechnologistUserId(3L);
-		competitionSetupForm.setPafNumber("paf");
 		competitionSetupForm.setInnovationAreaCategoryId(4L);
 		competitionSetupForm.setInnovationSectorCategoryId(5L);
 		
@@ -46,17 +43,14 @@ public class InitialDetailsSectionSaverTest {
 		service.saveSection(competition, competitionSetupForm);
 		
 		assertEquals("title", competition.getName());
-		assertEquals("budgetCode", competition.getBudgetCode());
 		assertEquals(Long.valueOf(1L), competition.getExecutive());
 		assertEquals(LocalDateTime.of(2000, 12, 1, 0, 0), competition.getStartDate());
 		assertEquals(Long.valueOf(2L), competition.getCompetitionType());
 		assertEquals(Long.valueOf(3L), competition.getLeadTechnologist());
-		assertEquals("paf", competition.getPafCode());
 		assertEquals(Long.valueOf(4L), competition.getInnovationArea());
 		assertEquals(Long.valueOf(5L), competition.getInnovationSector());
 
 		verify(competitionService).update(competition);
-		
-		assertEquals("compcode", competitionSetupForm.getCompetitionCode());
+
 	}
 }

@@ -1,10 +1,21 @@
 package com.worth.ifs.assessment.viewmodel;
 
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.file.controller.viewmodel.FileDetailsViewModel;
+import com.worth.ifs.form.resource.FormInputResource;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
+import static java.lang.Integer.max;
 import static java.lang.String.format;
+import static java.util.Optional.ofNullable;
 import static org.apache.commons.lang3.StringUtils.lowerCase;
 
 /**
@@ -12,31 +23,28 @@ import static org.apache.commons.lang3.StringUtils.lowerCase;
  */
 public class AssessmentFeedbackViewModel {
 
-    private final long daysLeft;
-    private final long daysLeftPercentage;
-    private final CompetitionResource competition;
-    private final ApplicationResource application;
-    private final Long questionId;
-    private final String questionNumber;
-    private final String questionShortName;
-    private final String questionName;
-    private final String questionResponse;
-    private final boolean requireScore;
-    private final boolean requireFeedback;
-    private final boolean requireCategory;
-    private final boolean requireScopeConfirmation;
-    private final String assessorGuidanceQuestion;
-    private final String assessorGuidanceAnswer;
-    private final Integer feedbackWordsLimit;
-    private final Integer feedbackWordsRemaining;
-    private final boolean appendixExists;
-    private final FileDetailsViewModel appendixDetails;
+    private long daysLeft;
+    private long daysLeftPercentage;
+    private CompetitionResource competition;
+    private ApplicationResource application;
+    private Long questionId;
+    private String questionNumber;
+    private String questionShortName;
+    private String questionName;
+    private Integer maximumScore;
+    private String applicantResponse;
+    private List<FormInputResource> assessmentFormInputs;
+    private Map<Long, AssessorFormInputResponseResource> assessorResponses;
+    private boolean scoreFormInputExists;
+    private boolean scopeFormInputExists;
+    private boolean appendixExists;
+    private FileDetailsViewModel appendixDetails;
 
-    public AssessmentFeedbackViewModel(long daysLeft, long daysLeftPercentage, CompetitionResource competition, ApplicationResource application, Long questionId, String questionNumber, String questionShortName, String questionName, String questionResponse, boolean requireScore, boolean requireFeedback, boolean requireCategory, boolean requireScopeConfirmation, String assessorGuidanceQuestion, String assessorGuidanceAnswer, Integer feedbackWordsLimit, Integer feedbackWordsRemaining) {
-        this(daysLeft, daysLeftPercentage, competition, application, questionId, questionNumber, questionShortName, questionName, questionResponse, requireScore, requireFeedback, requireCategory, requireScopeConfirmation, assessorGuidanceQuestion, assessorGuidanceAnswer, feedbackWordsLimit, feedbackWordsRemaining, false, null);
+    public AssessmentFeedbackViewModel(long daysLeft, long daysLeftPercentage, CompetitionResource competition, ApplicationResource application, Long questionId, String questionNumber, String questionShortName, String questionName, Integer maximumScore, String applicantResponse, List<FormInputResource> assessmentFormInputs, Map<Long, AssessorFormInputResponseResource> assessorResponses, boolean scoreFormInputExists, boolean scopeFormInputExists) {
+        this(daysLeft, daysLeftPercentage, competition, application, questionId, questionNumber, questionShortName, questionName, maximumScore, applicantResponse, assessmentFormInputs, assessorResponses, scoreFormInputExists, scopeFormInputExists, false, null);
     }
 
-    public AssessmentFeedbackViewModel(long daysLeft, long daysLeftPercentage, CompetitionResource competition, ApplicationResource application, Long questionId, String questionNumber, String questionShortName, String questionName, String questionResponse, boolean requireScore, boolean requireFeedback, boolean requireCategory, boolean requireScopeConfirmation, String assessorGuidanceQuestion, String assessorGuidanceAnswer, Integer feedbackWordsLimit, Integer feedbackWordsRemaining, boolean appendixExists, FileDetailsViewModel appendixDetails) {
+    public AssessmentFeedbackViewModel(long daysLeft, long daysLeftPercentage, CompetitionResource competition, ApplicationResource application, Long questionId, String questionNumber, String questionShortName, String questionName, Integer maximumScore, String applicantResponse, List<FormInputResource> assessmentFormInputs, Map<Long, AssessorFormInputResponseResource> assessorResponses, boolean scoreFormInputExists, boolean scopeFormInputExists, boolean appendixExists, FileDetailsViewModel appendixDetails) {
         this.daysLeft = daysLeft;
         this.daysLeftPercentage = daysLeftPercentage;
         this.competition = competition;
@@ -45,15 +53,12 @@ public class AssessmentFeedbackViewModel {
         this.questionNumber = questionNumber;
         this.questionShortName = questionShortName;
         this.questionName = questionName;
-        this.questionResponse = questionResponse;
-        this.requireScore = requireScore;
-        this.requireFeedback = requireFeedback;
-        this.requireCategory = requireCategory;
-        this.requireScopeConfirmation = requireScopeConfirmation;
-        this.assessorGuidanceQuestion = assessorGuidanceQuestion;
-        this.assessorGuidanceAnswer = assessorGuidanceAnswer;
-        this.feedbackWordsLimit = feedbackWordsLimit;
-        this.feedbackWordsRemaining = feedbackWordsRemaining;
+        this.maximumScore = maximumScore;
+        this.applicantResponse = applicantResponse;
+        this.assessmentFormInputs = assessmentFormInputs;
+        this.assessorResponses = assessorResponses;
+        this.scoreFormInputExists = scoreFormInputExists;
+        this.scopeFormInputExists = scopeFormInputExists;
         this.appendixExists = appendixExists;
         this.appendixDetails = appendixDetails;
     }
@@ -90,40 +95,28 @@ public class AssessmentFeedbackViewModel {
         return questionName;
     }
 
-    public String getQuestionResponse() {
-        return questionResponse;
+    public Integer getMaximumScore() {
+        return maximumScore;
     }
 
-    public boolean isRequireScore() {
-        return requireScore;
+    public String getApplicantResponse() {
+        return applicantResponse;
     }
 
-    public boolean isRequireFeedback() {
-        return requireFeedback;
+    public List<FormInputResource> getAssessmentFormInputs() {
+        return assessmentFormInputs;
     }
 
-    public boolean isRequireCategory() {
-        return requireCategory;
+    public Map<Long, AssessorFormInputResponseResource> getAssessorResponses() {
+        return assessorResponses;
     }
 
-    public boolean isRequireScopeConfirmation() {
-        return requireScopeConfirmation;
+    public boolean isScoreFormInputExists() {
+        return scoreFormInputExists;
     }
 
-    public String getAssessorGuidanceQuestion() {
-        return assessorGuidanceQuestion;
-    }
-
-    public String getAssessorGuidanceAnswer() {
-        return assessorGuidanceAnswer;
-    }
-
-    public Integer getFeedbackWordsLimit() {
-        return feedbackWordsLimit;
-    }
-
-    public Integer getFeedbackWordsRemaining() {
-        return feedbackWordsRemaining;
+    public boolean isScopeFormInputExists() {
+        return scopeFormInputExists;
     }
 
     public boolean isAppendixExists() {
@@ -136,5 +129,29 @@ public class AssessmentFeedbackViewModel {
 
     public String getAppendixFileDescription() {
         return format("View %s appendix", lowerCase(getQuestionShortName()));
+    }
+
+    public Integer getWordsRemaining(Long formInputId) {
+        Optional<FormInputResource> formInput = simpleFindFirst(assessmentFormInputs, assessmentFormInput -> formInputId.equals(assessmentFormInput.getId()));
+        Optional<AssessorFormInputResponseResource> response = ofNullable(assessorResponses.get(formInputId));
+
+        if (!(formInput.isPresent() && response.isPresent())) {
+            return null;
+        }
+
+        Integer maxWordCount = formInput.get().getWordCount();
+        String value = response.get().getValue();
+        if (maxWordCount == null || value == null) {
+            return null;
+        }
+
+        // clean any HTML markup from the value
+        Document doc = Jsoup.parse(value);
+        String cleaned = doc.text();
+
+        int valueLength = cleaned.split("\\s+").length;
+        int wordsRemaining = maxWordCount - valueLength;
+
+        return max(0, wordsRemaining);
     }
 }

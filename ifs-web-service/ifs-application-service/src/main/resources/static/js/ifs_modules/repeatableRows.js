@@ -14,7 +14,13 @@ IFS.application.repeatableRows = (function() {
               IFS.application.repeatableRows.backForwardCacheInvalidate();
               IFS.application.repeatableRows.removeRow(this,e);
             });
+
+            jQuery('body').on('persistUnsavedRow',function(event,name,newFieldId){
+              IFS.application.repeatableRows.persistUnsavedRow(name,newFieldId);
+            });
+
         },
+
         getAjaxUrl : function(el){
             var url = '';
             if(typeof(jQuery(el).val()) !== 'undefined' && typeof(jQuery(el).attr('name')) !== 'undefined' && jQuery("#application_id").length == 1){
@@ -74,6 +80,26 @@ IFS.application.repeatableRows = (function() {
           // change the input value so that we can detect
           // if the page is reloaded from cache later
           jQuery('#cacheTest').val("cached");
+        },
+        persistUnsavedRow : function(name,newFieldId){
+            //transforms unpersisted rows to persisted rows by updating the name attribute
+            var nameDashSplit = name.split('-');
+            var unsavedCostId = nameDashSplit.length > 2 ? nameDashSplit[3] : null;
+            var fieldsForUnsavedCost = jQuery('[data-repeatable-row] [name*="' + unsavedCostId + '"]');
+
+            fieldsForUnsavedCost.each(function(){
+              var thisFieldNameSplit = jQuery(this).attr('name').split('-');
+              jQuery(this).attr('name', thisFieldNameSplit[0] + '-' + thisFieldNameSplit[1] + '-' + thisFieldNameSplit[2] + '-' + newFieldId);
+            });
+            //add the button
+            var row = jQuery('[data-repeatable-row="'+unsavedCostId+'"]');
+            var button = row.find('.buttonplaceholder');
+        		if(button.length) {
+          			var buttonHtml = '<button type="submit" name="remove_cost" class="buttonlink js-remove-row" value="' + newFieldId + '">Remove</button>';
+          			row.find('.buttonplaceholder').replaceWith(buttonHtml);
+                //set the repeatable row id for referencing the removal, leave the original id as that is used for the promise
+                row.attr('data-repeatable-row', newFieldId);
+            }
         }
     };
 })();

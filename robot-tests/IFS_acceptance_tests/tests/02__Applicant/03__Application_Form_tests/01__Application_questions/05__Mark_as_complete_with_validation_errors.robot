@@ -16,6 +16,7 @@ Resource          ../../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
 Mark as complete is impossible for empty questions
     [Documentation]    -INFUND-406
     [Tags]    HappyPath     Pending
+    # Pending due to INFUND-4094
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Robot test application
     And the user clicks the button/link    link=Project summary
@@ -27,6 +28,7 @@ Mark as complete is impossible for empty questions
 Error should not be visible when the text area is not empty
     [Documentation]    -INFUND-406
     [Tags]    HappyPath     Pending
+    # Pending due to INFUND-4094
     When the "Project Summary" question is empty
     And the applicant inserts some text again in the "Project Summary" question
     Then applicant should be able to mark the question as complete

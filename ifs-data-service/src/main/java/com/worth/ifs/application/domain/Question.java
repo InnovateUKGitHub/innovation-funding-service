@@ -5,24 +5,25 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.worth.ifs.application.resource.QuestionType;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.form.domain.FormInput;
-
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Question defines database relations and a model to use client side and server side.
@@ -38,11 +39,6 @@ public class Question {
     @Column(length = 5000)
     private String description;
 
-    private String assessorGuidanceQuestion;
-
-    @Lob
-    private String assessorGuidanceAnswer;
-
     private Boolean markAsCompletedEnabled = false;
 
     private Boolean assignEnabled = true;
@@ -51,16 +47,7 @@ public class Question {
 
     private Integer priority;
 
-    @Column(nullable = false)
-    private boolean needingAssessorScore = false;
-
-    @Column(nullable = false)
-    private boolean needingAssessorFeedback = false;
-
-    @OneToMany
-    @JoinTable(name = "question_form_input",
-            joinColumns = {@JoinColumn(name = "question_id", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "form_input_id", referencedColumnName = "id")})
+    @OneToMany(mappedBy = "question")
     @OrderColumn(name = "priority", nullable = false)
     private List<FormInput> formInputs = new ArrayList<>();
 
@@ -79,6 +66,12 @@ public class Question {
     private List<Cost> costs;
 
     private String questionNumber;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(name="question_type")
+    private QuestionType type = QuestionType.GENERAL;
+
+    private Integer assessorMaximumScore;
 
     public Question() {
         //default constructor
@@ -106,22 +99,6 @@ public class Question {
 
     public String getDescription() {
         return description;
-    }
-
-    public String getAssessorGuidanceQuestion() {
-        return assessorGuidanceQuestion;
-    }
-
-    public void setAssessorGuidanceQuestion(String assessorGuidanceQuestion) {
-        this.assessorGuidanceQuestion = assessorGuidanceQuestion;
-    }
-
-    public String getAssessorGuidanceAnswer() {
-        return assessorGuidanceAnswer;
-    }
-
-    public void setAssessorGuidanceAnswer(String assessorGuidanceAnswer) {
-        this.assessorGuidanceAnswer = assessorGuidanceAnswer;
     }
 
     public List<QuestionStatus> getQuestionStatuses() {
@@ -188,13 +165,6 @@ public class Question {
         return this.assignEnabled;
     }
 
-    public boolean isNeedingAssessorScore() {
-        return this.needingAssessorScore;
-    }
-
-    public boolean isNeedingAssessorFeedback() {
-        return this.needingAssessorFeedback;
-    }
 
     public void setId(Long id) {
         this.id = id;
@@ -224,14 +194,6 @@ public class Question {
         this.priority = priority;
     }
 
-    public void setNeedingAssessorScore(boolean needingAssessorScore) {
-        this.needingAssessorScore = needingAssessorScore;
-    }
-
-    public void setNeedingAssessorFeedback(boolean needingAssessorFeedback) {
-        this.needingAssessorFeedback = needingAssessorFeedback;
-    }
-
     public void setFormInputs(List<FormInput> formInputs) {
         this.formInputs = formInputs;
     }
@@ -242,6 +204,26 @@ public class Question {
 
     public void setQuestionNumber(String questionNumber) {
         this.questionNumber = questionNumber;
+    }
+
+    public Integer getAssessorMaximumScore() {
+        return assessorMaximumScore;
+    }
+
+    public void setAssessorMaximumScore(Integer assessorMaximumScore) {
+        this.assessorMaximumScore = assessorMaximumScore;
+    }
+    
+    public QuestionType getType() {
+		return type;
+	}
+    
+    public void setType(QuestionType type) {
+		this.type = type;
+	}
+    
+    public boolean isType(QuestionType queriedType) {
+    	return queriedType.equals(type);
     }
 
     @Override
@@ -257,14 +239,10 @@ public class Question {
         Question question = (Question) o;
 
         return new EqualsBuilder()
-                .append(needingAssessorScore, question.needingAssessorScore)
-                .append(needingAssessorFeedback, question.needingAssessorFeedback)
                 .append(id, question.id)
                 .append(name, question.name)
                 .append(shortName, question.shortName)
                 .append(description, question.description)
-                .append(assessorGuidanceQuestion, question.assessorGuidanceQuestion)
-                .append(assessorGuidanceAnswer, question.assessorGuidanceAnswer)
                 .append(markAsCompletedEnabled, question.markAsCompletedEnabled)
                 .append(assignEnabled, question.assignEnabled)
                 .append(multipleStatuses, question.multipleStatuses)
@@ -275,6 +253,7 @@ public class Question {
                 .append(questionStatuses, question.questionStatuses)
                 .append(costs, question.costs)
                 .append(questionNumber, question.questionNumber)
+                .append(assessorMaximumScore, question.assessorMaximumScore)
                 .isEquals();
     }
 
@@ -285,20 +264,17 @@ public class Question {
                 .append(name)
                 .append(shortName)
                 .append(description)
-                .append(assessorGuidanceQuestion)
-                .append(assessorGuidanceAnswer)
                 .append(markAsCompletedEnabled)
                 .append(assignEnabled)
                 .append(multipleStatuses)
                 .append(priority)
-                .append(needingAssessorScore)
-                .append(needingAssessorFeedback)
                 .append(formInputs)
                 .append(competition)
                 .append(section)
                 .append(questionStatuses)
                 .append(costs)
                 .append(questionNumber)
+                .append(assessorMaximumScore)
                 .toHashCode();
     }
 }

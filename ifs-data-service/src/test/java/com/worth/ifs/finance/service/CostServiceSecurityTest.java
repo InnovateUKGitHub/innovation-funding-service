@@ -118,6 +118,7 @@ public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService
                 () -> {
                     verify(applicationRules).compAdminCanSeeApplicationFinancesTotals(isA(ApplicationResource.class), isA(UserResource.class));
                     verify(applicationRules).consortiumCanSeeTheApplicationFinanceTotals(isA(ApplicationResource.class), isA(UserResource.class));
+                    verify(applicationRules).assessorCanSeeTheApplicationFinancesTotals(isA(ApplicationResource.class), isA(UserResource.class));
                 });
     }
 
@@ -385,6 +386,11 @@ public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService
         public ServiceResult<ApplicationFinanceResource> addCost(ApplicationFinanceResourceId applicationFinanceResourceId) {
             return null;
         }
+        
+        @Override
+		public ServiceResult<CostItem> addCostWithoutPersisting(Long applicationFinanceId, Long questionId) {
+			return null;
+		}
 
         @Override
         public ServiceResult<ApplicationFinanceResource> getApplicationFinanceById(Long applicationFinanceId) {
@@ -430,6 +436,7 @@ public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService
         public ServiceResult<FileAndContents> getFileContents(@P("applicationFinanceId") long applicationFinance) {
             return null;
         }
+
     }
 }
 

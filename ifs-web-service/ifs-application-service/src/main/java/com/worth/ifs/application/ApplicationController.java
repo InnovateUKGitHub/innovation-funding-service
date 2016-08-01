@@ -251,8 +251,8 @@ public class ApplicationController extends AbstractApplicationController {
     }
 
     private String doAssignQuestionAndReturnSectionFragment(Model model,
-                                                            @PathVariable("applicationId") Long applicationId,
-                                                            @RequestParam("sectionId") Optional<Long> sectionId,
+                                                            Long applicationId,
+                                                            Optional<Long> sectionId,
                                                             HttpServletRequest request,
                                                             HttpServletResponse response,
                                                             ApplicationForm form) {
@@ -281,7 +281,7 @@ public class ApplicationController extends AbstractApplicationController {
             sectionQuestions.put(currentSection.get().getId(), currentSection.get().getQuestions().stream().map(questionService::getById).collect(Collectors.toList()));
         }
 
-        Map<Long, List<FormInputResource>> questionFormInputs = sectionQuestions.values().stream().flatMap(a -> a.stream()).collect(Collectors.toMap(q -> q.getId(), k -> formInputService.findByQuestion(k.getId())));
+        Map<Long, List<FormInputResource>> questionFormInputs = sectionQuestions.values().stream().flatMap(a -> a.stream()).collect(Collectors.toMap(q -> q.getId(), k -> formInputService.findApplicationInputsByQuestion(k.getId())));
 
         model.addAttribute("questionFormInputs", questionFormInputs);
         model.addAttribute("sectionQuestions", sectionQuestions);

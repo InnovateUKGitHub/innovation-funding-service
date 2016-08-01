@@ -27,7 +27,7 @@
 
 	<th:block th:if="${param.status != null and param.status[0] == 'approved'}">
 		<div class="success-alert">
-			The partner's viability has been approved
+			The partner's viability has been approved by Paul Davidson, 27/07/2016
 		</div>
 	</th:block>
 	
@@ -160,7 +160,7 @@
 		<form>
 			<fieldset class="extra-margin">
 				<legend class="heading-medium" id="change-org-title">Change organisation size</legend>
-				<p class="form-hint">If the Mint report has uncovered that the Business has not self declared correctly please update theri business size. this should only be done after communication with the partner. Increasing the size ofthe Business will reduce theri grant amount.</p>
+				<p class="form-hint">If the credit report shows that the business has not self declared properly, please update their business size. This should only be done after communicating with the lead partner. Increasing their buiness size will reduce their grant amount.</p>
 				<div class="form-block">
 					<label class="block-label" for="orgSizeSmall">
 						<input id="orgSizeSmall" type="radio" name="orgSizeGroup" value="Micro"/>
@@ -240,7 +240,7 @@
 		<dd>No</dd>
 	</dl>
 		
-	<h2 class="heading-medium">Mint details</h2>
+	<h2 class="heading-medium">Credit check</h2>
 
 	<dl class="standard-definition-list">
 		<dt>Date of incorporation</dt>
@@ -266,16 +266,17 @@
 	</dl>
 
 
-	<h2 class="heading-medium">Mint report</h2>
+	<h2 class="heading-medium">Credit report</h2>
 	 <div class="form-group">
     	<label class="block-label" for="costs-reviewed">
 	      <input id="costs-reviewed" value="costs-reviewed" type="checkbox" th:disabled="${param.status != null and param.status[0] == 'approved'}" th:checked="${param.status != null and param.status[0] == 'approved'}" />
-	     	A Mint report has been used in conjunction with the viability information presented here and has been stored in accordance with Innovate UK audit requirements.
+	     	A credit report has been used together with the viability information shown here. This information is stored in accordance with Innovate UK audit requirements.
 	    </label>
     </div>
 
 	<div class="extra-margin">
-    	<a href="#" class="button button-secondary">Queries</a>
+    	<a href="/prototypes/3807-finance-queries" class="button button-secondary">Queries</a>
+    	<a href="/prototypes/3990-finance-notes" class="button button-secondary">Notes</a>
     </div>
 
     <th:block th:unless="${param.status != null and param.status[0] == 'approved'}">
@@ -301,15 +302,26 @@
 
 		        	<h2 class="heading-medium no-margin-top">Confirm viability</h2>
 					
-					<p>TEXT REQUIRED</p>
+					<p>This partner will now be marked as viable for this project, please state the viability RAG rating</p>
 					
-					<hr />
+					<form>
 
-		        	<div class="alignright-button">
-						
-						<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
+						<div class="form-group">
+			                <label for="rag-rating" class="form-label">RAG rating</label>
+			                <select id="rag-rating" name="rag-rating" class="form-control" >
+			                	<option value="">--</option>
+			                	<option value="Green">Green</option>
+			                	<option value="Amber">Amber</option>
+			                	<option value="Red">Red</option>
+			                </select>
+			            </div>
 
-						<form>
+						<hr />
+
+			        	<div class="alignright-button">
+							
+							<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
+
 							<input type="hidden" id="status" name="status" value="approved" />
 
 							<th:block th:if="${param.status != null and param.status[0] == 'orgSizeChanged'}">
@@ -321,10 +333,10 @@
 							</th:block>
 						
 							<button class="button" th:formaction="@{${#httpServletRequest.requestURI}}">Confirm viability</button>
-						</form>
-		        		
-		        	</div>
-
+							
+			        		
+			        	</div>
+					</form>
 		        </div>
 		    </div>
 

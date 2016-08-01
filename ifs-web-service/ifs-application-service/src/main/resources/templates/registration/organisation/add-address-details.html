@@ -17,12 +17,12 @@
 
     <h2 class="heading-medium" th:text="${organisationForm.organisationType.name} + ''">? Organisation</h2>
 
-    <div th:include="create-application/fragments :: organisation-details-minimal" th:remove="tag"/>
+    <div th:include="fragments/addresses :: organisation-details-minimal" th:remove="tag"/>
 
     <form th:action="@{/organisation/create/selected-organisation/{organisationId}/{postcode}/{selectedPostcode}(organisationId=${organisationForm.searchOrganisationId}, postcode=${organisationForm.addressForm.postcodeInput}, selectedPostcode=${organisationForm.addressForm.selectedPostcodeIndex})}" th:object="${organisationForm}" method="POST">
         <input type="hidden" th:field="*{searchOrganisationId}" />
         <h2 class="heading-medium">Address</h2>
-        <div th:include="create-application/fragments :: company-address-details"
+        <div th:include="fragments/addresses :: company-address-details"
              th:with="form=${organisationForm}" th:remove="tag"/>
 
         <button type="submit" name="save-organisation-details" class="button button-large extra-margin">Save organisation and continue</button>

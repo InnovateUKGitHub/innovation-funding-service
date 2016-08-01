@@ -5,6 +5,17 @@ import com.worth.ifs.application.finance.view.FinanceHandler;
 import com.worth.ifs.application.finance.view.FinanceOverviewModelManager;
 import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.form.Form;
+import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.QuestionResource;
+import com.worth.ifs.application.resource.QuestionType;
+import com.worth.ifs.application.resource.QuestionStatusResource;
+import com.worth.ifs.application.resource.SectionResource;
+import com.worth.ifs.application.resource.SectionType;
+import com.worth.ifs.application.service.ApplicationService;
+import com.worth.ifs.application.service.CompetitionService;
+import com.worth.ifs.application.service.OrganisationService;
+import com.worth.ifs.application.service.QuestionService;
+import com.worth.ifs.application.service.SectionService;
 import com.worth.ifs.application.resource.*;
 import com.worth.ifs.application.service.*;
 import com.worth.ifs.commons.rest.RestResult;
@@ -49,43 +60,43 @@ import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
 
     @Autowired
-    FormInputResponseService formInputResponseService;
+    private FormInputResponseService formInputResponseService;
 
     @Autowired
-    QuestionService questionService;
+    private QuestionService questionService;
 
     @Autowired
-    ApplicationService applicationService;
+    private ApplicationService applicationService;
 
     @Autowired
-    SectionService sectionService;
+    private SectionService sectionService;
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @Autowired
-    ProcessRoleService processRoleService;
+    private ProcessRoleService processRoleService;
 
     @Autowired
-    OrganisationService organisationService;
+    private OrganisationService organisationService;
 
     @Autowired
-    OrganisationRestService organisationRestService;
+    private OrganisationRestService organisationRestService;
 
     @Autowired
-    FormInputService formInputService;
+    private FormInputService formInputService;
 
     @Autowired
-    CompetitionService competitionService;
+    private CompetitionService competitionService;
 
     @Autowired
-    InviteRestService inviteRestService;
+    private InviteRestService inviteRestService;
 
     @Autowired
-    FinanceOverviewModelManager financeOverviewModelManager;
+    private FinanceOverviewModelManager financeOverviewModelManager;
 
     @Autowired
-    FinanceHandler financeHandler;
+    private FinanceHandler financeHandler;
 
     @Override
     public void populateModel(final ApplicationForm form, final Model model, final ApplicationResource application, final SectionResource section, final UserResource user, final BindingResult bindingResult, final List<SectionResource> allSections){
@@ -260,7 +271,7 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
 
         List<QuestionResource> questions = questionService.findByCompetition(competition.getId());
 
-        List<FormInputResource> formInputResources = formInputService.findByCompetitionId(competition.getId());
+        List<FormInputResource> formInputResources = formInputService.findApplicationInputsByCompetition(competition.getId());
 
         Map<Long, List<QuestionResource>> sectionQuestions = parentSections.stream()
             .collect(Collectors.toMap(
@@ -348,7 +359,7 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
         questions.sort((QuestionResource q1, QuestionResource q2) -> q1.getPriority().compareTo(q2.getPriority()));
         Map<Long, List<QuestionResource>> sectionQuestions = new HashMap<>();
         sectionQuestions.put(currentSection.getId(), questions);
-        Map<Long, List<FormInputResource>> questionFormInputs = sectionQuestions.values().stream().flatMap(a -> a.stream()).collect(Collectors.toMap(q -> q.getId(), k -> formInputService.findByQuestion(k.getId())));
+        Map<Long, List<FormInputResource>> questionFormInputs = sectionQuestions.values().stream().flatMap(a -> a.stream()).collect(Collectors.toMap(q -> q.getId(), k -> formInputService.findApplicationInputsByQuestion(k.getId())));
 
         model.addAttribute("currentSectionId", currentSection.getId());
         model.addAttribute("currentSection", currentSection);
@@ -381,10 +392,13 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
         boolean hasFinanceSection = !financeSections.isEmpty();
 
         if(hasFinanceSection) {
+        	
+            List<QuestionResource> costsQuestions = questionService.getQuestionsBySectionIdAndType(financeSections.get(0).getId(), QuestionType.COST);
+        	
             financeOverviewModelManager.addFinanceDetails(model, competitionId, applicationId);
             if(!form.isAdminMode()){
                 String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
-                financeHandler.getFinanceModelManager(organisationType).addOrganisationFinanceDetails(model, applicationId, user.getId(), form);
+                financeHandler.getFinanceModelManager(organisationType).addOrganisationFinanceDetails(model, applicationId, costsQuestions, user.getId(), form);
             }
         }
 

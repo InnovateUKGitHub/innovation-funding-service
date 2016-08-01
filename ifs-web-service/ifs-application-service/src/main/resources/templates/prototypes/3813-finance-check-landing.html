@@ -23,12 +23,33 @@
 	
 	<ul>
 		<li>
-			<a href="/prototypes/3985-partner-finances">View finances</a> 
+			<a href="/prototypes/3985-partner-finances" class="heading-medium">View finances</a> 
 		</li>
 		<li>
-			<a href="/prototypes/1585-finances-overview">Project finance overview</a> 
+			<a href="/prototypes/1585-finances-overview" class="heading-medium">Project finance overview</a> 
 		</li>
 	</ul>
+
+	<h2 class="heading-medium">Queries</h2>
+
+	<p>Any queries raised by Innovate UK during these checks will appear here, the most recent queries will appear at the top. All queries should be answered as truthfully as possible, files can be uploaded to support all comments</p>
+
+	<hr />
+
+	<div class="panel-indent">
+		<h2 class="heading-medium no-margin-top">Subcontractor charges</h2>
+        <p><strong>Innovate UK - Finance team </strong> <small th:text="${#dates.format(#dates.createNow(), 'dd MMM yyyy HH:mm')}">26/06/2016 18:23</small></p>
+        <p>Please explain why you are intending to employ the services of a specialist consultant who is based in France? Please provide a breakdown of the work to justify the &pound;150,000</p>
+    </div>
+
+    <form method="get" th:action="${#httpServletRequest.requestURI}" th:unless="${param.action != mull and param.action[0] == 'newResponse' or param.action != mull and param.action[0] == 'postResponse'}">
+        <input type="hidden" id="action" name="action" value="newResponse" />
+        <input type="hidden" id="query" name="query" value="Test query" />
+        <hr />
+        <button class="button button-secondary">Respond</button>
+    </form>
+
+    <th:block th:include="prototypes/fragments/project-setup :: prototype-post-query('query','partner')" th:if="${param.action != null and param.action[0] == 'newResponse' or param.action != null and param.action[0] == 'postResponse'}"/> 
 	
 	
 	<!-- END OFHARDCODED PROTOTYPE HTML -->

@@ -18,13 +18,15 @@ import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.resource.CompetitionSummaryResource;
 import com.worth.ifs.application.resource.PageResource;
-import com.worth.ifs.assessment.domain.AssessmentFeedback;
-import com.worth.ifs.assessment.resource.AssessmentFeedbackResource;
+import com.worth.ifs.assessment.domain.AssessorFormInputResponse;
+import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
 import com.worth.ifs.authentication.resource.CreateUserResource;
 import com.worth.ifs.authentication.resource.UpdateUserResource;
 import com.worth.ifs.bankdetails.domain.BankDetails;
 import com.worth.ifs.bankdetails.resource.BankDetailsResource;
 import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.competition.resource.CompetitionCoFunderResource;
+import com.worth.ifs.competition.resource.CompetitionCountResource;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.CostField;
@@ -62,8 +64,8 @@ public class POJOTest {
     private List<Class<?>> classesToTest = Arrays.asList(
             Alert.class,
             AlertResource.class,
-            AssessmentFeedback.class,
-            AssessmentFeedbackResource.class,
+            AssessorFormInputResponse.class,
+            AssessorFormInputResponseResource.class,
             Invite.class,
             Address.class,
             OrganisationType.class,
@@ -91,7 +93,9 @@ public class POJOTest {
             AddressTypeResource.class,
             BankDetails.class,
             BankDetailsResource.class,
-            MonitoringOfficerResource.class
+            MonitoringOfficerResource.class,
+            CompetitionCoFunderResource.class,
+            CompetitionCountResource.class
     );
 
     @Before
