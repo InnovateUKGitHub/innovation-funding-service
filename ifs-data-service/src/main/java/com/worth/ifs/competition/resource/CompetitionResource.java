@@ -16,6 +16,8 @@ import java.util.stream.Collectors;
 public class CompetitionResource {
     public static final ChronoUnit CLOSING_SOON_CHRONOUNIT = ChronoUnit.HOURS;
     public static final int CLOSING_SOON_AMOUNT = 3;
+    private static final DateTimeFormatter ASSESSMENT_DATE_FORMAT = DateTimeFormatter.ofPattern("dd MMMM YYYY");
+    private static final DateTimeFormatter START_DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/YYYY");
 
     private Long id;
     private List<Long> applications = new ArrayList<>();
@@ -40,6 +42,7 @@ public class CompetitionResource {
     @Max(100)
     private Integer academicGrantPercentage;
     private Long competitionType;
+    private String competitionTypeName;
     private Long executive;
     private Long leadTechnologist;
     private Long innovationSector;
@@ -161,8 +164,17 @@ public class CompetitionResource {
     }
 
     public String assementEndDateDisplay() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM YYYY");
-        return getAssessmentEndDate().format(formatter);
+        if (getAssessmentEndDate() != null) {
+            return getAssessmentEndDate().format(ASSESSMENT_DATE_FORMAT);
+        }
+        return "";
+    }
+
+    public String startDateDisplay() {
+        if (getStartDate() != null) {
+            return getStartDate().format(START_DATE_FORMAT);
+        }
+        return "";
     }
 
     public void setAssessmentEndDate(LocalDateTime assessmentEndDate) {
@@ -327,6 +339,12 @@ public class CompetitionResource {
         this.competitionType = competitionType;
     }
 
+    public String getCompetitionTypeName() {
+        return competitionTypeName;
+    }
+
+    public void setCompetitionTypeName(String competitionTypeName) { this.competitionTypeName = competitionTypeName; }
+
     public Long getInnovationSector() {
         return innovationSector;
     }
@@ -416,7 +434,7 @@ public class CompetitionResource {
     }
 
     public enum Status {
-        COMPETITION_SETUP, COMPETITION_SETUP_FINISHED, NOT_STARTED, OPEN, IN_ASSESSMENT, FUNDERS_PANEL, ASSESSOR_FEEDBACK, PROJECT_SETUP, READY_TO_OPEN
+        COMPETITION_SETUP,COMPETITION_SETUP_FINISHED,NOT_STARTED,OPEN,CLOSED,IN_ASSESSMENT,FUNDERS_PANEL,ASSESSOR_FEEDBACK,PROJECT_SETUP,READY_TO_OPEN
     }
 
     public String getActivityCode() {

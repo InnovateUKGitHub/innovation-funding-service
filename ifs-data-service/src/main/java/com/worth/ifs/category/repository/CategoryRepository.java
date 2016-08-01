@@ -1,12 +1,11 @@
 package com.worth.ifs.category.repository;
 
-import java.util.List;
-import java.util.Set;
-
-import org.springframework.data.repository.CrudRepository;
-
 import com.worth.ifs.category.domain.Category;
 import com.worth.ifs.category.resource.CategoryType;
+import org.springframework.data.repository.CrudRepository;
+
+import java.util.List;
+import java.util.Set;
 
 
 public interface CategoryRepository extends CrudRepository<Category, Long> {

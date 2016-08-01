@@ -242,7 +242,6 @@ the applicant adds one row for the other costs
     focus    css=.app-submit-btn
 
 the user reloads the page
-    #Execute Javascript    jQuery('form').attr('data-test','true');
     Reload page
     sleep    800ms
 

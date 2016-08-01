@@ -30,7 +30,7 @@ Other funding client side
     [Setup]    the user should see the element    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
     When the user enters invalid inputs in the other funding fields    ${EMPTY}    132020    -6565
     Then the user gets the expected validation errors    Invalid secured date    Funding source cannot be blank
-    and the user should see an error    This field should be 1 or higher
+    And the user should see an error    This field should be 1 or higher
 
 Other funding server side
     [Documentation]    INFUND-2214
@@ -51,7 +51,7 @@ Select NO and mark as complete should be possible
     [Documentation]    INFUND-2214    #need to investigate the mark as complete and remove the "Run keyword and ignore error" from the test teardown
     [Tags]
     Given the user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains(No) input
-    And the user marks the finances as complete
+    When the user marks the finances as complete
     Then the user should see the text in the page    Application overview
     And the user should see the text in the page    These are the 10 questions which will be marked by assessors
     [Teardown]    Run keywords    Applicant navigates to the finances of the Robot application
