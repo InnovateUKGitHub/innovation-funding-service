@@ -8,12 +8,14 @@ IFS.core.unsavedChanges = (function(){
         },
         init : function(){
             s = this.settings;
-            IFS.core.unsavedChanges.initUnsavedChangesWarning();
-            IFS.core.unsavedChanges.updateSerializedFormState();
+            if(jQuery(s.formelement).length){
+              IFS.core.unsavedChanges.initUnsavedChangesWarning();
+              IFS.core.unsavedChanges.updateSerializedFormState();
 
-            jQuery('body').on('updateSerializedFormState',function(){
-                IFS.core.unsavedChanges.updateSerializedFormState();
-            });
+              jQuery('body').on('updateSerializedFormState',function(){
+                  IFS.core.unsavedChanges.updateSerializedFormState();
+              });
+            }
         },
         updateSerializedFormState : function(){
             var FormEl = jQuery(s.formelement);
