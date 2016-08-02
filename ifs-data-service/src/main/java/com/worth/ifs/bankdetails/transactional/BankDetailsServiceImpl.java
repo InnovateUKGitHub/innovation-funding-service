@@ -17,6 +17,7 @@ import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.sil.experian.resource.AccountDetails;
 import com.worth.ifs.sil.experian.resource.Condition;
+import com.worth.ifs.sil.experian.resource.SILBankDetails;
 import com.worth.ifs.sil.experian.service.SilExperianEndpoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -124,8 +125,9 @@ public class BankDetailsServiceImpl implements BankDetailsService{
     }
 
     private ServiceResult<AccountDetails> validateBankDetails(BankDetailsResource bankDetailsResource){
-            AccountDetails accountDetails = silBankDetailsMapper.toResource(bankDetailsResource);
-            return silExperianEndpoint.validate(accountDetails).
+        AccountDetails accountDetails = silBankDetailsMapper.toResource(bankDetailsResource);
+        SILBankDetails silBankDetails = silBankDetailsMapper.toSILBankDetailsResource(bankDetailsResource);
+            return silExperianEndpoint.validate(silBankDetails).
                     handleSuccessOrFailure(
                         failure -> serviceFailure(failure.getErrors()),
                         validationResult -> {
@@ -173,6 +175,6 @@ public class BankDetailsServiceImpl implements BankDetailsService{
     }
 
     private List<Error> convertExperianValidationMsgToUserMsg(List<Condition> conditons){
-        return conditons.stream().map(condition -> Error.globalError("", condition.getDescription())).collect(Collectors.toList());
+        return conditons.stream().filter(condition -> condition.getSeverity().equals("error")).map(condition -> Error.globalError(EXPERIAN_VALIDATION_FAILED.getErrorKey(), condition.getDescription())).collect(Collectors.toList());
     }
 }

@@ -3,13 +3,13 @@ package com.worth.ifs.sil.experian.resource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-public class BankDetails {
+public class SILBankDetails {
     private String sortcode;
     private String accountNumber;
 
-    public BankDetails() {}
+    public SILBankDetails() {}
 
-    public BankDetails(String sortcode, String accountNumber) {
+    public SILBankDetails(String sortcode, String accountNumber) {
         this.sortcode = sortcode;
         this.accountNumber = accountNumber;
     }
@@ -36,7 +36,7 @@ public class BankDetails {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        BankDetails that = (BankDetails) o;
+        SILBankDetails that = (SILBankDetails) o;
 
         return new EqualsBuilder()
                 .append(sortcode, that.sortcode)

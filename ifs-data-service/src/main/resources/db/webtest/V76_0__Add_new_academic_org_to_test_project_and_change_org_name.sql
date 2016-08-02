@@ -4,6 +4,7 @@ SELECT @leadApplicantRoleId := id FROM role WHERE `name` = 'leadapplicant';
 SELECT @collaboratorRoleId := id FROM role WHERE `name` = 'collaborator';
 SELECT @partnerRoleId := id FROM role WHERE `name` = 'partner';
 
+SELECT @compId := id FROM competition WHERE `name` = 'Killer Riffs';
 SELECT @projectId := id FROM project WHERE `name` = 'best riffs';
 SELECT @applicationId := application_id FROM project WHERE id = @projectId;
 SELECT @peteTomId:= id FROM `user` WHERE `email` = 'pete.tom@egg.com';
@@ -27,3 +28,5 @@ INSERT IGNORE INTO application_finance (application_id, organisation_id, organis
       SELECT 1 FROM application_finance a2
       WHERE a2.application_id = a.id AND a2.organisation_id = pu.organisation_id
   );
+
+UPDATE `competition` SET `academic_grant_percentage`='100' WHERE `id`= @compId;

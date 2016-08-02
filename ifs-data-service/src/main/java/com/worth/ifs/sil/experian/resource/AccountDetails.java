@@ -3,7 +3,7 @@ package com.worth.ifs.sil.experian.resource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-public class AccountDetails extends BankDetails{
+public class AccountDetails extends SILBankDetails {
     private String companyName;
     private String registrationNumber;
     private String firstName = "NA";

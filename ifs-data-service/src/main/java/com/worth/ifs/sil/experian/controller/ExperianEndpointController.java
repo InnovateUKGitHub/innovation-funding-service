@@ -21,8 +21,8 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 @RestController
 @RequestMapping("/silstub")
 public class ExperianEndpointController {
-    public static HashMap<BankDetails, ValidationResultWrapper> validationErrors;
-    public static HashMap<BankDetails, SilError> otherErrorsDuringValidation;
+    public static HashMap<SILBankDetails, ValidationResultWrapper> validationErrors;
+    public static HashMap<SILBankDetails, SilError> otherErrorsDuringValidation;
     public static ValidationResultWrapper defaultValidationResult;
     public static HashMap<AccountDetails, VerificationResultWrapper> verificationResults;
     public static HashMap<AccountDetails, SilError> otherErrorsDuringVerification;
@@ -34,7 +34,7 @@ public class ExperianEndpointController {
     }
 
     @RequestMapping(value = "/experianValidate", method = POST)
-    public RestResult<Object> experianValidate(@RequestBody BankDetails bankDetails) {
+    public RestResult<Object> experianValidate(@RequestBody SILBankDetails bankDetails) {
         LOG.info("Stubbing out SIL experian validation: " + bankDetails);
         ValidationResultWrapper validationResultWrapper = validationErrors.get(bankDetails);
         if (validationResultWrapper == null) {
@@ -68,7 +68,7 @@ public class ExperianEndpointController {
                 fromJson("{\n" +
                         "  \"sortcode\":\"000003\",\n" +
                         "  \"accountNumber\":\"12\"\n" +
-                        "}", BankDetails.class),
+                        "}", SILBankDetails.class),
                 fromJson("{\n" +
                         "  \"ValidationResult\": {\n" +
                         "    \"checkPassed\": false,\n" +
@@ -84,7 +84,7 @@ public class ExperianEndpointController {
                 fromJson("{\n" +
                         "  \"sortcode\":\"000003\",\n" +
                         "  \"accountNumber\":\"12345673\"\n" +
-                        "}\n", BankDetails.class),
+                        "}\n", SILBankDetails.class),
                 fromJson("{\n" +
                         "  \"ValidationResult\": {\n" +
                         "    \"checkPassed\": false,\n" +
@@ -101,7 +101,7 @@ public class ExperianEndpointController {
                 fromJson("{\n" +
                         "  \"sortcode\":\"000003\",\n" +
                         "  \"accountNumber\":\"123 45672\"\n" +
-                        "}\n", BankDetails.class),
+                        "}\n", SILBankDetails.class),
                 fromJson("{\n" +
                         "  \"ValidationResult\": {\n" +
                         "    \"checkPassed\": true,\n" +
@@ -119,7 +119,7 @@ public class ExperianEndpointController {
                 fromJson("{\n" +
                         "  \"sortcode\":\"000002\",\n" +
                         "  \"accountNumber\":\"12345678\"\n" +
-                        "}\n", BankDetails.class),
+                        "}\n", SILBankDetails.class),
                 fromJson("{\n" +
                         "  \"ValidationResult\": {\n" +
                         "    \"checkPassed\": true,\n" +
@@ -137,7 +137,7 @@ public class ExperianEndpointController {
                 fromJson("{\n" +
                         "  \"sortcode\":\"000003\",\n" +
                         "  \"accountNumber\":\"22345616\"\n" +
-                        "}\n", BankDetails.class),
+                        "}\n", SILBankDetails.class),
                 fromJson("{\n" +
                         "  \"ValidationResult\": {\n" +
                         "    \"checkPassed\": true,\n" +
@@ -155,7 +155,7 @@ public class ExperianEndpointController {
                 fromJson("{\n" +
                         "  \"sortcode\":\"000003\",\n" +
                         "  \"accountNumber\":\"22345632\"\n" +
-                        "}\n", BankDetails.class),
+                        "}\n", SILBankDetails.class),
                 fromJson("{\n" +
                         "  \"ValidationResult\": {\n" +
                         "    \"checkPassed\": true,\n" +
@@ -172,7 +172,7 @@ public class ExperianEndpointController {
                 fromJson("{\n" +
                         "  \"sortcode\":\"000003\",\n" +
                         "  \"accountNumber\":\"22345624\"\n" +
-                        "}\n", BankDetails.class),
+                        "}\n", SILBankDetails.class),
                 fromJson("{\n" +
                         "  \"ValidationResult\": {\n" +
                         "    \"checkPassed\": true,\n" +
@@ -189,7 +189,7 @@ public class ExperianEndpointController {
                 fromJson("{\n" +
                         "  \"sortcode\":\"000003\",\n" +
                         "  \"accountNumber\":\"22345683\"\n" +
-                        "}\n", BankDetails.class),
+                        "}\n", SILBankDetails.class),
                 fromJson("{\n" +
                         "  \"ValidationResult\": {\n" +
                         "    \"checkPassed\": true,\n" +
@@ -207,7 +207,7 @@ public class ExperianEndpointController {
                 fromJson("{\n" +
                         "  \"sortcode\":\"000004\",\n" +
                         "  \"accountNumber\":\"22345610\"\n" +
-                        "}\n", BankDetails.class),
+                        "}\n", SILBankDetails.class),
                 fromJson("{\n" +
                         "  \"ValidationResult\": {\n" +
                         "    \"checkPassed\": true,\n" +

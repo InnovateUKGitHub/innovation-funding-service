@@ -92,7 +92,6 @@ public enum CommonFailureKeys implements ErrorTemplate {
     EXPERIAN_VALIDATION_FAILED("Experian validation failed", BAD_REQUEST),
     EXPERIAN_VERIFICATION_FAILED("Experian verification failed", BAD_REQUEST),
 
-
     /**
      * Project Monitoring Officer
      */
