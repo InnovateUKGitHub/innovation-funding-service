@@ -234,4 +234,9 @@ public class ProjectController {
 
         return projectService.deleteExploitationPlanFile(projectId).toDeleteResponse();
     }
+
+    @RequestMapping(value = "/{projectId}/documents/other/submit", method = GET)
+    public RestResult<Boolean>isOtherDocumentsSubmitAllowed(@PathVariable("projectId") final Long projectId) {
+        return projectService.isOtherDocumentsSubmitAllowed(projectId).toGetResponse();
+    }
 }

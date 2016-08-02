@@ -233,7 +233,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     }
 
     @Override
-    public ServiceResult<Boolean> isOtherDocumentsSubmitAllowed(Long projectId, Long userId) {
+    public ServiceResult<Boolean> isOtherDocumentsSubmitAllowed(Long projectId) {
         ServiceResult<Project> project = getProject(projectId);
         Optional<ProjectUser> projectManager = getExistingProjectManager(project.getSuccessObject());
         boolean allMatch = retrieveUploadedDocuments(projectId).stream()
@@ -242,7 +242,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         if (!allMatch) {
              return serviceFailure(new Error(PROJECT_SETUP_OTHER_DOCUMENTS_MUST_BE_UPLOADED_BEFORE_SUBMIT));
         }
-        return projectManager.isPresent()&& projectManager.get().getId() == userId ? serviceSuccess(true)
+        return projectManager.isPresent() ? serviceSuccess(true)
                 : serviceFailure(new Error(PROJECT_SETUP_OTHER_DOCUMENTS_CAN_ONLY_SUBMITTED_BY_PROJECT_MANAGER));
 
     }

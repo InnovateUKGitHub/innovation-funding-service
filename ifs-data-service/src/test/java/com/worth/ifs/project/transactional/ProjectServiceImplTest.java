@@ -880,7 +880,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         assertFilesCanBeSubmittedByProjectManagerAndFilesExist(
                 project::setCollaborationAgreement,
                 project::setExploitationPlan,
-                () -> service.isOtherDocumentsSubmitAllowed(123L, 1L));
+                () -> service.isOtherDocumentsSubmitAllowed(123L));
 
     }
 
@@ -889,7 +889,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         assertFilesCannotBeSubmittedIfNotByProjectManager(
                 project::setCollaborationAgreement,
                 project::setExploitationPlan,
-                () -> service.isOtherDocumentsSubmitAllowed(123L, 1L));
+                () -> service.isOtherDocumentsSubmitAllowed(123L));
 
     }
 
