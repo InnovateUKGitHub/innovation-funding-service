@@ -41,8 +41,7 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
         List<RoleResource> assessorRole = newRoleResource().withType(ASSESSOR).build(1);
         Application application = newApplication().build();
         ProcessRole assessorProcessRole = newProcessRole().withApplication(application).withUser(newUser().withid(assessorId).build()).build();
-        ProcessRole assessmentProcessRole = newProcessRole().withApplication(application).build();
-        assessment = newAssessment().withProcessRole(assessmentProcessRole).build();
+        assessment = newAssessment().withProcessRole(assessorProcessRole).build();
         applicant = newUserResource().withRolesGlobal(applicantRole).build();
         compadmin = newUserResource().withRolesGlobal(compadminRole).build();
         assessor = newUserResource().withId(assessorId).withRolesGlobal(assessorRole).build();
@@ -66,12 +65,12 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
 
     @Test
     public void connectedUserShouldBeRecognised(){
-        assertTrue("the owner of an assessment should be recognised as connected", rules.isOwner(assessment, assessor));
+        assertTrue("the owner of an assessment should be recognised as connected", rules.isAssessor(assessment, assessor));
     }
 
     @Test
     public void unconnectedUserShouldNotBeRecognised(){
-        assertFalse("other users should not be recognised as connected", rules.isOwner(assessment, applicant));
+        assertFalse("other users should not be recognised as connected", rules.isAssessor(assessment, applicant));
     }
 
     @Test
