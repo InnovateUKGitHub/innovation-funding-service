@@ -51,7 +51,7 @@
             <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}" novalidate="novalidate" data-autosave="assessorFeedback">
                 <button class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">Save the form</button>
 
-                <div class="question" th:id="'form-input-' + ${#ids.next('fundingConfirmation')}">
+                <div class="question" th:id="form-input-fundingConfirmation">
                     <h2 class="heading-medium extra-margin">Do you believe that this application is suitable for funding?</h2>
                     <fieldset class="inline">
                         <legend class="visuallyhidden">Do you believe that this application is suitable for funding?</legend>
@@ -66,7 +66,7 @@
 
                 <fieldset>
                     <legend class="visuallyhidden">Question feedback</legend>
-                    <div class="question" th:id="'form-input-' + ${#ids.next('feedback')}">
+                    <div class="question" th:id="form-input-feedback">
                         <div class="form-group">
                             <label class="form-label form-label-bold" th:for="${#ids.next('feedback')}">
                                 Your feedback
@@ -82,7 +82,7 @@
                         </div>
                     </div>
 
-                    <div class="question" th:id="'form-input-' + ${#ids.next('comments')}">
+                    <div class="question" th:id="form-input-comments">
                         <div class="form-group">
                             <label class="form-label form-label-bold" th:for="${#ids.next('comments')}">Do you have any other comments about this application? Your comments here will only be shared with Innovate UK. (Optional)</label>
 
