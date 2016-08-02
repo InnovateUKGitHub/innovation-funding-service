@@ -20,7 +20,7 @@ import javax.persistence.*;
 @DiscriminatorColumn(name="type", discriminatorType=DiscriminatorType.STRING)
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @Entity
-public abstract class Invite<T> {
+public abstract class Invite<T extends InvitationTarget> {
     private static final CharSequence HASH_SALT = "b80asdf00poiasd07hn";
 
     @Id
