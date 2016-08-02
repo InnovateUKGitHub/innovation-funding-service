@@ -26,21 +26,21 @@ public class FormInputRestServiceImpl extends BaseRestService implements FormInp
 
     @Override
     public RestResult<List<FormInputResource>> getByQuestionId(Long questionId) {
-        return getWithRestResult(formInputRestURL + "/findByQuestionIdOrderByPriorityAsc/" + questionId, formInputResourceListType());
+        return getWithRestResult(formInputRestURL + "/findByQuestionId/" + questionId, formInputResourceListType());
     }
 
     @Override
     public RestResult<List<FormInputResource>> getByQuestionIdAndScope(Long questionId, FormInputScope scope) {
-        return getWithRestResult(formInputRestURL + "/findByQuestionIdOrderByPriorityAsc/" + questionId + "/scope/" + scope, formInputResourceListType());
+        return getWithRestResult(formInputRestURL + "/findByQuestionId/" + questionId + "/scope/" + scope, formInputResourceListType());
     }
 
     @Override
     public RestResult<List<FormInputResource>> getByCompetitionId(Long competitionId) {
-        return getWithRestResult(formInputRestURL + "/findByCompetitionIdOrderByPriorityAsc/" + competitionId, formInputResourceListType());
+        return getWithRestResult(formInputRestURL + "/findByCompetitionId/" + competitionId, formInputResourceListType());
     }
 
     @Override
     public RestResult<List<FormInputResource>> getByCompetitionIdAndScope(Long competitionId, FormInputScope scope) {
-        return getWithRestResult(formInputRestURL + "/findByCompetitionIdOrderByPriorityAsc/" + competitionId + "/scope/" + scope, formInputResourceListType());
+        return getWithRestResult(formInputRestURL + "/findByCompetitionId/" + competitionId + "/scope/" + scope, formInputResourceListType());
     }
 }

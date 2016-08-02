@@ -33,7 +33,7 @@ public class FormInputRestServiceImplTest extends BaseRestServiceUnitTest<FormIn
         Long questionId = 1L;
         FormInputScope scope = APPLICATION;
 
-        setupGetWithRestResultExpectations(format("%s/findByQuestionIdOrderByPriorityAsc/%s/scope/%s", formInputRestUrl, questionId, scope), formInputResourceListType(), expected, OK);
+        setupGetWithRestResultExpectations(format("%s/findByQuestionId/%s/scope/%s", formInputRestUrl, questionId, scope), formInputResourceListType(), expected, OK);
         List<FormInputResource> response = service.getByQuestionIdAndScope(questionId, scope).getSuccessObject();
         assertSame(expected, response);
     }
@@ -46,7 +46,7 @@ public class FormInputRestServiceImplTest extends BaseRestServiceUnitTest<FormIn
         Long competitionId = 1L;
         FormInputScope scope = APPLICATION;
 
-        setupGetWithRestResultExpectations(format("%s/findByCompetitionIdOrderByPriorityAsc/%s/scope/%s", formInputRestUrl, competitionId, scope), formInputResourceListType(), expected, OK);
+        setupGetWithRestResultExpectations(format("%s/findByCompetitionId/%s/scope/%s", formInputRestUrl, competitionId, scope), formInputResourceListType(), expected, OK);
         List<FormInputResource> response = service.getByCompetitionIdAndScope(competitionId, scope).getSuccessObject();
         assertSame(expected, response);
     }

@@ -53,7 +53,7 @@ public class FormInputRepositoryIntegrationTest extends BaseRepositoryIntegratio
         assertEquals(Long.valueOf(1), first.getId());
 
         FormInput last = competitionInputs.get(competitionInputs.size() - 1);
-        assertEquals(Long.valueOf(190), last.getId());
+        assertEquals(Long.valueOf(186), last.getId());
     }
 
     @Test
@@ -71,7 +71,7 @@ public class FormInputRepositoryIntegrationTest extends BaseRepositoryIntegratio
         assertEquals(Long.valueOf(1), first.getId());
 
         FormInput last = competitionInputs.get(competitionInputs.size() - 1);
-        assertEquals(Long.valueOf(42), last.getId());
+        assertEquals(Long.valueOf(18), last.getId());
     }
 
     @Test
