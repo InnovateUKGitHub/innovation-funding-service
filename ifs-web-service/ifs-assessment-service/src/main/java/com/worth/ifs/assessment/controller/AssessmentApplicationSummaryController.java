@@ -45,9 +45,9 @@ public class AssessmentApplicationSummaryController extends AbstractApplicationC
                        @PathVariable("assessmentId") Long assessmentId) {
         LOG.warn("AssessmentApplicationSummaryForm{" +
                 "fundingConfirmation=" + form.getFundingConfirmation() +
-                ", feedback='" + form.getFeedback() + '\'' +
+                ", feedback='" + form.getFeedback() + "'" +
                 ", comments='" + form.getComments() +
-                '}');
+                "'}");
         // TODO validation
         // TODO service call
         // TODO handle service errors
