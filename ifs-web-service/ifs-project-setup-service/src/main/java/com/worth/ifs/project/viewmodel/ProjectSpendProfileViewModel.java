@@ -1,6 +1,5 @@
 package com.worth.ifs.project.viewmodel;
 
-import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -16,14 +15,12 @@ public class ProjectSpendProfileViewModel {
     private String projectName;
     private LocalDate targetProjectStartDate;
     private Long durationInMonths;
-    private CompetitionResource competition;
 
-    public ProjectSpendProfileViewModel(ProjectResource project, CompetitionResource competition) {
+    public ProjectSpendProfileViewModel(ProjectResource project) {
         this.projectId = project.getId();
         this.projectName = project.getName();
         this.targetProjectStartDate = project.getTargetStartDate();
         this.durationInMonths = project.getDurationInMonths();
-        this.competition = competition;
     }
 
     public Long getProjectId() {
@@ -42,10 +39,6 @@ public class ProjectSpendProfileViewModel {
         return durationInMonths;
     }
 
-    public CompetitionResource getCompetition() {
-        return competition;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -56,9 +49,9 @@ public class ProjectSpendProfileViewModel {
 
         return new EqualsBuilder()
                 .append(projectId, viewModel.projectId)
+                .append(projectName, viewModel.projectName)
                 .append(targetProjectStartDate, viewModel.targetProjectStartDate)
                 .append(durationInMonths, viewModel.durationInMonths)
-                .append(competition, viewModel.competition)
                 .isEquals();
     }
 

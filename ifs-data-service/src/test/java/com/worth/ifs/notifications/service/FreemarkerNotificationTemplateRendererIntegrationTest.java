@@ -1,13 +1,5 @@
 package com.worth.ifs.notifications.service;
 
-import com.worth.ifs.BaseIntegrationTest;
-import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.notifications.resource.UserNotificationSource;
-import com.worth.ifs.notifications.resource.UserNotificationTarget;
-import org.apache.commons.lang3.StringUtils;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -15,6 +7,15 @@ import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+
+import com.worth.ifs.BaseIntegrationTest;
+import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.notifications.resource.UserNotificationSource;
+import com.worth.ifs.notifications.resource.UserNotificationTarget;
+
+import org.apache.commons.lang3.StringUtils;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilterNot;
@@ -113,16 +114,31 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
     public void testMonitoringOfficerAssignedEmail() throws URISyntaxException, IOException {
 
         Map<String, Object> templateArguments = asMap(
-                "projectName", "My Project",
-                "leadOrganisation", "Lead Organisation 123",
-                "projectManagerName", "ABC",
-                "projectManagerEmail", "abc.xyz@gmail.com",
-                "dashboardUrl", "https://ifs-local-dev/dashboard"
+            "projectName", "My Project",
+            "leadOrganisation", "Lead Organisation 123",
+            "projectManagerName", "ABC",
+            "projectManagerEmail", "abc.xyz@gmail.com",
+            "dashboardUrl", "https://ifs-local-dev/dashboard"
         );
 
         assertRenderedEmailTemplateContainsExpectedLines("monitoring_officer_assigned_subject.txt", templateArguments);
         assertRenderedEmailTemplateContainsExpectedLines("monitoring_officer_assigned_text_plain.txt", templateArguments);
         assertRenderedEmailTemplateContainsExpectedLines("monitoring_officer_assigned_text_html.html", templateArguments);
+    }
+
+    @Test
+    public void testMonitoringOfficerAssignedForProjectManagerEmail() throws URISyntaxException, IOException {
+
+        Map<String, Object> templateArguments = asMap(
+            "projectName", "My Project",
+            "monitoringOfficerName", "DEF",
+            "monitoringOfficerEmail", "def.ghi@gmail.com",
+            "monitoringOfficerTelephone", "0123456789"
+        );
+
+        assertRenderedEmailTemplateContainsExpectedLines("monitoring_officer_assigned_project_manager_subject.txt", templateArguments);
+        assertRenderedEmailTemplateContainsExpectedLines("monitoring_officer_assigned_project_manager_text_plain.txt", templateArguments);
+        assertRenderedEmailTemplateContainsExpectedLines("monitoring_officer_assigned_project_manager_text_html.html", templateArguments);
     }
 
     private void assertRenderedEmailTemplateContainsExpectedLines(String templateName, Map<String, Object> templateArguments) throws IOException, URISyntaxException {
