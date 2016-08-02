@@ -11,9 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
-import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static com.worth.ifs.assessment.builder.ProcessOutcomeBuilder.newProcessOutcome;
-import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -59,13 +57,12 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
     public static class TestAssessmentService implements AssessmentService {
         @Override
         public ServiceResult<AssessmentResource> findById(Long id) {
-           return serviceSuccess(newAssessmentResource().withId(id).build());
+            return null;
         }
 
         @Override
         public ServiceResult<Void> updateStatus(Long id, ProcessOutcome processOutcome) {
-            return serviceSuccess();
+            return null;
         }
-
     }
 }
