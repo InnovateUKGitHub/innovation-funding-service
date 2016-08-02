@@ -72,7 +72,7 @@ Bank account postcode lookup
 
 Bank details experian validations
     [Documentation]    INFUND-3010
-    [Tags]    Experian      Pending
+    [Tags]    Experian
         # TODO pending INFUND-3259
     When the user submits the bank account details     12345673      000003
     Then the user should see the text in the page     Modulus check has failed
@@ -81,7 +81,7 @@ Bank details experian validations
 
 Bank details submission
     [Documentation]    INFUND-3010
-    [Tags]     Experian     Pending
+    [Tags]     Experian
     When the user enters text to a text field      name=accountNumber         51406795
     And the user enters text to a text field       name=sortCode              404745
     When the user clicks the button/link    jQuery=.button:contains("Submit bank account details")
