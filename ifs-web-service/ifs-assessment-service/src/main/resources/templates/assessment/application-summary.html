@@ -48,7 +48,7 @@
 
             <div th:include="fragments/assessment :: assessment-summary-total-score((totalGiven=${model.totalScoreGiven}, totalPossible=${model.totalScorePossible}, totalPercentage=${model.totalScorePercentage}))" th:remove="tag" />
 
-            <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}" novalidate="novalidate" data-autosave="assessorFeedback">
+            <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}" enctype="multipart/form-data" novalidate="novalidate" data-autosave="assessorFeedback">
                 <button class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">Save the form</button>
 
                 <div class="question" th:id="form-input-fundingConfirmation">
@@ -57,7 +57,7 @@
                         <legend class="visuallyhidden">Do you believe that this application is suitable for funding?</legend>
                         <div class="form-group">
                             <label class="block-label" th:each="option : ${ { true, false } }">
-                                <input th:field="*{fundingConfirmation}" th:value="${option}" type="radio" />
+                                <input th:field="*{fundingConfirmation}" th:value="${option}" name="fundingConfirmation" type="radio" />
                                 <span th:text="${option ? 'Yes' : 'No'}" th:remove="tag" />
                             </label>
                         </div>
