@@ -418,16 +418,6 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
             milestonesIds.add(m.getId());
             milestoneRepository.save(m);
        });
-       //comp.setMilestones(milestonesIds);
-//       comp.
-
-       //comp.setStartDate(startDate);
-//       MilestonResource milestone = controller.up
-//       comp.setEndDate(endDate);
-//       comp.setAssessmentStartDate(assessmentStartDate);
-//       comp.setAssessmentEndDate(assessmentEndDate);
-//       comp.setFundersPanelEndDate(fundersPanelEndDate);
-//       comp.setAssessorFeedbackDate(assessorFeedbackDate);
 
        controller.saveCompetition(comp, comp.getId()).getSuccessObjectOrThrowException();
 
@@ -439,97 +429,48 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
 
        return controller.getCompetitionById(comp.getId()).getSuccessObjectOrThrowException();
    }
+
     private List<Milestone> createNewMilestones(CompetitionResource comp, LocalDateTime startDate,
-                                                LocalDateTime endDate, LocalDateTime assessmentStartDate,
-                                                LocalDateTime assessmentEndDate, LocalDateTime fundersPanelEndDate,
-                                                LocalDateTime assessorFeedbackDate) {
-        Milestone milestone;// = new Milestone();
-        Competition newComp = new Competition();
-        newComp.setId(comp.getId());
+                                      LocalDateTime endDate, LocalDateTime assessmentStartDate,
+                                      LocalDateTime assessmentEndDate, LocalDateTime fundersPanelEndDate,
+                                      LocalDateTime assessorFeedbackDate) {
 
-
-        List<Milestone> milestones = new ArrayList<>();
         LocalDateTime milestoneDate = LocalDateTime.now();
 
-        milestone = new Milestone();
-        milestone.setDate(startDate);
-        milestone.setName(MilestoneResource.MilestoneName.OPEN_DATE);
-        milestones.add(milestone);
-        milestone.setCompetition(newComp);
+        List<MilestoneResource.MilestoneName> milestoneNames = populateMilestoneNames();
+        List<Milestone> milestones = new ArrayList<>();
+        Milestone milestone;
 
-        milestone = new Milestone();
-        milestone.setDate(milestoneDate.plusDays(3));
-        milestone.setName(MilestoneResource.MilestoneName.BRIEFING_EVENT);
-        milestones.add(milestone);
-        milestone.setCompetition(newComp);
+        for(MilestoneResource.MilestoneName milestoneName : milestoneNames) {
+            milestone = new Milestone();
+            milestone.setName(milestoneName);
+            milestone.setCompetition(assignCompetitionId(comp));
 
-        milestone = new Milestone();
-        milestone.setDate(endDate);
-        milestone.setName(MilestoneResource.MilestoneName.SUBMISSION_DATE);
-        milestones.add(milestone);
-        milestone.setCompetition(newComp);
+            milestone.setDate(milestoneDate);
 
-        milestone = new Milestone();
-        milestone.setDate(milestoneDate.plusDays(5));
-        milestone.setName(MilestoneResource.MilestoneName.ALLOCATE_ASSESSORS);
-        milestones.add(milestone);
-        milestone.setCompetition(newComp);
-
-        milestone = new Milestone();
-        milestone.setDate(milestoneDate.plusDays(6));
-        milestone.setName(MilestoneResource.MilestoneName.ASSESSOR_BRIEFING);
-        milestones.add(milestone);
-        milestone.setCompetition(newComp);
-
-        milestone = new Milestone();
-        milestone.setDate(assessmentStartDate);
-        milestone.setName(MilestoneResource.MilestoneName.ASSESSOR_ACCEPTS);
-        milestones.add(milestone);
-        milestone.setCompetition(newComp);
-
-        milestone = new Milestone();
-        milestone.setDate(assessorFeedbackDate);
-        milestone.setName(MilestoneResource.MilestoneName.ASSESSOR_DEADLINE);
-        milestones.add(milestone);
-        milestone.setCompetition(newComp);
-
-        milestone = new Milestone();
-        milestone.setDate(milestoneDate.plusDays(9));
-        milestone.setName(MilestoneResource.MilestoneName.LINE_DRAW);
-        milestones.add(milestone);
-        milestone.setCompetition(newComp);
-
-        milestone = new Milestone();
-        milestone.setDate(milestoneDate.plusDays(10));
-        milestone.setName(MilestoneResource.MilestoneName.ASSESSMENT_PANEL);
-        milestones.add(milestone);
-        milestone.setCompetition(newComp);
-
-        milestone.setDate(milestoneDate.plusDays(11));
-        milestone.setName(MilestoneResource.MilestoneName.PANEL_DATE);
-        milestones.add(milestone);
-        milestone.setCompetition(newComp);
-
-        milestone = new Milestone();
-        milestone.setDate(assessmentEndDate);
-        milestone.setName(MilestoneResource.MilestoneName.FUNDERS_PANEL);
-        milestones.add(milestone);
-        milestone.setCompetition(newComp);
-
-        milestone = new Milestone();
-        milestone.setDate(fundersPanelEndDate);
-        milestone.setName(MilestoneResource.MilestoneName.NOTIFICATIONS);
-        milestones.add(milestone);
-        milestone.setCompetition(newComp);
-
-        milestone = new Milestone();
-        milestone.setDate(milestoneDate.plusDays(14));
-        milestone.setName(MilestoneResource.MilestoneName.RELEASE_FEEDBACK);
-        milestones.add(milestone);
-        milestone.setCompetition(newComp);
-
+            if (milestone.getName().toString().equals("OPEN_DATE")){
+                milestone.setDate(startDate);
+            } if (milestone.getName().toString().equals("SUBMISSION_DATE")) {
+                milestone.setDate(endDate);
+            } if (milestone.getName().toString().equals("ASSESSOR_ACCEPTS")) {
+                milestone.setDate(assessmentStartDate);
+            } if (milestone.getName().toString().equals("ASSESSOR_DEADLINE")) {
+                milestone.setDate(assessorFeedbackDate);
+            } if (milestone.getName().toString().equals("FUNDERS_PANEL")) {
+                milestone.setDate(assessmentEndDate);
+            } if (milestone.getName().toString().equals("NOTIFICATIONS")){
+                milestone.setDate(fundersPanelEndDate);
+            }
+            milestones.add(milestone);
+        }
         return milestones;
-    }
+        }
+
+        private Competition assignCompetitionId(CompetitionResource competition) {
+            Competition newComp = new Competition();
+            newComp.setId(competition.getId());
+            return newComp;
+        }
 
     private CompetitionResource createNewCompetition() {
         RestResult<CompetitionResource> competitionsResult = controller.create();
@@ -537,6 +478,10 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         CompetitionResource competition = competitionsResult.getSuccessObject();
         assertThat(competition.getName(), isEmptyOrNullString());
         return competition;
+    }
+
+    private List<MilestoneResource.MilestoneName> populateMilestoneNames() {
+        return new ArrayList<MilestoneResource.MilestoneName>(EnumSet.allOf(MilestoneResource.MilestoneName.class));
     }
 
     private void checkUpdatedCompetitionCategories(CompetitionResource savedCompetition) {
