@@ -1,5 +1,13 @@
 package com.worth.ifs.project.controller;
 
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.bankdetails.resource.BankDetailsResource;
@@ -12,21 +20,27 @@ import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.user.resource.OrganisationResource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
-
-import static com.worth.ifs.file.controller.FileControllerUtils.*;
-import static org.springframework.web.bind.annotation.RequestMethod.*;
+import static com.worth.ifs.file.controller.FileControllerUtils.handleFileDownload;
+import static com.worth.ifs.file.controller.FileControllerUtils.handleFileUpdate;
+import static com.worth.ifs.file.controller.FileControllerUtils.handleFileUpload;
+import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 /**
  * ProjectController exposes Project data and operations through a REST API.
@@ -116,7 +130,7 @@ public class ProjectController {
                                                   @RequestBody @Valid final MonitoringOfficerResource monitoringOfficerResource) {
 
         return projectService.saveMonitoringOfficer(projectId, monitoringOfficerResource)
-                .andOnSuccess(() -> projectService.notifyMonitoringOfficer(monitoringOfficerResource))
+                .andOnSuccess(() -> projectService.notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource))
                 .toPutResponse();
     }
     @RequestMapping(value = "/{projectId}/getOrganisationByUser/{userId}", method = GET)
