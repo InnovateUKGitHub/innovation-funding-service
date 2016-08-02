@@ -99,7 +99,7 @@ public class AssessmentApplicationSummaryControllerTest extends BaseControllerMo
         MvcResult result = mockMvc.perform(get("/{assessmentId}/summary", assessmentId))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("model"))
-                .andExpect(view().name("assessor-application-summary"))
+                .andExpect(view().name("assessment/application-summary"))
                 .andReturn();
 
         AssessmentApplicationSummaryViewModel model = (AssessmentApplicationSummaryViewModel) result.getModelAndView().getModel().get("model");

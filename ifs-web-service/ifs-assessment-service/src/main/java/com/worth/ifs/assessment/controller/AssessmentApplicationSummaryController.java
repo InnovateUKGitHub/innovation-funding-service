@@ -25,7 +25,7 @@ public class AssessmentApplicationSummaryController extends AbstractApplicationC
     @Autowired
     private AssessmentApplicationSummaryModelPopulator assessmentApplicationSummaryModelPopulator;
 
-    private static String SUMMARY = "assessor-application-summary";
+    private static String SUMMARY = "assessment/application-summary";
 
     @RequestMapping(value = "/{assessmentId}/summary", method = RequestMethod.GET)
     public String getSummary(Model model,
@@ -45,9 +45,9 @@ public class AssessmentApplicationSummaryController extends AbstractApplicationC
                        @PathVariable("assessmentId") Long assessmentId) {
         LOG.warn("AssessmentApplicationSummaryForm{" +
                 "fundingConfirmation=" + form.getFundingConfirmation() +
-                ", feedback='" + form.getFeedback() + '\'' +
+                ", feedback='" + form.getFeedback() + "'" +
                 ", comments='" + form.getComments() +
-                '}');
+                "'}");
         // TODO validation
         // TODO service call
         // TODO handle service errors
