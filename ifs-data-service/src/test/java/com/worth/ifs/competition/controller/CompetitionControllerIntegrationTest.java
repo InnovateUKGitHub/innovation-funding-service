@@ -5,10 +5,13 @@ import com.worth.ifs.BaseControllerIntegrationTest;
 import com.worth.ifs.category.repository.CategoryLinkRepository;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.competition.domain.Milestone;
 import com.worth.ifs.competition.repository.CompetitionRepository;
+import com.worth.ifs.competition.repository.MilestoneRepository;
 import com.worth.ifs.competition.resource.CompetitionCountResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
+import com.worth.ifs.competition.resource.MilestoneResource;
 import com.worth.ifs.util.fixtures.CompetitionCoFundersFixture;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,6 +20,8 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
@@ -36,6 +41,9 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
 
     @Autowired
     CompetitionRepository competitionRepository;
+
+    @Autowired
+    MilestoneRepository milestoneRepository;
 
 
     public static final String COMPETITION_NAME_UPDATED = "Competition name updated";
@@ -328,7 +336,15 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         CompetitionResource projectSetup = createWithDates(sixDaysAgo, fiveDaysAgo, fourDaysAgo, threeDaysAgo, twoDaysAgo, oneDayAgo);
         assertThat(projectSetup.getCompetitionStatus(), equalTo(CompetitionResource.Status.PROJECT_SETUP));
 
-        CompetitionCountResource counts = controller.count().getSuccessObjectOrThrowException();
+        CompetitionCountResource counts = null;
+        try {
+
+            counts = controller.count().getSuccessObjectOrThrowException();
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+        }
+//        CompetitionCountResource counts = controller.count().getSuccessObjectOrThrowException();
 
         List<CompetitionResource> liveCompetitions = controller.live().getSuccessObjectOrThrowException();
 
@@ -394,12 +410,24 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
                                                LocalDateTime assessorFeedbackDate) {
        CompetitionResource comp = controller.create().getSuccessObjectOrThrowException();
 
-       comp.setStartDate(startDate);
-       comp.setEndDate(endDate);
-       comp.setAssessmentStartDate(assessmentStartDate);
-       comp.setAssessmentEndDate(assessmentEndDate);
-       comp.setFundersPanelEndDate(fundersPanelEndDate);
-       comp.setAssessorFeedbackDate(assessorFeedbackDate);
+       List<Milestone> milestone = createNewMilestones(comp, startDate, endDate, assessmentStartDate,
+               assessmentEndDate, fundersPanelEndDate, assessorFeedbackDate);
+       List<Long> milestonesIds = new ArrayList<>();
+
+       milestone.forEach(m -> {
+            milestonesIds.add(m.getId());
+            milestoneRepository.save(m);
+       });
+       //comp.setMilestones(milestonesIds);
+//       comp.
+
+       //comp.setStartDate(startDate);
+//       MilestonResource milestone = controller.up
+//       comp.setEndDate(endDate);
+//       comp.setAssessmentStartDate(assessmentStartDate);
+//       comp.setAssessmentEndDate(assessmentEndDate);
+//       comp.setFundersPanelEndDate(fundersPanelEndDate);
+//       comp.setAssessorFeedbackDate(assessorFeedbackDate);
 
        controller.saveCompetition(comp, comp.getId()).getSuccessObjectOrThrowException();
 
@@ -411,6 +439,97 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
 
        return controller.getCompetitionById(comp.getId()).getSuccessObjectOrThrowException();
    }
+    private List<Milestone> createNewMilestones(CompetitionResource comp, LocalDateTime startDate,
+                                                LocalDateTime endDate, LocalDateTime assessmentStartDate,
+                                                LocalDateTime assessmentEndDate, LocalDateTime fundersPanelEndDate,
+                                                LocalDateTime assessorFeedbackDate) {
+        Milestone milestone;// = new Milestone();
+        Competition newComp = new Competition();
+        newComp.setId(comp.getId());
+
+
+        List<Milestone> milestones = new ArrayList<>();
+        LocalDateTime milestoneDate = LocalDateTime.now();
+
+        milestone = new Milestone();
+        milestone.setDate(startDate);
+        milestone.setName(MilestoneResource.MilestoneName.OPEN_DATE);
+        milestones.add(milestone);
+        milestone.setCompetition(newComp);
+
+        milestone = new Milestone();
+        milestone.setDate(milestoneDate.plusDays(3));
+        milestone.setName(MilestoneResource.MilestoneName.BRIEFING_EVENT);
+        milestones.add(milestone);
+        milestone.setCompetition(newComp);
+
+        milestone = new Milestone();
+        milestone.setDate(endDate);
+        milestone.setName(MilestoneResource.MilestoneName.SUBMISSION_DATE);
+        milestones.add(milestone);
+        milestone.setCompetition(newComp);
+
+        milestone = new Milestone();
+        milestone.setDate(milestoneDate.plusDays(5));
+        milestone.setName(MilestoneResource.MilestoneName.ALLOCATE_ASSESSORS);
+        milestones.add(milestone);
+        milestone.setCompetition(newComp);
+
+        milestone = new Milestone();
+        milestone.setDate(milestoneDate.plusDays(6));
+        milestone.setName(MilestoneResource.MilestoneName.ASSESSOR_BRIEFING);
+        milestones.add(milestone);
+        milestone.setCompetition(newComp);
+
+        milestone = new Milestone();
+        milestone.setDate(assessmentStartDate);
+        milestone.setName(MilestoneResource.MilestoneName.ASSESSOR_ACCEPTS);
+        milestones.add(milestone);
+        milestone.setCompetition(newComp);
+
+        milestone = new Milestone();
+        milestone.setDate(assessorFeedbackDate);
+        milestone.setName(MilestoneResource.MilestoneName.ASSESSOR_DEADLINE);
+        milestones.add(milestone);
+        milestone.setCompetition(newComp);
+
+        milestone = new Milestone();
+        milestone.setDate(milestoneDate.plusDays(9));
+        milestone.setName(MilestoneResource.MilestoneName.LINE_DRAW);
+        milestones.add(milestone);
+        milestone.setCompetition(newComp);
+
+        milestone = new Milestone();
+        milestone.setDate(milestoneDate.plusDays(10));
+        milestone.setName(MilestoneResource.MilestoneName.ASSESSMENT_PANEL);
+        milestones.add(milestone);
+        milestone.setCompetition(newComp);
+
+        milestone.setDate(milestoneDate.plusDays(11));
+        milestone.setName(MilestoneResource.MilestoneName.PANEL_DATE);
+        milestones.add(milestone);
+        milestone.setCompetition(newComp);
+
+        milestone = new Milestone();
+        milestone.setDate(assessmentEndDate);
+        milestone.setName(MilestoneResource.MilestoneName.FUNDERS_PANEL);
+        milestones.add(milestone);
+        milestone.setCompetition(newComp);
+
+        milestone = new Milestone();
+        milestone.setDate(fundersPanelEndDate);
+        milestone.setName(MilestoneResource.MilestoneName.NOTIFICATIONS);
+        milestones.add(milestone);
+        milestone.setCompetition(newComp);
+
+        milestone = new Milestone();
+        milestone.setDate(milestoneDate.plusDays(14));
+        milestone.setName(MilestoneResource.MilestoneName.RELEASE_FEEDBACK);
+        milestones.add(milestone);
+        milestone.setCompetition(newComp);
+
+        return milestones;
+    }
 
     private CompetitionResource createNewCompetition() {
         RestResult<CompetitionResource> competitionsResult = controller.create();
@@ -419,7 +538,6 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         assertThat(competition.getName(), isEmptyOrNullString());
         return competition;
     }
-
 
     private void checkUpdatedCompetitionCategories(CompetitionResource savedCompetition) {
         assertEquals(COMPETITION_NAME_UPDATED, savedCompetition.getName());
