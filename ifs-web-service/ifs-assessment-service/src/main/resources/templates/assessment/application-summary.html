@@ -68,15 +68,15 @@
                     <legend class="visuallyhidden">Question feedback</legend>
                     <div class="question" th:id="form-input-feedback">
                         <div class="form-group">
-                            <label class="form-label form-label-bold" th:for="${#ids.next('feedback')}">
+                            <label class="form-label form-label-bold" th:for="form-textarea-feedback" id="form-label-feedback">
                                 Your feedback
                                 <span class="form-hint">Please explain your decision with a few sentences. This feedback will be sent to the applicant.</span>
                             </label>
 
                             <div class="textarea-wrapped word-count">
-                                <textarea th:field="*{feedback}" rows="3" cols="60" data-max_words="350" aria-hidden="true"></textarea>
+                                <textarea th:field="*{feedback}" id="form-textarea-feedback" data-max_words="100"></textarea>
                                 <div class="textarea-footer">
-                                    <div th:include="question-type/form-elements :: form-word-count (maxWords=350, currentWordsLeft=350)" th:remove="tag" />
+                                    <div th:include="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=100)" th:remove="tag" />
                                 </div>
                             </div>
                         </div>
@@ -84,13 +84,13 @@
 
                     <div class="question" th:id="form-input-comments">
                         <div class="form-group">
-                            <label class="form-label form-label-bold" th:for="${#ids.next('comments')}">Do you have any other comments about this application? Your comments here will only be shared with Innovate UK. (Optional)</label>
+                            <label class="form-label form-label-bold" th:for="form-textarea-comments" id="form-label-comments">Do you have any other comments about this application? Your comments here will only be shared with Innovate UK. (Optional)</label>
 
                             <div class="textarea-wrapped word-count">
-                                <textarea th:field="*{comments}" rows="3" cols="60" data-max_words="350" aria-hidden="true"></textarea>
+                                <textarea th:field="*{comments}" id="form-textarea-comments" data-max_words="100"></textarea>
 
                                 <div class="textarea-footer">
-                                    <div th:include="question-type/form-elements :: form-word-count (maxWords=350, currentWordsLeft=350)" th:remove="tag" />
+                                    <div th:include="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=100)" th:remove="tag" />
                                 </div>
                             </div>
                         </div>
