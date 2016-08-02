@@ -494,7 +494,7 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
 
         when(projectServiceMock.isOtherDocumentsSubmitAllowed(123L)).thenReturn(serviceSuccess(true));
 
-        mockMvc.perform(get("/project/{projectId}/documents/other/submit", 123L))
+        mockMvc.perform(get("/project/{projectId}/documents/submit/other", 123L))
                 .andExpect(status().isOk())
                 .andExpect(content().string("true"))
                 .andReturn();
