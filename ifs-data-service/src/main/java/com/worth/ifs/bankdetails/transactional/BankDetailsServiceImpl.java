@@ -125,8 +125,8 @@ public class BankDetailsServiceImpl implements BankDetailsService{
     }
 
     private ServiceResult<AccountDetails> validateBankDetails(BankDetailsResource bankDetailsResource){
-        AccountDetails accountDetails = silBankDetailsMapper.toResource(bankDetailsResource);
-        SILBankDetails silBankDetails = silBankDetailsMapper.toSILBankDetailsResource(bankDetailsResource);
+        AccountDetails accountDetails = silBankDetailsMapper.toAccountDetails(bankDetailsResource);
+        SILBankDetails silBankDetails = silBankDetailsMapper.toSILBankDetails(bankDetailsResource);
             return silExperianEndpoint.validate(silBankDetails).
                     handleSuccessOrFailure(
                         failure -> serviceFailure(failure.getErrors()),

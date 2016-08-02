@@ -57,8 +57,8 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
         OrganisationAddress organisationAddress = newOrganisationAddress().build();
         bankDetailsResource = newBankDetailsResource().withProject(project.getId()).withSortCode("123123").withAccountNumber("12345678").withOrganisation(organisation.getId()).withOrganiationAddress(organisationAddressResource).build();
         bankDetails = newBankDetails().withSortCode(bankDetailsResource.getSortCode()).withAccountNumber(bankDetailsResource.getAccountNumber()).withOrganisation(organisation).withOrganiationAddress(organisationAddress).build();
-        accountDetails = silBankDetailsMapper.toResource(bankDetailsResource);
-        silBankDetails = silBankDetailsMapper.toSILBankDetailsResource(bankDetailsResource);
+        accountDetails = silBankDetailsMapper.toAccountDetails(bankDetailsResource);
+        silBankDetails = silBankDetailsMapper.toSILBankDetails(bankDetailsResource);
 
         when(bankDetailsMapperMock.mapToDomain(bankDetailsResource)).thenReturn(bankDetails);
         when(organisationAddressRepositoryMock.findOne(organisationAddressResource.getId())).thenReturn(organisationAddress);

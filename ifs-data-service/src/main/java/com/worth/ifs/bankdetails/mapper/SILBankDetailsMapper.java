@@ -10,7 +10,7 @@ import com.worth.ifs.sil.experian.resource.SILBankDetails;
  * Mapping results retrieved from the postcode web API to address resources.
  */
 public class SILBankDetailsMapper {
-    public AccountDetails toResource(BankDetailsResource bankDetailsResource) {
+    public AccountDetails toAccountDetails(BankDetailsResource bankDetailsResource) {
         Address address = null;
 
         if(bankDetailsResource.getOrganisationAddress() != null && bankDetailsResource.getOrganisationAddress().getAddress() != null){
@@ -32,7 +32,7 @@ public class SILBankDetailsMapper {
         );
     }
 
-    public SILBankDetails toSILBankDetailsResource(BankDetailsResource bankDetailsResource){
+    public SILBankDetails toSILBankDetails(BankDetailsResource bankDetailsResource){
         SILBankDetails silBankDetails = new SILBankDetails();
         silBankDetails.setAccountNumber(bankDetailsResource.getAccountNumber());
         silBankDetails.setSortcode(bankDetailsResource.getSortCode());
