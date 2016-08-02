@@ -42,14 +42,14 @@ IFS.core.editor = (function(){
                el.before('<div class="readonly"></div>');
             }
             else {
-                el.before('<div class="editor" spellcheck="true" aria-multiline="true" tabindex="0" '+labelledby+' visirole="textbox"></div>');
+                el.before('<div data-editor="" class="editor" spellcheck="true" aria-multiline="true" tabindex="0" labelledby="'+labelledby+'" role="textbox"></div>');
             }
 
             el.attr('aria-hidden','true');
             IFS.core.editor.processMarkdownToHtml(el,el.prev());
         },
         initEditors: function(){
-          jQuery('.editor').hallo({
+          jQuery('[data-editor]').hallo({
             plugins: {
               'halloformat': {},
               'hallolists': {},
@@ -59,7 +59,7 @@ IFS.core.editor = (function(){
           });
         },
         bindEditors : function(){
-            jQuery('.editor').bind('hallomodified', function(event, data) {
+            jQuery('[data-editor]').bind('hallomodified', function(event, data) {
                 var source = jQuery(this).next();
                 IFS.core.editor.processHtmlToMarkdown(data.content,source);
                 jQuery(source).trigger('keyup');
@@ -97,18 +97,5 @@ IFS.core.editor = (function(){
             html = jQuery.htmlClean(html, s.htmlOptions);
             return html;
         }
-        // contentEditableEnterFix : function(){
-        //    // for having good html we only agree upon <p>test</p> and not p<br/>
-        //    // however <br/> is default behaviour in FF, Chrome with contenteditble sections
-        //     var formatBlockSupported = document.queryCommandSupported("formatBlock");
-
-        //     if(formatBlockSupported){
-        //         jQuery('.editor').on( "keypress", function(event){
-        //              if(event.keyCode == '13') {
-        //                 document.execCommand('formatBlock', false, 'p');
-        //              }
-        //         });
-        //     }
-        // }
     };
 })();
