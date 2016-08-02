@@ -2,13 +2,15 @@ package com.worth.ifs.competitionsetup.model;
 
 public class Question {
     Long id;
-    Integer number;
+    String number;
+    String shortTitle;
     String title;
     String subTitle;
     String guidanceTitle;
     String guidance;
     Integer maxWords;
     Boolean appendix;
+    Boolean scored;
 
     public Long getId() {
         return id;
@@ -18,12 +20,20 @@ public class Question {
         this.id = id;
     }
 
-    public Integer getNumber() {
+    public String getNumber() {
         return number;
     }
 
-    public void setNumber(Integer number) {
+    public void setNumber(String number) {
         this.number = number;
+    }
+
+    public String getShortTitle() {
+        return shortTitle;
+    }
+
+    public void setShortTitle(String shortTitle) {
+        this.shortTitle = shortTitle;
     }
 
     public String getTitle() {
@@ -72,5 +82,13 @@ public class Question {
 
     public void setAppendix(Boolean appendix) {
         this.appendix = appendix;
+    }
+
+    public Boolean getScored() {
+        return scored;
+    }
+
+    public void setScored(Boolean scored) {
+        this.scored = scored;
     }
 }

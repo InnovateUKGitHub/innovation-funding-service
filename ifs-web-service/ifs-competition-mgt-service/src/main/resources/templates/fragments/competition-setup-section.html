@@ -611,31 +611,23 @@
 
     <h2 class="heading-large">Questions</h2>
 
-    <form th:action="@{(${editable} ? '' : 'application/edit')}" method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
 
-        <fieldset id="section-5-edit">
+    <ul class="list-overview application-questions">
 
-            <legend class="visuallyhidden">Application questions</legend>
+        <li><h2 class="heading-medium">Application details</h2></li>
+        <li><h2 class="heading-medium">Project summary</h2></li>
+        <li><h2 class="heading-medium">Public description</h2></li>
+        <li><h2 class="heading-medium">Scope</h2></li>
 
-            <ul class="list-overview application-questions">
+        <th:block th:each="question : ${questions}">
+            <th:block th:include="fragments/competition-setup :: application-question(${question})" />
+        </th:block>
+    </ul>
 
-                <li><h2 class="heading-medium">Application details</h2></li>
-                <li><h2 class="heading-medium">Project summary</h2></li>
-                <li><h2 class="heading-medium">Public description</h2></li>
-                <li><h2 class="heading-medium">Scope</h2></li>
-
-                <th:block th:each="question : ${questions}">
-                    <th:block th:include="fragments/competition-setup :: application-question(question)" />
-                </th:block>
-
-            </ul>
-        </fieldset>
-
-        <div class="extra-margin">
-            <button th:if="${editable}" type="submit" class="button">Done</button>
-            <button th:if="${!editable}" type="submit" class="button">Edit</button>
-        </div>
-    </form>
+    <div class="extra-margin">
+        <button th:if="${editable}" type="submit" class="button">Done</button>
+        <button th:if="${!editable}" type="submit" class="button">Edit</button>
+    </div>
 
     <ul class="pagination">
         <li class="prev">

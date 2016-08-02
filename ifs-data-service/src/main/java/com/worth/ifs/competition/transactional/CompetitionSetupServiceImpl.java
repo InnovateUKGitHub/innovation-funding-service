@@ -1,6 +1,7 @@
 package com.worth.ifs.competition.transactional;
 
 import static com.worth.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT_EDITABLE;
+import static com.worth.ifs.commons.error.CommonFailureKeys.COMPETITION_NO_TEMPLATE;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.transactional.CompetitionServiceImpl.COMPETITION_CLASS_NAME;
@@ -185,6 +186,10 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
             return serviceFailure(new Error(COMPETITION_NOT_EDITABLE));
         }
 
+        if(template == null) {
+            return serviceFailure(new Error(COMPETITION_NO_TEMPLATE));
+        }
+
         List<SectionTemplate> sectionsWithoutParentSections =
                 template.getSectionTemplates().stream()
                         .filter(s -> s.getParentSectionTemplate() == null)
@@ -252,7 +257,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 	private List<Question> createQuestions(Competition competition, Section section, List<QuestionTemplate> questions) {
 		return questions.stream().map(createQuestion(competition, section)).collect(Collectors.toList());
 	}
-x
+
 	private Function<QuestionTemplate, Question> createQuestion(Competition competition, Section section) {
 		return (QuestionTemplate questionTemplate) -> {
 			Question question = new Question();
@@ -261,6 +266,7 @@ x
 			question.setShortName(questionTemplate.getShortName());
 			question.setCompetition(competition);
 			question.setSection(section);
+            question.setQuestionNumber(questionTemplate.getQuestionNumber());
 
             // save it to get an question id for form input objects
 			questionRepository.save(question);

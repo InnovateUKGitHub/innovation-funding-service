@@ -11,6 +11,7 @@ import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionResource.Status;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competitionsetup.form.*;
+import com.worth.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -41,6 +42,9 @@ public class CompetitionSetupController {
 
     @Autowired
     private CompetitionSetupService competitionSetupService;
+
+    @Autowired
+    private CompetitionSetupQuestionService competitionSetupQuestionService;
 
     @Autowired
     private CategoryService categoryService;
@@ -157,6 +161,17 @@ public class CompetitionSetupController {
                                               Model model) {
 
         return genericCompetitionSetupSection(competitionSetupForm, bindingResult, competitionId, CompetitionSetupSection.APPLICATION_FORM, model);
+    }
+
+    @RequestMapping(value = "/{competitionId}/section/application/question/update", method = RequestMethod.POST)
+    public String submitApplicationQuestion(@Valid @ModelAttribute("competitionSetupForm") ApplicationFormForm competitionSetupForm,
+                                            BindingResult bindingResult,
+                                            @PathVariable("competitionId") Long competitionId,
+                                            Model model) {
+
+        competitionSetupQuestionService.updateQuestion(competitionSetupForm.getQuestionToUpdate());
+
+        return "redirect:/" + competitionId + "/section/application";
     }
 
     @RequestMapping(value = "/{competitionId}/section/finance", method = RequestMethod.POST)

@@ -1,21 +1,19 @@
 package com.worth.ifs.competitionsetup.form;
 
-import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.competitionsetup.model.Question;
 
-import java.util.List;
 
 /**
  * Form for the application form competition setup section.
  */
 public class ApplicationFormForm extends CompetitionSetupForm {
-    private List<Question> questions;
+    private Question questionToUpdate;
 
-    public List<Question> getQuestions() {
-        return questions;
+    public Question getQuestionToUpdate() {
+        return questionToUpdate;
     }
 
-    public void setQuestions(List<Question> questions) {
-        this.questions = questions;
+    public void setQuestionToUpdate(Question questionToUpdate) {
+        this.questionToUpdate = questionToUpdate;
     }
 }

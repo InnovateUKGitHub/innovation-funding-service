@@ -36,17 +36,16 @@
 <!-- =================Section: application questions=========================== -->
 
 <div th:fragment="application-question(question)">
-    <div th:text="${question.number}" />
     <li>
         <div class="grid-row">
             <div class="column-three-quarters">
-                <h2 class="heading-medium" th:text="${question.number + '. ' + question.title}" />
+                <h2 class="heading-medium" th:text="${question.number + '. ' + question.shortTitle}" />
             </div>
             <div class="column-quarter alignright">
                 <a th:href="@{'?status=edit-' + ${question.id}}" class="button button-secondary" th:unless="${param.status != null and param.status[0] == 'edit-' + question.id}">Edit</a>
             </div>
         </div>
-       <!--/*<th:block th:unless="${param.status != null and param.status[0] == 'edit-' + question.id}">
+        <th:block th:unless="${param.status != null and param.status[0] == 'edit-' + question.id}">
             <div class="extra-margin-bottom">
                 <div class="grid-row">
                     <div class="column-quarter">
@@ -61,7 +60,8 @@
                         <h3 class="heading-small">Question subtitle</h3>
                     </div>
                     <div class="column-three-quarters">
-                        <p th:text="${question.subTitle}"></p>
+                        <p th:if="${#strings.isEmpty(question.subTitle)}">None</p>
+                        <p th:unless="${#strings.isEmpty(question.subTitle)}" th:text="${question.subTitle}"></p>
                     </div>
                 </div>
                 <div class="grid-row">
@@ -77,7 +77,7 @@
                         <h3 class="heading-small">Guidance</h3>
                     </div>
                     <div class="column-three-quarters">
-                        <p th:text="${question.guidance}"></p>
+                        <p th:utext="${question.guidance}"></p>
                     </div>
                 </div>
                 <div class="grid-row">
@@ -97,73 +97,112 @@
                     </div>
                 </div>
             </div>
-        </th:block>*/--!>
-        <!--
-        <th:block th:if="${param.status != null and param.status[0] == 'edit-'+question.id}">
-            <div class="question">
-                <div class="form-group">
-                    <label class="form-label" th:for="${'question-'+ questionNo +'-title'}">
-                        <span class="form-label-bold">Question title</span>
-                    </label>
-                    <input class="form-control width-x-large" th:id="${'question-'+ questionNo +'-title'}" th:name="${'question-'+ questionNo +'-title'}" value="" th:value="${question}"/>
-                </div>
-                <div class="form-group">
-                    <label class="form-label" th:for="${'question-'+ questionNo +'-subtitle'}">
-                        <span class="form-label-bold">Competition subtitle</span>
-                    </label>
-                    <input class="form-control width-x-large" th:id="${'question-'+ questionNo +'-subtitle'}" th:name="${'question-'+ questionNo +'-subtitle'}" />
-                </div>
-                <div class="form-group">
-                    <label class="form-label" th:for="${'question-'+ questionNo +'-guidance-title'}">
-                        <span class="form-label-bold">Question guidance title</span>
-                    </label>
-                    <input class="form-control width-x-large" th:id="${'question-'+ questionNo +'-guidance-title'}" th:name="${'question-'+ questionNo +'-guidance-title'}" />
-                </div>
-                <div class="form-group">
-                    <label class="form-label form-label-bold" th:for="${'question-'+ questionNo +'-guidance'}">Question guidance</label>
-                    <div class="textarea-wrapped ">
-                        <textarea data-max_words="500" th:id="${'question-'+ questionNo +'-guidance'}" th:name="${'question-'+ questionNo +'-guidance'}"></textarea>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label" th:for="${'question-'+ questionNo +'-word-count'}">
-                        <span class="form-label-bold">Max word count</span>
-                    </label>
-                    <input class="form-control width-medium" th:id="${'question-'+ questionNo +'-word-count'}" th:name="${'question-'+ questionNo +'-word-count'}" value="400" />
-                </div>
-                <div class="grid-row">
-                    <div class="column-half">
-                        <fieldset class="inline">
-                            <legend class="form-label-bold">Is the answer scored?</legend>
-                            <label class="block-label" th:for="${'question-'+ questionNo +'-scored-yes'}">
-                                <input th:id="${'question-'+ questionNo +'-scored-yes'}" th:name="${'question-'+ questionNo +'-group-scored'}" value="Yes" type="radio" />
-                                Yes
-                            </label>
-                            <label class="block-label" th:for="${'question-'+ questionNo +'-scored-no'}">
-                                <input th:id="${'question-'+ questionNo +'-scored-no'}" th:name="${'question-'+ questionNo +'-group-scored'}" value="Yes" type="radio" />
-                                No
-                            </label>
-                        </fieldset>
-                    </div>
-                    <div class="column-half">
-                        <fieldset class="inline">
-                            <legend class="form-label-bold">Allow appendix?</legend>
-                            <label class="block-label" th:for="${'question-'+ questionNo +'-appendix-yes'}">
-                                <input th:id="${'question-'+ questionNo +'-appendix-yes'}" th:name="${'question-'+ questionNo +'-group-appendix'}" value="Yes" type="radio" />
-                                Yes
-                            </label>
-                            <label class="block-label" th:for="${'question-'+ questionNo +'-appendix-no'}">
-                                <input th:id="${'question-'+ questionNo +'-appendix-no'}" th:name="${'question-'+ questionNo +'-group-appendix'}" value="Yes" type="radio" />
-                                No
-                            </label>
-                        </fieldset>
-                    </div>
-                </div>
-            </div>
-            <div class="alignright">
-                <a th:href="@{'?status=save-'+${questionNo}+'&#38;section=application'}" class="button button-large">Save and close</a>
-            </div>
         </th:block>
-        -->
+        <th:block th:if="${param.status != null and param.status[0] == 'edit-' + question.id}">
+            <form method="post" th:object="${competitionSetupForm.questionToUpdate}" action="application/question/update">
+                <input type="hidden"
+                       th:name="questionToUpdate.id"
+                       th:value="${question.id}" />
+                <div class="question">
+                    <div class="form-group">
+                        <label class="form-label" for="question.title">
+                            <span class="form-label-bold">Question title</span>
+                            <span th:if="${#fields.hasErrors('*{title}')}" th:remove="tag">
+                                <span class="error-message"  th:each="err : ${#fields.errors('*{title}')}" th:text="${err}" />
+                            </span>
+                        </label>
+                        <input th:class="${#fields.hasErrors('title') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
+                               type="text"
+                               th:name="questionToUpdate.title"
+                               th:value="${question.title}"
+                               maxlength="255"/>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="question.subTitle">
+                            <span class="form-label-bold">Question subtitle</span>
+                            <span th:if="${#fields.hasErrors('subTitle')}" th:remove="tag">
+                                <span class="error-message"  th:each="err : ${#fields.errors('subTitle')}" th:text="${err}" />
+                            </span>
+                        </label>
+                        <input th:class="${#fields.hasErrors('subTitle') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
+                               type="text"
+                               th:name="questionToUpdate.subTitle"
+                               th:value="${question.subTitle}"
+                               maxlength="255"/>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="question.guidanceTitle">
+                            <span class="form-label-bold">Question guidance title</span>
+                            <span th:if="${#fields.hasErrors('title')}" th:remove="tag">
+                                <span class="error-message"  th:each="err : ${#fields.errors('guidanceTitle')}" th:text="${err}" />
+                            </span>
+                        </label>
+                        <input th:class="${#fields.hasErrors('guidanceTitle') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
+                               type="text"
+                               th:name="questionToUpdate.guidanceTitle"
+                               th:value="${question.guidanceTitle}"
+                               maxlength="255"/>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="question.guidanceTitle">
+                            <span class="form-label-bold">Question guidance</span>
+                            <span th:if="${#fields.hasErrors('title')}" th:remove="tag">
+                                <span class="error-message"  th:each="err : ${#fields.errors('guidance')}" th:text="${err}" />
+                            </span>
+                        </label>
+                        <div class="textarea-wrapped ">
+                            <textarea data-max_words="500"
+                                      th:class="${#fields.hasErrors('guidance') ? 'field-error' : ''}"
+                                      th:name="questionToUpdate.guidance"
+                                      ifs:utext="${question.guidance}">
+                            </textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="question.maxWords">
+                            <span class="form-label-bold">Max word count</span>
+                            <span th:if="${#fields.hasErrors('maxWords')}" th:remove="tag">
+                                <span class="error-message"  th:each="err : ${#fields.errors('maxWords')}" th:text="${err}" />
+                            </span>
+                        </label>
+                        <input th:class="${#fields.hasErrors('maxWords') ? 'form-control field-error width-medium' : 'form-control width-medium'}"
+                               type="number"
+                               th:name="questionToUpdate.maxWords"
+                               th:value="${question.maxWords}"/>
+                    </div>
+                    <div class="grid-row">
+                        <div class="column-half">
+                            <fieldset class="inline">
+                                <legend class="form-label-bold">Is the answer scored?</legend>
+                                <label class="block-label">
+                                    <input th:name="questionToUpdate.scored" value="1" type="radio" />
+                                    Yes
+                                </label>
+                                <label class="block-label">
+                                    <input  th:name="questionToUpdate.scored" value="0" type="radio" />
+                                    No
+                                </label>
+                            </fieldset>
+                        </div>
+                        <div class="column-half">
+                            <fieldset class="inline">
+                                <legend class="form-label-bold">Allow appendix?</legend>
+                                <label class="block-label">
+                                    <input th:name="questionToUpdate.appendix" value="1" type="radio" />
+                                    Yes
+                                </label>
+                                <label class="block-label">
+                                    <input th:name="questionToUpdate.appendix" value="0" type="radio" />
+                                    No
+                                </label>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+                <div class="alignright">
+                    <input type="submit" class="button button-large" value="Save and close"/>
+                </div>
+            </form>
+        </th:block>
     </li>
 </div>

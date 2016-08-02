@@ -49,6 +49,7 @@ CREATE TABLE `question_template` (
   `section_template_id` BIGINT(20) NOT NULL,
   `name` varchar(255) DEFAULT NULL,
   `short_name` varchar(255) DEFAULT NULL,
+  `question_number` varchar(255) DEFAULT NULL,
   `description` varchar(5000) DEFAULT NULL,
   `assessor_guidance_question` varchar(5000) DEFAULT NULL,
   `assessor_guidance_answer` varchar(5000) DEFAULT NULL,

@@ -23,6 +23,8 @@ public class QuestionTemplate {
  	private String name;
     private String shortName;
 
+	private String questionNumber;
+
     @Column(length = 5000)
     private String description;
 
@@ -64,6 +66,14 @@ public class QuestionTemplate {
 
 	public void setShortName(String shortName) {
 		this.shortName = shortName;
+	}
+
+	public String getQuestionNumber() {
+		return questionNumber;
+	}
+
+	public void setQuestionNumber(String questionNumber) {
+		this.questionNumber = questionNumber;
 	}
 
 	public String getDescription() {

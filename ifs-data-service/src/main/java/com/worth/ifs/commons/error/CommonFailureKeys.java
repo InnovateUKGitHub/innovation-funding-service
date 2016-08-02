@@ -43,6 +43,7 @@ public enum CommonFailureKeys implements ErrorTemplate {
      */
     COMPETITION_NOT_EDITABLE("The competition is no longer editable", BAD_REQUEST),
     COMPETITION_NOT_OPEN("The competition this application belongs to is no longer open for application submissions", BAD_REQUEST),
+    COMPETITION_NO_TEMPLATE("This competition type has no competition template available", CONFLICT),
 
     /**
      * Notifications
