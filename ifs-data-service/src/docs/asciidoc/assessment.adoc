@@ -1,9 +1,11 @@
 === Find Assessment By Id ===
 ==== Request
 include::{snippets}/assessment/find-assessment-by-id/http-request.adoc[]
+include::{snippets}/assessment/find-assessment-by-id/path-parameters.adoc[]
 
 ==== Response
 include::{snippets}/assessment/find-assessment-by-id/http-response.adoc[]
+include::{snippets}/assessment/find-assessment-by-id/response-fields.adoc[]
 
 ==== Curl Example
 include::{snippets}/assessment/find-assessment-by-id/curl-request.adoc[]
@@ -12,6 +14,7 @@ include::{snippets}/assessment/find-assessment-by-id/curl-request.adoc[]
 === Update Assessment Status ===
 ==== Request
 include::{snippets}/assessment/update-assessment-status/http-request.adoc[]
+include::{snippets}/assessment/update-assessment-status/path-parameters.adoc[]
 
 ==== Response
 include::{snippets}/assessment/update-assessment-status/http-response.adoc[]
