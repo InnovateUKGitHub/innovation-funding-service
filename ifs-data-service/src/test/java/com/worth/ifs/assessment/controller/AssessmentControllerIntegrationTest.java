@@ -34,6 +34,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         String event = "recommend";
         Long processRole = 7L;
 
+        loginCompAdmin();
         AssessmentResource assessmentResource = controller.findById(assessmentId).getSuccessObject();
         assertEquals(event,assessmentResource.getEvent());
         assertEquals(processRole,assessmentResource.getProcessRole());
@@ -50,6 +51,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         Long assessmentId = 2L;
         Long processRole = 8L;
 
+        loginPaulPlum();
         AssessmentResource assessmentResource = controller.findById(assessmentId).getSuccessObject();
         assertEquals(AssessmentStates.OPEN.getState(),assessmentResource.getStatus());
         assertEquals(processRole,assessmentResource.getProcessRole());
