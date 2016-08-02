@@ -28,9 +28,9 @@ public abstract class InviteMapper extends BaseMapper<ApplicationInvite, InviteR
             @Mapping(source = "target.leadApplicant.email", target = "leadApplicantEmail"),
             @Mapping(source = "target.name", target = "applicationName"),
             @Mapping(source = "target.id", target = "application"),
-            @Mapping(source = "owner.id", target = "inviteOrganisation"),
-            @Mapping(source = "owner.organisationName", target = "inviteOrganisationName"),
-            @Mapping(source = "owner.organisation.name", target = "inviteOrganisationNameConfirmed"),
+            @Mapping(source = "inviteOrganisation.id", target = "inviteOrganisation"),
+            @Mapping(source = "inviteOrganisation.organisationName", target = "inviteOrganisationName"),
+            @Mapping(source = "inviteOrganisation.organisation.name", target = "inviteOrganisationNameConfirmed"),
             @Mapping(source = "user.name", target = "nameConfirmed"),
             @Mapping(source = "user.id", target = "user"),
     })

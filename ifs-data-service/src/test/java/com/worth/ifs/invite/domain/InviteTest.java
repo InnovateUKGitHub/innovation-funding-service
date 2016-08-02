@@ -36,7 +36,7 @@ public class InviteTest {
         setInvite.setEmail(email);
         setInvite.setTarget(application);
         setInvite.setHash(hash);
-        setInvite.setOwner(inviteOrganisation);
+        setInvite.setInviteOrganisation(inviteOrganisation);
         setInvite.setStatus(status);
 
         constructedInvite = new ApplicationInvite(name, email, application, inviteOrganisation, hash, status);
@@ -49,7 +49,7 @@ public class InviteTest {
         Assert.assertEquals(email, setInvite.getEmail());
         Assert.assertEquals(application, setInvite.getTarget());
         Assert.assertEquals(hash, setInvite.getHash());
-        Assert.assertEquals(inviteOrganisation, setInvite.getOwner());
+        Assert.assertEquals(inviteOrganisation, setInvite.getInviteOrganisation());
         Assert.assertEquals(status, setInvite.getStatus());
     }
 
@@ -59,7 +59,7 @@ public class InviteTest {
         Assert.assertEquals(email, constructedInvite.getEmail());
         Assert.assertEquals(application, constructedInvite.getTarget());
         Assert.assertEquals(hash, constructedInvite.getHash());
-        Assert.assertEquals(inviteOrganisation, constructedInvite.getOwner());
+        Assert.assertEquals(inviteOrganisation, constructedInvite.getInviteOrganisation());
         Assert.assertEquals(status, constructedInvite.getStatus());
     }
 }

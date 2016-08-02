@@ -135,7 +135,7 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
         invite.setName("Nico");
         invite.setEmail("nico@test.nl");
         InviteOrganisation inviteOrganisation = new InviteOrganisation("SomeOrg", null, Arrays.asList(invite));
-        invite.setOwner(inviteOrganisation);
+        invite.setInviteOrganisation(inviteOrganisation);
 
         List<ServiceResult<Void>> results = inviteService.inviteCollaborators("http:localhost:189809", Arrays.asList(invite));
         assertEquals(1, results.size());

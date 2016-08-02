@@ -11,7 +11,7 @@ import javax.persistence.ManyToOne;
 
 @Entity
 @DiscriminatorValue("APPLICATION")
-public class ApplicationInvite extends Invite<InviteOrganisation, Application> {
+public class ApplicationInvite extends Invite<Application> {
 
     @ManyToOne
     @JoinColumn(name = "target_id", referencedColumnName = "id")
@@ -25,19 +25,17 @@ public class ApplicationInvite extends Invite<InviteOrganisation, Application> {
         // no-arg constructor
     }
 
-    public ApplicationInvite(String name, String email, Application application, InviteOrganisation inviteOrganisation, String hash, InviteStatusConstants status) {
+    public ApplicationInvite(final String name, final String email, final Application application, final InviteOrganisation inviteOrganisation, final String hash, final InviteStatusConstants status) {
         super(name, email, hash, status);
         this.application = application;
         this.inviteOrganisation = inviteOrganisation;
     }
 
-    @Override
-    public InviteOrganisation getOwner() {
+    public InviteOrganisation getInviteOrganisation() {
         return inviteOrganisation;
     }
 
-    @Override
-    public void setOwner(InviteOrganisation inviteOrganisation) {
+    public void setInviteOrganisation(InviteOrganisation inviteOrganisation) {
         this.inviteOrganisation = inviteOrganisation;
     }
 

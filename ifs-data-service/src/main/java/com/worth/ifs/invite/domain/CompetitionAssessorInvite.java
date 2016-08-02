@@ -1,6 +1,7 @@
 package com.worth.ifs.invite.domain;
 
 import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.invite.constant.InviteStatusConstants;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -9,7 +10,7 @@ import javax.persistence.ManyToOne;
 
 @Entity
 @DiscriminatorValue("COMPETITION_ASSESSOR")
-public class CompetitionAssessorInvite extends Invite<Void, Competition> {
+public class CompetitionAssessorInvite extends Invite<Competition> {
 
     @ManyToOne
     @JoinColumn(name = "target_id", referencedColumnName = "id")
@@ -19,14 +20,9 @@ public class CompetitionAssessorInvite extends Invite<Void, Competition> {
         // no-arg constructor
     }
 
-    @Override
-    public Void getOwner() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void setOwner(Void none) {
-        throw new UnsupportedOperationException();
+    public CompetitionAssessorInvite(final String name, final String email, final String hash, final Competition competition) {
+        super(name, email, hash, InviteStatusConstants.CREATED);
+        this.competition = competition;
     }
 
     @Override

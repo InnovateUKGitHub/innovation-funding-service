@@ -63,7 +63,7 @@ public class InvitePermissionRules {
 
     private boolean isCollaboratorOnInvite(final ApplicationInvite invite, final UserResource user) {
         final long applicationId = invite.getTarget().getId();
-        final InviteOrganisation inviteOrganisation = invite.getOwner();
+        final InviteOrganisation inviteOrganisation = invite.getInviteOrganisation();
         if (inviteOrganisation != null && inviteOrganisation.getOrganisation() != null) {
             long organisationId = inviteOrganisation.getOrganisation().getId();
             final boolean isCollaborator = checkProcessRole(user, applicationId, organisationId, COLLABORATOR, roleRepository, processRoleRepository);

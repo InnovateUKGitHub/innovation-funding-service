@@ -38,14 +38,14 @@ public class InviteBuilder extends BaseBuilder<ApplicationInvite, InviteBuilder>
     }
 
     public InviteBuilder withInviteOrganisation(InviteOrganisation... organisations) {
-        return withArray((organisation, invite) -> invite.setOwner(organisation), organisations);
+        return withArray((organisation, invite) -> invite.setInviteOrganisation(organisation), organisations);
     }
 
     @Override
     public void postProcess(int index, ApplicationInvite invite) {
 
         // add back-refs to InviteOrganisations
-        InviteOrganisation inviteOrganisation = invite.getOwner();
+        InviteOrganisation inviteOrganisation = invite.getInviteOrganisation();
         if (inviteOrganisation != null && !simpleMap(inviteOrganisation.getInvites(), ApplicationInvite::getId).contains(invite.getId())) {
             inviteOrganisation.getInvites().add(invite);
         }

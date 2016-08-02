@@ -155,10 +155,10 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         }
         notificationArguments.put("competitionName", invite.getTarget().getCompetition().getName());
         notificationArguments.put("inviteUrl", getInviteUrl(baseUrl, invite));
-        if(invite.getOwner().getOrganisation() != null){
-            notificationArguments.put("inviteOrganisationName", invite.getOwner().getOrganisation().getName());
+        if(invite.getInviteOrganisation().getOrganisation() != null){
+            notificationArguments.put("inviteOrganisationName", invite.getInviteOrganisation().getOrganisation().getName());
         }else{
-            notificationArguments.put("inviteOrganisationName", invite.getOwner().getOrganisationName());
+            notificationArguments.put("inviteOrganisationName", invite.getInviteOrganisation().getOrganisationName());
         }
         notificationArguments.put("leadOrganisation", invite.getTarget().getLeadOrganisation().getName());
         notificationArguments.put("leadApplicant", invite.getTarget().getLeadApplicant().getName());
@@ -204,7 +204,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
     @Override
     public ServiceResult<InviteOrganisationResource> getInviteOrganisationByHash(String hash) {
-        return getByHash(hash).andOnSuccessReturn(invite -> inviteOrganisationMapper.mapToResource(inviteOrganisationRepository.findOne(invite.getOwner().getId())));
+        return getByHash(hash).andOnSuccessReturn(invite -> inviteOrganisationMapper.mapToResource(inviteOrganisationRepository.findOne(invite.getInviteOrganisation().getId())));
     }
 
     @Override
@@ -248,8 +248,8 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
             if(invite.getEmail().equalsIgnoreCase(user.getEmail())){
                 invite.setStatus(InviteStatusConstants.ACCEPTED);
 
-                if(invite.getOwner().getOrganisation()==null && !user.getOrganisations().isEmpty()){
-                    invite.getOwner().setOrganisation(user.getOrganisations().get(0));
+                if(invite.getInviteOrganisation().getOrganisation()==null && !user.getOrganisations().isEmpty()){
+                    invite.getInviteOrganisation().setOrganisation(user.getOrganisations().get(0));
                 }
                 invite = inviteRepository.save(invite);
                 initializeInvitee(invite, user);
@@ -265,7 +265,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     private void initializeInvitee(ApplicationInvite invite, User user) {
         Application application = invite.getTarget();
         Role role = roleRepository.findOneByName(COLLABORATOR.getName());
-        Organisation organisation = invite.getOwner().getOrganisation();
+        Organisation organisation = invite.getInviteOrganisation().getOrganisation();
         ProcessRole processRole = new ProcessRole(user, application, role, organisation);
         processRoleRepository.save(processRole);
     }
@@ -353,7 +353,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         if(newInviteOrganisation.getOrganisation()!= null){
             List<InviteOrganisation> existingOrgInvite = inviteOrganisationRepository.findByOrganisationId(newInviteOrganisation.getOrganisation().getId());
             if(!existingOrgInvite.isEmpty()){
-                invite.setOwner(existingOrgInvite.get(0));
+                invite.setInviteOrganisation(existingOrgInvite.get(0));
             }
         }
 

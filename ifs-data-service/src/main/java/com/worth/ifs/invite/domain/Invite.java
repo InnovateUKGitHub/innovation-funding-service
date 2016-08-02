@@ -20,7 +20,7 @@ import javax.persistence.*;
 @DiscriminatorColumn(name="type", discriminatorType=DiscriminatorType.STRING)
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @Entity
-public abstract class Invite<O, T> {
+public abstract class Invite<T> {
     private static final CharSequence HASH_SALT = "b80asdf00poiasd07hn";
 
     @Id
@@ -41,15 +41,13 @@ public abstract class Invite<O, T> {
     @Enumerated(EnumType.STRING)
     private InviteStatusConstants status;
 
-    public Invite() {
+    Invite() {
     	// no-arg constructor
     }
 
-    public Invite(final String name, final String email, final String hash, final InviteStatusConstants status) {
+    Invite(final String name, final String email, final String hash, final InviteStatusConstants status) {
         this.name = name;
         this.email = email;
-//        this.application = application;
-//        this.inviteOrganisation = inviteOrganisation;
         this.hash = hash;
         this.status = status;
     }
@@ -77,22 +75,6 @@ public abstract class Invite<O, T> {
     public void setEmail(String email) {
         this.email = email;
     }
-
-//    public Application getApplication() {
-//        return application;
-//    }
-
-//    public void setApplication(Application application) {
-//        this.application = application;
-//    }
-
-//    public InviteOrganisation getInviteOrganisation() {
-//        return inviteOrganisation;
-//    }
-
-//    public void setInviteOrganisation(InviteOrganisation inviteOrganisation) {
-//        this.inviteOrganisation = inviteOrganisation;
-//    }
 
     public String getHash() {
         return hash;
@@ -127,10 +109,6 @@ public abstract class Invite<O, T> {
         }
         return hash;
     }
-
-    public abstract O getOwner(); // 'owner'
-
-    public abstract void setOwner(O inviter);
 
     public abstract T getTarget(); // the thing we're being invited to
 
