@@ -3,6 +3,9 @@ package com.worth.ifs.sil.experian.resource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+/**
+ * This is used to perform validation on account number and sort code via SIL API.
+ */
 public class SILBankDetails {
     private String sortcode;
     private String accountNumber;

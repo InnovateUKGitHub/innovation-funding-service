@@ -80,4 +80,15 @@ public class AccountDetails extends SILBankDetails {
                 .append(address)
                 .toHashCode();
     }
+
+    @Override
+    public String toString() {
+        return "AccountDetails{" +
+                "companyName='" + companyName + '\'' +
+                ", registrationNumber='" + registrationNumber + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", address=" + address +
+                '}';
+    }
 }

@@ -13,7 +13,6 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
 import com.worth.ifs.organisation.repository.OrganisationAddressRepository;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
-import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.sil.experian.resource.AccountDetails;
 import com.worth.ifs.sil.experian.resource.Condition;
@@ -81,28 +80,17 @@ public class BankDetailsServiceImpl implements BankDetailsService{
 
     @Override
     public ServiceResult<BankDetailsResource> getByProjectAndOrganisation(Long projectId, Long organisationId) {
-        BankDetails bankDetails = bankDetailsRepository.findByProjectIdAndOrganisationId(projectId, organisationId);
-        if(bankDetails != null) {
-            return serviceSuccess(bankDetailsMapper.mapToResource(bankDetails));
-        } else {
-            return serviceFailure(new Error(BANK_DETAILS_DONT_EXIST_FOR_GIVEN_PROJECT_AND_ORGANISATION, asList(projectId, organisationId), HttpStatus.NOT_FOUND));
-        }
+        return find(bankDetailsRepository.findByProjectIdAndOrganisationId(projectId, organisationId),
+                new Error(BANK_DETAILS_DONT_EXIST_FOR_GIVEN_PROJECT_AND_ORGANISATION, asList(projectId, organisationId), HttpStatus.NOT_FOUND)).
+                andOnSuccess(bankDetails -> serviceSuccess(bankDetailsMapper.mapToResource(bankDetails)));
     }
 
     private ServiceResult<Void> projectDetailsExist(final Long projectId){
-        Project project = projectRepository.findOne(projectId);
-        if(project.getSubmittedDate() == null){
-            return serviceFailure(new Error(BANK_DETAILS_CANNOT_BE_SUBMITTED_BEFORE_PROJECT_DETAILS));
-        }
-        return serviceSuccess();
+        return find(projectRepository.findOne(projectId), new Error(BANK_DETAILS_CANNOT_BE_SUBMITTED_BEFORE_PROJECT_DETAILS)).andOnSuccess(() -> serviceSuccess());
     }
 
     private ServiceResult<Void> bankDetailsDontExist(final Long projectId, final Long organisationId){
-        BankDetails bankDetails = bankDetailsRepository.findByProjectIdAndOrganisationId(projectId, organisationId);
-        if(bankDetails != null){
-            return serviceFailure(new Error(BANK_DETAILS_CAN_ONLY_BE_SUBMITTED_ONCE));
-        }
-        return serviceSuccess();
+        return find(bankDetailsRepository.findByProjectIdAndOrganisationId(projectId, organisationId), new Error(BANK_DETAILS_CAN_ONLY_BE_SUBMITTED_ONCE)).andOnSuccess(() -> serviceSuccess());
     }
 
     private ServiceResult<AccountDetails> saveBankDetails(AccountDetails accountDetails, BankDetailsResource bankDetailsResource){

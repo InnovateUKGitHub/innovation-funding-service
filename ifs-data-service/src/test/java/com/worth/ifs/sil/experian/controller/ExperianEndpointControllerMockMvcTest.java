@@ -7,6 +7,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import static com.worth.ifs.sil.experian.controller.ExperianEndpointController.validationErrors;
 import static com.worth.ifs.sil.experian.controller.ExperianEndpointController.verificationResults;
 import static com.worth.ifs.util.JsonMappingUtil.toJson;
+import static junit.framework.TestCase.fail;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -34,8 +35,9 @@ public class ExperianEndpointControllerMockMvcTest extends BaseControllerMockMVC
                         ).
                         andExpect(status().isOk()).
                         andReturn();
+                System.out.println();
             } catch (Exception e) {
-                e.printStackTrace();
+                fail("Error while validating a stub example " + e.getMessage() + " " + validationErrors.get(bankDetails));
             }
         });
     }
@@ -51,8 +53,9 @@ public class ExperianEndpointControllerMockMvcTest extends BaseControllerMockMVC
                                 header("IFS_AUTH_TOKEN", "123abc").
                                 content(requestBody)
                 ).andExpect(status().isOk()).andReturn();
+                System.out.println();
             } catch (Exception e){
-                e.printStackTrace();
+                fail("Error while verification of a stub example " + e.getMessage() + " " + verificationResults.get(accountDetails));
             }
         });
     }
