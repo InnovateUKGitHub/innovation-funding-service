@@ -60,7 +60,7 @@ public class FormInputControllerDocumentation extends BaseControllerMockMVCTest<
         List<FormInputResource> testResource = formInputResourceBuilder.build(1);
         when(formInputServiceMock.findByQuestionId(1L)).thenReturn(serviceSuccess(testResource));
 
-        mockMvc.perform(get(baseURI + "/findByQuestionId/{id}", 1L))
+        mockMvc.perform(get(baseURI + "/findByQuestionIdOrderByPriorityAsc/{id}", 1L))
             .andDo(this.document.snippets(
                 pathParameters(
                     parameterWithName("id").description("id of the question")
@@ -76,7 +76,7 @@ public class FormInputControllerDocumentation extends BaseControllerMockMVCTest<
         List<FormInputResource> testResource = formInputResourceBuilder.build(1);
         when(formInputServiceMock.findByCompetitionId(1L)).thenReturn(serviceSuccess(testResource));
 
-        mockMvc.perform(get(baseURI + "/findByCompetitionId/{id}", 1L))
+        mockMvc.perform(get(baseURI + "/findByCompetitionIdOrderByPriorityAsc/{id}", 1L))
             .andDo(this.document.snippets(
                 pathParameters(
                     parameterWithName("id").description("id of the competition")
