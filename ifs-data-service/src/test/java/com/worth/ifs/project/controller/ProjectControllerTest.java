@@ -222,7 +222,7 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
         verify(projectServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);
 
         // Ensure that notification is not sent when there is error whilst saving
-        verify(projectServiceMock, never()).notifyMonitoringOfficer(monitoringOfficerResource);
+        verify(projectServiceMock, never()).notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource);
 
     }
 
@@ -232,7 +232,7 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
         Long projectId = 1L;
 
         when(projectServiceMock.saveMonitoringOfficer(projectId, monitoringOfficerResource)).thenReturn(serviceSuccess());
-        when(projectServiceMock.notifyMonitoringOfficer(monitoringOfficerResource)).
+        when(projectServiceMock.notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource)).
                 thenReturn(serviceFailure(new Error(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE)));
 
         mockMvc.perform(put("/project/{projectId}/monitoring-officer", projectId)
@@ -241,7 +241,7 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
                 .andExpect(status().isInternalServerError());
 
         verify(projectServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);
-        verify(projectServiceMock).notifyMonitoringOfficer(monitoringOfficerResource);
+        verify(projectServiceMock).notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource);
 
     }
 
@@ -251,7 +251,7 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
         Long projectId = 1L;
 
         when(projectServiceMock.saveMonitoringOfficer(projectId, monitoringOfficerResource)).thenReturn(serviceSuccess());
-        when(projectServiceMock.notifyMonitoringOfficer(monitoringOfficerResource)).
+        when(projectServiceMock.notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource)).
                 thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/project/{projectId}/monitoring-officer", projectId)
@@ -260,7 +260,7 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
                 .andExpect(status().isOk());
 
         verify(projectServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);
-        verify(projectServiceMock).notifyMonitoringOfficer(monitoringOfficerResource);
+        verify(projectServiceMock).notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource);
 
     }
 

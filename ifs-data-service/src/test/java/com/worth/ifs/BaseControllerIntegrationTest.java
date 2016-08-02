@@ -4,7 +4,6 @@ import com.worth.ifs.security.SecurityRuleUtil;
 import com.worth.ifs.user.mapper.UserMapper;
 import com.worth.ifs.user.repository.UserRepository;
 import com.worth.ifs.user.resource.UserResource;
-import org.apache.catalina.security.SecurityUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +45,10 @@ public abstract class BaseControllerIntegrationTest<ControllerType> extends Base
         return getByEmail("compadmin@innovateuk.test");
     }
 
+    protected UserResource getPaulPlum() {
+        return getByEmail("paul.plum@gmail.com");
+    }
+
     protected UserResource getAnonUser() {
         return SecurityRuleUtil.getAnonymous();
     }
@@ -73,4 +76,9 @@ public abstract class BaseControllerIntegrationTest<ControllerType> extends Base
     protected void loginPeteTom() {
         setLoggedInUser(getPeteTom());
     }
+
+    protected void loginPaulPlum() {
+        setLoggedInUser(getPaulPlum());
+    }
+
 }
