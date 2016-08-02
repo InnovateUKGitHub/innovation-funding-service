@@ -104,8 +104,8 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
     @Autowired
     private OrganisationMapper organisationMapper;
-	
-	@Autowired
+
+    @Autowired
     private NotificationService notificationService;
 
     @Autowired
@@ -149,7 +149,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         return getProject(projectId).
                 andOnSuccess(project -> validateIfProjectAlreadySubmitted(project)).
                 andOnSuccess(project -> validateProjectManager(project, projectManagerUserId).
-                andOnSuccess(leadPartner -> createOrUpdateProjectManagerForProject(project, leadPartner)));
+                        andOnSuccess(leadPartner -> createOrUpdateProjectManagerForProject(project, leadPartner)));
     }
 
     @Override
@@ -178,8 +178,8 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
             project.setAddress(existingAddress);
         } else {
             Address newAddress = addressMapper.mapToDomain(address);
-            if(address.getOrganisations() == null || address.getOrganisations().size() == 0){
-                AddressType addressType = addressTypeRepository.findOne((long)organisationAddressType.getOrdinal());
+            if (address.getOrganisations() == null || address.getOrganisations().size() == 0) {
+                AddressType addressType = addressTypeRepository.findOne((long) organisationAddressType.getOrdinal());
                 List<OrganisationAddress> existingOrgAddresses = organisationAddressRepository.findByOrganisationIdAndAddressType(leadOrganisation.getId(), addressType);
                 existingOrgAddresses.stream().forEach(oA -> organisationAddressRepository.delete(oA));
                 OrganisationAddress organisationAddress = new OrganisationAddress(leadOrganisation, newAddress, addressType);
@@ -218,7 +218,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         return getProject(projectId).
                 andOnSuccess(
                         project -> {
-                            if(validateIsReadyForSubmission(project)){
+                            if (validateIsReadyForSubmission(project)) {
                                 return setSubmittedDate(project, date);
                             } else {
                                 return serviceFailure(new Error(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_SUBMITTED_IF_INCOMPLETE));
@@ -233,6 +233,21 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     }
 
     @Override
+    public ServiceResult<Boolean> isOtherDocumentsSubmitAllowed(Long projectId) {
+        ServiceResult<Project> project = getProject(projectId);
+        Optional<ProjectUser> projectManager = getExistingProjectManager(project.getSuccessObject());
+        boolean allMatch = retrieveUploadedDocuments(projectId).stream()
+                .allMatch(serviceResult -> serviceResult.getSuccessObject().getFileEntry().getFilesizeBytes() > 0);
+
+        if (!allMatch) {
+             return serviceFailure(new Error(PROJECT_SETUP_OTHER_DOCUMENTS_MUST_BE_UPLOADED_BEFORE_SUBMIT));
+        }
+        return projectManager.isPresent() ? serviceSuccess(true)
+                : serviceFailure(new Error(PROJECT_SETUP_OTHER_DOCUMENTS_CAN_ONLY_SUBMITTED_BY_PROJECT_MANAGER));
+
+    }
+
+    @Override
     public ServiceResult<MonitoringOfficerResource> getMonitoringOfficer(Long projectId) {
         return getExistingMonitoringOfficerForProject(projectId).andOnSuccessReturn(monitoringOfficerMapper::mapToResource);
     }
@@ -241,8 +256,8 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     public ServiceResult<Void> saveMonitoringOfficer(final Long projectId, final MonitoringOfficerResource monitoringOfficerResource) {
 
         return validateMonitoringOfficer(projectId, monitoringOfficerResource).
-            andOnSuccess(() -> validateInMonitoringOfficerAssignableState(projectId)).
-            andOnSuccess(() -> saveMonitoringOfficer(monitoringOfficerResource));
+                andOnSuccess(() -> validateInMonitoringOfficerAssignableState(projectId)).
+                andOnSuccess(() -> saveMonitoringOfficer(monitoringOfficerResource));
     }
 
     @Override
@@ -295,7 +310,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     public ServiceResult<Void> updateCollaborationAgreementFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
         return getProject(projectId).
                 andOnSuccess(project -> fileService.updateFile(fileEntryResource, inputStreamSupplier).
-                andOnSuccessReturnVoid(fileDetails -> linkCollaborationAgreementFileToProject(project, fileDetails)));
+                        andOnSuccessReturnVoid(fileDetails -> linkCollaborationAgreementFileToProject(project, fileDetails)));
     }
 
     @Override
@@ -355,6 +370,17 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
                 getExploitationPlan(project).andOnSuccess(fileEntry ->
                         fileService.deleteFile(fileEntry.getId()).andOnSuccessReturnVoid(() ->
                                 removeExploitationPlanFileFromProject(project))));
+    }
+
+    @Override
+    public List<ServiceResult<FileAndContents>> retrieveUploadedDocuments(Long projectId) {
+        ServiceResult<FileAndContents> collaborationAgreementFileContents = getCollaborationAgreementFileContents(projectId);
+        ServiceResult<FileAndContents> exploitationPlanFileContents = getExploitationPlanFileContents(projectId);
+
+        List<ServiceResult<FileAndContents>> serviceResults = new ArrayList<>();
+        serviceResults.add(collaborationAgreementFileContents);
+        serviceResults.add(exploitationPlanFileContents);
+        return serviceResults;
     }
 
     private ServiceResult<FileEntry> getCollaborationAgreement(Project project) {
@@ -420,6 +446,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         return new ExternalUserNotificationTarget(fullName, monitoringOfficer.getEmail());
 
     }
+
     private String getMonitoringOfficerFullName(MonitoringOfficerResource monitoringOfficer) {
 
         // At this stage, validation has already been done to ensure that first name and last name are not empty
@@ -454,9 +481,9 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     private ServiceResult<Void> validateInMonitoringOfficerAssignableState(final Long projectId) {
 
         return getProject(projectId).andOnSuccess(project -> {
-           if (!project.isProjectDetailsSubmitted()) {
-               return serviceFailure(new Error(PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED));
-           }
+            if (!project.isProjectDetailsSubmitted()) {
+                return serviceFailure(new Error(PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED));
+            }
             return serviceSuccess();
         });
     }
@@ -464,8 +491,8 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     private ServiceResult<Void> saveMonitoringOfficer(final MonitoringOfficerResource monitoringOfficerResource) {
 
         return getExistingMonitoringOfficerForProject(monitoringOfficerResource.getProject()).handleSuccessOrFailure(
-            noMonitoringOfficer -> saveNewMonitoringOfficer(monitoringOfficerResource),
-            existingMonitoringOfficer -> updateExistingMonitoringOfficer(existingMonitoringOfficer, monitoringOfficerResource)
+                noMonitoringOfficer -> saveNewMonitoringOfficer(monitoringOfficerResource),
+                existingMonitoringOfficer -> updateExistingMonitoringOfficer(existingMonitoringOfficer, monitoringOfficerResource)
         );
     }
 
@@ -487,7 +514,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     public ServiceResult<OrganisationResource> getOrganisationByProjectAndUser(Long projectId, Long userId) {
         Role partnerRole = roleRepository.findOneByName(PARTNER.getName());
         ProjectUser projectUser = projectUserRepository.findByProjectIdAndRoleIdAndUserId(projectId, partnerRole.getId(), userId);
-        if(projectUser != null && projectUser.getOrganisation() != null) {
+        if (projectUser != null && projectUser.getOrganisation() != null) {
             return serviceSuccess(organisationMapper.mapToResource(organisationRepository.findOne(projectUser.getOrganisation().getId())));
         } else {
             return serviceFailure(new Error(CANNOT_FIND_ORG_FOR_GIVEN_PROJECT_AND_USER, NOT_FOUND));
@@ -565,7 +592,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         List<ProjectUser> leadPartners = getLeadPartners(project);
         List<ProjectUser> matchingProjectUsers = simpleFilter(leadPartners, pu -> pu.getUser().getId().equals(projectManagerUserId));
 
-        if(!matchingProjectUsers.isEmpty()) {
+        if (!matchingProjectUsers.isEmpty()) {
             return getOnlyElementOrFail(matchingProjectUsers);
         } else {
             return serviceFailure(new Error(PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_LEAD_PARTNER));
@@ -575,7 +602,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     private List<ProjectUser> getLeadPartners(Project project) {
         Application application = project.getApplication();
         Organisation leadPartnerOrganisation = application.getLeadOrganisation();
-        return simpleFilter(project.getProjectUsers(),  pu -> organisationsEqual(leadPartnerOrganisation, pu)
+        return simpleFilter(project.getProjectUsers(), pu -> organisationsEqual(leadPartnerOrganisation, pu)
                 && pu.getRole().isPartner());
     }
 
@@ -583,7 +610,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         return pu.getOrganisation().getId().equals(leadPartnerOrganisation.getId());
     }
 
-    private ServiceResult<ProjectResource> createProjectFromApplicationId(final Long applicationId){
+    private ServiceResult<ProjectResource> createProjectFromApplicationId(final Long applicationId) {
         return getApplication(applicationId).andOnSuccess(application -> {
             Project project = new Project();
             project.setApplication(application);
@@ -619,7 +646,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         return find(projectRepository.findOne(projectId), notFoundError(Project.class, projectId));
     }
 
-    private ServiceResult<Project> getProjectByApplication(long applicationId){
+    private ServiceResult<Project> getProjectByApplication(long applicationId) {
         return find(projectRepository.findOneByApplicationId(applicationId), notFoundError(Project.class, applicationId));
     }
 
@@ -627,7 +654,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         return !(project.getAddress() == null || !getExistingProjectManager(project).isPresent() || project.getTargetStartDate() == null || allFinanceContactsNotSet(project.getId()) || project.getSubmittedDate() != null);
     }
 
-    private boolean allFinanceContactsNotSet(Long projectId){
+    private boolean allFinanceContactsNotSet(Long projectId) {
         List<ProjectUser> projectUserObjs = getProjectUsersByProjectId(projectId);
         List<ProjectUserResource> projectUserResources = simpleMap(projectUserObjs, projectUserMapper::mapToResource);
         List<Organisation> partnerOrganisations = getPartnerOrganisations(projectUserResources);
