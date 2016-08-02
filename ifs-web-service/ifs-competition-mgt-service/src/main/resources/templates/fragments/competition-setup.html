@@ -1,10 +1,11 @@
 <!-- =================== Comp setup section - Initial Details (1) ============================== -->
 
-<div th:fragment="comp-setup-navigation(sections, completedStatuses, currentSection, competition, readyToOpen)">
+<div th:fragment="comp-setup-navigation(sections, allCompletedSections, currentSection, competition, readyToOpen)">
     <div th:class="${(param.section != null ? 'visuallyhidden' : '')}">
         <ul class="list-overview">
             <li th:each="(section, iteration : ${sections})" th:if="${section.toString() != 'HOME'}"
-                th:classappend="${(section == currentSection) || (currentSection == null and iteration.index==0) ? 'selected' : ''} + '' + ${completedStatuses.contains(section) ? 'marked-as-complete' : ''}">
+                th:id="'section-' + ${iteration.index}"
+                th:classappend="${allCompletedSections.contains(section) ? 'marked-as-complete' : ''}">
                 <h3 class="heading-small">
                     <a th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${competition.id},sectionPath=${section.path})}"
                         th:text="${section.name}">Section Name</a>
