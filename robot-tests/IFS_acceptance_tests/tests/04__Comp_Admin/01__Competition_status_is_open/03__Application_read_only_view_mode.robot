@@ -14,7 +14,7 @@ Resource          ../../../resources/keywords/User_actions.robot
 
 *** Variables ***
 ${valid_pdf}      testing.pdf
-${quarantine_warning}    This file has been quarantined by the virus scanner
+${quarantine_warning}    This file has been found to be unsafe
 
 *** Test Cases ***
 Comp admin can open the view mode of the application

@@ -78,6 +78,9 @@
 <div th:fragment="finance-question-labour">
 	<fieldset class="collapsible-content">
 		<legend class="visuallyhidden">Labour</legend>
+		
+		<p>labour costs of all individuals you have working on your project.</p>
+
 		<table>
 			<tbody>
 				<tr>
@@ -213,6 +216,8 @@
 
 <div th:fragment="finance-question-admin-support">
 	
+	<p>Administration support costs are related expenses incurred as a result of delivering the project.</p>
+
 	<fieldset class="extra-margin">
 		<legend class="visuallyhidden">Admin support</legend>
 
@@ -338,6 +343,8 @@
 <div th:fragment="finance-question-materials">
 	<fieldset class="collapsible-content">
 		<legend class="visuallyhidden">Materials</legend>
+
+		<p>The costs of materials used on your project</p>
 		
 		<table id="materials-costs-table">
 			<thead>
@@ -458,6 +465,336 @@
 	</fieldset>
 	
 </div>
+
+
+<!-- ===========================Question -  Capital usage  =========================== --> 
+
+<div th:fragment="finance-question-capital">
+	<fieldset class="collapsible-content">
+		<legend class="visuallyhidden">Capital usage</legend>
+
+		<p>Details of capital equipment and tools you will buy for, or use on, your project.</p>
+		
+		<div class="table-overflow">
+			<table id="capital-usage-table">
+				<thead>
+					<th scope="col" id="cap-usage-description">
+						Item description
+					</th>
+					<th scope="col" id="cap-usage-new-existing">
+						New or Existing
+					</th>
+					<th scope="col" id="cap-usage-depreciation-period">
+						Depreciation period
+					</th>
+					<th scope="col" class="numeric" id="cap-usage-net-present-value">
+						Net present value
+					</th>
+					<th scope="col" class="numeric" id="cap-usage-residual-value">
+						Residual value
+					</th>
+					<th scope="col" class="numeric" id="cap-usage-utilisation">
+						Utilisation
+					</th>
+					<th scope="col" class="numeric" id="cap-usage-cost">
+						Net cost
+					</th>
+					<th th:unless="${param.status == null or param.status[0] != 'edit-cap-usage'}">&nbsp;</th>
+				</thead>
+
+				<tfoot>
+					<tr>
+						<th colspan="6">Total capital usage</th>
+						<td class="numeric">&pound;0</td>
+						<td th:unless="${param.status == null or param.status[0] != 'edit-cap-usage'}">&nbsp;</td>
+					</tr>
+				</tfoot>
+
+				<th:block th:unless="${param.status != null and param.status[0] == 'approved' or status == 'partnerView'}">
+				<tbody>
+					<td style="width: 30%">
+						<input type="text" id="cap-usage-row-1-description" name="cap-usage-row-1-description" class="form-control width-full" th:readonly="${param.status == null or param.status[0] != 'edit-cap-usage'}" value="" aria-labelledby="cap-usage-description" />
+					</td>
+					<td>
+						<input type="text" id="cap-usage-row-1-new-existing" name="cap-usage-row-1-new-existing" class="form-control width-full" th:readonly="${param.status == null or param.status[0] != 'edit-cap-usage'}" value="" aria-labelledby="cap-usage-new-existing" />
+					</td>
+					<td>
+						<input type="text" id="cap-usage-row-1-depreciation-period" name="cap-usage-row-1-depreciation-period" class="form-control width-full" th:readonly="${param.status == null or param.status[0] != 'edit-cap-usage'}" value="" aria-labelledby="cap-usage-depreciation-period" />
+					</td>
+					<td class="numeric">
+						<input type="text" id="cap-usage-row-1-net-present-value" name="cap-usage-row-1-net-present-value" class="form-control width-full" th:readonly="${param.status == null or param.status[0] != 'edit-cap-usage'}" value="" aria-labelledby="cap-usage-net-present-value" />
+					</td>
+					<td class="numeric">
+						<input type="text" id="cap-usage-row-1-residual-value" name="cap-usage-row-1-residual-value" class="form-control width-full" th:readonly="${param.status == null or param.status[0] != 'edit-cap-usage'}" value="" aria-labelledby="cap-usage-residual-value" />
+					</td>
+					<td class="numeric">
+						<input type="text" id="cap-usage-row-1-utilisation" name="cap-usage-row-1-utilisation" class="form-control width-full" th:readonly="${param.status == null or param.status[0] != 'edit-cap-usage'}" value="" aria-labelledby="cap-usage-utilisation" />
+					</td>
+					<td class="numeric">
+						<input type="text" id="cap-usage-row-1-costs" name="cap-usage-row-1-costs" class="form-control width-full" th:readonly="${param.status == null or param.status[0] != 'edit-cap-usage'}" value="" aria-labelledby="cap-usage-costs" />
+					</td>
+					
+					<td th:unless="${param.status == null or param.status[0] != 'edit-cap-usage'}">
+						<a href="#">Remove</a>
+					</td>
+				</tbody>
+
+			</th:block>
+
+			</table>
+
+		</div>
+
+		<th:block th:if="${param.status != null and param.status[0] == 'edit-cap-usage'}">
+			<div class="alignright extra-margin">
+				<a href="#">Add another item</a>
+			</div>
+		</th:block>
+
+		<div class="alignright extra-margin" th:unless="${param.status != null and param.status[0] == 'approved' or status == 'partnerView'}">
+			<th:block th:if="${param.status == null or param.status[0] != 'edit-cap-usage'}">
+				<a th:href="@{'?status=edit-cap-usage'}" class="button button-secondary">Edit</a>
+			</th:block>
+			<th:block th:if="${param.status != null and param.status[0] == 'edit-cap-usage'}">
+				<a th:href="@{'?status=save-cap-usage'}" class="button">Save</a>
+			</th:block>
+		</div>
+
+	</fieldset>
+</div>
+
+
+<!-- ===========================Question -  Subcontracting costs  =========================== --> 
+
+
+<div th:fragment="finance-question-subcontracting">
+	<fieldset class="collapsible-content">
+		<legend class="visuallyhidden">Subcontracting costs</legend>
+
+		<p>Subcontracting costs relate to work carried out by third party organisations. These organisations are not part of your project or collaboration.</p>
+		
+		<div class="table-overflow">
+			<table id="subcontracting-table">
+				<thead>
+					<th scope="col" id="subcontracting-name">
+						Suncontractor name
+					</th>
+					<th scope="col" id="subcontracting-country">
+						Country
+					</th>
+					<th scope="col" id="subcontracting-role">
+						Role
+					</th>
+					<th scope="col" class="numeric" id="subcontracting-cost">
+						Cost
+					</th>
+					<th th:unless="${param.status == null or param.status[0] != 'edit-subcontracting'}">&nbsp;</th>
+				</thead>
+
+				<tfoot>
+					<tr>
+						<th colspan="3">Total subcontracting costs</th>
+						<td class="numeric">&pound;150,000</td>
+						<td th:unless="${param.status == null or param.status[0] != 'edit-subcontracting'}">&nbsp;</td>
+					</tr>
+				</tfoot>
+
+				<th:block th:unless="${param.status != null and param.status[0] == 'approved' or status == 'partnerView'}">
+					<tbody>
+						<td style="width: 30%">
+							<input type="text" id="subcontracting-row-1-name" name="subcontracting-row-1-name" class="form-control width-full" th:readonly="${param.status == null or param.status[0] != 'edit-subcontracting'}" value="Mr Francis Bois" aria-labelledby="subcontracting-name" />
+						</td>
+						<td>
+							<input type="text" id="subcontracting-row-1-country" name="subcontracting-row-1-country" class="form-control width-full" th:readonly="${param.status == null or param.status[0] != 'edit-subcontracting'}" value="France" aria-labelledby="subcontracting-country" />
+						</td>
+						<td>
+							<input type="text" id="subcontracting-row-1-role" name="subcontracting-row-1-role" class="form-control width-full" th:readonly="${param.status == null or param.status[0] != 'edit-subcontracting'}" value="Specialist consultant" aria-labelledby="subcontracting-role" />
+						</td>
+						<td class="numeric">
+							<input type="text" id="subcontracting-row-1-costs" name="subcontracting-row-1-costs" class="form-control width-full" th:readonly="${param.status == null or param.status[0] != 'edit-subcontracting'}" value="150,000" aria-labelledby="subcontracting-costs" />
+						</td>
+						
+						<td th:unless="${param.status == null or param.status[0] != 'edit-subcontracting'}">
+							<a href="#">Remove</a>
+						</td>
+					</tbody>
+				</th:block>
+
+				<th:block th:if="${param.status != null and param.status[0] == 'approved' or status == 'partnerView'}">
+					<tbody>
+						<tr>
+							<td>Mr Francis Bois</td>
+							<td>France</td>
+							<td>Specialist consultant</td>
+							<td class="numeric">&pound;150,000</td>
+						</tr>
+					</tbody>
+				</th:block>
+
+			</table>
+
+		</div>
+
+		<th:block th:if="${param.status != null and param.status[0] == 'edit-subcontracting'}">
+			<div class="alignright extra-margin">
+				<a href="#">Add another item</a>
+			</div>
+		</th:block>
+
+		<div class="alignright extra-margin" th:unless="${param.status != null and param.status[0] == 'approved' or status == 'partnerView'}">
+			<th:block th:if="${param.status == null or param.status[0] != 'edit-subcontracting'}">
+				<a th:href="@{'?status=edit-subcontracting'}" class="button button-secondary">Edit</a>
+			</th:block>
+			<th:block th:if="${param.status != null and param.status[0] == 'edit-subcontracting'}">
+				<a th:href="@{'?status=save-subcontracting'}" class="button">Save</a>
+			</th:block>
+		</div>
+
+	</fieldset>
+</div>
+
+<!-- ===========================Question - Travel and subsistence  =========================== --> 
+
+<div th:fragment="finance-question-travel">
+	<fieldset class="collapsible-content">
+		<legend class="visuallyhidden">Travel &#38; sudsistence</legend>
+
+		<p>Itemised travel and subsistence costs that relate only to this project</p>
+		
+		<div class="table-overflow">
+			<table id="travel-table">
+				<thead>
+					<th scope="col" id="travel-purpose">
+						Purpose of journey or description of subsistence cost
+					</th>
+					<th scope="col" class="numeric" id="travel-amount">
+						Number of times
+					</th>
+					<th scope="col" class="numeric" id="travel-cost-each">
+						Cost each (&pound;)
+					</th>
+					<th scope="col" class="numeric" id="travel-total">
+						Total (&pound;)
+					</th>
+					<th th:unless="${param.status == null or param.status[0] != 'edit-travel'}">&nbsp;</th>
+				</thead>
+
+				<tfoot>
+					<tr>
+						<th colspan="3">Total travel &#38; subsistence</th>
+						<td class="numeric">&pound;0</td>
+						<td th:unless="${param.status == null or param.status[0] != 'edit-travel'}">&nbsp;</td>
+					</tr>
+				</tfoot>
+
+				<th:block th:unless="${param.status != null and param.status[0] == 'approved' or status == 'partnerView'}">
+					<tbody>
+						<td style="width: 30%">
+							<input type="text" id="travel-row-1-purpose" name="travel-row-1-purpose" class="form-control width-full" th:readonly="${param.status == null or param.status[0] != 'edit-travel'}" value="" aria-labelledby="travel-purpose" />
+						</td>
+						<td class="numeric">
+							<input type="text" id="travel-row-1-amount" name="travel-row-1-amount" class="form-control width-full" th:readonly="${param.status == null or param.status[0] != 'edit-travel'}" value="" aria-labelledby="travel-amount" />
+						</td>
+						<td>
+							<input type="text" id="travel-row-1-cost-each" name="travel-row-1-cost-each" class="form-control width-full" th:readonly="${param.status == null or param.status[0] != 'edit-travel'}" value="" aria-labelledby="travel-cost-each" />
+						</td>
+						<td class="numeric">
+							<input type="text" id="travel-row-1-total" name="travel-row-1-total" class="form-control width-full" th:readonly="${param.status == null or param.status[0] != 'edit-travel'}" value="" aria-labelledby="travel-total" />
+						</td>
+						
+						<td th:unless="${param.status == null or param.status[0] != 'edit-travel'}">
+							<a href="#">Remove</a>
+						</td>
+					</tbody>
+				</th:block>
+
+			</table>
+
+		</div>
+
+		<th:block th:if="${param.status != null and param.status[0] == 'edit-travel'}">
+			<div class="alignright extra-margin">
+				<a href="#">Add another item</a>
+			</div>
+		</th:block>
+
+		<div class="alignright extra-margin" th:unless="${param.status != null and param.status[0] == 'approved' or status == 'partnerView'}">
+			<th:block th:if="${param.status == null or param.status[0] != 'edit-travel'}">
+				<a th:href="@{'?status=edit-travel'}" class="button button-secondary">Edit</a>
+			</th:block>
+			<th:block th:if="${param.status != null and param.status[0] == 'edit-travel'}">
+				<a th:href="@{'?status=save-travel'}" class="button">Save</a>
+			</th:block>
+		</div>
+
+	</fieldset>
+</div>
+
+<!-- ===========================Question - Other costs  =========================== --> 
+
+<div th:fragment="finance-question-other">
+	<fieldset class="collapsible-content">
+		<legend class="visuallyhidden">Other costs</legend>
+
+		<p>Costs that do not fit under the other cost headings. You should describe each type of cost and explain why you have included it.</p>
+		
+		<div class="table-overflow">
+			<table id="other-costs-table">
+				<thead>
+					<th scope="col" id="other-description">
+						Description and justification of the cost
+					</th>
+					<th scope="col" class="numeric" id="other-cost">
+						Estimated cost (&pound;)
+					</th>
+					<th th:unless="${param.status == null or param.status[0] != 'edit-other'}">&nbsp;</th>
+				</thead>
+
+				<tfoot>
+					<tr>
+						<th>Total other costs</th>
+						<td class="numeric">&pound;0</td>
+						<td th:unless="${param.status == null or param.status[0] != 'edit-other'}">&nbsp;</td>
+					</tr>
+				</tfoot>
+
+				<th:block th:unless="${param.status != null and param.status[0] == 'approved' or status == 'partnerView'}">
+					<tbody>
+						<td>
+							<input type="text" id="other-row-1-description" name="other-row-1-description" class="form-control width-full" th:readonly="${param.status == null or param.status[0] != 'edit-other'}" value="" aria-labelledby="other-description" />
+						</td>
+						<td class="numeric">
+							<input type="text" id="other-row-1-cost" name="other-row-1-cost" class="form-control width-full" th:readonly="${param.status == null or param.status[0] != 'edit-other'}" value="" aria-labelledby="other-cost" />
+						</td>
+						
+						<td th:unless="${param.status == null or param.status[0] != 'edit-other'}">
+							<a href="#">Remove</a>
+						</td>
+					</tbody>
+				</th:block>
+
+			</table>
+
+		</div>
+
+		<th:block th:if="${param.status != null and param.status[0] == 'edit-other'}">
+			<div class="alignright extra-margin">
+				<a href="#">Add another item</a>
+			</div>
+		</th:block>
+
+		<div class="alignright extra-margin" th:unless="${param.status != null and param.status[0] == 'approved' or status == 'partnerView'}">
+			<th:block th:if="${param.status == null or param.status[0] != 'edit-other'}">
+				<a th:href="@{'?status=edit-other'}" class="button button-secondary">Edit</a>
+			</th:block>
+			<th:block th:if="${param.status != null and param.status[0] == 'edit-other'}">
+				<a th:href="@{'?status=save-other'}" class="button">Save</a>
+			</th:block>
+		</div>
+
+	</fieldset>
+</div>
+
 
 <!-- ===========================Table showing all changes to question answers  =========================== --> 
 
