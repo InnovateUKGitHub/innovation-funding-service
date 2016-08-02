@@ -69,7 +69,6 @@ public class POJOTest {
             Address.class,
             OrganisationType.class,
             Application.class,
-            ApplicationInvite.class,
             ApplicationStatus.class,
             FileEntry.class,
             CostField.class,
