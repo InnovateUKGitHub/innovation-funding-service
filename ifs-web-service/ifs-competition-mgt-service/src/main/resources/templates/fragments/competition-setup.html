@@ -3,9 +3,8 @@
 <div th:fragment="comp-setup-navigation(sections, allCompletedSections, currentSection, competition, readyToOpen)">
     <div th:class="${(param.section != null ? 'visuallyhidden' : '')}">
         <ul class="list-overview">
-            <li th:each="(section, iteration : ${sections})" th:if="${section.toString() != 'HOME'}"
-                th:id="'section-' + ${iteration.index}"
-                th:classappend="${allCompletedSections.contains(section) ? 'marked-as-complete' : ''}">
+            <li th:each="(section, iteration : ${sections})" th:if="${section.toString() != 'HOME'}">
+                <img width="30" height="30" th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-done-right.png')}" th:title="'The &quot;'+${section.name}+'&quot; section is done'" th:alt="'The &quot;'+${section.name}+'&quot; section is done'" th:if="${completedStatuses.contains(section)}" class="section-status" />
                 <h3 class="heading-small">
                     <a th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${competition.id},sectionPath=${section.path})}"
                         th:text="${section.name}">Section Name</a>
