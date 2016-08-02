@@ -25,7 +25,7 @@ public class AssessmentApplicationSummaryController extends AbstractApplicationC
     @Autowired
     private AssessmentApplicationSummaryModelPopulator assessmentApplicationSummaryModelPopulator;
 
-    private static String SUMMARY = "assessor-application-summary";
+    private static String SUMMARY = "assessment/application-summary";
 
     @RequestMapping(value = "/{assessmentId}/summary", method = RequestMethod.GET)
     public String getSummary(Model model,
