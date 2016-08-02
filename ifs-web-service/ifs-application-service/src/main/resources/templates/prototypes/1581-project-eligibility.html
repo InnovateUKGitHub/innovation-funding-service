@@ -32,11 +32,11 @@
 			<p>Reduce project costs in collaboration with the applicant</p>
 
 			<dl class="standard-definition-list">
-				<dt>Funding sought</dt>
-				<dd>-&pound;67,544</dd>
+				<dt class="standard-text-colour">Funding sought:</dt>
+				<dd class="standard-text-colour">&pound;67,544</dd>
 
-				<dt>Current funding</dt>
-				<dd><strong>-&pound;70,000</strong></dd>
+				<dt>Current funding:</dt>
+				<dd>&pound;70,000</dd>
 			</dl>
 		</div>
 	</th:block>
@@ -44,7 +44,7 @@
 
 	<th:block th:if="${param.status != null and param.status[0] == 'approved'}">
 		<div class="success-alert">
-			The partner finance eligibility has been approved by Paul Davidson, 27/07/2016
+			The partner finance eligibility has been approved by Paul Davidson, 27 July 2016
 		</div>
 	</th:block>
 
@@ -105,7 +105,7 @@
 			
 			<h3 class="heading-medium">Detailed finances</h3>
 
-			<p>These finances where originally submitted at the application stage by the applicant, they include all changes made during the eligibility checks.</p>
+			<p>These finances were submitted by the applicant during the application state. They include all changes made during the eligibility checks.</p>
 
 			<a href="/prototypes/1581-changes-finances">View changes to finances</a>
 
@@ -143,7 +143,7 @@
 
 			<div th:include="prototypes/fragments/finance-review-questions :: finance-question-subcontracting" th:remove="tag" />
 	    
-	    	<h2>Travel &amp; subsistence
+	    	<h2>Travel and subsistence
 		        <span data-mirror="#section-total-6">&pound; 0</span> <span class="section-percentage">0%</span>
 	       	</h2>
 			
@@ -266,7 +266,7 @@
 		<th:block th:unless="${param.status != null and param.status[0] == 'approved'}">
 
 		    <h3 class="heading-medium">Approve eligible costs</h3>
-		    <p>After any required alterations have been made, eligable costs should be approved.</p>
+		    <p>After any required alterations have been made, eligible costs should be approved.</p>
 		    <p>If changes are made ensure that the applicant has reviewed and understand the changes to their finances before approval.</p>
 
 		    <div class="form-group">

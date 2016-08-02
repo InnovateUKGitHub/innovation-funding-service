@@ -1,9 +1,7 @@
 package com.worth.ifs.project;
 
-import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.CompetitionService;
-import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.project.viewmodel.ProjectSpendProfileViewModel;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.user.resource.UserResource;
@@ -45,9 +43,7 @@ public class ProjectSpendProfileController {
     private ProjectSpendProfileViewModel populateSpendProfileViewModel(Long projectId) {
 
         ProjectResource projectResource = projectService.getById(projectId);
-        ApplicationResource application = applicationService.getById(projectResource.getApplication());
-        CompetitionResource competition = competitionService.getById(application.getCompetition());
 
-        return new ProjectSpendProfileViewModel(projectResource, competition);
+        return new ProjectSpendProfileViewModel(projectResource);
     }
 }
