@@ -94,7 +94,7 @@ public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler 
     private void setFinanceDetails(ApplicationFinanceResource applicationFinanceResource, Competition competition) {
         Organisation organisation = organisationRepository.findOne(applicationFinanceResource.getOrganisation());
         OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(organisation.getOrganisationType().getName());
-        Map<CostType, CostCategory> costs = organisationFinanceHandler.getOrganisationFinances(applicationFinanceResource.getId(), competition);
+        Map<CostType, CostCategory> costs = organisationFinanceHandler.getOrganisationFinances(applicationFinanceResource.getId());
         applicationFinanceResource.setFinanceOrganisationDetails(costs);
     }
 }

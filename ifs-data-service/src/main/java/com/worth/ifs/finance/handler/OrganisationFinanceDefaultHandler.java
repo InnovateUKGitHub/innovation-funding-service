@@ -74,7 +74,7 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
     }
 
     @Override
-    public Map<CostType, CostCategory> getOrganisationFinances(Long applicationFinanceId, Competition competition) {
+    public Map<CostType, CostCategory> getOrganisationFinances(Long applicationFinanceId) {
     	Map<CostType, CostCategory> costCategories = createCostCategories();
         List<Cost> costs = costRepository.findByApplicationFinanceId(applicationFinanceId);
         costCategories = addCostsToCategories(costCategories, costs);
@@ -84,7 +84,7 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
 
     @Override
     public Map<CostType, CostCategory> getOrganisationFinanceTotals(Long applicationFinanceId, Competition competition) {
-    	Map<CostType, CostCategory> costCategories = getOrganisationFinances(applicationFinanceId, competition);
+    	Map<CostType, CostCategory> costCategories = getOrganisationFinances(applicationFinanceId);
         return resetCosts(costCategories);
     }
 

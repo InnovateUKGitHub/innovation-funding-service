@@ -39,16 +39,16 @@ public class OrganisationJESFinance implements OrganisationFinanceHandler {
     }
 
     @Override
-    public Map<CostType, CostCategory> getOrganisationFinances(Long applicationFinanceId, Competition competition) {
+    public Map<CostType, CostCategory> getOrganisationFinances(Long applicationFinanceId) {
         List<Cost> costs = costRepository.findByApplicationFinanceId(applicationFinanceId);
         Map<CostType, CostCategory> costCategories = createCostCategories();
-        costCategories = setGrantClaimPercentage(costCategories, competition);
         return addCostsToCategories(costCategories, costs);
     }
 
     @Override
     public Map<CostType, CostCategory> getOrganisationFinanceTotals(Long applicationFinanceId, Competition competition) {
-    	Map<CostType, CostCategory> costCategories = getOrganisationFinances(applicationFinanceId, competition);
+    	Map<CostType, CostCategory> costCategories = getOrganisationFinances(applicationFinanceId);
+    	costCategories = setGrantClaimPercentage(costCategories, competition);
     	costCategories = calculateTotals(costCategories);
         return resetCosts(costCategories);
     }
