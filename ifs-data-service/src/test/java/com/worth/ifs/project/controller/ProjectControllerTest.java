@@ -26,8 +26,8 @@ import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-import static com.worth.ifs.JsonTestUtil.fromJson;
-import static com.worth.ifs.JsonTestUtil.toJson;
+import static com.worth.ifs.util.JsonMappingUtil.fromJson;
+import static com.worth.ifs.util.JsonMappingUtil.toJson;
 import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static com.worth.ifs.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
 import static com.worth.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE;
