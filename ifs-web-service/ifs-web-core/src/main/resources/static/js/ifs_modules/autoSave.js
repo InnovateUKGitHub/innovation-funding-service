@@ -187,7 +187,7 @@ IFS.core.autoSave = (function(){
           if((typeof(data.responseJson) !== 'undefined') && (typeof(data.responseJson.errorMessage) !== 'undefined')){
               errorMessage = data.responseJson.errorMessage;
           }
-          else if(data.status == 'timeout'){
+          else if(data.statusText == 'timeout'){
               errorMessage = "The server is slow responding, your data is not saved";
           }
           else {

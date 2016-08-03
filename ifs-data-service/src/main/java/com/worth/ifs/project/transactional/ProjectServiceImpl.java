@@ -1,5 +1,20 @@
 package com.worth.ifs.project.transactional;
 
+import java.io.File;
+import java.io.InputStream;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
 import com.worth.ifs.address.domain.Address;
 import com.worth.ifs.address.domain.AddressType;
 import com.worth.ifs.address.mapper.AddressMapper;
@@ -44,27 +59,37 @@ import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserRoleType;
+
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.io.InputStream;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.*;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
-import static com.worth.ifs.commons.error.CommonFailureKeys.*;
-import static com.worth.ifs.commons.service.ServiceResult.*;
+import static com.worth.ifs.commons.error.CommonFailureKeys.CANNOT_FIND_ORG_FOR_GIVEN_PROJECT_AND_USER;
+import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_DATE_MUST_BE_IN_THE_FUTURE;
+import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_DATE_MUST_START_ON_FIRST_DAY_OF_MONTH;
+import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_PARTNER_ON_THE_PROJECT_FOR_THE_ORGANISATION;
+import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_USER_ON_THE_PROJECT_FOR_THE_ORGANISATION;
+import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED;
+import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_SUBMITTED_IF_INCOMPLETE;
+import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_UPDATED_IF_ALREADY_SUBMITTED;
+import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_ID_IN_URL_MUST_MATCH_PROJECT_ID_IN_MONITORING_OFFICER_RESOURCE;
+import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_LEAD_PARTNER;
+import static com.worth.ifs.commons.service.ServiceResult.aggregate;
+import static com.worth.ifs.commons.service.ServiceResult.processAnyFailuresOrSucceed;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static com.worth.ifs.user.resource.UserRoleType.*;
-import static com.worth.ifs.util.CollectionFunctions.*;
+import static com.worth.ifs.user.resource.UserRoleType.FINANCE_CONTACT;
+import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
+import static com.worth.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
+import static com.worth.ifs.util.CollectionFunctions.getOnlyElementOrEmpty;
+import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static com.worth.ifs.util.EntityLookupCallbacks.getOnlyElementOrFail;
+import static java.util.Arrays.asList;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -121,7 +146,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     private String webBaseUrl;
 
     enum Notifications {
-        MONITORING_OFFICER_ASSIGNED,
+        MONITORING_OFFICER_ASSIGNED, MONITORING_OFFICER_ASSIGNED_PROJECT_MANAGER,
     }
 
     @Override
@@ -246,13 +271,21 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     }
 
     @Override
-    public ServiceResult<Void> notifyMonitoringOfficer(MonitoringOfficerResource monitoringOfficer) {
+    public ServiceResult<Void> notifyStakeholdersOfMonitoringOfficerChange(MonitoringOfficerResource monitoringOfficer) {
 
-        Notification notification = createMonitoringOfficerAssignedNotification(monitoringOfficer);
+        Project project = projectRepository.findOne(monitoringOfficer.getProject());
+        User projectManager = getExistingProjectManager(project).get().getUser();
 
-        ServiceResult<Void> moAssignedEmailSendResult = notificationService.sendNotification(notification, EMAIL);
+        NotificationTarget moTarget = createMonitoringOfficerNotificationTarget(monitoringOfficer);
+        NotificationTarget pmTarget = createProjectManagerNotificationTarget(projectManager);
 
-        return processAnyFailuresOrSucceed(singletonList(moAssignedEmailSendResult));
+        Notification monitoringOfficerNotification = createMonitoringOfficerAssignedNotification(monitoringOfficer, moTarget, Notifications.MONITORING_OFFICER_ASSIGNED, project, projectManager);
+        Notification projectManagerNotification = createMonitoringOfficerAssignedNotification(monitoringOfficer, pmTarget, Notifications.MONITORING_OFFICER_ASSIGNED, project, projectManager);
+
+        ServiceResult<Void> moAssignedEmailSendResult = notificationService.sendNotification(monitoringOfficerNotification, EMAIL);
+        ServiceResult<Void> pmAssignedEmailSendResult = notificationService.sendNotification(projectManagerNotification, EMAIL);
+
+        return processAnyFailuresOrSucceed(asList(moAssignedEmailSendResult, pmAssignedEmailSendResult));
     }
 
     @Override
@@ -357,6 +390,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
                                 removeExploitationPlanFileFromProject(project))));
     }
 
+
     private ServiceResult<FileEntry> getCollaborationAgreement(Project project) {
         if (project.getCollaborationAgreement() == null) {
             return serviceFailure(notFoundError(FileEntry.class));
@@ -402,18 +436,22 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     }
 
 
-    private Notification createMonitoringOfficerAssignedNotification(MonitoringOfficerResource monitoringOfficer) {
+    private NotificationTarget createProjectManagerNotificationTarget(final User projectManager) {
+        String fullName = getProjectManagerFullName(projectManager);
 
-        NotificationTarget notificationTarget = createMonitoringOfficerAssignedNotificationTarget(monitoringOfficer);
+        return new ExternalUserNotificationTarget(fullName, projectManager.getEmail());
+    }
 
-        Map<String, Object> globalArguments = createGlobalArgsForMonitoringOfficerAssignedEmail(monitoringOfficer);
+    private Notification createMonitoringOfficerAssignedNotification(MonitoringOfficerResource monitoringOfficer, NotificationTarget notificationTarget, Enum template, final Project project, final User projectManager) {
 
-        return new Notification(systemNotificationSource, singletonList(notificationTarget),
-                Notifications.MONITORING_OFFICER_ASSIGNED, globalArguments, emptyMap());
+        Map<String, Object> globalArguments = createGlobalArgsForMonitoringOfficerAssignedEmail(monitoringOfficer, project, projectManager);
+
+        return new Notification(systemNotificationSource, singletonList(notificationTarget), template
+                , globalArguments, emptyMap());
 
     }
 
-    private NotificationTarget createMonitoringOfficerAssignedNotificationTarget(MonitoringOfficerResource monitoringOfficer) {
+    private NotificationTarget createMonitoringOfficerNotificationTarget(MonitoringOfficerResource monitoringOfficer) {
 
         String fullName = getMonitoringOfficerFullName(monitoringOfficer);
 
@@ -421,23 +459,25 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
     }
     private String getMonitoringOfficerFullName(MonitoringOfficerResource monitoringOfficer) {
-
         // At this stage, validation has already been done to ensure that first name and last name are not empty
         return monitoringOfficer.getFirstName() + " " + monitoringOfficer.getLastName();
     }
 
-    private Map<String, Object> createGlobalArgsForMonitoringOfficerAssignedEmail(MonitoringOfficerResource monitoringOfficer) {
+    private String getProjectManagerFullName(User projectManager) {
+        // At this stage, validation has already been done to ensure that first name and last name are not empty
+        return projectManager.getFirstName() + " " + projectManager.getLastName();
+    }
 
-        Project project = projectRepository.findOne(monitoringOfficer.getProject());
-        User projectManager = getExistingProjectManager(project).get().getUser();
-
+    private Map<String, Object> createGlobalArgsForMonitoringOfficerAssignedEmail(MonitoringOfficerResource monitoringOfficer, Project project, User projectManager) {
         Map<String, Object> globalArguments = new HashMap<>();
         globalArguments.put("dashboardUrl", webBaseUrl);
         globalArguments.put("projectName", project.getName());
         globalArguments.put("leadOrganisation", project.getApplication().getLeadOrganisation().getName());
-        globalArguments.put("projectManagerName", projectManager.getFirstName() + " " + projectManager.getLastName());
+        globalArguments.put("projectManagerName", getProjectManagerFullName(projectManager));
         globalArguments.put("projectManagerEmail", projectManager.getEmail());
-
+        globalArguments.put("monitoringOfficerName", getMonitoringOfficerFullName(monitoringOfficer));
+        globalArguments.put("monitoringOfficerTelephone", monitoringOfficer.getPhoneNumber());
+        globalArguments.put("monitoringOfficerEmail", monitoringOfficer.getEmail());
         return globalArguments;
 
     }

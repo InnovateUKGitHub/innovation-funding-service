@@ -21,7 +21,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.worth.ifs.JsonTestUtil.toJson;
+import static com.worth.ifs.util.JsonMappingUtil.toJson;
 import static com.worth.ifs.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.error.Error.fieldError;
@@ -271,7 +271,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
         verify(projectServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);
 
         // Ensure that notification is not sent when there is error whilst saving
-        verify(projectServiceMock, never()).notifyMonitoringOfficer(monitoringOfficerResource);
+        verify(projectServiceMock, never()).notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource);
 
     }
 
@@ -297,7 +297,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
         verify(projectServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);
 
         // Ensure that notification is not sent when there is error whilst saving
-        verify(projectServiceMock, never()).notifyMonitoringOfficer(monitoringOfficerResource);
+        verify(projectServiceMock, never()).notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource);
 
     }
 
@@ -307,7 +307,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
         Long projectId = 1L;
 
         when(projectServiceMock.saveMonitoringOfficer(projectId, monitoringOfficerResource)).thenReturn(serviceSuccess());
-        when(projectServiceMock.notifyMonitoringOfficer(monitoringOfficerResource)).
+        when(projectServiceMock.notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource)).
                 thenReturn(serviceFailure(new Error(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE)));
 
         mockMvc.perform(put("/project/{projectId}/monitoring-officer", projectId)
@@ -322,7 +322,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                 ));
 
         verify(projectServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);
-        verify(projectServiceMock).notifyMonitoringOfficer(monitoringOfficerResource);
+        verify(projectServiceMock).notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource);
 
     }
 
@@ -332,7 +332,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
         Long projectId = 1L;
 
         when(projectServiceMock.saveMonitoringOfficer(projectId, monitoringOfficerResource)).thenReturn(serviceSuccess());
-        when(projectServiceMock.notifyMonitoringOfficer(monitoringOfficerResource)).
+        when(projectServiceMock.notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource)).
                 thenReturn(serviceSuccess());
 
 
@@ -348,7 +348,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                 ));
 
         verify(projectServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);
-        verify(projectServiceMock).notifyMonitoringOfficer(monitoringOfficerResource);
+        verify(projectServiceMock).notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource);
 
     }
 
