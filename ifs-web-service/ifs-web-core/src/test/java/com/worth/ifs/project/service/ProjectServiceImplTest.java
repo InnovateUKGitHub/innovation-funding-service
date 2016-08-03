@@ -3,6 +3,7 @@ package com.worth.ifs.project.service;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.service.ApplicationService;
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.project.ProjectServiceImpl;
@@ -23,6 +24,8 @@ import java.util.Optional;
 import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static com.worth.ifs.address.resource.OrganisationAddressType.REGISTERED;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_OTHER_DOCUMENTS_MUST_BE_UPLOADED_BEFORE_SUBMIT;
+import static com.worth.ifs.commons.rest.RestResult.restFailure;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
@@ -292,4 +295,31 @@ public class ProjectServiceImplTest {
 
 		verify(projectRestService).removeExploitationPlanDocument(123L);
 	}
+
+	@Test
+	public void testOtherDocumentsSubmitAllowedWhenAllFilesUploaded() throws Exception {
+
+		when(projectRestService.isOtherDocumentsSubmitAllowed(123L)).thenReturn(restSuccess(true));
+
+		ServiceResult<Boolean> submitAllowed = service.isOtherDocumentSubmitAllowed(123L);
+
+		assertTrue(submitAllowed.isSuccess());
+
+		verify(projectRestService).isOtherDocumentsSubmitAllowed(123L);
+	}
+
+	@Test
+	public void testOtherDocumentsSubmitAllowedWhenNotAllFilesUploaded() throws Exception {
+
+		when(projectRestService.isOtherDocumentsSubmitAllowed(123l)).thenReturn(restFailure(new Error(PROJECT_SETUP_OTHER_DOCUMENTS_MUST_BE_UPLOADED_BEFORE_SUBMIT)));
+
+		ServiceResult<Boolean> submitAllowed = service.isOtherDocumentSubmitAllowed(123L);
+
+		assertTrue(submitAllowed.isFailure());
+		assertTrue(submitAllowed.getFailure().is(new Error(PROJECT_SETUP_OTHER_DOCUMENTS_MUST_BE_UPLOADED_BEFORE_SUBMIT)));
+
+		verify(projectRestService).isOtherDocumentsSubmitAllowed(123L);
+	}
+
+
 }

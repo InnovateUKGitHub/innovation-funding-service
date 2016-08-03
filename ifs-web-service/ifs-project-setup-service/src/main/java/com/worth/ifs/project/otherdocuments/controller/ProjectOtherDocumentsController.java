@@ -17,10 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -54,6 +51,17 @@ public class ProjectOtherDocumentsController {
         ProjectOtherDocumentsForm form = new ProjectOtherDocumentsForm();
         return doViewOtherDocumentsPage(projectId, model, loggedInUser, form);
     }
+
+    @RequestMapping(value = "submit", method = RequestMethod.GET)
+    public String projectDetail(Model model, @PathVariable("projectId") final Long projectId,
+                                @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+
+        Boolean isSubmissionAllowed = projectService.isOtherDocumentSubmitAllowed(projectId).getSuccessObject();
+
+        ProjectOtherDocumentsForm form = new ProjectOtherDocumentsForm();
+        return doViewOtherDocumentsPage(projectId, model, loggedInUser, form);
+    }
+
 
     @RequestMapping(value = "/collaboration-agreement", method = GET)
     public @ResponseBody ResponseEntity<ByteArrayResource> downloadCollaborationAgreementFile(

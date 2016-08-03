@@ -460,4 +460,32 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                 ))
                 .andReturn();
     }
+
+    @Test
+    public void isOtherDocumentsSubmitAllowed() throws Exception {
+        when(projectServiceMock.isOtherDocumentsSubmitAllowed(123L)).thenReturn(serviceSuccess(true));
+        MvcResult mvcResult = mockMvc.perform(get("/project/{projectId}/documents/submit/other", 123L))
+                .andExpect(status().isOk())
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project for which the documents are being submitted to.")
+                        )))
+                .andReturn();
+        assertTrue(mvcResult.getResponse().getContentAsString().equals("true"));
+    }
+
+    @Test
+    public void isOtherDocumentsSubmitNotAllowedWhenDocumentsNotFullyUploaded() throws Exception {
+        when(projectServiceMock.isOtherDocumentsSubmitAllowed(123L)).thenReturn(serviceSuccess(false));
+        MvcResult mvcResult = mockMvc.perform(get("/project/{projectId}/documents/submit/other", 123L))
+                .andExpect(status().isOk())
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project for which the documents are being submitted to.")
+                        )))
+                .andReturn();
+        assertTrue(mvcResult.getResponse().getContentAsString().equals("false"));
+    }
+
+
 }

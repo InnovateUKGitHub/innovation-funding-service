@@ -347,6 +347,20 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
         verify(projectService).removeExploitationPlanDocument(123L);
     }
 
+    @Test
+    public void testOtherDocumentsSubmitAllowedWhenAllFilesUploaded() throws Exception {
+
+        when(projectService.isOtherDocumentSubmitAllowed(123L)).thenReturn(serviceSuccess(true));
+
+        mockMvc.perform(
+                get("/project/123/other-documents/submit")).
+                andExpect(status().isOk()).
+                andExpect(view().name("redirect:/project/123/other-documents"));
+
+        verify(projectService).isOtherDocumentSubmitAllowed(123L);
+
+    }
+
     @Override
     protected ProjectOtherDocumentsController supplyControllerUnderTest() {
         return new ProjectOtherDocumentsController();
