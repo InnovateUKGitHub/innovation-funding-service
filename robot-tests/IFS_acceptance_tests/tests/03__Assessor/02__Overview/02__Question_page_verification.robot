@@ -1,8 +1,10 @@
 *** Settings ***
 Documentation     INFUND-3303: As an Assessor I want the ability to reject the application after I have been given access to the full details so I can make Innovate UK aware.
+...
+...               INFUND-4203: Prevent navigation options appearing for questions that are not part of an assessment
 Suite Setup
 Suite Teardown    the user closes the browser
-Force Tags        Pending
+Force Tags
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -23,7 +25,7 @@ Word count functionality and validation
 
 Scope application question
     [Documentation]    INFUND-3402
-    [Tags]
+    [Tags]    Pending
     Given the user navigates to the page    ${Assessment_overview_9}
     When the user clicks the button/link    link=Scope
     Then The user should see the element    jquery=button:contains("Save and return to assessment overview")
@@ -43,6 +45,22 @@ Autosave and edit the Application questions
     When the Assessor edits the application question
     And the user reloads the page
     Then the modified text should be visible
+
+Navigation link should not appear for questions that are not part of an assessment
+    [Documentation]    INFUND-4264
+    [Tags]
+    Given the user navigates to the page    ${Assessment_overview_9}
+    When the user clicks the button/link    link=Application details
+    Then The user should see the element    css=#content .next .pagination-part-title
+    And the user clicks the button/link    css=#content .next .pagination-part-title
+    And The user should see the text in the page    Project summary
+    Then the user clicks the button/link    css=#content .next .pagination-part-title
+    And The user should see the text in the page    Public description
+    Then the user clicks the button/link    css=#content .next .pagination-part-title
+    And The user should see the text in the page    Scope
+    Then the user clicks the button/link    css=#content .next .pagination-part-title
+    And The user should see the text in the page    How many
+    And the user should not see the element    css=#content .next .pagination-part-title
 
 *** Keywords ***
 the Assessor fills the application question
