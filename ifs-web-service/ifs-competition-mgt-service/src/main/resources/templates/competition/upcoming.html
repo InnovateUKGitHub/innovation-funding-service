@@ -29,11 +29,11 @@
         </ul>
     </section>
 
-    <section th:with="notStartedComps=${competitions.get(T(com.worth.ifs.competition.resource.CompetitionResource.Status).NOT_STARTED)}">
+    <section th:with="readyToOpenComps=${competitions.get(T(com.worth.ifs.competition.resource.CompetitionResource.Status).READY_TO_OPEN)}">
         <h2 class="heading-medium"
-            th:text="'Ready to open ('+${notStartedComps == null ? '0' : notStartedComps.size()}+')'"></h2>
+            th:text="'Ready to open ('+${readyToOpenComps == null ? '0' : readyToOpenComps.size()}+')'"></h2>
         <ul class="list-overview">
-            <li class="grid-row section" th:each="competition : ${notStartedComps}">
+            <li class="grid-row section" th:each="competition : ${readyToOpenComps}">
                 <th:block
                     th:include="competition/dashboard :: dashboard-row"
                     th:with="competition=${competition},

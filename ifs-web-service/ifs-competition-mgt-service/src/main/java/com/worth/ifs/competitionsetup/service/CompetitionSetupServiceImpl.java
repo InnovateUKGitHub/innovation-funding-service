@@ -98,6 +98,9 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 		requiredSections.add(CompetitionSetupSection.INITIAL_DETAILS);
 		requiredSections.add(CompetitionSetupSection.ADDITIONAL_INFO);
 		requiredSections.add(CompetitionSetupSection.ELIGIBILITY);
+		requiredSections.add(CompetitionSetupSection.MILESTONES);
+		requiredSections.add(CompetitionSetupSection.APPLICATION_FORM);
+
 
 		Optional<CompetitionSetupSection> notDoneSection = requiredSections.stream().filter(section ->
 				(!competitionResource.getSectionSetupStatus().containsKey(section) ||
@@ -109,6 +112,10 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 	@Override
 	public void setCompetitionAsReadyToOpen(Long competitionId) {
 		CompetitionResource competitionResource = competitionService.getById(competitionId);
+		if (competitionResource.getCompetitionStatus() == CompetitionResource.Status.READY_TO_OPEN) {
+			return;
+		}
+
 		if (isCompetitionReadyToOpen(competitionResource)) {
 			competitionResource.setCompetitionStatus(CompetitionResource.Status.READY_TO_OPEN);
 			competitionService.update(competitionResource);
