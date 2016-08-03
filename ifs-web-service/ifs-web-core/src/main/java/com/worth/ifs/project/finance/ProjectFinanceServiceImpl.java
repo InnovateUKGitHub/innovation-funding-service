@@ -1,6 +1,8 @@
 package com.worth.ifs.project.finance;
 
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.project.service.ProjectFinanceRestService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -11,8 +13,11 @@ import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 @Service
 public class ProjectFinanceServiceImpl implements ProjectFinanceService {
 
+    @Autowired
+    private ProjectFinanceRestService projectFinanceRestService;
+
     @Override
     public ServiceResult<Void> generateSpendProfile(Long projectId, Long partnerOrganisationId) {
-        return serviceSuccess();
+        return projectFinanceRestService.generateSpendProfile(projectId, partnerOrganisationId);
     }
 }
