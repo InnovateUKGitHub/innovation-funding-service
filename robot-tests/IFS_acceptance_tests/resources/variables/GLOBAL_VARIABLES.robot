@@ -95,3 +95,4 @@ ${unsuccessful_login_message}    Your sign in was unsuccessful because of the fo
 # Assessor variables
 ${Assessment_overview_9}    ${server}/assessment/9
 ${Application_question_url}    ${server}/assessment/9/question/47
+${Finance_summar_9_url}    ${server}/assessment/9/finances
