@@ -65,7 +65,7 @@ IFS.core.modal = (function(){
                 target.find('form').on('submit', function(event){
                     /**
                      * Validate the modal form fields before submitting
-                     * @requires: formValidations.js
+                     * @requires: formValidation.js
                      */
                     var form = this,
                         submitValid = true;
