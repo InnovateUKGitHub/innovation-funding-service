@@ -18,6 +18,8 @@ import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.CompetitionService;
+import com.worth.ifs.bankdetails.resource.BankDetailsResource;
+import com.worth.ifs.bankdetails.service.BankDetailsRestService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
@@ -99,6 +101,9 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
     @Autowired
     private OrganisationAddressRestService organisationAddressRestService;
+
+    @Autowired
+    private BankDetailsRestService bankDetailsService;
 
     @RequestMapping(value = "/{projectId}/details", method = RequestMethod.GET)
     public String projectDetail(Model model, @PathVariable("projectId") final Long projectId,
@@ -335,36 +340,54 @@ public class ProjectDetailsController extends AddressLookupBaseController {
     }
 
     private ProjectConsortiumStatusViewModel getProjectTeamStatusViewModel(final Long projectId) {
+        ProjectResource project = projectService.getById(projectId);
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
         List<OrganisationResource> otherOrganisations = projectService.getPartnerOrganisationsForProject(projectId);
+
+        Optional<BankDetailsResource> leadBankDetails = bankDetailsService.getBankDetailsByProjectAndOrganisation(projectId, leadOrganisation.getId()).toOptionalIfNotFound().getSuccessObject();
+
+        ConsortiumPartnerStatus leadProjectDetailsSubmitted = project.isProjectDetailsSubmitted()?COMPLETE:ACTION_REQUIRED;
         ConsortiumPartnerStatus monitoringOfficerStatus = projectService.getMonitoringOfficerForProject(projectId).isPresent()? COMPLETE: PENDING;
+        ConsortiumPartnerStatus leadBankDetailsStatus = leadBankDetails.isPresent()?COMPLETE:ACTION_REQUIRED;
+        ConsortiumPartnerStatus financeChecksStatus = ACTION_REQUIRED;
+        ConsortiumPartnerStatus spendProfileStatus = ACTION_REQUIRED;
+        ConsortiumPartnerStatus otherDocumentsStatus = ACTION_REQUIRED;
+        ConsortiumPartnerStatus grantOfferLetterStatus = ACTION_REQUIRED;
 
         final LeadPartnerModel leadPartnerModel = new LeadPartnerModel(
             leadOrganisation.getName(),
-            ACTION_REQUIRED,
+            leadProjectDetailsSubmitted,
             monitoringOfficerStatus,
-            ACTION_REQUIRED,
-            ACTION_REQUIRED,
-            ACTION_REQUIRED,
-            ACTION_REQUIRED,
-            ACTION_REQUIRED
+            leadBankDetailsStatus,
+            financeChecksStatus,
+            spendProfileStatus,
+            otherDocumentsStatus,
+            grantOfferLetterStatus
         );
-        String name;
-        ConsortiumPartnerStatus projectDetailsStatus;
-        ConsortiumPartnerStatus monitoringOfficerStatus;
-        ConsortiumPartnerStatus bankDetailsStatus;
-        ConsortiumPartnerStatus financeChecksStatus;
-        ConsortiumPartnerStatus spendProfileStatus;
-        ConsortiumPartnerStatus otherDocumentsStatus;
-        ConsortiumPartnerStatus grantOfferLetterStatus;
-        final List<RegularPartnerModel> otherPartnersModels = simpleMap(otherOrganisations, partner -> createPartnerModel(projectId, partner));
+
+
+        final List<RegularPartnerModel> otherPartnersModels = simpleMap(otherOrganisations, partner -> createPartnerModel(project, partner));
 
         return new ProjectConsortiumStatusViewModel(projectId, leadPartnerModel, otherPartnersModels);
     }
 
-    private RegularPartnerModel createPartnerModel(final Long projectId, final OrganisationResource partner) {
+    private RegularPartnerModel createPartnerModel(final ProjectResource project, final OrganisationResource partner) {
 
-        return new RegularPartnerModel(partner.getName(), ACTION_REQUIRED, ACTION_REQUIRED, ACTION_REQUIRED, ACTION_REQUIRED);
+        Optional<BankDetailsResource> bankDetails = bankDetailsService.getBankDetailsByProjectAndOrganisation(project.getId(), partner.getId()).toOptionalIfNotFound().getSuccessObject();
+
+        final String name = partner.getName();
+        final ConsortiumPartnerStatus projectDetailsStatus = project.isProjectDetailsSubmitted()?COMPLETE:ACTION_REQUIRED;;
+        final ConsortiumPartnerStatus bankDetailsStatus = bankDetails.isPresent()?COMPLETE:ACTION_REQUIRED;
+        final ConsortiumPartnerStatus financeChecksStatus = ACTION_REQUIRED;
+        final ConsortiumPartnerStatus spendProfileStatus = ACTION_REQUIRED;
+
+        return new RegularPartnerModel(
+            name,
+            projectDetailsStatus,
+            bankDetailsStatus,
+            financeChecksStatus,
+            spendProfileStatus
+        );
     }
 
     private ProjectManagerForm populateOriginalProjectManagerForm(final Long projectId) {
