@@ -1,6 +1,6 @@
 package com.worth.ifs.invite.security;
 
-import com.worth.ifs.invite.domain.Invite;
+import com.worth.ifs.invite.domain.ApplicationInvite;
 import com.worth.ifs.invite.domain.InviteOrganisation;
 import com.worth.ifs.invite.repository.InviteOrganisationRepository;
 import com.worth.ifs.invite.resource.InviteResource;
@@ -17,11 +17,11 @@ import static com.worth.ifs.security.SecurityRuleUtil.checkProcessRole;
 import static com.worth.ifs.user.resource.UserRoleType.COLLABORATOR;
 
 /**
- * Permission rules for {@link Invite} and {@link InviteResource} for permissioning
+ * Permission rules for {@link ApplicationInvite} and {@link InviteResource} for permissioning
  */
 @Component
 @PermissionRules
-public class InvitePermissionRules {
+public class ApplicationInvitePermissionRules {
 
     @Autowired
     private ProcessRoleRepository processRoleRepository;
@@ -31,12 +31,12 @@ public class InvitePermissionRules {
     private InviteOrganisationRepository inviteOrganisationRepository;
 
     @PermissionRule(value = "SEND", description = "lead applicant can invite to the application")
-    public boolean leadApplicantCanInviteToTheApplication(final Invite invite, final UserResource user) {
+    public boolean leadApplicantCanInviteToTheApplication(final ApplicationInvite invite, final UserResource user) {
         return isLeadForInvite(invite, user);
     }
 
     @PermissionRule(value = "SEND", description = "collaborator can invite to the application for thier organisation")
-    public boolean collaboratorCanInviteToApplicationForTheirOrganisation(final Invite invite, final UserResource user) {
+    public boolean collaboratorCanInviteToApplicationForTheirOrganisation(final ApplicationInvite invite, final UserResource user) {
         return isCollaboratorOnInvite(invite, user);
     }
 
@@ -52,17 +52,17 @@ public class InvitePermissionRules {
     }
 
     @PermissionRule(value = "READ", description = "collaborator can view an invite to the application on for their organisation")
-    public boolean collaboratorCanReadInviteForTheirApplicationForTheirOrganisation(final Invite invite, final UserResource user) {
+    public boolean collaboratorCanReadInviteForTheirApplicationForTheirOrganisation(final ApplicationInvite invite, final UserResource user) {
         return isCollaboratorOnInvite(invite, user);
     }
 
     @PermissionRule(value = "READ", description = "lead applicant can view an invite to the application")
-    public boolean leadApplicantReadInviteToTheApplication(final Invite invite, final UserResource user) {
+    public boolean leadApplicantReadInviteToTheApplication(final ApplicationInvite invite, final UserResource user) {
         return isLeadForInvite(invite, user);
     }
 
-    private boolean isCollaboratorOnInvite(final Invite invite, final UserResource user) {
-        final long applicationId = invite.getApplication().getId();
+    private boolean isCollaboratorOnInvite(final ApplicationInvite invite, final UserResource user) {
+        final long applicationId = invite.getTarget().getId();
         final InviteOrganisation inviteOrganisation = invite.getInviteOrganisation();
         if (inviteOrganisation != null && inviteOrganisation.getOrganisation() != null) {
             long organisationId = inviteOrganisation.getOrganisation().getId();
@@ -82,9 +82,9 @@ public class InvitePermissionRules {
         return false;
     }
 
-    private boolean isLeadForInvite(final Invite invite, final UserResource user) {
-        final long applicationId = invite.getApplication().getId();
-        return checkProcessRole(user, invite.getApplication().getId(), UserRoleType.LEADAPPLICANT, processRoleRepository);
+    private boolean isLeadForInvite(final ApplicationInvite invite, final UserResource user) {
+        final long applicationId = invite.getTarget().getId();
+        return checkProcessRole(user, invite.getTarget().getId(), UserRoleType.LEADAPPLICANT, processRoleRepository);
     }
 
     private boolean isLeadForInvite(final InviteResource invite, final UserResource user) {

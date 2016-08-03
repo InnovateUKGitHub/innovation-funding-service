@@ -2,7 +2,7 @@ package com.worth.ifs.invite.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
-import com.worth.ifs.invite.domain.Invite;
+import com.worth.ifs.invite.domain.ApplicationInvite;
 import com.worth.ifs.invite.domain.InviteOrganisation;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
@@ -40,7 +40,7 @@ public class InviteControllerTest extends BaseControllerMockMVCTest<InviteContro
     @Before
     public void setUp() {
         when(inviteOrganisationRepositoryMock.save(isA(InviteOrganisation.class))).thenReturn(null);
-        when(inviteRepositoryMock.save(isA(Invite.class))).thenReturn(null);
+        when(inviteRepositoryMock.save(isA(ApplicationInvite.class))).thenReturn(null);
         when(organisationRepositoryMock.findOne(1L)).thenReturn(newOrganisation().build());
         when(applicationRepositoryMock.findOne(1L)).thenReturn(newApplication().build());
     }

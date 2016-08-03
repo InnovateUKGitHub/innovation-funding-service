@@ -37,8 +37,8 @@ public class RestSilExperianEndpoint implements SilExperianEndpoint {
     private String silExperianVerify;
 
     @Override
-    public ServiceResult<ValidationResult> validate(AccountDetails accountDetails) {
-        final Either<ResponseEntity<SilError>, ResponseEntity<ValidationResultWrapper>> response = adaptor.restPostWithEntity(silRestServiceUrl + silExperianValidate, accountDetails, ValidationResultWrapper.class, SilError.class, HttpStatus.OK, HttpStatus.ACCEPTED);
+    public ServiceResult<ValidationResult> validate(SILBankDetails bankDetails) {
+        final Either<ResponseEntity<SilError>, ResponseEntity<ValidationResultWrapper>> response = adaptor.restPostWithEntity(silRestServiceUrl + silExperianValidate, bankDetails, ValidationResultWrapper.class, SilError.class, HttpStatus.OK, HttpStatus.ACCEPTED);
         if(response.isLeft()){
             return serviceFailure(new Error(EXPERIAN_VALIDATION_FAILED));
         } else {
