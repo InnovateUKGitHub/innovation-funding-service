@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Spend Profile Summary'" th:remove="tag" />
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Partner Spend Profile'" th:remove="tag" />
 </head>
 <body th:with="context='comp-management'" class="competition-management assign-mo">
 <div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
@@ -26,9 +26,9 @@
 
     <hr/>
 
-    <th:block th:each="orgDetails : ${model.partnerOrganisationIdsAndNames}">
-        <a th:href="@{/project/{projectId}/partner-organisation/{orgId}/spend-profile(projectId=${model.projectId},orgId=${orgDetails.key})}" th:text="${orgDetails.value}">Partner Organisation Name</a> <br />
-    </th:block>
+    <form method="POST" th:action="@{/project/{projectId}/partner-organisation/{orgId}/spend-profile/generate(projectId=${model.projectId},orgId=${model.partnerOrganisationId})}">
+        <button class="button extra-margin">Generate Spend Profile</button>
+    </form>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
 </main>
