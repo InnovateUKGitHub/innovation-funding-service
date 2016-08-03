@@ -1,6 +1,6 @@
 package com.worth.ifs.project.consortiumoverview.viewmodel;
 
-abstract class ConsortiumMemberStatusModel {
+public abstract class ConsortiumMemberStatusModel {
     String name;
     ConsortiumPartnerStatus projectDetailsStatus;
     ConsortiumPartnerStatus monitoringOfficerStatus;

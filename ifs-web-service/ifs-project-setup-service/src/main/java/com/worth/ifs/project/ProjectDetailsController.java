@@ -349,9 +349,17 @@ public class ProjectDetailsController extends AddressLookupBaseController {
             ACTION_REQUIRED,
             ACTION_REQUIRED
         );
+        String name;
+        ConsortiumPartnerStatus projectDetailsStatus;
+        ConsortiumPartnerStatus monitoringOfficerStatus;
+        ConsortiumPartnerStatus bankDetailsStatus;
+        ConsortiumPartnerStatus financeChecksStatus;
+        ConsortiumPartnerStatus spendProfileStatus;
+        ConsortiumPartnerStatus otherDocumentsStatus;
+        ConsortiumPartnerStatus grantOfferLetterStatus;
         final List<RegularPartnerModel> otherPartnersModels = simpleMap(otherOrganisations, partner -> createPartnerModel(projectId, partner));
 
-        return new ProjectConsortiumStatusViewModel(leadPartnerModel, otherPartnersModels);
+        return new ProjectConsortiumStatusViewModel(projectId, leadPartnerModel, otherPartnersModels);
     }
 
     private RegularPartnerModel createPartnerModel(final Long projectId, final OrganisationResource partner) {
