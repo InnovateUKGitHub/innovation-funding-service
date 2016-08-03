@@ -14,7 +14,7 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               IFUND-3888 Rearrangement of Competitions setup
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        CompAdmin    Pending
+Force Tags        CompAdmin
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -24,7 +24,6 @@ Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
 
 *** Test Cases ***
 
-# All tests Pending due to INFUND-4354
 User can navigate to the competition setup form
     [Documentation]    INFUND-2945
     ...
@@ -40,6 +39,7 @@ User can navigate to the competition setup form
     ...
     ...    IFUND-3888
     [Tags]    HappyPath
+    Given the user clicks the button/link    id=section-2
     When the user clicks the button/link    jQuery=.button:contains("Create competition")
     Then the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
     When the user clicks the button/link    link=Initial Details
