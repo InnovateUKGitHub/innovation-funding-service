@@ -99,4 +99,16 @@ public class Address {
                 .append(postcode)
                 .toHashCode();
     }
+
+    @Override
+    public String toString() {
+        return "Address{" +
+                "organisation='" + organisation + '\'' +
+                ", buildingName='" + buildingName + '\'' +
+                ", street='" + street + '\'' +
+                ", locality='" + locality + '\'' +
+                ", town='" + town + '\'' +
+                ", postcode='" + postcode + '\'' +
+                '}';
+    }
 }
