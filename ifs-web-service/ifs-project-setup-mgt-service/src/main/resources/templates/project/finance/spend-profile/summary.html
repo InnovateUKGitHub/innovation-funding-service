@@ -26,7 +26,9 @@
 
     <hr/>
 
-    Hello!
+    <th:block th:each="orgDetails : ${model.partnerOrganisationIdsAndNames}">
+        <a th:href="@{/project/{projectId}/spend-profile/partner-organisation/{orgId}(projectId=${model.projectId},orgId=${orgDetails.key})}" th:text="${orgDetails.value}">Partner Organisation Name</a> <br />
+    </th:block>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
 </main>

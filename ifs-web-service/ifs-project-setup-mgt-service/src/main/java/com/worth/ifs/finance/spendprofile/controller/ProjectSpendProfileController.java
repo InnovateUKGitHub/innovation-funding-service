@@ -7,11 +7,14 @@ import com.worth.ifs.application.service.ApplicationSummaryService;
 import com.worth.ifs.finance.spendprofile.viewmodel.ProjectSpendProfileViewModel;
 import com.worth.ifs.project.ProjectService;
 import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.user.resource.OrganisationResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
@@ -37,8 +40,9 @@ public class ProjectSpendProfileController {
         ProjectResource project = projectService.getById(projectId);
         ApplicationResource application = applicationService.getById(project.getApplication());
         CompetitionSummaryResource competitionSummary = applicationSummaryService.getCompetitionSummaryByCompetitionId(application.getCompetition());
+        List<OrganisationResource> partnerOrganisations = projectService.getPartnerOrganisationsForProject(projectId);
 
-        model.addAttribute("model", new ProjectSpendProfileViewModel(competitionSummary));
+        model.addAttribute("model", new ProjectSpendProfileViewModel(projectId, competitionSummary, partnerOrganisations));
         return "project/finance/spend-profile/summary";
     }
 }
