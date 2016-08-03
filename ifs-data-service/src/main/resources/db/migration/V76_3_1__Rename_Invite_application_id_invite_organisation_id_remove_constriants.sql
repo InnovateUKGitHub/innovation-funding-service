@@ -13,4 +13,4 @@ ALTER TABLE invite CHANGE COLUMN `application_id` `target_id` BIGINT(20) DEFAULT
 ALTER TABLE invite CHANGE COLUMN `invite_organisation_id` `owner_id` BIGINT(20) DEFAULT NULL;
 
 
-ALTER TABLE invite ADD UNIQUE KEY `UK_unique_target_id_email` (target_id, email);
+ALTER TABLE invite ADD UNIQUE KEY `UK_unique_target_id_email` (type, target_id, email);
