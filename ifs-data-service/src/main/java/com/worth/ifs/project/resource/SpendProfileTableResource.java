@@ -1,8 +1,12 @@
 package com.worth.ifs.project.resource;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 public class SpendProfileTableResource {
 
@@ -12,15 +16,9 @@ public class SpendProfileTableResource {
     private List<LocalDate> months;
 
     /*
-     * Holds the cost for each month, the first entry representing the first month and so on
+     * Holds the cost per category for each month, the first entry in the list representing the first month and so on.
      */
-    private List<BigDecimal> monthlyLabourCost;
-    private List<BigDecimal> monthlyAdminSupportCost;
-    private List<BigDecimal> monthlyMaterialCost;
-    private List<BigDecimal> monthlyCapitalCost;
-    private List<BigDecimal> monthlySubcontractingCost;
-    private List<BigDecimal> monthlyTravelAndSubsistenceCost;
-    private List<BigDecimal> monthlyOtherCost;
+    private Map<String, List<BigDecimal>> monthlyCostsPerCategoryMap;
 
     public List<LocalDate> getMonths() {
         return months;
@@ -30,59 +28,32 @@ public class SpendProfileTableResource {
         this.months = months;
     }
 
-    public List<BigDecimal> getMonthlyLabourCost() {
-        return monthlyLabourCost;
+    public Map<String, List<BigDecimal>> getMonthlyCostsPerCategoryMap() {
+        return monthlyCostsPerCategoryMap;
     }
 
-    public void setMonthlyLabourCost(List<BigDecimal> monthlyLabourCost) {
-        this.monthlyLabourCost = monthlyLabourCost;
+    public void setMonthlyCostsPerCategoryMap(Map<String, List<BigDecimal>> monthlyCostsPerCategoryMap) {
+        this.monthlyCostsPerCategoryMap = monthlyCostsPerCategoryMap;
     }
 
-    public List<BigDecimal> getMonthlyAdminSupportCost() {
-        return monthlyAdminSupportCost;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        SpendProfileTableResource that = (SpendProfileTableResource) o;
+
+        return new EqualsBuilder()
+                .append(months, that.months)
+                .append(monthlyCostsPerCategoryMap, that.monthlyCostsPerCategoryMap)
+                .isEquals();
     }
 
-    public void setMonthlyAdminSupportCost(List<BigDecimal> monthlyAdminSupportCost) {
-        this.monthlyAdminSupportCost = monthlyAdminSupportCost;
-    }
-
-    public List<BigDecimal> getMonthlyMaterialCost() {
-        return monthlyMaterialCost;
-    }
-
-    public void setMonthlyMaterialCost(List<BigDecimal> monthlyMaterialCost) {
-        this.monthlyMaterialCost = monthlyMaterialCost;
-    }
-
-    public List<BigDecimal> getMonthlyCapitalCost() {
-        return monthlyCapitalCost;
-    }
-
-    public void setMonthlyCapitalCost(List<BigDecimal> monthlyCapitalCost) {
-        this.monthlyCapitalCost = monthlyCapitalCost;
-    }
-
-    public List<BigDecimal> getMonthlySubcontractingCost() {
-        return monthlySubcontractingCost;
-    }
-
-    public void setMonthlySubcontractingCost(List<BigDecimal> monthlySubcontractingCost) {
-        this.monthlySubcontractingCost = monthlySubcontractingCost;
-    }
-
-    public List<BigDecimal> getMonthlyTravelAndSubsistenceCost() {
-        return monthlyTravelAndSubsistenceCost;
-    }
-
-    public void setMonthlyTravelAndSubsistenceCost(List<BigDecimal> monthlyTravelAndSubsistenceCost) {
-        this.monthlyTravelAndSubsistenceCost = monthlyTravelAndSubsistenceCost;
-    }
-
-    public List<BigDecimal> getMonthlyOtherCost() {
-        return monthlyOtherCost;
-    }
-
-    public void setMonthlyOtherCost(List<BigDecimal> monthlyOtherCost) {
-        this.monthlyOtherCost = monthlyOtherCost;
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(months)
+                .toHashCode();
     }
 }

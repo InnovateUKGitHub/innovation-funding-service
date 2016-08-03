@@ -18,7 +18,9 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -59,19 +61,23 @@ public class ProjectSpendProfileController {
 
         SpendProfileTableResource table = buildSpendProfileTable(spendProfileResource, projectResource);
 
-        return new ProjectSpendProfileViewModel(projectResource);
+        return new ProjectSpendProfileViewModel(projectResource, table);
     }
 
     private SpendProfileResource tempGetSpendProfileEligibleCosts() {
 
         SpendProfileResource spendProfileResource = new SpendProfileResource();
-        spendProfileResource.setEligibleLabourCost(new BigDecimal("240"));
-        spendProfileResource.setEligibleAdminSupportCost(new BigDecimal("120"));
-        spendProfileResource.setEligibleMaterialCost(new BigDecimal("180"));
-        spendProfileResource.setEligibleCapitalCost(new BigDecimal("190"));
-        spendProfileResource.setEligibleSubcontractingCost(new BigDecimal("160"));
-        spendProfileResource.setEligibleTravelAndSubsistenceCost(new BigDecimal("850"));
-        spendProfileResource.setEligibleOtherCost(new BigDecimal("210"));
+
+        Map<String, BigDecimal> eligibleCostPerCategoryMap = new LinkedHashMap<>();
+        eligibleCostPerCategoryMap.put("LabourCost", new BigDecimal("240"));
+        eligibleCostPerCategoryMap.put("AdminSupportCost", new BigDecimal("120"));
+        eligibleCostPerCategoryMap.put("MaterialCost", new BigDecimal("180"));
+        eligibleCostPerCategoryMap.put("CapitalCost", new BigDecimal("190"));
+        eligibleCostPerCategoryMap.put("SubcontractingCost", new BigDecimal("160"));
+        eligibleCostPerCategoryMap.put("TravelAndSubsistenceCost", new BigDecimal("850"));
+        eligibleCostPerCategoryMap.put("OtherCost", new BigDecimal("210"));
+
+        spendProfileResource.setEligibleCostPerCategoryMap(eligibleCostPerCategoryMap);
 
         return spendProfileResource;
 
@@ -85,14 +91,7 @@ public class ProjectSpendProfileController {
         Long duration = projectResource.getDurationInMonths();
 
         table.setMonths(buildSpendProfileMonths(projectResource.getTargetStartDate(), duration));
-
-        table.setMonthlyLabourCost(splitCostsAcrossMonths(spendProfileResource.getEligibleLabourCost(), duration));
-        table.setMonthlyAdminSupportCost(splitCostsAcrossMonths(spendProfileResource.getEligibleAdminSupportCost(), duration));
-        table.setMonthlyMaterialCost(splitCostsAcrossMonths(spendProfileResource.getEligibleMaterialCost(), duration));
-        table.setMonthlyCapitalCost(splitCostsAcrossMonths(spendProfileResource.getEligibleCapitalCost(), duration));
-        table.setMonthlySubcontractingCost(splitCostsAcrossMonths(spendProfileResource.getEligibleSubcontractingCost(), duration));
-        table.setMonthlyTravelAndSubsistenceCost(splitCostsAcrossMonths(spendProfileResource.getEligibleTravelAndSubsistenceCost(), duration));
-        table.setMonthlyOtherCost(splitCostsAcrossMonths(spendProfileResource.getEligibleOtherCost(), duration));
+        table.setMonthlyCostsPerCategoryMap(buildMonthlyCostsPerCategory(spendProfileResource, duration));
 
         return table;
 
@@ -108,6 +107,21 @@ public class ProjectSpendProfileController {
         return months;
     }
 
+
+    private Map<String, List<BigDecimal>> buildMonthlyCostsPerCategory(SpendProfileResource spendProfileResource, Long duration) {
+
+        // Used a LinkedHashMap to preserve the order of insertion, but if its not required, then we can use a HashMap
+        Map<String, List<BigDecimal>> monthlyCostsPerCategoryMap = new LinkedHashMap<>();
+
+        Map<String, BigDecimal> eligibleCostPerCategoryMap = spendProfileResource.getEligibleCostPerCategoryMap();
+        eligibleCostPerCategoryMap.forEach((category, totalEligibleCost) -> {
+            List<BigDecimal> result = splitCostsAcrossMonths(totalEligibleCost, duration);
+            monthlyCostsPerCategoryMap.put(category, result);
+        });
+
+        return monthlyCostsPerCategoryMap;
+
+    }
 
     // If we don't want fractional numbers, I "could" set the scale to 0 and it works fine, but don't think it will total up to the correct value.
     // Also I believe that if we get a fraction then we need some sort of logic to adjust it. For example with value as 10 and 3 months, we should get 4, 3, 3 instead of
@@ -125,12 +139,12 @@ public class ProjectSpendProfileController {
 
     }
 
-    // TODO - For testing purpose only - will be deleted later - Ignore
+/*    // TODO - For testing purpose only - will be deleted later - Ignore
     public static void main(String[] args) {
 
 
         ProjectResource projectResource = new ProjectResource();
-        projectResource.setDurationInMonths(15L);
+        projectResource.setDurationInMonths(12L);
         projectResource.setTargetStartDate(LocalDate.now());
 
         ProjectSpendProfileController controller = new ProjectSpendProfileController();
@@ -138,5 +152,5 @@ public class ProjectSpendProfileController {
 
 
         SpendProfileTableResource table = controller.buildSpendProfileTable(spendProfileResource, projectResource);
-    }
+    }*/
 }
