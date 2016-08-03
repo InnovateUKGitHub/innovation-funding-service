@@ -1,6 +1,5 @@
 package com.worth.ifs.finance.handler;
 
-import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
