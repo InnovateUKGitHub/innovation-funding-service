@@ -99,7 +99,7 @@
             </div>
         </th:block>
         <th:block th:if="${param.status != null and param.status[0] == 'edit-' + question.id}">
-            <form method="post" th:object="${competitionSetupForm.questionToUpdate}" action="application/question/update">
+            <form method="post" th:object="${competitionSetupForm.questionToUpdate}" th:action="@{application/question/update}">
                 <input type="hidden"
                        th:name="questionToUpdate.id"
                        th:value="${question.id}" />

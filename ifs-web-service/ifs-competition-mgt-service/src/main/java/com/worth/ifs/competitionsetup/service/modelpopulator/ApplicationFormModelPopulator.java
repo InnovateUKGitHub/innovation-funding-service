@@ -11,7 +11,6 @@ import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competitionsetup.model.Question;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.service.FormInputService;
-import com.worth.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -28,9 +27,6 @@ public class ApplicationFormModelPopulator implements CompetitionSetupSectionMod
 
 	@Autowired
 	private CompetitionService competitionService;
-
-	@Autowired
-	private UserService userService;
 
 	@Autowired
 	private SectionService sectionService;

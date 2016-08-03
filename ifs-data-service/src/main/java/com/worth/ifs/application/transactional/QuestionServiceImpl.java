@@ -1,14 +1,25 @@
 package com.worth.ifs.application.transactional;
 
-import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
-import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
-import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
-import static com.worth.ifs.util.EntityLookupCallbacks.find;
-import static com.worth.ifs.util.EntityLookupCallbacks.getOnlyElementOrFail;
-import static java.time.LocalDateTime.now;
-import static java.util.Comparator.comparing;
-import static java.util.stream.Collectors.toList;
+import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.application.domain.QuestionStatus;
+import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.mapper.QuestionMapper;
+import com.worth.ifs.application.mapper.QuestionStatusMapper;
+import com.worth.ifs.application.repository.QuestionRepository;
+import com.worth.ifs.application.repository.QuestionStatusRepository;
+import com.worth.ifs.application.resource.*;
+import com.worth.ifs.commons.rest.ValidationMessages;
+import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.form.domain.FormInputType;
+import com.worth.ifs.form.transactional.FormInputTypeService;
+import com.worth.ifs.transactional.BaseTransactionalService;
+import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.validator.util.ValidationUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -20,31 +31,15 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.domain.QuestionStatus;
-import com.worth.ifs.application.domain.Section;
-import com.worth.ifs.application.mapper.QuestionMapper;
-import com.worth.ifs.application.mapper.QuestionStatusMapper;
-import com.worth.ifs.application.repository.QuestionRepository;
-import com.worth.ifs.application.repository.QuestionStatusRepository;
-import com.worth.ifs.application.resource.QuestionApplicationCompositeId;
-import com.worth.ifs.application.resource.QuestionResource;
-import com.worth.ifs.application.resource.QuestionStatusResource;
-import com.worth.ifs.application.resource.QuestionType;
-import com.worth.ifs.application.resource.SectionResource;
-import com.worth.ifs.commons.rest.ValidationMessages;
-import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.form.domain.FormInputType;
-import com.worth.ifs.form.transactional.FormInputTypeService;
-import com.worth.ifs.transactional.BaseTransactionalService;
-import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.validator.util.ValidationUtil;
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static com.worth.ifs.util.EntityLookupCallbacks.find;
+import static com.worth.ifs.util.EntityLookupCallbacks.getOnlyElementOrFail;
+import static java.time.LocalDateTime.now;
+import static java.util.Comparator.comparing;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Transactional and secured service focused around the processing of Applications
@@ -292,7 +287,13 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
 			Long sectionId, QuestionType type) {
 		return getSection(sectionId).andOnSuccessReturn(section -> questionsOfType(section, type));
 	}
-	
+
+    @Override
+    public ServiceResult<QuestionResource> save(QuestionResource questionResource) {
+        Question questionUpdated = questionRepository.save(questionMapper.mapToDomain(questionResource));
+        return serviceSuccess(questionMapper.mapToResource(questionUpdated));
+    }
+
     private List<QuestionResource> questionsOfType(Section section, QuestionType type) {
     	Stream<Question> sectionQuestionsStream = section.getQuestions().stream();
     	Stream<Question> childSectionsQuestionsStream = section.getChildSections().stream().flatMap(s -> s.getQuestions().stream());
