@@ -20,8 +20,8 @@ cd ../../../
 docker-compose -p ifs up -d
 wait
 sleep 1
-docker-compose -p ifs exec mysql mysql -uroot -ppassword -e 'create database ifs_test'
-docker-compose -p ifs exec mysql mysql -uroot -ppassword -e 'create database ifs'
+docker-compose -p ifs exec mysql mysql -uroot -ppassword -e 'create database if not exists ifs_test'
+docker-compose -p ifs exec mysql mysql -uroot -ppassword -e 'create database if not exists ifs'
 setHostFile
 
 cd $BASEDIR
