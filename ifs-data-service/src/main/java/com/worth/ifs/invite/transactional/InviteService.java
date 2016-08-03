@@ -2,7 +2,6 @@ package com.worth.ifs.invite.transactional;
 
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.invite.domain.ApplicationInvite;
-import com.worth.ifs.invite.domain.Invite;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.resource.InviteResultsResource;
@@ -58,5 +57,5 @@ public interface InviteService {
     @SecuredBySpring(value = "CHECK_EXISTENCE_OF_INVITE_ON_HASH",
             description = "The System Registration user can check to see if there is an invite for a given hash",
             additionalComments = "The hash should be unguessable so the only way to successfully call this method would be to have been given the hash in the first place")
-    ServiceResult<Void> checkUserExistingByInviteHash(@P("hash") String hash);
+    ServiceResult<Boolean> checkUserExistingByInviteHash(@P("hash") String hash);
 }

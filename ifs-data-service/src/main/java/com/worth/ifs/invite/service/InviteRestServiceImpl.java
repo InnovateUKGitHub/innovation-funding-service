@@ -57,9 +57,9 @@ public class InviteRestServiceImpl extends BaseRestService implements InviteRest
     }
 
     @Override
-    public RestResult<Void> checkExistingUser(String inviteHash) {
+    public RestResult<Boolean> checkExistingUser(String inviteHash) {
         String url = inviteRestUrl + String.format("/checkExistingUser/%s", inviteHash);
-        return getWithRestResultAnonymous(url, Void.class);
+        return getWithRestResultAnonymous(url, Boolean.class);
     }
 
     @Override

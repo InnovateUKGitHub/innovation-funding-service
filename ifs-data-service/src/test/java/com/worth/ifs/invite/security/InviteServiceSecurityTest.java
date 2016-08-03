@@ -160,7 +160,7 @@ public class InviteServiceSecurityTest extends BaseServiceSecurityTest<InviteSer
         }
 
         @Override
-        public ServiceResult<Void> checkUserExistingByInviteHash(@P("hash") String hash) {
+        public ServiceResult<Boolean> checkUserExistingByInviteHash(@P("hash") String hash) {
             return null;
         }
     }

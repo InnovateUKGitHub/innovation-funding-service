@@ -3,14 +3,12 @@ package com.worth.ifs.invite.transactional;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.commons.error.CommonErrors;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.BaseEitherBackedResult;
 import com.worth.ifs.commons.service.ServiceFailure;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.invite.domain.ApplicationInvite;
-import com.worth.ifs.invite.domain.Invite;
 import com.worth.ifs.invite.domain.InviteOrganisation;
 import com.worth.ifs.invite.mapper.InviteMapper;
 import com.worth.ifs.invite.mapper.InviteOrganisationMapper;
@@ -277,17 +275,10 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     }
 
     @Override
-    public ServiceResult<Void> checkUserExistingByInviteHash(@P("hash") String hash) {
+    public ServiceResult<Boolean> checkUserExistingByInviteHash(@P("hash") String hash) {
         return getByHash(hash)
                 .andOnSuccessReturn(i -> userRepository.findByEmail(i.getEmail()))
-                .andOnSuccess(u -> {
-                    if(u.isPresent()){
-                        return serviceSuccess();
-                    }else{
-                        return serviceFailure(CommonErrors.notFoundError(ApplicationInvite.class, hash));
-                    }
-                })
-                .andOnSuccessReturnVoid();
+                .andOnSuccess(u -> serviceSuccess(u.isPresent()));
     }
 
     protected Supplier<ServiceResult<ApplicationInvite>> invite(final String hash) {

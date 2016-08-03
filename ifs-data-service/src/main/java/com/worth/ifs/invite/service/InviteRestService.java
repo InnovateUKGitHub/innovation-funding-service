@@ -13,7 +13,7 @@ public interface InviteRestService {
     RestResult<InviteResultsResource> saveInvites(List<InviteResource> inviteResources);
     RestResult<Void> acceptInvite(String inviteHash, Long userId);
 
-    RestResult<Void> checkExistingUser(String inviteHash);
+    RestResult<Boolean> checkExistingUser(String inviteHash);
 
     RestResult<InviteResource> getInviteByHash(String hash);
     RestResult<InviteOrganisationResource> getInviteOrganisationByHash(String hash);
