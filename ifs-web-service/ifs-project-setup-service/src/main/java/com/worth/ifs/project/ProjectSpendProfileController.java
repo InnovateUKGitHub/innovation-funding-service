@@ -75,7 +75,7 @@ public class ProjectSpendProfileController {
         eligibleCostPerCategoryMap.put("CapitalCost", new BigDecimal("190"));
         eligibleCostPerCategoryMap.put("SubcontractingCost", new BigDecimal("160"));
         eligibleCostPerCategoryMap.put("TravelAndSubsistenceCost", new BigDecimal("850"));
-        eligibleCostPerCategoryMap.put("OtherCost", new BigDecimal("210"));
+        eligibleCostPerCategoryMap.put("OtherCost", new BigDecimal("149"));
 
         spendProfileResource.setEligibleCostPerCategoryMap(eligibleCostPerCategoryMap);
 
@@ -123,23 +123,39 @@ public class ProjectSpendProfileController {
 
     }
 
-    // If we don't want fractional numbers, I "could" set the scale to 0 and it works fine, but don't think it will total up to the correct value.
-    // Also I believe that if we get a fraction then we need some sort of logic to adjust it. For example with value as 10 and 3 months, we should get 4, 3, 3 instead of
-    // 3.33, 3.33, 3.33
-    // At the moment, this logic nicely spits the value equally
+    /*
+     * This method will split the total cost dynamically based on the number of months and will add it to the list.
+     * The splitting process will ensure that we do not get any fractional numbers for any month.
+     * Therefore the surplus will be added over to the first month to ensure non-fractional splitting.
+     * For example. the value 10 over 3 months will be split as 4, 3, 3 instead of 3.33, 3.33, 3.33
+     */
     private List<BigDecimal> splitCostsAcrossMonths(BigDecimal totalCost, Long duration) {
 
         List<BigDecimal> result = new ArrayList<>();
 
-        BigDecimal costPerMonth = totalCost.divide(new BigDecimal(duration.toString()), 2, RoundingMode.HALF_EVEN);
+        BigDecimal remainder = totalCost.remainder(new BigDecimal(duration.toString()));
+
+        totalCost = totalCost.subtract(remainder);
+
+        // Here we have used the scale as 0 since we are not interested in the fractional part (there isn't going to be a fractional part anyways,
+        // as now the total cost would be perfectly divisible by the number of months.
+        // Which also means that the Rounding Mode of HALF_EVEN will have no effect - but is here as part of a standard process of division
+        BigDecimal costPerMonth = totalCost.divide(new BigDecimal(duration.toString()), 0, RoundingMode.HALF_EVEN);
 
         Stream.generate(() -> costPerMonth).limit(duration).forEach(result::add);
+
+        if (!result.isEmpty()) {
+            BigDecimal firstMonth = result.get(0);
+            firstMonth = firstMonth.add(remainder);
+
+            result.set(0, firstMonth);
+        }
 
         return result;
 
     }
 
-/*    // TODO - For testing purpose only - will be deleted later - Ignore
+    // TODO - For testing purpose only - will be deleted later - Ignore
     public static void main(String[] args) {
 
 
@@ -152,5 +168,5 @@ public class ProjectSpendProfileController {
 
 
         SpendProfileTableResource table = controller.buildSpendProfileTable(spendProfileResource, projectResource);
-    }*/
+    }
 }
