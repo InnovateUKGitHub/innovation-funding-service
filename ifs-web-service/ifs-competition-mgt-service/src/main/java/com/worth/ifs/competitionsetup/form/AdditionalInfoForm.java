@@ -2,6 +2,7 @@ package com.worth.ifs.competitionsetup.form;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -14,6 +15,7 @@ import java.util.List;
  */
 public class AdditionalInfoForm extends CompetitionSetupForm {
     @Size(max = 255, message = "Activity code has a maximum length of 255 characters")
+    @NotEmpty(message = "Please enter a activity code")
     private String activityCode;
     @Size(max = 255, message = "Innovate budget has a maximum length of 255 characters")
     private String innovateBudget;
@@ -30,7 +32,7 @@ public class AdditionalInfoForm extends CompetitionSetupForm {
     @NotEmpty(message = "Please enter a budget code")
     private String budgetCode;
 
-
+    @Valid
     private List<CoFunderForm> coFunders = new ArrayList<>();
 
 

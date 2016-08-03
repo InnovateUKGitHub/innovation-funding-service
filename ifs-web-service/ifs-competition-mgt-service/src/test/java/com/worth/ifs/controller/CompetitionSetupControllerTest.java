@@ -95,8 +95,8 @@ public class CompetitionSetupControllerTest {
         ct1.setName("Comptype with stateAid");
         ct1.setStateAid(true);
         ct1.setCompetitions(asList(COMPETITION_ID));
-
         when(competitionService.getAllCompetitionTypes()).thenReturn(asList(ct1));
+
 
     }
     
