@@ -8,8 +8,8 @@ import com.worth.ifs.finance.resource.ApplicationFinanceResourceId;
 import com.worth.ifs.finance.resource.category.CostCategory;
 import com.worth.ifs.finance.resource.cost.CostType;
 import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import com.worth.ifs.user.repository.OrganisationRepository;
+import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
