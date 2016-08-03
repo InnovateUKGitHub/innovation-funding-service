@@ -142,13 +142,14 @@ public class CompetitionSetupServiceImplTest {
 		verify(otherSaver, never()).saveSection(competitionResource, competitionSetupForm);
 	}
 
-
 	@Test
 	public void testIsCompetitionReadyToOpen() {
 		Map<CompetitionSetupSection, Boolean> testSectionStatus = new HashMap<>();
 		testSectionStatus.put(CompetitionSetupSection.INITIAL_DETAILS, Boolean.TRUE);
 		testSectionStatus.put(CompetitionSetupSection.ADDITIONAL_INFO, Boolean.TRUE);
 		testSectionStatus.put(CompetitionSetupSection.ELIGIBILITY, Boolean.TRUE);
+		testSectionStatus.put(CompetitionSetupSection.MILESTONES, Boolean.TRUE);
+		testSectionStatus.put(CompetitionSetupSection.APPLICATION_FORM, Boolean.TRUE);
 
 		CompetitionResource competitionResource = newCompetitionResource().build();
 		competitionResource.setSectionSetupStatus(testSectionStatus);
@@ -163,6 +164,8 @@ public class CompetitionSetupServiceImplTest {
 		testSectionStatus.put(CompetitionSetupSection.INITIAL_DETAILS, Boolean.TRUE);
 		testSectionStatus.put(CompetitionSetupSection.ADDITIONAL_INFO, Boolean.FALSE);
 		testSectionStatus.put(CompetitionSetupSection.ELIGIBILITY, Boolean.TRUE);
+		testSectionStatus.put(CompetitionSetupSection.MILESTONES, Boolean.TRUE);
+		testSectionStatus.put(CompetitionSetupSection.APPLICATION_FORM, Boolean.TRUE);
 
 		CompetitionResource competitionResource = newCompetitionResource().build();
 		competitionResource.setSectionSetupStatus(testSectionStatus);
@@ -170,4 +173,51 @@ public class CompetitionSetupServiceImplTest {
 		assertFalse(service.isCompetitionReadyToOpen(competitionResource));
 	}
 
+
+
+	@Test
+	public void testSetCompetitionAsReadyToOpenWhenReadyToOpen() {
+		CompetitionResource competitionResource = newCompetitionResource().withCompetitionStatus(CompetitionResource.Status.READY_TO_OPEN).build();
+		when(competitionService.getById(any(Long.class))).thenReturn(competitionResource);
+		service.setCompetitionAsReadyToOpen(2L);
+		assertEquals(competitionResource.getCompetitionStatus(), CompetitionResource.Status.READY_TO_OPEN);
+
+	}
+
+	@Test
+	public void testSetCompetitionAsReadyToOpenSuccess() {
+		Map<CompetitionSetupSection, Boolean> testSectionStatus = new HashMap<>();
+		testSectionStatus.put(CompetitionSetupSection.INITIAL_DETAILS, Boolean.TRUE);
+		testSectionStatus.put(CompetitionSetupSection.ADDITIONAL_INFO, Boolean.TRUE);
+		testSectionStatus.put(CompetitionSetupSection.ELIGIBILITY, Boolean.TRUE);
+		testSectionStatus.put(CompetitionSetupSection.MILESTONES, Boolean.TRUE);
+		testSectionStatus.put(CompetitionSetupSection.APPLICATION_FORM, Boolean.TRUE);
+		CompetitionResource competitionResource = newCompetitionResource()
+				.withCompetitionStatus(CompetitionResource.Status.COMPETITION_SETUP)
+				.build();
+		competitionResource.setSectionSetupStatus(testSectionStatus);
+
+		when(competitionService.getById(any(Long.class))).thenReturn(competitionResource);
+		service.setCompetitionAsReadyToOpen(2L);
+		assertEquals(competitionResource.getCompetitionStatus(), CompetitionResource.Status.READY_TO_OPEN);
+
+	}
+
+
+	@Test(expected=IllegalArgumentException.class)
+	public void testSetCompetitionAsReadyToOpenFail() {
+		Map<CompetitionSetupSection, Boolean> testSectionStatus = new HashMap<>();
+		testSectionStatus.put(CompetitionSetupSection.INITIAL_DETAILS, Boolean.TRUE);
+		testSectionStatus.put(CompetitionSetupSection.ADDITIONAL_INFO, Boolean.FALSE);
+		testSectionStatus.put(CompetitionSetupSection.ELIGIBILITY, Boolean.TRUE);
+		testSectionStatus.put(CompetitionSetupSection.MILESTONES, Boolean.TRUE);
+		testSectionStatus.put(CompetitionSetupSection.APPLICATION_FORM, Boolean.TRUE);
+		CompetitionResource competitionResource = newCompetitionResource()
+				.withCompetitionStatus(CompetitionResource.Status.COMPETITION_SETUP)
+				.build();
+		competitionResource.setSectionSetupStatus(testSectionStatus);
+
+		when(competitionService.getById(any(Long.class))).thenReturn(competitionResource);
+		service.setCompetitionAsReadyToOpen(2L);
+	}
 }
