@@ -1,16 +1,13 @@
 package com.worth.ifs.sil.experian.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
-import com.worth.ifs.sil.experian.resource.AccountDetails;
-import com.worth.ifs.sil.experian.resource.Address;
 import org.junit.Test;
-import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.test.web.servlet.MvcResult;
 
-import static java.lang.Boolean.TRUE;
-import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
-import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static com.worth.ifs.sil.experian.controller.ExperianEndpointController.validationErrors;
+import static com.worth.ifs.sil.experian.controller.ExperianEndpointController.verificationResults;
+import static com.worth.ifs.util.JsonMappingUtil.toJson;
+import static junit.framework.TestCase.fail;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -21,41 +18,45 @@ public class ExperianEndpointControllerMockMvcTest extends BaseControllerMockMVC
 
     @Override
     protected ExperianEndpointController supplyControllerUnderTest() {
-        ExperianEndpointController endpointController = new ExperianEndpointController();
-        ReflectionTestUtils.setField(endpointController, "validateFromSilStub", TRUE);
-        return endpointController;
+        return new ExperianEndpointController();
     }
 
     @Test
     public void testExperianValidate() throws Exception {
-        String sortCode = "123456";
-        String accountNumber = "12345678";
-        String companyName = "ACME limited";
-        String registrationNumber = "12345678";
-        String buildingName = "";
-        String street = "";
-        String locality = "";
-        String town = "";
-        String postcode = "";
+        validationErrors.keySet().forEach(bankDetails -> {
+            String requestBody = toJson(bankDetails);
+            try {
+                MvcResult result = mockMvc.
+                        perform(
+                                post("/silstub/experianValidate").
+                                        header("Content-Type", "application/json").
+                                        header("IFS_AUTH_TOKEN", "123abc").
+                                        content(requestBody)
+                        ).
+                        andExpect(status().isOk()).
+                        andReturn();
+                System.out.println();
+            } catch (Exception e) {
+                fail("Error while validating a stub example " + e.getMessage() + " " + validationErrors.get(bankDetails));
+            }
+        });
+    }
 
-        Address address = new Address(companyName, buildingName, street, locality, town, postcode);
-        AccountDetails accountDetails = new AccountDetails(sortCode, accountNumber, companyName, registrationNumber, address);
-
-        String requestBody = new ObjectMapper().writeValueAsString(accountDetails);
-
-        mockMvc.
-            perform(
-                post("/silstub/experianValidate").
-                    header("Content-Type", "application/json").
-                    header("IFS_AUTH_TOKEN", "123abc").
-                    content(requestBody)
-            ).
-            andExpect(status().isOk()).
-            andDo(document("silstub/experianValidate",
-                requestHeaders(
-                    headerWithName("Content-Type").description("Needs to be application/json"),
-                    headerWithName("IFS_AUTH_TOKEN").description("The authentication token for the logged in user")
-                )
-            ));
+    @Test
+    public void testExperianVerify() throws Exception {
+        verificationResults.keySet().forEach(accountDetails -> {
+            String requestBody = toJson(accountDetails);
+            try{
+                MvcResult result = mockMvc.perform(
+                        post("/silstub/experianVerify").
+                                header("Content-Type", "application/json").
+                                header("IFS_AUTH_TOKEN", "123abc").
+                                content(requestBody)
+                ).andExpect(status().isOk()).andReturn();
+                System.out.println();
+            } catch (Exception e){
+                fail("Error while verification of a stub example " + e.getMessage() + " " + verificationResults.get(accountDetails));
+            }
+        });
     }
 }

@@ -6,6 +6,7 @@ COPY setup-files/scripts/docker/jrebel.jar /jrebel.jar
 ENV CATALINA_OPTS="-showversion"
 ENV CATALINA_OPTS="$CATALINA_OPTS -javaagent:/jrebel.jar"
 ENV CATALINA_OPTS="$CATALINA_OPTS -Drebel.remoting_plugin=true"
+ENV CATALINA_OPTS="$CATALINA_OPTS -Drebel.log=true"
 ENV CATALINA_OPTS="$CATALINA_OPTS -Dcom.sun.management.jmxremote"
 ENV CATALINA_OPTS="$CATALINA_OPTS -Dcom.sun.management.jmxremote.port=12345"
 ENV CATALINA_OPTS="$CATALINA_OPTS -Dcom.sun.management.jmxremote.ssl=false"

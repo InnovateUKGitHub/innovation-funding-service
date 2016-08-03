@@ -27,7 +27,7 @@
 
 	<th:block th:if="${param.status != null and param.status[0] == 'approved'}">
 		<div class="success-alert">
-			The partner's viability has been approved by Paul Davidson, 27/07/2016
+			The partner's viability has been approved by Paul Davidson, 27 July 2016
 		</div>
 	</th:block>
 	
@@ -111,10 +111,10 @@
 
 				<div class="panel-indent">
 
-					<h3 class="heading-small no-margin">Business size has been changed from Medium (60%) to Large (50% Grant).</h3>
+					<h3 class="heading-small no-margin">Business size has been changed from medium (60%) to large (50% Grant).</h3>
 
 					<dl class="standard-definition-list extra-margin">
-						<dt>The % Grant has been set to</dt>
+						<dt>The grant % has been set to</dt>
 						<dd>50%</dd>
 
 						<dt>Funding sought</dt>
@@ -132,10 +132,10 @@
 
 				<div class="panel-indent">
 
-					<h3 class="heading-small no-margin">Changing the business size from Medium (60% Grant) to Small (70% Grant).</h3>
+					<h3 class="heading-small no-margin">Changing the business size from medium (60% Grant) to small (70% Grant).</h3>
 					
 					<dl class="standard-definition-list extra-margin">
-						<dt>The % Grant will remain at</dt>
+						<dt>The grant % will remain at</dt>
 						<dd>55%</dd>
 
 						<dt>Funding sought</dt>
@@ -255,7 +255,7 @@
 		<dt>Net worth</dt>
 		<dd>&pound;10,000</dd>
 
-		<dt>Bank &#38; deposits</dt>
+		<dt>Bank and deposits</dt>
 		<dd>&pound;5,000</dd>
 
 		<dt>Credit score</dt>
@@ -270,7 +270,7 @@
 	 <div class="form-group">
     	<label class="block-label" for="costs-reviewed">
 	      <input id="costs-reviewed" value="costs-reviewed" type="checkbox" th:disabled="${param.status != null and param.status[0] == 'approved'}" th:checked="${param.status != null and param.status[0] == 'approved'}" />
-	     	A credit report has been used together with the viability information shown here. This information is stored in accordance with Innovate UK audit requirements.
+	     	A credit report has been used together with the viability information shown here. This information is kept in accordance with Innovate UK audit requirements.
 	    </label>
     </div>
 
@@ -282,8 +282,8 @@
     <th:block th:unless="${param.status != null and param.status[0] == 'approved'}">
 
 			<h3 class="heading-medium">Approve viability</h3>
-		    <p>After any required alterations have been made, viability should be approved, and the supporting Mint report uploaded.</p>
-		    <p>If changes are made ensure that the applicant has reviewed and understand the changes to their finances before approval.</p>
+		    <p>Viability should be approved after making any necessary alterations. The supporting Mint report should also be uploaded.</p>
+		    <p>Make sure the partner has reviewed and understood any changes made to their finances before approval.</p>
 
 		    <div class="form-group">
 		    	<label class="block-label" for="project-viable">
