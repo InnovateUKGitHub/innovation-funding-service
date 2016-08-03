@@ -1,16 +1,27 @@
 package com.worth.ifs.competitionsetup.model;
 
+import org.hibernate.validator.constraints.NotEmpty;
+import javax.validation.constraints.Min;
+
 public class Question {
-    Long id;
-    String number;
-    String shortTitle;
-    String title;
-    String subTitle;
-    String guidanceTitle;
-    String guidance;
-    Integer maxWords;
-    Boolean appendix;
-    Boolean scored;
+    private Long id;
+    private String number;
+    private String shortTitle;
+
+    @NotEmpty
+    private String title;
+    private String subTitle;
+
+    @NotEmpty
+    private String guidanceTitle;
+
+    @NotEmpty
+    private String guidance;
+
+    @Min(1)
+    private Integer maxWords;
+    private Boolean appendix;
+    private Boolean scored;
 
     public Long getId() {
         return id;

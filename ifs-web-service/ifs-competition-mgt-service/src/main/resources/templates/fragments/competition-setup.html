@@ -77,7 +77,7 @@
                         <h3 class="heading-small">Guidance</h3>
                     </div>
                     <div class="column-three-quarters">
-                        <p th:utext="${question.guidance}"></p>
+                        <p ifs:utext="${question.guidance}"></p>
                     </div>
                 </div>
                 <div class="grid-row">
@@ -93,7 +93,8 @@
                         <h3 class="heading-small">Appendix</h3>
                     </div>
                     <div class="column-three-quarters">
-                        <p>No</p>
+                        <p th:if="${question.appendix}">Yes</p>
+                        <p th:unless="${question.appendix}">No</p>
                     </div>
                 </div>
             </div>
@@ -107,12 +108,13 @@
                     <div class="form-group">
                         <label class="form-label" for="question.title">
                             <span class="form-label-bold">Question title</span>
-                            <span th:if="${#fields.hasErrors('*{title}')}" th:remove="tag">
-                                <span class="error-message"  th:each="err : ${#fields.errors('*{title}')}" th:text="${err}" />
+                            <span th:if="${#fields.hasErrors('title')}" th:remove="tag">
+                                <span class="error-message"  th:each="err : ${#fields.errors('title')}" th:text="${err}" />
                             </span>
                         </label>
                         <input th:class="${#fields.hasErrors('title') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
                                type="text"
+                               required="required"
                                th:name="questionToUpdate.title"
                                th:value="${question.title}"
                                maxlength="255"/>
@@ -139,6 +141,7 @@
                         </label>
                         <input th:class="${#fields.hasErrors('guidanceTitle') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
                                type="text"
+                               required="required"
                                th:name="questionToUpdate.guidanceTitle"
                                th:value="${question.guidanceTitle}"
                                maxlength="255"/>
@@ -154,6 +157,7 @@
                             <textarea data-max_words="500"
                                       th:class="${#fields.hasErrors('guidance') ? 'field-error' : ''}"
                                       th:name="questionToUpdate.guidance"
+                                      required="required"
                                       ifs:utext="${question.guidance}">
                             </textarea>
                         </div>
@@ -167,6 +171,8 @@
                         </label>
                         <input th:class="${#fields.hasErrors('maxWords') ? 'form-control field-error width-medium' : 'form-control width-medium'}"
                                type="number"
+                               min="1"
+                               required="required"
                                th:name="questionToUpdate.maxWords"
                                th:value="${question.maxWords}"/>
                     </div>
@@ -175,11 +181,11 @@
                             <fieldset class="inline">
                                 <legend class="form-label-bold">Is the answer scored?</legend>
                                 <label class="block-label">
-                                    <input th:name="questionToUpdate.scored" value="1" type="radio" />
+                                    <input th:name="questionToUpdate.scored" th:checked="${question.scored}" value="1" type="radio" />
                                     Yes
                                 </label>
                                 <label class="block-label">
-                                    <input  th:name="questionToUpdate.scored" value="0" type="radio" />
+                                    <input  th:name="questionToUpdate.scored" th:checked="${!question.scored}" value="0" type="radio" />
                                     No
                                 </label>
                             </fieldset>
@@ -188,11 +194,11 @@
                             <fieldset class="inline">
                                 <legend class="form-label-bold">Allow appendix?</legend>
                                 <label class="block-label">
-                                    <input th:name="questionToUpdate.appendix" value="1" type="radio" />
+                                    <input th:name="questionToUpdate.appendix" th:checked="${question.appendix}" value="1" type="radio" />
                                     Yes
                                 </label>
                                 <label class="block-label">
-                                    <input th:name="questionToUpdate.appendix" value="0" type="radio" />
+                                    <input th:name="questionToUpdate.appendix" th:checked="${!question.appendix}" value="0" type="radio" />
                                     No
                                 </label>
                             </fieldset>

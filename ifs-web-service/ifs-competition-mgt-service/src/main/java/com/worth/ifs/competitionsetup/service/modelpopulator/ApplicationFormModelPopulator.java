@@ -55,34 +55,40 @@ public class ApplicationFormModelPopulator implements CompetitionSetupSectionMod
         model.addAttribute("generalSections", generalSections);
         model.addAttribute("generalParentSections", parentSections);
         model.addAttribute("questions", getSortedQuestions(questionResources, parentSections));
-
 	}
 
 	private List<Question> getSortedQuestions(List<QuestionResource> questionResources, List<SectionResource> parentSections) {
         List<Question> questions = new ArrayList();
+
+        Long appendixTypeId = 4L;
+        Long scoreTypeId = 23L;
 
         List<Long> questionIds = parentSections.stream().filter(sectionResource -> sectionResource.getName().equals("Application questions")).findFirst().get().getQuestions();
 
         questionResources = questionResources.stream().filter(questionResource -> questionIds.contains(questionResource.getId())).collect(Collectors.toList());
         questionResources.forEach(questionResource -> {
             List<FormInputResource> formInputs = formInputService.findApplicationInputsByQuestion(questionResource.getId());
+            List<FormInputResource> formAssessmentInputs = formInputService.findAssessmentInputsByQuestion(questionResource.getId());
 
             Boolean appendix = formInputs
                     .stream()
-                    //4L is fileupload, so appendix
-                    .anyMatch(formInputResource -> formInputResource.getFormInputType().equals(4L));
+                    .anyMatch(formInputResource -> formInputResource.getFormInputType().equals(appendixTypeId));
+
+
+            Boolean scored = formAssessmentInputs
+                    .stream()
+                    .anyMatch(formInputResource -> formInputResource.getFormInputType().equals(scoreTypeId));
 
             formInputs
                     .stream()
-                    //4L is fileupload, so appendix
                     .filter(formInputResource -> !formInputResource.getFormInputType().equals(4L))
-                    .forEach(formInputResource -> questions.add(createQuestionObjectFromQuestionResource(questionResource, formInputResource, appendix)));
+                    .forEach(formInputResource -> questions.add(createQuestionObjectFromQuestionResource(questionResource, formInputResource, appendix, scored)));
         });
 
         return questions.stream().sorted((q1, q2) -> Integer.compare(Integer.parseInt(q1.getNumber()), Integer.parseInt(q2.getNumber()))).collect(Collectors.toList());
     }
 
-	private Question createQuestionObjectFromQuestionResource(QuestionResource questionResource, FormInputResource formInputResource, Boolean appendix){
+	private Question createQuestionObjectFromQuestionResource(QuestionResource questionResource, FormInputResource formInputResource, Boolean appendix, Boolean scored){
         Question question = new Question();
         question.setId(questionResource.getId());
         question.setNumber(questionResource.getQuestionNumber());
@@ -92,8 +98,14 @@ public class ApplicationFormModelPopulator implements CompetitionSetupSectionMod
 
         question.setGuidanceTitle(formInputResource.getGuidanceQuestion());
         question.setGuidance(formInputResource.getGuidanceAnswer());
-        question.setMaxWords(formInputResource.getWordCount());
+        if(formInputResource.getWordCount() > 0) {
+            question.setMaxWords(formInputResource.getWordCount());
+        } else {
+            //default amount
+            question.setMaxWords(400);
+        }
 
+        question.setScored(scored);
         question.setAppendix(appendix);
 
 	    return question;

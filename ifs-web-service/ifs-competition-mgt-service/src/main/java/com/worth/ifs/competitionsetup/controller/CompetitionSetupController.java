@@ -169,9 +169,13 @@ public class CompetitionSetupController {
                                             @PathVariable("competitionId") Long competitionId,
                                             Model model) {
 
+        if(!bindingResult.hasErrors()) {
+            // TODO don't close and show errors
+        }
+
         competitionSetupQuestionService.updateQuestion(competitionSetupForm.getQuestionToUpdate());
 
-        return "redirect:/" + competitionId + "/section/application";
+        return "redirect:/competition/setup/" + competitionId + "/section/application";
     }
 
     @RequestMapping(value = "/{competitionId}/section/finance", method = RequestMethod.POST)
