@@ -9,7 +9,7 @@ import org.junit.Test;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.invite.builder.InviteOrganisationBuilder.newInviteOrganisation;
 
-public class InviteTest {
+public class ApplicationInviteTest {
     ApplicationInvite setInvite;
     ApplicationInvite constructedInvite;
     Long inviteId;

@@ -10,9 +10,12 @@ import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
 
-/*
-* The Invite is used for saving invites into the database. Data about the Invitee and related Application and organisation is saved through this entity.
-* */
+/**
+ * An invitation for a person (who may or may not be an existing {@link User}) to participate in some business activity,
+ * the target {@link InvitationTarget}
+ *
+ * @param <T> the type of business activity to which we're inviting
+ */
 @Table(
         // Does this constraint still hold?
     uniqueConstraints= @UniqueConstraint(columnNames={"type", "target_id", "email"})
@@ -45,7 +48,7 @@ public abstract class Invite<T extends InvitationTarget> {
     	// no-arg constructor
     }
 
-    Invite(final String name, final String email, final String hash, final InviteStatusConstants status) {
+    protected Invite(String name, String email, String hash, InviteStatusConstants status) {
         this.name = name;
         this.email = email;
         this.hash = hash;

@@ -15,7 +15,7 @@ import org.junit.Test;
 
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static com.worth.ifs.invite.builder.InviteBuilder.newInvite;
+import static com.worth.ifs.invite.builder.ApplicationInviteBuilder.newInvite;
 import static com.worth.ifs.invite.builder.InviteOrganisationBuilder.newInviteOrganisation;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -25,7 +25,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
-public class InvitePermissionRulesTest extends BasePermissionRulesTest<InvitePermissionRules> {
+public class ApplicationInvitePermissionRulesTest extends BasePermissionRulesTest<ApplicationInvitePermissionRules> {
 
     private UserResource leadApplicant;
     private UserResource collaborator;
@@ -38,8 +38,8 @@ public class InvitePermissionRulesTest extends BasePermissionRulesTest<InvitePer
 
 
     @Override
-    protected InvitePermissionRules supplyPermissionRulesUnderTest() {
-        return new InvitePermissionRules();
+    protected ApplicationInvitePermissionRules supplyPermissionRulesUnderTest() {
+        return new ApplicationInvitePermissionRules();
     }
 
     @Before

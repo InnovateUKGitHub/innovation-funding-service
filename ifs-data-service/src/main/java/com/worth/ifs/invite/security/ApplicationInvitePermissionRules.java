@@ -21,7 +21,7 @@ import static com.worth.ifs.user.resource.UserRoleType.COLLABORATOR;
  */
 @Component
 @PermissionRules
-public class InvitePermissionRules {
+public class ApplicationInvitePermissionRules {
 
     @Autowired
     private ProcessRoleRepository processRoleRepository;

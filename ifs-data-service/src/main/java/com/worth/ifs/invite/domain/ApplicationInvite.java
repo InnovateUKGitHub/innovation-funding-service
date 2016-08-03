@@ -9,6 +9,9 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+/**
+ * An {@link Invite} for a person at an organisation to participate in an {@link Application}.
+ */
 @Entity
 @DiscriminatorValue("APPLICATION")
 public class ApplicationInvite extends Invite<Application> {
@@ -25,7 +28,7 @@ public class ApplicationInvite extends Invite<Application> {
         // no-arg constructor
     }
 
-    public ApplicationInvite(final String name, final String email, final Application application, final InviteOrganisation inviteOrganisation, final String hash, final InviteStatusConstants status) {
+    public ApplicationInvite(String name, String email, Application application, InviteOrganisation inviteOrganisation,  String hash, InviteStatusConstants status) {
         super(name, email, hash, status);
         this.application = application;
         this.inviteOrganisation = inviteOrganisation;

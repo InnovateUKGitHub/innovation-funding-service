@@ -3,7 +3,6 @@ package com.worth.ifs.invite.security;
 import com.worth.ifs.BaseServiceSecurityTest;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.invite.domain.ApplicationInvite;
-import com.worth.ifs.invite.domain.Invite;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.resource.InviteResultsResource;
@@ -18,7 +17,7 @@ import java.util.List;
 import java.util.Set;
 
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.invite.builder.InviteBuilder.newInvite;
+import static com.worth.ifs.invite.builder.ApplicationInviteBuilder.newInvite;
 import static com.worth.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
 import static com.worth.ifs.invite.builder.InviteResourceBuilder.newInviteResource;
 import static com.worth.ifs.invite.builder.InviteResultResourceBuilder.newInviteResultResource;
@@ -35,12 +34,12 @@ import static org.mockito.Mockito.verify;
  */
 public class InviteServiceSecurityTest extends BaseServiceSecurityTest<InviteService> {
 
-    InvitePermissionRules invitePermissionRules;
+    ApplicationInvitePermissionRules invitePermissionRules;
     InviteOrganisationPermissionRules inviteOrganisationPermissionRules;
 
     @Before
     public void lookupPermissionRules() {
-        invitePermissionRules = getMockPermissionRulesBean(InvitePermissionRules.class);
+        invitePermissionRules = getMockPermissionRulesBean(ApplicationInvitePermissionRules.class);
         inviteOrganisationPermissionRules = getMockPermissionRulesBean(InviteOrganisationPermissionRules.class);
     }
 

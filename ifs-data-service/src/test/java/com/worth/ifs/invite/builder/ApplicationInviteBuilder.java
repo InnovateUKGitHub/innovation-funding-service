@@ -4,7 +4,6 @@ import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.Builder;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.invite.domain.ApplicationInvite;
-import com.worth.ifs.invite.domain.Invite;
 import com.worth.ifs.invite.domain.InviteOrganisation;
 
 import java.util.List;
@@ -14,30 +13,30 @@ import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Collections.emptyList;
 
-public class InviteBuilder extends BaseBuilder<ApplicationInvite, InviteBuilder> {
+public class ApplicationInviteBuilder extends BaseBuilder<ApplicationInvite, ApplicationInviteBuilder> {
 
-    private InviteBuilder(List<BiConsumer<Integer, ApplicationInvite>> multiActions) {
+    private ApplicationInviteBuilder(List<BiConsumer<Integer, ApplicationInvite>> multiActions) {
         super(multiActions);
     }
 
-    public static InviteBuilder newInvite() {
-        return new InviteBuilder(emptyList()).with(uniqueIds());
+    public static ApplicationInviteBuilder newInvite() {
+        return new ApplicationInviteBuilder(emptyList()).with(uniqueIds());
     }
 
     @Override
-    protected InviteBuilder createNewBuilderWithActions(List<BiConsumer<Integer, ApplicationInvite>> actions) {
-        return new InviteBuilder(actions);
+    protected ApplicationInviteBuilder createNewBuilderWithActions(List<BiConsumer<Integer, ApplicationInvite>> actions) {
+        return new ApplicationInviteBuilder(actions);
     }
 
-    public InviteBuilder withApplication(Builder<Application, ?> application) {
+    public ApplicationInviteBuilder withApplication(Builder<Application, ?> application) {
         return withApplication(application.build());
     }
 
-    public InviteBuilder withApplication(Application... applications) {
+    public ApplicationInviteBuilder withApplication(Application... applications) {
         return withArray((application, invite) -> invite.setTarget(application), applications);
     }
 
-    public InviteBuilder withInviteOrganisation(InviteOrganisation... organisations) {
+    public ApplicationInviteBuilder withInviteOrganisation(InviteOrganisation... organisations) {
         return withArray((organisation, invite) -> invite.setInviteOrganisation(organisation), organisations);
     }
 
