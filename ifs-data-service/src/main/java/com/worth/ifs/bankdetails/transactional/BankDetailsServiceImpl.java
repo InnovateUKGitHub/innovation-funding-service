@@ -13,10 +13,10 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
 import com.worth.ifs.organisation.repository.OrganisationAddressRepository;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
-import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.sil.experian.resource.AccountDetails;
 import com.worth.ifs.sil.experian.resource.Condition;
+import com.worth.ifs.sil.experian.resource.SILBankDetails;
 import com.worth.ifs.sil.experian.service.SilExperianEndpoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -61,22 +61,6 @@ public class BankDetailsServiceImpl implements BankDetailsService{
                 andOnSuccessReturn(bankDetailsMapper::mapToResource);
     }
 
-    private ServiceResult<Void> projectDetailsExist(final Long projectId){
-        Project project = projectRepository.findOne(projectId);
-        if(project.getSubmittedDate() == null){
-            return serviceFailure(new Error(BANK_DETAILS_CANNOT_BE_SUBMITTED_BEFORE_PROJECT_DETAILS));
-        }
-        return serviceSuccess();
-    }
-
-    private ServiceResult<Void> bankDetailsDontExist(final Long projectId, final Long organisationId){
-        BankDetails bankDetails = bankDetailsRepository.findByProjectIdAndOrganisationId(projectId, organisationId);
-        if(bankDetails != null){
-            return serviceFailure(new Error(BANK_DETAILS_CAN_ONLY_BE_SUBMITTED_ONCE));
-        }
-        return serviceSuccess();
-    }
-
     @Override
     public ServiceResult<Void> updateBankDetails(BankDetailsResource bankDetailsResource) {
         return projectDetailsExist(bankDetailsResource.getProject()).
@@ -92,6 +76,32 @@ public class BankDetailsServiceImpl implements BankDetailsService{
                                                 })
                                 )
                 );
+    }
+
+    @Override
+    public ServiceResult<BankDetailsResource> getByProjectAndOrganisation(Long projectId, Long organisationId) {
+        return find(bankDetailsRepository.findByProjectIdAndOrganisationId(projectId, organisationId),
+                new Error(BANK_DETAILS_DONT_EXIST_FOR_GIVEN_PROJECT_AND_ORGANISATION, asList(projectId, organisationId), HttpStatus.NOT_FOUND)).
+                andOnSuccessReturn(bankDetails -> bankDetailsMapper.mapToResource(bankDetails));
+    }
+
+    private ServiceResult<Void> projectDetailsExist(final Long projectId){
+        return find(projectRepository.findOne(projectId),
+                new Error(BANK_DETAILS_CANNOT_BE_SUBMITTED_BEFORE_PROJECT_DETAILS)).
+                andOnSuccess(project -> {
+                    if (project.getSubmittedDate() == null) {
+                        return serviceFailure(new Error(BANK_DETAILS_CANNOT_BE_SUBMITTED_BEFORE_PROJECT_DETAILS));
+                    }
+                    return serviceSuccess();
+                });
+    }
+
+    private ServiceResult<Void> bankDetailsDontExist(final Long projectId, final Long organisationId){
+        BankDetails bankDetails = bankDetailsRepository.findByProjectIdAndOrganisationId(projectId, organisationId);
+        if(bankDetails != null){
+            return serviceFailure(new Error(BANK_DETAILS_CAN_ONLY_BE_SUBMITTED_ONCE));
+        }
+        return serviceSuccess();
     }
 
     private ServiceResult<AccountDetails> saveBankDetails(AccountDetails accountDetails, BankDetailsResource bankDetailsResource){
@@ -113,19 +123,10 @@ public class BankDetailsServiceImpl implements BankDetailsService{
         return serviceSuccess(accountDetails);
     }
 
-    @Override
-    public ServiceResult<BankDetailsResource> getByProjectAndOrganisation(Long projectId, Long organisationId) {
-        BankDetails bankDetails = bankDetailsRepository.findByProjectIdAndOrganisationId(projectId, organisationId);
-        if(bankDetails != null) {
-            return serviceSuccess(bankDetailsMapper.mapToResource(bankDetails));
-        } else {
-            return serviceFailure(new Error(BANK_DETAILS_DONT_EXIST_FOR_GIVEN_PROJECT_AND_ORGANISATION, asList(projectId, organisationId), HttpStatus.NOT_FOUND));
-        }
-    }
-
     private ServiceResult<AccountDetails> validateBankDetails(BankDetailsResource bankDetailsResource){
-            AccountDetails accountDetails = silBankDetailsMapper.toResource(bankDetailsResource);
-            return silExperianEndpoint.validate(accountDetails).
+        AccountDetails accountDetails = silBankDetailsMapper.toAccountDetails(bankDetailsResource);
+        SILBankDetails silBankDetails = silBankDetailsMapper.toSILBankDetails(bankDetailsResource);
+            return silExperianEndpoint.validate(silBankDetails).
                     handleSuccessOrFailure(
                         failure -> serviceFailure(failure.getErrors()),
                         validationResult -> {
@@ -173,6 +174,6 @@ public class BankDetailsServiceImpl implements BankDetailsService{
     }
 
     private List<Error> convertExperianValidationMsgToUserMsg(List<Condition> conditons){
-        return conditons.stream().map(condition -> Error.globalError("", condition.getDescription())).collect(Collectors.toList());
+        return conditons.stream().filter(condition -> condition.getSeverity().equals("error")).map(condition -> Error.globalError(EXPERIAN_VALIDATION_FAILED.getErrorKey(), condition.getDescription())).collect(Collectors.toList());
     }
 }

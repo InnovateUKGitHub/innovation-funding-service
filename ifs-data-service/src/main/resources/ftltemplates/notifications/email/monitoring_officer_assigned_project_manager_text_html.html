@@ -1,0 +1,24 @@
+<#import "layout/default.html" as layout>
+<@layout.default>
+    <p style="margin: 0 0 1em 0;">Dear ${notificationTarget.name},</p>
+    <p style="margin: 0 0 1em 0;">
+        The project <b>${projectName}</b> for which you are the project manager has been assigned a Monitoring officer,
+        who will be the primary point of contact for the project,
+        and will monitor and report progress to Innovate UK.
+    </p>
+
+    <p style="margin: 0;"><b>Monitoring officer</b></p>
+    <p style="margin: 0 0 1em 0;">${monitoringOfficerName}</p>
+    <p style="margin: 0 0 1em 0;">${monitoringOfficerTelephone}</p>
+    <p style="margin: 0 0 1em 0;">${monitoringOfficerEmail}</p>
+
+    <p style="margin: 0 0 1em 0;">
+        No action needs to be taken by your team.
+        Your Monitoring officer will make contact for an introduction to your project.
+        If there are any further questions about this appointment please contact Innovate UK for further information.
+    </p>
+
+    <p style="margin: 1em 0 1em 0;">
+        Innovate UK
+    </p>
+</@layout.default>

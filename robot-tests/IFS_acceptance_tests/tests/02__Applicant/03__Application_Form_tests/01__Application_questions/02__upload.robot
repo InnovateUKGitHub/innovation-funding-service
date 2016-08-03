@@ -177,7 +177,7 @@ Quarantined files are not returned to the user and the user is informed
     When the user should see the text in the page    test_quarantine.pdf
     And the user clicks the button/link    link=test_quarantine.pdf
     Then the user should see the text in the page    File not available for download
-    And the user should see the text in the page    This file has been quarantined by the virus scanner
+    And the user should see the text in the page    This file has been found to be unsafe
 
 *** Keywords ***
 the user logs out

@@ -12,8 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping(value = "/assessor")
 public class AssessorDashboardController {
 
-    private static String DASHBOARD = "assessor/assessor-dashboard";
-    private static String COMPETITION_DASHBOARD = "assessor/assessor-competition-dashboard";
+    private static String DASHBOARD = "assessor-dashboard";
+    private static String COMPETITION_DASHBOARD = "assessor-competition-dashboard";
 
     @RequestMapping(value = "/dashboard", method = RequestMethod.GET)
     public String dashboard(final Model model,
