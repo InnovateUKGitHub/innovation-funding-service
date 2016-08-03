@@ -31,8 +31,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 import java.util.Optional;
 
+import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.invite.constant.InviteStatusConstants.SEND;
 import static com.worth.ifs.util.CookieUtil.saveToCookie;
+import static com.worth.ifs.util.RestLookupCallbacks.find;
 
 /**
  * This class is use as an entry point to accept a invite, to a application.
@@ -53,7 +55,7 @@ public class AcceptProjectInviteController extends BaseController {
     @Autowired
     private RegistrationService registrationService;
 
-    @RequestMapping(value = "/project/accept-invite/{hash}", method = RequestMethod.GET)
+    @RequestMapping(value = "/accept-invite/project/{hash}", method = RequestMethod.GET)
     public String inviteEntryPage(
             @PathVariable("hash") final String hash,
             HttpServletResponse response,
@@ -61,7 +63,37 @@ public class AcceptProjectInviteController extends BaseController {
             Model model,
             @ModelAttribute("loggedInUser") UserResource loggedInUser) {
         // TODO find for REST
-        RestResult<String> objectRestResult = inviteRestService.getInviteByHash(hash).andOnSuccess(invite -> inviteRestService.getInviteOrganisationByHash(hash).andOnSuccessReturn(inviteOrganisation -> {
+        find(() -> inviteRestService.getInviteByHash(hash),
+                () -> inviteRestService.getInviteOrganisationByHash(hash),
+                () -> inviteRestService.checkExistingUser(hash)).andOnSuccess((invite, inviteOrganisation, userExists) -> {
+            if (invite.getStatus().equals(SEND)) {
+                // We have everything we need for a valid invite. Stick the hash in a cookie so we can use it later in the flow.
+                saveToCookie(response, INVITE_HASH, hash); // TODO a different cookie key
+                // TODO this should be a boolean and then included in the find.
+                if (userExists) {
+                    if (loggedInUser == null) {
+                        // If the user is not logged in then we send them to a please log in page
+                        return restSuccess("registration/project/accept-invite-not-logged-in");
+                    }
+                    // If the user is logged in then we check they are correct user and that they can accept this invite.
+                    Map<String, String> failureMessages = registrationService.getInvalidInviteMessages(loggedInUser, invite, inviteOrganisation);
+                    if (failureMessages.isEmpty()) {
+                        return restSuccess("registration/project/fail");
+                    } else {
+                        // Show the user a page that asks them if they are happy with their company
+                        return restSuccess("registration/project/accept-invite-authenticated");
+                    }
+                } else {
+
+                    return restSuccess("registration/project/accept-invite"); // TODO can this be part of the normal flow or not?
+                }
+            } else {
+                cookieFlashMessageFilter.setFlashMessage(response, "inviteAlreadyAccepted");
+                return restSuccess("redirect:/login");
+            }
+        });
+
+        inviteRestService.getInviteByHash(hash).andOnSuccess(invite -> inviteRestService.getInviteOrganisationByHash(hash).andOnSuccessReturn(inviteOrganisation -> {
                     if (invite.getStatus().equals(SEND)) {
                         // We have everything we need for a valid invite. Stick the hash in a cookie so we can use it later in the flow.
                         saveToCookie(response, INVITE_HASH, hash); // TODO a different cookie key
@@ -73,10 +105,9 @@ public class AcceptProjectInviteController extends BaseController {
                             }
                             // If the user is logged in then we check they are correct user and that they can accept this invite.
                             Map<String, String> failureMessages = registrationService.getInvalidInviteMessages(loggedInUser, invite, inviteOrganisation);
-                            if(failureMessages.isEmpty()){
+                            if (failureMessages.isEmpty()) {
                                 return "registration/project/fail";
-                            }
-                            else {
+                            } else {
                                 // Show the user a page that asks them if they are happy with their company
                                 return "registration/project/accept-invite-authenticated";
                             }
