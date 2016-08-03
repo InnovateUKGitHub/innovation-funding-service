@@ -1,11 +1,12 @@
 package com.worth.ifs.project.controller;
 
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.project.transactional.ProjectFinanceService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
@@ -15,10 +16,13 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 @RequestMapping("/project")
 public class ProjectFinanceController {
 
+    @Autowired
+    private ProjectFinanceService projectFinanceService;
+
     @RequestMapping(value = "/{projectId}/partner-organisation/{partnerOrganisationId}/spend-profile/generate", method = POST)
     public RestResult<Void> generateSpendProfile(@PathVariable("projectId") final Long projectId,
                                                  @PathVariable("partnerOrganisationId") final Long partnerOrganisationId) {
-        System.out.println("Spend Profile generated!");
-        return restSuccess();
+
+        return projectFinanceService.generateSpendProfile(projectId, partnerOrganisationId).toPostResponse();
     }
 }
