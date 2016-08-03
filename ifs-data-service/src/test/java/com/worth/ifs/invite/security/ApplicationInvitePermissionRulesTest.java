@@ -4,7 +4,7 @@ package com.worth.ifs.invite.security;
 import com.worth.ifs.BasePermissionRulesTest;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.invite.domain.Invite;
+import com.worth.ifs.invite.domain.ApplicationInvite;
 import com.worth.ifs.invite.domain.InviteOrganisation;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.user.builder.OrganisationBuilder;
@@ -15,7 +15,7 @@ import org.junit.Test;
 
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static com.worth.ifs.invite.builder.InviteBuilder.newInvite;
+import static com.worth.ifs.invite.builder.ApplicationInviteBuilder.newInvite;
 import static com.worth.ifs.invite.builder.InviteOrganisationBuilder.newInviteOrganisation;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -25,21 +25,21 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
-public class InvitePermissionRulesTest extends BasePermissionRulesTest<InvitePermissionRules> {
+public class ApplicationInvitePermissionRulesTest extends BasePermissionRulesTest<ApplicationInvitePermissionRules> {
 
     private UserResource leadApplicant;
     private UserResource collaborator;
-    private Invite invite;
+    private ApplicationInvite invite;
     private InviteResource inviteResource;
 
     private UserResource otherLeadApplicant;
     private UserResource otherCollaborator;
-    private Invite otherInvite;
+    private ApplicationInvite otherInvite;
 
 
     @Override
-    protected InvitePermissionRules supplyPermissionRulesUnderTest() {
-        return new InvitePermissionRules();
+    protected ApplicationInvitePermissionRules supplyPermissionRulesUnderTest() {
+        return new ApplicationInvitePermissionRules();
     }
 
     @Before
