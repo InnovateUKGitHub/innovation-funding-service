@@ -93,16 +93,7 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 		if (competitionResource.getCompetitionStatus() == CompetitionResource.Status.READY_TO_OPEN) {
 			return false;
 		}
-
-		List<CompetitionSetupSection> requiredSections = new ArrayList<>();
-		requiredSections.add(CompetitionSetupSection.INITIAL_DETAILS);
-		requiredSections.add(CompetitionSetupSection.ADDITIONAL_INFO);
-		requiredSections.add(CompetitionSetupSection.ELIGIBILITY);
-		requiredSections.add(CompetitionSetupSection.MILESTONES);
-		requiredSections.add(CompetitionSetupSection.APPLICATION_FORM);
-
-
-		Optional<CompetitionSetupSection> notDoneSection = requiredSections.stream().filter(section ->
+		Optional<CompetitionSetupSection> notDoneSection = getRequiredSectionsForReadyToOpen().stream().filter(section ->
 				(!competitionResource.getSectionSetupStatus().containsKey(section) ||
 						!competitionResource.getSectionSetupStatus().get(section))).findFirst();
 
@@ -131,6 +122,17 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 		CompetitionResource competitionResource = competitionService.getById(competitionId);
 		competitionResource.setCompetitionStatus(CompetitionResource.Status.COMPETITION_SETUP);
 		competitionService.update(competitionResource);
+	}
+
+
+	private List<CompetitionSetupSection> getRequiredSectionsForReadyToOpen() {
+		List<CompetitionSetupSection> requiredSections = new ArrayList<>();
+		requiredSections.add(CompetitionSetupSection.INITIAL_DETAILS);
+		requiredSections.add(CompetitionSetupSection.ADDITIONAL_INFO);
+		requiredSections.add(CompetitionSetupSection.ELIGIBILITY);
+		requiredSections.add(CompetitionSetupSection.MILESTONES);
+		requiredSections.add(CompetitionSetupSection.APPLICATION_FORM);
+		return requiredSections;
 	}
 
 
