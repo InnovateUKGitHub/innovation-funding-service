@@ -22,6 +22,8 @@ public class ApplicationFormFormPopulator implements CompetitionSetupFormPopulat
 	public CompetitionSetupForm populateForm(CompetitionResource competitionResource) {
 		ApplicationFormForm competitionSetupForm = new ApplicationFormForm();
 
+
+
 		return competitionSetupForm;
 	}
 

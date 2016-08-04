@@ -1,4 +1,4 @@
-<!-- =================== Comp setup section - Initial Details (1) ============================== -->
+<!-- =================== Comp setup section - Navigation ============================== -->
 
 <div th:fragment="comp-setup-navigation(sections, completedStatuses, currentSection, competition)">
     <div th:class="${(param.section != null ? 'visuallyhidden' : '')}">
@@ -35,17 +35,17 @@
 
 <!-- =================Section: application questions=========================== -->
 
-<div th:fragment="application-question(question)">
+<div th:fragment="application-question(question, editable)">
     <li>
         <div class="grid-row">
             <div class="column-three-quarters">
                 <h2 class="heading-medium" th:text="${question.number + '. ' + question.shortTitle}" />
             </div>
-            <div class="column-quarter alignright">
-                <a th:href="@{'?status=edit-' + ${question.id}}" class="button button-secondary" th:unless="${param.status != null and param.status[0] == 'edit-' + question.id}">Edit</a>
+            <div class="column-quarter alignright" th:if="${editable and (competitionSetupForm.questionToUpdate == null or competitionSetupForm.questionToUpdate.id != question.id)}">
+                <a th:href="@{'application/question/' + ${question.id}}" class="button button-secondary">Edit</a>
             </div>
         </div>
-        <th:block th:unless="${param.status != null and param.status[0] == 'edit-' + question.id}">
+        <th:block th:unless="${editable and (competitionSetupForm.questionToUpdate != null and competitionSetupForm.questionToUpdate.id == question.id)}">
             <div class="extra-margin-bottom">
                 <div class="grid-row">
                     <div class="column-quarter">
@@ -99,79 +99,85 @@
                 </div>
             </div>
         </th:block>
-        <th:block th:if="${param.status != null and param.status[0] == 'edit-' + question.id}">
-            <form method="post" th:object="${competitionSetupForm.questionToUpdate}" th:action="@{application/question/update}">
+        <th:block th:if="${editable and (competitionSetupForm.questionToUpdate != null and competitionSetupForm.questionToUpdate.id == question.id)}">
+            <form method="post" th:object="${competitionSetupForm}" th:action="@{${question.id}}" novalidate="novalidate">
                 <input type="hidden"
                        th:name="questionToUpdate.id"
                        th:value="${question.id}" />
                 <div class="question">
-                    <div class="form-group">
+                    <div th:class="${#fields.hasErrors('questionToUpdate.title')}? 'form-group error':'form-group'">
                         <label class="form-label" for="question.title">
                             <span class="form-label-bold">Question title</span>
-                            <span th:if="${#fields.hasErrors('title')}" th:remove="tag">
-                                <span class="error-message"  th:each="err : ${#fields.errors('title')}" th:text="${err}" />
+                            <span th:if="${#fields.hasErrors('questionToUpdate.title')}" th:remove="tag">
+                                <span class="error-message"  th:each="err : ${#fields.errors('questionToUpdate.title')}" th:text="${err}" />
                             </span>
                         </label>
-                        <input th:class="${#fields.hasErrors('title') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
+
+                        <input th:class="${#fields.hasErrors('questionToUpdate.title') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
                                type="text"
                                required="required"
+                               id="question.title"
                                th:name="questionToUpdate.title"
                                th:value="${question.title}"
                                maxlength="255"/>
                     </div>
-                    <div class="form-group">
+                    <div th:class="${#fields.hasErrors('questionToUpdate.subTitle')}? 'form-group error':'form-group'">
                         <label class="form-label" for="question.subTitle">
                             <span class="form-label-bold">Question subtitle</span>
-                            <span th:if="${#fields.hasErrors('subTitle')}" th:remove="tag">
-                                <span class="error-message"  th:each="err : ${#fields.errors('subTitle')}" th:text="${err}" />
+                            <span th:if="${#fields.hasErrors('questionToUpdate.subTitle')}" th:remove="tag">
+                                <span class="error-message"  th:each="err : ${#fields.errors('questionToUpdate.subTitle')}" th:text="${err}" />
                             </span>
                         </label>
-                        <input th:class="${#fields.hasErrors('subTitle') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
+                        <input th:class="${#fields.hasErrors('questionToUpdate.subTitle') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
                                type="text"
+                               id="question.subTitle"
                                th:name="questionToUpdate.subTitle"
                                th:value="${question.subTitle}"
                                maxlength="255"/>
                     </div>
-                    <div class="form-group">
+                    <div th:class="${#fields.hasErrors('questionToUpdate.guidanceTitle')}? 'form-group error':'form-group'">
                         <label class="form-label" for="question.guidanceTitle">
                             <span class="form-label-bold">Question guidance title</span>
-                            <span th:if="${#fields.hasErrors('title')}" th:remove="tag">
-                                <span class="error-message"  th:each="err : ${#fields.errors('guidanceTitle')}" th:text="${err}" />
+                            <span th:if="${#fields.hasErrors('questionToUpdate.guidanceTitle')}" th:remove="tag">
+                                <span class="error-message"  th:each="err : ${#fields.errors('questionToUpdate.guidanceTitle')}" th:text="${err}" />
                             </span>
                         </label>
-                        <input th:class="${#fields.hasErrors('guidanceTitle') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
+                        <input th:class="${#fields.hasErrors('questionToUpdate.guidanceTitle') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
                                type="text"
+                               id="question.guidanceTitle"
                                required="required"
                                th:name="questionToUpdate.guidanceTitle"
                                th:value="${question.guidanceTitle}"
                                maxlength="255"/>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label" for="question.guidanceTitle">
+                    <div th:class="${#fields.hasErrors('questionToUpdate.guidance')}? 'form-group error':'form-group'">
+                        <label class="form-label" for="question.guidance">
                             <span class="form-label-bold">Question guidance</span>
-                            <span th:if="${#fields.hasErrors('title')}" th:remove="tag">
-                                <span class="error-message"  th:each="err : ${#fields.errors('guidance')}" th:text="${err}" />
+                            <span th:if="${#fields.hasErrors('questionToUpdate.guidance')}" th:remove="tag">
+                                <span class="error-message"  th:each="err : ${#fields.errors('questionToUpdate.guidance')}" th:text="${err}" />
                             </span>
                         </label>
                         <div class="textarea-wrapped ">
-                            <textarea data-editor="html"
-                                      data-max_words="500"
-                                      th:class="${#fields.hasErrors('guidance') ? 'field-error' : ''}"
+                            <textarea data-max_words="500"
+                                      data-editor="html"
+                                      id="question.guidance"
+                                      th:class="${#fields.hasErrors('questionToUpdate.guidance') ? 'field-error' : ''}"
                                       th:name="questionToUpdate.guidance"
                                       required="required"
                                       ifs:utext="${question.guidance}">
                             </textarea>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div th:class="${#fields.hasErrors('questionToUpdate.maxWords')}? 'form-group error':'form-group'">
                         <label class="form-label" for="question.maxWords">
                             <span class="form-label-bold">Max word count</span>
-                            <span th:if="${#fields.hasErrors('maxWords')}" th:remove="tag">
-                                <span class="error-message"  th:each="err : ${#fields.errors('maxWords')}" th:text="${err}" />
+                            <span th:if="${#fields.hasErrors('questionToUpdate.maxWords')}" th:remove="tag">
+                                <span class="error-message"  th:each="err : ${#fields.errors('questionToUpdate.maxWords')}" th:text="${err}" />
                             </span>
                         </label>
-                        <input th:class="${#fields.hasErrors('maxWords') ? 'form-control field-error width-medium' : 'form-control width-medium'}"
+                        <input th:class="${#fields.hasErrors('questionToUpdate.maxWords') ? 'form-control field-error width-medium' : 'form-control width-medium'}"
                                type="number"
+                               id="question.maxWords"
                                min="1"
                                required="required"
                                th:name="questionToUpdate.maxWords"

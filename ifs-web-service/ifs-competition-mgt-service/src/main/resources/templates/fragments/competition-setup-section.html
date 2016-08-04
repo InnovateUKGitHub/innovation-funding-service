@@ -611,7 +611,6 @@
 
     <h2 class="heading-large">Questions</h2>
 
-
     <ul class="list-overview application-questions">
 
         <li><h2 class="heading-medium">Application details</h2></li>
@@ -620,13 +619,15 @@
         <li><h2 class="heading-medium">Scope</h2></li>
 
         <th:block th:each="question : ${questions}">
-            <th:block th:include="fragments/competition-setup :: application-question(${question})" />
+            <th:block th:include="fragments/competition-setup :: application-question(${question}, ${editable})" />
         </th:block>
     </ul>
 
     <div class="extra-margin">
-        <button th:if="${editable}" type="submit" class="button">Done</button>
-        <button th:if="${!editable}" type="submit" class="button">Edit</button>
+        <form th:action="@{(${editable} ? '' : 'application/edit')}" method="post" novalidate="novalidate">
+            <button th:if="${editable}" type="submit" class="button">Done</button>
+            <button th:if="${!editable}" type="submit" class="button">Edit</button>
+        </form>
     </div>
 
     <ul class="pagination">
