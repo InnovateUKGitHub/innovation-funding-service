@@ -84,7 +84,7 @@
                             <span class="error-message"  th:each="err : ${#fields.errors('openingDate*')}" th:text="${err}" />
                       </span>
                   </legend>
-                  <div class="date-group js-future-date">
+                  <div class="date-group" data-future-date="">
                       <div class="day">
                           <label class="form-label" for="competitionSetupForm.openingDateDay">
                               <div>Day</div>
@@ -609,26 +609,28 @@
 
 <div th:fragment="section-milestones">
 
-    <div class="hgroup extra-margin-bottom">
-        <h2>Step 4: Milestones</h2>
+    <div class="page-title">
+        <h1 class="heading-xlarge">Milestones</h1>
     </div>
 
     <div class="panel-indent">
         Here you can define the Competiton milestones. Submission date will generate other dates. You will be able to edit those, but it will override the dates calculated if you do.
     </div>
 
-    <form th:action="@{(${editable} ? '' : 'milestones/edit')}" method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
+    <form th:action="@{(${editable} ? '' : 'milestones/edit')}" id="milestones" method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
+
+        <div class="error-summary" th:attr="aria-hidden=${!#fields.hasAnyErrors()}">
+           <h2 class="heading-medium error-summary-heading">
+               Unable to save section
+           </h2>
+
+           <ul class="error-summary-list">
+               <li th:each="err : ${#fields.allErrors()}" th:text="${err}"></li>
+           </ul>
+       </div>
 
         <fieldset th:if="${editable}" id="section-4-edit">
-                 <div class="error-summary" th:if="${#fields.hasAnyErrors()}">
-                    <h2 class="heading-medium error-summary-heading">
-                        Unable to save section
-                    </h2>
 
-                    <ul class="error-summary-list">
-                        <li th:each="err : ${#fields.allErrors()}" th:text="${err}"></li>
-                    </ul>
-                </div>
 
             <legend class="visuallyhidden">Milestones</legend>
 
@@ -643,38 +645,45 @@
                 </tr>
                 </thead>
                 <tbody>
-                    <tr class="date-group js-future-date">
-                        <tr th:each="milestonesFormEntryList, iterStat : ${competitionSetupForm.milestonesFormEntryList}"
-                            name="milestonesFormEntryList" th:value="${iterStat.index}">
-                            <td  th:text="${milestonesFormEntryList.milestoneName.milestoneDescription}"></td>
-                            <td class="js-addWeekDay" th:text="${milestonesFormEntryList.dayOfWeek}"></td>
-                            <td class="day">
-                                <input type="number"
+                  <tr th:each="milestonesFormEntryList, iterStat : ${competitionSetupForm.milestonesFormEntryList}"
+                      class="date-group"
+                      data-future-date=""
+                      th:attr="data-date-invalid-errormessage=${milestonesFormEntryList.milestoneName.milestoneDescription+': please enter a valid date'},
+                               data-date-future-errormessage=${milestonesFormEntryList.milestoneName.milestoneDescription +': please enter a future date that is after the previous milestone'}">
+
+                      <td class="labelledby" th:id="${'milestone-'+iterStat.index}">
+                        <span th:text="${milestonesFormEntryList.milestoneName.milestoneDescription}" />
+                      </td>
+                      <td class="js-addWeekDay" th:text="${milestonesFormEntryList.dayOfWeek}"></td>
+                      <td class="day">
+                          <input type="number"
                                 placeholder="DD"
                                 min="1"
                                 max="31"
                                 required="required"
-                                data-required-errormessage="The date fields cannot be empty"
-                                       th:field="*{milestonesFormEntryList[__${iterStat.index}__].day}" />
-                            </td>
-                            <td class="month">
-                                <input type="number"
+                                class="form-control width-small"
+                                th:attr="aria-labelledby=${'milestone-'+iterStat.index}"
+                                th:field="*{milestonesFormEntryList[__${iterStat.index}__].day}" />
+                      </td>
+                      <td class="month">
+                          <input type="number"
                                 placeholder="MM"
                                 min="1"
                                 max="12"
                                 required="required"
-                                data-required-errormessage="The date fields cannot be empty"
-                                       th:field="*{milestonesFormEntryList[__${iterStat.index}__].month}" />
-                            </td>
-                            <td class="year" >
-                                <input type="number"
-                                       placeholder="YYYY"
-                                       required="required"
-                                       data-required-errormessage="The date fields cannot be empty"
-                                       th:field="*{milestonesFormEntryList[__${iterStat.index}__].year}" />
-                            </td>
-                        </tr>
-                    </tr>
+                                class="form-control width-small"
+                                th:attr="aria-labelledby=${'milestone-'+iterStat.index}"
+                                th:field="*{milestonesFormEntryList[__${iterStat.index}__].month}" />
+                      </td>
+                      <td class="year" >
+                          <input type="number"
+                                 placeholder="YYYY"
+                                 th:attr="aria-labelledby=${'milestone-'+iterStat.index}"
+                                 required="required"
+                                 class="form-control width-small"
+                                 th:field="*{milestonesFormEntryList[__${iterStat.index}__].year}" />
+                      </td>
+                  </tr>
                 </tbody>
             </table>
             <button class="button extra-margin">Done</button>

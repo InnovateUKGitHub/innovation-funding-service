@@ -39,7 +39,7 @@ IFS.core.formValidation = (function(){
                 messageInvalid : "Please enter a valid email address"
             },
             required : {
-                fields: '[required]',
+                fields: '[required]:not([data-date])',
                 messageInvalid : "This field cannot be left blank"
             },
             minlength : {
@@ -381,7 +381,6 @@ IFS.core.formValidation = (function(){
           var filledOut = ((d.val().length > 0) && (m.val().length > 0) && (y.val().length > 0));
           var validNumbers = IFS.core.formValidation.checkNumber(d,false) && IFS.core.formValidation.checkNumber(m,false) && IFS.core.formValidation.checkNumber(y,false);
           var invalidErrorMessage = IFS.core.formValidation.getErrorMessage(dateGroup,'date-invalid');
-          var futureErrorMessage = IFS.core.formValidation.getErrorMessage(dateGroup,'date-future');
 
           if(validNumbers && filledOut){
             var month = parseInt(m.val(),10);
@@ -390,6 +389,8 @@ IFS.core.formValidation = (function(){
             var date = new Date(year,month-1,day); //parse as date to check if it is a valid date
 
             if ((date.getDate() == day) && (date.getMonth() + 1 == month) && (date.getFullYear() == year)) {
+                valid = true;
+
                 if(showMessage){ IFS.core.formValidation.setValid(allFields,invalidErrorMessage); }
                 allFields.removeClass('js-autosave-disabled').attr('data-date',day+'-'+month+'-'+year);
                 //adding day of week which is not really validation might want to think about this
@@ -399,18 +400,9 @@ IFS.core.formValidation = (function(){
                   addWeekDay.text(weekday);
                 }
 
-                if(dateGroup.hasClass("js-future-date")){
-                  var now = new Date();
-                  if(now.setHours(0,0,0,0) <= date.setHours(0,0,0,0)){
-                    if(showMessage){ IFS.core.formValidation.setValid(allFields,futureErrorMessage); }
-                    valid = true;
-                  }
-                  else {
-                    if(showMessage){ IFS.core.formValidation.setInvalid(allFields,futureErrorMessage); }
-                    valid = false;
-                  }
+                if(dateGroup.is("[data-future-date]")){
+                    valid = IFS.core.formValidation.checkFutureDate(dateGroup,date,showMessage);
                 }
-                valid = true;
             } else {
                 if(showMessage){ IFS.core.formValidation.setInvalid(allFields,invalidErrorMessage); }
                 allFields.addClass('js-autosave-disabled').attr('data-date','');
@@ -431,6 +423,30 @@ IFS.core.formValidation = (function(){
           }
 
           return valid;
+        },
+        checkFutureDate : function(dateGroup,date,showMessage){
+          var futureErrorMessage = IFS.core.formValidation.getErrorMessage(dateGroup,'date-future');
+          var allFields = dateGroup.find('.day input, .month input, .year input');
+          var futureDate;
+          if(jQuery.trim(dateGroup.attr('data-future-date')).length === 0){
+            //if no future date is set we assume today
+            futureDate = new Date();
+          }
+          else {
+            var futureDateString = dateGroup.attr('data-future-date').split('-');
+            var futureDay = parseInt(futureDateString[0],10);
+            var futureMonth = parseInt(futureDateString[1],10)-1;
+            var futureYear = parseInt(futureDateString[2],10);
+            futureDate = new Date(futureYear,futureMonth,futureDay);
+          }
+          if(futureDate.setHours(0,0,0,0) <= date.setHours(0,0,0,0)){
+            if(showMessage){ IFS.core.formValidation.setValid(allFields,futureErrorMessage); }
+            return true;
+          }
+          else {
+            if(showMessage){ IFS.core.formValidation.setInvalid(allFields,futureErrorMessage); }
+            return false;
+          }
         },
         getErrorMessage : function(field,type){
             //first look if there is a custom message defined on the element
@@ -464,7 +480,7 @@ IFS.core.formValidation = (function(){
             return errorMessage;
         },
         setInvalid : function(field,message){
-            var formGroup = field.closest('.form-group');
+            var formGroup = field.closest('.form-group,tr.date-group');
             if(formGroup){
                 if(s.html5validationMode){ field[0].setCustomValidity(message);}
                 field.addClass('field-error');
@@ -473,7 +489,7 @@ IFS.core.formValidation = (function(){
                 if(errorEl.length === 0){
                     formGroup.addClass('error');
                     var html = '<span class="error-message">'+message+'</span>';
-                    formGroup.find('legend,label').first().append(html);
+                    formGroup.find('legend,label,.labelledby').first().append(html);
                 }
             }
             if(jQuery('ul.error-summary-list li:contains('+message+')').length === 0){
@@ -483,7 +499,8 @@ IFS.core.formValidation = (function(){
             jQuery(window).trigger('updateWysiwygPosition');
         },
         setValid : function(field,message){
-            var formGroup = field.closest('.form-group.error');
+
+            var formGroup = field.closest('.form-group.error,tr.date-group.error');
             if(formGroup){
               formGroup.find('.error-message:contains("'+message+'")').remove();
 
