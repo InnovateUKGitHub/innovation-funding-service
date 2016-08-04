@@ -113,6 +113,7 @@ MO details(email step)
     ...
     ...    INFUND-2633
     [Tags]    Email
+    # Note that assigning a monitoring officer will send emails out to both the new MO and the PM - this test checks for both emails
     When Open mailbox and confirm received email    ${test_mailbox_two}+monitoringofficer@gmail.com    ${test_mailbox_two_password}    has been assigned to you
     And Open mailbox and confirm received email    worth.email.test@gmail.com    testtest1    has been assigned a Monitoring officer
 
@@ -142,6 +143,7 @@ MO details edit(email step)
     ...
     ...    INFUND-2634
     [Tags]    Email
+    # Note that assigning a monitoring officer will send emails out to both the new MO and the PM - this test checks for both emails
     When Open mailbox and confirm received email    ${test_mailbox_two}@gmail.com    ${test_mailbox_two_password}    has been assigned to you
     And Open mailbox and confirm received email    worth.email.test@gmail.com    testtest1    has been assigned a Monitoring officer
 
