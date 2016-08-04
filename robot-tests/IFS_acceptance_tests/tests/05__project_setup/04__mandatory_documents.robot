@@ -82,7 +82,7 @@ Lead partner cannot remove either document
 Lead partner does not have the option to submit the mandatory documents
     [Documentation]  INFUND-3430
     [Tags]   Pending
-    # Pending due to INFUND-3013
+    # Pending due to INFUND-3012
     When the user should not see an error in the page
     And the user should not see the element    jQuery=.button.enabled:contains("Submit documents")
 
@@ -113,7 +113,7 @@ Non-lead partner cannot remove either document
 Non-lead partner does not have the option to submit the mandatory documents
     [Documentation]    INFUND-3422
     [Tags]   Pending
-    # Pending due to INFUND-3013
+    # Pending due to INFUND-3012
     When the user should not see the element     jQuery=.button.enabled:contains("Submit documents")
 
 PM can view both documents
@@ -157,7 +157,7 @@ Status in the dashboard remains pending after uploads
 Mandatory document submission
     [Documentation]   INFUND-3430
     [Tags]    Pending
-    # Pending due to INFUND-3013
+    # Pending due to INFUND-3012
     Given the user clicks the button/link    link=Other documents
     When the user clicks the button/link    jQuery=.button:contains("Submit documents")
     And the user clicks the button/link    jQuery=.button:contains("Cancel")
