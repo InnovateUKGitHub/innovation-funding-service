@@ -24,11 +24,11 @@ public class MilestoneResourceBuilder extends BaseBuilder<MilestoneResource, Mil
         return new MilestoneResourceBuilder(emptyList()).with(uniqueIds());
     }
 
-    public MilestoneResourceBuilder withCompetitionId(Long... ids) {
-        return withArray((id, object) -> BaseBuilderAmendFunctions.setField("id", id, object), ids);
+    public MilestoneResourceBuilder withCompetitionId(Long... competitions) {
+        return withArray((competition, object) -> BaseBuilderAmendFunctions.setField("competition", competition, object), competitions);
     }
 
-    public MilestoneResourceBuilder withName(String... names) {
+    public MilestoneResourceBuilder withName(MilestoneResource.MilestoneName... names) {
         return withArray((name, object) -> BaseBuilderAmendFunctions.setField("name", name, object), names);
     }
 
