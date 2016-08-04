@@ -97,11 +97,11 @@
         <div class="progress-status" />
         <div class="progress-info">
           <div th:unless="${param.user != null}" th:remove="tag">
-            <h2 class="heading-medium"><a th:href="@{/project/{id}/other-documents(id=${model.projectId})}">Other documents</a></h2>
+            <h2 class="heading-medium"><a th:href="@{/project/{id}/partner/documents(id=${model.projectId})}">Other documents</a></h2>
             <p>As the lead partner in the consortium, you will need to upload documents including:</p>
           </div>
           <div th:if="${param.user != null and param.user[0] == 'nonLead'}" th:remove="tag">
-            <h2 class="heading-medium"><a th:href="@{/project/{id}/other-documents(id=${model.projectId})}">Other documents</a></h2>
+            <h2 class="heading-medium"><a th:href="@{/project/{id}/partner/documents(id=${model.projectId})}">Other documents</a></h2>
             <p>The lead partner of the consortium will need to upload documents including:</p>
           </div>
           <ul class="list-bullet">

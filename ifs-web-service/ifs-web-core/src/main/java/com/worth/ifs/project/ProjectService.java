@@ -72,4 +72,6 @@ public interface ProjectService {
     boolean isUserPartner(Long projectId, Long userId);
 
     List<ProjectUserResource> getPartners(Long projectId);
+
+    ServiceResult<Boolean> isOtherDocumentSubmitAllowed(long projectId);
 }

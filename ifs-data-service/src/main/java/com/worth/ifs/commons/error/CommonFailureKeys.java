@@ -79,6 +79,8 @@ public enum CommonFailureKeys implements ErrorTemplate {
     PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_USER_ON_THE_PROJECT_FOR_THE_ORGANISATION("The organisation finance contact must be present on the project for the specified organisation", BAD_REQUEST),
     PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_PARTNER_ON_THE_PROJECT_FOR_THE_ORGANISATION("The organisation finance contact must be a partner on the project for the specified organisation", BAD_REQUEST),
     PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_SUBMITTED_IF_INCOMPLETE("All project details must be completed before submission", BAD_REQUEST),
+    PROJECT_SETUP_OTHER_DOCUMENTS_CAN_ONLY_SUBMITTED_BY_PROJECT_MANAGER("Other documents can only be submitted by the project manager", BAD_REQUEST),
+    PROJECT_SETUP_OTHER_DOCUMENTS_MUST_BE_UPLOADED_BEFORE_SUBMIT("Other documents must be uploaded before submit", BAD_REQUEST),
 	PROJECT_SETUP_PROJECT_ID_IN_URL_MUST_MATCH_PROJECT_ID_IN_MONITORING_OFFICER_RESOURCE("The project id in the url must match the project id in the Monitoring Officer Resource request body", BAD_REQUEST),
     PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_UPDATED_IF_ALREADY_SUBMITTED("Project details cannot be updated if they are already submitted", BAD_REQUEST),
     CANNOT_FIND_ORG_FOR_GIVEN_PROJECT_AND_USER("Cannot find organisation for given project and user", NOT_FOUND),
