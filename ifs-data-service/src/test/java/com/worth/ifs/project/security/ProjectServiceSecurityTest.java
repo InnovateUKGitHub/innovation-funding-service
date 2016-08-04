@@ -409,8 +409,13 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         public ServiceResult<Boolean> isSubmitAllowed(Long projectId) {
             return null;
         }
-		
-		@Override
+
+        @Override
+        public ServiceResult<Boolean> isOtherDocumentsSubmitAllowed(Long projectId) {
+            return null;
+        }
+
+        @Override
         public ServiceResult<Void> saveMonitoringOfficer(final Long projectId, final MonitoringOfficerResource monitoringOfficerResource) {
             return null;
         }
@@ -477,6 +482,11 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         @Override
         public ServiceResult<Void> deleteExploitationPlanFile(Long projectId) {
+            return null;
+        }
+
+        @Override
+        public List<ServiceResult<FileAndContents>>  retrieveUploadedDocuments(Long projectId) {
             return null;
         }
     }
