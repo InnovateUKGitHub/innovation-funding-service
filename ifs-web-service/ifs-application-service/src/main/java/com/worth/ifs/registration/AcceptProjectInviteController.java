@@ -125,9 +125,9 @@ public class AcceptProjectInviteController extends BaseController {
     @RequestMapping(value = ACCEPT_INVITE_USER_EXIST_CONFIRM_MAPPING, method = RequestMethod.GET)
     public String acceptInviteUserDoesExistComfirm(HttpServletRequest request) {
         String hash = getCookieValue(request, INVITE_HASH);
-        return find(inviteByHash(hash), inviteOrganisationByHash(hash), checkUserExistsByHash(hash)).andOnSuccess((invite, inviteOrganisation, userExists) -> {
-                    if (invite.getStatus().equals(SEND) && userExists) {
-
+        return find(inviteByHash(hash), inviteOrganisationByHash(hash), userByHash(hash)).andOnSuccess((invite, inviteOrganisation, userExists) -> {
+                    if (invite.getStatus().equals(SEND)) {
+                        // Now set the user on the org and send them to their homepage
                         return restSuccess("TODO");
                     } else {
                         return restSuccess("TODO - fail");
@@ -150,7 +150,7 @@ public class AcceptProjectInviteController extends BaseController {
         return () -> inviteRestService.checkExistingUser(hash);
     }
 
-    private Supplier<RestResult<UserResource>> getUserByHash(String hash) {
+    private Supplier<RestResult<UserResource>> userByHash(String hash) {
         return () -> inviteRestService.getUser(hash);
     }
 
