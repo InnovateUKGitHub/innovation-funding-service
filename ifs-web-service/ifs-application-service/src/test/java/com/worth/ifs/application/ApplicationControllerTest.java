@@ -283,7 +283,9 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(processRoleService.findProcessRole(user.getId(), app.getId())).thenReturn(processRole);
 
         mockMvc.perform(post("/application/" + app.getId() + "/summary")
-                .param(AbstractApplicationController.MARK_AS_COMPLETE, question.getId().toString()))
+                .param(AbstractApplicationController.MARK_AS_COMPLETE, question.getId().toString())
+                /* Infund 3954*/
+                .param("formInput[" + question.getId().toString() + "]", question.getId().toString()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/application/" + app.getId() + "/summary"));
         verify(questionService, times(1)).markAsComplete(question.getId(), app.getId(), user.getId());

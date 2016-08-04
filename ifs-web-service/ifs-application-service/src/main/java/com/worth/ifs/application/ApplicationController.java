@@ -121,11 +121,16 @@ public class ApplicationController extends AbstractApplicationController {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
 
         Map<String, String[]> params = request.getParameterMap();
+
         if (params.containsKey(ASSIGN_QUESTION_PARAM)) {
             assignQuestion(request, applicationId);
         } else if (params.containsKey(MARK_AS_COMPLETE)) {
             Long markQuestionCompleteId = Long.valueOf(request.getParameter(MARK_AS_COMPLETE));
-            if (markQuestionCompleteId != null) {
+            /* Infund 3954*/
+            String questionformInputKey = "formInput[" + markQuestionCompleteId + "]";
+            String questionFormInputValue = request.getParameter(questionformInputKey);
+
+            if (markQuestionCompleteId != null && questionFormInputValue != null && questionFormInputValue.length() > 0) {
                 ProcessRoleResource processRole = processRoleService.findProcessRole(user.getId(), applicationId);
                 questionService.markAsComplete(markQuestionCompleteId, applicationId, processRole.getId());
             }
