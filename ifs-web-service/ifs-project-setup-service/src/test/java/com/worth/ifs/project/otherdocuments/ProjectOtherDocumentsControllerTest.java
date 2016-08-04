@@ -376,7 +376,6 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
         ProjectOtherDocumentsViewModel model = (ProjectOtherDocumentsViewModel) result.getModelAndView().getModel().get("model");
         ProjectOtherDocumentsForm form = (ProjectOtherDocumentsForm) result.getModelAndView().getModel().get("form");
 
-        ProjectServiceImpl.javaProjectServiceImpl.java
         // test flags that help to drive the page
         assertTrue(model.isReadOnly());
         assertFalse(model.isEditable());
