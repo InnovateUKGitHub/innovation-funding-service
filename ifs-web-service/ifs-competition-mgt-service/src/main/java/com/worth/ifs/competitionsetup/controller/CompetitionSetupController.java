@@ -52,7 +52,7 @@ public class CompetitionSetupController {
 
         CompetitionResource competition = competitionService.getById(competitionId);
 
-        if(sendToDashboard(competition)) {
+        if(isSendToDashboard(competition)) {
         	LOG.error("Competition is not found in setup state");
             return "redirect:/dashboard";
         }
@@ -91,7 +91,7 @@ public class CompetitionSetupController {
 
         CompetitionResource competition = competitionService.getById(competitionId);
 
-        if(sendToDashboard(competition)) {
+        if(isSendToDashboard(competition)) {
         	LOG.error("Competition is not found in setup state");
             return "redirect:/dashboard";
         }
@@ -200,7 +200,7 @@ public class CompetitionSetupController {
     private String genericCompetitionSetupSection(CompetitionSetupForm competitionSetupForm, BindingResult bindingResult, Long competitionId, CompetitionSetupSection section, Model model) {
         CompetitionResource competition = competitionService.getById(competitionId);
 
-        if(sendToDashboard(competition)) {
+        if(isSendToDashboard(competition)) {
         	LOG.error("Competition is not found in setup state");
             return "redirect:/dashboard";
         }
@@ -216,7 +216,7 @@ public class CompetitionSetupController {
         return "competition/setup";
     }
 
-    private boolean sendToDashboard(CompetitionResource competition) {
+    private boolean isSendToDashboard(CompetitionResource competition) {
         return (competition == null || (!Status.COMPETITION_SETUP.equals(competition.getCompetitionStatus()) &&
                 !Status.READY_TO_OPEN.equals(competition.getCompetitionStatus()))) ? true : false;
     }
