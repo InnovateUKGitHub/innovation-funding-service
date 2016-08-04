@@ -70,15 +70,14 @@ IFS.core.modal = (function(){
                     var form = this,
                         submitValid = true;
 
+                    // Validate each required field in the form
                     jQuery('[required="required"]', form).each(function() {
-                        // Validate each required field in the form
                         if(IFS.core.formValidation.checkRequired(jQuery(this),true) !== true) {
-    // Assume one or more fields in the form are invalid
-    submitValid = false;
+                            submitValid = false;
 
-    // Apply form error and message to the field
-    IFS.core.formValidation.checkRequired(jQuery(this),true);
-}
+                            // Apply form error and message to the field
+                            IFS.core.formValidation.checkRequired(jQuery(this),true);
+                        }
                     });
 
                     // If valid submit the form, otherwise prevent submission
