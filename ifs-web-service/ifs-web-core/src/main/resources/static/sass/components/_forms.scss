@@ -32,7 +32,8 @@ div.readonly{
       margin-right: 1em;
     }
 }
-td.form-group {
+td.form-group,
+tr.form-group {
   float:none;
   width:auto;
   padding-left:0;
@@ -203,8 +204,14 @@ tr.date-group.error {
 
 }
 
-.count-label,
-.textarea-save-info {
+td.autosave-info {
+  color: $grey-1;
+  font-size:14px;
+  min-width:70px;
+}
+
+.textarea-footer .count-label,
+.textarea-footer .autosave-info {
     padding:2px 0;
     float:right;
     color: $grey-1;

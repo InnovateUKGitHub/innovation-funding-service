@@ -378,7 +378,7 @@
             <fieldset>
                 <div class="upload-section">
                     <legend class="heading-small no-margin">Upload supporting documentation</legend>
-                    <p class="form-hint">Any supporting documentation that you upload will be uploaded to the document library, and will be viewed by Innovate UK</p>
+                    <p class="form-hint">Any supporting documentation that you upload will be saved to the document library and will be viewed by Innovate UK.</p>
 
                     <input type="file" name="file" id="file" class="inputfile" />
                     <label for="file" class="button-secondary extra-margin">+ Upload</label>
@@ -403,11 +403,12 @@
 
     <th:block th:if="${param.action != null and param.action[0] == 'postQuery' or param.action != null and param.action[0] == 'showResponse' or param.action != null and param.action[0] == 'newResponse' or param.action != null and param.action[0] == 'postResponse'}" th:unless="${user == 'partner'}" >
         <th:block th:if="${queryType == 'query'}">
-            <h2 class="heading-medium" th:text="${(param.section != null ? param.section[0] : 'NOT SET')}">SECTION TITLE</h2>
             
-            <h3 class="heading-small no-margin" th:utext="${#strings.replace( #strings.escapeXml( #httpServletRequest.getParameter('queryTitle') ),T(java.lang.System).getProperty('line.separator'),'&lt;br /&gt;')}">QUERY TITLE</h3>
+            <h2 class="heading-medium no-margin-bottom" th:utext="${#strings.replace( #strings.escapeXml( #httpServletRequest.getParameter('queryTitle') ),T(java.lang.System).getProperty('line.separator'),'&lt;br /&gt;')}">QUERY TITLE</h2>
 
-            <p class="heading-small no-margin-bottom">Innovate UK - Finance team <small>26/06/2016 17:55</small></p>
+            <h3 class="heading-small no-margin" th:text="${(param.section != null ? param.section[0] : 'NOT SET')}">SECTION TITLE</h3>
+            
+            <p class="heading-small no-margin-top">Innovate UK - Finance team <small>26/06/2016 17:55</small></p>
 
             <div th:utext="${#strings.replace( #strings.escapeXml( #httpServletRequest.getParameter('query') ),T(java.lang.System).getProperty('line.separator'),'&lt;br /&gt;')}">QUERY
             </div>
@@ -521,7 +522,7 @@
             <fieldset>
                 <div class="upload-section">
                     <legend class="heading-small no-margin">Upload supporting documentation</legend>
-                    <p class="form-hint">Any supporting documentation that you upload will be uploaded to the document library, and will be viewed by Innovate UK</p>
+                    <p class="form-hint">Any supporting documentation that you upload will be saved to the document library and will be viewed by Innovate UK.</p>
 
                     <input type="file" name="file" id="file" class="inputfile" />
                     <label for="file" class="button-secondary extra-margin">+ Upload</label>

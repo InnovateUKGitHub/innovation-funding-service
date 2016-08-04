@@ -26,8 +26,8 @@ import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-import static com.worth.ifs.JsonTestUtil.fromJson;
-import static com.worth.ifs.JsonTestUtil.toJson;
+import static com.worth.ifs.util.JsonMappingUtil.fromJson;
+import static com.worth.ifs.util.JsonMappingUtil.toJson;
 import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static com.worth.ifs.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
 import static com.worth.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE;
@@ -113,14 +113,14 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(projectNumber)));
     }
-    
+
     @Test
     public void projectControllerSetProjectManager() throws Exception {
     	when(projectServiceMock.setProjectManager(3L, 5L)).thenReturn(serviceSuccess());
-    	
+
         mockMvc.perform(post("/project/3/project-manager/5").contentType(APPLICATION_JSON).accept(APPLICATION_JSON))
                 .andExpect(status().isOk());
-        
+
         verify(projectServiceMock).setProjectManager(3L, 5L);
     }
 
@@ -222,7 +222,7 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
         verify(projectServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);
 
         // Ensure that notification is not sent when there is error whilst saving
-        verify(projectServiceMock, never()).notifyMonitoringOfficer(monitoringOfficerResource);
+        verify(projectServiceMock, never()).notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource);
 
     }
 
@@ -232,7 +232,7 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
         Long projectId = 1L;
 
         when(projectServiceMock.saveMonitoringOfficer(projectId, monitoringOfficerResource)).thenReturn(serviceSuccess());
-        when(projectServiceMock.notifyMonitoringOfficer(monitoringOfficerResource)).
+        when(projectServiceMock.notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource)).
                 thenReturn(serviceFailure(new Error(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE)));
 
         mockMvc.perform(put("/project/{projectId}/monitoring-officer", projectId)
@@ -241,7 +241,7 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
                 .andExpect(status().isInternalServerError());
 
         verify(projectServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);
-        verify(projectServiceMock).notifyMonitoringOfficer(monitoringOfficerResource);
+        verify(projectServiceMock).notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource);
 
     }
 
@@ -251,7 +251,7 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
         Long projectId = 1L;
 
         when(projectServiceMock.saveMonitoringOfficer(projectId, monitoringOfficerResource)).thenReturn(serviceSuccess());
-        when(projectServiceMock.notifyMonitoringOfficer(monitoringOfficerResource)).
+        when(projectServiceMock.notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource)).
                 thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/project/{projectId}/monitoring-officer", projectId)
@@ -260,7 +260,7 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
                 .andExpect(status().isOk());
 
         verify(projectServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);
-        verify(projectServiceMock).notifyMonitoringOfficer(monitoringOfficerResource);
+        verify(projectServiceMock).notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource);
 
     }
 
@@ -487,5 +487,16 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
         assertDeleteFile("/project/{projectId}/exploitation-plan", new Object[] {projectId},
                 emptyMap(), projectServiceMock, serviceCallToDelete).
                 andDo(documentFileDeleteMethod(document));
+    }
+
+    @Test
+    public void isOtherDocumentsSubmitAllowed() throws Exception {
+
+        when(projectServiceMock.isOtherDocumentsSubmitAllowed(123L)).thenReturn(serviceSuccess(true));
+
+        mockMvc.perform(get("/project/{projectId}/partner/documents/submit", 123L))
+                .andExpect(status().isOk())
+                .andExpect(content().string("true"))
+                .andReturn();
     }
 }

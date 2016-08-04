@@ -43,8 +43,8 @@ import static java.util.stream.Collectors.toMap;
 @RequestMapping("/{assessmentId}")
 public class AssessmentFeedbackController extends AbstractApplicationController {
 
-    private static String APPLICATION_DETAILS = "assessment-application-details";
-    private static String QUESTION = "assessment-question";
+    private static String APPLICATION_DETAILS = "assessment/application-details";
+    private static String QUESTION = "assessment/application-question";
 
     @Autowired
     private AssessmentService assessmentService;

@@ -95,7 +95,7 @@ IFS.core.formValidation = (function(){
           //set data attribute on date fields
           //which has the combined value of the dates
           //and also makes sure that other vaidation doesn't get triggered
-          jQuery(s.date.fields).attr('data-date','');
+          jQuery(s.date.fields).attr({'data-date':'','data-autosave-disabled':''});
 
           //will only work on html5 validation browsers
           jQuery('form:not([novalidate]) input').on('invalid',function(){
@@ -392,7 +392,7 @@ IFS.core.formValidation = (function(){
                 valid = true;
 
                 if(showMessage){ IFS.core.formValidation.setValid(allFields,invalidErrorMessage); }
-                allFields.removeClass('js-autosave-disabled').attr('data-date',day+'-'+month+'-'+year);
+                allFields.removeAttr('data-autosave-disabled').attr('data-date',day+'-'+month+'-'+year);
                 //adding day of week which is not really validation might want to think about this
                 if(addWeekDay.length){
                   var days = ['Sun','Mon','Tues','Wed','Thurs','Fri','Sat'];
@@ -405,13 +405,13 @@ IFS.core.formValidation = (function(){
                 }
             } else {
                 if(showMessage){ IFS.core.formValidation.setInvalid(allFields,invalidErrorMessage); }
-                allFields.addClass('js-autosave-disabled').attr('data-date','');
+                allFields.attr({'data-date':'', 'autosave-disabled':''});
                 valid = false;
             }
           }
           else if (filledOut || fieldsVisited){
                 if(showMessage){ IFS.core.formValidation.setInvalid(allFields,invalidErrorMessage); }
-                allFields.addClass('js-autosave-disabled').attr('data-date','');
+                allFields.attr({'data-date':'', 'autosave-disabled':''});
                 valid = false;
           }
           else {

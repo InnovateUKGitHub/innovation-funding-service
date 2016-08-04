@@ -112,7 +112,7 @@
 <div th:fragment="form-dateinput (id, field)">
     <div class="date-group" data-future-date="" th:attr="data-field-group-name=${field},data-field-group-id=${id}">
 
-    	<div th:with="dateFieldPresent=*{__${field}__ != null},inputCssClass='js-autosave-disabled'" th:remove="tag">
+    	<div th:with="dateFieldPresent=*{__${field}__ != null}" th:remove="tag">
 
             <!--/* The hidden field below is used as a dummy value that is essentially ignored by the LocalDatePropertyEditor in order to allow
                    us to get the LocalDatePropertyEditor to kick in when Spring attempts to bind the current field to the LocalDate value in the
