@@ -55,32 +55,12 @@ public class ProjectSpendProfileController {
 
         ProjectResource projectResource = projectService.getById(projectId);
 
-        // At the moment we call this dummy method to populate the data - this will be replaced with a call to the data layer
-        // Here we will call a data service to get the Eligible Project costs for each category.
-        SpendProfileResource spendProfileResource = tempGetSpendProfileEligibleCosts();
+        // Here we will call a data service to get the eligible project costs for each category.
+        SpendProfileResource spendProfileResource = projectService.getSpendProfile(projectId);
 
         SpendProfileTableResource table = buildSpendProfileTable(spendProfileResource, projectResource);
 
         return new ProjectSpendProfileViewModel(projectResource, table);
-    }
-
-    private SpendProfileResource tempGetSpendProfileEligibleCosts() {
-
-        SpendProfileResource spendProfileResource = new SpendProfileResource();
-
-        Map<String, BigDecimal> eligibleCostPerCategoryMap = new LinkedHashMap<>();
-        eligibleCostPerCategoryMap.put("LabourCost", new BigDecimal("240"));
-        eligibleCostPerCategoryMap.put("AdminSupportCost", new BigDecimal("120"));
-        eligibleCostPerCategoryMap.put("MaterialCost", new BigDecimal("180"));
-        eligibleCostPerCategoryMap.put("CapitalCost", new BigDecimal("190"));
-        eligibleCostPerCategoryMap.put("SubcontractingCost", new BigDecimal("160"));
-        eligibleCostPerCategoryMap.put("TravelAndSubsistenceCost", new BigDecimal("850"));
-        eligibleCostPerCategoryMap.put("OtherCost", new BigDecimal("149"));
-
-        spendProfileResource.setEligibleCostPerCategoryMap(eligibleCostPerCategoryMap);
-
-        return spendProfileResource;
-
     }
 
     private SpendProfileTableResource buildSpendProfileTable(SpendProfileResource spendProfileResource, ProjectResource projectResource) {
@@ -110,7 +90,7 @@ public class ProjectSpendProfileController {
 
     private Map<String, List<BigDecimal>> buildMonthlyCostsPerCategory(SpendProfileResource spendProfileResource, Long duration) {
 
-        // Used a LinkedHashMap to preserve the order of insertion, but if its not required, then we can use a HashMap
+        // Used a LinkedHashMap to preserve the order of insertion
         Map<String, List<BigDecimal>> monthlyCostsPerCategoryMap = new LinkedHashMap<>();
 
         Map<String, BigDecimal> eligibleCostPerCategoryMap = spendProfileResource.getEligibleCostPerCategoryMap();
@@ -153,20 +133,5 @@ public class ProjectSpendProfileController {
 
         return result;
 
-    }
-
-    // TODO - For testing purpose only - will be deleted later - Ignore
-    public static void main(String[] args) {
-
-
-        ProjectResource projectResource = new ProjectResource();
-        projectResource.setDurationInMonths(12L);
-        projectResource.setTargetStartDate(LocalDate.now());
-
-        ProjectSpendProfileController controller = new ProjectSpendProfileController();
-        SpendProfileResource spendProfileResource = controller.tempGetSpendProfileEligibleCosts();
-
-
-        SpendProfileTableResource table = controller.buildSpendProfileTable(spendProfileResource, projectResource);
     }
 }

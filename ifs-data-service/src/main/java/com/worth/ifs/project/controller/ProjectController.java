@@ -10,6 +10,7 @@ import com.worth.ifs.file.transactional.FileHttpHeadersValidator;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.user.resource.OrganisationResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +49,11 @@ public class ProjectController {
     @RequestMapping("/{id}")
     public RestResult<ProjectResource> getProjectById(@PathVariable("id") final Long id) {
         return projectService.getProjectById(id).toGetResponse();
+    }
+
+    @RequestMapping("/{id}/spend-profile")
+    public RestResult<SpendProfileResource> getSpendProfileById(@PathVariable("id") final Long id) {
+        return projectService.getSpendProfileById(id).toGetResponse();
     }
 
     @RequestMapping("/application/{application}")

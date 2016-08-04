@@ -32,7 +32,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
 
         // Assert that the view model is populated with the correct values
-        ProjectSpendProfileViewModel viewModel = new ProjectSpendProfileViewModel(projectResource);
+        ProjectSpendProfileViewModel viewModel = new ProjectSpendProfileViewModel(projectResource, null);
 
         mockMvc.perform(get("/project/{projectId}/spend-profile", projectResource.getId()))
                 .andExpect(status().isOk())
