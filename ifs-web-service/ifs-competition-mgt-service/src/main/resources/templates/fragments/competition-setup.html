@@ -154,7 +154,8 @@
                             </span>
                         </label>
                         <div class="textarea-wrapped ">
-                            <textarea data-max_words="500"
+                            <textarea data-editor="html"
+                                      data-max_words="500"
                                       th:class="${#fields.hasErrors('guidance') ? 'field-error' : ''}"
                                       th:name="questionToUpdate.guidance"
                                       required="required"
