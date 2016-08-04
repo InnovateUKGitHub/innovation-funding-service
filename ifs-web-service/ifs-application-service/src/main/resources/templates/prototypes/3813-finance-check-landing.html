@@ -13,13 +13,20 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Project setup status'}, ${'/prototypes/1588-project-status?stage=level2'})" th:remove="tag" />
+	
+	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Project setup status'}, ${(param.status != null and param.status[0] == 'approved' ? '/prototypes/1588-project-status?stage=level5' : '/prototypes/1588-project-status?stage=level2')})" th:remove="tag" />
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Finance checks'})" th:remove="tag" />
 
-	<p>Innovate are currently reviewing your finances. during this stage costs outlined in your application may be queried, enabling thathis may take a while here are details on your finances as thy are reviewed by innovate UK</p>
+	<th:block th:if="${param.status != null and param.status[0] == 'approved'}">
+		<div class="success-alert extra-margin-bottom">
+			The finance checks have been completed and your finances approved
+		</div>
+	</th:block>
+
+	<p>Innovate are currently reviewing your finances. during this stage costs outlined in your application may be queried, enabling thathis may take a while here are details on your finances as thy are reviewed by Innovate UK</p>
 	
 	<ul>
 		<li>
@@ -46,7 +53,7 @@
         <input type="hidden" id="action" name="action" value="newResponse" />
         <input type="hidden" id="query" name="query" value="Test query" />
         <hr />
-        <button class="button button-secondary">Respond</button>
+        <button class="button button-secondary" th:unless="${param.status != null and param.status[0] == 'approved'}">Respond</button>
     </form>
 
     <th:block th:include="prototypes/fragments/project-setup :: prototype-post-query('query','partner')" th:if="${param.action != null and param.action[0] == 'newResponse' or param.action != null and param.action[0] == 'postResponse'}"/> 
