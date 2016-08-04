@@ -111,7 +111,7 @@
 
 				<div class="panel-indent">
 
-					<h3 class="heading-small no-margin">Business size has been changed from medium (60%) to large (50% Grant).</h3>
+					<h3 class="heading-small no-margin">Business size has been changed from medium (60%) to large (50% grant).</h3>
 
 					<dl class="standard-definition-list extra-margin">
 						<dt>The grant % has been set to</dt>
@@ -132,7 +132,7 @@
 
 				<div class="panel-indent">
 
-					<h3 class="heading-small no-margin">Changing the business size from medium (60% Grant) to small (70% Grant).</h3>
+					<h3 class="heading-small no-margin">Changing the business size from medium (60% grant) to small (70% grant).</h3>
 					
 					<dl class="standard-definition-list extra-margin">
 						<dt>The grant % will remain at</dt>
@@ -259,10 +259,10 @@
 		<dd>&pound;5,000</dd>
 
 		<dt>Credit score</dt>
-		<dd>7</dd>
+		<dd>7/100</dd>
 
 		<dt>Likelihood of failure</dt>
-		<dd>3</dd>
+		<dd>3%</dd>
 	</dl>
 
 
@@ -292,6 +292,16 @@
 			    </label>
 		    </div>
 
+		    <div class="form-group hidden" id="add-rag-rating">
+                <label for="rag-rating" class="form-label">Please enter the RAG rating for this viability review</label>
+                <select id="rag-rating" name="rag-rating" class="form-control" >
+                	<option value="">--</option>
+                	<option value="Green">Green</option>
+                	<option value="Amber">Amber</option>
+                	<option value="Red">Red</option>
+                </select>
+            </div>
+
 			<div class="extra-margin">
 				<button data-js-modal="confirm-viability-modal" id="confirm-viability" class="button" disabled="disabled">Confirm viability</button>
 			</div>
@@ -302,19 +312,9 @@
 
 		        	<h2 class="heading-medium no-margin-top">Confirm viability</h2>
 					
-					<p>This partner will now be marked as viable for this project, please state the viability RAG rating</p>
+					<p>This partner will now be marked as viable for this project.</p>
 					
 					<form>
-
-						<div class="form-group">
-			                <label for="rag-rating" class="form-label">RAG rating</label>
-			                <select id="rag-rating" name="rag-rating" class="form-control" >
-			                	<option value="">--</option>
-			                	<option value="Green">Green</option>
-			                	<option value="Amber">Amber</option>
-			                	<option value="Red">Red</option>
-			                </select>
-			            </div>
 
 						<hr />
 
@@ -384,11 +384,21 @@
 		}
 	});
 
-	jQuery('input#project-viable').on('click',function(e){ 
-		if ( jQuery(this).is(':checked') ) {
+	jQuery('select#rag-rating').on('change',function(e){
+		var rating = jQuery(this).val();
+
+		if (rating != ''){
 			jQuery("#confirm-viability").removeAttr('disabled');
 		}else{
 			jQuery("#confirm-viability").attr('disabled','disabled');
+		}
+	});
+
+	jQuery('input#project-viable').on('click',function(e){ 
+		if ( jQuery(this).is(':checked') ) {
+			jQuery("#add-rag-rating").removeClass('hidden');
+		}else{
+			jQuery("#add-rag-rating").addClass('hidden');
 		}
 	});
 	// ]]>
