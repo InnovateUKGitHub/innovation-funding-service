@@ -2,6 +2,7 @@ package com.worth.ifs.assessment.model;
 
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.service.QuestionService;
+import com.worth.ifs.application.service.SectionService;
 import com.worth.ifs.assessment.viewmodel.AssessmentNavigationViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -17,6 +18,9 @@ public class AssessmentFeedbackNavigationModelPopulator {
     @Autowired
     private QuestionService questionService;
 
+    @Autowired
+    private SectionService sectionService;
+
     public AssessmentNavigationViewModel populateModel(final Long assessmentId, final Long questionId) {
         return new AssessmentNavigationViewModel(assessmentId, getPreviousQuestion(questionId), getNextQuestion(questionId));
     }
@@ -26,7 +30,11 @@ public class AssessmentFeedbackNavigationModelPopulator {
     }
 
     private Optional<QuestionResource> getNextQuestion(final Long questionId) {
-        return questionService.getNextQuestion(questionId);
+        return questionService.getNextQuestion(questionId)
+                .filter(questionResource -> this.isAssessmentQuestion(questionResource));
     }
 
+    private boolean isAssessmentQuestion(QuestionResource question) {
+        return sectionService.getById(question.getSection()).isDisplayInAssessmentApplicationSummary();
+    }
 }

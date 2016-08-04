@@ -8,10 +8,14 @@
   // @include box-sizing(border-box);
   margin-right: 15px;
 
-  // Error messages should be red and bold
   .error-message {
-    color: $error-colour;
-    font-weight: bold;
+    @include core-19;
+
+    display: block;
+    clear: both;
+
+    margin: 0;
+    padding: 5px 0 7px 0;
   }
 
   // Form inputs should have a red border
@@ -37,15 +41,10 @@
     padding-left: $gutter-half;
   }
 }
-
+// Error messages should be red and bold
 .error-message {
-  @include core-19;
-
-  display: block;
-  clear: both;
-
-  margin: 0;
-  padding: 5px 0 7px 0;
+  color: $error-colour;
+  font-weight: bold;
 }
 
 // Summary of multiple error messages
