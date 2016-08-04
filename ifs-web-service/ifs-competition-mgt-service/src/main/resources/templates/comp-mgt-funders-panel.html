@@ -54,7 +54,7 @@
 
 			</form>
 
-    <form method="post" action="#" id="submit-funding-decision-form" th:action="@{/competition/{competitionId}/fundingdecision(competitionId=${competitionSummary.getCompetitionId()})}">
+    <form method="post" id="submit-funding-decision-form" data-autosave="fundingDecision" th:action="@{/competition/{competitionId}/fundingdecision(competitionId=${competitionSummary.getCompetitionId()})}">
       <div th:include="fragments/competition-management :: applications-table(competition=${competitionSummary},results=${results})" th:remove="tag" />
       <div th:include="fragments/modals :: modal-publish-funding-decision" th:remove="tag" />
       <p class="alignright-button">

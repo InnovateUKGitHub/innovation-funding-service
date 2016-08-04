@@ -17,7 +17,7 @@ import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 
 /**
- * Transactional and secured service providing operations around {@link com.worth.ifs.assessment.domain.AssessmentFeedback} data.
+ * Transactional and secured service providing operations around {@link com.worth.ifs.assessment.domain.Assessment} data.
  */
 @Service
 public class AssessmentServiceImpl extends BaseTransactionalService implements AssessmentService {

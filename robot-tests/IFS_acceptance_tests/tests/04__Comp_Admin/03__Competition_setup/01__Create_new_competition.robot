@@ -23,6 +23,7 @@ Resource          ../../../resources/keywords/User_actions.robot
 Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
 
 *** Test Cases ***
+
 User can navigate to the competition setup form
     [Documentation]    INFUND-2945
     ...
@@ -38,6 +39,7 @@ User can navigate to the competition setup form
     ...
     ...    IFUND-3888
     [Tags]    HappyPath
+    Given the user clicks the button/link    id=section-2
     When the user clicks the button/link    jQuery=.button:contains("Create competition")
     Then the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
     When the user clicks the button/link    link=Initial Details

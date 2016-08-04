@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.Optional;
 
+import static com.worth.ifs.user.resource.OrganisationTypeEnum.isResearch;
+
 /**
  * This controller will handle all requests that are related to a project.
  */
@@ -66,10 +68,19 @@ public class ProjectSetupStatusController {
         RestResult<BankDetailsResource> existingBankDetails = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisation.getId());
         Optional<BankDetailsResource> bankDetails = existingBankDetails.toOptionalIfNotFound().getSuccessObjectOrThrowException();
 
-        ApplicationFinanceResource applicationFinance = financeService.getFinanceDetails(project.getApplication(), organisation.getId()).getSuccessObjectOrThrowException();
-        Integer grantClaim = applicationFinance.getGrantClaimPercentage();
-        boolean funded = grantClaim != null && grantClaim > 0;
+        boolean funded = isApplicationFunded(project, organisation, competition);
 
         return new ProjectSetupStatusViewModel(project, competition, monitoringOfficer, bankDetails, funded);
+    }
+
+    private boolean isApplicationFunded(ProjectResource project, OrganisationResource organisation, CompetitionResource competition){
+        Integer grantClaim;
+        if(isResearch(organisation.getOrganisationType())){
+            grantClaim = competition.getAcademicGrantPercentage();
+        } else {
+            ApplicationFinanceResource applicationFinance = financeService.getFinanceDetails(project.getApplication(), organisation.getId()).getSuccessObjectOrThrowException();
+            grantClaim = applicationFinance.getGrantClaimPercentage();
+        }
+        return grantClaim != null && grantClaim > 0;
     }
 }
