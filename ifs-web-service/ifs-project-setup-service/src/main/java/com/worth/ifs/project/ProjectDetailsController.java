@@ -346,10 +346,12 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
         List<OrganisationResource> otherOrganisations = projectService.getPartnerOrganisationsForProject(projectId);
 
+        Optional<MonitoringOfficerResource> monitoringOfficer = projectService.getMonitoringOfficerForProject(projectId);
         Optional<BankDetailsResource> leadBankDetails = bankDetailsService.getBankDetailsByProjectAndOrganisation(projectId, leadOrganisation.getId()).toOptionalIfNotFound().getSuccessObject();
 
+
         ConsortiumPartnerStatus leadProjectDetailsSubmitted = createProjectDetailsStatus(project);
-        ConsortiumPartnerStatus monitoringOfficerStatus = createMonitoringOfficerStatus(projectService.getMonitoringOfficerForProject(projectId), leadProjectDetailsSubmitted);
+        ConsortiumPartnerStatus monitoringOfficerStatus = createMonitoringOfficerStatus(monitoringOfficer, leadProjectDetailsSubmitted);
         ConsortiumPartnerStatus leadBankDetailsStatus = createBankDetailStatus(leadBankDetails);
         ConsortiumPartnerStatus financeChecksStatus = createFinanceCheckStatus(leadBankDetails, leadBankDetailsStatus);
         ConsortiumPartnerStatus spendProfileStatus = createSpendProfileStatus(financeChecksStatus);
