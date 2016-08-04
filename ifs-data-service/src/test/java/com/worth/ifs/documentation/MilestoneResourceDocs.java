@@ -5,6 +5,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 
 import java.time.LocalDateTime;
 
+import com.worth.ifs.competition.resource.MilestoneResource;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
 import com.worth.ifs.competition.builder.MilestoneResourceBuilder;
@@ -18,8 +19,8 @@ public class MilestoneResourceDocs {
     };
 
     public static final MilestoneResourceBuilder milestoneResourceBuilder = newMilestoneResource()
-            .withId(5L)
+            .withId(1L)
             .withDate(LocalDateTime.now())
-            .withName("Briefing event test")
-            .withCompetitionId(10L);
+            .withName(MilestoneResource.MilestoneName.OPEN_DATE)
+            .withCompetitionId(1L);
 }

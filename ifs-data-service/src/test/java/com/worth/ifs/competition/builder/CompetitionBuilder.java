@@ -3,6 +3,7 @@ package com.worth.ifs.competition.builder;
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.competition.domain.Milestone;
 import com.worth.ifs.competition.resource.CompetitionResource.Status;
 
 import java.time.LocalDateTime;
@@ -61,6 +62,10 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
 
     public CompetitionBuilder withFunderBudget(Double funderBudget) {
         return with(competition -> setField("funderBudget", funderBudget, competition));
+    }
+
+    public CompetitionBuilder withMilestones(List<Milestone> milestones){
+        return with(competition -> competition.setMilestones(milestones));
     }
 
     public CompetitionBuilder withName(String name) {

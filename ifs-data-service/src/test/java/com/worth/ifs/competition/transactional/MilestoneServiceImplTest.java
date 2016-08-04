@@ -61,8 +61,8 @@ public class MilestoneServiceImplTest {
 		when(competitionRepository.findById(1L)).thenReturn(competition);
 		
 		List<MilestoneResource> milestones = asList(
-				ms(MilestoneName.FUNDERS_PANEL, LocalDateTime.of(2050, 3, 11, 0, 0)),
-				ms(MilestoneName.ASSESSMENT_PANEL, LocalDateTime.of(2050, 3, 10, 0, 0))
+                milestone(MilestoneName.FUNDERS_PANEL, LocalDateTime.of(2050, 3, 11, 0, 0)),
+                milestone(MilestoneName.ASSESSMENT_PANEL, LocalDateTime.of(2050, 3, 10, 0, 0))
 			);
 		
 		ServiceResult<Void> result = service.update(1L, milestones);
@@ -80,8 +80,8 @@ public class MilestoneServiceImplTest {
 		when(competitionRepository.findById(1L)).thenReturn(competition);
 		
 		List<MilestoneResource> milestones = asList(
-				ms(MilestoneName.FUNDERS_PANEL, LocalDateTime.of(2050, 3, 10, 0, 0)),
-				ms(MilestoneName.ASSESSMENT_PANEL, LocalDateTime.of(2050, 3, 11, 0, 0))
+                milestone(MilestoneName.FUNDERS_PANEL, LocalDateTime.of(2050, 3, 10, 0, 0)),
+                milestone(MilestoneName.ASSESSMENT_PANEL, LocalDateTime.of(2050, 3, 11, 0, 0))
 			);
 		
 		ServiceResult<Void> result = service.update(1L, milestones);
@@ -98,8 +98,8 @@ public class MilestoneServiceImplTest {
 		when(competitionRepository.findById(1L)).thenReturn(competition);
 		
 		List<MilestoneResource> milestones = asList(
-				ms(MilestoneName.FUNDERS_PANEL, LocalDateTime.of(2050, 3, 11, 0, 0)),
-				ms(MilestoneName.ASSESSMENT_PANEL, null)
+                milestone(MilestoneName.FUNDERS_PANEL, LocalDateTime.of(2050, 3, 11, 0, 0)),
+                milestone(MilestoneName.ASSESSMENT_PANEL, null)
 			);
 		
 		ServiceResult<Void> result = service.update(1L, milestones);
@@ -116,8 +116,8 @@ public class MilestoneServiceImplTest {
 		when(competitionRepository.findById(1L)).thenReturn(competition);
 		
 		List<MilestoneResource> milestones = asList(
-				ms(MilestoneName.FUNDERS_PANEL, LocalDateTime.of(2050, 3, 11, 0, 0)),
-				ms(MilestoneName.ASSESSMENT_PANEL, LocalDateTime.of(1985, 3, 10, 0, 0))
+                milestone(MilestoneName.FUNDERS_PANEL, LocalDateTime.of(2050, 3, 11, 0, 0)),
+                milestone(MilestoneName.ASSESSMENT_PANEL, LocalDateTime.of(1985, 3, 10, 0, 0))
 			);
 		
 		ServiceResult<Void> result = service.update(1L, milestones);
@@ -134,10 +134,10 @@ public class MilestoneServiceImplTest {
 		when(competitionRepository.findById(1L)).thenReturn(competition);
 		
 		List<MilestoneResource> milestones = asList(
-				ms(MilestoneName.FUNDERS_PANEL, null),
-				ms(MilestoneName.ASSESSMENT_PANEL, null),
-				ms(MilestoneName.ALLOCATE_ASSESSORS, null),
-				ms(MilestoneName.ASSESSOR_ACCEPTS, null)
+                milestone(MilestoneName.FUNDERS_PANEL, null),
+                milestone(MilestoneName.ASSESSMENT_PANEL, null),
+                milestone(MilestoneName.ALLOCATE_ASSESSORS, null),
+                milestone(MilestoneName.ASSESSOR_ACCEPTS, null)
 			);
 		
 		ServiceResult<Void> result = service.update(1L, milestones);
@@ -148,7 +148,7 @@ public class MilestoneServiceImplTest {
 		assertEquals(0, competition.getMilestones().size());
 	}
 
-	private MilestoneResource ms(MilestoneName name, LocalDateTime date) {
+	private MilestoneResource milestone(MilestoneName name, LocalDateTime date) {
 		MilestoneResource resource = new MilestoneResource();
 		resource.setName(name);
 		resource.setDate(date);

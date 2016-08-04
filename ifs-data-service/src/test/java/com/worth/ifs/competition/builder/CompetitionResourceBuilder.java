@@ -1,11 +1,8 @@
 package com.worth.ifs.competition.builder;
 
 import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.competition.resource.CollaborationLevel;
-import com.worth.ifs.competition.resource.CompetitionCoFunderResource;
-import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.*;
 import com.worth.ifs.competition.resource.CompetitionResource.Status;
-import com.worth.ifs.competition.resource.LeadApplicantType;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -154,6 +151,10 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
 
     public CompetitionResourceBuilder withCoFunders(List<CompetitionCoFunderResource> coFundersList) {
         return withList(coFundersList, (coFunders, section) -> section.setCoFunders(coFundersList));
+    }
+
+    public CompetitionResourceBuilder withMilestones(List<Long> milestonesList) {
+        return withList(milestonesList, (milestones, object) -> object.setMilestones(milestonesList));
     }
 
     @Override
