@@ -3,6 +3,7 @@ Documentation     INFUND-2630 As a Competitions team member I want to be able to
 ...
 ...               INFUND-2632 As a Competitions team member I want to send an email to a Monitoring Officer so they are aware I have assigned them to a project
 ...
+...               INFUND-2633 As a Competitions team member I want to send an email to the project manager so that they have the contact details of the Monitoring Officer I have assigned to their project
 ...
 ...               INFUND-2634 As a partner I want to be able to view details of the assigned Monitoring Officer for my project so I can contact them
 Suite Setup       Run Keywords    delete the emails from both test mailboxes
@@ -45,7 +46,7 @@ Comp admin can view the Supporting information details on MO page
     And the user should see the text in the page    Riff Street
     And the user should see the text in the page    Bath
     And the user should see the text in the page    BA1 5LR
-    #    And Element Should Contain    jQuery=p:nth-child(11)    1st Jan 2018    DateFails
+    And Element Should Contain    jQuery=p:nth-child(11)    1st Jan 2018
     And the user should see the text in the page    test twenty
     And the user should see the text in the page    Vitruvius Stonework Limited
     And the user should see the text in the page    EGGS
@@ -89,7 +90,7 @@ MO details can be added
     [Documentation]    INFUND-3330, INFUND-3334
     [Tags]    HappyPath
     When standard verification for email address follows
-    And the user enters text to a text field    id=emailAddress    ${test_mailbox_one}+monitoringofficer@gmail.com
+    And the user enters text to a text field    id=emailAddress    ${test_mailbox_two}+monitoringofficer@gmail.com
     Then standard verification for Phone number follows
     And the user moves focus away from an element for MO    id=phoneNumber
     And the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
@@ -106,10 +107,10 @@ MO details can be added
     And Element Should Contain    jQuery=ul li.complete:nth-child(3) p    Your Monitoring Officer for this project is Abbey Abigail.
 
 MO details(email step)
-    [Documentation]    INFUND-3330, INFUND-3334
+    [Documentation]    INFUND-3330, INFUND-3334, INFUND-3340
     [Tags]    Email
-    When Open mailbox and confirm received email    ${test_mailbox_one}+monitoringofficer@gmail.com    ${test_mailbox_one_password}    has been assigned to you
-
+    When Open mailbox and confirm received email    ${test_mailbox_two}+monitoringofficer@gmail.com    ${test_mailbox_two_password}    has been assigned to you
+    And Open mailbox and confirm received email     worth.email.test@gmail.com      testtest1       has been assigned a Monitoring officer
 MO details can be edited and viewed in the Project setup status page
     [Documentation]    INFUND-3330, INFUND-3349
     [Tags]    HappyPath
@@ -126,13 +127,15 @@ MO details can be edited and viewed in the Project setup status page
     And the user clicks the button/link    link=Monitoring Officer
     Then the user should see the text in the page    Your project has been assigned a Monitoring Officer
     And the user should see the text in the page    Grace Harper
-    And the user should see the text in the page    ${test_mailbox_one}+monitoringofficer@gmail.com
+    And the user should see the text in the page    ${test_mailbox_two}+monitoringofficer@gmail.com
     And the user should see the text in the page    08549731414
 
 MO details edit(email step)
     [Documentation]    INFUND-3330, INFUND-3349
     [Tags]    Email
-    When Open mailbox and confirm received email    ${test_mailbox_one}+monitoringofficer@gmail.com    ${test_mailbox_one_password}    has been assigned to you
+    When Open mailbox and confirm received email    ${test_mailbox_two}@gmail.com    ${test_mailbox_two_password}    has been assigned to you
+    And Open mailbox and confirm received email     worth.email.test@gmail.com      testtest1       has been assigned a Monitoring officer
+
 
 MO details accessible/seen by all partners
     [Documentation]    INFUND-3349
@@ -144,7 +147,7 @@ MO details accessible/seen by all partners
     And the user clicks the button/link    link=Monitoring Officer
     Then the user should see the text in the page    Your project has been assigned a Monitoring Officer
     And the user should see the text in the page    Grace Harper
-    And the user should see the text in the page    ${test_mailbox_one}+monitoringofficer@gmail.com
+    And the user should see the text in the page    ${test_mailbox_two}+monitoringofficer@gmail.com
     And the user should see the text in the page    08549731414
     Then Logout as user
     When Log in as user    steve.smith@empire.com    Passw0rd
@@ -154,7 +157,7 @@ MO details accessible/seen by all partners
     And the user clicks the button/link    link=Monitoring Officer
     Then the user should see the text in the page    Your project has been assigned a Monitoring Officer
     And the user should see the text in the page    Grace Harper
-    And the user should see the text in the page    ${test_mailbox_one}+monitoringofficer@gmail.com
+    And the user should see the text in the page    ${test_mailbox_two}+monitoringofficer@gmail.com
     And the user should see the text in the page    08549731414
 
 *** Keywords ***
