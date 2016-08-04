@@ -22,13 +22,13 @@
                 <table>
                     <tbody>
                         <tr>
-                            <th>Question</th>
+                            <th class="width-150" scope="row">Question</th>
                             <td th:each="question : ${model.questionsForScoreOverview}">
                                 <a th:href="@{/{id}/question/{quid}(id=${assessmentId}, quid=${question.questionId})}" th:text="${question.displayLabelShort}" />
                             </td>
                         </tr>
                         <tr>
-                            <th>Score</th>
+                            <th class="width-150" scope="row">Score</th>
                             <td th:each="question : ${model.questionsForScoreOverview}">
                                 <span th:text="${question.scoreGiven}" th:remove="tag" />
                             </td>
