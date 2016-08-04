@@ -163,5 +163,10 @@ public class InviteServiceSecurityTest extends BaseServiceSecurityTest<InviteSer
         public ServiceResult<Boolean> checkUserExistingByInviteHash(@P("hash") String hash) {
             return null;
         }
+
+        @Override
+        public ServiceResult<UserResource> getUserByInviteHash(@P("hash") String hash) {
+            return null;
+        }
     }
 }

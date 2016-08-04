@@ -4,6 +4,7 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.resource.InviteResultsResource;
+import com.worth.ifs.user.resource.UserResource;
 
 import java.util.List;
 
@@ -14,6 +15,7 @@ public interface InviteRestService {
     RestResult<Void> acceptInvite(String inviteHash, Long userId);
 
     RestResult<Boolean> checkExistingUser(String inviteHash);
+    RestResult<UserResource> getUser(String inviteHash);
 
     RestResult<InviteResource> getInviteByHash(String hash);
     RestResult<InviteOrganisationResource> getInviteOrganisationByHash(String hash);

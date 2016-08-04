@@ -5,7 +5,9 @@ import com.worth.ifs.invite.domain.ApplicationInvite;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.resource.InviteResultsResource;
+import com.worth.ifs.security.NotSecured;
 import com.worth.ifs.security.SecuredBySpring;
+import com.worth.ifs.user.resource.UserResource;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
@@ -58,4 +60,8 @@ public interface InviteService {
             description = "The System Registration user can check to see if there is an invite for a given hash",
             additionalComments = "The hash should be unguessable so the only way to successfully call this method would be to have been given the hash in the first place")
     ServiceResult<Boolean> checkUserExistingByInviteHash(@P("hash") String hash);
+
+
+    @NotSecured("TODO")
+    ServiceResult<UserResource> getUserByInviteHash(@P("hash") String hash);
 }
