@@ -2,7 +2,11 @@ package com.worth.ifs.assessment.controller;
 
 import com.worth.ifs.application.AbstractApplicationController;
 import com.worth.ifs.assessment.form.AssessmentApplicationSummaryForm;
-import com.worth.ifs.assessment.model.AssessmentApplicationSummaryModelPopulator;
+import com.worth.ifs.assessment.model.AssessmentSummaryModelPopulator;
+import com.worth.ifs.assessment.resource.AssessmentResource;
+import com.worth.ifs.assessment.service.AssessmentService;
+import com.worth.ifs.workflow.ProcessOutcomeService;
+import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,15 +19,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
 @Controller
-public class AssessmentApplicationSummaryController extends AbstractApplicationController {
+public class AssessmentSummaryController extends AbstractApplicationController {
 
-    private static Log LOG = LogFactory.getLog(AssessmentApplicationSummaryController.class);
+    private static Log LOG = LogFactory.getLog(AssessmentSummaryController.class);
 
     @Autowired
-    private AssessmentApplicationSummaryModelPopulator assessmentApplicationSummaryModelPopulator;
+    private AssessmentService assessmentService;
+
+    @Autowired
+    private ProcessOutcomeService processOutcomeService;
+
+    @Autowired
+    private AssessmentSummaryModelPopulator assessmentSummaryModelPopulator;
 
     private static String SUMMARY = "assessment/application-summary";
 
@@ -32,8 +43,8 @@ public class AssessmentApplicationSummaryController extends AbstractApplicationC
                              HttpServletResponse response,
                              @ModelAttribute(MODEL_ATTRIBUTE_FORM) AssessmentApplicationSummaryForm form,
                              BindingResult bindingResult, @PathVariable("assessmentId") Long assessmentId) throws ExecutionException, InterruptedException {
-        // TODO populate the form with any existing values
-        model.addAttribute("model", assessmentApplicationSummaryModelPopulator.populateModel(assessmentId));
+        populateFormWithExistingValues(form, assessmentId);
+        model.addAttribute("model", assessmentSummaryModelPopulator.populateModel(assessmentId));
         return SUMMARY;
     }
 
@@ -45,12 +56,28 @@ public class AssessmentApplicationSummaryController extends AbstractApplicationC
                        @PathVariable("assessmentId") Long assessmentId) {
         LOG.warn("AssessmentApplicationSummaryForm{" +
                 "fundingConfirmation=" + form.getFundingConfirmation() +
-                ", feedback='" + form.getFeedback() + "'" +
+                ", feedback='" + form.getFeedback() + '\'' +
                 ", comments='" + form.getComments() +
-                "'}");
+                '}');
         // TODO validation
         // TODO service call
         // TODO handle service errors
         return "redirect:/" + assessmentId;
+    }
+
+    private void populateFormWithExistingValues(AssessmentApplicationSummaryForm form, Long assessmentId) {
+        getOutcome(assessmentId).ifPresent(outcome -> {
+            form.setFundingConfirmation(Boolean.valueOf(outcome.getOutcome()));
+            form.setFeedback(outcome.getDescription());
+            form.setComments(outcome.getComment());
+        });
+    }
+
+    private Optional<ProcessOutcomeResource> getOutcome(Long assessmentId) {
+        return getAssessment(assessmentId).getProcessOutcomes().stream().reduce((id1, id2) -> id2).map(id -> processOutcomeService.getById(id));
+    }
+
+    private AssessmentResource getAssessment(Long assessmentId) {
+        return assessmentService.getById(assessmentId);
     }
 }

@@ -37,6 +37,7 @@ import com.worth.ifs.user.service.OrganisationRestService;
 import com.worth.ifs.user.service.OrganisationTypeRestService;
 import com.worth.ifs.user.service.ProcessRoleService;
 import com.worth.ifs.user.service.UserService;
+import com.worth.ifs.workflow.ProcessOutcomeService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
@@ -139,6 +140,8 @@ public class BaseUnitTest {
     public OrganisationTypeRestService organisationTypeRestService;
     @Mock
     public OrganisationAddressRestService organisationAddressRestService;
+    @Mock
+    public ProcessOutcomeService processOutcomeService;
     @Mock
     public SectionService sectionService;
     @Mock

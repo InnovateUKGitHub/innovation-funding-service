@@ -23,14 +23,14 @@
                     <tbody>
                         <tr>
                             <th>Question</th>
-                            <td th:each="question : ${model.questions}">
-                                <a th:href="@{/{id}/question/{quid}(id=${assessmentId}, quid=${question.questionId})}" th:text="${question.getDisplayLabelShort()}" />
+                            <td th:each="question : ${model.questionsForScoreOverview}">
+                                <a th:href="@{/{id}/question/{quid}(id=${assessmentId}, quid=${question.questionId})}" th:text="${question.displayLabelShort}" />
                             </td>
                         </tr>
                         <tr>
                             <th>Score</th>
-                            <td th:each="question : ${model.questions}">
-                                <span th:text="${question.values.get('SCORE')}" th:remove="tag" />
+                            <td th:each="question : ${model.questionsForScoreOverview}">
+                                <span th:text="${question.scoreGiven}" th:remove="tag" />
                             </td>
                         </tr>
                     </tbody>
@@ -41,7 +41,7 @@
 
             <h2 class="heading-medium">Review assessment</h2>
             <div class="collapsible section-overview">
-                <div th:each="question : ${model.questions}" th:remove="tag">
+                <div th:each="question : ${model.questionsForReview}" th:remove="tag">
                     <div th:include="fragments/assessment :: assessment-summary-section (question=${question})" th:remove="tag" />
                 </div>
             </div>

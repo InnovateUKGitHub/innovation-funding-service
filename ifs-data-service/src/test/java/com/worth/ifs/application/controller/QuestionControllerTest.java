@@ -81,7 +81,7 @@ public class QuestionControllerTest extends BaseControllerMockMVCTest<QuestionCo
                 .andExpect(content().string(new ObjectMapper().writeValueAsString(previousSectionQuestion)))
                 .andExpect(status().isOk());
     }
-    
+
     @Test
     public void getQuestionsBySectionIdAndTypeTest() throws Exception {
         List<QuestionResource> questions = newQuestionResource().build(2);
@@ -92,6 +92,17 @@ public class QuestionControllerTest extends BaseControllerMockMVCTest<QuestionCo
                 .andExpect(content().string(new ObjectMapper().writeValueAsString(questions)))
                 .andExpect(status().isOk());
     }
-    
-    
+
+    @Test
+    public void getQuestionsByAssessmentId() throws Exception {
+        final Long assessmentId = 1L;
+
+        List<QuestionResource> questions = newQuestionResource().build(2);
+
+        when(questionService.getQuestionsByAssessmentId(assessmentId)).thenReturn(serviceSuccess(questions));
+
+        mockMvc.perform(get("/question/getQuestionsByAssessment/{assessmentId}", assessmentId))
+                .andExpect(content().string(new ObjectMapper().writeValueAsString(questions)))
+                .andExpect(status().isOk());
+    }
 }

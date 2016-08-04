@@ -1,6 +1,8 @@
 package com.worth.ifs.assessment.form;
 
 import com.worth.ifs.controller.BindingResultTarget;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 
@@ -70,5 +72,37 @@ public class AssessmentApplicationSummaryForm implements BindingResultTarget {
     @Override
     public void setObjectErrors(List<ObjectError> objectErrors) {
         this.objectErrors = objectErrors;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        AssessmentApplicationSummaryForm that = (AssessmentApplicationSummaryForm) o;
+
+        return new EqualsBuilder()
+                .append(fundingConfirmation, that.fundingConfirmation)
+                .append(feedback, that.feedback)
+                .append(comments, that.comments)
+                .append(bindingResult, that.bindingResult)
+                .append(objectErrors, that.objectErrors)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(fundingConfirmation)
+                .append(feedback)
+                .append(comments)
+                .append(bindingResult)
+                .append(objectErrors)
+                .toHashCode();
     }
 }

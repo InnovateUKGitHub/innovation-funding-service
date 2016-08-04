@@ -6,7 +6,6 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.application.resource.SectionType;
 import com.worth.ifs.application.security.ApplicationLookupStrategy;
-import com.worth.ifs.application.security.SectionLookupStrategy;
 import com.worth.ifs.application.security.SectionPermissionRules;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -18,9 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static com.worth.ifs.application.builder.SectionResourceBuilder.newSectionResource;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -142,6 +139,11 @@ public class SectionServiceSecurityTest extends BaseServiceSecurityTest<SectionS
 
         @Override
         public ServiceResult<List<SectionResource>> getByCompetionId(Long CompetitionId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<List<SectionResource>> getByCompetitionIdVisibleForAssessment(Long competitionId) {
             return null;
         }
     }

@@ -234,6 +234,11 @@ public class QuestionServiceSecurityTest extends BaseServiceSecurityTest<Questio
 		public ServiceResult<List<QuestionResource>> getQuestionsBySectionIdAndType(Long sectionId, QuestionType type) {
 			 return serviceSuccess(newQuestionResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
 		}
+
+        @Override
+        public ServiceResult<List<QuestionResource>> getQuestionsByAssessmentId(Long assessmentId) {
+            return null;
+        }
     }
 }
 

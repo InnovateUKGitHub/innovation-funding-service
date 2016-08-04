@@ -90,4 +90,7 @@ public interface QuestionService {
     
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<QuestionResource>> getQuestionsBySectionIdAndType(Long sectionId, QuestionType type);
+
+    @NotSecured(value="TODO", mustBeSecuredByOtherServices = false)
+    ServiceResult<List<QuestionResource>> getQuestionsByAssessmentId(final Long assessmentId);
 }

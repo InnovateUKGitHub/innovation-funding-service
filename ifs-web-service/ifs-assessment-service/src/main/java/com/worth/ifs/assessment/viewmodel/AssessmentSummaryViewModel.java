@@ -6,27 +6,29 @@ import com.worth.ifs.competition.resource.CompetitionResource;
 import java.util.List;
 
 /**
- * Holder of model attributes for the Application Summary displayed when a review is requested by the Assessor.
+ * Holder of model attributes for the Assessment Summary displayed when a review is requested by the Assessor.
  */
-public class AssessmentApplicationSummaryViewModel {
+public class AssessmentSummaryViewModel {
 
     private Long assessmentId;
     private long daysLeft;
     private long daysLeftPercentage;
     private CompetitionResource competition;
     private ApplicationResource application;
-    private List<AssessmentApplicationSummaryQuestionViewModel> questions;
-    private Integer totalScoreGiven;
-    private Integer totalScorePossible;
-    private Integer totalScorePercentage;
+    private List<AssessmentSummaryQuestionViewModel> questionsForScoreOverview;
+    private List<AssessmentSummaryQuestionViewModel> questionsForReview;
+    private int totalScoreGiven;
+    private int totalScorePossible;
+    private int totalScorePercentage;
 
-    public AssessmentApplicationSummaryViewModel(Long assessmentId, long daysLeft, long daysLeftPercentage, CompetitionResource competition, ApplicationResource application, List<AssessmentApplicationSummaryQuestionViewModel> questions, Integer totalScoreGiven, Integer totalScorePossible, Integer totalScorePercentage) {
+    public AssessmentSummaryViewModel(Long assessmentId, long daysLeft, long daysLeftPercentage, CompetitionResource competition, ApplicationResource application, List<AssessmentSummaryQuestionViewModel> questionsForScoreOverview, List<AssessmentSummaryQuestionViewModel> questionsForReview, int totalScoreGiven, int totalScorePossible, int totalScorePercentage) {
         this.assessmentId = assessmentId;
         this.daysLeft = daysLeft;
         this.daysLeftPercentage = daysLeftPercentage;
         this.competition = competition;
         this.application = application;
-        this.questions = questions;
+        this.questionsForScoreOverview = questionsForScoreOverview;
+        this.questionsForReview = questionsForReview;
         this.totalScoreGiven = totalScoreGiven;
         this.totalScorePossible = totalScorePossible;
         this.totalScorePercentage = totalScorePercentage;
@@ -72,35 +74,43 @@ public class AssessmentApplicationSummaryViewModel {
         this.application = application;
     }
 
-    public List<AssessmentApplicationSummaryQuestionViewModel> getQuestions() {
-        return questions;
+    public List<AssessmentSummaryQuestionViewModel> getQuestionsForScoreOverview() {
+        return questionsForScoreOverview;
     }
 
-    public void setQuestions(List<AssessmentApplicationSummaryQuestionViewModel> questions) {
-        this.questions = questions;
+    public void setQuestionsForScoreOverview(List<AssessmentSummaryQuestionViewModel> questionsForScoreOverview) {
+        this.questionsForScoreOverview = questionsForScoreOverview;
     }
 
-    public Integer getTotalScoreGiven() {
+    public List<AssessmentSummaryQuestionViewModel> getQuestionsForReview() {
+        return questionsForReview;
+    }
+
+    public void setQuestionsForReview(List<AssessmentSummaryQuestionViewModel> questionsForReview) {
+        this.questionsForReview = questionsForReview;
+    }
+
+    public int getTotalScoreGiven() {
         return totalScoreGiven;
     }
 
-    public void setTotalScoreGiven(Integer totalScoreGiven) {
+    public void setTotalScoreGiven(int totalScoreGiven) {
         this.totalScoreGiven = totalScoreGiven;
     }
 
-    public Integer getTotalScorePossible() {
+    public int getTotalScorePossible() {
         return totalScorePossible;
     }
 
-    public void setTotalScorePossible(Integer totalScorePossible) {
+    public void setTotalScorePossible(int totalScorePossible) {
         this.totalScorePossible = totalScorePossible;
     }
 
-    public Integer getTotalScorePercentage() {
+    public int getTotalScorePercentage() {
         return totalScorePercentage;
     }
 
-    public void setTotalScorePercentage(Integer totalScorePercentage) {
+    public void setTotalScorePercentage(int totalScorePercentage) {
         this.totalScorePercentage = totalScorePercentage;
     }
 }
