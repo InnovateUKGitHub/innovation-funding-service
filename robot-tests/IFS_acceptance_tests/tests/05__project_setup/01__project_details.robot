@@ -146,6 +146,7 @@ Lead partner can change the Start Date
     The user redirects to the page    You are providing these details as the lead applicant on behalf of the overall project    Project details
     And the user should see the text in the page    1 Jan 2018
     Then the matching status checkbox is updated    project-details    1    yes
+    [Teardown]    the user changes the start date back again
 
 Lead partner can change the project manager
     [Documentation]    INFUND-2616, INFUND-2996
@@ -246,7 +247,7 @@ Non-lead partner cannot change any project details
     Given the user navigates to the page    ${project_in_setup_page}
     When the user clicks the button/link    link=Project details
     Then the user should see the text in the page    Start date
-    And the user should see the text in the page    1 Jan 2018
+    And the user should see the text in the page    1 Jan 2017
     And the user should not see the element    link=Start date
     And the user should see the text in the page    Project manager
     And the user should see the text in the page    test twenty
@@ -315,3 +316,10 @@ all the fields are completed
     the matching status checkbox is updated    project-details-finance    1    yes
     the matching status checkbox is updated    project-details-finance    2    yes
     the matching status checkbox is updated     project-details-finance    3    yes
+
+
+the user changes the start date back again
+    the user clicks the button/link    link=Start date
+    the user enters text to a text field    id=projectStartDate_year    2017
+    the user clicks the button/link    jQuery=.button:contains("Save")
+
