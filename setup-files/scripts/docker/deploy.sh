@@ -31,7 +31,7 @@ function deploy() {
 
 function core() {
     cd ifs-web-service/ifs-web-core
-    ./gradlew -Pprofile=docker cleanDeploy "$@"
+    ../gradlew -Pprofile=docker cleanDeploy "$@"
     cd ../..
 }
 

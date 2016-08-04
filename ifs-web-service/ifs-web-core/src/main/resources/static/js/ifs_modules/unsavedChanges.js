@@ -4,24 +4,27 @@ IFS.core.unsavedChanges = (function(){
     var s;
     return {
         settings : {
-          formelement : jQuery('.form-serialize-js')
+          formelement : '[data-autosave]'
         },
         init : function(){
             s = this.settings;
-            IFS.core.unsavedChanges.initUnsavedChangesWarning();
-            IFS.core.unsavedChanges.updateSerializedFormState();
+            if(jQuery(s.formelement).length){
+              IFS.core.unsavedChanges.initUnsavedChangesWarning();
+              IFS.core.unsavedChanges.updateSerializedFormState();
 
-            jQuery('body').on('updateSerializedFormState',function(){
-                IFS.core.unsavedChanges.updateSerializedFormState();
-            });
+              jQuery('body').on('updateSerializedFormState',function(){
+                  IFS.core.unsavedChanges.updateSerializedFormState();
+              });
+            }
         },
         updateSerializedFormState : function(){
-            s.formelement.data('serializedFormState',jQuery('.form-serialize-js').serialize());
+            var FormEl = jQuery(s.formelement);
+            FormEl.data('serializedFormState',FormEl.serialize());
         },
         initUnsavedChangesWarning : function(){
             // don't show the warning when the user is submitting the form.
             var formSubmit = false;
-            s.formelement.on('submit', function(){
+            jQuery('body').on(s.formelement,'submit', function(){
                 formSubmit = true;
             });
 
@@ -33,7 +36,8 @@ IFS.core.unsavedChanges = (function(){
                  else {
                      acceptanceTest = false;
                  }
-                var serializedState =  jQuery('.form-serialize-js').serialize()==jQuery('.form-serialize-js').data('serializedFormState');
+                var formEl = jQuery(s.formelement);
+                var serializedState =  formEl.serialize()==formEl.data('serializedFormState');
                 if(formSubmit === false && serializedState === false  && acceptanceTest === false){
                     return "Are you sure you want to leave this page? There are some unsaved changes...";
                 } else{
