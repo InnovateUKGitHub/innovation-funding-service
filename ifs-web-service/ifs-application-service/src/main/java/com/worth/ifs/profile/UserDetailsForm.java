@@ -13,32 +13,32 @@ import javax.validation.constraints.Size;
 public class UserDetailsForm {
     private String email;
 
-    @NotEmpty(message = "Please select a title")
-    @Size(max = 5, message = "Title has input has a maximum input of 5 characters")
+    @NotEmpty(message = "{validation.standard.title.required}")
+    @Size(max = 5, message = "{validation.standard.title.length.max}")
     private String title;
 
-    @NotEmpty(message = "Please enter a first name")
-    @Pattern(regexp = "[\\p{L} -]*", message = "Please enter a first name")
+    @NotEmpty(message = "{validation.standard.firstname.required}")
+    @Pattern(regexp = "[\\p{L} -]*", message = "{validation.standard.firstname.required}")
     @Size.List ({
-        @Size(min=2, message="Your first name should have at least 2 characters"),
-        @Size(max=70, message="Your first name cannot have more than 70 characters"),
+        @Size(min=2, message="{validation.standard.firstname.length.min}"),
+        @Size(max=70, message="{validation.standard.firstname.length.max}"),
     })
     private String firstName;
 
-    @NotEmpty(message = "Please enter a last name")
-    @Pattern(regexp = "[\\p{L} -]*", message = "Please enter a last name")
+    @NotEmpty(message = "{validation.standard.lastname.required}")
+    @Pattern(regexp = "[\\p{L} -]*", message = "{validation.standard.lastname.required}")
     @Size.List ({
-        @Size(min=2, message="Your last name should have at least 2 characters"),
-        @Size(max=70, message="Your last name cannot have more than 70 characters"),
+        @Size(min=2, message="{validation.standard.lastname.length.min}"),
+        @Size(max=70, message="{validation.standard.lastname.length.max}"),
     })
     private String lastName;
 
-    @NotEmpty(message = "Please enter a phone number")
+    @NotEmpty(message = "{validation.standard.phonenumber.required}")
     @Size.List ({
-        @Size(min=8, message="Input for your phone number has a minimum length of 8 characters"),
-        @Size(max=20, message="Input for your phone number has a maximum length of 20 characters")
+        @Size(min=8, message="{validation.standard.phonenumber.length.min}"),
+        @Size(max=20, message="{validation.standard.phonenumber.length.max}")
     })
-    @Pattern(regexp = "([0-9\\ +-])+",  message= "Please enter a valid phone number")
+    @Pattern(regexp = "([0-9\\ +-])+",  message= "{validation.standard.phonenumber.format}")
     private String phoneNumber;
 
     private String actionUrl;

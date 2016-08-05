@@ -21,10 +21,10 @@ public class OrganisationCreationForm implements Serializable {
     private AddressForm addressForm = new AddressForm();
     private boolean triedToSave = false;
 
-    @NotNull
+    @NotNull(message = "{validation.standard.organisationtyperesource.required}")
     private OrganisationTypeResource organisationType;
     private OrganisationTypeEnum organisationTypeEnum;
-    @NotEmpty
+    @NotEmpty(message = "{validation.standard.organisationsearchname.required}")
     // on empty value don't check pattern since then there already is a validation message.
     private String organisationSearchName;
     private String searchOrganisationId;
@@ -32,7 +32,7 @@ public class OrganisationCreationForm implements Serializable {
     private boolean manualEntry = false;
     private boolean useSearchResultAddress = false;
     private transient List<OrganisationSearchResult> organisationSearchResults;
-    @NotEmpty
+    @NotEmpty(message = "{validation.standard.organisationname.required}")
     private String organisationName;
 
     public OrganisationCreationForm() {

@@ -4,7 +4,7 @@ import javax.validation.constraints.Min;
 
 public class ApplicationSummaryQueryForm {
 
-	@Min(1)
+	@Min(value=1, message="{validation.applicationsummaryqueryform.page.min}")
 	private Integer page = 1;
 	
 	private String sort;

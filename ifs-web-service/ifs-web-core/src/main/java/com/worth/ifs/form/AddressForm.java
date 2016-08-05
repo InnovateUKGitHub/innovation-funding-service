@@ -15,7 +15,7 @@ public class AddressForm  implements Serializable {
     private boolean triedToSearch = false;
 
     //@Postcode(message = "Please enter a valid postcode")
-    @NotEmpty(message="Please enter a UK postcode")
+    @NotEmpty(message="{validation.standard.postcodeinput.required}")
     private String postcodeInput = "";
     private String selectedPostcodeIndex;
     @Valid

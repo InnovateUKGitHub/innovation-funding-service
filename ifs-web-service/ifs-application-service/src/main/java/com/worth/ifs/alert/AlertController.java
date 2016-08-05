@@ -14,7 +14,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/alert")
-public class AlertController {
+public class  AlertController {
 
     @Autowired
     private AlertService alertService;

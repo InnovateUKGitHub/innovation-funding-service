@@ -13,21 +13,21 @@ public class BankDetailsResource {
 
     private Long id;
 
-    @NotBlank (message = "Sort code is mandatory")
-    @Pattern(regexp="\\d{6}", message = "Please enter a valid 6 digit sort code")
+    @NotBlank (message = "{validation.standard.sortcode.required}")
+    @Pattern(regexp="\\d{6}", message = "{validation.standard.sortcode.format}")
     private String sortCode;
 
-    @NotBlank (message = "Account number is mandatory")
-    @Pattern(regexp="\\d{8}", message = "Please enter a valid 8 digit account number")
+    @NotBlank (message = "{validation.standard.accountnumber.required}")
+    @Pattern(regexp="\\d{8}", message = "{validation.standard.accountnumber.format}")
     private String accountNumber;
 
-    @NotNull(message = "Project id is mandatory")
+    @NotNull(message = "{validation.bankdetailsresource.project.required}")
     private Long project;
 
-    @NotNull(message = "Organisation Address is mandatory")
+    @NotNull(message = "{validation.bankdetailsresource.organisationaddress.required}")
     private OrganisationAddressResource organisationAddress;
 
-    @NotNull(message = "Organisation id is mandatory")
+    @NotNull(message = "{validation.bankdetailsresource.organisation.required}")
     private Long organisation;
 
     private String organisationTypeName;
