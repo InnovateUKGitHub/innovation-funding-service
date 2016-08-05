@@ -26,8 +26,9 @@ Day field client side
     [Documentation]    INFUND-43
     ...
     ...    INFUND-2843
-    [Tags]    HappyPath
+    [Tags]    HappyPath    Pending
     [Setup]    The applicant inserts a valid date
+    #Pending INFUND-4461
     When the user enters text to a text field    id=application_details-startdate_day    32
     Then the user should see an error    Please enter a valid date
     When the user enters text to a text field    id=application_details-startdate_day    0
@@ -43,8 +44,9 @@ Month field client side
     [Documentation]    INFUND-43
     ...
     ...    INFUND-2843
-    [Tags]
+    [Tags]    Pending
     [Setup]    The applicant inserts a valid date
+    #Pending INFUND-4461
     When the user enters text to a text field    id=application_details-startdate_month    0
     Then the user should see an error    Please enter a valid date
     When the user enters text to a text field    id=application_details-startdate_month    13
@@ -55,14 +57,16 @@ Month field client side
     Then the user should see an error    Please enter a valid date
     When the applicant inserts a valid date
     Then the applicant should not see the validation error any more
+    Capture Page Screenshot
 
 Year field client side
     [Documentation]    INFUND-43
     ...
     ...    INFUND-2843
-    [Tags]    HappyPath    Failing
+    [Tags]    HappyPath    Pending
     [Setup]    Run keywords    the user enters text to a text field    id=application_details-title    Robot test application
     ...    AND    the user enters text to a text field    id=application_details-duration    15
+    #Pending INFUND-4461
     When the applicant inserts an invalid date
     Then the user should see an error    Please enter a future date
     When the user enters text to a text field    id=application_details-startdate_year    ${EMPTY}
@@ -74,9 +78,10 @@ Duration field client side
     [Documentation]    INFUND-43
     ...
     ...    INFUND-2843
-    [Tags]    Failing
+    [Tags]    Pending
     [Setup]    Run keywords    the user enters text to a text field    id=application_details-title    Robot test application
     ...    AND    the applicant inserts a valid date
+    #Pending INFUND-4461
     When the user enters text to a text field    id=application_details-duration    0
     Then the user should see an error    Please enter a valid duration between 1 and 36 months
     When the user enters text to a text field    id=application_details-duration    -1
@@ -108,23 +113,27 @@ Empty text area
     [Tags]    Pending
     # Pending due to chromedriver
     Given the user clicks the button/link    css=.pagination-part-title
-    When the applicant clears the text area of the "Project Summary"
+    #When the applicant clears the text area of the "Project Summary"
+    When The user enters text to a text field    css=#form-input-11 .editor    Test 123
+    And The user enters text to a text field    css=#form-input-11 .editor    ${EMPTY}
     Then the user should see an error    Please enter some text
     And the user enters some text in the text area
     Then the applicant should not see the validation error any more
 
 *** Keywords ***
 the applicant should not see the validation error any more
-    Focus    css=.app-submit-btn
-    run keyword and ignore error    mouse out    css=input
-    Run Keyword And Ignore Error    mouse out    css=.editor
-    Focus    css=.app-submit-btn
+    Run Keyword And Ignore Error    Mouse Out    css=input
+    Run Keyword And Ignore Error    Focus    jQuery=Button:contains("Mark as complete")
+    #Focus    css=.app-submit-btn
+    #run keyword and ignore error    mouse out    css=input
+    #Run Keyword And Ignore Error    mouse out    css=.editor
+    #Focus    css=.app-submit-btn
     sleep    300ms
     wait until element is not visible    css=.error-message
 
 the applicant inserts a valid date
     Clear Element Text    id=application_details-startdate_day
-    Input Text    id=application_details-startdate_day    20
+    Input Text    id=application_details-startdate_day    12
     Clear Element Text    id=application_details-startdate_month
     Input Text    id=application_details-startdate_month    11
     Clear Element Text    id=application_details-startdate_year
