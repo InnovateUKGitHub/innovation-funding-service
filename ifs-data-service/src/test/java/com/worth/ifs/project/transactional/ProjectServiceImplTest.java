@@ -22,6 +22,7 @@ import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.UserRoleType;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Assert;
 import org.junit.Before;
@@ -31,6 +32,8 @@ import java.io.File;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -67,24 +70,24 @@ import static org.mockito.Mockito.*;
 
 public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> {
 
-	private Long projectId = 123L;
+    private Long projectId = 123L;
     private Long applicationId = 456L;
-	private Long userId = 7L;
-	private Long otherUserId = 8L;
+    private Long userId = 7L;
+    private Long otherUserId = 8L;
 
-	private Application application;
-	private Organisation organisation;
-	private Role leadApplicantRole;
+    private Application application;
+    private Organisation organisation;
+    private Role leadApplicantRole;
     private Role projectManagerRole;
     private Role partnerRole;
     private User user;
-	private ProcessRole leadApplicantProcessRole;
+    private ProcessRole leadApplicantProcessRole;
     private ProjectUser leadPartnerProjectUser;
-	private Project project;
+    private Project project;
     private MonitoringOfficerResource monitoringOfficerResource;
 
-	@Before
-	public void setUp() {
+    @Before
+    public void setUp() {
 
         organisation = newOrganisation().build();
 
@@ -92,15 +95,15 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         projectManagerRole = newRole(PROJECT_MANAGER).build();
         partnerRole = newRole(PARTNER).build();
 
-    	user = newUser().
-    			withid(userId).
-    			build();
+        user = newUser().
+                withid(userId).
+                build();
 
-    	leadApplicantProcessRole = newProcessRole().
-    			withOrganisation(organisation).
-    			withRole(leadApplicantRole).
-    			withUser(user).
-    			build();
+        leadApplicantProcessRole = newProcessRole().
+                withOrganisation(organisation).
+                withRole(leadApplicantRole).
+                withUser(user).
+                build();
 
         leadPartnerProjectUser = newProjectUser().
                 withOrganisation(organisation).
@@ -108,15 +111,15 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withUser(user).
                 build();
 
-    	application = newApplication().
-				withId(applicationId).
-	            withProcessRoles(leadApplicantProcessRole).
+        application = newApplication().
+                withId(applicationId).
+                withProcessRoles(leadApplicantProcessRole).
                 withName("My Application").
                 withDurationInMonths(5L).
                 withStartDate(LocalDate.of(2017, 3, 2)).
                 build();
 
-    	project = newProject().
+        project = newProject().
                 withId(projectId).
                 withApplication(application).
                 withProjectUsers(singletonList(leadPartnerProjectUser)).
@@ -132,8 +135,8 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
-	}
-	
+    }
+
     @Test
     public void testCreateProjectFromApplication() {
 
@@ -156,7 +159,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         assertTrue(project.isSuccess());
         assertEquals(newProjectResource, project.getSuccessObject());
     }
-    
+
     @Test
     public void testInvalidProjectManagerProvided() {
 
@@ -180,7 +183,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         assertTrue(existingProject.getProjectUsers().isEmpty());
     }
-    
+
     @Test
     public void testValidProjectManagerProvided() {
 
@@ -418,13 +421,13 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         Project anotherProject = newProject().withId(9999L).build();
 
         when(projectRepositoryMock.findOne(123L)).thenReturn(existingProject);
-        
+
         Organisation organisation = newOrganisation().withId(5L).build();
         User user = newUser().withid(7L).build();
         newProjectUser().withOrganisation(organisation).withUser(user).withProject(anotherProject).withRole(partnerRole).build();
 
         ServiceResult<Void> updateResult = service.updateFinanceContact(123L, 5L, userIdForUserNotOnProject);
-        
+
         assertTrue(updateResult.isFailure());
         assertTrue(updateResult.getFailure().is(PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_USER_ON_THE_PROJECT_FOR_THE_ORGANISATION));
     }
@@ -448,7 +451,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     }
 
     @Test
-    public void testFindByUserIdReturnsOnlyDistinctProjects(){
+    public void testFindByUserIdReturnsOnlyDistinctProjects() {
 
         Project project = newProject().withId(123L).build();
         Organisation organisation = newOrganisation().withId(5L).build();
@@ -476,7 +479,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     }
 
     @Test
-    public void testUpdateProjectAddressToBeRegisteredAddress(){
+    public void testUpdateProjectAddressToBeRegisteredAddress() {
 
         Project project = newProject().withId(1L).build();
         Organisation leadOrganisation = newOrganisation().withId(1L).build();
@@ -493,7 +496,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     }
 
     @Test
-    public void testUpdateProjectAddressToBeOperatingAddress(){
+    public void testUpdateProjectAddressToBeOperatingAddress() {
         Project project = newProject().withId(1L).build();
         Organisation leadOrganisation = newOrganisation().withId(1L).build();
         AddressResource existingOperatingAddressResource = newAddressResource().build();
@@ -509,19 +512,19 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     }
 
     @Test
-    public void testUpdateProjectAddressToNewProjectAddress(){
+    public void testUpdateProjectAddressToNewProjectAddress() {
         Project project = newProject().withId(1L).build();
         Organisation leadOrganisation = newOrganisation().withId(1L).build();
         AddressResource newAddressResource = newAddressResource().build();
         Address newAddress = newAddress().build();
-        AddressType projectAddressType = newAddressType().withId((long)PROJECT.getOrdinal()).withName(PROJECT.name()).build();
+        AddressType projectAddressType = newAddressType().withId((long) PROJECT.getOrdinal()).withName(PROJECT.name()).build();
         OrganisationAddress organisationAddress = newOrganisationAddress().withOrganisation(leadOrganisation).withAddress(newAddress).withAddressType(projectAddressType).build();
 
         when(projectRepositoryMock.findOne(project.getId())).thenReturn(project);
         when(organisationRepositoryMock.findOne(organisation.getId())).thenReturn(organisation);
         when(addressRepositoryMock.exists(newAddressResource.getId())).thenReturn(false);
         when(addressMapperMock.mapToDomain(newAddressResource)).thenReturn(newAddress);
-        when(addressTypeRepositoryMock.findOne((long)PROJECT.getOrdinal())).thenReturn(projectAddressType);
+        when(addressTypeRepositoryMock.findOne((long) PROJECT.getOrdinal())).thenReturn(projectAddressType);
         when(organisationAddressRepositoryMock.findByOrganisationIdAndAddressType(leadOrganisation.getId(), projectAddressType)).thenReturn(emptyList());
         when(organisationAddressRepositoryMock.save(organisationAddress)).thenReturn(organisationAddress);
 
@@ -530,7 +533,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     }
 
     @Test
-    public void testSaveProjectSubmitDateTimeIsSuccessfulWhenAllProjectDetailsHaveBeenProvided(){
+    public void testSaveProjectSubmitDateTimeIsSuccessfulWhenAllProjectDetailsHaveBeenProvided() {
         Organisation organisation1 = newOrganisation().build();
         Organisation organisation2 = newOrganisation().build();
         Organisation organisation3 = newOrganisation().build();
@@ -582,7 +585,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     }
 
     @Test
-    public void testSaveProjectSubmitDateTimeIsUnSuccessfulWhenAFinanceContactIsMissing(){
+    public void testSaveProjectSubmitDateTimeIsUnSuccessfulWhenAFinanceContactIsMissing() {
         Organisation organisation1 = newOrganisation().build();
         Organisation organisation2 = newOrganisation().build();
         Organisation organisation3 = newOrganisation().build();
@@ -864,6 +867,124 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 () -> service.deleteExploitationPlanFile(123L));
     }
 
+    @Test
+    public void testRetrieveUploadedFilesExist() {
+        assertUploadedFilesExist(
+                project::setCollaborationAgreement,
+                project::setExploitationPlan,
+                () -> service.retrieveUploadedDocuments(123L));
+    }
+
+    @Test
+    public void testFilesCanBeSubmitted() {
+        assertFilesCanBeSubmittedByProjectManagerAndFilesExist(
+                project::setCollaborationAgreement,
+                project::setExploitationPlan,
+                () -> service.isOtherDocumentsSubmitAllowed(123L));
+
+    }
+
+    @Test
+    public void testFilesCannotBeSubmittedIfUserNotProjectManager() {
+        assertFilesCannotBeSubmittedIfNotByProjectManager(
+                project::setCollaborationAgreement,
+                project::setExploitationPlan,
+                () -> service.isOtherDocumentsSubmitAllowed(123L));
+
+    }
+
+
+    private void assertFilesCannotBeSubmittedIfNotByProjectManager(Consumer<FileEntry> fileSetter1,
+                                                                   Consumer<FileEntry> fileSetter2,
+                                                                   Supplier<ServiceResult<Boolean>> getConditionFn) {
+        List<ProjectUser> projectUsers = new ArrayList<>();
+        Arrays.stream(UserRoleType.values())
+                .filter(roleType -> !roleType.getName().equals(UserRoleType.PROJECT_MANAGER.getName()))
+                .forEach(roleType -> {
+                    ProjectUser projectUser = newProjectUser()
+                            .withId(3L)
+                            .withRole(roleType)
+                            .build();
+                    projectUsers.add(projectUser);
+
+                });
+
+        when(projectUserRepositoryMock.findByProjectId(123L)).thenReturn(projectUsers);
+
+        Supplier<InputStream> inputStreamSupplier1 = () -> null;
+        Supplier<InputStream> inputStreamSupplier2 = () -> null;
+
+        getFileEntryResources(fileSetter1, fileSetter2, inputStreamSupplier1, inputStreamSupplier2);
+        ServiceResult<Boolean> result = getConditionFn.get();
+
+        assertFalse(result.isSuccess());
+        assertTrue(result.isFailure());
+
+    }
+
+
+    private void assertFilesCanBeSubmittedByProjectManagerAndFilesExist(Consumer<FileEntry> fileSetter1,
+                                                                        Consumer<FileEntry> fileSetter2,
+                                                                        Supplier<ServiceResult<Boolean>> getConditionFn) {
+        ProjectUser projectUserToSet = newProjectUser()
+                .withId(1L)
+                .withRole(projectManagerRole)
+                .build();
+        List<ProjectUser> projectUsers = new ArrayList<>();
+        projectUsers.add(projectUserToSet);
+
+        when(projectUserRepositoryMock.findByProjectId(123L)).thenReturn(projectUsers);
+
+        Supplier<InputStream> inputStreamSupplier1 = () -> null;
+        Supplier<InputStream> inputStreamSupplier2 = () -> null;
+
+        getFileEntryResources(fileSetter1, fileSetter2, inputStreamSupplier1, inputStreamSupplier2);
+        ServiceResult<Boolean> result = getConditionFn.get();
+
+        assertTrue(result.isSuccess());
+        assertTrue(result.getSuccessObject());
+
+    }
+
+    private void assertUploadedFilesExist(Consumer<FileEntry> fileSetter1, Consumer<FileEntry> fileSetter2,
+                                          Supplier<List<ServiceResult<FileAndContents>>> getFileContentsFnForFiles) {
+
+
+        Supplier<InputStream> inputStreamSupplier1 = () -> null;
+        Supplier<InputStream> inputStreamSupplier2 = () -> null;
+
+        List<FileEntryResource> fileEntryResourcesToGet = getFileEntryResources(fileSetter1, fileSetter2, inputStreamSupplier1, inputStreamSupplier2);
+
+        List<ServiceResult<FileAndContents>> results = getFileContentsFnForFiles.get();
+
+        assertTrue(results.get(0).isSuccess());
+        assertTrue(results.get(1).isSuccess());
+        assertEquals(fileEntryResourcesToGet.get(0), results.get(0).getSuccessObject().getFileEntry());
+        assertEquals(fileEntryResourcesToGet.get(1), results.get(1).getSuccessObject().getFileEntry());
+        assertEquals(inputStreamSupplier1, results.get(0).getSuccessObject().getContentsSupplier());
+        assertEquals(inputStreamSupplier2, results.get(1).getSuccessObject().getContentsSupplier());
+
+    }
+
+    private List<FileEntryResource> getFileEntryResources(Consumer<FileEntry> fileSetter1, Consumer<FileEntry> fileSetter2,
+                                                          Supplier<InputStream> inputStreamSupplier1,
+                                                          Supplier<InputStream> inputStreamSupplier2) {
+        FileEntry fileEntry1ToGet = newFileEntry().build();
+        FileEntry fileEntry2ToGet = newFileEntry().build();
+
+        List<FileEntryResource> fileEntryResourcesToGet = newFileEntryResource().withFilesizeBytes(100).build(2);
+
+        fileSetter1.accept(fileEntry1ToGet);
+        fileSetter2.accept(fileEntry2ToGet);
+
+        when(fileServiceMock.getFileByFileEntryId(fileEntry1ToGet.getId())).thenReturn(serviceSuccess(inputStreamSupplier1));
+        when(fileServiceMock.getFileByFileEntryId(fileEntry2ToGet.getId())).thenReturn(serviceSuccess(inputStreamSupplier2));
+
+        when(fileEntryMapperMock.mapToResource(fileEntry1ToGet)).thenReturn(fileEntryResourcesToGet.get(0));
+        when(fileEntryMapperMock.mapToResource(fileEntry2ToGet)).thenReturn(fileEntryResourcesToGet.get(1));
+        return fileEntryResourcesToGet;
+    }
+
     private void assertGetFileContents(Consumer<FileEntry> fileSetter, Supplier<ServiceResult<FileAndContents>> getFileContentsFn) {
 
         FileEntry fileToGet = newFileEntry().build();
@@ -960,7 +1081,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
                 List<ProjectUser> matchingProjectUser = simpleFilter(project.getProjectUsers(), projectUser ->
                         projectUser.getOrganisation().equals(processRole.getOrganisation()) &&
-                           projectUser.getUser().equals(processRole.getUser()));
+                                projectUser.getUser().equals(processRole.getUser()));
 
                 assertEquals(1, matchingProjectUser.size());
                 assertEquals(PARTNER.getName(), matchingProjectUser.get(0).getRole().getName());
