@@ -91,6 +91,6 @@ public interface QuestionService {
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<QuestionResource>> getQuestionsBySectionIdAndType(Long sectionId, QuestionType type);
 
-    @NotSecured(value="TODO", mustBeSecuredByOtherServices = false)
+    @PreAuthorize("hasPermission(#assessmentId, 'com.worth.ifs.assessment.resource.AssessmentResource', 'READ')")
     ServiceResult<List<QuestionResource>> getQuestionsByAssessmentId(final Long assessmentId);
 }

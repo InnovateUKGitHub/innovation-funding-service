@@ -18,7 +18,11 @@ import java.util.Map;
 import java.util.Set;
 
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static com.worth.ifs.application.builder.SectionResourceBuilder.newSectionResource;
+import static com.worth.ifs.application.transactional.SectionServiceSecurityTest.TestSectionService.ARRAY_SIZE_FOR_POST_FILTER_TESTS;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -60,6 +64,11 @@ public class SectionServiceSecurityTest extends BaseServiceSecurityTest<SectionS
         );
     }
 
+    @Test
+    public void testPermissionForGetByCompetitionIdVisibleForAssessment() {
+        service.getByCompetitionIdVisibleForAssessment(1L);
+        verify(sectionPermissionRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).userCanReadSection(isA(SectionResource.class), isA(UserResource.class));
+    }
 
     @Override
     protected Class<? extends SectionService> getServiceClass() {
@@ -67,6 +76,8 @@ public class SectionServiceSecurityTest extends BaseServiceSecurityTest<SectionS
     }
 
     public static class TestSectionService implements SectionService {
+        static final int ARRAY_SIZE_FOR_POST_FILTER_TESTS = 2;
+
         @Override
         public ServiceResult<SectionResource> getById(Long sectionId) {
             return null;
@@ -144,7 +155,7 @@ public class SectionServiceSecurityTest extends BaseServiceSecurityTest<SectionS
 
         @Override
         public ServiceResult<List<SectionResource>> getByCompetitionIdVisibleForAssessment(Long competitionId) {
-            return null;
+            return serviceSuccess(newSectionResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
         }
     }
 }

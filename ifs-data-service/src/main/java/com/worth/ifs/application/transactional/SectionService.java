@@ -1,12 +1,10 @@
 package com.worth.ifs.application.transactional;
 
 import com.worth.ifs.application.domain.Section;
-import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.application.resource.SectionType;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.security.NotSecured;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
@@ -70,6 +68,6 @@ public interface SectionService {
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<SectionResource>> getByCompetionId(final Long CompetitionId);
 
-    @NotSecured(value="TODO", mustBeSecuredByOtherServices = false)
+    @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<SectionResource>> getByCompetitionIdVisibleForAssessment(final Long competitionId);
 }
