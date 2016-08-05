@@ -39,6 +39,9 @@ public class MilestonesFormPopulator implements CompetitionSetupFormPopulator {
         if (allMilestonesByCompetitionId == null || allMilestonesByCompetitionId.isEmpty()) {
             allMilestonesByCompetitionId.addAll(createMilestonesForCompetition(competitionResource));
         }
+        else {
+            allMilestonesByCompetitionId.sort((c1, c2) -> c1.getName().compareTo(c2.getName()));
+        }
 
         List<MilestonesFormEntry> milestoneFormEntries = new ArrayList<>();
 
