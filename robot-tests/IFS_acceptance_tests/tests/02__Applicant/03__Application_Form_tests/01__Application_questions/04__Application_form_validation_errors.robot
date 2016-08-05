@@ -111,13 +111,12 @@ Application details server side
 Empty text area
     [Documentation]    INFUND-43
     [Tags]    Pending
-    # Pending due to chromedriver
+    # Pending INFUND-4462
     Given the user clicks the button/link    css=.pagination-part-title
-    #When the applicant clears the text area of the "Project Summary"
-    When The user enters text to a text field    css=#form-input-11 .editor    Test 123
-    And The user enters text to a text field    css=#form-input-11 .editor    ${EMPTY}
+    When the applicant clears the text area of the "Project Summary"
+    When the user clicks the button/link    jQuery=Button:contains("Mark as complete")
     Then the user should see an error    Please enter some text
-    And the user enters some text in the text area
+    When The user enters text to a text field    css=#form-input-11 .editor    Test 123
     Then the applicant should not see the validation error any more
 
 *** Keywords ***
@@ -151,17 +150,13 @@ the applicant clears the text area of the "Project Summary"
     Clear Element Text    css=#form-input-11 .editor
     Press Key    css=#form-input-11 .editor    \\8
     Focus    css=.app-submit-btn
-    Comment    Click Element    css=.fa-bold
+    Click Element    css=.fa-bold
     Sleep    300ms
 
 Applicant goes to the application details page of the Robot application
     Given the user navigates to the page    ${DASHBOARD_URL}
     When the user clicks the button/link    link=Robot test application
     And the user clicks the button/link    link=Application details
-
-the user enters some text in the text area
-    Input Text    css=#form-input-11 .editor    Test text
-    Mouse Out    css=#form-input-11 .editor
 
 the applicant should not see the validation error of the duration any more
     Focus    css=.app-submit-btn
