@@ -1,8 +1,9 @@
 package com.worth.ifs.registration.service;
 
 import com.worth.ifs.application.service.OrganisationService;
+import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
-import com.worth.ifs.invite.resource.InviteResource;
+import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     private OrganisationService organisationService;
 
     @Override
-    public Map<String, String> getInvalidInviteMessages(UserResource loggedInUser, InviteResource inviteResource, InviteOrganisationResource inviteOrganisation) {
+    public Map<String, String> getInvalidInviteMessages(UserResource loggedInUser, ApplicationInviteResource inviteResource, InviteOrganisationResource inviteOrganisation) {
         Map<String, String> modelAttributes = new HashMap<>();
 
         if (!inviteResource.getEmail().equalsIgnoreCase(loggedInUser.getEmail())) {

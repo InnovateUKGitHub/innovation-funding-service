@@ -3,8 +3,8 @@ package com.worth.ifs.invite.security;
 import com.worth.ifs.BaseServiceSecurityTest;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.invite.domain.ApplicationInvite;
+import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
-import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.resource.InviteResultsResource;
 import com.worth.ifs.invite.transactional.InviteService;
 import com.worth.ifs.user.resource.UserResource;
@@ -99,10 +99,10 @@ public class InviteServiceSecurityTest extends BaseServiceSecurityTest<InviteSer
     @Test
     public void testSaveInvites() {
         int nInvites = 2;
-        final List<InviteResource> invites = newInviteResource().build(nInvites);
+        final List<ApplicationInviteResource> invites = newInviteResource().build(nInvites);
         service.saveInvites(invites);
-        verify(invitePermissionRules, times(nInvites)).collaboratorCanSaveInviteToApplicationForTheirOrganisation(any(InviteResource.class), any(UserResource.class));
-        verify(invitePermissionRules, times(nInvites)).leadApplicantCanSaveInviteToTheApplication(any(InviteResource.class), any(UserResource.class));
+        verify(invitePermissionRules, times(nInvites)).collaboratorCanSaveInviteToApplicationForTheirOrganisation(any(ApplicationInviteResource.class), any(UserResource.class));
+        verify(invitePermissionRules, times(nInvites)).leadApplicantCanSaveInviteToTheApplication(any(ApplicationInviteResource.class), any(UserResource.class));
     }
 
     @Override
@@ -145,7 +145,7 @@ public class InviteServiceSecurityTest extends BaseServiceSecurityTest<InviteSer
         }
 
         @Override
-        public ServiceResult<InviteResultsResource> saveInvites(List<InviteResource> inviteResources) {
+        public ServiceResult<InviteResultsResource> saveInvites(List<ApplicationInviteResource> inviteResources) {
             return serviceSuccess(newInviteResultResource().build());
         }
 
@@ -155,7 +155,7 @@ public class InviteServiceSecurityTest extends BaseServiceSecurityTest<InviteSer
         }
 
         @Override
-        public ServiceResult<InviteResource> getInviteByHash(String hash) {
+        public ServiceResult<ApplicationInviteResource> getInviteByHash(String hash) {
             return null;
         }
 

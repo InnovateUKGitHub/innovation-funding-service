@@ -6,9 +6,9 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class InviteResourceTest {
-    InviteResource setInviteResource;
-    InviteResource constructedInviteResource;
+public class ApplicationInviteResourceTest {
+    ApplicationInviteResource setInviteResource;
+    ApplicationInviteResource constructedInviteResource;
 
     Long inviteId;
     String name;
@@ -30,7 +30,7 @@ public class InviteResourceTest {
         inviteOrganisationId = 3L;
         status = InviteStatusConstants.ACCEPTED;
 
-        setInviteResource = new InviteResource();
+        setInviteResource = new ApplicationInviteResource();
         setInviteResource.setId(inviteId);
         setInviteResource.setName(name);
         setInviteResource.setNameConfirmed(nameConfirmed);
@@ -40,7 +40,7 @@ public class InviteResourceTest {
         setInviteResource.setInviteOrganisation(inviteOrganisationId);
         setInviteResource.setStatus(status);
 
-        constructedInviteResource = new InviteResource(inviteId, name, email, applicationId, inviteOrganisationId, hash, status);
+        constructedInviteResource = new ApplicationInviteResource(inviteId, name, email, applicationId, inviteOrganisationId, hash, status);
     }
 
     @Test
@@ -68,7 +68,7 @@ public class InviteResourceTest {
 
     @Test
     public void test_getInviteOrganisationNameConfirmedSafe() throws Exception {
-        InviteResource inviteResource = new InviteResource();
+        ApplicationInviteResource inviteResource = new ApplicationInviteResource();
 
         inviteResource.setInviteOrganisationName("Unconfirmed name");
         assertEquals("Unconfirmed name", inviteResource.getInviteOrganisationNameConfirmedSafe());

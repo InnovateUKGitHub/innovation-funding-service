@@ -3,7 +3,7 @@ package com.worth.ifs.invite.security;
 import com.worth.ifs.invite.domain.ApplicationInvite;
 import com.worth.ifs.invite.domain.InviteOrganisation;
 import com.worth.ifs.invite.repository.InviteOrganisationRepository;
-import com.worth.ifs.invite.resource.InviteResource;
+import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.security.PermissionRule;
 import com.worth.ifs.security.PermissionRules;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
@@ -17,7 +17,7 @@ import static com.worth.ifs.security.SecurityRuleUtil.checkProcessRole;
 import static com.worth.ifs.user.resource.UserRoleType.COLLABORATOR;
 
 /**
- * Permission rules for {@link ApplicationInvite} and {@link InviteResource} for permissioning
+ * Permission rules for {@link ApplicationInvite} and {@link ApplicationInviteResource} for permissioning
  */
 @Component
 @PermissionRules
@@ -42,12 +42,12 @@ public class ApplicationInvitePermissionRules {
 
 
     @PermissionRule(value = "SAVE", description = "lead applicant can save invite to the application")
-    public boolean leadApplicantCanSaveInviteToTheApplication(final InviteResource invite, final UserResource user) {
+    public boolean leadApplicantCanSaveInviteToTheApplication(final ApplicationInviteResource invite, final UserResource user) {
         return isLeadForInvite(invite, user);
     }
 
     @PermissionRule(value = "SAVE", description = "collaborator can save invite to the application for thier organisation")
-    public boolean collaboratorCanSaveInviteToApplicationForTheirOrganisation(final InviteResource invite, final UserResource user) {
+    public boolean collaboratorCanSaveInviteToApplicationForTheirOrganisation(final ApplicationInviteResource invite, final UserResource user) {
         return isCollaboratorOnInvite(invite, user);
     }
 
@@ -72,7 +72,7 @@ public class ApplicationInvitePermissionRules {
         return false;
     }
 
-    private boolean isCollaboratorOnInvite(final InviteResource invite, final UserResource user) {
+    private boolean isCollaboratorOnInvite(final ApplicationInviteResource invite, final UserResource user) {
         if (invite.getApplication() != null && invite.getInviteOrganisation() != null) {
             final InviteOrganisation inviteOrganisation = inviteOrganisationRepository.findOne(invite.getInviteOrganisation());
             if (inviteOrganisation != null && inviteOrganisation.getOrganisation() != null) {
@@ -87,7 +87,7 @@ public class ApplicationInvitePermissionRules {
         return checkProcessRole(user, invite.getTarget().getId(), UserRoleType.LEADAPPLICANT, processRoleRepository);
     }
 
-    private boolean isLeadForInvite(final InviteResource invite, final UserResource user) {
+    private boolean isLeadForInvite(final ApplicationInviteResource invite, final UserResource user) {
         return checkProcessRole(user, invite.getApplication(), UserRoleType.LEADAPPLICANT, processRoleRepository);
     }
 }

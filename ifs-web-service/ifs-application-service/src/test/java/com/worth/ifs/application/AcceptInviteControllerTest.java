@@ -25,7 +25,7 @@ import org.springframework.validation.Validator;
 import com.worth.ifs.BaseUnitTest;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
-import com.worth.ifs.invite.resource.InviteResource;
+import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.registration.AcceptInviteController;
 import com.worth.ifs.registration.service.RegistrationService;
 import com.worth.ifs.user.resource.UserResource;
@@ -78,7 +78,7 @@ public class AcceptInviteControllerTest extends BaseUnitTest {
     public void testInviteEntryPageExistingUser() throws Exception {
     	Map<String, String> errors = new HashMap<>();
     	errors.put("errorkey", "errorvalue");
-        when(registrationService.getInvalidInviteMessages(isA(UserResource.class), isA(InviteResource.class), isA(InviteOrganisationResource.class))).thenReturn(errors);
+        when(registrationService.getInvalidInviteMessages(isA(UserResource.class), isA(ApplicationInviteResource.class), isA(InviteOrganisationResource.class))).thenReturn(errors);
 
         mockMvc.perform(
                 get(String.format("/accept-invite/%s", INVITE_HASH_EXISTING_USER))

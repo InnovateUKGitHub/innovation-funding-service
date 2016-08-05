@@ -2,8 +2,9 @@ package com.worth.ifs.registration;
 
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
+import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
-import com.worth.ifs.invite.resource.InviteResource;
+import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.registration.form.OrganisationTypeForm;
 import com.worth.ifs.user.resource.OrganisationTypeEnum;
@@ -58,7 +59,7 @@ public class OrganisationTypeCreationController {
     ) {
         String hash = CookieUtil.getCookieValue(request, AcceptInviteController.INVITE_HASH);
         CookieUtil.removeCookie(response, OrganisationCreationController.ORGANISATION_FORM);
-        RestResult<InviteResource> invite = inviteRestService.getInviteByHash(hash);
+        RestResult<ApplicationInviteResource> invite = inviteRestService.getInviteByHash(hash);
 
         if (invalid != null) {
             validator.validate(organisationTypeForm, bindingResult);

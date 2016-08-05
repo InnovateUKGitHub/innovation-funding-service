@@ -10,9 +10,9 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.invite.domain.ApplicationInvite;
-import com.worth.ifs.invite.repository.InviteRepository;
+import com.worth.ifs.invite.repository.ApplicationInviteRepository;
+import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
-import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.resource.InviteResultsResource;
 import com.worth.ifs.user.controller.UserController;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -21,7 +21,6 @@ import com.worth.ifs.user.mapper.UserMapper;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
@@ -37,7 +36,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 @Rollback
-public class InviteControllerIntegrationTest extends BaseControllerIntegrationTest<InviteController> {
+public class ApplicationInviteControllerIntegrationTest extends BaseControllerIntegrationTest<ApplicationInviteController> {
 
     public static final long APPLICATION_ID = 1L;
 
@@ -49,7 +48,7 @@ public class InviteControllerIntegrationTest extends BaseControllerIntegrationTe
     private UserController userController;
 
     @Autowired
-    InviteRepository inviteRepository;
+    ApplicationInviteRepository applicationInviteRepository;
 
     @Autowired
     UserMapper userMapper;
@@ -57,7 +56,7 @@ public class InviteControllerIntegrationTest extends BaseControllerIntegrationTe
 
     @Autowired
     @Override
-    protected void setControllerUnderTest(InviteController controller) {
+    protected void setControllerUnderTest(ApplicationInviteController controller) {
         this.controller = controller;
     }
     @Autowired
@@ -118,7 +117,7 @@ public class InviteControllerIntegrationTest extends BaseControllerIntegrationTe
         Assert.isTrue(invitesResult.isSuccess());
 
         // Create and save the new invite.
-        List<InviteResource> newInvites = createInviteResource(invitesResult, testName, testEmail, APPLICATION_ID);
+        List<ApplicationInviteResource> newInvites = createInviteResource(invitesResult, testName, testEmail, APPLICATION_ID);
         RestResult<UserResource> userResult = userController.findByEmail(testEmail);
         Assert.isTrue(userResult.isSuccess());
         UserResource user = userResult.getSuccessObject();
@@ -150,14 +149,14 @@ public class InviteControllerIntegrationTest extends BaseControllerIntegrationTe
         assertEquals(user.getName(), getMatchingInviteResource(invitesResult, testEmail).getNameConfirmed());
     }
 
-    private List<InviteResource> createInviteResource(RestResult<Set<InviteOrganisationResource>> invitesResult, String userName, String userMail, long applicationId) {
+    private List<ApplicationInviteResource> createInviteResource(RestResult<Set<InviteOrganisationResource>> invitesResult, String userName, String userMail, long applicationId) {
         Set<InviteOrganisationResource> invitesExisting = invitesResult.getSuccessObject();
         InviteOrganisationResource inviteOrganisation = invitesExisting.iterator().next();
 
-        InviteResource inviteResource = new InviteResource(userName, userMail, applicationId);
+        ApplicationInviteResource inviteResource = new ApplicationInviteResource(userName, userMail, applicationId);
         inviteResource.setInviteOrganisation(inviteOrganisation.getId());
 
-        List<InviteResource> newInvites = new ArrayList();
+        List<ApplicationInviteResource> newInvites = new ArrayList();
         newInvites.add(inviteResource);
 
         return newInvites;
@@ -166,7 +165,7 @@ public class InviteControllerIntegrationTest extends BaseControllerIntegrationTe
     private ApplicationInvite getCreatedInvite(String userEmail, long applicationId) {
         ApplicationInvite inviteMatching = null;
 
-        List<ApplicationInvite> invites = inviteRepository.findByApplicationId(applicationId);
+        List<ApplicationInvite> invites = applicationInviteRepository.findByApplicationId(applicationId);
         invites.get(0).getHash();
         for (ApplicationInvite invite : invites) {
             if(invite.getEmail().equals(userEmail)) {
@@ -179,12 +178,12 @@ public class InviteControllerIntegrationTest extends BaseControllerIntegrationTe
     }
 
 
-    private InviteResource getMatchingInviteResource(RestResult<Set<InviteOrganisationResource>> invitesResult, String userEmail) {
+    private ApplicationInviteResource getMatchingInviteResource(RestResult<Set<InviteOrganisationResource>> invitesResult, String userEmail) {
         Set<InviteOrganisationResource> invitesOrganisations = invitesResult.getSuccessObject();
-        List<InviteResource> inviteResources = invitesOrganisations.iterator().next().getInviteResources();
-        InviteResource inviteResourceMatiching = null;
+        List<ApplicationInviteResource> inviteResources = invitesOrganisations.iterator().next().getInviteResources();
+        ApplicationInviteResource inviteResourceMatiching = null;
 
-        for (InviteResource inviteResource : inviteResources) {
+        for (ApplicationInviteResource inviteResource : inviteResources) {
             if(inviteResource.getEmail().equals(userEmail)) {
                 inviteResourceMatiching = inviteResource;
             }
@@ -200,10 +199,10 @@ public class InviteControllerIntegrationTest extends BaseControllerIntegrationTe
 
 //    @Test
 //    public void addInvites(){
-//        List<InviteResource> inviteResources = new ArrayList<>();
-//        InviteResource invite1 = new InviteResource("Nico", "nico@email.com", APPLICATION_ID);
+//        List<ApplicationInviteResource> inviteResources = new ArrayList<>();
+//        ApplicationInviteResource invite1 = new ApplicationInviteResource("Nico", "nico@email.com", APPLICATION_ID);
 //        invite1.setInviteOrganisationName("Worth");
-//        InviteResource invite2 = new InviteResource("Brent", "brent@email.com", APPLICATION_ID);
+//        ApplicationInviteResource invite2 = new ApplicationInviteResource("Brent", "brent@email.com", APPLICATION_ID);
 //        invite2.setInviteOrganisationName("Worth");
 //        inviteResources.add(invite1);
 //        inviteResources.add(invite2);

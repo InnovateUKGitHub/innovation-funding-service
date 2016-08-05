@@ -4,7 +4,6 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /*
 * InviteOrganisationResource is a DTO which enables the application to transfer InviteOrganisation entities.
@@ -16,13 +15,13 @@ public class InviteOrganisationResource {
     private String organisationNameConfirmed;
     private Long organisation;
 
-    List<InviteResource> inviteResources;
+    List<ApplicationInviteResource> inviteResources;
 
     public InviteOrganisationResource() {
     	// no-arg constructor
     }
 
-    public InviteOrganisationResource(Long id, String organisationName, Long organisation, List<InviteResource> inviteResources) {
+    public InviteOrganisationResource(Long id, String organisationName, Long organisation, List<ApplicationInviteResource> inviteResources) {
         this.id = id;
         this.organisationName = organisationName;
         this.organisation = organisation;
@@ -44,11 +43,11 @@ public class InviteOrganisationResource {
     public void setOrganisationName(String organisationName) {
         this.organisationName = organisationName;
     }
-    public List<InviteResource> getInviteResources() {
+    public List<ApplicationInviteResource> getInviteResources() {
         return inviteResources;
     }
 
-    public void setInviteResources(List<InviteResource> inviteResources) {
+    public void setInviteResources(List<ApplicationInviteResource> inviteResources) {
         this.inviteResources = inviteResources;
     }
 
