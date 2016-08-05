@@ -1,10 +1,11 @@
 package com.worth.ifs.project.viewmodel;
 
+import java.time.LocalDate;
+
 import com.worth.ifs.project.resource.ProjectResource;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-
-import java.time.LocalDate;
 
 /**
  * View model to back the Spend Profile page
@@ -15,12 +16,14 @@ public class ProjectSpendProfileViewModel {
     private String projectName;
     private LocalDate targetProjectStartDate;
     private Long durationInMonths;
+    private SpendProfileSummaryModel summary;
 
-    public ProjectSpendProfileViewModel(ProjectResource project) {
+    public ProjectSpendProfileViewModel(ProjectResource project, final SpendProfileSummaryModel summary) {
         this.projectId = project.getId();
         this.projectName = project.getName();
         this.targetProjectStartDate = project.getTargetStartDate();
         this.durationInMonths = project.getDurationInMonths();
+        this.summary = summary;
     }
 
     public Long getProjectId() {
@@ -39,6 +42,10 @@ public class ProjectSpendProfileViewModel {
         return durationInMonths;
     }
 
+    public SpendProfileSummaryModel getSummary() {
+        return summary;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -52,6 +59,7 @@ public class ProjectSpendProfileViewModel {
                 .append(projectName, viewModel.projectName)
                 .append(targetProjectStartDate, viewModel.targetProjectStartDate)
                 .append(durationInMonths, viewModel.durationInMonths)
+                .append(summary, viewModel.summary)
                 .isEquals();
     }
 
