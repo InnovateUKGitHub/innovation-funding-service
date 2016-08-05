@@ -127,7 +127,7 @@ public class ApplicationController extends AbstractApplicationController {
             assignQuestion(request, applicationId);
         } else if (params.containsKey(MARK_AS_COMPLETE)) {
             Long markQuestionCompleteId = Long.valueOf(request.getParameter(MARK_AS_COMPLETE));
-            String questionformInputKey = "formInput[" + markQuestionCompleteId + "]";
+            String questionformInputKey = String.format("formInput[%1$s]", markQuestionCompleteId);
             String questionFormInputValue = request.getParameter(questionformInputKey);
 
             if (markQuestionCompleteId != null && StringUtils.isNotEmpty(questionFormInputValue)) {
