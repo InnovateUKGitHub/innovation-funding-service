@@ -40,21 +40,20 @@ public class MilestonesSectionSaver implements CompetitionSetupSectionSaver {
         MilestonesForm milestonesForm = (MilestonesForm) competitionSetupForm;
         List<MilestonesFormEntry> milestoneEntries = milestonesForm.getMilestonesFormEntryList();
         List<MilestoneResource> milestones = milestoneService.getAllDatesByCompetitionId(competition.getId());
+        milestones.sort((c1, c2) -> c1.getName().compareTo(c2.getName()));
 
-        if (milestones == null || milestones.isEmpty()) {
-            milestones.addAll(createMilestonesForCompetition(competition));
-        }
         List<Error> errors = validateMilestoneDates(milestoneEntries);
         return updateMilestonesForCompetition(milestones, milestoneEntries, competition, errors);
     }
 
     private List<Error> updateMilestonesForCompetition(List<MilestoneResource> milestones, List<MilestonesFormEntry> milestoneEntries, CompetitionResource competition, List<Error> errors) {
+
         for (int i = 0; i < milestones.size(); i++) {
             MilestonesFormEntry thisMilestonesFormEntry = milestoneEntries.get(i);
             thisMilestonesFormEntry.setMilestoneName(milestones.get(i).getName());
 
             milestones.get(i).setCompetition(competition.getId());
-            LocalDateTime temp = populateMilestoneDate(milestoneEntries.get(i).getDay(), milestoneEntries.get(i).getMonth(), milestoneEntries.get(i).getYear());
+            LocalDateTime temp = getMilestoneDate(milestoneEntries.get(i).getDay(), milestoneEntries.get(i).getMonth(), milestoneEntries.get(i).getYear());
             if (temp != null) {
                 milestones.get(i).setDate(temp);
             }
@@ -67,23 +66,12 @@ public class MilestonesSectionSaver implements CompetitionSetupSectionSaver {
         }
     }
 
-    private LocalDateTime populateMilestoneDate(Integer day, Integer month, Integer year){
+    private LocalDateTime getMilestoneDate(Integer day, Integer month, Integer year){
         if (day != null && month != null && year != null){
             return LocalDateTime.of(year, month, day, 0, 0);
         } else {
             return null;
         }
-    }
-
-    private List<MilestoneResource> createMilestonesForCompetition(CompetitionResource competition) {
-        List<MilestoneResource> newMilestones = new ArrayList<>();
-        Stream.of(MilestoneName.values()).forEach(name -> {
-            MilestoneResource newMilestone = milestoneService.create();
-            newMilestone.setName(name);
-            newMilestone.setCompetition(competition.getId());
-            newMilestones.add(newMilestone);
-        });
-        return newMilestones;
     }
 
     private List<Error> validateMilestoneDates(List<MilestonesFormEntry> milestonesFormEntries) {
@@ -115,7 +103,5 @@ public class MilestonesSectionSaver implements CompetitionSetupSectionSaver {
     }
 
     @Override
-    public boolean supportsForm(Class<? extends CompetitionSetupForm> clazz) {
-        return MilestonesForm.class.equals(clazz);
-    }
+    public boolean supportsForm(Class<? extends CompetitionSetupForm> clazz) { return MilestonesForm.class.equals(clazz); }
 }

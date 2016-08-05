@@ -56,9 +56,8 @@ public class MilestonesFormPopulator implements CompetitionSetupFormPopulator {
     private List<MilestoneResource> createMilestonesForCompetition(CompetitionResource competitionResource) {
         List<MilestoneResource> newMilestones = new ArrayList<>();
         Stream.of(MilestoneName.values()).forEach(name -> {
-            MilestoneResource newMilestone = new MilestoneResource();
+            MilestoneResource newMilestone = milestoneService.create(name, competitionResource.getId());
             newMilestone.setName(name);
-            newMilestone.setCompetition(competitionResource.getId());
             newMilestones.add(newMilestone);
         });
         return newMilestones;

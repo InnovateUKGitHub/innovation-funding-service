@@ -3,6 +3,7 @@ package com.worth.ifs.application.service;
 import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.competition.resource.MilestoneResource;
+import com.worth.ifs.competition.resource.MilestoneResource.MilestoneName;
 import com.worth.ifs.competition.service.MilestoneRestService;
 import org.junit.Before;
 import org.junit.Test;
@@ -57,8 +58,10 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
     public void test_create() {
         LocalDateTime milestoneDate = LocalDateTime.now();
 
-        when(milestoneRestService.create()).thenReturn(restSuccess(getNewMilestoneResource(milestoneDate)));
-        MilestoneResource foundMilestone = service.create();
+        when(milestoneRestService.create(MilestoneName.OPEN_DATE, 1L)).thenReturn(restSuccess(getNewMilestoneResource(milestoneDate)));
+
+        MilestoneResource foundMilestone = service.create(MilestoneName.OPEN_DATE, 1L);
+
         assertEquals(Long.valueOf(1L), foundMilestone.getId());
         assertEquals(MilestoneResource.MilestoneName.OPEN_DATE, foundMilestone.getName());
         assertEquals(milestoneDate, foundMilestone.getDate());

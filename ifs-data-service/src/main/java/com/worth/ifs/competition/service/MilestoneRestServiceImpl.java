@@ -10,6 +10,7 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.competition.domain.Milestone;
 import com.worth.ifs.competition.resource.MilestoneResource;
+import com.worth.ifs.competition.resource.MilestoneResource.MilestoneName;
 
 /**
  * MilestoneRestServiceImpl is a utility for CRUD operations on {@link Milestone}.
@@ -32,7 +33,7 @@ public class MilestoneRestServiceImpl extends BaseRestService implements Milesto
     }
 
     @Override
-    public RestResult<MilestoneResource> create() {
-        return postWithRestResult(milestonesRestURL + "", MilestoneResource.class);
+    public RestResult<MilestoneResource> create(MilestoneName name, Long competitionId) {
+        return postWithRestResult(milestonesRestURL + "/" + competitionId, name, MilestoneResource.class);
     }
 }

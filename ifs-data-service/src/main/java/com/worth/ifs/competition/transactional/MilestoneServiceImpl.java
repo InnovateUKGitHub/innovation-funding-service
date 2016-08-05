@@ -23,6 +23,7 @@ import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.competition.repository.MilestoneRepository;
 import com.worth.ifs.competition.resource.MilestoneResource;
 import com.worth.ifs.transactional.BaseTransactionalService;
+import com.worth.ifs.competition.resource.MilestoneResource.MilestoneName;
 
 /**
  * Service for operations around the usage and processing of Milestones
@@ -63,8 +64,12 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
     }
 
     @Override
-    public ServiceResult<MilestoneResource> create() {
+    public ServiceResult<MilestoneResource> create(MilestoneName name, Long id) {
+        Competition competition = competitionRepository.findById(id);
+
         Milestone milestone = new Milestone();
+        milestone.setName(name);
+        milestone.setCompetition(competition);
         return serviceSuccess(milestoneMapper.mapToResource(milestoneRepository.save(milestone)));
     }
 

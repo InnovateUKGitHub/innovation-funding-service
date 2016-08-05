@@ -6,6 +6,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.MilestoneResource;
+import com.worth.ifs.competition.resource.MilestoneResource.MilestoneName;
 
 /**
  * Service for operations around the usage and processing of Milestones
@@ -18,5 +19,5 @@ public interface MilestoneService {
     ServiceResult<Void> update(Long id, List<MilestoneResource> milestones);
 
     @PreAuthorize("hasAuthority('comp_admin')")
-    ServiceResult<MilestoneResource> create();
+    ServiceResult<MilestoneResource> create(MilestoneName name, Long id);
 }
