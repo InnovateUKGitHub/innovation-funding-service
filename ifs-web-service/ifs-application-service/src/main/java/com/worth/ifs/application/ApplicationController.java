@@ -16,6 +16,7 @@ import com.worth.ifs.profiling.ProfileExecution;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -126,11 +127,10 @@ public class ApplicationController extends AbstractApplicationController {
             assignQuestion(request, applicationId);
         } else if (params.containsKey(MARK_AS_COMPLETE)) {
             Long markQuestionCompleteId = Long.valueOf(request.getParameter(MARK_AS_COMPLETE));
-            /* Infund 3954*/
             String questionformInputKey = "formInput[" + markQuestionCompleteId + "]";
             String questionFormInputValue = request.getParameter(questionformInputKey);
 
-            if (markQuestionCompleteId != null && questionFormInputValue != null && questionFormInputValue.length() > 0) {
+            if (markQuestionCompleteId != null && StringUtils.isNotEmpty(questionFormInputValue)) {
                 ProcessRoleResource processRole = processRoleService.findProcessRole(user.getId(), applicationId);
                 questionService.markAsComplete(markQuestionCompleteId, applicationId, processRole.getId());
             }
