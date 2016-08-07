@@ -235,8 +235,9 @@ public class ProjectController {
         return projectService.deleteExploitationPlanFile(projectId).toDeleteResponse();
     }
 
-    @RequestMapping(value = "/{projectId}/partner/documents/submit", method = GET)
-    public RestResult<Boolean>isOtherDocumentsSubmitAllowed(@PathVariable("projectId") final Long projectId) {
-        return projectService.isOtherDocumentsSubmitAllowed(projectId).toGetResponse();
+    @RequestMapping(value = "/{projectId}/partner/{userId}/documents/submit", method = GET)
+    public RestResult<Boolean>isOtherDocumentsSubmitAllowed(@PathVariable("projectId") final Long projectId,
+                                                            @PathVariable("userId") final Long userId) {
+        return projectService.isOtherDocumentsSubmitAllowed(projectId, userId ).toGetResponse();
     }
 }

@@ -71,7 +71,7 @@ public interface ProjectService {
     ServiceResult<Boolean> isSubmitAllowed(Long projectId);
 
     @NotSecured(value = "Only a project manager can submit other documents", mustBeSecuredByOtherServices = false)
-    ServiceResult<Boolean> isOtherDocumentsSubmitAllowed(Long projectId);
+    ServiceResult<Boolean> isOtherDocumentsSubmitAllowed(Long projectId, Long userId);
 
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'VIEW_MONITORING_OFFICER')")
     ServiceResult<MonitoringOfficerResource> getMonitoringOfficer(Long projectId);
