@@ -31,4 +31,17 @@ public class ProcessOutcomeBuilder extends BaseBuilder<ProcessOutcome, ProcessOu
     public ProcessOutcomeBuilder withOutcome(String outcome) {
         return with(processOutcome -> processOutcome.setOutcome(outcome));
     }
+
+    public ProcessOutcomeBuilder withOutcomeType(String outcomeType) {
+        return with(processOutcome -> processOutcome.setOutcomeType(outcomeType));
+    }
+
+    public ProcessOutcomeBuilder withDescription(String description) {
+        return with(processOutcome -> processOutcome.setDescription(description));
+    }
+
+    public ProcessOutcomeBuilder withComment(String comment) {
+        return with(processOutcome -> processOutcome.setComment(comment));
+    }
+
 }

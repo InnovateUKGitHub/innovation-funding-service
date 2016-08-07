@@ -57,7 +57,8 @@ public class AssessmentFeedbackViewModelTest {
 
         AssessmentFeedbackViewModel assessmentFeedbackViewModel = setupViewModelWithFormInputsAndResponses(maxWordCount, asListOfPairs(formInputId, "No word limit imposed here."));
 
-        assertEquals(Integer.valueOf(0), assessmentFeedbackViewModel.getWordsRemaining(formInputId));
+        // Peeking into the behaviour of com.worth.ifs.form.resource.FormInputResource.getWordCount() reveals it treats no maximum word count as 0
+        assertEquals(Integer.valueOf(-5), assessmentFeedbackViewModel.getWordsRemaining(formInputId));
     }
 
     @Test
@@ -67,7 +68,7 @@ public class AssessmentFeedbackViewModelTest {
 
         AssessmentFeedbackViewModel assessmentFeedbackViewModel = setupViewModelWithFormInputsAndResponses(maxWordCount, asListOfPairs(formInputId, "Value of ten words here, exceeding the max word count."));
 
-        assertEquals(Integer.valueOf(0), assessmentFeedbackViewModel.getWordsRemaining(formInputId));
+        assertEquals(Integer.valueOf(-5), assessmentFeedbackViewModel.getWordsRemaining(formInputId));
     }
 
     @Test

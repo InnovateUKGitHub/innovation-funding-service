@@ -31,7 +31,7 @@ Lead partner can see correct project start date and duration
     [Documentation]    INFUND-3970
     [Tags]
     Then the user should see the text in the page    1
-    And the user should see the text in the page     January 2018
+    And the user should see the text in the page     January 2017
     And the user should see the text in the page     3 Months
     [Teardown]    Logout as user
 
@@ -50,6 +50,6 @@ Non-lead partner can see correct project start date and duration
     [Documentation]    INFUND-3970
     [Tags]
     Then the user should see the text in the page    1
-    And the user should see the text in the page     January 2018
+    And the user should see the text in the page     January 2017
     And the user should see the text in the page     3 Months
     [Teardown]    Logout as user
