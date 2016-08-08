@@ -1,20 +1,5 @@
 package com.worth.ifs.project.transactional;
 
-import java.io.File;
-import java.io.InputStream;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.SortedSet;
-import java.util.TreeSet;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-
 import com.worth.ifs.address.domain.Address;
 import com.worth.ifs.address.domain.AddressType;
 import com.worth.ifs.address.mapper.AddressMapper;
@@ -59,34 +44,25 @@ import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserRoleType;
-
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.InputStream;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
-import static com.worth.ifs.commons.error.CommonFailureKeys.CANNOT_FIND_ORG_FOR_GIVEN_PROJECT_AND_USER;
-import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_DATE_MUST_BE_IN_THE_FUTURE;
-import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_DATE_MUST_START_ON_FIRST_DAY_OF_MONTH;
-import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_PARTNER_ON_THE_PROJECT_FOR_THE_ORGANISATION;
-import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_USER_ON_THE_PROJECT_FOR_THE_ORGANISATION;
-import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED;
-import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_SUBMITTED_IF_INCOMPLETE;
-import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_UPDATED_IF_ALREADY_SUBMITTED;
-import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_ID_IN_URL_MUST_MATCH_PROJECT_ID_IN_MONITORING_OFFICER_RESOURCE;
-import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_LEAD_PARTNER;
-import static com.worth.ifs.commons.service.ServiceResult.aggregate;
-import static com.worth.ifs.commons.service.ServiceResult.processAnyFailuresOrSucceed;
-import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
-import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.commons.error.CommonFailureKeys.*;
+import static com.worth.ifs.commons.service.ServiceResult.*;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static com.worth.ifs.user.resource.UserRoleType.FINANCE_CONTACT;
-import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
-import static com.worth.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
-import static com.worth.ifs.util.CollectionFunctions.getOnlyElementOrEmpty;
-import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static com.worth.ifs.user.resource.UserRoleType.*;
+import static com.worth.ifs.util.CollectionFunctions.*;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static com.worth.ifs.util.EntityLookupCallbacks.getOnlyElementOrFail;
 import static java.util.Arrays.asList;
@@ -129,8 +105,8 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
     @Autowired
     private OrganisationMapper organisationMapper;
-	
-	@Autowired
+
+    @Autowired
     private NotificationService notificationService;
 
     @Autowired
@@ -174,7 +150,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         return getProject(projectId).
                 andOnSuccess(project -> validateIfProjectAlreadySubmitted(project)).
                 andOnSuccess(project -> validateProjectManager(project, projectManagerUserId).
-                andOnSuccess(leadPartner -> createOrUpdateProjectManagerForProject(project, leadPartner)));
+                        andOnSuccess(leadPartner -> createOrUpdateProjectManagerForProject(project, leadPartner)));
     }
 
     @Override
@@ -258,6 +234,21 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     }
 
     @Override
+    public ServiceResult<Boolean> isOtherDocumentsSubmitAllowed(Long projectId) {
+        ServiceResult<Project> project = getProject(projectId);
+        Optional<ProjectUser> projectManager = getExistingProjectManager(project.getSuccessObject());
+        boolean allMatch = retrieveUploadedDocuments(projectId).stream()
+        .allMatch(serviceResult -> (serviceResult.isSuccess()) && (serviceResult.getSuccessObject().getFileEntry().getFilesizeBytes() > 0));
+
+        if (!allMatch) {
+             return serviceFailure(new Error(PROJECT_SETUP_OTHER_DOCUMENTS_MUST_BE_UPLOADED_BEFORE_SUBMIT));
+        }
+        return projectManager.isPresent() ? serviceSuccess(true)
+                : serviceFailure(new Error(PROJECT_SETUP_OTHER_DOCUMENTS_CAN_ONLY_SUBMITTED_BY_PROJECT_MANAGER));
+
+    }
+
+    @Override
     public ServiceResult<MonitoringOfficerResource> getMonitoringOfficer(Long projectId) {
         return getExistingMonitoringOfficerForProject(projectId).andOnSuccessReturn(monitoringOfficerMapper::mapToResource);
     }
@@ -266,8 +257,8 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     public ServiceResult<Void> saveMonitoringOfficer(final Long projectId, final MonitoringOfficerResource monitoringOfficerResource) {
 
         return validateMonitoringOfficer(projectId, monitoringOfficerResource).
-            andOnSuccess(() -> validateInMonitoringOfficerAssignableState(projectId)).
-            andOnSuccess(() -> saveMonitoringOfficer(monitoringOfficerResource));
+                andOnSuccess(() -> validateInMonitoringOfficerAssignableState(projectId)).
+                andOnSuccess(() -> saveMonitoringOfficer(monitoringOfficerResource));
     }
 
     @Override
@@ -280,7 +271,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         NotificationTarget pmTarget = createProjectManagerNotificationTarget(projectManager);
 
         Notification monitoringOfficerNotification = createMonitoringOfficerAssignedNotification(monitoringOfficer, moTarget, Notifications.MONITORING_OFFICER_ASSIGNED, project, projectManager);
-        Notification projectManagerNotification = createMonitoringOfficerAssignedNotification(monitoringOfficer, pmTarget, Notifications.MONITORING_OFFICER_ASSIGNED, project, projectManager);
+        Notification projectManagerNotification = createMonitoringOfficerAssignedNotification(monitoringOfficer, pmTarget, Notifications.MONITORING_OFFICER_ASSIGNED_PROJECT_MANAGER, project, projectManager);
 
         ServiceResult<Void> moAssignedEmailSendResult = notificationService.sendNotification(monitoringOfficerNotification, EMAIL);
         ServiceResult<Void> pmAssignedEmailSendResult = notificationService.sendNotification(projectManagerNotification, EMAIL);
@@ -328,7 +319,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     public ServiceResult<Void> updateCollaborationAgreementFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
         return getProject(projectId).
                 andOnSuccess(project -> fileService.updateFile(fileEntryResource, inputStreamSupplier).
-                andOnSuccessReturnVoid(fileDetails -> linkCollaborationAgreementFileToProject(project, fileDetails)));
+                        andOnSuccessReturnVoid(fileDetails -> linkCollaborationAgreementFileToProject(project, fileDetails)));
     }
 
     @Override
@@ -390,6 +381,16 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
                                 removeExploitationPlanFileFromProject(project))));
     }
 
+    @Override
+    public List<ServiceResult<FileAndContents>> retrieveUploadedDocuments(Long projectId) {
+        ServiceResult<FileAndContents> collaborationAgreementFileContents = getCollaborationAgreementFileContents(projectId);
+        ServiceResult<FileAndContents> exploitationPlanFileContents = getExploitationPlanFileContents(projectId);
+
+        List<ServiceResult<FileAndContents>> serviceResults = new ArrayList<>();
+        serviceResults.add(collaborationAgreementFileContents);
+        serviceResults.add(exploitationPlanFileContents);
+        return serviceResults;
+    }
 
     private ServiceResult<FileEntry> getCollaborationAgreement(Project project) {
         if (project.getCollaborationAgreement() == null) {
@@ -494,9 +495,9 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     private ServiceResult<Void> validateInMonitoringOfficerAssignableState(final Long projectId) {
 
         return getProject(projectId).andOnSuccess(project -> {
-           if (!project.isProjectDetailsSubmitted()) {
-               return serviceFailure(new Error(PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED));
-           }
+            if (!project.isProjectDetailsSubmitted()) {
+                return serviceFailure(new Error(PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED));
+            }
             return serviceSuccess();
         });
     }
@@ -504,8 +505,8 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     private ServiceResult<Void> saveMonitoringOfficer(final MonitoringOfficerResource monitoringOfficerResource) {
 
         return getExistingMonitoringOfficerForProject(monitoringOfficerResource.getProject()).handleSuccessOrFailure(
-            noMonitoringOfficer -> saveNewMonitoringOfficer(monitoringOfficerResource),
-            existingMonitoringOfficer -> updateExistingMonitoringOfficer(existingMonitoringOfficer, monitoringOfficerResource)
+                noMonitoringOfficer -> saveNewMonitoringOfficer(monitoringOfficerResource),
+                existingMonitoringOfficer -> updateExistingMonitoringOfficer(existingMonitoringOfficer, monitoringOfficerResource)
         );
     }
 

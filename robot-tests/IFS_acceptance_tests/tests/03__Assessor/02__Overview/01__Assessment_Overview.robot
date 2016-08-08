@@ -24,7 +24,6 @@ Non-scorable question cannot be scored/edited
     [Tags]
     When the user clicks the button/link    link=Application details
     Then The user should not see the element    jquery=button:contains("Save and return to assessment overview")
-   # And The user should not see the element    css=[readonly]
     And the user clicks the button/link    link=Back to assessment overview
     Then The user should be redirected to the correct page    ${Assessment_overview_9}
     And the user clicks the button/link    link=Project summary
@@ -35,23 +34,6 @@ Non-scorable question cannot be scored/edited
     And The user should not see the element    jquery=button:contains("Save and return to assessment overview")
     And the user clicks the button/link    link=Back to assessment overview
     And The user should be redirected to the correct page    ${Assessment_overview_9}
-
-Assessors can provide scores and feedback to the Application questions
-    [Documentation]    INFUND-3400
-    [Tags]    Pending
-    # TODO pending as the autosave is not implemented. It will done in sprint 13
-    When the user clicks the button/link    link=1. How many
-    Then The user should see the text in the page    Please review the answer provided and score the answer out of 20 points.
-    And the assessor fills in application questions
-    And the user reloads the page
-    And the text should be visible
-
-#Feedback Word count
-#    [Documentation]    INFUND-3400
-#    [Tags]    Pending
-    # TODO pending as the autosave not implemented
-#    When the Assessor edits the feedback
-#    Then the word count should be correct
 
 Finance summary
     [Documentation]    INFUND-3394
@@ -106,15 +88,6 @@ the user should see four sections
     the user should see the element    css=#section-71 .heading-medium
     the user should see the element    css=#section-17 .heading-medium
   #  the user should see the element    css=#content .heading-medium
-
-the assessor fills in application questions
-    The user should see the element    id=assessor-question-score
-    Select From List By Index    id=assessor-question-score    9
-    The user should see the element    css=#form-input-195 .inPlaceholderMode
-    Input Text    css=#form-input-195 .inPlaceholderMode    This is to test the feedback entry.
-
-the text should be visible
-    wait until element contains    css=#form-input-195 .inPlaceholderMode    This is to test the feedback entry.
 
 the Assessor edits the feedback
   #  Clear Element Text    css=#form-input-195 .isModified

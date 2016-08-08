@@ -2,14 +2,15 @@ package com.worth.ifs.assessment.documentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
-import com.worth.ifs.assessment.builder.ProcessOutcomeBuilder;
 import com.worth.ifs.assessment.controller.AssessmentController;
+import com.worth.ifs.assessment.resource.AssessmentOutcomes;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
+import static com.worth.ifs.assessment.builder.ProcessOutcomeBuilder.newProcessOutcome;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.documentation.AssessmentDocs.assessmentFields;
 import static com.worth.ifs.documentation.AssessmentDocs.assessmentResourceBuilder;
@@ -48,7 +49,6 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
     public void findAssessmentById() throws Exception {
         long assessmentId = 1L;
         AssessmentResource assessmentResource = assessmentResourceBuilder.build();
-
         when(assessmentServiceMock.findById(assessmentId)).thenReturn(serviceSuccess(assessmentResource));
 
         mockMvc.perform(get("/assessment/{id}", assessmentId))
@@ -63,13 +63,15 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
     @Test
     public void updateAssessmentStatus() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
+        Long assessmentId  = 1L;
 
-        Long assessmentId = 1L;
-        ProcessOutcome processOutcome = ProcessOutcomeBuilder.newProcessOutcome().build();
-
-        AssessmentResource assessmentResource = assessmentResourceBuilder.build();
-
-        when(assessmentServiceMock.updateStatus(assessmentId, processOutcome)).thenReturn(serviceSuccess());
+        ProcessOutcome processOutcome = newProcessOutcome()
+                .withDescription("Conflict of interest")
+                .withComment("own company")
+                .withOutcome("YES")
+                .withOutcomeType(AssessmentOutcomes.REJECT.getType())
+                .build();
+        when(assessmentServiceMock.updateStatus(assessmentId,processOutcome)).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/assessment/{id}/status", assessmentId, processOutcome)
                 .contentType(APPLICATION_JSON)
