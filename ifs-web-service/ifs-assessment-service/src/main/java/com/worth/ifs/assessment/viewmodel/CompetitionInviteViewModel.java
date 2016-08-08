@@ -3,11 +3,11 @@ package com.worth.ifs.assessment.viewmodel;
 /**
  * ViewModel for an invite for a CompetitionAssessor.
  */
-public class CompetitionAssessorInviteViewModel {
+public class CompetitionInviteViewModel {
 
     private String competitionName;
 
-    public CompetitionAssessorInviteViewModel(String competitionName) {
+    public CompetitionInviteViewModel(String competitionName) {
         this.competitionName = competitionName;
     }
 }

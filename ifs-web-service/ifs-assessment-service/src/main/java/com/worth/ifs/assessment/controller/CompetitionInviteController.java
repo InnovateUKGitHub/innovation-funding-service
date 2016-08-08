@@ -1,6 +1,6 @@
 package com.worth.ifs.assessment.controller;
 
-import com.worth.ifs.assessment.viewmodel.CompetitionAssessorInviteViewModel;
+import com.worth.ifs.assessment.viewmodel.CompetitionInviteViewModel;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,11 +15,11 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Controller
 @RequestMapping("/invite")
-public class CompetitionAssessorInviteController {
+public class CompetitionInviteController {
 
     @RequestMapping(value = "competition/{hash}", method = RequestMethod.GET)
     public String accessInvite(@PathVariable String hash, HttpServletResponse response, HttpServletRequest request, Model model) {
-        model.addAttribute("model", new CompetitionAssessorInviteViewModel("Competition Name"));
+        model.addAttribute("model", new CompetitionInviteViewModel("Competition Name"));
         return "access-competition-invite";
     }
 
