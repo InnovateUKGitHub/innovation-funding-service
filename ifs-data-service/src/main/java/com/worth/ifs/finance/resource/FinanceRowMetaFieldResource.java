@@ -3,17 +3,17 @@ package com.worth.ifs.finance.resource;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CostFieldResource {
+public class FinanceRowMetaFieldResource {
     Long id;
     String title;
     String type;
     private List<FinanceRowMetaValueId> costValues = new ArrayList<>();
 
-    public CostFieldResource() {
+    public FinanceRowMetaFieldResource() {
     	// no-arg constructor
     }
 
-    public CostFieldResource(Long id, String title, String type) {
+    public FinanceRowMetaFieldResource(Long id, String title, String type) {
         this.id = id;
         this.title = title;
         this.type = type;

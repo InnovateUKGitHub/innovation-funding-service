@@ -14,13 +14,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.worth.ifs.finance.domain.FinanceRowMetaField;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
-import com.worth.ifs.finance.domain.CostField;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.GrantClaim;
 import com.worth.ifs.finance.transactional.CostService;
@@ -99,7 +99,7 @@ public class CostControllerTest extends BaseControllerMockMVCTest<CostController
     public void updateShouldReturnEmptyResponseOnWrongId() throws Exception {
 
         GrantClaim costItem = new GrantClaim();
-        when(costServiceMock.updateCost(eq(123L), isA(CostItem.class))).thenReturn(serviceFailure(notFoundError(CostField.class, 123L)));
+        when(costServiceMock.updateCost(eq(123L), isA(CostItem.class))).thenReturn(serviceFailure(notFoundError(FinanceRowMetaField.class, 123L)));
 
         mockMvc.perform(get("/cost/update/{id}", "123")
                 .contentType(MediaType.APPLICATION_JSON)

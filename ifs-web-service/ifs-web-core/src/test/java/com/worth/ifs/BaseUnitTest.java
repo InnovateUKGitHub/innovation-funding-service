@@ -6,7 +6,7 @@ import com.worth.ifs.application.builder.QuestionStatusResourceBuilder;
 import com.worth.ifs.application.builder.SectionResourceBuilder;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.finance.model.UserRole;
-import com.worth.ifs.application.finance.service.CostService;
+import com.worth.ifs.application.finance.service.FinanceRowService;
 import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.finance.view.*;
 import com.worth.ifs.application.resource.*;
@@ -125,7 +125,7 @@ public class BaseUnitTest {
     @Mock
     public FinanceService financeService;
     @Mock
-    public CostService costService;
+    public FinanceRowService financeRowService;
     @Mock
     public CostRestService costRestService;
     @Mock

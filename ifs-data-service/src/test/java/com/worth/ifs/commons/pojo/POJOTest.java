@@ -29,7 +29,7 @@ import com.worth.ifs.competition.resource.CompetitionCoFunderResource;
 import com.worth.ifs.competition.resource.CompetitionCountResource;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.finance.domain.ApplicationFinance;
-import com.worth.ifs.finance.domain.CostField;
+import com.worth.ifs.finance.domain.FinanceRowMetaField;
 import com.worth.ifs.finance.domain.FinanceRowMetaValue;
 import com.worth.ifs.form.domain.FormInputType;
 import com.worth.ifs.form.domain.FormValidator;
@@ -70,7 +70,7 @@ public class POJOTest {
             Application.class,
             ApplicationStatus.class,
             FileEntry.class,
-            CostField.class,
+            FinanceRowMetaField.class,
             FormValidator.class,
             FormInputType.class,
             OrganisationAddress.class,

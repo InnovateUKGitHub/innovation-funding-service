@@ -1,7 +1,7 @@
 package com.worth.ifs.finance.controller;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
-import com.worth.ifs.finance.resource.CostFieldResource;
+import com.worth.ifs.finance.resource.FinanceRowMetaFieldResource;
 import com.worth.ifs.finance.transactional.CostService;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -12,19 +12,19 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class CostFieldControllerTest extends BaseControllerMockMVCTest<CostFieldController> {
+public class FinanceRowMetaFieldControllerTest extends BaseControllerMockMVCTest<FinanceRowMetaFieldController> {
 
     @Mock
     private CostService costFieldService;
 
     @Override
-    protected CostFieldController supplyControllerUnderTest() {
-        return new CostFieldController();
+    protected FinanceRowMetaFieldController supplyControllerUnderTest() {
+        return new FinanceRowMetaFieldController();
     }
 
     @Test
     public void findAllShouldReturnListOfCostFields() throws Exception{
-        when(costFieldService.findAllCostFields()).thenReturn(serviceSuccess(asList(new CostFieldResource(), new CostFieldResource())));
+        when(costFieldService.findAllCostFields()).thenReturn(serviceSuccess(asList(new FinanceRowMetaFieldResource(), new FinanceRowMetaFieldResource())));
 
         mockMvc.perform(get("/costfield/findAll/"))
                 .andExpect(status().isOk());

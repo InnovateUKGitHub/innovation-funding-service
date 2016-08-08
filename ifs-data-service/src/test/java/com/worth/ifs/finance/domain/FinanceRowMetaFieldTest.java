@@ -4,30 +4,30 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-public class CostFieldTest {
+public class FinanceRowMetaFieldTest {
     Long id;
     String title;
     String type;
-    CostField costField;
+    FinanceRowMetaField financeRowMetaField;
 
     @Before
     public void setUp() throws Exception {
         id = 123456L;
         title = "field title";
         type = "field type";
-        costField = new CostField(id, title, type);
+        financeRowMetaField = new FinanceRowMetaField(id, title, type);
     }
 
     @Test
     public void constructorsShouldCreateInstanceOnValidInput() throws Exception{
-        new CostField();
-        new CostField(1234L, "title", "Type");
+        new FinanceRowMetaField();
+        new FinanceRowMetaField(1234L, "title", "Type");
     }
 
     @Test
     public void gettersShouldReturnCorrectAttributeValues() throws Exception {
-        Assert.assertEquals(costField.getId(), id);
-        Assert.assertEquals(costField.getTitle(), title);
-        Assert.assertEquals(costField.getType(), type);
+        Assert.assertEquals(financeRowMetaField.getId(), id);
+        Assert.assertEquals(financeRowMetaField.getTitle(), title);
+        Assert.assertEquals(financeRowMetaField.getType(), type);
     }
 }

@@ -2,37 +2,35 @@ package com.worth.ifs.application.finance.service;
 
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.rest.ValidationMessages;
-import com.worth.ifs.finance.resource.CostFieldResource;
+import com.worth.ifs.finance.resource.FinanceRowMetaFieldResource;
 import com.worth.ifs.finance.resource.cost.CostItem;
-import com.worth.ifs.finance.service.CostFieldRestService;
 import com.worth.ifs.finance.service.CostRestService;
+import com.worth.ifs.finance.service.FinanceRowMetaFieldRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
- * {@code CostService} implements {@link CostService}
+ * {@code FinanceRowService} implements {@link FinanceRowService}
  */
-// TODO DW - INFUND-1555 - handle rest results
 @Service
-public class CostServiceImpl implements CostService {
+public class FinanceRowServiceImpl implements FinanceRowService {
 
     @Autowired
     private CostRestService costRestService;
 
     @Autowired
-    private CostFieldRestService costFieldRestService;
+    private FinanceRowMetaFieldRestService costFieldRestService;
 
     @Override
-    public List<CostFieldResource> getCostFields() {
-        return costFieldRestService.getCostFields().getSuccessObjectOrThrowException();
+    public List<FinanceRowMetaFieldResource> getCostFields() {
+        return costFieldRestService.getFinanceRowMetaFields().getSuccessObjectOrThrowException();
     }
 
     @Override
     public RestResult<ValidationMessages> update(CostItem costItem) {
-        RestResult<ValidationMessages> validationMessages = costRestService.update(costItem);
-        return validationMessages;
+        return costRestService.update(costItem);
     }
 
     @Override

@@ -1,10 +1,10 @@
 package com.worth.ifs.application.finance.view.jes;
 
 import com.worth.ifs.application.finance.model.FinanceFormField;
-import com.worth.ifs.application.finance.service.CostService;
+import com.worth.ifs.application.finance.service.FinanceRowService;
 import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.finance.view.FinanceFormHandler;
-import com.worth.ifs.application.finance.view.item.CostHandler;
+import com.worth.ifs.application.finance.view.item.FinanceRowHandler;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.service.QuestionService;
 import com.worth.ifs.commons.error.Error;
@@ -39,7 +39,7 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
 	private static final Log LOG = LogFactory.getLog(JESFinanceFormHandler.class);
 	
     @Autowired
-    private CostService costService;
+    private FinanceRowService financeRowService;
 
     @Autowired
     private FinanceService financeService;
@@ -85,12 +85,12 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
         if(financeFormField==null)
             return null;
 
-        CostHandler costHandler = new AcademicFinanceHandler();
+        FinanceRowHandler financeRowHandler = new AcademicFinanceHandler();
         Long costFormFieldId = 0L;
         if (financeFormField.getId() != null && !"null".equals(financeFormField.getId())) {
             costFormFieldId = Long.parseLong(financeFormField.getId());
         }
-        CostItem costItem = costHandler.toCostItem(costFormFieldId, Arrays.asList(financeFormField));
+        CostItem costItem = financeRowHandler.toCostItem(costFormFieldId, Arrays.asList(financeFormField));
         if(costItem != null) {
         	return storeCostItem(costItem, userId, applicationId, financeFormField.getQuestionId());
         } else {
@@ -112,7 +112,7 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
         if (costItem.getId().equals(0L)) {
             addCostItem(costItem, userId, applicationId, question);
         } else {
-            RestResult<ValidationMessages> messages = costService.update(costItem);
+            RestResult<ValidationMessages> messages = financeRowService.update(costItem);
             ValidationMessages validationMessages = messages.getSuccessObject();
 
             if (validationMessages == null || validationMessages.getErrors() == null || validationMessages.getErrors().isEmpty()) {
@@ -132,7 +132,7 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
 
         if (question != null && !question.isEmpty()) {
             Long questionId = Long.parseLong(question);
-            costService.add(applicationFinanceResource.getId(), questionId, costItem);
+            financeRowService.add(applicationFinanceResource.getId(), questionId, costItem);
         }
     }
 

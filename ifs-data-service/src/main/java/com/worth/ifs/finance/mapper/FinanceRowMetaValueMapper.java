@@ -10,7 +10,7 @@ import org.mapstruct.Mapper;
 @Mapper(
     config = GlobalMapperConfig.class,
     uses = {
-        CostFieldMapper.class,
+        FinanceRowMetaFieldMapper.class,
         CostMapper.class
     }
 )

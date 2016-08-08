@@ -12,7 +12,7 @@ import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionTypeResource;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
-import com.worth.ifs.finance.resource.CostFieldResource;
+import com.worth.ifs.finance.resource.FinanceRowMetaFieldResource;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
@@ -103,8 +103,8 @@ public final class ParameterizedTypeReferences {
         return new ParameterizedTypeReference<List<FormInputResponseResource>>() {};
     }
 
-    public static ParameterizedTypeReference<List<CostFieldResource>> costFieldResourceListType() {
-        return new ParameterizedTypeReference<List<CostFieldResource>>() {};
+    public static ParameterizedTypeReference<List<FinanceRowMetaFieldResource>> financeRowMetaFieldResourceListType() {
+        return new ParameterizedTypeReference<List<FinanceRowMetaFieldResource>>() {};
     }
 
     public static ParameterizedTypeReference<List<InviteOrganisationResource>> inviteOrganisationResourceListType() {

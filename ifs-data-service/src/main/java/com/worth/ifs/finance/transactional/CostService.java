@@ -4,11 +4,11 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.FileAndContents;
 import com.worth.ifs.finance.domain.Cost;
-import com.worth.ifs.finance.domain.CostField;
+import com.worth.ifs.finance.domain.FinanceRowMetaField;
 import com.worth.ifs.finance.handler.item.CostHandler;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.ApplicationFinanceResourceId;
-import com.worth.ifs.finance.resource.CostFieldResource;
+import com.worth.ifs.finance.resource.FinanceRowMetaFieldResource;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.security.NotSecured;
 import org.springframework.security.access.method.P;
@@ -22,11 +22,11 @@ import java.util.function.Supplier;
 
 public interface CostService {
 
-    @PreAuthorize("hasPermission(#costFieldId, 'com.worth.ifs.finance.resource.CostFieldResource', 'READ')")
-    ServiceResult<CostField> getCostFieldById(@P("costFieldId") Long costFieldId);
+    @PreAuthorize("hasPermission(#costFieldId, 'com.worth.ifs.finance.resource.FinanceRowMetaFieldResource', 'READ')")
+    ServiceResult<FinanceRowMetaField> getCostFieldById(@P("costFieldId") Long costFieldId);
 
     @PostFilter("hasPermission(filterObject, 'READ')")
-    ServiceResult<List<CostFieldResource>> findAllCostFields();
+    ServiceResult<List<FinanceRowMetaFieldResource>> findAllCostFields();
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<CostItem> getCostItem(Long costItemId);

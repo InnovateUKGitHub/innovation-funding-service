@@ -32,7 +32,7 @@ public class FinanceRowMetaValueResourceBuilder extends BaseBuilder<FinanceRowMe
     }
 
     public FinanceRowMetaValueResourceBuilder withCostField(final Long costFieldId){
-        return with(costValue -> costValue.setCostField(costFieldId));
+        return with(costValue -> costValue.setFinanceRowMetaField(costFieldId));
     }
 
     public FinanceRowMetaValueResourceBuilder withCost(final Long costId) {

@@ -14,22 +14,22 @@ import com.worth.ifs.file.transactional.FileEntryService;
 import com.worth.ifs.file.transactional.FileService;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
-import com.worth.ifs.finance.domain.CostField;
+import com.worth.ifs.finance.domain.FinanceRowMetaField;
 import com.worth.ifs.finance.domain.FinanceRowMetaValue;
 import com.worth.ifs.finance.handler.ApplicationFinanceHandler;
 import com.worth.ifs.finance.handler.OrganisationFinanceDelegate;
 import com.worth.ifs.finance.handler.OrganisationFinanceHandler;
 import com.worth.ifs.finance.handler.item.CostHandler;
 import com.worth.ifs.finance.mapper.ApplicationFinanceMapper;
-import com.worth.ifs.finance.mapper.CostFieldMapper;
+import com.worth.ifs.finance.mapper.FinanceRowMetaFieldMapper;
 import com.worth.ifs.finance.mapper.CostMapper;
 import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
-import com.worth.ifs.finance.repository.CostFieldRepository;
+import com.worth.ifs.finance.repository.FinanceRowMetaFieldRepository;
 import com.worth.ifs.finance.repository.CostRepository;
 import com.worth.ifs.finance.repository.FinanceRowMetaValueRepository;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.ApplicationFinanceResourceId;
-import com.worth.ifs.finance.resource.CostFieldResource;
+import com.worth.ifs.finance.resource.FinanceRowMetaFieldResource;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.CostType;
 import com.worth.ifs.transactional.BaseTransactionalService;
@@ -63,7 +63,7 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
     private FileEntryRepository fileEntryRepository;
 
     @Autowired
-    private CostFieldMapper costFieldMapper;
+    private FinanceRowMetaFieldMapper financeRowMetaFieldMapper;
 
     @Autowired
     private ApplicationFinanceMapper applicationFinanceMapper;
@@ -76,7 +76,7 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
     private CostRepository costRepository;
 
     @Autowired
-    private CostFieldRepository costFieldRepository;
+    private FinanceRowMetaFieldRepository financeRowMetaFieldRepository;
 
     @Autowired
     private FinanceRowMetaValueRepository financeRowMetaValueRepository;
@@ -97,14 +97,14 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
     private FileEntryMapper fileEntryMapper;
 
     @Override
-    public ServiceResult<CostField> getCostFieldById(Long id) {
-        return find(costFieldRepository.findOne(id), notFoundError(CostField.class, id));
+    public ServiceResult<FinanceRowMetaField> getCostFieldById(Long id) {
+        return find(financeRowMetaFieldRepository.findOne(id), notFoundError(FinanceRowMetaField.class, id));
     }
 
     @Override
-    public ServiceResult<List<CostFieldResource>> findAllCostFields() {
-        List<CostField> allCostFields = costFieldRepository.findAll();
-        List<CostFieldResource> resources = simpleMap(allCostFields, costFieldMapper::mapToResource);
+    public ServiceResult<List<FinanceRowMetaFieldResource>> findAllCostFields() {
+        List<FinanceRowMetaField> allFinanceRowMetaFields = financeRowMetaFieldRepository.findAll();
+        List<FinanceRowMetaFieldResource> resources = simpleMap(allFinanceRowMetaFields, financeRowMetaFieldMapper::mapToResource);
         return serviceSuccess(resources);
     }
 
@@ -408,13 +408,13 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
     }
 
     private void updateCostValue(FinanceRowMetaValue costValue, Cost savedCost) {
-        if (costValue.getCostField() == null) {
-            LOG.error("CostField is null");
+        if (costValue.getFinanceRowMetaField() == null) {
+            LOG.error("FinanceRowMetaField is null");
             return;
         }
-        CostField costField = costFieldRepository.findOne(costValue.getCostField().getId());
+        FinanceRowMetaField financeRowMetaField = financeRowMetaFieldRepository.findOne(costValue.getFinanceRowMetaField().getId());
         costValue.setCost(savedCost);
-        costValue.setCostField(costField);
+        costValue.setFinanceRowMetaField(financeRowMetaField);
         costValue = financeRowMetaValueRepository.save(costValue);
         savedCost.addCostValues(costValue);
     }

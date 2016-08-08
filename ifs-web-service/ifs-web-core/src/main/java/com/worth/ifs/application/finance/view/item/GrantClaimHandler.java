@@ -13,7 +13,7 @@ import static com.worth.ifs.util.NullCheckFunctions.allNull;
 /**
  * Handles the conversion of form fields to a grant claims
  */
-public class GrantClaimHandler extends CostHandler {
+public class GrantClaimHandler extends FinanceRowHandler {
     @Override
     public CostItem toCostItem(Long id, List<FinanceFormField> financeFormFields) {
         Optional<FinanceFormField> grantClaimPercentageField = financeFormFields.stream().findFirst();

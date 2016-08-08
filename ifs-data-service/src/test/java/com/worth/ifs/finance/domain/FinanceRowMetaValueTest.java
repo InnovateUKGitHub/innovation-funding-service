@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 public class FinanceRowMetaValueTest {
     FinanceRowMetaValue costValue;
     Cost cost;
-    CostField costField;
+    FinanceRowMetaField financeRowMetaField;
     String value;
     ApplicationFinance applicationFinance;
     Question question;
@@ -22,34 +22,34 @@ public class FinanceRowMetaValueTest {
         applicationFinance = new ApplicationFinance();
         question = new Question();
         cost = new Cost(1L, "cost key", "cost item", "cost description", 10, price, applicationFinance, question);
-        costField = new CostField(1L, "NVP", "String");
+        financeRowMetaField = new FinanceRowMetaField(1L, "NVP", "String");
         value = "19000";
-        costValue = new FinanceRowMetaValue(cost, costField, value);
+        costValue = new FinanceRowMetaValue(cost, financeRowMetaField, value);
     }
 
     @Test
     public void constructorsShouldCreateInstancesOnValidInput() throws Exception {
         new FinanceRowMetaValue();
-        new FinanceRowMetaValue(costField, value);
-        new FinanceRowMetaValue(cost, costField, value);
+        new FinanceRowMetaValue(financeRowMetaField, value);
+        new FinanceRowMetaValue(cost, financeRowMetaField, value);
     }
 
     @Test
     public void costValueShouldReturnCorrectAttributeValues() throws Exception {
         Assert.assertEquals(costValue.getCost(), cost);
-        Assert.assertEquals(costValue.getCostField(), costField);
+        Assert.assertEquals(costValue.getFinanceRowMetaField(), financeRowMetaField);
         Assert.assertEquals(costValue.getValue(), value);
     }
 
     @Test
     public void costValueShouldReturnCorrectAttributeValuesAfterSetters() throws Exception {
         Cost newCost = new Cost(2L, "cost key", "cost item", "cost description", 10, price, applicationFinance, question);
-        CostField newCostField = new CostField(2L,"title","type");
+        FinanceRowMetaField newFinanceRowMetaField = new FinanceRowMetaField(2L,"title","type");
 
         costValue.setCost(newCost);
-        costValue.setCostField(newCostField);
+        costValue.setFinanceRowMetaField(newFinanceRowMetaField);
 
         Assert.assertEquals(costValue.getCost(), newCost);
-        Assert.assertEquals(costValue.getCostField(), newCostField);
+        Assert.assertEquals(costValue.getFinanceRowMetaField(), newFinanceRowMetaField);
     }
 }

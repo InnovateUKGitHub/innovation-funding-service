@@ -7,23 +7,23 @@ import java.io.Serializable;
 
 public class FinanceRowMetaValueId implements Serializable {
     private Long cost;
-    private Long costField;
+    private Long financeRowMetaField;
 
     public FinanceRowMetaValueId() {
     	// no-arg constructor
     }
 
-    public FinanceRowMetaValueId(Long cost, Long costField) {
+    public FinanceRowMetaValueId(Long cost, Long financeRowMetaField) {
         this.cost = cost;
-        this.costField = costField;
+        this.financeRowMetaField = financeRowMetaField;
     }
 
     public Long getCost() {
         return cost;
     }
 
-    public Long getCostField() {
-        return costField;
+    public Long getFinanceRowMetaField() {
+        return financeRowMetaField;
     }
 
 
@@ -41,7 +41,7 @@ public class FinanceRowMetaValueId implements Serializable {
         FinanceRowMetaValueId rhs = (FinanceRowMetaValueId) obj;
         return new EqualsBuilder()
             .append(this.cost, rhs.cost)
-            .append(this.costField, rhs.costField)
+            .append(this.financeRowMetaField, rhs.financeRowMetaField)
             .isEquals();
     }
 
@@ -49,7 +49,7 @@ public class FinanceRowMetaValueId implements Serializable {
     public int hashCode() {
         return new HashCodeBuilder()
             .append(cost)
-            .append(costField)
+            .append(financeRowMetaField)
             .toHashCode();
     }
 }

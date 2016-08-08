@@ -9,7 +9,7 @@ import java.util.List;
  * Holds all the fields which do not belong to the defined general costs.
  */
 @Entity
-public class CostField {
+public class FinanceRowMetaField {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -17,14 +17,14 @@ public class CostField {
     private String title;
     private String type;
 
-    @OneToMany(mappedBy="costField")
+    @OneToMany(mappedBy="financeRowMetaField")
     private List<FinanceRowMetaValue> costValues = new ArrayList<>();
 
-    public CostField() {
+    public FinanceRowMetaField() {
     	// no-arg constructor
     }
 
-    public CostField(Long id, String title, String type) {
+    public FinanceRowMetaField(Long id, String title, String type) {
         this.id = id;
         this.title = title;
         this.type = type;

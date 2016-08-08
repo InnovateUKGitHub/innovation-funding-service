@@ -12,7 +12,7 @@ import java.util.List;
 
 import static com.worth.ifs.util.NullCheckFunctions.allNull;
 
-public class TravelCostHandler extends CostHandler {
+public class TravelCostHandler extends FinanceRowHandler {
     private static final Log LOG = LogFactory.getLog(TravelCostHandler.class);
 
     @Override

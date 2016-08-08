@@ -1,8 +1,8 @@
 package com.worth.ifs.finance.security;
 
 import com.worth.ifs.BasePermissionRulesTest;
-import com.worth.ifs.finance.builder.CostFieldResourceBuilder;
-import com.worth.ifs.finance.resource.CostFieldResource;
+import com.worth.ifs.finance.builder.FinanceRowMetaFieldResourceBuilder;
+import com.worth.ifs.finance.resource.FinanceRowMetaFieldResource;
 import com.worth.ifs.security.CustomPermissionEvaluator;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -14,31 +14,31 @@ import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class CostFieldPermissionRulesTest extends BasePermissionRulesTest<CostFieldPermissionsRules> {
+public class FinanceRowMetaFieldPermissionRulesTest extends BasePermissionRulesTest<FinanceRowMetaFieldPermissionsRules> {
 
-    private CostFieldResource costFieldResource;
+    private FinanceRowMetaFieldResource financeRowMetaFieldResource;
     private UserResource user1;
     private UserResource anonymousUser;
 
     @Override
-    protected CostFieldPermissionsRules supplyPermissionRulesUnderTest() {
-        return new CostFieldPermissionsRules();
+    protected FinanceRowMetaFieldPermissionsRules supplyPermissionRulesUnderTest() {
+        return new FinanceRowMetaFieldPermissionsRules();
     }
 
     @Before
     public void setup() throws Exception {
         user1 = newUserResource().build();
         anonymousUser = (UserResource)ReflectionTestUtils.getField(new CustomPermissionEvaluator(), "ANONYMOUS_USER");
-        costFieldResource = CostFieldResourceBuilder.newCostFieldResource().with(id(1L)).build();
+        financeRowMetaFieldResource = FinanceRowMetaFieldResourceBuilder.newFinanceRowMetaFieldResource().with(id(1L)).build();
     }
 
     @Test
     public void loggedInUsersCanSeeCostFields() {
-        assertTrue(rules.loggedInUsersCanReadCostFieldReferenceData(costFieldResource, user1));
+        assertTrue(rules.loggedInUsersCanReadCostFieldReferenceData(financeRowMetaFieldResource, user1));
     }
 
     @Test
     public void nonLoggedInUserCannotSeeCostFields() {
-        assertFalse(rules.loggedInUsersCanReadCostFieldReferenceData(costFieldResource, anonymousUser));
+        assertFalse(rules.loggedInUsersCanReadCostFieldReferenceData(financeRowMetaFieldResource, anonymousUser));
     }
 }

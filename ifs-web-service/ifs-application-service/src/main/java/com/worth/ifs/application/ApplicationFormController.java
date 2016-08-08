@@ -59,7 +59,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.LongNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.worth.ifs.application.finance.service.CostService;
+import com.worth.ifs.application.finance.service.FinanceRowService;
 import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.form.validation.ApplicationStartDateValidator;
@@ -104,7 +104,7 @@ public class ApplicationFormController extends AbstractApplicationController {
     private static final Log LOG = LogFactory.getLog(ApplicationFormController.class);
 
     @Autowired
-    private CostService costService;
+    private FinanceRowService financeRowService;
 
     @Autowired
     private FormInputService formInputService;
@@ -328,7 +328,7 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     @RequestMapping(value = "/remove_cost/{costId}")
     public @ResponseBody String removeCostRow(@PathVariable("costId") final Long costId) throws JsonProcessingException {
-        costService.delete(costId);
+        financeRowService.delete(costId);
         AjaxResult ajaxResult = new AjaxResult(HttpStatus.OK, "true");
         ObjectMapper mapper = new ObjectMapper();
         return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(ajaxResult);

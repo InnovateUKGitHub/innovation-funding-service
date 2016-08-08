@@ -8,11 +8,11 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.FileAndContents;
 import com.worth.ifs.finance.domain.Cost;
-import com.worth.ifs.finance.domain.CostField;
+import com.worth.ifs.finance.domain.FinanceRowMetaField;
 import com.worth.ifs.finance.handler.item.CostHandler;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.ApplicationFinanceResourceId;
-import com.worth.ifs.finance.resource.CostFieldResource;
+import com.worth.ifs.finance.resource.FinanceRowMetaFieldResource;
 import com.worth.ifs.finance.resource.cost.AcademicCost;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.security.*;
@@ -32,7 +32,7 @@ import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newAp
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static com.worth.ifs.finance.builder.CostBuilder.newCost;
-import static com.worth.ifs.finance.builder.CostFieldResourceBuilder.newCostFieldResource;
+import static com.worth.ifs.finance.builder.FinanceRowMetaFieldResourceBuilder.newFinanceRowMetaFieldResource;
 import static com.worth.ifs.finance.service.CostServiceSecurityTest.TestCostService.ARRAY_SIZE_FOR_POST_FILTER_TESTS;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.isA;
@@ -43,32 +43,32 @@ import static org.mockito.Mockito.*;
  */
 public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService> {
 
-    private CostFieldPermissionsRules costFieldPermissionsRules;
+    private FinanceRowMetaFieldPermissionsRules financeRowMetaFieldPermissionsRules;
     private CostPermissionRules costPermissionsRules;
     private ApplicationFinancePermissionRules applicationFinanceRules;
     private ApplicationPermissionRules applicationRules;
     private ApplicationLookupStrategy applicationLookupStrategy;
     private CostLookupStrategy costLookupStrategy;
-    private CostFieldLookupStrategy costFieldLookupStrategy;
+    private FinanceRowMetaFieldLookupStrategy financeRowMetaFieldLookupStrategy;
     private ApplicationFinanceLookupStrategy applicationFinanceLookupStrategy;
 
     @Before
     public void lookupPermissionRules() {
-        costFieldPermissionsRules = getMockPermissionRulesBean(CostFieldPermissionsRules.class);
+        financeRowMetaFieldPermissionsRules = getMockPermissionRulesBean(FinanceRowMetaFieldPermissionsRules.class);
         costPermissionsRules = getMockPermissionRulesBean(CostPermissionRules.class);
         applicationFinanceRules = getMockPermissionRulesBean(ApplicationFinancePermissionRules.class);
         applicationRules = getMockPermissionRulesBean(ApplicationPermissionRules.class);
         applicationLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ApplicationLookupStrategy.class);
         costLookupStrategy = getMockPermissionEntityLookupStrategiesBean(CostLookupStrategy.class);
-        costFieldLookupStrategy = getMockPermissionEntityLookupStrategiesBean(CostFieldLookupStrategy.class);
+        financeRowMetaFieldLookupStrategy = getMockPermissionEntityLookupStrategiesBean(FinanceRowMetaFieldLookupStrategy.class);
         applicationFinanceLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ApplicationFinanceLookupStrategy.class);
     }
 
     @Test
     public void testFindAllCostFields() {
         service.findAllCostFields();
-        verify(costFieldPermissionsRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).loggedInUsersCanReadCostFieldReferenceData(isA(CostFieldResource.class), isA(UserResource.class));
-        verifyNoMoreInteractions(costFieldPermissionsRules);
+        verify(financeRowMetaFieldPermissionsRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).loggedInUsersCanReadCostFieldReferenceData(isA(FinanceRowMetaFieldResource.class), isA(UserResource.class));
+        verifyNoMoreInteractions(financeRowMetaFieldPermissionsRules);
     }
 
     @Test
@@ -149,11 +149,11 @@ public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService
     @Test
     public void testGetCostField() {
         final Long costFieldId = 1L;
-        when(costFieldLookupStrategy.getCostField(costFieldId)).thenReturn(newCostFieldResource().with(id(costFieldId)).build());
+        when(financeRowMetaFieldLookupStrategy.getCostField(costFieldId)).thenReturn(newFinanceRowMetaFieldResource().with(id(costFieldId)).build());
         assertAccessDenied(
                 () -> service.getCostFieldById(costFieldId),
                 () -> {
-                    verify(costFieldPermissionsRules).loggedInUsersCanReadCostFieldReferenceData(isA(CostFieldResource.class), isA(UserResource.class));
+                    verify(financeRowMetaFieldPermissionsRules).loggedInUsersCanReadCostFieldReferenceData(isA(FinanceRowMetaFieldResource.class), isA(UserResource.class));
                 });
     }
 
@@ -315,13 +315,13 @@ public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService
         static final int ARRAY_SIZE_FOR_POST_FILTER_TESTS = 2;
 
         @Override
-        public ServiceResult<CostField> getCostFieldById(Long id) {
+        public ServiceResult<FinanceRowMetaField> getCostFieldById(Long id) {
             return null;
         }
 
         @Override
-        public ServiceResult<List<CostFieldResource>> findAllCostFields() {
-            return serviceSuccess(newCostFieldResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
+        public ServiceResult<List<FinanceRowMetaFieldResource>> findAllCostFields() {
+            return serviceSuccess(newFinanceRowMetaFieldResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
         }
 
         @Override

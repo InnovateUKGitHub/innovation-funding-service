@@ -5,9 +5,9 @@ import com.worth.ifs.application.transactional.QuestionService;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
-import com.worth.ifs.finance.domain.CostField;
+import com.worth.ifs.finance.domain.FinanceRowMetaField;
 import com.worth.ifs.finance.handler.item.*;
-import com.worth.ifs.finance.repository.CostFieldRepository;
+import com.worth.ifs.finance.repository.FinanceRowMetaFieldRepository;
 import com.worth.ifs.finance.repository.CostRepository;
 import com.worth.ifs.finance.resource.category.*;
 import com.worth.ifs.finance.resource.cost.CostItem;
@@ -38,7 +38,7 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
     private CostRepository costRepository;
 
     @Autowired
-    private CostFieldRepository costFieldRepository;
+    private FinanceRowMetaFieldRepository financeRowMetaFieldRepository;
 
     @Autowired
     private AutowireCapableBeanFactory beanFactory;
@@ -139,8 +139,8 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
     @Override
     public Cost costItemToCost(CostItem costItem) {
         CostHandler costHandler = getCostHandler(costItem.getCostType());
-        List<CostField> costFields = costFieldRepository.findAll();
-        costHandler.setCostFields(costFields);
+        List<FinanceRowMetaField> financeRowMetaFields = financeRowMetaFieldRepository.findAll();
+        costHandler.setCostFields(financeRowMetaFields);
         return costHandler.toCost(costItem);
     }
 

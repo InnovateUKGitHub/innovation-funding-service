@@ -13,7 +13,7 @@ import static com.worth.ifs.util.NullCheckFunctions.allNull;
 /**
  * Handles the conversion of form fields to other costs
  */
-public class OtherCostHandler extends CostHandler {
+public class OtherCostsHandler extends FinanceRowHandler {
     @Override
     public CostItem toCostItem(Long id, List<FinanceFormField> financeFormFields) {
         String description = null;

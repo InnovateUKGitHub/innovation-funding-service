@@ -3,10 +3,10 @@ package com.worth.ifs.finance.handler;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
-import com.worth.ifs.finance.domain.CostField;
+import com.worth.ifs.finance.domain.FinanceRowMetaField;
 import com.worth.ifs.finance.handler.item.CostHandler;
 import com.worth.ifs.finance.handler.item.JESCostHandler;
-import com.worth.ifs.finance.repository.CostFieldRepository;
+import com.worth.ifs.finance.repository.FinanceRowMetaFieldRepository;
 import com.worth.ifs.finance.repository.CostRepository;
 import com.worth.ifs.finance.resource.category.CostCategory;
 import com.worth.ifs.finance.resource.category.DefaultCostCategory;
@@ -31,7 +31,7 @@ public class OrganisationJESFinance implements OrganisationFinanceHandler {
     private CostRepository costRepository;
 
     @Autowired
-    private CostFieldRepository costFieldRepository;
+    private FinanceRowMetaFieldRepository financeRowMetaFieldRepository;
 
     @Override
     public Iterable<Cost> initialiseCostType(ApplicationFinance applicationFinance, CostType costType) {
@@ -108,8 +108,8 @@ public class OrganisationJESFinance implements OrganisationFinanceHandler {
     @Override
     public Cost costItemToCost(CostItem costItem) {
         CostHandler costHandler = new JESCostHandler();
-        List<CostField> costFields = costFieldRepository.findAll();
-        costHandler.setCostFields(costFields);
+        List<FinanceRowMetaField> financeRowMetaFields = financeRowMetaFieldRepository.findAll();
+        costHandler.setCostFields(financeRowMetaFields);
         return costHandler.toCost(costItem);
     }
 

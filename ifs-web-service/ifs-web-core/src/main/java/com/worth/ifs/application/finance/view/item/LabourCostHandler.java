@@ -14,7 +14,7 @@ import static com.worth.ifs.util.NullCheckFunctions.allNull;
 /**
  * Handles the conversion of form fields to a labour cost
  */
-public class LabourCostHandler extends CostHandler {
+public class LabourCostHandler extends FinanceRowHandler {
 
     @Override
     public CostItem toCostItem(Long id, List<FinanceFormField> financeFormFields) {

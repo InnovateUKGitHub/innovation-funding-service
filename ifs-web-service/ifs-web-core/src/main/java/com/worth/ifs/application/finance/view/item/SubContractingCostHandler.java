@@ -13,7 +13,7 @@ import static com.worth.ifs.util.NullCheckFunctions.allNull;
 /**
  * Handles the conversion of form fields to subcontracting costs
  */
-public class SubContractingCostHandler extends CostHandler {
+public class SubContractingCostHandler extends FinanceRowHandler {
 
     @Override
     public CostItem toCostItem(Long id, List<FinanceFormField> financeFormFields) {

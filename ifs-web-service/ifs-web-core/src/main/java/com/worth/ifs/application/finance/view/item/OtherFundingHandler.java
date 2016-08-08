@@ -14,7 +14,7 @@ import static com.worth.ifs.util.NullCheckFunctions.allNull;
 /**
  * Handles the conversion of form fields to other funding item
  */
-public class OtherFundingHandler extends CostHandler {
+public class OtherFundingHandler extends FinanceRowHandler {
 
     @Override
     public CostItem toCostItem(Long id, List<FinanceFormField> financeFormFields) {

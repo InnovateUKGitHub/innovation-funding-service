@@ -7,11 +7,11 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
-import com.worth.ifs.finance.domain.CostField;
+import com.worth.ifs.finance.domain.FinanceRowMetaField;
 import com.worth.ifs.finance.domain.FinanceRowMetaValue;
 import com.worth.ifs.finance.handler.OrganisationFinanceDefaultHandler;
 import com.worth.ifs.finance.handler.OrganisationFinanceHandler;
-import com.worth.ifs.finance.repository.CostFieldRepository;
+import com.worth.ifs.finance.repository.FinanceRowMetaFieldRepository;
 import com.worth.ifs.finance.repository.CostRepository;
 import com.worth.ifs.finance.resource.category.CostCategory;
 import com.worth.ifs.finance.resource.category.LabourCostCategory;
@@ -45,7 +45,7 @@ public class OrganisationFinanceHandlerTest {
     @Mock
     CostRepository costRepositoryMock;
     @Mock
-    CostFieldRepository costFieldRepository;
+    FinanceRowMetaFieldRepository financeRowMetaFieldRepository;
     @Mock
     QuestionService questionService;
     private Competition competition;
@@ -87,22 +87,22 @@ public class OrganisationFinanceHandlerTest {
 
         capitalUsage =  new CapitalUsage(null, 20,"Description", "Yes", new BigDecimal(200000), new BigDecimal(100000), 20);
         capitalUsageCost = handler.costItemToCost(capitalUsage);
-        capitalUsageCost.getCostValues().add(new FinanceRowMetaValue(capitalUsageCost, new CostField(3l, "existing", "String"), "Yes"));
-        capitalUsageCost.getCostValues().add(new FinanceRowMetaValue(capitalUsageCost, new CostField(4l, "residual_value", "BigDecimal"), String.valueOf(new BigDecimal(100000))));
-        capitalUsageCost.getCostValues().add(new FinanceRowMetaValue(capitalUsageCost, new CostField(5l, "utilisation", "Integer"), String.valueOf(20)));
-        capitalUsageCost.getCostValues().add(new FinanceRowMetaValue(capitalUsageCost, new CostField(6L, null, "Integer"), String.valueOf(20)));
+        capitalUsageCost.getCostValues().add(new FinanceRowMetaValue(capitalUsageCost, new FinanceRowMetaField(3l, "existing", "String"), "Yes"));
+        capitalUsageCost.getCostValues().add(new FinanceRowMetaValue(capitalUsageCost, new FinanceRowMetaField(4l, "residual_value", "BigDecimal"), String.valueOf(new BigDecimal(100000))));
+        capitalUsageCost.getCostValues().add(new FinanceRowMetaValue(capitalUsageCost, new FinanceRowMetaField(5l, "utilisation", "Integer"), String.valueOf(20)));
+        capitalUsageCost.getCostValues().add(new FinanceRowMetaValue(capitalUsageCost, new FinanceRowMetaField(6L, null, "Integer"), String.valueOf(20)));
         capitalUsageCost.getCostValues().add(new FinanceRowMetaValue(capitalUsageCost, null, String.valueOf(20)));
         capitalUsageCost.setQuestion(costTypeQuestion.get(CostType.CAPITAL_USAGE));
         costs.add(capitalUsageCost);
 
         subContracting = new SubContractingCost(null, BigDecimal.ONE, "france", "name", "role");
         subContractingCost = handler.costItemToCost(subContracting);
-        subContractingCost.getCostValues().add(new FinanceRowMetaValue(new CostField(1l, "country", "france"), "frane"));
+        subContractingCost.getCostValues().add(new FinanceRowMetaValue(new FinanceRowMetaField(1l, "country", "france"), "frane"));
         subContractingCost.setQuestion(costTypeQuestion.get(CostType.SUBCONTRACTING_COSTS));
         costs.add(subContractingCost);
         SubContractingCost subContracting2 = new SubContractingCost(null, BigDecimal.TEN, "france", "name", "role");
         Cost subContractingCost2 = handler.costItemToCost(subContracting2);
-        subContractingCost2.getCostValues().add(new FinanceRowMetaValue(new CostField(2l, "country", "france"), "frane"));
+        subContractingCost2.getCostValues().add(new FinanceRowMetaValue(new FinanceRowMetaField(2l, "country", "france"), "frane"));
         subContractingCost2.setQuestion(costTypeQuestion.get(CostType.SUBCONTRACTING_COSTS));
         costs.add(subContractingCost2);
 
@@ -124,7 +124,7 @@ public class OrganisationFinanceHandlerTest {
         costs.add(materialCost);
 
         when(costRepositoryMock.findByApplicationFinanceId(applicationFinance.getId())).thenReturn(costs);
-        when(costFieldRepository.findAll()).thenReturn(new ArrayList<CostField>());
+        when(financeRowMetaFieldRepository.findAll()).thenReturn(new ArrayList<FinanceRowMetaField>());
 
     }
 

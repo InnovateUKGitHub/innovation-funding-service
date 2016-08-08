@@ -1,7 +1,7 @@
 package com.worth.ifs.finance.handler.item;
 
 import com.worth.ifs.finance.domain.Cost;
-import com.worth.ifs.finance.domain.CostField;
+import com.worth.ifs.finance.domain.FinanceRowMetaField;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.validator.util.ValidationUtil;
 import org.apache.commons.logging.Log;
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 public abstract class CostHandler {
     private static final Log LOG = LogFactory.getLog(CostHandler.class);
-    Map<String, CostField> costFields = new HashMap<>();
+    Map<String, FinanceRowMetaField> costFields = new HashMap<>();
 
     public abstract Cost toCost(CostItem costItem);
 
@@ -32,8 +32,8 @@ public abstract class CostHandler {
         ValidationUtil.isValid(bindingResult, costItem, classes);
     }
 
-    public void setCostFields(List<CostField> costFields) {
-        this.costFields = costFields.stream().collect(Collectors.toMap(CostField::getTitle, Function.<CostField>identity()));
+    public void setCostFields(List<FinanceRowMetaField> financeRowMetaFields) {
+        this.costFields = financeRowMetaFields.stream().collect(Collectors.toMap(FinanceRowMetaField::getTitle, Function.<FinanceRowMetaField>identity()));
     }
 
     public List<Cost> initializeCost() {
