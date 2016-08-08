@@ -8,6 +8,7 @@ import com.worth.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
 import static com.worth.ifs.security.SecurityRuleUtil.isCompAdmin;
+import static com.worth.ifs.security.SecurityRuleUtil.isProjectFinanceUser;
 
 @PermissionRules
 @Component
@@ -21,6 +22,11 @@ public class ProjectPermissionRules extends BasePermissionRules {
     @PermissionRule(value = "READ", description = "Comp admins can see project resources")
     public boolean compAdminsCanViewProjects(final ProjectResource project, final UserResource user){
         return isCompAdmin(user);
+    }
+
+    @PermissionRule(value = "READ", description = "Project finance users can see project resources")
+    public boolean projectFinanceUsersCanViewProjects(final ProjectResource project, final UserResource user){
+        return isProjectFinanceUser(user);
     }
 
     @PermissionRule(
