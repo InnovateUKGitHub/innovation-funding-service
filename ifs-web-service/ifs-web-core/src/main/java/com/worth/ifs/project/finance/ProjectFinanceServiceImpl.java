@@ -17,7 +17,7 @@ public class ProjectFinanceServiceImpl implements ProjectFinanceService {
     private ProjectFinanceRestService projectFinanceRestService;
 
     @Override
-    public ServiceResult<Void> generateSpendProfile(Long projectId, Long partnerOrganisationId) {
-        return projectFinanceRestService.generateSpendProfile(projectId, partnerOrganisationId);
+    public ServiceResult<Void> generateSpendProfile(Long projectId) {
+        return projectFinanceRestService.generateSpendProfile(projectId);
     }
 }

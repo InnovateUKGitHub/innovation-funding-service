@@ -7,5 +7,5 @@ import com.worth.ifs.commons.service.ServiceResult;
  */
 public interface ProjectFinanceService {
 
-    ServiceResult<Void> generateSpendProfile(Long projectId, Long partnerOrganisationId);
+    ServiceResult<Void> generateSpendProfile(Long projectId);
 }

@@ -26,9 +26,15 @@
 
     <hr/>
 
-    <th:block th:each="orgDetails : ${model.partnerOrganisationIdsAndNames}">
-        <a th:href="@{/project/{projectId}/partner-organisation/{orgId}/spend-profile(projectId=${model.projectId},orgId=${orgDetails.key})}" th:text="${orgDetails.value}">Partner Organisation Name</a> <br />
-    </th:block>
+    <ul>
+        <li th:each="orgDetails : ${model.partnerOrganisationIdsAndNames}">
+            <a href="#" th:text="${orgDetails.value}">Partner Organisation Name</a>
+        </li>
+    </ul>
+
+    <form method="POST" th:action="@{/project/{projectId}/spend-profile/generate(projectId=${model.projectId})}">
+        <button class="button extra-margin">Generate Spend Profile</button>
+    </form>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
 </main>

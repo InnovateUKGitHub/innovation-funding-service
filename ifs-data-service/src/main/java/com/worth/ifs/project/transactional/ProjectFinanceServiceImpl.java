@@ -13,7 +13,7 @@ import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 public class ProjectFinanceServiceImpl extends BaseTransactionalService implements ProjectFinanceService {
 
     @Override
-    public ServiceResult<Void> generateSpendProfile(Long projectId, Long partnerOrganisationId) {
+    public ServiceResult<Void> generateSpendProfile(Long projectId) {
         System.out.println("Spend Profile generated in service!");
         return serviceSuccess();
     }

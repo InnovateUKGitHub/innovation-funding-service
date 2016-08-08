@@ -13,8 +13,8 @@ public class ProjectFinanceRestServiceImpl extends BaseRestService implements Pr
     private String projectFinanceRestURL = "/project";
 
     @Override
-    public ServiceResult<Void> generateSpendProfile(Long projectId, Long partnerOrganisationId) {
-        String url = projectFinanceRestURL + "/" + projectId + "/partner-organisation/" + partnerOrganisationId + "/spend-profile/generate";
+    public ServiceResult<Void> generateSpendProfile(Long projectId) {
+        String url = projectFinanceRestURL + "/" + projectId + "/spend-profile/generate";
         return postWithRestResult(url, Void.class).toServiceResult();
     }
 }

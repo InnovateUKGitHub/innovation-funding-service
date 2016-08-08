@@ -19,10 +19,9 @@ public class ProjectFinanceController {
     @Autowired
     private ProjectFinanceService projectFinanceService;
 
-    @RequestMapping(value = "/{projectId}/partner-organisation/{partnerOrganisationId}/spend-profile/generate", method = POST)
-    public RestResult<Void> generateSpendProfile(@PathVariable("projectId") final Long projectId,
-                                                 @PathVariable("partnerOrganisationId") final Long partnerOrganisationId) {
+    @RequestMapping(value = "/{projectId}/spend-profile/generate", method = POST)
+    public RestResult<Void> generateSpendProfile(@PathVariable("projectId") final Long projectId) {
 
-        return projectFinanceService.generateSpendProfile(projectId, partnerOrganisationId).toPostResponse();
+        return projectFinanceService.generateSpendProfile(projectId).toPostResponse();
     }
 }
