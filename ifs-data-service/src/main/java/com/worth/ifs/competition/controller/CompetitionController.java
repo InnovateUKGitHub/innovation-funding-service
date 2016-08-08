@@ -57,6 +57,10 @@ public class CompetitionController {
         return competitionService.findUpcomingCompetitions().toGetResponse();
     }
 
+    @RequestMapping(value="/search/{searchQuery}", method= RequestMethod.GET)
+    public RestResult<List<CompetitionResource>> search(@PathVariable("searchQuery") String searchQuery) {
+        return competitionService.searchCompetitions(searchQuery).toGetResponse();
+    }
     @RequestMapping(value="/count", method= RequestMethod.GET)
     public RestResult<CompetitionCountResource> count() {
         return competitionService.countCompetitions().toGetResponse();

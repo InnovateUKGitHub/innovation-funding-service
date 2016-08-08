@@ -1,0 +1,36 @@
+.form-search {
+    position: relative;
+    margin-top: 2.5em;
+    margin-bottom: 1em;
+
+    input.search-query {
+        margin-right: 35px;
+        height: 35px;
+        box-sizing: border-box;
+        width: 100%;
+        padding-left: 0.25em;
+    }
+
+    input[type='submit'] {
+        position: absolute;
+        z-index: 4;
+        right: 0;
+        top: 0;
+        width: 35px;
+        height: 35px;
+        border: 1px solid #005ea5;
+        border-width: 0 0 0 1px;
+        border-left-color: #bfc1c3;
+        -webkit-border-radius: 0;
+        -moz-border-radius: 0;
+        border-radius: 0;
+        overflow: hidden;
+        text-indent: -5000px;
+        color: #fff;
+        background-color: #005ea5;
+        background-image: url(https://assets.publishing.service.gov.uk/static/search-button-ca89b2a79f944909ceb7370d3f0b78811d32b96e883348fcd8886f63dd619585.png);
+        background-repeat: no-repeat;
+        background-position: 0 50%;
+        cursor: pointer;
+    }
+}

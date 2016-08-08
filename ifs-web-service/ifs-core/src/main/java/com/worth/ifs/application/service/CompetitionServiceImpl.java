@@ -81,6 +81,11 @@ public class CompetitionServiceImpl implements CompetitionService {
     }
 
     @Override
+    public Map<CompetitionResource.Status, List<CompetitionResource>> searchCompetitions(String searchQuery) {
+        return mapToStatus(competitionsRestService.searchCompetitions(searchQuery).getSuccessObjectOrThrowException());
+    }
+
+    @Override
     public CompetitionCountResource getCompetitionCounts() {
         return competitionsRestService.countCompetitions().getSuccessObjectOrThrowException();
     }

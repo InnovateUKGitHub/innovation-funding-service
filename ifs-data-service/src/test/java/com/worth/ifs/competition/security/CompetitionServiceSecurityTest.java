@@ -142,6 +142,11 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         }
 
         @Override
+        public ServiceResult<List<CompetitionResource>> searchCompetitions(String searchQuery) {
+            return null;
+        }
+
+        @Override
         public ServiceResult<CompetitionCountResource> countCompetitions() {
             return serviceSuccess(new CompetitionCountResource());
         }

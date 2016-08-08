@@ -33,6 +33,9 @@ public interface CompetitionService {
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<CompetitionResource>> findUpcomingCompetitions();
 
+    @PostFilter("hasPermission(filterObject, 'READ')")
+    ServiceResult<List<CompetitionResource>> searchCompetitions(String searchQuery);
+
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<CompetitionCountResource> countCompetitions();
 }

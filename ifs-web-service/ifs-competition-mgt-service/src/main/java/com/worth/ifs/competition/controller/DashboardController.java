@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -42,4 +43,12 @@ public class DashboardController {
         model.addAttribute("counts", competitionService.getCompetitionCounts());
         return TEMPLATE_PATH + "upcoming";
     }
+
+    @RequestMapping(value="/search", method= RequestMethod.GET)
+    public String upcoming(@RequestParam(name = "searchQuery", required = true) String searchQuery,
+                           Model model, HttpServletRequest request) {
+        model.addAttribute("competitions", competitionService.searchCompetitions(searchQuery));
+        return TEMPLATE_PATH + "search";
+    }
+
 }

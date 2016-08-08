@@ -106,6 +106,16 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
+    public ServiceResult<List<CompetitionResource>> searchCompetitions(String searchQuery) {
+        //PageRequest pageRequest = new PageRequest(1, 10, new Sort("startDate"));
+        //Page<Competition> competitions = competitionRepository.findByNameLike("%"+searchQuery+"%");
+        //Page<CompetitionResource> resources = new PageImpl<CompetitionResource>((List) competitionMapper.mapToResource(competitions.getContent()), pageRequest, competitions.getTotalElements());
+        return serviceSuccess((List) competitionMapper.mapToResource(
+                competitionRepository.findByNameLikeOrCompetitionType_NameLike("%"+searchQuery+"%", "%"+searchQuery+"%").stream().map(this::addCategories).collect(Collectors.toList())
+        ));
+    }
+
+    @Override
     public ServiceResult<CompetitionCountResource> countCompetitions() {
         //TODO INFUND-3833 populate complete count
         return serviceSuccess(new CompetitionCountResource(competitionRepository.countLive(), competitionRepository.countProjectSetup(),
