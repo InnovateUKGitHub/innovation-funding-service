@@ -23,7 +23,6 @@ Resource          ../../../resources/keywords/User_actions.robot
 Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
 
 *** Test Cases ***
-
 User can navigate to the competition setup form
     [Documentation]    INFUND-2945
     ...
@@ -134,7 +133,9 @@ Initial details mark as done
     And the user should see the element    jQuery=.button:contains("Edit")
 
 Initial details can be edited again
-    [Documentation]    INFUND-2985, INFUND-3182
+    [Documentation]    INFUND-2985
+    ...
+    ...    INFUND-3182
     [Tags]    Pending
     When the user clicks the button/link    jQuery=.button:contains("Edit")
     And the user enters text to a text field    id=title    Test competition
@@ -150,7 +151,6 @@ Initial details can be edited again
 
 Funding information server-side validations
     [Documentation]    INFUND-2985
-    ...
     [Tags]    Pending
     # TODO update when story INFUND-3002 is completed
     Given the user clicks the button/link    link=Funding Information
@@ -164,7 +164,6 @@ Funding information server-side validations
 
 Funding information client-side validations
     [Documentation]    INFUND-2985
-    ...
     [Tags]    Pending
     #To do: add the validation errors
     When the user enters text to a text field    id=funder    Test
@@ -192,8 +191,7 @@ Funding informations calculations
     Then the total should be correct    £ 21,000
 
 Funding Information can be saved
-    [Documentation]    \
-    ...    INFUND-3182
+    [Documentation]    INFUND-3182
     [Tags]    Pending
     And the user clicks the button/link    jQuery=.button:contains("Done")
     And the user should see the text in the page    FunderName
@@ -205,12 +203,28 @@ Funding Information can be saved
     And the user should see the text in the page    1712-1
     And the user should see the element    jQuery=.button:contains("Edit")
 
+Eligibility page should contain the correct options
+    [Documentation]    INFUND-2989
+    ...
+    ...    INFUND-2990
+    [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
+    Given the user clicks the button/link    link=Eligibility
+    And the user should see the text in the page    Does the competition have multiple stream?
+    Then the user should see the element    jQuery=label:contains(Single or Collaborative)
+    When the user should see the element    jQuery=label:contains(Collaborative)
+    And the user should see the element    jQuery=label:contains(Business)
+    And the user should see the element    jQuery=label:contains(Research)
+    And the user should see the element    jQuery=label:contains(Either)
+    And the user should see the element    jQuery=label:contains(Yes)
+    And the user should see the element    jQuery=label:contains(No)
+    And the user should see the element    jQuery=label:contains(Technical feasibility)
+    And the user should see the element    jQuery=label:contains(Industrial research)
+    And the user should see the element    jQuery=label:contains(Experimental development)
+
 Eligibility server-side validations
     [Documentation]    INFUND-2986
     [Tags]
-    [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
-    Given the user clicks the button/link    link=Eligibility
-    And the user should see the text in the page    Stream
+    [Setup]
     Given the user selects the radio button    multipleStream    yes
     When the user clicks the button/link    jQuery=.button:contains("Done")
     Then the user should see the text in the page    Please select at least one research category
@@ -219,7 +233,11 @@ Eligibility server-side validations
     And the user should see the text in the page    A stream name is required
 
 Eligibility client-side validations
-    [Documentation]    INFUND-2986, INFUND-2988, INFUND-3888
+    [Documentation]    INFUND-2986
+    ...
+    ...    IINFUND-2988
+    ...
+    ...    INFUND-3888
     [Tags]
     Given the user selects the radio button    multipleStream    yes
     When the user selects the checkbox    id=research-categories-33
@@ -237,28 +255,22 @@ Eligibility client-side validations
     And the user moves focus to a different part of the page
     And the user should not see the text in the page    A stream name is required
 
-Eligibility information can be marked as done then edit again
+Eligibility can be marked as done then edit again
     [Documentation]    INFUND-3051
     ...
     ...    INFUND-3872
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Done")
-    Then the user should see the text in the page    Multiple Stream
+    Then the user should see the text in the page    Yes
+    And the user should see the text in the page    Single
+    And the user should see the text in the page    Business
+    And the user should see the text in the page    30%
+    And the user should see the text in the page    Test stream name
+    And the user should see the text in the page    Technical feasibility, Industrial research, Experimental development
     And The user should not see the element    id=streamName
     When the user clicks the button/link    jQuery=.button:contains("Edit")
     And the user clicks the button/link    jQuery=.button:contains("Done")
     [Teardown]    The user clicks the button/link    jQuery=.button:contains("Edit")
-
-Eligibility page should contain the correct options
-    [Documentation]    INFUND-2989, INFUND-2990
-    When the user should see the element    xpath=//input[@type='radio' and @name='multipleStream' and @value='yes']
-    When the user should see the element    xpath=//input[@type='radio' and @name='multipleStream' and @value='no']
-    When the user should see the element    xpath=//input[@type='radio' and @name='singleOrCollaborative' and @value='single']
-    When the user should see the element    xpath=//input[@type='radio' and @name='singleOrCollaborative' and @value='collaborative']
-    When the user should see the element    xpath=//input[@type='radio' and @name='singleOrCollaborative' and @value='single-or-collaborative']
-    When the user should see the element    xpath=//input[@type='radio' and @name='leadApplicantType' and @value='business']
-    When the user should see the element    xpath=//input[@type='radio' and @name='leadApplicantType' and @value='research']
-    When the user should see the element    xpath=//input[@type='radio' and @name='leadApplicantType' and @value='either']
 
 *** Keywords ***
 the user moves focus to a different part of the page
