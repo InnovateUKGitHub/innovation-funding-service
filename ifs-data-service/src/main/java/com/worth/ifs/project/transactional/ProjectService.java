@@ -1,5 +1,12 @@
 package com.worth.ifs.project.transactional;
 
+import java.io.InputStream;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
+
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.application.resource.FundingDecision;
@@ -11,17 +18,11 @@ import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.security.SecuredBySpring;
 import com.worth.ifs.user.resource.OrganisationResource;
+
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
-
-import java.io.InputStream;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Supplier;
 
 /**
  * Transactional and secure service for Project processing work
@@ -79,7 +80,7 @@ public interface ProjectService {
     ServiceResult<OrganisationResource> getOrganisationByProjectAndUser(Long projectId, Long userId);
 
     @PreAuthorize("hasPermission(#monitoringOfficer.project, 'com.worth.ifs.project.resource.ProjectResource', 'ASSIGN_MONITORING_OFFICER')")
-    ServiceResult<Void> notifyMonitoringOfficer(MonitoringOfficerResource monitoringOfficer);
+    ServiceResult<Void> notifyStakeholdersOfMonitoringOfficerChange(MonitoringOfficerResource monitoringOfficer);
 
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'UPLOAD_OTHER_DOCUMENTS')")
     ServiceResult<FileEntryResource> createCollaborationAgreementFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier);
