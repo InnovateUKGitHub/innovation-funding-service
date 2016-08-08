@@ -11,9 +11,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
  */
 public interface AssessmentService {
 
-    @PreAuthorize("hasPermission(#id, 'com.worth.ifs.assessment.domain.Assessment', 'READ')")
+    @PreAuthorize("hasPermission(#id, 'com.worth.ifs.assessment.resource.AssessmentResource', 'READ')")
     ServiceResult<AssessmentResource> findById(@P("id") final Long id);
 
-    @PreAuthorize("hasPermission(#assessmentId, 'com.worth.ifs.assessment.domain.Assessment', 'UPDATE')")
+    @PreAuthorize("hasPermission(#assessmentId, 'com.worth.ifs.assessment.resource.AssessmentResource', 'UPDATE')")
     ServiceResult<Void> updateStatus(@P("assessmentId") final Long assessmentId, final ProcessOutcome processOutcome);
 }
