@@ -1,28 +1,25 @@
 package com.worth.ifs.application.service;
 
-import static com.worth.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
-import static com.worth.ifs.application.service.Futures.settable;
-import static com.worth.ifs.commons.service.ParameterizedTypeReferences.questionResourceListType;
-import static com.worth.ifs.commons.service.ParameterizedTypeReferences.validationMessagesListType;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.when;
-import static org.springframework.http.HttpMethod.GET;
+import com.worth.ifs.BaseRestServiceUnitTest;
+import com.worth.ifs.application.resource.QuestionResource;
+import com.worth.ifs.application.resource.QuestionType;
+import org.junit.Test;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.junit.Test;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-
-import com.worth.ifs.BaseRestServiceUnitTest;
-import com.worth.ifs.application.resource.QuestionResource;
-import com.worth.ifs.application.resource.QuestionType;
+import static com.worth.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
+import static com.worth.ifs.application.service.Futures.settable;
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.questionResourceListType;
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.validationMessagesListType;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.when;
+import static org.springframework.http.HttpMethod.GET;
 
 public class QuestionRestServiceMocksTest extends BaseRestServiceUnitTest<QuestionRestServiceImpl> {
 
@@ -131,5 +128,14 @@ public class QuestionRestServiceMocksTest extends BaseRestServiceUnitTest<Questi
 
         List<QuestionResource> result = service.getQuestionsBySectionIdAndType(1L, QuestionType.COST).getSuccessObject();
         assertEquals(questions, result);
+    }
+
+    @Test
+    public void save() {
+        QuestionResource questionResource = newQuestionResource().build();
+        setupPutWithRestResultExpectations(questionRestURL + "/", QuestionResource.class, questionResource, questionResource);
+
+        QuestionResource result = service.save(questionResource).getSuccessObject();
+        assertEquals(questionResource, result);
     }
 }

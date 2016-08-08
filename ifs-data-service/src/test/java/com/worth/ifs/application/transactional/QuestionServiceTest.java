@@ -1,5 +1,22 @@
 package com.worth.ifs.application.transactional;
 
+import com.worth.ifs.BaseUnitTestMocksTest;
+import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.mapper.SectionMapper;
+import com.worth.ifs.application.resource.QuestionResource;
+import com.worth.ifs.application.resource.QuestionType;
+import com.worth.ifs.application.resource.SectionResource;
+import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.competition.domain.Competition;
+import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.Arrays;
+import java.util.List;
+
 import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
 import static com.worth.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
 import static com.worth.ifs.application.builder.SectionBuilder.newSection;
@@ -12,24 +29,6 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.when;
-
-import java.util.Arrays;
-import java.util.List;
-
-import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.worth.ifs.BaseUnitTestMocksTest;
-import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.domain.Section;
-import com.worth.ifs.application.mapper.SectionMapper;
-import com.worth.ifs.application.resource.QuestionResource;
-import com.worth.ifs.application.resource.QuestionType;
-import com.worth.ifs.application.resource.SectionResource;
-import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.competition.domain.Competition;
 
 public class QuestionServiceTest extends BaseUnitTestMocksTest {
 
@@ -170,5 +169,20 @@ public class QuestionServiceTest extends BaseUnitTestMocksTest {
     	assertTrue(result.getSuccessObject().contains(questionResource1));
     	assertTrue(result.getSuccessObject().contains(questionResource2));
     	assertTrue(result.getSuccessObject().contains(questionResource3));
+    }
+
+    @Test
+    public void saveQuestionResource() throws Exception {
+        QuestionResource questionResource = newQuestionResource().build();
+        Question question = newQuestion().build();
+
+        when(questionMapperMock.mapToDomain(questionResource)).thenReturn(question);
+        when(questionMapperMock.mapToResource(question)).thenReturn(questionResource);
+        when(questionRepositoryMock.save(question)).thenReturn(question);
+
+        ServiceResult<QuestionResource> result = questionService.save(questionResource);
+
+        assertTrue(result.isSuccess());
+        assertEquals(questionResource, result.getSuccessObject());
     }
 }
