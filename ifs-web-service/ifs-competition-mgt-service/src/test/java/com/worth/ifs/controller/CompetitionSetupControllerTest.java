@@ -41,6 +41,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+
 /**
  * Class for testing public functions of {@link CompetitionSetupController}
  */
@@ -205,9 +206,9 @@ public class CompetitionSetupControllerTest {
                         .param("budgetCode", "Bcode1")
                         .param("pafNumber", "1123")
                         .param("competitionCode", "12312-1"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("competition/setup"));
-        
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/initial"));
+
         verify(competitionSetupService).saveCompetitionSetupSection(isA(CompetitionSetupForm.class), eq(competition), eq(CompetitionSetupSection.INITIAL_DETAILS));
     }
     
@@ -237,8 +238,8 @@ public class CompetitionSetupControllerTest {
         				.param("singleOrCollaborative", "collaborative")
         				.param("leadApplicantType", "business")
         				.param("researchParticipationAmountId", "1"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("competition/setup"));
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/eligibility"));
         
         verify(competitionSetupService).saveCompetitionSetupSection(isA(CompetitionSetupForm.class), eq(competition), eq(CompetitionSetupSection.ELIGIBILITY));
     }
@@ -285,8 +286,8 @@ public class CompetitionSetupControllerTest {
                 .param("funder", "funder")
                 .param("funderBudget", "1")
                 .param("budgetCode", "b123"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("competition/setup"));
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/additional"));
 
         verify(competitionSetupService, atLeastOnce()).saveCompetitionSetupSection(any(AdditionalInfoForm.class),
                 any(CompetitionResource.class), any(CompetitionSetupSection.class));
