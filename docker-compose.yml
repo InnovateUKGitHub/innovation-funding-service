@@ -2,7 +2,6 @@ version: '2'
 services:
 
   shib:
-    container_name: ifs-local-dev
     image: g2g3/ifs-local-dev
     ports:
       - "443:443"
@@ -14,15 +13,16 @@ services:
       front-tier:
         aliases:
          - iuk-auth-localdev
+         - ifs-local-dev
 
   web:
-    container_name: ifs-web-service
     build:
       context: .
       dockerfile: web-dockerfile
     ports:
       - "8080:8080"
       - "12345:12345"
+      - "8081:8081"
     links:
       - data
     networks:
@@ -32,25 +32,26 @@ services:
           - ifs-application-host
 
   data:
-    container_name: ifs-data-service
     build:
       context: .
       dockerfile: data-dockerfile
     ports:
       - "8090:8080"
       - "12346:12345"
+      - "8091:8081"
     depends_on:
       - mysql
     networks:
       front-tier:
         aliases:
           - data-service
+          - ifs-data-service
       back-tier:
         aliases:
           - data-service
+          - ifs-data-service
 
   mysql:
-    container_name: ifs-database
     image: mysql:5.5.49
     ports:
       - "3306:3306"
@@ -65,33 +66,40 @@ services:
          - ifs-database
 
   smtp:
-    container_name: smtp
     image: camptocamp/smtp-sink
     expose:
       - 25
     networks:
-      - back-tier
+      back-tier:
+        aliases:
+          - smtp
 
   imap:
-    container_name: imap
     image: camptocamp/courier-imap
     volumes_from:
       - smtp:rw
     expose:
       - 143
     networks:
-      - front-tier
-      - back-tier
+      front-tier:
+        aliases:
+          - imap
+      back-tier:
+        aliases:
+          - imap
 
   webmail:
-    container_name: webmail
     image: camptocamp/sqwebmail
     ports:
       - "1234:80"
+    depends_on:
+      - smtp
     volumes_from:
       - smtp:rw
     networks:
-      - back-tier
+      back-tier:
+        aliases:
+          - webmail
 
 networks:
   front-tier:

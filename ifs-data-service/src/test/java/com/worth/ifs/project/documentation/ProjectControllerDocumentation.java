@@ -21,7 +21,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.worth.ifs.JsonTestUtil.toJson;
+import static com.worth.ifs.util.JsonMappingUtil.toJson;
 import static com.worth.ifs.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.error.Error.fieldError;
@@ -271,7 +271,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
         verify(projectServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);
 
         // Ensure that notification is not sent when there is error whilst saving
-        verify(projectServiceMock, never()).notifyMonitoringOfficer(monitoringOfficerResource);
+        verify(projectServiceMock, never()).notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource);
 
     }
 
@@ -297,7 +297,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
         verify(projectServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);
 
         // Ensure that notification is not sent when there is error whilst saving
-        verify(projectServiceMock, never()).notifyMonitoringOfficer(monitoringOfficerResource);
+        verify(projectServiceMock, never()).notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource);
 
     }
 
@@ -307,7 +307,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
         Long projectId = 1L;
 
         when(projectServiceMock.saveMonitoringOfficer(projectId, monitoringOfficerResource)).thenReturn(serviceSuccess());
-        when(projectServiceMock.notifyMonitoringOfficer(monitoringOfficerResource)).
+        when(projectServiceMock.notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource)).
                 thenReturn(serviceFailure(new Error(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE)));
 
         mockMvc.perform(put("/project/{projectId}/monitoring-officer", projectId)
@@ -322,7 +322,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                 ));
 
         verify(projectServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);
-        verify(projectServiceMock).notifyMonitoringOfficer(monitoringOfficerResource);
+        verify(projectServiceMock).notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource);
 
     }
 
@@ -332,7 +332,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
         Long projectId = 1L;
 
         when(projectServiceMock.saveMonitoringOfficer(projectId, monitoringOfficerResource)).thenReturn(serviceSuccess());
-        when(projectServiceMock.notifyMonitoringOfficer(monitoringOfficerResource)).
+        when(projectServiceMock.notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource)).
                 thenReturn(serviceSuccess());
 
 
@@ -348,7 +348,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                 ));
 
         verify(projectServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);
-        verify(projectServiceMock).notifyMonitoringOfficer(monitoringOfficerResource);
+        verify(projectServiceMock).notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource);
 
     }
 
@@ -440,8 +440,8 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                 .withOrganiationAddress(organisationAddressResource)
                 .build();
 
-        Error invalidSortCodeError = fieldError("sortCode", "Pattern");
-        Error invalidAccountNumberError = fieldError("accountNumber","Pattern");
+        Error invalidSortCodeError = fieldError("sortCode", "123", "Pattern");
+        Error invalidAccountNumberError = fieldError("accountNumber", "1234567", "Pattern");
 
         RestErrorResponse expectedErrors = new RestErrorResponse(asList(invalidSortCodeError, invalidAccountNumberError));
 
@@ -460,4 +460,32 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                 ))
                 .andReturn();
     }
+
+    @Test
+    public void isOtherDocumentsSubmitAllowed() throws Exception {
+        when(projectServiceMock.isOtherDocumentsSubmitAllowed(123L)).thenReturn(serviceSuccess(true));
+        MvcResult mvcResult = mockMvc.perform(get("/project/{projectId}/partner/documents/submit", 123L))
+                .andExpect(status().isOk())
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project for which the documents are being submitted to.")
+                        )))
+                .andReturn();
+        assertTrue(mvcResult.getResponse().getContentAsString().equals("true"));
+    }
+
+    @Test
+    public void isOtherDocumentsSubmitNotAllowedWhenDocumentsNotFullyUploaded() throws Exception {
+        when(projectServiceMock.isOtherDocumentsSubmitAllowed(123L)).thenReturn(serviceSuccess(false));
+        MvcResult mvcResult = mockMvc.perform(get("/project/{projectId}/partner/documents/submit", 123L))
+                .andExpect(status().isOk())
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project for which the documents are being submitted to.")
+                        )))
+                .andReturn();
+        assertTrue(mvcResult.getResponse().getContentAsString().equals("false"));
+    }
+
+
 }

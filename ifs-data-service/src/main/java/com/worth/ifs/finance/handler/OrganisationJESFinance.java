@@ -1,6 +1,5 @@
 package com.worth.ifs.finance.handler;
 
-import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
@@ -27,19 +26,12 @@ import java.util.stream.Collectors;
 
 @Component
 public class OrganisationJESFinance implements OrganisationFinanceHandler {
-    EnumMap<CostType, CostCategory> costCategories = new EnumMap<>(CostType.class);
+    
+    @Autowired
+    private CostRepository costRepository;
 
     @Autowired
-    CostRepository costRepository;
-
-    @Autowired
-    CostFieldRepository costFieldRepository;
-
-    @Autowired
-    ApplicationRepository applicationRepository;
-
-    @Autowired
-    ApplicationRepository applicationFinance;
+    private CostFieldRepository costFieldRepository;
 
     @Override
     public Iterable<Cost> initialiseCostType(ApplicationFinance applicationFinance, CostType costType) {
@@ -49,37 +41,39 @@ public class OrganisationJESFinance implements OrganisationFinanceHandler {
     @Override
     public Map<CostType, CostCategory> getOrganisationFinances(Long applicationFinanceId) {
         List<Cost> costs = costRepository.findByApplicationFinanceId(applicationFinanceId);
-
-        createCostCategories();
-        addCostsToCategories(costs);
-        return costCategories;
+        Map<CostType, CostCategory> costCategories = createCostCategories();
+        return addCostsToCategories(costCategories, costs);
     }
 
     @Override
     public Map<CostType, CostCategory> getOrganisationFinanceTotals(Long applicationFinanceId, Competition competition) {
-        getOrganisationFinances(applicationFinanceId);
-        setGrantClaimPercentage(competition);
-        calculateTotals();
-        resetCosts();
+    	Map<CostType, CostCategory> costCategories = getOrganisationFinances(applicationFinanceId);
+    	costCategories = setGrantClaimPercentage(costCategories, competition);
+    	costCategories = calculateTotals(costCategories);
+        return resetCosts(costCategories);
+    }
+
+    private Map<CostType, CostCategory> setGrantClaimPercentage(Map<CostType, CostCategory> costCategories, Competition competition) {
+        CostItem costItem = new GrantClaim(0L, competition.getAcademicGrantPercentage());
+        costCategories.get(CostType.FINANCE).addCost(costItem);
         return costCategories;
     }
 
-    public void setGrantClaimPercentage(Competition competition) {
-        CostItem costItem = new GrantClaim(0L, competition.getAcademicGrantPercentage());
-        costCategories.get(CostType.FINANCE).addCost(costItem);
-    }
-
-    private void calculateTotals() {
+    private Map<CostType, CostCategory> calculateTotals(Map<CostType, CostCategory> costCategories) {
         costCategories.values()
                 .forEach(cc -> cc.calculateTotal());
+        return costCategories;
     }
 
-    private void resetCosts() {
+    private Map<CostType, CostCategory> resetCosts(Map<CostType, CostCategory> costCategories) {
         costCategories.values()
                 .forEach(cc -> cc.setCosts(new ArrayList<>()));
+        return costCategories;
     }
 
-    private void createCostCategories() {
+    private Map<CostType, CostCategory> createCostCategories() {
+    	Map<CostType, CostCategory> costCategories = new EnumMap<>(CostType.class);
+
         for(CostType costType : CostType.values()) {
             CostCategory costCategory;
             switch (costType) {
@@ -92,13 +86,15 @@ public class OrganisationJESFinance implements OrganisationFinanceHandler {
             }
             costCategories.put(costType, costCategory);
         }
+        return costCategories;
     }
 
-    private void addCostsToCategories(List<Cost> costs) {
-        costs.stream().forEach(c -> addCostToCategory(c));
+    private Map<CostType, CostCategory> addCostsToCategories(Map<CostType, CostCategory> costCategories, List<Cost> costs) {
+        costs.stream().forEach(c -> addCostToCategory(costCategories, c));
+        return costCategories;
     }
 
-    private void addCostToCategory(Cost cost) {
+    private void addCostToCategory(Map<CostType, CostCategory> costCategories, Cost cost) {
         CostType costType = CostType.fromString(cost.getQuestion().getFormInputs().get(0).getFormInputType().getTitle());
         CostItem costItem = toCostItem(cost);
         CostCategory costCategory = costCategories.get(costType);

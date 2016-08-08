@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Confirm Bank Details'" th:remove="tag" />
+</head>
+<body th:with="context='project'" class="bank-detail-confirm">
+  <div th:include="fragments/layout :: body-start" th:remove="tag" />
+  <div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+<main id="content">
+  <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+  <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{id}(id=${project.id})}"  th:remove="tag"></div>
+
+  <div class="page-title">
+      <p class="subtitle" th:text="${#numbers.formatInteger(project.id,8)}"/>
+      <h1 class="heading-xlarge">Submit Bank Details</h1>
+  </div>
+
+    <form th:object="${form}" th:action="@{/project/{id}/bank-details(id=${project.id})}" method="post">
+      <input type="hidden" th:field="*{accountNumber}"/>
+      <input type="hidden" th:field="*{sortCode}"/>
+      <input type="hidden" th:field="*{addressType}"/>
+  		<p>Are you sure you wish to submit your bank details?</p>
+  		<p>After you submit, your bank details will be reviewed by Innovate UK. We may contact you to clarify any issues before we perform finance checks.</p>
+  		<hr />
+  		<div class="grid-row">
+  			<div class="column-half">
+  					<a th:href="@{/project/{id}/bank-details(id=${project.id})}" class="js-close button buttonlink large">Cancel</a>
+  			</div>
+  			<div class="column-half alignright-button" method="post">
+  				<button class="button large">Submit</button>
+  			</div>
+  		</div>
+  	</form>
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+</body>
+</html>

@@ -25,7 +25,7 @@ public class AssessmentFeedbackViewModelTest {
     public void testGetAppendixFileDescription() throws Exception {
         String questionShortName = "Technical approach";
 
-        AssessmentFeedbackViewModel assessmentFeedbackViewModel = new AssessmentFeedbackViewModel(0L, 0L, null, null, null, null, questionShortName, null, null, null, null, null);
+        AssessmentFeedbackViewModel assessmentFeedbackViewModel = new AssessmentFeedbackViewModel(0L, 0L, null, null, null, null, questionShortName, null, null, null, null, null, false, false);
 
         assertEquals("View technical approach appendix", assessmentFeedbackViewModel.getAppendixFileDescription());
     }
@@ -57,7 +57,8 @@ public class AssessmentFeedbackViewModelTest {
 
         AssessmentFeedbackViewModel assessmentFeedbackViewModel = setupViewModelWithFormInputsAndResponses(maxWordCount, asListOfPairs(formInputId, "No word limit imposed here."));
 
-        assertEquals(Integer.valueOf(0), assessmentFeedbackViewModel.getWordsRemaining(formInputId));
+        // Peeking into the behaviour of com.worth.ifs.form.resource.FormInputResource.getWordCount() reveals it treats no maximum word count as 0
+        assertEquals(Integer.valueOf(-5), assessmentFeedbackViewModel.getWordsRemaining(formInputId));
     }
 
     @Test
@@ -67,7 +68,7 @@ public class AssessmentFeedbackViewModelTest {
 
         AssessmentFeedbackViewModel assessmentFeedbackViewModel = setupViewModelWithFormInputsAndResponses(maxWordCount, asListOfPairs(formInputId, "Value of ten words here, exceeding the max word count."));
 
-        assertEquals(Integer.valueOf(0), assessmentFeedbackViewModel.getWordsRemaining(formInputId));
+        assertEquals(Integer.valueOf(-5), assessmentFeedbackViewModel.getWordsRemaining(formInputId));
     }
 
     @Test
@@ -98,7 +99,7 @@ public class AssessmentFeedbackViewModelTest {
                 .build()
         );
 
-        AssessmentFeedbackViewModel assessmentFeedbackViewModel = new AssessmentFeedbackViewModel(0L, 0L, null, null, null, null, null, null, null, null, assessmentFormInputs, assessorResponses);
+        AssessmentFeedbackViewModel assessmentFeedbackViewModel = new AssessmentFeedbackViewModel(0L, 0L, null, null, null, null, null, null, null, null, assessmentFormInputs, assessorResponses, false, false);
 
         assertNull(assessmentFeedbackViewModel.getWordsRemaining(formInputId));
     }
@@ -116,6 +117,6 @@ public class AssessmentFeedbackViewModelTest {
                 .build()
         );
 
-        return new AssessmentFeedbackViewModel(0L, 0L, null, null, null, null, null, null, null, null, assessmentFormInputs, assessorResponses);
+        return new AssessmentFeedbackViewModel(0L, 0L, null, null, null, null, null, null, null, null, assessmentFormInputs, assessorResponses, false, false);
     }
 }

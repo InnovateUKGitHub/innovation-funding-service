@@ -12,10 +12,10 @@ import java.util.List;
 public class CostField {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    Long id;
+    private Long id;
 
-    String title;
-    String type;
+    private String title;
+    private String type;
 
     @OneToMany(mappedBy="costField")
     private List<CostValue> costValues = new ArrayList<>();

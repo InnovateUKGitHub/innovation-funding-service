@@ -1,0 +1,58 @@
+
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Finance Contact'" th:remove="tag" />
+</head>
+<body th:with="context='project'" class="project-detail finance-contact">
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Project details',linkClass='link-back',linkUrl=@{/project/{projectId}/details(projectId=${project.id})}"  th:remove="tag"></div>
+
+    <div class="page-title">
+        <div th:include="fragments/elements :: project-title (projectId=${project.id}, projectName=${project.name})" th:remove="tag" />
+        <h1 class="heading-xlarge">Finance contact</h1>
+    </div>
+
+    <form method="POST" th:action="@{/project/{projectId}/details/finance-contact(projectId=${project.id})}" th:object="${form}">
+        <fieldset>
+          <h2 class="heading-medium">Finance contact</h2>
+          <div class="form-group" th:classappend="${#fields.hasErrors('financeContact') ? 'error' : ''}">
+            <legend>
+                <span class="visuallyhidden">Finance contact</span>
+                <div th:if="${#fields.hasErrors('financeContact')}" th:remove="tag">
+                   <span class="error-message" th:each="err : ${#fields.errors('financeContact')}" th:text="${err}" />
+               </div>
+            </legend>
+            <p class="form-hint">Who will be responsible for project finances in your organisation?</p>
+            <p>We will ask this person to</p>
+            <ul class="list-bullet">
+                <li>provide bank details for your organisation</li>
+                <li>confirm any queries we have with your project costs</li>
+                <li>review the spend profile of your project costs</li>
+            </ul>
+            <div class="extra-margin">
+                <div th:each="user : ${organisationUsers}" th:remove="tag">
+                    <input type="hidden" th:field="*{organisation}"></input>
+                    <label th:for="${#ids.next('financeContact')}" class="block-label">
+                        <input type="radio" th:field="*{financeContact}" th:value="${user.user}" data-required-errormessage="You need to select a Finance Contact before you can continue" required="required" />
+                        <span th:text="${user.userName}" th:remove="tag"></span>
+                    </label>
+                </div>
+            </div>
+          </div>
+        </fieldset>
+        <button class="button extra-margin">Save</button>
+    </form>
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+
+</body>
+</html>

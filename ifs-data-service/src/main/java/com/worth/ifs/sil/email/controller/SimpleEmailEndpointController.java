@@ -30,7 +30,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
  * A simple endpoint to allow stubbing of the SIL outbound email endpoint for non-integration test environments
  */
 @RestController
-@RequestMapping("/silstub")
+@RequestMapping("/silstub/sendmail")
 public class SimpleEmailEndpointController {
 
     private static final Log LOG = LogFactory.getLog(SimpleEmailEndpointController.class);
@@ -59,7 +59,7 @@ public class SimpleEmailEndpointController {
     @Value("${sil.stub.smtp.starttls.enable:false}")
     private Boolean tlsEnabled;
 
-    @RequestMapping(value="/sendmail", method = POST)
+    @RequestMapping(method = POST)
     public RestResult<Void> sendMail(@RequestBody SilEmailMessage message) {
 
         SilEmailBody plainTextBody = simpleFilter(message.getBody(), body -> "text/plain".equals(body.getContentType())).get(0);

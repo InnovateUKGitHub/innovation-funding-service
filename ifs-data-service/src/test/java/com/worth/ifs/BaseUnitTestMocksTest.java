@@ -56,6 +56,7 @@ import com.worth.ifs.project.repository.MonitoringOfficerRepository;
 import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.project.repository.ProjectUserRepository;
 import com.worth.ifs.project.transactional.ProjectService;
+import com.worth.ifs.sil.experian.service.SilExperianEndpoint;
 import com.worth.ifs.token.repository.TokenRepository;
 import com.worth.ifs.token.transactional.TokenService;
 import com.worth.ifs.user.mapper.UserMapper;
@@ -289,6 +290,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected CompetitionCoFunderRepository competitionCoFunderRepositoryMock;
+
+    @Mock
+    protected SilExperianEndpoint silExperianEndpointMock;
 
     @Before
     public void setupMockInjection() {

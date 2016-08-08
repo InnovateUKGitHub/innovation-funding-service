@@ -7,6 +7,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * Entity for persisting Bank Details for organisations associated with a project.
@@ -32,6 +33,19 @@ public class BankDetails {
     @OneToOne
     @JoinColumn(name = "organisationId", referencedColumnName = "id")
     private Organisation organisation;
+
+    private short companyNameScore;
+
+    private boolean registrationNumberMatched;
+
+    private short addressScore;
+
+    private boolean manualApproval;
+
+    private boolean verified;
+
+    @OneToMany(mappedBy = "bankDetails", cascade = CascadeType.ALL)
+    private List<VerificationCondition> verificationConditions;
 
     public Long getId() {
         return id;
@@ -81,6 +95,46 @@ public class BankDetails {
         this.organisation = organisation;
     }
 
+    public short getCompanyNameScore() {
+        return companyNameScore;
+    }
+
+    public void setCompanyNameScore(short companyNameScore) {
+        this.companyNameScore = companyNameScore;
+    }
+
+    public boolean getRegistrationNumberMatched() {
+        return registrationNumberMatched;
+    }
+
+    public void setRegistrationNumberMatched(boolean registrationNumberMatched) {
+        this.registrationNumberMatched = registrationNumberMatched;
+    }
+
+    public short getAddressScore() {
+        return addressScore;
+    }
+
+    public void setAddressScore(short addressScore) {
+        this.addressScore = addressScore;
+    }
+
+    public boolean isManualApproval() {
+        return manualApproval;
+    }
+
+    public void setManualApproval(boolean manualApproval) {
+        this.manualApproval = manualApproval;
+    }
+
+    public boolean isVerified() {
+        return verified;
+    }
+
+    public void setVerified(boolean verified) {
+        this.verified = verified;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -90,6 +144,11 @@ public class BankDetails {
         BankDetails that = (BankDetails) o;
 
         return new EqualsBuilder()
+                .append(companyNameScore, that.companyNameScore)
+                .append(registrationNumberMatched, that.registrationNumberMatched)
+                .append(addressScore, that.addressScore)
+                .append(manualApproval, that.manualApproval)
+                .append(verified, that.verified)
                 .append(id, that.id)
                 .append(sortCode, that.sortCode)
                 .append(accountNumber, that.accountNumber)
@@ -108,6 +167,23 @@ public class BankDetails {
                 .append(project)
                 .append(organisationAddress)
                 .append(organisation)
+                .append(companyNameScore)
+                .append(registrationNumberMatched)
+                .append(addressScore)
+                .append(manualApproval)
+                .append(verified)
                 .toHashCode();
+    }
+
+    public boolean isRegistrationNumberMatched() {
+        return registrationNumberMatched;
+    }
+
+    public List<VerificationCondition> getVerificationConditions() {
+        return verificationConditions;
+    }
+
+    public void setVerificationConditions(List<VerificationCondition> verificationConditions) {
+        this.verificationConditions = verificationConditions;
     }
 }

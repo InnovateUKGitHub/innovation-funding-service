@@ -157,7 +157,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
 
         mockMvc.perform(get("/" + assessment.getId()))
                 .andExpect(status().isOk())
-                .andExpect(view().name("assessor-application-overview"))
+                .andExpect(view().name("assessment/application-overview"))
                 .andExpect(model().attribute("currentApplication", app))
                 .andExpect(model().attribute("questionFeedback", assessorResponsesMap))
                 .andExpect(model().attribute("appendices", appendices))
@@ -193,7 +193,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
 
         mockMvc.perform(get("/" + assessment.getId() + "/finances"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("assessor-finances-summary"))
+                .andExpect(view().name("assessment/application-finances-summary"))
                 .andExpect(model().attribute("currentApplication", app))
                 .andExpect(model().attribute("currentCompetition", competitionService.getById(app.getCompetition())))
                 .andExpect(model().attribute("assessmentId", assessment.getId()))
@@ -210,12 +210,12 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
 
         when(assessmentService.rejectApplication(assessmentId, "reason", "comment")).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/{assessmentId}/status", assessmentId)
+        mockMvc.perform(post("/{assessmentId}/reject", assessmentId)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("rejectReason", reason)
                 .param("rejectComment", comment))
                 .andExpect(status().isOk())
-                .andExpect(view().name("assessor/assessor-dashboard"))
+                .andExpect(view().name("assessor-dashboard"))
                 .andReturn();
 
         verify(assessmentService, only()).rejectApplication(assessmentId, reason, comment);

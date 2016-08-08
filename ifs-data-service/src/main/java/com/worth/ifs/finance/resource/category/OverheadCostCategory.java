@@ -14,9 +14,9 @@ import java.util.Optional;
  */
 public class OverheadCostCategory implements CostCategory {
     public static final String ACCEPT_RATE = "Accept Rate";
-    List<CostItem> costs = new ArrayList<>();
-    BigDecimal total = BigDecimal.ZERO;
-    BigDecimal labourCostTotal = BigDecimal.ZERO;
+    private List<CostItem> costs = new ArrayList<>();
+    private BigDecimal total = BigDecimal.ZERO;
+    private BigDecimal labourCostTotal = BigDecimal.ZERO;
 
     @Override
     public List<CostItem> getCosts() {

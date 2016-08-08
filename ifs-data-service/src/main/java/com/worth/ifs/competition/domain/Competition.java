@@ -9,6 +9,7 @@ import com.worth.ifs.competition.resource.CollaborationLevel;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.LeadApplicantType;
+import com.worth.ifs.invite.domain.InvitationTarget;
 import com.worth.ifs.user.domain.User;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -22,7 +23,7 @@ import java.util.*;
  * Competition defines database relations and a model to use client side and server side.
  */
 @Entity
-public class Competition {
+public class Competition implements InvitationTarget {
 
 	@Transient
 	private DateProvider dateProvider = new DateProvider();
@@ -33,8 +34,11 @@ public class Competition {
             return status;
         }else if(getStartDate() == null || getStartDate().isAfter(today)){
             return CompetitionResource.Status.NOT_STARTED;
-        }else if(getEndDate() != null && getEndDate().isAfter(today)){
+        }else if(getEndDate() != null && getEndDate().isAfter(today)) {
             return CompetitionResource.Status.OPEN;
+        }else if (getEndDate() != null && getEndDate().isBefore(today)
+                  && getAssessmentStartDate() != null && getAssessmentStartDate().isAfter(today)) {
+            return CompetitionResource.Status.CLOSED;
         }else if(getAssessmentEndDate() != null && getAssessmentEndDate().isAfter(today)){
             return CompetitionResource.Status.IN_ASSESSMENT;
         }else if(getFundersPanelEndDate() == null || getFundersPanelEndDate().isAfter(today)) {
@@ -130,7 +134,7 @@ public class Competition {
     @MapKeyColumn (name="section")
     @Column(name="status")
     private Map<CompetitionSetupSection, Boolean> sectionSetupStatus = new HashMap<>();
-    
+
     public Competition() {
     	// no-arg constructor
         status = CompetitionResource.Status.COMPETITION_SETUP;

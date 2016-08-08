@@ -1,0 +1,95 @@
+
+.grid-row.sort-by {
+  border-bottom:1px solid $grey-1;
+  padding: 30px 0 5px;
+  margin: 0 0 5px;
+  > [class^="column"]{
+    padding:0;
+  }
+  h3 {
+    font-weight: bold;
+  }
+}
+
+.info-area > p > span {
+  display: block;
+}
+
+.info-area.sticky {
+  position: fixed;
+  top:0;
+}
+.info-area.bottom {
+  position: absolute;
+}
+
+.competition-management table + .pagination {
+    border-top:none;
+    margin-top:0;
+    margin-bottom:0;
+}
+
+.competition-management.app-summary #content  {
+  padding-bottom:0;
+}
+
+.js-enabled #save-funding-decision {
+  display:none;
+}
+
+@media (min-width: 1200px){
+    .info-area .button,
+    .info-area .button-secondary {
+        display:block;
+    }
+}
+@media(max-width: 1200px){
+  .competition-data .column-fifth,
+  .competition-data .column-four-fifth {
+      float:none;
+      width:100%;
+  }
+  .info-area {
+      overflow:hidden;
+      margin-bottom:30px;
+      > p:first-child {
+        clear:both;
+        width:100%;
+      }
+      > p + p {
+        padding-right: 1%;
+        width:24%;
+        float:left;
+        word-wrap:break-word;
+      }
+  }
+}
+
+.button-dashboard{
+    background: $grey-4;
+    padding: 20px 20px 15px 20px;
+    display: block;
+    min-height: 110px;
+    text-decoration: none;
+
+    &:hover{
+        background: $highlight-colour;
+    }
+
+    &.highlight{
+        background: $button-colour;
+        color: white;
+    }
+}
+
+.competition-management.competition-setup .inline-nav a {
+    font-size:15px;
+}
+@media (max-width: 1100px){
+  .competition-management.competition-setup .inline-nav li {
+    float:none;
+  }
+  .competition-management.competition-setup .inline-nav li.selected a {
+    border-bottom: 1px solid $border-colour;
+  }
+}

@@ -21,6 +21,7 @@ import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.service.ProcessRoleService;
+import com.worth.ifs.util.CollectionFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
@@ -35,6 +36,7 @@ import java.util.stream.Collectors;
 
 import static com.worth.ifs.application.AbstractApplicationController.FORM_MODEL_ATTRIBUTE;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
+import static com.worth.ifs.util.CollectionFunctions.toLinkedMap;
 
 /**
  * Build the model for Assessment Overview view.
@@ -101,7 +103,7 @@ public class AssessmentOverviewModelPopulator {
         final List<QuestionResource> questions = questionService.findByCompetition(competition.getId());
 
         final Map<Long, SectionResource> sections =
-                parentSections.stream().collect(Collectors.toMap(SectionResource::getId,
+                parentSections.stream().collect(toLinkedMap(SectionResource::getId,
                         Function.identity()));
 
         final Map<Long, List<SectionResource>> subSections = parentSections.stream()

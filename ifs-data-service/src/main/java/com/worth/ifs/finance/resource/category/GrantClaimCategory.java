@@ -15,8 +15,8 @@ import java.util.List;
 public class GrantClaimCategory implements CostCategory {
     private static final Log LOG = LogFactory.getLog(GrantClaimCategory.class);
 
-    List<CostItem> costs = new ArrayList<>();
-    BigDecimal total = BigDecimal.ZERO;
+    private List<CostItem> costs = new ArrayList<>();
+    private BigDecimal total = BigDecimal.ZERO;
 
     @Override
     public List<CostItem> getCosts() {

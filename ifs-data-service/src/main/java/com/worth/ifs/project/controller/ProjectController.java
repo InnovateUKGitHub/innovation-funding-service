@@ -116,7 +116,7 @@ public class ProjectController {
                                                   @RequestBody @Valid final MonitoringOfficerResource monitoringOfficerResource) {
 
         return projectService.saveMonitoringOfficer(projectId, monitoringOfficerResource)
-                .andOnSuccess(() -> projectService.notifyMonitoringOfficer(monitoringOfficerResource))
+                .andOnSuccess(() -> projectService.notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource))
                 .toPutResponse();
     }
     @RequestMapping(value = "/{projectId}/getOrganisationByUser/{userId}", method = GET)
@@ -233,5 +233,10 @@ public class ProjectController {
             @PathVariable("projectId") long projectId) throws IOException {
 
         return projectService.deleteExploitationPlanFile(projectId).toDeleteResponse();
+    }
+
+    @RequestMapping(value = "/{projectId}/partner/documents/submit", method = GET)
+    public RestResult<Boolean>isOtherDocumentsSubmitAllowed(@PathVariable("projectId") final Long projectId) {
+        return projectService.isOtherDocumentsSubmitAllowed(projectId).toGetResponse();
     }
 }
