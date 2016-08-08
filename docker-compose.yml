@@ -92,6 +92,8 @@ services:
     image: camptocamp/sqwebmail
     ports:
       - "1234:80"
+    depends_on:
+      - smtp
     volumes_from:
       - smtp:rw
     networks:

@@ -10,6 +10,7 @@ import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.security.NotSecured;
 import com.worth.ifs.security.SecuredBySpring;
 import com.worth.ifs.user.resource.OrganisationResource;
 import org.springframework.security.access.method.P;
@@ -73,6 +74,9 @@ public interface ProjectService {
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'UPDATE_FINANCE_CONTACT')")
     ServiceResult<Boolean> isSubmitAllowed(Long projectId);
 
+    @NotSecured(value = "Only a project manager can submit other documents", mustBeSecuredByOtherServices = false)
+    ServiceResult<Boolean> isOtherDocumentsSubmitAllowed(Long projectId);
+
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'VIEW_MONITORING_OFFICER')")
     ServiceResult<MonitoringOfficerResource> getMonitoringOfficer(Long projectId);
 
@@ -83,7 +87,7 @@ public interface ProjectService {
     ServiceResult<OrganisationResource> getOrganisationByProjectAndUser(Long projectId, Long userId);
 
     @PreAuthorize("hasPermission(#monitoringOfficer.project, 'com.worth.ifs.project.resource.ProjectResource', 'ASSIGN_MONITORING_OFFICER')")
-    ServiceResult<Void> notifyMonitoringOfficer(MonitoringOfficerResource monitoringOfficer);
+    ServiceResult<Void> notifyStakeholdersOfMonitoringOfficerChange(MonitoringOfficerResource monitoringOfficer);
 
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'UPLOAD_OTHER_DOCUMENTS')")
     ServiceResult<FileEntryResource> createCollaborationAgreementFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier);
@@ -114,4 +118,7 @@ public interface ProjectService {
 
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'DELETE_OTHER_DOCUMENTS')")
     ServiceResult<Void> deleteExploitationPlanFile(Long projectId);
+
+    @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'DOWNLOAD_OTHER_DOCUMENTS')")
+    List<ServiceResult<FileAndContents>>  retrieveUploadedDocuments(Long projectId);
 }

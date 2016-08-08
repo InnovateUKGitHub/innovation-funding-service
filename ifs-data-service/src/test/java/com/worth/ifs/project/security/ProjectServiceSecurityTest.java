@@ -225,7 +225,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
 
-        assertAccessDenied(() -> service.notifyMonitoringOfficer(newMonitoringOfficerResource().withProject(123L).build()),
+        assertAccessDenied(() -> service.notifyStakeholdersOfMonitoringOfficerChange(newMonitoringOfficerResource().withProject(123L).build()),
                 () -> {
             verify(projectPermissionRules).compAdminsCanAssignMonitoringOfficersForAnyProject(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
@@ -410,8 +410,13 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         public ServiceResult<Boolean> isSubmitAllowed(Long projectId) {
             return null;
         }
-		
-		@Override
+
+        @Override
+        public ServiceResult<Boolean> isOtherDocumentsSubmitAllowed(Long projectId) {
+            return null;
+        }
+
+        @Override
         public ServiceResult<Void> saveMonitoringOfficer(final Long projectId, final MonitoringOfficerResource monitoringOfficerResource) {
             return null;
         }
@@ -422,7 +427,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         }
 
 		@Override
-        public ServiceResult<Void> notifyMonitoringOfficer(MonitoringOfficerResource monitoringOfficer) {
+        public ServiceResult<Void> notifyStakeholdersOfMonitoringOfficerChange(MonitoringOfficerResource monitoringOfficer) {
             return null;
         }
 
@@ -483,6 +488,11 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         @Override
         public ServiceResult<Void> deleteExploitationPlanFile(Long projectId) {
+            return null;
+        }
+
+        @Override
+        public List<ServiceResult<FileAndContents>>  retrieveUploadedDocuments(Long projectId) {
             return null;
         }
     }

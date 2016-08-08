@@ -3,7 +3,7 @@
 <head>
     <div th:include="fragments/layout :: head" th:with="pageTitle='Confirm Bank Details'" th:remove="tag" />
 </head>
-<body class="bank-detail-confirm">
+<body th:with="context='project'" class="bank-detail-confirm">
   <div th:include="fragments/layout :: body-start" th:remove="tag" />
   <div th:include="fragments/layout :: global-header" th:remove="tag" />
 

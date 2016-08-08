@@ -17,7 +17,7 @@ import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 
 /**
- * Transactional and secured service providing operations around {@link com.worth.ifs.assessment.domain.AssessmentFeedback} data.
+ * Transactional and secured service providing operations around {@link com.worth.ifs.assessment.domain.Assessment} data.
  */
 @Service
 public class AssessmentServiceImpl extends BaseTransactionalService implements AssessmentService {
@@ -38,7 +38,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
 
     @Override
     public ServiceResult<Void> updateStatus(Long assessmentId, ProcessOutcome processOutcome) {
-        return find(assessmentRepository.findOne(assessmentId),notFoundError(AssessmentRepository.class,assessmentId)).andOnSuccess(found -> {
+        return find(assessmentRepository.findOne(assessmentId), notFoundError(AssessmentRepository.class, assessmentId)).andOnSuccess(found -> {
             if (processOutcome.getOutcomeType().equals(AssessmentOutcomes.REJECT.getType())) {
                 assessmentWorkflowEventHandler.rejectInvitation(found.getProcessRole().getId(), found.getProcessStatus(), processOutcome);
             }

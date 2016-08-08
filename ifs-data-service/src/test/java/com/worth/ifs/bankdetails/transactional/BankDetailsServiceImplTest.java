@@ -12,6 +12,7 @@ import com.worth.ifs.organisation.domain.OrganisationAddress;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.sil.experian.resource.AccountDetails;
+import com.worth.ifs.sil.experian.resource.SILBankDetails;
 import com.worth.ifs.sil.experian.resource.ValidationResult;
 import com.worth.ifs.sil.experian.resource.VerificationResult;
 import com.worth.ifs.user.domain.Organisation;
@@ -34,7 +35,7 @@ import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsService> {
@@ -42,6 +43,8 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
     private Project project;
     private Organisation organisation;
     private BankDetails bankDetails;
+    private SILBankDetails silBankDetails;
+    private AccountDetails accountDetails;
     private SILBankDetailsMapper silBankDetailsMapper = new SILBankDetailsMapper();
 
     @Before
@@ -54,6 +57,8 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
         OrganisationAddress organisationAddress = newOrganisationAddress().build();
         bankDetailsResource = newBankDetailsResource().withProject(project.getId()).withSortCode("123123").withAccountNumber("12345678").withOrganisation(organisation.getId()).withOrganiationAddress(organisationAddressResource).build();
         bankDetails = newBankDetails().withSortCode(bankDetailsResource.getSortCode()).withAccountNumber(bankDetailsResource.getAccountNumber()).withOrganisation(organisation).withOrganiationAddress(organisationAddress).build();
+        accountDetails = silBankDetailsMapper.toAccountDetails(bankDetailsResource);
+        silBankDetails = silBankDetailsMapper.toSILBankDetails(bankDetailsResource);
 
         when(bankDetailsMapperMock.mapToDomain(bankDetailsResource)).thenReturn(bankDetails);
         when(organisationAddressRepositoryMock.findOne(organisationAddressResource.getId())).thenReturn(organisationAddress);
@@ -83,10 +88,9 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
     @Test
     public void testSaveValidBankDetails(){
         project.setSubmittedDate(LocalDateTime.now());
-        AccountDetails accountDetails = silBankDetailsMapper.toResource(bankDetailsResource);
         ValidationResult validationResult = new ValidationResult();
         validationResult.setCheckPassed(true);
-        when(silExperianEndpointMock.validate(accountDetails)).thenReturn(serviceSuccess(validationResult));
+        when(silExperianEndpointMock.validate(silBankDetails)).thenReturn(serviceSuccess(validationResult));
         VerificationResult verificationResult = new VerificationResult();
         when(silExperianEndpointMock.verify(accountDetails)).thenReturn(serviceSuccess(verificationResult));
         when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(bankDetailsResource.getProject(), bankDetailsResource.getOrganisation())).thenReturn(null, bankDetails);
@@ -101,6 +105,31 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
         ServiceResult<Void> result = service.updateBankDetails(bankDetailsResource);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(BANK_DETAILS_CANNOT_BE_SUBMITTED_BEFORE_PROJECT_DETAILS));
+    }
+
+    @Test
+    public void testBankDetailsAreNotSavedIfExperianValidationFails(){
+        project.setSubmittedDate(LocalDateTime.now());
+        ValidationResult validationResult = new ValidationResult();
+        validationResult.setCheckPassed(false);
+        when(silExperianEndpointMock.validate(silBankDetails)).thenReturn(serviceSuccess(validationResult));
+        ServiceResult<Void> result = service.updateBankDetails(bankDetailsResource);
+        verify(silExperianEndpointMock, never()).verify(accountDetails);
+        verify(bankDetailsRepositoryMock, times(1)).findByProjectIdAndOrganisationId(bankDetailsResource.getProject(), bankDetailsResource.getOrganisation());
+    }
+
+    @Test
+    public void testVerificationOccursOnceBankDetailsAreSaved(){
+        project.setSubmittedDate(LocalDateTime.now());
+        ValidationResult validationResult = new ValidationResult();
+        validationResult.setCheckPassed(true);
+        VerificationResult verificationResult = new VerificationResult();
+        when(silExperianEndpointMock.validate(silBankDetails)).thenReturn(serviceSuccess(validationResult));
+        when(silExperianEndpointMock.verify(accountDetails)).thenReturn(serviceSuccess(verificationResult));
+        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(bankDetailsResource.getProject(), bankDetailsResource.getOrganisation())).thenReturn(null, bankDetails);
+        ServiceResult<Void> result = service.updateBankDetails(bankDetailsResource);
+        verify(silExperianEndpointMock, times(1)).verify(accountDetails);
+        verify(bankDetailsRepositoryMock, times(2)).findByProjectIdAndOrganisationId(bankDetailsResource.getProject(), bankDetailsResource.getOrganisation());
     }
 
     @Override

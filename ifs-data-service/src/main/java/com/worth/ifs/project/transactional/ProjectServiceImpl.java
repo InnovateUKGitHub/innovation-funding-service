@@ -66,6 +66,7 @@ import static com.worth.ifs.user.resource.UserRoleType.*;
 import static com.worth.ifs.util.CollectionFunctions.*;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static com.worth.ifs.util.EntityLookupCallbacks.getOnlyElementOrFail;
+import static java.util.Arrays.asList;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -105,8 +106,8 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
     @Autowired
     private OrganisationMapper organisationMapper;
-	
-	@Autowired
+
+    @Autowired
     private NotificationService notificationService;
 
     @Autowired
@@ -123,6 +124,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
     enum Notifications {
         MONITORING_OFFICER_ASSIGNED,
+        MONITORING_OFFICER_ASSIGNED_PROJECT_MANAGER,
         INVITE_FINANCE_CONTACT
     }
 
@@ -151,7 +153,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         return getProject(projectId).
                 andOnSuccess(project -> validateIfProjectAlreadySubmitted(project)).
                 andOnSuccess(project -> validateProjectManager(project, projectManagerUserId).
-                andOnSuccess(leadPartner -> createOrUpdateProjectManagerForProject(project, leadPartner)));
+                        andOnSuccess(leadPartner -> createOrUpdateProjectManagerForProject(project, leadPartner)));
     }
 
     @Override
@@ -235,6 +237,21 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     }
 
     @Override
+    public ServiceResult<Boolean> isOtherDocumentsSubmitAllowed(Long projectId) {
+        ServiceResult<Project> project = getProject(projectId);
+        Optional<ProjectUser> projectManager = getExistingProjectManager(project.getSuccessObject());
+        boolean allMatch = retrieveUploadedDocuments(projectId).stream()
+        .allMatch(serviceResult -> (serviceResult.isSuccess()) && (serviceResult.getSuccessObject().getFileEntry().getFilesizeBytes() > 0));
+
+        if (!allMatch) {
+             return serviceFailure(new Error(PROJECT_SETUP_OTHER_DOCUMENTS_MUST_BE_UPLOADED_BEFORE_SUBMIT));
+        }
+        return projectManager.isPresent() ? serviceSuccess(true)
+                : serviceFailure(new Error(PROJECT_SETUP_OTHER_DOCUMENTS_CAN_ONLY_SUBMITTED_BY_PROJECT_MANAGER));
+
+    }
+
+    @Override
     public ServiceResult<MonitoringOfficerResource> getMonitoringOfficer(Long projectId) {
         return getExistingMonitoringOfficerForProject(projectId).andOnSuccessReturn(monitoringOfficerMapper::mapToResource);
     }
@@ -243,18 +260,26 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     public ServiceResult<Void> saveMonitoringOfficer(final Long projectId, final MonitoringOfficerResource monitoringOfficerResource) {
 
         return validateMonitoringOfficer(projectId, monitoringOfficerResource).
-            andOnSuccess(() -> validateInMonitoringOfficerAssignableState(projectId)).
-            andOnSuccess(() -> saveMonitoringOfficer(monitoringOfficerResource));
+                andOnSuccess(() -> validateInMonitoringOfficerAssignableState(projectId)).
+                andOnSuccess(() -> saveMonitoringOfficer(monitoringOfficerResource));
     }
 
     @Override
-    public ServiceResult<Void> notifyMonitoringOfficer(MonitoringOfficerResource monitoringOfficer) {
+    public ServiceResult<Void> notifyStakeholdersOfMonitoringOfficerChange(MonitoringOfficerResource monitoringOfficer) {
 
-        Notification notification = createMonitoringOfficerAssignedNotification(monitoringOfficer);
+        Project project = projectRepository.findOne(monitoringOfficer.getProject());
+        User projectManager = getExistingProjectManager(project).get().getUser();
 
-        ServiceResult<Void> moAssignedEmailSendResult = notificationService.sendNotification(notification, EMAIL);
+        NotificationTarget moTarget = createMonitoringOfficerNotificationTarget(monitoringOfficer);
+        NotificationTarget pmTarget = createProjectManagerNotificationTarget(projectManager);
 
-        return processAnyFailuresOrSucceed(singletonList(moAssignedEmailSendResult));
+        Notification monitoringOfficerNotification = createMonitoringOfficerAssignedNotification(monitoringOfficer, moTarget, Notifications.MONITORING_OFFICER_ASSIGNED, project, projectManager);
+        Notification projectManagerNotification = createMonitoringOfficerAssignedNotification(monitoringOfficer, pmTarget, Notifications.MONITORING_OFFICER_ASSIGNED_PROJECT_MANAGER, project, projectManager);
+
+        ServiceResult<Void> moAssignedEmailSendResult = notificationService.sendNotification(monitoringOfficerNotification, EMAIL);
+        ServiceResult<Void> pmAssignedEmailSendResult = notificationService.sendNotification(projectManagerNotification, EMAIL);
+
+        return processAnyFailuresOrSucceed(asList(moAssignedEmailSendResult, pmAssignedEmailSendResult));
     }
 
     @Override
@@ -297,7 +322,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     public ServiceResult<Void> updateCollaborationAgreementFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
         return getProject(projectId).
                 andOnSuccess(project -> fileService.updateFile(fileEntryResource, inputStreamSupplier).
-                andOnSuccessReturnVoid(fileDetails -> linkCollaborationAgreementFileToProject(project, fileDetails)));
+                        andOnSuccessReturnVoid(fileDetails -> linkCollaborationAgreementFileToProject(project, fileDetails)));
     }
 
     @Override
@@ -359,6 +384,17 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
                                 removeExploitationPlanFileFromProject(project))));
     }
 
+    @Override
+    public List<ServiceResult<FileAndContents>> retrieveUploadedDocuments(Long projectId) {
+        ServiceResult<FileAndContents> collaborationAgreementFileContents = getCollaborationAgreementFileContents(projectId);
+        ServiceResult<FileAndContents> exploitationPlanFileContents = getExploitationPlanFileContents(projectId);
+
+        List<ServiceResult<FileAndContents>> serviceResults = new ArrayList<>();
+        serviceResults.add(collaborationAgreementFileContents);
+        serviceResults.add(exploitationPlanFileContents);
+        return serviceResults;
+    }
+
     private ServiceResult<FileEntry> getCollaborationAgreement(Project project) {
         if (project.getCollaborationAgreement() == null) {
             return serviceFailure(notFoundError(FileEntry.class));
@@ -404,18 +440,22 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     }
 
 
-    private Notification createMonitoringOfficerAssignedNotification(MonitoringOfficerResource monitoringOfficer) {
+    private NotificationTarget createProjectManagerNotificationTarget(final User projectManager) {
+        String fullName = getProjectManagerFullName(projectManager);
 
-        NotificationTarget notificationTarget = createMonitoringOfficerAssignedNotificationTarget(monitoringOfficer);
+        return new ExternalUserNotificationTarget(fullName, projectManager.getEmail());
+    }
 
-        Map<String, Object> globalArguments = createGlobalArgsForMonitoringOfficerAssignedEmail(monitoringOfficer);
+    private Notification createMonitoringOfficerAssignedNotification(MonitoringOfficerResource monitoringOfficer, NotificationTarget notificationTarget, Enum template, final Project project, final User projectManager) {
 
-        return new Notification(systemNotificationSource, singletonList(notificationTarget),
-                Notifications.MONITORING_OFFICER_ASSIGNED, globalArguments, emptyMap());
+        Map<String, Object> globalArguments = createGlobalArgsForMonitoringOfficerAssignedEmail(monitoringOfficer, project, projectManager);
+
+        return new Notification(systemNotificationSource, singletonList(notificationTarget), template
+                , globalArguments, emptyMap());
 
     }
 
-    private NotificationTarget createMonitoringOfficerAssignedNotificationTarget(MonitoringOfficerResource monitoringOfficer) {
+    private NotificationTarget createMonitoringOfficerNotificationTarget(MonitoringOfficerResource monitoringOfficer) {
 
         String fullName = getMonitoringOfficerFullName(monitoringOfficer);
 
@@ -423,23 +463,25 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
     }
     private String getMonitoringOfficerFullName(MonitoringOfficerResource monitoringOfficer) {
-
         // At this stage, validation has already been done to ensure that first name and last name are not empty
         return monitoringOfficer.getFirstName() + " " + monitoringOfficer.getLastName();
     }
 
-    private Map<String, Object> createGlobalArgsForMonitoringOfficerAssignedEmail(MonitoringOfficerResource monitoringOfficer) {
+    private String getProjectManagerFullName(User projectManager) {
+        // At this stage, validation has already been done to ensure that first name and last name are not empty
+        return projectManager.getFirstName() + " " + projectManager.getLastName();
+    }
 
-        Project project = projectRepository.findOne(monitoringOfficer.getProject());
-        User projectManager = getExistingProjectManager(project).get().getUser();
-
+    private Map<String, Object> createGlobalArgsForMonitoringOfficerAssignedEmail(MonitoringOfficerResource monitoringOfficer, Project project, User projectManager) {
         Map<String, Object> globalArguments = new HashMap<>();
         globalArguments.put("dashboardUrl", webBaseUrl);
         globalArguments.put("projectName", project.getName());
         globalArguments.put("leadOrganisation", project.getApplication().getLeadOrganisation().getName());
-        globalArguments.put("projectManagerName", projectManager.getFirstName() + " " + projectManager.getLastName());
+        globalArguments.put("projectManagerName", getProjectManagerFullName(projectManager));
         globalArguments.put("projectManagerEmail", projectManager.getEmail());
-
+        globalArguments.put("monitoringOfficerName", getMonitoringOfficerFullName(monitoringOfficer));
+        globalArguments.put("monitoringOfficerTelephone", monitoringOfficer.getPhoneNumber());
+        globalArguments.put("monitoringOfficerEmail", monitoringOfficer.getEmail());
         return globalArguments;
 
     }
@@ -456,9 +498,9 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     private ServiceResult<Void> validateInMonitoringOfficerAssignableState(final Long projectId) {
 
         return getProject(projectId).andOnSuccess(project -> {
-           if (!project.isProjectDetailsSubmitted()) {
-               return serviceFailure(new Error(PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED));
-           }
+            if (!project.isProjectDetailsSubmitted()) {
+                return serviceFailure(new Error(PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED));
+            }
             return serviceSuccess();
         });
     }
@@ -466,8 +508,8 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     private ServiceResult<Void> saveMonitoringOfficer(final MonitoringOfficerResource monitoringOfficerResource) {
 
         return getExistingMonitoringOfficerForProject(monitoringOfficerResource.getProject()).handleSuccessOrFailure(
-            noMonitoringOfficer -> saveNewMonitoringOfficer(monitoringOfficerResource),
-            existingMonitoringOfficer -> updateExistingMonitoringOfficer(existingMonitoringOfficer, monitoringOfficerResource)
+                noMonitoringOfficer -> saveNewMonitoringOfficer(monitoringOfficerResource),
+                existingMonitoringOfficer -> updateExistingMonitoringOfficer(existingMonitoringOfficer, monitoringOfficerResource)
         );
     }
 
@@ -556,6 +598,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     }
 
     //methods specific to inviteFinanceContact - end
+
 
     private ServiceResult<Void> validateProjectStartDate(LocalDate date) {
 

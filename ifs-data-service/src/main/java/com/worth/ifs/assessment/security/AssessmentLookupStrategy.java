@@ -1,5 +1,6 @@
 package com.worth.ifs.assessment.security;
 
+import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.mapper.AssessmentMapper;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.assessment.resource.AssessmentResource;
@@ -24,6 +25,11 @@ public class AssessmentLookupStrategy {
     @PermissionEntityLookupStrategy
     public AssessmentResource getAssessmentResource(final Long id){
         return assessmentMapper.mapToResource(assessmentRepository.findOne(id));
+    }
+
+    @PermissionEntityLookupStrategy
+    public Assessment getAssessment(final Long id){
+        return assessmentRepository.findOne(id);
     }
 
 }

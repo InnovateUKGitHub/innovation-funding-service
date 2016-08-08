@@ -3,7 +3,7 @@
 setHostFile(){
     cp /etc/hosts /tmp/hostsbackup
     ip_address=$(docker-machine ip default)
-    cat /etc/hosts | grep -v 'ifs-local-dev' | grep -v 'iuk-auth-localdev' > /tmp/temphosts
+    cat /etc/hosts | grep -v 'ifs-local-dev' | grep -v 'iuk-auth-localdev' | grep -v 'ifs-database' > /tmp/temphosts
     echo "$ip_address  ifs-local-dev" >> /tmp/temphosts
     echo "$ip_address  iuk-auth-localdev" >> /tmp/temphosts
     echo "$ip_address  ifs-database" >> /tmp/temphosts
@@ -20,8 +20,8 @@ cd ../../../
 docker-compose -p ifs up -d
 wait
 sleep 1
-docker-compose -p ifs exec mysql mysql -uroot -ppassword -e 'create database ifs_test'
-docker-compose -p ifs exec mysql mysql -uroot -ppassword -e 'create database ifs'
+docker-compose -p ifs exec mysql mysql -uroot -ppassword -e 'create database if not exists ifs_test'
+docker-compose -p ifs exec mysql mysql -uroot -ppassword -e 'create database if not exists ifs'
 setHostFile
 
 cd $BASEDIR

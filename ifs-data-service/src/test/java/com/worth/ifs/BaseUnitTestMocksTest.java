@@ -10,6 +10,7 @@ import com.worth.ifs.alert.repository.AlertRepository;
 import com.worth.ifs.alert.transactional.AlertService;
 import com.worth.ifs.application.mapper.ApplicationMapper;
 import com.worth.ifs.application.mapper.QuestionMapper;
+import com.worth.ifs.application.mapper.SectionMapper;
 import com.worth.ifs.application.repository.*;
 import com.worth.ifs.application.transactional.ApplicationFundingService;
 import com.worth.ifs.application.transactional.ApplicationService;
@@ -140,6 +141,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected FormInputRepository formInputRepositoryMock;
+
+    @Mock
+    protected SectionMapper sectionMapperMock;
 
     @Mock
     protected SectionRepository sectionRepositoryMock;

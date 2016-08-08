@@ -3,7 +3,7 @@
 <head>
     <div th:include="fragments/layout :: head" th:with="pageTitle='Project setup status'" th:remove="tag" />
 </head>
-<body th:with="context='applicant'" class="project-overview">
+<body th:with="context='project'" class="project-overview">
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
 <div th:include="fragments/layout :: global-header" th:remove="tag" />
 
@@ -86,7 +86,7 @@
       <li>
         <div class="progress-status" />
         <div class="progress-info">
-          <h2 class="heading-medium"><a href="#">Spend profile</a></h2>
+          <h2 class="heading-medium"><a th:href="@{/project/{id}/spend-profile(id=${model.projectId})}">Spend profile</a></h2>
           <p>Once we have approved your financial information, we will produce a spend profile.</p>
         </div>
       </li>
@@ -97,11 +97,11 @@
         <div class="progress-status" />
         <div class="progress-info">
           <div th:unless="${param.user != null}" th:remove="tag">
-            <h2 class="heading-medium"><a th:href="@{/project/{id}/other-documents(id=${model.projectId})}">Other documents</a></h2>
+            <h2 class="heading-medium"><a th:href="@{/project/{id}/partner/documents(id=${model.projectId})}">Other documents</a></h2>
             <p>As the lead partner in the consortium, you will need to upload documents including:</p>
           </div>
           <div th:if="${param.user != null and param.user[0] == 'nonLead'}" th:remove="tag">
-            <h2 class="heading-medium"><a th:href="@{/project/{id}/other-documents(id=${model.projectId})}">Other documents</a></h2>
+            <h2 class="heading-medium"><a th:href="@{/project/{id}/partner/documents(id=${model.projectId})}">Other documents</a></h2>
             <p>The lead partner of the consortium will need to upload documents including:</p>
           </div>
           <ul class="list-bullet">
