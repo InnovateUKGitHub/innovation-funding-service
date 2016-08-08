@@ -48,7 +48,7 @@
 }
 
 
-/*--- Table overflows for small screens ---*/
+/*---  ---*/
 .total-cost{
 	.heading-medium{
 		margin-left: 20px; 
@@ -60,6 +60,13 @@
 		margin-top: 5px;
 	}
 }
+
+/*--- Table modifications ---*/
+
+.cell-border-right{
+	border-right: 1px solid $grey-2;
+}
+
 
 /*--- Table overflows for small screens ---*/
 
@@ -92,9 +99,7 @@ table{
 	    background: red;
 	}
 
-
 }
-
 
 
 /*--- Full width pages for comp administrators ---*/

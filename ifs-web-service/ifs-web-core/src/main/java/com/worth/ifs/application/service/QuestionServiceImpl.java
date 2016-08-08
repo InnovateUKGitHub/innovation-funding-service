@@ -144,4 +144,9 @@ public class QuestionServiceImpl implements QuestionService {
 		return questionRestService.getQuestionsBySectionIdAndType(sectionId, type).getSuccessObjectOrThrowException();
 	}
 
+    @Override
+    public List<QuestionResource> getQuestionsByAssessment(Long assessmentId) {
+        return questionRestService.getQuestionsByAssessment(assessmentId).getSuccessObjectOrThrowException();
+    }
+
 }

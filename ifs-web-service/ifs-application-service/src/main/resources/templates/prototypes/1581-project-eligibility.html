@@ -54,6 +54,7 @@
 		<table>
 			<thead>
 				<tr>
+					<th scope="col">Project duration</th>
 					<th scope="col">Total costs</th>
 					<th scope="col" class="numeric">% grant</th>
 					<th scope="col" class="numeric">Funding sought</th>
@@ -63,6 +64,7 @@
 			</thead>
 			<tbody>
 				<tr>
+					<td>36 months</td>
 					<td>&pound;286,283</td>
 					<td class="numeric">55%</td>
 					<td class="numeric">&pound;180,399</td>
@@ -105,7 +107,7 @@
 			
 			<h3 class="heading-medium">Detailed finances</h3>
 
-			<p>These finances were submitted by the applicant during the application state. They include all changes made during the eligibility checks.</p>
+			<p>These finances were submitted by the applicant during the application stage. They include all changes made during the eligibility checks.</p>
 
 			<a href="/prototypes/1581-changes-finances">View changes to finances</a>
 
@@ -120,7 +122,7 @@
 			<div th:include="prototypes/fragments/finance-review-questions :: finance-question-labour" th:remove="tag" />
 
 	    	<h2>Administration support costs
-	    		<span data-mirror="#section-total-2">&pound; 0</span> <span class="section-percentage">20%</span>
+	    		<span data-mirror="#section-total-2">&pound; 0</span> <span class="section-percentage">(40% of labour) 20%</span>
 	       	</h2>
 
 			<div th:include="prototypes/fragments/finance-review-questions :: finance-question-admin-support" th:remove="tag" />
@@ -276,6 +278,16 @@
 			    </label>
 		    </div>
 
+		    <div class="form-group hidden" id="add-rag-rating">
+                <label for="rag-rating" class="form-label">Please enter the RAG rating for this eligibility review</label>
+                <select id="rag-rating" name="rag-rating" class="form-control" >
+                	<option value="">--</option>
+                	<option value="Green">Green</option>
+                	<option value="Amber">Amber</option>
+                	<option value="Red">Red</option>
+                </select>
+            </div>
+
 	    	<button data-js-modal="approve-eligibility-modal" id="approve-eligibility" class="button" type="submit" disabled="disabled">Approve eligible costs</button>
 
 		    <div class="approve-eligibility-modal" role="dialog" aria-hidden="true" style="margin-top: -174px;">
@@ -284,19 +296,9 @@
 
 					<h2 class="heading-medium no-margin">Approve eligible costs</h2>
 
-					<p>This partner will now be marked as eligible for this project, please state the eligibility RAG rating</p>
+					<p>This partner will now be marked as eligible for this project.</p>
 
 					<form>
-
-						<div class="form-group">
-			                <label for="rag-rating" class="form-label">RAG rating</label>
-			                <select id="rag-rating" name="rag-rating" class="form-control" >
-			                	<option value="">--</option>
-			                	<option value="Green">Green</option>
-			                	<option value="Amber">Amber</option>
-			                	<option value="Red">Red</option>
-			                </select>
-			            </div>
 
 						<hr />
 
@@ -306,7 +308,6 @@
 							
 							<input type="hidden" id="action" name="action" th:value="${(param.status != null and param.status[0] == 'grantChanged' ? 'grantChanged' : '')}" />
 							<input type="hidden" id="status" name="status" value="approved" />
-
 
 			        		<button class="button" th:formaction="@{${#httpServletRequest.requestURI}}">Approve eligible costs</button>
 			        	</div>
@@ -373,11 +374,22 @@
 		}
 	});
 
-	jQuery('input#costs-reviewed').on('click',function(e){ 
-		if ( jQuery(this).is(':checked') ) {
+	jQuery('select#rag-rating').on('change',function(e){
+		var rating = jQuery(this).val();
+
+		if (rating != ''){
 			jQuery("#approve-eligibility").removeAttr('disabled');
 		}else{
 			jQuery("#approve-eligibility").attr('disabled','disabled');
+		}
+	});
+
+
+	jQuery('input#costs-reviewed').on('click',function(e){ 
+		if ( jQuery(this).is(':checked') ) {
+			jQuery("#add-rag-rating").removeClass('hidden');
+		}else{
+			jQuery("#add-rag-rating").addClass('hidden');
 		}
 	});
 

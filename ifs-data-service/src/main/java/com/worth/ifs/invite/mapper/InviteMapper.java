@@ -2,6 +2,7 @@ package com.worth.ifs.invite.mapper;
 
 import com.worth.ifs.application.mapper.ApplicationMapper;
 import com.worth.ifs.commons.mapper.BaseMapper;
+import com.worth.ifs.invite.domain.ApplicationInvite;
 import com.worth.ifs.invite.domain.Invite;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.user.mapper.UserMapper;
@@ -17,16 +18,16 @@ import org.mapstruct.Mappings;
         UserMapper.class
     }
 )
-public abstract class InviteMapper extends BaseMapper<Invite, InviteResource, Long> {
+public abstract class InviteMapper extends BaseMapper<ApplicationInvite, InviteResource, Long> {
 
     @Mappings({
-            @Mapping(source = "application.competition.name", target = "competitionName"),
-            @Mapping(source = "application.competition.id", target = "competitionId"),
-            @Mapping(source = "application.leadOrganisation.name", target = "leadOrganisation"),
-            @Mapping(source = "application.leadApplicant.name", target = "leadApplicant"),
-            @Mapping(source = "application.leadApplicant.email", target = "leadApplicantEmail"),
-            @Mapping(source = "application.name", target = "applicationName"),
-            @Mapping(source = "application.id", target = "application"),
+            @Mapping(source = "target.competition.name", target = "competitionName"),
+            @Mapping(source = "target.competition.id", target = "competitionId"),
+            @Mapping(source = "target.leadOrganisation.name", target = "leadOrganisation"),
+            @Mapping(source = "target.leadApplicant.name", target = "leadApplicant"),
+            @Mapping(source = "target.leadApplicant.email", target = "leadApplicantEmail"),
+            @Mapping(source = "target.name", target = "applicationName"),
+            @Mapping(source = "target.id", target = "application"),
             @Mapping(source = "inviteOrganisation.id", target = "inviteOrganisation"),
             @Mapping(source = "inviteOrganisation.organisationName", target = "inviteOrganisationName"),
             @Mapping(source = "inviteOrganisation.organisation.name", target = "inviteOrganisationNameConfirmed"),
@@ -34,9 +35,9 @@ public abstract class InviteMapper extends BaseMapper<Invite, InviteResource, Lo
             @Mapping(source = "user.id", target = "user"),
     })
     @Override
-    public abstract InviteResource mapToResource(Invite domain);
+    public abstract InviteResource mapToResource(ApplicationInvite domain);
 
-    public Long mapInviteToId(Invite object) {
+    public Long mapInviteToId(ApplicationInvite object) {
         if (object == null) {
             return null;
         }
