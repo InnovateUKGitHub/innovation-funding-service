@@ -5,22 +5,24 @@ import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.mapper.SectionMapper;
 import com.worth.ifs.application.resource.SectionResource;
 
+import com.worth.ifs.commons.service.ServiceResult;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
+import java.util.List;
+
 import static com.worth.ifs.application.builder.SectionBuilder.newSection;
 import static com.worth.ifs.application.builder.SectionResourceBuilder.newSectionResource;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyLong;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.when;
 
-public class SectionServiceTest extends BaseUnitTestMocksTest {
+public class SectionServiceImplTest extends BaseUnitTestMocksTest {
     private final Log log = LogFactory.getLog(getClass());
 
     @Mock
@@ -89,5 +91,21 @@ public class SectionServiceTest extends BaseUnitTestMocksTest {
 
         SectionResource returnSection = sectionService.getPreviousSection(section.getId()).getSuccessObject();
         assertEquals(siblingSectionResource, returnSection);
+    }
+
+    @Test
+    public void getByCompetitionIdVisibleForAssessmentTest() throws Exception {
+        Long competitionId = 1L;
+
+        List<Section> sections = newSection().build(2);
+        List<SectionResource> sectionResources = newSectionResource().build(2);
+
+        when(sectionRepositoryMock.findByCompetitionIdAndDisplayInAssessmentApplicationSummaryTrueOrderByPriorityAsc(competitionId)).thenReturn(sections);
+        when(sectionMapper.mapToResource(same(sections.get(0)))).thenReturn(sectionResources.get(0));
+        when(sectionMapper.mapToResource(same(sections.get(1)))).thenReturn(sectionResources.get(1));
+
+        ServiceResult<List<SectionResource>> result = sectionService.getByCompetitionIdVisibleForAssessment(competitionId);
+        assertTrue(result.isSuccess());
+        assertEquals(sectionResources, result.getSuccessObject());
     }
 }

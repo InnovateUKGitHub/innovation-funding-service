@@ -5,6 +5,7 @@ import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.application.service.QuestionService;
 import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
+import com.worth.ifs.assessment.resource.AssessorFormInputType;
 import com.worth.ifs.assessment.service.AssessorFormInputResponseService;
 import com.worth.ifs.assessment.viewmodel.AssessmentFeedbackViewModel;
 import com.worth.ifs.commons.rest.RestResult;
@@ -20,6 +21,8 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Map;
 
+import static com.worth.ifs.assessment.resource.AssessorFormInputType.APPLICATION_IN_SCOPE;
+import static com.worth.ifs.assessment.resource.AssessorFormInputType.SCORE;
 import static com.worth.ifs.commons.rest.RestResult.aggregate;
 import static com.worth.ifs.util.CollectionFunctions.flattenLists;
 import static com.worth.ifs.util.CollectionFunctions.simpleToMap;
@@ -57,8 +60,8 @@ public class AssessmentFeedbackModelPopulator {
         List<FormInputResource> assessmentFormInputs = getAssessmentFormInputs(questionId);
         Map<Long, AssessorFormInputResponseResource> assessorResponses = getAssessorResponses(assessmentId, questionId);
         boolean appendixFormInputExists = hasFormInputWithType(applicationFormInputs, "fileupload");
-        boolean scoreFormInputExists = hasFormInputWithType(assessmentFormInputs, "assessor_score");
-        boolean scopeFormInputExists = hasFormInputWithType(assessmentFormInputs, "assessor_application_in_scope");
+        boolean scoreFormInputExists = hasFormInputWithType(assessmentFormInputs, SCORE);
+        boolean scopeFormInputExists = hasFormInputWithType(assessmentFormInputs, APPLICATION_IN_SCOPE);
 
         if (appendixFormInputExists) {
             FormInputResource appendixFormInput = applicationFormInputs.get(1);
@@ -105,7 +108,11 @@ public class AssessmentFeedbackModelPopulator {
                 AssessorFormInputResponseResource::getFormInput);
     }
 
-    private boolean hasFormInputWithType(List<FormInputResource> formInputs, String type) {
-        return formInputs.stream().anyMatch(formInput -> type.equals(formInput.getFormInputTypeTitle()));
+    private boolean hasFormInputWithType(List<FormInputResource> formInputs, AssessorFormInputType type) {
+        return hasFormInputWithType(formInputs, type.getTitle());
+    }
+
+    private boolean hasFormInputWithType(List<FormInputResource> formInputs, String typeTitle) {
+        return formInputs.stream().anyMatch(formInput -> typeTitle.equals(formInput.getFormInputTypeTitle()));
     }
 }
