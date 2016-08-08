@@ -6,9 +6,11 @@ Documentation     INFUND-3780: As an Assessor I want the system to autosave my w
 ...               INFUND-4203: Prevent navigation options appearing for questions that are not part of an assessment
 ...
 ...               INFUND-1483: As an Assessor I want to be asked to confirm whether the application is in the correct research category and scope so that Innovate UK know that the application aligns with the competition
+...
+...               INFUND-3394 Acceptance Test: Assessor should be able to view the full application and finance summaries for assessment
 Suite Setup       guest user log-in    paul.plum@gmail.com    Passw0rd
 Suite Teardown    the user closes the browser
-Force Tags        Pending    Assessor
+Force Tags        Assessor
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -16,9 +18,46 @@ Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
 
 *** Test Cases ***
+Scope section If NO selected then feedback should be added
+    [Documentation]    INFUND-1483
+    [Tags]    Pending
+    #Pending INFUND-4465
+    Given the user navigates to the page    ${Assessment_overview_9}
+    And the user clicks the button/link    link=Scope
+    When Assessor selects research category
+    And the user clicks the button/link    jQuery=label:contains(No)
+    And the user clicks the button/link    jQuery=a:contains(Back to assessment overview)
+    And The user should see the text in the page    In scope? No
+    Then The user should not see the element    css=.column-third > img    #green flag
+
+Scope section: Autosave
+    [Documentation]    INFUND-1483
+    Given the user navigates to the page    ${Assessment_overview_9}
+    And the user clicks the button/link    link=Scope
+    When Assessor selects research category
+    And the user clicks the button/link    jQuery=label:contains(No)
+    And The user enters text to a text field    css=#form-input-193 .editor    Testing feedback field when "No" is selected.
+    And the user clicks the button/link    jQuery=a:contains(Back to assessment overview)
+    Then The user should see the text in the page    In scope? No
+    And The user clicks the button/link    link=Scope
+    And The user should see the text in the page    Technical feasibility studies
+    And The user should see the text in the page    Testing feedback field when "No" is selected.
+
+Scope section: Word count
+    When The user enters text to a text field    css=#form-input-193 .editor    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco ullamco
+    Then The user should see the text in the page    Words remaining: 0
+
+Scope section: Status in the overview
+    [Documentation]    INFUND-1483
+    [Tags]
+    When the user clicks the button/link    jQuery=label:contains(Yes)
+    And the user clicks the button/link    jquery=button:contains("Save and return to assessment overview")
+    And The user should see the text in the page    In scope? Yes
+    And The user should see the element    css=.column-third > img    #green flag
+
 Autosave and edit the Application question - How many
     [Documentation]    INFUND-3552
-    [Tags]
+    [Tags]    Pending
     Given the user navigates to the page    ${Assessment_overview_9}
     When the user clicks the button/link    link=1. How many
     Then The user should see the text in the page    Please review the answer provided and score the answer out of 20 points.
@@ -31,7 +70,7 @@ Autosave and edit the Application question - How many
 
 Feedback should accept up to 100 words
     [Documentation]    INFUND-3402
-    [Tags]
+    [Tags]    Pending
     Given the user navigates to the page    ${Application_question_url}
     Then the word count should be calculated correctly
     When the Assessor enters more than 100 in feedback
@@ -39,23 +78,9 @@ Feedback should accept up to 100 words
     # TODO remove the comment after INFUND-4427 is fixed
     # Then the word count should remain the same
 
-Scope - Project details
-    [Documentation]    INFUND-3402
-    [Tags]
-    Given the user navigates to the page    ${Assessment_overview_9}
-    When the user clicks the button/link    link=Scope
-    Then The user should see the element    jquery=button:contains("Save and return to assessment overview")
-    And the Assessor fills in Scope details with In Scope as NO
-    Then The user should be redirected to the correct page    ${Assessment_overview_9}
-    And The user should see the element    css=#form-input-46 .column-third img
-    And The user should see the text in the page    In scope? No
-    Then the Assessor edits the Scope details with In Scope as Yes
-    And The user should see the text in the page    In scope? Yes
-    And The user should see the element    css=#form-input-46 div.column-third div
-
 Navigation link should not appear for questions that are not part of an assessment
     [Documentation]    INFUND-4264
-    [Tags]
+    [Tags]    Pending
     Given the user navigates to the page    ${Assessment_overview_9}
     When the user clicks the button/link    link=Application details
     Then The user should see the element    css=#content .next .pagination-part-title
@@ -71,7 +96,7 @@ Navigation link should not appear for questions that are not part of an assessme
 
 Non-scorable question cannot be scored/edited
     [Documentation]    INFUND-3400
-    [Tags]
+    [Tags]    Pending
     When the user clicks the button/link    link=Application details
     And The user should see the text in the page    Project title
     Then The user should not see the element    jQuery=label:contains(Question score)
@@ -91,7 +116,7 @@ Non-scorable question cannot be scored/edited
 
 Finance summary
     [Documentation]    INFUND-3394
-    [Tags]
+    [Tags]    Pending
     Given the user navigates to the page    ${Assessment_overview_9}
     When the user clicks the button/link    link=Finances overview
     Then The user should see the text in the page    Finances summary
@@ -146,25 +171,6 @@ the Assessor enters more than 100 in feedback
 the word count should remain the same
     Wait Until Element Contains    css=#form-input-195 .textarea-footer > span    -30
 
-the Assessor fills in Scope details with In Scope as NO
-    The user should see the element    id=research-category
-    Select From List By Index    id=research-category    1
-    Mouse Out    id=research-category
-    Click Element    xpath=//input[@type='radio' and @name='formInput[192]' and (@value='false' or @id='formInput1922')]
-    Input Text    css=#form-input-193 .editor.inPlaceholderMode    Testing feedback field when "No" is selected.
-    the user clicks the button/link    jquery=button:contains("Save and return to assessment overview")
-
-the Assessor edits the Scope details with In Scope as Yes
-    the user clicks the button/link    link=Scope
-    Select From List By Index    id=research-category    2
-    Mouse Out    id=research-category
-    Click Element    xpath=//input[@type='radio' and @name='formInput[192]' and (@value='true' or @id='formInput1921')]
-    # TODO the following locator is not recognised, can someone take a look at it please
-    # Mouse Out    xpath=//input[@type='radio' and @name='formInput[192]' and (@value='true' or @id='formInput1921')]
-    # Focus    css=#form-input-193 .editor.isModified
-    # Input Text    css=#form-input-193 .editor.isModified    Testing feedback field when "No" is selected. Also, testing feedback field when "Yes" is selected.
-    the user clicks the button/link    jquery=button:contains("Save and return to assessment overview")
-
 the finance summary total should be correct
     Element Should Contain    css=#content div:nth-child(5) tr:nth-child(2) td:nth-child(2)    £7,680
     Element Should Contain    css=#content div:nth-child(5) tr:nth-child(1) td:nth-child(3)    60%
@@ -181,3 +187,7 @@ the project cost breakdown total should be correct
     Element Should Contain    css=.form-group.project-cost-breakdown tr:nth-child(2) td:nth-child(7)    £0
     Element Should Contain    css=.form-group.project-cost-breakdown tr:nth-child(2) td:nth-child(8)    £0
     Element Should Contain    css=.form-group.project-cost-breakdown tr:nth-child(2) td:nth-child(9)    £0
+
+Assessor selects research category
+    Select From List By Index    id=research-category    1
+    Mouse Out    id=research-category
