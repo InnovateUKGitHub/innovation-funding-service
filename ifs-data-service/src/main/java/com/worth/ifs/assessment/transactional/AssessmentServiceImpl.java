@@ -38,7 +38,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
 
     @Override
     public ServiceResult<Void> updateStatus(Long assessmentId, ProcessOutcome processOutcome) {
-        return find(assessmentRepository.findOne(assessmentId),notFoundError(AssessmentRepository.class,assessmentId)).andOnSuccess(found -> {
+        return find(assessmentRepository.findOne(assessmentId), notFoundError(AssessmentRepository.class, assessmentId)).andOnSuccess(found -> {
             if (processOutcome.getOutcomeType().equals(AssessmentOutcomes.REJECT.getType())) {
                 assessmentWorkflowEventHandler.rejectInvitation(found.getProcessRole().getId(), found.getProcessStatus(), processOutcome);
             }

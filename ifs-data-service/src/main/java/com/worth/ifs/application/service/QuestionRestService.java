@@ -27,4 +27,5 @@ public interface QuestionRestService {
     RestResult<QuestionResource> getNextQuestionBySection(Long sectionId);
     RestResult<QuestionResource> getQuestionByFormInputType(String formInputType);
     RestResult<List<QuestionResource>> getQuestionsBySectionIdAndType(Long sectionId, QuestionType type);
+    RestResult<List<QuestionResource>> getQuestionsByAssessment(Long assessmentId);
 }
