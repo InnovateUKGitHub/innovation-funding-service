@@ -90,16 +90,22 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
         AssessorFormInputResponseResource existingAssessorFormInputResponseResource = newAssessorFormInputResponseResource()
                 .withAssessment(assessmentId)
                 .withFormInput(formInputId)
+                .withFormInputMaxWordCount(10)
                 .withValue(oldValue)
                 .withUpdatedDate(oldUpdatedDate)
                 .build();
-
+        AssessorFormInputResponseResource updatedAssessorFormInputResponseResource = newAssessorFormInputResponseResource()
+                .withAssessment(assessmentId)
+                .withFormInput(formInputId)
+                .withFormInputMaxWordCount(10)
+                .withValue(value)
+                .build();
         ArgumentCaptor<AssessorFormInputResponse> argument = ArgumentCaptor.forClass(AssessorFormInputResponse.class);
 
         when(assessorFormInputResponseRepositoryMock.findByAssessmentIdAndFormInputId(assessmentId, formInputId)).thenReturn(existingAssessorFormInputResponse);
         when(assessorFormInputResponseMapperMock.mapToResource(same(existingAssessorFormInputResponse))).thenReturn(existingAssessorFormInputResponseResource);
 
-        ServiceResult<Void> result = assessorFormInputResponseService.updateFormInputResponse(assessmentId, formInputId, value);
+        ServiceResult<Void> result = assessorFormInputResponseService.updateFormInputResponse(updatedAssessorFormInputResponseResource);
         assertTrue(result.isSuccess());
 
         InOrder inOrder = Mockito.inOrder(assessorFormInputResponseRepositoryMock, assessorFormInputResponseMapperMock);
@@ -124,8 +130,13 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
         String value = "New feedback";
 
         ArgumentCaptor<AssessorFormInputResponse> argument = ArgumentCaptor.forClass(AssessorFormInputResponse.class);
-
-        ServiceResult<Void> result = assessorFormInputResponseService.updateFormInputResponse(assessmentId, formInputId, value);
+        AssessorFormInputResponseResource assessorFormInputResponseResource = newAssessorFormInputResponseResource()
+                .withAssessment(assessmentId)
+                .withFormInput(formInputId)
+                .withFormInputMaxWordCount(10)
+                .withValue(value)
+                .build();
+        ServiceResult<Void> result = assessorFormInputResponseService.updateFormInputResponse(assessorFormInputResponseResource);
         assertTrue(result.isSuccess());
 
         InOrder inOrder = Mockito.inOrder(assessorFormInputResponseRepositoryMock, assessorFormInputResponseMapperMock);
@@ -153,6 +164,15 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
         AssessorFormInputResponseResource existingAssessorFormInputResponseResource = newAssessorFormInputResponseResource()
                 .withAssessment(assessmentId)
                 .withFormInput(formInputId)
+                .withFormInputMaxWordCount(10)
+                .withValue(oldValue)
+                .withUpdatedDate(oldUpdatedDate)
+                .build();
+
+        AssessorFormInputResponseResource assessorFormInputResponseResource = newAssessorFormInputResponseResource()
+                .withAssessment(assessmentId)
+                .withFormInput(formInputId)
+                .withFormInputMaxWordCount(10)
                 .withValue(oldValue)
                 .withUpdatedDate(oldUpdatedDate)
                 .build();
@@ -162,7 +182,7 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
         when(assessorFormInputResponseRepositoryMock.findByAssessmentIdAndFormInputId(assessmentId, formInputId)).thenReturn(existingAssessorFormInputResponse);
         when(assessorFormInputResponseMapperMock.mapToResource(same(existingAssessorFormInputResponse))).thenReturn(existingAssessorFormInputResponseResource);
 
-        ServiceResult<Void> result = assessorFormInputResponseService.updateFormInputResponse(assessmentId, formInputId, value);
+        ServiceResult<Void> result = assessorFormInputResponseService.updateFormInputResponse(assessorFormInputResponseResource);
         assertTrue(result.isSuccess());
 
         InOrder inOrder = Mockito.inOrder(assessorFormInputResponseRepositoryMock, assessorFormInputResponseMapperMock);

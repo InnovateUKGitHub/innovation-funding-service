@@ -6,6 +6,7 @@ import com.worth.ifs.commons.rest.RestResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -28,8 +29,10 @@ public class AssessorFormInputResponseController {
         return assessorFormInputResponseService.getAllAssessorFormInputResponsesByAssessmentAndQuestion(assessmentId, questionId).toGetResponse();
     }
 
+    //public RestResult<Void> updateFormInputResponse(@PathVariable("formInputId") Long formInputId, @PathVariable("assessmentId") Long assessmentId,@Valid @RequestBody(required = false) AssessorFormInputResponseResource value) {
+
     @RequestMapping(value = "/formInput/{formInputId}/assessment/{assessmentId}", method = RequestMethod.PUT)
-    public RestResult<Void> updateFormInputResponse(@PathVariable("formInputId") Long formInputId, @PathVariable("assessmentId") Long assessmentId, @RequestBody(required = false) String value) {
-        return assessorFormInputResponseService.updateFormInputResponse(assessmentId, formInputId, value).toPutResponse();
+    public RestResult<Void> updateFormInputResponse(@PathVariable("formInputId") Long formInputId, @PathVariable("assessmentId") Long assessmentId,@Valid @RequestBody(required = false) AssessorFormInputResponseResource response) {
+        return assessorFormInputResponseService.updateFormInputResponse(response).toPutResponse();
     }
 }

@@ -61,12 +61,17 @@ public class AssessorFormInputResponseServiceImplTest extends BaseServiceUnitTes
         final Long formInputId = 2L;
         final String value = "Feedback";
 
-        when(assessorFormInputResponseRestService.updateFormInputResponse(assessmentId, formInputId, value)).thenReturn(restSuccess());
+        AssessorFormInputResponseResource assessorFormInputResponse = newAssessorFormInputResponseResource()
+                .withAssessment(assessmentId)
+                .withFormInput(formInputId)
+                .withValue(value)
+                .build();
+        when(assessorFormInputResponseRestService.updateFormInputResponse(assessorFormInputResponse)).thenReturn(restSuccess());
 
-        final ServiceResult<Void> result = service.updateFormInputResponse(assessmentId, formInputId, value);
+        final ServiceResult<Void> result = service.updateFormInputResponse(assessorFormInputResponse);
         assertTrue(result.isSuccess());
 
-        verify(assessorFormInputResponseRestService, only()).updateFormInputResponse(assessmentId, formInputId, value);
+        verify(assessorFormInputResponseRestService, only()).updateFormInputResponse(assessorFormInputResponse);
     }
 
 }
