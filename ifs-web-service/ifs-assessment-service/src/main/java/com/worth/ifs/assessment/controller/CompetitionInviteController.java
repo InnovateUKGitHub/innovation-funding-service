@@ -20,7 +20,7 @@ public class CompetitionInviteController {
     @RequestMapping(value = "competition/{hash}", method = RequestMethod.GET)
     public String accessInvite(@PathVariable String hash, HttpServletResponse response, HttpServletRequest request, Model model) {
         model.addAttribute("model", new CompetitionInviteViewModel("Competition Name"));
-        return "access-competition-invite";
+        return "assessor-competition-invite";
     }
 
 }
