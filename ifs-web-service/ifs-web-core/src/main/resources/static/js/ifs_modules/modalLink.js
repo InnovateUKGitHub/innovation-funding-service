@@ -74,9 +74,6 @@ IFS.core.modal = (function(){
                     jQuery('[required="required"]', form).each(function() {
                         if(IFS.core.formValidation.checkRequired(jQuery(this),true) !== true) {
                             submitValid = false;
-
-                            // Apply form error and message to the field
-                            IFS.core.formValidation.checkRequired(jQuery(this),true);
                         }
                     });
 
