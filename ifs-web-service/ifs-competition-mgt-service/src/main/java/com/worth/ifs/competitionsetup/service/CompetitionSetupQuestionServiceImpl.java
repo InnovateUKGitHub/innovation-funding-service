@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQuestionService {
@@ -38,7 +39,17 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
 
         questionService.save(questionResource);
 
-        FormInputResource formInputResource = formInputResources.stream().filter(formInput -> !formInput.getFormInputType().equals(4L)).findFirst().get();
+        FormInputResource formInputResource = new FormInputResource();
+        Optional<FormInputResource> result = formInputResources.stream().filter(formInput -> !formInput.getFormInputType().equals(4L)).findFirst();
+        if(result.isPresent()) {
+            formInputResource = result.get();
+        } else {
+            //set default values if needed
+            formInputResource.setQuestion(question.getId());
+            formInputResource.setScope(FormInputScope.APPLICATION);
+            formInputResource.setFormInputType(2L);
+        }
+
         formInputResource.setGuidanceQuestion(question.getGuidanceTitle());
         formInputResource.setGuidanceAnswer(question.getGuidance());
         formInputResource.setWordCount(question.getMaxWords());

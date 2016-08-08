@@ -17,6 +17,7 @@ import org.springframework.ui.Model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -63,9 +64,13 @@ public class ApplicationFormModelPopulator implements CompetitionSetupSectionMod
         Long appendixTypeId = 4L;
         Long scoreTypeId = 23L;
 
-        List<Long> questionIds = parentSections.stream().filter(sectionResource -> sectionResource.getName().equals("Application questions")).findFirst().get().getQuestions();
+        Optional<SectionResource> section = parentSections.stream().filter(sectionResource -> sectionResource.getName().equals("Application questions")).findFirst();
 
-        questionResources = questionResources.stream().filter(questionResource -> questionIds.contains(questionResource.getId())).collect(Collectors.toList());
+        if(!section.isPresent()) {
+            return new ArrayList();
+        }
+
+        questionResources = questionResources.stream().filter(questionResource -> section.get().getQuestions().contains(questionResource.getId())).collect(Collectors.toList());
         questionResources.forEach(questionResource -> {
             List<FormInputResource> formInputs = formInputService.findApplicationInputsByQuestion(questionResource.getId());
             List<FormInputResource> formAssessmentInputs = formInputService.findAssessmentInputsByQuestion(questionResource.getId());

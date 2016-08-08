@@ -3,6 +3,7 @@ package com.worth.ifs.competitionsetup.form;
 import com.worth.ifs.competitionsetup.model.Question;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 
 /**
@@ -10,6 +11,7 @@ import javax.validation.Valid;
  */
 public class ApplicationFormForm extends CompetitionSetupForm {
     @Valid
+    @NotNull
     private Question questionToUpdate;
 
     public Question getQuestionToUpdate() {
