@@ -1,14 +1,13 @@
 package com.worth.ifs.form.documentation;
 
-import java.util.List;
-
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.form.controller.FormInputController;
 import com.worth.ifs.form.resource.FormInputResource;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
+
+import java.util.List;
 
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.form.documentation.FormInputResourceDocs.formInputResourceBuilder;
