@@ -10,6 +10,8 @@ import com.worth.ifs.commons.rest.RestErrorResponse;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.FileAndContents;
+import com.worth.ifs.invite.builder.InviteResourceBuilder;
+import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder;
 import com.worth.ifs.project.builder.SpendProfileResourceBuilder;
@@ -59,6 +61,8 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
 
     private MonitoringOfficerResource monitoringOfficerResource;
 
+    private InviteResource inviteResource;
+
     private RestDocumentationResultHandler document;
 
     @Before
@@ -72,6 +76,15 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
                 .withEmail("abc.xyz@gmail.com")
                 .withPhoneNumber("078323455")
                 .build();
+
+//          Fix in task INFUND-4401 - refactor when the InviteResource is completed
+//        inviteResource = InviteResourceBuilder.newInviteResource()
+//                .withId(1L)
+//                .withName("Ben Dishman")
+//                .withEmail("abc.xyz@gmail.com")
+//                .withOrganisation(1L)
+//                .build();
+
     }
 
     @Before
@@ -150,6 +163,24 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
 
         verify(projectServiceMock).updateFinanceContact(123L, 456L, 789L);
     }
+
+//    @Test
+//    public void inviteFinanceContact() throws Exception {
+//
+//        Long projectId = 1L;
+//
+//
+//        when(projectServiceMock.inviteFinanceContact(projectId, inviteResource)).
+//                thenReturn(serviceSuccess());
+//
+//        mockMvc.perform(put("/project/{projectId}/invite-finance-contact", projectId)
+//                .contentType(APPLICATION_JSON)
+//                .content(toJson(inviteResource)))
+//                .andExpect(status().isOk());
+//
+//        verify(projectServiceMock).inviteFinanceContact(projectId, inviteResource);
+//
+//    }
 
     @Test
     public void getProjectUsers() throws Exception {
