@@ -52,8 +52,8 @@ public class ProjectController {
     }
 
     @RequestMapping("/{id}/spend-profile")
-    public RestResult<SpendProfileResource> getSpendProfileById(@PathVariable("id") final Long id) {
-        return projectService.getSpendProfileById(id).toGetResponse();
+    public RestResult<SpendProfileResource> getSpendProfileById(@PathVariable("id") final Long projectId) {
+        return projectService.getSpendProfileById(projectId).toGetResponse();
     }
 
     @RequestMapping("/application/{application}")

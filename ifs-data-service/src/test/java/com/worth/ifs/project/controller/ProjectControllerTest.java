@@ -12,9 +12,11 @@ import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.FileAndContents;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder;
+import com.worth.ifs.project.builder.SpendProfileResourceBuilder;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.project.transactional.ProjectService;
 import org.junit.Before;
 import org.junit.Test;
@@ -112,6 +114,20 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
         mockMvc.perform(get("/project/").contentType(APPLICATION_JSON).accept(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(projectNumber)));
+    }
+
+    @Test
+    public void getSpendProfileById() throws Exception {
+
+        Long projectId = 1L;
+
+        SpendProfileResource spendProfileResource = SpendProfileResourceBuilder.newSpendProfileResource().build();
+
+        when(projectServiceMock.getSpendProfileById(projectId)).thenReturn(serviceSuccess(spendProfileResource));
+
+        mockMvc.perform(get("/project/{id}/spend-profile", projectId))
+                .andExpect(status().isOk())
+                .andExpect(content().string(new ObjectMapper().writeValueAsString(spendProfileResource)));
     }
 
     @Test
