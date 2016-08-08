@@ -367,4 +367,9 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
                 andOnSuccessReturn(r -> simpleMap(r, sectionMapper::mapToResource));
     }
 
+    @Override
+    public ServiceResult<List<SectionResource>> getByCompetitionIdVisibleForAssessment(Long competitionId) {
+        return serviceSuccess(simpleMap(sectionRepository.findByCompetitionIdAndDisplayInAssessmentApplicationSummaryTrueOrderByPriorityAsc(competitionId), sectionMapper::mapToResource));
+    }
+
 }

@@ -103,4 +103,9 @@ public class QuestionController {
     public RestResult<List<QuestionResource>> getQuestionsBySectionIdAndType(@PathVariable("sectionId") final Long sectionId, @PathVariable("type") QuestionType type) {
     	return questionService.getQuestionsBySectionIdAndType(sectionId, type).toGetResponse();
     }
+
+    @RequestMapping("/getQuestionsByAssessment/{assessmentId}")
+    public RestResult<List<QuestionResource>> getQuestionsByAssessmentId(@PathVariable("assessmentId") final Long assessmentId) {
+        return questionService.getQuestionsByAssessmentId(assessmentId).toGetResponse();
+    }
 }

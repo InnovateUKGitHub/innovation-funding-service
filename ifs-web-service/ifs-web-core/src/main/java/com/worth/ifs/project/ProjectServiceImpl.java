@@ -191,6 +191,15 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    public ServiceResult<Boolean> isOtherDocumentSubmitAllowed(long projectId) {
+        RestResult<Boolean> restResult = projectRestService.isOtherDocumentsSubmitAllowed(projectId);
+
+        return restResult.isSuccess() ?
+                restResult.toServiceResult() :
+                ServiceResult.serviceFailure(restResult.getErrors());
+    }
+
+    @Override
     public boolean isUserLeadPartner(Long projectId, Long userId) {
         return !simpleFilter(getLeadPartners(projectId), projectUser -> projectUser.getUser().equals(userId)).isEmpty();
     }

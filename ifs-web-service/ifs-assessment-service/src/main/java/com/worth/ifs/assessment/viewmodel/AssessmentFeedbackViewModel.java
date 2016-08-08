@@ -140,18 +140,21 @@ public class AssessmentFeedbackViewModel {
         }
 
         Integer maxWordCount = formInput.get().getWordCount();
-        String value = response.get().getValue();
-        if (maxWordCount == null || value == null) {
+        // Peeking into com.worth.ifs.form.resource.FormInputResource.getWordCount() reveals it will returning 0 rather than null if the word count has not been set, but handling this case anyway.
+        if (maxWordCount == null) {
             return null;
         }
 
-        // clean any HTML markup from the value
-        Document doc = Jsoup.parse(value);
-        String cleaned = doc.text();
+        return maxWordCount - getResponseWords(response);
+    }
 
-        int valueLength = cleaned.split("\\s+").length;
-        int wordsRemaining = maxWordCount - valueLength;
+    private int getResponseWords(Optional<AssessorFormInputResponseResource> response) {
+        return response.map(responseResource -> {
+            // clean any HTML markup from the value
+            Document doc = Jsoup.parse(responseResource.getValue());
+            String cleaned = doc.text();
 
-        return max(0, wordsRemaining);
+            return cleaned.split("\\s+").length;
+        }).orElse(0);
     }
 }

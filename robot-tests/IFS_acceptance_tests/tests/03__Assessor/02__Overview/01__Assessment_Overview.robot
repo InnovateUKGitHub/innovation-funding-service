@@ -16,15 +16,12 @@ Number of sections in the Assessment overview
     [Setup]    guest user log-in    paul.plum@gmail.com    Passw0rd
     When the user navigates to the page     ${Assessment_overview_9}
     Then the user should see four sections
-    #TODO Same number of questions and answers are present
-
 
 Non-scorable question cannot be scored/edited
     [Documentation]    INFUND-3400
     [Tags]
     When the user clicks the button/link    link=Application details
     Then The user should not see the element    jquery=button:contains("Save and return to assessment overview")
-   # And The user should not see the element    css=[readonly]
     And the user clicks the button/link    link=Back to assessment overview
     Then The user should be redirected to the correct page    ${Assessment_overview_9}
     And the user clicks the button/link    link=Project summary
@@ -35,23 +32,6 @@ Non-scorable question cannot be scored/edited
     And The user should not see the element    jquery=button:contains("Save and return to assessment overview")
     And the user clicks the button/link    link=Back to assessment overview
     And The user should be redirected to the correct page    ${Assessment_overview_9}
-
-Assessors can provide scores and feedback to the Application questions
-    [Documentation]    INFUND-3400
-    [Tags]    Pending
-    # TODO pending as the autosave is not implemented. It will done in sprint 13
-    When the user clicks the button/link    link=1. How many
-    Then The user should see the text in the page    Please review the answer provided and score the answer out of 20 points.
-    And the assessor fills in application questions
-    And the user reloads the page
-    And the text should be visible
-
-#Feedback Word count
-#    [Documentation]    INFUND-3400
-#    [Tags]    Pending
-    # TODO pending as the autosave not implemented
-#    When the Assessor edits the feedback
-#    Then the word count should be correct
 
 Finance summary
     [Documentation]    INFUND-3394
@@ -66,13 +46,14 @@ Finance summary
     And the project cost breakdown total should be correct
     And the user clicks the button/link    link=Back to assessment overview
     And The user should be redirected to the correct page    ${Assessment_overview_9}
+    [Teardown]    Logout as user
 
 Unable to assess this application
     [Documentation]    INFUND-3540
     [Tags]
     [Setup]    guest user log-in    felix.wilson@gmail.com    Passw0rd
-    # Here Assessor-Felix rejects the application 9 and paul is able to assess the application.
-    When the user navigates to the page     ${Assessment_overview_9}
+    # Note: Here Assessor-Felix rejects application 8 and paul is able to assess the application.
+    When the user navigates to the page     ${Assessment_overview_11}
     Then The user should see the element    css=#content .extra-margin details summary
     And the user clicks the button/link     css=#content .extra-margin details summary
     Then The user should see the element    css=#details-content-0 button
@@ -83,13 +64,13 @@ Unable to assess this application
     Then the user fills in rejection details
     And the user clicks the button/link    jquery=button:contains("Reject")
    # Then The user should be redirected to the correct page    [TODO add in assessor dashboard url which is not implemented yet]
-
+   [Teardown]    Logout as user
 
 Validation check in the Reject application modal
     [Documentation]    INFUND-3540
     [Tags]    Pending
-    # TODO or pending due to INFUND-3811
-    Given the user navigates to the page     ${Assessment_overview_9}
+    # TODO or pending due to INFUND-4375
+    Given the user navigates to the page     ${Assessment_overview_11}
     And the user clicks the button/link     css=#content .extra-margin details summary
     And the user clicks the button/link     css=#details-content-0 button
     When the user clicks the button/link    jquery=button:contains("Reject")
@@ -105,27 +86,6 @@ the user should see four sections
     the user should see the element    css=#section-16 .bold-medium
     the user should see the element    css=#section-71 .heading-medium
     the user should see the element    css=#section-17 .heading-medium
-  #  the user should see the element    css=#content .heading-medium
-
-the assessor fills in application questions
-    The user should see the element    id=assessor-question-score
-    Select From List By Index    id=assessor-question-score    9
-    The user should see the element    css=#form-input-195 .inPlaceholderMode
-    Input Text    css=#form-input-195 .inPlaceholderMode    This is to test the feedback entry.
-
-the text should be visible
-    wait until element contains    css=#form-input-195 .inPlaceholderMode    This is to test the feedback entry.
-
-the Assessor edits the feedback
-  #  Clear Element Text    css=#form-input-195 .isModified
-    Press Key    css=#form-input-195 .isModified    \\8
-    Wait Until Element Contains    css=#form-input-195 .textarea-footer span    100
-    Focus    css=#form-input-195 .isModified
-    Input Text    css=#form-input-195 .isModified    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris test @.
-    Sleep    500ms
-
-#the word count should be correct
- #   wait until element contains    css=#form-input-195 .textarea-footer span    69
 
 the user fills in rejection details
     the user should see the element    id=rejectReason
