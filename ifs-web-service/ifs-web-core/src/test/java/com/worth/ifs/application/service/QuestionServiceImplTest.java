@@ -30,7 +30,6 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.rest.ValidationMessages;
 
 public class QuestionServiceImplTest extends BaseServiceUnitTest<QuestionService> {
-
     @Mock
     private QuestionRestService questionRestService;
 
@@ -44,13 +43,13 @@ public class QuestionServiceImplTest extends BaseServiceUnitTest<QuestionService
     public void testGetQuestionsByType() {
     	QuestionResource section = newQuestionResource().build();
     	when(questionRestService.getQuestionsBySectionIdAndType(1L, QuestionType.COST)).thenReturn(restSuccess(asList(section)));
-    	
+
     	List<QuestionResource> result = service.getQuestionsBySectionIdAndType(1L, QuestionType.COST);
-    	
+
     	assertEquals(1, result.size());
     	assertEquals(section, result.get(0));
     }
-    
+
     @Test
     public void testAssign() throws Exception {
         Long questionId = 1L;
@@ -88,7 +87,6 @@ public class QuestionServiceImplTest extends BaseServiceUnitTest<QuestionService
         verify(questionRestService).markAsInComplete(questionId, applicationId, markedAsInCompleteById);
     }
 
-
     @Test
     public void testFindByCompetition() throws Exception {
         Long competitionId = 1L;
@@ -99,6 +97,7 @@ public class QuestionServiceImplTest extends BaseServiceUnitTest<QuestionService
 
         assertEquals(questions, returnedQuestions);
     }
+
 
     @Test
     public void testGetNotificationsForUser() throws Exception {
@@ -283,5 +282,16 @@ public class QuestionServiceImplTest extends BaseServiceUnitTest<QuestionService
         List<QuestionStatusResource> result = service.findQuestionStatusesByQuestionAndApplicationId(questionId, applicationId);
 
         assertEquals(statuses, result);
+    }
+
+    @Test
+    public void getQuestionsByAssessment() throws Exception {
+        Long assessmentId = 1L;
+        List<QuestionResource> questions = newQuestionResource().build(2);
+
+        when(questionRestService.getQuestionsByAssessment(assessmentId)).thenReturn(restSuccess(questions));
+        List<QuestionResource> result = service.getQuestionsByAssessment(assessmentId);
+
+        assertEquals(questions, result);
     }
 }
