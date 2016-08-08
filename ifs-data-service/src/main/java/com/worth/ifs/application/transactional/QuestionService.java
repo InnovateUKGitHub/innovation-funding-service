@@ -91,4 +91,7 @@ public interface QuestionService {
 
     @PreAuthorize("hasAuthority('comp_admin')")
     ServiceResult<QuestionResource> save(QuestionResource questionResource);
+
+    @PreAuthorize("hasPermission(#assessmentId, 'com.worth.ifs.assessment.resource.AssessmentResource', 'READ')")
+    ServiceResult<List<QuestionResource>> getQuestionsByAssessmentId(final Long assessmentId);
 }

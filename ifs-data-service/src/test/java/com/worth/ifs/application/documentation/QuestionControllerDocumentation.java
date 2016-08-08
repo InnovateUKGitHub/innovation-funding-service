@@ -16,6 +16,7 @@ import java.util.Set;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.documentation.QuestionDocs.questionBuilder;
 import static com.worth.ifs.documentation.QuestionDocs.questionFields;
+import static java.util.Arrays.asList;
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -264,5 +265,22 @@ public class QuestionControllerDocumentation extends BaseControllerMockMVCTest<Q
                         responseFields(questionFields)
                 ));
 
+    }
+
+    @Test
+    public void getQuestionsByAssessmentId() throws Exception {
+        final Long assessmentId = 1L;
+
+        when(questionService.getQuestionsByAssessmentId(assessmentId)).thenReturn(serviceSuccess(asList(questionBuilder.build())));
+
+        mockMvc.perform(get("/question/getQuestionsByAssessment/{assessmentId}", assessmentId))
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("assessmentId").description("Id of the assessment for which questions should be returned for")
+                        ),
+                        responseFields(
+                                fieldWithPath("[]").description("An array of the questions which are visible for the specified assessment")
+                        )
+                ));
     }
 }

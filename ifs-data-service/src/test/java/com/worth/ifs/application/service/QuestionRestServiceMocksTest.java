@@ -13,6 +13,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.worth.ifs.commons.rest.RestResult;
+
 import static com.worth.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
 import static com.worth.ifs.application.service.Futures.settable;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.questionResourceListType;
@@ -120,11 +122,12 @@ public class QuestionRestServiceMocksTest extends BaseRestServiceUnitTest<Questi
         QuestionResource nextQuestion = service.getPreviousQuestion(2L).getSuccessObject();
         assertEquals(question, nextQuestion);
     }
-    
+
     @Test
     public void getQuestionsBySectionIdAndTypeTest() {
-    	List<QuestionResource> questions = newQuestionResource().build(2);
-        setupGetWithRestResultExpectations(questionRestURL + "/getQuestionsBySectionIdAndType/1/COST", new ParameterizedTypeReference<List<QuestionResource>>() {}, questions);
+        List<QuestionResource> questions = newQuestionResource().build(2);
+        setupGetWithRestResultExpectations(questionRestURL + "/getQuestionsBySectionIdAndType/1/COST", new ParameterizedTypeReference<List<QuestionResource>>() {
+        }, questions);
 
         List<QuestionResource> result = service.getQuestionsBySectionIdAndType(1L, QuestionType.COST).getSuccessObject();
         assertEquals(questions, result);
@@ -137,5 +140,18 @@ public class QuestionRestServiceMocksTest extends BaseRestServiceUnitTest<Questi
 
         QuestionResource result = service.save(questionResource).getSuccessObject();
         assertEquals(questionResource, result);
+    }
+
+    @Test
+    public void getQuestionsByAssessmentTest() {
+        Long assessmentId = 1L;
+
+        List<QuestionResource> questions = newQuestionResource().build(2);
+        setupGetWithRestResultExpectations(questionRestURL + "/getQuestionsByAssessment/" + assessmentId, new ParameterizedTypeReference<List<QuestionResource>>() {
+        }, questions);
+
+        RestResult<List<QuestionResource>> result = service.getQuestionsByAssessment(assessmentId);
+        assertTrue(result.isSuccess());
+        assertEquals(questions, result.getSuccessObject());
     }
 }

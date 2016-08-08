@@ -6,9 +6,13 @@ import com.worth.ifs.application.domain.QuestionStatus;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.mapper.QuestionMapper;
 import com.worth.ifs.application.mapper.QuestionStatusMapper;
+import com.worth.ifs.application.mapper.SectionMapper;
 import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.application.repository.QuestionStatusRepository;
 import com.worth.ifs.application.resource.*;
+import com.worth.ifs.application.resource.*;
+import com.worth.ifs.assessment.domain.Assessment;
+import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.form.domain.FormInputType;
@@ -60,10 +64,16 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     private ApplicationService applicationService;
 
     @Autowired
+    private AssessmentRepository assessmentRepository;
+
+    @Autowired
     private FormInputTypeService formInputTypeService;
 
     @Autowired
     private QuestionStatusMapper questionStatusMapper;
+
+    @Autowired
+    private SectionMapper sectionMapper;
 
     @Autowired
     private QuestionMapper questionMapper;
@@ -294,6 +304,14 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
         return serviceSuccess(questionMapper.mapToResource(questionUpdated));
     }
 
+
+    @Override
+    public ServiceResult<List<QuestionResource>> getQuestionsByAssessmentId(Long assessmentId) {
+        return getAssessment(assessmentId).andOnSuccess(assessment ->
+                sectionService.getByCompetitionIdVisibleForAssessment(assessment.getProcessRole().getApplication().getCompetition().getId())
+                        .andOnSuccessReturn(sections -> sections.stream().map(sectionMapper::mapToDomain).flatMap(section -> section.getQuestions().stream()).map(questionMapper::mapToResource).collect(toList())));
+    }
+
     private List<QuestionResource> questionsOfType(Section section, QuestionType type) {
     	Stream<Question> sectionQuestionsStream = section.getQuestions().stream();
     	Stream<Question> childSectionsQuestionsStream = section.getChildSections().stream().flatMap(s -> s.getQuestions().stream());
@@ -434,6 +452,10 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
                 .collect(Collectors.toList());
     }
 
+    private ServiceResult<Assessment> getAssessment(Long assessmentId) {
+        return find(assessmentRepository.findOne(assessmentId), notFoundError(Assessment.class, assessmentId));
+    }
+
     private Supplier<ServiceResult<Question>> getQuestion(Long questionId) {
         return () -> find(questionRepository.findOne(questionId), notFoundError(Question.class, questionId));
     }
@@ -445,5 +467,4 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     private List<QuestionResource> questionsToResources(List<Question> filtered) {
         return simpleMap(filtered, question -> questionMapper.mapToResource(question));
     }
-
 }

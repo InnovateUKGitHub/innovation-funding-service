@@ -32,4 +32,5 @@ public interface QuestionService {
     List<QuestionStatusResource> findQuestionStatusesByQuestionAndApplicationId(Long questionId, Long applicationId);
     List<QuestionResource> getQuestionsBySectionIdAndType(Long sectionId, QuestionType type);
     QuestionResource save(QuestionResource questionResource);
+    List<QuestionResource> getQuestionsByAssessment(Long assessmentId);
 }

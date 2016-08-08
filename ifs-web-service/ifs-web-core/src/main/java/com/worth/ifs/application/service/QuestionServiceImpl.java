@@ -143,4 +143,9 @@ public class QuestionServiceImpl implements QuestionService {
         return questionRestService.save(questionResource).getSuccessObjectOrThrowException();
     }
 
+    @Override
+    public List<QuestionResource> getQuestionsByAssessment(Long assessmentId) {
+        return questionRestService.getQuestionsByAssessment(assessmentId).getSuccessObjectOrThrowException();
+    }
+
 }
