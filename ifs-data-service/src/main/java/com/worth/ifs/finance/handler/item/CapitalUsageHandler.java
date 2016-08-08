@@ -1,7 +1,7 @@
 package com.worth.ifs.finance.handler.item;
 
 import com.worth.ifs.finance.domain.Cost;
-import com.worth.ifs.finance.domain.CostValue;
+import com.worth.ifs.finance.domain.FinanceRowMetaValue;
 import com.worth.ifs.finance.resource.cost.CapitalUsage;
 import com.worth.ifs.finance.resource.cost.CostItem;
 
@@ -33,7 +33,7 @@ public class CapitalUsageHandler extends CostHandler {
         BigDecimal residualValue = BigDecimal.ZERO;
         Integer utilisation = 0;
 
-        for (CostValue costValue : cost.getCostValues()) {
+        for (FinanceRowMetaValue costValue : cost.getCostValues()) {
             if(costValue.getCostField() != null && costValue.getCostField().getTitle() != null){
                 String title = costValue.getCostField().getTitle();
                 if (title.equals(COST_FIELD_EXISTING)) {
@@ -55,9 +55,9 @@ public class CapitalUsageHandler extends CostHandler {
         Cost capitalUsageCost = new Cost(capitalUsage.getId(), COST_KEY, "", capitalUsage.getDescription(), capitalUsage.getDeprecation(),
                 capitalUsage.getNpv(), null, null);
         capitalUsageCost.addCostValues(
-                new CostValue(capitalUsageCost, costFields.get(COST_FIELD_EXISTING), capitalUsage.getExisting()),
-                new CostValue(capitalUsageCost, costFields.get(COST_FIELD_RESIDUAL_VALUE), String.valueOf(capitalUsage.getResidualValue())),
-                new CostValue(capitalUsageCost, costFields.get(COST_FIELD_UTILISATION), String.valueOf(capitalUsage.getUtilisation())));
+                new FinanceRowMetaValue(capitalUsageCost, costFields.get(COST_FIELD_EXISTING), capitalUsage.getExisting()),
+                new FinanceRowMetaValue(capitalUsageCost, costFields.get(COST_FIELD_RESIDUAL_VALUE), String.valueOf(capitalUsage.getResidualValue())),
+                new FinanceRowMetaValue(capitalUsageCost, costFields.get(COST_FIELD_UTILISATION), String.valueOf(capitalUsage.getUtilisation())));
 
         return capitalUsageCost;
     }

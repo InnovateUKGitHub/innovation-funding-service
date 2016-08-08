@@ -5,15 +5,15 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.Serializable;
 
-public class CostValueId implements Serializable {
+public class FinanceRowMetaValueId implements Serializable {
     private Long cost;
     private Long costField;
 
-    public CostValueId() {
+    public FinanceRowMetaValueId() {
     	// no-arg constructor
     }
 
-    public CostValueId(Long cost, Long costField) {
+    public FinanceRowMetaValueId(Long cost, Long costField) {
         this.cost = cost;
         this.costField = costField;
     }
@@ -38,7 +38,7 @@ public class CostValueId implements Serializable {
         if (obj.getClass() != getClass()) {
             return false;
         }
-        CostValueId rhs = (CostValueId) obj;
+        FinanceRowMetaValueId rhs = (FinanceRowMetaValueId) obj;
         return new EqualsBuilder()
             .append(this.cost, rhs.cost)
             .append(this.costField, rhs.costField)

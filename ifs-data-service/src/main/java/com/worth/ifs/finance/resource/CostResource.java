@@ -11,7 +11,7 @@ public class CostResource {
     private String description;
     private Integer quantity;
     private BigDecimal cost;
-    private List<CostValueResource> costValues = new ArrayList<>();
+    private List<FinanceRowMetaValueResource> costValues = new ArrayList<>();
     private Long applicationFinance;
     private Long question;
 
@@ -63,11 +63,11 @@ public class CostResource {
         this.cost = cost;
     }
 
-    public List<CostValueResource> getCostValues() {
+    public List<FinanceRowMetaValueResource> getCostValues() {
         return costValues;
     }
 
-    public void setCostValues(List<CostValueResource> costValues) {
+    public void setCostValues(List<FinanceRowMetaValueResource> costValues) {
         this.costValues = costValues;
     }
 

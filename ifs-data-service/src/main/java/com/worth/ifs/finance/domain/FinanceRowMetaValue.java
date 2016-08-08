@@ -1,18 +1,18 @@
 package com.worth.ifs.finance.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.worth.ifs.finance.resource.CostValueId;
+import com.worth.ifs.finance.resource.FinanceRowMetaValueId;
 
 import javax.persistence.*;
 
 /**
- * CostValue defines database relations and a model to use client side and server side.
+ * FinanceRowMetaValue defines database relations and a model to use client side and server side.
  * Holds the reference between the extra cost fields and the original cost.
  * The value is stored and the type determines how it is processed.
  */
 @Entity
-@IdClass(CostValueId.class)
-public class CostValue {
+@IdClass(FinanceRowMetaValueId.class)
+public class FinanceRowMetaValue {
     private String value;
 
     @Id
@@ -25,16 +25,16 @@ public class CostValue {
     @JoinColumn(name="cost_field_id")
     private CostField costField;
 
-    public CostValue() {
+    public FinanceRowMetaValue() {
     	// no-arg constructor
     }
 
-    public CostValue(CostField costField, String value) {
+    public FinanceRowMetaValue(CostField costField, String value) {
         this.costField = costField;
         this.value = value;
     }
 
-    public CostValue(Cost cost, CostField costField, String value) {
+    public FinanceRowMetaValue(Cost cost, CostField costField, String value) {
         this.cost = cost;
         this.costField = costField;
         this.value = value;
@@ -62,7 +62,7 @@ public class CostValue {
         this.costField = costField;
     }
 
-    public CostValueId getId(){ return new CostValueId(this.cost.getId(), this.costField.getId());}
+    public FinanceRowMetaValueId getId(){ return new FinanceRowMetaValueId(this.cost.getId(), this.costField.getId());}
 
     public void setValue(String value) {
         this.value = value;

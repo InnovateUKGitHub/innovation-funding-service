@@ -7,7 +7,7 @@ public class CostFieldResource {
     Long id;
     String title;
     String type;
-    private List<CostValueId> costValues = new ArrayList<>();
+    private List<FinanceRowMetaValueId> costValues = new ArrayList<>();
 
     public CostFieldResource() {
     	// no-arg constructor
@@ -43,11 +43,11 @@ public class CostFieldResource {
         this.type = type;
     }
 
-    public List<CostValueId> getCostValues() {
+    public List<FinanceRowMetaValueId> getCostValues() {
         return this.costValues;
     }
 
-    public void setCostValues(List<CostValueId> costValues) {
+    public void setCostValues(List<FinanceRowMetaValueId> costValues) {
         this.costValues = costValues;
     }
 }

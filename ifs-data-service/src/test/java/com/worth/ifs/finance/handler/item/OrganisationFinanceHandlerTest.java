@@ -8,7 +8,7 @@ import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.domain.CostField;
-import com.worth.ifs.finance.domain.CostValue;
+import com.worth.ifs.finance.domain.FinanceRowMetaValue;
 import com.worth.ifs.finance.handler.OrganisationFinanceDefaultHandler;
 import com.worth.ifs.finance.handler.OrganisationFinanceHandler;
 import com.worth.ifs.finance.repository.CostFieldRepository;
@@ -87,22 +87,22 @@ public class OrganisationFinanceHandlerTest {
 
         capitalUsage =  new CapitalUsage(null, 20,"Description", "Yes", new BigDecimal(200000), new BigDecimal(100000), 20);
         capitalUsageCost = handler.costItemToCost(capitalUsage);
-        capitalUsageCost.getCostValues().add(new CostValue(capitalUsageCost, new CostField(3l, "existing", "String"), "Yes"));
-        capitalUsageCost.getCostValues().add(new CostValue(capitalUsageCost, new CostField(4l, "residual_value", "BigDecimal"), String.valueOf(new BigDecimal(100000))));
-        capitalUsageCost.getCostValues().add(new CostValue(capitalUsageCost, new CostField(5l, "utilisation", "Integer"), String.valueOf(20)));
-        capitalUsageCost.getCostValues().add(new CostValue(capitalUsageCost, new CostField(6L, null, "Integer"), String.valueOf(20)));
-        capitalUsageCost.getCostValues().add(new CostValue(capitalUsageCost, null, String.valueOf(20)));
+        capitalUsageCost.getCostValues().add(new FinanceRowMetaValue(capitalUsageCost, new CostField(3l, "existing", "String"), "Yes"));
+        capitalUsageCost.getCostValues().add(new FinanceRowMetaValue(capitalUsageCost, new CostField(4l, "residual_value", "BigDecimal"), String.valueOf(new BigDecimal(100000))));
+        capitalUsageCost.getCostValues().add(new FinanceRowMetaValue(capitalUsageCost, new CostField(5l, "utilisation", "Integer"), String.valueOf(20)));
+        capitalUsageCost.getCostValues().add(new FinanceRowMetaValue(capitalUsageCost, new CostField(6L, null, "Integer"), String.valueOf(20)));
+        capitalUsageCost.getCostValues().add(new FinanceRowMetaValue(capitalUsageCost, null, String.valueOf(20)));
         capitalUsageCost.setQuestion(costTypeQuestion.get(CostType.CAPITAL_USAGE));
         costs.add(capitalUsageCost);
 
         subContracting = new SubContractingCost(null, BigDecimal.ONE, "france", "name", "role");
         subContractingCost = handler.costItemToCost(subContracting);
-        subContractingCost.getCostValues().add(new CostValue(new CostField(1l, "country", "france"), "frane"));
+        subContractingCost.getCostValues().add(new FinanceRowMetaValue(new CostField(1l, "country", "france"), "frane"));
         subContractingCost.setQuestion(costTypeQuestion.get(CostType.SUBCONTRACTING_COSTS));
         costs.add(subContractingCost);
         SubContractingCost subContracting2 = new SubContractingCost(null, BigDecimal.TEN, "france", "name", "role");
         Cost subContractingCost2 = handler.costItemToCost(subContracting2);
-        subContractingCost2.getCostValues().add(new CostValue(new CostField(2l, "country", "france"), "frane"));
+        subContractingCost2.getCostValues().add(new FinanceRowMetaValue(new CostField(2l, "country", "france"), "frane"));
         subContractingCost2.setQuestion(costTypeQuestion.get(CostType.SUBCONTRACTING_COSTS));
         costs.add(subContractingCost2);
 

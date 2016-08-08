@@ -45,7 +45,7 @@ public class Cost {
     private String name;
 
     @OneToMany(mappedBy="cost")
-    private List<CostValue> costValues = new ArrayList<>();
+    private List<FinanceRowMetaValue> costValues = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name="applicationFinanceId", referencedColumnName="id")
@@ -121,15 +121,15 @@ public class Cost {
         this.applicationFinance = applicationFinance;
     }
 
-    public List<CostValue> getCostValues() {
+    public List<FinanceRowMetaValue> getCostValues() {
         return costValues;
     }
 
-    public void setCostValues(List<CostValue> costValues) {
+    public void setCostValues(List<FinanceRowMetaValue> costValues) {
         this.costValues = costValues;
     }
     
-    public void addCostValues(CostValue... c) {
+    public void addCostValues(FinanceRowMetaValue... c) {
         Collections.addAll(this.costValues, c);
     }
 

@@ -3,7 +3,7 @@ package com.worth.ifs.finance.security;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.repository.CostRepository;
-import com.worth.ifs.finance.resource.CostValueResource;
+import com.worth.ifs.finance.resource.FinanceRowMetaValueResource;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.security.PermissionRule;
 import com.worth.ifs.security.PermissionRules;
@@ -55,8 +55,8 @@ public class CostPermissionRules {
     }
 
     @PermissionRule(value = "READ", description = "The consortium can read the cost for their application and organisation")
-    public boolean consortiumCanReadACostValueForTheirApplicationAndOrganisation(final CostValueResource costValueResource, final UserResource user) {
-        final Cost cost = costRepository.findOne(costValueResource.getCost());
+    public boolean consortiumCanReadACostValueForTheirApplicationAndOrganisation(final FinanceRowMetaValueResource financeRowMetaValueResource, final UserResource user) {
+        final Cost cost = costRepository.findOne(financeRowMetaValueResource.getCost());
         return isCollaborator(cost, user);
     }
 

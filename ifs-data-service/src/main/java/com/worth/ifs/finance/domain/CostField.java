@@ -18,7 +18,7 @@ public class CostField {
     private String type;
 
     @OneToMany(mappedBy="costField")
-    private List<CostValue> costValues = new ArrayList<>();
+    private List<FinanceRowMetaValue> costValues = new ArrayList<>();
 
     public CostField() {
     	// no-arg constructor
@@ -54,11 +54,11 @@ public class CostField {
         this.type = type;
     }
 
-    public List<CostValue> getCostValues() {
+    public List<FinanceRowMetaValue> getCostValues() {
         return this.costValues;
     }
 
-    public void setCostValues(List<CostValue> costValues) {
+    public void setCostValues(List<FinanceRowMetaValue> costValues) {
         this.costValues = costValues;
     }
 }

@@ -7,8 +7,8 @@ import org.junit.Test;
 
 import java.math.BigDecimal;
 
-public class CostValueTest {
-    CostValue costValue;
+public class FinanceRowMetaValueTest {
+    FinanceRowMetaValue costValue;
     Cost cost;
     CostField costField;
     String value;
@@ -24,14 +24,14 @@ public class CostValueTest {
         cost = new Cost(1L, "cost key", "cost item", "cost description", 10, price, applicationFinance, question);
         costField = new CostField(1L, "NVP", "String");
         value = "19000";
-        costValue = new CostValue(cost, costField, value);
+        costValue = new FinanceRowMetaValue(cost, costField, value);
     }
 
     @Test
     public void constructorsShouldCreateInstancesOnValidInput() throws Exception {
-        new CostValue();
-        new CostValue(costField, value);
-        new CostValue(cost, costField, value);
+        new FinanceRowMetaValue();
+        new FinanceRowMetaValue(costField, value);
+        new FinanceRowMetaValue(cost, costField, value);
     }
 
     @Test

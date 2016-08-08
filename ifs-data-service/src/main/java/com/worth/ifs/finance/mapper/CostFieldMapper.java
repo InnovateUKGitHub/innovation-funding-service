@@ -9,7 +9,7 @@ import org.mapstruct.Mapper;
 @Mapper(
     config = GlobalMapperConfig.class,
     uses = {
-        CostValueMapper.class
+        FinanceRowMetaValueMapper.class
     }
 )
 public abstract class CostFieldMapper extends BaseMapper<CostField, CostFieldResource, Long> {

@@ -1,7 +1,7 @@
 package com.worth.ifs.finance.handler.item;
 
 import com.worth.ifs.finance.domain.Cost;
-import com.worth.ifs.finance.domain.CostValue;
+import com.worth.ifs.finance.domain.FinanceRowMetaValue;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.SubContractingCost;
 
@@ -25,7 +25,7 @@ public class SubContractingCostHandler extends CostHandler {
     @Override
     public CostItem toCostItem(Cost cost) {
         String country = "";
-        for(CostValue costValue : cost.getCostValues()) {
+        for(FinanceRowMetaValue costValue : cost.getCostValues()) {
             if(costValue.getCostField() != null && costValue.getCostField().getTitle().equals(COST_FIELD_COUNTRY)) {
                 country = costValue.getValue();
             }
@@ -39,7 +39,7 @@ public class SubContractingCostHandler extends CostHandler {
         Cost cost =  new Cost(subContractingCost.getId(), COST_KEY, subContractingCost.getName(), subContractingCost.getRole(),
                 0, subContractingCost.getCost(),null,null);
         cost.addCostValues(
-                new CostValue(cost, costFields.get(COST_FIELD_COUNTRY), subContractingCost.getCountry()));
+                new FinanceRowMetaValue(cost, costFields.get(COST_FIELD_COUNTRY), subContractingCost.getCountry()));
         return cost;
     }
 }

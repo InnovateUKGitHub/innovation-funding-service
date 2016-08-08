@@ -1,20 +1,20 @@
 package com.worth.ifs.finance.resource;
 
-public class CostValueResource {
+public class FinanceRowMetaValueResource {
     String value;
     private Long cost;
     private Long costField;
 
-    public CostValueResource() {
+    public FinanceRowMetaValueResource() {
     	// no-arg constructor
     }
 
-    public CostValueResource(CostFieldResource costField, String value) {
+    public FinanceRowMetaValueResource(CostFieldResource costField, String value) {
         this.costField = costField.getId();
         this.value = value;
     }
 
-    public CostValueResource(CostResource cost, CostFieldResource costField, String value) {
+    public FinanceRowMetaValueResource(CostResource cost, CostFieldResource costField, String value) {
         this.cost = cost.getId();
         this.costField = costField.getId();
         this.value = value;
@@ -41,7 +41,7 @@ public class CostValueResource {
         this.costField = costField.getId();
     }
 
-    public CostValueId getId(){ return new CostValueId(this.cost, this.costField);}
+    public FinanceRowMetaValueId getId(){ return new FinanceRowMetaValueId(this.cost, this.costField);}
 
     public void setValue(String value) {
         this.value = value;

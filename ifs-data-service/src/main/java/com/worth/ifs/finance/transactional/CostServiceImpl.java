@@ -15,7 +15,7 @@ import com.worth.ifs.file.transactional.FileService;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.domain.CostField;
-import com.worth.ifs.finance.domain.CostValue;
+import com.worth.ifs.finance.domain.FinanceRowMetaValue;
 import com.worth.ifs.finance.handler.ApplicationFinanceHandler;
 import com.worth.ifs.finance.handler.OrganisationFinanceDelegate;
 import com.worth.ifs.finance.handler.OrganisationFinanceHandler;
@@ -26,7 +26,7 @@ import com.worth.ifs.finance.mapper.CostMapper;
 import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
 import com.worth.ifs.finance.repository.CostFieldRepository;
 import com.worth.ifs.finance.repository.CostRepository;
-import com.worth.ifs.finance.repository.CostValueRepository;
+import com.worth.ifs.finance.repository.FinanceRowMetaValueRepository;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.ApplicationFinanceResourceId;
 import com.worth.ifs.finance.resource.CostFieldResource;
@@ -79,7 +79,7 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
     private CostFieldRepository costFieldRepository;
 
     @Autowired
-    private CostValueRepository costValueRepository;
+    private FinanceRowMetaValueRepository financeRowMetaValueRepository;
 
     @Autowired
     private ApplicationFinanceRepository applicationFinanceRepository;
@@ -196,7 +196,7 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
                         .stream()
                         .filter(c -> c.getValue() != null)
                         .filter(c -> !"null".equals(c.getValue()))
-                        .peek(c -> LOG.debug("CostValue: " + c.getValue()))
+                        .peek(c -> LOG.debug("FinanceRowMetaValue: " + c.getValue()))
                         .forEach(costValue -> updateCostValue(costValue, savedCost));
 
                 // refresh the object, since we need to reload the costvalues, on the cost object.
@@ -209,7 +209,7 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
     public ServiceResult<Void> deleteCost(final Long costId) {
         Application application = costRepository.findOne(costId).getApplicationFinance().getApplication();
         return getOpenApplication(application.getId()).andOnSuccess(app -> {
-            costValueRepository.deleteByCostId(costId);
+            financeRowMetaValueRepository.deleteByCostId(costId);
             costRepository.delete(costId);
             return serviceSuccess();
         });
@@ -381,12 +381,12 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
     
     private Cost persistCostHandlingCostValues(Cost cost) {
     	
-    	  List<CostValue> costValues = cost.getCostValues();
+    	  List<FinanceRowMetaValue> costValues = cost.getCostValues();
           cost.setCostValues(new ArrayList<>());
           Cost persistedCost = costRepository.save(cost);
           costValues.stream().forEach(costVal -> costVal.setCost(persistedCost));
           persistedCost.setCostValues(costValues);
-          costValueRepository.save(costValues);
+          financeRowMetaValueRepository.save(costValues);
           return costRepository.save(persistedCost);
     }
 
@@ -407,7 +407,7 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
         return currentCost;
     }
 
-    private void updateCostValue(CostValue costValue, Cost savedCost) {
+    private void updateCostValue(FinanceRowMetaValue costValue, Cost savedCost) {
         if (costValue.getCostField() == null) {
             LOG.error("CostField is null");
             return;
@@ -415,7 +415,7 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
         CostField costField = costFieldRepository.findOne(costValue.getCostField().getId());
         costValue.setCost(savedCost);
         costValue.setCostField(costField);
-        costValue = costValueRepository.save(costValue);
+        costValue = financeRowMetaValueRepository.save(costValue);
         savedCost.addCostValues(costValue);
     }
 
