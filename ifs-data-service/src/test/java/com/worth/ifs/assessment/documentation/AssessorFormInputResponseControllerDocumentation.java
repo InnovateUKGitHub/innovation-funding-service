@@ -80,7 +80,8 @@ public class AssessorFormInputResponseControllerDocumentation extends BaseContro
         final Long formInputId = 2L;
         final String value = "Feedback";
 
-        when(assessorFormInputResponseServiceMock.updateFormInputResponse(assessmentId, formInputId, value)).thenReturn(serviceSuccess());
+        AssessorFormInputResponseResource response = assessorFormInputResponseResourceBuilder.build();
+        when(assessorFormInputResponseServiceMock.updateFormInputResponse(response)).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/assessorFormInputResponse/formInput/{formInputId}/assessment/{assessmentId}", formInputId, assessmentId)
                 .content(value))
