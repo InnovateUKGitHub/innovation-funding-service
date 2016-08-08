@@ -8,12 +8,12 @@ import org.hibernate.validator.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 
 public class BankDetailsForm extends ProjectDetailsAddressViewModelForm {
-    @NotEmpty(message="{BankDetailsForm.sortcode.Required}")
-    @Pattern(regexp = "\\d{6}", message = "{BankDetailsForm.sortcode.Valid}")
+    @NotEmpty(message="{validation.standard.sortcode.required}")
+    @Pattern(regexp = "\\d{6}", message = "{validation.standard.sortcode.format}")
     private String sortCode;
 
-    @NotEmpty(message="{BankDetailsForm.accountnumber.Required}")
-    @Pattern(regexp = "\\d{8}", message = "{BankDetailsForm.accountnumber.Valid}")
+    @NotEmpty(message="{validation.standard.accountnumber.required}")
+    @Pattern(regexp = "\\d{8}", message = "{validation.standard.accountnumber.format}")
     private String accountNumber;
 
     public String getSortCode() {

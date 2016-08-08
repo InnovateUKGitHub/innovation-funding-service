@@ -24,7 +24,7 @@ public class AddressResource {
     private String town;
     private String county;
     @NotBlank (message="{validation.standard.postcode.required}")
-    @Length(max = 9, message="{vvalidation.standard.postcode.length}")
+    @Length(max = 9, message="{validation.standard.postcode.length}")
     private String postcode;
     private List<Long> organisations = new ArrayList<>();
 

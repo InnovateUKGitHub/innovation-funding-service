@@ -31,23 +31,4 @@ public class Application extends SpringBootServletInitializer {
         LOG.info("IFS boot Application main method");
         SpringApplication.run(Application.class, args);
     }
-
-//
-//    @Bean
-//    public MessageSource messageSource() {
-//        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
-//        messageSource.setBasename("ValidationMessages");
-//        return messageSource;
-//    }
-
-//    //http://stackoverflow.com/questions/21036750/external-properties-file-as-spring-messagesource-not-working
-//    @Bean
-//    public MessageSource messageSource() {
-//        ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-//        messageSource.setBasename("file:/home/ben/ifs-dev/ValidationMessages");
-//        return messageSource;
-//    }
-
-
-
 }

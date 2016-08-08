@@ -10,7 +10,7 @@ import java.util.List;
 public class OrganisationInviteForm implements Serializable, Cloneable {
     private static final long serialVersionUID = -8151722876772666785L;
 
-    @NotEmpty (message="{standard.organisationName.Required}")
+    @NotEmpty (message="{validation.standard.organisationname.required}")
     String organisationName;
     String organisationNameConfirmed;
     Long organisationId;
