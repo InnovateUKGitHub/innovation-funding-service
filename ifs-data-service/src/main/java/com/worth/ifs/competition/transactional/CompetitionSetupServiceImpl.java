@@ -87,7 +87,6 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     @Override
     public ServiceResult<CompetitionResource> update(Long id, CompetitionResource competitionResource) {
         Competition competition = competitionMapper.mapToDomain(competitionResource);
-        competition.setStatus(competitionResource.getCompetitionStatus());
         saveCategories(competitionResource);
         competition = competitionRepository.save(competition);
         competitionService.addCategories(competition);
