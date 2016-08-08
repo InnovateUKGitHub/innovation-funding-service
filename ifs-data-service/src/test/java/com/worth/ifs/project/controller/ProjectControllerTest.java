@@ -492,9 +492,9 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
     @Test
     public void isOtherDocumentsSubmitAllowed() throws Exception {
 
-        when(projectServiceMock.isOtherDocumentsSubmitAllowed(123L)).thenReturn(serviceSuccess(true));
+        when(projectServiceMock.isOtherDocumentsSubmitAllowed(123L, 1L)).thenReturn(serviceSuccess(true));
 
-        mockMvc.perform(get("/project/{projectId}/partner/documents/submit", 123L))
+        mockMvc.perform(get("/project/{projectId}/partner/{userId}/documents/submit", 123L, 1L))
                 .andExpect(status().isOk())
                 .andExpect(content().string("true"))
                 .andReturn();

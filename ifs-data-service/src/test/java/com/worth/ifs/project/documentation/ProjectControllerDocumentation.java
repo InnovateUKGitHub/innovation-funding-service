@@ -463,12 +463,13 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
 
     @Test
     public void isOtherDocumentsSubmitAllowed() throws Exception {
-        when(projectServiceMock.isOtherDocumentsSubmitAllowed(123L)).thenReturn(serviceSuccess(true));
-        MvcResult mvcResult = mockMvc.perform(get("/project/{projectId}/partner/documents/submit", 123L))
+        when(projectServiceMock.isOtherDocumentsSubmitAllowed(123L, 1L)).thenReturn(serviceSuccess(true));
+        MvcResult mvcResult = mockMvc.perform(get("/project/{projectId}/partner/{userId}/documents/submit", 123L, 1L))
                 .andExpect(status().isOk())
                 .andDo(this.document.snippets(
                         pathParameters(
-                                parameterWithName("projectId").description("Id of the project for which the documents are being submitted to.")
+                                parameterWithName("projectId").description("Id of the project for which the documents are being submitted to."),
+                                parameterWithName("userId").description("Logged in User Id")
                         )))
                 .andReturn();
         assertTrue(mvcResult.getResponse().getContentAsString().equals("true"));
@@ -476,12 +477,13 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
 
     @Test
     public void isOtherDocumentsSubmitNotAllowedWhenDocumentsNotFullyUploaded() throws Exception {
-        when(projectServiceMock.isOtherDocumentsSubmitAllowed(123L)).thenReturn(serviceSuccess(false));
-        MvcResult mvcResult = mockMvc.perform(get("/project/{projectId}/partner/documents/submit", 123L))
+        when(projectServiceMock.isOtherDocumentsSubmitAllowed(123L, 1L)).thenReturn(serviceSuccess(false));
+        MvcResult mvcResult = mockMvc.perform(get("/project/{projectId}/partner/{userId}/documents/submit", 123L, 1L))
                 .andExpect(status().isOk())
                 .andDo(this.document.snippets(
                         pathParameters(
-                                parameterWithName("projectId").description("Id of the project for which the documents are being submitted to.")
+                                parameterWithName("projectId").description("Id of the project for which the documents are being submitted to."),
+                                parameterWithName("userId").description("Logged in User Id")
                         )))
                 .andReturn();
         assertTrue(mvcResult.getResponse().getContentAsString().equals("false"));

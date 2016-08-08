@@ -127,8 +127,8 @@ public class ProjectRestServiceImpl extends BaseRestService implements ProjectRe
     }
 
     @Override
-    public RestResult<Boolean> isOtherDocumentsSubmitAllowed(Long projectId) {
-        return getWithRestResult(projectRestURL + "/" + projectId + "/partner/documents/submit", Boolean.class);
+    public RestResult<Boolean> isOtherDocumentsSubmitAllowed(Long projectId, Long userId) {
+        return getWithRestResult(projectRestURL + "/" + projectId + "/partner/" + userId + "/documents/submit", Boolean.class);
     }
 
     @Override

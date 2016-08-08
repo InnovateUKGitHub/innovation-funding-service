@@ -191,8 +191,8 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ServiceResult<Boolean> isOtherDocumentSubmitAllowed(long projectId) {
-        RestResult<Boolean> restResult = projectRestService.isOtherDocumentsSubmitAllowed(projectId);
+    public ServiceResult<Boolean> isOtherDocumentSubmitAllowed(Long projectId, Long userId) {
+        RestResult<Boolean> restResult = projectRestService.isOtherDocumentsSubmitAllowed(projectId, userId);
 
         return restResult.isSuccess() ?
                 restResult.toServiceResult() :
