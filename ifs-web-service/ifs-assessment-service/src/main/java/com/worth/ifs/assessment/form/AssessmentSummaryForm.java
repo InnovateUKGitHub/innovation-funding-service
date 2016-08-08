@@ -11,21 +11,21 @@ import java.util.List;
 /**
  * Form field model for the decision made by an assessor about an application while reviewing the assessment summary.
  */
-public class AssessmentApplicationSummaryForm implements BindingResultTarget {
+public class AssessmentSummaryForm implements BindingResultTarget {
 
     private Boolean fundingConfirmation;
     private String feedback;
-    private String comments;
+    private String comment;
     private BindingResult bindingResult;
     private List<ObjectError> objectErrors;
 
-    public AssessmentApplicationSummaryForm() {
+    public AssessmentSummaryForm() {
     }
 
-    public AssessmentApplicationSummaryForm(Boolean fundingConfirmation, String feedback, String comments, BindingResult bindingResult, List<ObjectError> objectErrors) {
+    public AssessmentSummaryForm(Boolean fundingConfirmation, String feedback, String comment, BindingResult bindingResult, List<ObjectError> objectErrors) {
         this.fundingConfirmation = fundingConfirmation;
         this.feedback = feedback;
-        this.comments = comments;
+        this.comment = comment;
         this.bindingResult = bindingResult;
         this.objectErrors = objectErrors;
     }
@@ -46,12 +46,12 @@ public class AssessmentApplicationSummaryForm implements BindingResultTarget {
         this.feedback = feedback;
     }
 
-    public String getComments() {
-        return comments;
+    public String getComment() {
+        return comment;
     }
 
-    public void setComments(String comments) {
-        this.comments = comments;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     @Override
@@ -84,12 +84,12 @@ public class AssessmentApplicationSummaryForm implements BindingResultTarget {
             return false;
         }
 
-        AssessmentApplicationSummaryForm that = (AssessmentApplicationSummaryForm) o;
+        AssessmentSummaryForm that = (AssessmentSummaryForm) o;
 
         return new EqualsBuilder()
                 .append(fundingConfirmation, that.fundingConfirmation)
                 .append(feedback, that.feedback)
-                .append(comments, that.comments)
+                .append(comment, that.comment)
                 .append(bindingResult, that.bindingResult)
                 .append(objectErrors, that.objectErrors)
                 .isEquals();
@@ -100,7 +100,7 @@ public class AssessmentApplicationSummaryForm implements BindingResultTarget {
         return new HashCodeBuilder(17, 37)
                 .append(fundingConfirmation)
                 .append(feedback)
-                .append(comments)
+                .append(comment)
                 .append(bindingResult)
                 .append(objectErrors)
                 .toHashCode();

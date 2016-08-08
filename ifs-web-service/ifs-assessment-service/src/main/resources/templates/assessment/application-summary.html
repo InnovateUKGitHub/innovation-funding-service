@@ -87,7 +87,7 @@
                             <label class="form-label form-label-bold" th:for="form-textarea-comments" id="form-label-comments">Do you have any other comments about this application? Your comments here will only be shared with Innovate UK. (Optional)</label>
 
                             <div class="textarea-wrapped word-count">
-                                <textarea th:field="*{comments}" id="form-textarea-comments" data-max_words="100"></textarea>
+                                <textarea th:field="*{comment}" id="form-textarea-comments" data-max_words="100"></textarea>
 
                                 <div class="textarea-footer">
                                     <div th:include="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=100)" th:remove="tag" />
