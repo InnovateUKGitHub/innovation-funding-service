@@ -10,14 +10,14 @@ Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
 
 *** Test Cases ***
-Number of sections in the Assessment overview
+Assessment overview should show the expected questions
     [Documentation]    INFUND-3400
     [Tags]
     [Setup]    guest user log-in    paul.plum@gmail.com    Passw0rd
     When the user navigates to the page    ${Assessment_overview_9}
     Then the user should see four sections
 
-Unable to assess this application
+Other Assessors should not be able to access this application
     [Documentation]    INFUND-3540
     [Tags]
     [Setup]    guest user log-in    felix.wilson@gmail.com    Passw0rd
