@@ -27,8 +27,9 @@ Live competition calculations
     [Documentation]    INFUND-3830
     Then the calculations should be correct    Open    //section[1]/ul/li
     And the calculations should be correct    Closed    //section[2]/ul/li
-    And the calculations should be correct    Panel    //section[3]/ul/li
-    And the calculations should be correct    Inform    //section[4]/ul/li
+    And the calculations should be correct    In assessment    //section[3]/ul/li
+    And the calculations should be correct    Panel    //section[4]/ul/li
+    And the calculations should be correct    Inform    //section[5]/ul/li
     And the calculations should be correct    Live    //section/ul/li
 
 Project setup Competitions
