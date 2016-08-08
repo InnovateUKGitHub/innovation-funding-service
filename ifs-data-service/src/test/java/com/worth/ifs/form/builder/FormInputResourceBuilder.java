@@ -1,8 +1,8 @@
 package com.worth.ifs.form.builder;
 
 import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.form.resource.FormInputScope;
 import com.worth.ifs.form.resource.FormInputResource;
+import com.worth.ifs.form.resource.FormInputScope;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -48,8 +48,12 @@ public class FormInputResourceBuilder extends BaseBuilder<FormInputResource, For
         return with(formInput -> formInput.setFormInputType(formInputType));
     }
 
-    public FormInputResourceBuilder withFormInputTypeTitle(String formInputTypeTitle) {
-        return with(formInput -> formInput.setFormInputTypeTitle(formInputTypeTitle));
+    public FormInputResourceBuilder withFormInputTypeTitle(String... formInputTypeTitles) {
+        return withArray((formInputTypeTitle, formInput) -> setField("formInputTypeTitle", formInputTypeTitle, formInput), formInputTypeTitles);
+    }
+
+    public FormInputResourceBuilder withQuestion(Long... questions) {
+        return withArray((question, formInput) -> setField("question", question, formInput), questions);
     }
 
     public FormInputResourceBuilder withPriority(Integer... priorities) {
