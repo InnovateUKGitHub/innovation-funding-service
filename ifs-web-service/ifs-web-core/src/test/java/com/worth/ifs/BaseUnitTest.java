@@ -18,7 +18,7 @@ import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.service.CompetitionsRestService;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.service.ApplicationFinanceRestService;
-import com.worth.ifs.finance.service.CostRestService;
+import com.worth.ifs.finance.service.FinanceRowRestService;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.form.service.FormInputResponseService;
@@ -127,7 +127,7 @@ public class BaseUnitTest {
     @Mock
     public FinanceRowService financeRowService;
     @Mock
-    public CostRestService costRestService;
+    public FinanceRowRestService financeRowRestService;
     @Mock
     public ApplicationRestService applicationRestService;
     @Mock

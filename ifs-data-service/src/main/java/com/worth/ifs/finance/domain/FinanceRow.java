@@ -1,32 +1,24 @@
 package com.worth.ifs.finance.domain;
 
-import static com.worth.ifs.finance.resource.cost.CostItem.MAX_DB_STRING_LENGTH;
-import static com.worth.ifs.finance.resource.cost.CostItem.MAX_LENGTH_MESSAGE;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.worth.ifs.application.domain.Question;
+import org.hibernate.validator.constraints.Length;
+import org.springframework.util.StringUtils;
 
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-
-import org.hibernate.validator.constraints.Length;
-import org.springframework.util.StringUtils;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.worth.ifs.application.domain.Question;
+import static com.worth.ifs.finance.resource.cost.FinanceRowItem.MAX_DB_STRING_LENGTH;
+import static com.worth.ifs.finance.resource.cost.FinanceRowItem.MAX_LENGTH_MESSAGE;
 
 /**
- * Cost defines database relations and a model to use client side and server side.
+ * FinanceRow defines database relations and a model to use client side and server side.
  */
 @Entity
-public class Cost {
+public class FinanceRow {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -44,7 +36,7 @@ public class Cost {
     @Length(max = MAX_DB_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
     private String name;
 
-    @OneToMany(mappedBy="cost")
+    @OneToMany(mappedBy="financeRow")
     private List<FinanceRowMetaValue> costValues = new ArrayList<>();
 
     @ManyToOne
@@ -56,14 +48,14 @@ public class Cost {
     @JoinColumn(name="questionId", referencedColumnName="id")
     private Question question;
 
-    public Cost() {
+    public FinanceRow() {
     	// no-arg constructor
     }
 
     /**
      * Constructor used to add a new and empty cost object.
      */
-    public Cost(ApplicationFinance applicationFinance, Question question) {
+    public FinanceRow(ApplicationFinance applicationFinance, Question question) {
         this.name = "";
         this.item = "";
         this.description = "";
@@ -73,8 +65,8 @@ public class Cost {
         this.question = question;
     }
 
-    public Cost(String name, String item, String description, Integer quantity, BigDecimal cost,
-                ApplicationFinance applicationFinance, Question question) {
+    public FinanceRow(String name, String item, String description, Integer quantity, BigDecimal cost,
+                      ApplicationFinance applicationFinance, Question question) {
         this.name = name;
         this.item = item;
         this.description = description;
@@ -84,8 +76,8 @@ public class Cost {
         this.question = question;
     }
 
-    public Cost(Long id, String name, String item, String description, Integer quantity, BigDecimal cost,
-                ApplicationFinance applicationFinance, Question question) {
+    public FinanceRow(Long id, String name, String item, String description, Integer quantity, BigDecimal cost,
+                      ApplicationFinance applicationFinance, Question question) {
         this(name, item ,description, quantity, cost, applicationFinance, question);
         this.id = id;
     }

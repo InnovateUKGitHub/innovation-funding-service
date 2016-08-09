@@ -1,7 +1,7 @@
 package com.worth.ifs.application.finance.view.item;
 
 import com.worth.ifs.application.finance.model.FinanceFormField;
-import com.worth.ifs.finance.resource.cost.CostItem;
+import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class YourFinanceHandler extends FinanceRowHandler {
     @Override
-    public CostItem toCostItem(Long id, List<FinanceFormField> financeFormFields) {
+    public FinanceRowItem toFinanceRowItem(Long id, List<FinanceFormField> financeFormFields) {
         return null;
     }
 }

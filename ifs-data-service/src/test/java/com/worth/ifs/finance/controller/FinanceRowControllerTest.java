@@ -15,26 +15,26 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.worth.ifs.finance.domain.FinanceRowMetaField;
+import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
-import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.GrantClaim;
-import com.worth.ifs.finance.transactional.CostService;
+import com.worth.ifs.finance.transactional.FinanceRowService;
 import com.worth.ifs.validator.util.ValidationUtil;
 
-public class CostControllerTest extends BaseControllerMockMVCTest<CostController> {
+public class FinanceRowControllerTest extends BaseControllerMockMVCTest<FinanceRowController> {
 
     @Override
-    protected CostController supplyControllerUnderTest() {
-        return new CostController();
+    protected FinanceRowController supplyControllerUnderTest() {
+        return new FinanceRowController();
     }
 
     @Mock
-    private CostService costServiceMock;
+    private FinanceRowService financeRowServiceMock;
 
     @Mock
     private ValidationUtil validationUtil;
@@ -42,23 +42,23 @@ public class CostControllerTest extends BaseControllerMockMVCTest<CostController
     @Test
     public void addShouldCreateNewCost() throws Exception{
 
-        when(costServiceMock.addCost(123L, 456L, null)).thenReturn(serviceSuccess(new GrantClaim()));
+        when(financeRowServiceMock.addCost(123L, 456L, null)).thenReturn(serviceSuccess(new GrantClaim()));
 
         mockMvc.perform(get("/cost/add/{applicationFinanceId}/{questionId}", "123", "456"))
                 .andExpect(status().isCreated());
 
-        verify(costServiceMock, times(1)).addCost(123L, 456L, null);
+        verify(financeRowServiceMock, times(1)).addCost(123L, 456L, null);
     }
     
     @Test
     public void addShouldCreateNewCostWithoutPersisting() throws Exception{
 
-        when(costServiceMock.addCostWithoutPersisting(123L, 456L)).thenReturn(serviceSuccess(new GrantClaim()));
+        when(financeRowServiceMock.addCostWithoutPersisting(123L, 456L)).thenReturn(serviceSuccess(new GrantClaim()));
 
         mockMvc.perform(get("/cost/add-without-persisting/{applicationFinanceId}/{questionId}", "123", "456"))
                 .andExpect(status().isCreated());
 
-        verify(costServiceMock, times(1)).addCostWithoutPersisting(123L, 456L);
+        verify(financeRowServiceMock, times(1)).addCostWithoutPersisting(123L, 456L);
     }
 
     @Test
@@ -67,7 +67,7 @@ public class CostControllerTest extends BaseControllerMockMVCTest<CostController
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
 
-        verifyNoMoreInteractions(costRepositoryMock);
+        verifyNoMoreInteractions(financeRowRepositoryMock);
     }
 
     @Test
@@ -92,14 +92,14 @@ public class CostControllerTest extends BaseControllerMockMVCTest<CostController
                 .contentType(MediaType.TEXT_PLAIN))
                 .andExpect(status().isUnsupportedMediaType());
 
-        verifyNoMoreInteractions(costRepositoryMock);
+        verifyNoMoreInteractions(financeRowRepositoryMock);
     }
 
     @Test
     public void updateShouldReturnEmptyResponseOnWrongId() throws Exception {
 
         GrantClaim costItem = new GrantClaim();
-        when(costServiceMock.updateCost(eq(123L), isA(CostItem.class))).thenReturn(serviceFailure(notFoundError(FinanceRowMetaField.class, 123L)));
+        when(financeRowServiceMock.updateCost(eq(123L), isA(FinanceRowItem.class))).thenReturn(serviceFailure(notFoundError(FinanceRowMetaField.class, 123L)));
 
         mockMvc.perform(get("/cost/update/{id}", "123")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -107,32 +107,32 @@ public class CostControllerTest extends BaseControllerMockMVCTest<CostController
                 .andExpect(status().isNotFound())
                 .andReturn();
 
-        verify(costServiceMock, times(1)).updateCost(eq(123L), isA(CostItem.class));
+        verify(financeRowServiceMock, times(1)).updateCost(eq(123L), isA(FinanceRowItem.class));
     }
 
     @Test
     public void updateShouldReturnIsCorrectOnCorrectValues() throws Exception {
 
         GrantClaim costItem = new GrantClaim();
-        when(costServiceMock.updateCost(eq(123L), isA(CostItem.class))).thenReturn(serviceSuccess(costItem));
+        when(financeRowServiceMock.updateCost(eq(123L), isA(FinanceRowItem.class))).thenReturn(serviceSuccess(costItem));
 
         mockMvc.perform(post("/cost/update/{id}", "123")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(costItem)))
                 .andExpect(status().isOk());
 
-        verify(costServiceMock, times(1)).updateCost(eq(123L), isA(CostItem.class));
+        verify(financeRowServiceMock, times(1)).updateCost(eq(123L), isA(FinanceRowItem.class));
     }
 
     @Test
     public void deleteCostAPICallShouldRenderResponse() throws Exception {
 
-        when(costServiceMock.deleteCost(123L)).thenReturn(serviceSuccess());
+        when(financeRowServiceMock.deleteCost(123L)).thenReturn(serviceSuccess());
 
         mockMvc.perform(get("/cost/delete/123"))
                 .andExpect(status().isNoContent());
 
-        verify(costServiceMock, times(1)).deleteCost(123L);
+        verify(financeRowServiceMock, times(1)).deleteCost(123L);
     }
 
 }

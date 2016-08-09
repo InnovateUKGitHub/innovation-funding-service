@@ -35,7 +35,7 @@ import static org.mockito.Mockito.when;
 /**
  *
  */
-public class CostServiceImplTest extends BaseServiceUnitTest<CostServiceImpl> {
+public class FinanceRowServiceImplTest extends BaseServiceUnitTest<FinanceRowServiceImpl> {
 
     @Mock
     private OrganisationFinanceHandler organisationFinanceHandlerMock;
@@ -47,8 +47,8 @@ public class CostServiceImplTest extends BaseServiceUnitTest<CostServiceImpl> {
     private OrganisationFinanceDefaultHandler organisationFinanceDefaultHandlerMock;
 
     @Override
-    protected CostServiceImpl supplyServiceUnderTest() {
-        return new CostServiceImpl();
+    protected FinanceRowServiceImpl supplyServiceUnderTest() {
+        return new FinanceRowServiceImpl();
     }
 
     @Test

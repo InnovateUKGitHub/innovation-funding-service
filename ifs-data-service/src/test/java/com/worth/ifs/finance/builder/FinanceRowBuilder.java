@@ -2,7 +2,7 @@ package com.worth.ifs.finance.builder;
 
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.finance.domain.ApplicationFinance;
-import com.worth.ifs.finance.domain.Cost;
+import com.worth.ifs.finance.domain.FinanceRow;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -13,35 +13,35 @@ import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
 
 /**
- * Builder for Cost entities.
+ * Builder for FinanceRow entities.
  */
-public class CostBuilder extends BaseBuilder<Cost, CostBuilder> {
+public class FinanceRowBuilder extends BaseBuilder<FinanceRow, FinanceRowBuilder> {
 
-    private CostBuilder(List<BiConsumer<Integer, Cost>> newMultiActions) {
+    private FinanceRowBuilder(List<BiConsumer<Integer, FinanceRow>> newMultiActions) {
         super(newMultiActions);
     }
 
-    public static CostBuilder newCost() {
-        return new CostBuilder(emptyList()).
+    public static FinanceRowBuilder newFinanceRow() {
+        return new FinanceRowBuilder(emptyList()).
                 with(uniqueIds()).
                 with(idBasedDescriptions("Description "));
     }
 
     @Override
-    protected CostBuilder createNewBuilderWithActions(List<BiConsumer<Integer, Cost>> actions) {
-        return new CostBuilder(actions);
+    protected FinanceRowBuilder createNewBuilderWithActions(List<BiConsumer<Integer, FinanceRow>> actions) {
+        return new FinanceRowBuilder(actions);
     }
 
     @Override
-    protected Cost createInitial() {
-        return new Cost();
+    protected FinanceRow createInitial() {
+        return new FinanceRow();
     }
 
-    public CostBuilder withItem(String item){
+    public FinanceRowBuilder withItem(String item){
         return with(cost -> setField("item", item, cost));
     }
 
-    public CostBuilder withApplicationFinance(final ApplicationFinance applicationFinance) {
+    public FinanceRowBuilder withApplicationFinance(final ApplicationFinance applicationFinance) {
         return with(cost -> cost.setApplicationFinance(applicationFinance));
     }
 }

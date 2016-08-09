@@ -1,10 +1,10 @@
 package com.worth.ifs.finance.security;
 
 import com.worth.ifs.finance.domain.ApplicationFinance;
-import com.worth.ifs.finance.domain.Cost;
-import com.worth.ifs.finance.repository.CostRepository;
+import com.worth.ifs.finance.domain.FinanceRow;
+import com.worth.ifs.finance.repository.FinanceRowRepository;
 import com.worth.ifs.finance.resource.FinanceRowMetaValueResource;
-import com.worth.ifs.finance.resource.cost.CostItem;
+import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import com.worth.ifs.security.PermissionRule;
 import com.worth.ifs.security.PermissionRules;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
@@ -19,11 +19,11 @@ import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 
 
 /**
- * Permission rules for {@link Cost} and {@link CostItem} for permissioning
+ * Permission rules for {@link FinanceRow} and {@link FinanceRowItem} for permissioning
  */
 @Component
 @PermissionRules
-public class CostPermissionRules {
+public class FinanceRowPermissionRules {
 
     @Autowired
     private ProcessRoleRepository processRoleRepository;
@@ -32,35 +32,35 @@ public class CostPermissionRules {
     private RoleRepository roleRepository;
 
     @Autowired
-    private CostRepository costRepository;
+    private FinanceRowRepository financeRowRepository;
 
     @PermissionRule(value = "UPDATE", description = "The consortium can update the cost for their application and organisation")
-    public boolean consortiumCanUpdateACostForTheirApplicationAndOrganisation(final Cost cost, final UserResource user) {
+    public boolean consortiumCanUpdateACostForTheirApplicationAndOrganisation(final FinanceRow cost, final UserResource user) {
         return isCollaborator(cost, user);
     }
 
     @PermissionRule(value = "DELETE", description = "The consortium can update the cost for their application and organisation")
-    public boolean consortiumCanDeleteACostForTheirApplicationAndOrganisation(final Cost cost, final UserResource user) {
+    public boolean consortiumCanDeleteACostForTheirApplicationAndOrganisation(final FinanceRow cost, final UserResource user) {
         return isCollaborator(cost, user);
     }
 
     @PermissionRule(value = "READ", description = "The consortium can read the cost for their application and organisation")
-    public boolean consortiumCanReadACostForTheirApplicationAndOrganisation(final Cost cost, final UserResource user) {
+    public boolean consortiumCanReadACostForTheirApplicationAndOrganisation(final FinanceRow cost, final UserResource user) {
         return isCollaborator(cost, user);
     }
 
     @PermissionRule(value = "READ", description = "The consortium can read the cost for their application and organisation")
-    public boolean consortiumCanReadACostItemForTheirApplicationAndOrganisation(final CostItem costItem, final UserResource user) {
-        return isCollaborator(costRepository.findOne(costItem.getId()), user);
+    public boolean consortiumCanReadACostItemForTheirApplicationAndOrganisation(final FinanceRowItem costItem, final UserResource user) {
+        return isCollaborator(financeRowRepository.findOne(costItem.getId()), user);
     }
 
     @PermissionRule(value = "READ", description = "The consortium can read the cost for their application and organisation")
     public boolean consortiumCanReadACostValueForTheirApplicationAndOrganisation(final FinanceRowMetaValueResource financeRowMetaValueResource, final UserResource user) {
-        final Cost cost = costRepository.findOne(financeRowMetaValueResource.getCost());
+        final FinanceRow cost = financeRowRepository.findOne(financeRowMetaValueResource.getFinanceRow());
         return isCollaborator(cost, user);
     }
 
-    private boolean isCollaborator(final Cost cost, final UserResource user) {
+    private boolean isCollaborator(final FinanceRow cost, final UserResource user) {
         final ApplicationFinance applicationFinance = cost.getApplicationFinance();
         final Long applicationId = applicationFinance.getApplication().getId();
         final Long organisationId = applicationFinance.getOrganisation().getId();

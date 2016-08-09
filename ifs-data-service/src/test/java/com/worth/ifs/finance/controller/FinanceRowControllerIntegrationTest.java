@@ -8,8 +8,8 @@ import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.finance.domain.ApplicationFinance;
-import com.worth.ifs.finance.domain.Cost;
-import com.worth.ifs.finance.repository.CostRepository;
+import com.worth.ifs.finance.domain.FinanceRow;
+import com.worth.ifs.finance.repository.FinanceRowRepository;
 import com.worth.ifs.finance.resource.cost.*;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
@@ -35,7 +35,7 @@ import static java.util.Collections.singletonList;
 import static org.junit.Assert.*;
 
 @Rollback
-public class CostControllerIntegrationTest extends BaseControllerIntegrationTest<CostController> {
+public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrationTest<FinanceRowController> {
 
     private GrantClaim grantClaim;
     private Materials materials;
@@ -56,8 +56,8 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
     private BindingResult bindingResult;
 
     @Autowired
-    private CostRepository costRepository;
-    private Cost grandClaimCost;
+    private FinanceRowRepository financeRowRepository;
+    private FinanceRow grandClaimCost;
     private ApplicationFinance applicationFinance;
     private long leadApplicantId;
     private long leadApplicantProcessRole;
@@ -68,14 +68,14 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
 
     @Override
     @Autowired
-    protected void setControllerUnderTest(CostController controller) {
+    protected void setControllerUnderTest(FinanceRowController controller) {
         this.controller = controller;
     }
 
     @Before
     public void prepare(){
         loginSteveSmith();
-        grandClaimCost = costRepository.findOne(48L);
+        grandClaimCost = financeRowRepository.findOne(48L);
         applicationFinance = grandClaimCost.getApplicationFinance();
 
         grantClaim = (GrantClaim) controller.get(48L).getSuccessObject();
@@ -469,13 +469,13 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
         expectedErrors.forEach(error -> assertTrue(messages.getErrors().contains(error)));
     }
 
-    /* Other Cost Section Tests */
+    /* Other FinanceRow Section Tests */
 
     @Rollback
     @Test
     public void testValidationOtherCostUpdateSuccess() {
         otherCost.setCost(new BigDecimal("1000"));
-        otherCost.setDescription("Additional Test Cost");
+        otherCost.setDescription("Additional Test FinanceRow");
 
         RestResult<ValidationMessages> validationMessages = controller.update(otherCost.getId(), otherCost);
         assertTrue(validationMessages.isSuccess());

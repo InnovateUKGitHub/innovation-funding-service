@@ -7,16 +7,16 @@ import com.worth.ifs.application.security.ApplicationPermissionRules;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.FileAndContents;
-import com.worth.ifs.finance.domain.Cost;
+import com.worth.ifs.finance.domain.FinanceRow;
 import com.worth.ifs.finance.domain.FinanceRowMetaField;
-import com.worth.ifs.finance.handler.item.CostHandler;
+import com.worth.ifs.finance.handler.item.FinanceRowHandler;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.ApplicationFinanceResourceId;
 import com.worth.ifs.finance.resource.FinanceRowMetaFieldResource;
 import com.worth.ifs.finance.resource.cost.AcademicCost;
-import com.worth.ifs.finance.resource.cost.CostItem;
+import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import com.worth.ifs.finance.security.*;
-import com.worth.ifs.finance.transactional.CostService;
+import com.worth.ifs.finance.transactional.FinanceRowService;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,35 +31,35 @@ import static com.worth.ifs.BuilderAmendFunctions.id;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
-import static com.worth.ifs.finance.builder.CostBuilder.newCost;
+import static com.worth.ifs.finance.builder.FinanceRowBuilder.newFinanceRow;
 import static com.worth.ifs.finance.builder.FinanceRowMetaFieldResourceBuilder.newFinanceRowMetaFieldResource;
-import static com.worth.ifs.finance.service.CostServiceSecurityTest.TestCostService.ARRAY_SIZE_FOR_POST_FILTER_TESTS;
+import static com.worth.ifs.finance.service.FinanceRowServiceSecurityTest.TestFinanceRowService.ARRAY_SIZE_FOR_POST_FILTER_TESTS;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
 
 /**
- * Testing how the secured methods in {@link CostService} interact with Spring Security
+ * Testing how the secured methods in {@link FinanceRowService} interact with Spring Security
  */
-public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService> {
+public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<FinanceRowService> {
 
     private FinanceRowMetaFieldPermissionsRules financeRowMetaFieldPermissionsRules;
-    private CostPermissionRules costPermissionsRules;
+    private FinanceRowPermissionRules costPermissionsRules;
     private ApplicationFinancePermissionRules applicationFinanceRules;
     private ApplicationPermissionRules applicationRules;
     private ApplicationLookupStrategy applicationLookupStrategy;
-    private CostLookupStrategy costLookupStrategy;
+    private FinanceRowLookupStrategy financeRowLookupStrategy;
     private FinanceRowMetaFieldLookupStrategy financeRowMetaFieldLookupStrategy;
     private ApplicationFinanceLookupStrategy applicationFinanceLookupStrategy;
 
     @Before
     public void lookupPermissionRules() {
         financeRowMetaFieldPermissionsRules = getMockPermissionRulesBean(FinanceRowMetaFieldPermissionsRules.class);
-        costPermissionsRules = getMockPermissionRulesBean(CostPermissionRules.class);
+        costPermissionsRules = getMockPermissionRulesBean(FinanceRowPermissionRules.class);
         applicationFinanceRules = getMockPermissionRulesBean(ApplicationFinancePermissionRules.class);
         applicationRules = getMockPermissionRulesBean(ApplicationPermissionRules.class);
         applicationLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ApplicationLookupStrategy.class);
-        costLookupStrategy = getMockPermissionEntityLookupStrategiesBean(CostLookupStrategy.class);
+        financeRowLookupStrategy = getMockPermissionEntityLookupStrategiesBean(FinanceRowLookupStrategy.class);
         financeRowMetaFieldLookupStrategy = getMockPermissionEntityLookupStrategiesBean(FinanceRowMetaFieldLookupStrategy.class);
         applicationFinanceLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ApplicationFinanceLookupStrategy.class);
     }
@@ -138,11 +138,11 @@ public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService
     @Test
     public void testUpdateCost() {
         final Long costId = 1L;
-        when(costLookupStrategy.getCost(costId)).thenReturn(newCost().with(id(costId)).build());
+        when(financeRowLookupStrategy.getFinanceRow(costId)).thenReturn(newFinanceRow().with(id(costId)).build());
         assertAccessDenied(
                 () -> service.updateCost(costId, new AcademicCost()),
                 () -> {
-                    verify(costPermissionsRules).consortiumCanUpdateACostForTheirApplicationAndOrganisation(isA(Cost.class), isA(UserResource.class));
+                    verify(costPermissionsRules).consortiumCanUpdateACostForTheirApplicationAndOrganisation(isA(FinanceRow.class), isA(UserResource.class));
                 });
     }
 
@@ -160,11 +160,11 @@ public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService
     @Test
     public void testDeleteCost() {
         final Long costId = 1L;
-        when(costLookupStrategy.getCost(costId)).thenReturn(newCost().with(id(costId)).build());
+        when(financeRowLookupStrategy.getFinanceRow(costId)).thenReturn(newFinanceRow().with(id(costId)).build());
         assertAccessDenied(
                 () -> service.deleteCost(costId),
                 () -> {
-                    verify(costPermissionsRules).consortiumCanDeleteACostForTheirApplicationAndOrganisation(isA(Cost.class), isA(UserResource.class));
+                    verify(costPermissionsRules).consortiumCanDeleteACostForTheirApplicationAndOrganisation(isA(FinanceRow.class), isA(UserResource.class));
                 });
     }
 
@@ -215,7 +215,7 @@ public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService
         assertAccessDenied(
                 () -> service.getCostItem(costId),
                 () -> {
-                    verify(costPermissionsRules).consortiumCanReadACostItemForTheirApplicationAndOrganisation(isA(CostItem.class), isA(UserResource.class));
+                    verify(costPermissionsRules).consortiumCanReadACostItemForTheirApplicationAndOrganisation(isA(FinanceRowItem.class), isA(UserResource.class));
                 });
     }
 
@@ -273,7 +273,7 @@ public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService
         final Long questionId = 2L;
 
         service.getCosts(costId, costTypeName, questionId);
-        verify(costPermissionsRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).consortiumCanReadACostForTheirApplicationAndOrganisation(isA(Cost.class), isA(UserResource.class));
+        verify(costPermissionsRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).consortiumCanReadACostForTheirApplicationAndOrganisation(isA(FinanceRow.class), isA(UserResource.class));
     }
 
     @Test
@@ -283,7 +283,7 @@ public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService
         final Long questionId = 2L;
 
         service.getCostItems(costId, costTypeName, questionId);
-        verify(costPermissionsRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).consortiumCanReadACostItemForTheirApplicationAndOrganisation(isA(CostItem.class), isA(UserResource.class));
+        verify(costPermissionsRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).consortiumCanReadACostItemForTheirApplicationAndOrganisation(isA(FinanceRowItem.class), isA(UserResource.class));
     }
 
     @Test
@@ -291,7 +291,7 @@ public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService
         final Long applicationFinanceId = 1L;
         final Long questionId = 2L;
         service.getCostItems(applicationFinanceId, questionId);
-        verify(costPermissionsRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).consortiumCanReadACostItemForTheirApplicationAndOrganisation(isA(CostItem.class), isA(UserResource.class));
+        verify(costPermissionsRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).consortiumCanReadACostItemForTheirApplicationAndOrganisation(isA(FinanceRowItem.class), isA(UserResource.class));
     }
 
     private void verifyApplicationFinanceResourceReadRulesCalled() {
@@ -305,11 +305,11 @@ public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService
     }
 
     @Override
-    protected Class<TestCostService> getServiceClass() {
-        return TestCostService.class;
+    protected Class<TestFinanceRowService> getServiceClass() {
+        return TestFinanceRowService.class;
     }
 
-    public static class TestCostService implements CostService {
+    public static class TestFinanceRowService implements FinanceRowService {
 
 
         static final int ARRAY_SIZE_FOR_POST_FILTER_TESTS = 2;
@@ -325,32 +325,32 @@ public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService
         }
 
         @Override
-        public ServiceResult<CostItem> getCostItem(Long costItemId) {
+        public ServiceResult<FinanceRowItem> getCostItem(Long costItemId) {
             return serviceSuccess(new AcademicCost());
         }
 
         @Override
-        public ServiceResult<CostItem> addCost(Long applicationFinanceId, Long questionId, CostItem newCostItem) {
+        public ServiceResult<FinanceRowItem> addCost(Long applicationFinanceId, Long questionId, FinanceRowItem newCostItem) {
             return null;
         }
 
         @Override
-        public ServiceResult<CostItem> updateCost(Long id, CostItem newCostItem) {
+        public ServiceResult<FinanceRowItem> updateCost(Long id, FinanceRowItem newCostItem) {
             return null;
         }
 
         @Override
-        public ServiceResult<List<Cost>> getCosts(Long applicationFinanceId, String costTypeName, Long questionId) {
-            return serviceSuccess(newCost().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
+        public ServiceResult<List<FinanceRow>> getCosts(Long applicationFinanceId, String costTypeName, Long questionId) {
+            return serviceSuccess(newFinanceRow().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
         }
 
         @Override
-        public ServiceResult<List<CostItem>> getCostItems(Long applicationFinanceId, String costTypeName, Long questionId) {
+        public ServiceResult<List<FinanceRowItem>> getCostItems(Long applicationFinanceId, String costTypeName, Long questionId) {
             return getCostItems();
         }
 
-        private ServiceResult<List<CostItem>> getCostItems() {
-            final List<CostItem> items = new ArrayList<>();
+        private ServiceResult<List<FinanceRowItem>> getCostItems() {
+            final List<FinanceRowItem> items = new ArrayList<>();
             for (int i = 0; i < ARRAY_SIZE_FOR_POST_FILTER_TESTS; i++) {
                 items.add(new AcademicCost());
             }
@@ -358,7 +358,7 @@ public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService
         }
 
         @Override
-        public ServiceResult<List<CostItem>> getCostItems(Long applicationFinanceId, Long questionId) {
+        public ServiceResult<List<FinanceRowItem>> getCostItems(Long applicationFinanceId, Long questionId) {
             return getCostItems();
         }
 
@@ -388,7 +388,7 @@ public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService
         }
         
         @Override
-		public ServiceResult<CostItem> addCostWithoutPersisting(Long applicationFinanceId, Long questionId) {
+		public ServiceResult<FinanceRowItem> addCostWithoutPersisting(Long applicationFinanceId, Long questionId) {
 			return null;
 		}
 
@@ -413,7 +413,7 @@ public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService
         }
 
         @Override
-        public CostHandler getCostHandler(Long costItemId) {
+        public FinanceRowHandler getCostHandler(Long costItemId) {
             return null;
         }
 

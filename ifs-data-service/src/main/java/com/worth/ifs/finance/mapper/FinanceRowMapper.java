@@ -3,8 +3,8 @@ package com.worth.ifs.finance.mapper;
 import com.worth.ifs.application.mapper.QuestionMapper;
 import com.worth.ifs.commons.mapper.BaseMapper;
 import com.worth.ifs.commons.mapper.GlobalMapperConfig;
-import com.worth.ifs.finance.domain.Cost;
-import com.worth.ifs.finance.resource.CostResource;
+import com.worth.ifs.finance.domain.FinanceRow;
+import com.worth.ifs.finance.resource.FinanceRowResource;
 import org.mapstruct.Mapper;
 
 @Mapper(
@@ -15,9 +15,9 @@ import org.mapstruct.Mapper;
                 FinanceRowMetaValueMapper.class
         }
 )
-public abstract class CostMapper extends BaseMapper<Cost, CostResource, Long> {
+public abstract class FinanceRowMapper extends BaseMapper<FinanceRow, FinanceRowResource, Long> {
 
-        public Long mapCostToId(Cost object) {
+        public Long mapFinanceRowToId(FinanceRow object) {
                 if (object == null) {
                         return null;
                 }

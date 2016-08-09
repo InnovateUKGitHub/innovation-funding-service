@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.worth.ifs.application.finance.model.FinanceFormField;
 import com.worth.ifs.finance.resource.cost.CapitalUsage;
-import com.worth.ifs.finance.resource.cost.CostItem;
+import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import com.worth.ifs.util.NumberUtils;
 
 import static com.worth.ifs.util.NullCheckFunctions.allNull;
@@ -16,7 +16,7 @@ import static com.worth.ifs.util.NullCheckFunctions.allNull;
 public class CapitalUsageHandler extends FinanceRowHandler {
 
     @Override
-    public CostItem toCostItem(Long id, List<FinanceFormField> financeFormFields) {
+    public FinanceRowItem toFinanceRowItem(Long id, List<FinanceFormField> financeFormFields) {
         Integer deprecation = null;
         String description = null;
         String existing = null;

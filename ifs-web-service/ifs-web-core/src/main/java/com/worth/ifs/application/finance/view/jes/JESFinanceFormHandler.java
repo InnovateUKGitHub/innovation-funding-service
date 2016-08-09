@@ -13,7 +13,7 @@ import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.exception.UnableToReadUploadedFile;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
-import com.worth.ifs.finance.resource.cost.CostItem;
+import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import com.worth.ifs.util.MessageUtil;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.logging.Log;
@@ -54,11 +54,11 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
 
     @Override
     public ValidationMessages update(HttpServletRequest request, Long userId, Long applicationId) {
-        storeCostItems(request, userId, applicationId);
+        storeFinanceRowItems(request, userId, applicationId);
         return storeJESUpload(request, userId, applicationId);
     }
 
-    private void storeCostItems(HttpServletRequest request, Long userId, Long applicationId) {
+    private void storeFinanceRowItems(HttpServletRequest request, Long userId, Long applicationId) {
         Enumeration<String> parameterNames = request.getParameterNames();
         while(parameterNames.hasMoreElements()) {
             String parameter = parameterNames.nextElement();
@@ -90,9 +90,9 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
         if (financeFormField.getId() != null && !"null".equals(financeFormField.getId())) {
             costFormFieldId = Long.parseLong(financeFormField.getId());
         }
-        CostItem costItem = financeRowHandler.toCostItem(costFormFieldId, Arrays.asList(financeFormField));
+        FinanceRowItem costItem = financeRowHandler.toFinanceRowItem(costFormFieldId, Arrays.asList(financeFormField));
         if(costItem != null) {
-        	return storeCostItem(costItem, userId, applicationId, financeFormField.getQuestionId());
+        	return storeFinanceRowItem(costItem, userId, applicationId, financeFormField.getQuestionId());
         } else {
         	return ValidationMessages.noErrors();
         }
@@ -108,9 +108,9 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
         return null;
     }
 
-    private ValidationMessages storeCostItem(CostItem costItem, Long userId, Long applicationId, String question) {
+    private ValidationMessages storeFinanceRowItem(FinanceRowItem costItem, Long userId, Long applicationId, String question) {
         if (costItem.getId().equals(0L)) {
-            addCostItem(costItem, userId, applicationId, question);
+            addFinanceRowItem(costItem, userId, applicationId, question);
         } else {
             RestResult<ValidationMessages> messages = financeRowService.update(costItem);
             ValidationMessages validationMessages = messages.getSuccessObject();
@@ -127,7 +127,7 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
         return null;
     }
 
-    private void addCostItem(CostItem costItem, Long userId, Long applicationId, String question) {
+    private void addFinanceRowItem(FinanceRowItem costItem, Long userId, Long applicationId, String question) {
         ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(userId, applicationId);
 
         if (question != null && !question.isEmpty()) {
@@ -237,7 +237,7 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
     }
 
 	@Override
-	public CostItem addCostWithoutPersisting(Long applicationId, Long userId, Long questionId) {
+	public FinanceRowItem addCostWithoutPersisting(Long applicationId, Long userId, Long questionId) {
 		// not to be implemented, can't add extra rows of finance to the JES form
         throw new NotImplementedException("Can't add extra rows of finance to the JES form");
 	}

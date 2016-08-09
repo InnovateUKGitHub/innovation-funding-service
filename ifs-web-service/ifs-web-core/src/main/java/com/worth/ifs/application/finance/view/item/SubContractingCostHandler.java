@@ -1,7 +1,7 @@
 package com.worth.ifs.application.finance.view.item;
 
 import com.worth.ifs.application.finance.model.FinanceFormField;
-import com.worth.ifs.finance.resource.cost.CostItem;
+import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import com.worth.ifs.finance.resource.cost.SubContractingCost;
 import com.worth.ifs.util.NumberUtils;
 
@@ -16,7 +16,7 @@ import static com.worth.ifs.util.NullCheckFunctions.allNull;
 public class SubContractingCostHandler extends FinanceRowHandler {
 
     @Override
-    public CostItem toCostItem(Long id, List<FinanceFormField> financeFormFields) {
+    public FinanceRowItem toFinanceRowItem(Long id, List<FinanceFormField> financeFormFields) {
         BigDecimal cost = null;
         String country = null;
         String name = null;

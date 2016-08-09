@@ -1,7 +1,7 @@
 package com.worth.ifs.application.finance.view.item;
 
 import com.worth.ifs.application.finance.model.FinanceFormField;
-import com.worth.ifs.finance.resource.cost.CostItem;
+import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import com.worth.ifs.finance.resource.cost.TravelCost;
 import com.worth.ifs.util.NumberUtils;
 import org.apache.commons.logging.Log;
@@ -16,7 +16,7 @@ public class TravelCostHandler extends FinanceRowHandler {
     private static final Log LOG = LogFactory.getLog(TravelCostHandler.class);
 
     @Override
-    public CostItem toCostItem(Long id, List<FinanceFormField> financeFormFields) {
+    public FinanceRowItem toFinanceRowItem(Long id, List<FinanceFormField> financeFormFields) {
         BigDecimal costPerItem = null;
         String item = null;
         Integer quantity = null;

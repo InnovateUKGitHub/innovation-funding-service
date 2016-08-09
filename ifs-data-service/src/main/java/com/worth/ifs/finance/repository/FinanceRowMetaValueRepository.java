@@ -15,5 +15,5 @@ import java.util.List;
 public interface FinanceRowMetaValueRepository extends PagingAndSortingRepository<FinanceRowMetaValue, FinanceRowMetaValueId> {
 	@Override
     List<FinanceRowMetaValue> findAll();
-    void deleteByCostId(@Param("costId") Long costId);
+    void deleteByFinanceRowId(@Param("financeRowd") Long financeRowId);
 }

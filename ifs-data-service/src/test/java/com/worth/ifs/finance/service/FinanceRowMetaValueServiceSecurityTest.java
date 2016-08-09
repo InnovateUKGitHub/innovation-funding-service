@@ -4,7 +4,7 @@ import com.worth.ifs.BaseServiceSecurityTest;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.finance.resource.FinanceRowMetaValueId;
 import com.worth.ifs.finance.resource.FinanceRowMetaValueResource;
-import com.worth.ifs.finance.security.CostPermissionRules;
+import com.worth.ifs.finance.security.FinanceRowPermissionRules;
 import com.worth.ifs.finance.transactional.FinanceRowMetaValueService;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -20,12 +20,12 @@ import static org.mockito.Matchers.isA;
 public class FinanceRowMetaValueServiceSecurityTest extends BaseServiceSecurityTest<FinanceRowMetaValueService> {
 
 
-    private CostPermissionRules costPermissionsRules;
+    private FinanceRowPermissionRules costPermissionsRules;
 
 
     @Before
     public void lookupPermissionRules() {
-        costPermissionsRules = getMockPermissionRulesBean(CostPermissionRules.class);
+        costPermissionsRules = getMockPermissionRulesBean(FinanceRowPermissionRules.class);
     }
 
 

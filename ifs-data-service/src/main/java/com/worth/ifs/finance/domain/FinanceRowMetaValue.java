@@ -17,8 +17,8 @@ public class FinanceRowMetaValue {
 
     @Id
     @ManyToOne
-    @JoinColumn(name="cost_id")
-    private Cost cost;
+    @JoinColumn(name="finance_row_id")
+    private FinanceRow financeRow;
 
     @Id
     @ManyToOne
@@ -34,8 +34,8 @@ public class FinanceRowMetaValue {
         this.value = value;
     }
 
-    public FinanceRowMetaValue(Cost cost, FinanceRowMetaField financeRowMetaField, String value) {
-        this.cost = cost;
+    public FinanceRowMetaValue(FinanceRow financeRow, FinanceRowMetaField financeRowMetaField, String value) {
+        this.financeRow = financeRow;
         this.financeRowMetaField = financeRowMetaField;
         this.value = value;
     }
@@ -45,8 +45,8 @@ public class FinanceRowMetaValue {
     }
 
     @JsonIgnore
-    public Cost getCost() {
-        return cost;
+    public FinanceRow getFinanceRow() {
+        return financeRow;
     }
 
     public FinanceRowMetaField getFinanceRowMetaField() {
@@ -54,15 +54,15 @@ public class FinanceRowMetaValue {
     }
 
 
-    public void setCost(Cost cost) {
-        this.cost = cost;
+    public void setFinanceRow(FinanceRow financeRow) {
+        this.financeRow = financeRow;
     }
 
     public void setFinanceRowMetaField(FinanceRowMetaField financeRowMetaField) {
         this.financeRowMetaField = financeRowMetaField;
     }
 
-    public FinanceRowMetaValueId getId(){ return new FinanceRowMetaValueId(this.cost.getId(), this.financeRowMetaField.getId());}
+    public FinanceRowMetaValueId getId(){ return new FinanceRowMetaValueId(this.financeRow.getId(), this.financeRowMetaField.getId());}
 
     public void setValue(String value) {
         this.value = value;

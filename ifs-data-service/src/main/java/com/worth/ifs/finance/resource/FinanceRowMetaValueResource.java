@@ -2,7 +2,7 @@ package com.worth.ifs.finance.resource;
 
 public class FinanceRowMetaValueResource {
     String value;
-    private Long cost;
+    private Long financeRow;
     private Long financeRowMetaField;
 
     public FinanceRowMetaValueResource() {
@@ -14,8 +14,8 @@ public class FinanceRowMetaValueResource {
         this.value = value;
     }
 
-    public FinanceRowMetaValueResource(CostResource cost, FinanceRowMetaFieldResource financeRowMetaField, String value) {
-        this.cost = cost.getId();
+    public FinanceRowMetaValueResource(FinanceRowResource financeRow, FinanceRowMetaFieldResource financeRowMetaField, String value) {
+        this.financeRow = financeRow.getId();
         this.financeRowMetaField = financeRowMetaField.getId();
         this.value = value;
     }
@@ -24,8 +24,8 @@ public class FinanceRowMetaValueResource {
         return value;
     }
 
-    public Long getCost() {
-        return cost;
+    public Long getFinanceRow() {
+        return financeRow;
     }
 
     public Long getFinanceRowMetaField() {
@@ -33,22 +33,22 @@ public class FinanceRowMetaValueResource {
     }
 
 
-    public void setCost(CostResource cost) {
-        this.cost = cost.getId();
+    public void setFinanceRow(FinanceRowResource financeRow) {
+        this.financeRow = financeRow.getId();
     }
 
     public void setFinanceRowMetaField(FinanceRowMetaFieldResource financeRowMetaField) {
         this.financeRowMetaField = financeRowMetaField.getId();
     }
 
-    public FinanceRowMetaValueId getId(){ return new FinanceRowMetaValueId(this.cost, this.financeRowMetaField);}
+    public FinanceRowMetaValueId getId(){ return new FinanceRowMetaValueId(this.financeRow, this.financeRowMetaField);}
 
     public void setValue(String value) {
         this.value = value;
     }
 
-    public void setCost(Long cost) {
-        this.cost = cost;
+    public void setFinanceRow(Long financeRow) {
+        this.financeRow = financeRow;
     }
 
     public void setFinanceRowMetaField(Long financeRowMetaField) {

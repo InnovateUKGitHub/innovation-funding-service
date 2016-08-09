@@ -2,13 +2,13 @@ package com.worth.ifs.finance.resource.category;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.worth.ifs.finance.resource.cost.CostItem;
+import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 /**
- * {@code CostCategory} interface is for defined for retrieving updating and calculating costs
+ * {@code FinanceRowCostCategory} interface is for defined for retrieving updating and calculating costs
  * of which a cost Category consists.
  */
 @JsonTypeInfo(use=JsonTypeInfo.Id.NAME, include=JsonTypeInfo.As.PROPERTY, property="type")
@@ -19,12 +19,12 @@ import java.util.List;
         @JsonSubTypes.Type(value=OverheadCostCategory.class, name="overheadCostCategory"),
         @JsonSubTypes.Type(value=GrantClaimCategory.class, name="grantClaimCategory")
 })
-public interface CostCategory {
-    public List<CostItem> getCosts();
+public interface FinanceRowCostCategory {
+    public List<FinanceRowItem> getCosts();
 
     public BigDecimal getTotal();
     public void calculateTotal();
-    public void addCost(CostItem costItem);
+    public void addCost(FinanceRowItem costItem);
     public boolean excludeFromTotalCost();
-    public void setCosts(List<CostItem> costItems);
+    public void setCosts(List<FinanceRowItem> costItems);
 }

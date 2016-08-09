@@ -3,7 +3,7 @@ package com.worth.ifs.application.finance.service;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.finance.resource.FinanceRowMetaFieldResource;
-import com.worth.ifs.finance.resource.cost.CostItem;
+import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 
 import java.util.List;
 
@@ -12,9 +12,9 @@ import java.util.List;
  */
 public interface FinanceRowService {
     List<FinanceRowMetaFieldResource> getCostFields();
-    RestResult<ValidationMessages> update(CostItem costItem);
+    RestResult<ValidationMessages> update(FinanceRowItem costItem);
     void delete(Long costId);
-    ValidationMessages add(Long applicationFinanceId, Long questionId, CostItem costItem);
-    CostItem addWithoutPersisting(Long applicationFinanceId, Long questionId);
-    CostItem findById(Long costId);
+    ValidationMessages add(Long applicationFinanceId, Long questionId, FinanceRowItem costItem);
+    FinanceRowItem addWithoutPersisting(Long applicationFinanceId, Long questionId);
+    FinanceRowItem findById(Long costId);
 }

@@ -1,21 +1,21 @@
 package com.worth.ifs.finance.resource.category;
 
+import com.worth.ifs.finance.resource.cost.FinanceRowItem;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.worth.ifs.finance.resource.cost.CostItem;
-
 /**
- * {@code DefaultCostCategory} implementation for {@link CostCategory}.
+ * {@code DefaultCostCategory} implementation for {@link FinanceRowCostCategory}.
  * Default representation for costs and defaults to summing up the costs.
  */
-public class DefaultCostCategory implements CostCategory {
-    private List<CostItem> costs = new ArrayList<>();
+public class DefaultCostCategory implements FinanceRowCostCategory {
+    private List<FinanceRowItem> costs = new ArrayList<>();
     private BigDecimal total = BigDecimal.ZERO;
 
     @Override
-    public List<CostItem> getCosts() {
+    public List<FinanceRowItem> getCosts() {
         return costs;
     }
 
@@ -32,7 +32,7 @@ public class DefaultCostCategory implements CostCategory {
     }
 
     @Override
-    public void addCost(CostItem costItem) {
+    public void addCost(FinanceRowItem costItem) {
         if(costItem!=null) {
             costs.add(costItem);
         }
@@ -44,7 +44,7 @@ public class DefaultCostCategory implements CostCategory {
     }
 
     @Override
-    public void setCosts(List<CostItem> costItems) {
+    public void setCosts(List<FinanceRowItem> costItems) {
         costs = costItems;
     }
 }

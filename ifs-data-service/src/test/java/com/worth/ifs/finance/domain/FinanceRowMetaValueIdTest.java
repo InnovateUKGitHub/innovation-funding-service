@@ -27,7 +27,7 @@ public class FinanceRowMetaValueIdTest {
 
     @Test
     public void gettersShouldReturnCorrectAttributeValues() throws Exception {
-        Assert.assertEquals(financeRowMetaValueId.getCost(), cost);
+        Assert.assertEquals(financeRowMetaValueId.getFinanceRow(), cost);
         Assert.assertEquals(financeRowMetaValueId.getFinanceRowMetaField(), costField);
     }
 

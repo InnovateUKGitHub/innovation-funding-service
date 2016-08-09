@@ -1,9 +1,9 @@
 package com.worth.ifs.finance.resource.cost;
 
 /**
- * Cost types are used to identify the different categories that costs can have
+ * FinanceRow types are used to identify the different categories that costs can have
  */
-public enum CostType {
+public enum FinanceRowType {
     LABOUR("labour"),
     OVERHEADS("overheads"),
     MATERIALS("materials"),
@@ -18,13 +18,13 @@ public enum CostType {
 
     private String type;
 
-    CostType(String type) {
+    FinanceRowType(String type) {
         this.type = type;
     }
 
-    public static CostType fromString(String type) {
+    public static FinanceRowType fromString(String type) {
         if(type!=null) {
-            for(CostType costType : CostType.values()) {
+            for(FinanceRowType costType : FinanceRowType.values()) {
                 if(type.equalsIgnoreCase(costType.type)) {
                     return costType;
                 }

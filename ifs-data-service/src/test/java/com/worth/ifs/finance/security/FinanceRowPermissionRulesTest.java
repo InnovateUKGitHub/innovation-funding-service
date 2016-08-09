@@ -4,9 +4,9 @@ package com.worth.ifs.finance.security;
 import com.worth.ifs.BasePermissionRulesTest;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.finance.domain.ApplicationFinance;
-import com.worth.ifs.finance.domain.Cost;
+import com.worth.ifs.finance.domain.FinanceRow;
 import com.worth.ifs.finance.resource.cost.AcademicCost;
-import com.worth.ifs.finance.resource.cost.CostItem;
+import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -15,7 +15,7 @@ import org.junit.Test;
 import static com.worth.ifs.BuilderAmendFunctions.id;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
-import static com.worth.ifs.finance.builder.CostBuilder.newCost;
+import static com.worth.ifs.finance.builder.FinanceRowBuilder.newFinanceRow;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -26,11 +26,11 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
-public class CostPermissionRulesTest extends BasePermissionRulesTest<CostPermissionRules> {
+public class FinanceRowPermissionRulesTest extends BasePermissionRulesTest<FinanceRowPermissionRules> {
 
-    private Cost cost;
-    private CostItem costItem;
-    private Cost otherCost;
+    private FinanceRow cost;
+    private FinanceRowItem costItem;
+    private FinanceRow otherCost;
     private UserResource leadApplicant;
     private UserResource collaborator;
     private UserResource compAdmin;
@@ -38,8 +38,8 @@ public class CostPermissionRulesTest extends BasePermissionRulesTest<CostPermiss
     private UserResource otherLeadApplicant;
 
     @Override
-    protected CostPermissionRules supplyPermissionRulesUnderTest() {
-        return new CostPermissionRules();
+    protected FinanceRowPermissionRules supplyPermissionRulesUnderTest() {
+        return new FinanceRowPermissionRules();
     }
 
     @Before
@@ -54,12 +54,12 @@ public class CostPermissionRulesTest extends BasePermissionRulesTest<CostPermiss
             final Application application = newApplication().with(id(applicationId)).build();
             final Organisation organisation = newOrganisation().with(id(organisationId)).build();
             final ApplicationFinance applicationFinance = newApplicationFinance().withApplication(application).withOrganisation(organisation).build();
-            cost = newCost().withApplicationFinance(applicationFinance).build();
+            cost = newFinanceRow().withApplicationFinance(applicationFinance).build();
             costItem = new AcademicCost(cost.getId(), "", ZERO, "");
 
             leadApplicant = newUserResource().build();
             collaborator = newUserResource().build();
-            when(costRepositoryMock.findOne(cost.getId())).thenReturn(cost);
+            when(financeRowRepositoryMock.findOne(cost.getId())).thenReturn(cost);
             when(processRoleRepositoryMock.findByUserIdAndRoleIdAndApplicationIdAndOrganisationId(leadApplicant.getId(), getRole(LEADAPPLICANT).getId(), applicationId, organisationId)).thenReturn(newProcessRole().build());
             when(processRoleRepositoryMock.findByUserIdAndRoleIdAndApplicationIdAndOrganisationId(collaborator.getId(), getRole(COLLABORATOR).getId(), applicationId, organisationId)).thenReturn(newProcessRole().build());
         }
@@ -70,7 +70,7 @@ public class CostPermissionRulesTest extends BasePermissionRulesTest<CostPermiss
             final Organisation otherOrganisation = newOrganisation().with(id(otherOrganisationId)).build();
             final Application otherApplication = newApplication().with(id(otherApplicationId)).build();
             final ApplicationFinance otherApplicationFinance = newApplicationFinance().withOrganisation(otherOrganisation).withApplication(otherApplication).build();
-            otherCost = newCost().withApplicationFinance(otherApplicationFinance).build();
+            otherCost = newFinanceRow().withApplicationFinance(otherApplicationFinance).build();
             otherLeadApplicant = newUserResource().build();
             when(processRoleRepositoryMock.findByUserIdAndRoleIdAndApplicationIdAndOrganisationId(otherLeadApplicant.getId(), getRole(LEADAPPLICANT).getId(), otherApplicationId, otherOrganisationId)).thenReturn(newProcessRole().build());
         }

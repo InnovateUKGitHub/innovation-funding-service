@@ -1,7 +1,7 @@
 package com.worth.ifs.application.finance.view.item;
 
 import com.worth.ifs.application.finance.model.FinanceFormField;
-import com.worth.ifs.finance.resource.cost.CostItem;
+import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import com.worth.ifs.finance.resource.cost.OtherFunding;
 import com.worth.ifs.util.NumberUtils;
 
@@ -17,7 +17,7 @@ import static com.worth.ifs.util.NullCheckFunctions.allNull;
 public class OtherFundingHandler extends FinanceRowHandler {
 
     @Override
-    public CostItem toCostItem(Long id, List<FinanceFormField> financeFormFields) {
+    public FinanceRowItem toFinanceRowItem(Long id, List<FinanceFormField> financeFormFields) {
         String otherPublicFunding = null;
         String fundingSource = null;
         String securedDate = null;

@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CostResource {
+public class FinanceRowResource {
     private Long id;
     private String name;
     private String item;

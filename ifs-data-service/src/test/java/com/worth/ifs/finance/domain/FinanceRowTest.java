@@ -7,8 +7,8 @@ import org.junit.Test;
 
 import java.math.BigDecimal;
 
-public class CostTest {
-    Cost costItem;
+public class FinanceRowTest {
+    FinanceRow costItem;
     Long id;
     String item;
     String name;
@@ -30,7 +30,7 @@ public class CostTest {
         applicationFinance = new ApplicationFinance();
         question = new Question();
         financeType = new FinanceType();
-        costItem = new Cost(id, name, item, description, quantity, cost, applicationFinance, question);
+        costItem = new FinanceRow(id, name, item, description, quantity, cost, applicationFinance, question);
     }
 
     @Test
@@ -47,9 +47,9 @@ public class CostTest {
     @Test
     public void constructorsShouldCreateInstancesOnValidInput() throws Exception {
         BigDecimal value = new BigDecimal(2.2);
-        new Cost();
-        new Cost("item","key","description",1,value,applicationFinance, question);
-        new Cost(19274617892346L, "key", "item2","description2",1,value,applicationFinance, question);
+        new FinanceRow();
+        new FinanceRow("item","key","description",1,value,applicationFinance, question);
+        new FinanceRow(19274617892346L, "key", "item2","description2",1,value,applicationFinance, question);
     }
 
     @Test
