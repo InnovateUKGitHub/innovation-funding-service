@@ -619,7 +619,7 @@
         <li><h2 class="heading-medium">Scope</h2></li>
 
         <th:block th:each="question : ${questions}">
-            <th:block th:include="fragments/competition-setup :: application-question(${question}, ${editable})" />
+            <th:block th:include="fragments/competition-setup-elements :: application-question(${question}, ${editable})" />
         </th:block>
     </ul>
 
