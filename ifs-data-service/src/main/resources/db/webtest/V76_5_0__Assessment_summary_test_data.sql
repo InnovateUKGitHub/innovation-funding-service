@@ -1,9 +1,9 @@
-# Add additional questions for Competition 2
+-- Add additional questions for Competition 2
 INSERT INTO question (id, assign_enabled, description, mark_as_completed_enabled, multiple_statuses, name, short_name, priority, question_number, competition_id, section_id, assessor_maximum_score, question_type) VALUES (168, false, null, true, false, 'What mediums can you juggle with?', 'Mediums', 6, '2', 2, 71, 10, 'GENERAL');
 INSERT INTO question (id, assign_enabled, description, mark_as_completed_enabled, multiple_statuses, name, short_name, priority, question_number, competition_id, section_id, assessor_maximum_score, question_type) VALUES (169, false, null, true, false, 'What is your preferred juggling pattern?', 'Preferences', 7, '3', 2, 71, 10, 'GENERAL');
 INSERT INTO question (id, assign_enabled, description, mark_as_completed_enabled, multiple_statuses, name, short_name, priority, question_number, competition_id, section_id, assessor_maximum_score, question_type) VALUES (170, false, null, true, false, 'What do you wear when juggling?', 'Attire', 8, '4', 2, 71, 10, 'GENERAL');
 
-# Add form inputs
+-- Add form inputs
 -- Q168
 INSERT INTO form_input (id, word_count, form_input_type_id, competition_id, included_in_application_summary, description, guidance_question, guidance_answer, priority, question_id, scope) VALUES (217, 100, 2, 2, 1, 'What mediums can you juggle with?', '', '<p>guidance</p>', 0, 168, 'APPLICATION');
 INSERT INTO form_input (id, word_count, form_input_type_id, competition_id, included_in_application_summary, description, guidance_question, guidance_answer, priority, question_id, scope) VALUES (218, NULL, 23 , 2, 0, 'Question score', NULL, NULL, 0 , 168, 'ASSESSMENT');
@@ -26,7 +26,7 @@ INSERT INTO form_input_validator (form_input_id, form_validator_id) VALUES (224,
 INSERT INTO form_input_validator (form_input_id, form_validator_id) VALUES (225,2);
 INSERT INTO form_input_validator (form_input_id, form_validator_id) VALUES (225,3);
 
-# Update Applicant responses
+-- Update Applicant responses
 UPDATE form_input_response SET value='This is the applicant response from Test One for Project Summary.' WHERE form_input_id=44 and application_id=8;
 UPDATE form_input_response SET value='This is the applicant response from Test Two for Project Summary.' WHERE form_input_id=44 and application_id=9;
 UPDATE form_input_response SET value='This is the applicant response from Test Three for Project Summary.' WHERE form_input_id=44 and application_id=10;
@@ -49,24 +49,24 @@ UPDATE form_input_response SET value='This is the applicant response from Test T
 UPDATE form_input_response SET value='This is the applicant response from Test Three for How Many.' WHERE form_input_id=47 and application_id=10;
 UPDATE form_input_response SET value='This is the applicant response from Test Seven for How Many.' WHERE form_input_id=47 and application_id=14;
 
-# Add New Applicant responses
-# Submitted applications
-# Application 8 (Submitted)
+-- Add New Applicant responses
+-- Submitted applications
+-- Application 8 (Submitted)
 INSERT INTO form_input_response (id, update_date, value, form_input_id, updated_by_id, application_id, file_entry_id) VALUES (114, '2016-04-25 13:04:50', 'This is the applicant response from Test One for Mediums.', 217, 29, 8, null);
 INSERT INTO form_input_response (id, update_date, value, form_input_id, updated_by_id, application_id, file_entry_id) VALUES (115, '2016-04-25 13:06:00', 'This is the applicant response from Test One for Preferences.', 220, 29, 8, null);
 INSERT INTO form_input_response (id, update_date, value, form_input_id, updated_by_id, application_id, file_entry_id) VALUES (116, '2016-04-25 13:07:55', 'This is the applicant response from Test One for Attire.', 223, 29, 8, null);
 
-# Application 9 (Approved)
+-- Application 9 (Approved)
 INSERT INTO form_input_response (id, update_date, value, form_input_id, updated_by_id, application_id, file_entry_id) VALUES (117, '2016-04-25 13:08:03', 'This is the applicant response from Test Two for Mediums.', 217, 30, 9, null);
 INSERT INTO form_input_response (id, update_date, value, form_input_id, updated_by_id, application_id, file_entry_id) VALUES (118, '2016-04-25 13:09:51', 'This is the applicant response from Test Two for Preferences.', 220, 30, 9, null);
 INSERT INTO form_input_response (id, update_date, value, form_input_id, updated_by_id, application_id, file_entry_id) VALUES (119, '2016-04-25 13:11:14', 'This is the applicant response from Test Two for Attire.', 223, 30, 9, null);
 
-# Application 10 (Rejected)
+-- Application 10 (Rejected)
 INSERT INTO form_input_response (id, update_date, value, form_input_id, updated_by_id, application_id, file_entry_id) VALUES (120, '2016-04-25 13:09:13', 'This is the applicant response from Test Three for Mediums.', 217, 31, 10, null);
 INSERT INTO form_input_response (id, update_date, value, form_input_id, updated_by_id, application_id, file_entry_id) VALUES (121, '2016-04-25 13:10:59', 'This is the applicant response from Test Three for Preferences.', 220, 31, 10, null);
 INSERT INTO form_input_response (id, update_date, value, form_input_id, updated_by_id, application_id, file_entry_id) VALUES (122, '2016-04-25 13:12:07', 'This is the applicant response from Test Three for Attire.', 223, 31, 10, null);
 
-# Application 14 (Submitted)
+-- Application 14 (Submitted)
 INSERT INTO form_input_response (id, update_date, value, form_input_id, updated_by_id, application_id, file_entry_id) VALUES (123, '2016-04-25 13:25:53', 'This is the applicant response from Test Seven for Mediums.', 217, 35, 14, null);
 INSERT INTO form_input_response (id, update_date, value, form_input_id, updated_by_id, application_id, file_entry_id) VALUES (124, '2016-04-25 13:27:04', 'This is the applicant response from Test Seven for Preferences.', 220, 35, 14, null);
 INSERT INTO form_input_response (id, update_date, value, form_input_id, updated_by_id, application_id, file_entry_id) VALUES (125, '2016-04-25 13:29:57', 'This is the applicant response from Test Seven for Attire.', 223, 35, 14, null);
