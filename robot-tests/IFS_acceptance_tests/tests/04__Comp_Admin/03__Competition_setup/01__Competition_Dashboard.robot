@@ -17,8 +17,8 @@ Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
 *** Test Cases ***
 Live Competitions
     [Documentation]    INFUND-3830
-    Given The user should see the text in the page    All competitions
-    Then The user should see the text in the page    Open
+    Given the user should see the text in the page    All competitions
+    Then the user should see the text in the page    Open
     And the user should see the text in the page    Closed
     And the user should see the text in the page    Panel
     And the user should see the text in the page    Inform
@@ -27,15 +27,16 @@ Live competition calculations
     [Documentation]    INFUND-3830
     Then the calculations should be correct    Open    //section[1]/ul/li
     And the calculations should be correct    Closed    //section[2]/ul/li
-    And the calculations should be correct    Panel    //section[3]/ul/li
-    And the calculations should be correct    Inform    //section[4]/ul/li
+    And the calculations should be correct    In assessment    //section[3]/ul/li
+    And the calculations should be correct    Panel    //section[4]/ul/li
+    And the calculations should be correct    Inform    //section[5]/ul/li
     And the calculations should be correct    Live    //section/ul/li
 
 Project setup Competitions
     [Documentation]    INFUND-3831
-    When The user clicks the button/link    jQuery=a:contains(Project set up)    # We have used the JQuery selector for the link because the title will change according to the competitions number
-    Then The user should see the text in the page    Project set up
-    And The user should see the text in the page    Killer Riffs
+    When the user clicks the button/link    jQuery=a:contains(Project set up)    # We have used the JQuery selector for the link because the title will change according to the competitions number
+    Then the user should see the text in the page    Project set up
+    And the user should see the text in the page    Killer Riffs
 
 Project setup competition calculations
     [Documentation]    INFUND-3831
@@ -44,9 +45,9 @@ Project setup competition calculations
 
 Upcoming competitions
     [Documentation]    INFUND-3832
-    When The user clicks the button/link    jQuery=a:contains(Upcoming)    # We have used the JQuery selector for the link because the title will change according to the competitions number
-    Then The user should see the text in the page    In preparation
-    And The user should see the text in the page    Ready to open
+    When the user clicks the button/link    jQuery=a:contains(Upcoming)    # We have used the JQuery selector for the link because the title will change according to the competitions number
+    Then the user should see the text in the page    In preparation
+    And the user should see the text in the page    Ready to open
 
 Upcoming competitions calculations
     [Documentation]    INFUND-3832
