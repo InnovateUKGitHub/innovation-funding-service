@@ -101,7 +101,7 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
     }
 
 	private Boolean hasAppendix(List<FormInputResource> formInputResources) {
-        return formInputResources.stream().anyMatch(formInput -> formInput.getFormInputType().equals(fileUploadId));
+        return checkFormInputsForType(formInputResources, fileUploadId);
     }
 
     private void handleAssessorScore(Question question, List<FormInputResource> formInputResources, QuestionResource questionResource, FormInputResource formInputResource) {
@@ -139,6 +139,10 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
     }
 
     private Boolean hasAssessorScore(List<FormInputResource> formInputResources) {
-        return formInputResources.stream().anyMatch(formInput -> formInput.getFormInputType().equals(assessorScoreId));
+        return checkFormInputsForType(formInputResources, assessorScoreId);
+    }
+
+    private Boolean checkFormInputsForType(List<FormInputResource> formInputResources, Long typeId) {
+        return formInputResources.stream().anyMatch(formInput -> formInput.getFormInputType().equals(typeId));
     }
 }
