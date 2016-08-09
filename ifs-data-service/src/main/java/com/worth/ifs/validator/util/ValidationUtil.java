@@ -4,13 +4,12 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.commons.rest.ValidationMessages;
-import com.worth.ifs.finance.handler.item.CostHandler;
-import com.worth.ifs.finance.resource.cost.CostItem;
-import com.worth.ifs.finance.resource.cost.CostType;
+import com.worth.ifs.finance.handler.item.FinanceRowHandler;
+import com.worth.ifs.finance.resource.cost.FinanceRowItem;
+import com.worth.ifs.finance.resource.cost.FinanceRowType;
 import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.domain.FormValidator;
-import com.worth.ifs.form.resource.FormInputScope;
 import com.worth.ifs.validator.ApplicationMarkAsCompleteValidator;
 import com.worth.ifs.validator.MinRowCountValidator;
 import com.worth.ifs.validator.NotEmptyValidator;
@@ -180,14 +179,14 @@ public class ValidationUtil {
 
     private void validationCostItem(Question question, Application application, Long markedAsCompleteById, FormInput formInput, List<ValidationMessages> validationMessages) {
         try {
-            CostType.fromString(formInput.getFormInputType().getTitle()); // this checks if formInput is CostType related.
+            FinanceRowType.fromString(formInput.getFormInputType().getTitle()); // this checks if formInput is CostType related.
             validationMessages.addAll(validatorService.validateCostItem(application.getId(), question, markedAsCompleteById));
         } catch (IllegalArgumentException e) {
             // not a costtype, which is fine...
         }
     }
 
-    private ValidationMessages invokeEmptyRowValidatorAndReturnMessages(List<CostItem> costItems, Question question) {
+    private ValidationMessages invokeEmptyRowValidatorAndReturnMessages(List<FinanceRowItem> costItems, Question question) {
         BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(question, "question");
         invokeEmptyRowValidator(costItems, bindingResult);
         if (bindingResult.hasErrors()) {
@@ -196,7 +195,7 @@ public class ValidationUtil {
         return null;
     }
 
-    public List<ValidationMessages> validateCostItem(List<CostItem> costItems, Question question) {
+    public List<ValidationMessages> validateCostItem(List<FinanceRowItem> costItems, Question question) {
         if (costItems.isEmpty()) {
             return Collections.emptyList();
         }
@@ -218,7 +217,7 @@ public class ValidationUtil {
     	return validationMessages != null && validationMessages.hasErrors();
     }
 
-    public ValidationMessages validateCostItem(CostItem costItem) {
+    public ValidationMessages validateCostItem(FinanceRowItem costItem) {
         BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(costItem, "costItem");
         invokeValidator(costItem, bindingResult);
 
@@ -237,12 +236,12 @@ public class ValidationUtil {
         }
     }
 
-    private void invokeValidator(CostItem costItem, BeanPropertyBindingResult bindingResult) {
-        CostHandler costHandler = validatorService.getCostHandler(costItem);
-        costHandler.validate(costItem, bindingResult);
+    private void invokeValidator(FinanceRowItem costItem, BeanPropertyBindingResult bindingResult) {
+        FinanceRowHandler financeRowHandler = validatorService.getCostHandler(costItem);
+        financeRowHandler.validate(costItem, bindingResult);
     }
 
-    private void invokeEmptyRowValidator(List<CostItem> costItems, BeanPropertyBindingResult bindingResult) {
+    private void invokeEmptyRowValidator(List<FinanceRowItem> costItems, BeanPropertyBindingResult bindingResult) {
         ValidationUtils.invokeValidator(minRowCountValidator, costItems, bindingResult);
     }
 }
