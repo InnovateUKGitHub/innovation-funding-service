@@ -29,6 +29,19 @@
 			<dd><th:block th:text="${model.durationInMonths}" /> Months</dd>
 		</dl>
 
+    <table>
+      <tr>
+      <th scope="row">Month</th>
+      <th:block th:each="month : ${model.table.getMonths()}">
+        <th scope="col" th:text="${month}" />
+      </th:block>
+      </tr>
+      <tr th:each="row : ${model.table.getMonthlyCostsPerCategoryMap()}">
+          <th scope="row" th:text="${row.key}" />
+          <td th:each="cost : ${row.value}" th:text="${cost}"/>
+      </tr>
+    </table>
+
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
 </main>
 
