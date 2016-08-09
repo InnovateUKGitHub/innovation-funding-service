@@ -1,12 +1,12 @@
 package com.worth.ifs.validator;
 
+import com.worth.ifs.finance.domain.FinanceRow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import com.worth.ifs.finance.domain.Cost;
-import com.worth.ifs.finance.repository.CostRepository;
+import com.worth.ifs.finance.repository.FinanceRowRepository;
 import com.worth.ifs.finance.resource.cost.GrantClaim;
 import com.worth.ifs.user.domain.OrganisationType;
 import com.worth.ifs.user.resource.OrganisationSize;
@@ -19,7 +19,7 @@ import com.worth.ifs.user.resource.OrganisationTypeEnum;
 public class GrantClaimValidator implements Validator {
 
     @Autowired
-    private CostRepository costRepository;
+    private FinanceRowRepository financeRowRepository;
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -29,7 +29,7 @@ public class GrantClaimValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         GrantClaim response = (GrantClaim) target;
-        Cost cost = costRepository.findOne(response.getId());
+        FinanceRow cost = financeRowRepository.findOne(response.getId());
 
         OrganisationType organisationType = cost.getApplicationFinance().getOrganisation().getOrganisationType();
         

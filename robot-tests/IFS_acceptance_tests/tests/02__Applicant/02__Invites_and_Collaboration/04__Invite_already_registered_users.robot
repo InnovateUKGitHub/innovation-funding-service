@@ -85,7 +85,7 @@ Existing user creates a new application and invites a user from the same organis
     And the user clicks the button/link    jQuery=.button:contains("Apply now")
     And the user clicks the button/link    jQuery=Label:contains("Yes I want to create a new application")
     And the user clicks the button/link    jQuery=.button:contains("Continue")
-    And The user clicks the button/link    jquery=li:nth-child(1) button:contains('Add person')
+    And The user clicks the button/link    jquery=li:nth-child(1) button:contains('Add another person')
     And The user enters text to a text field    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input    Olivier Giroud
     And The user enters text to a text field    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(2) input    ${test_mailbox_one}+invite2@gmail.com
     Capture Page Screenshot

@@ -40,4 +40,8 @@ public class ProcessOutcomeResourceBuilder extends BaseBuilder<ProcessOutcomeRes
     public ProcessOutcomeResourceBuilder withComment(String... comments) {
         return withArray((comment, processOutcomeResource) -> setField("comment", comment, processOutcomeResource), comments);
     }
+
+    public ProcessOutcomeResourceBuilder withOutcomeType(String... outcomeTypes) {
+        return withArray((outcomeType, processOutcomeResource) -> setField("outcomeType", outcomeType, processOutcomeResource), outcomeTypes);
+    }
 }
