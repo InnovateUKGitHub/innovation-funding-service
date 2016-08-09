@@ -1,8 +1,6 @@
 package com.worth.ifs.project.security;
 
-import com.worth.ifs.invite.domain.Invite;
-import com.worth.ifs.invite.domain.InviteOrganisation;
-import com.worth.ifs.invite.resource.InviteResource;
+import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.security.BasePermissionRules;
 import com.worth.ifs.security.PermissionRule;
@@ -46,7 +44,7 @@ public class ProjectPermissionRules extends BasePermissionRules {
     @PermissionRule(
             value = "INVITE_FINANCE_CONTACT",
             description = "A partner can invite a member of their organisation to become a finance contact")
-    public boolean partnersCanInviteTheirOwnOrganisationsFinanceContacts(InviteResource invite, UserResource user) {
+    public boolean partnersCanInviteTheirOwnOrganisationsFinanceContacts(ApplicationInviteResource invite, UserResource user) {
         return isSpecificProjectPartnerByApplicationId(invite.getApplication(), invite.getInviteOrganisation(), user.getId());
     }
 

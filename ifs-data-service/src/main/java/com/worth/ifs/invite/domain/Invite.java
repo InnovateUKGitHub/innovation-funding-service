@@ -46,6 +46,7 @@ public abstract class Invite<T extends ProcessActivity, I extends Invite<T,I>> {
 
     Invite() {
     	// no-arg constructor
+        this.status=InviteStatusConstants.CREATED;
     }
 
     protected Invite(String name, String email, String hash, InviteStatusConstants status) {

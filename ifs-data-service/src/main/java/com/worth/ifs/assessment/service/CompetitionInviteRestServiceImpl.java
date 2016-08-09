@@ -11,7 +11,7 @@ import static java.lang.String.format;
  */
 public class CompetitionInviteRestServiceImpl extends BaseRestService implements CompetitionInviteRestService {
 
-    private static final String competitionInviteRestUrl = "competitioninvite/openinvite";
+    private static final String competitionInviteRestUrl = "competitioninvite/openInvite";
 
     @Override
     public RestResult<CompetitionInviteResource> accessInvite(String inviteHash) {
