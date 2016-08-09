@@ -16,7 +16,7 @@ import com.worth.ifs.application.domain.QuestionStatus;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.resource.QuestionType;
 import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.finance.domain.Cost;
+import com.worth.ifs.finance.domain.FinanceRow;
 import com.worth.ifs.form.domain.FormInput;
 
 public class QuestionBuilder extends BaseBuilder<Question, QuestionBuilder> {
@@ -98,7 +98,7 @@ public class QuestionBuilder extends BaseBuilder<Question, QuestionBuilder> {
         return withArray((questionStatus, object) -> setField("questionStatuses", questionStatus, object), questionStatuses);
     }
 
-    public QuestionBuilder withCosts(List<Cost>... costs) {
+    public QuestionBuilder withCosts(List<FinanceRow>... costs) {
         return withArray((cost, object) -> setField("costs", cost, object), costs);
     }
 

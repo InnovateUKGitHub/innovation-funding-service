@@ -25,13 +25,16 @@
       <h1 class="heading-large">Inviting Contributors and Partners</h1>
       <h2 class="heading-medium no-margin" th:text="${currentCompetition.getName() + '- New application'}" />
       <p>You can invite new contributors at any time, but your application must have at least one collaborative partner for this competition.</p>
-      <section class="message-alert" th:if="${leadApplicant.id == authenticatedUser.id}">
-          <h2 class="heading-small">You are the lead applicant</h2>
-          <p>
-            As the lead applicant you can manage your contributors or partners in this section. You may invite other contributors, assign questions and coordinate partners.
-          </p>
-      </section>
     </div>
+
+    <section class="message-alert" th:if="${leadApplicant.id == authenticatedUser.id}">
+        <h2 class="heading-small">You are the lead applicant</h2>
+        <p>
+          As the lead applicant you can manage your contributors or partners in this section.
+          You may invite other contributors, assign questions and coordinate partners.
+          The status of other contributors will be pending until they have accepted the invitation.
+        </p>
+    </section>
 
     <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${contributorsForm}" method="POST" class="contributorsForm">
         <div class="error-summary" th:if="${#fields.hasErrors('*')}">
@@ -176,7 +179,7 @@
                 </table>
 
                 <div class="alignright">
-                    <button th:if="${leadApplicant.id == authenticatedUser.id || organisationInviteForm.organisationId == authenticatedUserOrganisation}" class="add-another-row buttonlink" type="submit" name="add_person" th:value="${organisationStats.index}">Add person</button>
+                    <button th:if="${leadApplicant.id == authenticatedUser.id || organisationInviteForm.organisationId == authenticatedUserOrganisation}" class="add-another-row buttonlink" type="submit" name="add_person" th:value="${organisationStats.index}">Add another person</button>
                 </div>
             </li>
             <li th:if="${leadApplicant.id == authenticatedUser.id}">
@@ -184,8 +187,11 @@
                 <p>Add any partner organisations collaborating with you on this project. Partners are responsible for creating their own account and submitting their finances.</p>
             </li>
         </ul>
-        <p class="extra-margin">We will send emails to each of these partners inviting them to join the application.</p>
-          <button th:text="${param.newApplication != null ? 'Begin application' : 'Save Changes'}" type="submit" name="save_contributors" class="button" />
+        <p class="extra-margin">
+          We will send emails to each of these partners inviting them to join the application.
+          Once the partner has accepted the invitation you will be able to assign section of the application to them.
+        </p>
+        <button th:text="${param.newApplication != null ? 'Begin application' : 'Save Changes'}" type="submit" name="save_contributors" class="button" />
     </form>
 
 
