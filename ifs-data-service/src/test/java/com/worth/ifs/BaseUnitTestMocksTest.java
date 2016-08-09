@@ -65,6 +65,7 @@ import com.worth.ifs.user.repository.*;
 import com.worth.ifs.user.transactional.PasswordPolicyValidator;
 import com.worth.ifs.user.transactional.RegistrationService;
 import com.worth.ifs.user.transactional.UserService;
+import com.worth.ifs.workflow.mapper.ProcessOutcomeMapper;
 import org.junit.Before;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -189,6 +190,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected AddressService addressService;
+
+    @Mock
+    protected ProcessOutcomeMapper processOutcomeMapperMock;
 
     @Mock
     protected OrganisationService organisationServiceMock;

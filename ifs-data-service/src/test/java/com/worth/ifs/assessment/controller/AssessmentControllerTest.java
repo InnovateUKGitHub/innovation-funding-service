@@ -5,10 +5,12 @@ import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.assessment.resource.AssessmentOutcomes;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
+import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
 import org.junit.Test;
 
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static com.worth.ifs.assessment.builder.ProcessOutcomeBuilder.newProcessOutcome;
+import static com.worth.ifs.assessment.builder.ProcessOutcomeResourceBuilder.newProcessOutcomeResource;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -21,14 +23,13 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
-
     @Override
     protected AssessmentController supplyControllerUnderTest() {
         return new AssessmentController();
     }
 
     @Test
-    public void test_findById() throws Exception {
+    public void findById() throws Exception {
         AssessmentResource expected = newAssessmentResource()
                 .build();
 
@@ -44,17 +45,32 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
     }
 
     @Test
-    public void test_rejectApplication() throws Exception {
+    public void recommend() throws Exception {
         Long assessmentId = 1L;
+        ProcessOutcomeResource processOutcome = newProcessOutcomeResource().build();
 
-        ProcessOutcome processOutcome = newProcessOutcome().withOutcome(AssessmentOutcomes.REJECT.getType()).build();
-        when(assessmentServiceMock.updateStatus(assessmentId, processOutcome)).thenReturn(serviceSuccess());
+        when(assessmentServiceMock.recommend(assessmentId, processOutcome)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(put("/assessment/{id}/status", assessmentId)
+        mockMvc.perform(put("/assessment/{id}/recommend", assessmentId)
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(processOutcome)))
                 .andExpect(status().isOk());
 
-        verify(assessmentServiceMock, only()).updateStatus(assessmentId, processOutcome);
+        verify(assessmentServiceMock, only()).recommend(assessmentId, processOutcome);
+    }
+
+    @Test
+    public void rejectInvitation() throws Exception {
+        Long assessmentId = 1L;
+        ProcessOutcomeResource processOutcome = newProcessOutcomeResource().build();
+
+        when(assessmentServiceMock.rejectInvitation(assessmentId, processOutcome)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(put("/assessment/{id}/rejectInvitation", assessmentId)
+                .contentType(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(processOutcome)))
+                .andExpect(status().isOk());
+
+        verify(assessmentServiceMock, only()).rejectInvitation(assessmentId, processOutcome);
     }
 }

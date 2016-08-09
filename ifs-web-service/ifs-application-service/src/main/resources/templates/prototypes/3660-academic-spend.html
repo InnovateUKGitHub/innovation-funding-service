@@ -19,15 +19,15 @@
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Spend profile'})" th:remove="tag" />
 
-	<div th:include="prototypes/fragments/spend-profile :: prototype-spend-profile-intro" th:with="type=business" th:remove="tag" />
+	<div th:include="prototypes/fragments/spend-profile :: prototype-spend-profile-intro" th:with="type=academic" th:remove="tag" />
 
 	<form>
 
-		<div th:include="prototypes/fragments/spend-profile :: prototype-spend-profile-table" th:remove="tag" />
+		<div th:include="prototypes/fragments/spend-profile :: prototype-spend-profile-academic-table" th:remove="tag" />
 
 		<div th:include="prototypes/fragments/spend-profile :: prototype-spend-profile-totals" th:remove="tag" />
 
-		<div th:include="prototypes/fragments/spend-profile :: prototype-spend-profile-controls" th:remove="tag" />
+		<div th:include="prototypes/fragments/spend-profile :: prototype-spend-profile-controls" th:with="type=academic" th:remove="tag" />
 
 	</form>
 

@@ -1,23 +1,33 @@
-=== Find Assessment By Id ===
+=== Find an assessment by Id ===
 ==== Request
-include::{snippets}/assessment/find-assessment-by-id/http-request.adoc[]
-include::{snippets}/assessment/find-assessment-by-id/path-parameters.adoc[]
+include::{snippets}/assessment/find-by-id/http-request.adoc[]
+include::{snippets}/assessment/find-by-id/path-parameters.adoc[]
 
 ==== Response
-include::{snippets}/assessment/find-assessment-by-id/http-response.adoc[]
-include::{snippets}/assessment/find-assessment-by-id/response-fields.adoc[]
+include::{snippets}/assessment/find-by-id/http-response.adoc[]
+include::{snippets}/assessment/find-by-id/response-fields.adoc[]
 
 ==== Curl Example
-include::{snippets}/assessment/find-assessment-by-id/curl-request.adoc[]
+include::{snippets}/assessment/find-by-id/curl-request.adoc[]
 
-
-=== Update Assessment Status ===
+=== Recommend an assessment
 ==== Request
-include::{snippets}/assessment/update-assessment-status/http-request.adoc[]
-include::{snippets}/assessment/update-assessment-status/path-parameters.adoc[]
+include::{snippets}/assessment/recommend/http-request.adoc[]
+include::{snippets}/assessment/recommend/path-parameters.adoc[]
 
 ==== Response
-include::{snippets}/assessment/update-assessment-status/http-response.adoc[]
+include::{snippets}/assessment/recommend/http-response.adoc[]
 
 ==== Curl Example
-include::{snippets}/assessment/update-assessment-status/curl-request.adoc[]
+include::{snippets}/assessment/recommend/curl-request.adoc[]
+
+=== Reject an invitation for an assessment
+==== Request
+include::{snippets}/assessment/reject/http-request.adoc[]
+include::{snippets}/assessment/reject/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/assessment/reject/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/assessment/reject/curl-request.adoc[]
