@@ -1,5 +1,8 @@
 package com.worth.ifs.bankdetails.viewmodel;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 public class BankDetailsReviewViewModel {
     private String financeContactName;
     private String financeContactEmail;
@@ -143,5 +146,51 @@ public class BankDetailsReviewViewModel {
 
     public void setApproved(Boolean approved) {
         this.approved = approved;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        BankDetailsReviewViewModel that = (BankDetailsReviewViewModel) o;
+
+        return new EqualsBuilder()
+                .append(financeContactName, that.financeContactName)
+                .append(financeContactEmail, that.financeContactEmail)
+                .append(financeContactPhoneNumber, that.financeContactPhoneNumber)
+                .append(organisationName, that.organisationName)
+                .append(registrationNumber, that.registrationNumber)
+                .append(bankAccountNumber, that.bankAccountNumber)
+                .append(sortCode, that.sortCode)
+                .append(organisationAddress, that.organisationAddress)
+                .append(verified, that.verified)
+                .append(companyNameScore, that.companyNameScore)
+                .append(registrationNumberMatched, that.registrationNumberMatched)
+                .append(addressScore, that.addressScore)
+                .append(approved, that.approved)
+                .append(approvedManually, that.approvedManually)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(financeContactName)
+                .append(financeContactEmail)
+                .append(financeContactPhoneNumber)
+                .append(organisationName)
+                .append(registrationNumber)
+                .append(bankAccountNumber)
+                .append(sortCode)
+                .append(organisationAddress)
+                .append(verified)
+                .append(companyNameScore)
+                .append(registrationNumberMatched)
+                .append(addressScore)
+                .append(approved)
+                .append(approvedManually)
+                .toHashCode();
     }
 }

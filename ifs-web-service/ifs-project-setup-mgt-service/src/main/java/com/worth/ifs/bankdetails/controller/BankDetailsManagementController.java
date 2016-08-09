@@ -42,8 +42,7 @@ public class BankDetailsManagementController {
             Model model,
             @PathVariable("projectId") Long projectId,
             @PathVariable("organisationId") Long organisationId,
-            @ModelAttribute("loggedInUser") UserResource loggedInUser
-    ){
+            @ModelAttribute("loggedInUser") UserResource loggedInUser) {
         return doViewReviewBankDetails(model, projectId, organisationId, loggedInUser.getId());
     }
 
@@ -59,20 +58,24 @@ public class BankDetailsManagementController {
     private BankDetailsReviewViewModel populateBankDetailsReviewViewModel(Long projectId, OrganisationResource organisation, BankDetailsResource bankDetails){
         List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
         ProjectUserResource financeContact = getOnlyElement(simpleFilter(projectUsers, pr -> pr.isFinanceContact() && organisation.getId().equals(pr.getOrganisation())));
+        return buildViewModel(financeContact, organisation, bankDetails);
+    }
+
+    private BankDetailsReviewViewModel buildViewModel(ProjectUserResource financeContact, OrganisationResource organisation, BankDetailsResource bankDetails){
         return new BankDetailsReviewViewModel(
-                        financeContact.getUserName(),
-                        financeContact.getEmail(),
-                        financeContact.getPhoneNumber(),
-                        organisation.getName(),
-                        organisation.getCompanyHouseNumber(),
-                        bankDetails.getAccountNumber(),
-                        bankDetails.getSortCode(),
-                        bankDetails.getOrganisationAddress().getAddress().getAsSingleLine(),
-                        bankDetails.isVerified(),
-                        bankDetails.getCompanyNameScore(),
-                        bankDetails.getRegistrationNumberMatched(),
-                        bankDetails.getAddressScore(),
-                        bankDetails.isApproved(),
-                        bankDetails.isManualApproval());
+                financeContact.getUserName(),
+                financeContact.getEmail(),
+                financeContact.getPhoneNumber(),
+                organisation.getName(),
+                organisation.getCompanyHouseNumber(),
+                bankDetails.getAccountNumber(),
+                bankDetails.getSortCode(),
+                bankDetails.getOrganisationAddress().getAddress().getAsSingleLine(),
+                bankDetails.isVerified(),
+                bankDetails.getCompanyNameScore(),
+                bankDetails.getRegistrationNumberMatched(),
+                bankDetails.getAddressScore(),
+                bankDetails.isApproved(),
+                bankDetails.isManualApproval());
     }
 }
