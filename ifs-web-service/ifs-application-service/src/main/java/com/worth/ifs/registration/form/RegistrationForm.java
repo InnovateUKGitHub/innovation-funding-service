@@ -32,7 +32,7 @@ public class RegistrationForm {
     })
     private String password;
 
-    @NotEmpty(message = "validation.standard.retypedpassword.required")
+    @NotEmpty(message = "{validation.standard.retypedpassword.required}")
     @Size.List ({
         @Size(min=10, message="{validation.standard.password.length.min}"),
         @Size(max=30, message="{validation.standard.password.length.max}"),
