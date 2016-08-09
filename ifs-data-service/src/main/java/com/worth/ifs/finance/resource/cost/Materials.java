@@ -10,9 +10,9 @@ import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 /**
- * {@code Materials} implements {@link CostItem}
+ * {@code Materials} implements {@link FinanceRowItem}
  */
-public class Materials implements CostItem {
+public class Materials implements FinanceRowItem {
     private Long id;
 
     @NotNull
@@ -74,8 +74,8 @@ public class Materials implements CostItem {
     }
 
     @Override
-    public CostType getCostType() {
-        return CostType.MATERIALS;
+    public FinanceRowType getCostType() {
+        return FinanceRowType.MATERIALS;
     }
 
     public void setItem(String item) {

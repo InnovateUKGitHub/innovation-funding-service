@@ -1,8 +1,8 @@
 package com.worth.ifs.finance.handler.item;
 
-import com.worth.ifs.finance.domain.Cost;
+import com.worth.ifs.finance.domain.FinanceRow;
 import com.worth.ifs.finance.resource.category.OverheadCostCategory;
-import com.worth.ifs.finance.resource.cost.CostItem;
+import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import com.worth.ifs.finance.resource.cost.Overhead;
 import com.worth.ifs.finance.resource.cost.OverheadRateType;
 import org.springframework.validation.BindingResult;
@@ -15,11 +15,11 @@ import java.util.List;
  * Handles the overheads, i.e. converts the costs to be stored into the database
  * or for sending it over.
  */
-public class OverheadsHandler extends CostHandler {
+public class OverheadsHandler extends FinanceRowHandler {
     public static final String COST_KEY = "overhead";
 
     @Override
-    public void validate(@NotNull CostItem costItem, @NotNull BindingResult bindingResult) {
+    public void validate(@NotNull FinanceRowItem costItem, @NotNull BindingResult bindingResult) {
 
         Overhead overhead = (Overhead) costItem;
         if(overhead.getRateType() != null && !OverheadRateType.NONE.equals(overhead.getRateType())){
@@ -30,8 +30,8 @@ public class OverheadsHandler extends CostHandler {
     }
 
     @Override
-    public Cost toCost(CostItem costItem) {
-        Cost cost = null;
+    public FinanceRow toCost(FinanceRowItem costItem) {
+        FinanceRow cost = null;
         if (costItem instanceof Overhead) {
             Overhead overhead = (Overhead) costItem;
             Integer rate = overhead.getRate();
@@ -41,27 +41,27 @@ public class OverheadsHandler extends CostHandler {
                 rateType = overhead.getRateType().toString();
             }
 
-            cost = new Cost(overhead.getId(), COST_KEY, rateType, "", rate, null, null, null);
+            cost = new FinanceRow(overhead.getId(), COST_KEY, rateType, "", rate, null, null, null);
         }
         return cost;
     }
 
     @Override
-    public CostItem toCostItem(Cost cost) {
+    public FinanceRowItem toCostItem(FinanceRow cost) {
         OverheadRateType type = OverheadRateType.valueOf(cost.getItem()) != null ? OverheadRateType.valueOf(cost.getItem()) : OverheadRateType.NONE;
         return new Overhead(cost.getId(), type, cost.getQuantity());
     }
 
     @Override
-    public List<Cost> initializeCost() {
-        ArrayList<Cost> costs = new ArrayList<>();
+    public List<FinanceRow> initializeCost() {
+        ArrayList<FinanceRow> costs = new ArrayList<>();
         costs.add(initializeAcceptRate());
         return costs;
     }
 
-    private Cost initializeAcceptRate() {
+    private FinanceRow initializeAcceptRate() {
         Overhead costItem = new Overhead();
-        Cost cost = toCost(costItem);
+        FinanceRow cost = toCost(costItem);
         cost.setDescription(OverheadCostCategory.ACCEPT_RATE);
         return cost;
     }

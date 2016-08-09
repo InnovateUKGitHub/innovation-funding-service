@@ -22,7 +22,7 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
-import com.worth.ifs.finance.transactional.CostService;
+import com.worth.ifs.finance.transactional.FinanceRowService;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ApplicationSummarisationServiceTest {
@@ -33,7 +33,7 @@ public class ApplicationSummarisationServiceTest {
 	private ApplicationSummarisationServiceImpl service;
 	
 	@Mock
-	private CostService costService;
+	private FinanceRowService financeRowService;
 	
 	private Application application;
 	
@@ -54,7 +54,7 @@ public class ApplicationSummarisationServiceTest {
 		
 		ServiceResult<List<ApplicationFinanceResource>> afrs = serviceSuccess(Arrays.asList(afr1, afr2));
 		
-		when(costService.financeTotals(APPLICATION_ID)).thenReturn(afrs);
+		when(financeRowService.financeTotals(APPLICATION_ID)).thenReturn(afrs);
 		
 		ServiceResult<BigDecimal> result = service.getFundingSought(application);
 		
@@ -70,7 +70,7 @@ public class ApplicationSummarisationServiceTest {
 		
 		assertTrue(result.isSuccess());
 		assertEquals(new BigDecimal("0.00"), result.getSuccessObject());
-		verifyNoMoreInteractions(costService);
+		verifyNoMoreInteractions(financeRowService);
 	}
 	
 	@Test
@@ -83,7 +83,7 @@ public class ApplicationSummarisationServiceTest {
 		
 		ServiceResult<List<ApplicationFinanceResource>> afrs = serviceSuccess(Arrays.asList(afr1, afr2));
 		
-		when(costService.financeTotals(APPLICATION_ID)).thenReturn(afrs);
+		when(financeRowService.financeTotals(APPLICATION_ID)).thenReturn(afrs);
 		
 		ServiceResult<BigDecimal> result = service.getTotalProjectCost(application);
 		
@@ -99,6 +99,6 @@ public class ApplicationSummarisationServiceTest {
 		
 		assertTrue(result.isSuccess());
 		assertEquals(new BigDecimal("0.00"), result.getSuccessObject());
-		verifyNoMoreInteractions(costService);
+		verifyNoMoreInteractions(financeRowService);
 	}
 }
