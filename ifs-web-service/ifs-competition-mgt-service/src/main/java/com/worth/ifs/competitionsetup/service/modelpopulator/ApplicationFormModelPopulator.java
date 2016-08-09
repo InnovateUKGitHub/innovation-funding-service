@@ -38,6 +38,8 @@ public class ApplicationFormModelPopulator implements CompetitionSetupSectionMod
     @Autowired
     private FormInputService formInputService;
 
+    private Long appendixTypeId = 4L;
+    private Long scoreTypeId = 23L;
 
     @Override
 	public CompetitionSetupSection sectionToPopulateModel() {
@@ -48,7 +50,6 @@ public class ApplicationFormModelPopulator implements CompetitionSetupSectionMod
 	public void populateModel(Model model, CompetitionResource competitionResource) {
 		List<SectionResource> sections = sectionService.getAllByCompetitionId(competitionResource.getId());
 		List<QuestionResource> questionResources = questionService.findByCompetition(competitionResource.getId());
-
 
         List<SectionResource> generalSections = sections.stream().filter(sectionResource -> sectionResource.getType() == SectionType.GENERAL).collect(Collectors.toList());
         List<SectionResource> parentSections = generalSections.stream().filter(sectionResource -> sectionResource.getParentSection() == null).collect(Collectors.toList());
@@ -61,9 +62,6 @@ public class ApplicationFormModelPopulator implements CompetitionSetupSectionMod
 	private List<Question> getSortedQuestions(List<QuestionResource> questionResources, List<SectionResource> parentSections) {
         List<Question> questions = new ArrayList();
 
-        Long appendixTypeId = 4L;
-        Long scoreTypeId = 23L;
-
         Optional<SectionResource> section = parentSections.stream().filter(sectionResource -> sectionResource.getName().equals("Application questions")).findFirst();
 
         if(!section.isPresent()) {
@@ -71,26 +69,27 @@ public class ApplicationFormModelPopulator implements CompetitionSetupSectionMod
         }
 
         questionResources = questionResources.stream().filter(questionResource -> section.get().getQuestions().contains(questionResource.getId())).collect(Collectors.toList());
-        questionResources.forEach(questionResource -> {
-            List<FormInputResource> formInputs = formInputService.findApplicationInputsByQuestion(questionResource.getId());
-            List<FormInputResource> formAssessmentInputs = formInputService.findAssessmentInputsByQuestion(questionResource.getId());
-
-            Boolean appendix = formInputs
-                    .stream()
-                    .anyMatch(formInputResource -> formInputResource.getFormInputType().equals(appendixTypeId));
-
-
-            Boolean scored = formAssessmentInputs
-                    .stream()
-                    .anyMatch(formInputResource -> formInputResource.getFormInputType().equals(scoreTypeId));
-
-            formInputs
-                    .stream()
-                    .filter(formInputResource -> !formInputResource.getFormInputType().equals(4L))
-                    .forEach(formInputResource -> questions.add(createQuestionObjectFromQuestionResource(questionResource, formInputResource, appendix, scored)));
-        });
+        questionResources.forEach(questionResource -> initQuestionForForm(questions, questionResource));
 
         return questions.stream().sorted((q1, q2) -> Integer.compare(Integer.parseInt(q1.getNumber()), Integer.parseInt(q2.getNumber()))).collect(Collectors.toList());
+    }
+
+    private void initQuestionForForm(List<Question> questions, QuestionResource questionResource) {
+        List<FormInputResource> formInputs = formInputService.findApplicationInputsByQuestion(questionResource.getId());
+        List<FormInputResource> formAssessmentInputs = formInputService.findAssessmentInputsByQuestion(questionResource.getId());
+
+        Boolean appendix = inputsTypeMatching(formInputs, appendixTypeId);
+        Boolean scored = inputsTypeMatching(formAssessmentInputs, scoreTypeId);
+
+        formInputs.stream()
+                .filter(formInputResource -> !formInputResource.getFormInputType().equals(appendixTypeId))
+                .forEach(formInputResource -> questions.add(createQuestionObjectFromQuestionResource(questionResource, formInputResource, appendix, scored)));
+    }
+
+    private Boolean inputsTypeMatching(List<FormInputResource> formInputs, Long typeId) {
+        return formInputs
+                .stream()
+                .anyMatch(formInputResource -> formInputResource.getFormInputType().equals(typeId));
     }
 
 	private Question createQuestionObjectFromQuestionResource(QuestionResource questionResource, FormInputResource formInputResource, Boolean appendix, Boolean scored){
@@ -106,7 +105,6 @@ public class ApplicationFormModelPopulator implements CompetitionSetupSectionMod
         if(formInputResource.getWordCount() > 0) {
             question.setMaxWords(formInputResource.getWordCount());
         } else {
-            //default amount
             question.setMaxWords(400);
         }
 

@@ -36,7 +36,6 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
 
 		questionResource.setName(question.getTitle());
         questionResource.setDescription(question.getSubTitle());
-
         questionService.save(questionResource);
 
         FormInputResource formInputResource = new FormInputResource();
@@ -44,7 +43,6 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
         if(result.isPresent()) {
             formInputResource = result.get();
         } else {
-            //set default values if needed
             formInputResource.setQuestion(question.getId());
             formInputResource.setScope(FormInputScope.APPLICATION);
             formInputResource.setFormInputType(2L);
@@ -53,7 +51,6 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
         formInputResource.setGuidanceQuestion(question.getGuidanceTitle());
         formInputResource.setGuidanceAnswer(question.getGuidance());
         formInputResource.setWordCount(question.getMaxWords());
-
         formInputService.save(formInputResource);
 
         handleAppendix(question, formInputResources, questionResource, formInputResource);
@@ -87,7 +84,6 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
                 formInputService.save(appendix);
             }
         } else {
-            //check if it's there then delete
             if(hasAppendix(formInputResources)) {
                 Long appendixId = formInputResources
                         .stream()
@@ -106,7 +102,6 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
 
     private void handleAssessorScore(Question question, List<FormInputResource> formInputResources, QuestionResource questionResource, FormInputResource formInputResource) {
         if(question.getScored()) {
-            //check if it's there otherwise add
             if(!hasAssessorScore(formInputResources)) {
                 FormInputResource assessorScore = new FormInputResource();
                 assessorScore.setFormInputType(assessorScoreId);
@@ -123,7 +118,6 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
                 formInputService.save(assessorScore);
             }
         } else {
-            //check if it's there then delete
             if(hasAssessorScore(formInputResources)) {
                 Long scoreId = formInputResources
                         .stream()
