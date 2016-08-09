@@ -104,6 +104,16 @@ public class AssessmentFeedbackViewModelTest {
         assertNull(assessmentFeedbackViewModel.getWordsRemaining(formInputId));
     }
 
+    @Test
+    public void testGetWordsRemaining_noResponseValue() throws Exception {
+        Long formInputId = 1L;
+        Integer maxWordCount = 100;
+
+        AssessmentFeedbackViewModel assessmentFeedbackViewModel = setupViewModelWithFormInputsAndResponses(maxWordCount, asListOfPairs(formInputId, null));
+
+        assertEquals(Integer.valueOf(100), assessmentFeedbackViewModel.getWordsRemaining(formInputId));
+    }
+
     private AssessmentFeedbackViewModel setupViewModelWithFormInputsAndResponses(Integer maxWordCount, List<Pair<Long, String>> idAndValuePairs) {
         List<FormInputResource> assessmentFormInputs = idAndValuePairs.stream().map(idAndValuePair -> newFormInputResource()
                 .with(id(idAndValuePair.getLeft()))
