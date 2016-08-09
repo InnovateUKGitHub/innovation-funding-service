@@ -101,7 +101,6 @@ public class RegistrationController {
 
     @RequestMapping(value = "/register", method = RequestMethod.GET)
     public String registerForm(Model model, HttpServletRequest request, HttpServletResponse response) {
-        System.out.println("Ben 1");
 
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         if(user != null){
@@ -181,7 +180,7 @@ public class RegistrationController {
                                      Model model) {
 
         LOG.warn("registerFormSubmit");
-        System.out.println("Ben 2");
+
         boolean setInviteEmailAddress;
         
         try {
