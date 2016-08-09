@@ -13,7 +13,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
-import static java.lang.Integer.max;
 import static java.lang.String.format;
 import static java.util.Optional.ofNullable;
 import static org.apache.commons.lang3.StringUtils.lowerCase;
@@ -149,9 +148,10 @@ public class AssessmentFeedbackViewModel {
     }
 
     private int getResponseWords(Optional<AssessorFormInputResponseResource> response) {
-        return response.map(responseResource -> {
+        Optional<String> responseValue = response.flatMap(responseResource -> ofNullable(responseResource.getValue()));
+        return responseValue.map(value -> {
             // clean any HTML markup from the value
-            Document doc = Jsoup.parse(responseResource.getValue());
+            Document doc = Jsoup.parse(value);
             String cleaned = doc.text();
 
             return cleaned.split("\\s+").length;
