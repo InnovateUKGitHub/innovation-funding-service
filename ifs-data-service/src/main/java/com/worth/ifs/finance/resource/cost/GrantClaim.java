@@ -3,7 +3,7 @@ package com.worth.ifs.finance.resource.cost;
 import javax.validation.constraints.Digits;
 import java.math.BigDecimal;
 
-public class GrantClaim implements CostItem {
+public class GrantClaim implements FinanceRowItem {
     private Long id;
 
     @Digits(integer = MAX_DIGITS, fraction = 0)
@@ -58,7 +58,7 @@ public class GrantClaim implements CostItem {
     }
 
     @Override
-    public CostType getCostType() {
-        return CostType.FINANCE;
+    public FinanceRowType getCostType() {
+        return FinanceRowType.FINANCE;
     }
 }

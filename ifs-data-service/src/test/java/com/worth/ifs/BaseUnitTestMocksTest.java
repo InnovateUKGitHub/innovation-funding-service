@@ -40,7 +40,7 @@ import com.worth.ifs.file.transactional.FileHttpHeadersValidator;
 import com.worth.ifs.file.transactional.FileService;
 import com.worth.ifs.finance.mapper.ApplicationFinanceMapper;
 import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
-import com.worth.ifs.finance.repository.CostRepository;
+import com.worth.ifs.finance.repository.FinanceRowRepository;
 import com.worth.ifs.form.repository.FormInputRepository;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
 import com.worth.ifs.form.transactional.FormInputService;
@@ -65,6 +65,7 @@ import com.worth.ifs.user.repository.*;
 import com.worth.ifs.user.transactional.PasswordPolicyValidator;
 import com.worth.ifs.user.transactional.RegistrationService;
 import com.worth.ifs.user.transactional.UserService;
+import com.worth.ifs.workflow.mapper.ProcessOutcomeMapper;
 import org.junit.Before;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -191,13 +192,16 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected AddressService addressService;
 
     @Mock
+    protected ProcessOutcomeMapper processOutcomeMapperMock;
+
+    @Mock
     protected OrganisationService organisationServiceMock;
 
     @Mock
     protected UserService userServiceMock;
 
     @Mock
-    protected CostRepository costRepositoryMock;
+    protected FinanceRowRepository financeRowRepositoryMock;
 
     @Mock
     protected AssessmentRepository assessmentRepositoryMock;
