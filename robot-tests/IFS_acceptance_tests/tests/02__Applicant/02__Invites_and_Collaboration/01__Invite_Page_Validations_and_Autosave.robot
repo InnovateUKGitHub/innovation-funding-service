@@ -24,7 +24,7 @@ lead applicant can add/remove partners
     [Documentation]    INFUND-901
     [Tags]    HappyPath
     Given The user navigates to the invitation page of the test application
-    When The user clicks the button/link    jquery=li:nth-child(1) button:contains('Add person')
+    When The user clicks the button/link    jquery=li:nth-child(1) button:contains('Add another person')
     Then The user should see the element    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1)
     And The user clicks the button/link    jquery=li:nth-child(1) button:contains('Remove')
     Then The user should not see the element    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1)
@@ -37,7 +37,7 @@ lead applicant cannot remove himself
 Validations for the Email field
     [Documentation]    INFUND-901
     [Tags]    HappyPath
-    When The user clicks the button/link    jquery=li:nth-child(1) button:contains('Add person')
+    When The user clicks the button/link    jquery=li:nth-child(1) button:contains('Add another person')
     And the applicant fills the lead organisation fields    Collaborator01    @hiveit.co.uk
     Then the user should see an error    not a well-formed email address
 
@@ -128,7 +128,7 @@ the user fills the name and email field and reloads the page
     Input Text    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(1) input    Collaborator test
     Input Text    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(2) input    ewan+9@hiveit.co.uk
     sleep    500ms
-    focus    jquery=li:nth-child(1) button:contains('Add person')
+    focus    jquery=li:nth-child(1) button:contains('Add another person')
     the user reloads the page
 
 the user's inputs should still be visible
@@ -159,10 +159,10 @@ the applicant can enter Organisation name, Name and E-mail
     Input Text    name=organisations[1].organisationName    Fannie May
     Input Text    css=li:nth-child(2) tr:nth-of-type(1) td:nth-of-type(1) input    Collaborator 2
     Input Text    css=li:nth-child(2) tr:nth-of-type(1) td:nth-of-type(2) input    ewan+10@hiveit.co.uk
-    Click Element    jquery=li:nth-child(2) button:contains('Add person')
+    Click Element    jquery=li:nth-child(2) button:contains('Add another person')
     Input Text    css=li:nth-child(2) tr:nth-of-type(2) td:nth-of-type(1) input    Collaborator 3
     Input Text    css=li:nth-child(2) tr:nth-of-type(2) td:nth-of-type(2) input    ewan+11@hiveit.co.uk
-    focus    jquery=li:nth-child(2) button:contains('Add person')
+    focus    jquery=li:nth-child(2) button:contains('Add another person')
     Sleep    500ms
     the user reloads the page
 

@@ -2,14 +2,18 @@ package com.worth.ifs.workflow.transactional;
 
 import com.worth.ifs.BaseUnitTestMocksTest;
 import com.worth.ifs.assessment.repository.ProcessOutcomeRepository;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
+import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import static com.worth.ifs.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.assessment.builder.ProcessOutcomeBuilder.newProcessOutcome;
+import static com.worth.ifs.assessment.builder.ProcessOutcomeResourceBuilder.newProcessOutcomeResource;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 public class ProcessOutcomeServiceImplTest extends BaseUnitTestMocksTest {
@@ -21,15 +25,18 @@ public class ProcessOutcomeServiceImplTest extends BaseUnitTestMocksTest {
     ProcessOutcomeRepository processOutcomeRepository;
 
     @Test
-    public void testGetById() {
-
+    public void getById() {
         Long processOutcomeId = 1L;
 
         ProcessOutcome processOutcome = newProcessOutcome().with(id(processOutcomeId)).build();
+        ProcessOutcomeResource processOutcomeResource = newProcessOutcomeResource().build();
 
         when(processOutcomeRepository.findOne(processOutcomeId)).thenReturn(processOutcome);
-        final ProcessOutcome resultProcessOutcome = processOutcomeService.findOne(processOutcomeId);
+        when(processOutcomeMapperMock.mapToResource(processOutcome)).thenReturn(processOutcomeResource);
 
-        assertEquals(processOutcomeId,resultProcessOutcome.getId());
+        final ServiceResult<ProcessOutcomeResource> result = processOutcomeService.findOne(processOutcomeId);
+
+        assertTrue(result.isSuccess());
+        assertEquals(processOutcomeResource, result.getSuccessObject());
     }
 }
