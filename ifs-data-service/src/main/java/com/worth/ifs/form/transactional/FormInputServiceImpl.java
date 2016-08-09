@@ -55,22 +55,22 @@ public class FormInputServiceImpl extends BaseTransactionalService implements Fo
 
     @Override
     public ServiceResult<List<FormInputResource>> findByQuestionId(Long questionId) {
-        return serviceSuccess(formInputToResources(formInputRepository.findByQuestionId(questionId)));
+        return serviceSuccess(formInputToResources(formInputRepository.findByQuestionIdOrderByPriorityAsc(questionId)));
     }
 
     @Override
     public ServiceResult<List<FormInputResource>> findByQuestionIdAndScope(Long questionId, FormInputScope scope) {
-        return serviceSuccess(formInputToResources(formInputRepository.findByQuestionIdAndScope(questionId, scope)));
+        return serviceSuccess(formInputToResources(formInputRepository.findByQuestionIdAndScopeOrderByPriorityAsc(questionId, scope)));
     }
 
     @Override
     public ServiceResult<List<FormInputResource>> findByCompetitionId(Long competitionId) {
-        return serviceSuccess(formInputToResources(formInputRepository.findByCompetitionId(competitionId)));
+        return serviceSuccess(formInputToResources(formInputRepository.findByCompetitionIdOrderByPriorityAsc(competitionId)));
     }
 
     @Override
     public ServiceResult<List<FormInputResource>> findByCompetitionIdAndScope(Long competitionId, FormInputScope scope) {
-        return serviceSuccess(formInputToResources(formInputRepository.findByCompetitionIdAndScope(competitionId, scope)));
+        return serviceSuccess(formInputToResources(formInputRepository.findByCompetitionIdAndScopeOrderByPriorityAsc(competitionId, scope)));
     }
 
     private ServiceResult<FormInput> findFormInputEntity(Long id) {
