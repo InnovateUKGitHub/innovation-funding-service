@@ -4,6 +4,8 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Optional;
 
+import static javax.persistence.CascadeType.ALL;
+
 /**
  * Entity representing a simple Cost value
  */
@@ -23,12 +25,20 @@ public class Cost {
     @JoinColumn(name = "cost_group_id")
     private CostGroup costGroup;
 
+    @OneToOne(cascade = ALL, mappedBy = "cost", orphanRemoval = true)
+    private CostTimePeriod costTimePeriod;
+
     Cost() {
         // for ORM use
     }
 
     public Cost(BigDecimal value) {
         this.value = value;
+    }
+
+    public Cost(BigDecimal value, CostTimePeriod costTimePeriod) {
+        this.value = value;
+        this.setCostTimePeriod(costTimePeriod);
     }
 
     public Long getId() {
@@ -50,5 +60,15 @@ public class Cost {
     // for ORM backref setting
     public void setCostGroup(CostGroup costGroup) {
         this.costGroup = costGroup;
+    }
+
+    public Optional<CostTimePeriod> getCostTimePeriod() {
+        return Optional.ofNullable(costTimePeriod);
+    }
+
+    // for ORM backref setting
+    public void setCostTimePeriod(CostTimePeriod costTimePeriod) {
+        this.costTimePeriod = costTimePeriod;
+        this.costTimePeriod.setCost(this);
     }
 }
