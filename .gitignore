@@ -17,12 +17,6 @@ nbijl.xml
 .project
 bin/
 
-# additional application.properties locations to get in-eclipse and in-idea deploys to tomcat servers working
-ifs-data-service/src/main/resources/config/
-ifs-web-service/src/main/resources/config/
-ifs-data-service/idea-support/
-ifs-web-service/idea-support/
-
 
 
 
@@ -31,6 +25,7 @@ ifs-web-service/idea-support/
 **/application-*.properties
 !**/application-local.properties
 !**/application-integration-test.properties
+!**/application-hibernate-generate-ddl.properties
 !**/docker-build.gradle
 
 # Created with help from https://www.gitignore.io
