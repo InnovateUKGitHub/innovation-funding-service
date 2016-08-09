@@ -30,8 +30,6 @@ import static com.worth.ifs.util.CookieUtil.getCookieValue;
 import static com.worth.ifs.util.CookieUtil.saveToCookie;
 import static com.worth.ifs.util.RestLookupCallbacks.find;
 
-//import com.worth.ifs.registration.service.RegistrationService;
-
 /**
  * This class is use as an entry point to accept a invite to a project, to a application.
  */
@@ -56,6 +54,8 @@ public class AcceptProjectInviteController extends BaseController {
     private static final String ACCEPT_INVITE_USER_EXISTS_BUT_NOT_LOGGED_IN_VIEW = "project/registration/accept-invite-user-exists-but-not-logged-in";
     private static final String ACCEPT_INVITE_ALREADY_ACCEPTED_VIEW = "project/registration/accept-invite-already-accepted";
     private static final String ACCEPT_INVITE_SHOW_PROJECT = "project/registration/accept-invite-show-project";
+    private static final String ACCEPT_INVITE_FAILURE = "project/registration/accept-invite-failure";
+
 
     //===================================
     // Initial landing of the invite link
@@ -154,7 +154,7 @@ public class AcceptProjectInviteController extends BaseController {
 
     private RestResult<String> populateModelWithErrorsAndReturnErrorView(Map<String, String> errors, Model model) {
         errors.forEach((messageKey, messageValue) -> model.addAttribute(messageKey, messageValue));
-        return restSuccess("registration/project/accept-invite-failure");
+        return restSuccess(ACCEPT_INVITE_FAILURE);
     }
 
     private Map<String, String> errorMessages(UserResource loggedInUser, InviteResource invite) {
