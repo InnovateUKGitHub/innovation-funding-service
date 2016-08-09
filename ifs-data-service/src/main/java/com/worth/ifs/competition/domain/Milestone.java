@@ -25,6 +25,14 @@ public class Milestone {
     @JoinColumn(name="competitionId", referencedColumnName="id")
     private Competition competition;
 
+    public Milestone() {}
+
+    public Milestone(Long id, MilestoneName name, LocalDateTime date, Competition competition) {
+        this.id = id;
+        this.name = name;
+        this.date = date;
+        this.competition = competition;
+    }
 
     public Long getId() {
         return id;

@@ -48,7 +48,7 @@ public class MilestoneServiceImplTest {
 			public Milestone answer(InvocationOnMock invocation) throws Throwable {
 				MilestoneResource arg = invocation.getArgumentAt(0, MilestoneResource.class);
 				Milestone milestone = new Milestone();
-				milestone.setName(arg.getName());// TODO Auto-generated method stub
+				milestone.setName(arg.getName());
 				milestone.setDate(arg.getDate());
 				return milestone;
 			}
