@@ -27,16 +27,11 @@ public class SectionBuilder extends BaseBuilder<Section, SectionBuilder> {
     public static SectionBuilder newSection() {
         return new SectionBuilder(emptyList())
                 .with(uniqueIds())
-                .with(idBasedNames("Section "))
-                .withDisplayInAssessmentApplicationSummary(true);
+                .with(idBasedNames("Section "));
     }
 
     public SectionBuilder withId(Long... ids) {
         return withArray((id, object) -> setField("id", id, object), ids);
-    }
-
-    public SectionBuilder withQuestions(List<Question> questions) {
-        return with(section -> section.setQuestions(questions));
     }
 
     @Override
@@ -71,12 +66,12 @@ public class SectionBuilder extends BaseBuilder<Section, SectionBuilder> {
         });
     }
 
-    public SectionBuilder withQuestionSets(List<List<Question>> questionSets) {
-        return withList(questionSets, (questions, section) -> section.setQuestions(questions));
+    public SectionBuilder withQuestions(List<Question>... questions) {
+        return withArray((questionSet, object) -> setField("questions", questionSet, object), questions);
     }
 
-    public SectionBuilder withDisplayInAssessmentApplicationSummary(boolean displayInSummary) {
-        return with(section -> setField("displayInAssessmentApplicationSummary", displayInSummary, section));
+    public SectionBuilder withDisplayInAssessmentApplicationSummary(Boolean... displayInAssessmentApplicationSummaries) {
+        return withArray((displayInAssessmentApplicationSummary, object) -> setField("displayInAssessmentApplicationSummary", displayInAssessmentApplicationSummary, object), displayInAssessmentApplicationSummaries);
     }
     
     public SectionBuilder withChildSections(List<Section> childSections) {

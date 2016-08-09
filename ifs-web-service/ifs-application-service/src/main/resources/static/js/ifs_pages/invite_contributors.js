@@ -94,7 +94,7 @@ IFS.application.invites = (function(){
                               </tbody>\
                           </table>\
                           <p class="alignright">\
-                              <button value="'+orgId+'" name="add_person" type="submit" class="add-another-row buttonlink">Add person</button>\
+                              <button value="'+orgId+'" name="add_person" type="submit" class="add-another-row buttonlink">Add another person</button>\
                           </p>\
                       </li>';
 

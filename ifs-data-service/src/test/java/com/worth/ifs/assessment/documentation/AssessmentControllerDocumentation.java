@@ -5,12 +5,12 @@ import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.assessment.controller.AssessmentController;
 import com.worth.ifs.assessment.resource.AssessmentOutcomes;
 import com.worth.ifs.assessment.resource.AssessmentResource;
-import com.worth.ifs.workflow.domain.ProcessOutcome;
+import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
-import static com.worth.ifs.assessment.builder.ProcessOutcomeBuilder.newProcessOutcome;
+import static com.worth.ifs.assessment.builder.ProcessOutcomeResourceBuilder.newProcessOutcomeResource;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.documentation.AssessmentDocs.assessmentFields;
 import static com.worth.ifs.documentation.AssessmentDocs.assessmentResourceBuilder;
@@ -25,15 +25,10 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.response
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 
-/**
- * Module: innovation-funding-service-dev
- * IBCTEC LTD
- * AUthor: ikenna1
- * DAte: 20/07/2016.
- **/
 public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest<AssessmentController> {
 
     private RestDocumentationResultHandler document;
+
     @Override
     protected AssessmentController supplyControllerUnderTest() {
         return new AssessmentController();
@@ -46,9 +41,10 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
     }
 
     @Test
-    public void findAssessmentById() throws Exception {
+    public void findById() throws Exception {
         long assessmentId = 1L;
         AssessmentResource assessmentResource = assessmentResourceBuilder.build();
+
         when(assessmentServiceMock.findById(assessmentId)).thenReturn(serviceSuccess(assessmentResource));
 
         mockMvc.perform(get("/assessment/{id}", assessmentId))
@@ -61,24 +57,44 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
     }
 
     @Test
-    public void updateAssessmentStatus() throws Exception {
-        ObjectMapper mapper = new ObjectMapper();
-        Long assessmentId  = 1L;
-
-        ProcessOutcome processOutcome = newProcessOutcome()
-                .withDescription("Conflict of interest")
-                .withComment("own company")
-                .withOutcome("YES")
-                .withOutcomeType(AssessmentOutcomes.REJECT.getType())
+    public void recommend() throws Exception {
+        Long assessmentId = 1L;
+        ProcessOutcomeResource processOutcome = newProcessOutcomeResource()
+                .withOutcome("yes")
+                .withDescription("Decision feedback that will be sent to the applicant")
+                .withComment("Other comments about this application")
+                .withOutcomeType(AssessmentOutcomes.RECOMMEND.getType())
                 .build();
-        when(assessmentServiceMock.updateStatus(assessmentId,processOutcome)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(put("/assessment/{id}/status", assessmentId, processOutcome)
+        when(assessmentServiceMock.recommend(assessmentId, processOutcome)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(put("/assessment/{id}/recommend", assessmentId, processOutcome)
                 .contentType(APPLICATION_JSON)
-                .content(mapper.writeValueAsString(processOutcome)))
+                .content(new ObjectMapper().writeValueAsString(processOutcome)))
                 .andDo(this.document.snippets(
                         pathParameters(
-                                parameterWithName("id").description("id of the assessment for which to update the assessment status")
+                                parameterWithName("id").description("id of the assessment for which to recommend")
+                        )
+                ));
+    }
+
+    @Test
+    public void reject() throws Exception {
+        Long assessmentId = 1L;
+        ProcessOutcomeResource processOutcome = newProcessOutcomeResource()
+                .withDescription("Conflict of interest")
+                .withComment("Own company")
+                .withOutcomeType(AssessmentOutcomes.REJECT.getType())
+                .build();
+
+        when(assessmentServiceMock.rejectInvitation(assessmentId, processOutcome)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(put("/assessment/{id}/rejectInvitation", assessmentId, processOutcome)
+                .contentType(APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(processOutcome)))
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("id").description("id of the assessment for which to reject")
                         )
                 ));
     }

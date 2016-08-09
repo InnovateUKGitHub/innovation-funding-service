@@ -35,4 +35,5 @@ public interface QuestionService {
     Map<Long, QuestionStatusResource> getQuestionStatusesByQuestionIdsAndApplicationIdAndOrganisationId(List<Long> questionIds, Long applicationId, Long organisationId);
     List<QuestionStatusResource> findQuestionStatusesByQuestionAndApplicationId(Long questionId, Long applicationId);
     List<QuestionResource> getQuestionsBySectionIdAndType(Long sectionId, QuestionType type);
+    List<QuestionResource> getQuestionsByAssessment(Long assessmentId);
 }

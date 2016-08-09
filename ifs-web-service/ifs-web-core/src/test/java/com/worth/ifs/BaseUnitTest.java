@@ -6,7 +6,7 @@ import com.worth.ifs.application.builder.QuestionStatusResourceBuilder;
 import com.worth.ifs.application.builder.SectionResourceBuilder;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.finance.model.UserRole;
-import com.worth.ifs.application.finance.service.CostService;
+import com.worth.ifs.application.finance.service.FinanceRowService;
 import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.finance.view.*;
 import com.worth.ifs.application.resource.*;
@@ -18,7 +18,7 @@ import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.service.CompetitionsRestService;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.service.ApplicationFinanceRestService;
-import com.worth.ifs.finance.service.CostRestService;
+import com.worth.ifs.finance.service.FinanceRowRestService;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.form.service.FormInputResponseService;
@@ -37,6 +37,7 @@ import com.worth.ifs.user.service.OrganisationRestService;
 import com.worth.ifs.user.service.OrganisationTypeRestService;
 import com.worth.ifs.user.service.ProcessRoleService;
 import com.worth.ifs.user.service.UserService;
+import com.worth.ifs.workflow.ProcessOutcomeService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
@@ -124,9 +125,9 @@ public class BaseUnitTest {
     @Mock
     public FinanceService financeService;
     @Mock
-    public CostService costService;
+    public FinanceRowService financeRowService;
     @Mock
-    public CostRestService costRestService;
+    public FinanceRowRestService financeRowRestService;
     @Mock
     public ApplicationRestService applicationRestService;
     @Mock
@@ -139,6 +140,8 @@ public class BaseUnitTest {
     public OrganisationTypeRestService organisationTypeRestService;
     @Mock
     public OrganisationAddressRestService organisationAddressRestService;
+    @Mock
+    public ProcessOutcomeService processOutcomeService;
     @Mock
     public SectionService sectionService;
     @Mock
