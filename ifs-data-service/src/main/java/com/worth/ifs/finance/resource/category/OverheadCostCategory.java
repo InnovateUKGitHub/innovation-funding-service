@@ -1,6 +1,6 @@
 package com.worth.ifs.finance.resource.category;
 
-import com.worth.ifs.finance.resource.cost.CostItem;
+import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import com.worth.ifs.finance.resource.cost.Overhead;
 
 import java.math.BigDecimal;
@@ -9,17 +9,17 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * {@code DefaultCostCategory} implementation for {@link CostCategory}.
+ * {@code DefaultCostCategory} implementation for {@link FinanceRowCostCategory}.
  * Default representation for costs and defaults to summing up the costs.
  */
-public class OverheadCostCategory implements CostCategory {
+public class OverheadCostCategory implements FinanceRowCostCategory {
     public static final String ACCEPT_RATE = "Accept Rate";
-    private List<CostItem> costs = new ArrayList<>();
+    private List<FinanceRowItem> costs = new ArrayList<>();
     private BigDecimal total = BigDecimal.ZERO;
     private BigDecimal labourCostTotal = BigDecimal.ZERO;
 
     @Override
-    public List<CostItem> getCosts() {
+    public List<FinanceRowItem> getCosts() {
         return costs;
     }
 
@@ -30,7 +30,7 @@ public class OverheadCostCategory implements CostCategory {
 
     @Override
     public void calculateTotal() {
-        Optional<CostItem> cost = costs.stream()
+        Optional<FinanceRowItem> cost = costs.stream()
                 .findFirst();
 
         if(cost.isPresent()) {
@@ -46,7 +46,7 @@ public class OverheadCostCategory implements CostCategory {
     }
 
     @Override
-    public void addCost(CostItem costItem) {
+    public void addCost(FinanceRowItem costItem) {
         if(costItem!=null) {
             costs.add(costItem);
         }
@@ -58,7 +58,7 @@ public class OverheadCostCategory implements CostCategory {
     }
 
     @Override
-    public void setCosts(List<CostItem> costItems) {
+    public void setCosts(List<FinanceRowItem> costItems) {
         costs = costItems;
     }
 

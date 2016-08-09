@@ -40,7 +40,7 @@ import com.worth.ifs.file.transactional.FileHttpHeadersValidator;
 import com.worth.ifs.file.transactional.FileService;
 import com.worth.ifs.finance.mapper.ApplicationFinanceMapper;
 import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
-import com.worth.ifs.finance.repository.CostRepository;
+import com.worth.ifs.finance.repository.FinanceRowRepository;
 import com.worth.ifs.form.repository.FormInputRepository;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
 import com.worth.ifs.form.transactional.FormInputService;
@@ -201,7 +201,7 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected UserService userServiceMock;
 
     @Mock
-    protected CostRepository costRepositoryMock;
+    protected FinanceRowRepository financeRowRepositoryMock;
 
     @Mock
     protected AssessmentRepository assessmentRepositoryMock;
