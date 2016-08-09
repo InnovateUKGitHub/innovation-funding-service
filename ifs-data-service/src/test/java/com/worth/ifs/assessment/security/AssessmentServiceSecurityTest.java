@@ -5,12 +5,13 @@ import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.transactional.AssessmentService;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.user.resource.UserResource;
-import com.worth.ifs.workflow.domain.ProcessOutcome;
+import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.security.access.method.P;
 
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
-import static com.worth.ifs.assessment.builder.ProcessOutcomeBuilder.newProcessOutcome;
+import static com.worth.ifs.assessment.builder.ProcessOutcomeResourceBuilder.newProcessOutcomeResource;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -33,7 +34,7 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
     }
 
     @Test
-    public void test_getAssessmentById() {
+    public void findById() {
         final Long assessmentId = 1L;
         when(assessmentLookupStrategy.getAssessmentResource(assessmentId)).thenReturn(newAssessmentResource().withId(assessmentId).build());
         assertAccessDenied(
@@ -43,12 +44,23 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
     }
 
     @Test
-    public void test_updateStatus() {
+    public void recommend() {
         final Long assessmentId = 1L;
-        ProcessOutcome outcome = newProcessOutcome().build();
+        ProcessOutcomeResource outcome = newProcessOutcomeResource().build();
         when(assessmentLookupStrategy.getAssessmentResource(assessmentId)).thenReturn(newAssessmentResource().withId(assessmentId).build());
         assertAccessDenied(
-                () -> service.updateStatus(assessmentId, outcome),
+                () -> service.recommend(assessmentId, outcome),
+                () -> verify(assessmentPermissionRules).userCanUpdateAssessment(isA(AssessmentResource.class), isA(UserResource.class))
+        );
+    }
+
+    @Test
+    public void rejectInvitation() {
+        final Long assessmentId = 1L;
+        ProcessOutcomeResource outcome = newProcessOutcomeResource().build();
+        when(assessmentLookupStrategy.getAssessmentResource(assessmentId)).thenReturn(newAssessmentResource().withId(assessmentId).build());
+        assertAccessDenied(
+                () -> service.rejectInvitation(assessmentId, outcome),
                 () -> verify(assessmentPermissionRules).userCanUpdateAssessment(isA(AssessmentResource.class), isA(UserResource.class))
         );
     }
@@ -60,7 +72,12 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
         }
 
         @Override
-        public ServiceResult<Void> updateStatus(Long id, ProcessOutcome processOutcome) {
+        public ServiceResult<Void> recommend(@P("assessmentId") Long assessmentId, ProcessOutcomeResource processOutcome) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> rejectInvitation(@P("assessmentId") Long assessmentId, ProcessOutcomeResource processOutcome) {
             return null;
         }
     }

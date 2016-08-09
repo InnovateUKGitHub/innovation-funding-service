@@ -1,9 +1,10 @@
 package com.worth.ifs.assessment.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionResource;
-import com.worth.ifs.assessment.form.AssessmentApplicationSummaryForm;
+import com.worth.ifs.assessment.form.AssessmentSummaryForm;
 import com.worth.ifs.assessment.model.AssessmentSummaryModelPopulator;
 import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
 import com.worth.ifs.assessment.service.AssessmentService;
@@ -31,6 +32,7 @@ import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAsse
 import static com.worth.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
 import static com.worth.ifs.assessment.builder.ProcessOutcomeResourceBuilder.newProcessOutcomeResource;
 import static com.worth.ifs.assessment.resource.AssessorFormInputType.*;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static com.worth.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static com.worth.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
@@ -40,14 +42,15 @@ import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Stream.concat;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
 public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<AssessmentSummaryController> {
-
     @Mock
     private AssessmentService assessmentService;
 
@@ -64,7 +67,7 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
     }
 
     @Test
-    public void testGetSummary() throws Exception {
+    public void getSummary() throws Exception {
         Long competitionId = 1L;
         Long processRoleId = 2L;
         Long applicationId = 3L;
@@ -200,15 +203,14 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
     }
 
     @Test
-    public void testGetSummary_withExistingOutcome() throws Exception {
+    public void getSummary_withExistingOutcome() throws Exception {
         Long competitionId = 1L;
         Long processRoleId = 2L;
         Long applicationId = 3L;
         Long assessmentId = 4L;
         Long latestProcessOutcomeId = 100L;
-        Boolean expectedFundingConfirmation = TRUE;
         String expectedFeedback = "feedback";
-        String expectedComments = "comments";
+        String expectedComment = "comment";
 
         when(assessmentService.getById(assessmentId)).thenReturn(newAssessmentResource()
                 .withProcessRole(processRoleId)
@@ -233,17 +235,17 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
         when(questionService.getQuestionsByAssessment(assessmentId)).thenReturn(asList());
 
         ProcessOutcomeResource processOutcome = newProcessOutcomeResource()
-                .withOutcome(expectedFundingConfirmation.toString())
+                .withOutcome("yes")
                 .withDescription(expectedFeedback)
-                .withComment(expectedComments)
+                .withComment(expectedComment)
                 .build();
 
         when(processOutcomeService.getById(latestProcessOutcomeId)).thenReturn(processOutcome);
 
-        AssessmentApplicationSummaryForm expectedForm = new AssessmentApplicationSummaryForm();
-        expectedForm.setFundingConfirmation(expectedFundingConfirmation);
+        AssessmentSummaryForm expectedForm = new AssessmentSummaryForm();
+        expectedForm.setFundingConfirmation(TRUE);
         expectedForm.setFeedback(expectedFeedback);
-        expectedForm.setComments(expectedComments);
+        expectedForm.setComment(expectedComment);
 
         MvcResult result = mockMvc.perform(get("/{assessmentId}/summary", assessmentId))
                 .andExpect(status().isOk())
@@ -257,5 +259,26 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
         assertEquals(assessmentId, model.getAssessmentId());
         assertEquals(expectedCompetition, model.getCompetition());
         assertEquals(expectedApplication, model.getApplication());
+    }
+
+    @Test
+    public void save() throws Exception {
+        Long assessmentId = 1L;
+        Boolean fundingConfirmation = TRUE;
+        String feedback = "feedback";
+        String comment = "comment";
+
+        when(assessmentService.recommend(assessmentId, fundingConfirmation, feedback, comment)).thenReturn(serviceSuccess());
+
+        MvcResult result = mockMvc.perform(post("/{assessmentId}/summary", assessmentId)
+                .contentType(APPLICATION_FORM_URLENCODED)
+                .param("fundingConfirmation", fundingConfirmation.toString())
+                .param("feedback", feedback)
+                .param("comment", comment))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/assessor/dashboard/competition/2"))
+                .andReturn();
+
+        verify(assessmentService, times(1)).recommend(assessmentId, fundingConfirmation, feedback, comment);
     }
 }
