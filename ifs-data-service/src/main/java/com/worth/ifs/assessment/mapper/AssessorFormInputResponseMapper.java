@@ -34,5 +34,4 @@ public abstract class AssessorFormInputResponseMapper extends BaseMapper<Assesso
         }
         return object.getId();
     }
-
 }

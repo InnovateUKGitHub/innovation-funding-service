@@ -36,6 +36,8 @@ public abstract class InviteMapper extends BaseMapper<ApplicationInvite, Applica
     @Override
     public abstract ApplicationInviteResource mapToResource(ApplicationInvite domain);
 
+
+
     public Long mapInviteToId(ApplicationInvite object) {
         if (object == null) {
             return null;

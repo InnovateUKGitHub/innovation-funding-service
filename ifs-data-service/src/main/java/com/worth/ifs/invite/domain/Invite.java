@@ -1,8 +1,8 @@
 package com.worth.ifs.invite.domain;
 
-import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.user.domain.User;
+import org.aspectj.lang.annotation.SuppressAjWarnings;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
@@ -12,7 +12,7 @@ import javax.persistence.*;
 
 /**
  * An invitation for a person (who may or may not be an existing {@link User}) to participate in some business activity,
- * the target {@link InvitationTarget}
+ * the target {@link ProcessActivity}
  *
  * @param <T> the type of business activity to which we're inviting
  */
@@ -23,7 +23,7 @@ import javax.persistence.*;
 @DiscriminatorColumn(name="type", discriminatorType=DiscriminatorType.STRING)
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @Entity
-public abstract class Invite<T extends InvitationTarget> {
+public abstract class Invite<T extends ProcessActivity, I extends Invite<T,I>> {
     private static final CharSequence HASH_SALT = "b80asdf00poiasd07hn";
 
     @Id
@@ -52,7 +52,7 @@ public abstract class Invite<T extends InvitationTarget> {
         this.name = name;
         this.email = email;
         this.hash = hash;
-        this.status = status;
+        this.status = InviteStatusConstants.CREATED;
     }
 
     public Long getId() {
@@ -91,7 +91,20 @@ public abstract class Invite<T extends InvitationTarget> {
         return status;
     }
 
-    public void setStatus(InviteStatusConstants status) {
+    protected void setStatus(InviteStatusConstants status) {
+        if (status == null) throw new NullPointerException("status cannot be null");
+        switch (status) {
+            case CREATED:
+                if (this.status != null) throw new IllegalStateException("Cannot create an Invite that has already been created.");
+                break;
+            case SEND:
+                if (this.status != InviteStatusConstants.CREATED) throw new IllegalStateException("Cannot send an Invite that has already been sent.");
+                break;
+            case ACCEPTED:
+                if (this.status != InviteStatusConstants.SEND || this.status != InviteStatusConstants.ACCEPTED)
+                    throw new IllegalStateException("Cannot accept an Invite that hasn't been sent");
+                break;
+        }
         this.status = status;
     }
 
@@ -116,4 +129,14 @@ public abstract class Invite<T extends InvitationTarget> {
     public abstract T getTarget(); // the thing we're being invited to
 
     public abstract void setTarget(T target);
+
+    public I send() {
+        setStatus(InviteStatusConstants.SEND);
+        return (I) this; // for object chaining
+    }
+
+    public I open () {
+        setStatus(InviteStatusConstants.ACCEPTED);
+        return (I) this; // for object chaining
+    }
 }

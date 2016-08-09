@@ -32,7 +32,7 @@ import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.invite.domain.ApplicationInvite;
-import com.worth.ifs.invite.domain.InvitationTarget;
+import com.worth.ifs.invite.domain.ProcessActivity;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
@@ -42,7 +42,7 @@ import com.worth.ifs.user.resource.UserRoleType;
  * Application defines database relations and a model to use client side and server side.
  */
 @Entity
-public class Application implements InvitationTarget {
+public class Application implements ProcessActivity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

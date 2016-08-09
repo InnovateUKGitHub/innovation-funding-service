@@ -130,8 +130,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     }
 
     private boolean handleInviteSuccess(ApplicationInvite i) {
-        i.setStatus(InviteStatusConstants.SEND);
-        applicationInviteRepository.save(i);
+        applicationInviteRepository.save(i.send());
         return true;
     }
 
@@ -246,7 +245,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         return find(invite(inviteHash), user(userId)).andOnSuccess((invite, user) -> {
 
             if(invite.getEmail().equalsIgnoreCase(user.getEmail())){
-                invite.setStatus(InviteStatusConstants.ACCEPTED);
+                invite.open();
 
                 if(invite.getInviteOrganisation().getOrganisation()==null && !user.getOrganisations().isEmpty()){
                     invite.getInviteOrganisation().setOrganisation(user.getOrganisations().get(0));

@@ -3,7 +3,7 @@ package com.worth.ifs.competition.domain;
 import javax.persistence.*;
 
 @Entity
-public class CompetitionAssessorRejectionReason {
+public class CompetitionParticipantRejectionReason {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -12,11 +12,11 @@ public class CompetitionAssessorRejectionReason {
     @Column( name = "reason" )
     private String reason;
 
-    CompetitionAssessorRejectionReason() {
+    CompetitionParticipantRejectionReason() {
         // no-arg constructor
     }
 
-    public CompetitionAssessorRejectionReason(String reason) {
+    public CompetitionParticipantRejectionReason(String reason) {
         this.reason = reason;
     }
 

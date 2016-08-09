@@ -14,7 +14,7 @@ import javax.persistence.ManyToOne;
  */
 @Entity
 @DiscriminatorValue("APPLICATION")
-public class ApplicationInvite extends Invite<Application> {
+public class ApplicationInvite extends Invite<Application, ApplicationInvite> {
 
     @ManyToOne
     @JoinColumn(name = "target_id", referencedColumnName = "id")
