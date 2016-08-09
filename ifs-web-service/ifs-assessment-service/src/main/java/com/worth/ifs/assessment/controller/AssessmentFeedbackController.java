@@ -30,7 +30,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -103,9 +102,9 @@ public class AssessmentFeedbackController extends AbstractApplicationController 
             HttpServletResponse response,
             @PathVariable("assessmentId") Long assessmentId,
             @PathVariable("formInputId") Long formInputId,
-            @Valid @RequestBody AssessorFormInputResponseResource assessorFormInputResponse) {
+            @RequestParam("value") String value) {
 
-        ServiceResult<Void> result = assessorFormInputResponseService.updateFormInputResponse(assessorFormInputResponse);
+        ServiceResult<Void> result = assessorFormInputResponseService.updateFormInputResponse(assessmentId, formInputId, value);
         return createJsonObjectNode(result.isSuccess(), result.getErrors());
     }
 
@@ -136,13 +135,8 @@ public class AssessmentFeedbackController extends AbstractApplicationController 
             List<FormInputResource> formInputs = formInputService.findAssessmentInputsByQuestion(questionId);
             List<Pair<Long, String>> formInputResponses = getFormInputResponses(form, formInputs);
             formInputResponses.stream().forEach(responsePair -> {
-                AssessorFormInputResponseResource assessorFormInputResponse = new AssessorFormInputResponseResource();
-                assessorFormInputResponse.setAssessment(assessmentId);
-                assessorFormInputResponse.setQuestion(questionId);
-                assessorFormInputResponse.setFormInput(responsePair.getLeft());
-                assessorFormInputResponse.setValue(responsePair.getRight());
                 // TODO INFUND-4105 optimise this to save multiple responses at a time
-                ServiceResult<Void> updateResult = assessorFormInputResponseService.updateFormInputResponse(assessorFormInputResponse);
+                ServiceResult<Void> updateResult = assessorFormInputResponseService.updateFormInputResponse(assessmentId,responsePair.getLeft(),responsePair.getRight());
                 validationHandler.addAnyErrors(updateResult, toField("formErrors"));
             });
 
@@ -209,7 +203,6 @@ public class AssessmentFeedbackController extends AbstractApplicationController 
         node.put("success", success ? "true" : "false");
         if (!success) {
             ArrayNode errorsNode = mapper.createArrayNode();
-            //errors.stream().forEach(errorsNode::add);
             errors.stream().map(u -> u.getErrorMessage()).collect(Collectors.toList()).forEach(errorsNode::add);
             node.set("validation_errors", errorsNode);
         }

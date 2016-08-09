@@ -74,7 +74,7 @@ public class AssessorFormInputResponseControllerTest extends BaseControllerMockM
 
         when(assessorFormInputResponseServiceMock.updateFormInputResponse(response)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(put("/assessorFormInputResponse/formInput/{formInputId}/assessment/{assessmentId}", formInputId, assessmentId)
+        mockMvc.perform(put("/assessorFormInputResponse")
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(response)))
                 .andExpect(status().isOk());

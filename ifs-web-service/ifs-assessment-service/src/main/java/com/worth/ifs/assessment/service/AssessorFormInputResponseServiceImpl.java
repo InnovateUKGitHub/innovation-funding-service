@@ -28,7 +28,11 @@ public class AssessorFormInputResponseServiceImpl implements AssessorFormInputRe
     }
 
     @Override
-    public ServiceResult<Void> updateFormInputResponse(AssessorFormInputResponseResource response) {
+    public ServiceResult<Void> updateFormInputResponse(Long assessmentId,Long formInputId,String value) {
+        AssessorFormInputResponseResource response = new AssessorFormInputResponseResource();
+        response.setAssessment(assessmentId);
+        response.setFormInput(formInputId);
+        response.setValue(value);
         return assessorFormInputResponseRestService.updateFormInputResponse(response).toServiceResult();
     }
 }

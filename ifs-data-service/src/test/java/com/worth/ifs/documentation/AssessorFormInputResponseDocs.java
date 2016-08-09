@@ -3,8 +3,6 @@ package com.worth.ifs.documentation;
 import com.worth.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
-import java.time.LocalDateTime;
-
 import static com.worth.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
@@ -24,7 +22,5 @@ public class AssessorFormInputResponseDocs {
             .withAssessment(2L)
             .withFormInput(3L)
             .withQuestion(4L)
-            .withFormInputMaxWordCount(100)
-            .withValue("message")
-            .withUpdatedDate(LocalDateTime.parse("2016-07-12T16:10:50.21"));
+            .withValue("message");
 }

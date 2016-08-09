@@ -29,10 +29,8 @@ public class AssessorFormInputResponseController {
         return assessorFormInputResponseService.getAllAssessorFormInputResponsesByAssessmentAndQuestion(assessmentId, questionId).toGetResponse();
     }
 
-    //public RestResult<Void> updateFormInputResponse(@PathVariable("formInputId") Long formInputId, @PathVariable("assessmentId") Long assessmentId,@Valid @RequestBody(required = false) AssessorFormInputResponseResource value) {
-
-    @RequestMapping(value = "/formInput/{formInputId}/assessment/{assessmentId}", method = RequestMethod.PUT)
-    public RestResult<Void> updateFormInputResponse(@PathVariable("formInputId") Long formInputId, @PathVariable("assessmentId") Long assessmentId,@Valid @RequestBody(required = false) AssessorFormInputResponseResource response) {
+    @RequestMapping(value = "", method = RequestMethod.PUT)
+    public RestResult<Void> updateFormInputResponse(@Valid @RequestBody(required = false) AssessorFormInputResponseResource response) {
         return assessorFormInputResponseService.updateFormInputResponse(response).toPutResponse();
     }
 }

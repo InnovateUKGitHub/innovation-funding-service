@@ -68,7 +68,7 @@ public class AssessorFormInputResponseControllerIntegrationTest extends BaseCont
                 .withFormInputMaxWordCount(20)
                 .withValue(newValue)
                 .build();
-        RestResult<Void> updateResult = controller.updateFormInputResponse(formInputId, assessmentId, updatedAssessorResponse);
+        RestResult<Void> updateResult = controller.updateFormInputResponse(updatedAssessorResponse);
         assertTrue(updateResult.isSuccess());
 
         RestResult<List<AssessorFormInputResponseResource>> allResponsesAfterResult = controller.getAllAssessorFormInputResponsesByAssessmentAndQuestion(assessmentId, questionId);

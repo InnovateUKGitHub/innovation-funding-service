@@ -60,7 +60,6 @@ import static java.util.stream.Collectors.toList;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -242,21 +241,16 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
     public void testUpdateFormInputResponse() throws Exception {
         String value = "Feedback";
         Long formInputId = 1L;
-        AssessorFormInputResponseResource assessorFormInputResponse = newAssessorFormInputResponseResource()
-                .withAssessment(ASSESSMENT_ID)
-                .withFormInput(formInputId)
-                .withValue(value)
-                .build();
-        when(assessorFormInputResponseService.updateFormInputResponse(assessorFormInputResponse)).thenReturn(serviceSuccess());
+        when(assessorFormInputResponseService.updateFormInputResponse(ASSESSMENT_ID, formInputId, value)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/{assessmentId}/formInput/{formInputId}", ASSESSMENT_ID, formInputId)
-                .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(assessorFormInputResponse)))
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("value", value))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("success", is("true")))
                 .andReturn();
 
-        verify(assessorFormInputResponseService, only()).updateFormInputResponse(assessorFormInputResponse);
+        verify(assessorFormInputResponseService, only()).updateFormInputResponse(ASSESSMENT_ID, formInputId, value);
     }
 
     @Test
@@ -266,19 +260,18 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         AssessorFormInputResponseResource assessorFormInputResponse = newAssessorFormInputResponseResource()
                 .withAssessment(ASSESSMENT_ID)
                 .withFormInput(formInputId)
-                .withFormInputMaxWordCount(3)
                 .withValue(value)
                 .build();
-        when(assessorFormInputResponseService.updateFormInputResponse(assessorFormInputResponse)).thenReturn(serviceFailure(FORM_WORD_LIMIT_EXCEEDED));
+        when(assessorFormInputResponseService.updateFormInputResponse(ASSESSMENT_ID, formInputId, value)).thenReturn(serviceFailure(FORM_WORD_LIMIT_EXCEEDED));
 
         MvcResult result = mockMvc.perform(post("/{assessmentId}/formInput/{formInputId}", ASSESSMENT_ID, formInputId)
-                .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(assessorFormInputResponse)))
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("value", value))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("success", is("false")))
                 .andReturn();
 
-        verify(assessorFormInputResponseService, only()).updateFormInputResponse(assessorFormInputResponse);
+        verify(assessorFormInputResponseService, only()).updateFormInputResponse(ASSESSMENT_ID, formInputId, value);
         String content = result.getResponse().getContentAsString();
         String jsonExpectedContent = "{\"success\":\"false\",\"validation_errors\":[\"The form word limit has been exceeded\"]}";
         Assert.assertEquals(jsonExpectedContent, content);
@@ -301,8 +294,8 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
                 .withValue("10","Feedback")
                 .build(2);
 
-        when(assessorFormInputResponseService.updateFormInputResponse(formResponses.get(0))).thenReturn(serviceSuccess());
-        when(assessorFormInputResponseService.updateFormInputResponse(formResponses.get(1))).thenReturn(serviceSuccess());
+        when(assessorFormInputResponseService.updateFormInputResponse(ASSESSMENT_ID,formInputIdScore,"10")).thenReturn(serviceSuccess());
+        when(assessorFormInputResponseService.updateFormInputResponse(ASSESSMENT_ID,formInputIdFeedback,"Feedback")).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/{assessmentId}/question/{questionId}", ASSESSMENT_ID, QUESTION_ID)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -313,8 +306,8 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
                 .andReturn();
 
         InOrder inOrder = inOrder(assessorFormInputResponseService);
-        inOrder.verify(assessorFormInputResponseService, calls(1)).updateFormInputResponse(formResponses.get(0));
-        inOrder.verify(assessorFormInputResponseService, calls(1)).updateFormInputResponse(formResponses.get(1));
+        inOrder.verify(assessorFormInputResponseService, calls(1)).updateFormInputResponse(ASSESSMENT_ID,formInputIdScore,"10");
+        inOrder.verify(assessorFormInputResponseService, calls(1)).updateFormInputResponse(ASSESSMENT_ID,formInputIdFeedback,"Feedback");
     }
 
     @Test
@@ -336,8 +329,8 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
                 .withValue("10","Feedback")
                 .build(2);
 
-        when(assessorFormInputResponseService.updateFormInputResponse(formResponses.get(0))).thenReturn(serviceSuccess());
-        when(assessorFormInputResponseService.updateFormInputResponse(formResponses.get(1))).thenReturn(serviceFailure(FORM_WORD_LIMIT_EXCEEDED));
+        when(assessorFormInputResponseService.updateFormInputResponse(ASSESSMENT_ID,formInputIdScore,"10")).thenReturn(serviceSuccess());
+        when(assessorFormInputResponseService.updateFormInputResponse(ASSESSMENT_ID,formInputIdFeedback,"Feedback")).thenReturn(serviceFailure(FORM_WORD_LIMIT_EXCEEDED));
 
         // For re-display of question view following the invalid data entry
         List<FormInputResource> applicationFormInputs = this.setupApplicationFormInputs(QUESTION_ID, FORM_INPUT_TYPES.get("textarea"));
@@ -353,8 +346,8 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
                 .andReturn();
 
         InOrder inOrder = inOrder(assessorFormInputResponseService);
-        inOrder.verify(assessorFormInputResponseService, calls(1)).updateFormInputResponse(formResponses.get(0));
-        inOrder.verify(assessorFormInputResponseService, calls(1)).updateFormInputResponse(formResponses.get(1));
+        inOrder.verify(assessorFormInputResponseService, calls(1)).updateFormInputResponse(ASSESSMENT_ID,formInputIdScore,"10");
+        inOrder.verify(assessorFormInputResponseService, calls(1)).updateFormInputResponse(ASSESSMENT_ID,formInputIdFeedback,"Feedback");
 
         Map<String, Object> modelMap = result.getModelAndView().getModel();
         AssessmentFeedbackViewModel model = (AssessmentFeedbackViewModel) modelMap.get("model");

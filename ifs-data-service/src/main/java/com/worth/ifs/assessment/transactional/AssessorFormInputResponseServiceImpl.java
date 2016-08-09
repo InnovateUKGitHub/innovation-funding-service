@@ -5,6 +5,8 @@ import com.worth.ifs.assessment.repository.AssessorFormInputResponseRepository;
 import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.form.resource.FormInputResource;
+import com.worth.ifs.form.transactional.FormInputService;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,9 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
 
     @Autowired
     private AssessorFormInputResponseMapper assessorFormInputResponseMapper;
+
+    @Autowired
+    private FormInputService formInputService;
 
     @Override
     public ServiceResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponses(Long assessmentId) {
@@ -72,12 +77,13 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
 
     private ServiceResult<Void> validateWordCount(AssessorFormInputResponseResource response) {
         String value = response.getValue();
+        FormInputResource formInputResource = formInputService.findFormInput(response.getFormInput()).getSuccessObject();
 
         if (value != null) {
             // clean any HTML markup from the value
             String cleaned = Jsoup.parse(value).text();
 
-            if (cleaned.split("\\s+").length > response.getFormInputMaxWordCount()) {
+            if (cleaned.split("\\s+").length > formInputResource.getWordCount()) {
                 return serviceFailure(new Error(FORM_WORD_LIMIT_EXCEEDED));
             }
         }

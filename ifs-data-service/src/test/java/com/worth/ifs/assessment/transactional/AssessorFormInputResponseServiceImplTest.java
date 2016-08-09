@@ -4,6 +4,7 @@ import com.worth.ifs.BaseUnitTestMocksTest;
 import com.worth.ifs.assessment.domain.AssessorFormInputResponse;
 import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.form.resource.FormInputResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -18,7 +19,9 @@ import static com.worth.ifs.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static com.worth.ifs.assessment.builder.AssessorFormInputResponseBuilder.newAssessorFormInputResponse;
 import static com.worth.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.form.builder.FormInputBuilder.newFormInput;
+import static com.worth.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static java.time.LocalDateTime.now;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.same;
@@ -90,18 +93,21 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
         AssessorFormInputResponseResource existingAssessorFormInputResponseResource = newAssessorFormInputResponseResource()
                 .withAssessment(assessmentId)
                 .withFormInput(formInputId)
-                .withFormInputMaxWordCount(10)
                 .withValue(oldValue)
                 .withUpdatedDate(oldUpdatedDate)
                 .build();
         AssessorFormInputResponseResource updatedAssessorFormInputResponseResource = newAssessorFormInputResponseResource()
                 .withAssessment(assessmentId)
                 .withFormInput(formInputId)
-                .withFormInputMaxWordCount(10)
                 .withValue(value)
+                .build();
+        FormInputResource formInput = newFormInputResource()
+                .withId(formInputId)
+                .withWordCount(10)
                 .build();
         ArgumentCaptor<AssessorFormInputResponse> argument = ArgumentCaptor.forClass(AssessorFormInputResponse.class);
 
+        when(formInputServiceMock.findFormInput(formInputId)).thenReturn(serviceSuccess(formInput));
         when(assessorFormInputResponseRepositoryMock.findByAssessmentIdAndFormInputId(assessmentId, formInputId)).thenReturn(existingAssessorFormInputResponse);
         when(assessorFormInputResponseMapperMock.mapToResource(same(existingAssessorFormInputResponse))).thenReturn(existingAssessorFormInputResponseResource);
 
@@ -133,9 +139,14 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
         AssessorFormInputResponseResource assessorFormInputResponseResource = newAssessorFormInputResponseResource()
                 .withAssessment(assessmentId)
                 .withFormInput(formInputId)
-                .withFormInputMaxWordCount(10)
                 .withValue(value)
                 .build();
+        FormInputResource formInput = newFormInputResource()
+                .withId(formInputId)
+                .withWordCount(10)
+                .build();
+        when(formInputServiceMock.findFormInput(formInputId)).thenReturn(serviceSuccess(formInput));
+
         ServiceResult<Void> result = assessorFormInputResponseService.updateFormInputResponse(assessorFormInputResponseResource);
         assertTrue(result.isSuccess());
 
@@ -154,6 +165,46 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
     }
 
     @Test
+    public void testUpdateFormInputResponse_noValue() throws Exception {
+        Long assessmentId = 1L;
+        Long formInputId = 2L;
+
+        AssessorFormInputResponseResource assessorFormInputResponseResource = newAssessorFormInputResponseResource()
+                .withAssessment(assessmentId)
+                .withFormInput(formInputId)
+                .build();
+        FormInputResource formInput = newFormInputResource()
+                .withId(formInputId)
+                .withWordCount(10)
+                .build();
+        when(formInputServiceMock.findFormInput(formInputId)).thenReturn(serviceSuccess(formInput));
+
+        ServiceResult<Void> result = assessorFormInputResponseService.updateFormInputResponse(assessorFormInputResponseResource);
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void testUpdateFormInputResponse_exceedsWordLimit() throws Exception {
+        Long assessmentId = 1L;
+        Long formInputId = 2L;
+        String value = "This is the feedback text";
+
+        AssessorFormInputResponseResource assessorFormInputResponseResource = newAssessorFormInputResponseResource()
+                .withAssessment(assessmentId)
+                .withFormInput(formInputId)
+                .withValue(value)
+                .build();
+        FormInputResource formInput = newFormInputResource()
+                .withId(formInputId)
+                .withWordCount(3)
+                .build();
+        when(formInputServiceMock.findFormInput(formInputId)).thenReturn(serviceSuccess(formInput));
+
+        ServiceResult<Void> result = assessorFormInputResponseService.updateFormInputResponse(assessorFormInputResponseResource);
+        assertTrue(result.isFailure());
+    }
+
+    @Test
     public void testUpdateFormInputResponse_sameAsExistingValue() throws Exception {
         Long assessmentId = 1L;
         Long formInputId = 2L;
@@ -164,18 +215,20 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
         AssessorFormInputResponseResource existingAssessorFormInputResponseResource = newAssessorFormInputResponseResource()
                 .withAssessment(assessmentId)
                 .withFormInput(formInputId)
-                .withFormInputMaxWordCount(10)
                 .withValue(oldValue)
                 .withUpdatedDate(oldUpdatedDate)
                 .build();
-
         AssessorFormInputResponseResource assessorFormInputResponseResource = newAssessorFormInputResponseResource()
                 .withAssessment(assessmentId)
                 .withFormInput(formInputId)
-                .withFormInputMaxWordCount(10)
                 .withValue(oldValue)
-                .withUpdatedDate(oldUpdatedDate)
                 .build();
+
+        FormInputResource formInput = newFormInputResource()
+                .withId(formInputId)
+                .withWordCount(10)
+                .build();
+        when(formInputServiceMock.findFormInput(formInputId)).thenReturn(serviceSuccess(formInput));
 
         ArgumentCaptor<AssessorFormInputResponse> argument = ArgumentCaptor.forClass(AssessorFormInputResponse.class);
 
