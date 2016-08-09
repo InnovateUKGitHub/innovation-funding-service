@@ -1,37 +1,11 @@
 package com.worth.ifs.competition.transactional;
 
-import static com.worth.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT_EDITABLE;
-import static com.worth.ifs.commons.error.CommonFailureKeys.COMPETITION_NO_TEMPLATE;
-import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
-import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.competition.transactional.CompetitionServiceImpl.COMPETITION_CLASS_NAME;
-
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
-import com.worth.ifs.application.repository.QuestionRepository;
-import com.worth.ifs.commons.error.Error;
-import com.worth.ifs.commons.service.ServiceFailure;
-import com.worth.ifs.form.repository.FormInputRepository;
-import com.worth.ifs.form.resource.FormInputScope;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
-
+import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.category.resource.CategoryType;
 import com.worth.ifs.category.transactional.CategoryLinkService;
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.mapper.CompetitionMapper;
@@ -47,7 +21,30 @@ import com.worth.ifs.competitiontemplate.domain.QuestionTemplate;
 import com.worth.ifs.competitiontemplate.domain.SectionTemplate;
 import com.worth.ifs.competitiontemplate.repository.CompetitionTemplateRepository;
 import com.worth.ifs.form.domain.FormInput;
+import com.worth.ifs.form.repository.FormInputRepository;
+import com.worth.ifs.form.resource.FormInputScope;
 import com.worth.ifs.transactional.BaseTransactionalService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import static com.worth.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT_EDITABLE;
+import static com.worth.ifs.commons.error.CommonFailureKeys.COMPETITION_NO_TEMPLATE;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.competition.transactional.CompetitionServiceImpl.COMPETITION_CLASS_NAME;
 
 
 /**
@@ -179,7 +176,6 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 		CompetitionTemplate template = competitionTemplateRepository.findByCompetitionTypeId(competitionTypeId);
 		Competition competition = competitionRepository.findById(competitionId);
 
-        //Clean every time a different competition type is selected - this function is called
         cleanUpCompetitionSections(competition);
 
         if(competition == null || !competition.getCompetitionStatus().equals(Status.COMPETITION_SETUP)) {
@@ -268,8 +264,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 			question.setSection(section);
             question.setQuestionNumber(questionTemplate.getQuestionNumber());
 
-            // save it to get an question id for form input objects
-			questionRepository.save(question);
+            questionRepository.save(question);
 
             question.setFormInputs(createFormInputs(competition, question, questionTemplate.getFormInputTemplates()));
             formInputRepository.save(question.getFormInputs());

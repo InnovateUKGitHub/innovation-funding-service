@@ -4,6 +4,9 @@ import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.Min;
 
+/**
+ * View model where all information is for editing questions
+ */
 public class Question {
     private Long id;
     private String number;
