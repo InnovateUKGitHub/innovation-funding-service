@@ -4,10 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.commons.error.CommonFailureKeys;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.error.exception.*;
-import com.worth.ifs.commons.service.BaseEitherBackedResult;
-import com.worth.ifs.commons.service.ExceptionThrowingFunction;
-import com.worth.ifs.commons.service.FailingOrSucceedingResult;
-import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.commons.service.*;
 import com.worth.ifs.util.Either;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -18,6 +15,7 @@ import org.springframework.web.client.HttpStatusCodeException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
@@ -49,6 +47,17 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
     public RestResult(Either<RestFailure, T> result, HttpStatus successfulStatusCode) {
         super(result);
         this.successfulStatusCode = successfulStatusCode;
+    }
+
+
+    @Override
+    public <R> RestResult<R> andOnSuccess(Supplier<FailingOrSucceedingResult<R, RestFailure>> successHandler) {
+        return (RestResult<R>) super.andOnSuccess(successHandler);
+    }
+
+    @Override
+    public <R> RestResult<R> andOnSuccessReturn(Supplier<R> successHandler) {
+        return (RestResult<R>) super.andOnSuccessReturn(successHandler);
     }
 
     @Override
