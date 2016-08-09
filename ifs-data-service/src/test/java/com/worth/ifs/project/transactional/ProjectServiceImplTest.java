@@ -928,6 +928,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                                                                         Supplier<ServiceResult<Boolean>> getConditionFn) {
         ProjectUser projectUserToSet = newProjectUser()
                 .withId(1L)
+                .withUser(newUser().withid(1L).build())
                 .withRole(projectManagerRole)
                 .build();
         List<ProjectUser> projectUsers = new ArrayList<>();

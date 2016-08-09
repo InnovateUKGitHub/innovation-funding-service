@@ -244,7 +244,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
              return serviceFailure(new Error(PROJECT_SETUP_OTHER_DOCUMENTS_MUST_BE_UPLOADED_BEFORE_SUBMIT));
         }
         return projectManager.isPresent()
-                && projectManager.get().getId().equals(userId) ? serviceSuccess(true)
+                && projectManager.get().getUser().getId().equals(userId) ? serviceSuccess(true)
                 : serviceFailure(new Error(PROJECT_SETUP_OTHER_DOCUMENTS_CAN_ONLY_SUBMITTED_BY_PROJECT_MANAGER));
 
     }
