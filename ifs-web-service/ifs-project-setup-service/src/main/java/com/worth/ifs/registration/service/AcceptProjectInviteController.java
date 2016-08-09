@@ -2,6 +2,7 @@ package com.worth.ifs.registration.service;
 
 import com.worth.ifs.BaseController;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
@@ -20,10 +21,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.function.Supplier;
 
+import static com.worth.ifs.commons.error.Error.globalError;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.invite.constant.InviteStatusConstants.SEND;
 import static com.worth.ifs.util.CookieUtil.getCookieValue;
@@ -52,7 +52,6 @@ public class AcceptProjectInviteController extends BaseController {
     private static final String ACCEPT_INVITE_USER_EXIST_CONFIRM_MAPPING = "/registration/accept-invite-user-exist-confirm";
 
     private static final String ACCEPT_INVITE_USER_EXISTS_BUT_NOT_LOGGED_IN_VIEW = "project/registration/accept-invite-user-exists-but-not-logged-in";
-    private static final String ACCEPT_INVITE_ALREADY_ACCEPTED_VIEW = "project/registration/accept-invite-already-accepted";
     private static final String ACCEPT_INVITE_SHOW_PROJECT = "project/registration/accept-invite-show-project";
     private static final String ACCEPT_INVITE_FAILURE = "project/registration/accept-invite-failure";
 
@@ -68,28 +67,19 @@ public class AcceptProjectInviteController extends BaseController {
             Model model,
             @ModelAttribute("loggedInUser") UserResource loggedInUser) {
         return find(inviteByHash(hash), inviteOrganisationByHash(hash), checkUserExistsByHash(hash)).andOnSuccess((invite, inviteOrganisation, userExists) -> {
-            if (invite.getStatus().equals(SEND)) {
-                saveToCookie(response, INVITE_HASH, hash);
-                if (userExists && loggedInUser == null) {
-                    return restSuccess(ACCEPT_INVITE_USER_EXISTS_BUT_NOT_LOGGED_IN_VIEW);
-                } else if (userExists) {
-                    return handleUserExistsAndAUserIsLoggedIn(loggedInUser, invite, model);
-                } else {
-                    return restSuccess("redirect:" + ACCEPT_INVITE_USER_DOES_NOT_YET_EXIST_SHOW_PROJECT_MAPPING);
-                }
+            ValidationMessages errors = errorMessages(loggedInUser, invite);
+            if (errors.hasErrors()) {
+                return populateModelWithErrorsAndReturnErrorView(errors, model);
+            }
+            saveToCookie(response, INVITE_HASH, hash);
+            if (userExists && loggedInUser == null) {
+                return restSuccess(ACCEPT_INVITE_USER_EXISTS_BUT_NOT_LOGGED_IN_VIEW);
+            } else if (userExists) {
+                return restSuccess("redirect:" + ACCEPT_INVITE_USER_EXIST_SHOW_PROJECT_MAPPING);
             } else {
-                return restSuccess(ACCEPT_INVITE_ALREADY_ACCEPTED_VIEW);
+                return restSuccess("redirect:" + ACCEPT_INVITE_USER_DOES_NOT_YET_EXIST_SHOW_PROJECT_MAPPING);
             }
         }).getSuccessObject();
-    }
-
-    private RestResult<String> handleUserExistsAndAUserIsLoggedIn(UserResource loggedInUser, InviteResource invite, Model model) {
-        Map<String, String> errors = errorMessages(loggedInUser, invite);
-        if (!errors.isEmpty()) {
-            return populateModelWithErrorsAndReturnErrorView(errors, model);
-        } else {
-            return restSuccess("redirect:" + ACCEPT_INVITE_USER_EXIST_SHOW_PROJECT_MAPPING);
-        }
     }
 
     //==================================
@@ -112,8 +102,8 @@ public class AcceptProjectInviteController extends BaseController {
         String hash = getCookieValue(request, INVITE_HASH);
         return find(inviteByHash(hash), inviteOrganisationByHash(hash))
                 .andOnSuccess((invite, inviteOrganisation) -> {
-                    Map<String, String> errors = errorMessages(loggedInUser, invite);
-                    if (!errors.isEmpty()) {
+                    ValidationMessages errors = errorMessages(loggedInUser, invite);
+                    if (errors.hasErrors()) {
                         return populateModelWithErrorsAndReturnErrorView(errors, model);
                     }
                     return organisationRestService.getOrganisationByIdForAnonymousUserFlow(inviteOrganisation.getOrganisation())
@@ -132,17 +122,18 @@ public class AcceptProjectInviteController extends BaseController {
     //======================================================
 
     @RequestMapping(value = ACCEPT_INVITE_USER_EXIST_CONFIRM_MAPPING, method = RequestMethod.GET)
-    public String acceptInviteUserDoesExistConfirm(HttpServletRequest request) {
+    public String acceptInviteUserDoesExistConfirm(HttpServletRequest request, @ModelAttribute("loggedInUser") UserResource loggedInUser, Model model) {
         String hash = getCookieValue(request, INVITE_HASH);
         return find(inviteByHash(hash), inviteOrganisationByHash(hash), userByHash(hash)).andOnSuccess((invite, inviteOrganisation, userExists) -> {
-                    if (invite.getStatus().equals(SEND)) {
-                        // Add the user to the project
-                        return projectRestService.addPartner(1L, userExists.getId(), inviteOrganisation.getOrganisation())
-                                .andOnSuccess(() -> inviteRestService.acceptInvite(hash, userExists.getId()))
-                                .andOnSuccessReturn(() -> "redirect:/");
-                    } else {
-                        return restSuccess("TODO - fail");
+                    ValidationMessages errors = errorMessages(loggedInUser, invite);
+                    if (errors.hasErrors()) {
+                        return populateModelWithErrorsAndReturnErrorView(errors, model);
                     }
+                    // Add the user to the project
+                    return projectRestService.addPartner(1L, userExists.getId(), inviteOrganisation.getOrganisation())
+                            .andOnSuccess(() -> inviteRestService.acceptInvite(hash, userExists.getId()))
+                            .andOnSuccessReturn(() -> "redirect:/");
+
                 }
         ).getSuccessObject();
     }
@@ -152,17 +143,19 @@ public class AcceptProjectInviteController extends BaseController {
     // Code to validate fundamental problems with the invite
     //======================================================
 
-    private RestResult<String> populateModelWithErrorsAndReturnErrorView(Map<String, String> errors, Model model) {
-        errors.forEach((messageKey, messageValue) -> model.addAttribute(messageKey, messageValue));
+    private RestResult<String> populateModelWithErrorsAndReturnErrorView(ValidationMessages errors, Model model) {
+        model.addAttribute("failureMessageKeys", errors.getErrors());
         return restSuccess(ACCEPT_INVITE_FAILURE);
     }
 
-    private Map<String, String> errorMessages(UserResource loggedInUser, InviteResource invite) {
-        Map<String, String> errorMessages = new HashMap<>();
-        if (loggedInUser != null && !invite.getEmail().equalsIgnoreCase(loggedInUser.getEmail())) {
-            errorMessages.put("failureMessageKey", "registration.LOGGED_IN_WITH_OTHER_ACCOUNT");
+    private ValidationMessages errorMessages(UserResource loggedInUser, InviteResource invite) {
+        ValidationMessages errors = new ValidationMessages();
+        if (!invite.getStatus().equals(SEND)) {
+            errors.addError(globalError("registration.INVITE_ALREADY_ACCEPTED"));
+        } else if (loggedInUser != null && !invite.getEmail().equalsIgnoreCase(loggedInUser.getEmail())) {
+            errors.addError(globalError("registration.LOGGED_IN_WITH_OTHER_ACCOUNT"));
         }
-        return errorMessages;
+        return errors;
     }
 
     private Supplier<RestResult<InviteResource>> inviteByHash(String hash) {

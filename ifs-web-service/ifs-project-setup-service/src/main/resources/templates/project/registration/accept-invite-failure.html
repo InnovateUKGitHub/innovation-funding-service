@@ -12,7 +12,9 @@
     <div th:include="fragments/layout :: main-content-start" th:remove="tag"/>
 
     <h1 class="heading-large" th:text="#{registration.INVITE_FAILURE}"></h1>
-    <p th:text="#{${failureMessageKey}}"></p>
+    <div th:each="failureMessageKey:${failureMessageKeys}">
+        <p th:text="#{${failureMessageKey.errorKey}}"></p>
+    </div>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag"/>
 </main>
