@@ -6,6 +6,7 @@ import com.worth.ifs.invite.domain.CompetitionInvite;
 import com.worth.ifs.invite.repository.CompetitionInviteRepository;
 import com.worth.ifs.invite.resource.CompetitionInviteResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
@@ -13,6 +14,7 @@ import static com.worth.ifs.util.EntityLookupCallbacks.find;
 /**
  * Service for managing {@link com.worth.ifs.invite.domain.CompetitionInvite}s.
  */
+@Service
 public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     @Autowired
@@ -20,6 +22,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     @Autowired
     private CompetitionInviteMapper mapper;
+
 
     @Override
     public ServiceResult<CompetitionInviteResource> openInvite(String inviteHash) {

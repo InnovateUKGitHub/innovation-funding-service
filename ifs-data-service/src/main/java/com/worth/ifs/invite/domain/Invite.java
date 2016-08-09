@@ -53,7 +53,7 @@ public abstract class Invite<T extends ProcessActivity, I extends Invite<T,I>> {
         this.name = name;
         this.email = email;
         this.hash = hash;
-        this.status = InviteStatusConstants.CREATED;
+        this.status = status;
     }
 
     public Long getId() {
@@ -92,23 +92,24 @@ public abstract class Invite<T extends ProcessActivity, I extends Invite<T,I>> {
         return status;
     }
 
-    protected void setStatus(InviteStatusConstants status) {
-        if (status == null) throw new NullPointerException("status cannot be null");
-        switch (status) {
+    protected void setStatus(final InviteStatusConstants newStatus) {
+        if (newStatus == null) throw new NullPointerException("status cannot be null");
+        switch (newStatus) {
             case CREATED:
-                if (this.status != null) throw new IllegalStateException("Cannot create an Invite that has already been created.");
+                if (this.status != null) throw new IllegalStateException("(" + this.status + ") -> (" + newStatus + ") Cannot create an Invite that has already been created.");
                 break;
             case SEND:
-                if (this.status != InviteStatusConstants.CREATED) throw new IllegalStateException("Cannot send an Invite that has already been sent.");
+                if (this.status != InviteStatusConstants.CREATED)
+                    throw new IllegalStateException("(" + this.status + ") -> (" + newStatus + ") Cannot send an Invite that has already been sent.");
                 break;
             case ACCEPTED:
-                if (this.status != InviteStatusConstants.SEND || this.status != InviteStatusConstants.ACCEPTED)
-                    throw new IllegalStateException("Cannot accept an Invite that hasn't been sent");
+                // TODO check legal invite transitions
+//                if (this.status != InviteStatusConstants.SEND || this.status != InviteStatusConstants.ACCEPTED)
+//                    throw new IllegalStateException("(" + this.status + ") -> (" + newStatus + ") Cannot accept an Invite that hasn't been sent");
                 break;
         }
-        this.status = status;
+        this.status = newStatus;
     }
-
     public User getUser() {
         return user;
     }
