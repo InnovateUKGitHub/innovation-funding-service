@@ -336,15 +336,7 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         CompetitionResource projectSetup = createWithDates(sixDaysAgo, fiveDaysAgo, fourDaysAgo, threeDaysAgo, twoDaysAgo, oneDayAgo);
         assertThat(projectSetup.getCompetitionStatus(), equalTo(CompetitionResource.Status.PROJECT_SETUP));
 
-        CompetitionCountResource counts = null;
-        try {
-
-            counts = controller.count().getSuccessObjectOrThrowException();
-        }
-        catch(Exception ex){
-            ex.printStackTrace();
-        }
-//        CompetitionCountResource counts = controller.count().getSuccessObjectOrThrowException();
+        CompetitionCountResource counts = controller.count().getSuccessObjectOrThrowException();;
 
         List<CompetitionResource> liveCompetitions = controller.live().getSuccessObjectOrThrowException();
 
