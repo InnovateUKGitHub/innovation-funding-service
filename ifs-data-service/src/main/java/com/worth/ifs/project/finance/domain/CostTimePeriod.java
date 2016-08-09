@@ -29,14 +29,17 @@ public class CostTimePeriod {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Cost cost;
 
+    @Column(nullable = false)
     private Integer offsetAmount;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private TimeUnit offsetUnit;
 
+    @Column(nullable = false)
     private Integer durationAmount;
 
     @Enumerated(EnumType.STRING)

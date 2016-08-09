@@ -1,8 +1,7 @@
 package com.worth.ifs.project.finance.repository;
 
 import com.worth.ifs.BaseRepositoryIntegrationTest;
-import com.worth.ifs.project.finance.domain.Cost;
-import com.worth.ifs.project.finance.domain.CostTimePeriod;
+import com.worth.ifs.project.finance.domain.*;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
@@ -11,6 +10,7 @@ import java.math.BigDecimal;
 
 import static com.worth.ifs.project.finance.domain.CostTimePeriod.TimeUnit.DAY;
 import static com.worth.ifs.project.finance.domain.CostTimePeriod.TimeUnit.YEAR;
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.*;
 
 /**
@@ -23,6 +23,9 @@ public class CostRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
     protected void setRepository(CostRepository repository) {
         this.repository = repository;
     }
+
+    @Autowired
+    private CostCategoryTypeRepository costCategoryTypeRepository;
 
     @Test
     @Rollback
@@ -42,6 +45,9 @@ public class CostRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
 
         // assert that there are no temporal parts to this cost
         assertFalse(retrieved.getCostTimePeriod().isPresent());
+
+        // assert that there are no categorization parts to this cost
+        assertFalse(retrieved.getCostCategory().isPresent());
     }
 
     @Test
@@ -85,5 +91,31 @@ public class CostRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
         assertEquals(DAY, period.getOffsetUnit());
         assertEquals(Integer.valueOf(4), period.getDurationAmount());
         assertEquals(YEAR, period.getDurationUnit());
+    }
+
+    @Test
+    @Rollback
+    public void test_createCostWithCategorization() {
+
+        CostCategory costCategory = new CostCategory("Labour");
+        CostCategoryGroup costCategoryGroup = new CostCategoryGroup("Industrial Cost Categories group", singletonList(costCategory));
+        CostCategoryType newCostCategoryType = new CostCategoryType("CR&D Industrial Cost Categories", costCategoryGroup);
+
+        costCategoryTypeRepository.save(newCostCategoryType);
+
+        // save a new Cost
+        Cost newCost = new Cost(new BigDecimal("12.6"), costCategory);
+        Cost saved = repository.save(newCost);
+
+        // clear the Hibernate cache
+        flushAndClearSession();
+
+        // and retrieve from the db again - ensure its value is retained
+        Cost retrieved = repository.findOne(saved.getId());
+        assertEquals(new BigDecimal("12.60"), retrieved.getValue());
+
+        // ensure the categorization aspect is as expected
+        assertTrue(retrieved.getCostCategory().isPresent());
+        assertEquals(costCategory.getId(), retrieved.getCostCategory().get().getId());
     }
 }

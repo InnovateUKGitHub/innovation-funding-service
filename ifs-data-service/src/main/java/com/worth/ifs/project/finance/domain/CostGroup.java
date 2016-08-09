@@ -20,6 +20,7 @@ public class CostGroup {
     @OneToMany(cascade = ALL, mappedBy = "costGroup", orphanRemoval = true)
     private List<Cost> costs = new ArrayList<>();
 
+    @Column(nullable = false)
     private String description;
 
     CostGroup() {

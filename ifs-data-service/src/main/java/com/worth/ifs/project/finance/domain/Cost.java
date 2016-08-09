@@ -28,6 +28,14 @@ public class Cost {
     @OneToOne(cascade = ALL, mappedBy = "cost", orphanRemoval = true)
     private CostTimePeriod costTimePeriod;
 
+    @ManyToOne
+    @JoinTable(
+            name = "cost_categorization",
+            joinColumns = @JoinColumn(name = "cost_id"),
+            inverseJoinColumns = @JoinColumn(name = "cost_category_id")
+    )
+    private CostCategory costCategory;
+
     Cost() {
         // for ORM use
     }
@@ -39,6 +47,11 @@ public class Cost {
     public Cost(BigDecimal value, CostTimePeriod costTimePeriod) {
         this.value = value;
         this.setCostTimePeriod(costTimePeriod);
+    }
+
+    public Cost(BigDecimal value, CostCategory costCategory) {
+        this.value = value;
+        this.costCategory = costCategory;
     }
 
     public Long getId() {
@@ -70,5 +83,14 @@ public class Cost {
     public void setCostTimePeriod(CostTimePeriod costTimePeriod) {
         this.costTimePeriod = costTimePeriod;
         this.costTimePeriod.setCost(this);
+    }
+
+    public Optional<CostCategory> getCostCategory() {
+        return Optional.ofNullable(costCategory);
+    }
+
+    // for ORM backref setting
+    public void setCostCategory(CostCategory costCategory) {
+        this.costCategory = costCategory;
     }
 }

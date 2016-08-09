@@ -16,9 +16,10 @@ public class CostCategoryType {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Column(nullable = false)
     private String name;
 
-    @ManyToOne(cascade = ALL)
+    @ManyToOne(cascade = ALL, optional = false)
     private CostCategoryGroup costCategoryGroup;
 
     CostCategoryType() {
