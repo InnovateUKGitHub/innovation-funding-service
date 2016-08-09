@@ -32,7 +32,7 @@ public class RegistrationForm {
     })
     private String password;
 
-    @NotEmpty(message = "validation.standard.retypedPassword.required")
+    @NotEmpty(message = "validation.standard.retypedpassword.required")
     @Size.List ({
         @Size(min=10, message="{validation.standard.password.length.min}"),
         @Size(max=30, message="{validation.standard.password.length.max}"),
@@ -52,7 +52,7 @@ public class RegistrationForm {
     })
     private String firstName;
 
-    @NotEmpty(message = "{validation.standard.lastName.required}")
+    @NotEmpty(message = "{validation.standard.lastname.required}")
     @Pattern(regexp = "[\\p{L} -]*", message = "{validation.standard.lastname.required}")
     @Size.List ({
         @Size(min=2, message="{validation.standard.lastname.length.min}"),
