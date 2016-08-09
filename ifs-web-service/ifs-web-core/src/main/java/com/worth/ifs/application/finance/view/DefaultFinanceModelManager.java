@@ -1,12 +1,5 @@
 package com.worth.ifs.application.finance.view;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
-
 import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.form.Form;
 import com.worth.ifs.application.resource.ApplicationResource;
@@ -17,14 +10,20 @@ import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.application.service.QuestionService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
-import com.worth.ifs.finance.resource.category.CostCategory;
+import com.worth.ifs.finance.resource.category.FinanceRowCostCategory;
 import com.worth.ifs.finance.resource.category.LabourCostCategory;
-import com.worth.ifs.finance.resource.cost.CostItem;
-import com.worth.ifs.finance.resource.cost.CostType;
+import com.worth.ifs.finance.resource.cost.FinanceRowItem;
+import com.worth.ifs.finance.resource.cost.FinanceRowType;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.service.FormInputService;
 import com.worth.ifs.user.resource.OrganisationTypeResource;
 import com.worth.ifs.user.service.OrganisationTypeRestService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
+
+import java.util.List;
 
 /**
  * Managing all the view attributes for the finances
@@ -95,10 +94,10 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
         if(!application.hasBeenSubmitted() && competition.isOpen()) {
 	        // add cost for each cost question
 	        for(QuestionResource question: costsQuestions) {
-	        	CostType costType = costTypeForQuestion(question);
+	        	FinanceRowType costType = costTypeForQuestion(question);
 	        	if(costType != null) {
-		        	CostCategory category = applicationFinanceResource.getFinanceOrganisationDetails(costType);
-		            CostItem costItem = financeHandler.getFinanceFormHandler(organisationType).addCostWithoutPersisting(applicationId, userId, question.getId());
+		        	FinanceRowCostCategory category = applicationFinanceResource.getFinanceOrganisationDetails(costType);
+		            FinanceRowItem costItem = financeHandler.getFinanceFormHandler(organisationType).addCostWithoutPersisting(applicationId, userId, question.getId());
 		        	category.addCost(costItem);
 	        	}
 	        }
@@ -107,7 +106,7 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
         return applicationFinanceResource;
     }
 
-    private CostType costTypeForQuestion(QuestionResource question) {
+    private FinanceRowType costTypeForQuestion(QuestionResource question) {
     	List<FormInputResource> formInputs = formInputService.findApplicationInputsByQuestion(question.getId());
     	if(formInputs.isEmpty()) {
     		return null;
@@ -118,7 +117,7 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
         		continue;
         	}
         	try {
-        		return CostType.fromString(formInputTypeName);
+        		return FinanceRowType.fromString(formInputTypeName);
         	} catch(IllegalArgumentException e) {
         		continue;
         	}
@@ -127,10 +126,10 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
 	}
 
 	@Override
-    public void addCost(Model model, CostItem costItem, long applicationId, long userId, Long questionId, String costType) {
-        if (CostType.fromString(costType).equals(CostType.LABOUR)) {
+    public void addCost(Model model, FinanceRowItem costItem, long applicationId, long userId, Long questionId, String costType) {
+        if (FinanceRowType.fromString(costType).equals(FinanceRowType.LABOUR)) {
             ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(userId, applicationId);
-            LabourCostCategory costCategory = (LabourCostCategory) applicationFinanceResource.getFinanceOrganisationDetails(CostType.LABOUR);
+            LabourCostCategory costCategory = (LabourCostCategory) applicationFinanceResource.getFinanceOrganisationDetails(FinanceRowType.LABOUR);
             model.addAttribute("costCategory", costCategory);
         }
 
