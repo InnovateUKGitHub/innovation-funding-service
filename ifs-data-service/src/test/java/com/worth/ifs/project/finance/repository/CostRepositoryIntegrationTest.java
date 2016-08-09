@@ -32,7 +32,7 @@ public class CostRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
     public void test_createStandaloneCost() {
 
         // save a new Cost
-        Cost newCost = new Cost(new BigDecimal("12.6"));
+        Cost newCost = new Cost("12.6");
         Cost saved = repository.save(newCost);
 
         // clear the Hibernate cache
@@ -55,7 +55,7 @@ public class CostRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
     public void test_createStandaloneCost_truncatedDecimalPart() {
 
         // save a new Cost
-        Cost newCost = new Cost(new BigDecimal("12.656"));
+        Cost newCost = new Cost("12.656");
         Cost saved = repository.save(newCost);
 
         // clear the Hibernate cache

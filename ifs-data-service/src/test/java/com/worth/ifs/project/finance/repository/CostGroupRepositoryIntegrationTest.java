@@ -34,9 +34,9 @@ public class CostGroupRepositoryIntegrationTest extends BaseRepositoryIntegratio
     public void test_createCostGroup() {
 
         List<Cost> costs = asList(
-                new Cost(new BigDecimal("12.6")),
-                new Cost(new BigDecimal("13")),
-                new Cost(new BigDecimal("14.567"))
+                new Cost("12.6"),
+                new Cost("13"),
+                new Cost("14.567")
         );
 
         CostGroup newCostGroup = new CostGroup("My collection of costs", costs);
@@ -74,9 +74,9 @@ public class CostGroupRepositoryIntegrationTest extends BaseRepositoryIntegratio
     public void test_updateCostGroup() {
 
         List<Cost> costs = asList(
-                new Cost(new BigDecimal("12.6")),
-                new Cost(new BigDecimal("13")),
-                new Cost(new BigDecimal("14.567"))
+                new Cost("12.6"),
+                new Cost("13"),
+                new Cost("14.567")
         );
 
         CostGroup newCostGroup = new CostGroup("My collection of costs", costs);
@@ -117,9 +117,9 @@ public class CostGroupRepositoryIntegrationTest extends BaseRepositoryIntegratio
     public void test_deleteCostGroupWithOrphanRemoval() {
 
         List<Cost> costs = asList(
-                new Cost(new BigDecimal("12.6")),
-                new Cost(new BigDecimal("13")),
-                new Cost(new BigDecimal("14.567"))
+                new Cost("12.6"),
+                new Cost("13"),
+                new Cost("14.567")
         );
 
         CostGroup newCostGroup = new CostGroup("My collection of costs", costs);

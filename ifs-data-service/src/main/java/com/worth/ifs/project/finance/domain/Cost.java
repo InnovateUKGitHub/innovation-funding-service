@@ -40,6 +40,10 @@ public class Cost {
         // for ORM use
     }
 
+    public Cost(String value) {
+        this(new BigDecimal(value));
+    }
+
     public Cost(BigDecimal value) {
         this.value = value;
     }
