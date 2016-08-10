@@ -23,9 +23,7 @@ Resource          ../../../resources/keywords/User_actions.robot
 *** Test Cases ***
 Assessment summary should show questions as incomplete
     [Documentation]    INFUND-550
-    Given the user navigates to the page    ${Assessment_overview_9}
-    When The user clicks the button/link    jQuery=.button:contains(Review assessment)
-    And The user should see the text in the page    Assessment summary
+    The assessor navigates to the summary page
     Then the collapsible button should contain    jQuery=button:contains(1. How many)    Incomplete
     And the collapsible button should contain    jQuery=button:contains(2. Mediums)    Incomplete
     And the collapsible button should contain    jQuery=button:contains(3. Preference)    Incomplete
@@ -171,7 +169,7 @@ Finance summary
 
 Validation check in the Reject application modal
     [Documentation]    INFUND-3540
-    [Tags]
+    [Tags]    Failing
     Given the user navigates to the page    ${Assessment_overview_11}
     And the user clicks the button/link    jQuery=.summary:contains("Unable to assess this application")
     And the user clicks the button/link    link=Reject this application
@@ -181,6 +179,39 @@ Validation check in the Reject application modal
     Then the user selects the option from the drop-down menu    ${empty}    id=rejectReason    # Note that using this empty option will actually select the 'Select a reason' option at the top of the dropdown menu
     And the user should see an error    This field cannot be left blank
     Then the user enters text to a text field    id=rejectComment    Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc, quis gravida magna mi a libero. Fusce vulputate eleifend sapien. Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. Cras ultricies mi eu turpis hendrerit fringilla. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; In ac dui quis mi consectetuer lacinia. Nam pretium turpis et arcu. Duis arcu tortor, suscipit eget, imperdiet nec, imperdiet iaculis, ipsum. Sed aliquam ultrices mauris. Integer ante arcu, accumsan a, consectetuer eget, posuere ut, mauris. Praesent adipiscing. Phasellus ullamcorper ipsum rutrum nunc. Nunc nonummy metus. Vestibulum volutpat pretium libero. Cras id dui. Aenean ut
+
+Assessment summary should show questions as complete
+    [Documentation]    INFUND-550
+    Given the user adds score and feedback for every question
+    When The assessor navigates to the summary page
+    Then the collapsible button should contain    jQuery=button:contains(1. How many)    Complete
+    And the collapsible button should contain    jQuery=button:contains(2. Mediums)    Complete
+    And the collapsible button should contain    jQuery=button:contains(3. Preference)    Complete
+    And the collapsible button should contain    jQuery=button:contains(4. Attire)    Complete
+    And the collapsible button should contain    jQuery=button:contains(Scope)    Complete
+
+Assessment summary should show questions the scores
+    [Documentation]    INFUND-550
+    Then The user should see the text in the page    Total: 50/50
+    And The user should see the text in the page    100%
+    And the table should show the correct scores
+    And the collapsible button should contain    jQuery=button:contains(1. How many)    Score: 20/20
+    And the collapsible button should contain    jQuery=button:contains(2. Mediums)    Score: 10/10
+    And the collapsible button should contain    jQuery=button:contains(3. Preference)    Score: 10/10
+    And the collapsible button should contain    jQuery=button:contains(4. Attire)    Score: 10/10
+
+Assessment summary should show the feedback in each section
+    [Documentation]    INFUND-550
+    When The user clicks the button/link    jQuery=button:contains(1. How many)
+    Then The user should see the text in the page    Testing how many feedback text
+    When The user clicks the button/link    jQuery=button:contains(2. Mediums)
+    Then The user should see the text in the page    Testing Mediums feedback text
+    When The user clicks the button/link    jQuery=button:contains(3. Preference)
+    Then The user should see the text in the page    Testing Preferences feedback text
+    When The user clicks the button/link    jQuery=button:contains(4. Attire)
+    Then The user should see the text in the page    Testing Attire feedback text
+    When The user clicks the button/link    jQuery=button:contains(Scope)
+    Then The user should see the text in the page    Testing scope feedback text
 
 *** Keywords ***
 the user clicks next and goes to the page
@@ -213,3 +244,37 @@ the project cost breakdown total should be correct
 the collapsible button should contain
     [Arguments]    ${BUTTON}    ${TEXT}
     Element Should Contain    ${BUTTON}    ${TEXT}
+
+the user adds score and feedback for every question
+    Given the user navigates to the page    ${Assessment_overview_9}
+    And the user clicks the button/link    link=Scope
+    When the user selects the option from the drop-down menu    Technical feasibility studies    id=research-category
+    And the user clicks the button/link    jQuery=label:contains(Yes)
+    And The user enters text to a text field    css=#form-input-193 .editor    Testing scope feedback text
+    wait until page contains    Saving
+    the user clicks the button/link    css=.next
+    the user selects the option from the drop-down menu    20    id=assessor-question-score
+    the user enters text to a text field    css=#form-input-195 .editor    Testing how many feedback text
+    wait until page contains    Saving
+    the user clicks the button/link    css=.next
+    the user selects the option from the drop-down menu    10    id=assessor-question-score
+    the user enters text to a text field    css=#form-input-219 .editor    Testing Mediums feedback text
+    wait until page contains    Saving
+    the user clicks the button/link    css=.next
+    the user selects the option from the drop-down menu    10    id=assessor-question-score
+    the user enters text to a text field    css=#form-input-222 .editor    Testing Preferences feedback text
+    wait until page contains    Saving
+    the user clicks the button/link    css=.next
+    the user selects the option from the drop-down menu    10    id=assessor-question-score
+    the user enters text to a text field    css=#form-input-225 .editor    Testing Attire feedback text
+
+The assessor navigates to the summary page
+    Given the user navigates to the page    ${Assessment_overview_9}
+    When The user clicks the button/link    jQuery=.button:contains(Review assessment)
+    And The user should see the text in the page    Assessment summary
+
+the table should show the correct scores
+    Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(1)    20
+    Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(2)    10
+    Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(3)    10
+    Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(4)    10
