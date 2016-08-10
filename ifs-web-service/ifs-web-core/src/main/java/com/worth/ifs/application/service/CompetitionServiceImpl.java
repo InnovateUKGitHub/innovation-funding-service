@@ -3,6 +3,7 @@ package com.worth.ifs.application.service;
 import com.worth.ifs.competition.resource.CompetitionCountResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
+import com.worth.ifs.competition.resource.CompetitionSearchResult;
 import com.worth.ifs.competition.resource.CompetitionTypeResource;
 import com.worth.ifs.competition.service.CompetitionsRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,8 +84,8 @@ public class CompetitionServiceImpl implements CompetitionService {
     }
 
     @Override
-    public com.worth.ifs.competition.resource.CompetitionSearchResult searchCompetitions(String searchQuery, int page) {
-        com.worth.ifs.competition.resource.CompetitionSearchResult searchResult = competitionsRestService.searchCompetitions(searchQuery, page, COMPETITION_PAGE_SIZE).getSuccessObjectOrThrowException();
+    public CompetitionSearchResult searchCompetitions(String searchQuery, int page) {
+        CompetitionSearchResult searchResult = competitionsRestService.searchCompetitions(searchQuery, page, COMPETITION_PAGE_SIZE).getSuccessObjectOrThrowException();
         searchResult.setMappedCompetitions(mapToStatus(searchResult.getContent()));
         return searchResult;
     }

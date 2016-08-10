@@ -4,6 +4,7 @@ import com.worth.ifs.competition.resource.CompetitionCountResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.CompetitionTypeResource;
+import com.worth.ifs.competition.resource.CompetitionSearchResult;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -33,7 +34,7 @@ public interface CompetitionService {
 
     Map<CompetitionResource.Status, List<CompetitionResource>> getUpcomingCompetitions();
 
-    com.worth.ifs.competition.resource.CompetitionSearchResult searchCompetitions(String searchQuery, int page);
+    CompetitionSearchResult searchCompetitions(String searchQuery, int page);
 
     CompetitionCountResource getCompetitionCounts();
 
