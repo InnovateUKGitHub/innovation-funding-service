@@ -50,6 +50,7 @@ import com.worth.ifs.notifications.resource.SystemNotificationSource;
 import com.worth.ifs.notifications.service.NotificationService;
 import com.worth.ifs.organisation.repository.OrganisationAddressRepository;
 import com.worth.ifs.organisation.transactional.OrganisationService;
+import com.worth.ifs.project.finance.repository.SpendProfileRepository;
 import com.worth.ifs.project.mapper.MonitoringOfficerMapper;
 import com.worth.ifs.project.mapper.ProjectMapper;
 import com.worth.ifs.project.mapper.ProjectUserMapper;
@@ -301,6 +302,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected SilExperianEndpoint silExperianEndpointMock;
+
+    @Mock
+    protected SpendProfileRepository spendProfileRepositoryMock;
 
     @Before
     public void setupMockInjection() {
