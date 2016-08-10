@@ -177,9 +177,9 @@ public class BankDetailsServiceImpl implements BankDetailsService{
         return conditons.stream().filter(condition -> condition.getSeverity().equals("error")).
                 map(condition -> {
                     if (condition.getCode().equals(4)) {
-                        return Error.globalError(EXPERIAN_VALIDATION_FAILED_WITH_INCORRECT_ACC_NO.getErrorKey(), "validation.bankdetails.account.number.incorrect");
+                        return Error.globalError(EXPERIAN_VALIDATION_FAILED_WITH_INCORRECT_ACC_NO.getErrorKey(), "Account number is incorrect, please check and try again");
                     } else if (condition.getCode().equals(7)) {
-                        return Error.globalError(EXPERIAN_VALIDATION_FAILED_WITH_INCORRECT_BANK_DETAILS.getErrorKey(), "validation.bankdetails.bank.account.details.incorrect");
+                        return Error.globalError(EXPERIAN_VALIDATION_FAILED_WITH_INCORRECT_BANK_DETAILS.getErrorKey(), "Bank account details are incorrect, please check and try again");
                     }
                     return Error.globalError(EXPERIAN_VALIDATION_FAILED.getErrorKey(), condition.getDescription());
                 }).
