@@ -61,6 +61,10 @@ public class CostTimePeriod {
         this(null, offsetAmount, offsetUnit, durationAmount, durationUnit);
     }
 
+    public CostTimePeriod(Integer durationAmount, TimeUnit durationUnit) {
+        this(null, 0, TimeUnit.DAY, durationAmount, durationUnit);
+    }
+
     public Long getId() {
         return id;
     }

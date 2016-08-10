@@ -32,8 +32,10 @@ public class Cost {
     @JoinTable(
             name = "cost_categorization",
             joinColumns = @JoinColumn(name = "cost_id"),
-            inverseJoinColumns = @JoinColumn(name = "cost_category_id")
+            inverseJoinColumns = @JoinColumn(name = "cost_category_id"),
+            uniqueConstraints = @UniqueConstraint(columnNames = {"cost_id", "cost_category_id"})
     )
+    @OrderColumn(name = "priority")
     private CostCategory costCategory;
 
     Cost() {
@@ -42,6 +44,14 @@ public class Cost {
 
     public Cost(String value) {
         this(new BigDecimal(value));
+    }
+
+    public Cost(String value, CostCategory costCategory) {
+        this(new BigDecimal(value), costCategory);
+    }
+
+    public Cost(String value, CostCategory costCategory, CostTimePeriod costTimePeriod) {
+        this(new BigDecimal(value), costCategory, costTimePeriod);
     }
 
     public Cost(BigDecimal value) {
@@ -56,6 +66,12 @@ public class Cost {
     public Cost(BigDecimal value, CostCategory costCategory) {
         this.value = value;
         this.costCategory = costCategory;
+    }
+
+    public Cost(BigDecimal value, CostCategory costCategory, CostTimePeriod costTimePeriod) {
+        this.value = value;
+        this.costCategory = costCategory;
+        this.setCostTimePeriod(costTimePeriod);
     }
 
     public Long getId() {
