@@ -12,6 +12,7 @@ import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.user.resource.OrganisationResource;
+import com.worth.ifs.invite.resource.InviteResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -91,6 +92,12 @@ public class ProjectController {
         return projectService.updateFinanceContact(projectId, organisationId, financeContactUserId).toPostResponse();
     }
 
+    @RequestMapping(value = "/{projectId}/invite-finance-contact", method = POST)
+    public RestResult<Void> inviteFinanceContact(@PathVariable("projectId") final Long projectId,
+                                                 @RequestBody @Valid final InviteResource inviteResource) {
+       return projectService.inviteFinanceContact(projectId, inviteResource).toPostResponse();
+    }
+
     @RequestMapping(value = "/{projectId}/project-users", method = GET)
     public RestResult<List<ProjectUserResource>> getProjectUsers(@PathVariable("projectId") final Long projectId) {
         return projectService.getProjectUsers(projectId).toGetResponse();
@@ -111,14 +118,14 @@ public class ProjectController {
         return projectService.getMonitoringOfficer(projectId).toGetResponse();
     }
 
-	@RequestMapping(value = "/{projectId}/monitoring-officer", method = PUT)
+    @RequestMapping(value = "/{projectId}/monitoring-officer", method = PUT)
     public RestResult<Void> saveMonitoringOfficer(@PathVariable("projectId") final Long projectId,
                                                   @RequestBody @Valid final MonitoringOfficerResource monitoringOfficerResource) {
-
         return projectService.saveMonitoringOfficer(projectId, monitoringOfficerResource)
                 .andOnSuccess(() -> projectService.notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource))
                 .toPutResponse();
     }
+
     @RequestMapping(value = "/{projectId}/getOrganisationByUser/{userId}", method = GET)
     public RestResult<OrganisationResource> getOrganisationByProjectAndUser(@PathVariable("projectId") final Long projectId,
                                                                             @PathVariable("userId") final Long userId){

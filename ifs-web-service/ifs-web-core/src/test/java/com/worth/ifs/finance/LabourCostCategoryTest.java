@@ -2,9 +2,8 @@ package com.worth.ifs.finance;
 
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
-import com.worth.ifs.finance.resource.CostResource;
 import com.worth.ifs.finance.resource.category.LabourCostCategory;
-import com.worth.ifs.finance.resource.cost.CostItem;
+import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,9 +20,9 @@ import java.util.List;
 public class LabourCostCategoryTest {
 
     LabourCostCategory labourCostCategory;
-    List<CostItem> costs;
+    List<FinanceRowItem> costs;
     BigDecimal total;
-    CostItem cost3;
+    FinanceRowItem cost3;
 
     @Before
     public void setUp() throws Exception {

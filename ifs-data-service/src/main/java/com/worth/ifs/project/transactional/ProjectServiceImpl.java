@@ -17,6 +17,7 @@ import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.BasicFileAndContents;
 import com.worth.ifs.file.service.FileAndContents;
 import com.worth.ifs.file.transactional.FileService;
+import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.notifications.resource.ExternalUserNotificationTarget;
 import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.notifications.resource.NotificationTarget;
@@ -125,7 +126,9 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     private String webBaseUrl;
 
     enum Notifications {
-        MONITORING_OFFICER_ASSIGNED, MONITORING_OFFICER_ASSIGNED_PROJECT_MANAGER,
+        MONITORING_OFFICER_ASSIGNED,
+        MONITORING_OFFICER_ASSIGNED_PROJECT_MANAGER,
+        INVITE_FINANCE_CONTACT
     }
 
     @Override
@@ -584,6 +587,44 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     private ServiceResult<ProjectUser> createFinanceContactProjectUser(User user, Project project, Organisation organisation) {
         return createProjectUserForRole(project, user, organisation, FINANCE_CONTACT);
     }
+
+    @Override
+    public ServiceResult<Void> inviteFinanceContact(Long projectId, InviteResource inviteResource) {
+
+        Notification notification = createInviteFinanceContactNotification(projectId, inviteResource);
+        ServiceResult<Void> moAssignedEmailSendResult = notificationService.sendNotification(notification, EMAIL);
+        return processAnyFailuresOrSucceed(singletonList(moAssignedEmailSendResult));
+    }
+
+    //methods specific to inviteFinanceContact - start
+    private Notification createInviteFinanceContactNotification(Long projectId, InviteResource inviteResource) {
+        NotificationTarget notificationTarget = createInviteFinanceContactNotificationTarget(inviteResource);
+        Map<String, Object> globalArguments = createGlobalArgsForInviteFinanceContactEmail(projectId, inviteResource);
+        return new Notification(systemNotificationSource, singletonList(notificationTarget),
+                Notifications.INVITE_FINANCE_CONTACT, globalArguments, emptyMap());
+    }
+
+    private NotificationTarget createInviteFinanceContactNotificationTarget(InviteResource inviteResource) {
+        String fullName = inviteResource.getName();
+        return new ExternalUserNotificationTarget(fullName, inviteResource.getEmail());
+    }
+
+    private Map<String, Object> createGlobalArgsForInviteFinanceContactEmail(Long projectId, InviteResource inviteResource) {
+        Project project = projectRepository.findOne(projectId);
+        Map<String, Object> globalArguments = new HashMap<>();
+        globalArguments.put("projectName", project.getName());
+        globalArguments.put("leadOrganisation", project.getApplication().getLeadOrganisation().getName());
+        globalArguments.put("inviteOrganisationName", (inviteResource.getInviteOrganisationName().isEmpty() | inviteResource.getInviteOrganisationName() == null ) ? "No org as yet" : inviteResource.getInviteOrganisationName());
+        globalArguments.put("inviteUrl", getInviteUrl(webBaseUrl, inviteResource));
+        return globalArguments;
+    }
+
+    private String getInviteUrl(String baseUrl, InviteResource inviteResource) {
+        return String.format("%s/accept-invite/%s", baseUrl, inviteResource.getHash());
+    }
+
+    //methods specific to inviteFinanceContact - end
+
 
     private ServiceResult<Void> validateProjectStartDate(LocalDate date) {
 

@@ -8,9 +8,9 @@ import java.math.BigDecimal;
 
 
 /**
- * {@code CapitalUsage} implements {@link CostItem}
+ * {@code CapitalUsage} implements {@link FinanceRowItem}
  */
-public class CapitalUsage implements CostItem {
+public class CapitalUsage implements FinanceRowItem {
     Long id;
     String name;
     @NotNull
@@ -116,8 +116,8 @@ public class CapitalUsage implements CostItem {
     }
 
     @Override
-    public CostType getCostType() {
-        return CostType.CAPITAL_USAGE;
+    public FinanceRowType getCostType() {
+        return FinanceRowType.CAPITAL_USAGE;
     }
 
     public void setDescription(String description) {

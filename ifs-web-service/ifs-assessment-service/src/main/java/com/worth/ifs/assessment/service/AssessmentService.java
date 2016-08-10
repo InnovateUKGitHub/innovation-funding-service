@@ -10,6 +10,8 @@ public interface AssessmentService {
 
     AssessmentResource getById(Long id);
 
-    ServiceResult<Void> rejectApplication(Long assessmentId, String reason, String comment);
+    ServiceResult<Void> recommend(Long assessmentId, Boolean fundingConfirmation, String feedback, String comment);
+
+    ServiceResult<Void> rejectInvitation(Long assessmentId, String reason, String comment);
 
 }
