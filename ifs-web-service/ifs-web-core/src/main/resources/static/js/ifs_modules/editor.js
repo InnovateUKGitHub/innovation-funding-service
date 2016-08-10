@@ -7,7 +7,7 @@ IFS.core.editor = (function(){
 
     return {
         settings : {
-            textareas : '.textarea-wrapped textarea',
+            editorTextarea : 'textarea[data-editor]',
             htmlOptions : {
                 format: false,
                 allowedTags: ['p','em','strong','ol','ul','li','br','b','div']
@@ -17,39 +17,48 @@ IFS.core.editor = (function(){
             s = this.settings;
             converter = new showdown.Converter();
 
-            var textareas = jQuery(s.textareas);
-             jQuery.each(textareas,function(){
-                IFS.core.editor.prepareEditor(this);
+             jQuery.each(jQuery(s.editorTextarea),function(){
+                IFS.core.editor.prepareEditorHTML(this);
             });
-            jQuery(".js-md-to-html").each(function(){
+            IFS.core.editor.initEditors();
+
+            jQuery("[data-md-to-html]").each(function(){
               var content = jQuery(this).html();
               var html =  IFS.core.editor.markdownToHtml(content);
               jQuery(this).html(html);
             });
-
-            IFS.core.editor.initEditors();
-            IFS.core.editor.bindEditors();
         },
-        prepareEditor : function(textarea){
+        prepareEditorHTML : function(textarea){
             var el = jQuery(textarea);
-            var labelledby = '';
-            if(jQuery('[for="'+el.attr('id')+'"]').length) {
-              labelledby = jQuery('[for="'+el.attr('id')+'"]').attr('id');
-            }
+            var editorType = el.attr('data-editor');
+            if(editorType !== ''){
+              var labelledby = '';
+              if(jQuery('[for="'+el.attr('id')+'"]').length) {
+                labelledby = jQuery('[for="'+el.attr('id')+'"]').attr('id');
+              }
 
-            if(el.attr('readonly')){
-                //don't add the editor but do render the html on page load
-               el.before('<div class="readonly"></div>');
-            }
-            else {
-                el.before('<div data-editor="" class="editor" spellcheck="true" aria-multiline="true" tabindex="0" labelledby="'+labelledby+'" role="textbox"></div>');
-            }
+              if(el.attr('readonly')){
+                  //don't add the editor but do render the html on page load
+                 el.before('<div class="readonly"></div>');
+              }
+              else {
+                  el.before('<div data-editor="'+editorType+'" class="editor" spellcheck="true" aria-multiline="true" tabindex="0" labelledby="'+labelledby+'" role="textbox"></div>');
+              }
 
-            el.attr('aria-hidden','true');
-            IFS.core.editor.processMarkdownToHtml(el,el.prev());
+              el.attr('aria-hidden','true');
+              switch(editorType){
+                case 'md':
+                  IFS.core.editor.textareaMarkdownToHtml(el,el.prev());
+                  break;
+                case 'html':
+                  var html = jQuery.htmlClean(el.val(), s.htmlOptions);
+                  el.prev().html(html);
+                  break;
+              }
+            }
         },
         initEditors: function(){
-          jQuery('[data-editor]').hallo({
+          jQuery('[role="textbox"][data-editor]').hallo({
             plugins: {
               'halloformat': {},
               'hallolists': {},
@@ -57,15 +66,18 @@ IFS.core.editor = (function(){
             },
             toolbar: 'halloToolbarFixed'
           });
+          jQuery('[role="textbox"][data-editor="md"]').on('hallomodified', function(event, data) {
+              var source = jQuery(this).next();
+              IFS.core.editor.editorHtmlToMarkdown(data.content,source);
+              jQuery(source).trigger('keyup');
+          });
+          jQuery('[role="textbox"][data-editor="html"]').on('hallomodified',function(event, data){
+              var textarea = jQuery(this).next();
+              jQuery(textarea).get(0).value = jQuery.htmlClean(data.content, s.htmlOptions);
+              jQuery(textarea).trigger('keyup');
+          });
         },
-        bindEditors : function(){
-            jQuery('[data-editor]').bind('hallomodified', function(event, data) {
-                var source = jQuery(this).next();
-                IFS.core.editor.processHtmlToMarkdown(data.content,source);
-                jQuery(source).trigger('keyup');
-            });
-        },
-        processMarkdownToHtml: function(sourceEl,editorEl) {
+        textareaMarkdownToHtml: function(sourceEl,editorEl) {
             var sourceVal = sourceEl.val();
             if (IFS.core.editor.htmlToMarkdown(jQuery(editorEl).html()) == sourceVal) {
               return;
@@ -73,7 +85,7 @@ IFS.core.editor = (function(){
             var html = IFS.core.editor.markdownToHtml(sourceVal);
             jQuery(editorEl).html(html);
         },
-        processHtmlToMarkdown : function(editorEl,sourceEl) {
+        editorHtmlToMarkdown : function(editorEl,sourceEl) {
             var markdown = IFS.core.editor.htmlToMarkdown(editorEl);
             if (jQuery(sourceEl).get(0).value == markdown) {
               return;

@@ -29,4 +29,7 @@ public interface CompetitionSetupService {
 
     @PreAuthorize("hasAuthority('comp_admin')")
     ServiceResult<List<CompetitionTypeResource>> findAllTypes();
+    
+    @PreAuthorize("hasAuthority('comp_admin')")
+    ServiceResult<Void> initialiseFormForCompetitionType(Long competitionId, Long competitionType);
 }

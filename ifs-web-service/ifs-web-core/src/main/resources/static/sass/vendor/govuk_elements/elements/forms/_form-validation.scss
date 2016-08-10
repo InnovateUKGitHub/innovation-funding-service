@@ -42,7 +42,7 @@
   }
 }
 // Error messages should be red and bold
-.error-message {
+.error-message.error-message {
   color: $error-colour;
   font-weight: bold;
 }
