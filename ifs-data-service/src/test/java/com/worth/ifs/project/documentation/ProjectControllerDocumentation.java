@@ -7,20 +7,26 @@ import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestErrorResponse;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder;
+import com.worth.ifs.project.builder.SpendProfileResourceBuilder;
 import com.worth.ifs.project.controller.ProjectController;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.project.resource.SpendProfileResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
+import static com.worth.ifs.documentation.SpendProfileDocs.spendProfileResourceFields;
 import static com.worth.ifs.util.JsonMappingUtil.toJson;
 import static com.worth.ifs.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
@@ -39,6 +45,7 @@ import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -110,6 +117,46 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                         this.document.snippets(
                         responseFields(
                                 fieldWithPath("[]").description("List of projects the user is allowed to see")
+                        )
+                ));
+    }
+
+    @Test
+    public void getSpendProfile()  throws Exception {
+
+        Long projectId = 1L;
+
+        SpendProfileResource spendProfileResource = SpendProfileResourceBuilder.newSpendProfileResource()
+                .withEligibleCostPerCategoryMap(buildEligibleCostPerCategoryMap())
+                .build();
+
+        when(projectServiceMock.getSpendProfileById(projectId)).thenReturn(serviceSuccess(spendProfileResource));
+
+        mockMvc.perform(get("/project/{projectId}/spend-profile", projectId))
+                .andExpect(status().isOk())
+                .andExpect(content().string(new ObjectMapper().writeValueAsString(spendProfileResource)))
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project for which the Spend Profile data is being retrieved")
+                        ),
+                        responseFields(spendProfileResourceFields)
+                ));
+    }
+
+    @Test
+    public void getSpendProfileWhenSpendProfileDataNotInDb()  throws Exception {
+
+        Long projectId = 1L;
+
+        when(projectServiceMock.getSpendProfileById(projectId)).
+                thenReturn(serviceFailure(new Error(GENERAL_NOT_FOUND, " SpendProfile not found", NOT_FOUND)));
+
+        mockMvc.perform(get("/project/{projectId}/spend-profile", projectId)
+        )
+                .andExpect(status().isNotFound())
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project for which the Spend Profile data is being retrieved")
                         )
                 ));
     }
@@ -487,5 +534,14 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
         assertTrue(mvcResult.getResponse().getContentAsString().equals("false"));
     }
 
+    private Map<String, BigDecimal> buildEligibleCostPerCategoryMap() {
 
+        Map<String, BigDecimal> eligibleCostPerCategoryMap = new LinkedHashMap<>();
+
+        eligibleCostPerCategoryMap.put("LabourCost", new BigDecimal("240"));
+        eligibleCostPerCategoryMap.put("CapitalCost", new BigDecimal("190"));
+        eligibleCostPerCategoryMap.put("OtherCost", new BigDecimal("149"));
+
+        return eligibleCostPerCategoryMap;
+    }
 }
