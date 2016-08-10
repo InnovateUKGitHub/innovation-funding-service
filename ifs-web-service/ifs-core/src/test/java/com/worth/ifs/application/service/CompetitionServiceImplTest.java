@@ -3,10 +3,7 @@ package com.worth.ifs.application.service;
 import com.google.common.collect.Lists;
 import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.competition.builder.CompetitionResourceBuilder;
-import com.worth.ifs.competition.resource.CompetitionCountResource;
-import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.resource.CompetitionSetupSection;
-import com.worth.ifs.competition.resource.CompetitionTypeResource;
+import com.worth.ifs.competition.resource.*;
 import com.worth.ifs.competition.service.CompetitionsRestService;
 import org.junit.Before;
 import org.junit.Test;
@@ -185,5 +182,18 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         CompetitionCountResource result = service.getCompetitionCounts();
 
         assertEquals(result, resource);
+    }
+
+    @Test
+    public void test_searchCompetitions() throws Exception {
+        CompetitionSearchResult results = new CompetitionSearchResult();
+        results.setContent(new ArrayList<>());
+        String searchQuery = "SearchQuery";
+        int page = 1;
+        when(competitionsRestService.searchCompetitions(searchQuery, page, CompetitionServiceImpl.COMPETITION_PAGE_SIZE)).thenReturn(restSuccess(results));
+
+        CompetitionSearchResult actual = service.searchCompetitions(searchQuery, page);
+
+        assertEquals(actual, results);
     }
 }

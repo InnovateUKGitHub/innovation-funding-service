@@ -3,6 +3,7 @@ package com.worth.ifs.competition.controller;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.competition.resource.CompetitionCountResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionSearchResult;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.transactional.CompetitionService;
 import com.worth.ifs.competition.transactional.CompetitionSetupService;
@@ -57,9 +58,11 @@ public class CompetitionController {
         return competitionService.findUpcomingCompetitions().toGetResponse();
     }
 
-    @RequestMapping(value="/search/{searchQuery}", method= RequestMethod.GET)
-    public RestResult<List<CompetitionResource>> search(@PathVariable("searchQuery") String searchQuery) {
-        return competitionService.searchCompetitions(searchQuery).toGetResponse();
+    @RequestMapping(value="/search/{searchQuery}/{page}/{size}", method= RequestMethod.GET)
+    public RestResult<CompetitionSearchResult> search(@PathVariable("searchQuery") String searchQuery,
+                                                      @PathVariable("page") int page,
+                                                      @PathVariable("size") int size) {
+        return competitionService.searchCompetitions(searchQuery, page, size).toGetResponse();
     }
     @RequestMapping(value="/count", method= RequestMethod.GET)
     public RestResult<CompetitionCountResource> count() {

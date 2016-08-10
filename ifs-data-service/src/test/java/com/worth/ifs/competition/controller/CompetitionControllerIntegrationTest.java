@@ -8,6 +8,7 @@ import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.competition.resource.CompetitionCountResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionSearchResult;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.util.fixtures.CompetitionCoFundersFixture;
 import org.junit.Before;
@@ -294,13 +295,40 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
     @Rollback
     @Test
     public void testCompetitionInCompleteSection() throws Exception {
-    	Long competitionId = 7L;
-    	
-    	controller.markSectionInComplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS);
-    	
+        Long competitionId = 7L;
+
+        controller.markSectionInComplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS);
+
         RestResult<CompetitionResource> competitionsResult = controller.getCompetitionById(competitionId);
         assertEquals(Boolean.FALSE, competitionsResult.getSuccessObject().getSectionSetupStatus().get(CompetitionSetupSection.INITIAL_DETAILS));
     }
+
+
+    @Rollback
+    @Test
+    public void testCompetitionSearch() throws Exception {
+        String matchAllQuery = "a";
+        String matchOneQuery = "Connected";
+        String matchNoneQuery = "XSAMXLAMSXSA";
+        //Small page size to test pagination with two competitions in the db.
+        int size = 1;
+        int pageOne = 0;
+        int pageTwo = 1;
+
+        CompetitionSearchResult pageOneResult = controller.search(matchAllQuery, pageOne, size).getSuccessObjectOrThrowException();
+        assertThat(pageOneResult.getNumber(), equalTo(pageOne));
+        assertThat(pageOneResult.getTotalElements(), equalTo(2L));
+
+        CompetitionSearchResult pageTwoResult = controller.search(matchAllQuery, pageTwo, size).getSuccessObjectOrThrowException();
+        assertThat(pageTwoResult.getNumber(), equalTo(pageTwo));
+        assertThat(pageTwoResult.getTotalElements(), equalTo(2L));
+
+        CompetitionSearchResult matchOneResult = controller.search(matchOneQuery, pageOne, size).getSuccessObjectOrThrowException();
+        assertThat(matchOneResult.getTotalElements(), equalTo(1L));
+
+        CompetitionSearchResult matchNoneResult = controller.search(matchNoneQuery, pageOne, size).getSuccessObjectOrThrowException();
+        assertThat(matchNoneResult.getTotalElements(), equalTo(0L));
+   }
 
     @Rollback
     @Test

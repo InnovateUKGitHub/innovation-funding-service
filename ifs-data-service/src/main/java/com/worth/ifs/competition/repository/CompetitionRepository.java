@@ -1,8 +1,11 @@
 package com.worth.ifs.competition.repository;
 
 import com.worth.ifs.competition.domain.Competition;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -34,7 +37,6 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
     @Query("SELECT count(c) FROM Competition c WHERE (CURRENT_TIMESTAMP <= c.startDate AND c.status = 'COMPETITION_SETUP_FINISHED') OR c.status = 'COMPETITION_SETUP'")
     Long countUpcoming();
 
-
-    List<Competition> findByNameLikeOrCompetitionType_NameLike(String name, String name2);
+    Page<Competition> findByNameLikeOrCompetitionType_NameLike(String searchQuery, String searchQuery2, Pageable pageable);
 
 }

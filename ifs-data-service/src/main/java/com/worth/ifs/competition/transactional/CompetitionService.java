@@ -4,6 +4,7 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.resource.CompetitionCountResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionSearchResult;
 import com.worth.ifs.security.NotSecured;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;
@@ -33,8 +34,8 @@ public interface CompetitionService {
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<CompetitionResource>> findUpcomingCompetitions();
 
-    @PostFilter("hasPermission(filterObject, 'READ')")
-    ServiceResult<List<CompetitionResource>> searchCompetitions(String searchQuery);
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
+    ServiceResult<CompetitionSearchResult> searchCompetitions(String searchQuery, int page, int size);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<CompetitionCountResource> countCompetitions();

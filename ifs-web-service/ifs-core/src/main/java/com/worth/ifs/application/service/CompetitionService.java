@@ -33,7 +33,7 @@ public interface CompetitionService {
 
     Map<CompetitionResource.Status, List<CompetitionResource>> getUpcomingCompetitions();
 
-    Map<CompetitionResource.Status, List<CompetitionResource>> searchCompetitions(String searchQuery);
+    com.worth.ifs.competition.resource.CompetitionSearchResult searchCompetitions(String searchQuery, int page);
 
     CompetitionCountResource getCompetitionCounts();
 

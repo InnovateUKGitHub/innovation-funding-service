@@ -14,21 +14,10 @@
     <form role="search" method="get" id="searchform" th:action="@{'/dashboard/search'}">
         <div th:include="competition/dashboard :: comp-dashboard-header (searchQuery=${''})" th:remove="tag" />
     </form>
-    <div th:include="competition/dashboard :: comp-dashboard-navigation (tab=${'projectSetup'}, counts=${counts})" th:remove="tag" />
+    <div th:include="competition/dashboard :: comp-dashboard-navigation (tab=${'complete'}, counts=${counts})" th:remove="tag" />
 
-    <section th:with="projectSetupComps=${competitions.get(T(com.worth.ifs.competition.resource.CompetitionResource.Status).PROJECT_SETUP)}">
-        <h2 class="heading-medium"
-            th:text="'Project set up ('+${projectSetupComps == null ? '0' : projectSetupComps.size()}+')'"></h2>
-        <ul class="list-overview">
-            <li class="gwsection" th:each="competition : ${projectSetupComps}">
-                <th:block
-                        th:include="competition/dashboard :: dashboard-row"
-                        th:with="competition=${competition},
-                    cell3=${competition.innovationAreaName},
-                    cell4=${1 + ' projects'}">
-                </th:block>
-            </li>
-        </ul>
+    <section>
+        <h2 class="heading-medium">Complete (0)</h2>
     </section>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />

@@ -21,6 +21,8 @@ import java.util.stream.Collectors;
 @Service
 public class CompetitionServiceImpl implements CompetitionService {
 
+    public static final int COMPETITION_PAGE_SIZE = 20;
+
     @Autowired
     private CompetitionsRestService competitionsRestService;
 
@@ -81,8 +83,10 @@ public class CompetitionServiceImpl implements CompetitionService {
     }
 
     @Override
-    public Map<CompetitionResource.Status, List<CompetitionResource>> searchCompetitions(String searchQuery) {
-        return mapToStatus(competitionsRestService.searchCompetitions(searchQuery).getSuccessObjectOrThrowException());
+    public com.worth.ifs.competition.resource.CompetitionSearchResult searchCompetitions(String searchQuery, int page) {
+        com.worth.ifs.competition.resource.CompetitionSearchResult searchResult = competitionsRestService.searchCompetitions(searchQuery, page, COMPETITION_PAGE_SIZE).getSuccessObjectOrThrowException();
+        searchResult.setMappedCompetitions(mapToStatus(searchResult.getContent()));
+        return searchResult;
     }
 
     @Override

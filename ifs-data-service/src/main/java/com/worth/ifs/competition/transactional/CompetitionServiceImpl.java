@@ -9,10 +9,14 @@ import com.worth.ifs.competition.mapper.CompetitionMapper;
 import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.competition.resource.CompetitionCountResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionSearchResult;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -106,13 +110,19 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<List<CompetitionResource>> searchCompetitions(String searchQuery) {
-        //PageRequest pageRequest = new PageRequest(1, 10, new Sort("startDate"));
-        //Page<Competition> competitions = competitionRepository.findByNameLike("%"+searchQuery+"%");
-        //Page<CompetitionResource> resources = new PageImpl<CompetitionResource>((List) competitionMapper.mapToResource(competitions.getContent()), pageRequest, competitions.getTotalElements());
-        return serviceSuccess((List) competitionMapper.mapToResource(
-                competitionRepository.findByNameLikeOrCompetitionType_NameLike("%"+searchQuery+"%", "%"+searchQuery+"%").stream().map(this::addCategories).collect(Collectors.toList())
-        ));
+    public ServiceResult<CompetitionSearchResult> searchCompetitions(String searchQuery, int page, int size) {
+        String searchQueryLike = "%" + searchQuery + "%";
+        PageRequest pageRequest = new PageRequest(page, size, Sort.Direction.ASC, "startDate");
+        Page<Competition> pageResult = competitionRepository.findByNameLikeOrCompetitionType_NameLike(searchQueryLike, searchQueryLike, pageRequest);
+
+        CompetitionSearchResult result = new CompetitionSearchResult();
+        result.setContent((List) competitionMapper.mapToResource(pageResult.getContent()));
+        result.setNumber(pageRequest.getPageNumber());
+        result.setSize(size);
+        result.setTotalElements(pageResult.getTotalElements());
+        result.setTotalPages(pageResult.getTotalPages());
+
+        return serviceSuccess(result);
     }
 
     @Override

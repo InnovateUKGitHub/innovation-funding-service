@@ -4,10 +4,12 @@ import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.controller.CompetitionController;
 import com.worth.ifs.competition.resource.CompetitionCountResource;
+import com.worth.ifs.competition.resource.CompetitionSearchResult;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.transactional.CompetitionService;
 import com.worth.ifs.competition.transactional.CompetitionSetupService;
 import com.worth.ifs.documentation.CompetitionCountResourceDocs;
+import com.worth.ifs.documentation.CompetitionSearchResultDocs;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -154,6 +156,22 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
                 .andExpect(status().isOk())
                 .andDo(this.document.snippets(
                         responseFields(CompetitionCountResourceDocs.competitionCountResourceFields)
+                ));
+    }
+
+
+    @Test
+    public void search() throws Exception {
+        CompetitionSearchResult results = new CompetitionSearchResult();
+        String searchQuery = "test";
+        int page = 1;
+        int size = 20;
+        when(competitionService.searchCompetitions(searchQuery, page, size)).thenReturn(ServiceResult.serviceSuccess(results));
+
+        mockMvc.perform(get("/competition/search/" + searchQuery + "/" + page + "/" + size))
+                .andExpect(status().isOk())
+                .andDo(this.document.snippets(
+                        responseFields(CompetitionSearchResultDocs.competitionSearchResultFields)
                 ));
     }
 

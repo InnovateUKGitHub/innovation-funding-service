@@ -3,10 +3,7 @@ package com.worth.ifs.competition.service;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.competition.resource.CompetitionCountResource;
-import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.resource.CompetitionSetupSection;
-import com.worth.ifs.competition.resource.CompetitionTypeResource;
+import com.worth.ifs.competition.resource.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
@@ -51,8 +48,8 @@ public class CompetitionsRestServiceImpl extends BaseRestService implements Comp
     }
 
     @Override
-    public RestResult<List<CompetitionResource>> searchCompetitions(String searchQuery) {
-        return getWithRestResult(competitionsRestURL + "/search/" + searchQuery, competitionResourceListType());
+    public RestResult<CompetitionSearchResult> searchCompetitions(String searchQuery, int page, int size) {
+        return getWithRestResult(competitionsRestURL + "/search/" + searchQuery + "/" + page + "/" + size, CompetitionSearchResult.class);
     }
 
     @Override

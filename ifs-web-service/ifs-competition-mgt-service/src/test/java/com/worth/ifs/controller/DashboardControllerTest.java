@@ -5,7 +5,9 @@ import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.competition.controller.DashboardController;
 import com.worth.ifs.competition.resource.CompetitionCountResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionSearchResult;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -96,5 +98,21 @@ public class DashboardControllerTest {
                 .andExpect(model().attribute("competitions", is(competitions)))
                 .andExpect(model().attribute("counts", is(counts)));
     }
+
+
+    @Test
+    public void searchDashboard() throws Exception {
+        CompetitionSearchResult searchResult = new CompetitionSearchResult();
+        String searchQuery = "search";
+        int defaultPage = 0;
+
+        when(competitionService.searchCompetitions(searchQuery, defaultPage)).thenReturn(searchResult);
+
+        mockMvc.perform(get("/dashboard/search?searchQuery=" + searchQuery))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition/search"))
+                .andExpect(model().attribute("results", is(searchResult)));
+    }
+
 
 }
