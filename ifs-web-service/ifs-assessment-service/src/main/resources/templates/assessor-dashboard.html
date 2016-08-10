@@ -16,61 +16,55 @@
             </div>
 
             <div class="my-applications">
-                <h2 class="heading-medium">Competitions for assessment (1)</h2>
-                <ul class="boxed-list">
-                    <!--/*li th:each="competition : ${competitionsInProcess}">
-<div class="grid-row">
-                            <div class="column-half">
-                                <h2 class="heading-medium"><a href="https://ifs-local-dev/assessment/assessor/dashboard/competition/2">Juggling Craziness</a></h2>
-                                <p class="form-hint">Assessment progress:</p>
-                                <p class="greentext"><strong><span>1</span>/<span>4</span> Assessed</strong></p>
-                            </div>
-
-                            <div class="column-half">
-                                <div class="competition-deadline">
-                                    <div class="day">
-                                        31<span>st</span>
-                                    </div>
-                                    <div class="month">December deadline</div>
+                <div class="invite-to-assess" th:unless="${#lists.isEmpty(model.upcomingCompetitions)}">
+                    <h2 class="heading-medium">Invitations to assess (<span th:text="${#lists.size(model.upcomingCompetitions)}" />)</h2>
+                    <ul class="boxed-list">
+                        <li th:each="upcomingCompetition : ${model.upcomingCompetitions}">
+                            <div class="grid-row">
+                                <div class="column-assessment-details">
+                                    <h3 class="heading-medium">
+                                    <a href="#" th:text="${upcomingCompetition.displayLabel}"/>
+                                    </h3>
+                                    <p>Please respond to this request for you to assess on this new competition.</p>
                                 </div>
-
-                                <div th:include="fragments/elements :: pie" th:with="daysPercentage=${competitions.get(application.getId()).getStartDateToEndDatePercentage()},daysLeft=${competitions.get(application.getId()).getDaysLeft()}" th:remove="tag" />
-                            </div>
-                        </div>
-                    </li*/-->
-
-                    <li>
-                        <div class="grid-row">
-                            <div class="column-half">
-                                <h2 class="heading-medium">
-                                <a href="https://ifs-local-dev/assessment/assessor/dashboard/competition/2">Juggling Craziness</a>
-                                </h2>
-                                <p class="form-hint">Assessment progress:</p>
-                                <p class="greentext"><strong><span>1</span>/<span>4</span> Assessed</strong></p>
-                            </div>
-
-                            <div class="column-half">
-                                <div class="competition-deadline">
-                                    <div class="day">
-                                        31<span>st</span>
-                                    </div>
-                                    <div class="month">December deadline</div>
-                                    <div class="time">
-                                        <!--<span th:text="${#temporals.format(endDate, 'HH:mm')}" />-->
-                                    </div>
-                                </div>
-
-                                <div class="pie-container">
-                                    <div class="pie" aria-hidden="true"><svg viewBox="0 0 32 32"><title>67%</title><circle r="16" cx="16" cy="16" stroke-dasharray="67 100"></circle></svg></div>
-                                    <div class="pie-overlay">
-                                        <div>16</div>
-                                        <span>Days left</span>
+                                <div class="column-assessment-status navigation-right">
+                                    <div class="application-status invite">
+                                        <p class="subtitle no-margin">Assessment period:</p>
+                                        <p class="heading-small no-margin">
+                                            <span th:text="${#temporals.day(upcomingCompetition.assessmentStartDate)}" th:remove="tag" /> <span th:text="${#temporals.monthName(upcomingCompetition.assessmentStartDate)}" th:remove="tag" />
+                                            -
+                                            <span th:text="${#temporals.day(upcomingCompetition.assessmentEndDate)}" th:remove="tag" /> <span th:text="${#temporals.monthName(upcomingCompetition.assessmentEndDate)}" th:remove="tag" />
+                                        </p>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </li>
-                </ul>
+                        </li>
+                    </ul>
+                </div>
+
+                <div th:unless="${#lists.isEmpty(model.activeCompetitions)}" th:remove="tag">
+                    <h2 class="heading-medium">Competitions for assessment (<span th:text="${#lists.size(model.activeCompetitions)}" />)</h2>
+                    <ul class="boxed-list">
+                        <li th:each="activeCompetition : ${model.activeCompetitions}">
+                            <div class="grid-row">
+                                <div class="column-half">
+                                    <h2 class="heading-medium"><a th:href="@{/assessor/dashboard/competition/{competitionId}(competitionId=${activeCompetition.competitionId})}" th:text="${activeCompetition.displayLabel}" /></h2>
+                                    <p class="form-hint">Assessment progress:</p>
+                                    <p class="greentext"><strong><span th:text="${activeCompetition.progressAssessed}" />/<span th:text="${activeCompetition.progressTotal}" /> Assessed</strong></p>
+                                </div>
+
+                                <div class="column-half">
+                                    <div class="competition-deadline">
+                                        <div class="day" th:text="${#temporals.day(activeCompetition.deadline)}" />
+                                        <div class="month" th:text="${#temporals.monthName(activeCompetition.deadline)}+' deadline'" />
+                                    </div>
+
+                                    <div th:include="fragments/elements :: pie" th:with="daysPercentage=${activeCompetition.daysLeftPercentage},daysLeft=${activeCompetition.daysLeft}" th:remove="tag" />
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
             </div>
 
             <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
