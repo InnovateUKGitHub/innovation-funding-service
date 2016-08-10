@@ -386,6 +386,20 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
 
    }
 
+
+    @Rollback
+    @Test
+    public void testInitApplicationFormByType() throws Exception {
+        Long competitionId = 7L;
+        Long competitionTypeId = 1L;
+
+        controller.initialiseForm(competitionId, competitionTypeId);
+
+        RestResult<CompetitionResource> competitionsResult = controller.getCompetitionById(competitionId);
+        assertEquals(Boolean.TRUE, competitionsResult.getSuccessObject().getQuestions().size() > 0);
+        assertEquals(competitionTypeId, competitionsResult.getSuccessObject().getCompetitionType());
+    }
+
    private CompetitionResource createWithDates(LocalDateTime startDate,
                                                LocalDateTime endDate,
                                                LocalDateTime assessmentStartDate,

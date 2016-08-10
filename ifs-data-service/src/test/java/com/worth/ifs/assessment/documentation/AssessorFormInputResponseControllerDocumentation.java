@@ -1,5 +1,6 @@
 package com.worth.ifs.assessment.documentation;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.assessment.controller.AssessorFormInputResponseController;
 import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
@@ -10,22 +11,25 @@ import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import java.util.List;
 
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.documentation.AssessorFormInputResponseDocs.assessorFormInputResponseFields;
 import static com.worth.ifs.documentation.AssessorFormInputResponseDocs.assessorFormInputResponseResourceBuilder;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 public class AssessorFormInputResponseControllerDocumentation extends BaseControllerMockMVCTest<AssessorFormInputResponseController> {
 
     private RestDocumentationResultHandler document;
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     protected AssessorFormInputResponseController supplyControllerUnderTest() {
@@ -76,19 +80,16 @@ public class AssessorFormInputResponseControllerDocumentation extends BaseContro
 
     @Test
     public void updateAssessorFormInputResponse() throws Exception {
-        final Long assessmentId = 1L;
-        final Long formInputId = 2L;
-        final String value = "Feedback";
+        AssessorFormInputResponseResource response = assessorFormInputResponseResourceBuilder.build();
 
-        when(assessorFormInputResponseServiceMock.updateFormInputResponse(assessmentId, formInputId, value)).thenReturn(serviceSuccess());
+        when(assessorFormInputResponseServiceMock.updateFormInputResponse(response)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(put("/assessorFormInputResponse/formInput/{formInputId}/assessment/{assessmentId}", formInputId, assessmentId)
-                .content(value))
+        mockMvc.perform(put("/assessorFormInputResponse")
+                .contentType(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(response)))
+                .andExpect(status().is2xxSuccessful())
                 .andDo(this.document.snippets(
-                        pathParameters(
-                                parameterWithName("formInputId").description("Id of the form associated with the response being updated"),
-                                parameterWithName("assessmentId").description("Id of the assessment associated with the response being updated")
-                        )
+                        requestFields(assessorFormInputResponseFields)
                 ));
     }
 }
