@@ -18,12 +18,12 @@ Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
 
 *** Test Cases ***
-Scope section If NO selected then feedback should be added
+Choosing 'not in scope' should update on the overview page
     [Documentation]    INFUND-1483
     [Tags]
     Given the user navigates to the page    ${Assessment_overview_9}
     And the user clicks the button/link    link=Scope
-    When Assessor selects research category
+    When the user selects the option from the drop-down menu    Technical feasibility studies      id=research-category
     And the user clicks the button/link    jQuery=label:contains(No)
     And the user clicks the button/link    link=Back to assessment overview
     And the user should see the text in the page    In scope? No
@@ -31,9 +31,10 @@ Scope section If NO selected then feedback should be added
 
 Scope section: Autosave
     [Documentation]    INFUND-1483
+    [Tags]
     Given the user navigates to the page    ${Assessment_overview_9}
     And the user clicks the button/link    link=Scope
-    When Assessor selects research category
+    When the user selects the option from the drop-down menu    Technical feasibility studies      id=research-category
     And the user clicks the button/link    jQuery=label:contains(No)
     And The user enters text to a text field    css=#form-input-193 .editor    Testing feedback field when "No" is selected.
     And the user clicks the button/link    jQuery=a:contains(Back to assessment overview)
@@ -44,6 +45,7 @@ Scope section: Autosave
 
 Scope section: Word count
     [Documentation]    INFUND-1483
+    [Tags]
     When the user enters text to a text field    css=#form-input-193 .editor    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco ullamco
     Then the user should see the text in the page    Words remaining: 0
 
@@ -70,32 +72,48 @@ Autosave and edit the Application question - How many
     the user enters text to a text field    css=#form-input-195 .editor    This is to test the feedback entry is modified.
     Sleep    500ms
     And the user reloads the page
-    And the modified text should be visible
+    And the user enters text to a text field    css=#form-input-195 .editor    This is to test the feedback entry is modified.
 
 Feedback should accept up to 100 words
     [Documentation]    INFUND-3402
     [Tags]
     Given the user navigates to the page    ${Application_question_url}
-    Then the word count should be calculated correctly
-    When the Assessor enters more than 100 in feedback
+    Then the user should see the text in the page       Words remaining: 91
+    When the user enters text to a text field     css=#form-input-195 .editor    This is to test the feedback entry is modified. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris test @.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris test @.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris test @.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris test @.
+    And the user should see the text in the page        Words remaining: -30
     And the user reloads the page
-    Then the word count should remain the same
+    Then the user should see the text in the page       Words remaining: -30
 
-Navigation link should not appear for questions that are not part of an assessment
+Navigation using next button
     [Documentation]    INFUND-4264
     [Tags]
     Given the user navigates to the page    ${Assessment_overview_9}
     When the user clicks the button/link    link=Application details
-    Then the user should see the element    css=#content .next .pagination-part-title
-    And the user clicks the button/link    css=#content .next .pagination-part-title
-    And the user should see the text in the page    Project summary
-    Then the user clicks the button/link    css=#content .next .pagination-part-title
-    And the user should see the text in the page    Public description
-    Then the user clicks the button/link    css=#content .next .pagination-part-title
-    And the user should see the text in the page    Scope
-    Then the user clicks the button/link    css=#content .next .pagination-part-title
-    And the user should see the text in the page    How many
-    And the user should not see the element    css=#content .next .pagination-part-title
+    Then the user should see the text in the page    Application details
+    And the user clicks next and goes to the page    Project summary
+    And the user clicks next and goes to the page    Public description
+    And the user clicks next and goes to the page    Scope
+    And the user clicks next and goes to the page    How many
+    And the user clicks next and goes to the page    Mediums
+    And the user clicks next and goes to the page    Preferences
+    And the user clicks next and goes to the page    Attire
+    And the user should not see the element    css=.next
+
+Navigation using previous button
+    [Documentation]   INFUND-4264
+    [Tags]
+    Given the user navigates to the page    ${Assessment_overview_9}
+    When the user clicks the button/link     link=4. Attire
+    Then the user should see the text in the page     Attire
+    And the user clicks previous and goes to the page    Preferences
+    And the user clicks previous and goes to the page    Mediums
+    And the user clicks previous and goes to the page    How many
+    And the user clicks previous and goes to the page    Scope
+    And the user clicks previous and goes to the page    Public description
+    And the user clicks previous and goes to the page    Project summary
+    And the user clicks previous and goes to the page    Application details
+    And the user should not see the element     css=.prev
+
 
 Non-scorable question cannot be scored/edited
     [Documentation]    INFUND-3400
@@ -106,15 +124,15 @@ Non-scorable question cannot be scored/edited
     Then the user should not see the element    jQuery=label:contains(Question score)
     And the user should not see the text in the page    Question score
     And the user clicks the button/link    jQuery=span:contains(Next)
-    And the user should see the text in the page    second answer
+    And the user should see the text in the page    This is the applicant response from Test One for Project Summary.
     Then the user should not see the element    jQuery=label:contains(Question score)
     And the user should not see the text in the page    Question score
     And the user clicks the button/link    jQuery=span:contains(Next)
-    And the user should see the text in the page    third answer
+    And the user should see the text in the page    This is the applicant response from Test One for Public Description.
     Then the user should not see the element    jQuery=label:contains(Question score)
     And the user should not see the text in the page    Question score
     And the user clicks the button/link    jQuery=span:contains(Next)
-    And the user should see the text in the page    fourth answer
+    And the user should see the text in the page    This is the applicant response from Test One for Scope.
     Then the user should not see the element    jQuery=label:contains(Question score)
     And the user should not see the text in the page    Question score
 
@@ -134,7 +152,6 @@ Finance summary
 Validation check in the Reject application modal
     [Documentation]    INFUND-3540
     [Tags]
-    # TODO or pending due to INFUND-4375
     Given the user navigates to the page    ${Assessment_overview_11}
     And the user clicks the button/link    jQuery=.summary:contains("Unable to assess this application")
     And the user clicks the button/link    link=Reject this application
@@ -146,21 +163,20 @@ Validation check in the Reject application modal
     Then the user enters text to a text field    id=rejectComment    Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc, quis gravida magna mi a libero. Fusce vulputate eleifend sapien. Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. Cras ultricies mi eu turpis hendrerit fringilla. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; In ac dui quis mi consectetuer lacinia. Nam pretium turpis et arcu. Duis arcu tortor, suscipit eget, imperdiet nec, imperdiet iaculis, ipsum. Sed aliquam ultrices mauris. Integer ante arcu, accumsan a, consectetuer eget, posuere ut, mauris. Praesent adipiscing. Phasellus ullamcorper ipsum rutrum nunc. Nunc nonummy metus. Vestibulum volutpat pretium libero. Cras id dui. Aenean ut
 
 
+
+
+
 *** Keywords ***
 
+the user clicks next and goes to the page
+    [Arguments]    ${page_content}
+    the user clicks the button/link     css=.next
+    the user should see the text in the page     ${page_content}
 
-the modified text should be visible
-    wait until element contains    css=#form-input-195 .editor    This is to test the feedback entry is modified.
-
-the word count should be calculated correctly
-    Wait Until Element Contains    css=#form-input-195 .textarea-footer > span    91
-
-the Assessor enters more than 100 in feedback
-    Input Text    css=#form-input-195 .editor    This is to test the feedback entry is modified. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris test @.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris test @.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris test @.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris test @.
-    Wait Until Element Contains    css=#form-input-195 .textarea-footer > span    -30
-
-the word count should remain the same
-    Wait Until Element Contains    css=#form-input-195 .textarea-footer > span    -30
+the user clicks previous and goes to the page
+    [Arguments]    ${page_content}
+    the user clicks the button/link     css=.prev
+    the user should see the text in the page      ${page_content}
 
 the finance summary total should be correct
     Element Should Contain    css=#content div:nth-child(5) tr:nth-child(2) td:nth-child(2)    £7,680
@@ -179,6 +195,3 @@ the project cost breakdown total should be correct
     Element Should Contain    css=.form-group.project-cost-breakdown tr:nth-child(2) td:nth-child(8)    £0
     Element Should Contain    css=.form-group.project-cost-breakdown tr:nth-child(2) td:nth-child(9)    £0
 
-Assessor selects research category
-    Select From List By Index    id=research-category    1
-    Mouse Out    id=research-category

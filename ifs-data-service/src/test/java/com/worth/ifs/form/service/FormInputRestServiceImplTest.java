@@ -1,9 +1,11 @@
 package com.worth.ifs.form.service;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputScope;
 import org.junit.Test;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -11,7 +13,8 @@ import static com.worth.ifs.commons.service.ParameterizedTypeReferences.formInpu
 import static com.worth.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static com.worth.ifs.form.resource.FormInputScope.APPLICATION;
 import static java.lang.String.format;
-import static org.junit.Assert.assertSame;
+import static org.junit.Assert.*;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 
 public class FormInputRestServiceImplTest extends BaseRestServiceUnitTest<FormInputRestServiceImpl> {
@@ -49,6 +52,24 @@ public class FormInputRestServiceImplTest extends BaseRestServiceUnitTest<FormIn
         setupGetWithRestResultExpectations(format("%s/findByCompetitionId/%s/scope/%s", formInputRestUrl, competitionId, scope), formInputResourceListType(), expected, OK);
         List<FormInputResource> response = service.getByCompetitionIdAndScope(competitionId, scope).getSuccessObject();
         assertSame(expected, response);
+    }
+
+    @Test
+    public void testSave() throws Exception {
+        FormInputResource expected = newFormInputResource().build();
+
+        setupPutWithRestResultExpectations(formInputRestUrl + "/", FormInputResource.class, expected, expected);
+        RestResult<FormInputResource> result = service.save(expected);
+        assertTrue(result.isSuccess());
+        assertEquals(expected, result.getSuccessObject());
+    }
+
+    @Test
+    public void testDelete() throws Exception {
+        Long formInputId = 1L;
+
+        ResponseEntity<Void> result = setupDeleteWithRestResultExpectations(formInputRestUrl + "/" + formInputId);
+        assertEquals(NO_CONTENT, result.getStatusCode());
     }
 
 }
