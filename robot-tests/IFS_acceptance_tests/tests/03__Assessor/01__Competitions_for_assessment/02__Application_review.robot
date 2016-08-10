@@ -84,21 +84,36 @@ Feedback should accept up to 100 words
     And the user reloads the page
     Then the user should see the text in the page       Words remaining: -30
 
-Navigation link should not appear for questions that are not part of an assessment
+Navigation using next button
     [Documentation]    INFUND-4264
     [Tags]
     Given the user navigates to the page    ${Assessment_overview_9}
     When the user clicks the button/link    link=Application details
-    Then the user should see the element    css=#content .next .pagination-part-title
-    And the user clicks the button/link    css=#content .next .pagination-part-title
-    And the user should see the text in the page    Project summary
-    Then the user clicks the button/link    css=#content .next .pagination-part-title
-    And the user should see the text in the page    Public description
-    Then the user clicks the button/link    css=#content .next .pagination-part-title
-    And the user should see the text in the page    Scope
-    Then the user clicks the button/link    css=#content .next .pagination-part-title
-    And the user should see the text in the page    How many
-    And the user should not see the element    css=#content .next .pagination-part-title
+    Then the user should see the text in the page    Application details
+    And the user clicks next and goes to the page    Project summary
+    And the user clicks next and goes to the page    Public description
+    And the user clicks next and goes to the page    Scope
+    And the user clicks next and goes to the page    How many
+    And the user clicks next and goes to the page    Mediums
+    And the user clicks next and goes to the page    Preferences
+    And the user clicks next and goes to the page    Attire
+    And the user should not see the element    css=.next
+
+Navigation using previous button
+    [Documentation]   INFUND-4264
+    [Tags]
+    Given the user navigates to the page    ${Assessment_overview_9}
+    When the user clicks the button/link     link=4. Attire
+    Then the user should see the text in the page     Attire
+    And the user clicks previous and goes to the page    Preferences
+    And the user clicks previous and goes to the page    Mediums
+    And the user clicks previous and goes to the page    How many
+    And the user clicks previous and goes to the page    Scope
+    And the user clicks previous and goes to the page    Public description
+    And the user clicks previous and goes to the page    Project summary
+    And the user clicks previous and goes to the page    Application details
+    And the user should not see the element     css=.prev
+
 
 Non-scorable question cannot be scored/edited
     [Documentation]    INFUND-3400
@@ -109,15 +124,15 @@ Non-scorable question cannot be scored/edited
     Then the user should not see the element    jQuery=label:contains(Question score)
     And the user should not see the text in the page    Question score
     And the user clicks the button/link    jQuery=span:contains(Next)
-    And the user should see the text in the page    second answer
+    And the user should see the text in the page    This is the applicant response from Test One for Project Summary.
     Then the user should not see the element    jQuery=label:contains(Question score)
     And the user should not see the text in the page    Question score
     And the user clicks the button/link    jQuery=span:contains(Next)
-    And the user should see the text in the page    third answer
+    And the user should see the text in the page    This is the applicant response from Test One for Public Description.
     Then the user should not see the element    jQuery=label:contains(Question score)
     And the user should not see the text in the page    Question score
     And the user clicks the button/link    jQuery=span:contains(Next)
-    And the user should see the text in the page    fourth answer
+    And the user should see the text in the page    This is the applicant response from Test One for Scope.
     Then the user should not see the element    jQuery=label:contains(Question score)
     And the user should not see the text in the page    Question score
 
@@ -148,7 +163,20 @@ Validation check in the Reject application modal
     Then the user enters text to a text field    id=rejectComment    Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc, quis gravida magna mi a libero. Fusce vulputate eleifend sapien. Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. Cras ultricies mi eu turpis hendrerit fringilla. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; In ac dui quis mi consectetuer lacinia. Nam pretium turpis et arcu. Duis arcu tortor, suscipit eget, imperdiet nec, imperdiet iaculis, ipsum. Sed aliquam ultrices mauris. Integer ante arcu, accumsan a, consectetuer eget, posuere ut, mauris. Praesent adipiscing. Phasellus ullamcorper ipsum rutrum nunc. Nunc nonummy metus. Vestibulum volutpat pretium libero. Cras id dui. Aenean ut
 
 
+
+
+
 *** Keywords ***
+
+the user clicks next and goes to the page
+    [Arguments]    ${page_content}
+    the user clicks the button/link     css=.next
+    the user should see the text in the page     ${page_content}
+
+the user clicks previous and goes to the page
+    [Arguments]    ${page_content}
+    the user clicks the button/link     css=.prev
+    the user should see the text in the page      ${page_content}
 
 the finance summary total should be correct
     Element Should Contain    css=#content div:nth-child(5) tr:nth-child(2) td:nth-child(2)    £7,680
