@@ -23,13 +23,14 @@ public class ProjectInvite extends Invite<Project> {
     @JoinColumn(name = "target_id", referencedColumnName = "id")
     private Project project;
 
-    ProjectInvite() {
+    public ProjectInvite() {
         // no-arg constructor
     }
 
     public ProjectInvite(final String name, final String email, final String hash, final Organisation organisation, final Project project) {
         super(name, email, hash, InviteStatusConstants.CREATED);
         this.project = project;
+        this.organisation = organisation;
     }
 
     public Organisation getOrganisation() {

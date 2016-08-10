@@ -44,7 +44,9 @@ import com.worth.ifs.form.repository.FormInputRepository;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
 import com.worth.ifs.form.transactional.FormInputService;
 import com.worth.ifs.invite.repository.InviteOrganisationRepository;
+import com.worth.ifs.invite.repository.InviteProjectRepository;
 import com.worth.ifs.invite.repository.InviteRepository;
+import com.worth.ifs.invite.transactional.InviteProjectService;
 import com.worth.ifs.notifications.resource.SystemNotificationSource;
 import com.worth.ifs.notifications.service.NotificationService;
 import com.worth.ifs.organisation.repository.OrganisationAddressRepository;
@@ -179,6 +181,12 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected InviteRepository inviteRepositoryMock;
+
+    @Mock
+    protected InviteProjectRepository inviteProjectRepositoryMock;
+
+    @Mock
+    protected InviteProjectService inviteProjectServiceMock;
 
     @Mock
     protected AddressLookupService addressLookupServiceMock;
