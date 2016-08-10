@@ -7,7 +7,7 @@ import static com.worth.ifs.assessment.builder.AssessorFormInputResponseResource
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
 public class AssessorFormInputResponseDocs {
-    public static final FieldDescriptor[] AssessorFormInputResponseFields = {
+    public static final FieldDescriptor[] assessorFormInputResponseFields = {
             fieldWithPath("id").description("Id of the assessor form input response"),
             fieldWithPath("assessment").description("assessment process that the response belongs to"),
             fieldWithPath("question").description("question that the response is associated with"),

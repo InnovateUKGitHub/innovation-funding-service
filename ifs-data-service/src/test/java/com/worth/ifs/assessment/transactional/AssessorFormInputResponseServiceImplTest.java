@@ -19,6 +19,7 @@ import static com.worth.ifs.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static com.worth.ifs.assessment.builder.AssessorFormInputResponseBuilder.newAssessorFormInputResponse;
 import static com.worth.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
+import static com.worth.ifs.commons.error.CommonFailureKeys.FORM_WORD_LIMIT_EXCEEDED;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.form.builder.FormInputBuilder.newFormInput;
 import static com.worth.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
@@ -202,6 +203,7 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
 
         ServiceResult<Void> result = assessorFormInputResponseService.updateFormInputResponse(assessorFormInputResponseResource);
         assertTrue(result.isFailure());
+        assertEquals(FORM_WORD_LIMIT_EXCEEDED.getErrorKey(),result.getErrors().get(0).getErrorKey());
     }
 
     @Test

@@ -11,7 +11,7 @@ import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import java.util.List;
 
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.documentation.AssessorFormInputResponseDocs.AssessorFormInputResponseFields;
+import static com.worth.ifs.documentation.AssessorFormInputResponseDocs.assessorFormInputResponseFields;
 import static com.worth.ifs.documentation.AssessorFormInputResponseDocs.assessorFormInputResponseResourceBuilder;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -89,7 +89,7 @@ public class AssessorFormInputResponseControllerDocumentation extends BaseContro
                 .content(objectMapper.writeValueAsString(response)))
                 .andExpect(status().is2xxSuccessful())
                 .andDo(this.document.snippets(
-                        requestFields(AssessorFormInputResponseFields)
+                        requestFields(assessorFormInputResponseFields)
                 ));
     }
 }

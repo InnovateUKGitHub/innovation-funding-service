@@ -36,6 +36,6 @@ public class AssessorFormInputResponseRestServiceImpl extends BaseRestService im
 
     @Override
     public RestResult<Void> updateFormInputResponse(AssessorFormInputResponseResource response) {
-        return putWithRestResult(format("%s/formInput/%s/assessment/%s", assessorFormInputResponseRestUrl, response.getFormInput(), response.getAssessment()), response, Void.class);
+        return putWithRestResult(format("%s", assessorFormInputResponseRestUrl), response, Void.class);
     }
 }

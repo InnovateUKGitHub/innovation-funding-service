@@ -60,7 +60,7 @@ public class AssessorFormInputResponseRestServiceImplTest extends BaseRestServic
                 .withFormInput(formInputId)
                 .withValue(value)
                 .build();
-        setupPutWithRestResultExpectations(format("%s/formInput/%s/assessment/%s", assessorFormInputResponseRestUrl, formInputId, assessmentId), formInputResponse, OK);
+        setupPutWithRestResultExpectations(format("%s", assessorFormInputResponseRestUrl), formInputResponse, OK);
         final RestResult<Void> response = service.updateFormInputResponse(formInputResponse);
         assertTrue(response.isSuccess());
     }

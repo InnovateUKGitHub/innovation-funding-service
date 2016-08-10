@@ -30,7 +30,7 @@ public class AssessorFormInputResponseController {
     }
 
     @RequestMapping(value = "", method = RequestMethod.PUT)
-    public RestResult<Void> updateFormInputResponse(@Valid @RequestBody(required = false) AssessorFormInputResponseResource response) {
+    public RestResult<Void> updateFormInputResponse(@Valid @RequestBody AssessorFormInputResponseResource response) {
         return assessorFormInputResponseService.updateFormInputResponse(response).toPutResponse();
     }
 }
