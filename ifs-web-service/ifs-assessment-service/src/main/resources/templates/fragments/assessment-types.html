@@ -33,7 +33,7 @@
         </details>
 
         <div class="textarea-wrapped word-count">
-            <textarea th:field="*{formInput[__${field.id}__]}" th:attr="data-max_words=${field.wordCount}" th:id="'form-textarea-'+${field.id}">
+            <textarea data-editor="md" th:field="*{formInput[__${field.id}__]}" th:attr="data-max_words=${field.wordCount}" th:id="'form-textarea-'+${field.id}">
             </textarea>
 
             <div class="textarea-footer">

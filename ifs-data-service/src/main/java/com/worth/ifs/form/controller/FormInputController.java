@@ -5,10 +5,7 @@ import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputScope;
 import com.worth.ifs.form.transactional.FormInputService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -45,5 +42,15 @@ public class FormInputController {
     @RequestMapping(value = "/findByCompetitionId/{competitionId}/scope/{scope}", method = RequestMethod.GET)
     public RestResult<List<FormInputResource>> findByCompetitionIdAndScope(@PathVariable("competitionId") Long competitionId, @PathVariable("scope") FormInputScope scope) {
         return formInputService.findByCompetitionIdAndScope(competitionId, scope).toGetResponse();
+    }
+
+    @RequestMapping(value = "/", method = RequestMethod.PUT)
+    public RestResult<FormInputResource> save(@RequestBody FormInputResource formInputResource) {
+        return formInputService.save(formInputResource).toGetResponse();
+    }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    public RestResult<Void> delete(@PathVariable("id") Long id) {
+        return formInputService.delete(id).toDeleteResponse();
     }
 }
