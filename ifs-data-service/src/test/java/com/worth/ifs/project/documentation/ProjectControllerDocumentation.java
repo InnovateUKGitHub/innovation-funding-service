@@ -11,16 +11,19 @@ import com.worth.ifs.project.controller.ProjectController;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.test.web.servlet.MvcResult;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.util.JsonMappingUtil.toJson;
 import static com.worth.ifs.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
@@ -35,6 +38,7 @@ import static com.worth.ifs.organisation.builder.OrganisationAddressResourceBuil
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -463,13 +467,18 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
 
     @Test
     public void isOtherDocumentsSubmitAllowed() throws Exception {
+        UserResource userResource = newUserResource()
+                .withId(1L)
+                .withUID("123abc")
+                .build();
         when(projectServiceMock.isOtherDocumentsSubmitAllowed(123L, 1L)).thenReturn(serviceSuccess(true));
-        MvcResult mvcResult = mockMvc.perform(get("/project/{projectId}/partner/{userId}/documents/submit", 123L, 1L))
+        when(userAuthenticationService.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(userResource);
+
+        MvcResult mvcResult = mockMvc.perform(get("/project/{projectId}/partner/documents/ready", 123L))
                 .andExpect(status().isOk())
                 .andDo(this.document.snippets(
                         pathParameters(
-                                parameterWithName("projectId").description("Id of the project for which the documents are being submitted to."),
-                                parameterWithName("userId").description("Logged in User Id")
+                                parameterWithName("projectId").description("Id of the project for which the documents are being submitted to.")
                         )))
                 .andReturn();
         assertTrue(mvcResult.getResponse().getContentAsString().equals("true"));
@@ -477,13 +486,18 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
 
     @Test
     public void isOtherDocumentsSubmitNotAllowedWhenDocumentsNotFullyUploaded() throws Exception {
+        UserResource userResource = newUserResource()
+                .withId(1L)
+                .withUID("123abc")
+                .build();
         when(projectServiceMock.isOtherDocumentsSubmitAllowed(123L, 1L)).thenReturn(serviceSuccess(false));
-        MvcResult mvcResult = mockMvc.perform(get("/project/{projectId}/partner/{userId}/documents/submit", 123L, 1L))
+        when(userAuthenticationService.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(userResource);
+
+        MvcResult mvcResult = mockMvc.perform(get("/project/{projectId}/partner/documents/ready", 123L))
                 .andExpect(status().isOk())
                 .andDo(this.document.snippets(
                         pathParameters(
-                                parameterWithName("projectId").description("Id of the project for which the documents are being submitted to."),
-                                parameterWithName("userId").description("Logged in User Id")
+                                parameterWithName("projectId").description("Id of the project for which the documents are being submitted to.")
                         )))
                 .andReturn();
         assertTrue(mvcResult.getResponse().getContentAsString().equals("false"));
