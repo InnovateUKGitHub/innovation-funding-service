@@ -29,8 +29,8 @@ public class AssessorDashboardModelPopulator {
     private List<AssessorDashboardActiveCompetitionViewModel> getActiveCompetitions() {
         Long competitionId = 2L;
         String displayLabel = "Juggling Craziness";
-        String progressAssessed = "1";
-        String progressTotal = "2";
+        Integer progressAssessed = 1;
+        Integer progressTotal = 2;
         LocalDate deadline = LocalDate.parse("2016-12-31");
         long daysLeft = 16L;
         long daysLeftPercentage = 20L;
