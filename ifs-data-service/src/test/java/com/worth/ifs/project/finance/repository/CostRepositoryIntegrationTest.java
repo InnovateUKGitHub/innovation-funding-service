@@ -72,7 +72,7 @@ public class CostRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
     public void test_createCostWithTimePeriod() {
 
         // save a new Cost
-        Cost newCost = new Cost(new BigDecimal("12.6"), new CostTimePeriod(2, DAY, 4, YEAR));
+        Cost newCost = new Cost(new BigDecimal("12.6")).withTimePeriod(2, DAY, 4, YEAR);
         Cost saved = repository.save(newCost);
 
         // clear the Hibernate cache
@@ -104,7 +104,7 @@ public class CostRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
         costCategoryTypeRepository.save(newCostCategoryType);
 
         // save a new Cost
-        Cost newCost = new Cost(new BigDecimal("12.6"), costCategory);
+        Cost newCost = new Cost("12.6").withCategory(costCategory);
         Cost saved = repository.save(newCost);
 
         // clear the Hibernate cache

@@ -42,36 +42,38 @@ public class Cost {
         // for ORM use
     }
 
+    // copy constructor
+    private Cost(Cost cost) {
+        this(cost.id, cost.value, cost.costGroup, cost.costTimePeriod, cost.costCategory);
+    }
+
+    // for use with copy constructor
+    private Cost(Long id, BigDecimal value, CostGroup costGroup, CostTimePeriod costTimePeriod, CostCategory costCategory) {
+        this.id = id;
+        this.value = value;
+        this.costGroup = costGroup;
+        this.costTimePeriod = costTimePeriod;
+        this.costCategory = costCategory;
+    }
+
     public Cost(String value) {
         this(new BigDecimal(value));
-    }
-
-    public Cost(String value, CostCategory costCategory) {
-        this(new BigDecimal(value), costCategory);
-    }
-
-    public Cost(String value, CostCategory costCategory, CostTimePeriod costTimePeriod) {
-        this(new BigDecimal(value), costCategory, costTimePeriod);
     }
 
     public Cost(BigDecimal value) {
         this.value = value;
     }
 
-    public Cost(BigDecimal value, CostTimePeriod costTimePeriod) {
-        this.value = value;
-        this.setCostTimePeriod(costTimePeriod);
+    public Cost withCategory(CostCategory category) {
+        Cost copy = new Cost(this);
+        copy.setCostCategory(category);
+        return copy;
     }
 
-    public Cost(BigDecimal value, CostCategory costCategory) {
-        this.value = value;
-        this.costCategory = costCategory;
-    }
-
-    public Cost(BigDecimal value, CostCategory costCategory, CostTimePeriod costTimePeriod) {
-        this.value = value;
-        this.costCategory = costCategory;
-        this.setCostTimePeriod(costTimePeriod);
+    public Cost withTimePeriod(Integer offsetAmount, CostTimePeriod.TimeUnit offsetUnit, Integer durationAmount, CostTimePeriod.TimeUnit durationUnit) {
+        Cost copy = new Cost(this);
+        copy.setCostTimePeriod(new CostTimePeriod(offsetAmount, offsetUnit, durationAmount, durationUnit));
+        return copy;
     }
 
     public Long getId() {

@@ -108,10 +108,13 @@ public class SpendProfileRepositoryIntegrationTest extends BaseRepositoryIntegra
         CostTimePeriod month1Again = new CostTimePeriod(1, MONTH);
 
         CostGroup eligibleCosts = new CostGroup("My eligible costs",
-                asList(new Cost("1.20", labourCostCategory), new Cost("3.40", materialsCostCategory)));
+                asList(new Cost("1.20").withCategory(labourCostCategory), new Cost("3.40").withCategory(materialsCostCategory)));
 
         CostGroup spendProfileFigures = new CostGroup("My spend profile costs",
-                asList(new Cost("5.60", labourCostCategory, month1), new Cost("7.80", materialsCostCategory, month1Again)));
+                asList(
+                        new Cost("5.60").withCategory(labourCostCategory).withTimePeriod(0, DAY, 1, MONTH),
+                        new Cost("7.80").withCategory(materialsCostCategory).withTimePeriod(0, DAY, 1, MONTH)
+                ));
 
         SpendProfile saved = repository.save(new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileFigures));
 
@@ -175,14 +178,11 @@ public class SpendProfileRepositoryIntegrationTest extends BaseRepositoryIntegra
 
         Organisation organisation = organisationRepository.findOne(1L);
 
-        CostTimePeriod month1 = new CostTimePeriod(1, MONTH);
-        CostTimePeriod month1Again = new CostTimePeriod(1, MONTH);
-
         CostGroup eligibleCosts = new CostGroup("My eligible costs",
-                singletonList(new Cost("1.20", labourCostCategory)));
+                singletonList(new Cost("1.20").withCategory(labourCostCategory)));
 
         CostGroup spendProfileFigures = new CostGroup("My spend profile costs",
-                singletonList(new Cost("5.60", labourCostCategory, month1)));
+                singletonList(new Cost("5.60").withCategory(labourCostCategory).withTimePeriod(0, DAY, 1, MONTH)));
 
         SpendProfile saved = repository.save(new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileFigures));
 
@@ -190,9 +190,9 @@ public class SpendProfileRepositoryIntegrationTest extends BaseRepositoryIntegra
         flushAndClearSession();
 
         saved.getEligibleCosts().getCosts().get(0).setValue("99.99");
-        saved.getEligibleCosts().addCost(new Cost("3.40", materialsCostCategory));
+        saved.getEligibleCosts().addCost(new Cost("3.40").withCategory(materialsCostCategory));
         saved.getSpendProfileFigures().removeCost(0);
-        saved.getSpendProfileFigures().addCost(new Cost("7.80", materialsCostCategory, month1Again));
+        saved.getSpendProfileFigures().addCost(new Cost("7.80").withCategory(materialsCostCategory).withTimePeriod(0, DAY, 1, MONTH));
 
         repository.save(saved);
 
