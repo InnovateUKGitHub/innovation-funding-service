@@ -1,33 +1,16 @@
 package com.worth.ifs.competitionsetup.controller;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.base.CharMatcher;
 import com.worth.ifs.application.service.CategoryService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.category.resource.CategoryResource;
-import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionResource.Status;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.competitionsetup.form.AdditionalInfoForm;
 import com.worth.ifs.competitionsetup.form.ApplicationFormForm;
 import com.worth.ifs.competitionsetup.form.AssessorsForm;
@@ -37,11 +20,30 @@ import com.worth.ifs.competitionsetup.form.FinanceForm;
 import com.worth.ifs.competitionsetup.form.InitialDetailsForm;
 import com.worth.ifs.competitionsetup.form.MilestonesForm;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupService;
+import com.worth.ifs.competitionsetup.model.Question;
+import com.worth.ifs.competitionsetup.service.CompetitionSetupQuestionService;
+import com.worth.ifs.competitionsetup.service.CompetitionSetupService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.Validator;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.common.base.CharMatcher;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import java.util.List;
+import java.util.Optional;
 
 
 /**
@@ -52,6 +54,7 @@ import com.google.common.base.CharMatcher;
 public class CompetitionSetupController {
 
     private static final Log LOG = LogFactory.getLog(CompetitionSetupController.class);
+    private static final String BINDING_RESULT_COMPETITION_SETUP_FORM = "org.springframework.validation.BindingResult.applicationFormForm";
 
     @Autowired
     private CompetitionService competitionService;
@@ -60,7 +63,13 @@ public class CompetitionSetupController {
     private CompetitionSetupService competitionSetupService;
 
     @Autowired
+    private CompetitionSetupQuestionService competitionSetupQuestionService;
+
+    @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private Validator validator;
 
     @RequestMapping(value = "/{competitionId}", method = RequestMethod.GET)
     public String initCompetitionSetupSection(Model model, @PathVariable("competitionId") Long competitionId) {
@@ -97,19 +106,40 @@ public class CompetitionSetupController {
         return "redirect:/competition/setup/" + competitionId + "/section/" + section.getPath();
     }
 
-    @RequestMapping(value = "/{competitionId}/section/{sectionPath}", method = RequestMethod.GET)
-    public String editCompetitionSetupSection(Model model, @PathVariable("competitionId") Long competitionId, @PathVariable("sectionPath") String sectionPath) {
+    @RequestMapping(value = "/{competitionId}/section/application/question/{questionId}", method = RequestMethod.GET)
+    public String editCompetitionSetupApplication(@PathVariable("competitionId") Long competitionId,
+                                              @PathVariable("questionId") Long questionId,
+                                              Model model) {
 
-    	CompetitionSetupSection section = CompetitionSetupSection.fromPath(sectionPath);
-    	if(section == null) {
-    		LOG.error("Invalid section path specified: " + sectionPath);
+    	CompetitionSetupSection section = CompetitionSetupSection.APPLICATION_FORM;
+        CompetitionResource competition = competitionService.getById(competitionId);
+
+        //TODO do competition check
+
+        competitionSetupService.populateCompetitionSectionModelAttributes(model, competition, section);
+        ApplicationFormForm competitionSetupForm = (ApplicationFormForm) competitionSetupService.getSectionFormData(competition, section);
+
+        addQuestionToUpdate(questionId, model, competitionSetupForm);
+        model.addAttribute("competitionSetupForm", competitionSetupForm);
+
+        return "competition/setup";
+    }
+
+    @RequestMapping(value = "/{competitionId}/section/{sectionPath}", method = RequestMethod.GET)
+    public String editCompetitionSetupSection(@PathVariable("competitionId") Long competitionId,
+                                              @PathVariable("sectionPath") String sectionPath,
+                                              Model model) {
+
+        CompetitionSetupSection section = CompetitionSetupSection.fromPath(sectionPath);
+        if(section == null) {
+            LOG.error("Invalid section path specified: " + sectionPath);
             return "redirect:/dashboard";
-    	}
+        }
 
         CompetitionResource competition = competitionService.getById(competitionId);
 
         if(competition == null || !Status.COMPETITION_SETUP.equals(competition.getCompetitionStatus())) {
-        	LOG.error("Competition is not found in setup state");
+            LOG.error("Competition is not found in setup state");
             return "redirect:/dashboard";
         }
 
@@ -173,7 +203,27 @@ public class CompetitionSetupController {
                                               @PathVariable("competitionId") Long competitionId,
                                               Model model) {
 
+
         return genericCompetitionSetupSection(competitionSetupForm, bindingResult, competitionId, CompetitionSetupSection.APPLICATION_FORM, model);
+    }
+
+    @RequestMapping(value = "/{competitionId}/section/application/question/{questionId}", method = RequestMethod.POST)
+    public String submitApplicationQuestion(@Valid @ModelAttribute("competitionSetupForm") ApplicationFormForm competitionSetupForm,
+                                            BindingResult bindingResult,
+                                            @PathVariable("competitionId") Long competitionId,
+                                            @PathVariable("questionId") Long questionId,
+                                            Model model) {
+
+        competitionSetupQuestionService.updateQuestion(competitionSetupForm.getQuestionToUpdate());
+
+        if(!bindingResult.hasErrors()) {
+            return "redirect:/competition/setup/" + competitionId + "/section/application";
+        } else {
+            competitionSetupService.populateCompetitionSectionModelAttributes(model, competitionService.getById(competitionId), CompetitionSetupSection.APPLICATION_FORM);
+            addQuestionToUpdate(questionId, model, competitionSetupForm);
+            model.addAttribute("competitionSetupForm", competitionSetupForm);
+            return "competition/setup";
+        }
     }
 
     @RequestMapping(value = "/{competitionId}/section/finance", method = RequestMethod.POST)
@@ -224,13 +274,15 @@ public class CompetitionSetupController {
         			bindingResult.addError(error);
         		});
         	}
+            //@TODO Fix redirection / error handling
+            return null;
+//        	competitionSetupService.saveCompetitionSetupSection(competitionSetupForm, competition, section);
+//            return "redirect:/competition/setup/" + competitionId + "/section/" + section.getPath();
         } else {
             LOG.debug("Form errors");
+            competitionSetupService.populateCompetitionSectionModelAttributes(model, competition, section);
+            return "competition/setup";
         }
-
-        competitionSetupService.populateCompetitionSectionModelAttributes(model, competition, section);
-
-        return "competition/setup";
     }
 
     private ObjectNode createJsonObjectNode(boolean success, String message) {
@@ -239,6 +291,19 @@ public class CompetitionSetupController {
         node.put("success", success ? "true" : "false");
         node.put("message", CharMatcher.is('\"').trimFrom(message));
         return node;
+    }
+
+    private void addQuestionToUpdate(Long questionId, Model model, ApplicationFormForm applicationFormForm) {
+        if(model.containsAttribute("questions")) {
+            List<Question> questions = (List<Question>) model.asMap().get("questions");
+            Optional<Question> question = questions.stream().filter(questionObject -> questionObject.getId().equals(questionId)).findFirst();
+            if(question.isPresent()) {
+                applicationFormForm.setQuestionToUpdate(question.get());
+            } else {
+                LOG.error("Question(" + questionId + ") not found");
+            }
+        }
+
     }
 
 }

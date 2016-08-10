@@ -13,6 +13,11 @@ import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.form.InitialDetailsForm;
+import com.worth.ifs.competitionsetup.service.CompetitionSetupService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 /**
  * Competition setup section saver for the initial details section.
@@ -22,7 +27,10 @@ public class InitialDetailsSectionSaver implements CompetitionSetupSectionSaver 
 
 	@Autowired
 	private CompetitionService competitionService;
-	
+
+	@Autowired
+	private CompetitionSetupService competitionSetupService;
+
 	@Override
 	public CompetitionSetupSection sectionToSave() {
 		return CompetitionSetupSection.INITIAL_DETAILS;
@@ -32,7 +40,9 @@ public class InitialDetailsSectionSaver implements CompetitionSetupSectionSaver 
 	public List<Error> saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
 		
 		InitialDetailsForm initialDetailsForm = (InitialDetailsForm) competitionSetupForm;
-		
+
+		Boolean isDiffCompType = competition.getCompetitionType() != initialDetailsForm.getCompetitionTypeId();
+
 		competition.setName(initialDetailsForm.getTitle());
 		competition.setExecutive(initialDetailsForm.getExecutiveUserId());
 
@@ -51,6 +61,9 @@ public class InitialDetailsSectionSaver implements CompetitionSetupSectionSaver 
 
 		competitionService.update(competition);
 
+        if(isDiffCompType) {
+            competitionService.initApplicationFormByCompetitionType(competition.getId(), initialDetailsForm.getCompetitionTypeId());
+        }
         return new ArrayList<>();
 	}
 	

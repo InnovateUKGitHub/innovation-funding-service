@@ -18,7 +18,7 @@ public interface CompetitionSetupService {
 	
 	CompetitionSetupForm getSectionFormData(CompetitionResource competitionResource,
 			CompetitionSetupSection section);
-	
+
 	List<Error> saveCompetitionSetupSection(CompetitionSetupForm competitionSetupForm,
 			CompetitionResource competitionResource, CompetitionSetupSection section);
 }

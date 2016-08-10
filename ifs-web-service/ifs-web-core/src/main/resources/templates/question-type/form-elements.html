@@ -177,8 +177,8 @@
               th:name="${name != null} ? ${name} : 'formInput['+${id}+']'"
               th:field="*{formInput[__${id}__]}"
               th:readonly="${readonly}"
-              th:attrappend="data-max_words=${wordCount != null}?@{${wordCount}}"
-              th:attr="rows=${textareaRows != null ? textareaRows : ''}, cols=${textareaCols != null ? textareaCols : ''}"
+              th:attrappend="data-max_words=${wordCount != null}?@{${wordCount}},data-editor=${editor != null}?@{${editor}}"
+              th:attr="rows=${textareaRows != null ? textareaRows : ''}, cols=${textareaCols != null ? textareaCols : ''} "
               >
 		</textarea>
 </div>
@@ -204,7 +204,8 @@
 		 					value=${value},
 		 					wordCount=${maxWords},
 		 					readonly=false,
-		 					name=${name}
+		 					name=${name},
+              editor='md'
 		 					)" th:remove="tag">
         </div>
 
@@ -253,6 +254,7 @@
 
         <div th:include="question-type/form-elements :: form-textarea (
 		 					id=${formInput.getId()},
+              editor='md',
 		 					value=((${response} == null ) ? '' : ${response?.getValue()} ),
 		 					wordCount=${formInput.getWordCount()},
 		 					readonly=${readonly} or ${question.isMarkAsCompletedEnabled() and

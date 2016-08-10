@@ -109,6 +109,7 @@ public class BankDetailsController extends AddressLookupBaseController {
     public String searchAddress(Model model,
                                 @PathVariable("projectId") Long projectId,
                                 @Valid @ModelAttribute(FORM_ATTR_NAME) BankDetailsForm form,
+                                BindingResult bindingResult,
                                 @ModelAttribute("loggedInUser") UserResource loggedInUser) {
         form.getAddressForm().setSelectedPostcodeIndex(null);
         form.getAddressForm().setTriedToSearch(true);

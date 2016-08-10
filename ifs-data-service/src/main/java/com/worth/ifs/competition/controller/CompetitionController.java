@@ -70,6 +70,11 @@ public class CompetitionController {
     public RestResult<CompetitionResource> saveCompetition(@RequestBody CompetitionResource competitionResource, @PathVariable("id") final Long id) {
         return competitionSetupService.update(id, competitionResource).toGetResponse();
     }
+    
+    @RequestMapping(value = "/{id}/initialise-form/{competitionTypeId}", method = RequestMethod.POST)
+    public RestResult<Void> initialiseForm(@PathVariable("id") Long competitionId, @PathVariable("competitionTypeId") Long competitionType) {
+    	return competitionSetupService.initialiseFormForCompetitionType(competitionId, competitionType).toGetResponse();
+    }
 
     /**
      * Generate and save the competition code

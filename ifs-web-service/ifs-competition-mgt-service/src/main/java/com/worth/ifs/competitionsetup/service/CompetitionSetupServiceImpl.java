@@ -28,8 +28,8 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 	
 	@Autowired
 	private CompetitionService competitionService;
-	
-	private Map<CompetitionSetupSection, CompetitionSetupFormPopulator> formPopulators;
+
+    private Map<CompetitionSetupSection, CompetitionSetupFormPopulator> formPopulators;
 	
 	private Map<CompetitionSetupSection, CompetitionSetupSectionSaver> sectionSavers;
 
@@ -95,7 +95,7 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 		
 		return errors;
 	}
-	
+
 	private void populateGeneralModelAttributes(Model model, CompetitionResource competitionResource, CompetitionSetupSection section) {
 		List<CompetitionSetupSection> completedSections = competitionService
 				.getCompletedCompetitionSetupSectionStatusesByCompetitionId(competitionResource.getId());
