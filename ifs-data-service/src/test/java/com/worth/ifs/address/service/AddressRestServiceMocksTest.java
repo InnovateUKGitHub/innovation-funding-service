@@ -22,7 +22,7 @@ public class AddressRestServiceMocksTest extends BaseRestServiceUnitTest<Address
 
     @Test
     public void testDoLookup() throws Exception{
-        String expectedUrl = addressRestURL + "/doLookup/BS348XU";
+        String expectedUrl = addressRestURL + "/doLookup/?lookup=BS348XU";
         List<AddressResource> returnedAddresses = newAddressResource().build(4);
         setupGetWithRestResultExpectations(expectedUrl, addressResourceListType(), returnedAddresses);
 

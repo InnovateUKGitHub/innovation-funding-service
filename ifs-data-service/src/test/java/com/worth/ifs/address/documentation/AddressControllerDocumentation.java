@@ -20,6 +20,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 
 public class AddressControllerDocumentation extends BaseControllerMockMVCTest<AddressController> {
     private RestDocumentationResultHandler document;
@@ -41,9 +42,9 @@ public class AddressControllerDocumentation extends BaseControllerMockMVCTest<Ad
 
         when(addressLookupServiceMock.validatePostcode(postCode)).thenReturn(serviceSuccess(true));
 
-        mockMvc.perform(get("/address/validatePostcode/{postcode}", postCode))
+        mockMvc.perform(get("/address/validatePostcode/?postcode=" +  postCode))
                 .andDo(this.document.snippets(
-                        pathParameters(
+                        requestParameters(
                                 parameterWithName("postcode").description("Postcode to validate")
                         )
                 ));
@@ -58,10 +59,10 @@ public class AddressControllerDocumentation extends BaseControllerMockMVCTest<Ad
 
         when(addressLookupServiceMock.doLookup(postCode)).thenReturn(serviceSuccess(addressResources));
 
-        mockMvc.perform(get("/address/doLookup/{postcode}", postCode))
+        mockMvc.perform(get("/address/doLookup/?lookup=" + postCode))
                 .andDo(this.document.snippets(
-                        pathParameters(
-                                parameterWithName("postcode").description("Postcode to look up")
+                        requestParameters(
+                                parameterWithName("lookup").description("Postcode to look up")
                         ),
                         responseFields(
                                 fieldWithPath("[]id").description("Address Id"),
