@@ -18,12 +18,11 @@ import java.util.List;
 
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.milestoneResourceListType;
 
-/**
- *
- */
 public class MilestoneRestServiceMocksTest extends BaseRestServiceUnitTest<MilestoneRestServiceImpl> {
 
     private static final String milestonesRestURL = "/milestone";
+    private static final Long competitionId = 1L;
+    private static final Long newCompetitionId = 2L;
 
     @Override
     protected MilestoneRestServiceImpl registerRestServiceUnderTest() {
@@ -36,23 +35,22 @@ public class MilestoneRestServiceMocksTest extends BaseRestServiceUnitTest<Miles
         List<MilestoneResource> returnedResponse = new ArrayList<>();
         returnedResponse.add(getMilestone());
 
-        setupGetWithRestResultExpectations(milestonesRestURL + "/" + 1L, milestoneResourceListType(), returnedResponse);
-        List<MilestoneResource> response = service.getAllDatesByCompetitionId(1L).getSuccessObject();
+        setupGetWithRestResultExpectations(milestonesRestURL + "/" + competitionId, milestoneResourceListType(), returnedResponse);
+        List<MilestoneResource> response = service.getAllDatesByCompetitionId(competitionId).getSuccessObject();
         assertNotNull(response);
         assertEquals(returnedResponse, response);
     }
 
     @Test
     public void test_createMilestone() {
-
         MilestoneResource milestone = new MilestoneResource();
-        milestone.setId(2L);
+        milestone.setId(3L);
         milestone.setName(MilestoneResource.MilestoneName.OPEN_DATE);
-        milestone.setCompetition(2L);
+        milestone.setCompetition(newCompetitionId);
 
-        setupPostWithRestResultExpectations(milestonesRestURL + "/" + 2L, MilestoneResource.class, MilestoneName.OPEN_DATE, milestone, HttpStatus.OK);
+        setupPostWithRestResultExpectations(milestonesRestURL + "/" + newCompetitionId, MilestoneResource.class, MilestoneName.OPEN_DATE, milestone, HttpStatus.OK);
 
-        MilestoneResource response = service.create(MilestoneName.OPEN_DATE, 2L).getSuccessObject();
+        MilestoneResource response = service.create(MilestoneName.OPEN_DATE, newCompetitionId).getSuccessObject();
         assertNotNull(response);
         assertEquals(milestone, response);
     }
@@ -64,17 +62,20 @@ public class MilestoneRestServiceMocksTest extends BaseRestServiceUnitTest<Miles
         List<MilestoneResource> returnedResponse = new ArrayList<>();
         returnedResponse.add(getMilestone());
 
-        setupGetWithRestResultExpectations(milestonesRestURL + "/" + 1L, milestoneResourceListType(), returnedResponse);
-        List<MilestoneResource> response = service.getAllDatesByCompetitionId(1L).getSuccessObject();
+        setupGetWithRestResultExpectations(milestonesRestURL + "/" + competitionId, milestoneResourceListType(), returnedResponse);
+        List<MilestoneResource> response = service.getAllDatesByCompetitionId(competitionId).getSuccessObject();
         assertNotNull(response);
         assertEquals(returnedResponse, response);
 
         MilestoneResource milestone = response.get(0);
         milestone.setDate(milestone.getDate().plusDays(7));
+        response.set(0, milestone);
+      //  response.set(0).setDate(milestone.getDate().plus(7));
 
-        setupPutWithRestResultExpectations(milestonesRestURL + "/" + 1L, Void.class, response, null, HttpStatus.OK);
+        //setupPutWithRestResultExpectations(milestonesRestURL + "/" + competitionId, Void.class, response, null, HttpStatus.OK);
+        setupPutWithRestResultVerifications(milestonesRestURL + "/" + competitionId, Void.class, response);
 
-        service.update(response, 1L).getSuccessObject();
+        service.update(response, competitionId).getSuccessObject();
     }
 
     private MilestoneResource getMilestone() {
@@ -82,7 +83,7 @@ public class MilestoneRestServiceMocksTest extends BaseRestServiceUnitTest<Miles
                 .withId(1L)
                 .withName(MilestoneResource.MilestoneName.OPEN_DATE)
                 .withDate(LocalDateTime.now())
-                .withCompetitionId(1L).build();
+                .withCompetitionId(competitionId).build();
         return milestone;
     }
 }

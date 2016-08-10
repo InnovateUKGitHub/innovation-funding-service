@@ -24,7 +24,6 @@ public class ApplicationFormSectionSaver implements CompetitionSetupSectionSaver
 
 	@Override
 	public List<Error> saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
-
         return new ArrayList<>();
 	}
 

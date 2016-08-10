@@ -44,7 +44,7 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
 
     @Override
     public ServiceResult<List<MilestoneResource>> getAllDatesByCompetitionId(Long id) {
-        return serviceSuccess ((List) milestoneMapper.mapToResource(milestoneRepository.findAllByCompetitionId(id)));
+        return serviceSuccess ((List<MilestoneResource>) milestoneMapper.mapToResource(milestoneRepository.findAllByCompetitionId(id)));
     }
 
     @Override

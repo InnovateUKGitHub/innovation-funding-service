@@ -12,6 +12,9 @@ import javax.persistence.ManyToOne;
 
 import com.worth.ifs.competition.resource.MilestoneResource.MilestoneName;
 
+/**
+ * Entity model to store the Competition Milestones
+ */
 @Entity
 public class Milestone {
     @Id

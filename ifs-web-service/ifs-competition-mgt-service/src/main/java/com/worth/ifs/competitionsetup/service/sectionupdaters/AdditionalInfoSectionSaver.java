@@ -45,10 +45,8 @@ public class AdditionalInfoSectionSaver implements CompetitionSetupSectionSaver 
 			competitionCoFunderResource.setCoFunderBudget(coFunderForm.getCoFunderBudget());
 			competition.getCoFunders().add(competitionCoFunderResource);
 		});
-
         competitionService.update(competition);
-
-        return null;
+		return new ArrayList<>();
 	}
 
 	@Override

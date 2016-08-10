@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 /**
- * Form for the milestones competition setup section.
+ * Milestone Form Entry for the Milestones form.
  */
 public class MilestonesFormEntry extends CompetitionSetupForm {
     @Range(min = 1, max = 31)
@@ -50,7 +50,6 @@ public class MilestonesFormEntry extends CompetitionSetupForm {
     public String getDayOfWeek() {
         return getNameOfDay();
     }
-
 
     public void setDayOfWeek(String dayOfWeek) {
         this.dayOfWeek = dayOfWeek;

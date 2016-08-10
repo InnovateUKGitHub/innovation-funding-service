@@ -92,8 +92,6 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
 
         newMilestones.sort((c1, c2) -> c1.getName().compareTo(c2.getName()));
 
-        testMilestoneNamesOrder(newMilestones);
-
         newMilestones.forEach(m -> {
             assertNotNull(m.getId());
             assertNull(m.getDate());
@@ -151,14 +149,5 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
         RestResult<List<MilestoneResource>> milestoneResult = controller.getAllDatesByCompetitionId(competitionId);
         assertTrue(milestoneResult.isSuccess());
         return milestoneResult.getSuccessObject();
-    }
-
-    private void testMilestoneNamesOrder(List<MilestoneResource> milestones) {
-        MilestoneName[] milestoneNames = MilestoneName.values();
-        assertTrue(milestoneNames.length == 13);
-
-        for(int i = 0; i < MilestoneName.values().length; i++) {
-            assertTrue(milestoneNames[i].equals(milestones.get(i).getName()));
-        }
     }
 }

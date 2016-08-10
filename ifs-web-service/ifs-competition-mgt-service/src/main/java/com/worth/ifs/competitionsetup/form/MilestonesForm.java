@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * List of fields for the milestones competition setup section.
+ * List of Milestone Form Entries for the Milestone form.
  */
 public class MilestonesForm extends CompetitionSetupForm {
 

@@ -21,9 +21,6 @@ public class MilestoneTest {
     private Competition competition;
     private List<String> milestoneNames;
 
-    @Mock
-    MilestoneMapper milestoneMapper;
-
     private Long id;
     private MilestoneName name;
     private LocalDateTime date;

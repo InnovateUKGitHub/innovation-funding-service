@@ -29,12 +29,6 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
         return new MilestoneServiceImpl();
     }
 
-    @Override
-    @Before
-    public void setUp() {
-        super.setUp();
-    }
-
     @Test
     public void test_getAllDatesByCompetitionId() {
 

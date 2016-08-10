@@ -19,20 +19,20 @@ public class MilestoneController {
     @Autowired
     private MilestoneService milestoneService;
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{competitionId}", method = RequestMethod.GET)
     public RestResult<List<MilestoneResource>> getAllDatesByCompetitionId(
-            @PathVariable("id") final Long id){
-        return milestoneService.getAllDatesByCompetitionId(id).toGetResponse();
+            @PathVariable("competitionId") final Long competitionId){
+        return milestoneService.getAllDatesByCompetitionId(competitionId).toGetResponse();
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.POST)
+    @RequestMapping(value = "/{competitionId}", method = RequestMethod.POST)
     public RestResult<MilestoneResource> create(@RequestBody final MilestoneName name,
-                                                @PathVariable("id") final Long id) {
-        return milestoneService.create(name, id).toPostCreateResponse();
+                                                @PathVariable("competitionId") final Long competitionId) {
+        return milestoneService.create(name, competitionId).toPostCreateResponse();
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public RestResult<Void> saveMilestone(@RequestBody List<MilestoneResource> milestones, @PathVariable("id") final Long id) {
-         return milestoneService.update(id, milestones).toPutResponse();
+    @RequestMapping(value = "/{competitionId}", method = RequestMethod.PUT)
+    public RestResult<Void> saveMilestone(@RequestBody List<MilestoneResource> milestones, @PathVariable("competitionId") final Long competitionId) {
+         return milestoneService.update(competitionId, milestones).toPutResponse();
     }
  }

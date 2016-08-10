@@ -76,16 +76,10 @@ public class MilestonesSectionSaver implements CompetitionSetupSectionSaver {
 
     private List<Error> validateMilestoneDates(List<MilestonesFormEntry> milestonesFormEntries) {
         List<Error> errors =  new ArrayList<>();
+
         milestonesFormEntries.forEach(milestone -> {
-
-                Integer day = milestone.getDay();
-                Integer month = milestone.getMonth();
-                Integer year = milestone.getYear();
-
-                if ((day == null || 1 > day || day > 31)
-                        || (month == null || month < 1 || month > 12) || (year == null || year < 1900)
-                        || !isMilestoneDateValid(day, month, year)){
-                        if(errors.size() == 0) {
+            if(!isMilestoneDateValid(milestone.getDay(), milestone.getMonth(), milestone.getYear()));{
+                        if(errors.isEmpty()) {
                             errors.add(new Error("error.milestone.invalid", "Please enter the valid date(s)", HttpStatus.BAD_REQUEST));
                         }}
             });

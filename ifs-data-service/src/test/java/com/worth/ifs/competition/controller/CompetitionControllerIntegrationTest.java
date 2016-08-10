@@ -439,18 +439,17 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
             milestone.setCompetition(assignCompetitionId(comp));
 
             milestone.setDate(milestoneDate);
-
-            if (milestone.getName().toString().equals("OPEN_DATE")){
+            if (milestone.getName().name().equals("OPEN_DATE")){
                 milestone.setDate(startDate);
-            } if (milestone.getName().toString().equals("SUBMISSION_DATE")) {
+            } if (milestone.getName().name().equals("SUBMISSION_DATE")) {
                 milestone.setDate(endDate);
-            } if (milestone.getName().toString().equals("ASSESSOR_ACCEPTS")) {
+            } if (milestone.getName().name().equals("ASSESSOR_ACCEPTS")) {
                 milestone.setDate(assessmentStartDate);
-            } if (milestone.getName().toString().equals("ASSESSOR_DEADLINE")) {
+            } if (milestone.getName().name().equals("ASSESSOR_DEADLINE")) {
                 milestone.setDate(assessorFeedbackDate);
-            } if (milestone.getName().toString().equals("FUNDERS_PANEL")) {
+            } if (milestone.getName().name().equals("FUNDERS_PANEL")) {
                 milestone.setDate(assessmentEndDate);
-            } if (milestone.getName().toString().equals("NOTIFICATIONS")){
+            } if (milestone.getName().name().equals("NOTIFICATIONS")){
                 milestone.setDate(fundersPanelEndDate);
             }
             milestones.add(milestone);
@@ -473,7 +472,7 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
     }
 
     private List<MilestoneResource.MilestoneName> populateMilestoneNames() {
-        return new ArrayList<MilestoneResource.MilestoneName>(EnumSet.allOf(MilestoneResource.MilestoneName.class));
+        return new ArrayList<>(EnumSet.allOf(MilestoneResource.MilestoneName.class));
     }
 
     private void checkUpdatedCompetitionCategories(CompetitionResource savedCompetition) {

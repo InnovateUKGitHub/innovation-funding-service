@@ -89,7 +89,7 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 		
 		List<Error> errors = saver.saveSection(competitionResource, competitionSetupForm);
 		
-		if(errors == null || errors.isEmpty()) {
+		if(errors.isEmpty()) {
 			competitionService.setSetupSectionMarkedAsComplete(competitionResource.getId(), section);
 		}
 		
