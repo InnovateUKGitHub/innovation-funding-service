@@ -22,12 +22,12 @@ import static org.mockito.Mockito.verify;
  */
 public class InviteOrganisationServiceSecurityTest extends BaseServiceSecurityTest<InviteOrganisationService> {
 
-    InvitePermissionRules invitePermissionRules;
+    ApplicationInvitePermissionRules invitePermissionRules;
     InviteOrganisationPermissionRules inviteOrganisationPermissionRules;
 
     @Before
     public void lookupPermissionRules() {
-        invitePermissionRules = getMockPermissionRulesBean(InvitePermissionRules.class);
+        invitePermissionRules = getMockPermissionRulesBean(ApplicationInvitePermissionRules.class);
         inviteOrganisationPermissionRules = getMockPermissionRulesBean(InviteOrganisationPermissionRules.class);
     }
 

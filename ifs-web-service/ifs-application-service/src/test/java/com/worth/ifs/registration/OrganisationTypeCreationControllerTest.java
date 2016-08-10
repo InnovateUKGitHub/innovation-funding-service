@@ -13,7 +13,6 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.validation.Validator;
 
 import javax.servlet.http.Cookie;
-
 import java.net.URLEncoder;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;

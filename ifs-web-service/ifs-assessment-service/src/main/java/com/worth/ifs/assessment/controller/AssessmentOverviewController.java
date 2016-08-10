@@ -24,9 +24,9 @@ import java.util.concurrent.ExecutionException;
 public class AssessmentOverviewController extends AbstractApplicationController {
 
     private static final Log LOG = LogFactory.getLog(AssessmentOverviewController.class);
-    private static final String OVERVIEW = "assessor-application-overview";
-    private static final String FINANCES_SUMMARY = "assessor-finances-summary";
-    private static final String DASHBOARD = "assessor/assessor-dashboard";
+    private static final String OVERVIEW = "assessment/application-overview";
+    private static final String FINANCES_SUMMARY = "assessment/application-finances-summary";
+    private static final String DASHBOARD = "assessor-dashboard";
 
 
     @Autowired
@@ -60,14 +60,14 @@ public class AssessmentOverviewController extends AbstractApplicationController 
 
 
     @RequestMapping(method = RequestMethod.POST, value = "/{assessmentId}/reject")
-    public String rejectApplication(
+    public String rejectInvitation(
             final Model model,
             final HttpServletResponse response,
             @ModelAttribute(MODEL_ATTRIBUTE_FORM) final AssessmentOverviewForm form,
             final BindingResult bindingResult,
             @PathVariable("assessmentId") final Long assessmentId) {
 
-        assessmentService.rejectApplication(assessmentId,form.getRejectReason(),form.getRejectComment());
+        assessmentService.rejectInvitation(assessmentId,form.getRejectReason(),form.getRejectComment());
 
         return DASHBOARD;
     }

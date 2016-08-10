@@ -57,7 +57,8 @@ public class AssessmentFeedbackViewModelTest {
 
         AssessmentFeedbackViewModel assessmentFeedbackViewModel = setupViewModelWithFormInputsAndResponses(maxWordCount, asListOfPairs(formInputId, "No word limit imposed here."));
 
-        assertEquals(Integer.valueOf(0), assessmentFeedbackViewModel.getWordsRemaining(formInputId));
+        // Peeking into the behaviour of com.worth.ifs.form.resource.FormInputResource.getWordCount() reveals it treats no maximum word count as 0
+        assertEquals(Integer.valueOf(-5), assessmentFeedbackViewModel.getWordsRemaining(formInputId));
     }
 
     @Test
@@ -67,7 +68,7 @@ public class AssessmentFeedbackViewModelTest {
 
         AssessmentFeedbackViewModel assessmentFeedbackViewModel = setupViewModelWithFormInputsAndResponses(maxWordCount, asListOfPairs(formInputId, "Value of ten words here, exceeding the max word count."));
 
-        assertEquals(Integer.valueOf(0), assessmentFeedbackViewModel.getWordsRemaining(formInputId));
+        assertEquals(Integer.valueOf(-5), assessmentFeedbackViewModel.getWordsRemaining(formInputId));
     }
 
     @Test
@@ -101,6 +102,16 @@ public class AssessmentFeedbackViewModelTest {
         AssessmentFeedbackViewModel assessmentFeedbackViewModel = new AssessmentFeedbackViewModel(0L, 0L, null, null, null, null, null, null, null, null, assessmentFormInputs, assessorResponses, false, false);
 
         assertNull(assessmentFeedbackViewModel.getWordsRemaining(formInputId));
+    }
+
+    @Test
+    public void testGetWordsRemaining_noResponseValue() throws Exception {
+        Long formInputId = 1L;
+        Integer maxWordCount = 100;
+
+        AssessmentFeedbackViewModel assessmentFeedbackViewModel = setupViewModelWithFormInputsAndResponses(maxWordCount, asListOfPairs(formInputId, null));
+
+        assertEquals(Integer.valueOf(100), assessmentFeedbackViewModel.getWordsRemaining(formInputId));
     }
 
     private AssessmentFeedbackViewModel setupViewModelWithFormInputsAndResponses(Integer maxWordCount, List<Pair<Long, String>> idAndValuePairs) {

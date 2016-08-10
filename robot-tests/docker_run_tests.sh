@@ -1,19 +1,8 @@
 #!/bin/bash
 
 function setEnv() {
-    case $OSTYPE in
-        darwin*)
-            echo "Mac detected"
-            eval $(docker-machine env default)
-            ;;
-        linux*)
-            echo "Linux detected"
-            ;;
-        *)
-            echo "Unable to determine a supported operating system for this script.  Currently only supported on Linux and Macs"
-            exit 1
-            ;;
-    esac
+    echo "setting environment"
+    eval $(docker-machine env default)
 }
 
 function coloredEcho(){
@@ -39,9 +28,9 @@ function coloredEcho(){
 function addTestFiles() {
     echo "***********Adding test files***************"
     echo "***********Making the quarantined directory ***************"
-    docker-compose exec data mkdir -p ${virusScanQuarantinedFolder}
+    docker-compose -p ifs exec data mkdir -p ${virusScanQuarantinedFolder}
     echo "***********Adding pretend quarantined file ***************"
-    docker-compose exec data cp ${uploadFileDir}/8 ${virusScanQuarantinedFolder}/8
+    docker-compose -p ifs exec data cp ${uploadFileDir}/8 ${virusScanQuarantinedFolder}/8
 }
 
 
@@ -53,8 +42,8 @@ function buildAndDeploy() {
     sed 's/ext\.ifsFlywayLocations.*/ext\.ifsFlywayLocations="db\/migration,db\/setup,db\/webtest"/' docker-build.gradle > webtest.gradle.tmp
     mv docker-build.gradle docker-build.gradle.tmp
     mv webtest.gradle.tmp docker-build.gradle
-    ./gradlew -Pprofile=docker cleanDeploy -x test
-    ./gradlew -Pprofile=docker flywayMigrate
+    ./gradlew -Pprofile=docker clean deployToTomcat
+    ./gradlew -Pprofile=docker flywayClean flywayMigrate
     ## Replace the webtest build environment with the one we had before.
     echo "********SWAPPING BACK THE ORIGINAL BUILD PROPERTIES********"
     mv docker-build.gradle.tmp docker-build.gradle
@@ -73,19 +62,17 @@ function startServers() {
     pwd
     cd ../setup-files/scripts/docker
     ./startup.sh
-    ./deploy.sh -x test
-    ./syncShib.sh
+    ./deploy.sh all -x test
+    ./migrate.sh
     wait
-    cd ../shibboleth/ui
-    # ./deploy-ui.sh
 
     echo "**********WAIT FOR SUCCESSFUL DEPLOYMENT OF THE DATASERVICE**********"
-    tail -F -n0 < docker-compose logs data | while read logLine
+    docker-compose -p ifs logs -ft --tail 10 data | while read logLine
     do
       [[ "${logLine}" == *"Deployment of web application archive"* ]] && pkill -P $$ tail
     done
     echo "**********WAIT FOR SUCCESSFUL DEPLOYMENT OF THE WEBSERVICE**********"
-    tail -F -n0 < docker-compose logs web | while read logLine
+    docker-compose -p ifs logs -ft --tail 10 web | while read logLine
     do
       [[ "${logLine}" == *"Deployment of web application archive"* ]] && pkill -P $$ tail
     done
@@ -98,9 +85,17 @@ function startSeleniumGrid() {
     cd ${scriptDir}
     declare -i suiteCount=$(find ${testDirectory}/* -maxdepth 0 -type d | wc -l)
     echo ${suiteCount}
-    docker-compose up -d
-    docker-compose scale chrome=${suiteCount}
+    docker-compose -p robot up -d
+    docker-compose -p robot scale chrome=${suiteCount}
     unset suiteCount
+}
+
+function stopSeleniumGrid() {
+    cd ../robot-tests
+    cd ${testDirectory}
+    cd ${scriptDir}
+
+    docker-compose -p robot down -v --remove-orphans
 }
 
 function startPybot() {
@@ -125,12 +120,6 @@ function runTests() {
 
     results=`find target/* -regex ".*/output\.xml"`
     rebot -d target ${results}
-}
-
-function runTestsRemotely {
-    echo "***********RUNNING AGAINST THE IFS DEV SERVER...**********"
-    cd ${scriptDir}
-    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_AUTH:ifs:Fund1ng -v SERVER_BASE:ifs.dev.innovateuk.org -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:'YES' -v LOCAL_MAIL_SENDING_IMPLEMENTED:'YES' -v UPLOAD_FOLDER:$uploadFileDir -v RUNNING_ON_DEV:'YES' --exclude Failing --exclude Pending --exclude FailingForDev --name IFS ${testDirectory}/*
 }
 
 setEnv
@@ -220,3 +209,5 @@ else
     addTestFiles
     runTests
 fi
+
+stopSeleniumGrid

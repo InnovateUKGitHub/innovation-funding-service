@@ -15,7 +15,7 @@ IFS.competition_management.various = (function(){
         init: function(){
             s = this.settings;
 
-            jQuery(document).on('change', s.fundingDecisionSelects, IFS.competition_management.various.handleFundingDecisionSelectChange);
+            jQuery(document).on('change', s.fundingDecisionSelects, IFS.competition_management.various.handleFundingDecisionEnableOrDisable);
             IFS.competition_management.various.handleFundingDecisionEnableOrDisable();
             IFS.competition_management.various.alterSubmitDecisionFormAction();
         },
@@ -53,48 +53,12 @@ IFS.competition_management.various = (function(){
 
         	 return allDecided;
          },
-        handleFundingDecisionSelectChange: function(){
-
-        	IFS.competition_management.various.handleFundingDecisionEnableOrDisable();
-
-        	var element = jQuery(this);
-        	var applicationId = element.attr('name');
-        	var competitionId = element.attr('competition');
-        	var value = element.val();
-
-        	IFS.competition_management.various.saveFundingDecision(competitionId, applicationId, value);
-        },
-        handleFundingDecisionEnableOrDisable: function() {
+         handleFundingDecisionEnableOrDisable: function() {
         	if(IFS.competition_management.various.allSelectsDecided()){
                 IFS.competition_management.various.enableFundingDecisionButton();
         	} else {
                 IFS.competition_management.various.disableFundingDecisonButton();
         	}
-        },
-        saveFundingDecision: function(competitionId, applicationId, value) {
-
-        	var saveInfo = jQuery('#funding-decision-save-info-' + applicationId);
-
-        	jQuery.ajaxProtected({
-                 type: 'POST',
-                 url: '/management/funding/' + competitionId,
-                 data: {
-                	 applicationId: applicationId,
-                	 fundingDecision: value
-                 },
-                 dataType: "json",
-                 beforeSend: function() {
-                     saveInfo.html('Saving...');
-                 }
-             }).done(function(data){
-            	 if(data.success == 'true') {
-            		 saveInfo.html('Saved!');
-            	 } else {
-            		 saveInfo.html('Not saved.');
-            	 }
-             }).error(function(){
-            	 saveInfo.html('Not saved.');
-             });
         }
     };
 })();

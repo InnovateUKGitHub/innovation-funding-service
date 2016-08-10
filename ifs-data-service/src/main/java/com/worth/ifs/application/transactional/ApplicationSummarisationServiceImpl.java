@@ -12,13 +12,13 @@ import org.springframework.stereotype.Service;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
-import com.worth.ifs.finance.transactional.CostService;
+import com.worth.ifs.finance.transactional.FinanceRowService;
 
 @Service
 public class ApplicationSummarisationServiceImpl implements ApplicationSummarisationService {
 
 	@Autowired
-	private CostService costService;
+	private FinanceRowService financeRowService;
 
 	@Override
 	public ServiceResult<BigDecimal> getTotalProjectCost(Application application) {
@@ -27,7 +27,7 @@ public class ApplicationSummarisationServiceImpl implements ApplicationSummarisa
 			return result(BigDecimal.ZERO);
 		}
 
-		ServiceResult<List<ApplicationFinanceResource>> financeTotalsResult = costService.financeTotals(application.getId());
+		ServiceResult<List<ApplicationFinanceResource>> financeTotalsResult = financeRowService.financeTotals(application.getId());
 
 		BigDecimal total;
 		if (financeTotalsResult.isSuccess()) {
@@ -46,7 +46,7 @@ public class ApplicationSummarisationServiceImpl implements ApplicationSummarisa
 			return result(BigDecimal.ZERO);
 		}
 
-		ServiceResult<List<ApplicationFinanceResource>> financeTotalsResult = costService.financeTotals(application.getId());
+		ServiceResult<List<ApplicationFinanceResource>> financeTotalsResult = financeRowService.financeTotals(application.getId());
 
 		BigDecimal fundingSought;
 		if (financeTotalsResult.isSuccess()) {

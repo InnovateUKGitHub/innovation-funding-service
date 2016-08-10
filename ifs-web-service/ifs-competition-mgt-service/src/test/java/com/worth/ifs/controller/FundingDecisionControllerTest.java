@@ -1,5 +1,6 @@
 package com.worth.ifs.controller;
 
+import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
 import com.worth.ifs.application.resource.ApplicationSummaryResource;
 import com.worth.ifs.application.resource.FundingDecision;

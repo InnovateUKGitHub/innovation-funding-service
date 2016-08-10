@@ -42,7 +42,7 @@ import java.util.function.Supplier;
 
 import static com.worth.ifs.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.InputStreamTestUtil.assertInputStreamContents;
-import static com.worth.ifs.JsonTestUtil.toJson;
+import static com.worth.ifs.util.JsonMappingUtil.toJson;
 import static com.worth.ifs.LambdaMatcher.createLambdaMatcher;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;

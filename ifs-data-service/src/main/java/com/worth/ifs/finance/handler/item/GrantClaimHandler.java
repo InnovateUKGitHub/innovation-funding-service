@@ -1,7 +1,7 @@
 package com.worth.ifs.finance.handler.item;
 
-import com.worth.ifs.finance.domain.Cost;
-import com.worth.ifs.finance.resource.cost.CostItem;
+import com.worth.ifs.finance.domain.FinanceRow;
+import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import com.worth.ifs.finance.resource.cost.GrantClaim;
 import com.worth.ifs.validator.GrantClaimValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ import java.util.List;
  * or for sending it over.
  */
 @Component
-public class GrantClaimHandler extends CostHandler {
+public class GrantClaimHandler extends FinanceRowHandler {
     public static final String GRANT_CLAIM = "Grant Claim";
     public static final String COST_KEY = "grant-claim";
 
@@ -26,7 +26,7 @@ public class GrantClaimHandler extends CostHandler {
     private  GrantClaimValidator grantClaimValidator;
 
     @Override
-    public void validate(CostItem costItem, BindingResult bindingResult) {
+    public void validate(FinanceRowItem costItem, BindingResult bindingResult) {
         GrantClaim grantClaim = (GrantClaim) costItem;
         super.validate(grantClaim, bindingResult, Default.class);
         grantClaimValidator.validate(grantClaim, bindingResult);
@@ -34,28 +34,28 @@ public class GrantClaimHandler extends CostHandler {
 
 
     @Override
-    public Cost toCost(CostItem costItem) {
-        Cost cost = null;
+    public FinanceRow toCost(FinanceRowItem costItem) {
+        FinanceRow cost = null;
         if (costItem instanceof GrantClaim) {
             GrantClaim grantClaim = (GrantClaim) costItem;
-            return new Cost(grantClaim.getId(), COST_KEY, "", GRANT_CLAIM, grantClaim.getGrantClaimPercentage(), BigDecimal.ZERO, null,null);
+            return new FinanceRow(grantClaim.getId(), COST_KEY, "", GRANT_CLAIM, grantClaim.getGrantClaimPercentage(), BigDecimal.ZERO, null,null);
         }
         return cost;
     }
 
     @Override
-    public CostItem toCostItem(Cost cost) {
+    public FinanceRowItem toCostItem(FinanceRow cost) {
         return new GrantClaim(cost.getId(), cost.getQuantity());
     }
 
     @Override
-    public List<Cost> initializeCost() {
-        ArrayList<Cost> costs = new ArrayList<>();
+    public List<FinanceRow> initializeCost() {
+        ArrayList<FinanceRow> costs = new ArrayList<>();
         costs.add(initializeFundingLevel());
         return costs;
     }
 
-    private Cost initializeFundingLevel() {
+    private FinanceRow initializeFundingLevel() {
         GrantClaim costItem = new GrantClaim();
         costItem.setGrantClaimPercentage(null);
         return toCost(costItem);
