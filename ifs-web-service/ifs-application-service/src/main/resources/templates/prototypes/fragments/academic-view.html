@@ -186,7 +186,7 @@
 
     </form>
     
-    <div class="alignright extra-margin" th:unless="${param.status != null and param.status[0] == 'approved' or user == 'partner'}">
+    <div class="alignright extra-margin" th:unless="${param.status != null and param.status[0] == 'approved' or user == 'partner' or type == 'partnerView'}">
         <th:block th:if="${param.status == null or param.status[0] != 'edit-academic'}">
             <a th:href="@{'?status=edit-academic'}" class="button button-secondary">Edit</a>
         </th:block>

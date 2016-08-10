@@ -25,6 +25,12 @@
 	
 	<hr />
 
+	<th:block th:if="${param.status != null and param.status[0] == 'approved'}">
+		<div class="success-alert">
+			The partner finance eligibility has been approved by Paul Davidson, 27 July 2016
+		</div>
+	</th:block>
+
 	<h2 class="heading-medium">Finances overview</h2>
 
 	<div class="table-overflow">
@@ -123,6 +129,10 @@
 	    </div>
 
 	</th:block>
+
+	<div class="extra-margin">
+		<a href="/prototypes/1199-project-finances" class="button button-secondary">Save and return to finance checks</a>
+	</div>
 
 	
 
