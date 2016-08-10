@@ -26,22 +26,23 @@ public class CompetitionInviteController extends BaseController {
     @Autowired
     private CompetitionInviteRestService inviteRestService;
 
-    @RequestMapping(value = "competition/{hash}", method= RequestMethod.GET)
-    public String openInvite(@PathVariable String inviteHash, HttpServletResponse response,
+    @RequestMapping(value = "competition/{inviteHash}", method= RequestMethod.GET)
+    public String openInvite(@PathVariable("inviteHash") String inviteHash, HttpServletResponse response,
                              HttpServletRequest request,
                              Model model) {
 
         RestResult<CompetitionInviteResource> invite = inviteRestService.accessInvite(inviteHash);
 
-        if (!invite.isSuccess()) {
-            throw new InvalidURLException("Invite url is not valid", null);
-        }
-        else {
-            CompetitionInviteResource inviteResource = invite.getSuccessObject();
+//        if (!invite.isSuccess()) {
+//            throw new InvalidURLException("Invite url is not valid", null);
+//        }
+//        else {
+//            CompetitionInviteResource inviteResource = invite.getSuccessObject();
 
-            model.addAttribute("model", new CompetitionInviteViewModel(inviteResource.getCompetitionName()));
+//        model.addAttribute("model", new CompetitionInviteViewModel(inviteResource.getCompetitionName()));
+        model.addAttribute("model", new CompetitionInviteViewModel("Stub competition"));
 
-            return "access-competition-invite"; // timeleaf view template name
-        }
+            return "assessor-competition-invite"; // timeleaf view template name
+//        }
     }
 }
