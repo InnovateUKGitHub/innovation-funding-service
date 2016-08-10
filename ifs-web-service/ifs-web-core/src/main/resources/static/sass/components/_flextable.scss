@@ -66,7 +66,7 @@
             flex: 0 0 210px;
           }
           .spend-profile-table .flex-table-after {
-            flex: 0 0 90px;
+            flex: 0 0 150px;
 
           }
           .spend-profile-table td:last-child,
@@ -74,7 +74,7 @@
             right: 0;
             padding: 1.3em 1em;
             position: absolute;
-            width: 90px;
+            width: 150px;
             @include box-sizing(border-box);
           }
       }
