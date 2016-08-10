@@ -41,8 +41,9 @@ public enum CommonFailureKeys implements ErrorTemplate {
     /**
      * Competitions
      */
-
+    COMPETITION_NOT_EDITABLE("The competition is no longer editable", BAD_REQUEST),
     COMPETITION_NOT_OPEN("The competition this application belongs to is no longer open for application submissions", BAD_REQUEST),
+    COMPETITION_NO_TEMPLATE("This competition type has no competition template available", CONFLICT),
 
     /**
      * Notifications
@@ -97,7 +98,12 @@ public enum CommonFailureKeys implements ErrorTemplate {
     /**
      * Project Monitoring Officer
      */
-    PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED("A Monitoring Officer cannot be assigned to a Project until its Project Details have been submitted", BAD_REQUEST)
+    PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED("A Monitoring Officer cannot be assigned to a Project until its Project Details have been submitted", BAD_REQUEST),
+
+    /*
+     * Forms
+     */
+    FORM_WORD_LIMIT_EXCEEDED("The form word limit has been exceeded",BAD_REQUEST)
     ;
 
     private ErrorTemplate errorTemplate;

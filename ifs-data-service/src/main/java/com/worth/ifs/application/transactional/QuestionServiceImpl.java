@@ -10,6 +10,7 @@ import com.worth.ifs.application.mapper.SectionMapper;
 import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.application.repository.QuestionStatusRepository;
 import com.worth.ifs.application.resource.*;
+import com.worth.ifs.application.resource.*;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.commons.rest.ValidationMessages;
@@ -296,6 +297,13 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
 			Long sectionId, QuestionType type) {
 		return getSection(sectionId).andOnSuccessReturn(section -> questionsOfType(section, type));
 	}
+
+    @Override
+    public ServiceResult<QuestionResource> save(QuestionResource questionResource) {
+        Question questionUpdated = questionRepository.save(questionMapper.mapToDomain(questionResource));
+        return serviceSuccess(questionMapper.mapToResource(questionUpdated));
+    }
+
 
     @Override
     public ServiceResult<List<QuestionResource>> getQuestionsByAssessmentId(Long assessmentId) {

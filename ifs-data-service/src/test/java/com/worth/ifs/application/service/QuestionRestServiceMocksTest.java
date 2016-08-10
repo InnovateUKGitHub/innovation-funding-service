@@ -3,7 +3,6 @@ package com.worth.ifs.application.service;
 import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.QuestionType;
-import com.worth.ifs.commons.rest.RestResult;
 import org.junit.Test;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatus;
@@ -13,6 +12,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import com.worth.ifs.commons.rest.RestResult;
 
 import static com.worth.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
 import static com.worth.ifs.application.service.Futures.settable;
@@ -130,6 +131,15 @@ public class QuestionRestServiceMocksTest extends BaseRestServiceUnitTest<Questi
 
         List<QuestionResource> result = service.getQuestionsBySectionIdAndType(1L, QuestionType.COST).getSuccessObject();
         assertEquals(questions, result);
+    }
+
+    @Test
+    public void save() {
+        QuestionResource questionResource = newQuestionResource().build();
+        setupPutWithRestResultExpectations(questionRestURL + "/", QuestionResource.class, questionResource, questionResource);
+
+        QuestionResource result = service.save(questionResource).getSuccessObject();
+        assertEquals(questionResource, result);
     }
 
     @Test
