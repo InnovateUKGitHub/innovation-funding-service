@@ -88,6 +88,7 @@ dependencies {
     compile "org.apache.httpcomponents:httpasyncclient"
     compile "com.google.guava:guava:19.0"
     compile "commons-io:commons-io:2.4"
+    compile 'org.jsoup:jsoup:1.9.1'
 
     //providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
     compile fileTree(dir: "libs", include: "*.jar")

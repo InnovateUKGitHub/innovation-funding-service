@@ -1372,7 +1372,7 @@
 <!-- =================Section: application questions=========================== -->
 
 <div th:fragment="prototype-application-question">
-    
+
     <li>
 
         <div class="grid-row">
@@ -1428,7 +1428,7 @@
                         </ul>
                     </div>
                 </div>
-                
+
                 <div class="grid-row">
                     <div class="column-quarter">
                         <h3 class="heading-small">Words</h3>
@@ -1448,12 +1448,12 @@
                 </div>
 
             </div>
-            
+
 
         </th:block>
 
         <th:block th:if="${param.status != null and param.status[0] == 'edit-'+questionNo}">
-                    
+
             <div class="question">
 
                 <div class="form-group">
@@ -1469,7 +1469,7 @@
                     </label>
                     <input class="form-control width-x-large" th:id="${'question-'+ questionNo +'-subtitle'}" th:name="${'question-'+ questionNo +'-subtitle'}" />
                 </div>
-                
+
                 <div class="form-group">
                     <label class="form-label" th:for="${'question-'+ questionNo +'-guidance-title'}">
                         <span class="form-label-bold">Question guidance title</span>
@@ -1479,7 +1479,7 @@
 
                 <div class="form-group">
                     <label class="form-label form-label-bold" th:for="${'question-'+ questionNo +'-guidance'}">Question guidance</label>
-                    <div class="textarea-wrapped "> 
+                    <div class="textarea-wrapped ">
                         <textarea data-max_words="500" th:id="${'question-'+ questionNo +'-guidance'}" th:name="${'question-'+ questionNo +'-guidance'}"></textarea>
                     </div>
                 </div>
@@ -1523,7 +1523,7 @@
 
                 </div>
             </div>
-            
+
             <div class="alignright">
                 <a th:href="@{'?status=save-'+${questionNo}+'&#38;section=application'}" class="button button-large">Save and close</a>
             </div>
