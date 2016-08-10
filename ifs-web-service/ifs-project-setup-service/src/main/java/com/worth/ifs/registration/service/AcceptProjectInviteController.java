@@ -3,7 +3,6 @@ package com.worth.ifs.registration.service;
 import com.worth.ifs.BaseController;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.rest.ValidationMessages;
-import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.service.InviteRestService;
@@ -39,8 +38,6 @@ public class AcceptProjectInviteController extends BaseController {
     public static final String INVITE_HASH = "project_invite_hash";
     @Autowired
     private InviteRestService inviteRestService;
-    @Autowired
-    private CookieFlashMessageFilter cookieFlashMessageFilter;
     @Autowired
     private ProjectRestService projectRestService;
     @Autowired

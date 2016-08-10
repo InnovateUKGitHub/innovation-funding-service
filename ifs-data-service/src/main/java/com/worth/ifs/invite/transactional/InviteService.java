@@ -5,7 +5,6 @@ import com.worth.ifs.invite.domain.ApplicationInvite;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.resource.InviteResultsResource;
-import com.worth.ifs.security.NotSecured;
 import com.worth.ifs.security.SecuredBySpring;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.security.access.method.P;
@@ -62,6 +61,9 @@ public interface InviteService {
     ServiceResult<Boolean> checkUserExistingByInviteHash(@P("hash") String hash);
 
 
-    @NotSecured("TODO")
+    @PreAuthorize("hasAuthority('system_registrar')")
+    @SecuredBySpring(value = "GET_USER_ON_HASH",
+            description = "The System Registration user can see if there is a user for a given hash",
+            additionalComments = "The hash should be unguessable so the only way to successfully call this method would be to have been given the hash in the first place")
     ServiceResult<UserResource> getUserByInviteHash(@P("hash") String hash);
 }
