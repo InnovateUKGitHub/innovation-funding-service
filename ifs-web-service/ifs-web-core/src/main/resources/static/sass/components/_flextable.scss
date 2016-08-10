@@ -4,13 +4,6 @@
   margin: 0 auto;
   position: relative;
 }
-.spend-profile-table td,
-.spend-profile-table th,{
-  white-space:nowrap;
-  box-sizing: border-box;
-  height: 60px;
-  padding: 0.75em 1em;
-}
 
 .spend-profile-table th[scope="col"],
 .spend-profile-table td{
@@ -20,19 +13,7 @@
 .spend-profile-table .year {
   border-right: 1px solid $border-colour;
 }
-.spend-profile-table th[scope="row"] {
-  left: 0;
-  padding: 1.3em 1em;
-  position: absolute;
-  width: 210px;
-  @include box-sizing(border-box);
-  border-right: 1px solid #bfc1c3;
-  background-color: #fff;
-  +td,
-  +th {
-    padding-left:210px;
-  }
-}
+
 .spend-profile-table .flex-table-wrap {
     overflow:auto;
     max-width:100%;
@@ -44,7 +25,31 @@
   font-weight:bold;
 }
 
+
+
 @media screen and (min-width: 800px) {
+  .spend-profile-table td,
+  .spend-profile-table th,{
+    white-space:nowrap;
+    box-sizing: border-box;
+    height: 60px;
+    padding: 0.75em 1em;
+  }
+
+  .spend-profile-table th[scope="row"] {
+    left: 0;
+    padding: 1.3em 1em;
+    position: absolute;
+    width: 210px;
+    @include box-sizing(border-box);
+    border-right: 1px solid #bfc1c3;
+    background-color: #fff;
+    +td,
+    +th {
+      padding-left:210px;
+    }
+  }
+
       @supports (display:flex){
 
           .spend-profile-table {
