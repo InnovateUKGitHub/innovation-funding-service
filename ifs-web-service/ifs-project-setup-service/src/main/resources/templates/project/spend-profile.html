@@ -53,7 +53,9 @@
             </thead>
             <tbody>
               <tr th:each="row : ${model.table.getMonthlyCostsPerCategoryMap()}">
-                  <th scope="row" class="fix-left" th:text="${row.key}" />
+                  <th scope="row" class="fix-left">
+                    <th:block th:include="project/fragments :: spend-profile-label(${row.key})" />
+                  </th>
                   <td th:each="cost : ${row.value}" th:text="${cost}"/>
               </tr>
             </tbody>
