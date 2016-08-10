@@ -14,6 +14,8 @@ import static javax.persistence.CascadeType.ALL;
 @Entity
 public class SpendProfile {
 
+    public static final String ELIGIBLE_COSTS_DESCRIPTION = "Eligible costs for Partner Organisation";
+    public static final String SPEND_PROFILE_DESCRIPTION = "Spend Profile figures for Partner Organisation";
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -43,12 +45,8 @@ public class SpendProfile {
         this.organisation = organisation;
         this.project = project;
         this.costCategoryType = costCategoryType;
-
-        String eligibleCostsDescription = "Eligible costs for Partner Organisation " + organisation.getName() + " on Project " + project.getName();
-        String spendProfileDescription = "Spend Profile figures for Partner Organisation " + organisation.getName() + " on Project " + project.getName();
-
-        this.eligibleCosts = new CostGroup(eligibleCostsDescription, eligibleCosts);
-        this.spendProfileFigures = new CostGroup(spendProfileDescription, spendProfileFigures);
+        this.eligibleCosts = new CostGroup(ELIGIBLE_COSTS_DESCRIPTION, eligibleCosts);
+        this.spendProfileFigures = new CostGroup(SPEND_PROFILE_DESCRIPTION, spendProfileFigures);
     }
 
     public Long getId() {
