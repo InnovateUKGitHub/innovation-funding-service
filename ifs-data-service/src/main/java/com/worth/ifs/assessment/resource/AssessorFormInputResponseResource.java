@@ -2,7 +2,10 @@ package com.worth.ifs.assessment.resource;
 
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.form.domain.FormInput;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 /**
@@ -15,6 +18,7 @@ public class AssessorFormInputResponseResource {
     private Long assessment;
     private Long question;
     private Long formInput;
+    @Size (max = 5000)
     private String value;
     private Integer formInputMaxWordCount;
     private LocalDateTime updatedDate;
@@ -86,5 +90,37 @@ public class AssessorFormInputResponseResource {
 
     public void setUpdatedDate(LocalDateTime updatedDate) {
         this.updatedDate = updatedDate;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AssessorFormInputResponseResource that = (AssessorFormInputResponseResource) o;
+
+        return new EqualsBuilder()
+                .append(id, that.id)
+                .append(assessment, that.assessment)
+                .append(question, that.question)
+                .append(formInput, that.formInput)
+                .append(value, that.value)
+                .append(formInputMaxWordCount, that.formInputMaxWordCount)
+                .append(updatedDate, that.updatedDate)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(id)
+                .append(assessment)
+                .append(question)
+                .append(formInput)
+                .append(value)
+                .append(formInputMaxWordCount)
+                .append(updatedDate)
+                .toHashCode();
     }
 }
