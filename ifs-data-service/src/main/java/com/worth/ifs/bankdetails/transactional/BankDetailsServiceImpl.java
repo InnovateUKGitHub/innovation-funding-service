@@ -174,6 +174,15 @@ public class BankDetailsServiceImpl implements BankDetailsService{
     }
 
     private List<Error> convertExperianValidationMsgToUserMsg(List<Condition> conditons){
-        return conditons.stream().filter(condition -> condition.getSeverity().equals("error")).map(condition -> Error.globalError(EXPERIAN_VALIDATION_FAILED.getErrorKey(), condition.getDescription())).collect(Collectors.toList());
+        return conditons.stream().filter(condition -> condition.getSeverity().equals("error")).
+                map(condition -> {
+                    if (condition.getCode().equals(4)) {
+                        return Error.globalError(EXPERIAN_VALIDATION_FAILED_WITH_INCORRECT_ACC_NO.getErrorKey(), "validation.bankdetails.account.number.incorrect");
+                    } else if (condition.getCode().equals(7)) {
+                        return Error.globalError(EXPERIAN_VALIDATION_FAILED_WITH_INCORRECT_BANK_DETAILS.getErrorKey(), "validation.bankdetails.bank.account.details.incorrect");
+                    }
+                    return Error.globalError(EXPERIAN_VALIDATION_FAILED.getErrorKey(), condition.getDescription());
+                }).
+                collect(Collectors.toList());
     }
 }
