@@ -1,0 +1,72 @@
+
+.spend-profile-table {
+  max-width:95%;
+  margin: 0 auto;
+}
+.spend-profile-table td,
+.spend-profile-table th,{
+  white-space:nowrap;
+  box-sizing: border-box;
+  height: 60px;
+  padding: 0.75em 1em;
+}
+
+.spend-profile-table th[scope="col"],
+.spend-profile-table td{
+  text-align:right;
+
+}
+.spend-profile-table .year {
+  border-right: 1px solid $border-colour;
+}
+.spend-profile-table th[scope="row"] {
+  left: 0;
+  padding: 1.3em 1em;
+  position: absolute;
+  width: 250px;
+  @include box-sizing(border-box);
+  border-right: 1px solid #bfc1c3;
+
+  +td,
+  +th {
+    padding-left:250px;
+  }
+}
+
+
+  @media screen and (min-width: 800px) {
+      @supports (display:flex){
+
+          .spend-profile-table {
+            display:flex;
+            position: relative;
+          }
+          .spend-profile-table th[scope="row"] + td,
+          .spend-profile-table th[scope="row"] + th  {
+            padding-left:0.65em;
+          }
+          .spend-profile-table .flex-table-wrap {
+            flex: 1 1 100%;
+            overflow: auto;
+          }
+          .spend-profile-table .flex-table-before {
+            flex: 0 0 250px;
+          }
+          .spend-profile-table .flex-table-after {
+            flex: 0 0 90px;
+
+          }
+          .spend-profile-table td:last-child,
+          .spend-profile-table thead th:last-child {
+            right: 0;
+            padding: 1.3em 1em;
+            position: absolute;
+            width: 90px;
+            @include box-sizing(border-box);
+            border-left: 1px solid #bfc1c3;
+            background: $grey-3;
+            font-weight:bold;
+          }
+
+      }
+  }

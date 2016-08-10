@@ -99,6 +99,7 @@ public class ProjectSpendProfileController {
             monthlyCostsPerCategoryMap.put(category, result);
         });
 
+
         return monthlyCostsPerCategoryMap;
 
     }
@@ -114,13 +115,12 @@ public class ProjectSpendProfileController {
         List<BigDecimal> result = new ArrayList<>();
 
         BigDecimal remainder = totalCost.remainder(new BigDecimal(duration.toString()));
-
-        totalCost = totalCost.subtract(remainder);
+        BigDecimal totalCostMinusRemainder = totalCost.subtract(remainder);
 
         // Here we have used the scale as 0 since we are not interested in the fractional part (there isn't going to be a fractional part anyways,
         // as now the total cost would be perfectly divisible by the number of months.
         // Which also means that the Rounding Mode of HALF_EVEN will have no effect - but is here as part of a standard process of division
-        BigDecimal costPerMonth = totalCost.divide(new BigDecimal(duration.toString()), 0, RoundingMode.HALF_EVEN);
+        BigDecimal costPerMonth = totalCostMinusRemainder.divide(new BigDecimal(duration.toString()), 0, RoundingMode.HALF_EVEN);
 
         Stream.generate(() -> costPerMonth).limit(duration).forEach(result::add);
 
@@ -130,7 +130,8 @@ public class ProjectSpendProfileController {
 
             result.set(0, firstMonth);
         }
-
+        //add the total as last row
+        result.add(totalCost);
         return result;
 
     }
