@@ -8,6 +8,8 @@ import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.file.mapper.FileEntryMapper;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 
 @Mapper(
         config = GlobalMapperConfig.class,
@@ -22,6 +24,9 @@ public abstract class ProjectMapper extends BaseMapper<Project, ProjectResource,
     @Override
     public abstract ProjectResource mapToResource(Project project);
 
+    @Mappings({
+            @Mapping(target = "organisations", ignore = true)
+    })
     @Override
     public abstract Project mapToDomain(ProjectResource projectResource);
 

@@ -25,6 +25,7 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -34,9 +35,9 @@ import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.UserRoleType.APPLICANT;
 import static com.worth.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
-import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
-import static java.util.stream.Collectors.toList;
+import static java.util.EnumSet.complementOf;
+import static java.util.EnumSet.of;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.*;
 
@@ -114,15 +115,9 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
 
    @Test
     public void test_createApplicationByAppNameForUserIdAndCompetitionId_deniedIfNotCorrectGlobalRolesOrASystemRegistrar() {
-
-        List<UserRoleType> nonApplicantRoles = asList(UserRoleType.values())
-                .stream()
-                .filter(type -> type != APPLICANT
-                        && type != SYSTEM_REGISTRATION_USER)
-                .collect(toList());
+        EnumSet<UserRoleType> nonApplicantRoles = complementOf(of(APPLICANT, SYSTEM_REGISTRATION_USER));
 
         nonApplicantRoles.forEach(role -> {
-
             setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
 
             try {

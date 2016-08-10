@@ -244,6 +244,6 @@ public class ProjectController {
     public RestResult<Void> addPartner(@PathVariable(value = "projectId")Long projectId,
                                        @RequestParam(value = "userId", required = true) Long userId,
                                        @RequestParam(value = "organisationId", required = true) Long organisationId) {
-        return projectService.addPartner(projectId, userId, organisationId);
+        return projectService.addPartner(projectId, userId, organisationId).toPostResponse();
     }
 }
