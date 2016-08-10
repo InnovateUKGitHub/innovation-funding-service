@@ -10,32 +10,30 @@ import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
 
-/*
-* The Invite is used for saving invites into the database. Data about the Invitee and related Application and organisation is saved through this entity.
-* */
+/**
+ * An invitation for a person (who may or may not be an existing {@link User}) to participate in some business activity,
+ * the target {@link InvitationTarget}
+ *
+ * @param <T> the type of business activity to which we're inviting
+ */
 @Table(
-    uniqueConstraints= @UniqueConstraint(columnNames={"applicationId", "email"})
+        // Does this constraint still hold?
+    uniqueConstraints= @UniqueConstraint(columnNames={"type", "target_id", "email"})
 )
+@DiscriminatorColumn(name="type", discriminatorType=DiscriminatorType.STRING)
+@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @Entity
-public class Invite {
+public abstract class Invite<T extends InvitationTarget> {
     private static final CharSequence HASH_SALT = "b80asdf00poiasd07hn";
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @NotBlank
-    private String name;
+    private  String name;
     @NotBlank
     @Email
-    private String email;
-
-    @ManyToOne
-    @JoinColumn(name = "applicationId", referencedColumnName = "id")
-    private Application application;
-
-    @ManyToOne
-    @JoinColumn(name = "inviteOrganisationId", referencedColumnName = "id")
-    private InviteOrganisation inviteOrganisation;
+    private  String email; // invitee
 
     @ManyToOne
     @JoinColumn(name = "email", referencedColumnName = "email", insertable = false, updatable = false)
@@ -46,15 +44,13 @@ public class Invite {
     @Enumerated(EnumType.STRING)
     private InviteStatusConstants status;
 
-    public Invite() {
+    Invite() {
     	// no-arg constructor
     }
 
-    public Invite(String name, String email, Application application, InviteOrganisation inviteOrganisation, String hash, InviteStatusConstants status) {
+    protected Invite(String name, String email, String hash, InviteStatusConstants status) {
         this.name = name;
         this.email = email;
-        this.application = application;
-        this.inviteOrganisation = inviteOrganisation;
         this.hash = hash;
         this.status = status;
     }
@@ -81,22 +77,6 @@ public class Invite {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public Application getApplication() {
-        return application;
-    }
-
-    public void setApplication(Application application) {
-        this.application = application;
-    }
-
-    public InviteOrganisation getInviteOrganisation() {
-        return inviteOrganisation;
-    }
-
-    public void setInviteOrganisation(InviteOrganisation inviteOrganisation) {
-        this.inviteOrganisation = inviteOrganisation;
     }
 
     public String getHash() {
@@ -132,4 +112,8 @@ public class Invite {
         }
         return hash;
     }
+
+    public abstract T getTarget(); // the thing we're being invited to
+
+    public abstract void setTarget(T target);
 }

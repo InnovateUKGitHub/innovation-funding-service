@@ -1,0 +1,35 @@
+=== Find all AssessorFormInputResponses by Application
+==== Request
+include::{snippets}/assessorFormInputResponse/get-all-assessor-form-input-responses/http-request.adoc[]
+include::{snippets}/assessorFormInputResponse/get-all-assessor-form-input-responses/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/assessorFormInputResponse/get-all-assessor-form-input-responses/http-response.adoc[]
+include::{snippets}/assessorFormInputResponse/get-all-assessor-form-input-responses/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/assessorFormInputResponse/get-all-assessor-form-input-responses/curl-request.adoc[]
+
+=== Find all Assessor Form Input Response by Application and Question
+==== Request
+include::{snippets}/assessorFormInputResponse/get-all-assessor-form-input-responses-by-assessment-and-question/http-request.adoc[]
+include::{snippets}/assessorFormInputResponse/get-all-assessor-form-input-responses-by-assessment-and-question/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/assessorFormInputResponse/get-all-assessor-form-input-responses-by-assessment-and-question/http-response.adoc[]
+include::{snippets}/assessorFormInputResponse/get-all-assessor-form-input-responses-by-assessment-and-question/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/assessorFormInputResponse/get-all-assessor-form-input-responses-by-assessment-and-question/curl-request.adoc[]
+
+=== Update Assessor Form Input Response ===
+==== Request
+include::{snippets}/assessorFormInputResponse/update-assessor-form-input-response/http-request.adoc[]
+include::{snippets}/assessorFormInputResponse/update-assessor-form-input-response/request-fields.adoc[]
+==== Response
+include::{snippets}/assessorFormInputResponse/update-assessor-form-input-response/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/assessorFormInputResponse/update-assessor-form-input-response/curl-request.adoc[]
+
+

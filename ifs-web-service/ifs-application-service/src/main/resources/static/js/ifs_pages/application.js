@@ -20,11 +20,16 @@ IFS.application.application_page = (function(){
                     type: "POST",
                     beforeSend : function(){
                         if(typeof(IFS.application.progressiveSelect.hideAll) == 'function'){ IFS.application.progressiveSelect.hideAll();  }
-                        sectionToUpdate.find('.assign-button').html('Assigning to <strong>'+button.text()+'</strong>...');
-                        sectionToUpdate.find('img.section-status').remove();
+                        //hide the assign button and add an assigning to... text
+                        var assignButtonContainer =  sectionToUpdate.find('.assign-button');
+                        assignButtonContainer.children('button').attr('aria-hidden','true');
+                        sectionToUpdate.find('img.section-status').attr('aria-hidden','true');
+                        assignButtonContainer.find('.reassign-status').remove();
+                        assignButtonContainer.append('<div class="reassign-status">Assigning to <strong>'+button.text()+'</strong>...</div>');
                     },
                     url: '?singleFragment=true&sectionId=' + sectionId,
                     data: form.serialize() + '&' + button.attr('name') + '=' + button.attr('value'),
+                    timeout: 15000,
                     success: function(data) {
                       var htmlReplacement = jQuery('<div>' + data + '</div>');
                       var replacement = htmlReplacement.find('#' + questionId);
@@ -36,6 +41,14 @@ IFS.application.application_page = (function(){
                         IFS.application.progressiveSelect.selectToListHTML(select);
                       }
                     }
+                }).fail(function(data) {
+                      var errorMessage = IFS.core.autoSave.getErrorMessage(data);
+                      if(errorMessage){
+                          var assignButtonContainer =  sectionToUpdate.find('.assign-button');
+                          assignButtonContainer.children('button').attr('aria-hidden','false');
+                          sectionToUpdate.find('img.section-status').attr('aria-hidden','false');
+                          sectionToUpdate.find('.reassign-status').html('<div class="error-message">'+errorMessage+'</div>');
+                      }
                 });
                 e.preventDefault();
                 return false;

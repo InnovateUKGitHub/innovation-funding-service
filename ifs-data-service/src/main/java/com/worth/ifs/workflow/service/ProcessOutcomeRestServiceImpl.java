@@ -1,5 +1,6 @@
 package com.worth.ifs.workflow.service;
 
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
 import org.springframework.stereotype.Service;
@@ -10,7 +11,7 @@ public class ProcessOutcomeRestServiceImpl extends BaseRestService implements Pr
     private String restUrl = "/processoutcome";
 
     @Override
-    public ProcessOutcomeResource findOne(Long id) {
-        return restGet(restUrl + "/" + id, ProcessOutcomeResource.class);
+    public RestResult<ProcessOutcomeResource> findOne(Long id) {
+        return getWithRestResult(restUrl + "/" + id, ProcessOutcomeResource.class);
     }
 }

@@ -156,14 +156,16 @@
             </label>
             <input class="form-control" id="company-name" name="company-name" value="Aptrans Ltd" type="text" />
         </div>
-
-        <div class="form-group">
-            <label class="form-label" for="companies-house-number">
-                <span class="form-label-bold">Companies house number</span>
-            </label>
-            <p class="form-hint">For example: 1548965</p>
-            <input class="form-control" id="companies-house-number" name="companies-house-number" value="6567388" type="text" />
-        </div>
+        
+        <th:block th:unless="${param.status != null and param.status[0] == 'noCompHouse'}">
+            <div class="form-group">
+                <label class="form-label" for="companies-house-number">
+                    <span class="form-label-bold">Companies house number</span>
+                </label>
+                <p class="form-hint">For example: 1548965</p>
+                <input class="form-control" id="companies-house-number" name="companies-house-number" value="6567388" type="text" />
+            </div>
+        </th:block>
 
     </fieldset>
 
@@ -206,7 +208,18 @@
 
 <div th:fragment="prototype-spend-row">
     <tr th:class="${(spend == 'high' ? 'error-in-row' : 'spend-ok')}">
-        <th scope="row" th:text="${header}" th:id="${#strings.substringBefore(header, ' ')}" class="fix-left">Labour</th>
+        
+        <th:block th:if="${type == null}">
+            <th scope="row" th:text="${header}" th:id="${#strings.substringBefore(header, ' ')}" class="fix-left">HEADER HERE</th>
+        </th:block>
+        
+        <th:block th:if="${type != null}">
+            <th scope="row" th:id="${#strings.substringBefore(header, ' ')}" class="fix-left">
+                <span th:text="${header}">HEADER HERE</span>
+                <small th:text="${type}">TYPE</small>
+            </th>
+        </th:block>
+
         <td th:text="${value}">12,500</td>
         <td th:text="${value}">12,500</td>
         <td th:text="${value}">12,500</td>
@@ -303,11 +316,113 @@
 </div>
 
 
+<!-- ===========================Spend profile ACADEMIC rows readonly=========================== --> 
+
+<div th:fragment="prototype-spend-academic-row">
+    <tr th:class="${border != null ? 'cell-border-bottom-divide' : ''}" th:classappend="${(spend == 'high' ? 'error-in-row' : 'spend-ok')}">
+        <th th:text="${section}" class="fix-left1">Directly Incured</th>
+        <th scope="row" th:text="${header}" th:id="${#strings.substringBefore(header, ' ')}" class="fix-left2">Staff</th>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}" class="separate-cell year">12,500</td>
+
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}" class="separate-cell year">12,500</td>
+
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}" class="separate-cell year">12,500</td>
+
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+
+        <td th:text="${total}" class="total fix-right2">450,000</td>
+        <td th:text="${total}" class="total eligible fix-right">450,000</td>
+    </tr>
+</div>
+
+<!-- ===========================Spend profile academic rows inputs=========================== --> 
+
+<div th:fragment="prototype-spend-academic-row-edit">
+    <tr th:class="${border != null ? 'cell-border-bottom-divide' : ''}" th:classappend="${(spend == 'high' ? 'error-in-row' : 'spend-ok')}">
+        <th th:text="${section}" class="fix-left1">Directly Incured</th>
+        <th scope="row" th:text="${header}" th:id="${#strings.substringBefore(header, ' ')}" class="fix-left2">Staff</th>
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month1'}"/></td>
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month2'}"/></td>
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month3'}"/></td>
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month4'}"/></td>
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month5'}"/></td>
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month6'}"/></td>
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month7'}"/></td>
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month8'}"/></td>
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month9'}"/></td>
+        <td class="separate-cell year"><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month10'}"/></td>
+
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month11'}"/></td>
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month12'}"/></td>
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month13'}"/></td>
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month14'}"/></td>
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month15'}"/></td>
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month16'}"/></td>
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month17'}"/></td>
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month18'}"/></td>
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month19'}"/></td>
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month20'}"/></td>
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month21'}"/></td>
+        <td class="separate-cell year"><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month22'}"/></td>
+
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month23'}"/></td>
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month24'}"/></td>
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month25'}"/></td>
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month26'}"/></td>
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month27'}"/></td>
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month28'}"/></td>
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month29'}"/></td>
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month30'}"/></td>
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month31'}"/></td>
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month32'}"/></td>
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month33'}"/></td>
+        <td class="separate-cell year"><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month34'}"/></td>
+
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month35'}"/></td>
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month36'}"/></td>
+
+        <td th:text="${total}" class="total fix-right2">450,000</td>
+        <td th:text="${total}" class="total eligible fix-right">450,000</td>
+    </tr>
+</div>
+
 <!-- ===========================Messages / Queries  / notes=========================== --> 
 
 <div th:fragment="prototype-post-query(queryType, user)">
     
-    <fieldset th:unless="${queryType == 'note'}"> 
+    <fieldset th:unless="${queryType == 'note' or user == 'partner'}"> 
         
         <div class="form-group alignright">
             <label for="querySection">Query section</label>
@@ -321,9 +436,9 @@
 
     </fieldset>
 
-    <a th:href="${#httpServletRequest.requestURI + '?action=newQuery'}" id="post-new-query" th:unless="${param.action != null and param.action[0] == 'newQuery'}" class="button button-large" th:text="${(queryType == 'query' ? 'Post a new query' : 'Create a new note')}">QUERY TYPE</a>
+    <a th:href="${#httpServletRequest.requestURI + '?action=newQuery'}" id="post-new-query" th:unless="${param.action != null and param.action[0] == 'newQuery' or user == 'partner'}" class="button button-large" th:text="${(queryType == 'query' ? 'Post a new query' : 'Create a new note')}">QUERY TYPE</a>
 
-    <th:block th:if="${param.action != null and param.action[0] == 'newQuery'}">
+    <th:block th:if="${param.action != null and param.action[0] == 'newQuery'}" th:unless="${user == 'partner'}" >
     
         <form class="extra-margin" th:action="@{${#httpServletRequest.requestURI}}" method="get">
 
@@ -332,13 +447,17 @@
                 <th:block th:if="${queryType == 'query'}">
 
                     <legend class="heading-medium">Post new query</legend>
+                    
+                    <div class="form-group">
+                        <label for="queryTitle" class="form-label-bold">Title</label>
+                        <input name="queryTitle" id="queryTitle"  class="width-full" required="required" />
+                    </div>
 
                     <div class="form-group">
                         <label for="section" class="form-label-bold">Section</label>
                         <select name="section" id="section" class="form-control">
-                            <option value="All sections">All sections</option>
-                            <option value="Labour">Labour</option>
-                            <option value="Admin support costs">Admin support costs</option>
+                            <option value="Viability">Viability</option>
+                            <option value="Eligibility">Eligibility</option>
                         </select>
                     </div>
 
@@ -372,7 +491,7 @@
             <fieldset>
                 <div class="upload-section">
                     <legend class="heading-small no-margin">Upload supporting documentation</legend>
-                    <p class="form-hint">Any supporting documentation that you upload will be uploaded to the document library, and will be viewed by Innovate UK</p>
+                    <p class="form-hint">Any supporting documentation that you upload will be saved to the document library and will be viewed by Innovate UK.</p>
 
                     <input type="file" name="file" id="file" class="inputfile" />
                     <label for="file" class="button-secondary extra-margin">+ Upload</label>
@@ -395,16 +514,20 @@
 
 
 
-    <th:block th:if="${param.action != null and param.action[0] == 'postQuery' or param.action != null and param.action[0] == 'showResponse' or param.action != null and param.action[0] == 'newResponse'}">
+    <th:block th:if="${param.action != null and param.action[0] == 'postQuery' or param.action != null and param.action[0] == 'showResponse' or param.action != null and param.action[0] == 'newResponse' or param.action != null and param.action[0] == 'postResponse'}" th:unless="${user == 'partner'}" >
         <th:block th:if="${queryType == 'query'}">
-            <h2 class="heading-medium" th:text="${(param.section != null ? param.section[0] : 'NOT SET')}">SECTION TITLE</h2>
             
-            <p><strong>Innovate UK - Finance team</strong> 26/06/2016 17:55</p>
+            <h2 class="heading-medium no-margin-bottom" th:utext="${#strings.replace( #strings.escapeXml( #httpServletRequest.getParameter('queryTitle') ),T(java.lang.System).getProperty('line.separator'),'&lt;br /&gt;')}">QUERY TITLE</h2>
 
-            <div th:utext="${#strings.replace( #strings.escapeXml( #httpServletRequest.getParameter('query') ),T(java.lang.System).getProperty('line.separator'),'&lt;br /&gt;')}">
+            <h3 class="heading-small no-margin" th:text="${(param.section != null ? param.section[0] : 'NOT SET')}">SECTION TITLE</h3>
+            
+            <p class="heading-small no-margin-top">Innovate UK - Finance team <small>26/06/2016 17:55</small></p>
+
+            <div th:utext="${#strings.replace( #strings.escapeXml( #httpServletRequest.getParameter('query') ),T(java.lang.System).getProperty('line.separator'),'&lt;br /&gt;')}">QUERY
             </div>
 
             <form method="get" th:action="${#httpServletRequest.requestURI}">
+                <input type="hidden" id="queryTitle" name="queryTitle" th:value="${#httpServletRequest.getParameter('queryTitle')}" />
                 <input type="hidden" id="section" name="section" th:value="${#httpServletRequest.getParameter('section')}" />
                 <input type="hidden" id="query" name="query" th:value="${#httpServletRequest.getParameter('query')}" />
                 <input type="hidden" id="action" name="action" value="showResponse" />
@@ -427,41 +550,55 @@
 
 
 
-    <th:block th:if="${param.action != null and param.action[0] == 'saveNote' or param.action != null and param.action[0] == 'newResponse'}">
+  <!--  <th:block th:if="${param.action != null and param.action[0] == 'saveNote' or param.action != null and param.action[0] == 'newResponse'}" th:unless="${user == 'partner'}">
         
         <h2 class="heading-medium no-margin-bottom" th:utext="${#strings.replace( #strings.escapeXml( #httpServletRequest.getParameter('noteTitle') ),T(java.lang.System).getProperty('line.separator'),'&lt;br /&gt;')}" th:unless="${param.noteTitle == null}"></h2>
 
         <h2 class="heading-medium no-margin-bottom" th:unless="${param.noteTitle != null}">Administrative support costs</h2>
 
-        <p class="heading-small no-margin-top">Paul Deldt - Finance team <small>27/06/2015 09:40</small></p>
+        <p class="heading-small">Paul Deldt ABC - Finance team <small>27/06/2015 09:40</small></p>
 
         <p th:utext="${#strings.replace( #strings.escapeXml( #httpServletRequest.getParameter('noteDetails') ),T(java.lang.System).getProperty('line.separator'),'&lt;br /&gt;')}" th:unless="${param.noteDetails == null}"></p>
 
         <p th:unless="${param.noteDetails != null}">Need to look into why the admin support costs are so high, surely they could be lower for a company of this type.</p>
         
 
-    </th:block>
+    </th:block> -->
 
+    <th:block th:if="${param.action != null and param.action[0] == 'showResponse' or param.action != null and param.action[0] == 'postResponse' or param.action != null and param.action[0] == 'Response' or param.action != null and param.action[0] == 'newResponse'}">
 
-
-    <th:block th:if="${param.action != null and param.action[0] == 'showResponse' or param.action != null and param.action[0] == 'postResponse' or param.action != null and param.action[0] == 'Response'}">
-        <div class="panel-indent" th:unless="${queryType == 'note'}">
-            <p><strong>Steve Smith - Empire </strong> <small th:text="${#dates.format(#dates.createNow(), 'dd MMM yyyy HH:mm')}">26/06/2016 18:23</small></p>
+        <div class="panel-indent" th:unless="${queryType == 'note' or user == 'partner'}">
+            <p><strong>Steve Smith - Aptrans Ltd </strong> <small th:text="${#dates.format(#dates.createNow(), 'dd MMM yyyy HH:mm')}">26/06/2016 18:23</small></p>
             <p>We have always used Francois. He is related to the director of the company. &pound;150k equates to 150 days.</p>
         </div>
 
-        <div class="panel-indent" th:unless="${queryType == 'query'}">
+    </th:block>
 
-            <h2 class="heading-medium no-margin" th:utext="${#strings.replace( #strings.escapeXml( #httpServletRequest.getParameter('noteTitle') ),T(java.lang.System).getProperty('line.separator'),'&lt;br /&gt;')}" th:unless="${param.noteTitle == null}"></h2>
+    <th:block th:if="${param.action != null and param.action[0] == 'saveNote' or param.action != null and param.action[0] == 'saveNote' or param.action != null and param.action[0] == 'newResponse' or param.action != null and param.action[0] == 'postResponse'}" th:unless="${queryType == 'query'}">
+        <div class="extra-margin">
 
-            <p class="heading-small no-margin-top">Paul Deldt - Finance team <small>27/06/2015 09:40</small></p>
+            <h2 class="heading-medium no-margin-top" th:utext="${#strings.replace( #strings.escapeXml( #httpServletRequest.getParameter('noteTitle') ),T(java.lang.System).getProperty('line.separator'),'&lt;br /&gt;')}" th:unless="${param.noteTitle == null}"></h2>
+
+            <p class="heading-small no-margin">Paul Deldt - Finance team <small>27/06/2015 09:40</small></p>
 
             <p th:utext="${#strings.replace( #strings.escapeXml( #httpServletRequest.getParameter('noteDetails') ),T(java.lang.System).getProperty('line.separator'),'&lt;br /&gt;')}" th:unless="${param.noteDetails == null}"></p>
 
         </div>
+    </th:block>
+
+
+    <th:block th:if="${param.action != null and param.action[0] == 'showResponse' or param.action != null and param.action[0] == 'postResponse' or param.action != null and param.action[0] == 'Response'}">
 
         <div class="panel-indent" th:if="${param.action != null and param.action[0] == 'postResponse'}">
-            <p class="no-margin"><strong>Innovate UK - Finance team </strong> <small th:text="${#dates.format(#dates.createNow(), 'dd MMM yyyy HH:mm')}">26/06/2016 18:23</small></p>
+            
+            <th:block th:if="${user == 'admin'}">
+                <p class="no-margin"><strong>Innovate UK - Finance team </strong> <small th:text="${#dates.format(#dates.createNow(), 'dd MMM yyyy HH:mm')}">26/06/2016 18:23</small></p>
+            </th:block>
+
+            <th:block th:if="${user == 'partner'}">
+                <p class="no-margin"><strong>Steve Smith - Aptrans Ltd </strong> <small th:text="${#dates.format(#dates.createNow(), 'dd MMM yyyy HH:mm')}">26/06/2016 18:23</small></p>
+            </th:block>
+
             <div th:utext="${#strings.replace( #strings.escapeXml( #httpServletRequest.getParameter('response') ),T(java.lang.System).getProperty('line.separator'),'&lt;br /&gt;')}">
         </div>
             <h4 class="heading-small">Supporting document</h4>
@@ -471,12 +608,11 @@
         <form method="get" th:action="${#httpServletRequest.requestURI}" th:unless="${queryType == 'note'}">
             <input type="hidden" id="section" name="section" th:value="${#httpServletRequest.getParameter('section')}" />
             <input type="hidden" id="query" name="query" th:value="${#httpServletRequest.getParameter('query')}" />
+            <input type="hidden" id="queryTitle" name="queryTitle" th:value="${#httpServletRequest.getParameter('queryTitle')}" />
             <input type="hidden" id="action" name="action" value="newResponse" />
             <hr />
             <button class="button button-secondary">Respond</button>
         </form>
-
-
 
     </th:block>
 
@@ -499,7 +635,7 @@
             <fieldset>
                 <div class="upload-section">
                     <legend class="heading-small no-margin">Upload supporting documentation</legend>
-                    <p class="form-hint">Any supporting documentation that you upload will be uploaded to the document library, and will be viewed by Innovate UK</p>
+                    <p class="form-hint">Any supporting documentation that you upload will be saved to the document library and will be viewed by Innovate UK.</p>
 
                     <input type="file" name="file" id="file" class="inputfile" />
                     <label for="file" class="button-secondary extra-margin">+ Upload</label>
@@ -509,6 +645,7 @@
             <th:block th:if="${queryType == 'query'}">
                 <input type="hidden" id="section" name="section" th:value="${#httpServletRequest.getParameter('section')}" />
                 <input type="hidden" id="query" name="query" th:value="${#httpServletRequest.getParameter('query')}" />
+                <input type="hidden" id="queryTitle" name="queryTitle" th:value="${#httpServletRequest.getParameter('queryTitle')}" />
             </th:block>
             
             <th:block th:if="${queryType == 'note'}">

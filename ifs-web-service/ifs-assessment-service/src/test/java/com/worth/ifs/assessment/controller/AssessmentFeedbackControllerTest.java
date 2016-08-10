@@ -1,8 +1,11 @@
 package com.worth.ifs.assessment.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.form.Form;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.QuestionResource;
+import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.assessment.model.AssessmentFeedbackApplicationDetailsModelPopulator;
 import com.worth.ifs.assessment.model.AssessmentFeedbackModelPopulator;
 import com.worth.ifs.assessment.model.AssessmentFeedbackNavigationModelPopulator;
@@ -18,6 +21,7 @@ import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.form.resource.FormInputTypeResource;
 import org.apache.commons.lang3.tuple.Pair;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,12 +37,16 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.worth.ifs.BaseBuilderAmendFunctions.idBasedValues;
+import static com.worth.ifs.application.builder.SectionResourceBuilder.newSectionResource;
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static com.worth.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
+import static com.worth.ifs.commons.error.CommonFailureKeys.FORM_WORD_LIMIT_EXCEEDED;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static com.worth.ifs.form.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
@@ -59,6 +67,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
 public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<AssessmentFeedbackController> {
+
+    private ObjectMapper objectMapper = new ObjectMapper();
+
     @Mock
     private AssessmentService assessmentService;
 
@@ -106,6 +117,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
     public void testGetQuestion() throws Exception {
         Long expectedPreviousQuestionId = 10L;
         Long expectedNextQuestionId = 21L;
+        Long sectionId = 2L;
         CompetitionResource expectedCompetition = competitionResource;
         ApplicationResource expectedApplication = simpleToMap(applications, ApplicationResource::getId).get(APPLICATION_ID);
 
@@ -118,13 +130,14 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         Form expectedForm = new Form();
         expectedForm.setFormInput(simpleToMap(assessorResponses, assessorFormInputResponseResource -> String.valueOf(assessorFormInputResponseResource.getFormInput()), AssessorFormInputResponseResource::getValue));
         AssessmentNavigationViewModel expectedNavigation = new AssessmentNavigationViewModel(ASSESSMENT_ID, of(questionResources.get(expectedPreviousQuestionId)), of(questionResources.get(expectedNextQuestionId)));
+        this.setupNextQuestionSection(sectionId, expectedNextQuestionId, true);
 
         MvcResult result = mockMvc.perform(get("/{assessmentId}/question/{questionId}", ASSESSMENT_ID, QUESTION_ID))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("form", expectedForm))
                 .andExpect(model().attributeExists("model"))
                 .andExpect(model().attribute("navigation", expectedNavigation))
-                .andExpect(view().name("assessment-question"))
+                .andExpect(view().name("assessment/application-question"))
                 .andReturn();
 
         AssessmentFeedbackViewModel model = (AssessmentFeedbackViewModel) result.getModelAndView().getModel().get("model");
@@ -160,8 +173,34 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
     }
 
     @Test
+    public void testNextQuestionIsNotNavigable() throws Exception {
+        Long expectedPreviousQuestionId = 10L;
+        Long expectedNextQuestionId = 21L;
+        Long sectionId = 71L;
+        List<FormInputResource> applicationFormInputs = this.setupApplicationFormInputs(QUESTION_ID, FORM_INPUT_TYPES.get("textarea"));
+        this.setupApplicantResponses(APPLICATION_ID, applicationFormInputs);
+
+        List<FormInputResource> assessmentFormInputs = this.setupAssessmentFormInputs(QUESTION_ID, FORM_INPUT_TYPES.get("textarea"), FORM_INPUT_TYPES.get("assessor_score"));
+        List<AssessorFormInputResponseResource> assessorResponses = this.setupAssessorResponses(ASSESSMENT_ID, QUESTION_ID, assessmentFormInputs);
+
+        Form expectedForm = new Form();
+        expectedForm.setFormInput(simpleToMap(assessorResponses, assessorFormInputResponseResource -> String.valueOf(assessorFormInputResponseResource.getFormInput()), AssessorFormInputResponseResource::getValue));
+        AssessmentNavigationViewModel expectedNavigation = new AssessmentNavigationViewModel(ASSESSMENT_ID, of(questionResources.get(expectedPreviousQuestionId)), Optional.empty());
+        this.setupNextQuestionSection(sectionId, expectedNextQuestionId, false);
+
+        MvcResult result = mockMvc.perform(get("/{assessmentId}/question/{questionId}", ASSESSMENT_ID, QUESTION_ID))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("form", expectedForm))
+                .andExpect(model().attributeExists("model"))
+                .andExpect(model().attribute("navigation", expectedNavigation))
+                .andExpect(view().name("assessment/application-question"))
+                .andReturn();
+    }
+
+    @Test
     public void testGetQuestion_applicationDetailsQuestion() throws Exception {
         Long expectedNextQuestionId = 10L;
+        Long sectionId = 2L;
         CompetitionResource expectedCompetition = competitionResource;
         ApplicationResource expectedApplication = simpleToMap(applications, ApplicationResource::getId).get(APPLICATION_ID);
         AssessmentNavigationViewModel expectedNavigation = new AssessmentNavigationViewModel(ASSESSMENT_ID, empty(), of(questionResources.get(expectedNextQuestionId)));
@@ -169,12 +208,13 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         List<FormInputResource> applicationFormInputs = this.setupApplicationFormInputs(APPLICATION_DETAILS_QUESTION_ID, FORM_INPUT_TYPES.get("application_details"));
         this.setupApplicantResponses(APPLICATION_ID, applicationFormInputs);
         this.setupInvites();
+        this.setupNextQuestionSection(sectionId, expectedNextQuestionId, true);
 
         MvcResult result = mockMvc.perform(get("/{assessmentId}/question/{questionId}", ASSESSMENT_ID, APPLICATION_DETAILS_QUESTION_ID))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("model"))
                 .andExpect(model().attribute("navigation", expectedNavigation))
-                .andExpect(view().name("assessment-application-details"))
+                .andExpect(view().name("assessment/application-details"))
                 .andReturn();
 
         AssessmentFeedbackApplicationDetailsViewModel model = (AssessmentFeedbackApplicationDetailsViewModel) result.getModelAndView().getModel().get("model");
@@ -205,13 +245,36 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
 
         mockMvc.perform(post("/{assessmentId}/formInput/{formInputId}", ASSESSMENT_ID, formInputId)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("formInputId", String.valueOf(formInputId))
                 .param("value", value))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("success", is("true")))
                 .andReturn();
 
         verify(assessorFormInputResponseService, only()).updateFormInputResponse(ASSESSMENT_ID, formInputId, value);
+    }
+
+    @Test
+    public void testUpdateFormInputResponseValidation() throws Exception {
+        String value = "This is the feedback";
+        Long formInputId = 1L;
+        AssessorFormInputResponseResource assessorFormInputResponse = newAssessorFormInputResponseResource()
+                .withAssessment(ASSESSMENT_ID)
+                .withFormInput(formInputId)
+                .withValue(value)
+                .build();
+        when(assessorFormInputResponseService.updateFormInputResponse(ASSESSMENT_ID, formInputId, value)).thenReturn(serviceFailure(FORM_WORD_LIMIT_EXCEEDED));
+
+        MvcResult result = mockMvc.perform(post("/{assessmentId}/formInput/{formInputId}", ASSESSMENT_ID, formInputId)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("value", value))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("success", is("false")))
+                .andReturn();
+
+        verify(assessorFormInputResponseService, only()).updateFormInputResponse(ASSESSMENT_ID, formInputId, value);
+        String content = result.getResponse().getContentAsString();
+        String jsonExpectedContent = "{\"success\":\"false\",\"validation_errors\":[\"The form word limit has been exceeded\"]}";
+        Assert.assertEquals(jsonExpectedContent, content);
     }
 
     @Test
@@ -223,6 +286,17 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         Pair<String, String> scoreResponse = Pair.of(format("formInput[%s]", formInputIdScore), "10");
         Pair<String, String> feedbackResponse = Pair.of(format("formInput[%s]", formInputIdFeedback), "Feedback");
 
+        List<AssessorFormInputResponseResource> formResponses = newAssessorFormInputResponseResource()
+                .withId(null, null)
+                .withAssessment(ASSESSMENT_ID,ASSESSMENT_ID)
+                .withQuestion(QUESTION_ID,QUESTION_ID)
+                .withFormInput(formInputIdScore,formInputIdFeedback)
+                .withValue("10","Feedback")
+                .build(2);
+
+        when(assessorFormInputResponseService.updateFormInputResponse(ASSESSMENT_ID,formInputIdScore,"10")).thenReturn(serviceSuccess());
+        when(assessorFormInputResponseService.updateFormInputResponse(ASSESSMENT_ID,formInputIdFeedback,"Feedback")).thenReturn(serviceSuccess());
+
         mockMvc.perform(post("/{assessmentId}/question/{questionId}", ASSESSMENT_ID, QUESTION_ID)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param(scoreResponse.getLeft(), scoreResponse.getRight())
@@ -232,8 +306,55 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
                 .andReturn();
 
         InOrder inOrder = inOrder(assessorFormInputResponseService);
-        inOrder.verify(assessorFormInputResponseService, calls(1)).updateFormInputResponse(ASSESSMENT_ID, formInputIdScore, "10");
-        inOrder.verify(assessorFormInputResponseService, calls(1)).updateFormInputResponse(ASSESSMENT_ID, formInputIdFeedback, "Feedback");
+        inOrder.verify(assessorFormInputResponseService, calls(1)).updateFormInputResponse(ASSESSMENT_ID,formInputIdScore,"10");
+        inOrder.verify(assessorFormInputResponseService, calls(1)).updateFormInputResponse(ASSESSMENT_ID,formInputIdFeedback,"Feedback");
+    }
+
+    @Test
+    public void testSaveValidation() throws Exception {
+        Long expectedNextQuestionId = 21L;
+        Long sectionId = 71L;
+        List<FormInputResource> formInputs = this.setupAssessmentFormInputs(QUESTION_ID, FORM_INPUT_TYPES.get("assessor_score"), FORM_INPUT_TYPES.get("textarea"));
+
+        Long formInputIdScore = formInputs.get(0).getId();
+        Long formInputIdFeedback = formInputs.get(1).getId();
+        Pair<String, String> scoreResponse = Pair.of(format("formInput[%s]", formInputIdScore), "10");
+        Pair<String, String> feedbackResponse = Pair.of(format("formInput[%s]", formInputIdFeedback), "Feedback");
+
+        List<AssessorFormInputResponseResource> formResponses = newAssessorFormInputResponseResource()
+                .withId(null, null)
+                .withAssessment(ASSESSMENT_ID,ASSESSMENT_ID)
+                .withQuestion(QUESTION_ID,QUESTION_ID)
+                .withFormInput(formInputIdScore,formInputIdFeedback)
+                .withValue("10","Feedback")
+                .build(2);
+
+        when(assessorFormInputResponseService.updateFormInputResponse(ASSESSMENT_ID,formInputIdScore,"10")).thenReturn(serviceSuccess());
+        when(assessorFormInputResponseService.updateFormInputResponse(ASSESSMENT_ID,formInputIdFeedback,"Feedback")).thenReturn(serviceFailure(FORM_WORD_LIMIT_EXCEEDED));
+
+        // For re-display of question view following the invalid data entry
+        List<FormInputResource> applicationFormInputs = this.setupApplicationFormInputs(QUESTION_ID, FORM_INPUT_TYPES.get("textarea"));
+        this.setupApplicantResponses(APPLICATION_ID, applicationFormInputs);
+        this.setupNextQuestionSection(sectionId, expectedNextQuestionId, true);
+
+        MvcResult result = mockMvc.perform(post("/{assessmentId}/question/{questionId}", ASSESSMENT_ID, QUESTION_ID)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param(scoreResponse.getLeft(), scoreResponse.getRight())
+                .param(feedbackResponse.getLeft(), feedbackResponse.getRight()))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(view().name("assessment/application-question"))
+                .andReturn();
+
+        InOrder inOrder = inOrder(assessorFormInputResponseService);
+        inOrder.verify(assessorFormInputResponseService, calls(1)).updateFormInputResponse(ASSESSMENT_ID,formInputIdScore,"10");
+        inOrder.verify(assessorFormInputResponseService, calls(1)).updateFormInputResponse(ASSESSMENT_ID,formInputIdFeedback,"Feedback");
+
+        Map<String, Object> modelMap = result.getModelAndView().getModel();
+        AssessmentFeedbackViewModel model = (AssessmentFeedbackViewModel) modelMap.get("model");
+
+        Form form = (Form) modelMap.get("form");
+        assertEquals(1, form.getObjectErrors().size());
+        assertEquals(FORM_WORD_LIMIT_EXCEEDED.getErrorKey(), form.getObjectErrors().get(0).getCode());
     }
 
     @Override
@@ -246,6 +367,13 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         questionResources.get(QUESTION_ID).setShortName("Market opportunity");
         questionResources.get(QUESTION_ID).setAssessorMaximumScore(50);
         questionResources.get(APPLICATION_DETAILS_QUESTION_ID).setShortName("Application details");
+    }
+
+    private void setupNextQuestionSection(Long sectionId, Long expectedNextQuestionId, boolean isAssessmentQuestion) {
+        SectionResource section = newSectionResource().withDisplayInAssessmentApplicationSummary(isAssessmentQuestion).build();
+        when(sectionService.getById(sectionId)).thenReturn(section);
+        QuestionResource question = questionResources.get(expectedNextQuestionId);
+        question.setSection(sectionId);
     }
 
     private List<FormInputResource> setupApplicationFormInputs(Long questionId, FormInputTypeResource... formInputTypes) {

@@ -1,0 +1,289 @@
+/*
+
+
+```
+<div class="form-control-wrap">
+    <div class="form-group_header">
+        test
+    </div>
+     <textarea  name="question-1" id="question-1" cols="30" rows="10">
+                Contents of the textarea
+      </textarea>
+</div>
+```
+
+*/
+textarea[readonly],
+textarea[disabled],
+input[readonly],
+input[disabled],
+div.readonly{
+    color: $black;
+    background: $grey-4;
+    border: 1px solid $border-colour;
+}
+
+.form-group{
+    .form-finances-subcontracting-cost{
+        text-align: right;
+    }
+    &.inline label {
+      display:inline-block;
+      margin-right: 1em;
+    }
+}
+td.form-group,
+tr.form-group {
+  float:none;
+  width:auto;
+  padding-left:0;
+  input {
+    vertical-align: top;
+  }
+  &.error  {
+    border-left:none;
+  }
+}
+.field-error {
+  @include box-shadow(none);
+  border: 2px solid $error-colour;
+}
+
+table td input[type="number"]{
+        text-align: right;
+}
+
+
+/* SG
+
+# IFS/Input sizes
+Used to define input widths, so they can be more specific to digits that need to ne entered. Used particularly for numerical fields
+
+```
+<div class="form-group">
+    <label class="form-label" for="">Extra small</label>
+    <input class="width-extra-small" id="width-extra-small" value="65px">
+</div>
+<div class="form-group">
+    <label class="form-label" for="">Small</label>
+    <input class="width-small" id="width-small" value="80px">
+</div>
+<div class="form-group">
+    <label class="form-label" for="">Small medium</label>
+    <input class="width-small-medium" id="width-small-medium" value="100px">
+</div>
+<div class="form-group">
+    <label class="form-label" for="">Medium</label>
+    <input class="width-medium" id="width-medium" value="150px">
+</div>
+<div class="form-group">
+    <label class="form-label" for="">LARGE</label>
+    <input class="width-large" id="width-large" value="200px">
+</div>
+<div class="form-group">
+    <label class="form-label" for="">Full</label>
+    <input class="width-full" id="width-full" value="100%">
+</div>
+ ```
+*/
+
+
+
+.width-extra-small{
+    width: 65px;
+}
+.width-small{
+    width: 80px;
+}
+.width-small-medium{
+    width: 100px;
+}
+.width-medium{
+    width: 150px;
+}
+.width-large{
+    width: 200px;
+}
+.width-full{
+    width: 100%;
+}
+select.form-control.width-x-large,
+.width-x-large{
+    width:60%;
+}
+input.form-control + button.button,
+select.form-control + button.button {
+    line-height:1;
+}
+
+
+table td{
+
+    &.numeric{
+        text-align: right;
+
+        input{
+            text-align: right;
+        }
+    }
+    .control{
+        padding-left: 20px
+    }
+}
+
+.date-group {
+    overflow: hidden;
+    max-width:300px;
+    > div {
+        width:33%;
+        float:left;
+    }
+}
+
+.form-date{
+    overflow: hidden;
+    margin-bottom: 30px;
+}
+
+.textarea-wrapped {
+    position: relative;
+
+    .textarea-header {
+        font-size:14px;
+        border:  1px solid $border-colour;
+        border-bottom:none;
+        background: $grey-4 0 0 no-repeat;
+        min-height:60px;
+    }
+
+    .assignee {
+        padding:20px 15px  5px;
+    }
+    .assignee span + span {
+        font-weight:bold;
+    }
+    img + .assignee {
+        padding:20px 15px 0 55px;
+    }
+
+
+    .textarea-header + textarea,
+    .textarea-header + [contenteditable="true"],
+    .textarea-header + .readonly {
+        border-top:none;
+    }
+
+    textarea,
+    [contenteditable="true"],
+    .readonly {
+        border:  1px solid $border-colour;
+        min-height: 250px;
+        margin: 0;
+        padding: 5px 10px;
+        resize: vertical;
+        vertical-align: top;
+        width:100%;
+        @include box-sizing(border-box);
+        overflow:auto; //needed for resize [contenteditable] div
+    }
+
+
+    .textarea-footer {
+        font-size:16px;
+        padding: 10px 0px;
+    }
+    .textarea-footer .buttonlink {
+        vertical-align:top;
+        padding: 0 10px 0 0;
+    }
+
+}
+
+td.autosave-info {
+  color: $grey-1;
+  font-size:14px;
+  min-width:70px;
+}
+
+.textarea-footer .count-label,
+.textarea-footer .autosave-info {
+    padding:2px 0;
+    float:right;
+    color: $grey-1;
+    clear:right;
+}
+.count-label .negative{
+    color: $orange;
+    font-weight: 700;
+}
+.count-label .word-count-reached .count-down{
+    color: $orange;
+    font-weight: 700;
+}
+
+// .form-group{
+//     &.alignright{
+//         .form-control{
+//             margin-right: 1.25em;
+//         }
+//     }
+// }
+
+select.form-control{
+  -webkit-appearance: menulist;
+  width:auto;
+}
+
+.feedback .textarea-wrapped textarea{
+        border: 1px solid $border-colour;
+
+}
+
+
+// ------- file upload -------- //
+
+.upload-section{
+	border: 1px solid $border-colour;
+	background: $grey-4;
+	padding: 16px 16px 8px 16px;
+	margin: 16px 0;
+}
+.upload-section.error{
+  @extend .warning-alert;
+  background: none;
+  padding-left: 16px;
+}
+.no-js .upload-section .inputfile + label{
+    visibility: hidden;
+    display: none;
+}
+.no-js .upload-section .inputfile {
+    margin:16px 0;
+    font-size:17px;
+}
+.js-enabled [data-for-file-upload] {
+    display:none;
+}
+.js-enabled .upload-section .inputfile{
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+.upload-section .inputfile + label{
+  margin-top: 20px;
+}
+
+.upload-section	.uploaded-file{
+	display: block;
+	background: $panel-colour;
+	padding: 20px;
+	font-weight: bold;
+	margin: 10px 0;
+}
+.form-group.download{
+		padding: 5px 0 0 50px;
+		background: url(../images/icons/icon-download.png) no-repeat;
+}

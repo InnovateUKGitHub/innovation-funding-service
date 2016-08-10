@@ -1,10 +1,24 @@
 package com.worth.ifs.competition.documentation;
 
+import com.worth.ifs.BaseControllerMockMVCTest;
+import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.competition.controller.CompetitionController;
+import com.worth.ifs.competition.resource.CompetitionCountResource;
+import com.worth.ifs.competition.resource.CompetitionSetupSection;
+import com.worth.ifs.competition.transactional.CompetitionService;
+import com.worth.ifs.competition.transactional.CompetitionSetupService;
+import com.worth.ifs.documentation.CompetitionCountResourceDocs;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mock;
+import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
+
 import static com.worth.ifs.documentation.CompetitionResourceDocs.competitionResourceBuilder;
 import static com.worth.ifs.documentation.CompetitionResourceDocs.competitionResourceFields;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
@@ -12,18 +26,6 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.response
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mock;
-import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
-
-import com.worth.ifs.BaseControllerMockMVCTest;
-import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.competition.controller.CompetitionController;
-import com.worth.ifs.competition.resource.CompetitionSetupSection;
-import com.worth.ifs.competition.transactional.CompetitionService;
-import com.worth.ifs.competition.transactional.CompetitionSetupService;
 
 public class CompetitionControllerDocumentation extends BaseControllerMockMVCTest<CompetitionController> {
     @Mock
@@ -101,6 +103,73 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
                         pathParameters(
                                 parameterWithName("competitionId").description("id of the competition on what the section should be marked as incomplete"),
                                 parameterWithName("section").description("the section to mark as incomplete")
+                        )
+                ));
+    }
+
+    @Test
+    public void live() throws Exception {
+        when(competitionService.findLiveCompetitions()).thenReturn(ServiceResult.serviceSuccess(competitionResourceBuilder.build(2)));
+
+        mockMvc.perform(get("/competition/live"))
+            .andExpect(status().isOk())
+            .andDo(this.document.snippets(
+                responseFields(
+                        fieldWithPath("[]").description("list of live competitions the authenticated user has access to")
+                )
+            ));
+    }
+
+    @Test
+    public void projectSetup() throws Exception {
+        when(competitionService.findProjectSetupCompetitions()).thenReturn(ServiceResult.serviceSuccess(competitionResourceBuilder.build(2)));
+
+        mockMvc.perform(get("/competition/projectSetup"))
+                .andExpect(status().isOk())
+                .andDo(this.document.snippets(
+                        responseFields(
+                                fieldWithPath("[]").description("list of competitions in project set up the authenticated user has access to")
+                        )
+                ));
+    }
+
+    @Test
+    public void upcoming() throws Exception {
+        when(competitionService.findUpcomingCompetitions()).thenReturn(ServiceResult.serviceSuccess(competitionResourceBuilder.build(2)));
+
+        mockMvc.perform(get("/competition/upcoming"))
+                .andExpect(status().isOk())
+                .andDo(this.document.snippets(
+                        responseFields(
+                                fieldWithPath("[]").description("list of upcoming competitions the authenticated user has access to")
+                        )
+                ));
+    }
+
+    @Test
+    public void count() throws Exception {
+        CompetitionCountResource resource = new CompetitionCountResource();
+        when(competitionService.countCompetitions()).thenReturn(ServiceResult.serviceSuccess(resource));
+
+        mockMvc.perform(get("/competition/count"))
+                .andExpect(status().isOk())
+                .andDo(this.document.snippets(
+                        responseFields(CompetitionCountResourceDocs.competitionCountResourceFields)
+                ));
+    }
+
+    @Test
+    public void initialiseFormForCompetitionType() throws Exception {
+        Long competitionId = 2L;
+        Long competitionTypeId = 3L;
+        when(competitionSetupService.initialiseFormForCompetitionType(competitionId, competitionTypeId)).thenReturn(ServiceResult.serviceSuccess());
+
+        mockMvc.perform(post("/competition/{competitionId}/initialise-form/{competitionTypeId}", competitionId, competitionTypeId))
+                .andExpect(status().isOk())
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("competitionId").description("id of the competition in competition setup on which the application form should be initialised"),
+                                parameterWithName("competitionTypeId").description("id of the competitionType that is being chosen on setup")
                         )
                 ));
     }

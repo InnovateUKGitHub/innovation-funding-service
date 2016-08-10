@@ -26,13 +26,13 @@ import com.worth.ifs.bankdetails.domain.BankDetails;
 import com.worth.ifs.bankdetails.resource.BankDetailsResource;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.resource.CompetitionCoFunderResource;
+import com.worth.ifs.competition.resource.CompetitionCountResource;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.finance.domain.ApplicationFinance;
-import com.worth.ifs.finance.domain.CostField;
-import com.worth.ifs.finance.domain.CostValue;
+import com.worth.ifs.finance.domain.FinanceRowMetaField;
+import com.worth.ifs.finance.domain.FinanceRowMetaValue;
 import com.worth.ifs.form.domain.FormInputType;
 import com.worth.ifs.form.domain.FormValidator;
-import com.worth.ifs.invite.domain.Invite;
 import com.worth.ifs.invite.domain.InviteOrganisation;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
 import com.worth.ifs.project.domain.Project;
@@ -65,17 +65,16 @@ public class POJOTest {
             AlertResource.class,
             AssessorFormInputResponse.class,
             AssessorFormInputResponseResource.class,
-            Invite.class,
             Address.class,
             OrganisationType.class,
             Application.class,
             ApplicationStatus.class,
             FileEntry.class,
-            CostField.class,
+            FinanceRowMetaField.class,
             FormValidator.class,
             FormInputType.class,
             OrganisationAddress.class,
-            CostValue.class,
+            FinanceRowMetaValue.class,
             Token.class,
             InviteOrganisation.class,
             Section.class,
@@ -93,7 +92,8 @@ public class POJOTest {
             BankDetails.class,
             BankDetailsResource.class,
             MonitoringOfficerResource.class,
-            CompetitionCoFunderResource.class
+            CompetitionCoFunderResource.class,
+            CompetitionCountResource.class
     );
 
     @Before

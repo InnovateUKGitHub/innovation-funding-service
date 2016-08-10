@@ -279,11 +279,11 @@ unset startServersInDebugMode
 unset testMailboxOneExists
 
 
-browser="Firefox"
+browser="GoogleChrome"
 
 
 testDirectory='IFS_acceptance_tests/tests/*'
-while getopts ":q :t :h :p :r :d: :D :x :c" opt ; do
+while getopts ":q :t :h :p :r :d: :D :x :f" opt ; do
     case $opt in
         q)
          quickTest=1
@@ -309,8 +309,8 @@ while getopts ":q :t :h :p :r :d: :D :x :c" opt ; do
         D)
          startServersInDebugMode=true
         ;;
-        c)
-         browser="GoogleChrome"
+        f)
+         browser="Firefox"
         ;;
         \?)
          coloredEcho "Invalid option: -$OPTARG" red >&2

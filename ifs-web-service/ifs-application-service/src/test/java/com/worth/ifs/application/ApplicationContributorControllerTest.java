@@ -1,23 +1,10 @@
 package com.worth.ifs.application;
 
-import static com.worth.ifs.commons.rest.RestResult.restSuccess;
-import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
-
-import java.net.URLEncoder;
-import java.util.Arrays;
-
-import javax.servlet.http.Cookie;
-
+import com.worth.ifs.BaseControllerMockMVCTest;
+import com.worth.ifs.application.form.ContributorsForm;
+import com.worth.ifs.filter.CookieFlashMessageFilter;
+import com.worth.ifs.invite.resource.InviteOrganisationResource;
+import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.lang3.CharEncoding;
 import org.junit.Before;
@@ -29,11 +16,19 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.Validator;
 
-import com.worth.ifs.BaseControllerMockMVCTest;
-import com.worth.ifs.application.form.ContributorsForm;
-import com.worth.ifs.filter.CookieFlashMessageFilter;
-import com.worth.ifs.invite.resource.InviteOrganisationResource;
-import com.worth.ifs.invite.resource.InviteResource;
+import javax.servlet.http.Cookie;
+import java.net.URLEncoder;
+import java.util.Arrays;
+
+import static com.worth.ifs.commons.rest.RestResult.restSuccess;
+import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")

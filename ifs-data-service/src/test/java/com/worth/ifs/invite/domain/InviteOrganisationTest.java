@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static com.worth.ifs.invite.builder.InviteBuilder.newInvite;
+import static com.worth.ifs.invite.builder.ApplicationInviteBuilder.newInvite;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 
 public class InviteOrganisationTest {
@@ -16,7 +16,7 @@ public class InviteOrganisationTest {
 
     String name;
     Organisation organisation;
-    List<Invite> invites;
+    List<ApplicationInvite> invites;
     Long id;
 
     @Before

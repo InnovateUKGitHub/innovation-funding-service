@@ -1,0 +1,242 @@
+
+.list-overview{
+
+		margin-left: 0;
+    padding: 0;
+    list-style-type: none;
+
+    > li{
+        border-top: 1px solid $border-colour;
+    }
+    > li:last-child{
+        border-bottom: 1px solid $border-colour;
+    }
+
+    > li.grid-row {
+    	min-height: 30px;
+        margin: 0
+
+    }
+    h3.heading-small {
+       margin: 10px 0;
+    }
+
+    .assign-container{
+       	font-size: 14px;
+        padding: 10px 0;
+
+    	.assign-team{
+    		margin-top: 0;
+    		margin-bottom: 10px;
+    	}
+    }
+}
+
+/*
+
+```
+<div class="eligibility">
+    <dl class="list-eligibility">
+        <dt>Maximum research participation</dt>
+        <dd>0 %</dd>
+        <dt>Current research participation</dt>
+        <dd>4.74 %</dd>
+    </dl>
+</div>
+```
+
+
+*/
+
+
+.eligibility{
+    border: 1px solid $border-colour;
+    padding: 20px 20px 10px 20px;
+
+    &.warning{
+        border: 1px solid $red;
+    }
+}
+
+
+.list-eligibility{
+    overflow: auto;
+    @include core-24;
+    dt{
+        display: block;
+        float: left;
+        width: 50%;
+				font-weight:normal;
+        margin-bottom: 0.5em;
+        @include media-down(tablet) {
+            width: 70%;
+        }
+    }
+
+    dd {
+        display: block;
+        float: left;
+        font-weight: bold;
+        margin-bottom: 0.5em;
+    }
+    dd.warning {
+        color: $red;
+    }
+    dd + dt {
+      clear: both;
+    }
+}
+
+dl dd,
+dl dt {
+	display: block;
+}
+
+dl dt,
+dl dt.font-small {
+	font-weight:bold;
+}
+
+.dl-left {
+	overflow: hidden;
+
+	dd,dt {
+		line-height:1.5;
+		font-weight:normal;
+	}
+	dd {
+		float:left;
+		font-weight:bold;
+		clear:left;
+		margin-right:5px;
+		@include media-down(tablet) {
+				display:block;
+				float:none;
+				margin: 0;
+		}
+	}
+
+}
+
+
+ol.list-alpha {
+  counter-reset: item;
+	padding:15px 0;
+
+	li {
+		display: block;
+		padding:10px 0 10px 45px;
+	  counter-increment: item;
+	}
+	li:before {
+			position: absolute;
+			content: counter(item, upper-alpha);
+			margin-left:-45px; //negative of the ol li padding
+	}
+}
+
+ol.list-counted {
+	counter-reset: item;
+	padding:15px 0;
+	li {
+		display: block;
+		padding:10px 0;
+	}
+
+	li:before {
+		 content: counters(item, ".") ". ";
+		 counter-increment: item
+	}
+
+	li.list-bold:before,
+	li.list-bold > span {
+			font-weight: bold;
+	}
+
+	ol {
+		counter-reset: item;
+	}
+	ol ol {
+		padding-left:15px;
+	}
+	> li > ol {
+		 margin-left:-45px;
+	}
+	//making sure the text columns are straight
+	li {
+		padding-left: 45px;
+		&:before {
+			position: absolute;
+			margin-left:-45px; //negative of the ol li padding
+		}
+	}
+	ol li	li {
+			padding-left: 55px;
+			&:before {
+				margin-left:-55px;
+			}
+		}
+	ol ol ol {
+			margin-left:-20px;
+	}
+	ol ol	ol li {
+			padding-left: 70px;
+			&:before {
+				margin-left:-70px;
+			}
+		}
+
+}
+
+
+
+dl.standard-definition-list{
+    overflow: auto;
+    @include core-19;
+
+    dt{
+        display: block;
+        float: left;
+        width: 50%;
+        max-width: 250px;
+        margin-bottom: 0.5em;
+
+        @include media-down(tablet) {
+            width: 70%;
+        }
+    }
+
+    dd{
+        display: block;
+        float: left;
+        font-weight: bold;
+        margin-bottom: 0.5em;
+
+        &.warning{
+            color: $red;
+        }
+
+        & + dt{
+            clear: both;
+        }
+    }
+}
+
+.comp-list{
+    li {
+        border-top:1px solid $border-colour;
+				overflow: hidden;
+		}
+    li:last-child {
+        border-bottom:1px solid $border-colour;
+    }
+    .status{
+        display:block;
+				color: $secondary-text-colour;
+        background: $panel-colour;
+        padding: 12px;
+        text-align: center;
+        margin-top: 1.2em;
+        font-weight: bold;
+    }
+}

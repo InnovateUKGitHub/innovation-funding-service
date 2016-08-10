@@ -3,11 +3,13 @@ package com.worth.ifs.competition.service;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.competition.resource.CompetitionCountResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.CompetitionTypeResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.xmlbeans.impl.jam.internal.elements.VoidClassImpl;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -32,6 +34,26 @@ public class CompetitionsRestServiceImpl extends BaseRestService implements Comp
     @Override
     public RestResult<List<CompetitionResource>> getAll() {
         return getWithRestResult(competitionsRestURL + "/findAll", competitionResourceListType());
+    }
+
+    @Override
+    public RestResult<List<CompetitionResource>> findLiveCompetitions() {
+        return getWithRestResult(competitionsRestURL + "/live", competitionResourceListType());
+    }
+
+    @Override
+    public RestResult<List<CompetitionResource>> findProjectSetupCompetitions() {
+        return getWithRestResult(competitionsRestURL + "/projectSetup", competitionResourceListType());
+    }
+
+    @Override
+    public RestResult<List<CompetitionResource>> findUpcomingCompetitions() {
+        return getWithRestResult(competitionsRestURL + "/upcoming", competitionResourceListType());
+    }
+
+    @Override
+    public RestResult<CompetitionCountResource> countCompetitions() {
+        return getWithRestResult(competitionsRestURL + "/count", CompetitionCountResource.class);
     }
 
     @Override
@@ -69,6 +91,11 @@ public class CompetitionsRestServiceImpl extends BaseRestService implements Comp
     public RestResult<String> generateCompetitionCode(Long competitionId, LocalDateTime openingDate) {
         String url = String.format("%s/generateCompetitionCode/%s", competitionsRestURL, competitionId);
         return postWithRestResult(String.format("%s/generateCompetitionCode/%s", competitionsRestURL, competitionId), openingDate, String.class);
+    }
+
+    @Override
+    public RestResult<Void> initApplicationForm(Long competitionId, Long competitionTypeId) {
+        return postWithRestResult(String.format("%s/%s/initialise-form/%s", competitionsRestURL, competitionId, competitionTypeId), Void.class);
     }
 
 }
