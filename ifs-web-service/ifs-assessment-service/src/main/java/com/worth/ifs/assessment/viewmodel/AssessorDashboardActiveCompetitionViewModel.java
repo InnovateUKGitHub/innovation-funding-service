@@ -1,5 +1,8 @@
 package com.worth.ifs.assessment.viewmodel;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import java.time.LocalDate;
 
 /**
@@ -9,13 +12,13 @@ public class AssessorDashboardActiveCompetitionViewModel {
 
     private Long competitionId;
     private String displayLabel;
-    private String progressAssessed;
-    private String progressTotal;
+    private Integer progressAssessed;
+    private Integer progressTotal;
     private LocalDate deadline;
     private long daysLeft;
     private long daysLeftPercentage;
 
-    public AssessorDashboardActiveCompetitionViewModel(Long competitionId, String displayLabel, String progressAssessed, String progressTotal, LocalDate deadline, long daysLeft, long daysLeftPercentage) {
+    public AssessorDashboardActiveCompetitionViewModel(Long competitionId, String displayLabel, Integer progressAssessed, Integer progressTotal, LocalDate deadline, long daysLeft, long daysLeftPercentage) {
         this.competitionId = competitionId;
         this.displayLabel = displayLabel;
         this.progressAssessed = progressAssessed;
@@ -41,19 +44,19 @@ public class AssessorDashboardActiveCompetitionViewModel {
         this.displayLabel = displayLabel;
     }
 
-    public String getProgressAssessed() {
+    public Integer getProgressAssessed() {
         return progressAssessed;
     }
 
-    public void setProgressAssessed(String progressAssessed) {
+    public void setProgressAssessed(Integer progressAssessed) {
         this.progressAssessed = progressAssessed;
     }
 
-    public String getProgressTotal() {
+    public Integer getProgressTotal() {
         return progressTotal;
     }
 
-    public void setProgressTotal(String progressTotal) {
+    public void setProgressTotal(Integer progressTotal) {
         this.progressTotal = progressTotal;
     }
 
@@ -79,5 +82,41 @@ public class AssessorDashboardActiveCompetitionViewModel {
 
     public void setDaysLeftPercentage(long daysLeftPercentage) {
         this.daysLeftPercentage = daysLeftPercentage;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        AssessorDashboardActiveCompetitionViewModel that = (AssessorDashboardActiveCompetitionViewModel) o;
+
+        return new EqualsBuilder()
+                .append(daysLeft, that.daysLeft)
+                .append(daysLeftPercentage, that.daysLeftPercentage)
+                .append(competitionId, that.competitionId)
+                .append(displayLabel, that.displayLabel)
+                .append(progressAssessed, that.progressAssessed)
+                .append(progressTotal, that.progressTotal)
+                .append(deadline, that.deadline)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(competitionId)
+                .append(displayLabel)
+                .append(progressAssessed)
+                .append(progressTotal)
+                .append(deadline)
+                .append(daysLeft)
+                .append(daysLeftPercentage)
+                .toHashCode();
     }
 }
