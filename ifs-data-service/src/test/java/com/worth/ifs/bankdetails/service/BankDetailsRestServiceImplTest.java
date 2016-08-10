@@ -28,7 +28,7 @@ public class BankDetailsRestServiceImplTest extends BaseRestServiceUnitTest<Bank
         Long bankDetailsId = 1L;
         BankDetailsResource returnedResponse = newBankDetailsResource().build();
         setupGetWithRestResultExpectations(projectRestURL + "/" + projectId + "/bank-details?bankDetailsId=" + bankDetailsId, BankDetailsResource.class, returnedResponse);
-        BankDetailsResource response = service.getById(projectId, bankDetailsId).getSuccessObject();
+        BankDetailsResource response = service.getByProjectIdAndBankDetailsId(projectId, bankDetailsId).getSuccessObject();
         assertEquals(response, returnedResponse);
     }
 
