@@ -1,5 +1,29 @@
 package com.worth.ifs.application.transactional;
 
+import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.application.domain.QuestionStatus;
+import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.mapper.QuestionMapper;
+import com.worth.ifs.application.mapper.QuestionStatusMapper;
+import com.worth.ifs.application.mapper.SectionMapper;
+import com.worth.ifs.application.repository.QuestionRepository;
+import com.worth.ifs.application.repository.QuestionStatusRepository;
+import com.worth.ifs.application.resource.*;
+import com.worth.ifs.assessment.domain.Assessment;
+import com.worth.ifs.assessment.repository.AssessmentRepository;
+import com.worth.ifs.commons.rest.ValidationMessages;
+import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.form.domain.FormInputType;
+import com.worth.ifs.form.transactional.FormInputTypeService;
+import com.worth.ifs.transactional.BaseTransactionalService;
+import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.validator.util.ValidationUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -8,30 +32,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-
-import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.domain.QuestionStatus;
-import com.worth.ifs.application.mapper.QuestionMapper;
-import com.worth.ifs.application.mapper.QuestionStatusMapper;
-import com.worth.ifs.application.repository.QuestionRepository;
-import com.worth.ifs.application.repository.QuestionStatusRepository;
-import com.worth.ifs.application.resource.QuestionApplicationCompositeId;
-import com.worth.ifs.application.resource.QuestionResource;
-import com.worth.ifs.application.resource.QuestionStatusResource;
-import com.worth.ifs.application.resource.SectionResource;
-import com.worth.ifs.commons.rest.ValidationMessages;
-import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.form.domain.FormInputType;
-import com.worth.ifs.form.transactional.FormInputTypeService;
-import com.worth.ifs.transactional.BaseTransactionalService;
-import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.validator.util.ValidationUtil;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import java.util.stream.Stream;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
@@ -41,6 +42,7 @@ import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static com.worth.ifs.util.EntityLookupCallbacks.getOnlyElementOrFail;
 import static java.time.LocalDateTime.now;
 import static java.util.Comparator.comparing;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Transactional and secured service focused around the processing of Applications
@@ -61,10 +63,16 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     private ApplicationService applicationService;
 
     @Autowired
+    private AssessmentRepository assessmentRepository;
+
+    @Autowired
     private FormInputTypeService formInputTypeService;
 
     @Autowired
     private QuestionStatusMapper questionStatusMapper;
+
+    @Autowired
+    private SectionMapper sectionMapper;
 
     @Autowired
     private QuestionMapper questionMapper;
@@ -283,6 +291,28 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
         return serviceSuccess(questionStatusRepository.countByApplicationIdAndAssigneeId(applicationId, assigneeId));
     }
 
+    @Override
+	public ServiceResult<List<QuestionResource>> getQuestionsBySectionIdAndType(
+			Long sectionId, QuestionType type) {
+		return getSection(sectionId).andOnSuccessReturn(section -> questionsOfType(section, type));
+	}
+
+    @Override
+    public ServiceResult<List<QuestionResource>> getQuestionsByAssessmentId(Long assessmentId) {
+        return getAssessment(assessmentId).andOnSuccess(assessment ->
+                sectionService.getByCompetitionIdVisibleForAssessment(assessment.getProcessRole().getApplication().getCompetition().getId())
+                        .andOnSuccessReturn(sections -> sections.stream().map(sectionMapper::mapToDomain).flatMap(section -> section.getQuestions().stream()).map(questionMapper::mapToResource).collect(toList())));
+    }
+
+    private List<QuestionResource> questionsOfType(Section section, QuestionType type) {
+    	Stream<Question> sectionQuestionsStream = section.getQuestions().stream();
+    	Stream<Question> childSectionsQuestionsStream = section.getChildSections().stream().flatMap(s -> s.getQuestions().stream());
+    	
+    	return Stream.concat(sectionQuestionsStream, childSectionsQuestionsStream).filter(q -> q.isType(type))
+        .map(questionMapper::mapToResource)
+        .collect(toList());
+    }
+    
     private ServiceResult<List<ValidationMessages>> setComplete(Long questionId, Long applicationId, Long processRoleId, boolean markAsComplete) {
         return find(processRole(processRoleId), openApplication(applicationId), getQuestion(questionId)).andOnSuccess((markedAsCompleteBy, application, question)
                 -> setCompleteOnFindAndSuccess(markedAsCompleteBy, application, question, processRoleId, markAsComplete));
@@ -412,6 +442,10 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
         return questionStatuses.stream().
                 filter(qs -> !qs.getQuestion().hasMultipleStatuses() || (qs.getAssignee() != null && qs.getAssignee().getOrganisation().getId().equals(organisationId)))
                 .collect(Collectors.toList());
+    }
+
+    private ServiceResult<Assessment> getAssessment(Long assessmentId) {
+        return find(assessmentRepository.findOne(assessmentId), notFoundError(Assessment.class, assessmentId));
     }
 
     private Supplier<ServiceResult<Question>> getQuestion(Long questionId) {

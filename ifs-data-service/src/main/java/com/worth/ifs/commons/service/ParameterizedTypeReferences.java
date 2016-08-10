@@ -10,10 +10,10 @@ import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.category.resource.CategoryResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionTypeResource;
-import com.worth.ifs.finance.domain.Cost;
+import com.worth.ifs.finance.domain.FinanceRow;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
-import com.worth.ifs.finance.resource.CostFieldResource;
-import com.worth.ifs.finance.resource.cost.CostItem;
+import com.worth.ifs.finance.resource.FinanceRowMetaFieldResource;
+import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
@@ -103,20 +103,20 @@ public final class ParameterizedTypeReferences {
         return new ParameterizedTypeReference<List<FormInputResponseResource>>() {};
     }
 
-    public static ParameterizedTypeReference<List<CostFieldResource>> costFieldResourceListType() {
-        return new ParameterizedTypeReference<List<CostFieldResource>>() {};
+    public static ParameterizedTypeReference<List<FinanceRowMetaFieldResource>> financeRowMetaFieldResourceListType() {
+        return new ParameterizedTypeReference<List<FinanceRowMetaFieldResource>>() {};
     }
 
     public static ParameterizedTypeReference<List<InviteOrganisationResource>> inviteOrganisationResourceListType() {
         return new ParameterizedTypeReference<List<InviteOrganisationResource>>() {};
     }
 
-    public static ParameterizedTypeReference<List<Cost>> costListType() {
-        return new ParameterizedTypeReference<List<Cost>>() {};
+    public static ParameterizedTypeReference<List<FinanceRow>> costListType() {
+        return new ParameterizedTypeReference<List<FinanceRow>>() {};
     }
 
-    public static ParameterizedTypeReference<List<CostItem>> costItemListType() {
-        return new ParameterizedTypeReference<List<CostItem>>() {};
+    public static ParameterizedTypeReference<List<FinanceRowItem>> costItemListType() {
+        return new ParameterizedTypeReference<List<FinanceRowItem>>() {};
     }
 
     public static ParameterizedTypeReference<List<ApplicationFinanceResource>> applicationFinanceResourceListType() {

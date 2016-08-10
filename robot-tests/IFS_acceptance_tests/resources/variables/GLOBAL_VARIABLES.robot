@@ -56,12 +56,12 @@ ${COMP_MANAGEMENT_COMP_SETUP}    ${SERVER}/management/competition/setup/8
 ${NEWLY_CREATED_APPLICATION_YOUR_FINANCES_URL}    ${SERVER}/application/24/form/section/7
 ${CONFIRM_ORGANISATION_URL}    ${SERVER}/organisation/create/confirm-organisation
 ${PROJECT_FINANCE_DASHBOARD_URL}    ${SERVER}/management/projectfinancedashboard
-${SUCCESSFUL_PROJECT_PAGE}    ${server}/project/4
-${SUCCESSFUL_PROJECT_PAGE_DETAILS}    ${server}/project/1/details
-${project_in_setup_page}     ${server}/project/1
-${project_start_date_page}    ${server}/project/1/details/start-date
-${project_address_page}    ${server}/project/1/details/project-address
-${project_manager_page}    ${server}/project/1/details/project-manager
+${SUCCESSFUL_PROJECT_PAGE}    ${server}/project-setup/project/4
+${SUCCESSFUL_PROJECT_PAGE_DETAILS}    ${server}/project-setup/project/1/details
+${project_in_setup_page}     ${server}/project-setup/project/1
+${project_start_date_page}    ${server}/project-setup/project/1/details/start-date
+${project_address_page}    ${server}/project-setup/project/1/details/project-address
+${project_manager_page}    ${server}/project-setup/project/1/details/start-date
 ${404_error_message}    Page Not Found
 ${403_error_message}    You do not have the necessary permissions for your request
 ${wrong_filetype_validation_error}    Please upload a file in .pdf format only
@@ -92,5 +92,8 @@ ${test_mailbox_two_password}    testtest1
 ${Providing_Sustainable_Childcare_Application_Overview}    ${server}/management/competition/1/application/2
 ${unsuccessful_login_message}    Your sign in was unsuccessful because of the following issue(s)
 
-# Assessor Journey variables
-${Assessment_overview_9}    ${SERVER}/assessment/9
+# Assessor variables
+${Assessment_overview_9}    ${server}/assessment/9
+${Assessment_overview_11}    ${server}/assessment/11
+${Application_question_url}    ${server}/assessment/9/question/47
+${Finance_summar_9_url}    ${server}/assessment/9/finances

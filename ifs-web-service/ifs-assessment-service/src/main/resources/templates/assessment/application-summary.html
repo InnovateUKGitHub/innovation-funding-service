@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+    <head>
+        <div th:include="fragments/layout :: head" th:with="pageTitle='Assessment summary'" th:remove="tag" />
+    </head>
+
+    <body class="assessment assessment-form">
+        <div th:include="fragments/layout :: body-start" th:remove="tag" />
+        <div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+        <main id="content">
+            <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+            <div th:include="fragments/assessment :: assessment-header-sub" th:with="currentApplication=${model.application},linkTitle='Back to assessment overview',linkClass='link-back',linkUrl=@{/{id}(id=${assessmentId})},daysPercentage=${model.daysLeftPercentage},daysLeft=${model.daysLeft}" th:remove="tag" />
+
+            <div class="page-title">
+                <div th:include="fragments/elements :: application-title (application=${model.application}, competition=${model.competition})" th:remove="tag" />
+                <h1 class="heading-xlarge" th:text="${'Assessment summary'}" />
+            </div>
+
+            <h2 class="heading-medium">Overall scores</h2>
+            <div class="table-overflow">
+                <table>
+                    <tbody>
+                        <tr>
+                            <th class="width-150" scope="row">Question</th>
+                            <td th:each="question : ${model.questionsForScoreOverview}">
+                                <a th:href="@{/{id}/question/{quid}(id=${assessmentId}, quid=${question.questionId})}" th:text="${question.displayLabelShort}" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="width-150" scope="row">Score</th>
+                            <td th:each="question : ${model.questionsForScoreOverview}">
+                                <span th:text="${question.scoreGiven}" th:remove="tag" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div th:include="fragments/assessment :: assessment-summary-total-score((totalGiven=${model.totalScoreGiven}, totalPossible=${model.totalScorePossible}, totalPercentage=${model.totalScorePercentage}))" th:remove="tag" />
+
+            <h2 class="heading-medium">Review assessment</h2>
+            <div class="collapsible section-overview">
+                <div th:each="question : ${model.questionsForReview}" th:remove="tag">
+                    <div th:include="fragments/assessment :: assessment-summary-section (question=${question})" th:remove="tag" />
+                </div>
+            </div>
+
+            <div th:include="fragments/assessment :: assessment-summary-total-score((totalGiven=${model.totalScoreGiven}, totalPossible=${model.totalScorePossible}, totalPercentage=${model.totalScorePercentage}))" th:remove="tag" />
+
+            <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}" enctype="multipart/form-data" novalidate="novalidate" data-autosave="assessorFeedback">
+                <button class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">Save the form</button>
+
+                <div class="question" th:id="form-input-fundingConfirmation">
+                    <h2 class="heading-medium extra-margin">Do you believe that this application is suitable for funding?</h2>
+                    <fieldset class="inline">
+                        <legend class="visuallyhidden">Do you believe that this application is suitable for funding?</legend>
+                        <div class="form-group">
+                            <label class="block-label" th:each="option : ${ { true, false } }">
+                                <input th:field="*{fundingConfirmation}" th:value="${option}" name="fundingConfirmation" type="radio" />
+                                <span th:text="${option ? 'Yes' : 'No'}" th:remove="tag" />
+                            </label>
+                        </div>
+                    </fieldset>
+                </div>
+
+                <fieldset>
+                    <legend class="visuallyhidden">Question feedback</legend>
+                    <div class="question" th:id="form-input-feedback">
+                        <div class="form-group">
+                            <label class="form-label form-label-bold" th:for="form-textarea-feedback" id="form-label-feedback">
+                                Your feedback
+                                <span class="form-hint">Please explain your decision with a few sentences. This feedback will be sent to the applicant.</span>
+                            </label>
+
+                            <div class="textarea-wrapped word-count">
+                                <textarea th:field="*{feedback}" id="form-textarea-feedback" data-max_words="100"></textarea>
+                                <div class="textarea-footer">
+                                    <div th:include="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=100)" th:remove="tag" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question" th:id="form-input-comments">
+                        <div class="form-group">
+                            <label class="form-label form-label-bold" th:for="form-textarea-comments" id="form-label-comments">Do you have any other comments about this application? Your comments here will only be shared with Innovate UK. (Optional)</label>
+
+                            <div class="textarea-wrapped word-count">
+                                <textarea th:field="*{comment}" id="form-textarea-comments" data-max_words="100"></textarea>
+
+                                <div class="textarea-footer">
+                                    <div th:include="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=100)" th:remove="tag" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <p class="icon-info">You will still be able to edit after you have saved this assessment. Saved assessments are submitted through your dashboard.</p>
+
+                <input type="hidden" id="application_id" th:value="${model.application.id}" />
+
+                <div class="alignright">
+                    <button type="submit" class="button button-large" name="submit-section">Save assessment</button>
+                </div>
+            </form>
+
+            <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+        </main>
+
+        <div th:include="fragments/layout :: footer" th:remove="tag" />
+        <div th:include="fragments/layout :: body-end" th:remove="tag" />
+    </body>
+</html>

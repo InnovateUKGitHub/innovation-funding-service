@@ -1,26 +1,23 @@
 package com.worth.ifs.application.service;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
-import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.resource.QuestionResource;
+import com.worth.ifs.application.resource.QuestionType;
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.commons.rest.ValidationMessages;
-import com.worth.ifs.commons.service.ParameterizedTypeReferences;
 import org.junit.Test;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.util.*;
-import java.util.concurrent.Future;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
 import static com.worth.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
 import static com.worth.ifs.application.service.Futures.settable;
-import static com.worth.ifs.commons.service.ParameterizedTypeReferences.longsListType;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.questionResourceListType;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.validationMessagesListType;
-import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpMethod.GET;
@@ -123,5 +120,28 @@ public class QuestionRestServiceMocksTest extends BaseRestServiceUnitTest<Questi
 
         QuestionResource nextQuestion = service.getPreviousQuestion(2L).getSuccessObject();
         assertEquals(question, nextQuestion);
+    }
+
+    @Test
+    public void getQuestionsBySectionIdAndTypeTest() {
+        List<QuestionResource> questions = newQuestionResource().build(2);
+        setupGetWithRestResultExpectations(questionRestURL + "/getQuestionsBySectionIdAndType/1/COST", new ParameterizedTypeReference<List<QuestionResource>>() {
+        }, questions);
+
+        List<QuestionResource> result = service.getQuestionsBySectionIdAndType(1L, QuestionType.COST).getSuccessObject();
+        assertEquals(questions, result);
+    }
+
+    @Test
+    public void getQuestionsByAssessmentTest() {
+        Long assessmentId = 1L;
+
+        List<QuestionResource> questions = newQuestionResource().build(2);
+        setupGetWithRestResultExpectations(questionRestURL + "/getQuestionsByAssessment/" + assessmentId, new ParameterizedTypeReference<List<QuestionResource>>() {
+        }, questions);
+
+        RestResult<List<QuestionResource>> result = service.getQuestionsByAssessment(assessmentId);
+        assertTrue(result.isSuccess());
+        assertEquals(questions, result.getSuccessObject());
     }
 }

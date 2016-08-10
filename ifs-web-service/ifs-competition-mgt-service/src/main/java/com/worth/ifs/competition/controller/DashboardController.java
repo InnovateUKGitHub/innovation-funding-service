@@ -10,14 +10,36 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.servlet.http.HttpServletRequest;
 
 @Controller
+@RequestMapping("/dashboard")
 public class DashboardController {
+    public static final String TEMPLATE_PATH = "competition/";
 
     @Autowired
     CompetitionService competitionService;
 
-    @RequestMapping(value="/dashboard", method= RequestMethod.GET)
-    public String dashboard(Model model, HttpServletRequest request) {
-        model.addAttribute("competitions", competitionService.getAllCompetitions());
-        return "competition/list";
+    @RequestMapping(value="", method= RequestMethod.GET)
+    public String dashboard() {
+        return "redirect:/dashboard/live";
+    }
+
+    @RequestMapping(value="/live", method= RequestMethod.GET)
+    public String live(Model model, HttpServletRequest request) {
+        model.addAttribute("competitions", competitionService.getLiveCompetitions());
+        model.addAttribute("counts", competitionService.getCompetitionCounts());
+        return TEMPLATE_PATH + "live";
+    }
+
+    @RequestMapping(value="/projectSetup", method= RequestMethod.GET)
+    public String projectSetup(Model model, HttpServletRequest request) {
+        model.addAttribute("competitions", competitionService.getProjectSetupCompetitions());
+        model.addAttribute("counts", competitionService.getCompetitionCounts());
+        return TEMPLATE_PATH + "projectSetup";
+    }
+
+    @RequestMapping(value="/upcoming", method= RequestMethod.GET)
+    public String upcoming(Model model, HttpServletRequest request) {
+        model.addAttribute("competitions", competitionService.getUpcomingCompetitions());
+        model.addAttribute("counts", competitionService.getCompetitionCounts());
+        return TEMPLATE_PATH + "upcoming";
     }
 }

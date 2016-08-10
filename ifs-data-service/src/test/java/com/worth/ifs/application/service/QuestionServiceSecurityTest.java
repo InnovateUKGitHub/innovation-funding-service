@@ -5,9 +5,13 @@ import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.resource.QuestionApplicationCompositeId;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.QuestionStatusResource;
+import com.worth.ifs.application.resource.QuestionType;
 import com.worth.ifs.application.security.QuestionPermissionRules;
 import com.worth.ifs.application.security.QuestionResourceLookupStrategy;
 import com.worth.ifs.application.transactional.QuestionService;
+import com.worth.ifs.assessment.resource.AssessmentResource;
+import com.worth.ifs.assessment.security.AssessmentLookupStrategy;
+import com.worth.ifs.assessment.security.AssessmentPermissionRules;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.user.resource.UserResource;
@@ -20,6 +24,7 @@ import java.util.Set;
 import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
 import static com.worth.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
 import static com.worth.ifs.application.service.QuestionServiceSecurityTest.TestQuestionService.ARRAY_SIZE_FOR_POST_FILTER_TESTS;
+import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.times;
@@ -34,11 +39,16 @@ public class QuestionServiceSecurityTest extends BaseServiceSecurityTest<Questio
     private QuestionPermissionRules questionPermissionRules;
     private QuestionResourceLookupStrategy questionResourceLookupStrategy;
 
+    private AssessmentPermissionRules assessmentPermissionRules;
+    private AssessmentLookupStrategy assessmentLookupStrategy;
 
     @Before
     public void lookupPermissionRules() {
         questionPermissionRules = getMockPermissionRulesBean(QuestionPermissionRules.class);
         questionResourceLookupStrategy = getMockPermissionEntityLookupStrategiesBean(QuestionResourceLookupStrategy.class);
+
+        assessmentPermissionRules = getMockPermissionRulesBean(AssessmentPermissionRules.class);
+        assessmentLookupStrategy = getMockPermissionEntityLookupStrategiesBean(AssessmentLookupStrategy.class);
     }
 
     @Test
@@ -110,6 +120,23 @@ public class QuestionServiceSecurityTest extends BaseServiceSecurityTest<Questio
         assertAccessDenied(
                 () -> service.getQuestionByFormInputType(formInputTypeTitle),
                 () -> verify(questionPermissionRules).loggedInUsersCanSeeAllQuestions(isA(Question.class), isA(UserResource.class))
+        );
+    }
+
+    @Test
+    public void testGetQuestionsBySectionIdAndType() {
+        service.getQuestionsBySectionIdAndType(1L, QuestionType.GENERAL);
+        verify(questionPermissionRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).loggedInUsersCanSeeAllQuestions(isA(QuestionResource.class), isA(UserResource.class));
+    }
+
+    @Test
+    public void testGetQuestionsByAssessmentId() {
+        Long assessmentId = 1L;
+
+        when(assessmentLookupStrategy.getAssessmentResource(assessmentId)).thenReturn(newAssessmentResource().build());
+        assertAccessDenied(
+                () -> service.getQuestionsByAssessmentId(assessmentId),
+                () -> verify(assessmentPermissionRules).userCanReadAssessment(isA(AssessmentResource.class), isA(UserResource.class))
         );
     }
 
@@ -220,6 +247,16 @@ public class QuestionServiceSecurityTest extends BaseServiceSecurityTest<Questio
 
         @Override
         public ServiceResult<Integer> getCountByApplicationIdAndAssigneeId(Long applicationId, Long assigneeId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<List<QuestionResource>> getQuestionsBySectionIdAndType(Long sectionId, QuestionType type) {
+            return serviceSuccess(newQuestionResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
+        }
+
+        @Override
+        public ServiceResult<List<QuestionResource>> getQuestionsByAssessmentId(Long assessmentId) {
             return null;
         }
     }

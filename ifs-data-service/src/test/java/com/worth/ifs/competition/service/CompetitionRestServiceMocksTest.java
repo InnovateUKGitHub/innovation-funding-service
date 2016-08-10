@@ -1,6 +1,7 @@
 package com.worth.ifs.competition.service;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
+import com.worth.ifs.competition.resource.CompetitionCountResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionTypeResource;
 import org.junit.Test;
@@ -99,4 +100,47 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
         assertEquals(competitionCode, response);
     }
 
+    @Test
+    public void test_findLiveCompetitions() {
+        List<CompetitionResource> returnedResponse = newCompetitionResource().build(3);
+
+        setupGetWithRestResultExpectations(competitionsRestURL + "/live", competitionResourceListType(), returnedResponse);
+
+        List<CompetitionResource> responses = service.findLiveCompetitions().getSuccessObject();
+        assertNotNull(responses);
+        assertEquals(returnedResponse, responses);
+    }
+
+    @Test
+    public void test_findProjectSetupCompetitions() {
+        List<CompetitionResource> returnedResponse = newCompetitionResource().build(3);
+
+        setupGetWithRestResultExpectations(competitionsRestURL + "/projectSetup", competitionResourceListType(), returnedResponse);
+
+        List<CompetitionResource> responses = service.findProjectSetupCompetitions().getSuccessObject();
+        assertNotNull(responses);
+        assertEquals(returnedResponse, responses);
+    }
+
+    @Test
+    public void test_findUpcomingCompetitions() {
+        List<CompetitionResource> returnedResponse = newCompetitionResource().build(3);
+
+        setupGetWithRestResultExpectations(competitionsRestURL + "/upcoming", competitionResourceListType(), returnedResponse);
+
+        List<CompetitionResource> responses = service.findUpcomingCompetitions().getSuccessObject();
+        assertNotNull(responses);
+        assertEquals(returnedResponse, responses);
+    }
+
+    @Test
+    public void test_countCompetitions() {
+        CompetitionCountResource returnedResponse = new CompetitionCountResource();
+
+        setupGetWithRestResultExpectations(competitionsRestURL + "/count", CompetitionCountResource.class, returnedResponse);
+
+        CompetitionCountResource responses = service.countCompetitions().getSuccessObject();
+        assertNotNull(responses);
+        assertEquals(returnedResponse, responses);
+    }
 }

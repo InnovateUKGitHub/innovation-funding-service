@@ -1,6 +1,6 @@
 package com.worth.ifs.finance.resource.category;
 
-import com.worth.ifs.finance.resource.cost.CostItem;
+import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import com.worth.ifs.finance.resource.cost.OtherFunding;
 
 import java.math.BigDecimal;
@@ -8,18 +8,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * {@code OtherFundingCostCategory} implementation for {@link CostCategory}. Retrieving the other funding
+ * {@code OtherFundingCostCategory} implementation for {@link FinanceRowCostCategory}. Retrieving the other funding
  * for an application.
  */
-public class OtherFundingCostCategory implements CostCategory {
+public class OtherFundingCostCategory implements FinanceRowCostCategory {
     public static final String OTHER_FUNDING = "Other Funding";
     private OtherFunding otherFunding;
 
-    List<CostItem> costs = new ArrayList<>();
-    BigDecimal total = BigDecimal.ZERO;
+    private List<FinanceRowItem> costs = new ArrayList<>();
+    private BigDecimal total = BigDecimal.ZERO;
 
     @Override
-    public List<CostItem> getCosts() {
+    public List<FinanceRowItem> getCosts() {
         return costs;
     }
 
@@ -58,10 +58,10 @@ public class OtherFundingCostCategory implements CostCategory {
     }
 
     @Override
-    public void addCost(CostItem costItem) {
+    public void addCost(FinanceRowItem costItem) {
         if(costItem != null) {
             OtherFunding otherFundingCost = (OtherFunding) costItem;
-            if (otherFundingCost.getFundingSource().equals(OTHER_FUNDING)) {
+            if (OTHER_FUNDING.equals(otherFundingCost.getFundingSource())) {
                 otherFunding = (OtherFunding) costItem;
             } else if (costItem != null) {
                 costs.add(costItem);
@@ -75,7 +75,7 @@ public class OtherFundingCostCategory implements CostCategory {
     }
 
     @Override
-    public void setCosts(List<CostItem> costItems) {
+    public void setCosts(List<FinanceRowItem> costItems) {
         costs = costItems;
     }
 }
