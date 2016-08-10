@@ -1,12 +1,11 @@
 package com.worth.ifs.project.transactional;
 
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.finance.resource.category.FinanceRowCostCategory;
-import com.worth.ifs.finance.resource.cost.FinanceRowType;
-import com.worth.ifs.finance.transactional.FinanceRowService;
 import com.worth.ifs.project.domain.Project;
-import com.worth.ifs.project.finance.domain.*;
-import com.worth.ifs.project.finance.repository.CostCategoryTypeRepository;
+import com.worth.ifs.project.finance.domain.Cost;
+import com.worth.ifs.project.finance.domain.CostCategory;
+import com.worth.ifs.project.finance.domain.CostCategoryType;
+import com.worth.ifs.project.finance.domain.SpendProfile;
 import com.worth.ifs.project.finance.repository.SpendProfileRepository;
 import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.project.resource.ProjectResource;
@@ -18,8 +17,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
@@ -28,7 +25,6 @@ import static com.worth.ifs.commons.service.ServiceResult.processAnyFailuresOrSu
 import static com.worth.ifs.project.finance.domain.CostTimePeriod.TimeUnit.MONTH;
 import static com.worth.ifs.util.CollectionFunctions.*;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
-import static java.math.RoundingMode.HALF_EVEN;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -44,13 +40,13 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     private ProjectRepository projectRepository;
 
     @Autowired
-    private FinanceRowService financeRowService;
-
-    @Autowired
-    private CostCategoryTypeRepository costCategoryTypeRepository;
-
-    @Autowired
     private SpendProfileRepository spendProfileRepository;
+
+    @Autowired
+    private CostCategoryTypeStrategy costCategoryTypeStrategy;
+
+    @Autowired
+    private SpendProfileCostCategorySummaryStrategy spendProfileCostCategorySummaryStrategy;
 
     @Override
     public ServiceResult<Void> generateSpendProfile(Long projectId) {
@@ -67,15 +63,9 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
         List<ServiceResult<Void>> generationResults = simpleMap(organisationIds, organisationId -> {
 
-            return financeRowService.financeDetails(project.getApplication(), organisationId).andOnSuccess(finance -> {
-
-                Map<FinanceRowType, FinanceRowCostCategory> financeDetails = finance.getFinanceOrganisationDetails();
-
-                List<CostCategorySummary> summaryPerCategory = simpleMap(financeDetails, (category, costs) ->
-                    new CostCategorySummary(category, costs.getTotal(), project.getDurationInMonths()));
-
-                return generateSpendProfileForOrganisation(project.getId(), organisationId, summaryPerCategory);
-            });
+            return spendProfileCostCategorySummaryStrategy.getCostCategorySummaries(project.getId(), organisationId).
+                    andOnSuccess(summaryPerCategory ->
+                            generateSpendProfileForOrganisation(project.getId(), organisationId, summaryPerCategory));
         });
 
         return processAnyFailuresOrSucceed(generationResults);
@@ -84,23 +74,26 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     private ServiceResult<Void> generateSpendProfileForOrganisation(
             Long projectId,
             Long organisationId,
-            List<CostCategorySummary> summaryPerCategory) {
+            List<SpendProfileCostCategorySummary> summaryPerCategory) {
 
-        return find(project(projectId), organisation(organisationId)).andOnSuccessReturnVoid(
+        return find(project(projectId), organisation(organisationId)).andOnSuccess(
                 (project, organisation) -> generateSpendProfileForOrganisation(summaryPerCategory, project, organisation));
     }
 
-    private void generateSpendProfileForOrganisation(List<CostCategorySummary> summaryPerCategory, Project project, Organisation organisation) {
+    private ServiceResult<Void> generateSpendProfileForOrganisation(List<SpendProfileCostCategorySummary> summaryPerCategory, Project project, Organisation organisation) {
 
-        CostCategoryType costCategoryType = getOrCreateSupportingCostCategoryType(summaryPerCategory);
-        List<Cost> eligibleCosts = generateEligibleCosts(summaryPerCategory, costCategoryType);
-        List<Cost> spendProfileCosts = generateSpendProfileFigures(summaryPerCategory, project, costCategoryType);
+        return costCategoryTypeStrategy.getOrCreateCostCategoryTypeForSpendProfile(project.getId(), organisation.getId()).
+                andOnSuccessReturnVoid(costCategoryType -> {
 
-        SpendProfile spendProfile = new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileCosts);
-        spendProfileRepository.save(spendProfile);
+            List<Cost> eligibleCosts = generateEligibleCosts(summaryPerCategory, costCategoryType);
+            List<Cost> spendProfileCosts = generateSpendProfileFigures(summaryPerCategory, project, costCategoryType);
+
+            SpendProfile spendProfile = new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileCosts);
+            spendProfileRepository.save(spendProfile);
+        });
     }
 
-    private List<Cost> generateSpendProfileFigures(List<CostCategorySummary> summaryPerCategory, Project project, CostCategoryType costCategoryType) {
+    private List<Cost> generateSpendProfileFigures(List<SpendProfileCostCategorySummary> summaryPerCategory, Project project, CostCategoryType costCategoryType) {
 
         List<List<Cost>> spendProfileCostsPerCategory = simpleMap(summaryPerCategory, summary -> {
 
@@ -121,37 +114,13 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         return flattenLists(spendProfileCostsPerCategory);
     }
 
-    private List<Cost> generateEligibleCosts(List<CostCategorySummary> summaryPerCategory, CostCategoryType costCategoryType) {
+    private List<Cost> generateEligibleCosts(List<SpendProfileCostCategorySummary> summaryPerCategory, CostCategoryType costCategoryType) {
         return simpleMap(summaryPerCategory, summary -> {
 
             CostCategory matchingCategory = simpleFindFirst(costCategoryType.getCostCategories(),
                     cat -> cat.getName().equals(summary.getCategory().getType())).get();
 
             return new Cost(summary.getTotal()).withCategory(matchingCategory);
-        });
-    }
-
-    private CostCategoryType getOrCreateSupportingCostCategoryType(List<CostCategorySummary> summaryPerCategory) {
-
-        List<String> categoryNamesToSupport = simpleMap(summaryPerCategory, details -> details.getCategory().getType());
-
-        List<CostCategoryType> existingCostCategoryTypes = costCategoryTypeRepository.findAll();
-
-        Optional<CostCategoryType> existingCostCategoryTypeWithMatchingCategories = simpleFindFirst(existingCostCategoryTypes, costCategoryType -> {
-            List<String> existingCostCategoryNames = simpleMap(costCategoryType.getCostCategories(), CostCategory::getName);
-            return existingCostCategoryNames.size() == categoryNamesToSupport.size() &&
-                    existingCostCategoryNames.containsAll(categoryNamesToSupport);
-        });
-
-        return existingCostCategoryTypeWithMatchingCategories.orElseGet(() -> {
-
-            List<CostCategory> costCategories = simpleMap(categoryNamesToSupport, CostCategory::new);
-            String costCategoryGroupDescription = "Cost Category Group for Categories " + simpleJoiner(categoryNamesToSupport, ", ");
-            CostCategoryGroup costCategoryGroup = new CostCategoryGroup(costCategoryGroupDescription, costCategories);
-
-            String costCategoryTypeName = "Cost Category Type for Categories " + simpleJoiner(categoryNamesToSupport, ", ");
-            CostCategoryType costCategoryTypeToCreate = new CostCategoryType(costCategoryTypeName, costCategoryGroup);
-            return costCategoryTypeRepository.save(costCategoryTypeToCreate);
         });
     }
 
@@ -163,38 +132,4 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         return find(projectRepository.findOne(id), notFoundError(Project.class, id));
     }
 
-    private class CostCategorySummary {
-        private FinanceRowType category;
-        private BigDecimal total;
-        private BigDecimal firstMonthSpend;
-        private BigDecimal otherMonthsSpend;
-
-        private CostCategorySummary(FinanceRowType category, BigDecimal total, long projectDurationInMonths) {
-            this.category = category;
-            this.total = total;
-
-            BigDecimal durationInMonths = BigDecimal.valueOf(projectDurationInMonths);
-            BigDecimal monthlyCost = total.divide(durationInMonths, 0, HALF_EVEN);
-            BigDecimal remainder = total.subtract(monthlyCost.multiply(durationInMonths)).setScale(0, HALF_EVEN);
-
-            this.firstMonthSpend = monthlyCost.add(remainder);
-            this.otherMonthsSpend = monthlyCost;
-        }
-
-        public FinanceRowType getCategory() {
-            return category;
-        }
-
-        public BigDecimal getTotal() {
-            return total;
-        }
-
-        public BigDecimal getFirstMonthSpend() {
-            return firstMonthSpend;
-        }
-
-        public BigDecimal getOtherMonthsSpend() {
-            return otherMonthsSpend;
-        }
-    }
 }
