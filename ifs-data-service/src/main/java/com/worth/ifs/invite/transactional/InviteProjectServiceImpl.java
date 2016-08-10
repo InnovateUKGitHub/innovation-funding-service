@@ -1,29 +1,18 @@
 package com.worth.ifs.invite.transactional;
 
-import com.google.common.collect.Iterables;
+
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
-import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.commons.error.CommonErrors;
 import com.worth.ifs.commons.error.Error;
-import com.worth.ifs.commons.service.BaseEitherBackedResult;
 import com.worth.ifs.commons.service.ServiceFailure;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.invite.domain.ApplicationInvite;
 import com.worth.ifs.invite.domain.ProjectInvite;
-import com.worth.ifs.invite.domain.Invite;
-import com.worth.ifs.invite.domain.InviteOrganisation;
-import com.worth.ifs.invite.mapper.InviteMapper;
 import com.worth.ifs.invite.mapper.InviteOrganisationMapper;
 import com.worth.ifs.invite.mapper.InviteProjectMapper;
-import com.worth.ifs.invite.repository.InviteOrganisationRepository;
 import com.worth.ifs.invite.repository.InviteProjectRepository;
-import com.worth.ifs.invite.repository.InviteRepository;
-import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteProjectResource;
-import com.worth.ifs.invite.resource.InviteResource;
-import com.worth.ifs.invite.resource.InviteResultsResource;
 import com.worth.ifs.notifications.resource.*;
 import com.worth.ifs.notifications.service.NotificationService;
 import com.worth.ifs.project.domain.Project;
@@ -34,8 +23,6 @@ import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
-import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.repository.UserRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -51,20 +38,16 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import java.util.*;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
-import static com.google.common.collect.Lists.newArrayList;
 import static com.worth.ifs.commons.error.CommonErrors.*;
-import static com.worth.ifs.commons.error.CommonFailureKeys.CANNOT_FIND_ORG_FOR_GIVEN_PROJECT_AND_USER;
+
 import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_INVITE_INVALID_PROJECT_ID;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static com.worth.ifs.user.resource.UserRoleType.COLLABORATOR;
 import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
-import static java.util.Collections.singletonList;
+
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service

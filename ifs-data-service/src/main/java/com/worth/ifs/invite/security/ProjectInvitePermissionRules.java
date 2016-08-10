@@ -1,30 +1,16 @@
 package com.worth.ifs.invite.security;
 
-import com.worth.ifs.invite.domain.ApplicationInvite;
-import com.worth.ifs.invite.domain.InviteOrganisation;
-import com.worth.ifs.invite.domain.ProjectInvite;
 import com.worth.ifs.invite.resource.InviteProjectResource;
-import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
-import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.security.BasePermissionRules;
 import com.worth.ifs.security.PermissionRule;
 import com.worth.ifs.security.PermissionRules;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.Role;
-import com.worth.ifs.user.repository.OrganisationRepository;
-import com.worth.ifs.user.repository.ProcessRoleRepository;
-import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.resource.UserResource;
-import com.worth.ifs.user.resource.UserRoleType;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
-import static com.worth.ifs.security.SecurityRuleUtil.checkProcessRole;
-import static com.worth.ifs.user.resource.UserRoleType.COLLABORATOR;
 import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
 
 /**

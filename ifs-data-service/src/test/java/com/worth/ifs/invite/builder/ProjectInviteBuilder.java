@@ -27,16 +27,6 @@ public class ProjectInviteBuilder extends BaseBuilder<ProjectInvite, ProjectInvi
         return new ProjectInviteBuilder(actions);
     }
 
-//    @Override
-//    public void postProcess(int index, ProjectInvite invite) {
-//
-//        // add back-refs to InviteOrganisations
-//        Project inviteProject = invite.getTarget();
-//        if (inviteOrganisation != null && !simpleMap(inviteOrganisation.getInvites(), ApplicationInvite::getId).contains(invite.getId())) {
-//            inviteOrganisation.getInvites().add(invite);
-//        }
-//    }
-
 
     @Override
     protected ProjectInvite createInitial() {

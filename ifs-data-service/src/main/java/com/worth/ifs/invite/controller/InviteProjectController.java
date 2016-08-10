@@ -18,6 +18,10 @@ import java.util.List;
 import java.util.Set;
 import javax.validation.Valid;
 
+/**
+ * Project Invite controller to handle RESTful service related to Project Invite
+ */
+
 @RestController
 @RequestMapping("/projectinvite")
 public class InviteProjectController {
