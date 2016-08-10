@@ -228,6 +228,19 @@ public final class CollectionFunctions {
     /**
      * A simple wrapper around a 1-stage mapping function, to remove boilerplate from production code
      *
+     * @param map
+     * @param mappingFn
+     * @param <T>
+     * @param <R>
+     * @return
+     */
+    public static <S, T, R> List<R> simpleMap(Map<S, T> map, BiFunction<S, T, R> mappingFn) {
+        return simpleMap(map.entrySet(), entry -> mappingFn.apply(entry.getKey(), entry.getValue()));
+    }
+
+    /**
+     * A simple wrapper around a 1-stage mapping function, to remove boilerplate from production code
+     *
      * @param list
      * @param mappingFn
      * @param <T>

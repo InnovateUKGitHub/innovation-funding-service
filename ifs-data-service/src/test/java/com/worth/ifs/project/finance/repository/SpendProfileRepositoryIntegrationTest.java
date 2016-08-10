@@ -61,8 +61,8 @@ public class SpendProfileRepositoryIntegrationTest extends BaseRepositoryIntegra
 
         Organisation organisation = organisationRepository.findOne(1L);
 
-        CostGroup eligibleCosts = new CostGroup("My eligible costs", asList(new Cost("1.20"), new Cost("3.40")));
-        CostGroup spendProfileFigures = new CostGroup("My spend profile costs", asList(new Cost("5.60"), new Cost("7.80")));
+        List<Cost> eligibleCosts = asList(new Cost("1.20"), new Cost("3.40"));
+        List<Cost> spendProfileFigures = asList(new Cost("5.60"), new Cost("7.80"));
 
         SpendProfile saved = repository.save(new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileFigures));
 
@@ -76,11 +76,11 @@ public class SpendProfileRepositoryIntegrationTest extends BaseRepositoryIntegra
         assertEquals(project.getId(), retrieved.getProject().getId());
         assertEquals(organisation.getId(), retrieved.getOrganisation().getId());
 
-        List<BigDecimal> expectedEligibleCostValues = simpleMap(eligibleCosts.getCosts(), Cost::getValue);
+        List<BigDecimal> expectedEligibleCostValues = simpleMap(eligibleCosts, Cost::getValue);
         List<BigDecimal> actualEligibleCostValues = simpleMap(retrieved.getEligibleCosts().getCosts(), Cost::getValue);
         assertEquals(expectedEligibleCostValues, actualEligibleCostValues);
 
-        List<BigDecimal> expectedSpendProfileCostValues = simpleMap(spendProfileFigures.getCosts(), Cost::getValue);
+        List<BigDecimal> expectedSpendProfileCostValues = simpleMap(spendProfileFigures, Cost::getValue);
         List<BigDecimal> actualSpendProfileCostValues = simpleMap(retrieved.getSpendProfileFigures().getCosts(), Cost::getValue);
         assertEquals(expectedSpendProfileCostValues, actualSpendProfileCostValues);
     }
@@ -104,17 +104,11 @@ public class SpendProfileRepositoryIntegrationTest extends BaseRepositoryIntegra
 
         Organisation organisation = organisationRepository.findOne(1L);
 
-        CostTimePeriod month1 = new CostTimePeriod(1, MONTH);
-        CostTimePeriod month1Again = new CostTimePeriod(1, MONTH);
+        List<Cost> eligibleCosts = asList(new Cost("1.20").withCategory(labourCostCategory), new Cost("3.40").withCategory(materialsCostCategory));
 
-        CostGroup eligibleCosts = new CostGroup("My eligible costs",
-                asList(new Cost("1.20").withCategory(labourCostCategory), new Cost("3.40").withCategory(materialsCostCategory)));
-
-        CostGroup spendProfileFigures = new CostGroup("My spend profile costs",
-                asList(
-                        new Cost("5.60").withCategory(labourCostCategory).withTimePeriod(0, DAY, 1, MONTH),
-                        new Cost("7.80").withCategory(materialsCostCategory).withTimePeriod(0, DAY, 1, MONTH)
-                ));
+        List<Cost> spendProfileFigures = asList(
+                new Cost("5.60").withCategory(labourCostCategory).withTimePeriod(0, DAY, 1, MONTH),
+                new Cost("7.80").withCategory(materialsCostCategory).withTimePeriod(0, DAY, 1, MONTH));
 
         SpendProfile saved = repository.save(new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileFigures));
 
@@ -131,7 +125,7 @@ public class SpendProfileRepositoryIntegrationTest extends BaseRepositoryIntegra
         assertEquals(project.getId(), retrieved.getProject().getId());
         assertEquals(organisation.getId(), retrieved.getOrganisation().getId());
 
-        List<BigDecimal> expectedEligibleCostValues = simpleMap(eligibleCosts.getCosts(), Cost::getValue);
+        List<BigDecimal> expectedEligibleCostValues = simpleMap(eligibleCosts, Cost::getValue);
         List<BigDecimal> actualEligibleCostValues = simpleMap(retrievedEligibles.getCosts(), Cost::getValue);
         assertEquals(expectedEligibleCostValues, actualEligibleCostValues);
         assertEquals(labourCostCategory.getName(), retrievedEligibles.getCosts().get(0).getCostCategory().get().getName());
@@ -139,7 +133,7 @@ public class SpendProfileRepositoryIntegrationTest extends BaseRepositoryIntegra
         assertFalse(retrievedEligibles.getCosts().get(0).getCostTimePeriod().isPresent());
         assertFalse(retrievedEligibles.getCosts().get(1).getCostTimePeriod().isPresent());
 
-        List<BigDecimal> expectedSpendProfileCostValues = simpleMap(spendProfileFigures.getCosts(), Cost::getValue);
+        List<BigDecimal> expectedSpendProfileCostValues = simpleMap(spendProfileFigures, Cost::getValue);
 
         List<BigDecimal> actualSpendProfileCostValues = simpleMap(retrievedFigures.getCosts(), Cost::getValue);
         assertEquals(expectedSpendProfileCostValues, actualSpendProfileCostValues);
@@ -178,11 +172,8 @@ public class SpendProfileRepositoryIntegrationTest extends BaseRepositoryIntegra
 
         Organisation organisation = organisationRepository.findOne(1L);
 
-        CostGroup eligibleCosts = new CostGroup("My eligible costs",
-                singletonList(new Cost("1.20").withCategory(labourCostCategory)));
-
-        CostGroup spendProfileFigures = new CostGroup("My spend profile costs",
-                singletonList(new Cost("5.60").withCategory(labourCostCategory).withTimePeriod(0, DAY, 1, MONTH)));
+        List<Cost> eligibleCosts = singletonList(new Cost("1.20").withCategory(labourCostCategory));
+        List<Cost> spendProfileFigures = singletonList(new Cost("5.60").withCategory(labourCostCategory).withTimePeriod(0, DAY, 1, MONTH));
 
         SpendProfile saved = repository.save(new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileFigures));
 
@@ -220,8 +211,7 @@ public class SpendProfileRepositoryIntegrationTest extends BaseRepositoryIntegra
         assertFalse(retrievedEligibles.getCosts().get(0).getCostTimePeriod().isPresent());
         assertFalse(retrievedEligibles.getCosts().get(1).getCostTimePeriod().isPresent());
 
-        List<BigDecimal> expectedSpendProfileCostValues = simpleMap(spendProfileFigures.getCosts(), Cost::getValue);
-
+        List<BigDecimal> expectedSpendProfileCostValues = singletonList(new BigDecimal("7.80"));
         List<BigDecimal> actualSpendProfileCostValues = simpleMap(retrievedFigures.getCosts(), Cost::getValue);
         assertEquals(expectedSpendProfileCostValues, actualSpendProfileCostValues);
         assertEquals(materialsCostCategory.getName(), retrievedFigures.getCosts().get(0).getCostCategory().get().getName());

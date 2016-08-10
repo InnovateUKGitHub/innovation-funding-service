@@ -4,6 +4,7 @@ import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.user.domain.Organisation;
 
 import javax.persistence.*;
+import java.util.List;
 
 import static javax.persistence.CascadeType.ALL;
 
@@ -38,12 +39,16 @@ public class SpendProfile {
         // for ORM use
     }
 
-    public SpendProfile(Organisation organisation, Project project, CostCategoryType costCategoryType, CostGroup eligibleCosts, CostGroup spendProfileFigures) {
+    public SpendProfile(Organisation organisation, Project project, CostCategoryType costCategoryType, List<Cost> eligibleCosts, List<Cost> spendProfileFigures) {
         this.organisation = organisation;
         this.project = project;
         this.costCategoryType = costCategoryType;
-        this.eligibleCosts = eligibleCosts;
-        this.spendProfileFigures = spendProfileFigures;
+
+        String eligibleCostsDescription = "Eligible costs for Partner Organisation " + organisation.getName() + " on Project " + project.getName();
+        String spendProfileDescription = "Spend Profile figures for Partner Organisation " + organisation.getName() + " on Project " + project.getName();
+
+        this.eligibleCosts = new CostGroup(eligibleCostsDescription, eligibleCosts);
+        this.spendProfileFigures = new CostGroup(spendProfileDescription, spendProfileFigures);
     }
 
     public Long getId() {
