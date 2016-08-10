@@ -1,5 +1,6 @@
 package com.worth.ifs.invite.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
 
@@ -7,10 +8,11 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import java.io.Serializable;
 
 @Entity
-@DiscriminatorValue("COMPETITION_ASSESSOR")
-public class CompetitionInvite extends Invite<Competition, CompetitionInvite> {
+@DiscriminatorValue("COMPETITION")
+public class CompetitionInvite extends Invite<Competition, CompetitionInvite> implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "target_id", referencedColumnName = "id")

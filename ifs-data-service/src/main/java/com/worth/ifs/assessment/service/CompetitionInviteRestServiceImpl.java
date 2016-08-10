@@ -13,10 +13,10 @@ import static java.lang.String.format;
 @Service
 public class CompetitionInviteRestServiceImpl extends BaseRestService implements CompetitionInviteRestService {
 
-    private static final String competitionInviteRestUrl = "competitioninvite/openInvite";
+    private static final String competitionInviteRestUrl = "/competitioninvite/openInvite";
 
     @Override
     public RestResult<CompetitionInviteResource> accessInvite(String inviteHash) {
-        return postWithRestResult(format("%s/%s", competitionInviteRestUrl, inviteHash), CompetitionInviteResource.class);
+        return postWithRestResultAnonymous(format("%s/%s", competitionInviteRestUrl, inviteHash), CompetitionInviteResource.class);
     }
 }

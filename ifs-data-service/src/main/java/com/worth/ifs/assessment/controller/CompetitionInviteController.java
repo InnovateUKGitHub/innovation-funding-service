@@ -13,10 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
  * Controller for managing Invites to Competitions.
  */
 @RestController
-@RequestMapping("competitioninvite")
+@RequestMapping("/competitioninvite")
 public class CompetitionInviteController {
-
-    // this is called by the rest service
 
     @Autowired
     private CompetitionInviteService competitionInviteService;

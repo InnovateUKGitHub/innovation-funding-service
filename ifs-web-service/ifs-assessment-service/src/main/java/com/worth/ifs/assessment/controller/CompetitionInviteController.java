@@ -33,16 +33,15 @@ public class CompetitionInviteController extends BaseController {
 
         RestResult<CompetitionInviteResource> invite = inviteRestService.accessInvite(inviteHash);
 
-//        if (!invite.isSuccess()) {
-//            throw new InvalidURLException("Invite url is not valid", null);
-//        }
-//        else {
-//            CompetitionInviteResource inviteResource = invite.getSuccessObject();
+        if (invite.isFailure()) {
+            throw new InvalidURLException("Invite url is not valid " + inviteHash, null);
+        }
+        else {
+            CompetitionInviteResource inviteResource = invite.getSuccessObject();
 
-//        model.addAttribute("model", new CompetitionInviteViewModel(inviteResource.getCompetitionName()));
-        model.addAttribute("model", new CompetitionInviteViewModel("Stub competition"));
+            model.addAttribute("model", new CompetitionInviteViewModel(inviteResource.getCompetitionName()));
 
             return "assessor-competition-invite"; // timeleaf view template name
-//        }
+        }
     }
 }
