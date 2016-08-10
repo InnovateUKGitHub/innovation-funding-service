@@ -1,10 +1,3 @@
-/*
-DROP TABLE IF EXISTS competition_user;
-DROP TABLE IF EXISTS competition_user_rejection_reason;
-DROP TABLE IF EXISTS competition_role;
-DROP TABLE IF EXISTS competition_user_status;
-*/
-
 CREATE TABLE competition_user_status (
   id bigint(20) PRIMARY KEY AUTO_INCREMENT,
   name varchar(16) NOT NULL UNIQUE
