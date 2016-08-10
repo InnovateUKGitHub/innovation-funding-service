@@ -86,6 +86,10 @@ public class Cost {
         this.value = value;
     }
 
+    public void setValue(String value) {
+        setValue(new BigDecimal(value));
+    }
+
     public Optional<CostGroup> getCostGroup() {
         return Optional.ofNullable(costGroup);
     }

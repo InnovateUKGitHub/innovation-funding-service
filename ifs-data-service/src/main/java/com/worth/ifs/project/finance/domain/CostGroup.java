@@ -42,8 +42,7 @@ public class CostGroup {
 
     public void setCosts(Collection<Cost> costs) {
         this.costs.clear();
-        this.costs.addAll(costs);
-        this.costs.forEach(c -> c.setCostGroup(this));
+        costs.forEach(this::addCost);
     }
 
     public String getDescription() {
@@ -52,5 +51,18 @@ public class CostGroup {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public void addCost(Cost cost) {
+        this.costs.add(cost);
+        cost.setCostGroup(this);
+    }
+
+    public boolean removeCost(Cost cost) {
+        return this.costs.remove(cost);
+    }
+
+    public void removeCost(int index) {
+        this.costs.remove(index);
     }
 }
