@@ -67,7 +67,9 @@ public class BankDetailsServiceImplTest {
     public void getBankDetailsByProjectAndOrganisation() {
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectResource.getId(), organisationResource.getId())).thenReturn(restSuccess(bankDetailsResource));
 
-        BankDetailsResource bankDetailsResource = service.getBankDetailsByProjectAndOrganisation(projectResource.getId(), organisationResource.getId());
+        BankDetailsResource returnedBankDetailsResource = service.getBankDetailsByProjectAndOrganisation(projectResource.getId(), organisationResource.getId());
+
+        assertEquals(bankDetailsResource, returnedBankDetailsResource);
 
         verify(bankDetailsRestService).getBankDetailsByProjectAndOrganisation(projectResource.getId(), organisationResource.getId());
     }
