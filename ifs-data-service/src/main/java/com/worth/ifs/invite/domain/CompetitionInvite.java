@@ -35,7 +35,4 @@ public class CompetitionInvite extends Invite<Competition, CompetitionInvite> {
         this.competition = competition;
     }
 
-    public Competition getCompetition() {
-        return competition;
-    }
 }
