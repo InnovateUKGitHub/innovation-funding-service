@@ -207,6 +207,26 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
     }
 
     @Test
+    public void testUpdateFormInputResponse_noWordLimit() throws Exception {
+        Long assessmentId = 1L;
+        Long formInputId = 2L;
+        String value = "This is the feedback text";
+
+        AssessorFormInputResponseResource assessorFormInputResponseResource = newAssessorFormInputResponseResource()
+                .withAssessment(assessmentId)
+                .withFormInput(formInputId)
+                .withValue(value)
+                .build();
+        FormInputResource formInput = newFormInputResource()
+                .withId(formInputId)
+                .build();
+        when(formInputServiceMock.findFormInput(formInputId)).thenReturn(serviceSuccess(formInput));
+
+        ServiceResult<Void> result = assessorFormInputResponseService.updateFormInputResponse(assessorFormInputResponseResource);
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
     public void testUpdateFormInputResponse_sameAsExistingValue() throws Exception {
         Long assessmentId = 1L;
         Long formInputId = 2L;
