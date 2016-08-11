@@ -219,6 +219,7 @@ The user clicks the button/link
     wait until element is visible    ${BUTTON}
     Focus    ${BUTTON}
     click element    ${BUTTON}
+    run keyword and ignore error    confirm action
 
 The user should see the text in the page
     [Arguments]    ${VISIBLE_TEXT}

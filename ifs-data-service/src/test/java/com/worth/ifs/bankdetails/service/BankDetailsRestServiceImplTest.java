@@ -4,11 +4,13 @@ import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.bankdetails.resource.BankDetailsResource;
 import com.worth.ifs.commons.rest.RestResult;
 import org.junit.Test;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import static com.worth.ifs.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
 
 public class BankDetailsRestServiceImplTest extends BaseRestServiceUnitTest<BankDetailsRestServiceImpl> {
@@ -26,7 +28,7 @@ public class BankDetailsRestServiceImplTest extends BaseRestServiceUnitTest<Bank
         Long bankDetailsId = 1L;
         BankDetailsResource returnedResponse = newBankDetailsResource().build();
         setupGetWithRestResultExpectations(projectRestURL + "/" + projectId + "/bank-details?bankDetailsId=" + bankDetailsId, BankDetailsResource.class, returnedResponse);
-        BankDetailsResource response = service.getById(projectId, bankDetailsId).getSuccessObject();
+        BankDetailsResource response = service.getByProjectIdAndBankDetailsId(projectId, bankDetailsId).getSuccessObject();
         assertEquals(response, returnedResponse);
     }
 
@@ -38,6 +40,16 @@ public class BankDetailsRestServiceImplTest extends BaseRestServiceUnitTest<Bank
         setupGetWithRestResultExpectations(projectRestURL + "/" + projectId + "/bank-details?organisationId=" + organisationId, BankDetailsResource.class, returnedResponse);
         BankDetailsResource response = service.getBankDetailsByProjectAndOrganisation(projectId, organisationId).getSuccessObject();
         assertEquals(response, returnedResponse);
+    }
+
+    @Test
+    public void testGetBankDetailsByProjectAndOrganisationReturnsNotFoundWhenBankDetailsDontExist(){
+        Long projectId = 123L;
+        Long organisationId = 100L;
+        setupGetWithRestResultExpectations(projectRestURL + "/" + projectId + "/bank-details?organisationId=" + organisationId, BankDetailsResource.class, null, NOT_FOUND);
+        RestResult<BankDetailsResource> response = service.getBankDetailsByProjectAndOrganisation(projectId, organisationId);
+        assertTrue(response.isFailure());
+        assertEquals(response.getFailure().getStatusCode(), HttpStatus.NOT_FOUND);
     }
 
     @Test

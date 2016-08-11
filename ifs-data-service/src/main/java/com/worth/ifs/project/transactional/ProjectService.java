@@ -10,6 +10,7 @@ import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.security.NotSecured;
 import com.worth.ifs.security.SecuredBySpring;
 import com.worth.ifs.user.resource.OrganisationResource;
@@ -32,6 +33,9 @@ public interface ProjectService {
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<ProjectResource> getProjectById(@P("projectId") Long projectId);
+
+    @NotSecured(value="", mustBeSecuredByOtherServices = false) // TODO - This needs to be changed once Security is added
+    ServiceResult<SpendProfileResource> getSpendProfile(Long projectId, Long organisationId);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<ProjectResource> getByApplicationId(@P("applicationId") Long applicationId);

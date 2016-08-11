@@ -9,6 +9,7 @@ import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.project.service.ProjectRestService;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.service.OrganisationRestService;
@@ -51,6 +52,16 @@ public class ProjectServiceImpl implements ProjectService {
         }
 
         return projectRestService.getProjectById(projectId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public SpendProfileResource getSpendProfile(final Long projectId, final Long organisationId) {
+
+        if (projectId == null || organisationId == null) {
+            return null;
+        }
+
+        return projectRestService.getSpendProfile(projectId, organisationId).getSuccessObjectOrThrowException();
     }
 
     @Override
