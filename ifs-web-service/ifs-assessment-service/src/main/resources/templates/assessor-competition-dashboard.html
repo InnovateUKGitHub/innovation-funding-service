@@ -10,7 +10,7 @@
 
         <main id="content">
             <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-            <div th:include="fragments/assessment :: assessment-header-sub" th:with="linkTitle='Back to assessor dashboard',linkClass='link-back',linkUrl=@{${'/assessor/dashboard'}}" th:remove="tag" />
+            <div th:include="fragments/assessment :: assessment-header-sub" th:with="linkTitle='Back to assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}" th:remove="tag" />
 
             <div class="hgroup">
                 <h1 class="heading-large" th:text="${model.competitionTitle}" />
@@ -33,7 +33,7 @@
                             <li th:each="application : ${model.applications}">
                                 <div class="grid-row">
                                     <div class="column-assessment-details">
-                                        <h4 class="heading-medium"><a th:href="@{/{applicationId}(applicationId=${application.assessmentId})}" th:text="${application.displayLabel}" /></h4>
+                                        <h4 class="heading-medium"><a th:href="@{/{assessmentId}(assessmentId=${application.assessmentId})}" th:text="${application.displayLabel}" /></h4>
                                         <p th:text="${application.leadOrganisation}" />
                                     </div>
                                 </div>
