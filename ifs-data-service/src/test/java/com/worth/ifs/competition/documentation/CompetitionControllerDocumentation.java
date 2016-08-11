@@ -27,6 +27,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class CompetitionControllerDocumentation extends BaseControllerMockMVCTest<CompetitionController> {
@@ -168,9 +169,14 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
         int size = 20;
         when(competitionService.searchCompetitions(searchQuery, page, size)).thenReturn(ServiceResult.serviceSuccess(results));
 
-        mockMvc.perform(get("/competition/search/" + searchQuery + "/" + page + "/" + size))
+        mockMvc.perform(get("/competition/search/{page}/{size}/?searchQuery=" + searchQuery, page, size))
                 .andExpect(status().isOk())
                 .andDo(this.document.snippets(
+                        requestParameters(parameterWithName("searchQuery").description("The search query to lookup")),
+                        pathParameters(
+                                parameterWithName("page").description("The page number to be requested"),
+                                parameterWithName("size").description("The number of competitions per page")
+                        ),
                         responseFields(CompetitionSearchResultDocs.competitionSearchResultFields)
                 ));
     }
@@ -190,4 +196,5 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
                         )
                 ));
     }
+
 }

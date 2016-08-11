@@ -58,8 +58,8 @@ public class CompetitionController {
         return competitionService.findUpcomingCompetitions().toGetResponse();
     }
 
-    @RequestMapping(value="/search/{searchQuery}/{page}/{size}", method= RequestMethod.GET)
-    public RestResult<CompetitionSearchResult> search(@PathVariable("searchQuery") String searchQuery,
+    @RequestMapping(value="/search/{page}/{size}", method= RequestMethod.GET)
+    public RestResult<CompetitionSearchResult> search(@RequestParam("searchQuery") String searchQuery,
                                                       @PathVariable("page") int page,
                                                       @PathVariable("size") int size) {
         return competitionService.searchCompetitions(searchQuery, page, size).toGetResponse();

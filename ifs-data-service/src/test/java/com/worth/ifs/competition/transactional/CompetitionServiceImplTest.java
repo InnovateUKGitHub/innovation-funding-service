@@ -28,7 +28,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
- *
+ * Tests the CompetitionServiceImpl with mocked repositories/mappers.
  */
 public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionServiceImpl> {
     @Mock

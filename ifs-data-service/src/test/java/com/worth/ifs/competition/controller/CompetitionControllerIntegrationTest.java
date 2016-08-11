@@ -323,12 +323,31 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         assertThat(pageTwoResult.getNumber(), equalTo(pageTwo));
         assertThat(pageTwoResult.getTotalElements(), equalTo(2L));
 
+
         CompetitionSearchResult matchOneResult = controller.search(matchOneQuery, pageOne, size).getSuccessObjectOrThrowException();
         assertThat(matchOneResult.getTotalElements(), equalTo(1L));
 
         CompetitionSearchResult matchNoneResult = controller.search(matchNoneQuery, pageOne, size).getSuccessObjectOrThrowException();
         assertThat(matchNoneResult.getTotalElements(), equalTo(0L));
    }
+
+    @Rollback
+    @Test
+    public void testSearchSpecialCharacters() throws Exception {
+        String specialChar = "!@£$%^&*(*()_";
+        int size = 20;
+        int pageOne = 0;
+
+        CompetitionResource comp = controller.create().getSuccessObjectOrThrowException();
+        comp.setName(specialChar);
+        controller.saveCompetition(comp, comp.getId()).getSuccessObjectOrThrowException();
+
+        CompetitionSearchResult pageOneResult = controller.search(specialChar, pageOne, size).getSuccessObjectOrThrowException();
+        assertThat(pageOneResult.getNumber(), equalTo(pageOne));
+        assertThat(pageOneResult.getTotalElements(), equalTo(1L));
+        assertThat(pageOneResult.getContent().get(0).getName(), equalTo(specialChar));
+    }
+
 
     @Rollback
     @Test

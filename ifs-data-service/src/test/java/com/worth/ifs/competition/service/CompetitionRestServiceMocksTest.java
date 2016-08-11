@@ -152,8 +152,7 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
         int page = 1;
         int size = 20;
 
-
-        setupGetWithRestResultExpectations(competitionsRestURL + "/search/" + searchQuery + "/" + page + "/" + size, CompetitionSearchResult.class, returnedResponse);
+        setupGetWithRestResultExpectations(competitionsRestURL + "/search/" + page + "/" + size + "?searchQuery=" + searchQuery, CompetitionSearchResult.class, returnedResponse);
 
         CompetitionSearchResult responses = service.searchCompetitions(searchQuery, page, size).getSuccessObject();
         assertNotNull(responses);
