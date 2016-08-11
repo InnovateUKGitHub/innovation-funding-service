@@ -4,6 +4,7 @@ import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.bankdetails.controller.BankDetailsManagementController;
 import com.worth.ifs.bankdetails.resource.BankDetailsResource;
 import com.worth.ifs.bankdetails.viewmodel.BankDetailsReviewViewModel;
+import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 import org.junit.Before;
@@ -16,6 +17,7 @@ import java.util.Map;
 import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static com.worth.ifs.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
 import static com.worth.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
+import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static com.worth.ifs.user.resource.UserRoleType.FINANCE_CONTACT;
@@ -26,9 +28,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTest<BankDetailsManagementController> {
+    private ProjectResource project;
     private OrganisationResource organisationResource;
     private BankDetailsResource bankDetailsResource;
-    private Long projectId = 1L;
     private List<ProjectUserResource> projectUsers;
     private BankDetailsReviewViewModel bankDetailsReviewViewModel;
 
@@ -38,14 +40,17 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
         organisationResource = newOrganisationResource().build();
         bankDetailsResource = newBankDetailsResource().build();
         bankDetailsResource.setOrganisationAddress(newOrganisationAddressResource().withAddress(newAddressResource().build()).build());
+        project = newProjectResource().build();
         projectUsers = newProjectUserResource().build(3);
         projectUsers.get(0).setRoleName(FINANCE_CONTACT.getName());
         projectUsers.get(0).setOrganisation(organisationResource.getId());
-        bankDetailsReviewViewModel = buildModelView(projectUsers.get(0), organisationResource, bankDetailsResource);
+        bankDetailsReviewViewModel = buildModelView(project, projectUsers.get(0), organisationResource, bankDetailsResource);
     }
 
-    private BankDetailsReviewViewModel buildModelView(ProjectUserResource financeContact, OrganisationResource organisation, BankDetailsResource bankDetails){
+    private BankDetailsReviewViewModel buildModelView(ProjectResource project, ProjectUserResource financeContact, OrganisationResource organisation, BankDetailsResource bankDetails){
         return new BankDetailsReviewViewModel(
+                project.getFormattedId(),
+                project.getName(),
                 financeContact.getUserName(),
                 financeContact.getEmail(),
                 financeContact.getPhoneNumber(),
@@ -70,9 +75,10 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
     @Test
     public void canViewBankDetailsWhenBankDetailsSubmitted() throws Exception {
         when(organisationService.getOrganisationById(organisationResource.getId())).thenReturn(organisationResource);
-        when(bankDetailsService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId())).thenReturn(bankDetailsResource);
-        when(projectService.getProjectUsersForProject(projectId)).thenReturn(projectUsers);
-        MvcResult result = mockMvc.perform(get("/project/" + projectId + "/organisation/" + organisationResource.getId() + "/review-bank-details")).
+        when(bankDetailsService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(bankDetailsResource);
+        when(projectService.getById(project.getId())).thenReturn(project);
+        when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
+        MvcResult result = mockMvc.perform(get("/project/" + project.getId() + "/organisation/" + organisationResource.getId() + "/review-bank-details")).
                 andExpect(view().name("project/review-bank-details")).
                 andExpect(status().isOk()).
                 andReturn();

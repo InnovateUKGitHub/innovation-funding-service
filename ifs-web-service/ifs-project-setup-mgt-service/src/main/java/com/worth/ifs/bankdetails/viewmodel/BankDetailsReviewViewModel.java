@@ -4,6 +4,8 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class BankDetailsReviewViewModel {
+    private String projectNumber;
+    private String projectName;
     private String financeContactName;
     private String financeContactEmail;
     private String financeContactPhoneNumber;
@@ -19,7 +21,9 @@ public class BankDetailsReviewViewModel {
     private Boolean approved;
     private Boolean approvedManually;
 
-    public BankDetailsReviewViewModel(String financeContactName, String financeContactEmail, String financeContactPhoneNumber, String organisationName, String registrationNumber, String bankAccountNumber, String sortCode, String organisationAddress, Boolean verified, Short companyNameScore, Boolean registrationNumberMatched, Short addressScore, Boolean approved, Boolean approvedManually) {
+    public BankDetailsReviewViewModel(String projectNumber, String projectName, String financeContactName, String financeContactEmail, String financeContactPhoneNumber, String organisationName, String registrationNumber, String bankAccountNumber, String sortCode, String organisationAddress, Boolean verified, Short companyNameScore, Boolean registrationNumberMatched, Short addressScore, Boolean approved, Boolean approvedManually) {
+        this.projectNumber = projectNumber;
+        this.projectName = projectName;
         this.financeContactName = financeContactName;
         this.financeContactEmail = financeContactEmail;
         this.financeContactPhoneNumber = financeContactPhoneNumber;
@@ -34,6 +38,14 @@ public class BankDetailsReviewViewModel {
         this.addressScore = addressScore;
         this.approved = approved;
         this.approvedManually = approvedManually;
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
     }
 
     public String getFinanceContactName() {
@@ -192,5 +204,13 @@ public class BankDetailsReviewViewModel {
                 .append(approved)
                 .append(approvedManually)
                 .toHashCode();
+    }
+
+    public String getProjectNumber() {
+        return projectNumber;
+    }
+
+    public void setProjectNumber(String projectNumber) {
+        this.projectNumber = projectNumber;
     }
 }
