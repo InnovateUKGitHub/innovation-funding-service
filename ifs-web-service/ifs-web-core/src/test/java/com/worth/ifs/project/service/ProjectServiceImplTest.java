@@ -299,28 +299,28 @@ public class ProjectServiceImplTest {
     @Test
     public void testOtherDocumentsSubmitAllowedWhenAllFilesUploaded() throws Exception {
 
-        when(projectRestService.isOtherDocumentsSubmitAllowed(123L, 1L)).thenReturn(restSuccess(true));
+        when(projectRestService.isOtherDocumentsSubmitAllowed(123L)).thenReturn(restSuccess(true));
 
-        ServiceResult<Boolean> submitAllowed = service.isOtherDocumentSubmitAllowed(123L, 1L);
+        ServiceResult<Boolean> submitAllowed = service.isOtherDocumentSubmitAllowed(123L);
 
         assertTrue(submitAllowed.isSuccess());
 
-        verify(projectRestService).isOtherDocumentsSubmitAllowed(123L, 1L);
+        verify(projectRestService).isOtherDocumentsSubmitAllowed(123L);
     }
 
     @Test
     public void testOtherDocumentsSubmitAllowedWhenNotAllFilesUploaded() throws Exception {
 
-        when(projectRestService.isOtherDocumentsSubmitAllowed(123L, 1L)).thenReturn(restFailure(new Error(PROJECT_SETUP_OTHER_DOCUMENTS_MUST_BE_UPLOADED_BEFORE_SUBMIT)));
+        when(projectRestService.isOtherDocumentsSubmitAllowed(123L)).thenReturn(restFailure(new Error(PROJECT_SETUP_OTHER_DOCUMENTS_MUST_BE_UPLOADED_BEFORE_SUBMIT)));
 
         ServiceResult<Boolean> submitAllowed = null;
 
-        submitAllowed = service.isOtherDocumentSubmitAllowed(123L, 1L);
+        submitAllowed = service.isOtherDocumentSubmitAllowed(123L);
 
         assertTrue(submitAllowed
                 .getFailure().is(new Error(PROJECT_SETUP_OTHER_DOCUMENTS_MUST_BE_UPLOADED_BEFORE_SUBMIT)));
 
-        verify(projectRestService).isOtherDocumentsSubmitAllowed(123L, 1L);
+        verify(projectRestService).isOtherDocumentsSubmitAllowed(123L);
     }
 
 

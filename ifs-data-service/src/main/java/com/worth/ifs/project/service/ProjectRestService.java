@@ -36,5 +36,5 @@ public interface ProjectRestService {
     RestResult<FileEntryResource> addCollaborationAgreementDocument(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes);
     RestResult<Void> removeExploitationPlanDocument(Long projectId);
     RestResult<FileEntryResource> addExploitationPlanDocument(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes);
-    RestResult<Boolean> isOtherDocumentsSubmitAllowed(Long projectId, Long UserId);
+    RestResult<Boolean> isOtherDocumentsSubmitAllowed(Long projectId);
 }

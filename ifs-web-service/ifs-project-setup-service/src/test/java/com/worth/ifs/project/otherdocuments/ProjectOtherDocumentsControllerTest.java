@@ -53,7 +53,7 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
         when(projectService.getExploitationPlanFileDetails(projectId)).thenReturn(Optional.empty());
         when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(partnerOrganisations);
         when(projectService.isUserLeadPartner(projectId, loggedInUser.getId())).thenReturn(true);
-        when(projectService.isOtherDocumentSubmitAllowed(projectId, userId)).thenReturn(serviceFailure(new Error(PROJECT_SETUP_OTHER_DOCUMENTS_MUST_BE_UPLOADED_BEFORE_SUBMIT)));
+        when(projectService.isOtherDocumentSubmitAllowed(projectId)).thenReturn(serviceFailure(new Error(PROJECT_SETUP_OTHER_DOCUMENTS_MUST_BE_UPLOADED_BEFORE_SUBMIT)));
 
         MvcResult result = mockMvc.perform(get("/project/123/partner/documents")).
                 andExpect(view().name("project/other-documents")).
@@ -100,7 +100,7 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
         when(projectService.getExploitationPlanFileDetails(projectId)).thenReturn(Optional.empty());
         when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(partnerOrganisations);
         when(projectService.isUserLeadPartner(projectId, loggedInUser.getId())).thenReturn(false);
-        when(projectService.isOtherDocumentSubmitAllowed(projectId, userId)).thenReturn(serviceFailure(new Error(PROJECT_SETUP_OTHER_DOCUMENTS_MUST_BE_UPLOADED_BEFORE_SUBMIT)));
+        when(projectService.isOtherDocumentSubmitAllowed(projectId)).thenReturn(serviceFailure(new Error(PROJECT_SETUP_OTHER_DOCUMENTS_MUST_BE_UPLOADED_BEFORE_SUBMIT)));
 
         MvcResult result = mockMvc.perform(get("/project/123/partner/documents")).
                 andExpect(view().name("project/other-documents")).
@@ -150,7 +150,7 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
         when(projectService.getExploitationPlanFileDetails(projectId)).thenReturn(Optional.of(existingExplotationPlan));
         when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(partnerOrganisations);
         when(projectService.isUserLeadPartner(projectId, loggedInUser.getId())).thenReturn(true);
-        when(projectService.isOtherDocumentSubmitAllowed(projectId, userId)).thenReturn(serviceFailure(new Error(PROJECT_SETUP_OTHER_DOCUMENTS_MUST_BE_UPLOADED_BEFORE_SUBMIT)));
+        when(projectService.isOtherDocumentSubmitAllowed(projectId)).thenReturn(serviceFailure(new Error(PROJECT_SETUP_OTHER_DOCUMENTS_MUST_BE_UPLOADED_BEFORE_SUBMIT)));
 
         MvcResult result = mockMvc.perform(get("/project/123/partner/documents")).
                 andExpect(view().name("project/other-documents")).
@@ -260,7 +260,7 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
         when(projectService.getExploitationPlanFileDetails(projectId)).thenReturn(Optional.empty());
         when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(emptyList());
         when(projectService.isUserLeadPartner(projectId, loggedInUser.getId())).thenReturn(true);
-        when(projectService.isOtherDocumentSubmitAllowed(projectId, userId)).thenReturn(serviceFailure(new Error(PROJECT_SETUP_OTHER_DOCUMENTS_MUST_BE_UPLOADED_BEFORE_SUBMIT)));
+        when(projectService.isOtherDocumentSubmitAllowed(projectId)).thenReturn(serviceFailure(new Error(PROJECT_SETUP_OTHER_DOCUMENTS_MUST_BE_UPLOADED_BEFORE_SUBMIT)));
 
         MvcResult result = mockMvc.perform(
                 fileUpload("/project/123/partner/documents").
@@ -368,7 +368,7 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
         when(projectService.getExploitationPlanFileDetails(projectId)).thenReturn(Optional.empty());
         when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(emptyList());
         when(projectService.isUserLeadPartner(projectId, loggedInUser.getId())).thenReturn(true);
-        when(projectService.isOtherDocumentSubmitAllowed(projectId, userId)).thenReturn(serviceSuccess(true));
+        when(projectService.isOtherDocumentSubmitAllowed(projectId)).thenReturn(serviceSuccess(true));
 
         MvcResult result = mockMvc.perform(
                 get("/project/123/partner/documents/ready")).
@@ -376,20 +376,21 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
                 andExpect(view().name("project/other-documents")).
                 andReturn();
 
-        verify(projectService).isOtherDocumentSubmitAllowed(123L, 1L);
+        verify(projectService).isOtherDocumentSubmitAllowed(123L);
 
         ProjectOtherDocumentsViewModel model = (ProjectOtherDocumentsViewModel) result.getModelAndView().getModel().get("model");
         ProjectOtherDocumentsForm form = (ProjectOtherDocumentsForm) result.getModelAndView().getModel().get("form");
 
         // test flags that help to drive the page
-        assertTrue(model.isReadOnly());
-        assertFalse(model.isEditable());
+        assertFalse(model.isReadOnly());
+        assertTrue(model.isEditable());
         assertTrue(model.isLeadPartner());
-        assertFalse(model.isShowLeadPartnerGuidanceInformation());
-        assertTrue(model.isShowApprovedMessage());
+        assertTrue(model.isShowLeadPartnerGuidanceInformation());
+        assertFalse(model.isShowApprovedMessage());
         assertFalse(model.isShowDocumentsBeingReviewedMessage());
         assertFalse(model.isShowRejectionMessages());
-        assertFalse(model.isShowSubmitDocumentsButton());
+        assertTrue(model.isShowSubmitDocumentsButton());
+        assertTrue(model.isSubmitAllowed());
 
         // test the form for the file uploads
         assertNull(form.getCollaborationAgreement());
