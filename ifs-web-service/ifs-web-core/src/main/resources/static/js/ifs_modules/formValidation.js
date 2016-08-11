@@ -392,26 +392,29 @@ IFS.core.formValidation = (function(){
                 valid = true;
 
                 if(showMessage){ IFS.core.formValidation.setValid(allFields,invalidErrorMessage); }
-                allFields.removeAttr('data-autosave-disabled').attr('data-date',day+'-'+month+'-'+year);
-                //adding day of week which is not really validation might want to think about this
+
+                allFields.attr('data-date',day+'-'+month+'-'+year);
+                //adding day of week which is not really validation
+                //so could be better of somehwere else
                 if(addWeekDay.length){
                   var days = ['Sun','Mon','Tues','Wed','Thurs','Fri','Sat'];
                   var weekday = days[date.getDay()];
                   addWeekDay.text(weekday);
                 }
+                field.trigger('ifsAutosave');
 
                 if(dateGroup.is("[data-future-date]")){
                     valid = IFS.core.formValidation.checkFutureDate(dateGroup,date,showMessage);
                 }
             } else {
                 if(showMessage){ IFS.core.formValidation.setInvalid(allFields,invalidErrorMessage); }
-                allFields.attr({'data-date':'', 'autosave-disabled':''});
+                allFields.attr({'data-date':''});
                 valid = false;
             }
           }
           else if (filledOut || fieldsVisited){
                 if(showMessage){ IFS.core.formValidation.setInvalid(allFields,invalidErrorMessage); }
-                allFields.attr({'data-date':'', 'autosave-disabled':''});
+                allFields.attr({'data-date':''});
                 valid = false;
           }
           else {
