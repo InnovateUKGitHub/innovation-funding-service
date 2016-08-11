@@ -11,5 +11,9 @@ import java.util.List;
  */
 public interface CompetitionSetupMilestoneService {
 
+	List<MilestoneResource> createMilestonesForCompetition(Long competitionId);
+
 	List<Error> updateMilestonesForCompetition(List<MilestoneResource> milestones, List<MilestonesFormEntry> milestoneEntries, Long competitionId);
+
+	List<Error> validateMilestoneDates(List<MilestonesFormEntry> milestonesFormEntries);
 }

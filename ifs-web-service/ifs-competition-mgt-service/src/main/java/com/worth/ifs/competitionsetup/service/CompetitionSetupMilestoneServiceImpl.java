@@ -12,6 +12,8 @@ import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 @Service
 public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMilestoneService {
@@ -20,25 +22,37 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
     MilestoneService milestoneService;
 
     @Override
+    public List<MilestoneResource> createMilestonesForCompetition(Long competitionId) {
+        List<MilestoneResource> newMilestones = new ArrayList<>();
+        Stream.of(MilestoneResource.MilestoneName.values()).forEach(name -> {
+            MilestoneResource newMilestone = milestoneService.create(name, competitionId);
+            newMilestone.setName(name);
+            newMilestones.add(newMilestone);
+        });
+        return newMilestones;
+    }
+
+    @Override
     public List<Error> updateMilestonesForCompetition(List<MilestoneResource> milestones, List<MilestonesFormEntry> milestoneEntries, Long competitionId) {
 
-        List<Error> errors = validateMilestoneDates(milestoneEntries);
-        if(!errors.isEmpty()) {
-            return errors;
-        }
+        List<MilestoneResource> updatedMilestones = new ArrayList();
 
-        for (int i = 0; i < milestones.size(); i++) {
-            MilestonesFormEntry thisMilestonesFormEntry = milestoneEntries.get(i);
-            thisMilestonesFormEntry.setMilestoneType(milestones.get(i).getType());
+        milestones.forEach(milestoneResource -> {
+            Optional<MilestonesFormEntry> milestoneWithUpdate = milestoneEntries.stream()
+                    .filter(milestonesFormEntry -> milestonesFormEntry.getMilestoneName().equals(milestoneResource.getName())).findAny();
 
-            milestones.get(i).setCompetition(competitionId);
-            LocalDateTime temp = getMilestoneDate(milestoneEntries.get(i).getDay(), milestoneEntries.get(i).getMonth(), milestoneEntries.get(i).getYear());
-            if (temp != null) {
-                milestones.get(i).setDate(temp);
+            if(milestoneWithUpdate.isPresent()) {
+                LocalDateTime temp = getMilestoneDate(milestoneWithUpdate.get().getDay(), milestoneWithUpdate.get().getMonth(), milestoneWithUpdate.get().getYear());
+                if (temp != null) {
+                    milestoneResource.setDate(temp);
+                    updatedMilestones.add(milestoneResource);
+                }
             }
-        }
 
-        return milestoneService.update(milestones, competitionId);
+        });
+
+
+        return milestoneService.update(updatedMilestones, competitionId);
     }
 
     private LocalDateTime getMilestoneDate(Integer day, Integer month, Integer year){
@@ -49,7 +63,8 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
         }
     }
 
-    private List<Error> validateMilestoneDates(List<MilestonesFormEntry> milestonesFormEntries) {
+    @Override
+    public List<Error> validateMilestoneDates(List<MilestonesFormEntry> milestonesFormEntries) {
         List<Error> errors =  new ArrayList<>();
 
         milestonesFormEntries.forEach(milestone -> {

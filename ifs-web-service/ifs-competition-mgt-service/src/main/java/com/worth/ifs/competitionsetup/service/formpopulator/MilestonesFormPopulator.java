@@ -15,6 +15,13 @@ import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.MilestoneResource;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.form.MilestonesForm;
+import com.worth.ifs.competitionsetup.form.MilestonesFormEntry;
+import com.worth.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Form populator for the milestones competition setup section.
@@ -25,6 +32,9 @@ public class MilestonesFormPopulator implements CompetitionSetupFormPopulator {
     @Autowired
     private MilestoneService milestoneService;
 
+    @Autowired
+    private CompetitionSetupMilestoneService competitionSetupMilestoneService;
+
     @Override
     public CompetitionSetupSection sectionToFill() {
         return CompetitionSetupSection.MILESTONES;
@@ -34,33 +44,20 @@ public class MilestonesFormPopulator implements CompetitionSetupFormPopulator {
     public CompetitionSetupForm populateForm(CompetitionResource competitionResource) {
         MilestonesForm competitionSetupForm = new MilestonesForm();
 
-        List<MilestoneResource> allMilestonesByCompetitionId = milestoneService.getAllDatesByCompetitionId(competitionResource.getId());
-
-        if (allMilestonesByCompetitionId == null || allMilestonesByCompetitionId.isEmpty()) {
-            allMilestonesByCompetitionId.addAll(createMilestonesForCompetition(competitionResource));
-        }
-        else {
-            allMilestonesByCompetitionId.sort((c1, c2) -> c1.getType().compareTo(c2.getType()));
+        List<MilestoneResource> milestonesByCompetition = milestoneService.getAllDatesByCompetitionId(competitionResource.getId());
+        if (milestonesByCompetition.isEmpty()) {
+            milestonesByCompetition.addAll(competitionSetupMilestoneService.createMilestonesForCompetition(competitionResource.getId()));
+        } else {
+            milestonesByCompetition.sort((c1, c2) -> c1.getName().compareTo(c2.getName()));
         }
 
         List<MilestonesFormEntry> milestoneFormEntries = new ArrayList<>();
-
-        allMilestonesByCompetitionId.forEach(milestone -> {
+        milestonesByCompetition.forEach(milestone -> {
             milestoneFormEntries.add(populateMilestoneFormEntries(milestone));
-
         });
         competitionSetupForm.setMilestonesFormEntryList(milestoneFormEntries);
-        return competitionSetupForm;
-    }
 
-    private List<MilestoneResource> createMilestonesForCompetition(CompetitionResource competitionResource) {
-        List<MilestoneResource> newMilestones = new ArrayList<>();
-        Stream.of(MilestoneType.values()).forEach(type -> {
-            MilestoneResource newMilestone = milestoneService.create(type, competitionResource.getId());
-            newMilestone.setType(type);
-            newMilestones.add(newMilestone);
-        });
-        return newMilestones;
+        return competitionSetupForm;
     }
 
     private MilestonesFormEntry populateMilestoneFormEntries(MilestoneResource milestone) {
