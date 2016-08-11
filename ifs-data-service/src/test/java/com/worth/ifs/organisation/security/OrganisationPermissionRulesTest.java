@@ -50,6 +50,17 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
     }
 
     @Test
+    public void projectFinanceUserCanSeeAllOrganisations(){
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.equals(projectFinanceUser())) {
+                assertTrue(rules.projectFinanceUserCanSeeAllOrganisations(newOrganisationResource().build(), user));
+            } else {
+                assertFalse(rules.projectFinanceUserCanSeeAllOrganisations(newOrganisationResource().build(), user));
+            }
+        });
+    }
+
+    @Test
     public void testSystemRegistrationUsersCanViewAnyOrganisation() {
         allGlobalRoleUsers.forEach(user -> {
             if (user.equals(systemRegistrationUser())) {
