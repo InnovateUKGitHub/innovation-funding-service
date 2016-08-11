@@ -35,6 +35,10 @@ import static java.util.Arrays.asList;
 
 @Service
 public class BankDetailsServiceImpl implements BankDetailsService{
+
+    private final int EXPERIAN_INVALID_ACC_NO_ERROR_ID = 4;
+    private final int EXPERIAN_MODULUS_CHECK_FAILURE_ID = 7;
+
     @Autowired
     private BankDetailsMapper bankDetailsMapper;
 
@@ -174,6 +178,15 @@ public class BankDetailsServiceImpl implements BankDetailsService{
     }
 
     private List<Error> convertExperianValidationMsgToUserMsg(List<Condition> conditons){
-        return conditons.stream().filter(condition -> condition.getSeverity().equals("error")).map(condition -> Error.globalError(EXPERIAN_VALIDATION_FAILED.getErrorKey(), condition.getDescription())).collect(Collectors.toList());
+        return conditons.stream().filter(condition -> condition.getSeverity().equals("error")).
+                map(condition -> {
+                    if (condition.getCode().equals(EXPERIAN_INVALID_ACC_NO_ERROR_ID)) {
+                        return Error.globalError(EXPERIAN_VALIDATION_FAILED_WITH_INCORRECT_ACC_NO.getErrorKey(), "Account number is incorrect, please check and try again");
+                    } else if (condition.getCode().equals(EXPERIAN_MODULUS_CHECK_FAILURE_ID)) {
+                        return Error.globalError(EXPERIAN_VALIDATION_FAILED_WITH_INCORRECT_BANK_DETAILS.getErrorKey(), "Bank account details are incorrect, please check and try again");
+                    }
+                    return Error.globalError(EXPERIAN_VALIDATION_FAILED.getErrorKey(), condition.getDescription());
+                }).
+                collect(Collectors.toList());
     }
 }
