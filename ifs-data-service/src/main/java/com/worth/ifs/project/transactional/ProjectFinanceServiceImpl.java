@@ -8,7 +8,6 @@ import com.worth.ifs.project.finance.domain.CostCategoryType;
 import com.worth.ifs.project.finance.domain.SpendProfile;
 import com.worth.ifs.project.finance.repository.SpendProfileRepository;
 import com.worth.ifs.project.repository.ProjectRepository;
-import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.Organisation;
@@ -25,6 +24,7 @@ import static com.worth.ifs.commons.service.ServiceResult.processAnyFailuresOrSu
 import static com.worth.ifs.project.finance.domain.CostTimePeriod.TimeUnit.MONTH;
 import static com.worth.ifs.util.CollectionFunctions.*;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
+import static java.math.BigDecimal.ROUND_HALF_UP;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -51,7 +51,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     @Override
     public ServiceResult<Void> generateSpendProfile(Long projectId) {
 
-        return projectService.getProjectById(projectId).andOnSuccess(project ->
+        return getProject(projectId).andOnSuccess(project ->
                projectService.getProjectUsers(projectId).andOnSuccess(projectUsers -> {
                    List<Long> organisationIds = removeDuplicates(simpleMap(projectUsers, ProjectUserResource::getOrganisation));
                    return generateSpendProfileForPartnerOrganisations(project, organisationIds);
@@ -59,7 +59,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         );
     }
 
-    private ServiceResult<Void> generateSpendProfileForPartnerOrganisations(ProjectResource project, List<Long> organisationIds) {
+    private ServiceResult<Void> generateSpendProfileForPartnerOrganisations(Project project, List<Long> organisationIds) {
 
         List<ServiceResult<Void>> generationResults = simpleMap(organisationIds, organisationId -> {
 
@@ -100,7 +100,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
             CostCategory matchingCategory = simpleFindFirst(costCategoryType.getCostCategories(),
                     cat -> cat.getName().equals(summary.getCategory().getType())).get();
 
-            return IntStream.of(project.getDurationInMonths().intValue()).mapToObj(i -> {
+            return IntStream.range(0, project.getDurationInMonths().intValue()).mapToObj(i -> {
 
                 BigDecimal costValueForThisMonth = i == 0 ? summary.getFirstMonthSpend() : summary.getOtherMonthsSpend();
 
@@ -115,12 +115,13 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     }
 
     private List<Cost> generateEligibleCosts(List<SpendProfileCostCategorySummary> summaryPerCategory, CostCategoryType costCategoryType) {
+
         return simpleMap(summaryPerCategory, summary -> {
 
             CostCategory matchingCategory = simpleFindFirst(costCategoryType.getCostCategories(),
                     cat -> cat.getName().equals(summary.getCategory().getType())).get();
 
-            return new Cost(summary.getTotal()).withCategory(matchingCategory);
+            return new Cost(summary.getTotal().setScale(0, ROUND_HALF_UP)).withCategory(matchingCategory);
         });
     }
 
