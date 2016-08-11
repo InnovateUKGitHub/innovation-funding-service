@@ -6,6 +6,7 @@ import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.MilestoneResource;
+import com.worth.ifs.competition.resource.MilestoneType;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.form.InitialDetailsForm;
 import com.worth.ifs.competitionsetup.form.MilestonesFormEntry;
@@ -82,7 +83,7 @@ public class InitialDetailsSectionSaver implements CompetitionSetupSectionSaver 
 
 	private void saveOpeningDateAsMilestone(LocalDateTime openingDate, Long competitionId) {
 	    MilestonesFormEntry milestonesFormEntry = new MilestonesFormEntry();
-        milestonesFormEntry.setMilestoneName(MilestoneResource.MilestoneName.OPEN_DATE);
+        milestonesFormEntry.setMilestoneType(MilestoneType.OPEN_DATE);
 		milestonesFormEntry.setDay(openingDate.getDayOfMonth());
         milestonesFormEntry.setMonth(openingDate.getMonth().getValue());
         milestonesFormEntry.setYear(openingDate.getYear());
@@ -91,7 +92,7 @@ public class InitialDetailsSectionSaver implements CompetitionSetupSectionSaver 
         if(milestones.isEmpty()) {
             milestones = competitionSetupMilestoneService.createMilestonesForCompetition(competitionId);
         }
-        milestones.sort((c1, c2) -> c1.getName().compareTo(c2.getName()));
+        milestones.sort((c1, c2) -> c1.getType().compareTo(c2.getType()));
 
         competitionSetupMilestoneService.updateMilestonesForCompetition(milestones, Arrays.asList(milestonesFormEntry), competitionId);
     }
