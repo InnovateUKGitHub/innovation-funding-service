@@ -6,13 +6,16 @@ import com.worth.ifs.application.finance.view.OrganisationFinanceOverview;
 import com.worth.ifs.application.resource.AppendixResource;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionResource;
+import com.worth.ifs.assessment.form.AssessmentOverviewForm;
 import com.worth.ifs.assessment.model.AssessmentFinancesSummaryModelPopulator;
 import com.worth.ifs.assessment.model.AssessmentOverviewModelPopulator;
+import com.worth.ifs.assessment.model.RejectAssessmentModelPopulator;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
 import com.worth.ifs.assessment.service.AssessmentService;
 import com.worth.ifs.assessment.service.AssessorFormInputResponseService;
 import com.worth.ifs.assessment.viewmodel.AssessmentOverviewRowViewModel;
+import com.worth.ifs.assessment.viewmodel.RejectAssessmentViewModel;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.FileEntryRestService;
@@ -28,12 +31,11 @@ import com.worth.ifs.user.resource.ProcessRoleResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Spy;
+import org.mockito.*;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -41,6 +43,7 @@ import java.util.stream.Collectors;
 
 import static com.google.common.collect.Sets.newHashSet;
 import static com.worth.ifs.BaseBuilderAmendFunctions.id;
+import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.application.service.Futures.settable;
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static com.worth.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
@@ -53,7 +56,9 @@ import static com.worth.ifs.form.builder.FormInputResourceBuilder.newFormInputRe
 import static com.worth.ifs.form.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static com.worth.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
+import static java.lang.String.format;
 import static java.util.Arrays.asList;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyList;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.*;
@@ -91,6 +96,9 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
     @InjectMocks
     private AssessmentFinancesSummaryModelPopulator assessmentFinancesSummaryModelPopulator;
 
+    @Spy
+    @InjectMocks
+    private RejectAssessmentModelPopulator rejectAssessmentModelPopulator;
 
     @Override
     protected AssessmentOverviewController supplyControllerUnderTest() {
@@ -111,7 +119,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
     }
 
     @Test
-    public void testAssessmentDetails() throws Exception {
+    public void AssessmentDetails() throws Exception {
         String SCORE_INPUT_TYPE = "assessor_score";
         AssessmentResource assessment = newAssessmentResource().withId(1L).withProcessRole(0L).build();
         ProcessRoleResource processRole = newProcessRoleResource().with(id(0L)).withApplication(1L).build();
@@ -147,7 +155,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         when(formInputService.findAssessmentInputsByQuestion(anyLong())).thenReturn(formInputs);
         Map<Long, AssessmentOverviewRowViewModel> assessorResponsesMap = new HashMap<>();
         questions.forEach(question -> {
-            assessorResponsesMap.put(question.getId(),new AssessmentOverviewRowViewModel(question,formInputs,assessorResponses));
+            assessorResponsesMap.put(question.getId(), new AssessmentOverviewRowViewModel(question, formInputs, assessorResponses));
         });
 
         FileEntryResource fileEntry = newFileEntryResource().build();
@@ -167,7 +175,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
     }
 
     @Test
-    public void testAssessmentFinance() throws Exception {
+    public void assessmentFinance() throws Exception {
         AssessmentResource assessment = newAssessmentResource().withId(1L).withProcessRole(0L).build();
         ProcessRoleResource processRole = newProcessRoleResource().with(id(0L)).withApplication(1L).build();
         CompetitionResource competition = newCompetitionResource()
@@ -203,22 +211,66 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
     }
 
     @Test
-    public void testRejectInvitation() throws Exception {
-        final Long assessmentId = 1L;
-        final String reason = "reason";
-        final String comment = "comment";
+    public void rejectInvitation() throws Exception {
+        Long assessmentId = 1L;
+        Long competitionId = 2L;
+        String reason = "reason";
+        String comment = "comment";
 
+        AssessmentResource assessment = newAssessmentResource()
+                .with(id(assessmentId))
+                .withCompetition(competitionId)
+                .build();
+
+        when(assessmentService.getById(assessmentId)).thenReturn(assessment);
         when(assessmentService.rejectInvitation(assessmentId, reason, comment)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/{assessmentId}/reject", assessmentId)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("rejectReason", reason)
                 .param("rejectComment", comment))
-                .andExpect(status().isOk())
-                .andExpect(view().name("assessor-dashboard"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(format("/assessor/dashboard/competition/%s", competitionId)))
                 .andReturn();
 
-        verify(assessmentService, only()).rejectInvitation(assessmentId, reason, comment);
+        verify(assessmentService, times(1)).getById(assessmentId);
+        verify(assessmentService, times(1)).rejectInvitation(assessmentId, reason, comment);
+        verifyNoMoreInteractions(assessmentService);
+    }
+
+    @Test
+    public void rejectInvitationConfirm() throws Exception {
+        Long assessmentId = 1L;
+        Long applicationId = 2L;
+
+        AssessmentResource assessment = newAssessmentResource()
+                .with(id(assessmentId))
+                .withApplication(applicationId)
+                .build();
+
+        ApplicationResource application = newApplicationResource().build();
+
+        when(assessmentService.getById(assessmentId)).thenReturn(assessment);
+        when(applicationService.getById(applicationId)).thenReturn(application);
+
+        AssessmentOverviewForm expectedForm = new AssessmentOverviewForm();
+
+        MvcResult result = mockMvc.perform(get("/{assessmentId}/reject/confirm", assessmentId))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("form", expectedForm))
+                .andExpect(model().attributeExists("model"))
+                .andExpect(view().name("assessment/reject-invitation-confirm"))
+                .andReturn();
+
+        RejectAssessmentViewModel model = (RejectAssessmentViewModel) result.getModelAndView().getModel().get("model");
+
+        assertEquals(assessmentId, model.getAssessmentId());
+        assertEquals(application, model.getApplication());
+
+        InOrder inOrder = Mockito.inOrder(assessmentService, applicationService);
+        inOrder.verify(assessmentService, calls(1)).getById(assessmentId);
+        inOrder.verify(applicationService, calls(1)).getById(applicationId);
+        inOrder.verifyNoMoreInteractions();
     }
 
     private List<ApplicationFinanceResource> setupFinances(ApplicationResource app, SortedSet<OrganisationResource> orgSet) {

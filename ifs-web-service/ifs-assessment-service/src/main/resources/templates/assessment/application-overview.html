@@ -85,7 +85,7 @@
                     <summary><span class="summary">Unable to assess this application?</span></summary>
                     <div class="panel-indent">
                         <p>If you have discovered a conflict of interest or are unable to review this assessment, you can return this application to Innovate UK</p>
-                        <a data-js-modal="reject-assesment-modal" class="buttonlink" href="#">Reject this application</a>
+                        <a th:formaction="@{/{assessmentId}/reject/confirm(assessmentId=${assessmentId})}" data-js-modal="reject-assesment-modal" class="buttonlink">Reject this application</a>
                     </div>
                 </details>
             </div>

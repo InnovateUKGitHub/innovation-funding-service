@@ -11,7 +11,6 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 
-
 /**
  * Build the model for the Assessor Dashboard view.
  */

@@ -4,7 +4,6 @@ import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.resource.AssessmentStates;
 import com.worth.ifs.workflow.resource.ProcessEvent;
 import com.worth.ifs.workflow.resource.ProcessStates;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDate;
@@ -30,6 +29,8 @@ public class AssessmentResourceBuilderTest {
         final Long expectedProcessRole = 2L;
         final Boolean expectedSubmitted = Boolean.FALSE;
         final Boolean expectedStarted = Boolean.TRUE;
+        final Long expectedApplication = 3L;
+        final Long expectedCompetition = 4L;
 
         final AssessmentResource assessment = newAssessmentResource()
                 .withId(expectedId)
@@ -42,6 +43,8 @@ public class AssessmentResourceBuilderTest {
                 .withProcessRole(expectedProcessRole)
                 .withSubmitted(expectedSubmitted)
                 .withStarted(expectedStarted)
+                .withApplication(expectedApplication)
+                .withCompetition(expectedCompetition)
                 .build();
 
         assertEquals(expectedId, assessment.getId());
@@ -54,6 +57,8 @@ public class AssessmentResourceBuilderTest {
         assertEquals(expectedProcessRole, assessment.getProcessRole());
         assertEquals(expectedSubmitted, assessment.getSubmitted());
         assertEquals(expectedStarted, assessment.getStarted());
+        assertEquals(expectedApplication, assessment.getApplication());
+        assertEquals(expectedCompetition, assessment.getCompetition());
     }
 
 
@@ -70,6 +75,8 @@ public class AssessmentResourceBuilderTest {
         final Long[] expectedProcessRoles = { 1L, 2L };
         final Boolean[] expectedSubmittedValues = { Boolean.FALSE, Boolean.TRUE };
         final Boolean[] expectedStartedValues = { Boolean.FALSE, Boolean.TRUE };
+        final Long[] expectedApplications = { 3L, 4L };
+        final Long[] expectedCompetitions = { 5L, 6L };
 
         final List<AssessmentResource> assessments = newAssessmentResource()
                 .withId(expectedIds)
@@ -82,6 +89,8 @@ public class AssessmentResourceBuilderTest {
                 .withProcessRole(expectedProcessRoles)
                 .withSubmitted(expectedSubmittedValues)
                 .withStarted(expectedStartedValues)
+                .withApplication(expectedApplications)
+                .withCompetition(expectedCompetitions)
                 .build(2);
 
         final AssessmentResource first = assessments.get(0);
@@ -95,6 +104,8 @@ public class AssessmentResourceBuilderTest {
         assertEquals(expectedProcessRoles[0], first.getProcessRole());
         assertEquals(expectedSubmittedValues[0], first.getSubmitted());
         assertEquals(expectedStartedValues[0], first.getStarted());
+        assertEquals(expectedApplications[0], first.getApplication());
+        assertEquals(expectedCompetitions[0], first.getCompetition());
 
         final AssessmentResource second = assessments.get(1);
         assertEquals(expectedIds[1], second.getId());
@@ -107,5 +118,7 @@ public class AssessmentResourceBuilderTest {
         assertEquals(expectedProcessRoles[1], second.getProcessRole());
         assertEquals(expectedSubmittedValues[1], second.getSubmitted());
         assertEquals(expectedStartedValues[1], second.getStarted());
+        assertEquals(expectedApplications[1], second.getApplication());
+        assertEquals(expectedCompetitions[1], second.getCompetition());
     }
 }

@@ -2,7 +2,6 @@ package com.worth.ifs.assessment.builder;
 
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.assessment.resource.AssessmentResource;
-import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.workflow.resource.ProcessEvent;
 import com.worth.ifs.workflow.resource.ProcessStates;
 
@@ -73,5 +72,13 @@ public class AssessmentResourceBuilder extends BaseBuilder<AssessmentResource, A
 
     public AssessmentResourceBuilder withStarted(Boolean... startedValues) {
         return withArray((started, object) -> setField("started", started, object), startedValues);
+    }
+
+    public AssessmentResourceBuilder withApplication(Long... applications) {
+        return withArray((application, object) -> setField("application", application, object), applications);
+    }
+
+    public AssessmentResourceBuilder withCompetition(Long... competitions) {
+        return withArray((competition, object) -> setField("competition", competition, object), competitions);
     }
 }

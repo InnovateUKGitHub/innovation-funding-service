@@ -8,6 +8,7 @@ import org.mockito.Mock;
 
 import java.util.List;
 
+import static com.worth.ifs.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static org.junit.Assert.assertSame;
@@ -57,19 +58,19 @@ public class AssessorFormInputResponseServiceImplTest extends BaseServiceUnitTes
 
     @Test
     public void updateFormInputResponse() throws Exception {
-        final Long assessmentId = 1L;
-        final Long formInputId = 2L;
-        final String value = "Feedback";
+        Long assessmentId = 1L;
+        Long formInputId = 2L;
+        String value = "Feedback";
 
         AssessorFormInputResponseResource assessorFormInputResponse = newAssessorFormInputResponseResource()
-                .withId(null)
+                .with(id(null))
                 .withAssessment(assessmentId)
                 .withFormInput(formInputId)
                 .withValue(value)
                 .build();
         when(assessorFormInputResponseRestService.updateFormInputResponse(assessorFormInputResponse)).thenReturn(restSuccess());
 
-        final ServiceResult<Void> result = service.updateFormInputResponse(assessmentId, formInputId, value);
+        ServiceResult<Void> result = service.updateFormInputResponse(assessmentId, formInputId, value);
         assertTrue(result.isSuccess());
 
         verify(assessorFormInputResponseRestService, only()).updateFormInputResponse(assessorFormInputResponse);

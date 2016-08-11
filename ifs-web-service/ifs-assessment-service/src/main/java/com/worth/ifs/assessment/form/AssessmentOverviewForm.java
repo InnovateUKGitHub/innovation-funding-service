@@ -4,6 +4,7 @@ package com.worth.ifs.assessment.form;
 import com.worth.ifs.application.form.Form;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 
@@ -14,6 +15,7 @@ import java.util.List;
  */
 public class AssessmentOverviewForm extends Form {
 
+    @NotEmpty(message="Please enter a reason")
     private String rejectReason;
     private String rejectComment;
     private BindingResult bindingResult;

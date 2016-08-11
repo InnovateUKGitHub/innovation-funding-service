@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Confirm Rejection'" th:remove="tag"/>
+</head>
+
+<body th:with="context='assessment'" class="reject-invitation-confirm">
+<div th:include="fragments/layout :: body-start" th:remove="tag"/>
+<div th:include="fragments/layout :: global-header" th:remove="tag"/>
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag"/>
+
+    <div class="page-title">
+        <div th:include="fragments/elements :: application-title (application=${model.application})" th:remove="tag" />
+        <h1 class="heading-xlarge">Confirm Rejection</h1>
+    </div>
+
+    <p>If you have discovered a conflict of interest or are unable to review this assessment, you can return this
+        application to Innovate UK.</p>
+    <form method="post" th:action="@{/{assessmentId}/reject(assessmentId=${model.assessmentId})}" th:object="${form}"
+          novalidate="novalidate">
+        <div class="form-group">
+            <label class="form-label">Please select a reason for rejecting the assessment</label>
+            <select class="form-control" required="required" th:field="*{rejectReason}">
+                <option value="">Select a reason</option>
+                <option value="not-available">Not available</option>
+                <option value="conflict-of-interest">Conflict of interest</option>
+                <option value="not-my-area-of-interest">Not my area of expertise</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="form-label">Use this space to provide more information</label>
+            <textarea class="form-control width-full" rows="4" th:field="*{rejectComment}"></textarea>
+        </div>
+        <button class="button large button-warning extra-margin" name="submit-app-details">Reject</button>
+        <a role="button" tabindex="1" class="button buttonlink large"
+           th:href="@{/{assessmentId}(assessmentId=${model.assessmentId})}">Cancel</a>
+    </form>
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag"/>
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag"/>
+<div th:include="fragments/layout :: body-end" th:remove="tag"/>
+</body>
+</html>
