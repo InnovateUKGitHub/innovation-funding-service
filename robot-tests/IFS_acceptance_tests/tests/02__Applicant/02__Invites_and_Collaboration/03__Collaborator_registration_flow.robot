@@ -34,12 +34,12 @@ User cannot continue if an organisation type is not selected
     [Tags]
     Given browser validations have been disabled
     When the user clicks the button/link    jQuery=.button:contains("Continue")
-    Then the user should see the text in the page    may not be null
+    Then the user should see the text in the page    Please select an organisation type
     Given the user selects the radio button    organisationType    2
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     Given browser validations have been disabled
     And the user clicks the button/link    jQuery=.button:contains("Continue")
-    Then the user should see the text in the page    may not be null
+    Then the user should see the text in the page    Please select an organisation type
 
 User is able to select only one type
     [Documentation]    INFUND-1005
@@ -113,7 +113,7 @@ Catapult search (empty, invalid & valid inputs)
     When the user clicks the button/link    jQuery=.button:contains("Continue")
     And the user should see the text in the page    Catapult
     When the user clicks the button/link    jQuery=.button:contains("Continue")
-    Then the user should see the text in the page    ${empty_field_warning_message}
+    Then the user should see the text in the page    An organisation name is required
     When the user enters text to a text field    name=organisationName    Digital Catapult
 #   Following disabled temporarily.  See INFUND-4497
 #   When the user clicks the button/link    jQuery=.button:contains("Find UK address")

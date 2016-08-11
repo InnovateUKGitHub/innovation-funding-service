@@ -57,7 +57,7 @@ Empty company name field
     Given the user should see the text in the page    Create your account
     When the user enters text to a text field    id=organisationSearchName    ${EMPTY}
     And the user clicks the button/link    id=org-search
-    Then the user should see an error    ${empty_field_warning_message}
+    Then the user should see an error    Please enter an organisation name to search
 
 Other characters
     [Documentation]    INFUND-2960
