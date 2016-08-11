@@ -10,7 +10,6 @@ import com.worth.ifs.commons.service.ServiceFailure;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.invite.domain.ApplicationInvite;
-import com.worth.ifs.invite.domain.Invite;
 import com.worth.ifs.invite.domain.InviteOrganisation;
 import com.worth.ifs.invite.mapper.InviteMapper;
 import com.worth.ifs.invite.mapper.InviteOrganisationMapper;
@@ -175,7 +174,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
     @Override
     public ServiceResult<ApplicationInvite> findOne(Long id) {
-        return find(applicationInviteRepository.findOne(id), notFoundError(Invite.class, id));
+        return find(applicationInviteRepository.findOne(id), notFoundError(ApplicationInvite.class, id));
     }
 
     @Override

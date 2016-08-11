@@ -2,6 +2,7 @@ package com.worth.ifs.invite.domain;
 
 import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.user.domain.User;
+import org.hibernate.annotations.DiscriminatorOptions;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
@@ -22,6 +23,7 @@ import javax.persistence.*;
 @DiscriminatorColumn(name="type", discriminatorType=DiscriminatorType.STRING)
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @Entity
+@DiscriminatorOptions(force = true)
 public abstract class Invite<T extends ProcessActivity, I extends Invite<T,I>> {
     private static final CharSequence HASH_SALT = "b80asdf00poiasd07hn";
 
