@@ -16,8 +16,8 @@ import java.util.Set;
 public interface InviteProjectService {
 
 
-    @PreFilter(filterTarget = "inviteResources", value = "hasPermission(filterObject, 'SAVE_PROJECT_INVITE')")
-    ServiceResult<Void> saveFinanceContactInvite(@P("inviteResource") InviteProjectResource inviteResource);
+    @PreAuthorize("hasPermission(#inviteProjectResource, 'SAVE_PROJECT_INVITE')")
+    ServiceResult<Void> saveFinanceContactInvite(@P("inviteProjectResource") InviteProjectResource inviteProjectResource);
 
     @PostFilter("hasPermission(filterObject, 'READ_PROJECT_INVITE')")
     ServiceResult<List<InviteProjectResource>> getInvitesByProject(Long projectId);
@@ -26,7 +26,7 @@ public interface InviteProjectService {
     @SecuredBySpring(value = "ACCEPT_INVITE",
             description = "The System Registration user can accept an invite for a given hash",
             additionalComments = "The hash should be unguessable so the only way to successfully call this method would be to have been given the hash in the first place")
-    ServiceResult<Void> acceptInvite(String inviteHash, Long userId);
+    ServiceResult<Void> acceptProjectInvite(String inviteHash, Long userId);
 
     @PreAuthorize("hasAuthority('system_registrar')")
     @SecuredBySpring(value = "READ_INVITE_ON_HASH",

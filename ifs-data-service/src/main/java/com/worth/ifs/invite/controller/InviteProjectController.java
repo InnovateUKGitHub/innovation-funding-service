@@ -33,8 +33,8 @@ public class InviteProjectController {
 
 
     @RequestMapping(value = "/save-finance-contact-invite", method = RequestMethod.PUT)
-    public RestResult<Void> saveProjectInvites(@RequestBody @Valid InviteProjectResource inviteResource) {
-        return inviteProjectService.saveFinanceContactInvite(inviteResource).
+    public RestResult<Void> saveProjectInvites(@RequestBody @Valid InviteProjectResource inviteProjectResource) {
+        return inviteProjectService.saveFinanceContactInvite(inviteProjectResource).
                 toPutResponse();
     }
 
@@ -50,7 +50,7 @@ public class InviteProjectController {
 
     @RequestMapping(value = "/acceptInvite/{hash}/{userId}", method = RequestMethod.POST)
     public RestResult<Void> acceptInvite( @PathVariable("hash") String hash, @PathVariable("userId") Long userId) {
-        return inviteProjectService.acceptInvite(hash, userId).toPutResponse();
+        return inviteProjectService.acceptProjectInvite(hash, userId).toPostResponse();
     }
 
     @RequestMapping(value = "/checkExistingUser/{hash}", method = RequestMethod.GET)

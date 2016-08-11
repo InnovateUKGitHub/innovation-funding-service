@@ -37,7 +37,6 @@ public class ProjectInvitePermissionRules extends BasePermissionRules {
     }
 
 
-
     private boolean isUserPartnerOnProjectWithinSameOrganisation(final InviteProjectResource invite, UserResource user){
         if (invite.getProject() != null && invite.getOrganisation() != null) {
             final Project project = projectRepository.findOneByApplicationId(invite.getProject());
@@ -52,10 +51,6 @@ public class ProjectInvitePermissionRules extends BasePermissionRules {
     }
 
     private boolean isUserMemberOfProjectTeam(final InviteProjectResource invite, UserResource user) {
-        if (invite.getProject() != null) {
-            final Project project = projectRepository.findOne(invite.getProject());
-            return isPartner(project.getId(), user.getId());
-        }
-        return false;
+            return isPartner(invite.getProject(), user.getId());
     }
 }

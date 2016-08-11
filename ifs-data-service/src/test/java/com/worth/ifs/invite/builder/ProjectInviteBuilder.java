@@ -1,8 +1,11 @@
 package com.worth.ifs.invite.builder;
 
 import com.worth.ifs.BaseBuilder;
+import com.worth.ifs.Builder;
+import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.invite.domain.ProjectInvite;
 import com.worth.ifs.project.domain.Project;
+import com.worth.ifs.user.domain.Organisation;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -26,6 +29,23 @@ public class ProjectInviteBuilder extends BaseBuilder<ProjectInvite, ProjectInvi
     protected ProjectInviteBuilder createNewBuilderWithActions(List<BiConsumer<Integer, ProjectInvite>> actions) {
         return new ProjectInviteBuilder(actions);
     }
+
+    public ProjectInviteBuilder withProject(Builder<Project, ?> project) {
+        return withProject(project.build());
+    }
+
+    public ProjectInviteBuilder withProject(Project... projects) {
+        return withArray((project, invite) -> invite.setTarget(project), projects);
+    }
+
+    public ProjectInviteBuilder withOrganisation(Builder<Organisation, ?> organisation) {
+        return withOrganisation(organisation.build());
+    }
+
+    public ProjectInviteBuilder withOrganisation(Organisation... organisations) {
+        return withArray((organisation, invite) -> invite.setOrganisation(organisation), organisations);
+    }
+
 
 
     @Override

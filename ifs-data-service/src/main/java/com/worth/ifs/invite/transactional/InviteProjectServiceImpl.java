@@ -134,7 +134,7 @@ public class InviteProjectServiceImpl extends BaseTransactionalService implement
     }
 
     @Override
-    public ServiceResult<Void> acceptInvite(String inviteHash, Long userId) {
+    public ServiceResult<Void> acceptProjectInvite(String inviteHash, Long userId) {
         LOG.error(String.format("acceptInvite %s => %s ", inviteHash, userId));
         return find(invite(inviteHash), user(userId)).andOnSuccess((invite, user) -> {
 
@@ -176,17 +176,6 @@ public class InviteProjectServiceImpl extends BaseTransactionalService implement
         return true;
     }
 
-
-    private boolean handleInviteSuccess(ProjectInvite invite) {
-        invite.setStatus(InviteStatusConstants.SEND);
-        inviteProjectRepository.save(invite);
-        return true;
-    }
-
-    private boolean handleInviteError(ProjectInvite i, ServiceFailure failure) {
-        LOG.error(String.format("Invite failed %s , %s (error count: %s)", i.getId(), i.getEmail(), failure.getErrors().size()));
-        return true;
-    }
 
     private String getInviteUrl(String baseUrl, ProjectInvite invite) {
         return String.format("%s/accept-invite/%s", baseUrl, invite.getHash());
