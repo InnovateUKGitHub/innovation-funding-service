@@ -27,8 +27,8 @@
     <hr/>
 
     <ul>
-        <li th:each="orgDetails : ${model.partnerOrganisationIdsAndNames}">
-            <a href="#" th:text="${orgDetails.value}">Partner Organisation Name</a>
+        <li th:each="orgDetails : ${model.partnerOrganisationDetails}">
+            <a href="#" th:text="${orgDetails.name}">Partner Organisation Name</a>
         </li>
     </ul>
 

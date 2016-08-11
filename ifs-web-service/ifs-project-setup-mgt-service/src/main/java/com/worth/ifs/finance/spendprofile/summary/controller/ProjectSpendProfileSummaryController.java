@@ -20,9 +20,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.function.Supplier;
 
+import static com.worth.ifs.util.CollectionFunctions.mapWithIndex;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -47,14 +49,7 @@ public class ProjectSpendProfileSummaryController {
 
     @RequestMapping(value = "/summary", method = GET)
     public String viewSpendProfileSummary(@PathVariable Long projectId, Model model) {
-
-        ProjectResource project = projectService.getById(projectId);
-        ApplicationResource application = applicationService.getById(project.getApplication());
-        CompetitionSummaryResource competitionSummary = applicationSummaryService.getCompetitionSummaryByCompetitionId(application.getCompetition());
-        List<OrganisationResource> partnerOrganisations = projectService.getPartnerOrganisationsForProject(projectId);
-
-        model.addAttribute("model", new ProjectSpendProfileSummaryViewModel(projectId, competitionSummary, partnerOrganisations));
-        return "project/finance/spend-profile/summary";
+        return doViewSpendProfileSummary(projectId, model, new ProjectSpendProfileForm());
     }
 
     @RequestMapping(value = "/generate", method = POST)
@@ -71,15 +66,47 @@ public class ProjectSpendProfileSummaryController {
         );
     }
 
-    private String doViewSpendProfileSummary(@PathVariable Long projectId, Model model, ProjectSpendProfileForm form) {
+    private String doViewSpendProfileSummary(Long projectId, Model model, ProjectSpendProfileForm form) {
+
+        ProjectSpendProfileSummaryViewModel viewModel = populateSpendProfileViewModel(projectId);
+
+        model.addAttribute("model", viewModel);
+        model.addAttribute("form", form);
+
+        return "project/finance/spend-profile/summary";
+    }
+
+    // TODO DW - a lot of this information will not be available in reality until the Finance Checks story is available,
+    // so supporting the page with dummy data until then in order to unblock development on other Spend Profile stories
+    private ProjectSpendProfileSummaryViewModel populateSpendProfileViewModel(Long projectId) {
+
         ProjectResource project = projectService.getById(projectId);
         ApplicationResource application = applicationService.getById(project.getApplication());
         CompetitionSummaryResource competitionSummary = applicationSummaryService.getCompetitionSummaryByCompetitionId(application.getCompetition());
         List<OrganisationResource> partnerOrganisations = projectService.getPartnerOrganisationsForProject(projectId);
 
-        model.addAttribute("model", new ProjectSpendProfileSummaryViewModel(projectId, competitionSummary, partnerOrganisations));
-        model.addAttribute("form", form);
-        return "project/finance/spend-profile/summary";
+        List<ProjectSpendProfileSummaryViewModel.SpendProfileOrganisationRow> organisationRows = mapWithIndex(partnerOrganisations, (i, org) ->
+
+                new ProjectSpendProfileSummaryViewModel.SpendProfileOrganisationRow(
+                    org.getId(), org.getName(),
+                    getEnumForIndex(ProjectSpendProfileSummaryViewModel.Viability.class, i),
+                    getEnumForIndex(ProjectSpendProfileSummaryViewModel.RagStatus.class, i),
+                    getEnumForIndex(ProjectSpendProfileSummaryViewModel.Eligibility.class, i),
+                    getEnumForIndex(ProjectSpendProfileSummaryViewModel.RagStatus.class, i + 1),
+                    getEnumForIndex(ProjectSpendProfileSummaryViewModel.QueriesRaised.class, i))
+        );
+
+        return new ProjectSpendProfileSummaryViewModel(
+                projectId, competitionSummary, organisationRows,
+                project.getTargetStartDate(), project.getDurationInMonths().intValue(),
+                BigDecimal.valueOf(400000), BigDecimal.valueOf(200000),
+                BigDecimal.valueOf(0),
+                BigDecimal.valueOf(50));
+    }
+
+    private <T extends Enum> T getEnumForIndex(Class<T> enums, int index) {
+        T[] enumConstants = enums.getEnumConstants();
+        return enumConstants[index % enumConstants.length];
     }
 
     private String redirectToViewSpendProfile(Long projectId) {
