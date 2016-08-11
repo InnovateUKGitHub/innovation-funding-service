@@ -45,11 +45,11 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         Organisation organisation1 = newOrganisation().build();
         Organisation organisation2 = newOrganisation().build();
 
-        CostCategory type1Cat1 = new CostCategory(LABOUR.getType());
-        CostCategory type1Cat2 = new CostCategory(MATERIALS.getType());
+        CostCategory type1Cat1 = new CostCategory(LABOUR.getName());
+        CostCategory type1Cat2 = new CostCategory(MATERIALS.getName());
         CostCategoryType matchingCostCategoryType1 = new CostCategoryType("Type 1", new CostCategoryGroup("Group 1", asList(type1Cat1, type1Cat2)));
 
-        CostCategory type2Cat1 = new CostCategory(LABOUR.getType());
+        CostCategory type2Cat1 = new CostCategory(LABOUR.getName());
         CostCategoryType matchingCostCategoryType2 = new CostCategoryType("Type 2", new CostCategoryGroup("Group 2", singletonList(type2Cat1)));
 
         // set basic repository lookup expectations

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Map;
 
+import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
 /**
@@ -32,8 +33,13 @@ public class ByApplicationFinanceCostCategorySummaryStrategy implements SpendPro
                 financeRowService.financeDetails(project.getApplication(), organisationId).andOnSuccessReturn(finances -> {
 
             Map<FinanceRowType, FinanceRowCostCategory> financeOrganisationDetails = finances.getFinanceOrganisationDetails();
-            return simpleMap(financeOrganisationDetails, (category, costs) ->
-                    new SpendProfileCostCategorySummary(category, costs.getTotal(), project.getDurationInMonths()));
+
+            Map<FinanceRowType, FinanceRowCostCategory> spendRows =
+                    simpleFilter(financeOrganisationDetails, (category, costs) -> category.isSpendCostCategory());
+
+            return simpleMap(spendRows, (category, costs) ->
+                new SpendProfileCostCategorySummary(category, costs.getTotal(), project.getDurationInMonths()));
+
         }));
     }
 }

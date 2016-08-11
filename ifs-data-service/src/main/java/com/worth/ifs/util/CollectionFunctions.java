@@ -229,6 +229,20 @@ public final class CollectionFunctions {
      * A simple wrapper around a 1-stage mapping function, to remove boilerplate from production code
      *
      * @param map
+     * @param filterFn
+     * @param <T>
+     * @param <R>
+     * @return
+     */
+    public static <T, R> Map<T, R> simpleFilter(Map<T, R> map, BiPredicate<T, R> filterFn) {
+        return map.entrySet().stream().filter(entry -> filterFn.test(entry.getKey(), entry.getValue())).collect(
+                toMap(Entry::getKey, Entry::getValue));
+    }
+
+    /**
+     * A simple wrapper around a 1-stage mapping function, to remove boilerplate from production code
+     *
+     * @param map
      * @param mappingFn
      * @param <T>
      * @param <R>

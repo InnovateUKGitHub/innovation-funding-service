@@ -48,7 +48,9 @@ public class ByApplicationFinanceCostCategoriesStrategy implements CostCategoryT
 
     private CostCategoryType getOrCreateSupportingCostCategoryType(Set<FinanceRowType> summaryPerCategory) {
 
-        List<String> categoryNamesToSupport = simpleMap(summaryPerCategory, FinanceRowType::getType);
+        List<FinanceRowType> spendRows = simpleFilter(summaryPerCategory, FinanceRowType::isSpendCostCategory);
+
+        List<String> categoryNamesToSupport = simpleMap(spendRows, FinanceRowType::getName);
 
         List<CostCategoryType> existingCostCategoryTypes = costCategoryTypeRepository.findAll();
 

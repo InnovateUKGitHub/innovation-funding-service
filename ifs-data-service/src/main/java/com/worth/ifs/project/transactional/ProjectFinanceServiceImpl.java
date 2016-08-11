@@ -97,8 +97,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
         List<List<Cost>> spendProfileCostsPerCategory = simpleMap(summaryPerCategory, summary -> {
 
-            CostCategory matchingCategory = simpleFindFirst(costCategoryType.getCostCategories(),
-                    cat -> cat.getName().equals(summary.getCategory().getType())).get();
+            CostCategory matchingCategory = findMatchingCostCategory(costCategoryType, summary);
 
             return IntStream.range(0, project.getDurationInMonths().intValue()).mapToObj(i -> {
 
@@ -118,11 +117,13 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
         return simpleMap(summaryPerCategory, summary -> {
 
-            CostCategory matchingCategory = simpleFindFirst(costCategoryType.getCostCategories(),
-                    cat -> cat.getName().equals(summary.getCategory().getType())).get();
-
+            CostCategory matchingCategory = findMatchingCostCategory(costCategoryType, summary);
             return new Cost(summary.getTotal().setScale(0, ROUND_HALF_UP)).withCategory(matchingCategory);
         });
+    }
+
+    private CostCategory findMatchingCostCategory(CostCategoryType costCategoryType, SpendProfileCostCategorySummary summary) {
+        return simpleFindFirst(costCategoryType.getCostCategories(), cat -> cat.getName().equals(summary.getCategory().getName())).get();
     }
 
     private Supplier<ServiceResult<Project>> project(Long id) {
