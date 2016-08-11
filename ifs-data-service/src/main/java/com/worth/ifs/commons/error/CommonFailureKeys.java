@@ -100,6 +100,12 @@ public enum CommonFailureKeys implements ErrorTemplate {
      */
     PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED("A Monitoring Officer cannot be assigned to a Project until its Project Details have been submitted", BAD_REQUEST),
 
+    /**
+     * Assessment
+     */
+    ASSESSMENT_REJECTION_FAILED("Only assessments which are Open can be rejected.", BAD_REQUEST),
+    ASSESSMENT_RECOMMENDATION_FAILED("Only assessments which are Open can be recommended.", BAD_REQUEST),
+
     /*
      * Forms
      */

@@ -21,7 +21,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.concurrent.ExecutionException;
+import java.util.function.Supplier;
 
+import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
+import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 import static java.lang.String.format;
 
 @Controller
@@ -60,13 +63,21 @@ public class AssessmentOverviewController extends AbstractApplicationController 
 
     @RequestMapping(method = RequestMethod.POST, value = "/reject")
     public String rejectInvitation(
+            Model model,
             @Valid @ModelAttribute(MODEL_ATTRIBUTE_FORM) AssessmentOverviewForm form,
             @SuppressWarnings("unused") BindingResult bindingResult,
             ValidationHandler validationHandler,
             @PathVariable("assessmentId") Long assessmentId) {
-        AssessmentResource assessment = assessmentService.getById(assessmentId);
-        ServiceResult<Void> result = assessmentService.rejectInvitation(assessment.getId(), form.getRejectReason(), form.getRejectComment());
-        return redirectToAssessorCompetitionDashboard(assessment.getCompetition());
+        Supplier<String> failureView = () -> doViewRejectInvitationConfirm(model, assessmentId);
+
+        return validationHandler.failNowOrSucceedWith(failureView, () -> {
+
+            AssessmentResource assessment = assessmentService.getById(assessmentId);
+            ServiceResult<Void> updateResult = assessmentService.rejectInvitation(assessment.getId(), form.getRejectReason(), form.getRejectComment());
+
+            return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors()).
+                    failNowOrSucceedWith(failureView, () -> redirectToAssessorCompetitionDashboard(assessment.getCompetition()));
+        });
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/reject/confirm")
@@ -74,7 +85,10 @@ public class AssessmentOverviewController extends AbstractApplicationController 
             Model model,
             @ModelAttribute(MODEL_ATTRIBUTE_FORM) AssessmentOverviewForm form,
             @PathVariable("assessmentId") Long assessmentId) {
+        return doViewRejectInvitationConfirm(model, assessmentId);
+    }
 
+    private String doViewRejectInvitationConfirm(Model model, Long assessmentId) {
         model.addAttribute("model", rejectAssessmentModelPopulator.populateModel(assessmentId));
         return "assessment/reject-invitation-confirm";
     }

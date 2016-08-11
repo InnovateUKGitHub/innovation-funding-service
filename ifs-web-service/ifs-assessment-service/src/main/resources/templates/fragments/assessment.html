@@ -140,6 +140,15 @@
 <!-- ======== Assessment - reject assessment form for modal and non-js page ======= -->
 <div th:fragment="assessment-reject-application-form (assessmentId)">
     <form action="#" th:action="@{/{assessmentId}/reject(assessmentId=${assessmentId})}" method="post" th:object="${form}" novalidate="novalidate">
+        <div class="error-summary" th:if="${#fields.hasErrors('global')}">
+            <h2 class="heading-medium error-summary-heading">
+                We were unable to reject the assessment:
+            </h2>
+            <ul class="error-summary-list">
+                <li th:errors="*{global}" />
+            </ul>
+        </div>
+
         <div class="form-group">
             <label class="form-label" th:for="${#ids.next('rejectReason')}">Please select a reason for rejecting the application</label>
             <select class="form-control" required="required" th:field="*{rejectReason}">
