@@ -179,8 +179,6 @@ public class RegistrationController {
                                      HttpServletRequest request,
                                      Model model) {
 
-        LOG.warn("registerFormSubmit");
-
         boolean setInviteEmailAddress;
         
         try {
