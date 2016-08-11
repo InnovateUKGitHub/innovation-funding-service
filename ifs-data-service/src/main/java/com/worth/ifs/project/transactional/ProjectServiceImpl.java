@@ -415,6 +415,8 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
                         pu.setProject(project);
                         pu.setUser(user);
                         projectUserRepository.save(pu);
+                        user.addUserOrganisation(organisation);
+                        userRepository.save(user);
                         return serviceSuccess();
                     }
                 });
