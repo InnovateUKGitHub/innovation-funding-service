@@ -21,7 +21,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.NativeWebRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -258,9 +257,8 @@ public class ProjectController {
 
     @RequestMapping(value = "/{projectId}/partner/documents/ready", method = GET)
     public RestResult<Boolean>isOtherDocumentsSubmitAllowed(@PathVariable("projectId") final Long projectId,
-                                                            NativeWebRequest springRequest) {
+                                                            HttpServletRequest request) {
 
-        HttpServletRequest request = springRequest.getNativeRequest(HttpServletRequest.class);
         UserResource authenticatedUser = userAuthenticationService.getAuthenticatedUser(request);
         return projectService.isOtherDocumentsSubmitAllowed(projectId, authenticatedUser.getId()).toGetResponse();
     }
