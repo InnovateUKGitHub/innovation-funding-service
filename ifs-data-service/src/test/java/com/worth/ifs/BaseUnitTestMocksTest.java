@@ -18,6 +18,7 @@ import com.worth.ifs.application.transactional.AssessorFeedbackService;
 import com.worth.ifs.application.transactional.QuestionService;
 import com.worth.ifs.assessment.mapper.AssessmentMapper;
 import com.worth.ifs.assessment.mapper.AssessorFormInputResponseMapper;
+import com.worth.ifs.assessment.mapper.CompetitionInviteMapper;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.assessment.repository.AssessorFormInputResponseRepository;
 import com.worth.ifs.assessment.transactional.AssessmentService;
@@ -187,7 +188,10 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected ApplicationInviteRepository applicationInviteRepositoryMock;
 
     @Mock
-    protected CompetitionInviteRepository competitionInviteRepository;
+    protected CompetitionInviteRepository competitionInviteRepositoryMock;
+
+    @Mock
+    protected CompetitionInviteMapper competitionInviteMapperMock;
 
     @Mock
     protected AddressLookupService addressLookupServiceMock;

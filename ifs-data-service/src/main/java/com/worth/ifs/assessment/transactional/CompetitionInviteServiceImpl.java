@@ -26,7 +26,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     @Override
     public ServiceResult<CompetitionInviteResource> openInvite(String inviteHash) {
-        return getByHash(inviteHash).andOnSuccessReturn(i -> mapper.mapToResource(openInvite(i)));
+        return getByHash(inviteHash).andOnSuccessReturn(invite -> mapper.mapToResource(openInvite(invite)));
     }
 
     private ServiceResult<CompetitionInvite> getByHash(String inviteHash) {
