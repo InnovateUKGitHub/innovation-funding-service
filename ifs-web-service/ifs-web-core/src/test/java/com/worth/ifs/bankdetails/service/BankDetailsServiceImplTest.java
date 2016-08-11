@@ -1,5 +1,6 @@
 package com.worth.ifs.bankdetails.service;
 
+import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.bankdetails.BankDetailsService;
 import com.worth.ifs.bankdetails.BankDetailsServiceImpl;
 import com.worth.ifs.bankdetails.resource.BankDetailsResource;
@@ -22,10 +23,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class BankDetailsServiceImplTest {
-
-    private BankDetailsService service;
-
+public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsService> {
     @Mock
     private BankDetailsRestService bankDetailsRestService;
 
@@ -33,9 +31,13 @@ public class BankDetailsServiceImplTest {
     private BankDetailsResource bankDetailsResource;
     private OrganisationResource organisationResource;
 
+    @Override
+    protected BankDetailsService supplyServiceUnderTest() {
+        return new BankDetailsServiceImpl(bankDetailsRestService);
+    }
+
     @Before
     public void setUp(){
-        service = new BankDetailsServiceImpl(bankDetailsRestService);
         projectResource = newProjectResource().build();
         bankDetailsResource = newBankDetailsResource().build();
         organisationResource = newOrganisationResource().build();
