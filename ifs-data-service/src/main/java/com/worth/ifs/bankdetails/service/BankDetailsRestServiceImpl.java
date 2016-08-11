@@ -11,7 +11,7 @@ public class BankDetailsRestServiceImpl extends BaseRestService implements BankD
     private String projectRestURL = "/project";
 
     @Override
-    public RestResult<BankDetailsResource> getById(final Long projectId, final Long bankDetailsId){
+    public RestResult<BankDetailsResource> getByProjectIdAndBankDetailsId(final Long projectId, final Long bankDetailsId){
         return getWithRestResult(projectRestURL + "/" + projectId + "/bank-details?bankDetailsId=" + bankDetailsId, BankDetailsResource.class);
     }
 
