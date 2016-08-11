@@ -70,11 +70,11 @@
       <tbody>
         <tr th:each="orgDetails : ${model.partnerOrganisationDetails}">
             <th scope="row" th:text="${orgDetails.name}" />
-            <td class="aligncentre"><a href="#"  th:text="${#strings.toLowerCase(orgDetails.viability.name())}" /></td>
+            <td class="aligncentre"><a href="#" th:text="${#strings.toLowerCase(orgDetails.viability.name())}" /></td>
             <td class="aligncentre" th:text="${#strings.toLowerCase(orgDetails.viabilityRagStatus.name())}"></td>
-            <td class="aligncentre"><a href="#"  th:text="${#strings.toLowerCase(orgDetails.eligibility.name())}" /></td>
+            <td class="aligncentre"><a href="#" th:text="${#strings.toLowerCase(orgDetails.eligibility.name())}" /></td>
             <td class="aligncentre" th:text="${#strings.toLowerCase(orgDetails.eligibilityRagStatus.name())}"></td>
-            <td class="aligncentre"><a href="#"  th:text="${orgDetails.queriesRaised.name() == AWAITING_RESPONSE ? 'Awaiting response' : 'view'}" /></td>
+            <td class="aligncentre"><a href="#" th:text="${orgDetails.queriesRaised.name() == AWAITING_RESPONSE ? 'Awaiting response' : 'view'}" /></td>
             <td class="aligncentre"><a href="#">View</a></td>
         </tr>
       </tbody>
@@ -88,7 +88,8 @@
         <p>To get your spend profile, both viability and eligibility sections above must be approved for all partners.</p>
         <p>This will then create individual flat profile spends for partners. Partners can edit their profile spends during the course of the project.</p>
 
-        <button class="button extra-margin">Generate Spend Profile</button>
+        <a href="#" data-js-modal="generate-spend-profile" class="button">Generate Spend Profile</a>
+        <div th:include="fragments/modals :: generate-spend-profile" th:remove="tag" />
     </form>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
