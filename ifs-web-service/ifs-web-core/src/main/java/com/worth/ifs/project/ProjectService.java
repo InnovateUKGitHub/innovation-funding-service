@@ -7,7 +7,6 @@ import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
-import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 import org.springframework.core.io.ByteArrayResource;
 
@@ -25,8 +24,6 @@ public interface ProjectService {
     List<OrganisationResource> getPartnerOrganisationsForProject(Long projectId);
 
     ProjectResource getById(Long projectId);
-
-    SpendProfileResource getSpendProfile(Long projectId, Long organisationId);
 
     ProjectResource getByApplicationId(Long applicationId);
 

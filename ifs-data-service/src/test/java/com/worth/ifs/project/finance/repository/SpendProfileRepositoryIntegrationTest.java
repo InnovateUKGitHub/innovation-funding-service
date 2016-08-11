@@ -222,4 +222,44 @@ public class SpendProfileRepositoryIntegrationTest extends BaseRepositoryIntegra
         assertEquals(Integer.valueOf(1), retrievedFigures.getCosts().get(0).getCostTimePeriod().get().getDurationAmount());
         assertEquals(MONTH, retrievedFigures.getCosts().get(0).getCostTimePeriod().get().getDurationUnit());
     }
+
+    @Test
+    @Rollback
+    public void test_findOneByProjectIdAndOrganisationId() {
+
+        List<CostCategory> costCategories = asList(new CostCategory("Labour"), new CostCategory("Materials"));
+        CostCategoryGroup costCategoryGroup = new CostCategoryGroup("Industrial Cost Categories group", costCategories);
+        CostCategoryType costCategoryType = new CostCategoryType("CR&D Industrial Cost Categories", costCategoryGroup);
+        costCategoryTypeRepository.save(costCategoryType);
+
+        Application application = applicationRepository.findOne(1L);
+
+        Project project = new Project(null, application, null, null, null, "A name", null);
+        projectRepository.save(project);
+
+        Organisation organisation = organisationRepository.findOne(1L);
+
+        List<Cost> eligibleCosts = asList(new Cost("1.20"), new Cost("3.40"));
+        List<Cost> spendProfileFigures = asList(new Cost("5.60"), new Cost("7.80"));
+
+        SpendProfile saved = repository.save(new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileFigures));
+
+        // clear the Hibernate cache
+        flushAndClearSession();
+
+        // and retrieve from the db again - ensure its value is retained
+        SpendProfile retrieved = repository.findOneByProjectIdAndOrganisationId(project.getId(), organisation.getId());
+        assertNotSame(saved, retrieved);
+        assertEquals(costCategoryType.getId(), retrieved.getCostCategoryType().getId());
+        assertEquals(project.getId(), retrieved.getProject().getId());
+        assertEquals(organisation.getId(), retrieved.getOrganisation().getId());
+
+        List<BigDecimal> expectedEligibleCostValues = simpleMap(eligibleCosts, Cost::getValue);
+        List<BigDecimal> actualEligibleCostValues = simpleMap(retrieved.getEligibleCosts().getCosts(), Cost::getValue);
+        assertEquals(expectedEligibleCostValues, actualEligibleCostValues);
+
+        List<BigDecimal> expectedSpendProfileCostValues = simpleMap(spendProfileFigures, Cost::getValue);
+        List<BigDecimal> actualSpendProfileCostValues = simpleMap(retrieved.getSpendProfileFigures().getCosts(), Cost::getValue);
+        assertEquals(expectedSpendProfileCostValues, actualSpendProfileCostValues);
+    }
 }

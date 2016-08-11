@@ -60,8 +60,6 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
 
     private MonitoringOfficerResource monitoringOfficerResource;
 
-    private InviteResource inviteResource;
-
     private RestDocumentationResultHandler document;
 
     @Before
@@ -126,21 +124,6 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
         mockMvc.perform(get("/project/").contentType(APPLICATION_JSON).accept(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(projectNumber)));
-    }
-
-    @Test
-    public void getSpendProfile() throws Exception {
-
-        Long projectId = 1L;
-        Long organisationId = 1L;
-
-        SpendProfileResource spendProfileResource = SpendProfileResourceBuilder.newSpendProfileResource().build();
-
-        when(projectServiceMock.getSpendProfile(projectId, organisationId)).thenReturn(serviceSuccess(spendProfileResource));
-
-        mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile", projectId, organisationId))
-                .andExpect(status().isOk())
-                .andExpect(content().string(new ObjectMapper().writeValueAsString(spendProfileResource)));
     }
 
     @Test

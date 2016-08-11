@@ -241,12 +241,6 @@ public final class CollectionFunctions {
 
     /**
      * A simple wrapper around a 1-stage mapping function, to remove boilerplate from production code
-     *
-     * @param map
-     * @param mappingFn
-     * @param <T>
-     * @param <R>
-     * @return
      */
     public static <S, T, R> List<R> simpleMap(Map<S, T> map, BiFunction<S, T, R> mappingFn) {
         return simpleMap(map.entrySet(), entry -> mappingFn.apply(entry.getKey(), entry.getValue()));
@@ -254,12 +248,31 @@ public final class CollectionFunctions {
 
     /**
      * A simple wrapper around a 1-stage mapping function, to remove boilerplate from production code
-     *
-     * @param list
-     * @param mappingFn
-     * @param <T>
-     * @param <R>
-     * @return
+     */
+    public static <S, T, R, U> Map<R, U> simpleMapKeyAndValue(Map<S, T> map, Function<S, R> keyMappingFn, Function<T, U> valueMappingFn) {
+
+        List<Pair<R, U>> list = simpleMap(map.entrySet(), entry ->
+            Pair.of(keyMappingFn.apply(entry.getKey()), valueMappingFn.apply(entry.getValue())));
+
+        return simpleToMap(list, Pair::getKey, Pair::getValue);
+    }
+
+    /**
+     * A simple wrapper around a 1-stage mapping function, to remove boilerplate from production code
+     */
+    public static <S, T, R> Map<R, T> simpleMapKey(Map<S, T> map, Function<S, R> mappingFn) {
+        return simpleMapKeyAndValue(map, mappingFn, value -> value);
+    }
+
+    /**
+     * A simple wrapper around a 1-stage mapping function, to remove boilerplate from production code
+     */
+    public static <S, T, R> Map<S, R> simpleMapValue(Map<S, T> map, Function<T, R> mappingFn) {
+        return simpleMapKeyAndValue(map, key -> key, mappingFn);
+    }
+
+    /**
+     * A simple wrapper around a 1-stage mapping function, to remove boilerplate from production code
      */
     public static <T, R> Set<R> simpleMapSet(Set<T> list, Function<T, R> mappingFn) {
         if (null == list || list.isEmpty()) {

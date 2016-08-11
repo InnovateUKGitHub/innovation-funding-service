@@ -77,6 +77,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
         assertEquals("", viewModel.getMonitoringOfficerName());
         assertFalse(viewModel.isFunded());
         assertNull(viewModel.getBankDetails());
+        assertEquals(organisationResource.getId(), viewModel.getOrganisationId());
     }
 
     @Test
