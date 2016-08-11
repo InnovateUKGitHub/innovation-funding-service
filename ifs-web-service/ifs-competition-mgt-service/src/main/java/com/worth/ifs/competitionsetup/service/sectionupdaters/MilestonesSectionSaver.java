@@ -1,25 +1,18 @@
 package com.worth.ifs.competitionsetup.service.sectionupdaters;
 
-import java.time.DateTimeException;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Stream;
-
-import com.worth.ifs.competitionsetup.form.MilestonesFormEntry;
-import com.worth.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-
 import com.worth.ifs.application.service.MilestoneService;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.MilestoneResource;
-import com.worth.ifs.competition.resource.MilestoneResource.MilestoneName;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.form.MilestonesForm;
+import com.worth.ifs.competitionsetup.form.MilestonesFormEntry;
+import com.worth.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * Competition setup section saver for the milestones section.
