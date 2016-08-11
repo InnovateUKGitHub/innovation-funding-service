@@ -92,6 +92,6 @@ public class SectionController {
 
     @RequestMapping("/getByCompetition/{competitionId}")
     public RestResult<List<SectionResource>> getSectionsByCompetitionId(@PathVariable("competitionId") final Long competitionId) {
-        return sectionService.getByCompetionId(competitionId).toGetResponse();
+        return sectionService.getByCompetitionId(competitionId).toGetResponse();
     }
 }

@@ -29,14 +29,14 @@ IFS.core.unsavedChanges = (function(){
             });
 
              jQuery(window).bind('beforeunload', function(e){
-                 var acceptanceTest = s.formelement.attr('data-test');
-                 if (typeof acceptanceTest !== typeof undefined && acceptanceTest !== false) {
-                     acceptanceTest = true;
-                 }
-                 else {
-                     acceptanceTest = false;
-                 }
                 var formEl = jQuery(s.formelement);
+                var acceptanceTest = formEl.attr('data-test');
+                if (typeof acceptanceTest !== typeof undefined && acceptanceTest !== false) {
+                  acceptanceTest = true;
+                }
+                else {
+                  acceptanceTest = false;
+                }
                 var serializedState =  formEl.serialize()==formEl.data('serializedFormState');
                 if(formSubmit === false && serializedState === false  && acceptanceTest === false){
                     return "Are you sure you want to leave this page? There are some unsaved changes...";

@@ -38,7 +38,7 @@ public class AssessorFormInputResponseServiceSecurityTest extends BaseServiceSec
         }
 
         @Override
-        public ServiceResult<Void> updateFormInputResponse(Long assessmentId, Long formInputId, String value) {
+        public ServiceResult<Void> updateFormInputResponse(AssessorFormInputResponseResource response) {
             return null;
         }
     }
