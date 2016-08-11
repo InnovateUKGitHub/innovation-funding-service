@@ -1,29 +1,16 @@
 package com.worth.ifs.application.domain;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderColumn;
-
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.application.resource.QuestionType;
 import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.finance.domain.Cost;
+import com.worth.ifs.finance.domain.FinanceRow;
 import com.worth.ifs.form.domain.FormInput;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Question defines database relations and a model to use client side and server side.
@@ -48,7 +35,6 @@ public class Question {
     private Integer priority;
 
     @OneToMany(mappedBy = "question")
-    @OrderColumn(name = "priority", nullable = false)
     private List<FormInput> formInputs = new ArrayList<>();
 
     @ManyToOne
@@ -63,7 +49,7 @@ public class Question {
     private List<QuestionStatus> questionStatuses;
 
     @OneToMany(mappedBy = "question")
-    private List<Cost> costs;
+    private List<FinanceRow> costs;
 
     private String questionNumber;
     
@@ -157,7 +143,7 @@ public class Question {
     }
 
     @JsonIgnore
-    public List<Cost> getCosts() {
+    public List<FinanceRow> getCosts() {
         return costs;
     }
 
@@ -198,7 +184,7 @@ public class Question {
         this.formInputs = formInputs;
     }
 
-    public void setCosts(List<Cost> costs) {
+    public void setCosts(List<FinanceRow> costs) {
         this.costs = costs;
     }
 

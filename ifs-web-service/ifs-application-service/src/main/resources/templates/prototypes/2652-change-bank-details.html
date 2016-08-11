@@ -25,6 +25,17 @@
 	
 	<hr />
 
+	<th:block th:if="${param.status != null and param.status[0] == 'noCompHouse'}">
+		<div class="panel-indent">
+			<h2 class="heading-medium no-margin-top">Business not registered on Companies House</h2>
+
+			<dl class="standard-definition-list">
+				<dt>Stated business type:</dt>
+				<dd>Limited Liability Partnership</dd>
+			</dl>
+		</div>
+	</th:block>
+
 
 	<p>Bank account details have been submitted to Innovate UK for use during the project <strong>Machine Learning In Robots (10294856)</strong></p>
 
@@ -71,7 +82,8 @@
 					
 					<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a> 
 
-            		<a href="/prototypes/2650-review-bank-details" class="button">Update bank account details</a>
+					<a th:href="${param.status != null and param.status[0] == 'noCompHouse' ? '/prototypes/2650-review-bank-details?status=noCompHouse':'/prototypes/2650-review-bank-details'}" class="button">Update bank account details</a>
+					
             	</div>
 
 	        </div>

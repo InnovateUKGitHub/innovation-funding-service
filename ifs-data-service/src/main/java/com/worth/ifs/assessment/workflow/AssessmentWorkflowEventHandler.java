@@ -36,12 +36,12 @@ public class AssessmentWorkflowEventHandler {
                 .build(), assessment.getProcessStatus());
     }
 
-    public void rejectInvitation(Long processRoleId, String currentProcessStatus, ProcessOutcome processOutcome) {
+    public void rejectInvitation(Long processRoleId, Assessment assessment, ProcessOutcome processOutcome) {
         stateHandler.handleEventWithState(MessageBuilder
                 .withPayload(AssessmentOutcomes.REJECT.getType())
-                .setHeader("processOutcome", processOutcome)
                 .setHeader("processRoleId", processRoleId)
-                .build(), currentProcessStatus);
+                .setHeader("processOutcome", processOutcome)
+                .build(), assessment.getProcessStatus());
     }
 
     public void recommend(Long processRoleId, Assessment assessment, ProcessOutcome processOutcome) {

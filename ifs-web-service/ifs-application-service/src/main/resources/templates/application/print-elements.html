@@ -34,7 +34,7 @@
     <h2 class="heading-small" th:if="${question.getName()}" th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.name}" />
     <div class="textarea-wrapped">
         <div class="readonly">
-            <p th:text="${response?.value}" class="js-md-to-html"></p>
+            <p th:text="${response?.value}" data-md-to-html=""></p>
         </div>
     </div>
 </div>
@@ -132,7 +132,7 @@
                     <div th:each="financeSubSection : ${financeSectionChildren}" th:with="question=${financeSectionChildrenQuestionsMap.get(financeSubSection.id).get(0)},formInput=${financeSectionChildrenQuestionFormInputs?.get(question?.id).get(0)}" th:remove="tag">
                         <div th:with="organisationFinance= ${organisationFinances.get(applicationOrganisation.id)}" th:if="${organisationFinances.containsKey(applicationOrganisation.id)}" th:remove="tag">
                             <td class="numeric"
-                                th:with="category = ${organisationFinance.getFinanceOrganisationDetails(T(com.worth.ifs.finance.resource.cost.CostType).fromString(formInput.formInputTypeTitle))}"
+                                th:with="category = ${organisationFinance.getFinanceOrganisationDetails(T(com.worth.ifs.finance.resource.cost.FinanceRowType).fromString(formInput.formInputTypeTitle))}"
                                 th:text="'£'+${#numbers.formatDecimal(category.total, 0, 'COMMA', 0, 'POINT')}">
                             </td>
                         </div>
@@ -148,7 +148,7 @@
                     </td>
                     <div th:remove="tag" th:each="financeSubSection : ${financeSectionChildren}"
                          th:with="question=${financeSectionChildrenQuestionsMap.get(financeSubSection.id).get(0)},formInput=${financeSectionChildrenQuestionFormInputs?.get(question?.id).get(0)}">
-                        <td class="numeric" th:each="financeTotal: ${financeTotalPerType.get(T(com.worth.ifs.finance.resource.cost.CostType).fromString(formInput.formInputTypeTitle))}"
+                        <td class="numeric" th:each="financeTotal: ${financeTotalPerType.get(T(com.worth.ifs.finance.resource.cost.FinanceRowType).fromString(formInput.formInputTypeTitle))}"
                             th:text="'£'+${#numbers.formatDecimal(financeTotal, 0, 'COMMA', 0, 'POINT')}" />
                     </div>
                 </tr>

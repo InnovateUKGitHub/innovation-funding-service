@@ -1,6 +1,6 @@
 package com.worth.ifs.workflow.controller;
 
-import com.worth.ifs.workflow.mapper.ProcessOutcomeMapper;
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
 import com.worth.ifs.workflow.transactional.ProcessOutcomeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +14,8 @@ public class ProcessOutcomeController {
     @Autowired
     private ProcessOutcomeService service;
 
-    @Autowired
-    private ProcessOutcomeMapper mapper;
-
     @RequestMapping("/{id}")
-    public ProcessOutcomeResource findById(@PathVariable("id") final Long id) {
-        return mapper.mapToResource(service.findOne(id));
+    public RestResult<ProcessOutcomeResource> findById(@PathVariable("id") Long id) {
+        return service.findOne(id).toGetResponse();
     }
 }

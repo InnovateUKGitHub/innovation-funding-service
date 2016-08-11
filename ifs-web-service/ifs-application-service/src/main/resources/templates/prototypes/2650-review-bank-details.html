@@ -25,15 +25,24 @@
 	
 	<hr />
 
-	
-		
-	<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
-	<p th:unless="${param.status != null and param.status[0] == 'accepted'}">The following bank account details have been submitted to Innovate UK by Aptrans Ltd for use during the project Technology Inspired, awaiting internal review from Innovate UK</p>
-	
-
 	<div class="success-alert" th:unless="${param.status == null or param.status[0] != 'accepted'}">
 		<h2 class="heading-small no-margin-top">The bank details provided have been approved.</h2>
 	</div>
+
+	<th:block th:if="${param.status != null and param.status[0] == 'noCompHouse' or param.type != null and param.type[0] == 'noCompHouse'}">
+		<div class="panel-indent">
+			<h2 class="heading-medium no-margin-top">Business not registered on Companies House</h2>
+
+			<dl class="standard-definition-list">
+				<dt>Stated business type:</dt>
+				<dd>Limited Liability Partnership</dd>
+			</dl>
+		</div>
+	</th:block>
+
+	<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
+	<p th:unless="${param.status != null and param.status[0] == 'accepted'}">The following bank account details have been submitted to Innovate UK by Aptrans Ltd for use during the project Technology Inspired, awaiting internal review from Innovate UK</p>
+
 
 	<h2 class="heading-medium">Finance contact</h2>
 
@@ -72,7 +81,7 @@
 					<span class="no" th:unless="${param.status == null or param.status[0] != 'error'}">4 / 9</span>
 				</td>
 			</tr>
-			<tr>
+			<tr th:unless="${param.status != null and param.status[0] == 'noCompHouse' or param.type != null and param.type[0] == 'noCompHouse'}">
 				<td>
 					Company number
 				</td>
@@ -83,6 +92,21 @@
 					<span class="yes">Match</span>
 				</td>
 			</tr>
+			
+			<th:block th:if="${param.status != null and param.status[0] == 'noCompHouse' or param.type != null and param.type[0] == 'noCompHouse'}">
+				<tr>
+					<td>
+						Company number
+					</td>
+					<td>
+						&nbsp;
+					</td>
+					<td>
+						&nbsp;
+					</td>
+				</tr>
+			</th:block>
+
 			<tr>
 				<td>
 					Bank account number / Sort code
@@ -113,7 +137,7 @@
 
 	<div class="grid-row  extra-margin" th:unless="${param.status != null and param.status[0] == 'accepted'}">
 		<div class="column-half">
-			<a href="/prototypes/2652-change-bank-details" class="button-link">Change bank account details</a>
+			<a th:href="${param.status != null and param.status[0] == 'noCompHouse' ? '/prototypes/2652-change-bank-details?status=noCompHouse':'/prototypes/2652-change-bank-details'}" class="button-link">Change bank account details</a>
 		</div>
 		<div class="column-half alignright">
 			<a href="#" data-js-modal="modal-update-bank-details" class="button">Approve bank account details</a>
@@ -136,7 +160,7 @@
 					
 					<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a> 
 
-            		<a href="/prototypes/2650-review-bank-details?status=accepted" class="button">Approve account</a>
+            		<a th:href="${param.status != null and param.status[0] == 'noCompHouse' ? '/prototypes/2650-review-bank-details?status=accepted&#38;type=noCompHouse':'/prototypes/2650-review-bank-details?status=accepted'}" class="button">Approve account</a>
             	</div>
 
 	        </div>

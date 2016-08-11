@@ -105,6 +105,11 @@ public class CompetitionServiceImpl implements CompetitionService {
     }
 
     @Override
+    public void initApplicationFormByCompetitionType(Long competitionId, Long competitionTypeId) {
+        competitionsRestService.initApplicationForm(competitionId, competitionTypeId);
+    }
+
+    @Override
     public String generateCompetitionCode(Long competitionId, LocalDateTime openingDate) {
         return competitionsRestService.generateCompetitionCode(competitionId, openingDate).getSuccessObjectOrThrowException();
     }

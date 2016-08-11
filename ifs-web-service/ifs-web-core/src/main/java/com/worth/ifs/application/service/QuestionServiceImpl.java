@@ -1,24 +1,18 @@
 package com.worth.ifs.application.service;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.Future;
-import java.util.stream.Collectors;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.QuestionStatusResource;
 import com.worth.ifs.application.resource.QuestionType;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.rest.ValidationMessages;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
+import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 
 /**
  * This class contains methods to retrieve and store {@link QuestionResource} related data,
@@ -143,5 +137,15 @@ public class QuestionServiceImpl implements QuestionService {
 	public List<QuestionResource> getQuestionsBySectionIdAndType(Long sectionId, QuestionType type) {
 		return questionRestService.getQuestionsBySectionIdAndType(sectionId, type).getSuccessObjectOrThrowException();
 	}
+
+    @Override
+    public QuestionResource save(QuestionResource questionResource) {
+        return questionRestService.save(questionResource).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public List<QuestionResource> getQuestionsByAssessment(Long assessmentId) {
+        return questionRestService.getQuestionsByAssessment(assessmentId).getSuccessObjectOrThrowException();
+    }
 
 }

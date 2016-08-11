@@ -90,7 +90,7 @@ IFS.core.formValidation = (function(){
           jQuery('body').on('change',s.minlength.fields,function(){ IFS.core.formValidation.checkMinLength(jQuery(this),true); });
           jQuery('body').on('change',s.maxlength.fields,function(){ IFS.core.formValidation.checkMaxLength(jQuery(this),true); });
           jQuery('body').on('change',s.tel.fields,function(){ IFS.core.formValidation.checkTel(jQuery(this),true); });
-          jQuery('body').on('change',s.date.fields,function(){  IFS.core.formValidation.checkDate(jQuery(this),true); });
+          jQuery('body').on('change',s.date.fields,function(){ IFS.core.formValidation.checkDate(jQuery(this),true); });
 
           //set data attribute on date fields
           //which has the combined value of the dates
@@ -381,7 +381,8 @@ IFS.core.formValidation = (function(){
 
             if ((date.getDate() == day) && (date.getMonth() + 1 == month) && (date.getFullYear() == year)) {
                 if(showMessage){ IFS.core.formValidation.setValid(allFields,s.date.messageInvalid.invalid); }
-                allFields.removeAttr('data-autosave-disabled').attr('data-date',day+'-'+month+'-'+year);
+                allFields.attr('data-date',day+'-'+month+'-'+year);
+                field.trigger('ifsAutosave');
 
                 if(dateGroup.hasClass("js-future-date")){
                   var now = new Date();
@@ -397,13 +398,13 @@ IFS.core.formValidation = (function(){
                 return true;
             } else {
                 if(showMessage){ IFS.core.formValidation.setInvalid(allFields,s.date.messageInvalid.invalid); }
-                allFields.attr({'data-date':'', 'autosave-disabled':''});
+                allFields.attr({'data-date':''});
                 return false;
             }
           }
           else if (filledOut || fieldsVisited){
                 if(showMessage){ IFS.core.formValidation.setInvalid(allFields,s.date.messageInvalid.invalid); }
-                allFields.attr({'data-date':'', 'autosave-disabled':''});
+                allFields.attr({'data-date':''});
                 return false;
           }
           else {
