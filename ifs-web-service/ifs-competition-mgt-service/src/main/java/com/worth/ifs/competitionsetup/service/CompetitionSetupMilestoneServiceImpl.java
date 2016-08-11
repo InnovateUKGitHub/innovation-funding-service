@@ -3,6 +3,7 @@ package com.worth.ifs.competitionsetup.service;
 import com.worth.ifs.application.service.MilestoneService;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.competition.resource.MilestoneResource;
+import com.worth.ifs.competition.resource.MilestoneType;
 import com.worth.ifs.competitionsetup.form.MilestonesFormEntry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,9 +25,9 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
     @Override
     public List<MilestoneResource> createMilestonesForCompetition(Long competitionId) {
         List<MilestoneResource> newMilestones = new ArrayList<>();
-        Stream.of(MilestoneResource.MilestoneName.values()).forEach(name -> {
-            MilestoneResource newMilestone = milestoneService.create(name, competitionId);
-            newMilestone.setName(name);
+        Stream.of(MilestoneType.values()).forEach(type -> {
+            MilestoneResource newMilestone = milestoneService.create(type, competitionId);
+            newMilestone.setType(type);
             newMilestones.add(newMilestone);
         });
         return newMilestones;
@@ -39,7 +40,7 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
 
         milestones.forEach(milestoneResource -> {
             Optional<MilestonesFormEntry> milestoneWithUpdate = milestoneEntries.stream()
-                    .filter(milestonesFormEntry -> milestonesFormEntry.getMilestoneName().equals(milestoneResource.getName())).findAny();
+                    .filter(milestonesFormEntry -> milestonesFormEntry.getMilestoneType().equals(milestoneResource.getType())).findAny();
 
             if(milestoneWithUpdate.isPresent()) {
                 LocalDateTime temp = getMilestoneDate(milestoneWithUpdate.get().getDay(), milestoneWithUpdate.get().getMonth(), milestoneWithUpdate.get().getYear());
@@ -48,10 +49,7 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
                     updatedMilestones.add(milestoneResource);
                 }
             }
-
         });
-
-
         return milestoneService.update(updatedMilestones, competitionId);
     }
 

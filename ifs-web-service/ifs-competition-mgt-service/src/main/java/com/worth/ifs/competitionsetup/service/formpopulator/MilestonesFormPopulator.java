@@ -1,14 +1,5 @@
 package com.worth.ifs.competitionsetup.service.formpopulator;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Stream;
-
-import com.worth.ifs.competition.resource.MilestoneType;
-import com.worth.ifs.competitionsetup.form.MilestonesFormEntry;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.worth.ifs.application.service.MilestoneService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
@@ -48,7 +39,7 @@ public class MilestonesFormPopulator implements CompetitionSetupFormPopulator {
         if (milestonesByCompetition.isEmpty()) {
             milestonesByCompetition.addAll(competitionSetupMilestoneService.createMilestonesForCompetition(competitionResource.getId()));
         } else {
-            milestonesByCompetition.sort((c1, c2) -> c1.getName().compareTo(c2.getName()));
+            milestonesByCompetition.sort((c1, c2) -> c1.getType().compareTo(c2.getType()));
         }
 
         List<MilestonesFormEntry> milestoneFormEntries = new ArrayList<>();
