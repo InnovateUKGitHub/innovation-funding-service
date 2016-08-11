@@ -138,11 +138,11 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         Map<String, List<BigDecimal>> expectedMonthlyCostsPerCategoryMap = new LinkedHashMap<>();
 
         expectedMonthlyCostsPerCategoryMap.put("LabourCost",
-                buildExpectedCategorySplitList(new BigDecimal("80"), new BigDecimal("80"), new BigDecimal("80")));
+                buildExpectedCategorySplitList(new BigDecimal("80"), new BigDecimal("80"), new BigDecimal("80"), new BigDecimal("240")));
         expectedMonthlyCostsPerCategoryMap.put("CapitalCost",
-                buildExpectedCategorySplitList(new BigDecimal("64"), new BigDecimal("63"), new BigDecimal("63")));
+                buildExpectedCategorySplitList(new BigDecimal("64"), new BigDecimal("63"), new BigDecimal("63"), new BigDecimal("190")));
         expectedMonthlyCostsPerCategoryMap.put("OtherCost",
-                buildExpectedCategorySplitList(new BigDecimal("51"), new BigDecimal("49"), new BigDecimal("49")));
+                buildExpectedCategorySplitList(new BigDecimal("51"), new BigDecimal("49"), new BigDecimal("49"), new BigDecimal("149")));
 
         return expectedMonthlyCostsPerCategoryMap;
     }
