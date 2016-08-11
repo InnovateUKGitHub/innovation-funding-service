@@ -21,7 +21,6 @@ public class ProjectFinanceController {
 
     @RequestMapping(value = "/{projectId}/spend-profile/generate", method = POST)
     public RestResult<Void> generateSpendProfile(@PathVariable("projectId") final Long projectId) {
-
-        return projectFinanceService.generateSpendProfile(projectId).toPostResponse();
+        return projectFinanceService.generateSpendProfile(projectId).toPostCreateResponse();
     }
 }

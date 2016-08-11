@@ -319,3 +319,16 @@ include::{snippets}/project/delete-exploitation-plan/http-response.adoc[]
 
 ==== Curl Example
 include::{snippets}/project/delete-exploitation-plan/curl-request.adoc[]
+
+
+=== Generate Spend Profile during Project Setup
+
+==== Request
+include::{snippets}/project/generate-spend-profile/http-request.adoc[]
+include::{snippets}/project/generate-spend-profile/request-parameters.adoc[]
+
+==== Response
+include::{snippets}/project/generate-spend-profile/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/project/generate-spend-profile/curl-request.adoc[]
