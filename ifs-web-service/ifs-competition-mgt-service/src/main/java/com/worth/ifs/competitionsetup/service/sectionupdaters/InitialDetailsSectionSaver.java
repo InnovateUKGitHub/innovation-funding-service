@@ -88,6 +88,9 @@ public class InitialDetailsSectionSaver implements CompetitionSetupSectionSaver 
         milestonesFormEntry.setYear(openingDate.getYear());
 
         List<MilestoneResource> milestones = milestoneService.getAllDatesByCompetitionId(competitionId);
+        if(milestones.isEmpty()) {
+            milestones = competitionSetupMilestoneService.createMilestonesForCompetition(competitionId);
+        }
         milestones.sort((c1, c2) -> c1.getName().compareTo(c2.getName()));
 
         competitionSetupMilestoneService.updateMilestonesForCompetition(milestones, Arrays.asList(milestonesFormEntry), competitionId);
