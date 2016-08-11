@@ -55,8 +55,13 @@ public class AssessorFormInputResponseRestServiceImplTest extends BaseRestServic
         Long formInputId = 2L;
         String value = "Feedback";
 
-        setupPutWithRestResultExpectations(format("%s/formInput/%s/assessment/%s", assessorFormInputResponseRestUrl, formInputId, assessmentId), value, OK);
-        final RestResult<Void> response = service.updateFormInputResponse(assessmentId, formInputId, value);
+        AssessorFormInputResponseResource formInputResponse = newAssessorFormInputResponseResource()
+                .withAssessment(assessmentId)
+                .withFormInput(formInputId)
+                .withValue(value)
+                .build();
+        setupPutWithRestResultExpectations(format("%s", assessorFormInputResponseRestUrl), formInputResponse, OK);
+        final RestResult<Void> response = service.updateFormInputResponse(formInputResponse);
         assertTrue(response.isSuccess());
     }
 }

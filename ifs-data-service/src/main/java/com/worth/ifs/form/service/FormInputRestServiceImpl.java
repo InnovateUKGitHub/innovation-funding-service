@@ -43,4 +43,14 @@ public class FormInputRestServiceImpl extends BaseRestService implements FormInp
     public RestResult<List<FormInputResource>> getByCompetitionIdAndScope(Long competitionId, FormInputScope scope) {
         return getWithRestResult(formInputRestURL + "/findByCompetitionId/" + competitionId + "/scope/" + scope, formInputResourceListType());
     }
+
+    @Override
+    public RestResult<Void> delete(Long formInputId) {
+        return deleteWithRestResult(formInputRestURL + "/" + formInputId, Void.class) ;
+    }
+
+    @Override
+    public RestResult<FormInputResource> save(FormInputResource formInputResource) {
+        return putWithRestResult(formInputRestURL + "/", formInputResource, FormInputResource.class);
+    }
 }
