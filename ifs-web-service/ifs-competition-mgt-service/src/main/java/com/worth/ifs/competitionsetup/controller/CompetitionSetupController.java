@@ -7,19 +7,11 @@ import com.google.common.base.CharMatcher;
 import com.worth.ifs.application.service.CategoryService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.category.resource.CategoryResource;
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionResource.Status;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
-import com.worth.ifs.commons.error.Error;
-import com.worth.ifs.competitionsetup.form.AdditionalInfoForm;
-import com.worth.ifs.competitionsetup.form.ApplicationFormForm;
-import com.worth.ifs.competitionsetup.form.AssessorsForm;
-import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
-import com.worth.ifs.competitionsetup.form.EligibilityForm;
-import com.worth.ifs.competitionsetup.form.FinanceForm;
-import com.worth.ifs.competitionsetup.form.InitialDetailsForm;
-import com.worth.ifs.competitionsetup.form.MilestonesForm;
-import com.worth.ifs.competitionsetup.service.CompetitionSetupService;
+import com.worth.ifs.competitionsetup.form.*;
 import com.worth.ifs.competitionsetup.model.Question;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupService;
@@ -31,14 +23,9 @@ import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -266,23 +253,33 @@ public class CompetitionSetupController {
             return "redirect:/dashboard";
         }
 
-        if (!bindingResult.hasErrors()) {
-        	List<Error> saveSectionResult = competitionSetupService.saveCompetitionSetupSection(competitionSetupForm, competition, section);
-        	if(saveSectionResult != null && !saveSectionResult.isEmpty()) {
-        		saveSectionResult.forEach(e -> {
-        			ObjectError error = new ObjectError("currentSection", e.getErrorMessage());
-        			bindingResult.addError(error);
-        		});
-        	}
-            //@TODO Fix redirection / error handling
-            return null;
-//        	competitionSetupService.saveCompetitionSetupSection(competitionSetupForm, competition, section);
-//            return "redirect:/competition/setup/" + competitionId + "/section/" + section.getPath();
+        if (isSuccessfulSaved(competitionSetupForm, competition, section, bindingResult)) {
+            return "redirect:/competition/setup/" + competitionId + "/section/" + section.getPath();
         } else {
             LOG.debug("Form errors");
             competitionSetupService.populateCompetitionSectionModelAttributes(model, competition, section);
             return "competition/setup";
         }
+    }
+
+    private Boolean isSuccessfulSaved(CompetitionSetupForm competitionSetupForm, CompetitionResource competition, CompetitionSetupSection section, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+           return false;
+        }
+
+        List<Error> saveSectionResult = competitionSetupService.saveCompetitionSetupSection(competitionSetupForm, competition, section);
+        if(saveSectionResult != null && !saveSectionResult.isEmpty()) {
+            saveSectionResult.forEach(e -> {
+                ObjectError error = new ObjectError("currentSection", e.getErrorMessage());
+                bindingResult.addError(error);
+            });
+        }
+
+        if(bindingResult.hasErrors()) {
+           return false;
+        }
+
+        return true;
     }
 
     private ObjectNode createJsonObjectNode(boolean success, String message) {
