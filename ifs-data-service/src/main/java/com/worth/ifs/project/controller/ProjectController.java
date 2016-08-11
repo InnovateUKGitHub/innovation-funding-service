@@ -105,6 +105,12 @@ public class ProjectController {
        return projectService.inviteFinanceContact(projectId, inviteResource).toPostResponse();
     }
 
+    @RequestMapping(value = "/{projectId}/invite-project-manager", method = POST)
+    public RestResult<Void> inviteProjectManager(@PathVariable("projectId") final Long projectId,
+                                                 @RequestBody @Valid final InviteResource inviteResource) {
+        return projectService.inviteProjectManager(projectId, inviteResource).toPostResponse();
+    }
+
     @RequestMapping(value = "/{projectId}/project-users", method = GET)
     public RestResult<List<ProjectUserResource>> getProjectUsers(@PathVariable("projectId") final Long projectId) {
         return projectService.getProjectUsers(projectId).toGetResponse();
