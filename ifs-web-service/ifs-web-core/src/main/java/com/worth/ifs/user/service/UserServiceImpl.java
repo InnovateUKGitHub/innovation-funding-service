@@ -100,6 +100,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public RestResult<UserResource> createOrganisationUser(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId) {
+        // TODO rationalise and rename - createLeadApplicantForOrganisation isn't actually what this method does - it simply creates a user who is attached to an organisation
+        return createLeadApplicantForOrganisation(firstName, lastName, password, email, title, phoneNumber, organisationId);
+    }
+
+
+    @Override
     public RestResult<UserResource> updateDetails(Long id, String email, String firstName, String lastName, String title, String phoneNumber) {
         return userRestService.updateDetails(id, email, firstName, lastName, title, phoneNumber);
     }

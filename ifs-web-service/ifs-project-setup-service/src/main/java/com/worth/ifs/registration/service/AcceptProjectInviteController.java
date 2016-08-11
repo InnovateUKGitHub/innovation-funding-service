@@ -105,8 +105,13 @@ public class AcceptProjectInviteController extends BaseController {
                     }
                     return organisationRestService.getOrganisationByIdForAnonymousUserFlow(inviteOrganisation.getOrganisation())
                             .andOnSuccessReturn(organisation -> {
-                                JoinAProjectViewModel pdavm = new JoinAProjectViewModel();
-                                model.addAttribute("model", pdavm);
+                                JoinAProjectViewModel japvm = new JoinAProjectViewModel();
+                                japvm.setCompetitionName(invite.getCompetitionName());
+                                japvm.setLeadApplicantName(invite.getLeadApplicant());
+                                japvm.setOrganisationAddress(organisation.getAddresses().get(0));
+                                japvm.setOrganisationName(organisation.getName());
+                                japvm.setProjectName("TODO");
+                                model.addAttribute("model", japvm);
                                 return ACCEPT_INVITE_SHOW_PROJECT;
                             });
                 }).getSuccessObject();
@@ -128,6 +133,7 @@ public class AcceptProjectInviteController extends BaseController {
                     }
                     // Add the user to the project
                     return projectRestService.addPartner(1L, userExists.getId(), inviteOrganisation.getOrganisation())
+                            // TODO accept project invite - maybe role addPartner into it.
                             .andOnSuccess(() -> inviteRestService.acceptInvite(hash, userExists.getId()))
                             .andOnSuccessReturn(() -> "redirect:/");
 
@@ -140,12 +146,12 @@ public class AcceptProjectInviteController extends BaseController {
     // Code to validate fundamental problems with the invite
     //======================================================
 
-    private RestResult<String> populateModelWithErrorsAndReturnErrorView(ValidationMessages errors, Model model) {
+    public static RestResult<String> populateModelWithErrorsAndReturnErrorView(ValidationMessages errors, Model model) {
         model.addAttribute("failureMessageKeys", errors.getErrors());
         return restSuccess(ACCEPT_INVITE_FAILURE);
     }
 
-    private ValidationMessages errorMessages(UserResource loggedInUser, InviteResource invite) {
+    public static ValidationMessages errorMessages(UserResource loggedInUser, InviteResource invite) {
         ValidationMessages errors = new ValidationMessages();
         if (!invite.getStatus().equals(SEND)) {
             errors.addError(globalError("registration.INVITE_ALREADY_ACCEPTED"));

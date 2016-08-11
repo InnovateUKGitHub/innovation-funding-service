@@ -33,18 +33,7 @@ public class RegistrationServiceSecurityTest extends BaseServiceSecurityTest<Reg
 
         UserResource userToCreate = newUserResource().build();
 
-        assertAccessDenied(() -> service.createApplicantUser(123L, userToCreate), () -> {
-            verify(rules).systemRegistrationUserCanCreateUsers(userToCreate, getLoggedInUser());
-            verifyNoMoreInteractions(rules);
-        });
-    }
-
-    @Test
-    public void testCreateApplicantUserWithCompetitionId() {
-
-        UserResource userToCreate = newUserResource().build();
-
-        assertAccessDenied(() -> service.createApplicantUser(123L, of(456L), userToCreate), () -> {
+        assertAccessDenied(() -> service.createOrganisationUser(123L, userToCreate), () -> {
             verify(rules).systemRegistrationUserCanCreateUsers(userToCreate, getLoggedInUser());
             verifyNoMoreInteractions(rules);
         });
@@ -95,12 +84,7 @@ public class RegistrationServiceSecurityTest extends BaseServiceSecurityTest<Reg
     public static class TestRegistrationService implements RegistrationService {
 
         @Override
-        public ServiceResult<UserResource> createApplicantUser(Long organisationId, UserResource userResource) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<UserResource> createApplicantUser(Long organisationId, Optional<Long> competitionId, UserResource userResource) {
+        public ServiceResult<UserResource> createOrganisationUser(Long organisationId, UserResource userResource) {
             return null;
         }
 

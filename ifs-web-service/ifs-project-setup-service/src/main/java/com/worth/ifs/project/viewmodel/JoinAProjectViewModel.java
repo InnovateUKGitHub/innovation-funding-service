@@ -1,7 +1,7 @@
 package com.worth.ifs.project.viewmodel;
 
 
-import com.worth.ifs.address.resource.AddressResource;
+import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 
 public class JoinAProjectViewModel {
     private String projectName;
@@ -10,7 +10,7 @@ public class JoinAProjectViewModel {
     private String leadApplicantName;
     private String organisationName;
     private String organisationResgistrationNumber;
-    private AddressResource organisationAddress;
+    private OrganisationAddressResource organisationAddress;
 
     public String getProjectName() {
         return projectName;
@@ -60,11 +60,11 @@ public class JoinAProjectViewModel {
         this.organisationResgistrationNumber = organisationResgistrationNumber;
     }
 
-    public AddressResource getOrganisationAddress() {
+    public OrganisationAddressResource getOrganisationAddress() {
         return organisationAddress;
     }
 
-    public void setOrganisationAddress(AddressResource organisationAddress) {
+    public void setOrganisationAddress(OrganisationAddressResource organisationAddress) {
         this.organisationAddress = organisationAddress;
     }
 }

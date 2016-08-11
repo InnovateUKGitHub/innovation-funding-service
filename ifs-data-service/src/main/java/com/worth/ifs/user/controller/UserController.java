@@ -133,7 +133,7 @@ public class UserController {
 
     @RequestMapping(value = "/createLeadApplicantForOrganisation/{organisationId}", method = POST)
     public RestResult<UserResource> createUser(@PathVariable("organisationId") final Long organisationId, @RequestBody UserResource userResource) {
-        return registrationService.createApplicantUser(organisationId, userResource).andOnSuccessReturn(created ->
+        return registrationService.createOrganisationUser(organisationId, userResource).andOnSuccessReturn(created ->
                 {
                     registrationService.sendUserVerificationEmail(created, empty()).getSuccessObjectOrThrowException();
                     return created;
@@ -143,7 +143,7 @@ public class UserController {
 
     @RequestMapping(value = "/createLeadApplicantForOrganisation/{organisationId}/{competitionId}", method = POST)
     public RestResult<UserResource> createUser(@PathVariable("organisationId") final Long organisationId, @PathVariable("competitionId") final Long competitionId, @RequestBody UserResource userResource) {
-        return registrationService.createApplicantUser(organisationId, of(competitionId), userResource).andOnSuccessReturn(created ->
+        return registrationService.createOrganisationUser(organisationId, userResource).andOnSuccessReturn(created ->
                 {
                     registrationService.sendUserVerificationEmail(created, of(competitionId)).getSuccessObjectOrThrowException();
                     return created;
