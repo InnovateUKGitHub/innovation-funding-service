@@ -26,7 +26,7 @@ public interface ProjectService {
 
     ProjectResource getById(Long projectId);
 
-    SpendProfileResource getSpendProfile(Long projectId);
+    SpendProfileResource getSpendProfile(Long projectId, Long organisationId);
 
     ProjectResource getByApplicationId(Long applicationId);
 

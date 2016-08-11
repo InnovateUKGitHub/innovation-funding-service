@@ -136,14 +136,14 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     }
 
     @Override
-    public ServiceResult<SpendProfileResource> getSpendProfileById(Long projectId) {
+    public ServiceResult<SpendProfileResource> getSpendProfile(final Long projectId, final Long organisationId) {
 
         /*
          * TODO
          * Here ideally we would get the SpendProfile entity which on Success we need to convert to SpendProfileResource.
          * Since we don't have a data model as yet, we get the SpendProfileResource directly, so we just return that for now
          */
-        return getSpendProfile(projectId);
+        return getSpendProfileByProjectIdAndOrganisationId(projectId, organisationId);
 
     }
 
@@ -725,11 +725,11 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
      * In the second parameter to the find method, we need to pass SpendProfile.class instead of SpendProfileResource.class
      *
      */
-    private ServiceResult<SpendProfileResource> getSpendProfile(long projectId) {
-        return find(tempGetSpendProfileEligibleCosts(), notFoundError(SpendProfileResource.class, projectId));
+    private ServiceResult<SpendProfileResource> getSpendProfileByProjectIdAndOrganisationId(final long projectId, final long organisationId) {
+        return find(tempGetSpendProfileEligibleCosts(projectId, organisationId), notFoundError(SpendProfileResource.class, projectId, organisationId));
     }
 
-    private SpendProfileResource tempGetSpendProfileEligibleCosts() {
+    private SpendProfileResource tempGetSpendProfileEligibleCosts(long projectId, long organisationId) {
 
         SpendProfileResource spendProfileResource = new SpendProfileResource();
 

@@ -35,37 +35,43 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
     @Test
     public void viewSpendProfileWhenProjectDetailsNotInDB() throws Exception {
 
+        Long organisationId = 1L;
+
         ProjectResource projectResource = newProjectResource().build();
 
         when(projectService.getById(projectResource.getId())).
                 thenThrow(new ObjectNotFoundException("Project not found", null));
 
-        mockMvc.perform(get("/project/{projectId}/spend-profile", projectResource.getId()))
+        mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile", projectResource.getId(), organisationId))
                 .andExpect(status().isNotFound())
                 .andExpect(model().attributeDoesNotExist("model"));
 
-        verify(projectService, never()).getSpendProfile(projectResource.getId());
+        verify(projectService, never()).getSpendProfile(projectResource.getId(), organisationId);
     }
 
     @Test
     public void viewSpendProfileWhenSpendProfileDetailsNotInDB() throws Exception {
+
+        Long organisationId = 1L;
 
         ProjectResource projectResource = newProjectResource().build();
 
         when(projectService.getById(projectResource.getId())).
                 thenReturn(projectResource);
 
-        when(projectService.getSpendProfile(projectResource.getId())).
+        when(projectService.getSpendProfile(projectResource.getId(), organisationId)).
                 thenThrow(new ObjectNotFoundException("SpendProfile not found", null));
 
 
-        mockMvc.perform(get("/project/{projectId}/spend-profile", projectResource.getId()))
+        mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile", projectResource.getId(), organisationId))
                 .andExpect(status().isNotFound())
                 .andExpect(model().attributeDoesNotExist("model"));
     }
 
     @Test
     public void viewSpendProfileSuccessfulViewModelPopulation() throws Exception {
+
+        Long organisationId = 1L;
 
         ProjectResource projectResource = newProjectResource()
                 .withName("projectName1")
@@ -79,14 +85,14 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
 
-        when(projectService.getSpendProfile(projectResource.getId())).thenReturn(spendProfileResource);
+        when(projectService.getSpendProfile(projectResource.getId(), organisationId)).thenReturn(spendProfileResource);
 
         SpendProfileTableResource expectedTable = buildExpectedSpendProfileTable();
 
         // Assert that the view model is populated with the correct values
         ProjectSpendProfileViewModel expectedViewModel = new ProjectSpendProfileViewModel(projectResource, expectedTable);
 
-        mockMvc.perform(get("/project/{projectId}/spend-profile", projectResource.getId()))
+        mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile", projectResource.getId(), organisationId))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(view().name("project/spend-profile"));

@@ -71,25 +71,36 @@ public class ProjectServiceImplTest {
     @Test
     public void testGetSpendProfileWhenProjectIdIsNull() {
 
-        SpendProfileResource returnedSpendProfileResource = service.getSpendProfile(null);
+        SpendProfileResource returnedSpendProfileResource = service.getSpendProfile(null, 1L);
 
         assertNull(returnedSpendProfileResource);
 
-        verify(projectRestService, never()).getSpendProfileById(Mockito.any());
+        verify(projectRestService, never()).getSpendProfile(Mockito.any(), Mockito.any());
+    }
+
+    @Test
+    public void testGetSpendProfileWhenOrganisationIdIsNull() {
+
+        SpendProfileResource returnedSpendProfileResource = service.getSpendProfile(1L, null);
+
+        assertNull(returnedSpendProfileResource);
+
+        verify(projectRestService, never()).getSpendProfile(Mockito.any(), Mockito.any());
     }
 
     @Test
     public void testGetSpendProfileWhenRestThrowsException() {
 
         Long projectId = 1L;
+        Long organisationId = 1L;
 
-        when(projectRestService.getSpendProfileById(projectId)).
+        when(projectRestService.getSpendProfile(projectId, organisationId)).
                 thenThrow(new ObjectNotFoundException("SpendProfile not found", null));
 
         SpendProfileResource returnedSpendProfileResource = null;
 
         try {
-            returnedSpendProfileResource = service.getSpendProfile(projectId);
+            returnedSpendProfileResource = service.getSpendProfile(projectId, organisationId);
         }
         catch (Exception e) {
 
@@ -97,7 +108,7 @@ public class ProjectServiceImplTest {
             assertTrue(e instanceof ObjectNotFoundException);
 
             assertNull(returnedSpendProfileResource);
-            verify(projectRestService).getSpendProfileById(projectId);
+            verify(projectRestService).getSpendProfile(projectId, organisationId);
 
             // This exception flow is the only expected flow, so return from here and assertFalse if no exception
             return;
@@ -112,16 +123,17 @@ public class ProjectServiceImplTest {
     public void testGetSpendProfileSuccess() {
 
         Long projectId = 1L;
+        Long organisationId = 1L;
 
         SpendProfileResource spendProfileResource = SpendProfileResourceBuilder.newSpendProfileResource().build();
 
-        when(projectRestService.getSpendProfileById(projectId)).thenReturn(restSuccess(spendProfileResource));
+        when(projectRestService.getSpendProfile(projectId, organisationId)).thenReturn(restSuccess(spendProfileResource));
 
-        SpendProfileResource returnedSpendProfileResource = service.getSpendProfile(projectId);
+        SpendProfileResource returnedSpendProfileResource = service.getSpendProfile(projectId, organisationId);
 
         assertEquals(spendProfileResource, returnedSpendProfileResource);
 
-        verify(projectRestService).getSpendProfileById(projectId);
+        verify(projectRestService).getSpendProfile(projectId, organisationId);
     }
 
     @Test

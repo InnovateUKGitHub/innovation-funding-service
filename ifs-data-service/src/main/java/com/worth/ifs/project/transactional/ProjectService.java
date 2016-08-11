@@ -35,7 +35,7 @@ public interface ProjectService {
     ServiceResult<ProjectResource> getProjectById(@P("projectId") Long projectId);
 
     @NotSecured(value="", mustBeSecuredByOtherServices = false) // TODO - This needs to be changed once Security is added
-    ServiceResult<SpendProfileResource> getSpendProfileById(Long projectId);
+    ServiceResult<SpendProfileResource> getSpendProfile(Long projectId, Long organisationId);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<ProjectResource> getByApplicationId(@P("applicationId") Long applicationId);

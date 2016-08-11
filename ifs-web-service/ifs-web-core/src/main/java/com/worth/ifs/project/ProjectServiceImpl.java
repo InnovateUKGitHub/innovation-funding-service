@@ -55,13 +55,13 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public SpendProfileResource getSpendProfile(Long projectId) {
+    public SpendProfileResource getSpendProfile(final Long projectId, final Long organisationId) {
 
-        if (projectId == null) {
+        if (projectId == null || organisationId == null) {
             return null;
         }
 
-        return projectRestService.getSpendProfileById(projectId).getSuccessObjectOrThrowException();
+        return projectRestService.getSpendProfile(projectId, organisationId).getSuccessObjectOrThrowException();
     }
 
     @Override

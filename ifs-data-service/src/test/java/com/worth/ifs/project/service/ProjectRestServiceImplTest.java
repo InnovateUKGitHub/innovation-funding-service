@@ -55,12 +55,13 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
     public void testGetSpendProfileById() {
 
         Long projectId = 1L;
+        Long organisationId = 1L;
 
         SpendProfileResource spendProfileResource = SpendProfileResourceBuilder.newSpendProfileResource().build();
 
-        setupGetWithRestResultExpectations(projectRestURL + "/" + projectId + "/spend-profile/", SpendProfileResource.class, spendProfileResource);
+        setupGetWithRestResultExpectations(projectRestURL + "/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile/", SpendProfileResource.class, spendProfileResource);
 
-        SpendProfileResource result = service.getSpendProfileById(projectId).getSuccessObject();
+        SpendProfileResource result = service.getSpendProfile(projectId, organisationId).getSuccessObject();
 
         assertEquals(spendProfileResource, result);
 

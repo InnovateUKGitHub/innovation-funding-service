@@ -3,6 +3,7 @@ package com.worth.ifs.project.documentation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.bankdetails.resource.BankDetailsResource;
+import com.worth.ifs.commons.error.CommonErrors;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestErrorResponse;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
@@ -45,7 +46,6 @@ import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -125,19 +125,21 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
     public void getSpendProfile()  throws Exception {
 
         Long projectId = 1L;
+        Long organisationId = 1L;
 
         SpendProfileResource spendProfileResource = SpendProfileResourceBuilder.newSpendProfileResource()
                 .withEligibleCostPerCategoryMap(buildEligibleCostPerCategoryMap())
                 .build();
 
-        when(projectServiceMock.getSpendProfileById(projectId)).thenReturn(serviceSuccess(spendProfileResource));
+        when(projectServiceMock.getSpendProfile(projectId, organisationId)).thenReturn(serviceSuccess(spendProfileResource));
 
-        mockMvc.perform(get("/project/{projectId}/spend-profile", projectId))
+        mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile", projectId, organisationId))
                 .andExpect(status().isOk())
                 .andExpect(content().string(new ObjectMapper().writeValueAsString(spendProfileResource)))
                 .andDo(this.document.snippets(
                         pathParameters(
-                                parameterWithName("projectId").description("Id of the project for which the Spend Profile data is being retrieved")
+                                parameterWithName("projectId").description("Id of the project for which the Spend Profile data is being retrieved"),
+                                parameterWithName("organisationId").description("Organisation Id for which the Spend Profile data is being retrieved")
                         ),
                         responseFields(spendProfileResourceFields)
                 ));
@@ -147,16 +149,22 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
     public void getSpendProfileWhenSpendProfileDataNotInDb()  throws Exception {
 
         Long projectId = 1L;
+        Long organisationId = 1L;
 
-        when(projectServiceMock.getSpendProfileById(projectId)).
-                thenReturn(serviceFailure(new Error(GENERAL_NOT_FOUND, " SpendProfile not found", NOT_FOUND)));
+        when(projectServiceMock.getSpendProfile(projectId, organisationId)).
+            /*
+             * TODO - When the Spend Profile domain model is done,  SpendProfileResource.class should be replaced with SpendProfile.class
+             * We don't have this class as yet, and hence we are returning SpendProfileResource.class directly at the moment
+             */
+             thenReturn(serviceFailure(CommonErrors.notFoundError(SpendProfileResource.class, projectId, organisationId)));
 
-        mockMvc.perform(get("/project/{projectId}/spend-profile", projectId)
+        mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile", projectId, organisationId)
         )
                 .andExpect(status().isNotFound())
                 .andDo(this.document.snippets(
                         pathParameters(
-                                parameterWithName("projectId").description("Id of the project for which the Spend Profile data is being retrieved")
+                                parameterWithName("projectId").description("Id of the project for which the Spend Profile data is being retrieved"),
+                                parameterWithName("organisationId").description("Organisation Id for which the Spend Profile data is being retrieved")
                         )
                 ));
     }

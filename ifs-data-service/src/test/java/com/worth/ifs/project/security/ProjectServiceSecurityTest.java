@@ -353,7 +353,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         }
 
         @Override
-        public ServiceResult<SpendProfileResource> getSpendProfileById(Long projectId) {
+        public ServiceResult<SpendProfileResource> getSpendProfile(Long projectId, Long organisationId) {
             return null;
         }
 

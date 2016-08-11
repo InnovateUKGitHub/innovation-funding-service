@@ -4,7 +4,6 @@ import com.worth.ifs.BaseControllerIntegrationTest;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.mapper.QuestionMapper;
-import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.repository.SectionRepository;
 import com.worth.ifs.application.resource.QuestionApplicationCompositeId;
 import com.worth.ifs.application.resource.SectionResource;
@@ -32,29 +31,24 @@ import static org.junit.Assert.*;
 public class SectionControllerIntegrationTest extends BaseControllerIntegrationTest<SectionController> {
 
     @Autowired
-    SectionRepository sectionRepository;
-    @Autowired
-    ApplicationRepository applicationRepository;
+    private SectionRepository sectionRepository;
     @Autowired
     private QuestionService questionService;
     @Autowired
-    SectionService sectionService;
+    private SectionService sectionService;
     @Autowired
-    QuestionMapper questionMapper;
+    private QuestionMapper questionMapper;
 
     private Section section;
     private Long applicationId;
     private Section excludedSections;
     private Long sectionId;
     private Long excludedSectionId;
-    private Long leadApplicantId;
     private Long collaboratorIdOne;
-    private Long collaboratorOneProcessRoleId;
     private Long leadApplicantProcessRole;
     private long leadApplicantOrganisationId;
     private long collaboratorOneOrganisationId;
     private long sectionIdYourFinances;
-    private long sectionIdLabour;
 
 
 
@@ -66,16 +60,13 @@ public class SectionControllerIntegrationTest extends BaseControllerIntegrationT
         section = sectionRepository.findOne(sectionId);
         excludedSections = section = sectionRepository.findOne(excludedSectionId);
 
-        leadApplicantId = 1L;
         leadApplicantProcessRole = 1L;
         leadApplicantOrganisationId = 3L;
 
         collaboratorIdOne = 8L;
-        collaboratorOneProcessRoleId = 9L;
         collaboratorOneOrganisationId = 6L;
 
         sectionIdYourFinances = 7L;
-        sectionIdLabour = 9L;
         addBasicSecurityUser();
     }
 
