@@ -1,7 +1,7 @@
 package com.worth.ifs.project.controller;
 
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.project.transactional.ProjectFinanceService;
+import com.worth.ifs.project.finance.transactional.ProjectFinanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;

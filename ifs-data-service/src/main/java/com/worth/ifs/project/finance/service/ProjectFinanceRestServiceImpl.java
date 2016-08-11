@@ -1,4 +1,4 @@
-package com.worth.ifs.project.service;
+package com.worth.ifs.project.finance.service;
 
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.commons.service.ServiceResult;

@@ -2,7 +2,7 @@ package com.worth.ifs.project.security;
 
 import com.worth.ifs.BaseServiceSecurityTest;
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.project.transactional.ProjectFinanceService;
+import com.worth.ifs.project.finance.transactional.ProjectFinanceService;
 import com.worth.ifs.user.resource.RoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.resource.UserRoleType;

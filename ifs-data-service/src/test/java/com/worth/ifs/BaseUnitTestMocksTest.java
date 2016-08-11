@@ -57,7 +57,7 @@ import com.worth.ifs.project.mapper.ProjectUserMapper;
 import com.worth.ifs.project.repository.MonitoringOfficerRepository;
 import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.project.repository.ProjectUserRepository;
-import com.worth.ifs.project.transactional.ProjectFinanceService;
+import com.worth.ifs.project.finance.transactional.ProjectFinanceService;
 import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.sil.experian.service.SilExperianEndpoint;
 import com.worth.ifs.token.repository.TokenRepository;
