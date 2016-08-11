@@ -40,3 +40,5 @@ CREATE TABLE competition_user (
   CONSTRAINT competition_user_to_competition_user_status_fk FOREIGN KEY (competition_user_status_name) REFERENCES competition_user_status(name),
   CONSTRAINT competition_user_to_competition_user_rejection_reason FOREIGN KEY (rejection_reason_id) REFERENCES competition_user_rejection_reason(id)
 );
+
+ALTER TABLE invite ADD UNIQUE KEY uk_hash (hash);

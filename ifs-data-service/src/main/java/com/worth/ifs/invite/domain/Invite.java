@@ -2,7 +2,6 @@ package com.worth.ifs.invite.domain;
 
 import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.user.domain.User;
-import org.aspectj.lang.annotation.SuppressAjWarnings;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
@@ -39,6 +38,7 @@ public abstract class Invite<T extends ProcessActivity, I extends Invite<T,I>> {
     @JoinColumn(name = "email", referencedColumnName = "email", insertable = false, updatable = false)
     private User user;
 
+    @Column(unique=true)
     private String hash;
 
     @Enumerated(EnumType.STRING)
