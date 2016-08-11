@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import com.worth.ifs.competitionsetup.form.MilestonesFormEntry;
+import com.worth.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,9 @@ public class MilestonesSectionSaver implements CompetitionSetupSectionSaver {
     @Autowired
     private MilestoneService milestoneService;
 
+    @Autowired
+    private CompetitionSetupMilestoneService competitionSetupMilestoneService;
+
 	@Override
 	public CompetitionSetupSection sectionToSave() {
 		return CompetitionSetupSection.MILESTONES;
@@ -42,59 +46,10 @@ public class MilestonesSectionSaver implements CompetitionSetupSectionSaver {
         List<MilestoneResource> milestones = milestoneService.getAllDatesByCompetitionId(competition.getId());
         milestones.sort((c1, c2) -> c1.getName().compareTo(c2.getName()));
 
-        List<Error> errors = validateMilestoneDates(milestoneEntries);
-        return updateMilestonesForCompetition(milestones, milestoneEntries, competition, errors);
+        return competitionSetupMilestoneService.updateMilestonesForCompetition(milestones, milestoneEntries, competition.getId());
     }
 
-    private List<Error> updateMilestonesForCompetition(List<MilestoneResource> milestones, List<MilestonesFormEntry> milestoneEntries, CompetitionResource competition, List<Error> errors) {
 
-        for (int i = 0; i < milestones.size(); i++) {
-            MilestonesFormEntry thisMilestonesFormEntry = milestoneEntries.get(i);
-            thisMilestonesFormEntry.setMilestoneName(milestones.get(i).getName());
-
-            milestones.get(i).setCompetition(competition.getId());
-            LocalDateTime temp = getMilestoneDate(milestoneEntries.get(i).getDay(), milestoneEntries.get(i).getMonth(), milestoneEntries.get(i).getYear());
-            if (temp != null) {
-                milestones.get(i).setDate(temp);
-            }
-        }
-        if (errors.size() > 0){
-            return errors;
-        }
-        else {
-            return milestoneService.update(milestones, competition.getId());
-        }
-    }
-
-    private LocalDateTime getMilestoneDate(Integer day, Integer month, Integer year){
-        if (day != null && month != null && year != null){
-            return LocalDateTime.of(year, month, day, 0, 0);
-        } else {
-            return null;
-        }
-    }
-
-    private List<Error> validateMilestoneDates(List<MilestonesFormEntry> milestonesFormEntries) {
-        List<Error> errors =  new ArrayList<>();
-
-        milestonesFormEntries.forEach(milestone -> {
-            if(!isMilestoneDateValid(milestone.getDay(), milestone.getMonth(), milestone.getYear()));{
-                        if(errors.isEmpty()) {
-                            errors.add(new Error("error.milestone.invalid", "Please enter the valid date(s)", HttpStatus.BAD_REQUEST));
-                        }}
-            });
-        return errors;
-    }
-
-    private Boolean isMilestoneDateValid(Integer day, Integer month, Integer year) {
-        try{
-            LocalDateTime.of(year, month, day, 0,0);
-            return true;
-        }
-        catch(DateTimeException dte){
-            return false;
-        }
-    }
 
     @Override
     public boolean supportsForm(Class<? extends CompetitionSetupForm> clazz) { return MilestonesForm.class.equals(clazz); }
