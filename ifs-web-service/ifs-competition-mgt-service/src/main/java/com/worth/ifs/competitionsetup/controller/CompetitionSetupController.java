@@ -183,7 +183,7 @@ public class CompetitionSetupController {
     }
 
     @RequestMapping(value = "/{competitionId}/section/application", method = RequestMethod.POST)
-    public String submitApplicationFormSectionDetails(@Valid @ModelAttribute("competitionSetupForm") ApplicationFormForm competitionSetupForm,
+    public String submitApplicationFormSectionDetails(@ModelAttribute("competitionSetupForm") ApplicationFormForm competitionSetupForm,
                                               BindingResult bindingResult,
                                               @PathVariable("competitionId") Long competitionId,
                                               Model model) {
