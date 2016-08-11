@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+	<div th:include="fragments/layout :: head" th:with="pageTitle='Review bank details'" th:remove="tag" />
+</head>
+<body th:with="context='project-management'" class="project-management review-bank-details">
+
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+<main id="content">
+	<div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+	<div class="grid-row">
+		<div class="column-two-thirds">
+			<div class="page-title">
+				<p class="subtitle no-margin" th:text="|${model.projectNumber}: ${model.projectName}|">0102468: Technology inspired</p>
+				<h1 class="heading-xlarge">Project Details</h1>
+			</div>
+		</div>
+		<div class="column-third alignright extra-margin">
+				<h2 class="bold-small blue-block">Bank account</h2>
+		</div>
+	</div>
+
+	<hr/>
+	<p>The following bank account details have been submitted to Innovate UK by Aptrans Ltd for use during the project Technology Inspired, awaiting internal review from Innovate UK</p>
+
+	<h2 class="heading-medium">Finance contact</h2>
+
+	<p>
+		<th:block th:unless="${#strings.isEmpty(model.financeContactName)}">
+				<th:block th:text="${model.financeContactName}" /><br/>
+		</th:block>
+		<th:block th:unless="${#strings.isEmpty(model.financeContactEmail)}">
+				<a th:href="${'mailto:'+model.financeContactEmail}" th:text="${model.financeContactEmail}" /><br/>
+		</th:block>
+		<th:block th:unless="${#strings.isEmpty(model.financeContactPhoneNumber)}">
+				<th:block th:text="${model.financeContactPhoneNumber}" /><br/>
+		</th:block>
+	</p>
+
+	<h2 class="heading-medium"><th:block th:text="${model.organisationName}" /> - Account details</h2>
+	<table>
+		<thead>
+			<tr>
+				<th scope="col">Section</th>
+				<th scope="col">Answer</th>
+				<th scope="col">Experian score</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>Company</td>
+				<td th:text="${model.organisationName}" />
+				<td><span class="yes" th:text="${model.companyNameScore+' / 9'}" /></td>
+			</tr>
+			<tr>
+				<td>Company Number</td>
+				<td th:text="${model.registrationNumber}" />
+				<td><span th:text="${model.registrationNumberMatched ? 'Match' : 'No Match'}" th:class="${model.registrationNumberMatched ? 'yes' : 'no'}" /></td>
+			</tr>
+			<tr>
+				<td>Bank account number / Sort code</td>
+				<td th:text="${model.bankAccountNumber+' / '+model.sortCode}" />
+				<td><span th:text="${model.registrationNumberMatched ? 'Match' : 'No Match'}" th:class="${model.registrationNumberMatched ? 'yes' : 'no'}" /></td>
+			</tr>
+			<tr>
+				<td>Address</td>
+				<td>
+					<th:block th:each="addressLine : ${model.organisationAddress}">
+						<th:block th:text="${addressLine}" /><br />
+					</th:block>
+				</td>
+				<td><span th:text="${model.addressScore+' / 9'}" class="yes" /></td>
+			</tr>
+		</tbody>
+	</table>
+	<div class="grid-row extra-margin">
+		<div class="column-half">
+			<a href="#">Change bank account details</a>
+		</div>
+		<div class="column-half alignright">
+			<form>
+				<button class="no-margin-right button">Approve bank account details</button>
+			</form>
+		</div>
+	</div>
+
+
+
+	<div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+
+</body>
+</html>

@@ -151,6 +151,10 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
             throw new RegistrationTokenExpiredException(error.getErrorMessage(), error.getArguments());
         }
 
+        if(restFailure.has(BANK_DETAILS_DONT_EXIST_FOR_GIVEN_PROJECT_AND_ORGANISATION)){
+            throw new ObjectNotFoundException(error.getErrorMessage(), error.getArguments());
+        }
+
         throw new RuntimeException();
     }
 

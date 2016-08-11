@@ -11,6 +11,7 @@ import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.RoleResource;
@@ -194,6 +195,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         assertAccessDenied(() -> service.getProjectUsers(123L), () -> {
             verify(projectPermissionRules).partnersOnProjectCanView(project, getLoggedInUser());
             verify(projectPermissionRules).compAdminsCanViewProjects(project, getLoggedInUser());
+            verify(projectPermissionRules).projectFinanceUsersCanViewProjects(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
         });
     }
@@ -388,6 +390,11 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         @Override
         public ServiceResult<ProjectResource> getProjectById(@P("projectId") Long projectId) {
             return serviceSuccess(newProjectResource().withId(1L).build());
+        }
+
+        @Override
+        public ServiceResult<SpendProfileResource> getSpendProfile(Long projectId, Long organisationId) {
+            return null;
         }
 
         @Override
