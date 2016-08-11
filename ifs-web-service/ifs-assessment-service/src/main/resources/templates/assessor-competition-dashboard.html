@@ -1,31 +1,45 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Technology inspired'" th:remove="tag" />
+    <div th:include="fragments/layout :: head" th:with="pageTitle=${model.competitionTitle}" th:remove="tag" />
 </head>
 
-    <body th:with="context='assessment'" class="assessor-dashboard">
+    <body th:with="context='assessment'" class="assessor-comp-dashboard">
         <div th:include="fragments/layout :: body-start" th:remove="tag" />
         <div th:include="fragments/layout :: global-header" th:remove="tag" />
 
         <main id="content">
             <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-            <div th:include="fragments/assessment :: assessment-header-sub" th:with="linkTitle='Back to competition dashboard',linkClass='link-back',linkUrl=@{${'/'}}" th:remove="tag" />
+            <div th:include="fragments/assessment :: assessment-header-sub" th:with="linkTitle='Back to assessor dashboard',linkClass='link-back',linkUrl=@{${'/assessor/dashboard'}}" th:remove="tag" />
 
             <div class="hgroup">
-                <h1 class="heading-large">Technology inspired</h1>
+                <h1 class="heading-large" th:text="${model.competitionTitle}" />
             </div>
 
             <div class="grid-row">
                 <div class="column-two-thirds competition details">
                     <ul class="no-bullet">
-                        <li><strong>Competiton:</strong> Juggling Craziness (CRD3359)</li>
-                        <li><strong>Lead technologist:</strong> Mike Biddle</li>
-                        <li><strong>Funding body:</strong> Innovate UK</li>
-                        <li><strong>Accept applications deadline:</strong> Noon Wednesday 20 April 2016</li>
-                        <li><strong>Submit applications deadline:</strong> Noon Monday 25 April 2016</li>
+                        <li><strong>Competiton:</strong> <span th:text="${model.competitionTitle}" th:remove="tag"/></li>
+                        <li><strong>Funding body:</strong> <span th:text="${model.fundingBody}" th:remove="tag"/></li>
                     </ul>
+                </div>
+            </div>
 
+            <div class="my-applications">
+                <div class="in-progress"  th:unless="${#lists.isEmpty(model.applications)}">
+                    <h3 class="heading-large">Applications for Assessment (<span th:text="${#lists.size(model.applications)}" />)</h3>
+                    <form>
+                        <ul class="boxed-list bulk-select">
+                            <li th:each="application : ${model.applications}">
+                                <div class="grid-row">
+                                    <div class="column-assessment-details">
+                                        <h4 class="heading-medium"><a th:href="@{/{applicationId}(applicationId=${application.assessmentId})}" th:text="${application.displayLabel}" /></h4>
+                                        <p th:text="${application.leadOrganisation}" />
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </form>
                 </div>
             </div>
 
