@@ -3,7 +3,7 @@ package com.worth.ifs.competition.builder;
 
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.competition.domain.Milestone;
-import com.worth.ifs.competition.resource.MilestoneResource;
+import com.worth.ifs.competition.resource.MilestoneType;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,8 +28,8 @@ public class MilestoneBuilder extends BaseBuilder<Milestone, MilestoneBuilder> {
         return withArray((id, object) -> setField("id", id, object), ids);
     }
 
-    public MilestoneBuilder withName(MilestoneResource.MilestoneName name) {
-        return with(milestone -> setField("name", name, milestone));
+    public MilestoneBuilder withName(MilestoneType type) {
+        return with(milestone -> setField("type", type, milestone));
     }
 
     public MilestoneBuilder withDate(LocalDateTime date) {

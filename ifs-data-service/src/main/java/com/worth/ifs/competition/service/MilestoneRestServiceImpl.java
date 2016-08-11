@@ -4,13 +4,13 @@ import static com.worth.ifs.commons.service.ParameterizedTypeReferences.mileston
 
 import java.util.List;
 
+import com.worth.ifs.competition.resource.MilestoneType;
 import org.springframework.stereotype.Service;
 
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.competition.domain.Milestone;
 import com.worth.ifs.competition.resource.MilestoneResource;
-import com.worth.ifs.competition.resource.MilestoneResource.MilestoneName;
 
 /**
  * MilestoneRestServiceImpl is a utility for CRUD operations on {@link Milestone}.
@@ -33,7 +33,7 @@ public class MilestoneRestServiceImpl extends BaseRestService implements Milesto
     }
 
     @Override
-    public RestResult<MilestoneResource> create(MilestoneName name, Long competitionId) {
-        return postWithRestResult(milestonesRestURL + "/" + competitionId, name, MilestoneResource.class);
+    public RestResult<MilestoneResource> create(MilestoneType type, Long competitionId) {
+        return postWithRestResult(milestonesRestURL + "/" + competitionId, type, MilestoneResource.class);
     }
 }

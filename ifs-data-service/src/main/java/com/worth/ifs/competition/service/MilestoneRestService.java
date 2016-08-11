@@ -2,7 +2,7 @@ package com.worth.ifs.competition.service;
 
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.competition.resource.MilestoneResource;
-import com.worth.ifs.competition.resource.MilestoneResource.MilestoneName;
+import com.worth.ifs.competition.resource.MilestoneType;
 
 import java.util.List;
 
@@ -15,5 +15,5 @@ public interface MilestoneRestService {
 
     RestResult<Void> update(List<MilestoneResource> milestones, Long competitionId);
 
-    RestResult<MilestoneResource> create(MilestoneName name, Long competitionId);
+    RestResult<MilestoneResource> create(MilestoneType type, Long competitionId);
 }

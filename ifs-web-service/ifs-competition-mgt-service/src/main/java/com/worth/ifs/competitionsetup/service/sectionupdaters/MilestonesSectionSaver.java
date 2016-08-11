@@ -17,7 +17,6 @@ import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.MilestoneResource;
-import com.worth.ifs.competition.resource.MilestoneResource.MilestoneName;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.form.MilestonesForm;
 
@@ -44,7 +43,7 @@ public class MilestonesSectionSaver implements CompetitionSetupSectionSaver {
         MilestonesForm milestonesForm = (MilestonesForm) competitionSetupForm;
         List<MilestonesFormEntry> milestoneEntries = milestonesForm.getMilestonesFormEntryList();
         List<MilestoneResource> milestones = milestoneService.getAllDatesByCompetitionId(competition.getId());
-        milestones.sort((c1, c2) -> c1.getName().compareTo(c2.getName()));
+        milestones.sort((c1, c2) -> c1.getType().compareTo(c2.getType()));
 
         return competitionSetupMilestoneService.updateMilestonesForCompetition(milestones, milestoneEntries, competition.getId());
     }

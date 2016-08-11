@@ -1,11 +1,11 @@
 package com.worth.ifs.competitionsetup.form;
 
 import com.worth.ifs.competition.resource.MilestoneResource;
+import com.worth.ifs.competition.resource.MilestoneType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.validator.constraints.Range;
 
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 /**
@@ -18,7 +18,7 @@ public class MilestonesFormEntry extends CompetitionSetupForm {
     private Integer month;
     @Range(min = 2016, max = 9000)
     private Integer year;
-    private MilestoneResource.MilestoneName milestoneName;
+    private MilestoneType milestoneType;
     private String dayOfWeek;
 
     private static final Log LOG = LogFactory.getLog(MilestonesFormEntry.class);
@@ -55,12 +55,12 @@ public class MilestonesFormEntry extends CompetitionSetupForm {
         this.dayOfWeek = dayOfWeek;
     }
 
-    public MilestoneResource.MilestoneName getMilestoneName() {
-        return milestoneName;
+    public MilestoneType getMilestoneType() {
+        return milestoneType;
     }
 
-    public void setMilestoneName(MilestoneResource.MilestoneName milestoneName) {
-        this.milestoneName = milestoneName;
+    public void setMilestoneType(MilestoneType milestoneType) {
+        this.milestoneType = milestoneType;
     }
 
     private String getNameOfDay() {

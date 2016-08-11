@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.worth.ifs.competition.resource.MilestoneType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,6 @@ import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.competition.repository.MilestoneRepository;
 import com.worth.ifs.competition.resource.MilestoneResource;
 import com.worth.ifs.transactional.BaseTransactionalService;
-import com.worth.ifs.competition.resource.MilestoneResource.MilestoneName;
 
 /**
  * Service for operations around the usage and processing of Milestones
@@ -64,11 +64,11 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
     }
 
     @Override
-    public ServiceResult<MilestoneResource> create(MilestoneName name, Long id) {
+    public ServiceResult<MilestoneResource> create(MilestoneType type, Long id) {
         Competition competition = competitionRepository.findById(id);
 
         Milestone milestone = new Milestone();
-        milestone.setName(name);
+        milestone.setType(type);
         milestone.setCompetition(competition);
         return serviceSuccess(milestoneMapper.mapToResource(milestoneRepository.save(milestone)));
     }
@@ -77,7 +77,7 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
 
         ValidationMessages vm = new ValidationMessages();
 
-        milestones.sort((c1, c2) -> c1.getName().compareTo(c2.getName()));
+        milestones.sort((c1, c2) -> c1.getType().compareTo(c2.getType()));
         
         milestones.forEach(m -> {
         	if(m.getDate() == null) {

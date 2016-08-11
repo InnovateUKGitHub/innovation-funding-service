@@ -2,7 +2,6 @@ package com.worth.ifs.competitionsetup.service.formpopulator;
 
 import com.worth.ifs.application.service.MilestoneService;
 import com.worth.ifs.competition.resource.*;
-import com.worth.ifs.competition.resource.MilestoneResource.MilestoneName;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.form.MilestonesForm;
 import com.worth.ifs.competitionsetup.form.MilestonesFormEntry;
@@ -43,7 +42,7 @@ public class MilestoneFormPopulatorTest {
 
         MilestoneResource milestone = newMilestoneResource()
                 .withId(1L)
-                .withName(MilestoneName.OPEN_DATE)
+                .withName(MilestoneType.OPEN_DATE)
                 .withDate()
                 .withCompetitionId(1L).build();
 
@@ -67,10 +66,10 @@ public class MilestoneFormPopulatorTest {
         List<MilestonesFormEntry> milestonesFormEntryList = form.getMilestonesFormEntryList();
 
         assertFalse(form.getMilestonesFormEntryList().isEmpty());
-        assertTrue(milestonesFormEntryList.get(0).getMilestoneName().equals(MilestoneName.OPEN_DATE));
+        assertTrue(milestonesFormEntryList.get(0).getMilestoneType().equals(MilestoneType.OPEN_DATE));
         assertTrue(milestonesFormEntryList.get(0).getDay() == null);
         assertTrue(milestonesFormEntryList.get(0).getMonth()== null);
         assertTrue(milestonesFormEntryList.get(0).getYear() == null);
-        assertTrue(milestonesFormEntryList.get(0).getMilestoneName().getMilestoneDescription().equals("1. Open date"));
+        assertTrue(milestonesFormEntryList.get(0).getMilestoneType().getMilestoneDescription().equals("1. Open date"));
     }
 }

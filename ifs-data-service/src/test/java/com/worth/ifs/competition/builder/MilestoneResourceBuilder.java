@@ -3,16 +3,14 @@ package com.worth.ifs.competition.builder;
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.BaseBuilderAmendFunctions;
 import com.worth.ifs.competition.resource.MilestoneResource;
+import com.worth.ifs.competition.resource.MilestoneType;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
 import static com.worth.ifs.BaseBuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
-import static org.springframework.test.util.ReflectionTestUtils.setField;
-
 
 public class MilestoneResourceBuilder extends BaseBuilder<MilestoneResource, MilestoneResourceBuilder> {
 
@@ -28,8 +26,8 @@ public class MilestoneResourceBuilder extends BaseBuilder<MilestoneResource, Mil
         return withArray((competition, object) -> BaseBuilderAmendFunctions.setField("competition", competition, object), competitions);
     }
 
-    public MilestoneResourceBuilder withName(MilestoneResource.MilestoneName... names) {
-        return withArray((name, object) -> BaseBuilderAmendFunctions.setField("name", name, object), names);
+    public MilestoneResourceBuilder withName(MilestoneType... types) {
+        return withArray((type, object) -> BaseBuilderAmendFunctions.setField("type", type, object), types);
     }
 
     public MilestoneResourceBuilder withDate(LocalDateTime... dates) {

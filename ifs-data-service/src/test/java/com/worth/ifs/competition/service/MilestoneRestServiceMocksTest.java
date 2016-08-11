@@ -2,7 +2,7 @@ package com.worth.ifs.competition.service;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.competition.resource.MilestoneResource;
-import com.worth.ifs.competition.resource.MilestoneResource.MilestoneName;
+import com.worth.ifs.competition.resource.MilestoneType;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 
@@ -42,12 +42,12 @@ public class MilestoneRestServiceMocksTest extends BaseRestServiceUnitTest<Miles
     public void test_createMilestone() {
         MilestoneResource milestone = new MilestoneResource();
         milestone.setId(3L);
-        milestone.setName(MilestoneResource.MilestoneName.OPEN_DATE);
+        milestone.setType(MilestoneType.OPEN_DATE);
         milestone.setCompetition(newCompetitionId);
 
-        setupPostWithRestResultExpectations(milestonesRestURL + "/" + newCompetitionId, MilestoneResource.class, MilestoneName.OPEN_DATE, milestone, HttpStatus.OK);
+        setupPostWithRestResultExpectations(milestonesRestURL + "/" + newCompetitionId, MilestoneResource.class, MilestoneType.OPEN_DATE, milestone, HttpStatus.OK);
 
-        MilestoneResource response = service.create(MilestoneName.OPEN_DATE, newCompetitionId).getSuccessObject();
+        MilestoneResource response = service.create(MilestoneType.OPEN_DATE, newCompetitionId).getSuccessObject();
         assertNotNull(response);
         assertEquals(milestone, response);
     }
@@ -80,7 +80,7 @@ public class MilestoneRestServiceMocksTest extends BaseRestServiceUnitTest<Miles
     private MilestoneResource getMilestone() {
         MilestoneResource milestone = newMilestoneResource()
                 .withId(1L)
-                .withName(MilestoneResource.MilestoneName.OPEN_DATE)
+                .withName(MilestoneType.OPEN_DATE)
                 .withDate(LocalDateTime.now())
                 .withCompetitionId(competitionId).build();
         return milestone;

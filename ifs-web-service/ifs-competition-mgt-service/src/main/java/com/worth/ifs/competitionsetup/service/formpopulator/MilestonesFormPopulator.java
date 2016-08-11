@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
+import com.worth.ifs.competition.resource.MilestoneType;
 import com.worth.ifs.competitionsetup.form.MilestonesFormEntry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,7 +13,6 @@ import com.worth.ifs.application.service.MilestoneService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.MilestoneResource;
-import com.worth.ifs.competition.resource.MilestoneResource.MilestoneName;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.form.MilestonesForm;
 
@@ -40,7 +40,7 @@ public class MilestonesFormPopulator implements CompetitionSetupFormPopulator {
             allMilestonesByCompetitionId.addAll(createMilestonesForCompetition(competitionResource));
         }
         else {
-            allMilestonesByCompetitionId.sort((c1, c2) -> c1.getName().compareTo(c2.getName()));
+            allMilestonesByCompetitionId.sort((c1, c2) -> c1.getType().compareTo(c2.getType()));
         }
 
         List<MilestonesFormEntry> milestoneFormEntries = new ArrayList<>();
@@ -55,9 +55,9 @@ public class MilestonesFormPopulator implements CompetitionSetupFormPopulator {
 
     private List<MilestoneResource> createMilestonesForCompetition(CompetitionResource competitionResource) {
         List<MilestoneResource> newMilestones = new ArrayList<>();
-        Stream.of(MilestoneName.values()).forEach(name -> {
-            MilestoneResource newMilestone = milestoneService.create(name, competitionResource.getId());
-            newMilestone.setName(name);
+        Stream.of(MilestoneType.values()).forEach(type -> {
+            MilestoneResource newMilestone = milestoneService.create(type, competitionResource.getId());
+            newMilestone.setType(type);
             newMilestones.add(newMilestone);
         });
         return newMilestones;
@@ -65,7 +65,7 @@ public class MilestonesFormPopulator implements CompetitionSetupFormPopulator {
 
     private MilestonesFormEntry populateMilestoneFormEntries(MilestoneResource milestone) {
         MilestonesFormEntry newMilestone = new MilestonesFormEntry();
-        newMilestone.setMilestoneName(milestone.getName());
+        newMilestone.setMilestoneType(milestone.getType());
         if (milestone.getDate() != null) {
             newMilestone.setDay(milestone.getDate().getDayOfMonth());
             newMilestone.setMonth(milestone.getDate().getMonthValue());

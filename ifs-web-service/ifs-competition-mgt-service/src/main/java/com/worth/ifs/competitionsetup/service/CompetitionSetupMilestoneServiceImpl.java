@@ -29,7 +29,7 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
 
         for (int i = 0; i < milestones.size(); i++) {
             MilestonesFormEntry thisMilestonesFormEntry = milestoneEntries.get(i);
-            thisMilestonesFormEntry.setMilestoneName(milestones.get(i).getName());
+            thisMilestonesFormEntry.setMilestoneType(milestones.get(i).getType());
 
             milestones.get(i).setCompetition(competitionId);
             LocalDateTime temp = getMilestoneDate(milestoneEntries.get(i).getDay(), milestoneEntries.get(i).getMonth(), milestoneEntries.get(i).getYear());
