@@ -52,6 +52,12 @@ public class ProjectSpendProfileSummaryController {
         return doViewSpendProfileSummary(projectId, model, new ProjectSpendProfileForm());
     }
 
+    @RequestMapping(value = "/generate/confirm", method = GET)
+    public String confirmGenerateSpendProfile(@PathVariable Long projectId, Model model) {
+        doViewSpendProfileSummary(projectId, model, new ProjectSpendProfileForm());
+        return "project/finance/spend-profile/confirm-generate";
+    }
+
     @RequestMapping(value = "/generate", method = POST)
     public String generateSpendProfile(@PathVariable Long projectId, Model model,
                                        @ModelAttribute ProjectSpendProfileForm form,
