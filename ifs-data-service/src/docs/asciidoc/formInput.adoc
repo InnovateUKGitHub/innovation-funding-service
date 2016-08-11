@@ -1,0 +1,59 @@
+=== Retrieve formInput by id
+==== Request
+include::{snippets}/forminput/document-find-by-id/http-request.adoc[]
+include::{snippets}/forminput/document-find-by-id/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/forminput/document-find-by-id/http-response.adoc[]
+include::{snippets}/forminput/document-find-by-id/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/forminput/document-find-by-id/curl-request.adoc[]
+
+=== Retrieve formInputs by question
+==== Request
+include::{snippets}/forminput/document-find-by-question-id/http-request.adoc[]
+include::{snippets}/forminput/document-find-by-question-id/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/forminput/document-find-by-question-id/http-response.adoc[]
+include::{snippets}/forminput/document-find-by-question-id/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/forminput/document-find-by-question-id/curl-request.adoc[]
+
+
+=== Retrieve formInputs by competition
+==== Request
+include::{snippets}/forminput/document-find-by-competition-id/http-request.adoc[]
+include::{snippets}/forminput/document-find-by-competition-id/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/forminput/document-find-by-competition-id/http-response.adoc[]
+include::{snippets}/forminput/document-find-by-competition-id/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/forminput/document-find-by-competition-id/curl-request.adoc[]
+
+=== Save forminput
+==== Request
+include::{snippets}/forminput/document-save/http-request.adoc[]
+
+==== Response
+include::{snippets}/forminput/document-save/http-response.adoc[]
+include::{snippets}/forminput/document-save/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/forminput/document-save/curl-request.adoc[]
+
+=== Delete forminput
+==== Request
+include::{snippets}/forminput/document-delete/http-request.adoc[]
+include::{snippets}/forminput/document-delete/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/forminput/document-delete/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/forminput/document-delete/curl-request.adoc[]
+

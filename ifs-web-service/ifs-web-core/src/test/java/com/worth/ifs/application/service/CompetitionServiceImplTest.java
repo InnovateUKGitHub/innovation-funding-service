@@ -196,4 +196,13 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
         assertEquals(actual, results);
     }
+
+    @Test
+    public void test_initApplicationFormByCompetitionType() throws Exception {
+        Long competitionId = Long.MAX_VALUE;
+        Long competitionTypeId = Long.MIN_VALUE;
+        when(competitionsRestService.initApplicationForm(competitionId, competitionTypeId)).thenReturn(restSuccess());
+
+        service.initApplicationFormByCompetitionType(competitionId, competitionTypeId);
+    }
 }
