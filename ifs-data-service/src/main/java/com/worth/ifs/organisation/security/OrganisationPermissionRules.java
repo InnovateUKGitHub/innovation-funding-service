@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 import static com.worth.ifs.security.SecurityRuleUtil.isCompAdmin;
+import static com.worth.ifs.security.SecurityRuleUtil.isProjectFinanceUser;
 import static com.worth.ifs.security.SecurityRuleUtil.isSystemRegistrationUser;
 import static com.worth.ifs.util.CollectionFunctions.flattenLists;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
@@ -32,6 +33,11 @@ public class OrganisationPermissionRules {
     @PermissionRule(value = "READ", description = "Comp Admins can see all Organisations")
     public boolean compAdminsCanSeeAllOrganisations(OrganisationResource organisation, UserResource user) {
         return isCompAdmin(user);
+    }
+
+    @PermissionRule(value = "READ", description = "Project Finance Users can see all Organisations")
+    public boolean projectFinanceUserCanSeeAllOrganisations(OrganisationResource organisation, UserResource user) {
+        return isProjectFinanceUser(user);
     }
 
     @PermissionRule(value = "READ", description = "System Registration User can see all Organisations, in order to view particular Organisations during registration and invite")

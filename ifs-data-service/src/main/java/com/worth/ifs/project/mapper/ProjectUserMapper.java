@@ -24,7 +24,9 @@ public abstract class ProjectUserMapper extends BaseMapper<ProjectUser, ProjectU
 
     @Mappings({
         @Mapping(source = "role.name", target = "roleName"),
-        @Mapping(source = "user.name", target = "userName")
+        @Mapping(source = "user.name", target = "userName"),
+        @Mapping(source = "user.email", target = "email"),
+        @Mapping(source = "user.phoneNumber", target = "phoneNumber")
     })
     @Override
     public abstract ProjectUserResource mapToResource(ProjectUser domain);

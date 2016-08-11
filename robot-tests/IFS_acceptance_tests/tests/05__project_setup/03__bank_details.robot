@@ -72,7 +72,7 @@ Bank details experian validations
     [Tags]    Experian
     # TODO pending INFUND-3259
     When the user submits the bank account details    12345673    000003
-    Then the user should see the text in the page    Modulus check has failed
+    Then the user should see the text in the page    Bank account details are incorrect, please check and try again
 
 Bank details submission
     [Documentation]    INFUND-3010

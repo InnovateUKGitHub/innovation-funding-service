@@ -3,7 +3,7 @@
 <head>
 	<div th:include="fragments/layout :: head" th:with="pageTitle='Assign a Monitoring Officer'" th:remove="tag" />
 </head>
-<body class="competition-management application-overview">
+<body th:with="context='project-management'" class="project-management application-overview">
 
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
 <div th:include="fragments/layout :: global-header" th:remove="tag" />
