@@ -1,12 +1,5 @@
 package com.worth.ifs.competitionsetup.service.sectionupdaters;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.competition.resource.CompetitionResource;
@@ -14,16 +7,22 @@ import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.form.InitialDetailsForm;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Competition setup section saver for the initial details section.
  */
 @Service
 public class InitialDetailsSectionSaver implements CompetitionSetupSectionSaver {
+
+	private static Log LOG = LogFactory.getLog(InitialDetailsSectionSaver.class);
 
 	@Autowired
 	private CompetitionService competitionService;
@@ -51,6 +50,7 @@ public class InitialDetailsSectionSaver implements CompetitionSetupSectionSaver 
 					initialDetailsForm.getOpeningDateMonth(), initialDetailsForm.getOpeningDateDay(), 0, 0);
 			competition.setStartDate(startDate);
 		} catch (Exception e) {
+			LOG.error(e.getMessage());
 			competition.setStartDate(null);
 		}
 		competition.setCompetitionType(initialDetailsForm.getCompetitionTypeId());
