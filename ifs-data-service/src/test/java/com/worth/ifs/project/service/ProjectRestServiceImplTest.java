@@ -6,9 +6,11 @@ import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder;
+import com.worth.ifs.project.builder.SpendProfileResourceBuilder;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.project.resource.SpendProfileResource;
 import org.junit.Test;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -46,6 +48,22 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
         ProjectResource result = service.getProjectById(123L).getSuccessObject();
        
         assertEquals(returnedResponse, result);
+
+    }
+
+    @Test
+    public void testGetSpendProfileById() {
+
+        Long projectId = 1L;
+        Long organisationId = 1L;
+
+        SpendProfileResource spendProfileResource = SpendProfileResourceBuilder.newSpendProfileResource().build();
+
+        setupGetWithRestResultExpectations(projectRestURL + "/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile/", SpendProfileResource.class, spendProfileResource);
+
+        SpendProfileResource result = service.getSpendProfile(projectId, organisationId).getSuccessObject();
+
+        assertEquals(spendProfileResource, result);
 
     }
     
