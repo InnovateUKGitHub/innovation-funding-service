@@ -24,10 +24,6 @@ public class CompetitionController {
     @Autowired
     private CompetitionSetupService competitionSetupService;
 
-    /****
-     * General Competition methods
-     ****/
-
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public RestResult<CompetitionResource> getCompetitionById(@PathVariable("id") final Long id) {
         return competitionService.getCompetitionById(id).toGetResponse();
@@ -38,10 +34,6 @@ public class CompetitionController {
         return competitionService.findAll().toGetResponse();
     }
 
-
-    /***
-     * Get methods for the competition dashboard.
-     */
     @RequestMapping(value="/live", method= RequestMethod.GET)
     public RestResult<List<CompetitionResource>> live() {
         return competitionService.findLiveCompetitions().toGetResponse();
@@ -62,10 +54,6 @@ public class CompetitionController {
         return competitionService.countCompetitions().toGetResponse();
     }
 
-    /****
-     * Competition Setup methods
-     ****/
-
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public RestResult<CompetitionResource> saveCompetition(@RequestBody CompetitionResource competitionResource, @PathVariable("id") final Long id) {
         return competitionSetupService.update(id, competitionResource).toGetResponse();
@@ -76,9 +64,6 @@ public class CompetitionController {
     	return competitionSetupService.initialiseFormForCompetitionType(competitionId, competitionType).toGetResponse();
     }
 
-    /**
-     * Generate and save the competition code
-     */
     @RequestMapping(value = "/generateCompetitionCode/{id}", method = RequestMethod.POST)
     public RestResult<String> generateCompetitionCode(@RequestBody LocalDateTime dateTime, @PathVariable("id") final Long id) {
         return competitionSetupService.generateCompetitionCode(id, dateTime).toGetResponse();
@@ -94,9 +79,6 @@ public class CompetitionController {
         return competitionSetupService.markSectionInComplete(competitionId, section).toGetResponse();
     }
 
-    /**
-     * Create a new competition object, and return it.
-     */
     @RequestMapping(value = "", method = RequestMethod.POST)
     public RestResult<CompetitionResource> create() {
         return competitionSetupService.create().toPostCreateResponse();
