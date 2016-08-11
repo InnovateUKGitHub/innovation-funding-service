@@ -31,7 +31,7 @@ public class CompetitionInviteController extends BaseController {
                              HttpServletRequest request,
                              Model model) {
 
-        RestResult<CompetitionInviteResource> invite = inviteRestService.accessInvite(inviteHash);
+        RestResult<CompetitionInviteResource> invite = inviteRestService.openInvite(inviteHash);
 
         if (invite.isFailure()) {
             throw new InvalidURLException("Invite url is not valid " + inviteHash, null);
@@ -41,7 +41,7 @@ public class CompetitionInviteController extends BaseController {
 
             model.addAttribute("model", new CompetitionInviteViewModel(inviteResource.getCompetitionName()));
 
-            return "assessor-competition-invite"; // timeleaf view template name
+            return "assessor-competition-invite";
         }
     }
 }

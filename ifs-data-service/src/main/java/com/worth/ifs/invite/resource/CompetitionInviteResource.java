@@ -16,4 +16,24 @@ public class CompetitionInviteResource extends InviteResource {
     public void setCompetitionName(String competitionName) {
         this.competitionName = competitionName;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CompetitionInviteResource that = (CompetitionInviteResource) o;
+
+        return new EqualsBuilder()
+                .append(competitionName, that.competitionName)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(competitionName)
+                .toHashCode();
+    }
 }
