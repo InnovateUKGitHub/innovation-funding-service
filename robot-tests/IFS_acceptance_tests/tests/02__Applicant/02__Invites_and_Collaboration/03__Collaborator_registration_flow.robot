@@ -115,8 +115,9 @@ Catapult search (empty, invalid & valid inputs)
     When the user clicks the button/link    jQuery=.button:contains("Continue")
     Then the user should see the text in the page    ${empty_field_warning_message}
     When the user enters text to a text field    name=organisationName    Digital Catapult
-    When the user clicks the button/link    jQuery=.button:contains("Find UK address")
-    And the user should see the text in the page    Please enter a UK postcode
+#   Following disabled temporarily.  See INFUND-4497
+#   When the user clicks the button/link    jQuery=.button:contains("Find UK address")
+#   And the user should see the text in the page    Please enter a UK postcode
     When the user enters text to a text field    name=addressForm.postcodeInput    BS14NT
     And the user clicks the button/link    jQuery=.button:contains("Find UK address")
     And the user clicks the button/link    jQuery=.button:contains("Use selected address")

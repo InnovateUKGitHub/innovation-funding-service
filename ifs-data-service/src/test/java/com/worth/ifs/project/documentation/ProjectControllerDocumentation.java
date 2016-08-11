@@ -3,24 +3,31 @@ package com.worth.ifs.project.documentation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.bankdetails.resource.BankDetailsResource;
+import com.worth.ifs.commons.error.CommonErrors;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestErrorResponse;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder;
+import com.worth.ifs.project.builder.SpendProfileResourceBuilder;
 import com.worth.ifs.project.controller.ProjectController;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.project.resource.SpendProfileResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
+import static com.worth.ifs.documentation.SpendProfileDocs.spendProfileResourceFields;
 import static com.worth.ifs.util.JsonMappingUtil.toJson;
 import static com.worth.ifs.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
@@ -110,6 +117,54 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                         this.document.snippets(
                         responseFields(
                                 fieldWithPath("[]").description("List of projects the user is allowed to see")
+                        )
+                ));
+    }
+
+    @Test
+    public void getSpendProfile()  throws Exception {
+
+        Long projectId = 1L;
+        Long organisationId = 1L;
+
+        SpendProfileResource spendProfileResource = SpendProfileResourceBuilder.newSpendProfileResource()
+                .withEligibleCostPerCategoryMap(buildEligibleCostPerCategoryMap())
+                .build();
+
+        when(projectServiceMock.getSpendProfile(projectId, organisationId)).thenReturn(serviceSuccess(spendProfileResource));
+
+        mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile", projectId, organisationId))
+                .andExpect(status().isOk())
+                .andExpect(content().string(new ObjectMapper().writeValueAsString(spendProfileResource)))
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project for which the Spend Profile data is being retrieved"),
+                                parameterWithName("organisationId").description("Organisation Id for which the Spend Profile data is being retrieved")
+                        ),
+                        responseFields(spendProfileResourceFields)
+                ));
+    }
+
+    @Test
+    public void getSpendProfileWhenSpendProfileDataNotInDb()  throws Exception {
+
+        Long projectId = 1L;
+        Long organisationId = 1L;
+
+        when(projectServiceMock.getSpendProfile(projectId, organisationId)).
+            /*
+             * TODO - When the Spend Profile domain model is done,  SpendProfileResource.class should be replaced with SpendProfile.class
+             * We don't have this class as yet, and hence we are returning SpendProfileResource.class directly at the moment
+             */
+             thenReturn(serviceFailure(CommonErrors.notFoundError(SpendProfileResource.class, projectId, organisationId)));
+
+        mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile", projectId, organisationId)
+        )
+                .andExpect(status().isNotFound())
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project for which the Spend Profile data is being retrieved"),
+                                parameterWithName("organisationId").description("Organisation Id for which the Spend Profile data is being retrieved")
                         )
                 ));
     }
@@ -487,5 +542,14 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
         assertTrue(mvcResult.getResponse().getContentAsString().equals("false"));
     }
 
+    private Map<String, BigDecimal> buildEligibleCostPerCategoryMap() {
 
+        Map<String, BigDecimal> eligibleCostPerCategoryMap = new LinkedHashMap<>();
+
+        eligibleCostPerCategoryMap.put("LabourCost", new BigDecimal("240"));
+        eligibleCostPerCategoryMap.put("CapitalCost", new BigDecimal("190"));
+        eligibleCostPerCategoryMap.put("OtherCost", new BigDecimal("149"));
+
+        return eligibleCostPerCategoryMap;
+    }
 }
