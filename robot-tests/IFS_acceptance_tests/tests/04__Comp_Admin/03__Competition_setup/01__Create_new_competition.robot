@@ -23,7 +23,6 @@ Resource          ../../../resources/keywords/User_actions.robot
 Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
 
 *** Test Cases ***
-
 User can navigate to the competition setup form
     [Documentation]    INFUND-2945
     ...
@@ -39,7 +38,7 @@ User can navigate to the competition setup form
     ...
     ...    IFUND-3888
     [Tags]    HappyPath
-    Given the user clicks the button/link    id=section-2
+    Given the user clicks the button/link    id=section-3
     When the user clicks the button/link    jQuery=.button:contains("Create competition")
     Then the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
     When the user clicks the button/link    link=Initial Details
@@ -150,7 +149,6 @@ Initial details can be edited again
 
 Funding information server-side validations
     [Documentation]    INFUND-2985
-    ...
     [Tags]    Pending
     # TODO update when story INFUND-3002 is completed
     Given the user clicks the button/link    link=Funding Information
@@ -164,7 +162,6 @@ Funding information server-side validations
 
 Funding information client-side validations
     [Documentation]    INFUND-2985
-    ...
     [Tags]    Pending
     #To do: add the validation errors
     When the user enters text to a text field    id=funder    Test
@@ -192,8 +189,7 @@ Funding informations calculations
     Then the total should be correct    £ 21,000
 
 Funding Information can be saved
-    [Documentation]    \
-    ...    INFUND-3182
+    [Documentation]    INFUND-3182
     [Tags]    Pending
     And the user clicks the button/link    jQuery=.button:contains("Done")
     And the user should see the text in the page    FunderName
