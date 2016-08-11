@@ -33,7 +33,6 @@ import static com.worth.ifs.util.RestLookupCallbacks.find;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Controller
-@RequestMapping("/registration")
 public class ProjectRegistrationController {
 
     @Autowired
@@ -55,7 +54,7 @@ public class ProjectRegistrationController {
     protected OrganisationRestService organisationRestService;
 
     private final static String EMAIL_FIELD_NAME = "email";
-    private static final String REGISTER_MAPPING = "/register";
+    public static final String REGISTER_MAPPING = "/registration/register";
     private static final String REGISTRATION_SUCCESS_VIEW = "project/registration/successful";
     private static final String REGISTRATION_REGISTER_VIEW = "project/registration/register";
 
@@ -72,7 +71,7 @@ public class ProjectRegistrationController {
                     }
                     model.addAttribute("invitee", true);
                     model.addAttribute("registrationForm", new RegistrationForm().withEmail(invite.getEmail()));
-                    return restSuccess("registration-register");
+                    return restSuccess(REGISTRATION_REGISTER_VIEW);
                 }
         ).getSuccessObject();
     }
@@ -80,12 +79,12 @@ public class ProjectRegistrationController {
     @RequestMapping(value = REGISTER_MAPPING, method = RequestMethod.POST)
     public String registerFormSubmit(@Valid @ModelAttribute("registrationForm") RegistrationForm registrationForm,
                                      BindingResult bindingResult,
-                                     HttpServletResponse response,
                                      HttpServletRequest request,
                                      Model model,
                                      @ModelAttribute("loggedInUser") UserResource loggedInUser) {
         String hash = getCookieValue(request, INVITE_HASH);
         return find(inviteByHash(hash), inviteOrganisationByHash(hash)).andOnSuccess((invite, inviteOrganisation) -> {
+            registrationForm.setEmail(invite.getEmail());
             ValidationMessages errors = errorMessages(loggedInUser, invite);
             if (errors.hasErrors()) {
                 return populateModelWithErrorsAndReturnErrorView(errors, model);
@@ -99,13 +98,13 @@ public class ProjectRegistrationController {
                     .andOnSuccess(newUser -> projectRestService.addPartner(1L, newUser.getId(), inviteOrganisation.getOrganisation()).
                             andOnSuccess(() -> {
                                 inviteRestService.acceptInvite(hash, newUser.getId());
-                                return restSuccess("redirect:" + REGISTRATION_SUCCESS_VIEW);
+                                return restSuccess(REGISTRATION_SUCCESS_VIEW);
                             }));
             if (result.isSuccess()) {
                 return result;
             } else {
                 result.getErrors().forEach(error -> bindingResult.reject("registration." + error.getErrorKey()));
-                return restSuccess("registration-register");
+                return restSuccess(REGISTER_MAPPING);
             }
         }).getSuccessObject();
     }

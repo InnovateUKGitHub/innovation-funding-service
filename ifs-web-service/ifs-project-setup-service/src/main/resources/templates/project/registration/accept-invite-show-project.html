@@ -50,7 +50,7 @@
 
 	<a th:href="@{/registration/accept-invite-user-exist-confirm}" class="button button-large extra-margin" name="select-org-size" th:unless="${!userExists}">Continue to project</a>
 
-	<a href="TODO" class="button button-large extra-margin" name="select-org-size" th:unless="${userExists}">Create account</a>
+	<a th:href="@{/registration/register}" class="button button-large extra-margin" name="select-org-size" th:unless="${userExists}">Create account</a>
 
 </main>
 

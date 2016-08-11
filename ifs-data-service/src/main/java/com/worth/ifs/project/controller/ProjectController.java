@@ -247,7 +247,7 @@ public class ProjectController {
         return projectService.isOtherDocumentsSubmitAllowed(projectId).toGetResponse();
     }
 
-    @RequestMapping(value = "/{projectId}/partners/", method = POST)
+    @RequestMapping(value = "/{projectId}/partners", method = POST)
     public RestResult<Void> addPartner(@PathVariable(value = "projectId")Long projectId,
                                        @RequestParam(value = "userId", required = true) Long userId,
                                        @RequestParam(value = "organisationId", required = true) Long organisationId) {
