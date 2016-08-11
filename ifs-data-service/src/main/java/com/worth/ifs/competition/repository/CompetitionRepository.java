@@ -20,32 +20,32 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
     List<Competition> findByCodeLike(String code);
 
     @Query("SELECT c FROM Competition c WHERE c.id IN (SELECT c1.id FROM Competition c1 " +
-                "WHERE CURRENT_TIMESTAMP >= (SELECT m.date FROM Milestone m WHERE m.name = 'OPEN_DATE' AND m.competition.id = c1.id)" +
-                    "AND CURRENT_TIMESTAMP <= (SELECT m.date FROM Milestone m WHERE m.name = 'ASSESSOR_DEADLINE' AND m.competition.id = c1.id))")
+                "WHERE CURRENT_TIMESTAMP >= (SELECT m.date FROM Milestone m WHERE m.type = 'OPEN_DATE' AND m.competition.id = c1.id)" +
+                    "AND CURRENT_TIMESTAMP <= (SELECT m.date FROM Milestone m WHERE m.type = 'ASSESSOR_DEADLINE' AND m.competition.id = c1.id))")
     List<Competition> findLive();
 
     @Query("SELECT COUNT(c) FROM Competition c WHERE c.id IN (SELECT c1.id FROM Competition c1 " +
-                "WHERE CURRENT_TIMESTAMP >= (SELECT m.date FROM Milestone m WHERE m.name = 'OPEN_DATE' AND m.competition.id = c1.id) " +
-                    "AND CURRENT_TIMESTAMP <= (SELECT m.date FROM Milestone m WHERE m.name = 'ASSESSOR_DEADLINE' AND m.competition.id = c1.id))")
+                "WHERE CURRENT_TIMESTAMP >= (SELECT m.date FROM Milestone m WHERE m.type = 'OPEN_DATE' AND m.competition.id = c1.id) " +
+                    "AND CURRENT_TIMESTAMP <= (SELECT m.date FROM Milestone m WHERE m.type = 'ASSESSOR_DEADLINE' AND m.competition.id = c1.id))")
     Long countLive();
 
     @Query("SELECT c FROM Competition c WHERE c.id IN (SELECT c1.id FROM Competition c1 " +
-                "WHERE CURRENT_TIMESTAMP >= (SELECT m.date FROM Milestone m WHERE m.name = 'ASSESSOR_DEADLINE' and m.competition.id = c1.id)) " +
+                "WHERE CURRENT_TIMESTAMP >= (SELECT m.date FROM Milestone m WHERE m.type = 'ASSESSOR_DEADLINE' and m.competition.id = c1.id)) " +
                     "AND c.status = 'COMPETITION_SETUP_FINISHED'")
     List<Competition> findProjectSetup();
 
     @Query("SELECT COUNT(c) FROM Competition c WHERE c.id IN (SELECT c1.id FROM Competition c1 " +
-                "WHERE CURRENT_TIMESTAMP >= (SELECT m.date FROM Milestone m WHERE m.name = 'ASSESSOR_DEADLINE' and m.competition.id = c1.id)) " +
+                "WHERE CURRENT_TIMESTAMP >= (SELECT m.date FROM Milestone m WHERE m.type = 'ASSESSOR_DEADLINE' and m.competition.id = c1.id)) " +
                     "AND c.status = 'COMPETITION_SETUP_FINISHED'")
     Long countProjectSetup();
 
     @Query("SELECT c FROM Competition c WHERE c.id IN (SELECT c1.id FROM Competition c1 " +
-                "WHERE CURRENT_TIMESTAMP <= (SELECT m.date FROM Milestone m WHERE m.name = 'OPEN_DATE' AND m.competition.id = c1.id)) " +
+                "WHERE CURRENT_TIMESTAMP <= (SELECT m.date FROM Milestone m WHERE m.type = 'OPEN_DATE' AND m.competition.id = c1.id)) " +
                     "OR c.status = 'COMPETITION_SETUP'")
     List<Competition> findUpcoming();
 
     @Query("SELECT COUNT(c) FROM Competition c WHERE c.id IN (SELECT c1.id FROM Competition c1 " +
-                "WHERE CURRENT_TIMESTAMP <= (SELECT m.date FROM Milestone m WHERE m.name = 'OPEN_DATE' AND m.competition.id = c1.id)) " +
+                "WHERE CURRENT_TIMESTAMP <= (SELECT m.date FROM Milestone m WHERE m.type = 'OPEN_DATE' AND m.competition.id = c1.id)) " +
                     "OR c.status = 'COMPETITION_SETUP'")
     Long countUpcoming();
 
