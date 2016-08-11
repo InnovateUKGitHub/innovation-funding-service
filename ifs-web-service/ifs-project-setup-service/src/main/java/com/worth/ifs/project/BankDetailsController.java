@@ -19,7 +19,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -122,13 +121,6 @@ public class BankDetailsController extends AddressLookupBaseController {
         OrganisationResource organisationResource = projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId());
         RestResult<BankDetailsResource> bankDetailsResourceRestResult = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId());
         return doViewBankDetails(model, form, project, bankDetailsResourceRestResult, loggedInUser);
-    }
-
-    private FieldError createPostcodeSearchFieldError() {
-        FieldError fieldError = new FieldError("form",
-                "addressForm.postcodeInput",
-                "Please enter a UK postcode");
-        return fieldError;
     }
 
     @RequestMapping(params = SELECT_ADDRESS, method = RequestMethod.POST)
