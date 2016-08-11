@@ -12,12 +12,24 @@ import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Service
 public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMilestoneService {
 
     @Autowired
     MilestoneService milestoneService;
+
+    @Override
+    public List<MilestoneResource> createMilestonesForCompetition(Long competitionId) {
+        List<MilestoneResource> newMilestones = new ArrayList<>();
+        Stream.of(MilestoneResource.MilestoneName.values()).forEach(name -> {
+            MilestoneResource newMilestone = milestoneService.create(name, competitionId);
+            newMilestone.setName(name);
+            newMilestones.add(newMilestone);
+        });
+        return newMilestones;
+    }
 
     @Override
     public List<Error> updateMilestonesForCompetition(List<MilestoneResource> milestones, List<MilestonesFormEntry> milestoneEntries, Long competitionId) {
