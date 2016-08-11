@@ -38,6 +38,7 @@ import com.worth.ifs.project.repository.ProjectUserRepository;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -53,6 +54,7 @@ import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -135,6 +137,18 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     @Override
     public ServiceResult<ProjectResource> getProjectById(Long projectId) {
         return getProject(projectId).andOnSuccessReturn(projectMapper::mapToResource);
+    }
+
+    @Override
+    public ServiceResult<SpendProfileResource> getSpendProfile(final Long projectId, final Long organisationId) {
+
+        /*
+         * TODO
+         * Here ideally we would get the SpendProfile entity which on Success we need to convert to SpendProfileResource.
+         * Since we don't have a data model as yet, we get the SpendProfileResource directly, so we just return that for now
+         */
+        return getSpendProfileByProjectIdAndOrganisationId(projectId, organisationId);
+
     }
 
     @Override
@@ -709,6 +723,39 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
     private ServiceResult<Project> getProject(long projectId) {
         return find(projectRepository.findOne(projectId), notFoundError(Project.class, projectId));
+    }
+
+    /*
+     * TODO - Here we need to fetch the actual data from the DB.
+     *
+     * Here ideally we should be returning the SpendProfile entity, but since we do not have the data model as yet, we return
+     * the SpendProfileResource directly.
+     *
+     * The first parameter of the find method should be replaced with the actual call to the DB.
+     * In the second parameter to the find method, we need to pass SpendProfile.class instead of SpendProfileResource.class
+     *
+     */
+    private ServiceResult<SpendProfileResource> getSpendProfileByProjectIdAndOrganisationId(final long projectId, final long organisationId) {
+        return find(tempGetSpendProfileEligibleCosts(projectId, organisationId), notFoundError(SpendProfileResource.class, projectId, organisationId));
+    }
+
+    private SpendProfileResource tempGetSpendProfileEligibleCosts(long projectId, long organisationId) {
+
+        SpendProfileResource spendProfileResource = new SpendProfileResource();
+
+        Map<String, BigDecimal> eligibleCostPerCategoryMap = new LinkedHashMap<>();
+        eligibleCostPerCategoryMap.put("LabourCost", new BigDecimal("240"));
+        eligibleCostPerCategoryMap.put("AdminSupportCost", new BigDecimal("120"));
+        eligibleCostPerCategoryMap.put("MaterialCost", new BigDecimal("180"));
+        eligibleCostPerCategoryMap.put("CapitalCost", new BigDecimal("190"));
+        eligibleCostPerCategoryMap.put("SubcontractingCost", new BigDecimal("160"));
+        eligibleCostPerCategoryMap.put("TravelAndSubsistenceCost", new BigDecimal("850"));
+        eligibleCostPerCategoryMap.put("OtherCost", new BigDecimal("149"));
+
+        spendProfileResource.setEligibleCostPerCategoryMap(eligibleCostPerCategoryMap);
+
+        return spendProfileResource;
+
     }
 
     private ServiceResult<Project> getProjectByApplication(long applicationId){

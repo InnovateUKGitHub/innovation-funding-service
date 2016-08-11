@@ -9,13 +9,13 @@ cd ../../../
 
 function deploy() {
     base="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-    
+
     service=$1
     dir=$2
     name=$(basename ${dir})
 
     shift 2
-    
+
     cd ${dir}
     echo `pwd`
     ../gradlew -Pprofile=docker cleanDeploy "$@"
@@ -69,6 +69,8 @@ case "$target" in
         app "$@"
         cmgt "$@"
         asm "$@"
+        ps "$@"
+        psm "$@"
     ;;
     data)
         data "$@"
@@ -78,6 +80,8 @@ case "$target" in
         app "$@"
         cmgt "$@"
         asm "$@"
+        ps "$@"
+        psm "$@"
     ;;
     asm)
         core "$@"
