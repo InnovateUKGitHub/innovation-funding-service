@@ -18,58 +18,57 @@ import javax.validation.constraints.Size;
 
 @FieldMatch(first = "password", second = "retypedPassword", message = "Passwords must match")
 public class RegistrationForm {
-    private static final String PASSWORD_CANNOT_BE_SO_SHORT= "Password must at least be 10 characters";
-    private static final String PASSWORD_CANNOT_BE_SO_LONG = "Password must not be more than 30 characters";
 
-    @Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message = "Please enter a valid email address")
-    @NotEmpty(message = "Please enter your email")
-    @Size(max = 256, message = "Your email address has a maximum length of 256 characters")
+
+    @Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message = "{validation.standard.email.format}")
+    @NotEmpty(message = "{validation.standard.email.required}")
+    @Size(max = 256, message = "{validation.standard.email.length.max}")
     private String email;
 
-    @NotEmpty(message = "Please enter your password")
+    @NotEmpty(message = "{validation.standard.password.required}")
     @Size.List ({
-        @Size(min=10, message=PASSWORD_CANNOT_BE_SO_SHORT),
-        @Size(max=30, message=PASSWORD_CANNOT_BE_SO_LONG),
+        @Size(min=10, message="{validation.standard.password.length.min}"),
+        @Size(max=30, message="{validation.standard.password.length.max}"),
     })
     private String password;
 
-    @NotEmpty(message = "Please re-type your password")
+    @NotEmpty(message = "{validation.standard.retypedpassword.required}")
     @Size.List ({
-        @Size(min=10, message=PASSWORD_CANNOT_BE_SO_SHORT),
-        @Size(max=30, message=PASSWORD_CANNOT_BE_SO_LONG),
+        @Size(min=10, message="{validation.standard.password.length.min}"),
+        @Size(max=30, message="{validation.standard.password.length.max}"),
     })
     private String retypedPassword;
 
-    @NotEmpty(message = "Please select a title")
-    @Size(max = 5, message = "The title has a maximum input of 5 characters")
-    @Pattern(regexp = "^(Mr|Miss|Mrs|Ms|Dr)$", message = "Please select a valid title")
+    @NotEmpty(message = "{validation.standard.title.selectionrequired}")
+    @Size(max = 5, message = "{validation.standard.title.length.max}")
+    @Pattern(regexp = "^(Mr|Miss|Mrs|Ms|Dr)$", message = "{validation.standard.title.format}")
     private String title;
 
-    @NotEmpty(message = "Please enter a first name")
-    @Pattern(regexp = "[\\p{L} -]*", message = "Please enter a first name")
+    @NotEmpty(message = "{validation.standard.firstname.required}")
+    @Pattern(regexp = "[\\p{L} -]*", message = "{validation.standard.firstname.required}")
     @Size.List ({
-        @Size(min=2, message="Your first name should have at least 2 characters"),
-        @Size(max=70, message="Your first name cannot have more than 70 characters"),
+        @Size(min=2, message="{validation.standard.firstname.length.min}"),
+        @Size(max=70, message="{validation.standard.firstname.length.max}"),
     })
     private String firstName;
 
-    @NotEmpty(message = "Please enter a last name")
-    @Pattern(regexp = "[\\p{L} -]*", message = "Please enter a last name")
+    @NotEmpty(message = "{validation.standard.lastname.required}")
+    @Pattern(regexp = "[\\p{L} -]*", message = "{validation.standard.lastname.required}")
     @Size.List ({
-        @Size(min=2, message="Your last name should have at least 2 characters"),
-        @Size(max=70, message="Your last name cannot have more than 70 characters"),
+        @Size(min=2, message="{validation.standard.lastname.length.min}"),
+        @Size(max=70, message="{validation.standard.lastname.length.max}"),
     })
     private String lastName;
 
-    @NotEmpty(message = "Please enter a phone number")
+    @NotEmpty(message = "{validation.standard.phonenumber.required}")
     @Size.List ({
-        @Size(min=8, message="Input for your phone number has a minimum length of 8 characters"),
-        @Size(max=20, message="Input for your phone number has a maximum length of 20 characters")
+        @Size(min=8, message="{validation.standard.phonenumber.length.min}"),
+        @Size(max=20, message="{validation.standard.phonenumber.length.max}")
     })
-    @Pattern(regexp = "([0-9\\ +-])+",  message= "Please enter a valid phone number")
+    @Pattern(regexp = "([0-9\\ +-])+",  message= "{validation.standard.phonenumber.format}")
     private String phoneNumber;
 
-    @NotBlank(message = "In order to register an account you have to agree to the Terms and Conditions")
+    @NotBlank(message = "{validation.bankaccount.termsandconditions.required}")
     private String termsAndConditions;
 
     public String getPassword() {
