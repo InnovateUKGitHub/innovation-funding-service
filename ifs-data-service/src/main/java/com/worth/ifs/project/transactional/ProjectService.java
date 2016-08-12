@@ -70,7 +70,7 @@ public interface ProjectService {
     ServiceResult<Void> inviteFinanceContact(Long projectId, ApplicationInviteResource inviteResource);
 
     @PreAuthorize("hasPermission(#inviteResource, 'INVITE_PROJECT_MANAGER')")
-    ServiceResult<Void> inviteProjectManager(Long projectId, InviteResource inviteResource);
+    ServiceResult<Void> inviteProjectManager(Long projectId, ApplicationInviteResource inviteResource);
 
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'READ')")
     ServiceResult<List<ProjectUserResource>> getProjectUsers(Long projectId);

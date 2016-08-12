@@ -107,7 +107,7 @@ public class ProjectController {
 
     @RequestMapping(value = "/{projectId}/invite-project-manager", method = POST)
     public RestResult<Void> inviteProjectManager(@PathVariable("projectId") final Long projectId,
-                                                 @RequestBody @Valid final InviteResource inviteResource) {
+                                                 @RequestBody @Valid final ApplicationInviteResource inviteResource) {
         return projectService.inviteProjectManager(projectId, inviteResource).toPostResponse();
     }
 

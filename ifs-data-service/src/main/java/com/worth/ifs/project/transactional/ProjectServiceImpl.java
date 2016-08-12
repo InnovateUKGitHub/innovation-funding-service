@@ -587,7 +587,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     }
 
     @Override
-    public ServiceResult<Void> inviteProjectManager(Long projectId, InviteResource inviteResource) {
+    public ServiceResult<Void> inviteProjectManager(Long projectId, ApplicationInviteResource inviteResource) {
 
         return inviteContact(projectId, inviteResource, INVITE_PROJECT_MANAGER);
     }
@@ -610,7 +610,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         return new ExternalUserNotificationTarget(inviteResource.getName(), inviteResource.getEmail());
     }
 
-    private Map<String, Object> createGlobalArgsForInviteContactEmail(Long projectId, InviteResource inviteResource) {
+    private Map<String, Object> createGlobalArgsForInviteContactEmail(Long projectId, ApplicationInviteResource inviteResource) {
         Project project = projectRepository.findOne(projectId);
         Map<String, Object> globalArguments = new HashMap<>();
         globalArguments.put("projectName", project.getName());

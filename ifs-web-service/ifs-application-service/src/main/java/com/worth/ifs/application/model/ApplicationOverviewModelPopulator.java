@@ -30,7 +30,6 @@ import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
-import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.project.ProjectService;
 import com.worth.ifs.project.resource.ProjectResource;
