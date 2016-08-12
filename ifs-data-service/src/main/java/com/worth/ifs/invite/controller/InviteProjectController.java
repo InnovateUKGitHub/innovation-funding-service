@@ -26,7 +26,7 @@ import javax.validation.Valid;
 @RequestMapping("/projectinvite")
 public class InviteProjectController {
 
-    private static final Log LOG = LogFactory.getLog(InviteController.class);
+    private static final Log LOG = LogFactory.getLog(InviteProjectController.class);
 
     @Autowired
     private InviteProjectService inviteProjectService;
