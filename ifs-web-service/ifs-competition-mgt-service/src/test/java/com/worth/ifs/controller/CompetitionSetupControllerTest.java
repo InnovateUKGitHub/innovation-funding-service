@@ -195,8 +195,6 @@ public class CompetitionSetupControllerTest {
     }
 
     @Test
-    @Ignore
-    //@todo fix redirection
     public void submitSectionInitialDetailsWithoutErrors() throws Exception {
         CompetitionResource competition = newCompetitionResource().withCompetitionStatus(Status.COMPETITION_SETUP).build();
 
@@ -247,11 +245,8 @@ public class CompetitionSetupControllerTest {
         				.param("singleOrCollaborative", "collaborative")
         				.param("leadApplicantType", "business")
         				.param("researchParticipationAmountId", "1"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("competition/setup/12/section/eligibility"));
-        //@Todo fix redirection
-//                .andExpect(status().is3xxRedirection())
-//                .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/eligibility"));
+                        .andExpect(status().is3xxRedirection())
+                        .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/eligibility"));
 
 
         verify(competitionSetupService).saveCompetitionSetupSection(isA(CompetitionSetupForm.class), eq(competition), eq(CompetitionSetupSection.ELIGIBILITY));
@@ -326,11 +321,8 @@ public class CompetitionSetupControllerTest {
                 .param("funder", "funder")
                 .param("funderBudget", "1")
                 .param("budgetCode", "b123"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("competition/setup/12/section/additional"));
-        //@todo fix redirection
-//                .andExpect(status().is3xxRedirection())
-//                .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/additional"));
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/additional"));
 
         verify(competitionSetupService, atLeastOnce()).saveCompetitionSetupSection(any(AdditionalInfoForm.class),
                 any(CompetitionResource.class), any(CompetitionSetupSection.class));
