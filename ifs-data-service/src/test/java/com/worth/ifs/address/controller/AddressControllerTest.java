@@ -31,7 +31,20 @@ public class AddressControllerTest extends BaseControllerMockMVCTest<AddressCont
 
         when(addressLookupServiceMock.doLookup(postCode)).thenReturn(serviceSuccess(addressResources));
 
-        mockMvc.perform(get("/address/doLookup/?lookup=" + postCode))
+        mockMvc.perform(get("/address/doLookup?lookup=" + postCode))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(numberOfAddresses)));
+    }
+
+    @Test
+    public void doLookupWithSpecialCharacters() throws Exception {
+        int numberOfAddresses = 4;
+        String postCode = "!@£ !@£$";
+        List<AddressResource> addressResources = newAddressResource().build(numberOfAddresses);
+
+        when(addressLookupServiceMock.doLookup(postCode)).thenReturn(serviceSuccess(addressResources));
+
+        mockMvc.perform(get("/address/doLookup?lookup=" + postCode))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(numberOfAddresses)));
     }

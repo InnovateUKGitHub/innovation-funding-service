@@ -26,12 +26,12 @@ public class AddressController {
     @Autowired
     private AddressLookupService addressLookupService;
 
-    @RequestMapping("/doLookup/")
+    @RequestMapping("/doLookup")
     public RestResult<List<AddressResource>> doLookup(@RequestParam(name="lookup", defaultValue="") final String lookup) {
         return addressLookupService.doLookup(lookup).toGetResponse();
     }
 
-    @RequestMapping("/validatePostcode/")
+    @RequestMapping("/validatePostcode")
     public RestResult<Boolean> validatePostcode(@RequestParam(name="postcode", defaultValue="") final String postcode) {
         return addressLookupService.validatePostcode(postcode).toGetResponse();
     }
