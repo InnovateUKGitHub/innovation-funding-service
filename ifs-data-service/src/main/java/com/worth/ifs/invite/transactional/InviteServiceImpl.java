@@ -11,7 +11,7 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.invite.domain.ApplicationInvite;
 import com.worth.ifs.invite.domain.InviteOrganisation;
-import com.worth.ifs.invite.mapper.InviteMapper;
+import com.worth.ifs.invite.mapper.ApplicationInviteMapper;
 import com.worth.ifs.invite.mapper.InviteOrganisationMapper;
 import com.worth.ifs.invite.repository.ApplicationInviteRepository;
 import com.worth.ifs.invite.repository.InviteOrganisationRepository;
@@ -65,7 +65,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     private String webBaseUrl;
 
     @Autowired
-    private InviteMapper inviteMapper;
+    private ApplicationInviteMapper applicationInviteMapper;
     @Autowired
     private InviteOrganisationMapper inviteOrganisationMapper;
 
@@ -271,7 +271,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
     @Override
     public ServiceResult<ApplicationInviteResource> getInviteByHash(String hash) {
-        return getByHash(hash).andOnSuccessReturn(inviteMapper::mapToResource);
+        return getByHash(hash).andOnSuccessReturn(applicationInviteMapper::mapToResource);
     }
 
     @Override

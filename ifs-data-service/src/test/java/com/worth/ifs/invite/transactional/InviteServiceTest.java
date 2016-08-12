@@ -6,7 +6,7 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.invite.domain.ApplicationInvite;
 import com.worth.ifs.invite.domain.InviteOrganisation;
-import com.worth.ifs.invite.mapper.InviteMapper;
+import com.worth.ifs.invite.mapper.ApplicationInviteMapper;
 import com.worth.ifs.invite.mapper.InviteOrganisationMapper;
 import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
@@ -63,7 +63,7 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
     @Mock
     NotificationService notificationService;
     @Mock
-    InviteMapper inviteMapper;
+    ApplicationInviteMapper applicationInviteMapper;
     @Mock
     InviteOrganisationMapper inviteOrganisationMapper;
 
@@ -308,10 +308,10 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
 //        Invite invite2 = newInvite().withInviteOrganisation(inviteOrganisation).withApplication(application).build();
 //        inviteOrganisation.setInvites(Arrays.asList(invite1, invite2));
 //
-////        when(inviteMapper.mapToResource(invite1)).thenReturn()
+////        when(applicationInviteMapper.mapToResource(invite1)).thenReturn()
 //        when(applicationInviteRepositoryMock.findByApplicationId(123L)).thenReturn(asList(invite1, invite2));
-//        when(inviteMapper.mapToResource(invite1)).thenReturn(new ApplicationInviteResource());
-//        when(inviteMapper.mapToResource(invite2)).thenReturn(new ApplicationInviteResource());
+//        when(applicationInviteMapper.mapToResource(invite1)).thenReturn(new ApplicationInviteResource());
+//        when(applicationInviteMapper.mapToResource(invite2)).thenReturn(new ApplicationInviteResource());
 //        when(inviteOrganisationMapper.mapToResource(inviteOrganisation)).thenReturn(inviteOrganisationMapperLocal.mapToResource(inviteOrganisation));
 //
 //        ServiceResult<Set<InviteOrganisationResource>> result = inviteService.getInvitesByApplication(123L);

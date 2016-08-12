@@ -2,6 +2,11 @@ package com.worth.ifs.competition.domain;
 
 import javax.persistence.*;
 
+
+/**
+ * The reason a {@link com.worth.ifs.invite.domain.Participant} gave for rejecting participation in a
+ * {@link com.worth.ifs.invite.domain.ProcessActivity}.
+ */
 @Entity
 public class CompetitionParticipantRejectionReason {
 

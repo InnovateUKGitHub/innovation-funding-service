@@ -5,10 +5,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-/*
-* ApplicationInviteResource is a DTO which enables to application to transfer Invite entities.
-* */
-
+/**
+ * A DTO which enables to application to transfer {@link com.worth.ifs.invite.domain.ApplicationInvite} entities.
+ */
 public class ApplicationInviteResource extends InviteResource {
     private String leadOrganisation;
     private String leadApplicant;

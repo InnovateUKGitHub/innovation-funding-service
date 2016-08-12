@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 
+import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -25,7 +26,7 @@ public class CompetitionInviteRepositoryIntegrationTest extends BaseRepositoryIn
 
     @Before
     public void setup() {
-        competition = CompetitionBuilder.newCompetition().withName("competition").build();
+        competition = newCompetition().withName("competition").build();
     }
 
     @Test
@@ -41,7 +42,7 @@ public class CompetitionInviteRepositoryIntegrationTest extends BaseRepositoryIn
     @Test
     public void getByHash() {
         CompetitionInvite invite = new CompetitionInvite("name", "tom@poly.io", "hash", competition);
-        repository.save(invite);
+        CompetitionInvite saved = repository.save(invite);
 
         flushAndClearSession();
 
@@ -51,8 +52,7 @@ public class CompetitionInviteRepositoryIntegrationTest extends BaseRepositoryIn
         assertEquals("name", retrievedInvite.getName());
         assertEquals("tom@poly.io", retrievedInvite.getEmail());
         assertEquals("hash", retrievedInvite.getHash());
-        assertEquals(competition.getId(), retrievedInvite.getTarget().getId());
-
+        assertEquals(saved.getTarget().getId(), retrievedInvite.getTarget().getId());
     }
 
     @Test

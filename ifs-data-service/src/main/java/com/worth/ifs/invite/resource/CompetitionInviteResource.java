@@ -1,10 +1,11 @@
 package com.worth.ifs.invite.resource;
 
-import com.worth.ifs.invite.constant.InviteStatusConstants;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+/**
+ * DTO for {@link com.worth.ifs.invite.domain.CompetitionInvite}s.
+ */
 public class CompetitionInviteResource extends InviteResource {
 
     private String competitionName;

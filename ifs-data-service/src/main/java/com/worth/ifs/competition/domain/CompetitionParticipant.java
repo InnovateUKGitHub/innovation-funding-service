@@ -60,6 +60,7 @@ public class CompetitionParticipant extends Participant<Competition, Competition
 
         this.competition = competition;
         this.user = user;
+        this.invite = invite;
     }
 
     @Override

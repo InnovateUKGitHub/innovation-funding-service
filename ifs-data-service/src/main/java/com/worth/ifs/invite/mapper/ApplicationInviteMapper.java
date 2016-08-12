@@ -17,7 +17,7 @@ import org.mapstruct.Mappings;
         UserMapper.class
     }
 )
-public abstract class InviteMapper extends BaseMapper<ApplicationInvite, ApplicationInviteResource, Long> {
+public abstract class ApplicationInviteMapper extends BaseMapper<ApplicationInvite, ApplicationInviteResource, Long> {
 
     @Mappings({
             @Mapping(source = "target.competition.name", target = "competitionName"),

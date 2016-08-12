@@ -13,9 +13,7 @@ import org.mapstruct.Mappings;
  */
 @Mapper(
         config = GlobalMapperConfig.class,
-        uses = {
-//                CompetitionMapper.class
-        }
+        uses = {}
 )
 public abstract class CompetitionInviteMapper extends BaseMapper<CompetitionInvite, CompetitionInviteResource, Long> {
 

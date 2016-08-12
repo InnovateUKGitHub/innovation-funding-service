@@ -14,7 +14,7 @@ import static java.lang.String.format;
 
 public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTest<CompetitionInviteRestServiceImpl> {
 
-    private static final String restUrl = "/competitioninvite/openInvite";
+    private static final String restUrl = "/competitioninvite";
 
     @Override
     protected CompetitionInviteRestServiceImpl registerRestServiceUnderTest() {
@@ -25,14 +25,14 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
     @Test
     public void openInvite() {
         CompetitionInviteResource expected = newCompetitionInviteResource().withCompetitionName("my competition").build();
-        setupPostWithRestResultAnonymousExpectations(format("%s/%s", restUrl, "hash"), CompetitionInviteResource.class, null, expected, OK);
+        setupPostWithRestResultAnonymousExpectations(format("%s/%s/%s", restUrl, "/openInvite", "hash"), CompetitionInviteResource.class, null, expected, OK);
         CompetitionInviteResource actual = service.openInvite("hash").getSuccessObject();
         assertEquals(expected, actual);
     }
 
     @Test
     public void openInvite_hashNotExists() {
-        setupPostWithRestResultAnonymousExpectations(format("%s/%s", restUrl, "hashNotExists"), CompetitionInviteResource.class, null, null, NOT_FOUND);
+        setupPostWithRestResultAnonymousExpectations(format("%s/%s/%s", restUrl, "/openInvite", "hashNotExists"), CompetitionInviteResource.class, null, null, NOT_FOUND);
         RestResult<CompetitionInviteResource> restResult = service.openInvite("hashNotExists");
         assertTrue(restResult.isFailure());
     }
