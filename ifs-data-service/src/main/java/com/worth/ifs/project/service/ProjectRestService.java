@@ -17,6 +17,7 @@ import java.util.Optional;
 
 public interface ProjectRestService {
     RestResult<ProjectResource> getProjectById(Long projectId);
+    RestResult<SpendProfileResource> getSpendProfile(Long projectId, Long organisationId);
     RestResult<Void> updateProjectManager(Long projectId, Long projectManagerUserId);
     RestResult<Void> updateProjectAddress(long leadOrganisationId, long projectId, OrganisationAddressType addressType, AddressResource address);
     RestResult<List<ProjectResource>> findByUserId(long userId);

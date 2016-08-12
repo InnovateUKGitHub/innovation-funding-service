@@ -7,6 +7,7 @@ import com.worth.ifs.project.finance.domain.*;
 import com.worth.ifs.project.finance.repository.SpendProfileRepository;
 import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.project.resource.SpendProfileTableResource;
 import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.transactional.BaseTransactionalService;
@@ -98,6 +99,13 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         });
     }
 
+    @Override
+    public ServiceResult<SpendProfileResource> getSpendProfile(Long projectId, Long organisationId) {
+        return getSpendProfile(projectId, organisationId).andOnSuccess(profile -> {
+            spendProfileRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId);
+        });
+    }
+
     private List<BigDecimal> orderCostsByMonths(List<Cost> costs, List<LocalDate> months, LocalDate startDate) {
         return simpleMap(months, month -> findCostForMonth(costs, month, startDate));
     }
@@ -108,10 +116,10 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     }
 
     private Supplier<ServiceResult<SpendProfile>> spendProfile(Long projectId, Long organisationId) {
-        return () -> getSpendProfile(projectId, organisationId);
+        return () -> getSpendProfileResource(projectId, organisationId);
     }
 
-    private ServiceResult<SpendProfile> getSpendProfile(Long projectId, Long organisationId) {
+    private ServiceResult<SpendProfile> getSpendProfileResource(Long projectId, Long organisationId) {
         return find(spendProfileRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId), notFoundError(SpendProfile.class, projectId, organisationId));
     }
 
