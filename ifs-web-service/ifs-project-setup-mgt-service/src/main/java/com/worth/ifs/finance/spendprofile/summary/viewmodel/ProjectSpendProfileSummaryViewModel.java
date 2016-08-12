@@ -90,12 +90,13 @@ public class ProjectSpendProfileSummaryViewModel {
     private BigDecimal grantAppliedFor;
     private BigDecimal otherPublicSectorFunding;
     private BigDecimal totalPercentageGrant;
+    private boolean spendProfilesGenerated;
 
     public ProjectSpendProfileSummaryViewModel(
             Long projectId, CompetitionSummaryResource competitionSummary,
             List<SpendProfileOrganisationRow> partnerOrganisationDetails,
             LocalDate projectStartDate, int durationInMonths, BigDecimal totalProjectCost, BigDecimal grantAppliedFor,
-            BigDecimal otherPublicSectorFunding, BigDecimal totalPercentageGrant) {
+            BigDecimal otherPublicSectorFunding, BigDecimal totalPercentageGrant, boolean spendProfilesGenerated) {
 
         this.projectId = projectId;
         this.competitionSummary = competitionSummary;
@@ -106,6 +107,7 @@ public class ProjectSpendProfileSummaryViewModel {
         this.grantAppliedFor = grantAppliedFor;
         this.otherPublicSectorFunding = otherPublicSectorFunding;
         this.totalPercentageGrant = totalPercentageGrant;
+        this.spendProfilesGenerated = spendProfilesGenerated;
     }
 
     public Long getProjectId() {
@@ -142,5 +144,13 @@ public class ProjectSpendProfileSummaryViewModel {
 
     public BigDecimal getTotalPercentageGrant() {
         return totalPercentageGrant;
+    }
+
+    public boolean isShowGenerateSpendProfilesButton() {
+        return !spendProfilesGenerated;
+    }
+
+    public boolean isShowSpendProfilesGeneratedMessage() {
+        return spendProfilesGenerated;
     }
 }

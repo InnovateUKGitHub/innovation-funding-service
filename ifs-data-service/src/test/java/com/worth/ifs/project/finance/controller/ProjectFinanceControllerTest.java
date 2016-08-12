@@ -2,21 +2,23 @@ package com.worth.ifs.project.finance.controller;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.commons.rest.LocalDateResource;
+import com.worth.ifs.project.builder.SpendProfileResourceBuilder;
 import com.worth.ifs.project.controller.ProjectFinanceController;
+import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.project.resource.SpendProfileTableResource;
 import org.junit.Test;
-import org.springframework.test.web.servlet.MvcResult;
 
 import java.math.BigDecimal;
 
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.util.JsonMappingUtil.fromJson;
+import static com.worth.ifs.util.JsonMappingUtil.toJson;
 import static com.worth.ifs.util.MapFunctions.asMap;
 import static java.util.Arrays.asList;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ProjectFinanceControllerTest extends BaseControllerMockMVCTest<ProjectFinanceController> {
@@ -33,7 +35,7 @@ public class ProjectFinanceControllerTest extends BaseControllerMockMVCTest<Proj
     }
 
     @Test
-    public void getSpendProfile() throws Exception {
+    public void getSpendProfileTable() throws Exception {
 
         Long projectId = 1L;
         Long organisationId = 1L;
@@ -58,15 +60,24 @@ public class ProjectFinanceControllerTest extends BaseControllerMockMVCTest<Proj
 
         when(projectFinanceServiceMock.getSpendProfileTable(projectId, organisationId)).thenReturn(serviceSuccess(expectedTable));
 
-        MvcResult result = mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile", projectId, organisationId))
+        mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile-table", projectId, organisationId))
                 .andExpect(status().isOk())
-                .andReturn();
-
-        SpendProfileTableResource actualTable = fromJson(result.getResponse().getContentAsString(), SpendProfileTableResource.class);
-        assertSpendProfilesEqual(expectedTable, actualTable);
+                .andExpect(content().json(toJson(expectedTable)));
     }
 
-    private void assertSpendProfilesEqual(SpendProfileTableResource expectedTable, SpendProfileTableResource actualTable) {
+    @Test
+    public void getSpendProfile() throws Exception {
+
+        Long projectId = 1L;
+        Long organisationId = 1L;
+
+        SpendProfileResource spendProfileResource = SpendProfileResourceBuilder.newSpendProfileResource().build();
+
+        when(projectFinanceServiceMock.getSpendProfile(projectId, organisationId)).thenReturn(serviceSuccess(spendProfileResource));
+
+        mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile", projectId, organisationId))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(spendProfileResource)));
     }
 
     @Override

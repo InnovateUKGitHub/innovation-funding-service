@@ -26,7 +26,7 @@ public class ProjectFinanceController {
         return projectFinanceService.generateSpendProfile(projectId).toPostCreateResponse();
     }
 
-    @RequestMapping("/{projectId}/partner-organisation/{organisationId}/spend-profile")
+    @RequestMapping("/{projectId}/partner-organisation/{organisationId}/spend-profile-table")
     public RestResult<SpendProfileTableResource> getSpendProfileTable(@PathVariable("projectId") final Long projectId,
                                                                  @PathVariable("organisationId") final Long organisationId) {
         return projectFinanceService.getSpendProfileTable(projectId, organisationId).toGetResponse();

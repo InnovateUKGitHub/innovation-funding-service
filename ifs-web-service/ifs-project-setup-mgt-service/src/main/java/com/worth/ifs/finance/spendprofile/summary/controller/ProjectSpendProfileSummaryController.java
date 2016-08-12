@@ -11,6 +11,7 @@ import com.worth.ifs.finance.spendprofile.summary.viewmodel.ProjectSpendProfileS
 import com.worth.ifs.project.ProjectService;
 import com.worth.ifs.project.finance.ProjectFinanceService;
 import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.util.CollectionFunctions.mapWithIndex;
@@ -85,6 +87,8 @@ public class ProjectSpendProfileSummaryController {
         CompetitionSummaryResource competitionSummary = applicationSummaryService.getCompetitionSummaryByCompetitionId(application.getCompetition());
         List<OrganisationResource> partnerOrganisations = projectService.getPartnerOrganisationsForProject(projectId);
 
+        Optional<SpendProfileResource> anySpendProfile = projectFinanceService.getSpendProfile(projectId, partnerOrganisations.get(0).getId());
+
         List<ProjectSpendProfileSummaryViewModel.SpendProfileOrganisationRow> organisationRows = mapWithIndex(partnerOrganisations, (i, org) ->
 
                 new ProjectSpendProfileSummaryViewModel.SpendProfileOrganisationRow(
@@ -101,7 +105,8 @@ public class ProjectSpendProfileSummaryController {
                 project.getTargetStartDate(), project.getDurationInMonths().intValue(),
                 BigDecimal.valueOf(400000), BigDecimal.valueOf(200000),
                 BigDecimal.valueOf(0),
-                BigDecimal.valueOf(50));
+                BigDecimal.valueOf(50),
+                anySpendProfile.isPresent());
     }
 
     private <T extends Enum> T getEnumForIndex(Class<T> enums, int index) {

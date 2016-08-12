@@ -2,7 +2,9 @@ package com.worth.ifs.project.finance.documentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
+import com.worth.ifs.commons.error.CommonErrors;
 import com.worth.ifs.commons.rest.LocalDateResource;
+import com.worth.ifs.project.builder.SpendProfileResourceBuilder;
 import com.worth.ifs.project.controller.ProjectFinanceController;
 import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.project.resource.SpendProfileTableResource;
@@ -18,7 +20,8 @@ import java.util.Map;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.documentation.SpendProfileTableDocs.spendProfileTableFields;
+import static com.worth.ifs.documentation.SpendProfileDocs.spendProfileResourceFields;
+import static com.worth.ifs.documentation.SpendProfileDocs.spendProfileTableFields;
 import static java.util.Arrays.asList;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -58,7 +61,7 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
     }
 
     @Test
-    public void getSpendProfile()  throws Exception {
+    public void getSpendProfileTable()  throws Exception {
 
         Long projectId = 1L;
         Long organisationId = 1L;
@@ -70,7 +73,7 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
 
         when(projectFinanceServiceMock.getSpendProfileTable(projectId, organisationId)).thenReturn(serviceSuccess(table));
 
-        mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile", projectId, organisationId))
+        mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile-table", projectId, organisationId))
                 .andExpect(status().isOk())
                 .andExpect(content().string(new ObjectMapper().writeValueAsString(table)))
                 .andDo(this.document.snippets(
@@ -83,7 +86,7 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
     }
 
     @Test
-    public void getSpendProfileWhenSpendProfileDataNotInDb()  throws Exception {
+    public void getSpendProfileTableWhenSpendProfileDataNotInDb()  throws Exception {
 
         Long projectId = 1L;
         Long organisationId = 1L;
@@ -91,7 +94,7 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
         when(projectFinanceServiceMock.getSpendProfileTable(projectId, organisationId)).
                     thenReturn(serviceFailure(notFoundError(SpendProfileResource.class, projectId, organisationId)));
 
-        mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile", projectId, organisationId))
+        mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile-table", projectId, organisationId))
                 .andExpect(status().isNotFound())
                 .andDo(this.document.snippets(
                         pathParameters(
@@ -100,6 +103,53 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
                         )
                 ));
     }
+
+    @Test
+    public void getSpendProfile()  throws Exception {
+
+        Long projectId = 1L;
+        Long organisationId = 1L;
+
+        SpendProfileResource spendProfileResource = SpendProfileResourceBuilder.newSpendProfileResource().build();
+
+        when(projectFinanceServiceMock.getSpendProfile(projectId, organisationId)).thenReturn(serviceSuccess(spendProfileResource));
+
+        mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile", projectId, organisationId))
+                .andExpect(status().isOk())
+                .andExpect(content().string(new ObjectMapper().writeValueAsString(spendProfileResource)))
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project for which the Spend Profile data is being retrieved"),
+                                parameterWithName("organisationId").description("Organisation Id for which the Spend Profile data is being retrieved")
+                        ),
+                        responseFields(spendProfileResourceFields)
+                ));
+    }
+
+    @Test
+    public void getSpendProfileWhenSpendProfileDataNotInDb()  throws Exception {
+
+        Long projectId = 1L;
+        Long organisationId = 1L;
+
+        when(projectFinanceServiceMock.getSpendProfile(projectId, organisationId)).
+            /*
+             * TODO - When the Spend Profile domain model is done,  SpendProfileResource.class should be replaced with SpendProfile.class
+             * We don't have this class as yet, and hence we are returning SpendProfileResource.class directly at the moment
+             */
+                    thenReturn(serviceFailure(CommonErrors.notFoundError(SpendProfileResource.class, projectId, organisationId)));
+
+        mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile", projectId, organisationId)
+        )
+                .andExpect(status().isNotFound())
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project for which the Spend Profile data is being retrieved"),
+                                parameterWithName("organisationId").description("Organisation Id for which the Spend Profile data is being retrieved")
+                        )
+                ));
+    }
+
 
     private Map<String, BigDecimal> buildEligibleCostPerCategoryMap() {
 

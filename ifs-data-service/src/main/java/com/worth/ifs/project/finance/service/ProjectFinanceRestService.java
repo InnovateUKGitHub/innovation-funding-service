@@ -1,6 +1,7 @@
 package com.worth.ifs.project.finance.service;
 
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.project.resource.SpendProfileTableResource;
 
 /**
@@ -12,4 +13,5 @@ public interface ProjectFinanceRestService {
 
     RestResult<SpendProfileTableResource> getSpendProfileTable(Long projectId, Long organisationId);
 
+    RestResult<SpendProfileResource> getSpendProfile(Long projectId, Long organisationId);
 }

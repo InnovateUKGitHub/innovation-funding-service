@@ -3,6 +3,7 @@ package com.worth.ifs.project.security;
 import com.worth.ifs.BaseServiceSecurityTest;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.project.finance.transactional.ProjectFinanceService;
+import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.project.resource.SpendProfileTableResource;
 import com.worth.ifs.user.resource.RoleResource;
 import com.worth.ifs.user.resource.UserResource;
@@ -53,6 +54,11 @@ public class ProjectFinanceServiceSecurityTest extends BaseServiceSecurityTest<P
 
         @Override
         public ServiceResult<SpendProfileTableResource> getSpendProfileTable(Long projectId, Long organisationId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<SpendProfileResource> getSpendProfile(Long projectId, Long organisationId) {
             return null;
         }
     }
