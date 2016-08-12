@@ -6,10 +6,10 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.invite.domain.ApplicationInvite;
 import com.worth.ifs.invite.domain.InviteOrganisation;
-import com.worth.ifs.invite.mapper.InviteMapper;
+import com.worth.ifs.invite.mapper.ApplicationInviteMapper;
 import com.worth.ifs.invite.mapper.InviteOrganisationMapper;
+import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
-import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.resource.InviteResultsResource;
 import com.worth.ifs.notifications.resource.NotificationMedium;
 import com.worth.ifs.notifications.service.NotificationService;
@@ -63,7 +63,7 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
     @Mock
     NotificationService notificationService;
     @Mock
-    InviteMapper inviteMapper;
+    ApplicationInviteMapper applicationInviteMapper;
     @Mock
     InviteOrganisationMapper inviteOrganisationMapper;
 
@@ -74,7 +74,7 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
 
     @Before
     public void setup() {
-        when(inviteRepositoryMock.save(any(ApplicationInvite.class))).thenReturn(new ApplicationInvite());
+        when(applicationInviteRepositoryMock.save(any(ApplicationInvite.class))).thenReturn(new ApplicationInvite());
         ServiceResult<Void> result = serviceSuccess();
         when(notificationService.sendNotification(any(), eq(NotificationMedium.EMAIL))).thenReturn(result);
 
@@ -162,7 +162,7 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
     @Test
     public void testCreateApplicationInvites() {
 
-        List<InviteResource> inviteResources = newInviteResource()
+        List<ApplicationInviteResource> inviteResources = newInviteResource()
                 .withApplication(1L)
                 .withName("testname")
                 .withEmail("testemail", "testemail1", "testemail2", "testemail3", "testemail4")
@@ -192,20 +192,20 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
         }));
 
 
-        when(inviteRepositoryMock.save(saveInvitesExpectations)).thenReturn(savedInvites);
+        when(applicationInviteRepositoryMock.save(saveInvitesExpectations)).thenReturn(savedInvites);
         when(applicationRepositoryMock.findOne(isA(Long.class))).thenReturn(newApplication().withId(1L).build());
 
         ServiceResult<InviteResultsResource> result = inviteService.createApplicationInvites(inviteOrganisationResource);
         assertTrue(result.isSuccess());
 
         verify(inviteOrganisationRepositoryMock).save(isA(InviteOrganisation.class));
-        verify(inviteRepositoryMock).save(isA(List.class));
+        verify(applicationInviteRepositoryMock).save(isA(List.class));
     }
 
     @Test
     public void testCreateApplicationInvitesWithInvalidInvitesNoApplicationId() {
 
-        List<InviteResource> inviteResources = newInviteResource()
+        List<ApplicationInviteResource> inviteResources = newInviteResource()
                 .withName("testname")
                 .withEmail("testemail")
                 .build(5);
@@ -216,7 +216,7 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
     @Test
     public void testCreateApplicationInvitesWithInvalidInvitesNoEmailAddress() {
 
-        List<InviteResource> inviteResources = newInviteResource()
+        List<ApplicationInviteResource> inviteResources = newInviteResource()
                 .withId(1L)
                 .withName("testname")
                 .build(5);
@@ -227,7 +227,7 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
     @Test
     public void testCreateApplicationInvitesWithInvalidInvitesNoName() {
 
-        List<InviteResource> inviteResources = newInviteResource()
+        List<ApplicationInviteResource> inviteResources = newInviteResource()
                 .withId(1L)
                 .withEmail("testemail")
                 .build(5);
@@ -238,7 +238,7 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
     @Test
     public void testCreateApplicationInvitesWithInvalidOrganisationInviteNoOrganisationName() {
 
-        List<InviteResource> inviteResources = newInviteResource()
+        List<ApplicationInviteResource> inviteResources = newInviteResource()
                 .withApplication(1L)
                 .withName("testname")
                 .withEmail("testemail")
@@ -257,7 +257,7 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
         assertTrue(result.isFailure());
         
         verify(inviteOrganisationRepositoryMock, never()).save(isA(InviteOrganisation.class));
-        verify(inviteRepositoryMock, never()).save(isA(List.class));
+        verify(applicationInviteRepositoryMock, never()).save(isA(List.class));
     }
 
     @Ignore
@@ -273,16 +273,16 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
         Application application = newApplication().withCompetition(competition).withProcessRoles(leadApplicantProcessRole).build();
         InviteOrganisation inviteOrganisation = newInviteOrganisation().build();
         ApplicationInvite invite = newInvite().withInviteOrganisation(inviteOrganisation).withApplication(application).build();
-        InviteResource inviteResource = newInviteResource().withOrganisation(1L).withApplication(application.getId()).build();
+        ApplicationInviteResource inviteResource = newInviteResource().withOrganisation(1L).withApplication(application.getId()).build();
 
 
-        when(inviteRepositoryMock.getByHash("an organisation hash")).thenReturn(invite);
+        when(applicationInviteRepositoryMock.getByHash("an organisation hash")).thenReturn(invite);
 
         ServiceResult<InviteOrganisationResource> organisationInvite = inviteService.getInviteOrganisationByHash("an organisation hash");
         assertTrue(organisationInvite.isSuccess());
 
 
-        List<InviteResource> expectedInvites = singletonList(inviteResource);
+        List<ApplicationInviteResource> expectedInvites = singletonList(inviteResource);
 
         InviteOrganisationResource expectedInviteOrganisation = newInviteOrganisationResource().
                 withId(inviteOrganisation.getId()).
@@ -304,20 +304,20 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
 //        Application application = newApplication().withId(123L).withCompetition(competition).withProcessRoles(leadApplicantProcessRole).build();
 //        InviteOrganisation inviteOrganisation = newInviteOrganisation().build();
 //        Invite invite1 = newInvite().withInviteOrganisation(inviteOrganisation).withApplication(application).build();
-//        InviteResource inviteResource1 = newInviteResource().withApplication(application).build();
+//        ApplicationInviteResource inviteResource1 = newInviteResource().withApplication(application).build();
 //        Invite invite2 = newInvite().withInviteOrganisation(inviteOrganisation).withApplication(application).build();
 //        inviteOrganisation.setInvites(Arrays.asList(invite1, invite2));
 //
-////        when(inviteMapper.mapToResource(invite1)).thenReturn()
-//        when(inviteRepositoryMock.findByApplicationId(123L)).thenReturn(asList(invite1, invite2));
-//        when(inviteMapper.mapToResource(invite1)).thenReturn(new InviteResource());
-//        when(inviteMapper.mapToResource(invite2)).thenReturn(new InviteResource());
+////        when(applicationInviteMapper.mapToResource(invite1)).thenReturn()
+//        when(applicationInviteRepositoryMock.findByApplicationId(123L)).thenReturn(asList(invite1, invite2));
+//        when(applicationInviteMapper.mapToResource(invite1)).thenReturn(new ApplicationInviteResource());
+//        when(applicationInviteMapper.mapToResource(invite2)).thenReturn(new ApplicationInviteResource());
 //        when(inviteOrganisationMapper.mapToResource(inviteOrganisation)).thenReturn(inviteOrganisationMapperLocal.mapToResource(inviteOrganisation));
 //
 //        ServiceResult<Set<InviteOrganisationResource>> result = inviteService.getInvitesByApplication(123L);
 //        assertTrue(result.isSuccess());
 //
-//        List<InviteResource> expectedInvites = asList(new InviteResource(invite1), new InviteResource(invite2));
+//        List<ApplicationInviteResource> expectedInvites = asList(new ApplicationInviteResource(invite1), new ApplicationInviteResource(invite2));
 //
 //        InviteOrganisationResource expectedInviteOrganisation = newInviteOrganisationResource().
 //                withId(inviteOrganisation.getId()).
@@ -340,7 +340,7 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
     @Test
     public void testGetInviteOrganisationByHashButInviteOrganisationNotFound() {
 
-        when(inviteRepositoryMock.getByHash("an organisation hash")).thenReturn(null);
+        when(applicationInviteRepositoryMock.getByHash("an organisation hash")).thenReturn(null);
 
         ServiceResult<InviteOrganisationResource> organisationInvite = inviteService.getInviteOrganisationByHash("an organisation hash");
         assertTrue(organisationInvite.isFailure());
@@ -348,7 +348,7 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
     }
 
 
-    private void assertInvalidInvites(List<InviteResource> inviteResources) {
+    private void assertInvalidInvites(List<ApplicationInviteResource> inviteResources) {
         InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource()
                 .withInviteResources(inviteResources)
                 .withOrganisationName("new organisation")
@@ -362,6 +362,6 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
         assertTrue(result.isFailure());
 
         verify(inviteOrganisationRepositoryMock, never()).save(isA(InviteOrganisation.class));
-        verify(inviteRepositoryMock, never()).save(isA(List.class));
+        verify(applicationInviteRepositoryMock, never()).save(isA(List.class));
     }
 }

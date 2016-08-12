@@ -10,7 +10,7 @@ import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.LeadApplicantType;
 import com.worth.ifs.competition.resource.MilestoneType;
-import com.worth.ifs.invite.domain.InvitationTarget;
+import com.worth.ifs.invite.domain.ProcessActivity;
 import com.worth.ifs.user.domain.User;
 
 import javax.persistence.*;
@@ -23,7 +23,7 @@ import java.util.*;
  * Competition defines database relations and a model to use client side and server side.
  */
 @Entity
-public class Competition implements InvitationTarget {
+public class Competition implements ProcessActivity {
 
 	@Transient
 	private DateProvider dateProvider = new DateProvider();

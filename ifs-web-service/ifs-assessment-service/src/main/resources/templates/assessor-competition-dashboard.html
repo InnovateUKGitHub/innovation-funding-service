@@ -1,54 +1,52 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
-    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+    <div th:include="fragments/layout :: head" th:with="pageTitle=${model.competitionTitle}" th:remove="tag" />
 </head>
-<body th:with="context='assessment'" class="app-dashboard">
 
-<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+    <body th:with="context='assessment'" class="assessor-comp-dashboard">
+        <div th:include="fragments/layout :: body-start" th:remove="tag" />
+        <div th:include="fragments/layout :: global-header" th:remove="tag" />
 
+        <main id="content">
+            <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+            <div th:include="fragments/assessment :: assessment-header-sub" th:with="linkTitle='Back to assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}" th:remove="tag" />
 
-<main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Back to competition dashboard'}, ${'/prototypes/865-assessor-dashboard-invites'})" th:remove="tag" />
+            <div class="hgroup">
+                <h1 class="heading-large" th:text="${model.competitionTitle}" />
+            </div>
 
-	<!-- HARDCODED PROTOTYPE HTML -->
-	<div class="hgroup">
-        <h1 class="heading-large">Technology inspired</h1>
-    </div>
+            <div class="grid-row">
+                <div class="column-two-thirds competition details">
+                    <ul class="no-bullet">
+                        <li><strong>Competiton:</strong> <span th:text="${model.competitionTitle}" th:remove="tag"/></li>
+                        <li><strong>Funding body:</strong> <span th:text="${model.fundingBody}" th:remove="tag"/></li>
+                    </ul>
+                </div>
+            </div>
 
-    <div class="grid-row">
-        <div class="column-two-thirds competition details">
-            <ul class="no-bullet">
-                <li><strong>Competiton:</strong> Juggling Craziness (CRD3359)</li>
-                <li><strong>Lead technologist:</strong> Mike Biddle</li>
-                <li><strong>Funding body:</strong> Innovate UK</li>
-                <li><strong>Accept applications deadline:</strong> Noon Wednesday 20 April 2016</li>
-                <li><strong>Submit applications deadline:</strong> Noon Monday 25 April 2016</li>
-            </ul>
+            <div class="my-applications">
+                <div class="in-progress"  th:unless="${#lists.isEmpty(model.applications)}">
+                    <h3 class="heading-large">Applications for Assessment (<span th:text="${#lists.size(model.applications)}" />)</h3>
+                    <form>
+                        <ul class="boxed-list bulk-select">
+                            <li th:each="application : ${model.applications}">
+                                <div class="grid-row">
+                                    <div class="column-assessment-details">
+                                        <h4 class="heading-medium"><a th:href="@{/{assessmentId}(assessmentId=${application.assessmentId})}" th:text="${application.displayLabel}" /></h4>
+                                        <p th:text="${application.leadOrganisation}" />
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </form>
+                </div>
+            </div>
 
-        </div>
-        <div class="column-third">
-            <ul class="list-bullet">
-                <li><a href="#">competition brief</a></li>
-                <li><a href="#">assessor briefing materials</a></li>
-            </ul>
-        </div>
-    </div>
+            <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+        </main>
 
-    <div th:include="prototypes/fragments/assessor-view :: prototype-assessor-application" th:remove="tag" />
-
-
-
-	<!-- END OFHARDCODED PROTOTYPE HTML -->
-
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
-</main>
-
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
-</body>
+        <div th:include="fragments/layout :: footer" th:remove="tag" />
+        <div th:include="fragments/layout :: body-end" th:remove="tag" />
+    </body>
 </html>

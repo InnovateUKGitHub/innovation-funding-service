@@ -753,7 +753,7 @@
     </ul>
 
     <div class="extra-margin">
-        <form th:action="@{(${editable} ? '/management/competition/setup/${competition.id}/section/application' : '/management/competition/setup/${competition.id}/section/application/edit')}" method="post" novalidate="novalidate">
+        <form th:action="@{(${editable} ? '/competition/setup/' + ${competition.id} + '/section/application' : '/competition/setup/' + ${competition.id} + '/section/application/edit')}" method="post" novalidate="novalidate">
             <button th:if="${editable}" type="submit" class="button">Done</button>
             <button th:if="${!editable}" type="submit" class="button">Edit</button>
         </form>

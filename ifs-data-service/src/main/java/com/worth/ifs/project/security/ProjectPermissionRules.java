@@ -1,8 +1,6 @@
 package com.worth.ifs.project.security;
 
-import com.worth.ifs.invite.domain.Invite;
-import com.worth.ifs.invite.domain.InviteOrganisation;
-import com.worth.ifs.invite.resource.InviteResource;
+import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.security.BasePermissionRules;
 import com.worth.ifs.security.PermissionRule;
@@ -10,9 +8,8 @@ import com.worth.ifs.security.PermissionRules;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
-import static com.worth.ifs.security.SecurityRuleUtil.checkProcessRole;
 import static com.worth.ifs.security.SecurityRuleUtil.isCompAdmin;
-import static com.worth.ifs.user.resource.UserRoleType.COLLABORATOR;
+import static com.worth.ifs.security.SecurityRuleUtil.isProjectFinanceUser;
 
 @PermissionRules
 @Component
@@ -26,6 +23,11 @@ public class ProjectPermissionRules extends BasePermissionRules {
     @PermissionRule(value = "READ", description = "Comp admins can see project resources")
     public boolean compAdminsCanViewProjects(final ProjectResource project, final UserResource user){
         return isCompAdmin(user);
+    }
+
+    @PermissionRule(value = "READ", description = "Project finance users can see project resources")
+    public boolean projectFinanceUsersCanViewProjects(final ProjectResource project, final UserResource user){
+        return isProjectFinanceUser(user);
     }
 
     @PermissionRule(
@@ -46,7 +48,14 @@ public class ProjectPermissionRules extends BasePermissionRules {
     @PermissionRule(
             value = "INVITE_FINANCE_CONTACT",
             description = "A partner can invite a member of their organisation to become a finance contact")
-    public boolean partnersCanInviteTheirOwnOrganisationsFinanceContacts(InviteResource invite, UserResource user) {
+    public boolean partnersCanInviteTheirOwnOrganisationsFinanceContacts(ApplicationInviteResource invite, UserResource user) {
+        return isSpecificProjectPartnerByApplicationId(invite.getApplication(), invite.getInviteOrganisation(), user.getId());
+    }
+
+    @PermissionRule(
+            value = "INVITE_PROJECT_MANAGER",
+            description = "A partner can invite a member of their organisation to become a project manager")
+    public boolean partnersCanInviteTheirOwnOrganisationsProjectManager(ApplicationInviteResource invite, UserResource user) {
         return isSpecificProjectPartnerByApplicationId(invite.getApplication(), invite.getInviteOrganisation(), user.getId());
     }
 
