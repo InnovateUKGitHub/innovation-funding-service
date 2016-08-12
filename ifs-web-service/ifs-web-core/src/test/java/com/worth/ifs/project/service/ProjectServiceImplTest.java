@@ -4,16 +4,20 @@ import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.project.ProjectServiceImpl;
+import com.worth.ifs.project.builder.SpendProfileResourceBuilder;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.core.io.ByteArrayResource;
 
@@ -32,7 +36,10 @@ import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectRes
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static junit.framework.TestCase.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -59,6 +66,74 @@ public class ProjectServiceImplTest {
         assertEquals(projectResource, returnedProjectResource);
 
         verify(projectRestService).getProjectById(projectResource.getId());
+    }
+
+    @Test
+    public void testGetSpendProfileWhenProjectIdIsNull() {
+
+        SpendProfileResource returnedSpendProfileResource = service.getSpendProfile(null, 1L);
+
+        assertNull(returnedSpendProfileResource);
+
+        verify(projectRestService, never()).getSpendProfile(Mockito.any(), Mockito.any());
+    }
+
+    @Test
+    public void testGetSpendProfileWhenOrganisationIdIsNull() {
+
+        SpendProfileResource returnedSpendProfileResource = service.getSpendProfile(1L, null);
+
+        assertNull(returnedSpendProfileResource);
+
+        verify(projectRestService, never()).getSpendProfile(Mockito.any(), Mockito.any());
+    }
+
+    @Test
+    public void testGetSpendProfileWhenRestThrowsException() {
+
+        Long projectId = 1L;
+        Long organisationId = 1L;
+
+        when(projectRestService.getSpendProfile(projectId, organisationId)).
+                thenThrow(new ObjectNotFoundException("SpendProfile not found", null));
+
+        SpendProfileResource returnedSpendProfileResource = null;
+
+        try {
+            returnedSpendProfileResource = service.getSpendProfile(projectId, organisationId);
+        }
+        catch (Exception e) {
+
+            // We expect an exception to be thrown
+            assertTrue(e instanceof ObjectNotFoundException);
+
+            assertNull(returnedSpendProfileResource);
+            verify(projectRestService).getSpendProfile(projectId, organisationId);
+
+            // This exception flow is the only expected flow, so return from here and assertFalse if no exception
+            return;
+        }
+
+        // Should not reach here - we must get an exception
+        assertFalse(true);
+
+    }
+
+    @Test
+    public void testGetSpendProfileSuccess() {
+
+        Long projectId = 1L;
+        Long organisationId = 1L;
+
+        SpendProfileResource spendProfileResource = SpendProfileResourceBuilder.newSpendProfileResource().build();
+
+        when(projectRestService.getSpendProfile(projectId, organisationId)).thenReturn(restSuccess(spendProfileResource));
+
+        SpendProfileResource returnedSpendProfileResource = service.getSpendProfile(projectId, organisationId);
+
+        assertEquals(spendProfileResource, returnedSpendProfileResource);
+
+        verify(projectRestService).getSpendProfile(projectId, organisationId);
     }
 
     @Test
