@@ -51,6 +51,10 @@ public class ProjectBuilder extends BaseBuilder<Project, ProjectBuilder> {
         return withArray((duration, project) -> project.setDurationInMonths(duration), durations);
     }
 
+    public ProjectBuilder withName(String... names) {
+        return withArray((name, project) -> project.setName(name), names);
+    }
+
     public ProjectBuilder withApplication(Application... application){
         return withArray((app, project) -> project.setApplication(app), application);
     }

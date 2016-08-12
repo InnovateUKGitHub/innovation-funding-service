@@ -7,6 +7,7 @@ import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.FileAndContents;
+import com.worth.ifs.invite.builder.InviteResourceBuilder;
 import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
@@ -166,6 +167,26 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
             verify(projectPermissionRules).partnersCanUpdateTheirOwnOrganisationsFinanceContacts(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
         });
+    }
+
+    @Test
+    public void testInviteProjectManager() {
+
+        Long projectId = 1L;
+
+        ApplicationInviteResource inviteResource = InviteResourceBuilder.newInviteResource()
+                .withName("Abc Xyz")
+                .withEmail("Abc.xyz@gmail.com")
+                .withLeadOrganisation("Lead Organisation 1")
+                .withInviteOrganisationName("Invite Organisation 1")
+                .withHash("sample/url")
+                .build();
+
+        assertAccessDenied(() -> service.inviteProjectManager(projectId, inviteResource),
+                () -> {
+                    verify(projectPermissionRules).partnersCanInviteTheirOwnOrganisationsProjectManager(inviteResource, getLoggedInUser());
+                    verifyNoMoreInteractions(projectPermissionRules);
+                });
     }
 
     @Test
