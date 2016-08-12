@@ -72,8 +72,8 @@ dependencies {
     compile "org.springframework:spring-web"
     compile "com.jayway.jsonpath:json-path-assert:2.0.0"
     compile "com.jayway.jsonpath:json-path"
-    compile "org.springframework.statemachine:spring-statemachine-core:1.0.0.RC1"
-    compile "org.springframework.statemachine:spring-statemachine-recipes-common:1.0.0.RC1"
+    compile "org.springframework.statemachine:spring-statemachine-core:1.1.0.RELEASE"
+    compile "org.springframework.statemachine:spring-statemachine-recipes-common:1.1.0.RELEASE"
     compile 'org.apache.commons:commons-lang3:3.4'
     compile 'commons-codec:commons-codec:1.10'
     compile "org.flywaydb:flyway-core:4.0"
