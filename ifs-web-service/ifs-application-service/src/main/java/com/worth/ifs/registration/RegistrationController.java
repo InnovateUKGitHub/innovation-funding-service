@@ -101,6 +101,7 @@ public class RegistrationController {
 
     @RequestMapping(value = "/register", method = RequestMethod.GET)
     public String registerForm(Model model, HttpServletRequest request, HttpServletResponse response) {
+
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         if(user != null){
             return getRedirectUrlForUser(user);
@@ -178,8 +179,6 @@ public class RegistrationController {
                                      HttpServletRequest request,
                                      Model model) {
 
-        LOG.warn("registerFormSubmit");
-        
         boolean setInviteEmailAddress;
         
         try {
