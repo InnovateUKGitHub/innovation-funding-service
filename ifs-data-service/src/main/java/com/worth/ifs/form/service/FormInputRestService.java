@@ -16,4 +16,8 @@ public interface FormInputRestService {
     RestResult<List<FormInputResource>> getByCompetitionId(Long competitionId);
 
     RestResult<List<FormInputResource>> getByCompetitionIdAndScope(Long competitionId, FormInputScope scope);
+
+    RestResult<Void> delete(Long id);
+
+    RestResult<FormInputResource> save(FormInputResource formInputResource);
 }

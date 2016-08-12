@@ -9,6 +9,7 @@ import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.project.service.ProjectRestService;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.service.OrganisationRestService;
@@ -51,6 +52,16 @@ public class ProjectServiceImpl implements ProjectService {
         }
 
         return projectRestService.getProjectById(projectId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public SpendProfileResource getSpendProfile(final Long projectId, final Long organisationId) {
+
+        if (projectId == null || organisationId == null) {
+            return null;
+        }
+
+        return projectRestService.getSpendProfile(projectId, organisationId).getSuccessObjectOrThrowException();
     }
 
     @Override
@@ -188,6 +199,15 @@ public class ProjectServiceImpl implements ProjectService {
         List<ProjectUserResource> partnerUsers = getProjectUsersWithPartnerRole(projectId);
         OrganisationResource leadOrganisation = getLeadOrganisation(projectId);
         return simpleFilter(partnerUsers, projectUser -> !(projectUser.getOrganisation().equals(leadOrganisation.getId())));
+    }
+
+    @Override
+    public ServiceResult<Boolean> isOtherDocumentSubmitAllowed(long projectId) {
+        RestResult<Boolean> restResult = projectRestService.isOtherDocumentsSubmitAllowed(projectId);
+
+        return restResult.isSuccess() ?
+                restResult.toServiceResult() :
+                ServiceResult.serviceFailure(restResult.getErrors());
     }
 
     @Override

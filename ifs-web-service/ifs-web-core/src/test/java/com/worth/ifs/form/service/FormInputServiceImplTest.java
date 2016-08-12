@@ -87,4 +87,29 @@ public class FormInputServiceImplTest extends BaseServiceUnitTest<FormInputServi
         assertSame(expected, response);
         verify(formInputRestService, only()).getByCompetitionIdAndScope(competitionId, ASSESSMENT);
     }
+
+    @Test
+    public void testDelete() throws Exception {
+        Long formInputId = Long.MAX_VALUE;
+
+        when(formInputRestService.delete(formInputId)).thenReturn(restSuccess());
+
+        service.delete(formInputId);
+
+        verify(formInputRestService, only()).delete(formInputId);
+    }
+
+    @Test
+    public void testSave() throws Exception {
+        FormInputResource expected = newFormInputResource()
+                .build();
+
+
+        when(formInputRestService.save(expected)).thenReturn(restSuccess(expected));
+
+        FormInputResource response = service.save(expected);
+
+        assertSame(expected, response);
+        verify(formInputRestService, only()).save(expected);
+    }
 }

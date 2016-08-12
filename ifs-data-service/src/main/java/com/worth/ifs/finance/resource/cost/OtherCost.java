@@ -8,7 +8,7 @@ import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
-public class OtherCost implements CostItem {
+public class OtherCost implements FinanceRowItem {
     private Long id;
 
     @NotBlank
@@ -52,8 +52,8 @@ public class OtherCost implements CostItem {
     }
 
     @Override
-    public CostType getCostType() {
-        return CostType.OTHER_COSTS;
+    public FinanceRowType getCostType() {
+        return FinanceRowType.OTHER_COSTS;
     }
 
     @Override

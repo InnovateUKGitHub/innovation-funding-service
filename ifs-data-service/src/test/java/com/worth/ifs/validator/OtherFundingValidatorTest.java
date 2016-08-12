@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.worth.ifs.finance.domain.FinanceRow;
+import com.worth.ifs.finance.resource.cost.FinanceRowType;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,11 +32,9 @@ import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.transactional.QuestionService;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.finance.builder.ApplicationFinanceBuilder;
-import com.worth.ifs.finance.builder.CostBuilder;
+import com.worth.ifs.finance.builder.FinanceRowBuilder;
 import com.worth.ifs.finance.domain.ApplicationFinance;
-import com.worth.ifs.finance.domain.Cost;
-import com.worth.ifs.finance.repository.CostRepository;
-import com.worth.ifs.finance.resource.cost.CostType;
+import com.worth.ifs.finance.repository.FinanceRowRepository;
 import com.worth.ifs.finance.resource.cost.OtherFunding;
 import com.worth.ifs.util.MessageUtil;
 
@@ -46,7 +46,7 @@ public class OtherFundingValidatorTest {
     private ReloadableResourceBundleMessageSource messageSource;
 
     @Mock
-    private CostRepository costRepository;
+    private FinanceRowRepository financeRowRepository;
     
     @Mock
     private QuestionService questionService;
@@ -55,7 +55,7 @@ public class OtherFundingValidatorTest {
 	@Before
 	public void setUp() {
 		messageSource = new ReloadableResourceBundleMessageSource();
-        validator = new OtherFundingValidator(costRepository, questionService);
+        validator = new OtherFundingValidator(financeRowRepository, questionService);
     }
 	
     @Test
@@ -153,12 +153,12 @@ public class OtherFundingValidatorTest {
 
     private void mockWithRadio(String value){
         ApplicationFinance applicationFinance = ApplicationFinanceBuilder.newApplicationFinance().build();
-        Cost cost = CostBuilder.newCost().withApplicationFinance(applicationFinance).withItem(value).build();
+        FinanceRow cost = FinanceRowBuilder.newFinanceRow().withApplicationFinance(applicationFinance).withItem(value).build();
         Question question = QuestionBuilder.newQuestion().build();
-        when(costRepository.findOne(any(Long.class))).thenReturn(cost);
-        when(questionService.getQuestionByFormInputType(CostType.OTHER_FUNDING.getType())).thenReturn(ServiceResult.serviceSuccess(question));
-        List<Cost> listOfCostWithYes = new ArrayList<>();
+        when(financeRowRepository.findOne(any(Long.class))).thenReturn(cost);
+        when(questionService.getQuestionByFormInputType(FinanceRowType.OTHER_FUNDING.getType())).thenReturn(ServiceResult.serviceSuccess(question));
+        List<FinanceRow> listOfCostWithYes = new ArrayList<>();
         listOfCostWithYes.add(cost);
-        when(costRepository.findByApplicationFinanceIdAndNameAndQuestionId(anyLong(), eq(COST_KEY), anyLong())).thenReturn(listOfCostWithYes);
+        when(financeRowRepository.findByApplicationFinanceIdAndNameAndQuestionId(anyLong(), eq(COST_KEY), anyLong())).thenReturn(listOfCostWithYes);
     }
 }

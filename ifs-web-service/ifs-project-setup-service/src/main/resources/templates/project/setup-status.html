@@ -9,7 +9,7 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/applicant/dashboard}"  th:remove="tag"></div>
+    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=${url}"  th:remove="tag"></div>
 
     <div class="page-title">
         <div th:include="fragments/elements :: project-title (projectId=${model.projectId}, projectName=${model.projectName})" th:remove="tag" />
@@ -86,7 +86,11 @@
       <li>
         <div class="progress-status" />
         <div class="progress-info">
-          <h2 class="heading-medium"><a th:href="@{/project/{id}/spend-profile(id=${model.projectId})}">Spend profile</a></h2>
+
+          <!-- TODO - This needs to be replaced with something like the below after adding the organisation id to the ProjectSetupStatusViewModel -->
+          <h2 class="heading-medium"><a th:href="@{/project/{id}/partner-organisation/1/spend-profile(id=${model.projectId})}">Spend profile</a></h2>
+          <!--a th:href="@{/project/{id}/partner-organisation/{orgId}/spend-profile(id=${model.projectId}, orgId=${model.orgId})}">Spend profile</a-->
+
           <p>Once we have approved your financial information, we will produce a spend profile.</p>
         </div>
       </li>
@@ -97,11 +101,11 @@
         <div class="progress-status" />
         <div class="progress-info">
           <div th:unless="${param.user != null}" th:remove="tag">
-            <h2 class="heading-medium"><a th:href="@{/project/{id}/other-documents(id=${model.projectId})}">Other documents</a></h2>
+            <h2 class="heading-medium"><a th:href="@{/project/{id}/partner/documents(id=${model.projectId})}">Other documents</a></h2>
             <p>As the lead partner in the consortium, you will need to upload documents including:</p>
           </div>
           <div th:if="${param.user != null and param.user[0] == 'nonLead'}" th:remove="tag">
-            <h2 class="heading-medium"><a th:href="@{/project/{id}/other-documents(id=${model.projectId})}">Other documents</a></h2>
+            <h2 class="heading-medium"><a th:href="@{/project/{id}/partner/documents(id=${model.projectId})}">Other documents</a></h2>
             <p>The lead partner of the consortium will need to upload documents including:</p>
           </div>
           <ul class="list-bullet">

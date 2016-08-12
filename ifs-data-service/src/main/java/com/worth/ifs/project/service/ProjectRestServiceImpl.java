@@ -8,6 +8,7 @@ import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,11 @@ public class ProjectRestServiceImpl extends BaseRestService implements ProjectRe
     @Override
     public RestResult<ProjectResource> getProjectById(Long projectId) {
         return getWithRestResult(projectRestURL + "/" + projectId, ProjectResource.class);
+    }
+
+    @Override
+    public RestResult<SpendProfileResource> getSpendProfile(final Long projectId, final Long organisationId) {
+        return getWithRestResult(projectRestURL + "/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile/", SpendProfileResource.class);
     }
 
 	@Override
@@ -124,6 +130,11 @@ public class ProjectRestServiceImpl extends BaseRestService implements ProjectRe
     public RestResult<FileEntryResource> addExploitationPlanDocument(Long projectId, String contentType, long contentLength, String originalFilename, byte[] bytes) {
         String url = projectRestURL + "/" + projectId + "/exploitation-plan?filename=" + originalFilename;
         return postWithRestResult(url, bytes, createFileUploadHeader(contentType, contentLength), FileEntryResource.class);
+    }
+
+    @Override
+    public RestResult<Boolean> isOtherDocumentsSubmitAllowed(Long projectId) {
+        return getWithRestResult(projectRestURL + "/" + projectId + "/partner/documents/submit", Boolean.class);
     }
 
     @Override

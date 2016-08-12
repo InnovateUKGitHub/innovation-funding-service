@@ -11,5 +11,7 @@ public interface AssessmentRestService {
 
     RestResult<AssessmentResource> getById(final Long id);
 
-    RestResult<Void> updateStatus(final Long id, final ProcessOutcomeResource processOutcome);
+    RestResult<Void> recommend(final Long id, final ProcessOutcomeResource processOutcome);
+
+    RestResult<Void> rejectInvitation(final Long id, final ProcessOutcomeResource processOutcome);
 }

@@ -203,12 +203,12 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
     }
 
     @Test
-    public void testRejectApplication() throws Exception {
+    public void testRejectInvitation() throws Exception {
+        final Long assessmentId = 1L;
         final String reason = "reason";
         final String comment = "comment";
-        final Long assessmentId = 1L;
 
-        when(assessmentService.rejectApplication(assessmentId, "reason", "comment")).thenReturn(serviceSuccess());
+        when(assessmentService.rejectInvitation(assessmentId, reason, comment)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/{assessmentId}/reject", assessmentId)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -218,7 +218,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(view().name("assessor-dashboard"))
                 .andReturn();
 
-        verify(assessmentService, only()).rejectApplication(assessmentId, reason, comment);
+        verify(assessmentService, only()).rejectInvitation(assessmentId, reason, comment);
     }
 
     private List<ApplicationFinanceResource> setupFinances(ApplicationResource app, SortedSet<OrganisationResource> orgSet) {

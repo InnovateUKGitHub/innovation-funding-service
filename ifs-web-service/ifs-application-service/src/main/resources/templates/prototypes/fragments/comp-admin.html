@@ -19,6 +19,9 @@
                     <th:block th:if="${partner == 'lead'}">
                         <small>(Lead partner)</small>
                     </th:block>
+                    <th:block th:if="${partner == 'nonLead'}">
+                        <small>(Partner)</small>
+                    </th:block>
                 </h1> 
             </div> 
             <div class="column-third" th:unless="${subheading == 'createComp'}">

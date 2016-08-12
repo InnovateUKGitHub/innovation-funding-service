@@ -29,11 +29,10 @@ import com.worth.ifs.competition.resource.CompetitionCoFunderResource;
 import com.worth.ifs.competition.resource.CompetitionCountResource;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.finance.domain.ApplicationFinance;
-import com.worth.ifs.finance.domain.CostField;
-import com.worth.ifs.finance.domain.CostValue;
+import com.worth.ifs.finance.domain.FinanceRowMetaField;
+import com.worth.ifs.finance.domain.FinanceRowMetaValue;
 import com.worth.ifs.form.domain.FormInputType;
 import com.worth.ifs.form.domain.FormValidator;
-import com.worth.ifs.invite.domain.ApplicationInvite;
 import com.worth.ifs.invite.domain.InviteOrganisation;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
 import com.worth.ifs.project.domain.Project;
@@ -41,6 +40,8 @@ import com.worth.ifs.project.domain.ProjectUser;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.project.resource.SpendProfileResource;
+import com.worth.ifs.project.resource.SpendProfileTableResource;
 import com.worth.ifs.token.domain.Token;
 import com.worth.ifs.token.resource.TokenResource;
 import com.worth.ifs.user.domain.OrganisationType;
@@ -71,11 +72,11 @@ public class POJOTest {
             Application.class,
             ApplicationStatus.class,
             FileEntry.class,
-            CostField.class,
+            FinanceRowMetaField.class,
             FormValidator.class,
             FormInputType.class,
             OrganisationAddress.class,
-            CostValue.class,
+            FinanceRowMetaValue.class,
             Token.class,
             InviteOrganisation.class,
             Section.class,
@@ -93,6 +94,8 @@ public class POJOTest {
             BankDetails.class,
             BankDetailsResource.class,
             MonitoringOfficerResource.class,
+            SpendProfileResource.class,
+            SpendProfileTableResource.class,
             CompetitionCoFunderResource.class,
             CompetitionCountResource.class
     );

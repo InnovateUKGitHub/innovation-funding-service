@@ -14,22 +14,29 @@ import java.util.List;
  * Form for the additional info competition setup section.
  */
 public class AdditionalInfoForm extends CompetitionSetupForm {
+
     @Size(max = 255, message = "Activity code has a maximum length of 255 characters")
     @NotEmpty(message = "Please enter a activity code")
     private String activityCode;
-    @Size(max = 255, message = "Innovate budget has a maximum length of 255 characters")
+
+    @Size(max = 255, message = "{validation.additionalinfoform.innovatebudget.size}")
     private String innovateBudget;
+
     @Size(max = 255, message = "Funder has a maximum length of 255 characters")
     @NotEmpty(message = "Please enter a funder name")
     private String funder;
+
     @Min(value=0, message = "Please a valid number.")
     @NotNull(message = "Please enter a budget")
     private BigDecimal funderBudget;
-    @NotEmpty(message = "Please enter a PAF number")
-    private String pafNumber;
-    @NotEmpty(message = "Please generate a competition code")
+
+    @NotEmpty(message = "{validation.additionalinfoform.pafnumber.required}")
+     private String pafNumber;
+
+    @NotEmpty(message = "{validation.additionalinfoform.competitioncode.required}")
     private String competitionCode;
-    @NotEmpty(message = "Please enter a budget code")
+
+    @NotEmpty(message = "{validation.additionalinfoform.budgetcode.required}")
     private String budgetCode;
 
     @Valid

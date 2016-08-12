@@ -276,135 +276,149 @@ The view is similar to the applications for assessment, but have a grey backgrou
 
 }
 
-.app-dashboard {
-		.competition-deadline {
-			margin:0;
-		}
+.app-dashboard,
+.assessor-dashboard,
+.assessor-comp-dashboard{
 
-			@include media(tablet){
-			.my-applications .in-progress .grid-row{
-					margin: 5px 0 0 12px;
-			}
-		}
+    .competition-deadline{
+        margin:0;
+    }
 
-	.boxed-list.bulk-select{
-		max-width: 96%;
-		@include media-down(mobile) {
-			max-width: 92%;
-		}
-	}
+    @include media(tablet){
+        .my-applications .in-progress .grid-row{
+            margin: 5px 0 0 12px;
+        }
+    }
 
-	.awaiting-assessment{
-		@include with-hourglass;
-		padding-top: 110px;
-	}
-	
-	.project-in-setup{
-		@include with-hourglass;
-		padding-top: 46px;
-		background-size: 36px 36px;
-    	background-position: 32px 0px;
-	}
+    .boxed-list.bulk-select{
+        max-width: 96%;
 
-	.assessment-submit-checkbox{
-		position: absolute;
-		top: 35%;
-		right: -34px;
-	}
+        @include media-down(mobile) {
+            max-width: 92%;
+        }
+    }
 
+    .awaiting-assessment{
+        @include with-hourglass;
+            padding-top: 110px;
+        }
 
+    .project-in-setup{
+        @include with-hourglass;
+        padding-top: 46px;
+        background-size: 36px 36px;
+        background-position: 32px 0px;
+    }
 
-	.submitted{
-		.boxed-list{
-			li{
-				background: #e8e9eb;
-			}
-		}
-		.application-status{
-			background: #e8e9eb !important;
-		}
-	}
+    .assessment-submit-checkbox{
+        position: absolute;
+        top: 35%;
+        right: -34px;
+    }
 
-	.button[name="submit_assessments"]{
-		margin: 15px 0 0 0;
-	}
+    .submitted{
 
-	.modal-confirm-submit{
-		.button[name="submit_assessments"]{
-			margin: 0;
-		}
-	}
+        .boxed-list{
 
-	.boxed-list .progress-container {
-		margin: 20px 0 55px 0;
-	}
-	.boxed-list .column-half + .column-half{
-		padding: 0 20px 0 0;
-		text-align:right;
-	}
-	.boxed-list .pie-container {
-		vertical-align:top;
-		margin-left:30px;
-	}
-    @include media-down(tablet) {
-		.boxed-list .column-half + .column-half{
-			text-align:left;
-			padding: 15px 15px;
-		}
-	}
+            li{
+                background: #e8e9eb;
+            }
+        }
 
-	.grid-row{
-		.row{
-			@include grid-column(1);
-		}
-	}
+        .application-status{
+            background: #e8e9eb !important;
+        }
+    }
 
+    .button[name="submit_assessments"]{
+        margin: 15px 0 0 0;
+    }
 
-	.competition-details{
+    .modal-confirm-submit{
 
-		.list-bullet{
-			margin-bottom: 45px;
-		}
+        .button[name="submit_assessments"]{
+            margin: 0;
+        }
+    }
 
-	}
+    .boxed-list .progress-container{
+        margin: 20px 0 55px 0;
+    }
 
-	.panel-indent{
-		margin-bottom: 0;
-	}
+    .boxed-list .column-half + .column-half{
+        padding: 0 20px 0 0;
+        text-align:right;
+    }
 
-	.form-hint{
-		margin-bottom: 0;
-	}
+    .boxed-list .pie-container{
+        vertical-align:top;
+        margin-left:30px;
+    }
 
-	.collapsible{
-		.column-three-quarters{
-			padding-left: 30px;
-		}
+    @include media-down(tablet){
+        .boxed-list .column-half + .column-half{
+            text-align:left;
+            padding: 15px 15px;
+        }
+    }
 
-		.column-full{
-			padding: 0 18px;
-		}
+    .grid-row{
 
-		.accordion_item{
+        .row{
+            @include grid-column(1);
+        }
+    }
 
-			border-top: 1px solid $border-colour;
-			padding-top: 20px;
+    .competition-details{
 
-			&:first-child{
-				border: none;
-			}
-		}
+        .list-bullet{
+            margin-bottom: 45px;
+        }
+    }
 
-		.assessor-score{
-			text-align: center;
-			margin-right: 60px;
-			font-weight: bold;
-			float: right;
-			.score{
-				font-size: 48px;
-			}
-		}
+    .panel-indent{
+        margin-bottom: 0;
+    }
 
-	}
+    .form-hint{
+        margin-bottom: 0;
+    }
 
+    .collapsible{
+
+        .column-three-quarters{
+            padding-left: 30px;
+        }
+
+        .column-full{
+            padding: 0 18px;
+        }
+
+        .accordion_item{
+            border-top: 1px solid $border-colour;
+            padding-top: 20px;
+
+            &:first-child{
+                border: none;
+            }
+        }
+
+        .assessor-score{
+            text-align: center;
+            margin-right: 60px;
+            font-weight: bold;
+            float: right;
+
+            .score{
+                font-size: 48px;
+            }
+        }
+    }
+
+    .my-applications .in-progress li{
+
+        .grid-row{
+            margin: 0 -15px;
+        }
+    }
 }

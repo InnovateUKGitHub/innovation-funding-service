@@ -11,11 +11,14 @@ import static com.worth.ifs.assessment.builder.AssessorFormInputResponseResource
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.*;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class AssessorFormInputResponseControllerTest extends BaseControllerMockMVCTest<AssessorFormInputResponseController> {
+
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     protected AssessorFormInputResponseController supplyControllerUnderTest() {
@@ -63,12 +66,19 @@ public class AssessorFormInputResponseControllerTest extends BaseControllerMockM
         final Long formInputId = 2L;
         final String value = "Feedback";
 
-        when(assessorFormInputResponseServiceMock.updateFormInputResponse(assessmentId, formInputId, value)).thenReturn(serviceSuccess());
+        AssessorFormInputResponseResource response = newAssessorFormInputResponseResource()
+                .withAssessment(assessmentId)
+                .withFormInput(formInputId)
+                .withValue(value)
+                .build();
 
-        mockMvc.perform(put("/assessorFormInputResponse/formInput/{formInputId}/assessment/{assessmentId}", formInputId, assessmentId)
-                .content(value))
+        when(assessorFormInputResponseServiceMock.updateFormInputResponse(response)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(put("/assessorFormInputResponse")
+                .contentType(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(response)))
                 .andExpect(status().isOk());
 
-        verify(assessorFormInputResponseServiceMock, only()).updateFormInputResponse(assessmentId, formInputId, value);
+        verify(assessorFormInputResponseServiceMock, only()).updateFormInputResponse(response);
     }
 }

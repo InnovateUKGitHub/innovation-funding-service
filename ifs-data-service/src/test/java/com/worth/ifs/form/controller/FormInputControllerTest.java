@@ -5,6 +5,7 @@ import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputScope;
 import org.junit.Test;
+import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 
 import java.util.List;
@@ -77,5 +78,31 @@ public class FormInputControllerTest extends BaseControllerMockMVCTest<FormInput
                 .andExpect(content().string(new ObjectMapper().writeValueAsString(expected)));
 
         verify(formInputServiceMock, only()).findByCompetitionIdAndScope(competitionId, scope);
+    }
+
+    @Test
+    public void testSave() throws Exception {
+        FormInputResource expected = newFormInputResource()
+                .build();
+
+        Long competitionId = 1L;
+
+        when(formInputServiceMock.save(any(FormInputResource.class))).thenReturn(serviceSuccess(expected));
+
+        mockMvc.perform(RestDocumentationRequestBuilders.put("/forminput/", competitionId)
+                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .content(new ObjectMapper().writeValueAsString(expected)))
+                .andExpect(status().isOk())
+                .andExpect(content().string(new ObjectMapper().writeValueAsString(expected)));
+    }
+
+    @Test
+    public void testDelete() throws Exception {
+        Long formInputId = 1L;
+
+        when(formInputServiceMock.delete(formInputId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(RestDocumentationRequestBuilders.delete("/forminput/{id}", formInputId))
+                .andExpect(status().is2xxSuccessful());
     }
 }

@@ -177,7 +177,7 @@ public class SectionControllerTest extends BaseControllerMockMVCTest<SectionCont
                             ),
                             responseFields(
                                     fieldWithPath("[0].objectName").description("name of the object type"),
-                                    fieldWithPath("[0].objectId").description("identifier of the object, for example the Cost.id"),
+                                    fieldWithPath("[0].objectId").description("identifier of the object, for example the FinanceRow.id"),
                                     fieldWithPath("[0].errors").description("list of Error objects, containing the validation messages"),
                                     fieldWithPath("[0].errors[0].fieldName").description("the name of the field that is invalid"),
                                     fieldWithPath("[0].errors[0].errorKey").description("the key to identity the type of validation message"),

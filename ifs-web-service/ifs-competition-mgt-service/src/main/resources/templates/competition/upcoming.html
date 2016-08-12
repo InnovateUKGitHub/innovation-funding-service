@@ -43,13 +43,7 @@
             </li>
         </ul>
     </section>
-
-    <div class="grid-row">
-        <div class="column-half">
-            <a th:href="@{/competition/create}" class="button button-large" th:text="#{ifs.competition.create_competition}">Create Competition</a>
-        </div>
-    </div>
-    
+    <a th:href="@{/competition/create}" class="button button-large extra-margin" th:text="#{ifs.competition.create_competition}">Create Competition</a>
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
 </main>
 

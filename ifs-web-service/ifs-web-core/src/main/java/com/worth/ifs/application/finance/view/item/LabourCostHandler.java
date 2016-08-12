@@ -2,7 +2,7 @@ package com.worth.ifs.application.finance.view.item;
 
 import com.worth.ifs.application.finance.model.FinanceFormField;
 import com.worth.ifs.finance.resource.category.LabourCostCategory;
-import com.worth.ifs.finance.resource.cost.CostItem;
+import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import com.worth.ifs.finance.resource.cost.LabourCost;
 import com.worth.ifs.util.NumberUtils;
 
@@ -14,10 +14,10 @@ import static com.worth.ifs.util.NullCheckFunctions.allNull;
 /**
  * Handles the conversion of form fields to a labour cost
  */
-public class LabourCostHandler extends CostHandler {
+public class LabourCostHandler extends FinanceRowHandler {
 
     @Override
-    public CostItem toCostItem(Long id, List<FinanceFormField> financeFormFields) {
+    public FinanceRowItem toFinanceRowItem(Long id, List<FinanceFormField> financeFormFields) {
         BigDecimal grossAnnualSalary = null;
         String role = null;
         Integer labourDays = null;

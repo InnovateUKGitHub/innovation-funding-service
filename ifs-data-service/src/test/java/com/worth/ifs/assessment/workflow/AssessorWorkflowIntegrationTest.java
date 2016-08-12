@@ -41,7 +41,7 @@ public class AssessorWorkflowIntegrationTest extends BaseIntegrationTest {
     public void testStateChangePendingToRejected() throws Exception {
         Assessment assessment = assessmentRepository.findOneByProcessRoleId(PENDING_PROCESS_ROLE);
         assertEquals(AssessmentStates.PENDING.getState(),assessment.getProcessStatus());
-        assessmentWorkflowEventHandler.rejectInvitation(PENDING_PROCESS_ROLE,assessment.getProcessStatus(),createProcessOutcome());
+        assessmentWorkflowEventHandler.rejectInvitation(PENDING_PROCESS_ROLE,assessment,createProcessOutcome());
         Assessment update = assessmentRepository.findOneByProcessRoleId(PENDING_PROCESS_ROLE);
         assertEquals(AssessmentStates.REJECTED.getState(),update.getProcessStatus());
         assertEquals(COMMENT,update.getLastOutcome().getComment());
@@ -52,7 +52,7 @@ public class AssessorWorkflowIntegrationTest extends BaseIntegrationTest {
     public void testStateChangeOpenToRejected() throws Exception {
         Assessment assessment = assessmentRepository.findOneByProcessRoleId(OPEN_PROCESS_ROLE);
         assertEquals(AssessmentStates.OPEN.getState(),assessment.getProcessStatus());
-        assessmentWorkflowEventHandler.rejectInvitation(OPEN_PROCESS_ROLE,assessment.getProcessStatus(),createProcessOutcome());
+        assessmentWorkflowEventHandler.rejectInvitation(OPEN_PROCESS_ROLE,assessment,createProcessOutcome());
         Assessment update = assessmentRepository.findOneByProcessRoleId(OPEN_PROCESS_ROLE);
         assertEquals(AssessmentStates.REJECTED.getState(),update.getProcessStatus());
         assertEquals(COMMENT,update.getLastOutcome().getComment());
@@ -72,7 +72,7 @@ public class AssessorWorkflowIntegrationTest extends BaseIntegrationTest {
     public void testStateChangeAssessedToRejected() throws Exception {
         Assessment assessment = assessmentRepository.findOneByProcessRoleId(ASSESSED_PROCESS_ROLE);
         assertEquals(AssessmentStates.ASSESSED.getState(),assessment.getProcessStatus());
-        assessmentWorkflowEventHandler.rejectInvitation(ASSESSED_PROCESS_ROLE,assessment.getProcessStatus(),createProcessOutcome());
+        assessmentWorkflowEventHandler.rejectInvitation(ASSESSED_PROCESS_ROLE,assessment,createProcessOutcome());
         Assessment update = assessmentRepository.findOneByProcessRoleId(ASSESSED_PROCESS_ROLE);
         assertEquals(AssessmentStates.REJECTED.getState(),update.getProcessStatus());
         assertEquals(COMMENT,update.getLastOutcome(AssessmentOutcomes.REJECT).getComment());

@@ -3,11 +3,12 @@
 #if [! -f /vagrant/data/install.txt ];
 #then
 
+
 echo "# Updating package repository"
 sudo apt-get -y update
 
 echo "# Installing xvfb"
-sudo apt-get install xvfb x11-xkb-utils xfonts-100dpi xfonts-75dpi xfonts-scalable xfonts-cyrillic x11-apps
+sudo apt-get -y install xvfb x11-xkb-utils xfonts-100dpi xfonts-75dpi xfonts-scalable xfonts-cyrillic x11-apps
 
 echo "# Installing python-wxgtk2.8"
 sudo apt-get -y install python-wxgtk2.8
@@ -48,5 +49,25 @@ pip install robotframework-excellibrary
 
 echo "# Installing ftplibrary"
 pip install robotframework-ftplibrary
+
+echo "# Installing unzip"
+sudo apt-get -f install zip unzip
+
+echo "# Installing Chrome"
+wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+sudo dpkg -i --force-depends google-chrome-stable_current_amd64.deb
+sudo apt-get install -f -y
+
+echo "# Installing Chromedriver"
+wget http://chromedriver.storage.googleapis.com/2.23/chromedriver_linux64.zip
+unzip chromedriver_linux64.zip && sudo mv chromedriver /usr/bin
+sudo chmod a+x /usr/bin/chromedriver
+
+echo "# Set locales"
+echo "export LC_ALL=en_US.utf8" >> .bashrc
+echo "export LANGUAGE=en_US.utf8" >> .bashrc
+echo "export LC_CTYPE=en_US.utf8" >> .bashrc
+
+sudo dpkg-reconfigure locales
 
 #fi

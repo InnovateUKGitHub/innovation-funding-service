@@ -392,7 +392,7 @@ public abstract class AbstractApplicationController extends BaseController {
     }
 
     private List<FormInputResource> findFormInputByQuestion(final Long id, final List<FormInputResource> list) {
-        return simpleFilter(list, input -> input.getId().equals(id));
+        return simpleFilter(list, input -> input.getQuestion().equals(id));
     }
 
     private List<QuestionResource> getQuestionsBySection(final List<Long> questionIds, final List<QuestionResource> questions) {

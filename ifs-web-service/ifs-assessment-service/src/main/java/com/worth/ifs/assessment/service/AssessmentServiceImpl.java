@@ -1,23 +1,14 @@
 package com.worth.ifs.assessment.service;
 
-import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.application.resource.QuestionResource;
-import com.worth.ifs.application.service.ApplicationService;
-import com.worth.ifs.application.service.CompetitionService;
-import com.worth.ifs.application.service.QuestionService;
 import com.worth.ifs.assessment.resource.AssessmentOutcomes;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.user.resource.ProcessRoleResource;
-import com.worth.ifs.user.service.ProcessRoleService;
 import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
+import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-
+import static java.util.Optional.ofNullable;
 
 /**
  * This class contains methods to retrieve and store {@link com.worth.ifs.assessment.resource.AssessmentResource} related data,
@@ -29,38 +20,29 @@ public class AssessmentServiceImpl implements AssessmentService {
     @Autowired
     private AssessmentRestService assessmentRestService;
 
-    @Autowired
-    private ApplicationService applicationService;
-
-    @Autowired
-    private ProcessRoleService processRoleService;
-
-    @Autowired
-    private CompetitionService competitionService;
-
-    @Autowired
-    private QuestionService questionService;
-
     @Override
     public AssessmentResource getById(final Long id) {
         return assessmentRestService.getById(id).getSuccessObjectOrThrowException();
     }
 
     @Override
-    public List<QuestionResource> getAllQuestionsById(Long assessmentId) throws ExecutionException, InterruptedException {
-        ProcessRoleResource processRoleResource = processRoleService.getById(getById(assessmentId).getProcessRole()).get();
-        ApplicationResource applicationResource = applicationService.getById(processRoleResource.getApplication());
-        CompetitionResource competitionResource = competitionService.getById(applicationResource.getCompetition());
-        return questionService.findByCompetition(competitionResource.getId());
+    public ServiceResult<Void> recommend(Long assessmentId, Boolean fundingConfirmation, String feedback, String comment) {
+        ProcessOutcomeResource processOutcome = new ProcessOutcomeResource();
+        processOutcome.setOutcomeType(AssessmentOutcomes.RECOMMEND.getType());
+        processOutcome.setOutcome(ofNullable(fundingConfirmation).map(BooleanUtils::toStringYesNo).orElse(null));
+        processOutcome.setComment(comment);
+        processOutcome.setDescription(feedback);
+
+        return assessmentRestService.recommend(assessmentId, processOutcome).toServiceResult();
     }
 
     @Override
-    public ServiceResult<Void> rejectApplication(Long assessmentId, String reason, String comment) {
+    public ServiceResult<Void> rejectInvitation(Long assessmentId, String reason, String comment) {
         ProcessOutcomeResource processOutcome = new ProcessOutcomeResource();
         processOutcome.setOutcomeType(AssessmentOutcomes.REJECT.getType());
         processOutcome.setComment(comment);
         processOutcome.setDescription(reason);
 
-        return assessmentRestService.updateStatus(assessmentId, processOutcome).toServiceResult();
+        return assessmentRestService.rejectInvitation(assessmentId, processOutcome).toServiceResult();
     }
 }

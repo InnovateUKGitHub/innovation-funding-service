@@ -15,7 +15,7 @@ public interface CompetitionSetupService {
 	
 	CompetitionSetupForm getSectionFormData(CompetitionResource competitionResource,
 			CompetitionSetupSection section);
-	
+
 	void saveCompetitionSetupSection(CompetitionSetupForm competitionSetupForm,
 			CompetitionResource competitionResource, CompetitionSetupSection section);
 

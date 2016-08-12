@@ -6,6 +6,7 @@ import com.worth.ifs.workflow.resource.ProcessEvent;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
 import java.time.LocalDate;
+import java.util.GregorianCalendar;
 
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static java.util.Arrays.asList;
@@ -32,5 +33,8 @@ public class AssessmentDocs {
             .withProcessOutcome(asList(1L, 2L))
             .withProcessStatus(AssessmentStates.OPEN)
             .withProcessEvent(ProcessEvent.ASSESSMENT)
+            .withStarted(true)
+            .withSubmitted(false)
+            .withLastModifiedDate(GregorianCalendar.getInstance())
             .withProcessRole(1L);
 }

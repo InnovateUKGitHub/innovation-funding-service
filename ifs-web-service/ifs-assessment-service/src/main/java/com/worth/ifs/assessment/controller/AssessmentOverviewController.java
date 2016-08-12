@@ -60,14 +60,14 @@ public class AssessmentOverviewController extends AbstractApplicationController 
 
 
     @RequestMapping(method = RequestMethod.POST, value = "/{assessmentId}/reject")
-    public String rejectApplication(
+    public String rejectInvitation(
             final Model model,
             final HttpServletResponse response,
             @ModelAttribute(MODEL_ATTRIBUTE_FORM) final AssessmentOverviewForm form,
             final BindingResult bindingResult,
             @PathVariable("assessmentId") final Long assessmentId) {
 
-        assessmentService.rejectApplication(assessmentId,form.getRejectReason(),form.getRejectComment());
+        assessmentService.rejectInvitation(assessmentId,form.getRejectReason(),form.getRejectComment());
 
         return DASHBOARD;
     }

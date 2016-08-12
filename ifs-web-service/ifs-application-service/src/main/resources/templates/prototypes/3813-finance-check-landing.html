@@ -13,13 +13,20 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Project setup status'}, ${'/prototypes/1588-project-status?stage=level2'})" th:remove="tag" />
+	
+	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Project setup status'}, ${(param.status != null and param.status[0] == 'approved' ? '/prototypes/1588-project-status?stage=level5' : '/prototypes/1588-project-status?stage=level2')})" th:remove="tag" />
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Finance checks'})" th:remove="tag" />
 
-	<p>Innovate are currently reviewing your finances. during this stage costs outlined in your application may be queried, enabling thathis may take a while here are details on your finances as thy are reviewed by innovate UK</p>
+	<th:block th:if="${param.status != null and param.status[0] == 'approved'}">
+		<div class="success-alert extra-margin-bottom">
+			The finance checks have been completed and your finances approved
+		</div>
+	</th:block>
+
+	<p>Innovate UK are currently reviewing your finances and may contact you with any queries. This stage can take some time. You can review your finance details using the link below.</p>
 	
 	<ul>
 		<li>
@@ -32,21 +39,20 @@
 
 	<h2 class="heading-medium">Queries</h2>
 
-	<p>Any queries raised by Innovate UK during these checks will appear here, the most recent queries will appear at the top. All queries should be answered as truthfully as possible, files can be uploaded to support all comments</p>
+	<p>Any queries we raise will appear here, with the most recent queries first. You may upload files to support your answers if necessary. It is your responsibility to make sure your answers are as accurate as possible</p>
 
 	<hr />
 
-	<div class="panel-indent">
-		<h2 class="heading-medium no-margin-top">Subcontractor charges</h2>
-        <p><strong>Innovate UK - Finance team </strong> <small th:text="${#dates.format(#dates.createNow(), 'dd MMM yyyy HH:mm')}">26/06/2016 18:23</small></p>
-        <p>Please explain why you are intending to employ the services of a specialist consultant who is based in France? Please provide a breakdown of the work to justify the &pound;150,000</p>
-    </div>
+	<h2 class="heading-medium no-margin-top">Subcontractor charges</h2>
+    <p><strong>Innovate UK - Finance team </strong> <small th:text="${#dates.format(#dates.createNow(), 'dd MMM yyyy HH:mm')}">26/06/2016 18:23</small></p>
+    <p>Please explain why you are intending to employ the services of a specialist consultant who is based in France? Please provide a breakdown of the work to justify the &pound;150,000</p>
+
 
     <form method="get" th:action="${#httpServletRequest.requestURI}" th:unless="${param.action != mull and param.action[0] == 'newResponse' or param.action != mull and param.action[0] == 'postResponse'}">
         <input type="hidden" id="action" name="action" value="newResponse" />
         <input type="hidden" id="query" name="query" value="Test query" />
         <hr />
-        <button class="button button-secondary">Respond</button>
+        <button class="button button-secondary" th:unless="${param.status != null and param.status[0] == 'approved'}">Respond</button>
     </form>
 
     <th:block th:include="prototypes/fragments/project-setup :: prototype-post-query('query','partner')" th:if="${param.action != null and param.action[0] == 'newResponse' or param.action != null and param.action[0] == 'postResponse'}"/> 

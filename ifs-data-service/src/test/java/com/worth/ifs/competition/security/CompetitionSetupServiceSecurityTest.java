@@ -115,5 +115,10 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
 		public ServiceResult<Void> markSectionInComplete(Long competitionId, CompetitionSetupSection section) {
 			return null;
 		}
+
+		@Override
+		public ServiceResult<Void> initialiseFormForCompetitionType(Long competitionId, Long competitionType) {
+			return null;
+		}
     }
 }

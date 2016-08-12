@@ -145,6 +145,10 @@ include::user.adoc[]
 == FormInputResponse File Upload
 include::forminputresponsefileupload.adoc[]
 
+[[formInput]]
+== FormInput
+include::formInput.adoc[]
+
 [[formInputResponse]]
 == FormInputResponse
 include::formInputResponse.adoc[]

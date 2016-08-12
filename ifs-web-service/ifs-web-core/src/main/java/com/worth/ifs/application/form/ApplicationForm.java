@@ -19,7 +19,6 @@ public class ApplicationForm extends Form {
     private boolean adminMode = false;
     private Long impersonateOrganisationId;
 
-
     public ApplicationForm() {
         super();
     }

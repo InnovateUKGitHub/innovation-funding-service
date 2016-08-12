@@ -1,24 +1,28 @@
 package com.worth.ifs.application.documentation;
 
-import java.util.Set;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.controller.QuestionController;
 import com.worth.ifs.application.resource.QuestionApplicationCompositeId;
+import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.transactional.QuestionService;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
+import java.util.Set;
+
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.documentation.QuestionDocs.questionBuilder;
 import static com.worth.ifs.documentation.QuestionDocs.questionFields;
+import static java.util.Arrays.asList;
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
@@ -244,6 +248,39 @@ public class QuestionControllerDocumentation extends BaseControllerMockMVCTest<Q
                                 parameterWithName("formInputType").description("form input type")
                         ),
                         responseFields(questionFields)
+                ));
+    }
+
+    @Test
+    public void save() throws Exception {
+        QuestionResource questionResource = questionBuilder.build();
+        ObjectMapper mapper = new ObjectMapper();
+
+        when(questionService.save(questionResource)).thenReturn(serviceSuccess(questionResource));
+
+        mockMvc.perform(put("/question/")
+                    .contentType(APPLICATION_JSON)
+                    .content(mapper.writeValueAsString(questionResource)))
+                .andDo(this.document.snippets(
+                        responseFields(questionFields)
+                ));
+
+    }
+
+    @Test
+    public void getQuestionsByAssessmentId() throws Exception {
+        final Long assessmentId = 1L;
+
+        when(questionService.getQuestionsByAssessmentId(assessmentId)).thenReturn(serviceSuccess(asList(questionBuilder.build())));
+
+        mockMvc.perform(get("/question/getQuestionsByAssessment/{assessmentId}", assessmentId))
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("assessmentId").description("Id of the assessment for which questions should be returned for")
+                        ),
+                        responseFields(
+                                fieldWithPath("[]").description("An array of the questions which are visible for the specified assessment")
+                        )
                 ));
     }
 }

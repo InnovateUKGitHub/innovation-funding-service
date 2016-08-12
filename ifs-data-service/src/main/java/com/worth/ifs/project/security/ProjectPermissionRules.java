@@ -1,5 +1,6 @@
 package com.worth.ifs.project.security;
 
+import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.security.BasePermissionRules;
 import com.worth.ifs.security.PermissionRule;
@@ -8,6 +9,7 @@ import com.worth.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
 import static com.worth.ifs.security.SecurityRuleUtil.isCompAdmin;
+import static com.worth.ifs.security.SecurityRuleUtil.isProjectFinanceUser;
 
 @PermissionRules
 @Component
@@ -23,6 +25,11 @@ public class ProjectPermissionRules extends BasePermissionRules {
         return isCompAdmin(user);
     }
 
+    @PermissionRule(value = "READ", description = "Project finance users can see project resources")
+    public boolean projectFinanceUsersCanViewProjects(final ProjectResource project, final UserResource user){
+        return isProjectFinanceUser(user);
+    }
+
     @PermissionRule(
             value = "UPDATE_BASIC_PROJECT_SETUP_DETAILS",
             description = "The lead partners can update the basic project details, like start date, address, project manager")
@@ -36,6 +43,20 @@ public class ProjectPermissionRules extends BasePermissionRules {
             description = "The lead partner can update the basic project details like start date")
     public boolean partnersCanUpdateTheirOwnOrganisationsFinanceContacts(ProjectResource project, UserResource user) {
         return isPartner(project.getId(), user.getId());
+    }
+
+    @PermissionRule(
+            value = "INVITE_FINANCE_CONTACT",
+            description = "A partner can invite a member of their organisation to become a finance contact")
+    public boolean partnersCanInviteTheirOwnOrganisationsFinanceContacts(InviteResource invite, UserResource user) {
+        return isSpecificProjectPartnerByApplicationId(invite.getApplication(), invite.getInviteOrganisation(), user.getId());
+    }
+
+    @PermissionRule(
+            value = "INVITE_PROJECT_MANAGER",
+            description = "A partner can invite a member of their organisation to become a project manager")
+    public boolean partnersCanInviteTheirOwnOrganisationsProjectManager(InviteResource invite, UserResource user) {
+        return isSpecificProjectPartnerByApplicationId(invite.getApplication(), invite.getInviteOrganisation(), user.getId());
     }
 
     @PermissionRule(

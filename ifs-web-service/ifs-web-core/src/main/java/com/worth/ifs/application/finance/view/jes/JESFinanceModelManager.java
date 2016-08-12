@@ -8,10 +8,10 @@ import com.worth.ifs.application.form.Form;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
-import com.worth.ifs.finance.resource.category.CostCategory;
+import com.worth.ifs.finance.resource.category.FinanceRowCostCategory;
 import com.worth.ifs.finance.resource.cost.AcademicCost;
-import com.worth.ifs.finance.resource.cost.CostItem;
-import com.worth.ifs.finance.resource.cost.CostType;
+import com.worth.ifs.finance.resource.cost.FinanceRowItem;
+import com.worth.ifs.finance.resource.cost.FinanceRowType;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.service.ProcessRoleService;
@@ -42,7 +42,7 @@ public class JESFinanceModelManager implements FinanceModelManager {
         ProcessRoleResource processRole = processRoleService.findProcessRole(userId, applicationId);
         OrganisationResource organisationResource = organisationService.getOrganisationById(processRole.getOrganisation());
 
-        Map<CostType, CostCategory> organisationFinanceDetails = applicationFinanceResource.getFinanceOrganisationDetails();
+        Map<FinanceRowType, FinanceRowCostCategory> organisationFinanceDetails = applicationFinanceResource.getFinanceOrganisationDetails();
         AcademicFinance academicFinance = mapFinancesToFields(organisationFinanceDetails);
         if(applicationFinanceResource.getFinanceFileEntry() != null) {
             financeService.getFinanceEntry(applicationFinanceResource.getFinanceFileEntry()).andOnSuccessReturn(
@@ -60,7 +60,7 @@ public class JESFinanceModelManager implements FinanceModelManager {
     }
 
     @Override
-    public void addCost(Model model, CostItem costItem, long applicationId, long userId, Long questionId, String costType) {
+    public void addCost(Model model, FinanceRowItem costItem, long applicationId, long userId, Long questionId, String costType) {
 
     }
 
@@ -73,7 +73,7 @@ public class JESFinanceModelManager implements FinanceModelManager {
         return applicationFinanceResource;
     }
 
-    protected AcademicFinance mapFinancesToFields(Map<CostType, CostCategory> organisationFinanceDetails) {
+    protected AcademicFinance mapFinancesToFields(Map<FinanceRowType, FinanceRowCostCategory> organisationFinanceDetails) {
         AcademicFinance academicFinance = new AcademicFinance();
         organisationFinanceDetails.values()
                 .stream()

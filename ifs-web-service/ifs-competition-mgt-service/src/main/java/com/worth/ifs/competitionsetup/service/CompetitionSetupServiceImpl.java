@@ -25,8 +25,8 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 	
 	@Autowired
 	private CompetitionService competitionService;
-	
-	private Map<CompetitionSetupSection, CompetitionSetupFormPopulator> formPopulators;
+
+    private Map<CompetitionSetupSection, CompetitionSetupFormPopulator> formPopulators;
 	
 	private Map<CompetitionSetupSection, CompetitionSetupSectionSaver> sectionSavers;
 

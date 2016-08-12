@@ -10,9 +10,9 @@ import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 /**
- * {@code TravelCost} implements {@link CostItem}
+ * {@code TravelCost} implements {@link FinanceRowItem}
  */
-public class TravelCost implements CostItem {
+public class TravelCost implements FinanceRowItem {
     private Long id;
     @NotBlank
     @Length(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
@@ -65,8 +65,8 @@ public class TravelCost implements CostItem {
     }
 
     @Override
-    public CostType getCostType() {
-        return CostType.TRAVEL;
+    public FinanceRowType getCostType() {
+        return FinanceRowType.TRAVEL;
     }
 
     @Override
