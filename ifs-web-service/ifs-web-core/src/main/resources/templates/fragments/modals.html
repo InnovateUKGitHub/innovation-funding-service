@@ -154,6 +154,24 @@
 		</div>
 </div>
 
+<!-- save finance checks -->
+<div th:fragment="generate-spend-profile">
+<div class="generate-spend-profile" role="dialog" aria-hidden="true" >
+		<div th:include="fragments/modals :: close-button" th:remove="tag" />
 
+		<h2 class="heading-medium no-margin">Generate spend profile</h2>
+		<p>This will generate a flat profile spend for all project partners. This assumes that finance checks have been completed for all partners and this section will be locked.</p>
+		<p>Partners will be notified that they can now create their spend profile.</p>
+		<hr />
+		<div class="grid-row">
+			<div class="column-half">
+					<button type="button" class="js-close button buttonlink large">Cancel</button>
+			</div>
+			<div class="column-half alignright-button" method="post">
+				<button class="button large" name="submit-app-details">Generate spend profile</button>
+			</div>
+		</div>
+</div>
+</div>
 
 </div>
