@@ -40,11 +40,7 @@ public class MilestonesSectionSaver implements CompetitionSetupSectionSaver {
         milestones.sort((c1, c2) -> c1.getType().compareTo(c2.getType()));
 
         List<Error> errors = competitionSetupMilestoneService.validateMilestoneDates(milestoneEntries);
-        if(!errors.isEmpty()) {
-            return errors;
-        }
-
-        return competitionSetupMilestoneService.updateMilestonesForCompetition(milestones, milestoneEntries, competition.getId());
+        return competitionSetupMilestoneService.updateMilestonesForCompetition(milestones, milestoneEntries, competition.getId(), errors);
     }
 
 

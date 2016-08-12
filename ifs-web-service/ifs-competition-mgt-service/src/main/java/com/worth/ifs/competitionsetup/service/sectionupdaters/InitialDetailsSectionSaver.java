@@ -94,8 +94,8 @@ public class InitialDetailsSectionSaver implements CompetitionSetupSectionSaver 
         }
         milestones.sort((c1, c2) -> c1.getType().compareTo(c2.getType()));
 
-        competitionSetupMilestoneService.updateMilestonesForCompetition(milestones, Arrays.asList(milestonesFormEntry), competitionId);
-    }
+		competitionSetupMilestoneService.updateInitialDetailsOpenDateForCompetition(milestones, Arrays.asList(milestonesFormEntry), competitionId);
+	}
 
 	@Override
 	public boolean supportsForm(Class<? extends CompetitionSetupForm> clazz) {

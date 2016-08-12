@@ -34,8 +34,29 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
     }
 
     @Override
-    public List<Error> updateMilestonesForCompetition(List<MilestoneResource> milestones, List<MilestonesFormEntry> milestoneEntries, Long competitionId) {
+    public List<Error> updateMilestonesForCompetition(List<MilestoneResource> milestones, List<MilestonesFormEntry> milestoneEntries, Long competitionId, List<Error> errors) {
+        List<MilestoneResource> updatedMilestones = new ArrayList();
 
+        for (int i = 0; i < milestones.size(); i++) {
+            MilestonesFormEntry thisMilestonesFormEntry = milestoneEntries.get(i);
+            thisMilestonesFormEntry.setMilestoneType(milestones.get(i).getType());
+
+            milestones.get(i).setCompetition(competitionId);
+            LocalDateTime temp = getMilestoneDate(milestoneEntries.get(i).getDay(), milestoneEntries.get(i).getMonth(), milestoneEntries.get(i).getYear());
+            if (temp != null) {
+                milestones.get(i).setDate(temp);
+            }
+        }
+        if (errors.size() > 0){
+            return errors;
+        }
+        else {
+            return milestoneService.update(updatedMilestones, competitionId);
+        }
+    }
+
+    @Override
+    public List<Error> updateInitialDetailsOpenDateForCompetition(List<MilestoneResource> milestones, List<MilestonesFormEntry> milestoneEntries, Long competitionId) {
         List<MilestoneResource> updatedMilestones = new ArrayList();
 
         milestones.forEach(milestoneResource -> {
@@ -64,9 +85,13 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
     @Override
     public List<Error> validateMilestoneDates(List<MilestonesFormEntry> milestonesFormEntries) {
         List<Error> errors =  new ArrayList<>();
-
         milestonesFormEntries.forEach(milestone -> {
-            if(!isMilestoneDateValid(milestone.getDay(), milestone.getMonth(), milestone.getYear()));{
+
+            Integer day = milestone.getDay();
+            Integer month = milestone.getMonth();
+            Integer year = milestone.getYear();
+
+            if(day == null || month == null || year == null || !isMilestoneDateValid(day, month, year));{
                 if(errors.isEmpty()) {
                     errors.add(new Error("error.milestone.invalid", "Please enter the valid date(s)", HttpStatus.BAD_REQUEST));
                 }}

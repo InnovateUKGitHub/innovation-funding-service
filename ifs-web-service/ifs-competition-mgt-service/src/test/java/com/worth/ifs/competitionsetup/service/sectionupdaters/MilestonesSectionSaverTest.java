@@ -6,6 +6,7 @@ import com.worth.ifs.competition.resource.MilestoneResource;
 import com.worth.ifs.competition.resource.MilestoneType;
 import com.worth.ifs.competitionsetup.form.MilestonesForm;
 import com.worth.ifs.competitionsetup.form.MilestonesFormEntry;
+import com.worth.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -22,6 +23,7 @@ import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyList;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.when;
 
@@ -30,6 +32,9 @@ public class MilestonesSectionSaverTest {
 
     @InjectMocks
     private MilestonesSectionSaver service;
+
+    @Mock
+    private CompetitionSetupMilestoneService competitionSetupMilestoneService;
 
     @Mock
     private MilestoneService milestoneService;
@@ -48,7 +53,7 @@ public class MilestonesSectionSaverTest {
                 .withId(1L)
                 .withName(MilestoneType.OPEN_DATE)
                 .withDate(milestoneDate)
-                .withCompetitionId().build();
+                .withCompetitionId(1L).build();
 
         List<MilestoneResource> resourceList = new ArrayList<>();
         resourceList.add(milestoneresource);
@@ -56,7 +61,6 @@ public class MilestonesSectionSaverTest {
         competitionSetupForm.setMilestonesFormEntryList(populateMilestoneFormEntry());
 
         when(milestoneService.getAllDatesByCompetitionId(anyLong())).thenReturn(resourceList);
-
         service.saveSection(competition, competitionSetupForm);
         List<Long> milestones = competition.getMilestones();
 
