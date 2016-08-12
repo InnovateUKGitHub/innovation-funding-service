@@ -139,9 +139,9 @@ the user sees that the radio button is selected
 
 the user selects the option from the drop-down menu
     [Arguments]    ${option}    ${drop-down}
-    wait until element is visible       ${drop-down}
+    wait until element is visible    ${drop-down}
     Select From List    ${drop-down}    ${option}
-    mouse out     ${drop-down}
+    mouse out    ${drop-down}
     # Error checking
     Page Should Not Contain    Error
     Page Should Not Contain    something went wrong
