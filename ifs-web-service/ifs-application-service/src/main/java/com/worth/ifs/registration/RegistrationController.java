@@ -9,7 +9,7 @@ import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.exception.InviteAlreadyAcceptedException;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
-import com.worth.ifs.invite.resource.InviteResource;
+import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.registration.form.RegistrationForm;
 import com.worth.ifs.registration.form.ResendEmailVerificationForm;
@@ -154,9 +154,9 @@ public class RegistrationController {
     private boolean setInviteeEmailAddress(RegistrationForm registrationForm, HttpServletRequest request, Model model) {
         String inviteHash = CookieUtil.getCookieValue(request, AcceptInviteController.INVITE_HASH);
         if(StringUtils.hasText(inviteHash)){
-            RestResult<InviteResource> invite = inviteRestService.getInviteByHash(inviteHash);
+            RestResult<ApplicationInviteResource> invite = inviteRestService.getInviteByHash(inviteHash);
             if(invite.isSuccess() && InviteStatusConstants.SEND.equals(invite.getSuccessObject().getStatus())){
-                InviteResource inviteResource = invite.getSuccessObject();
+                ApplicationInviteResource inviteResource = invite.getSuccessObject();
                 registrationForm.setEmail(inviteResource.getEmail());
                 model.addAttribute("invitee", true);
                 return true;
