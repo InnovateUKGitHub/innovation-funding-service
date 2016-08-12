@@ -16,15 +16,15 @@ import static java.util.Arrays.asList;
 public class AddressResource {
     private Long id;
 
-    @NotBlank
+    @NotBlank (message="{validation.standard.addressline1.required}")
     private String addressLine1;
     private String addressLine2;
     private String addressLine3;
-    @NotBlank
+    @NotBlank (message="{validation.standard.town.required}")
     private String town;
     private String county;
-    @NotBlank
-    @Length(max = 9)
+    @NotBlank (message="{validation.standard.postcode.required}")
+    @Length(max = 9, message="{validation.standard.postcode.length}")
     private String postcode;
     private List<Long> organisations = new ArrayList<>();
 

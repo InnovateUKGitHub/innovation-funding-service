@@ -1,4 +1,4 @@
-package com.worth.ifs.project.transactional;
+package com.worth.ifs.project.finance.transactional;
 
 import com.worth.ifs.commons.service.ServiceResult;
 

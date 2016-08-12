@@ -4,19 +4,6 @@
 
 <!-- ===========================Project setup select address=========================== -->
 
-<th:block th:fragment="spend-profile-label(label)">
-  <th:block th:switch="${label}">
-       <th:block th:case="'LabourCost'">Labour</th:block>
-       <th:block th:case="'AdminSupportCost'">Admin support costs</th:block>
-       <th:block th:case="'MaterialCost'">Materials</th:block>
-       <th:block th:case="'CapitalCost'">Capital usage</th:block>
-       <th:block th:case="'SubcontractingCost'">Subcontracting costs</th:block>
-       <th:block th:case="'TravelAndSubsistenceCost'">Travel &amp; subsistence</th:block>
-       <th:block th:case="'OtherCost'">Other</th:block>
-  </th:block>
-</th:block>
-
-
 <div th:fragment="select-address">
     <fieldset>
       <div class="form-group" th:classappend="${#fields.hasErrors('*{addressType}') ? 'error' : ''}">

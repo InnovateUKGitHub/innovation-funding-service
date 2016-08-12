@@ -29,16 +29,14 @@ import com.worth.ifs.organisation.repository.OrganisationAddressRepository;
 import com.worth.ifs.project.domain.MonitoringOfficer;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
+import com.worth.ifs.project.finance.transactional.ProjectFinanceService;
 import com.worth.ifs.project.mapper.MonitoringOfficerMapper;
 import com.worth.ifs.project.mapper.ProjectMapper;
 import com.worth.ifs.project.mapper.ProjectUserMapper;
 import com.worth.ifs.project.repository.MonitoringOfficerRepository;
 import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.project.repository.ProjectUserRepository;
-import com.worth.ifs.project.resource.MonitoringOfficerResource;
-import com.worth.ifs.project.resource.ProjectResource;
-import com.worth.ifs.project.resource.ProjectUserResource;
-import com.worth.ifs.project.resource.SpendProfileResource;
+import com.worth.ifs.project.resource.*;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -50,6 +48,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.io.InputStream;
@@ -64,6 +63,8 @@ import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.service.ServiceResult.*;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
+import static com.worth.ifs.project.transactional.ProjectServiceImpl.Notifications.INVITE_FINANCE_CONTACT;
+import static com.worth.ifs.project.transactional.ProjectServiceImpl.Notifications.INVITE_PROJECT_MANAGER;
 import static com.worth.ifs.user.resource.UserRoleType.*;
 import static com.worth.ifs.util.CollectionFunctions.*;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
@@ -127,24 +128,13 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     enum Notifications {
         MONITORING_OFFICER_ASSIGNED,
         MONITORING_OFFICER_ASSIGNED_PROJECT_MANAGER,
-        INVITE_FINANCE_CONTACT
+        INVITE_FINANCE_CONTACT,
+        INVITE_PROJECT_MANAGER
     }
 
     @Override
     public ServiceResult<ProjectResource> getProjectById(Long projectId) {
         return getProject(projectId).andOnSuccessReturn(projectMapper::mapToResource);
-    }
-
-    @Override
-    public ServiceResult<SpendProfileResource> getSpendProfile(final Long projectId, final Long organisationId) {
-
-        /*
-         * TODO
-         * Here ideally we would get the SpendProfile entity which on Success we need to convert to SpendProfileResource.
-         * Since we don't have a data model as yet, we get the SpendProfileResource directly, so we just return that for now
-         */
-        return getSpendProfileByProjectIdAndOrganisationId(projectId, organisationId);
-
     }
 
     @Override
@@ -579,30 +569,39 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     @Override
     public ServiceResult<Void> inviteFinanceContact(Long projectId, InviteResource inviteResource) {
 
-        Notification notification = createInviteFinanceContactNotification(projectId, inviteResource);
-        ServiceResult<Void> moAssignedEmailSendResult = notificationService.sendNotification(notification, EMAIL);
-        return processAnyFailuresOrSucceed(singletonList(moAssignedEmailSendResult));
+        return inviteContact(projectId, inviteResource, INVITE_FINANCE_CONTACT);
     }
 
-    //methods specific to inviteFinanceContact - start
-    private Notification createInviteFinanceContactNotification(Long projectId, InviteResource inviteResource) {
-        NotificationTarget notificationTarget = createInviteFinanceContactNotificationTarget(inviteResource);
-        Map<String, Object> globalArguments = createGlobalArgsForInviteFinanceContactEmail(projectId, inviteResource);
+    @Override
+    public ServiceResult<Void> inviteProjectManager(Long projectId, InviteResource inviteResource) {
+
+        return inviteContact(projectId, inviteResource, INVITE_PROJECT_MANAGER);
+    }
+
+    private ServiceResult<Void> inviteContact(Long projectId, InviteResource inviteResource, Notifications kindOfNotification) {
+
+        Notification notification = createInviteContactNotification(projectId, inviteResource, kindOfNotification);
+        ServiceResult<Void> inviteContactEmailSendResult = notificationService.sendNotification(notification, EMAIL);
+        return processAnyFailuresOrSucceed(singletonList(inviteContactEmailSendResult));
+    }
+
+    private Notification createInviteContactNotification(Long projectId, InviteResource inviteResource, Notifications kindOfNotification) {
+        NotificationTarget notificationTarget = createInviteContactNotificationTarget(inviteResource);
+        Map<String, Object> globalArguments = createGlobalArgsForInviteContactEmail(projectId, inviteResource);
         return new Notification(systemNotificationSource, singletonList(notificationTarget),
-                Notifications.INVITE_FINANCE_CONTACT, globalArguments, emptyMap());
+                kindOfNotification, globalArguments, emptyMap());
     }
 
-    private NotificationTarget createInviteFinanceContactNotificationTarget(InviteResource inviteResource) {
-        String fullName = inviteResource.getName();
-        return new ExternalUserNotificationTarget(fullName, inviteResource.getEmail());
+    private NotificationTarget createInviteContactNotificationTarget(InviteResource inviteResource) {
+        return new ExternalUserNotificationTarget(inviteResource.getName(), inviteResource.getEmail());
     }
 
-    private Map<String, Object> createGlobalArgsForInviteFinanceContactEmail(Long projectId, InviteResource inviteResource) {
+    private Map<String, Object> createGlobalArgsForInviteContactEmail(Long projectId, InviteResource inviteResource) {
         Project project = projectRepository.findOne(projectId);
         Map<String, Object> globalArguments = new HashMap<>();
         globalArguments.put("projectName", project.getName());
-        globalArguments.put("leadOrganisation", project.getApplication().getLeadOrganisation().getName());
-        globalArguments.put("inviteOrganisationName", (inviteResource.getInviteOrganisationName().isEmpty() | inviteResource.getInviteOrganisationName() == null ) ? "No org as yet" : inviteResource.getInviteOrganisationName());
+        globalArguments.put("leadOrganisation", inviteResource.getLeadOrganisation());
+        globalArguments.put("inviteOrganisationName", (StringUtils.isEmpty(inviteResource.getInviteOrganisationName())) ? "No org as yet" : inviteResource.getInviteOrganisationName());
         globalArguments.put("inviteUrl", getInviteUrl(webBaseUrl, inviteResource));
         return globalArguments;
     }
@@ -610,9 +609,6 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     private String getInviteUrl(String baseUrl, InviteResource inviteResource) {
         return String.format("%s/accept-invite/%s", baseUrl, inviteResource.getHash());
     }
-
-    //methods specific to inviteFinanceContact - end
-
 
     private ServiceResult<Void> validateProjectStartDate(LocalDate date) {
 
@@ -713,39 +709,6 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
     private ServiceResult<Project> getProject(long projectId) {
         return find(projectRepository.findOne(projectId), notFoundError(Project.class, projectId));
-    }
-
-    /*
-     * TODO - Here we need to fetch the actual data from the DB.
-     *
-     * Here ideally we should be returning the SpendProfile entity, but since we do not have the data model as yet, we return
-     * the SpendProfileResource directly.
-     *
-     * The first parameter of the find method should be replaced with the actual call to the DB.
-     * In the second parameter to the find method, we need to pass SpendProfile.class instead of SpendProfileResource.class
-     *
-     */
-    private ServiceResult<SpendProfileResource> getSpendProfileByProjectIdAndOrganisationId(final long projectId, final long organisationId) {
-        return find(tempGetSpendProfileEligibleCosts(projectId, organisationId), notFoundError(SpendProfileResource.class, projectId, organisationId));
-    }
-
-    private SpendProfileResource tempGetSpendProfileEligibleCosts(long projectId, long organisationId) {
-
-        SpendProfileResource spendProfileResource = new SpendProfileResource();
-
-        Map<String, BigDecimal> eligibleCostPerCategoryMap = new LinkedHashMap<>();
-        eligibleCostPerCategoryMap.put("LabourCost", new BigDecimal("240"));
-        eligibleCostPerCategoryMap.put("AdminSupportCost", new BigDecimal("120"));
-        eligibleCostPerCategoryMap.put("MaterialCost", new BigDecimal("180"));
-        eligibleCostPerCategoryMap.put("CapitalCost", new BigDecimal("190"));
-        eligibleCostPerCategoryMap.put("SubcontractingCost", new BigDecimal("160"));
-        eligibleCostPerCategoryMap.put("TravelAndSubsistenceCost", new BigDecimal("850"));
-        eligibleCostPerCategoryMap.put("OtherCost", new BigDecimal("149"));
-
-        spendProfileResource.setEligibleCostPerCategoryMap(eligibleCostPerCategoryMap);
-
-        return spendProfileResource;
-
     }
 
     private ServiceResult<Project> getProjectByApplication(long applicationId){

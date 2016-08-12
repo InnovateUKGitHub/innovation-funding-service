@@ -52,12 +52,6 @@ public class ProjectController {
         return projectService.getProjectById(id).toGetResponse();
     }
 
-    @RequestMapping("/{projectId}/partner-organisation/{organisationId}/spend-profile")
-    public RestResult<SpendProfileResource> getSpendProfile(@PathVariable("projectId") final Long projectId,
-                                                                @PathVariable("organisationId") final Long organisationId) {
-        return projectService.getSpendProfile(projectId, organisationId).toGetResponse();
-    }
-
     @RequestMapping("/application/{application}")
     public RestResult<ProjectResource> getByApplicationId(@PathVariable("application") final Long application) {
         return projectService.getByApplicationId(application).toGetResponse();
@@ -103,6 +97,12 @@ public class ProjectController {
     public RestResult<Void> inviteFinanceContact(@PathVariable("projectId") final Long projectId,
                                                  @RequestBody @Valid final InviteResource inviteResource) {
        return projectService.inviteFinanceContact(projectId, inviteResource).toPostResponse();
+    }
+
+    @RequestMapping(value = "/{projectId}/invite-project-manager", method = POST)
+    public RestResult<Void> inviteProjectManager(@PathVariable("projectId") final Long projectId,
+                                                 @RequestBody @Valid final InviteResource inviteResource) {
+        return projectService.inviteProjectManager(projectId, inviteResource).toPostResponse();
     }
 
     @RequestMapping(value = "/{projectId}/project-users", method = GET)

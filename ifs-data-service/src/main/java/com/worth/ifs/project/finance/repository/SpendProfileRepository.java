@@ -9,4 +9,6 @@ import org.springframework.data.repository.PagingAndSortingRepository;
  * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
  */
 public interface SpendProfileRepository extends PagingAndSortingRepository<SpendProfile, Long> {
+
+    SpendProfile findOneByProjectIdAndOrganisationId(Long projectId, Long organisationId);
 }

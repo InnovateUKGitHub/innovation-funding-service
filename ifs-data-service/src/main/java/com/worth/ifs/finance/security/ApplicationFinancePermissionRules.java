@@ -3,14 +3,13 @@ package com.worth.ifs.finance.security;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.security.PermissionRule;
 import com.worth.ifs.security.PermissionRules;
-import com.worth.ifs.security.SecurityRuleUtil;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import static com.worth.ifs.security.SecurityRuleUtil.checkProcessRole;
+import static com.worth.ifs.security.SecurityRuleUtil.*;
 import static com.worth.ifs.user.resource.UserRoleType.*;
 
 /**
@@ -40,7 +39,12 @@ public class ApplicationFinancePermissionRules {
 
     @PermissionRule(value = "READ", description = "A comp admin can see application finances for organisations")
     public boolean compAdminCanSeeApplicationFinancesForOrganisations(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
-        return SecurityRuleUtil.isCompAdmin(user);
+        return isCompAdmin(user);
+    }
+
+    @PermissionRule(value = "READ", description = "A Project Finance team member can see application finances for organisations")
+    public boolean projectFinanceCanSeeApplicationFinancesForOrganisations(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
+        return isProjectFinanceUser(user);
     }
 
     @PermissionRule(value = "ADD_COST", description = "The consortium can add a cost to the application finances of their own organisation")
@@ -60,7 +64,7 @@ public class ApplicationFinancePermissionRules {
 
     @PermissionRule(value = "READ_FILE_ENTRY", description = "A comp admin can get file entry resource for finance section of a collaborator")
     public boolean compAdminCanGetFileEntryResourceForFinanceIdOfACollaborator(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
-        return SecurityRuleUtil.isCompAdmin(user);
+        return isCompAdmin(user);
     }
 
 

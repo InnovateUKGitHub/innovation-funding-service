@@ -1,4 +1,4 @@
-package com.worth.ifs.project.transactional;
+package com.worth.ifs.project.finance.transactional;
 
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.finance.resource.category.FinanceRowCostCategory;
@@ -8,6 +8,7 @@ import com.worth.ifs.project.finance.domain.CostCategory;
 import com.worth.ifs.project.finance.domain.CostCategoryGroup;
 import com.worth.ifs.project.finance.domain.CostCategoryType;
 import com.worth.ifs.project.finance.repository.CostCategoryTypeRepository;
+import com.worth.ifs.project.transactional.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
