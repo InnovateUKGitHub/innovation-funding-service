@@ -18,6 +18,7 @@ import com.worth.ifs.application.transactional.AssessorFeedbackService;
 import com.worth.ifs.application.transactional.QuestionService;
 import com.worth.ifs.assessment.mapper.AssessmentMapper;
 import com.worth.ifs.assessment.mapper.AssessorFormInputResponseMapper;
+import com.worth.ifs.assessment.mapper.CompetitionInviteMapper;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.assessment.repository.AssessorFormInputResponseRepository;
 import com.worth.ifs.assessment.transactional.AssessmentService;
@@ -44,8 +45,9 @@ import com.worth.ifs.finance.repository.FinanceRowRepository;
 import com.worth.ifs.form.repository.FormInputRepository;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
 import com.worth.ifs.form.transactional.FormInputService;
+import com.worth.ifs.invite.repository.ApplicationInviteRepository;
+import com.worth.ifs.invite.repository.CompetitionInviteRepository;
 import com.worth.ifs.invite.repository.InviteOrganisationRepository;
-import com.worth.ifs.invite.repository.InviteRepository;
 import com.worth.ifs.notifications.resource.SystemNotificationSource;
 import com.worth.ifs.notifications.service.NotificationService;
 import com.worth.ifs.organisation.repository.OrganisationAddressRepository;
@@ -183,7 +185,13 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected InviteOrganisationRepository inviteOrganisationRepositoryMock;
 
     @Mock
-    protected InviteRepository inviteRepositoryMock;
+    protected ApplicationInviteRepository applicationInviteRepositoryMock;
+
+    @Mock
+    protected CompetitionInviteRepository competitionInviteRepositoryMock;
+
+    @Mock
+    protected CompetitionInviteMapper competitionInviteMapperMock;
 
     @Mock
     protected AddressLookupService addressLookupServiceMock;

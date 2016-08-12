@@ -13,7 +13,7 @@ import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
-import com.worth.ifs.invite.resource.InviteResource;
+import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.hamcrest.Matchers;
@@ -117,30 +117,30 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     
     @Test
     public void testNonAcceptedInvitationsAffectPendingAssignableUsersAndPendingOrganisationNames() throws Exception {
-       ApplicationResource app = applications.get(0);
+        ApplicationResource app = applications.get(0);
         Set<Long> sections = newHashSet(1L, 2L);
         Map<Long, Set<Long>> mappedSections = new HashMap();
         mappedSections.put(organisations.get(0).getId(), sections);
         when(sectionService.getCompletedSectionsByOrganisation(anyLong())).thenReturn(mappedSections);
-       when(applicationService.getById(app.getId())).thenReturn(app);
-       when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
+        when(applicationService.getById(app.getId())).thenReturn(app);
+        when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
-       InviteResource inv1 = inviteResource("kirk", "teamA", InviteStatusConstants.CREATED);
-       InviteResource inv2 = inviteResource("spock", "teamA", InviteStatusConstants.SEND);
-       InviteResource inv3 = inviteResource("bones", "teamA",  InviteStatusConstants.ACCEPTED);
+        ApplicationInviteResource inv1 = inviteResource("kirk", "teamA", InviteStatusConstants.CREATED);
+        ApplicationInviteResource inv2 = inviteResource("spock", "teamA", InviteStatusConstants.SEND);
+        ApplicationInviteResource inv3 = inviteResource("bones", "teamA",  InviteStatusConstants.ACCEPTED);
+
+        ApplicationInviteResource inv4 = inviteResource("picard", "teamB", InviteStatusConstants.CREATED);
        
-       InviteResource inv4 = inviteResource("picard", "teamB", InviteStatusConstants.CREATED);
+        InviteOrganisationResource inviteOrgResource1 = inviteOrganisationResource(inv1, inv2, inv3);
+        InviteOrganisationResource inviteOrgResource2 = inviteOrganisationResource(inv4);
        
-       InviteOrganisationResource inviteOrgResource1 = inviteOrganisationResource(inv1, inv2, inv3);
-       InviteOrganisationResource inviteOrgResource2 = inviteOrganisationResource(inv4);
+        List<InviteOrganisationResource> inviteOrgResources = Arrays.asList(inviteOrgResource1, inviteOrgResource2);
+        RestResult<List<InviteOrganisationResource>> invitesResult = RestResult.<List<InviteOrganisationResource>>restSuccess(inviteOrgResources, HttpStatus.OK);
        
-       List<InviteOrganisationResource> inviteOrgResources = Arrays.asList(inviteOrgResource1, inviteOrgResource2);
-       RestResult<List<InviteOrganisationResource>> invitesResult = RestResult.<List<InviteOrganisationResource>>restSuccess(inviteOrgResources, HttpStatus.OK);
+        when(inviteRestService.getInvitesByApplication(app.getId())).thenReturn(invitesResult);
        
-       when(inviteRestService.getInvitesByApplication(app.getId())).thenReturn(invitesResult);
-       
-       LOG.debug("Show dashboard for application: " + app.getId());
-       mockMvc.perform(get("/application/" + app.getId()))
+        LOG.debug("Show dashboard for application: " + app.getId());
+        mockMvc.perform(get("/application/" + app.getId()))
                .andExpect(status().isOk())
                .andExpect(view().name("application-details"))
                .andExpect(model().attribute("currentApplication", app))
@@ -154,17 +154,17 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     
     @Test
     public void testPendingOrganisationNamesOmitsEmptyOrganisationName() throws Exception {
-       ApplicationResource app = applications.get(0);
+        ApplicationResource app = applications.get(0);
         Set<Long> sections = newHashSet(1L, 2L);
         Map<Long, Set<Long>> mappedSections = new HashMap();
         mappedSections.put(organisations.get(0).getId(), sections);
         when(sectionService.getCompletedSectionsByOrganisation(anyLong())).thenReturn(mappedSections);
-       when(applicationService.getById(app.getId())).thenReturn(app);
-       when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
+        when(applicationService.getById(app.getId())).thenReturn(app);
+        when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
-       InviteResource inv1 = inviteResource("kirk", "teamA", InviteStatusConstants.CREATED);
-       
-       InviteResource inv2 = inviteResource("picard", "", InviteStatusConstants.CREATED);
+        ApplicationInviteResource inv1 = inviteResource("kirk", "teamA", InviteStatusConstants.CREATED);
+
+        ApplicationInviteResource inv2 = inviteResource("picard", "", InviteStatusConstants.CREATED);
        
        InviteOrganisationResource inviteOrgResource1 = inviteOrganisationResource(inv1);
        InviteOrganisationResource inviteOrgResource2 = inviteOrganisationResource(inv2);
@@ -193,26 +193,26 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         Map<Long, Set<Long>> mappedSections = new HashMap();
         mappedSections.put(organisations.get(0).getId(), sections);
         when(sectionService.getCompletedSectionsByOrganisation(anyLong())).thenReturn(mappedSections);
-       when(applicationService.getById(app.getId())).thenReturn(app);
-       when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
+        when(applicationService.getById(app.getId())).thenReturn(app);
+        when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
 
-       InviteResource inv1 = inviteResource("kirk", "teamA", InviteStatusConstants.CREATED);
-       
-       InviteResource inv2 = inviteResource("picard", organisations.get(0).getName(), InviteStatusConstants.CREATED);
-       
-       InviteOrganisationResource inviteOrgResource1 = inviteOrganisationResource(inv1);
-       InviteOrganisationResource inviteOrgResource2 = inviteOrganisationResource(inv2);
-       
-       
-       
-       List<InviteOrganisationResource> inviteOrgResources = Arrays.asList(inviteOrgResource1, inviteOrgResource2);
-       RestResult<List<InviteOrganisationResource>> invitesResult = RestResult.<List<InviteOrganisationResource>>restSuccess(inviteOrgResources, HttpStatus.OK);
+        ApplicationInviteResource inv1 = inviteResource("kirk", "teamA", InviteStatusConstants.CREATED);
 
-       when(inviteRestService.getInvitesByApplication(app.getId())).thenReturn(invitesResult);
+        ApplicationInviteResource inv2 = inviteResource("picard", organisations.get(0).getName(), InviteStatusConstants.CREATED);
        
-       LOG.debug("Show dashboard for application: " + app.getId());
-       mockMvc.perform(get("/application/" + app.getId()))
+        InviteOrganisationResource inviteOrgResource1 = inviteOrganisationResource(inv1);
+        InviteOrganisationResource inviteOrgResource2 = inviteOrganisationResource(inv2);
+       
+       
+       
+        List<InviteOrganisationResource> inviteOrgResources = Arrays.asList(inviteOrgResource1, inviteOrgResource2);
+        RestResult<List<InviteOrganisationResource>> invitesResult = RestResult.<List<InviteOrganisationResource>>restSuccess(inviteOrgResources, HttpStatus.OK);
+
+        when(inviteRestService.getInvitesByApplication(app.getId())).thenReturn(invitesResult);
+       
+        LOG.debug("Show dashboard for application: " + app.getId());
+        mockMvc.perform(get("/application/" + app.getId()))
                .andExpect(status().isOk())
                .andExpect(view().name("application-details"))
                .andExpect(model().attribute("currentApplication", app))
@@ -223,14 +223,14 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasItem(inv2)));
    }
 
-    private InviteOrganisationResource inviteOrganisationResource(InviteResource... invs) {
+    private InviteOrganisationResource inviteOrganisationResource(ApplicationInviteResource... invs) {
     	InviteOrganisationResource ior = new InviteOrganisationResource();
     	ior.setInviteResources(Arrays.asList(invs));
 		return ior;
 	}
 
-	private InviteResource inviteResource(String name, String organisation, InviteStatusConstants status) {
-		InviteResource invRes = new InviteResource();
+	private ApplicationInviteResource inviteResource(String name, String organisation, InviteStatusConstants status) {
+        ApplicationInviteResource invRes = new ApplicationInviteResource();
 		invRes.setName(name);
 		invRes.setInviteOrganisationName(organisation);
 		invRes.setStatus(status);

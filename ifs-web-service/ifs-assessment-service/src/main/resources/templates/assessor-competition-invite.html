@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <div th:include="fragments/layout :: head" th:with="pageTitle='Invitation to assess '+${competitionName}" th:remove="tag" />
+        <div th:include="fragments/layout :: head" th:with="pageTitle='Invitation to assess '+${model.competitionName}" th:remove="tag" />
     </head>
 
     <body class="app-dashboard">
@@ -14,10 +14,10 @@
             <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
 
             <div class="hgroup">
-                <h1 class="heading-large">Invitation to assess '<span th:text="${competitionName}" th:remove="tag" />'</h1>
+                <h1 class="heading-large">Invitation to assess '<span th:text="${model.competitionName}" th:remove="tag" />'</h1>
             </div>
 
-            <p>You are invited to act as an assessor for the competition <strong>'<span th:text="${competitionName}" th:remove="tag" />'</strong>.<!--/* Please read the information below and confirm whether you are available to assess applications for this competition./*/--></p>
+            <p>You are invited to act as an assessor for the competition <strong>'<span th:text="${model.competitionName}" th:remove="tag" />'</strong>.<!--/* Please read the information below and confirm whether you are available to assess applications for this competition./*/--></p>
 
             <!--/*section class="boxed">
                 <h2 class="heading-medium no-margin">15 - 25 April - assessment period</h2>

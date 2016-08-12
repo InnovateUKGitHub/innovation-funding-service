@@ -13,7 +13,7 @@ import javax.persistence.ManyToOne;
 
 @Entity
 @DiscriminatorValue("PROJECT")
-public class ProjectInvite extends Invite<Project> {
+public class ProjectInvite extends Invite<Project, ProjectInvite> {
 
     @ManyToOne
     @JoinColumn(name = "owner_id", referencedColumnName = "id")

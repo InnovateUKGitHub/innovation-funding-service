@@ -1,8 +1,8 @@
 package com.worth.ifs.invite.controller;
 
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
-import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.resource.InviteResultsResource;
 import com.worth.ifs.invite.transactional.InviteService;
 import org.apache.commons.logging.Log;
@@ -19,8 +19,8 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/invite")
-public class InviteController {
-    private static final Log LOG = LogFactory.getLog(InviteController.class);
+public class ApplicationInviteController {
+    private static final Log LOG = LogFactory.getLog(ApplicationInviteController.class);
     @Autowired
     private InviteService inviteService;
 
@@ -30,7 +30,7 @@ public class InviteController {
     }
 
     @RequestMapping("/getInviteByHash/{hash}")
-    public RestResult<InviteResource> getInviteByHash(@PathVariable("hash") String hash) {
+    public RestResult<ApplicationInviteResource> getInviteByHash(@PathVariable("hash") String hash) {
         return inviteService.getInviteByHash(hash).toGetResponse();
     }
 
@@ -46,7 +46,7 @@ public class InviteController {
     }
 
     @RequestMapping(value = "/saveInvites", method = RequestMethod.POST)
-    public RestResult<InviteResultsResource> saveInvites(@RequestBody List<InviteResource> inviteResources) {
+    public RestResult<InviteResultsResource> saveInvites(@RequestBody List<ApplicationInviteResource> inviteResources) {
         return inviteService.saveInvites(inviteResources).toPostCreateResponse();
     }
 
