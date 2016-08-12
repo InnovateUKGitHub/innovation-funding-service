@@ -21,9 +21,7 @@ import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static com.worth.ifs.assessment.builder.ProcessOutcomeBuilder.newProcessOutcome;
 import static com.worth.ifs.assessment.builder.ProcessOutcomeResourceBuilder.newProcessOutcomeResource;
-import static com.worth.ifs.commons.error.CommonFailureKeys.FORM_WORD_LIMIT_EXCEEDED;
-import static com.worth.ifs.commons.error.CommonFailureKeys.ASSESSMENT_RECOMMENDATION_FAILED;
-import static com.worth.ifs.commons.error.CommonFailureKeys.ASSESSMENT_REJECTION_FAILED;
+import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.same;
@@ -114,7 +112,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
         ServiceResult<Void> result = assessmentService.recommend(assessmentId, processOutcomeResource);
         assertTrue(result.isFailure());
-        assertEquals(FORM_WORD_LIMIT_EXCEEDED.getErrorKey(),result.getErrors().get(0).getErrorKey());
+        assertEquals(SUMMARY_FEEDBACK_WORD_LIMIT_EXCEEDED.getErrorKey(),result.getErrors().get(0).getErrorKey());
     }
 
     @Test
@@ -145,7 +143,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         ServiceResult<Void> result = assessmentService.recommend(assessmentId, processOutcomeResource);
 
         assertTrue(result.isFailure());
-        assertEquals(FORM_WORD_LIMIT_EXCEEDED.getErrorKey(),result.getErrors().get(0).getErrorKey());
+        assertEquals(SUMMARY_COMMENT_WORD_LIMIT_EXCEEDED.getErrorKey(),result.getErrors().get(0).getErrorKey());
     }
 
     @Test

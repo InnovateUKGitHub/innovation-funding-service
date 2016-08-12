@@ -1,16 +1,12 @@
 package com.worth.ifs.assessment.controller;
 
 import com.worth.ifs.application.AbstractApplicationController;
-import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.assessment.form.AssessmentSummaryForm;
 import com.worth.ifs.assessment.model.AssessmentSummaryModelPopulator;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.service.AssessmentService;
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.controller.ValidationHandler;
-import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.workflow.ProcessOutcomeService;
 import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
 import org.apache.commons.lang3.BooleanUtils;
@@ -27,10 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 import java.util.function.Supplier;
-
-import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
 
 @Controller
 public class AssessmentSummaryController extends AbstractApplicationController {
@@ -40,9 +33,6 @@ public class AssessmentSummaryController extends AbstractApplicationController {
 
     @Autowired
     private ProcessOutcomeService processOutcomeService;
-
-    @Autowired
-    private CompetitionService competitionService;
 
     @Autowired
     private AssessmentSummaryModelPopulator assessmentSummaryModelPopulator;
@@ -82,26 +72,15 @@ public class AssessmentSummaryController extends AbstractApplicationController {
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             ServiceResult<Void> updateResult = assessmentService.recommend(assessmentId, form.getFundingConfirmation(), form.getFeedback(), form.getComment());
-            validationHandler.addAnyErrors(updateResult, toField("formErrors"));
-            //TODO change implementation of lambda call to handle exceptions concisely
+            validationHandler.addAnyErrors(updateResult);
+
             return validationHandler.
-                    failNowOrSucceedWith(failureView, () -> {
-                        String view = "";
-                        try {
-                            view = redirectToCompetitionOfAssessment(assessmentId);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        } catch (ExecutionException e) {
-                            e.printStackTrace();
-                        }
-                        return view;
-                    });
+                    failNowOrSucceedWith(failureView, () -> redirectToCompetitionOfAssessment(assessmentId));
         });
     }
 
-    private String redirectToCompetitionOfAssessment(Long assessmentId) throws InterruptedException, ExecutionException {
-        CompetitionResource competition = getCompetition(getApplicationForAssessment(assessmentId).getCompetition());
-        return "redirect:/assessor/dashboard/competition/" + competition.getId();
+    private String redirectToCompetitionOfAssessment(Long assessmentId)  {
+        return "redirect:/assessor/dashboard/competition/" + getAssessment(assessmentId).getCompetition();
     }
 
     private void populateFormWithExistingValues(AssessmentSummaryForm form, Long assessmentId) {
@@ -118,25 +97,5 @@ public class AssessmentSummaryController extends AbstractApplicationController {
 
     private AssessmentResource getAssessment(Long assessmentId) {
         return assessmentService.getById(assessmentId);
-    }
-
-    private ApplicationResource getApplicationForAssessment(Long assessmentId) throws InterruptedException, ExecutionException {
-        return getApplication(getApplicationIdForProcessRole(getProcessRoleForAssessment(getAssessment(assessmentId))));
-    }
-
-    private ApplicationResource getApplication(Long applicationId) {
-        return applicationService.getById(applicationId);
-    }
-
-    private Future<ProcessRoleResource> getProcessRoleForAssessment(AssessmentResource assessment) {
-        return processRoleService.getById(assessment.getProcessRole());
-    }
-
-    private Long getApplicationIdForProcessRole(Future<ProcessRoleResource> processRoleResource) throws InterruptedException, ExecutionException {
-        return processRoleResource.get().getApplication();
-    }
-
-    private CompetitionResource getCompetition(Long competitionId) {
-        return competitionService.getById(competitionId);
     }
 }

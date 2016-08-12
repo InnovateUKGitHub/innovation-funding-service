@@ -33,7 +33,7 @@ import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAsse
 import static com.worth.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
 import static com.worth.ifs.assessment.builder.ProcessOutcomeResourceBuilder.newProcessOutcomeResource;
 import static com.worth.ifs.assessment.resource.AssessorFormInputType.*;
-import static com.worth.ifs.commons.error.CommonFailureKeys.FORM_WORD_LIMIT_EXCEEDED;
+import static com.worth.ifs.commons.error.CommonFailureKeys.SUMMARY_FEEDBACK_WORD_LIMIT_EXCEEDED;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
@@ -293,7 +293,7 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
         String feedback = "feedback";
         String comment = "comment";
 
-        setupServiceMocks(assessmentId, fundingConfirmation, feedback, comment, serviceFailure(FORM_WORD_LIMIT_EXCEEDED));
+        setupServiceMocks(assessmentId, fundingConfirmation, feedback, comment, serviceFailure(SUMMARY_FEEDBACK_WORD_LIMIT_EXCEEDED));
 
         MvcResult result = mockMvc.perform(post("/{assessmentId}/summary", assessmentId)
                 .contentType(APPLICATION_FORM_URLENCODED)
@@ -311,7 +311,7 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
 
         AssessmentSummaryForm form = (AssessmentSummaryForm) modelMap.get("form");
         assertEquals(1, form.getObjectErrors().size());
-        assertEquals(FORM_WORD_LIMIT_EXCEEDED.getErrorKey(), form.getObjectErrors().get(0).getCode());
+        assertEquals(SUMMARY_FEEDBACK_WORD_LIMIT_EXCEEDED.getErrorKey(), form.getObjectErrors().get(0).getCode());
     }
 
     private void setupServiceMocks(Long assessmentId, Boolean fundingConfirmation, String feedback, String comment, ServiceResult<Void> result) {
@@ -324,6 +324,7 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
         when(assessmentService.getById(assessmentId)).thenReturn(newAssessmentResource()
                 .withProcessRole(processRoleId)
                 .withProcessOutcome(asList(1L, 2L, 3L, latestProcessOutcomeId))
+                .withCompetition(competitionId)
                 .build());
         when(processRoleService.getById(processRoleId)).thenReturn(settable(newProcessRoleResource()
                 .withApplication(applicationId)
