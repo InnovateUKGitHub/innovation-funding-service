@@ -419,7 +419,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         }
 
         @Override
-        public ServiceResult<Boolean> isOtherDocumentsSubmitAllowed(Long projectId) {
+        public ServiceResult<Boolean> isOtherDocumentsSubmitAllowed(Long projectId, Long userId) {
             return null;
         }
 
