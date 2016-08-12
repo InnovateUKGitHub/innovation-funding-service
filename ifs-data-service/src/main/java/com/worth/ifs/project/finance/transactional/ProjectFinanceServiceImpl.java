@@ -101,7 +101,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
     @Override
     public ServiceResult<SpendProfileResource> getSpendProfile(Long projectId, Long organisationId) {
-        return getSpendProfile(projectId, organisationId).andOnSuccessReturn(profile -> {
+        return getSpendProfileEntity(projectId, organisationId).andOnSuccessReturn(profile -> {
             SpendProfileResource resource = new SpendProfileResource();
             resource.setId(profile.getId());
             return resource;
@@ -118,10 +118,10 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     }
 
     private Supplier<ServiceResult<SpendProfile>> spendProfile(Long projectId, Long organisationId) {
-        return () -> getSpendProfileResource(projectId, organisationId);
+        return () -> getSpendProfileEntity(projectId, organisationId);
     }
 
-    private ServiceResult<SpendProfile> getSpendProfileResource(Long projectId, Long organisationId) {
+    private ServiceResult<SpendProfile> getSpendProfileEntity(Long projectId, Long organisationId) {
         return find(spendProfileRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId), notFoundError(SpendProfile.class, projectId, organisationId));
     }
 
