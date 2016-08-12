@@ -15,6 +15,8 @@ public class ProjectUserResource {
     private Long role;
     private String roleName;
     private Long organisation;
+    private String email;
+    private String phoneNumber;
 
     public ProjectUserResource(){
     	// no-arg constructor
@@ -28,6 +30,8 @@ public class ProjectUserResource {
         this.role = role.getId();
         this.roleName = role.getName();
         this.organisation = organisation.getId();
+        this.email = user.getEmail();
+        this.phoneNumber = user.getPhoneNumber();
     }
 
     public Long getId(){return id;}
@@ -87,5 +91,21 @@ public class ProjectUserResource {
     @JsonIgnore
     public boolean isFinanceContact() {
         return FINANCE_CONTACT.getName().equals(getRoleName());
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 }

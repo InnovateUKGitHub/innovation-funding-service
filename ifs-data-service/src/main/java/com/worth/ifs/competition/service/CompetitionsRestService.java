@@ -26,4 +26,5 @@ public interface CompetitionsRestService {
     RestResult<Void> markSectionComplete(Long competitionId, CompetitionSetupSection section);
     RestResult<Void> markSectionInComplete(Long competitionId, CompetitionSetupSection section);
     RestResult<String> generateCompetitionCode(Long competitionId, LocalDateTime openingDate);
+    RestResult<Void> initApplicationForm(Long competitionId, Long competitionTypeId);
 }

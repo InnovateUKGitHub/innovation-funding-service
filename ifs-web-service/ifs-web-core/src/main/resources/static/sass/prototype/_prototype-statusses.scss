@@ -1,6 +1,6 @@
 
-.collapsible { 
-	
+.collapsible {
+
 	h2{
 		&.section-complete:before{
 			top: 13px;
@@ -79,7 +79,7 @@ table{
 	text-align: center;
 	padding: 20px;
 	color: $white;
-	
+
 	&.closed{
 		background: $red;
 	}
@@ -112,7 +112,7 @@ table{
 	.application-status{
 
 		.results-status{
-			
+
 			padding: 35px 0;
 
 		}
@@ -131,7 +131,5 @@ span.yes{
 
 span.no{
 	@extend %icon-cross;
-	padding-left: 28px; 
+	padding-left: 28px;
 }
-
-

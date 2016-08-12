@@ -149,7 +149,7 @@ public class SectionServiceSecurityTest extends BaseServiceSecurityTest<SectionS
         }
 
         @Override
-        public ServiceResult<List<SectionResource>> getByCompetionId(Long CompetitionId) {
+        public ServiceResult<List<SectionResource>> getByCompetitionId(Long CompetitionId) {
             return null;
         }
 

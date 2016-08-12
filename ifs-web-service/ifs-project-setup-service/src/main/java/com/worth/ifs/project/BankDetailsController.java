@@ -1,12 +1,12 @@
 package com.worth.ifs.project;
 
 import com.worth.ifs.address.resource.OrganisationAddressType;
-import com.worth.ifs.form.AddressForm;
 import com.worth.ifs.bankdetails.resource.BankDetailsResource;
 import com.worth.ifs.bankdetails.service.BankDetailsRestService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.controller.ValidationHandler;
+import com.worth.ifs.form.AddressForm;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.organisation.service.OrganisationAddressRestService;
 import com.worth.ifs.project.form.BankDetailsForm;
@@ -111,6 +111,9 @@ public class BankDetailsController extends AddressLookupBaseController {
                                 @Valid @ModelAttribute(FORM_ATTR_NAME) BankDetailsForm form,
                                 BindingResult bindingResult,
                                 @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+        if(StringUtils.isEmpty(form.getAddressForm().getPostcodeInput())){
+            bindingResult.addError(createPostcodeSearchFieldError());
+        }
         form.getAddressForm().setSelectedPostcodeIndex(null);
         form.getAddressForm().setTriedToSearch(true);
         form.setAddressType(OrganisationAddressType.valueOf(form.getAddressType().name()));

@@ -34,7 +34,7 @@
     <h2 class="heading-small" th:if="${question.getName()}" th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.name}" />
     <div class="textarea-wrapped">
         <div class="readonly">
-            <p th:text="${response?.value}" class="js-md-to-html"></p>
+            <p th:text="${response?.value}" data-md-to-html=""></p>
         </div>
     </div>
 </div>

@@ -13,6 +13,7 @@ import java.util.List;
  */
 public interface FormInputRepository extends PagingAndSortingRepository<FormInput, Long> {
     List<FormInput> findAll();
+    List<FormInput> findByCompetitionId(Long competitionId);
     List<FormInput> findByCompetitionIdOrderByPriorityAsc(Long competitionId);
     List<FormInput> findByCompetitionIdAndScopeOrderByPriorityAsc(Long competitionId, FormInputScope scope);
     List<FormInput> findByQuestionIdOrderByPriorityAsc(Long questionId);

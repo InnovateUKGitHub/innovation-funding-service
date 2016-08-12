@@ -25,8 +25,7 @@ include::{snippets}/assessorFormInputResponse/get-all-assessor-form-input-respon
 === Update Assessor Form Input Response ===
 ==== Request
 include::{snippets}/assessorFormInputResponse/update-assessor-form-input-response/http-request.adoc[]
-include::{snippets}/assessorFormInputResponse/update-assessor-form-input-response/path-parameters.adoc[]
-
+include::{snippets}/assessorFormInputResponse/update-assessor-form-input-response/request-fields.adoc[]
 ==== Response
 include::{snippets}/assessorFormInputResponse/update-assessor-form-input-response/http-response.adoc[]
 

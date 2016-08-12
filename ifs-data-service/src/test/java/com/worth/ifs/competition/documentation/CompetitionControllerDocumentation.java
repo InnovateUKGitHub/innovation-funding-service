@@ -18,6 +18,7 @@ import static com.worth.ifs.documentation.CompetitionResourceDocs.competitionRes
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
@@ -156,5 +157,22 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
                         responseFields(CompetitionCountResourceDocs.competitionCountResourceFields)
                 ));
     }
+
+    @Test
+    public void initialiseFormForCompetitionType() throws Exception {
+        Long competitionId = 2L;
+        Long competitionTypeId = 3L;
+        when(competitionSetupService.initialiseFormForCompetitionType(competitionId, competitionTypeId)).thenReturn(ServiceResult.serviceSuccess());
+
+        mockMvc.perform(post("/competition/{competitionId}/initialise-form/{competitionTypeId}", competitionId, competitionTypeId))
+                .andExpect(status().isOk())
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("competitionId").description("id of the competition in competition setup on which the application form should be initialised"),
+                                parameterWithName("competitionTypeId").description("id of the competitionType that is being chosen on setup")
+                        )
+                ));
+    }
+
 
 }

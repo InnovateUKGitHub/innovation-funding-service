@@ -30,7 +30,7 @@ Non registered users CH route
     ...    INFUND-1920
     ...
     ...    INFUND-1785
-    [Tags]    HappyPath
+    [Tags]    HappyPath   SmokeTest
     [Setup]    The guest user opens the browser
     Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
     When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
@@ -53,7 +53,7 @@ Non registered users CH route (email step)
     ...    INFUND-1920
     ...
     ...    INFUND-1785
-    [Tags]    HappyPath    Email
+    [Tags]    HappyPath    Email    SmokeTest
     [Setup]    The guest user opens the browser
     Given the user opens the mailbox and verifies the email from
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}

@@ -27,22 +27,27 @@ IFS.core.autoSave = (function(){
                 }
             });
             jQuery('body').on('change', s.inputs+','+s.select, function(e){
-                IFS.core.autoSave.fieldChanged(e.target);
+              IFS.core.autoSave.fieldChanged(e.target);
+            });
+            //events for other javascripts
+            jQuery('body').on('ifsAutosave',function(e){
+              IFS.core.autoSave.fieldChanged(e.target);
             });
         },
         fieldChanged : function (element){
-          var promiseListName;
           var field = jQuery(element);
-          //make sure repeating rows process sequential per row
-          if(field.closest('[data-repeatable-row]').length){
-            promiseListName = field.closest('[data-repeatable-row]').attr('id');
-          }
-          else {
-            promiseListName =field.attr('name');
-          }
+
           //per field we handle the request on a promise base, this means that ajax calls should be per field sequental
           //this menas we can still have async as two fields can still be processed at the same time
           //http://www.jefferydurand.com/jquery/sequential/javascript/ajax/2015/04/13/jquery-sequential-ajax-promise-deferred.html
+          var promiseListName;
+          if(field.closest('[data-repeatable-row]').length){
+            //make sure repeating rows process sequential per row
+            promiseListName = field.closest('[data-repeatable-row]').prop('id');
+          }
+          else {
+            promiseListName =field.prop('name');
+          }
           if(typeof(promiseList[promiseListName]) == 'undefined'){
             promiseList[promiseListName] = jQuery.when({}); //fire first promise :)
           }
@@ -63,22 +68,22 @@ IFS.core.autoSave = (function(){
                           jsonObj = {
                             applicationId: applicationId,
                             value: field.attr('data-date'),
-                            formInputId: fieldInfo.attr('id'),
-                            fieldName:  fieldInfo.attr('name')
+                            formInputId: fieldInfo.prop('id'),
+                            fieldName:  fieldInfo.prop('name')
                           };
                         }
                         else {
                           jsonObj = {
                             applicationId: applicationId,
                             value: field.val(),
-                            formInputId: field.attr('id').replace('form-textarea-',''),
-                            fieldName: field.attr('name')
+                            formInputId: field.prop('id').replace('form-textarea-',''),
+                            fieldName: field.prop('name')
                           };
                         }
                         break;
                   case 'fundingDecision':
                         jsonObj = {
-                          applicationId: field.attr('name'),
+                          applicationId: field.prop('name'),
                           fundingDecision: field.val()
                         };
                         break;
@@ -105,7 +110,7 @@ IFS.core.autoSave = (function(){
                   url = '/management/funding/' + competitionId;
                   break;
                 case 'assessorFeedback':
-                  var formInputId = field.closest('.question').attr('id').replace('form-input-','');
+                  var formInputId = field.closest('.question').prop('id').replace('form-input-','');
                   var assessmentId = form.attr('action').split('/')[2];
                   url = '/assessment/'+assessmentId+'/formInput/'+formInputId;
                   break;
@@ -126,7 +131,7 @@ IFS.core.autoSave = (function(){
               return defer.promise();
             }
 
-            var name = field.attr('name');
+            var name = field.prop('name');
             var formGroup = field.closest('.form-group');
             var autoSaveInfo = formGroup.find('.autosave-info');
             var startAjaxTime= new Date().getTime();

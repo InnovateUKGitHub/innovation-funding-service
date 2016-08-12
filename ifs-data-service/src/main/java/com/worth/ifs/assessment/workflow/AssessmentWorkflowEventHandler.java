@@ -28,24 +28,24 @@ public class AssessmentWorkflowEventHandler {
         this.stateHandler.addPersistStateChangeListener(listener);
     }
 
-    public void acceptInvitation(Long processRoleId, Assessment assessment) {
-        stateHandler.handleEventWithState(MessageBuilder
+    public boolean acceptInvitation(Long processRoleId, Assessment assessment) {
+        return stateHandler.handleEventWithState(MessageBuilder
                 .withPayload(AssessmentOutcomes.ACCEPT.getType())
                 .setHeader("assessment", assessment)
                 .setHeader("processRoleId", processRoleId)
                 .build(), assessment.getProcessStatus());
     }
 
-    public void rejectInvitation(Long processRoleId, Assessment assessment, ProcessOutcome processOutcome) {
-        stateHandler.handleEventWithState(MessageBuilder
+    public boolean rejectInvitation(Long processRoleId, Assessment assessment, ProcessOutcome processOutcome) {
+        return stateHandler.handleEventWithState(MessageBuilder
                 .withPayload(AssessmentOutcomes.REJECT.getType())
                 .setHeader("processRoleId", processRoleId)
                 .setHeader("processOutcome", processOutcome)
                 .build(), assessment.getProcessStatus());
     }
 
-    public void recommend(Long processRoleId, Assessment assessment, ProcessOutcome processOutcome) {
-        stateHandler.handleEventWithState(MessageBuilder
+    public boolean recommend(Long processRoleId, Assessment assessment, ProcessOutcome processOutcome) {
+        return stateHandler.handleEventWithState(MessageBuilder
                 .withPayload(AssessmentOutcomes.RECOMMEND.getType())
                 .setHeader("assessment", assessment)
                 .setHeader("processRoleId", processRoleId)
@@ -53,8 +53,8 @@ public class AssessmentWorkflowEventHandler {
                 .build(), assessment.getProcessStatus());
     }
 
-    public void submit(Assessment assessment) {
-        stateHandler.handleEventWithState(MessageBuilder
+    public boolean submit(Assessment assessment) {
+        return stateHandler.handleEventWithState(MessageBuilder
                 .withPayload(AssessmentOutcomes.SUBMIT.getType())
                 .setHeader("assessment", assessment)
                 .build(), assessment.getProcessStatus());

@@ -31,7 +31,7 @@
                     </span>
 
                 </label>
-                <input class="form-control" id="tsb-ref" type="text" th:value="${(user == 'internal' ? 'BBT-564' : '')}" />
+                <input class="form-control" id="tsb-ref" type="text" th:value="${(user == 'internal' ? 'BBT-564' : '')}" th:readonly="${param.status == null or param.status[0] != 'edit-academic'}" />
             </div>
         </fieldset>
         <fieldset class="form-inline">
@@ -52,7 +52,7 @@
                     <span>Staff
                     </span>
                 </label>
-                <input class="form-control" id="staff" type="text" th:value="${(user == 'internal' ? '&pound;50,000' : '')}" />
+                <input class="form-control" id="staff" type="text" th:value="${(user == 'internal' ? '&pound;50,000' : '')}" th:readonly="${param.status == null or param.status[0] != 'edit-academic'}"/>
             </div>
 
             <div class="form-group">
@@ -60,7 +60,7 @@
                     <span>Travel and subsistence
                     </span>
                 </label>
-                <input class="form-control" id="travel" type="text" th:value="${(user == 'internal' ? '&pound;1,000' : '')}"/>
+                <input class="form-control" id="travel" type="text" th:value="${(user == 'internal' ? '&pound;1,000' : '')}" th:readonly="${param.status == null or param.status[0] != 'edit-academic'}" />
             </div>
 
             <div class="form-group">
@@ -68,7 +68,7 @@
                     <span>Other costs
                     </span>
                 </label>
-                <input class="form-control" id="other" type="text" th:value="${(user == 'internal' ? '&pound;0' : '')}"/>
+                <input class="form-control" id="other" type="text" th:value="${(user == 'internal' ? '&pound;0' : '')}" th:readonly="${param.status == null or param.status[0] != 'edit-academic'}" />
             </div>
 
             <div class="form-group">
@@ -97,7 +97,7 @@
                     <span>Investigators
                     </span>
                 </label>
-                <input class="form-control" id="investigators" type="text" th:value="${(user == 'internal' ? '&pound;2,000' : '')}" />
+                <input class="form-control" id="investigators" type="text" th:value="${(user == 'internal' ? '&pound;2,000' : '')}" th:readonly="${param.status == null or param.status[0] != 'edit-academic'}" />
             </div>
 
             <div class="form-group">
@@ -105,7 +105,7 @@
                     <span>Estates Costs
                     </span>
                 </label>
-                <input class="form-control" id="estates" type="text" th:value="${(user == 'internal' ? '&pound;2,000' : '')}" />
+                <input class="form-control" id="estates" type="text" th:value="${(user == 'internal' ? '&pound;2,000' : '')}" th:readonly="${param.status == null or param.status[0] != 'edit-academic'}" />
             </div>
 
             <div class="form-group">
@@ -113,7 +113,7 @@
                     <span>Other costs
                     </span>
                 </label>
-                <input class="form-control" id="other-direct" type="text" th:value="${(user == 'internal' ? '&pound;2,000' : '')}" />
+                <input class="form-control" id="other-direct" type="text" th:value="${(user == 'internal' ? '&pound;2,000' : '')}" th:readonly="${param.status == null or param.status[0] != 'edit-academic'}" />
             </div>
 
             <div class="form-group">
@@ -133,7 +133,7 @@
                     <span class="form-label-bold">Indirect costs
                     </span>
                 </label>
-                <input class="form-control" id="indirect" type="text" th:value="${(user == 'internal' ? '&pound;1,000' : '')}" />
+                <input class="form-control" id="indirect" type="text" th:value="${(user == 'internal' ? '&pound;1,000' : '')}" th:readonly="${param.status == null or param.status[0] != 'edit-academic'}" />
             </div>
 
          </fieldset>
@@ -153,7 +153,7 @@
                     <span>Staff
                     </span>
                 </label>
-                <input class="form-control" id="exceptions-staff" type="text" th:value="${(user == 'internal' ? '&pound;1,000' : '')}" />
+                <input class="form-control" id="exceptions-staff" type="text" th:value="${(user == 'internal' ? '&pound;1,000' : '')}" th:readonly="${param.status == null or param.status[0] != 'edit-academic'}" />
             </div>
 
             <div class="form-group">
@@ -161,7 +161,7 @@
                     <span>Other costs
                     </span>
                 </label>
-                <input class="form-control" id="exceptions-other-direct" type="text" th:value="${(user == 'internal' ? '&pound;1,000' : '')}" />
+                <input class="form-control" id="exceptions-other-direct" type="text" th:value="${(user == 'internal' ? '&pound;1,000' : '')}" th:readonly="${param.status == null or param.status[0] != 'edit-academic'}" />
             </div>
 
             <div class="form-group">
@@ -186,7 +186,7 @@
 
     </form>
     
-    <div class="alignright extra-margin" th:unless="${param.status != null and param.status[0] == 'approved' or user == 'partner'}">
+    <div class="alignright extra-margin" th:unless="${param.status != null and param.status[0] == 'approved' or user == 'partner' or type == 'partnerView'}">
         <th:block th:if="${param.status == null or param.status[0] != 'edit-academic'}">
             <a th:href="@{'?status=edit-academic'}" class="button button-secondary">Edit</a>
         </th:block>

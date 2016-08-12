@@ -72,8 +72,8 @@ dependencies {
     compile "org.springframework:spring-web"
     compile "com.jayway.jsonpath:json-path-assert:2.0.0"
     compile "com.jayway.jsonpath:json-path"
-    compile "org.springframework.statemachine:spring-statemachine-core:1.0.0.RC1"
-    compile "org.springframework.statemachine:spring-statemachine-recipes-common:1.0.0.RC1"
+    compile "org.springframework.statemachine:spring-statemachine-core:1.1.0.RELEASE"
+    compile "org.springframework.statemachine:spring-statemachine-recipes-common:1.1.0.RELEASE"
     compile 'org.apache.commons:commons-lang3:3.4'
     compile 'commons-codec:commons-codec:1.10'
     compile "org.flywaydb:flyway-core:4.0"
@@ -88,6 +88,7 @@ dependencies {
     compile "org.apache.httpcomponents:httpasyncclient"
     compile "com.google.guava:guava:19.0"
     compile "commons-io:commons-io:2.4"
+    compile 'org.jsoup:jsoup:1.9.1'
 
     //providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
     compile fileTree(dir: "libs", include: "*.jar")

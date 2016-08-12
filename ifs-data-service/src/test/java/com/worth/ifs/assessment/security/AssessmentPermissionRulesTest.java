@@ -7,9 +7,10 @@ import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 
-import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
+import static com.worth.ifs.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
+import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.UserRoleType.ASSESSOR;
 import static org.junit.Assert.assertFalse;
@@ -31,20 +32,18 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
     public void setup() {
         Long processRoleId = 1L;
         Long userId = 2L;
-        Long applicationId = 3L;
 
         applicantUser = newUserResource().build();
         assessorUser = newUserResource().withId(userId).build();
 
         ProcessRole processRole = newProcessRole()
-                .withApplication(newApplication().withId(applicationId).build())
+                .withUser(newUser().with(id(userId)).build())
                 .withRole(ASSESSOR)
                 .build();
 
         assessment = newAssessmentResource().withProcessRole(processRole.getId()).build();
 
         when(processRoleRepositoryMock.findOne(processRoleId)).thenReturn(processRole);
-        when(processRoleRepositoryMock.findByUserIdAndApplicationId(userId, applicationId)).thenReturn(processRole);
     }
 
     @Test

@@ -25,6 +25,12 @@
 	
 	<hr />
 
+	<th:block th:if="${param.status != null and param.status[0] == 'approved'}">
+		<div class="success-alert">
+			The partner finance eligibility has been approved by Paul Davidson, 27 July 2016
+		</div>
+	</th:block>
+
 	<h2 class="heading-medium">Finances overview</h2>
 
 	<div class="table-overflow">
@@ -50,7 +56,7 @@
 
 	<h2 class="heading-medium">Je-S Form Overview</h2>
 
-		<p>These finances where initially submitted at the application stage. from the details in the J-eS form.</p>
+		<p>These finances were initially submitted at the application stage. from the details in the J-eS form.</p>
 		<p>If any numbers need to be corrected this must be discussed with the applicant, by raising queries through IFS. any changes will be visible to the applicant on saving.</p>
 
 		<div class="upload-section">
@@ -123,6 +129,10 @@
 	    </div>
 
 	</th:block>
+
+	<div class="extra-marin">
+		<a href="/prototypes/1199-project-finances" class="button button-secondary">Save and return to finance checks</a>
+	</div>
 
 	
 

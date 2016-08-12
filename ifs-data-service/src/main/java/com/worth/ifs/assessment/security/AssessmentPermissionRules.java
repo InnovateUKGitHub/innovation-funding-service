@@ -18,15 +18,16 @@ public class AssessmentPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "READ", description = "Assessors and competitionAdmins can read Assessments")
     public boolean userCanReadAssessment(final AssessmentResource assessment, final UserResource user) {
-        return isCompAdmin(user) || isAssessor(assessment, user);
+        return isCompAdmin(user) || isAssessorForAssessment(assessment, user);
     }
 
     @PermissionRule(value = "UPDATE", description = "only owners can update Assessments")
     public boolean userCanUpdateAssessment(final AssessmentResource assessment, final UserResource user) {
-        return isAssessor(assessment, user);
+        return isAssessorForAssessment(assessment, user);
     }
 
-    private boolean isAssessor(final AssessmentResource assessment, final UserResource user) {
-        return isAssessor(processRoleRepository.findOne(assessment.getProcessRole()).getApplication().getId(), user);
+    private boolean isAssessorForAssessment(final AssessmentResource assessment, final UserResource user) {
+        Long assessmentUser = processRoleRepository.findOne(assessment.getProcessRole()).getUser().getId();
+        return user.getId().equals(assessmentUser);
     }
 }

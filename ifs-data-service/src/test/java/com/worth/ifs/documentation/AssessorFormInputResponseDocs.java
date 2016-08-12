@@ -3,13 +3,11 @@ package com.worth.ifs.documentation;
 import com.worth.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
-import java.time.LocalDateTime;
-
 import static com.worth.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
 public class AssessorFormInputResponseDocs {
-    public static final FieldDescriptor[] AssessorFormInputResponseFields = {
+    public static final FieldDescriptor[] assessorFormInputResponseFields = {
             fieldWithPath("id").description("Id of the assessor form input response"),
             fieldWithPath("assessment").description("assessment process that the response belongs to"),
             fieldWithPath("question").description("question that the response is associated with"),
@@ -24,7 +22,5 @@ public class AssessorFormInputResponseDocs {
             .withAssessment(2L)
             .withFormInput(3L)
             .withQuestion(4L)
-            .withFormInputMaxWordCount(100)
-            .withValue("message")
-            .withUpdatedDate(LocalDateTime.parse("2016-07-12T16:10:50.21"));
+            .withValue("message");
 }

@@ -17,14 +17,18 @@ Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
 *** Test Cases ***
 Live Competitions
     [Documentation]    INFUND-3830
+    ...
+    ...    INFUND-3003
     Given the user should see the text in the page    All competitions
     Then the user should see the text in the page    Open
     And the user should see the text in the page    Closed
     And the user should see the text in the page    Panel
     And the user should see the text in the page    Inform
+    And the user should not see the text in the page    Sarcasm Stupendousness    # this step verifies that the ready to open competitions are not visible in other tabs
 
 Live competition calculations
     [Documentation]    INFUND-3830
+    ...
     Then the calculations should be correct    Open    //section[1]/ul/li
     And the calculations should be correct    Closed    //section[2]/ul/li
     And the calculations should be correct    In assessment    //section[3]/ul/li
@@ -34,9 +38,12 @@ Live competition calculations
 
 Project setup Competitions
     [Documentation]    INFUND-3831
+    ...
+    ...    INFUND-3003
     When the user clicks the button/link    jQuery=a:contains(Project set up)    # We have used the JQuery selector for the link because the title will change according to the competitions number
     Then the user should see the text in the page    Project set up
     And the user should see the text in the page    Killer Riffs
+    And the user should not see the text in the page    Sarcasm Stupendousness    # this step verifies that the ready to open competitions are not visible in other tabs
 
 Project setup competition calculations
     [Documentation]    INFUND-3831
@@ -51,9 +58,15 @@ Upcoming competitions
 
 Upcoming competitions calculations
     [Documentation]    INFUND-3832
+    ...
+    ...    INFUND-3003
     Then the calculations should be correct    In preparation    //section[1]/ul/li
     And the calculations should be correct    Ready to open    //section[2]/ul/li
     And the calculations should be correct    Upcoming    //section/ul/li
+
+Upcoming competitions ready for open
+    [Documentation]    INFUND-3003
+    Then The user should see the text in the page    Sarcasm Stupendousness
 
 *** Keywords ***
 the calculations should be correct
