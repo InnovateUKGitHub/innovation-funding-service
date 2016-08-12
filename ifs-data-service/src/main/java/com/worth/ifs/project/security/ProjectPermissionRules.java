@@ -1,5 +1,7 @@
 package com.worth.ifs.project.security;
 
+import com.worth.ifs.invite.domain.Invite;
+import com.worth.ifs.invite.domain.InviteOrganisation;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.security.BasePermissionRules;
@@ -8,8 +10,9 @@ import com.worth.ifs.security.PermissionRules;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
+import static com.worth.ifs.security.SecurityRuleUtil.checkProcessRole;
 import static com.worth.ifs.security.SecurityRuleUtil.isCompAdmin;
-import static com.worth.ifs.security.SecurityRuleUtil.isProjectFinanceUser;
+import static com.worth.ifs.user.resource.UserRoleType.COLLABORATOR;
 
 @PermissionRules
 @Component
@@ -49,6 +52,13 @@ public class ProjectPermissionRules extends BasePermissionRules {
             value = "INVITE_FINANCE_CONTACT",
             description = "A partner can invite a member of their organisation to become a finance contact")
     public boolean partnersCanInviteTheirOwnOrganisationsFinanceContacts(InviteResource invite, UserResource user) {
+        return isSpecificProjectPartnerByApplicationId(invite.getApplication(), invite.getInviteOrganisation(), user.getId());
+    }
+
+    @PermissionRule(
+            value = "INVITE_PROJECT_MANAGER",
+            description = "A partner can invite a member of their organisation to become a project manager")
+    public boolean partnersCanInviteTheirOwnOrganisationsProjectManager(InviteResource invite, UserResource user) {
         return isSpecificProjectPartnerByApplicationId(invite.getApplication(), invite.getInviteOrganisation(), user.getId());
     }
 

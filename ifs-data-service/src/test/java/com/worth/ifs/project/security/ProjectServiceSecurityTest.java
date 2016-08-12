@@ -436,6 +436,11 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         }
 
         @Override
+        public ServiceResult<Void> inviteProjectManager(Long projectId, InviteResource inviteResource) {
+            return null;
+        }
+
+        @Override
         public ServiceResult<MonitoringOfficerResource> getMonitoringOfficer(Long projectId) {
             return null;
         }

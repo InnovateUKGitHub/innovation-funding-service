@@ -63,6 +63,9 @@ public interface ProjectService {
     @PreAuthorize("hasPermission(#inviteResource, 'INVITE_FINANCE_CONTACT')")
     ServiceResult<Void> inviteFinanceContact(Long projectId, InviteResource inviteResource);
 
+    @PreAuthorize("hasPermission(#inviteResource, 'INVITE_PROJECT_MANAGER')")
+    ServiceResult<Void> inviteProjectManager(Long projectId, InviteResource inviteResource);
+
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'READ')")
     ServiceResult<List<ProjectUserResource>> getProjectUsers(Long projectId);
 
