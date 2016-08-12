@@ -276,7 +276,7 @@ Eligibility can be marked as done then edit again
 
 Application questions: All the sections should be visible
     [Documentation]    INFUND-3000
-    go to    ${COMP_MANAGEMENT_COMP_SETUP}
+    [Setup]    go to    ${COMP_MANAGEMENT_COMP_SETUP}
     When The user clicks the button/link    link=Application Questions
     Then The user should see the text in the page    Template: Programme 10 questions
     And the user should see the text in the page    Scope
