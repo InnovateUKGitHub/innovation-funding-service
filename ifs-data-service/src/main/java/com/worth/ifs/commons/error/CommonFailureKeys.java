@@ -111,7 +111,9 @@ public enum CommonFailureKeys implements ErrorTemplate {
     /*
      * Forms
      */
-    FORM_WORD_LIMIT_EXCEEDED("The form word limit has been exceeded",BAD_REQUEST)
+    FORM_WORD_LIMIT_EXCEEDED("The form word limit has been exceeded",BAD_REQUEST),
+    SUMMARY_FEEDBACK_WORD_LIMIT_EXCEEDED("The form word limit has been exceeded",BAD_REQUEST),
+    SUMMARY_COMMENT_WORD_LIMIT_EXCEEDED("The form word limit has been exceeded",BAD_REQUEST)
     ;
 
     private ErrorTemplate errorTemplate;

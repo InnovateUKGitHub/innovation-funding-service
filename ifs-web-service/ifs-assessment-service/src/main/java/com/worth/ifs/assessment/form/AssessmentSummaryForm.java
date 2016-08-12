@@ -3,9 +3,12 @@ package com.worth.ifs.assessment.form;
 import com.worth.ifs.controller.BindingResultTarget;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 /**
@@ -13,7 +16,10 @@ import java.util.List;
  */
 public class AssessmentSummaryForm implements BindingResultTarget {
 
+    @NotNull(message = "Please indicate your decision")
     private Boolean fundingConfirmation;
+    @NotEmpty(message = "Please enter your feedback")
+    @Size (max = 5000)
     private String feedback;
     private String comment;
     private BindingResult bindingResult;
