@@ -45,17 +45,17 @@ Edit link navigates to the application form
     When the user clicks the button/link    jQuery=#form-input-11 button:contains("Edit")
     Then the user redirects to the page    Please provide a short summary of your project    Project summary
 
-#created By: NKhan.
-Should not mark as complete for question with no text eg guestion Technical approach
-    [Tags]    Failing
-     Given the user clicks the button/link    jQuery=button:contains("5. Technical approach")
-     When the user clicks the button/link    jQuery=#form-input-11 button:contains("Mark as complete")
-     Then the user should see the element     jQuery=#form-input-11 button:contains("Mark as complete")
+#created By: NKhan. updated webelement : <going to wrong page due to which its failing>
+Should not mark as complete for question with no text eg question Technical approach
 
-#created By: NKhan.
+     Given the user clicks the button/link    jQuery=#form-input-5 button:contains("5.Technical approach")
+     When the user clicks the button/link    jQuery=#form-input-11 button:contains("Mark as complete")
+     Then the user should see the element     jQuery=#irform-input-11 button:contains("Mark as complete")
+
+#created By: NKhan. updated webelement : <going to wrong page due to which its failing>
 Should not mark as complete for question with no text eg. question economic benefit
-    [Tags]    Failing
-     Given the user clicks the button/link    jQuery=button:contains("4. Economic benefit")
+
+     Given the user clicks the button/link    jQuery=#form-input-4 button:contains("4.Economic benefit")
      When the user clicks the button/link    jQuery=#form-input-11 button:contains("Mark as complete")
      Then the user should see the element     jQuery=#form-input-11 button:contains("Mark as complete")
 
