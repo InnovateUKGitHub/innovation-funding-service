@@ -1,9 +1,9 @@
 package com.worth.ifs.application.service;
 
 import com.worth.ifs.commons.error.Error;
-import org.springframework.stereotype.Service;
 import com.worth.ifs.competition.resource.MilestoneResource;
-import com.worth.ifs.competition.resource.MilestoneResource.MilestoneName;
+import com.worth.ifs.competition.resource.MilestoneType;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -16,5 +16,5 @@ public interface MilestoneService {
 
     List<Error> update(List<MilestoneResource> milestones, Long competitionId);
 
-    MilestoneResource create(MilestoneName name, Long competitionId);
+    MilestoneResource create(MilestoneType type, Long competitionId);
 }

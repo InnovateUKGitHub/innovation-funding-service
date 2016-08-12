@@ -8,10 +8,7 @@ import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.domain.Milestone;
 import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.competition.repository.MilestoneRepository;
-import com.worth.ifs.competition.resource.CompetitionCountResource;
-import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.resource.CompetitionSetupSection;
-import com.worth.ifs.competition.resource.MilestoneResource;
+import com.worth.ifs.competition.resource.*;
 import com.worth.ifs.util.fixtures.CompetitionCoFundersFixture;
 import org.junit.Before;
 import org.junit.Test;
@@ -443,27 +440,27 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
 
         LocalDateTime milestoneDate = LocalDateTime.now();
 
-        List<MilestoneResource.MilestoneName> milestoneNames = populateMilestoneNames();
+        List<MilestoneType> milestoneTypes = populateMilestoneTypes();
         List<Milestone> milestones = new ArrayList<>();
         Milestone milestone;
 
-        for(MilestoneResource.MilestoneName milestoneName : milestoneNames) {
+        for(MilestoneType milestoneType : milestoneTypes) {
             milestone = new Milestone();
-            milestone.setName(milestoneName);
+            milestone.setType(milestoneType);
             milestone.setCompetition(assignCompetitionId(comp));
 
             milestone.setDate(milestoneDate);
-            if (milestone.getName().name().equals("OPEN_DATE")){
+            if (milestone.getType().name().equals("OPEN_DATE")){
                 milestone.setDate(startDate);
-            } if (milestone.getName().name().equals("SUBMISSION_DATE")) {
+            } if (milestone.getType().name().equals("SUBMISSION_DATE")) {
                 milestone.setDate(endDate);
-            } if (milestone.getName().name().equals("ASSESSOR_ACCEPTS")) {
+            } if (milestone.getType().name().equals("ASSESSOR_ACCEPTS")) {
                 milestone.setDate(assessmentStartDate);
-            } if (milestone.getName().name().equals("ASSESSOR_DEADLINE")) {
+            } if (milestone.getType().name().equals("ASSESSOR_DEADLINE")) {
                 milestone.setDate(assessorFeedbackDate);
-            } if (milestone.getName().name().equals("FUNDERS_PANEL")) {
+            } if (milestone.getType().name().equals("FUNDERS_PANEL")) {
                 milestone.setDate(assessmentEndDate);
-            } if (milestone.getName().name().equals("NOTIFICATIONS")){
+            } if (milestone.getType().name().equals("NOTIFICATIONS")){
                 milestone.setDate(fundersPanelEndDate);
             }
             milestones.add(milestone);
@@ -485,8 +482,8 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         return competition;
     }
 
-    private List<MilestoneResource.MilestoneName> populateMilestoneNames() {
-        return new ArrayList<>(EnumSet.allOf(MilestoneResource.MilestoneName.class));
+    private List<MilestoneType> populateMilestoneTypes() {
+        return new ArrayList<>(EnumSet.allOf(MilestoneType.class));
     }
 
     private void checkUpdatedCompetitionCategories(CompetitionResource savedCompetition) {

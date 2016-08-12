@@ -642,11 +642,11 @@
                   <tr th:each="milestonesFormEntryList, iterStat : ${competitionSetupForm.milestonesFormEntryList}"
                       class="date-group"
                       data-future-date=""
-                      th:attr="data-date-invalid-errormessage=${milestonesFormEntryList.milestoneName.milestoneDescription+': please enter a valid date'},
-                               data-date-future-errormessage=${milestonesFormEntryList.milestoneName.milestoneDescription +': please enter a future date that is after the previous milestone'}">
+                      th:attr="data-date-invalid-errormessage=${milestonesFormEntryList.milestoneType.milestoneDescription+': please enter a valid date'},
+                               data-date-future-errormessage=${milestonesFormEntryList.milestoneType.milestoneDescription +': please enter a future date that is after the previous milestone'}">
 
                       <td class="labelledby" th:id="${'milestone-'+iterStat.index}">
-                        <span th:text="${milestonesFormEntryList.milestoneName.milestoneDescription}" />
+                        <span th:text="${milestonesFormEntryList.milestoneType.milestoneDescription}" />
                       </td>
                       <td class="js-addWeekDay" th:text="${milestonesFormEntryList.dayOfWeek}"></td>
                       <td class="day">
@@ -697,7 +697,7 @@
                 </thead>
                 <tbody>
                     <tr th:each="milestonesFormEntryList : ${competitionSetupForm.milestonesFormEntryList}" >
-                        <td th:text="${milestonesFormEntryList.milestoneName.milestoneDescription}"></td>
+                        <td th:text="${milestonesFormEntryList.milestoneType.milestoneDescription}"></td>
                         <td th:text="${milestonesFormEntryList.dayOfWeek}"></td>
                         <td th:text="${milestonesFormEntryList.day}"></td>
                         <td th:text="${milestonesFormEntryList.month}"></td>

@@ -3,6 +3,7 @@ package com.worth.ifs.competitionsetup.service.sectionupdaters;
 import com.worth.ifs.application.service.MilestoneService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.MilestoneResource;
+import com.worth.ifs.competition.resource.MilestoneType;
 import com.worth.ifs.competitionsetup.form.MilestonesForm;
 import com.worth.ifs.competitionsetup.form.MilestonesFormEntry;
 import org.junit.Test;
@@ -45,7 +46,7 @@ public class MilestonesSectionSaverTest {
 
         MilestoneResource milestoneresource = newMilestoneResource()
                 .withId(1L)
-                .withName(MilestoneResource.MilestoneName.OPEN_DATE)
+                .withName(MilestoneType.OPEN_DATE)
                 .withDate(milestoneDate)
                 .withCompetitionId().build();
 
@@ -62,7 +63,7 @@ public class MilestonesSectionSaverTest {
         assertEquals(1L, milestones.get(0).longValue());
         assertTrue(resourceList.get(0).getCompetition() == 1L);
         assertNotNull(resourceList.get(0).getDate());
-        assertTrue(resourceList.get(0).getName().equals(MilestoneResource.MilestoneName.OPEN_DATE));
+        assertTrue(resourceList.get(0).getType().equals(MilestoneType.OPEN_DATE));
     }
 
     private List<MilestonesFormEntry> populateMilestoneFormEntry() {
@@ -70,7 +71,7 @@ public class MilestonesSectionSaverTest {
 
         MilestonesFormEntry milestone = new MilestonesFormEntry();
 
-        milestone.setMilestoneName(MilestoneResource.MilestoneName.OPEN_DATE);
+        milestone.setMilestoneType(MilestoneType.OPEN_DATE);
         milestone.setDay(1);
         milestone.setMonth(1);
         milestone.setYear(2017);

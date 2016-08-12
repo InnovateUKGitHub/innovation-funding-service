@@ -3,7 +3,7 @@ package com.worth.ifs.application.service;
 import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.competition.resource.MilestoneResource;
-import com.worth.ifs.competition.resource.MilestoneResource.MilestoneName;
+import com.worth.ifs.competition.resource.MilestoneType;
 import com.worth.ifs.competition.service.MilestoneRestService;
 import org.junit.Before;
 import org.junit.Test;
@@ -43,7 +43,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
 
         MilestoneResource foundMilestone = found.get(0);
         assertEquals(Long.valueOf(1L), foundMilestone.getId());
-        assertEquals(MilestoneResource.MilestoneName.OPEN_DATE, foundMilestone.getName());
+        assertEquals(MilestoneType.OPEN_DATE, foundMilestone.getType());
         assertEquals(milestoneDate, foundMilestone.getDate());
         assertEquals(Long.valueOf(1L), foundMilestone.getCompetition());
     }
@@ -52,12 +52,12 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
     public void test_create() {
         LocalDateTime milestoneDate = LocalDateTime.now();
 
-        when(milestoneRestService.create(MilestoneName.OPEN_DATE, 1L)).thenReturn(restSuccess(getNewMilestoneResource(milestoneDate)));
+        when(milestoneRestService.create(MilestoneType.OPEN_DATE, 1L)).thenReturn(restSuccess(getNewMilestoneResource(milestoneDate)));
 
-        MilestoneResource foundMilestone = service.create(MilestoneName.OPEN_DATE, 1L);
+        MilestoneResource foundMilestone = service.create(MilestoneType.OPEN_DATE, 1L);
 
         assertEquals(Long.valueOf(1L), foundMilestone.getId());
-        assertEquals(MilestoneResource.MilestoneName.OPEN_DATE, foundMilestone.getName());
+        assertEquals(MilestoneType.OPEN_DATE, foundMilestone.getType());
         assertEquals(milestoneDate, foundMilestone.getDate());
         assertEquals(Long.valueOf(1L), foundMilestone.getCompetition());
     }
@@ -80,7 +80,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
 
         MilestoneResource milestoneResource = newMilestoneResource()
                 .withId(1L)
-                .withName(MilestoneResource.MilestoneName.OPEN_DATE)
+                .withName(MilestoneType.OPEN_DATE)
                 .withDate(milestoneDate)
                 .withCompetitionId(1L).build();
 

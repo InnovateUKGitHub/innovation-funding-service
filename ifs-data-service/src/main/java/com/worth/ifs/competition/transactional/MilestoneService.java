@@ -2,12 +2,12 @@ package com.worth.ifs.competition.transactional;
 
 import java.util.List;
 
+import com.worth.ifs.competition.resource.MilestoneType;
 import com.worth.ifs.security.SecuredBySpring;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.MilestoneResource;
-import com.worth.ifs.competition.resource.MilestoneResource.MilestoneName;
 
 /**
  * Service for operations around the usage and processing of Milestones
@@ -26,5 +26,5 @@ public interface MilestoneService {
     @PreAuthorize("hasAuthority('comp_admin')")
     @SecuredBySpring(value="UPDATE", securedType=MilestoneResource.class,
             description = "Only Comp Admins is able to create the milestone for the given competitions")
-    ServiceResult<MilestoneResource> create(MilestoneName name, Long id);
+    ServiceResult<MilestoneResource> create(MilestoneType type, Long id);
 }

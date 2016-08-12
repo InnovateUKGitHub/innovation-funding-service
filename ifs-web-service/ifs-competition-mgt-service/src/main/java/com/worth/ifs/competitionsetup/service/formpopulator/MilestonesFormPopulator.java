@@ -1,20 +1,18 @@
 package com.worth.ifs.competitionsetup.service.formpopulator;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Stream;
-
-import com.worth.ifs.competitionsetup.form.MilestonesFormEntry;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.worth.ifs.application.service.MilestoneService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.MilestoneResource;
-import com.worth.ifs.competition.resource.MilestoneResource.MilestoneName;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.form.MilestonesForm;
+import com.worth.ifs.competitionsetup.form.MilestonesFormEntry;
+import com.worth.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Form populator for the milestones competition setup section.
@@ -25,6 +23,9 @@ public class MilestonesFormPopulator implements CompetitionSetupFormPopulator {
     @Autowired
     private MilestoneService milestoneService;
 
+    @Autowired
+    private CompetitionSetupMilestoneService competitionSetupMilestoneService;
+
     @Override
     public CompetitionSetupSection sectionToFill() {
         return CompetitionSetupSection.MILESTONES;
@@ -34,38 +35,25 @@ public class MilestonesFormPopulator implements CompetitionSetupFormPopulator {
     public CompetitionSetupForm populateForm(CompetitionResource competitionResource) {
         MilestonesForm competitionSetupForm = new MilestonesForm();
 
-        List<MilestoneResource> allMilestonesByCompetitionId = milestoneService.getAllDatesByCompetitionId(competitionResource.getId());
-
-        if (allMilestonesByCompetitionId == null || allMilestonesByCompetitionId.isEmpty()) {
-            allMilestonesByCompetitionId.addAll(createMilestonesForCompetition(competitionResource));
-        }
-        else {
-            allMilestonesByCompetitionId.sort((c1, c2) -> c1.getName().compareTo(c2.getName()));
+        List<MilestoneResource> milestonesByCompetition = milestoneService.getAllDatesByCompetitionId(competitionResource.getId());
+        if (milestonesByCompetition.isEmpty()) {
+            milestonesByCompetition.addAll(competitionSetupMilestoneService.createMilestonesForCompetition(competitionResource.getId()));
+        } else {
+            milestonesByCompetition.sort((c1, c2) -> c1.getType().compareTo(c2.getType()));
         }
 
         List<MilestonesFormEntry> milestoneFormEntries = new ArrayList<>();
-
-        allMilestonesByCompetitionId.forEach(milestone -> {
+        milestonesByCompetition.forEach(milestone -> {
             milestoneFormEntries.add(populateMilestoneFormEntries(milestone));
-
         });
         competitionSetupForm.setMilestonesFormEntryList(milestoneFormEntries);
-        return competitionSetupForm;
-    }
 
-    private List<MilestoneResource> createMilestonesForCompetition(CompetitionResource competitionResource) {
-        List<MilestoneResource> newMilestones = new ArrayList<>();
-        Stream.of(MilestoneName.values()).forEach(name -> {
-            MilestoneResource newMilestone = milestoneService.create(name, competitionResource.getId());
-            newMilestone.setName(name);
-            newMilestones.add(newMilestone);
-        });
-        return newMilestones;
+        return competitionSetupForm;
     }
 
     private MilestonesFormEntry populateMilestoneFormEntries(MilestoneResource milestone) {
         MilestonesFormEntry newMilestone = new MilestonesFormEntry();
-        newMilestone.setMilestoneName(milestone.getName());
+        newMilestone.setMilestoneType(milestone.getType());
         if (milestone.getDate() != null) {
             newMilestone.setDay(milestone.getDate().getDayOfMonth());
             newMilestone.setMonth(milestone.getDate().getMonthValue());

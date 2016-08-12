@@ -1,5 +1,7 @@
 package com.worth.ifs.competition.domain;
 
+import com.worth.ifs.competition.resource.MilestoneType;
+
 import java.time.LocalDateTime;
 
 import javax.persistence.Entity;
@@ -10,8 +12,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import com.worth.ifs.competition.resource.MilestoneResource.MilestoneName;
-
 /**
  * Entity model to store the Competition Milestones
  */
@@ -21,7 +21,7 @@ public class Milestone {
     @GeneratedValue
     private Long id;
     @Enumerated(EnumType.STRING)
-    private MilestoneName name;
+    private MilestoneType type;
     private LocalDateTime date;
 
     @ManyToOne
@@ -30,9 +30,9 @@ public class Milestone {
 
     public Milestone() {}
 
-    public Milestone(Long id, MilestoneName name, LocalDateTime date, Competition competition) {
+    public Milestone(Long id, MilestoneType type, LocalDateTime date, Competition competition) {
         this.id = id;
-        this.name = name;
+        this.type = type;
         this.date = date;
         this.competition = competition;
     }
@@ -45,12 +45,12 @@ public class Milestone {
         this.id = id;
     }
 
-    public MilestoneName getName() {
-        return name;
+    public MilestoneType getType() {
+        return type;
     }
 
-    public void setName(MilestoneName name) {
-        this.name = name;
+    public void setType(MilestoneType type) {
+        this.type = type;
     }
 
     public LocalDateTime getDate() {

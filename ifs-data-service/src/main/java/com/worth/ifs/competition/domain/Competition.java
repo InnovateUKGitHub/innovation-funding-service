@@ -1,32 +1,5 @@
 package com.worth.ifs.competition.domain;
 
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.*;
-import java.util.List;
-
-import com.worth.ifs.commons.error.Error;
-
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToOne;
-import javax.persistence.MapKeyColumn;
-import javax.persistence.MapKeyEnumerated;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.Transient;
-
-import org.springframework.format.annotation.DateTimeFormat;
-import java.math.BigDecimal;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
@@ -36,9 +9,15 @@ import com.worth.ifs.competition.resource.CollaborationLevel;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.LeadApplicantType;
+import com.worth.ifs.competition.resource.MilestoneType;
 import com.worth.ifs.invite.domain.InvitationTarget;
-import com.worth.ifs.competition.resource.MilestoneResource.MilestoneName;
 import com.worth.ifs.user.domain.User;
+
+import javax.persistence.*;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 
 /**
  * Competition defines database relations and a model to use client side and server side.
@@ -246,47 +225,58 @@ public class Competition implements InvitationTarget {
     }
 
     public LocalDateTime getEndDate() {
-        return getMilestoneValue(MilestoneName.SUBMISSION_DATE);
+        return getMilestoneValue(MilestoneType.SUBMISSION_DATE);
     }
+
     public void setEndDate(LocalDateTime endDate) {
-    	setMilestoneValue(MilestoneName.SUBMISSION_DATE, endDate);
+    	setMilestoneValue(MilestoneType.SUBMISSION_DATE, endDate);
     }
+
     public LocalDateTime getStartDate() {
-    	return getMilestoneValue(MilestoneName.OPEN_DATE);
+    	return getMilestoneValue(MilestoneType.OPEN_DATE);
     }
+
     public void setStartDate(LocalDateTime startDate) {
-        setMilestoneValue(MilestoneName.OPEN_DATE, startDate);
+        setMilestoneValue(MilestoneType.OPEN_DATE, startDate);
     }
+
     public LocalDateTime getAssessmentEndDate() {
-    	return getMilestoneValue(MilestoneName.FUNDERS_PANEL);
+    	return getMilestoneValue(MilestoneType.FUNDERS_PANEL);
     }
+
     public void setAssessmentEndDate(LocalDateTime assessmentEndDate) {
-    	setMilestoneValue(MilestoneName.FUNDERS_PANEL, assessmentEndDate);
+    	setMilestoneValue(MilestoneType.FUNDERS_PANEL, assessmentEndDate);
     }
+
     public LocalDateTime getAssessmentStartDate() {
-    	return getMilestoneValue(MilestoneName.ASSESSOR_ACCEPTS);
+    	return getMilestoneValue(MilestoneType.ASSESSOR_ACCEPTS);
     }
+
     public void setAssessmentStartDate(LocalDateTime assessmentStartDate){
-    	setMilestoneValue(MilestoneName.ASSESSOR_ACCEPTS, assessmentStartDate);
+    	setMilestoneValue(MilestoneType.ASSESSOR_ACCEPTS, assessmentStartDate);
     }
+
     public LocalDateTime getAssessorFeedbackDate() {
-    	return getMilestoneValue(MilestoneName.ASSESSOR_DEADLINE);
+    	return getMilestoneValue(MilestoneType.ASSESSOR_DEADLINE);
     }
+
     public void setAssessorFeedbackDate(LocalDateTime assessorFeedbackDate) {
-    	setMilestoneValue(MilestoneName.ASSESSOR_DEADLINE, assessorFeedbackDate);
+    	setMilestoneValue(MilestoneType.ASSESSOR_DEADLINE, assessorFeedbackDate);
     }
+
     public LocalDateTime getFundersPanelEndDate() {
-    	return getMilestoneValue(MilestoneName.NOTIFICATIONS);
-	}
-    public void setFundersPanelEndDate(LocalDateTime fundersPanelEndDate) {
-    	setMilestoneValue(MilestoneName.NOTIFICATIONS, fundersPanelEndDate);
+    	return getMilestoneValue(MilestoneType.NOTIFICATIONS);
 	}
 
-    private void setMilestoneValue(MilestoneName milestoneName, LocalDateTime dateTime) {
-		Milestone milestone = milestones.stream().filter(m -> milestoneName.equals(m.getName())).findAny().orElseGet(() -> {
+    public void setFundersPanelEndDate(LocalDateTime fundersPanelEndDate) {
+    	setMilestoneValue(MilestoneType.NOTIFICATIONS, fundersPanelEndDate);
+	}
+
+    private void setMilestoneValue(MilestoneType MilestoneType, LocalDateTime dateTime) {
+		Milestone milestone = milestones.stream().filter(m -> MilestoneType.equals(m.getType())).findAny().orElseGet(() -> {
 			Milestone m = new Milestone();
 			m.setCompetition(this);
-			m.setName(milestoneName);
+			m.setType(MilestoneType);
 			milestones.add(m);
 			return m;
 		});
@@ -294,8 +284,8 @@ public class Competition implements InvitationTarget {
 		milestone.setDate(dateTime);
 	}
 
-	private LocalDateTime getMilestoneValue(MilestoneName milestoneName) {
-		Optional<Milestone> milestone = milestones.stream().filter(m -> milestoneName.equals(m.getName())).findAny();
+	private LocalDateTime getMilestoneValue(MilestoneType milestoneType) {
+		Optional<Milestone> milestone = milestones.stream().filter(m -> milestoneType.equals(m.getType())).findAny();
 
 		if(milestone.isPresent()) {
 			return milestone.get().getDate();

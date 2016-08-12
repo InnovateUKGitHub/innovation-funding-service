@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-import com.worth.ifs.competition.repository.MilestoneRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.worth.ifs.BaseControllerIntegrationTest;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.competition.resource.MilestoneResource;
-import com.worth.ifs.competition.resource.MilestoneResource.MilestoneName;
+import com.worth.ifs.competition.resource.MilestoneType;
 
 /**
  * Integration test for testing the rest services of the milestone controller
@@ -71,10 +70,10 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
         assertNotNull(milestones);
         assertTrue(milestones.isEmpty());
 
-        MilestoneResource newMilestone = createNewMilestone(MilestoneName.BRIEFING_EVENT, COMPETITION_ID_NEW_MILESTONES);
+        MilestoneResource newMilestone = createNewMilestone(MilestoneType.BRIEFING_EVENT, COMPETITION_ID_NEW_MILESTONES);
 
         assertNotNull(newMilestone.getId());
-        assertTrue(newMilestone.getName().equals(MilestoneName.BRIEFING_EVENT));
+        assertTrue(newMilestone.getType().equals(MilestoneType.BRIEFING_EVENT));
         assertNull(newMilestone.getDate());
     }
 
@@ -90,7 +89,7 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
 
         assertTrue(newMilestones.size() == 13);
 
-        newMilestones.sort((c1, c2) -> c1.getName().compareTo(c2.getName()));
+        newMilestones.sort((c1, c2) -> c1.getType().compareTo(c2.getType()));
 
         newMilestones.forEach(m -> {
             assertNotNull(m.getId());
@@ -104,7 +103,7 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
         List<MilestoneResource> milestones = getMilestonesForCompetition(COMPETITION_ID_VALID);
 
         MilestoneResource milestone = milestones.get(0);
-        milestone.setName(MilestoneName.OPEN_DATE);
+        milestone.setType(MilestoneType.OPEN_DATE);
         milestone.setDate(LocalDateTime.now());
 
         controller.saveMilestone(milestones, COMPETITION_ID_VALID);
@@ -117,7 +116,7 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
 
         assertTrue(!milestones.isEmpty() && milestones.size() == 13);
 
-        milestones.sort((c1, c2) -> c1.getName().compareTo(c2.getName()));
+        milestones.sort((c1, c2) -> c1.getType().compareTo(c2.getType()));
 
         LocalDateTime milestoneDate = LocalDateTime.now();
         milestones.forEach(milestone -> {
@@ -129,7 +128,7 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
     }
 
 
-    private MilestoneResource createNewMilestone(MilestoneName name, Long competitionId) {
+    private MilestoneResource createNewMilestone(MilestoneType name, Long competitionId) {
         RestResult<MilestoneResource> milestoneResult = controller.create(name, competitionId);
         assertTrue(milestoneResult.isSuccess());
         return  milestoneResult.getSuccessObject();
@@ -137,9 +136,9 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
 
     private List<MilestoneResource> createNewMilestones(Long competitionId){
         List<MilestoneResource> newMilestones = new ArrayList<>();
-        Stream.of(MilestoneName.values()).forEach(name -> {
+        Stream.of(MilestoneType.values()).forEach(name -> {
             MilestoneResource newMilestone = createNewMilestone(name, competitionId);
-            newMilestone.setName(name);
+            newMilestone.setType(name);
             newMilestones.add(newMilestone);
         });
         return newMilestones;

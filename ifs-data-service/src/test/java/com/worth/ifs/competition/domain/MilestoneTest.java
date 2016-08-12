@@ -1,10 +1,8 @@
 package com.worth.ifs.competition.domain;
 
-import com.worth.ifs.competition.mapper.MilestoneMapper;
-import com.worth.ifs.competition.resource.MilestoneResource.MilestoneName;
+import com.worth.ifs.competition.resource.MilestoneType;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -19,10 +17,10 @@ public class MilestoneTest {
 
     private Milestone milestone;
     private Competition competition;
-    private List<String> milestoneNames;
+    private List<String> milestoneTypes;
 
     private Long id;
-    private MilestoneName name;
+    private MilestoneType type;
     private LocalDateTime date;
     private Long competitionId;
 
@@ -43,51 +41,51 @@ public class MilestoneTest {
     @Before
     public void setUp() throws Exception {
         id = 0L;
-        name = MilestoneName.OPEN_DATE;
+        type = MilestoneType.OPEN_DATE;
         date = LocalDateTime.now().plusDays(7);
         competitionId = 1L;
 
         competition = new Competition();
         competition.setId(competitionId);
 
-        milestone = new Milestone(id, name, date, competition);
-        populateMilestoneNames();
+        milestone = new Milestone(id, type, date, competition);
+        populateMilestoneTypes();
     }
 
     @Test
     public void getMilestone() {
         assertEquals(milestone.getId(), id);
-        assertEquals(milestone.getName(), name);
+        assertEquals(milestone.getType(), type);
         assertEquals(milestone.getDate(), date);
         assertEquals(milestone.getCompetition().getId(), competitionId);
     }
 
     @Test
-    public void milestoneNameSize() {
-        assertTrue(MilestoneName.values().length == 13);
+    public void milestoneTypeSize() {
+        assertTrue(MilestoneType.values().length == 13);
 
         List<String> milestoneEnum = new ArrayList<>();
 
-        Stream.of(MilestoneName.values()).forEach(name -> {
+        Stream.of(MilestoneType.values()).forEach(name -> {
             milestoneEnum.add(name.toString());
         });
-        assertTrue(!Collections.disjoint(milestoneNames, milestoneEnum));
+        assertTrue(!Collections.disjoint(milestoneTypes, milestoneEnum));
     }
 
-    private void populateMilestoneNames(){
-        milestoneNames = new ArrayList<>();
-        milestoneNames.add(openDate);
-        milestoneNames.add(briefingEvent);
-        milestoneNames.add(submissionDate);
-        milestoneNames.add(allocateAssessors);
-        milestoneNames.add(assessorBriefing);
-        milestoneNames.add(assessorAccepts);
-        milestoneNames.add(assessorDeadline);
-        milestoneNames.add(lineDraw);
-        milestoneNames.add(assessmentPanel);
-        milestoneNames.add(panelDate);
-        milestoneNames.add(fundersPanel);
-        milestoneNames.add(notifications);
-        milestoneNames.add(releaseFeedback);
+    private void populateMilestoneTypes(){
+        milestoneTypes = new ArrayList<>();
+        milestoneTypes.add(openDate);
+        milestoneTypes.add(briefingEvent);
+        milestoneTypes.add(submissionDate);
+        milestoneTypes.add(allocateAssessors);
+        milestoneTypes.add(assessorBriefing);
+        milestoneTypes.add(assessorAccepts);
+        milestoneTypes.add(assessorDeadline);
+        milestoneTypes.add(lineDraw);
+        milestoneTypes.add(assessmentPanel);
+        milestoneTypes.add(panelDate);
+        milestoneTypes.add(fundersPanel);
+        milestoneTypes.add(notifications);
+        milestoneTypes.add(releaseFeedback);
     }
 }
