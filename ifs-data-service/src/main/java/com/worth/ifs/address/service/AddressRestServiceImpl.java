@@ -18,13 +18,13 @@ public class AddressRestServiceImpl extends BaseRestService implements AddressRe
 
     @Override
     public RestResult<List<AddressResource>> doLookup(String lookup) {
-        return getWithRestResult(addressRestUrl + "/doLookup/" + lookup, ParameterizedTypeReferences.addressResourceListType());
+        return getWithRestResult(addressRestUrl + "/doLookup?lookup=" + lookup, ParameterizedTypeReferences.addressResourceListType());
     }
 
     @Override
     public RestResult<Boolean> validatePostcode(String postcode) {
-        LOG.info(addressRestUrl + "/validatePostcode/" + postcode);
-        return getWithRestResult(addressRestUrl + "/validatePostcode/" + postcode, Boolean.class);
+        LOG.info(addressRestUrl + "/validatePostcode/?postcode=" + postcode);
+        return getWithRestResult(addressRestUrl + "/validatePostcode?postcode=" + postcode, Boolean.class);
     }
 
     @Override

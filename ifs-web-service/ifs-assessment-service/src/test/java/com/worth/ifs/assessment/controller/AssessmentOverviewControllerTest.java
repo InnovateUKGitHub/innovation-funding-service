@@ -6,13 +6,16 @@ import com.worth.ifs.application.finance.view.OrganisationFinanceOverview;
 import com.worth.ifs.application.resource.AppendixResource;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionResource;
+import com.worth.ifs.assessment.form.AssessmentOverviewForm;
 import com.worth.ifs.assessment.model.AssessmentFinancesSummaryModelPopulator;
 import com.worth.ifs.assessment.model.AssessmentOverviewModelPopulator;
+import com.worth.ifs.assessment.model.RejectAssessmentModelPopulator;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
 import com.worth.ifs.assessment.service.AssessmentService;
 import com.worth.ifs.assessment.service.AssessorFormInputResponseService;
 import com.worth.ifs.assessment.viewmodel.AssessmentOverviewRowViewModel;
+import com.worth.ifs.assessment.viewmodel.RejectAssessmentViewModel;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.FileEntryRestService;
@@ -28,12 +31,12 @@ import com.worth.ifs.user.resource.ProcessRoleResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Spy;
+import org.mockito.*;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.validation.BindingResult;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -41,10 +44,13 @@ import java.util.stream.Collectors;
 
 import static com.google.common.collect.Sets.newHashSet;
 import static com.worth.ifs.BaseBuilderAmendFunctions.id;
+import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.application.service.Futures.settable;
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static com.worth.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
+import static com.worth.ifs.commons.error.CommonFailureKeys.ASSESSMENT_REJECTION_FAILED;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
@@ -53,8 +59,9 @@ import static com.worth.ifs.form.builder.FormInputResourceBuilder.newFormInputRe
 import static com.worth.ifs.form.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static com.worth.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
-import static java.util.Arrays.asList;
-import static org.mockito.Matchers.anyList;
+import static java.lang.String.format;
+import static java.util.Collections.singletonList;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -91,6 +98,9 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
     @InjectMocks
     private AssessmentFinancesSummaryModelPopulator assessmentFinancesSummaryModelPopulator;
 
+    @Spy
+    @InjectMocks
+    private RejectAssessmentModelPopulator rejectAssessmentModelPopulator;
 
     @Override
     protected AssessmentOverviewController supplyControllerUnderTest() {
@@ -107,11 +117,12 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         this.loginDefaultUser();
         this.setupFinances();
         this.setupInvites();
-        when(organisationService.getOrganisationForUser(anyLong(), anyList())).thenReturn(Optional.ofNullable(organisations.get(0)));
+        //noinspection unchecked
+        when(organisationService.getOrganisationForUser(isA(Long.class), isA(List.class))).thenReturn(Optional.ofNullable(organisations.get(0)));
     }
 
     @Test
-    public void testAssessmentDetails() throws Exception {
+    public void AssessmentDetails() throws Exception {
         String SCORE_INPUT_TYPE = "assessor_score";
         AssessmentResource assessment = newAssessmentResource().withId(1L).withProcessRole(0L).build();
         ProcessRoleResource processRole = newProcessRoleResource().with(id(0L)).withApplication(1L).build();
@@ -146,9 +157,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         when(assessorFormInputResponseService.getAllAssessorFormInputResponses(assessment.getId())).thenReturn(assessorResponses);
         when(formInputService.findAssessmentInputsByQuestion(anyLong())).thenReturn(formInputs);
         Map<Long, AssessmentOverviewRowViewModel> assessorResponsesMap = new HashMap<>();
-        questions.forEach(question -> {
-            assessorResponsesMap.put(question.getId(),new AssessmentOverviewRowViewModel(question,formInputs,assessorResponses));
-        });
+        questions.forEach(question -> assessorResponsesMap.put(question.getId(), new AssessmentOverviewRowViewModel(question, formInputs, assessorResponses)));
 
         FileEntryResource fileEntry = newFileEntryResource().build();
         FormInputResource formInput = newFormInputResource().withId(1L).build();
@@ -167,7 +176,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
     }
 
     @Test
-    public void testAssessmentFinance() throws Exception {
+    public void assessmentFinance() throws Exception {
         AssessmentResource assessment = newAssessmentResource().withId(1L).withProcessRole(0L).build();
         ProcessRoleResource processRole = newProcessRoleResource().with(id(0L)).withApplication(1L).build();
         CompetitionResource competition = newCompetitionResource()
@@ -203,22 +212,170 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
     }
 
     @Test
-    public void testRejectInvitation() throws Exception {
-        final Long assessmentId = 1L;
-        final String reason = "reason";
-        final String comment = "comment";
+    public void rejectInvitation() throws Exception {
+        Long assessmentId = 1L;
+        Long competitionId = 2L;
+        String reason = "reason";
+        String comment = "comment";
 
+        AssessmentResource assessment = newAssessmentResource()
+                .with(id(assessmentId))
+                .withCompetition(competitionId)
+                .build();
+
+        when(assessmentService.getById(assessmentId)).thenReturn(assessment);
         when(assessmentService.rejectInvitation(assessmentId, reason, comment)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/{assessmentId}/reject", assessmentId)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("rejectReason", reason)
                 .param("rejectComment", comment))
-                .andExpect(status().isOk())
-                .andExpect(view().name("assessor-dashboard"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(format("/assessor/dashboard/competition/%s", competitionId)))
                 .andReturn();
 
-        verify(assessmentService, only()).rejectInvitation(assessmentId, reason, comment);
+        verify(assessmentService, times(1)).getById(assessmentId);
+        verify(assessmentService, times(1)).rejectInvitation(assessmentId, reason, comment);
+        verifyNoMoreInteractions(assessmentService);
+    }
+
+    @Test
+    public void rejectInvitation_noReason() throws Exception {
+        Long assessmentId = 1L;
+        Long applicationId = 2L;
+        String reason = "";
+        String comment = "comment";
+
+        AssessmentResource assessment = newAssessmentResource()
+                .with(id(assessmentId))
+                .withApplication(applicationId)
+                .build();
+
+        ApplicationResource application = newApplicationResource().build();
+
+        when(assessmentService.getById(assessmentId)).thenReturn(assessment);
+        when(applicationService.getById(applicationId)).thenReturn(application);
+
+        // The non-js confirmation view should be returned with the comment pre-populated in the form and an error for the missing reason
+
+        AssessmentOverviewForm expectedForm = new AssessmentOverviewForm();
+        expectedForm.setRejectReason(reason);
+        expectedForm.setRejectComment(comment);
+
+        MvcResult result = mockMvc.perform(post("/{assessmentId}/reject", assessmentId)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("rejectReason", reason)
+                .param("rejectComment", comment))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("form", expectedForm))
+                .andExpect(model().attributeExists("model"))
+                .andExpect(view().name("assessment/reject-invitation-confirm"))
+                .andReturn();
+
+        RejectAssessmentViewModel model = (RejectAssessmentViewModel) result.getModelAndView().getModel().get("model");
+
+        assertEquals(assessmentId, model.getAssessmentId());
+        assertEquals(application, model.getApplication());
+
+        AssessmentOverviewForm form = (AssessmentOverviewForm) result.getModelAndView().getModel().get("form");
+
+        BindingResult bindingResult = form.getBindingResult();
+        assertEquals(0, bindingResult.getGlobalErrorCount());
+        assertEquals(1, bindingResult.getFieldErrorCount());
+        assertEquals("NotEmpty", bindingResult.getFieldError("rejectReason").getCode());
+
+        InOrder inOrder = Mockito.inOrder(assessmentService, applicationService);
+        inOrder.verify(assessmentService, calls(1)).getById(assessmentId);
+        inOrder.verify(applicationService, calls(1)).getById(applicationId);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void rejectInvitation_eventNotAccepted() throws Exception {
+        Long assessmentId = 1L;
+        Long applicationId = 2L;
+        String reason = "reason";
+        String comment = "comment";
+
+        AssessmentResource assessment = newAssessmentResource()
+                .with(id(assessmentId))
+                .withApplication(applicationId)
+                .build();
+
+        ApplicationResource application = newApplicationResource().build();
+
+        when(assessmentService.getById(assessmentId)).thenReturn(assessment);
+        when(applicationService.getById(applicationId)).thenReturn(application);
+        when(assessmentService.rejectInvitation(assessmentId, reason, comment)).thenReturn(serviceFailure(ASSESSMENT_REJECTION_FAILED));
+
+        // The non-js confirmation view should be returned with the fields pre-populated in the form and a global error
+
+        AssessmentOverviewForm expectedForm = new AssessmentOverviewForm();
+        expectedForm.setRejectReason(reason);
+        expectedForm.setRejectComment(comment);
+
+        MvcResult result = mockMvc.perform(post("/{assessmentId}/reject", assessmentId)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("rejectReason", reason)
+                .param("rejectComment", comment))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("form", expectedForm))
+                .andExpect(model().attributeExists("model"))
+                .andExpect(view().name("assessment/reject-invitation-confirm"))
+                .andReturn();
+
+        RejectAssessmentViewModel model = (RejectAssessmentViewModel) result.getModelAndView().getModel().get("model");
+
+        assertEquals(assessmentId, model.getAssessmentId());
+        assertEquals(application, model.getApplication());
+
+        AssessmentOverviewForm form = (AssessmentOverviewForm) result.getModelAndView().getModel().get("form");
+
+        BindingResult bindingResult = form.getBindingResult();
+        assertEquals(1, bindingResult.getGlobalErrorCount());
+        assertEquals(0, bindingResult.getFieldErrorCount());
+        assertEquals("Only assessments which are Open can be rejected.", bindingResult.getGlobalError().getDefaultMessage());
+
+        InOrder inOrder = Mockito.inOrder(assessmentService, applicationService);
+        inOrder.verify(assessmentService, calls(1)).getById(assessmentId);
+        inOrder.verify(assessmentService, calls(1)).rejectInvitation(assessmentId, reason, comment);
+        inOrder.verify(applicationService, calls(1)).getById(applicationId);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void rejectInvitationConfirm() throws Exception {
+        Long assessmentId = 1L;
+        Long applicationId = 2L;
+
+        AssessmentResource assessment = newAssessmentResource()
+                .with(id(assessmentId))
+                .withApplication(applicationId)
+                .build();
+
+        ApplicationResource application = newApplicationResource().build();
+
+        when(assessmentService.getById(assessmentId)).thenReturn(assessment);
+        when(applicationService.getById(applicationId)).thenReturn(application);
+
+        AssessmentOverviewForm expectedForm = new AssessmentOverviewForm();
+
+        MvcResult result = mockMvc.perform(get("/{assessmentId}/reject/confirm", assessmentId))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("form", expectedForm))
+                .andExpect(model().attributeExists("model"))
+                .andExpect(view().name("assessment/reject-invitation-confirm"))
+                .andReturn();
+
+        RejectAssessmentViewModel model = (RejectAssessmentViewModel) result.getModelAndView().getModel().get("model");
+
+        assertEquals(assessmentId, model.getAssessmentId());
+        assertEquals(application, model.getApplication());
+
+        InOrder inOrder = Mockito.inOrder(assessmentService, applicationService);
+        inOrder.verify(assessmentService, calls(1)).getById(assessmentId);
+        inOrder.verify(applicationService, calls(1)).getById(applicationId);
+        inOrder.verifyNoMoreInteractions();
     }
 
     private List<ApplicationFinanceResource> setupFinances(ApplicationResource app, SortedSet<OrganisationResource> orgSet) {
@@ -258,6 +415,6 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
     }
 
     private List<AppendixResource> setUpAppendices(FileEntryResource fileEntry, FormInputResource formInput, ApplicationResource app) {
-        return asList(new AppendixResource(app.getId(), formInput.getId(), "test", fileEntry));
+        return singletonList(new AppendixResource(app.getId(), formInput.getId(), "test", fileEntry));
     }
 }
