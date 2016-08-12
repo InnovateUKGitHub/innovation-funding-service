@@ -73,9 +73,18 @@ IFS.core.editor = (function(){
           });
           jQuery('[role="textbox"][data-editor="html"]').on('hallomodified',function(event, data){
               var textarea = jQuery(this).next();
-              jQuery(textarea).get(0).value = jQuery.htmlClean(data.content, s.htmlOptions);
+              var html =  jQuery.htmlClean(data.content, s.htmlOptions);
+              if(html.replace(/<[^>]+>/ig,"").length === 0){
+                  html = '';
+              }
+              jQuery(textarea).get(0).value = html;
               jQuery(textarea).trigger('keyup');
           });
+          jQuery('[role="textbox"][data-editor]').on('blur',function(){
+              var textarea = jQuery(this).next();
+              jQuery(textarea).trigger('change');
+          });
+
         },
         textareaMarkdownToHtml: function(sourceEl,editorEl) {
             var sourceVal = sourceEl.val();

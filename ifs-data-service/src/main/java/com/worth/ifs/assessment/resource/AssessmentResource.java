@@ -15,6 +15,8 @@ public class AssessmentResource {
     Long processRole;
     private Boolean submitted;
     private Boolean started;
+    private Long application;
+    private Long competition;
 
     public Long getId() {
         return id;
@@ -94,5 +96,21 @@ public class AssessmentResource {
 
     public void setStarted(Boolean started) {
         this.started = started;
+    }
+
+    public Long getApplication() {
+        return application;
+    }
+
+    public void setApplication(Long application) {
+        this.application = application;
+    }
+
+    public Long getCompetition() {
+        return competition;
+    }
+
+    public void setCompetition(Long competition) {
+        this.competition = competition;
     }
 }

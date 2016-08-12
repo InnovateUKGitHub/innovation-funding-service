@@ -6,7 +6,7 @@ import javax.validation.constraints.NotNull;
 
 public class FinanceContactForm  extends BaseBindingResultTarget {
 
-	@NotNull(message = "You need to select a Finance Contact before you can continue")
+	@NotNull(message = "{validation.financecontactform.financecontact.required}")
 	private Long financeContact;
 
 	private Long organisation;

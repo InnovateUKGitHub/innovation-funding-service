@@ -1,8 +1,8 @@
 package com.worth.ifs.invite.domain;
 
-import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.user.domain.User;
+import org.hibernate.annotations.DiscriminatorOptions;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
@@ -12,7 +12,7 @@ import javax.persistence.*;
 
 /**
  * An invitation for a person (who may or may not be an existing {@link User}) to participate in some business activity,
- * the target {@link InvitationTarget}
+ * the target {@link ProcessActivity}
  *
  * @param <T> the type of business activity to which we're inviting
  */
@@ -23,7 +23,8 @@ import javax.persistence.*;
 @DiscriminatorColumn(name="type", discriminatorType=DiscriminatorType.STRING)
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @Entity
-public abstract class Invite<T extends InvitationTarget> {
+@DiscriminatorOptions(force = true)
+public abstract class Invite<T extends ProcessActivity, I extends Invite<T,I>> {
     private static final CharSequence HASH_SALT = "b80asdf00poiasd07hn";
 
     @Id
@@ -39,6 +40,7 @@ public abstract class Invite<T extends InvitationTarget> {
     @JoinColumn(name = "email", referencedColumnName = "email", insertable = false, updatable = false)
     private User user;
 
+    @Column(unique=true)
     private String hash;
 
     @Enumerated(EnumType.STRING)
@@ -46,6 +48,7 @@ public abstract class Invite<T extends InvitationTarget> {
 
     Invite() {
     	// no-arg constructor
+        this.status=InviteStatusConstants.CREATED;
     }
 
     protected Invite(String name, String email, String hash, InviteStatusConstants status) {
@@ -91,10 +94,24 @@ public abstract class Invite<T extends InvitationTarget> {
         return status;
     }
 
-    public void setStatus(InviteStatusConstants status) {
-        this.status = status;
+    protected void setStatus(final InviteStatusConstants newStatus) {
+        if (newStatus == null) throw new NullPointerException("status cannot be null");
+        switch (newStatus) {
+            case CREATED:
+                if (this.status != null) throw new IllegalStateException("(" + this.status + ") -> (" + newStatus + ") Cannot create an Invite that has already been created.");
+                break;
+            case SEND:
+                if (this.status != InviteStatusConstants.CREATED)
+                    throw new IllegalStateException("(" + this.status + ") -> (" + newStatus + ") Cannot send an Invite that has already been sent.");
+                break;
+            case ACCEPTED:
+                // TODO check legal invite transitions
+//                if (this.status != InviteStatusConstants.SEND || this.status != InviteStatusConstants.ACCEPTED)
+//                    throw new IllegalStateException("(" + this.status + ") -> (" + newStatus + ") Cannot accept an Invite that hasn't been sent");
+                break;
+        }
+        this.status = newStatus;
     }
-
     public User getUser() {
         return user;
     }
@@ -116,4 +133,14 @@ public abstract class Invite<T extends InvitationTarget> {
     public abstract T getTarget(); // the thing we're being invited to
 
     public abstract void setTarget(T target);
+
+    public I send() {
+        setStatus(InviteStatusConstants.SEND);
+        return (I) this; // for object chaining
+    }
+
+    public I open () {
+        setStatus(InviteStatusConstants.ACCEPTED);
+        return (I) this; // for object chaining
+    }
 }

@@ -1,7 +1,7 @@
 package com.worth.ifs.invite.builder;
 
 import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.invite.resource.InviteResource;
+import com.worth.ifs.invite.resource.ApplicationInviteResource;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -10,9 +10,9 @@ import static com.worth.ifs.BuilderAmendFunctions.setField;
 import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
 
-public class InviteResourceBuilder extends BaseBuilder<InviteResource, InviteResourceBuilder> {
+public class InviteResourceBuilder extends BaseBuilder<ApplicationInviteResource, InviteResourceBuilder> {
 
-    private InviteResourceBuilder(List<BiConsumer<Integer, InviteResource>> multiActions) {
+    private InviteResourceBuilder(List<BiConsumer<Integer, ApplicationInviteResource>> multiActions) {
         super(multiActions);
     }
 
@@ -21,7 +21,7 @@ public class InviteResourceBuilder extends BaseBuilder<InviteResource, InviteRes
     }
 
     @Override
-    protected InviteResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, InviteResource>> actions) {
+    protected InviteResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, ApplicationInviteResource>> actions) {
         return new InviteResourceBuilder(actions);
     }
 
@@ -46,7 +46,7 @@ public class InviteResourceBuilder extends BaseBuilder<InviteResource, InviteRes
     }
 
     @Override
-    protected InviteResource createInitial() {
-        return new InviteResource();
+    protected ApplicationInviteResource createInitial() {
+        return new ApplicationInviteResource();
     }
 }

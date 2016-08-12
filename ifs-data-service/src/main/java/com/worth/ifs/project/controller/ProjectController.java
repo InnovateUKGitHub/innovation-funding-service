@@ -16,6 +16,7 @@ import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -107,8 +108,14 @@ public class ProjectController {
 
     @RequestMapping(value = "/{projectId}/invite-finance-contact", method = POST)
     public RestResult<Void> inviteFinanceContact(@PathVariable("projectId") final Long projectId,
-                                                 @RequestBody @Valid final InviteResource inviteResource) {
+                                                 @RequestBody @Valid final ApplicationInviteResource inviteResource) {
        return projectService.inviteFinanceContact(projectId, inviteResource).toPostResponse();
+    }
+
+    @RequestMapping(value = "/{projectId}/invite-project-manager", method = POST)
+    public RestResult<Void> inviteProjectManager(@PathVariable("projectId") final Long projectId,
+                                                 @RequestBody @Valid final ApplicationInviteResource inviteResource) {
+        return projectService.inviteProjectManager(projectId, inviteResource).toPostResponse();
     }
 
     @RequestMapping(value = "/{projectId}/project-users", method = GET)
