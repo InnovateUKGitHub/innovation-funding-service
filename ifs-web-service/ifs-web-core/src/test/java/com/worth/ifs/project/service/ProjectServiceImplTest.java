@@ -318,7 +318,7 @@ public class ProjectServiceImplTest {
     @Test
     public void testOtherDocumentsSubmitAllowedWhenNotAllFilesUploaded() throws Exception {
 
-        when(projectRestService.isOtherDocumentsSubmitAllowed(123l)).thenReturn(restFailure(new Error(PROJECT_SETUP_OTHER_DOCUMENTS_MUST_BE_UPLOADED_BEFORE_SUBMIT)));
+        when(projectRestService.isOtherDocumentsSubmitAllowed(123L)).thenReturn(restFailure(new Error(PROJECT_SETUP_OTHER_DOCUMENTS_MUST_BE_UPLOADED_BEFORE_SUBMIT)));
 
         ServiceResult<Boolean> submitAllowed = null;
 

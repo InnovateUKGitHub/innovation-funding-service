@@ -78,8 +78,9 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
     private ServiceResult<Void> validateWordCount(AssessorFormInputResponseResource response) {
         String value = response.getValue();
         FormInputResource formInputResource = formInputService.findFormInput(response.getFormInput()).getSuccessObject();
+        Integer wordLimit = formInputResource.getWordCount();
 
-        if (value != null) {
+        if (value != null && wordLimit != null && wordLimit > 0) {
             // clean any HTML markup from the value
             String cleaned = Jsoup.parse(value).text();
 
