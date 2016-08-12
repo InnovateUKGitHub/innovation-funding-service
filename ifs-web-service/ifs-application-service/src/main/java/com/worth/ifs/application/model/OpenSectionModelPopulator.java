@@ -26,7 +26,7 @@ import com.worth.ifs.form.service.FormInputResponseService;
 import com.worth.ifs.form.service.FormInputService;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
-import com.worth.ifs.invite.resource.InviteResource;
+import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.OrganisationTypeEnum;
@@ -166,7 +166,7 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
         List<String> activeApplicationOrganisationNames = organisations.stream().map(OrganisationResource::getName).collect(Collectors.toList());
 
         List<String> pendingOrganisationNames = pendingInvitations(application).stream()
-            .map(InviteResource::getInviteOrganisationName)
+            .map(ApplicationInviteResource::getInviteOrganisationName)
             .distinct()
             .filter(orgName -> StringUtils.hasText(orgName)
                 && activeApplicationOrganisationNames.stream().noneMatch(organisationName -> organisationName.equals(orgName))).collect(Collectors.toList());
@@ -229,7 +229,7 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
         List<QuestionStatusResource> notifications = questionService.getNotificationsForUser(questionAssignees.values(), userId);
         questionService.removeNotifications(notifications);
 
-        List<InviteResource> pendingAssignableUsers = pendingInvitations(application);
+        List<ApplicationInviteResource> pendingAssignableUsers = pendingInvitations(application);
 
         model.addAttribute("assignableUsers", processRoleService.findAssignableProcessRoles(application.getId()));
         model.addAttribute("pendingAssignableUsers", pendingAssignableUsers);
@@ -241,7 +241,7 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
         if(!application.isOpen() || userOrganisation == null){
             //Application Not open, so add empty lists
             model.addAttribute("assignableUsers", new ArrayList<ProcessRoleResource>());
-            model.addAttribute("pendingAssignableUsers", new ArrayList<InviteResource>());
+            model.addAttribute("pendingAssignableUsers", new ArrayList<ApplicationInviteResource>());
             model.addAttribute("questionAssignees", new HashMap<Long, QuestionStatusResource>());
             model.addAttribute("notifications", new ArrayList<QuestionStatusResource>());
             return true;
@@ -249,7 +249,7 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
         return false;
     }
 
-    private List<InviteResource> pendingInvitations(ApplicationResource application) {
+    private List<ApplicationInviteResource> pendingInvitations(ApplicationResource application) {
         RestResult<List<InviteOrganisationResource>> pendingAssignableUsersResult = inviteRestService.getInvitesByApplication(application.getId());
 
         return pendingAssignableUsersResult.handleSuccessOrFailure(

@@ -10,7 +10,6 @@ import com.worth.ifs.commons.rest.RestErrorResponse;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.FileAndContents;
-import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder;
 import com.worth.ifs.project.builder.SpendProfileResourceBuilder;

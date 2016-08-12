@@ -17,7 +17,7 @@ import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.BasicFileAndContents;
 import com.worth.ifs.file.service.FileAndContents;
 import com.worth.ifs.file.transactional.FileService;
-import com.worth.ifs.invite.resource.InviteResource;
+import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.notifications.resource.ExternalUserNotificationTarget;
 import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.notifications.resource.NotificationTarget;
@@ -567,36 +567,36 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     }
 
     @Override
-    public ServiceResult<Void> inviteFinanceContact(Long projectId, InviteResource inviteResource) {
+    public ServiceResult<Void> inviteFinanceContact(Long projectId, ApplicationInviteResource inviteResource) {
 
         return inviteContact(projectId, inviteResource, INVITE_FINANCE_CONTACT);
     }
 
     @Override
-    public ServiceResult<Void> inviteProjectManager(Long projectId, InviteResource inviteResource) {
+    public ServiceResult<Void> inviteProjectManager(Long projectId, ApplicationInviteResource inviteResource) {
 
         return inviteContact(projectId, inviteResource, INVITE_PROJECT_MANAGER);
     }
 
-    private ServiceResult<Void> inviteContact(Long projectId, InviteResource inviteResource, Notifications kindOfNotification) {
+    private ServiceResult<Void> inviteContact(Long projectId, ApplicationInviteResource inviteResource, Notifications kindOfNotification) {
 
         Notification notification = createInviteContactNotification(projectId, inviteResource, kindOfNotification);
         ServiceResult<Void> inviteContactEmailSendResult = notificationService.sendNotification(notification, EMAIL);
         return processAnyFailuresOrSucceed(singletonList(inviteContactEmailSendResult));
     }
 
-    private Notification createInviteContactNotification(Long projectId, InviteResource inviteResource, Notifications kindOfNotification) {
+    private Notification createInviteContactNotification(Long projectId, ApplicationInviteResource inviteResource, Notifications kindOfNotification) {
         NotificationTarget notificationTarget = createInviteContactNotificationTarget(inviteResource);
         Map<String, Object> globalArguments = createGlobalArgsForInviteContactEmail(projectId, inviteResource);
         return new Notification(systemNotificationSource, singletonList(notificationTarget),
                 kindOfNotification, globalArguments, emptyMap());
     }
 
-    private NotificationTarget createInviteContactNotificationTarget(InviteResource inviteResource) {
+    private NotificationTarget createInviteContactNotificationTarget(ApplicationInviteResource inviteResource) {
         return new ExternalUserNotificationTarget(inviteResource.getName(), inviteResource.getEmail());
     }
 
-    private Map<String, Object> createGlobalArgsForInviteContactEmail(Long projectId, InviteResource inviteResource) {
+    private Map<String, Object> createGlobalArgsForInviteContactEmail(Long projectId, ApplicationInviteResource inviteResource) {
         Project project = projectRepository.findOne(projectId);
         Map<String, Object> globalArguments = new HashMap<>();
         globalArguments.put("projectName", project.getName());
@@ -606,7 +606,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         return globalArguments;
     }
 
-    private String getInviteUrl(String baseUrl, InviteResource inviteResource) {
+    private String getInviteUrl(String baseUrl, ApplicationInviteResource inviteResource) {
         return String.format("%s/accept-invite/%s", baseUrl, inviteResource.getHash());
     }
 

@@ -48,14 +48,14 @@ public class ProjectPermissionRules extends BasePermissionRules {
     @PermissionRule(
             value = "INVITE_FINANCE_CONTACT",
             description = "A partner can invite a member of their organisation to become a finance contact")
-    public boolean partnersCanInviteTheirOwnOrganisationsFinanceContacts(InviteResource invite, UserResource user) {
+    public boolean partnersCanInviteTheirOwnOrganisationsFinanceContacts(ApplicationInviteResource invite, UserResource user) {
         return isSpecificProjectPartnerByApplicationId(invite.getApplication(), invite.getInviteOrganisation(), user.getId());
     }
 
     @PermissionRule(
             value = "INVITE_PROJECT_MANAGER",
             description = "A partner can invite a member of their organisation to become a project manager")
-    public boolean partnersCanInviteTheirOwnOrganisationsProjectManager(InviteResource invite, UserResource user) {
+    public boolean partnersCanInviteTheirOwnOrganisationsProjectManager(ApplicationInviteResource invite, UserResource user) {
         return isSpecificProjectPartnerByApplicationId(invite.getApplication(), invite.getInviteOrganisation(), user.getId());
     }
 

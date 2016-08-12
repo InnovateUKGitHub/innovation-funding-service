@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.invite.domain.ApplicationInvite;
 import com.worth.ifs.invite.domain.InviteOrganisation;
+import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
-import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.resource.InviteResultsResource;
 import com.worth.ifs.invite.transactional.InviteService;
 import org.junit.Before;
@@ -27,11 +27,11 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class InviteControllerTest extends BaseControllerMockMVCTest<InviteController> {
+public class ApplicationInviteControllerTest extends BaseControllerMockMVCTest<ApplicationInviteController> {
 
     @Override
-    protected InviteController supplyControllerUnderTest() {
-        return new InviteController();
+    protected ApplicationInviteController supplyControllerUnderTest() {
+        return new ApplicationInviteController();
     }
 
     @Mock
@@ -40,14 +40,14 @@ public class InviteControllerTest extends BaseControllerMockMVCTest<InviteContro
     @Before
     public void setUp() {
         when(inviteOrganisationRepositoryMock.save(isA(InviteOrganisation.class))).thenReturn(null);
-        when(inviteRepositoryMock.save(isA(ApplicationInvite.class))).thenReturn(null);
+        when(applicationInviteRepositoryMock.save(isA(ApplicationInvite.class))).thenReturn(null);
         when(organisationRepositoryMock.findOne(1L)).thenReturn(newOrganisation().build());
         when(applicationRepositoryMock.findOne(1L)).thenReturn(newApplication().build());
     }
 
     @Test
     public void postingOrganisationInviteResourceContainingInviteResourcesShouldInitiateSaveCalls() throws Exception {
-        List<InviteResource> inviteResources = newInviteResource()
+        List<ApplicationInviteResource> inviteResources = newInviteResource()
                 .withApplication(1L)
                 .withName("testname")
                 .withEmail("testemail")
@@ -75,7 +75,7 @@ public class InviteControllerTest extends BaseControllerMockMVCTest<InviteContro
 
     @Test
     public void invalidInviteOrganisationResourceShouldReturnErrorMessage() throws Exception {
-        List<InviteResource> inviteResources = newInviteResource()
+        List<ApplicationInviteResource> inviteResources = newInviteResource()
                 .withApplication(1L)
                 .withName("testname")
                 .withEmail("testemail")

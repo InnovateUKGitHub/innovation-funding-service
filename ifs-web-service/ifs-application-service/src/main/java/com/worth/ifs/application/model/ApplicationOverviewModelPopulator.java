@@ -28,8 +28,8 @@ import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
+import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
-import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.project.ProjectService;
 import com.worth.ifs.project.resource.ProjectResource;
@@ -179,7 +179,7 @@ public class ApplicationOverviewModelPopulator {
 
         List<QuestionStatusResource> notifications = questionService.getNotificationsForUser(questionAssignees.values(), userId);
         questionService.removeNotifications(notifications);
-        List<InviteResource> pendingAssignableUsers = pendingInvitations(application);
+        List<ApplicationInviteResource> pendingAssignableUsers = pendingInvitations(application);
 
         model.addAttribute("assignableUsers", processRoleService.findAssignableProcessRoles(application.getId()));
         model.addAttribute("pendingAssignableUsers", pendingAssignableUsers);
@@ -191,7 +191,7 @@ public class ApplicationOverviewModelPopulator {
         if(!application.isOpen() || userOrganisation == null){
             //Application Not open, so add empty lists
             model.addAttribute("assignableUsers", new ArrayList<ProcessRoleResource>());
-            model.addAttribute("pendingAssignableUsers", new ArrayList<InviteResource>());
+            model.addAttribute("pendingAssignableUsers", new ArrayList<ApplicationInviteResource>());
             model.addAttribute("questionAssignees", new HashMap<Long, QuestionStatusResource>());
             model.addAttribute("notifications", new ArrayList<QuestionStatusResource>());
             return true;
@@ -199,7 +199,7 @@ public class ApplicationOverviewModelPopulator {
         return false;
     }
 
-    private List<InviteResource> pendingInvitations(ApplicationResource application) {
+    private List<ApplicationInviteResource> pendingInvitations(ApplicationResource application) {
         RestResult<List<InviteOrganisationResource>> pendingAssignableUsersResult = inviteRestService.getInvitesByApplication(application.getId());
 
         return pendingAssignableUsersResult.handleSuccessOrFailure(
