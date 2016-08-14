@@ -22,12 +22,13 @@ public class AddressRestServiceMocksTest extends BaseRestServiceUnitTest<Address
 
     @Test
     public void testDoLookup() throws Exception{
-        String expectedUrl = addressRestURL + "/doLookup/BS348XU";
+        String postcode = "BS348XU";
+        String expectedUrl = addressRestURL + "/doLookup?lookup=" + postcode;
         List<AddressResource> returnedAddresses = newAddressResource().build(4);
         setupGetWithRestResultExpectations(expectedUrl, addressResourceListType(), returnedAddresses);
 
         // now run the method under test
-        List<AddressResource> addresses = service.doLookup("BS348XU").getSuccessObject();
+        List<AddressResource> addresses = service.doLookup(postcode).getSuccessObject();
         assertNotNull(addresses);
         assertEquals(returnedAddresses, addresses);
     }

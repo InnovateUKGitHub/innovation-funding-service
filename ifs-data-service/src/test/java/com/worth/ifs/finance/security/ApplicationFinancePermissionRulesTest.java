@@ -169,4 +169,18 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
         assertFalse(rules.consortiumMemberCanDeleteAFileForTheApplicationFinanceForTheirOrganisation(applicationFinance, otherLeadApplicant));
     }
 
+    @Test
+    public void testCompAdminCanGetApplicationFinance(){
+        assertTrue(rules.compAdminCanSeeApplicationFinancesForOrganisations(applicationFinance, compAdmin));
+        assertFalse(rules.compAdminCanSeeApplicationFinancesForOrganisations(applicationFinance, collaborator));
+        assertFalse(rules.compAdminCanSeeApplicationFinancesForOrganisations(applicationFinance, leadApplicant));
+    }
+
+    @Test
+    public void testProjectFinanceCanGetApplicationFinance(){
+        assertTrue(rules.projectFinanceCanSeeApplicationFinancesForOrganisations(applicationFinance, projectFinanceUser()));
+        assertFalse(rules.projectFinanceCanSeeApplicationFinancesForOrganisations(applicationFinance, collaborator));
+        assertFalse(rules.projectFinanceCanSeeApplicationFinancesForOrganisations(applicationFinance, leadApplicant));
+    }
+
 }

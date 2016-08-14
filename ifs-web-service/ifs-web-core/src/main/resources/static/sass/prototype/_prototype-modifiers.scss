@@ -79,6 +79,12 @@
 	border-right: 1px solid $grey-2;
 }
 
+tr.cell-border-right{
+	td,th{
+		border-right: 1px solid $grey-2;
+	}
+}
+
 .cell-border-top-divide{
 	th,td{
 		border-top: 1px solid $black;

@@ -7,29 +7,65 @@
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
 <div th:include="fragments/layout :: global-header" th:remove="tag" />
 
-<main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{projectId}(projectId=${model.projectId})}"  th:remove="tag"></div>
+<main>
+    <div class="grid-container">
+        <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+        <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{projectId}(projectId=${model.projectId})}"  th:remove="tag"></div>
 
-    <div class="page-title">
-        <div th:include="fragments/elements :: project-title (projectId=${model.projectId}, projectName=${model.projectName})" th:remove="tag" />
-        <h1 class="heading-xlarge">Spend Profile</h1>
+        <div class="page-title">
+            <div th:include="fragments/elements :: project-title (projectId=${model.projectId}, projectName=${model.projectName})" th:remove="tag" />
+            <h1 class="heading-xlarge">Spend Profile</h1>
+        </div>
+        <p>Your project costs have been reviewed and confirmed by Innovate UK.
+           We now require a <strong>spend profile</strong> from you so that we can plan allocation of the grant funding to your project.
+           This spend profile should be developed collaboratively with your project partners.
+        </p>
+        <dl class="standard-definition-list">
+          <dt>Project start date</dt>
+          <dd>
+            <th:block th:include="fragments/elements :: ordinal-day (date=${model.targetProjectStartDate})" />
+            <th:block th:text="${#temporals.format(model.targetProjectStartDate, 'MMMM yyyy')}" />
+          </dd>
+          <dt>Duration</dt>
+          <dd><th:block th:text="${model.durationInMonths}" /> Months</dd>
+        </dl>
     </div>
-    <p>Your project costs have been reviewed and confirmed by Innovate UK.
-       We now require a <strong>spend profile</strong> from you so that we can plan allocation of the grant funding to your project.
-       This spend profile should be developed collaboratively with your project partners.
-    </p>
-    <dl class="standard-definition-list">
-			<dt>Project start date</dt>
-			<dd>
-        <th:block th:include="fragments/elements :: ordinal-day (date=${model.targetProjectStartDate})" />
-        <th:block th:text="${#temporals.format(model.targetProjectStartDate, 'MMMM yyyy')}" />
-			</dd>
-			<dt>Duration</dt>
-			<dd><th:block th:text="${model.durationInMonths}" /> Months</dd>
-		</dl>
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <div class="spend-profile-table">
+      <div class="flex-table-before"></div>
+      <div class="flex-table-wrap">
+          <table>
+            <colgroup >
+                <col />
+                <th:block th:each="month : ${model.table.getMonths()}">
+                  <col th:class="${#temporals.month(month.localDate) == 3 ? 'year':''}" />
+                </th:block>
+                <col class="total" />
+            </colgroup>
+            <thead>
+              <tr>
+                  <th scope="row" class="fix-left">Month</th>
+                  <th:block th:each="month : ${model.table.getMonths()}">
+                    <th scope="col" th:text="${#temporals.format(month.localDate, 'MMM yyyy')}"  />
+                  </th:block>
+                  <th scope="col">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="row : ${model.table.getMonthlyCostsPerCategoryMap()}">
+                  <th scope="row" class="fix-left" th:text="${row.key}" />
+                  <td th:each="cost : ${row.value}" th:text="${cost}"/>
+                  <td th:text="${model.table.eligibleCostPerCategoryMap.get(row.key)}"/>
+              </tr>
+            </tbody>
+          </table>
+      </div>
+      <div class="flex-table-after"></div>
+    </div>
+
+    <div class="grid-container">
+      <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    </div>
 </main>
 
 <div th:include="fragments/layout :: footer" th:remove="tag" />

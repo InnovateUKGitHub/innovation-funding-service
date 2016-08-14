@@ -8,7 +8,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 public class ProjectDetailsAddressForm extends BaseBindingResultTarget {
-    @NotNull(message = "You need to select a project address before you can continue")
+    @NotNull(message = "{validation.bankdetailsresource.organisation.required}")
     private OrganisationAddressType addressType;
 
     @Valid

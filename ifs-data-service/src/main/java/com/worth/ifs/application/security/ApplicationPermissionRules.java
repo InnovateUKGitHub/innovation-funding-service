@@ -1,7 +1,5 @@
 package com.worth.ifs.application.security;
 
-import java.util.List;
-
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.security.BasePermissionRules;
@@ -12,12 +10,14 @@ import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.resource.UserResource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 import static com.worth.ifs.competition.resource.CompetitionResource.Status.PROJECT_SETUP;
 import static com.worth.ifs.security.SecurityRuleUtil.isCompAdmin;
+import static com.worth.ifs.security.SecurityRuleUtil.isProjectFinanceUser;
 import static com.worth.ifs.user.resource.UserRoleType.COLLABORATOR;
 import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static java.util.Arrays.asList;
@@ -87,6 +87,11 @@ public class ApplicationPermissionRules extends BasePermissionRules {
     @PermissionRule(value = "READ", description = "Comp admins can see application resources")
     public boolean compAdminsCanViewApplications(final ApplicationResource application, final UserResource user){
         return isCompAdmin(user);
+    }
+
+    @PermissionRule(value = "READ", description = "Project Finance team members can see application resources")
+    public boolean projectFinanceUsersCanViewApplications(final ApplicationResource application, final UserResource user){
+        return isProjectFinanceUser(user);
     }
 
     @PermissionRule(value = "UPDATE", description = "A user can update their own application if they are a lead applicant or collaborator of the application")
