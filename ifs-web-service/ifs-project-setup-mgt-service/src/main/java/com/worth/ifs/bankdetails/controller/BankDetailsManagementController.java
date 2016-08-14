@@ -2,7 +2,10 @@ package com.worth.ifs.bankdetails.controller;
 
 import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.bankdetails.BankDetailsService;
+import com.worth.ifs.bankdetails.form.AmendBankDetailsForm;
+import com.worth.ifs.bankdetails.form.BankDetailsForm;
 import com.worth.ifs.bankdetails.resource.BankDetailsResource;
+import com.worth.ifs.bankdetails.viewmodel.AmendBankDetailsViewModel;
 import com.worth.ifs.bankdetails.viewmodel.BankDetailsReviewViewModel;
 import com.worth.ifs.project.ProjectService;
 import com.worth.ifs.project.resource.ProjectResource;
@@ -29,6 +32,8 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 @RequestMapping("/project/{projectId}/organisation/{organisationId}/review-bank-details")
 public class BankDetailsManagementController {
 
+    private static final String FORM_ATTR_NAME = "form";
+
     @Autowired
     private OrganisationService organisationService;
 
@@ -37,6 +42,7 @@ public class BankDetailsManagementController {
 
     @Autowired
     private BankDetailsService bankDetailsService;
+
 
     @RequestMapping(method = GET)
     public String viewBankDetails(
@@ -47,6 +53,20 @@ public class BankDetailsManagementController {
         return doViewReviewBankDetails(model, projectId, organisationId);
     }
 
+    @RequestMapping(method = GET, path = "/change")
+    public String changeBankDetailsView(
+            Model model,
+            @PathVariable("projectId") Long projectId,
+            @PathVariable("organisationId") Long organisationId,
+            @ModelAttribute("loggedInUser") UserResource loggedInUser,
+            @ModelAttribute(FORM_ATTR_NAME) AmendBankDetailsForm form) {
+        final OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
+        BankDetailsResource bankDetailsResource = bankDetailsService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId());
+        ProjectResource project = projectService.getById(projectId);
+        populateExitingBankDetailsInForm(bankDetailsResource, form);
+        return doViewChangeBankDetails(loggedInUser, organisationResource, project, bankDetailsResource, form, model);
+    }
+
     private String doViewReviewBankDetails(Model model, Long projectId, Long organisationId) {
         final OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
         BankDetailsResource bankDetailsResource = bankDetailsService.
@@ -54,6 +74,16 @@ public class BankDetailsManagementController {
         BankDetailsReviewViewModel viewModel = populateBankDetailsReviewViewModel(projectId, organisationResource, bankDetailsResource);
         model.addAttribute("model", viewModel);
         return "project/review-bank-details";
+    }
+
+    private String doViewChangeBankDetails(UserResource loggedInUser,
+                                           OrganisationResource organisationResource,
+                                           ProjectResource projectResource,
+                                           BankDetailsResource bankDetailsResource,
+                                           AmendBankDetailsForm form,
+                                           Model model) {
+        populateBankDetailsModel(loggedInUser, organisationResource, projectResource, bankDetailsResource, form, model);
+        return "project/change-bank-details";
     }
 
     private BankDetailsReviewViewModel populateBankDetailsReviewViewModel(Long projectId, OrganisationResource organisation, BankDetailsResource bankDetails){
@@ -81,5 +111,23 @@ public class BankDetailsManagementController {
                 bankDetails.getAddressScore(),
                 bankDetails.isApproved(),
                 bankDetails.isManualApproval());
+    }
+
+    private AmendBankDetailsViewModel buildAmendBankDetailsViewModel(ProjectResource project, OrganisationResource organisation, BankDetailsResource bankDetails){
+        return new AmendBankDetailsViewModel(project);
+    };
+
+    private void populateExitingBankDetailsInForm(BankDetailsResource bankDetails, AmendBankDetailsForm form){
+        form.setSortCode(bankDetails.getSortCode());
+        form.setAccountNumber(bankDetails.getAccountNumber());
+    }
+
+    private void populateBankDetailsModel(UserResource loggedInUser, OrganisationResource organisationResource, ProjectResource project, BankDetailsResource bankDetails, BankDetailsForm form, Model model){
+        AmendBankDetailsViewModel bankDetailsViewModel = buildAmendBankDetailsViewModel(project, organisationResource, bankDetails);
+        model.addAttribute("project", project);
+        model.addAttribute("currentUser", loggedInUser);
+        model.addAttribute("organisation", organisationResource);
+        model.addAttribute(FORM_ATTR_NAME, form);
+        model.addAttribute("model", bankDetailsViewModel);
     }
 }

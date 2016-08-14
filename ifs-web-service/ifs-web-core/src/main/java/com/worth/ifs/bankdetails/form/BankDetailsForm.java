@@ -1,13 +1,12 @@
-package com.worth.ifs.project.form;
+package com.worth.ifs.bankdetails.form;
 
-import com.worth.ifs.project.viewmodel.ProjectDetailsAddressViewModelForm;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.Pattern;
 
-public class BankDetailsForm extends ProjectDetailsAddressViewModelForm {
+public class BankDetailsForm extends ProjectDetailsAddressForm {
     @NotEmpty(message="Please enter a sort code")
     @Pattern(regexp = "\\d{6}", message = "Please enter a valid sort code")
     private String sortCode;
