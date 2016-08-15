@@ -3,8 +3,8 @@ package com.worth.ifs.invite.security;
 import com.worth.ifs.BasePermissionRulesTest;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.invite.builder.InviteResourceBuilder;
+import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
-import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,7 +47,7 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
 
     @Test
     public void testLeadApplicantCanInviteAnOrganisationToTheApplication() throws Exception {
-        final List<InviteResource> inviteResource = InviteResourceBuilder.newInviteResource().withApplication(applicationResource.getId()).build(5);
+        final List<ApplicationInviteResource> inviteResource = InviteResourceBuilder.newInviteResource().withApplication(applicationResource.getId()).build(5);
         final InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().withInviteResources(inviteResource).build();
 
         assertTrue(rules.leadApplicantCanInviteAnOrganisationToTheApplication(inviteOrganisationResource, leadApplicant));
@@ -57,7 +57,7 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
 
     @Test
     public void testLeadApplicantCanViewOrganisationInviteToTheApplication() throws Exception {
-        final List<InviteResource> inviteResource = InviteResourceBuilder.newInviteResource().withApplication(applicationResource.getId()).build(5);
+        final List<ApplicationInviteResource> inviteResource = InviteResourceBuilder.newInviteResource().withApplication(applicationResource.getId()).build(5);
         final InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().withInviteResources(inviteResource).build();
 
         assertTrue(rules.leadApplicantCanViewOrganisationInviteToTheApplication(inviteOrganisationResource, leadApplicant));
@@ -67,7 +67,7 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
 
     @Test
     public void testCollaboratorCanViewOrganisationInviteToTheApplication() throws Exception {
-        final List<InviteResource> inviteResource = InviteResourceBuilder.newInviteResource().withApplication(applicationResource.getId()).build(5);
+        final List<ApplicationInviteResource> inviteResource = InviteResourceBuilder.newInviteResource().withApplication(applicationResource.getId()).build(5);
         final InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().withInviteResources(inviteResource).build();
 
         assertTrue(rules.collaboratorCanViewOrganisationInviteToTheApplication(inviteOrganisationResource, collaborator));
@@ -77,7 +77,7 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
 
     @Test
     public void testLeadApplicantCanSaveInviteAnOrganisationToTheApplication() throws Exception {
-        final List<InviteResource> inviteResource = InviteResourceBuilder.newInviteResource().withApplication(applicationResource.getId()).build(5);
+        final List<ApplicationInviteResource> inviteResource = InviteResourceBuilder.newInviteResource().withApplication(applicationResource.getId()).build(5);
         final InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().withInviteResources(inviteResource).build();
 
         assertTrue(rules.leadApplicantCanSaveInviteAnOrganisationToTheApplication(inviteOrganisationResource, leadApplicant));

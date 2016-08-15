@@ -1,20 +1,41 @@
 package com.worth.ifs.competition.domain;
 
-import javax.persistence.*;
+import com.worth.ifs.competition.resource.MilestoneType;
+
 import java.time.LocalDateTime;
 
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
+/**
+ * Entity model to store the Competition Milestones
+ */
 @Entity
 public class Milestone {
     @Id
     @GeneratedValue
     private Long id;
-    private String name;
+    @Enumerated(EnumType.STRING)
+    private MilestoneType type;
     private LocalDateTime date;
 
     @ManyToOne
     @JoinColumn(name="competitionId", referencedColumnName="id")
     private Competition competition;
 
+    public Milestone() {}
+
+    public Milestone(Long id, MilestoneType type, LocalDateTime date, Competition competition) {
+        this.id = id;
+        this.type = type;
+        this.date = date;
+        this.competition = competition;
+    }
 
     public Long getId() {
         return id;
@@ -24,12 +45,12 @@ public class Milestone {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public MilestoneType getType() {
+        return type;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setType(MilestoneType type) {
+        this.type = type;
     }
 
     public LocalDateTime getDate() {

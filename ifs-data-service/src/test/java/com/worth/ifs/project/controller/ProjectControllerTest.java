@@ -10,26 +10,27 @@ import com.worth.ifs.commons.rest.RestErrorResponse;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.FileAndContents;
-import com.worth.ifs.invite.builder.InviteResourceBuilder;
-import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder;
+import com.worth.ifs.project.builder.SpendProfileResourceBuilder;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.project.transactional.ProjectService;
+import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-import static com.worth.ifs.util.JsonMappingUtil.fromJson;
-import static com.worth.ifs.util.JsonMappingUtil.toJson;
 import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static com.worth.ifs.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
 import static com.worth.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE;
@@ -41,7 +42,10 @@ import static com.worth.ifs.organisation.builder.OrganisationAddressResourceBuil
 import static com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
+import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
+import static com.worth.ifs.util.JsonMappingUtil.fromJson;
+import static com.worth.ifs.util.JsonMappingUtil.toJson;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyMap;
 import static org.hamcrest.Matchers.hasSize;
@@ -50,16 +54,16 @@ import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectController> {
 
     private MonitoringOfficerResource monitoringOfficerResource;
-
-    private InviteResource inviteResource;
 
     private RestDocumentationResultHandler document;
 
@@ -523,9 +527,17 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
     @Test
     public void isOtherDocumentsSubmitAllowed() throws Exception {
 
-        when(projectServiceMock.isOtherDocumentsSubmitAllowed(123L)).thenReturn(serviceSuccess(true));
+        UserResource userResource = newUserResource()
+                .withId(1L)
+                .withUID("123abc")
+                .build();
+        MockHttpServletRequestBuilder mainRequest = get("/project/{projectId}/partner/documents/ready", 123L)
+                .header("IFS_AUTH_TOKEN", "123abc");
 
-        mockMvc.perform(get("/project/{projectId}/partner/documents/submit", 123L))
+        when(projectServiceMock.isOtherDocumentsSubmitAllowed(123L, 1L)).thenReturn(serviceSuccess(true));
+        when(userAuthenticationService.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(userResource);
+
+        mockMvc.perform(mainRequest)
                 .andExpect(status().isOk())
                 .andExpect(content().string("true"))
                 .andReturn();

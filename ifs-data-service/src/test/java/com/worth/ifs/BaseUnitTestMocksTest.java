@@ -18,6 +18,7 @@ import com.worth.ifs.application.transactional.AssessorFeedbackService;
 import com.worth.ifs.application.transactional.QuestionService;
 import com.worth.ifs.assessment.mapper.AssessmentMapper;
 import com.worth.ifs.assessment.mapper.AssessorFormInputResponseMapper;
+import com.worth.ifs.assessment.mapper.CompetitionInviteMapper;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.assessment.repository.AssessorFormInputResponseRepository;
 import com.worth.ifs.assessment.transactional.AssessmentService;
@@ -32,6 +33,7 @@ import com.worth.ifs.category.repository.CategoryLinkRepository;
 import com.worth.ifs.category.repository.CategoryRepository;
 import com.worth.ifs.category.transactional.CategoryLinkService;
 import com.worth.ifs.category.transactional.CategoryService;
+import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.repository.CompetitionCoFunderRepository;
 import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.email.service.EmailService;
@@ -44,18 +46,21 @@ import com.worth.ifs.finance.repository.FinanceRowRepository;
 import com.worth.ifs.form.repository.FormInputRepository;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
 import com.worth.ifs.form.transactional.FormInputService;
+import com.worth.ifs.invite.repository.ApplicationInviteRepository;
+import com.worth.ifs.invite.repository.CompetitionInviteRepository;
 import com.worth.ifs.invite.repository.InviteOrganisationRepository;
-import com.worth.ifs.invite.repository.InviteRepository;
 import com.worth.ifs.notifications.resource.SystemNotificationSource;
 import com.worth.ifs.notifications.service.NotificationService;
 import com.worth.ifs.organisation.repository.OrganisationAddressRepository;
 import com.worth.ifs.organisation.transactional.OrganisationService;
+import com.worth.ifs.project.finance.repository.SpendProfileRepository;
 import com.worth.ifs.project.mapper.MonitoringOfficerMapper;
 import com.worth.ifs.project.mapper.ProjectMapper;
 import com.worth.ifs.project.mapper.ProjectUserMapper;
 import com.worth.ifs.project.repository.MonitoringOfficerRepository;
 import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.project.repository.ProjectUserRepository;
+import com.worth.ifs.project.finance.transactional.ProjectFinanceService;
 import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.sil.experian.service.SilExperianEndpoint;
 import com.worth.ifs.token.repository.TokenRepository;
@@ -183,7 +188,13 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected InviteOrganisationRepository inviteOrganisationRepositoryMock;
 
     @Mock
-    protected InviteRepository inviteRepositoryMock;
+    protected ApplicationInviteRepository applicationInviteRepositoryMock;
+
+    @Mock
+    protected CompetitionInviteRepository competitionInviteRepositoryMock;
+
+    @Mock
+    protected CompetitionInviteMapper competitionInviteMapperMock;
 
     @Mock
     protected AddressLookupService addressLookupServiceMock;
@@ -301,6 +312,15 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected SilExperianEndpoint silExperianEndpointMock;
+
+    @Mock
+    protected SpendProfileRepository spendProfileRepositoryMock;
+
+    @Mock
+    protected ProjectFinanceService projectFinanceServiceMock;
+
+    @Mock
+    protected UserAuthenticationService userAuthenticationService;
 
     @Before
     public void setupMockInjection() {

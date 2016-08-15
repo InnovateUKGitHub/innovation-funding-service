@@ -24,6 +24,7 @@ import com.worth.ifs.authentication.resource.CreateUserResource;
 import com.worth.ifs.authentication.resource.UpdateUserResource;
 import com.worth.ifs.bankdetails.domain.BankDetails;
 import com.worth.ifs.bankdetails.resource.BankDetailsResource;
+import com.worth.ifs.commons.rest.LocalDateResource;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.resource.CompetitionCoFunderResource;
 import com.worth.ifs.competition.resource.CompetitionCountResource;
@@ -40,6 +41,8 @@ import com.worth.ifs.project.domain.ProjectUser;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.project.resource.SpendProfileResource;
+import com.worth.ifs.project.resource.SpendProfileTableResource;
 import com.worth.ifs.token.domain.Token;
 import com.worth.ifs.token.resource.TokenResource;
 import com.worth.ifs.user.domain.OrganisationType;
@@ -48,12 +51,13 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.List;
 
 public class POJOTest {
     // Configured for expectation, so we know when a class gets added or removed.
-    private static final int EXPECTED_RESOURCES = 34;
+    private static final int EXPECTED_RESOURCES = 35;
 
     // The package to test
     private static final String POJO_PACKAGE = "com.worth.ifs";
@@ -92,8 +96,11 @@ public class POJOTest {
             BankDetails.class,
             BankDetailsResource.class,
             MonitoringOfficerResource.class,
+            SpendProfileResource.class,
+            SpendProfileTableResource.class,
             CompetitionCoFunderResource.class,
-            CompetitionCountResource.class
+            CompetitionCountResource.class,
+            LocalDateResource.class
     );
 
     @Before
@@ -142,7 +149,8 @@ public class POJOTest {
                     && !pojoClass.getClazz().equals(TokenResource.class)
                     && !pojoClass.getClazz().equals(PageResource.class)
                     && !pojoClass.getClazz().equals(Competition.class)
-                    && (classes.stream().anyMatch(pojoClass.getClazz()::equals)|| pojoClass.getClazz().getName().endsWith("Resource"));
+                    && (classes.stream().anyMatch(pojoClass.getClazz()::equals) || pojoClass.getClazz().getName().endsWith("Resource"))
+                    && !Modifier.isAbstract(pojoClass.getClazz().getModifiers());
         }
     }
 }

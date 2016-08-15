@@ -5,14 +5,18 @@ import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.bankdetails.resource.BankDetailsResource;
 import com.worth.ifs.bankdetails.transactional.BankDetailsService;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.transactional.FileHttpHeadersValidator;
+import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.user.resource.OrganisationResource;
-import com.worth.ifs.invite.resource.InviteResource;
+import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -45,6 +49,10 @@ public class ProjectController {
     @Autowired
     @Qualifier("projectSetupOtherDocumentsFileValidator")
     private FileHttpHeadersValidator fileValidator;
+
+    @Autowired
+    private UserAuthenticationService userAuthenticationService;
+
 
     @RequestMapping("/{id}")
     public RestResult<ProjectResource> getProjectById(@PathVariable("id") final Long id) {
@@ -94,8 +102,14 @@ public class ProjectController {
 
     @RequestMapping(value = "/{projectId}/invite-finance-contact", method = POST)
     public RestResult<Void> inviteFinanceContact(@PathVariable("projectId") final Long projectId,
-                                                 @RequestBody @Valid final InviteResource inviteResource) {
+                                                 @RequestBody @Valid final ApplicationInviteResource inviteResource) {
        return projectService.inviteFinanceContact(projectId, inviteResource).toPostResponse();
+    }
+
+    @RequestMapping(value = "/{projectId}/invite-project-manager", method = POST)
+    public RestResult<Void> inviteProjectManager(@PathVariable("projectId") final Long projectId,
+                                                 @RequestBody @Valid final ApplicationInviteResource inviteResource) {
+        return projectService.inviteProjectManager(projectId, inviteResource).toPostResponse();
     }
 
     @RequestMapping(value = "/{projectId}/project-users", method = GET)
@@ -242,8 +256,11 @@ public class ProjectController {
         return projectService.deleteExploitationPlanFile(projectId).toDeleteResponse();
     }
 
-    @RequestMapping(value = "/{projectId}/partner/documents/submit", method = GET)
-    public RestResult<Boolean>isOtherDocumentsSubmitAllowed(@PathVariable("projectId") final Long projectId) {
-        return projectService.isOtherDocumentsSubmitAllowed(projectId).toGetResponse();
+    @RequestMapping(value = "/{projectId}/partner/documents/ready", method = GET)
+    public RestResult<Boolean>isOtherDocumentsSubmitAllowed(@PathVariable("projectId") final Long projectId,
+                                                            HttpServletRequest request) {
+
+        UserResource authenticatedUser = userAuthenticationService.getAuthenticatedUser(request);
+        return projectService.isOtherDocumentsSubmitAllowed(projectId, authenticatedUser.getId()).toGetResponse();
     }
 }

@@ -12,6 +12,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               INFUND-3182 As a Competition Executive I want to the ability to save progress on each tab in competition setup.
 ...
 ...               IFUND-3888 Rearrangement of Competitions setup
+...
+...               INFUND-3000 As a competitions team member I want to be able to configure application form questions during Competition Setup so that correct details are provided for each competition
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin    CompSetup
@@ -105,14 +107,14 @@ Initial details correct state aid status
     ...
     ...    INFUND-3888
     [Tags]    HappyPath
-    When the user selects the option from the drop-down menu    Programme    id=competitionTypeId
-    Then the user should see the element    css=.yes
+    When the user selects the option from the drop-down menu    SBRI    id=competitionTypeId
+    Then the user should see the element    css=.no
     When the user selects the option from the drop-down menu    Special    id=competitionTypeId
     Then the user should see the element    css=.no
     When the user selects the option from the drop-down menu    Additive Manufacturing    id=competitionTypeId
     Then the user should see the element    css=.yes
-    When the user selects the option from the drop-down menu    SBRI    id=competitionTypeId
-    Then the user should see the element    css=.no
+    When the user selects the option from the drop-down menu    Programme    id=competitionTypeId
+    Then the user should see the element    css=.yes
 
 Initial details mark as done
     [Documentation]    INFUND-2982
@@ -128,7 +130,7 @@ Initial details mark as done
     And the user should see the text in the page    Competition title
     And the user should see the text in the page    Health and life sciences
     And the user should see the text in the page    Advanced Therapies
-    And the user should see the text in the page    SBRI
+    And the user should see the text in the page    Programme
     And the user should see the text in the page    NO
     And the user should see the element    jQuery=.button:contains("Edit")
 
@@ -145,7 +147,7 @@ Initial details can be edited again
     And the user should see the text in the page    Test competition
     And the user should see the text in the page    Health and life sciences
     And the user should see the text in the page    Advanced Therapies
-    And the user should see the text in the page    SBRI
+    And the user should see the text in the page    Programme
     And the user should see the text in the page    NO
     [Teardown]    The user clicks the button/link    link=Competition set up
 
@@ -272,6 +274,56 @@ Eligibility can be marked as done then edit again
     And the user clicks the button/link    jQuery=.button:contains("Done")
     [Teardown]    The user clicks the button/link    jQuery=.button:contains("Edit")
 
+Application questions: All the sections should be visible
+    [Documentation]    INFUND-3000
+    [Setup]    go to    ${COMP_MANAGEMENT_COMP_SETUP}
+    When The user clicks the button/link    link=Application Questions
+    Then The user should see the text in the page    Template: Programme 10 questions
+    And the user should see the text in the page    Scope
+    And the user should see the text in the page    2. Potential market
+    And the user should see the text in the page    3. Project exploitation
+    And the user should see the text in the page    4. Economic benefit
+    And the user should see the text in the page    5. Technical approach
+    And the user should see the text in the page    6. Innovation
+    And the user should see the text in the page    7. Risks
+    And the user should see the text in the page    8. Project team
+    And the user should see the text in the page    9. Funding
+    And the user should see the text in the page    10. Adding value
+
+Application questions: server side validations
+    [Documentation]    INFUND-3000
+    Given The user clicks the button/link    jQuery=li:nth-child(5) .button:contains(Edit)
+    And The user should see the element    jQuery=.button[value="Save and close"]
+    When the user leaves all the question field empty
+    And The user clicks the button/link    jQuery=.button[value="Save and close"]
+    And The user clicks the button/link    jQuery=.button[value="Save and close"]
+    Then the validation error above the question should be visible    jQuery=label:contains(Question title)    This field cannot be left blank
+    And the validation error above the question should be visible    jQuery=label:contains(Question guidance title)    This field cannot be left blank
+    #To do: investigate why this step fails with chrome driver    INFUND-4514
+    #And the validation error above the question should be visible    jQuery=div:nth-child(4) div:nth-child(4) label:contains(Question guidance)    This field cannot be left blank
+
+Application questions: Client side validations
+    [Documentation]    INFUND-3000
+    Given the user fills the empty question fields
+    Then the validation error above the question should not be visible    jQuery=label:contains(Question title)    This field cannot be left blank
+    And the validation error above the question should not be visible    jQuery=label:contains(Question guidance title)    This field cannot be left blank
+    And the validation error above the question should not be visible    jQuery=div:nth-child(4) div:nth-child(4) label:contains(Question guidance)    This field cannot be left blank
+    And The user enters text to a text field    id=question.maxWords    ${EMPTY}
+    And the validation error above the question should be visible    jQuery=label:contains(Max word count)    This field cannot be left blank
+    And input text    jQuery=[id="question.maxWords"]    150
+    And the validation error above the question should not be visible    jQuery=label:contains(Max word count)    This field cannot be left blank
+
+Application questions: Mark as done and the Edit again
+    [Documentation]    INFUND-3000
+    [Setup]    The user clicks the button/link    jQuery=.grid-row div:nth-child(2) label:contains(Yes)
+    When The user clicks the button/link    jQuery=.button[value="Save and close"]
+    Then The user should see the text in the page    Test title
+    And the user should see the text in the page    Subtitle test
+    And the user should see the text in the page    Test guidance title
+    And the user should see the text in the page    Guidance text test
+    And the user should see the text in the page    150
+    And the user should see the text in the page    Yes
+
 *** Keywords ***
 the user moves focus to a different part of the page
     focus    link=Sign out
@@ -288,3 +340,29 @@ the total should be correct
     mouse out    css=input
     Focus    jQuery=Button:contains("Done")
     Wait Until Element Contains    css=.no-margin    ${Total}
+
+the user leaves all the question field empty
+    The user enters text to a text field    css=.editor    ${EMPTY}
+    Mouse Out    css=.editor
+    focus    jQuery=.button[value="Save and close"]
+    sleep    200ms
+    The user enters text to a text field    id=question.title    ${EMPTY}
+    The user enters text to a text field    id=question.guidanceTitle    ${EMPTY}
+    The user enters text to a text field    jQuery=[id="question.maxWords"]    ${EMPTY}
+
+the validation error above the question should be visible
+    [Arguments]    ${QUESTION}    ${ERROR}
+    Element Should Contain    ${QUESTION}    ${ERROR}
+
+the user fills the empty question fields
+    The user enters text to a text field    id=question.title    Test title
+    The user enters text to a text field    id=question.subTitle    Subtitle test
+    The user enters text to a text field    id=question.guidanceTitle    Test guidance title
+    The user enters text to a text field    css=.editor    Guidance text test
+    The user enters text to a text field    id=question.maxWords    150
+
+the validation error above the question should not be visible
+    [Arguments]    ${QUESTION}    ${ERROR}
+    focus    jQuery=.button[value="Save and close"]
+    wait until element is not visible    css=error-message
+    Element Should not Contain    ${QUESTION}    ${ERROR}
