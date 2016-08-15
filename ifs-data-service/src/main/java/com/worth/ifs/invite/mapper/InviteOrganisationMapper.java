@@ -14,7 +14,7 @@ import org.mapstruct.Mappings;
     config = GlobalMapperConfig.class,
     uses = {
         OrganisationMapper.class,
-        InviteMapper.class
+        ApplicationInviteMapper.class
     }
 )
 public abstract class InviteOrganisationMapper extends BaseMapper<InviteOrganisation, InviteOrganisationResource, Long> {

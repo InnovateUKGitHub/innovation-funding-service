@@ -52,7 +52,7 @@ public class ProjectOtherDocumentsController {
         return doViewOtherDocumentsPage(projectId, model, loggedInUser, form);
     }
 
-    @RequestMapping(value = "submit", method = RequestMethod.GET)
+    @RequestMapping(value = "/ready", method = RequestMethod.GET)
     public String projectDetail(Model model, @PathVariable("projectId") final Long projectId,
                                 @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
@@ -170,20 +170,21 @@ public class ProjectOtherDocumentsController {
 
         boolean leadPartner = projectService.isUserLeadPartner(projectId, loggedInUser.getId());
 
-        boolean otherDocumentsApproved = projectService.isOtherDocumentSubmitAllowed(projectId).isSuccess() ? true : false;
+        boolean isSubmitAllowed = projectService.isOtherDocumentSubmitAllowed(projectId).isSuccess() ? true : false;
 
         // TODO DW - these rejection messages to be covered in other stories
         List<String> rejectionReasons = emptyList();
 
         // TODO DW - these flags to be covered in other stories
-        boolean otherDocumentsSubmitted = otherDocumentsApproved && leadPartner;
+        boolean otherDocumentsApproved = false;
+        boolean otherDocumentsSubmitted = false;
 
         return new ProjectOtherDocumentsViewModel(projectId, project.getName(),
                 collaborationAgreement.map(FileDetailsViewModel::new).orElse(null),
                 exploitationPlan.map(FileDetailsViewModel::new).orElse(null),
                 partnerOrganisationNames, rejectionReasons,
-                leadPartner, otherDocumentsSubmitted, otherDocumentsApproved
-        );
+                leadPartner, otherDocumentsSubmitted, otherDocumentsApproved,
+                isSubmitAllowed);
     }
 
     private ResponseEntity<ByteArrayResource> returnFileIfFoundOrThrowNotFoundException(Long projectId, Optional<ByteArrayResource> content, Optional<FileEntryResource> fileDetails) {

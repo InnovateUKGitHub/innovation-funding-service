@@ -10,34 +10,34 @@ import javax.validation.constraints.NotNull;
  */
 public class InitialDetailsForm extends CompetitionSetupForm {
 
-    @NotNull(message = "Please select a competition executive")
+    @NotNull(message = "{validation.initialdetailsform.executiveuserid.required}")
     private Long executiveUserId;
 
-    @NotNull(message = "Please enter an opening day")
-    @Range(min=1, max=31, message= "Please enter a opening day")
+    @NotNull(message = "{validation.initialdetailsform.openingdateday.required}")
+    @Range(min=1, max=31, message= "{validation.initialdetailsform.openingdateday.range}")
     private Integer openingDateDay;
 
-    @NotNull(message = "Please enter an opening month")
-    @Range(min=1, max=12, message= "Please enter a opening month")
+    @NotNull(message = "{validation.initialdetailsform.openingdatemonth.required}")
+    @Range(min=1, max=12, message= "{validation.InitialDetailsForm.openingdatemonth.range}")
     private Integer openingDateMonth;
 
-    @NotNull(message = "Please enter an opening year")
-    @Range(min=1900, max=9000, message= "Please enter a opening year")
+    @NotNull(message = "{validation.initialdetailsform.openingdateyear.required}")
+    @Range(min=1900, max=9000, message= "{validation.InitialDetailsForm.openingdateyear.range}")
     private Integer openingDateYear;
 
-    @NotEmpty(message = "Please enter a title")
+    @NotEmpty(message = "{validation.standard.title.required}")
     private String title;
 
-    @NotNull(message = "Please select an innovation sector")
+    @NotNull(message = "{validation.initialdetailsform.innovationsectorcategoryid.required}")
     private Long innovationSectorCategoryId;
 
-    @NotNull(message = "Please select an innovation area")
+    @NotNull(message = "{validation.initialdetailsform.innovationareacategoryid.required}")
     private Long innovationAreaCategoryId;
 
-    @NotNull(message = "Please select a competition type")
+    @NotNull(message = "{validation.initialdetailsform.competitiontypeid.required}")
     private Long competitionTypeId;
 
-    @NotNull(message = "Please select a lead technologist")
+    @NotNull(message = "{validation.initialdetailsform.leadtechnologistuserid.required}")
     private Long leadTechnologistUserId;
 
     public Long getExecutiveUserId() {

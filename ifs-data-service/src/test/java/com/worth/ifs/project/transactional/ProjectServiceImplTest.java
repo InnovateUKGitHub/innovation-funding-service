@@ -881,7 +881,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         assertFilesCanBeSubmittedByProjectManagerAndFilesExist(
                 project::setCollaborationAgreement,
                 project::setExploitationPlan,
-                () -> service.isOtherDocumentsSubmitAllowed(123L));
+                () -> service.isOtherDocumentsSubmitAllowed(123L, 1L));
 
     }
 
@@ -890,7 +890,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         assertFilesCannotBeSubmittedIfNotByProjectManager(
                 project::setCollaborationAgreement,
                 project::setExploitationPlan,
-                () -> service.isOtherDocumentsSubmitAllowed(123L));
+                () -> service.isOtherDocumentsSubmitAllowed(123L, 1L));
 
     }
 
@@ -983,6 +983,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                                                                         Supplier<ServiceResult<Boolean>> getConditionFn) {
         ProjectUser projectUserToSet = newProjectUser()
                 .withId(1L)
+                .withUser(newUser().withid(1L).build())
                 .withRole(projectManagerRole)
                 .build();
         List<ProjectUser> projectUsers = new ArrayList<>();

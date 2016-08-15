@@ -3,8 +3,8 @@ package com.worth.ifs.registration.service;
 import com.worth.ifs.BaseController;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.rest.ValidationMessages;
+import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
-import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.project.service.ProjectRestService;
 import com.worth.ifs.project.viewmodel.JoinAProjectViewModel;
@@ -151,7 +151,7 @@ public class AcceptProjectInviteController extends BaseController {
         return restSuccess(ACCEPT_INVITE_FAILURE);
     }
 
-    public static ValidationMessages errorMessages(UserResource loggedInUser, InviteResource invite) {
+    public static ValidationMessages errorMessages(UserResource loggedInUser, ApplicationInviteResource invite) {
         ValidationMessages errors = new ValidationMessages();
         if (!invite.getStatus().equals(SEND)) {
             errors.addError(globalError("registration.INVITE_ALREADY_ACCEPTED"));
@@ -161,7 +161,7 @@ public class AcceptProjectInviteController extends BaseController {
         return errors;
     }
 
-    private Supplier<RestResult<InviteResource>> inviteByHash(String hash) {
+    private Supplier<RestResult<ApplicationInviteResource>> inviteByHash(String hash) {
         return () -> inviteRestService.getInviteByHash(hash);
     }
 

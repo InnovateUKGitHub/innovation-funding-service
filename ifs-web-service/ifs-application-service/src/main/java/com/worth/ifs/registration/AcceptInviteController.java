@@ -9,6 +9,7 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
+import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.service.InviteRestService;
@@ -30,6 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 import java.util.Optional;
+
 
 /**
  * This class is use as an entry point to accept a invite, to a application.
@@ -56,14 +58,14 @@ public class AcceptInviteController extends BaseController {
             HttpServletResponse response,
             HttpServletRequest request,
             Model model) {
-        RestResult<InviteResource> invite = inviteRestService.getInviteByHash(hash);
+        RestResult<ApplicationInviteResource> invite = inviteRestService.getInviteByHash(hash);
         CookieUtil.removeCookie(response, OrganisationCreationController.ORGANISATION_FORM);
 
         if (!invite.isSuccess()) {
             handleInvalidInvite(response);
             return "never should get here because of exception.";
         } else {
-            InviteResource inviteResource = invite.getSuccessObject();
+            ApplicationInviteResource inviteResource = invite.getSuccessObject();
             if (!InviteStatusConstants.SEND.equals(inviteResource.getStatus())) {
                 return handleAcceptedInvite(cookieFlashMessageFilter, response);
             } else {
@@ -89,8 +91,10 @@ public class AcceptInviteController extends BaseController {
         return "redirect:/login";
     }
 
-    private String handleExistingUser(@PathVariable("hash") String hash, HttpServletResponse response, HttpServletRequest request, Model model, InviteResource inviteResource, RestResult<Boolean> existingUserSearch, InviteOrganisationResource inviteOrganisation) {
+
+    private String handleExistingUser(@PathVariable("hash") String hash, HttpServletResponse response, HttpServletRequest request, Model model, ApplicationInviteResource inviteResource, RestResult<Boolean> existingUserSearch, InviteOrganisationResource inviteOrganisation) {
         if (existingUserSearch.getSuccessObject()) {
+
             model.addAttribute("emailAddressRegistered", "true");
 
             UserResource loggedInUser = userAuthenticationService.getAuthenticatedUser(request);
@@ -126,10 +130,10 @@ public class AcceptInviteController extends BaseController {
     @RequestMapping(value = "/accept-invite/confirm-invited-organisation", method = RequestMethod.GET)
     public String confirmInvitedOrganisation(HttpServletResponse response, HttpServletRequest request, Model model) {
         String hash = CookieUtil.getCookieValue(request, INVITE_HASH);
-        RestResult<InviteResource> invite = inviteRestService.getInviteByHash(hash);
+        RestResult<ApplicationInviteResource> invite = inviteRestService.getInviteByHash(hash);
 
         if (invite.isSuccess()) {
-            InviteResource inviteResource = invite.getSuccessObject();
+            ApplicationInviteResource inviteResource = invite.getSuccessObject();
             if (InviteStatusConstants.SEND.equals(inviteResource.getStatus())) {
                 InviteOrganisationResource inviteOrganisation = inviteRestService.getInviteOrganisationByHash(hash).getSuccessObjectOrThrowException();
                 OrganisationResource organisation = organisationService.getOrganisationByIdForAnonymousUserFlow(inviteOrganisation.getOrganisation());

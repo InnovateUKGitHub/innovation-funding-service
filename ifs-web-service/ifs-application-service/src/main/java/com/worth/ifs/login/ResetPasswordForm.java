@@ -7,12 +7,12 @@ import javax.validation.constraints.Size;
 
 @FieldMatch(first = "password", second = "retypedPassword", message = "Passwords must match")
 public class ResetPasswordForm {
-    @NotEmpty(message = "Please enter your password")
-    @Size(min = 6, max = 30, message = "Password size should be between 6 and 30 characters")
+    @NotEmpty(message = "{validation.standard.password.required}")
+    @Size(min = 6, max = 30, message = "{validation.standard.password.length.range}")
     private String password;
 
-    @NotEmpty(message = "Please re-type your password")
-    @Size(max = 30, message = "Password size should be between 6 and 30 characters")
+    @NotEmpty(message = "validation.standard.retypedPassword.required")
+    @Size(max = 30, message = "{validation.standard.password.length.range}")
     private String retypedPassword;
 
     public String getPassword() {

@@ -6,7 +6,7 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.invite.domain.ApplicationInvite;
 import com.worth.ifs.invite.domain.InviteOrganisation;
-import com.worth.ifs.invite.resource.InviteResource;
+import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.user.builder.OrganisationBuilder;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.resource.UserResource;
@@ -30,7 +30,7 @@ public class ApplicationInvitePermissionRulesTest extends BasePermissionRulesTes
     private UserResource leadApplicant;
     private UserResource collaborator;
     private ApplicationInvite invite;
-    private InviteResource inviteResource;
+    private ApplicationInviteResource inviteResource;
 
     private UserResource otherLeadApplicant;
     private UserResource otherCollaborator;
@@ -53,11 +53,11 @@ public class ApplicationInvitePermissionRulesTest extends BasePermissionRulesTes
             final Application application = newApplication().withCompetition(competition).build();
             final InviteOrganisation inviteOrganisation = newInviteOrganisation().withOrganisation(organisation).build();
             invite = newInvite().withApplication(application).withInviteOrganisation(inviteOrganisation).build();
-            inviteResource = new InviteResource();
+            inviteResource = new ApplicationInviteResource();
             inviteResource.setApplication(application.getId());
             inviteResource.setInviteOrganisation(inviteOrganisation.getId());
             when(inviteOrganisationRepositoryMock.findOne(inviteOrganisation.getId())).thenReturn(inviteOrganisation);
-            when(inviteRepositoryMock.findOne(invite.getId())).thenReturn(invite);
+            when(applicationInviteRepositoryMock.findOne(invite.getId())).thenReturn(invite);
             when(processRoleRepositoryMock.findByUserIdAndApplicationId(leadApplicant.getId(), application.getId())).thenReturn(newProcessRole().withRole(getRole(LEADAPPLICANT)).build());
             when(processRoleRepositoryMock.findByUserIdAndApplicationId(collaborator.getId(), application.getId())).thenReturn(newProcessRole().withRole(getRole(COLLABORATOR)).build());
             when(processRoleRepositoryMock.findByUserIdAndRoleIdAndApplicationIdAndOrganisationId(collaborator.getId(), getRole(COLLABORATOR).getId(), application.getId(), organisation.getId())).thenReturn(newProcessRole().withRole(getRole(COLLABORATOR)).build());

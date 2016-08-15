@@ -3,8 +3,8 @@ package com.worth.ifs.registration.service;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.security.UserAuthenticationService;
+import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
-import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.project.service.ProjectRestService;
 import com.worth.ifs.registration.form.RegistrationForm;
@@ -125,7 +125,7 @@ public class ProjectRegistrationController {
                 organisationId);
     }
 
-    private Supplier<RestResult<InviteResource>> inviteByHash(String hash) {
+    private Supplier<RestResult<ApplicationInviteResource>> inviteByHash(String hash) {
         return () -> inviteRestService.getInviteByHash(hash);
     }
 

@@ -3,7 +3,7 @@ package com.worth.ifs.project.domain;
 import com.worth.ifs.address.domain.Address;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.file.domain.FileEntry;
-import com.worth.ifs.invite.domain.InvitationTarget;
+import com.worth.ifs.invite.domain.ProcessActivity;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.resource.UserRoleType;
 
@@ -25,7 +25,7 @@ import static java.util.stream.Collectors.toList;
  *  It stores details specific to project (which are different from application)
  */
 @Entity
-public class Project implements InvitationTarget {
+public class Project implements ProcessActivity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
