@@ -8,9 +8,7 @@ import org.apache.commons.logging.LogFactory;
 
 import java.util.Collection;
 import java.util.Optional;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-import java.util.function.Supplier;
+import java.util.function.*;
 
 import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
@@ -190,6 +188,13 @@ public class EntityLookupCallbacks {
         public <R> ServiceResult<R> andOnSuccessReturn(ExceptionThrowingFunction<T, R> successFn) {
             return getterFn1.get().andOnSuccessReturn(result1 -> successFn.apply(result1));
         }
+
+        public ServiceResult<Void> andOnSuccessReturnVoid(Consumer<T> successFn) {
+            return getterFn1.get().andOnSuccess(result1 -> {
+                successFn.accept(result1);
+                return serviceSuccess();
+            });
+        }
     }
 
     /**
@@ -216,6 +221,13 @@ public class EntityLookupCallbacks {
 
         public <T> ServiceResult<T> andOnSuccess(Supplier<T> supplier) {
             return andOnSuccess((p1, p2) -> serviceSuccess(supplier.get()));
+        }
+
+        public ServiceResult<Void> andOnSuccessReturnVoid(BiConsumer<R, S> consumer) {
+            return andOnSuccess((p1, p2) -> {
+                consumer.accept(p1, p2);
+                return serviceSuccess();
+            });
         }
     }
 
@@ -248,6 +260,13 @@ public class EntityLookupCallbacks {
 
         public <T> ServiceResult<T> andOnSuccess(Supplier<T> supplier) {
             return andOnSuccess((p1, p2, p3) -> serviceSuccess(supplier.get()));
+        }
+
+        public ServiceResult<Void> andOnSuccessReturnVoid(TriConsumer<R, S, T> consumer) {
+            return andOnSuccess((p1, p2, p3) -> {
+                consumer.accept(p1, p2, p3);
+                return serviceSuccess();
+            });
         }
     }
 

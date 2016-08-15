@@ -3,9 +3,7 @@ package com.worth.ifs.project.builder;
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.project.resource.SpendProfileResource;
 
-import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 import java.util.function.BiConsumer;
 
 import static com.worth.ifs.BaseBuilderAmendFunctions.uniqueIds;
@@ -30,9 +28,5 @@ public class SpendProfileResourceBuilder extends BaseBuilder<SpendProfileResourc
     @Override
     protected SpendProfileResource createInitial() {
         return new SpendProfileResource();
-    }
-
-    public SpendProfileResourceBuilder withEligibleCostPerCategoryMap(Map<String, BigDecimal> eligibleCostPerCategoryMap){
-        return with((spendProfileResource) -> spendProfileResource.setEligibleCostPerCategoryMap(eligibleCostPerCategoryMap));
     }
 }
