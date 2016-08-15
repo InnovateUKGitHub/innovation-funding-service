@@ -13,7 +13,7 @@ Documentation     INFUND-3780: As an Assessor I want the system to autosave my w
 ...               INFUND-550 As an assessor I want the ‘Assessment summary’ page to show me complete and incomplete sections, so that I can easily judge how much of the application is left to do
 Suite Setup       guest user log-in    paul.plum@gmail.com    Passw0rd
 Suite Teardown    the user closes the browser
-Force Tags        Assessor    Pending    # Pending due to INFUND-4502
+Force Tags        Assessor
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -95,7 +95,7 @@ Autosave and edit the Application question - How many
 
 Feedback should accept up to 100 words
     [Documentation]    INFUND-3402
-    [Tags]
+    [Tags]  Pending
     Given the user navigates to the page    ${Application_question_url}
     Then the user should see the text in the page    Words remaining: 91
     When the user enters text to a text field    css=#form-input-195 .editor    This is to test the feedback entry is modified. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris test @.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris test @.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris test @.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris test @.
