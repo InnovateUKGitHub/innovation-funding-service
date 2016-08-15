@@ -2,6 +2,7 @@ package com.worth.ifs.project;
 
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
+import com.worth.ifs.bankdetails.form.ProjectDetailsAddressForm;
 import com.worth.ifs.form.AddressForm;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.service.ApplicationService;
@@ -197,7 +198,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
     @RequestMapping(value = "/{projectId}/details/project-address", method = RequestMethod.GET)
     public String viewAddress(Model model,
-                              @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressViewModelForm form,
+                              @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressForm form,
                               @PathVariable("projectId") final Long projectId) {
 
         ProjectResource project = projectService.getById(projectId);
@@ -214,7 +215,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
     @RequestMapping(value = "/{projectId}/details/project-address", method = POST)
     public String updateAddress(Model model,
-                                @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressViewModelForm form,
+                                @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressForm form,
                                 @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
                                 @PathVariable("projectId") final Long projectId) {
 
@@ -265,7 +266,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
     @RequestMapping(value = "/{projectId}/details/project-address", params = SEARCH_ADDRESS, method = POST)
     public String searchAddress(Model model,
                                 @PathVariable("projectId") Long projectId,
-                                @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressViewModelForm form,
+                                @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressForm form,
                                 BindingResult bindingResult) {
 
         form.getAddressForm().setSelectedPostcodeIndex(null);
@@ -278,7 +279,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
     @RequestMapping(value = "/{projectId}/details/project-address", params = SELECT_ADDRESS, method = POST)
     public String selectAddress(Model model,
                                 @PathVariable("projectId") Long projectId,
-                                @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressViewModelForm form) {
+                                @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressForm form) {
         form.getAddressForm().setSelectedPostcode(null);
         ProjectResource project = projectService.getById(projectId);
         return viewCurrentAddressForm(model, form, project);
@@ -286,7 +287,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
     @RequestMapping(value = "/{projectId}/details/project-address", params = MANUAL_ADDRESS, method = POST)
     public String manualAddress(Model model,
-                                @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressViewModelForm form,
+                                @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressForm form,
                                 @PathVariable("projectId") Long projectId) {
         AddressForm addressForm = form.getAddressForm();
         addressForm.setManualAddress(true);
@@ -405,7 +406,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         return "project/project-manager";
     }
 
-    private String viewCurrentAddressForm(Model model, ProjectDetailsAddressViewModelForm form,
+    private String viewCurrentAddressForm(Model model, ProjectDetailsAddressForm form,
                                           ProjectResource project){
         ProjectDetailsAddressViewModel projectDetailsAddressViewModel = loadDataIntoModel(project);
         processAddressLookupFields(form);
