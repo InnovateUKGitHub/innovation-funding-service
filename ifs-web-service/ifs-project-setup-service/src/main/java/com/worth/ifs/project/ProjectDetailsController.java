@@ -1,23 +1,11 @@
 package com.worth.ifs.project;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-import java.util.SortedSet;
-import java.util.TreeSet;
-import java.util.concurrent.ExecutionException;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-
-import javax.validation.Valid;
-
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.CompetitionService;
+import com.worth.ifs.bankdetails.form.ProjectDetailsAddressForm;
 import com.worth.ifs.bankdetails.resource.BankDetailsResource;
 import com.worth.ifs.bankdetails.service.BankDetailsRestService;
 import com.worth.ifs.commons.rest.RestResult;
@@ -37,7 +25,6 @@ import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.project.viewmodel.ProjectDetailsAddressViewModel;
-import com.worth.ifs.project.viewmodel.ProjectDetailsAddressViewModelForm;
 import com.worth.ifs.project.viewmodel.ProjectDetailsStartDateForm;
 import com.worth.ifs.project.viewmodel.ProjectDetailsStartDateViewModel;
 import com.worth.ifs.project.viewmodel.ProjectDetailsViewModel;
@@ -47,32 +34,26 @@ import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.OrganisationRestService;
 import com.worth.ifs.user.service.ProcessRoleService;
 import com.worth.ifs.user.service.UserService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
-import static com.worth.ifs.address.resource.OrganisationAddressType.OPERATING;
-import static com.worth.ifs.address.resource.OrganisationAddressType.PROJECT;
-import static com.worth.ifs.address.resource.OrganisationAddressType.REGISTERED;
+import javax.validation.Valid;
+import java.time.LocalDate;
+import java.util.*;
+import java.util.concurrent.ExecutionException;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
+import static com.worth.ifs.address.resource.OrganisationAddressType.*;
 import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
-import static com.worth.ifs.project.consortiumoverview.viewmodel.ConsortiumPartnerStatus.ACTION_REQUIRED;
-import static com.worth.ifs.project.consortiumoverview.viewmodel.ConsortiumPartnerStatus.COMPLETE;
-import static com.worth.ifs.project.consortiumoverview.viewmodel.ConsortiumPartnerStatus.NOT_STARTED;
-import static com.worth.ifs.project.consortiumoverview.viewmodel.ConsortiumPartnerStatus.PENDING;
+import static com.worth.ifs.project.consortiumoverview.viewmodel.ConsortiumPartnerStatus.*;
 import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
 import static com.worth.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
-import static com.worth.ifs.util.CollectionFunctions.getOnlyElement;
-import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
-import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static com.worth.ifs.util.CollectionFunctions.*;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -232,7 +213,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
     @RequestMapping(value = "/{projectId}/details/project-address", method = RequestMethod.GET)
     public String viewAddress(Model model,
-                              @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressViewModelForm form,
+                              @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressForm form,
                               @PathVariable("projectId") final Long projectId) {
 
         ProjectResource project = projectService.getById(projectId);
@@ -249,7 +230,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
     @RequestMapping(value = "/{projectId}/details/project-address", method = POST)
     public String updateAddress(Model model,
-                                @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressViewModelForm form,
+                                @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressForm form,
                                 @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
                                 @PathVariable("projectId") final Long projectId) {
 
@@ -300,7 +281,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
     @RequestMapping(value = "/{projectId}/details/project-address", params = SEARCH_ADDRESS, method = POST)
     public String searchAddress(Model model,
                                 @PathVariable("projectId") Long projectId,
-                                @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressViewModelForm form,
+                                @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressForm form,
                                 BindingResult bindingResult) {
 
         form.getAddressForm().setSelectedPostcodeIndex(null);
@@ -313,7 +294,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
     @RequestMapping(value = "/{projectId}/details/project-address", params = SELECT_ADDRESS, method = POST)
     public String selectAddress(Model model,
                                 @PathVariable("projectId") Long projectId,
-                                @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressViewModelForm form) {
+                                @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressForm form) {
         form.getAddressForm().setSelectedPostcode(null);
         ProjectResource project = projectService.getById(projectId);
         return viewCurrentAddressForm(model, form, project);
@@ -321,7 +302,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
     @RequestMapping(value = "/{projectId}/details/project-address", params = MANUAL_ADDRESS, method = POST)
     public String manualAddress(Model model,
-                                @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressViewModelForm form,
+                                @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressForm form,
                                 @PathVariable("projectId") Long projectId) {
         AddressForm addressForm = form.getAddressForm();
         addressForm.setManualAddress(true);
@@ -553,7 +534,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         return "project/project-manager";
     }
 
-    private String viewCurrentAddressForm(Model model, ProjectDetailsAddressViewModelForm form,
+    private String viewCurrentAddressForm(Model model, ProjectDetailsAddressForm form,
                                           ProjectResource project){
         ProjectDetailsAddressViewModel projectDetailsAddressViewModel = loadDataIntoModel(project);
         processAddressLookupFields(form);

@@ -49,11 +49,13 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
 
     private BankDetailsReviewViewModel buildModelView(ProjectResource project, ProjectUserResource financeContact, OrganisationResource organisation, BankDetailsResource bankDetails){
         return new BankDetailsReviewViewModel(
+                project.getId(),
                 project.getFormattedId(),
                 project.getName(),
                 financeContact.getUserName(),
                 financeContact.getEmail(),
                 financeContact.getPhoneNumber(),
+                organisation.getId(),
                 organisation.getName(),
                 organisation.getCompanyHouseNumber(),
                 bankDetails.getAccountNumber(),

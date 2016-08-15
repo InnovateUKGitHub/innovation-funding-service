@@ -78,7 +78,7 @@
 	</table>
 	<div class="grid-row extra-margin">
 		<div class="column-half">
-			<a href="#">Change bank account details</a>
+			<a th:href="@{/project/{id}/organisation/{orgId}/review-bank-details/change(id=${model.projectId}, orgId=${model.organisationId})}">Change bank account details</a>
 		</div>
 		<div class="column-half alignright">
 			<form>
