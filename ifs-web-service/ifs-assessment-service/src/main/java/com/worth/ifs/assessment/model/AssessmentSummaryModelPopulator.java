@@ -15,16 +15,12 @@ import com.worth.ifs.assessment.viewmodel.AssessmentSummaryViewModel;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.service.FormInputService;
-import com.worth.ifs.user.resource.ProcessRoleResource;
-import com.worth.ifs.user.service.ProcessRoleService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 
 import static com.worth.ifs.assessment.resource.AssessorFormInputType.*;
 import static com.worth.ifs.util.CollectionFunctions.*;
@@ -52,16 +48,14 @@ public class AssessmentSummaryModelPopulator {
     private QuestionService questionService;
 
     @Autowired
-    private ProcessRoleService processRoleService;
-
-    @Autowired
     private ApplicationService applicationService;
 
     @Autowired
     private CompetitionService competitionService;
 
-    public AssessmentSummaryViewModel populateModel(Long assessmentId) throws ExecutionException, InterruptedException {
-        ApplicationResource application = getApplicationForAssessment(assessmentId);
+    public AssessmentSummaryViewModel populateModel(Long assessmentId) {
+        AssessmentResource assessment = getAssessment(assessmentId);
+        ApplicationResource application = getApplication(assessment.getApplication());
         CompetitionResource competition = getCompetition(application.getCompetition());
 
         List<AssessmentSummaryQuestionViewModel> questions = getQuestions(assessmentId, competition.getId());
@@ -78,10 +72,6 @@ public class AssessmentSummaryModelPopulator {
         return competitionService.getById(competitionId);
     }
 
-    private ApplicationResource getApplicationForAssessment(Long assessmentId) throws InterruptedException, ExecutionException {
-        return getApplication(getApplicationIdForProcessRole(getProcessRoleForAssessment(getAssessment(assessmentId))));
-    }
-
     private AssessmentResource getAssessment(Long assessmentId) {
         return assessmentService.getById(assessmentId);
     }
@@ -90,15 +80,7 @@ public class AssessmentSummaryModelPopulator {
         return applicationService.getById(applicationId);
     }
 
-    private Future<ProcessRoleResource> getProcessRoleForAssessment(AssessmentResource assessment) {
-        return processRoleService.getById(assessment.getProcessRole());
-    }
-
-    private Long getApplicationIdForProcessRole(Future<ProcessRoleResource> processRoleResource) throws InterruptedException, ExecutionException {
-        return processRoleResource.get().getApplication();
-    }
-
-    private List<AssessmentSummaryQuestionViewModel> getQuestions(Long assessmentId, Long competitionId) throws ExecutionException, InterruptedException {
+    private List<AssessmentSummaryQuestionViewModel> getQuestions(Long assessmentId, Long competitionId) {
         Map<Long, List<FormInputResource>> assessmentFormInputs = getAssessmentFormInputs(competitionId);
         Map<Long, List<AssessorFormInputResponseResource>> assessorResponses = getAssessorResponses(assessmentId);
         List<QuestionResource> questions = simpleFilter(questionService.getQuestionsByAssessment(assessmentId), question -> assessmentFormInputs.containsKey(question.getId()));
@@ -109,10 +91,10 @@ public class AssessmentSummaryModelPopulator {
             String displayLabel = getQuestionDisplayLabel(question);
             String displayLabelShort = getQuestionDisplayLabelShort(question);
             boolean scoreFormInputExists = formInputsForQuestion.stream().anyMatch(formInput -> SCORE.getTitle().equals(formInput.getFormInputTypeTitle()));
-            Integer scoreGiven = ofNullable(responsesByFieldType.get(SCORE)).map(value -> Integer.valueOf(value)).orElse(null);
+            Integer scoreGiven = ofNullable(responsesByFieldType.get(SCORE)).map(Integer::valueOf).orElse(null);
             Integer scorePossible = scoreFormInputExists ? question.getAssessorMaximumScore() : null;
             String feedback = responsesByFieldType.get(FEEDBACK);
-            Boolean applicationInScope = ofNullable(responsesByFieldType.get(APPLICATION_IN_SCOPE)).map(value -> Boolean.valueOf(value)).orElse(null);
+            Boolean applicationInScope = ofNullable(responsesByFieldType.get(APPLICATION_IN_SCOPE)).map(Boolean::valueOf).orElse(null);
             boolean complete = isComplete(formInputsForQuestion, responsesForQuestion);
             return new AssessmentSummaryQuestionViewModel(question.getId(), displayLabel, displayLabelShort, scoreFormInputExists, scoreGiven, scorePossible, feedback, applicationInScope, complete);
         });
