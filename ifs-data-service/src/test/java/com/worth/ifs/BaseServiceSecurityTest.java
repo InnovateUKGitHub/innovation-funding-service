@@ -3,12 +3,14 @@ package com.worth.ifs;
 import au.com.bytecode.opencsv.CSVWriter;
 import com.worth.ifs.security.PermissionRule;
 import com.worth.ifs.security.SecuredBySpring;
+import com.worth.ifs.user.resource.UserRoleType;
 import javassist.util.proxy.MethodHandler;
 import javassist.util.proxy.ProxyFactory;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.After;
 import org.junit.Before;
 import org.springframework.beans.factory.support.RootBeanDefinition;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,15 +21,18 @@ import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
+import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
+import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.util.CollectionFunctions.simpleJoiner;
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
+import static java.util.EnumSet.complementOf;
+import static java.util.EnumSet.copyOf;
+import static org.junit.Assert.fail;
 import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
 
 /**
@@ -238,5 +243,29 @@ public abstract class BaseServiceSecurityTest<T> extends BaseMockSecurityTest {
 
     private boolean hasOneAnnotation(Method method, Class<? extends Annotation>... annotations) {
         return asList(annotations).stream().anyMatch(annotation -> findAnnotation(method, annotation) != null);
+    }
+
+    protected final void testOnlyAUserWithOneOfTheGlobalRolesCan(Runnable functionToCall, UserRoleType... roles){
+        EnumSet<UserRoleType> rolesThatShouldSucceed = copyOf(asList(roles));
+        EnumSet<UserRoleType> rolesThatShouldFail = complementOf(rolesThatShouldSucceed);
+        rolesThatShouldFail.forEach(role -> {
+            setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
+            try {
+                functionToCall.run();
+                fail("Should not have been able to run the function given the role: " + role);
+            } catch (AccessDeniedException e) {
+                // expected behaviour
+            }
+        });
+        rolesThatShouldSucceed.forEach(role -> {
+            setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
+            try {
+                functionToCall.run();
+                // Should not throw
+            }
+            catch (AccessDeniedException e){
+                fail("Should have been able to run the function given the role: " + role);
+            }
+        });
     }
 }
