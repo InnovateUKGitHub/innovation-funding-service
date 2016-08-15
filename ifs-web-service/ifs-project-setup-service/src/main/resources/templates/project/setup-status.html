@@ -88,7 +88,7 @@
         <div class="progress-info">
 
           <!-- TODO - This needs to be replaced with something like the below after adding the organisation id to the ProjectSetupStatusViewModel -->
-          <h2 class="heading-medium"><a th:href="@{/project/{id}/partner-organisation/1/spend-profile(id=${model.projectId})}">Spend profile</a></h2>
+          <h2 class="heading-medium"><a th:href="@{/project/{id}/partner-organisation/{organisationId}/spend-profile(id=${model.projectId}, organisationId=${model.organisationId})}">Spend profile</a></h2>
           <!--a th:href="@{/project/{id}/partner-organisation/{orgId}/spend-profile(id=${model.projectId}, orgId=${model.orgId})}">Spend profile</a-->
 
           <p>Once we have approved your financial information, we will produce a spend profile.</p>

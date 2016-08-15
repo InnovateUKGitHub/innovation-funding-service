@@ -5,14 +5,17 @@ import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.bankdetails.resource.BankDetailsResource;
 import com.worth.ifs.bankdetails.transactional.BankDetailsService;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.transactional.FileHttpHeadersValidator;
+import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.user.resource.OrganisationResource;
+import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -47,15 +50,13 @@ public class ProjectController {
     @Qualifier("projectSetupOtherDocumentsFileValidator")
     private FileHttpHeadersValidator fileValidator;
 
+    @Autowired
+    private UserAuthenticationService userAuthenticationService;
+
+
     @RequestMapping("/{id}")
     public RestResult<ProjectResource> getProjectById(@PathVariable("id") final Long id) {
         return projectService.getProjectById(id).toGetResponse();
-    }
-
-    @RequestMapping("/{projectId}/partner-organisation/{organisationId}/spend-profile")
-    public RestResult<SpendProfileResource> getSpendProfile(@PathVariable("projectId") final Long projectId,
-                                                                @PathVariable("organisationId") final Long organisationId) {
-        return projectService.getSpendProfile(projectId, organisationId).toGetResponse();
     }
 
     @RequestMapping("/application/{application}")
@@ -255,8 +256,11 @@ public class ProjectController {
         return projectService.deleteExploitationPlanFile(projectId).toDeleteResponse();
     }
 
-    @RequestMapping(value = "/{projectId}/partner/documents/submit", method = GET)
-    public RestResult<Boolean>isOtherDocumentsSubmitAllowed(@PathVariable("projectId") final Long projectId) {
-        return projectService.isOtherDocumentsSubmitAllowed(projectId).toGetResponse();
+    @RequestMapping(value = "/{projectId}/partner/documents/ready", method = GET)
+    public RestResult<Boolean>isOtherDocumentsSubmitAllowed(@PathVariable("projectId") final Long projectId,
+                                                            HttpServletRequest request) {
+
+        UserResource authenticatedUser = userAuthenticationService.getAuthenticatedUser(request);
+        return projectService.isOtherDocumentsSubmitAllowed(projectId, authenticatedUser.getId()).toGetResponse();
     }
 }

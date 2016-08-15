@@ -137,11 +137,9 @@
               </th:block>
           </div>
 
-      <form th:if="${model.isShowSubmitDocumentsButton()}" action="#">
-          <p>
-            Once you have uploaded these documents, they must be submitted to Innovate Uk for review.
-            We will contact you if we need any clarification.
-          </p>
+
+      <form th:if="${model.isShowSubmitDocumentsButton() and  model.isSubmitAllowed()}" action="#">
+          <p>When you are have uploaded your collaboration agreement and exploitation plan, they must be submitted to Innovate UK for review. If these documents require further clarification Innovate UK will contact you.</p>
           <!--/* todo for mr Brent, js-modal */-->
           <button class="button">Submit documents</button>
       </form>
