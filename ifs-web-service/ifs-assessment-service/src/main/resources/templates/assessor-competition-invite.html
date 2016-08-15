@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+    <head>
+        <div th:include="fragments/layout :: head" th:with="pageTitle='Invitation to assess '+${model.competitionName}" th:remove="tag" />
+    </head>
+
+    <body class="app-dashboard">
+        <div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
+        <div th:include="fragments/assessment :: assessment-reject-competition-modal (competitionId=${1})" th:remove="tag" />
+        <div th:include="fragments/layout :: body-start" th:remove="tag" />
+        <div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+        <main id="content">
+            <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+            <div class="hgroup">
+                <h1 class="heading-large">Invitation to assess '<span th:text="${model.competitionName}" th:remove="tag" />'</h1>
+            </div>
+
+            <p>You are invited to act as an assessor for the competition <strong>'<span th:text="${model.competitionName}" th:remove="tag" />'</strong>.<!--/* Please read the information below and confirm whether you are available to assess applications for this competition./*/--></p>
+
+            <!--/*section class="boxed">
+                <h2 class="heading-medium no-margin">15 - 25 April - assessment period</h2>
+                <p>This is the allocated timescale for reading, scoring, providing written comments and submitting your assessments in our online service. Each assessor could receive up to 10 proposals to assess, however the number could be less dependant on how many applications have been submitted. Our assessment fee for this competition is &pound;100 per application.</p>
+
+                <p>The assessor webinar briefing is mandatory and will last one hour, taking place on 21 March.</p>
+            </section>
+
+            <section>
+                <h2 class="heading-medium">Competition details - Technology Inspired</h2>
+                <p>Innovate UK is to invest up to &pound;3 million in feasibility studies to stimulate innovation across four enabling technology areas that underpin future UK growth: advanced materials; biosciences; electronics, sensors and photonics; and information and communication technology (ICT).</p>
+
+                <p><a href="#" rel="external">See competition brief</a></p>
+
+                <h3 class="heading-small">You should reject this competition if:</h3>
+                <ul class="list-bullet">
+                    <li>you are unavailable for the assessment period dates</li>
+                    <li>you are unable to meet the assessment deadlines</li>
+                    <li>this competition is outside your area of expertise</li>
+                    <li>you have a direct conflict of interest, for example intending to apply to this competition yourself</li>
+                </ul>
+            </section/*/-->
+
+            <form>
+                <fieldset>
+                    <legend class="visuallyhidden">Are you available to assess this competition?</legend>
+                    <h2 class="heading-medium">Are you available to assess this competition?</h2>
+                    <button class="button large" name="accept" value="accepted" type="submit">Accept</button>
+                    <a class="button button-warning large" href="#" data-js-modal="reject-competition-modal">Reject</a>
+                </fieldset>
+            </form>
+
+            <div th:include="fragments/assessment :: prototype-modal-comp-reject" th:with="backTo='/prototypes/4081-assessor-thank-you'" th:remove="tag" />
+
+            <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+        </main>
+
+        <div th:include="fragments/layout :: footer" th:remove="tag" />
+        <div th:include="fragments/layout :: body-end" th:remove="tag" />
+    </body>
+</html>

@@ -20,20 +20,7 @@
 
             <div th:include="fragments/assessment :: application_details (currentApplication=${model.application}, applicationOrganisations=${applicationOrganisations}, pendingOrganisationNames=${pendingOrganisationNames}, leadOrganisation=${leadOrganisation})" th:remove="tag" />
 
-            <ul class="pagination" th:unless="${#strings.isEmpty(navigation.previousUrl) and #strings.isEmpty(navigation.nextUrl)}">
-                <li class="prev" th:unless="${#strings.isEmpty(navigation.previousUrl)}">
-                    <a th:href="@{${navigation.previousUrl}}" rel="prev" title="Navigate to previous part">
-                        <span class="pagination-label">Previous</span>
-                        <span class="pagination-part-title" th:text="${navigation.previousText}">Scope</span>
-                    </a>
-                </li>
-                <li class="next" th:unless="${#strings.isEmpty(navigation.nextUrl)}">
-                    <a th:href="@{${navigation.nextUrl}}" rel="next" title="Navigate to next part">
-                        <span class="pagination-label">Next</span>
-                        <span class="pagination-part-title" th:text="${navigation.nextText}">Potential market</span>
-                    </a>
-                </li>
-            </ul>
+            <div th:include="fragments/assessment :: assessment-pagination" th:remove="tag" />
 
             <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
         </main>

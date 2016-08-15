@@ -15,7 +15,9 @@ import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
 import com.worth.ifs.assessment.service.AssessmentService;
 import com.worth.ifs.assessment.service.AssessorFormInputResponseService;
 import com.worth.ifs.assessment.viewmodel.AssessmentFeedbackViewModel;
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.service.FormInputService;
 import com.worth.ifs.model.OrganisationDetailsModelPopulator;
@@ -32,11 +34,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
+import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static com.worth.ifs.util.CollectionFunctions.simpleToMap;
 import static com.worth.ifs.util.MapFunctions.toListOfPairs;
-import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toMap;
 
 @Controller
@@ -93,18 +97,15 @@ public class AssessmentFeedbackController extends AbstractApplicationController 
     }
 
     @RequestMapping(value = "/formInput/{formInputId}", method = RequestMethod.POST)
-    public
-    @ResponseBody
-    JsonNode updateFormInputResponse(
+    public @ResponseBody JsonNode updateFormInputResponse(
             Model model,
             HttpServletResponse response,
             @PathVariable("assessmentId") Long assessmentId,
             @PathVariable("formInputId") Long formInputId,
             @RequestParam("value") String value) {
-        // TODO validation
+
         ServiceResult<Void> result = assessorFormInputResponseService.updateFormInputResponse(assessmentId, formInputId, value);
-        // TODO handle service errors
-        return createJsonObjectNode(result.isSuccess(), asList());
+        return createJsonObjectNode(result.isSuccess(), result.getErrors());
     }
 
     @RequestMapping(value = "/question/{questionId}", method = RequestMethod.POST)
@@ -113,19 +114,38 @@ public class AssessmentFeedbackController extends AbstractApplicationController 
             HttpServletResponse response,
             @ModelAttribute(MODEL_ATTRIBUTE_FORM) Form form,
             BindingResult bindingResult,
+            ValidationHandler validationHandler,
             @PathVariable("assessmentId") Long assessmentId,
-            @PathVariable("questionId") Long questionId) {
-        // TODO possiby get the form inputs from assessmentFormInputs in the view model?
-        // TODO validation
-        List<FormInputResource> formInputs = formInputService.findAssessmentInputsByQuestion(questionId);
-        List<Pair<Long, String>> formInputResponses = getFormInputResponses(form, formInputs);
-        formInputResponses.stream().forEach(responsePair -> {
-            Long formInputId = responsePair.getLeft();
-            String value = responsePair.getRight();
-            // TODO INFUND-4105 optimise this to save multiple responses at a time
-            assessorFormInputResponseService.updateFormInputResponse(assessmentId, formInputId, value);
+            @PathVariable("questionId") Long questionId)  {
+
+        //TODO change implementation of lambda call to handle exceptions concisely
+        Supplier<String> failureView = () -> {
+            String view = "";
+            try {
+                view = getQuestion(model, response, form, bindingResult, assessmentId, questionId);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+            return view;
+        };
+
+        return validationHandler.failNowOrSucceedWith(failureView, () -> {
+            List<FormInputResource> formInputs = formInputService.findAssessmentInputsByQuestion(questionId);
+            List<Pair<Long, String>> formInputResponses = getFormInputResponses(form, formInputs);
+            formInputResponses.stream().forEach(responsePair -> {
+                // TODO INFUND-4105 optimise this to save multiple responses at a time
+                ServiceResult<Void> updateResult = assessorFormInputResponseService.updateFormInputResponse(assessmentId,responsePair.getLeft(),responsePair.getRight());
+                validationHandler.addAnyErrors(updateResult, toField("formErrors"));
+            });
+
+            return validationHandler.
+                    failNowOrSucceedWith(failureView, () -> redirectToAssessmentOverview(assessmentId));
         });
-        // TODO handle service errors
+    }
+
+    private String redirectToAssessmentOverview(Long assessmentId) {
         return "redirect:/" + assessmentId;
     }
 
@@ -177,13 +197,13 @@ public class AssessmentFeedbackController extends AbstractApplicationController 
         return simpleFilter(responses, responsePair -> formInputResourceMap.containsKey(responsePair.getLeft()));
     }
 
-    private ObjectNode createJsonObjectNode(boolean success, List<String> errors) {
+    private ObjectNode createJsonObjectNode(boolean success, List<Error> errors) {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode node = mapper.createObjectNode();
         node.put("success", success ? "true" : "false");
         if (!success) {
             ArrayNode errorsNode = mapper.createArrayNode();
-            errors.stream().forEach(errorsNode::add);
+            errors.stream().map(u -> u.getErrorMessage()).collect(Collectors.toList()).forEach(errorsNode::add);
             node.set("validation_errors", errorsNode);
         }
         return node;

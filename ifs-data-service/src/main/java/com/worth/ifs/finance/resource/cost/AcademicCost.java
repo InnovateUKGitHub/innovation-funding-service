@@ -3,7 +3,7 @@ package com.worth.ifs.finance.resource.cost;
 import javax.validation.constraints.DecimalMin;
 import java.math.BigDecimal;
 
-public class AcademicCost implements CostItem {
+public class AcademicCost implements FinanceRowItem {
     private Long id;
     private String name;
 
@@ -37,8 +37,8 @@ public class AcademicCost implements CostItem {
     }
 
     @Override
-    public CostType getCostType() {
-        return CostType.ACADEMIC;
+    public FinanceRowType getCostType() {
+        return FinanceRowType.ACADEMIC;
     }
 
     public String getItem() {

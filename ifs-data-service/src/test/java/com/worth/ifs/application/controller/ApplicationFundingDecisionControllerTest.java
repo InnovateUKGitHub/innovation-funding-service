@@ -10,7 +10,7 @@ import org.springframework.http.MediaType;
 
 import java.util.Map;
 
-import static com.worth.ifs.JsonTestUtil.toJson;
+import static com.worth.ifs.util.JsonMappingUtil.toJson;
 import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;

@@ -24,13 +24,13 @@ public class InviteOrganisation {
     private Organisation organisation;
 
     @OneToMany(mappedBy = "inviteOrganisation")
-    private List<Invite> invites;
+    private List<ApplicationInvite> invites;
 
     public InviteOrganisation() {
     	// no-arg constructor
     }
 
-    public InviteOrganisation(String organisationName, Organisation organisation, List<Invite> invites) {
+    public InviteOrganisation(String organisationName, Organisation organisation, List<ApplicationInvite> invites) {
         this.organisationName = organisationName;
         this.organisation = organisation;
         this.invites = invites;
@@ -60,11 +60,11 @@ public class InviteOrganisation {
         this.organisation = organisation;
     }
 
-    public List<Invite> getInvites() {
+    public List<ApplicationInvite> getInvites() {
         return (invites == null)? new ArrayList<>() : invites;
     }
 
-    public void setInvites(List<Invite> invites) {
+    public void setInvites(List<ApplicationInvite> invites) {
         this.invites = invites;
     }
 }

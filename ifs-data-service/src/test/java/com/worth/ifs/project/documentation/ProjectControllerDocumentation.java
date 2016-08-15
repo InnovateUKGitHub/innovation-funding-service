@@ -11,17 +11,19 @@ import com.worth.ifs.project.controller.ProjectController;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.test.web.servlet.MvcResult;
 
+import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.worth.ifs.JsonTestUtil.toJson;
 import static com.worth.ifs.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.error.Error.fieldError;
@@ -33,22 +35,18 @@ import static com.worth.ifs.documentation.ProjectDocs.projectResourceBuilder;
 import static com.worth.ifs.documentation.ProjectDocs.projectResourceFields;
 import static com.worth.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
+import static com.worth.ifs.util.JsonMappingUtil.toJson;
+import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -108,10 +106,10 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
         mockMvc.perform(get("/project/").contentType(APPLICATION_JSON).accept(APPLICATION_JSON))
                 .andDo(
                         this.document.snippets(
-                        responseFields(
-                                fieldWithPath("[]").description("List of projects the user is allowed to see")
-                        )
-                ));
+                                responseFields(
+                                        fieldWithPath("[]").description("List of projects the user is allowed to see")
+                                )
+                        ));
     }
 
     @Test
@@ -148,7 +146,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                 .andExpect(status().isBadRequest())
                 .andDo(this.document);
     }
-    
+
     @Test
     public void setProjectManager() throws Exception {
         Long project1Id = 1L;
@@ -232,10 +230,10 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                 andExpect(status().isOk()).
                 andExpect(content().json(toJson(projectUsers))).
                 andDo(this.document.snippets(
-                    pathParameters(
-                            parameterWithName("projectId").description("Id of the project that the Project Users are being requested from")
-                    ),
-                    responseFields(fieldWithPath("[]").description("List of Project Users the user is allowed to see"))
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project that the Project Users are being requested from")
+                        ),
+                        responseFields(fieldWithPath("[]").description("List of Project Users the user is allowed to see"))
                 ));
     }
 
@@ -358,9 +356,9 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
         mockMvc.perform(post("/project/{projectId}/setApplicationDetailsSubmitted", 123L))
                 .andExpect(status().isBadRequest())
                 .andDo(this.document.snippets(
-                    pathParameters(
-                        parameterWithName("projectId").description("Id of the project that the Project Users are being requested from")
-                    )));
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project that the Project Users are being requested from")
+                        )));
     }
 
     @Test
@@ -459,5 +457,43 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                         requestFields(bankDetailsResourceFields)
                 ))
                 .andReturn();
+    }
+
+    @Test
+    public void isOtherDocumentsSubmitAllowed() throws Exception {
+        UserResource userResource = newUserResource()
+                .withId(1L)
+                .withUID("123abc")
+                .build();
+        when(projectServiceMock.isOtherDocumentsSubmitAllowed(123L, 1L)).thenReturn(serviceSuccess(true));
+        when(userAuthenticationService.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(userResource);
+
+        MvcResult mvcResult = mockMvc.perform(get("/project/{projectId}/partner/documents/ready", 123L))
+                .andExpect(status().isOk())
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project for which the documents are being submitted to.")
+                        )))
+                .andReturn();
+        assertTrue(mvcResult.getResponse().getContentAsString().equals("true"));
+    }
+
+    @Test
+    public void isOtherDocumentsSubmitNotAllowedWhenDocumentsNotFullyUploaded() throws Exception {
+        UserResource userResource = newUserResource()
+                .withId(1L)
+                .withUID("123abc")
+                .build();
+        when(projectServiceMock.isOtherDocumentsSubmitAllowed(123L, 1L)).thenReturn(serviceSuccess(false));
+        when(userAuthenticationService.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(userResource);
+
+        MvcResult mvcResult = mockMvc.perform(get("/project/{projectId}/partner/documents/ready", 123L))
+                .andExpect(status().isOk())
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project for which the documents are being submitted to.")
+                        )))
+                .andReturn();
+        assertTrue(mvcResult.getResponse().getContentAsString().equals("false"));
     }
 }

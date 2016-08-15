@@ -1,12 +1,13 @@
 package com.worth.ifs.validator;
 
-import static com.worth.ifs.validator.ValidatorTestUtil.getBindingResult;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.when;
-
+import com.worth.ifs.finance.domain.ApplicationFinance;
+import com.worth.ifs.finance.domain.FinanceRow;
+import com.worth.ifs.finance.repository.FinanceRowRepository;
+import com.worth.ifs.finance.resource.cost.GrantClaim;
+import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.domain.OrganisationType;
+import com.worth.ifs.user.resource.OrganisationSize;
+import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,14 +16,10 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.validation.BindingResult;
 
-import com.worth.ifs.finance.domain.ApplicationFinance;
-import com.worth.ifs.finance.domain.Cost;
-import com.worth.ifs.finance.repository.CostRepository;
-import com.worth.ifs.finance.resource.cost.GrantClaim;
-import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.OrganisationType;
-import com.worth.ifs.user.resource.OrganisationSize;
-import com.worth.ifs.user.resource.OrganisationTypeEnum;
+import static com.worth.ifs.validator.ValidatorTestUtil.getBindingResult;
+import static org.junit.Assert.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class GrantClaimValidatorTest {
@@ -30,7 +27,7 @@ public class GrantClaimValidatorTest {
 	private GrantClaimValidator validator;
 
 	@Mock
-	private CostRepository costRepository;
+	private FinanceRowRepository financeRowRepository;
 	
 	private GrantClaim claim;
 	private BindingResult bindingResult;
@@ -274,9 +271,9 @@ public class GrantClaimValidatorTest {
     	ApplicationFinance applicationFinance = new ApplicationFinance();
     	applicationFinance.setOrganisation(organisation);
     	applicationFinance.setOrganisationSize(organisationSize);
-    	Cost cost = new Cost();
+    	FinanceRow cost = new FinanceRow();
     	cost.setApplicationFinance(applicationFinance);
-    	when(costRepository.findOne(any(Long.class))).thenReturn(cost);
+    	when(financeRowRepository.findOne(any(Long.class))).thenReturn(cost);
     }
     
 }

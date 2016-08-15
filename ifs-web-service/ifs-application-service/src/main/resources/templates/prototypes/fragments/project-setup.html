@@ -156,14 +156,16 @@
             </label>
             <input class="form-control" id="company-name" name="company-name" value="Aptrans Ltd" type="text" />
         </div>
-
-        <div class="form-group">
-            <label class="form-label" for="companies-house-number">
-                <span class="form-label-bold">Companies house number</span>
-            </label>
-            <p class="form-hint">For example: 1548965</p>
-            <input class="form-control" id="companies-house-number" name="companies-house-number" value="6567388" type="text" />
-        </div>
+        
+        <th:block th:unless="${param.status != null and param.status[0] == 'noCompHouse'}">
+            <div class="form-group">
+                <label class="form-label" for="companies-house-number">
+                    <span class="form-label-bold">Companies house number</span>
+                </label>
+                <p class="form-hint">For example: 1548965</p>
+                <input class="form-control" id="companies-house-number" name="companies-house-number" value="6567388" type="text" />
+            </div>
+        </th:block>
 
     </fieldset>
 
@@ -206,7 +208,18 @@
 
 <div th:fragment="prototype-spend-row">
     <tr th:class="${(spend == 'high' ? 'error-in-row' : 'spend-ok')}">
-        <th scope="row" th:text="${header}" th:id="${#strings.substringBefore(header, ' ')}" class="fix-left">Labour</th>
+        
+        <th:block th:if="${type == null}">
+            <th scope="row" th:text="${header}" th:id="${#strings.substringBefore(header, ' ')}" class="fix-left">HEADER HERE</th>
+        </th:block>
+        
+        <th:block th:if="${type != null}">
+            <th scope="row" th:id="${#strings.substringBefore(header, ' ')}" class="fix-left">
+                <span th:text="${header}">HEADER HERE</span>
+                <small th:text="${type}">TYPE</small>
+            </th>
+        </th:block>
+
         <td th:text="${value}">12,500</td>
         <td th:text="${value}">12,500</td>
         <td th:text="${value}">12,500</td>
@@ -303,11 +316,113 @@
 </div>
 
 
+<!-- ===========================Spend profile ACADEMIC rows readonly=========================== --> 
+
+<div th:fragment="prototype-spend-academic-row">
+    <tr th:class="${border != null ? 'cell-border-bottom-divide' : ''}" th:classappend="${(spend == 'high' ? 'error-in-row' : 'spend-ok')}">
+        <th th:text="${section}" class="fix-left1">Directly Incured</th>
+        <th scope="row" th:text="${header}" th:id="${#strings.substringBefore(header, ' ')}" class="fix-left2">Staff</th>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}" class="separate-cell year">12,500</td>
+
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}" class="separate-cell year">12,500</td>
+
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}" class="separate-cell year">12,500</td>
+
+        <td th:text="${value}">12,500</td>
+        <td th:text="${value}">12,500</td>
+
+        <td th:text="${total}" class="total fix-right2">450,000</td>
+        <td th:text="${total}" class="total eligible fix-right">450,000</td>
+    </tr>
+</div>
+
+<!-- ===========================Spend profile academic rows inputs=========================== --> 
+
+<div th:fragment="prototype-spend-academic-row-edit">
+    <tr th:class="${border != null ? 'cell-border-bottom-divide' : ''}" th:classappend="${(spend == 'high' ? 'error-in-row' : 'spend-ok')}">
+        <th th:text="${section}" class="fix-left1">Directly Incured</th>
+        <th scope="row" th:text="${header}" th:id="${#strings.substringBefore(header, ' ')}" class="fix-left2">Staff</th>
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month1'}"/></td>
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month2'}"/></td>
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month3'}"/></td>
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month4'}"/></td>
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month5'}"/></td>
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month6'}"/></td>
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month7'}"/></td>
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month8'}"/></td>
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month9'}"/></td>
+        <td class="separate-cell year"><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month10'}"/></td>
+
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month11'}"/></td>
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month12'}"/></td>
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month13'}"/></td>
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month14'}"/></td>
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month15'}"/></td>
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month16'}"/></td>
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month17'}"/></td>
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month18'}"/></td>
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month19'}"/></td>
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month20'}"/></td>
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month21'}"/></td>
+        <td class="separate-cell year"><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month22'}"/></td>
+
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month23'}"/></td>
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month24'}"/></td>
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month25'}"/></td>
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month26'}"/></td>
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month27'}"/></td>
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month28'}"/></td>
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month29'}"/></td>
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month30'}"/></td>
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month31'}"/></td>
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month32'}"/></td>
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month33'}"/></td>
+        <td class="separate-cell year"><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month34'}"/></td>
+
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month35'}"/></td>
+        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month36'}"/></td>
+
+        <td th:text="${total}" class="total fix-right2">450,000</td>
+        <td th:text="${total}" class="total eligible fix-right">450,000</td>
+    </tr>
+</div>
+
 <!-- ===========================Messages / Queries  / notes=========================== --> 
 
 <div th:fragment="prototype-post-query(queryType, user)">
     
-    <fieldset th:unless="${queryType == 'note' or user == 'partner'}"> 
+    <!-- <fieldset th:unless="${queryType == 'note' or user == 'partner'}"> 
         
         <div class="form-group alignright">
             <label for="querySection">Query section</label>
@@ -319,7 +434,7 @@
             </select>
         </div>
 
-    </fieldset>
+    </fieldset> -->
 
     <a th:href="${#httpServletRequest.requestURI + '?action=newQuery'}" id="post-new-query" th:unless="${param.action != null and param.action[0] == 'newQuery' or user == 'partner'}" class="button button-large" th:text="${(queryType == 'query' ? 'Post a new query' : 'Create a new note')}">QUERY TYPE</a>
 
@@ -341,10 +456,8 @@
                     <div class="form-group">
                         <label for="section" class="form-label-bold">Section</label>
                         <select name="section" id="section" class="form-control">
-                            <option value="All sections">All</option>
                             <option value="Viability">Viability</option>
                             <option value="Eligibility">Eligibility</option>
-                            <option value="Other">Other</option>
                         </select>
                     </div>
 
@@ -376,10 +489,9 @@
             </fieldset>
 
             <fieldset>
-                <div class="upload-section">
+                <div class="upload-section unstyled-view">
                     <legend class="heading-small no-margin">Upload supporting documentation</legend>
-                    <p class="form-hint">Any supporting documentation that you upload will be saved to the document library and will be viewed by Innovate UK.</p>
-
+                   
                     <input type="file" name="file" id="file" class="inputfile" />
                     <label for="file" class="button-secondary extra-margin">+ Upload</label>
                 </div>
@@ -392,8 +504,9 @@
             <input type="hidden" id="action" name="action" th:value="${(queryType == 'query' ? 'postQuery' : 'saveNote')}" />
 
             <div class="grid-row">
-                <div class="column-half"><a th:href="${#httpServletRequest.requestURI + '?action=cancelQuery'}">Cancel</a></div>
-                <div class="column-half alignright"><button class="button button-large no-margin" th:text="${(queryType == 'query' ? 'Post Query' : 'Save note')}">Save note</button></div>
+                <div class="column-half"><button class="button button-large no-margin" th:text="${(queryType == 'query' ? 'Post Query' : 'Save note')}">Save note</button></div>
+                <div class="column-half alignright"><a th:href="${#httpServletRequest.requestURI + '?action=cancelQuery'}">Cancel</a></div>
+                
             </div>
         </form>
 
@@ -520,10 +633,9 @@
             </fieldset>
 
             <fieldset>
-                <div class="upload-section">
+                <div class="upload-section unstyled-view">
                     <legend class="heading-small no-margin">Upload supporting documentation</legend>
-                    <p class="form-hint">Any supporting documentation that you upload will be saved to the document library and will be viewed by Innovate UK.</p>
-
+                
                     <input type="file" name="file" id="file" class="inputfile" />
                     <label for="file" class="button-secondary extra-margin">+ Upload</label>
                 </div>
@@ -543,9 +655,10 @@
 
             <input type="hidden" id="action" name="action" value="postResponse" />  
 
-            <div class="grid-row">
-                <div class="column-half"><a th:href="${#httpServletRequest.requestURI}">Cancel</a></div>
-                <div class="column-half alignright"><button class="button button-large no-margin" th:text="${(queryType == 'query' ? 'Post response' : 'Save comment')}">Post response</button></div>
+            <div class="grid-row extra-margin">
+                <div class="column-half"><button class="button button-large no-margin" th:text="${(queryType == 'query' ? 'Post response' : 'Save comment')}">Post response</button></div>
+                <div class="column-half alignright"><a th:href="${#httpServletRequest.requestURI}">Cancel</a></div>
+                
             </div>
         </form>
 

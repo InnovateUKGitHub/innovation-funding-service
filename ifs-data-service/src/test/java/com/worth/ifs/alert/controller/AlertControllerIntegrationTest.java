@@ -18,6 +18,7 @@ import static com.worth.ifs.security.SecuritySetter.basicSecurityUser;
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.UserRoleType.SYSTEM_MAINTAINER;
+import static java.time.LocalDateTime.now;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.*;
 
@@ -27,38 +28,38 @@ public class AlertControllerIntegrationTest extends BaseControllerIntegrationTes
 
     @Before
     public void setUp() throws Exception {
-        final RoleResource systemMaintainerRole = newRoleResource().withType(SYSTEM_MAINTAINER).build();
+        RoleResource systemMaintainerRole = newRoleResource().withType(SYSTEM_MAINTAINER).build();
         systemMaintenanceUser = newUserResource().withRolesGlobal(singletonList(systemMaintainerRole)).build();
     }
 
     @Autowired
     @Override
-    protected void setControllerUnderTest(final AlertController controller) {
+    protected void setControllerUnderTest(AlertController controller) {
         this.controller = controller;
     }
 
     @Test
     public void test_findAllVisible() throws Exception {
         // save new alerts with date ranges that should make them visible now
-        final LocalDateTime now = LocalDateTime.now().minusMinutes(1);
-        final LocalDateTime oneSecondAgo = now.minusSeconds(1);
-        final LocalDateTime oneDayAgo = now.minusDays(1);
-        final LocalDateTime oneHourAhead = now.plusHours(1);
-        final LocalDateTime oneDayAhead = now.plusDays(1);
+        LocalDateTime now = now();
+        LocalDateTime oneSecondAgo = now.minusSeconds(1);
+        LocalDateTime oneDayAgo = now.minusDays(1);
+        LocalDateTime oneHourAhead = now.plusHours(1);
+        LocalDateTime oneDayAhead = now.plusDays(1);
 
         setLoggedInUser(systemMaintenanceUser);
-        final AlertResource created1 = controller.create(newAlertResource()
+        AlertResource created1 = controller.create(newAlertResource()
                 .withValidFromDate(oneDayAgo)
                 .withValidToDate(oneDayAhead)
                 .build()).getSuccessObjectOrThrowException();
 
-        final AlertResource created2 = controller.create(newAlertResource()
+        AlertResource created2 = controller.create(newAlertResource()
                 .withValidFromDate(oneSecondAgo)
                 .withValidToDate(oneHourAhead)
                 .build()).getSuccessObjectOrThrowException();
 
         setLoggedInUser(basicSecurityUser);
-        final List<AlertResource> found = controller.findAllVisible().getSuccessObjectOrThrowException();
+        List<AlertResource> found = controller.findAllVisible().getSuccessObjectOrThrowException();
 
         assertEquals(2, found.size());
         assertEquals(created1, found.get(0));
@@ -68,25 +69,25 @@ public class AlertControllerIntegrationTest extends BaseControllerIntegrationTes
     @Test
     public void test_findAllVisibleByType() throws Exception {
         // save new alerts with date ranges that should make them visible now
-        final LocalDateTime now = LocalDateTime.now().minusMinutes(1);
-        final LocalDateTime oneSecondAgo = now.minusSeconds(1);
-        final LocalDateTime oneDayAgo = now.minusDays(1);
-        final LocalDateTime oneHourAhead = now.plusHours(1);
-        final LocalDateTime oneDayAhead = now.plusDays(1);
+        LocalDateTime now = now();
+        LocalDateTime oneSecondAgo = now.minusSeconds(1);
+        LocalDateTime oneDayAgo = now.minusDays(1);
+        LocalDateTime oneHourAhead = now.plusHours(1);
+        LocalDateTime oneDayAhead = now.plusDays(1);
 
         setLoggedInUser(systemMaintenanceUser);
-        final AlertResource created1 = controller.create(newAlertResource()
+        AlertResource created1 = controller.create(newAlertResource()
                 .withValidFromDate(oneDayAgo)
                 .withValidToDate(oneDayAhead)
                 .build()).getSuccessObjectOrThrowException();
 
-        final AlertResource created2 = controller.create(newAlertResource()
+        AlertResource created2 = controller.create(newAlertResource()
                 .withValidFromDate(oneSecondAgo)
                 .withValidToDate(oneHourAhead)
                 .build()).getSuccessObjectOrThrowException();
 
         setLoggedInUser(basicSecurityUser);
-        final List<AlertResource> found = controller.findAllVisibleByType(MAINTENANCE).getSuccessObjectOrThrowException();
+        List<AlertResource> found = controller.findAllVisibleByType(MAINTENANCE).getSuccessObjectOrThrowException();
 
         assertEquals(2, found.size());
         assertEquals(created1, found.get(0));
@@ -96,7 +97,7 @@ public class AlertControllerIntegrationTest extends BaseControllerIntegrationTes
     @Test
     public void test_findById() throws Exception {
         setLoggedInUser(basicSecurityUser);
-        final AlertResource found = controller.findById(1L).getSuccessObjectOrThrowException();
+        AlertResource found = controller.findById(1L).getSuccessObjectOrThrowException();
 
         assertEquals(Long.valueOf(1L), found.getId());
         assertEquals("Sample message", found.getMessage());
@@ -109,10 +110,10 @@ public class AlertControllerIntegrationTest extends BaseControllerIntegrationTes
     public void test_create() throws Exception {
         setLoggedInUser(systemMaintenanceUser);
 
-        final AlertResource alertResource = newAlertResource()
+        AlertResource alertResource = newAlertResource()
                 .build();
 
-        final AlertResource created = controller.create(alertResource).getSuccessObjectOrThrowException();
+        AlertResource created = controller.create(alertResource).getSuccessObjectOrThrowException();
         assertNotNull(created.getId());
         assertEquals("Sample message", created.getMessage());
         assertEquals(MAINTENANCE, created.getType());
@@ -128,9 +129,9 @@ public class AlertControllerIntegrationTest extends BaseControllerIntegrationTes
         setLoggedInUser(systemMaintenanceUser);
 
         // save a new alert
-        final AlertResource alertResource = newAlertResource()
+        AlertResource alertResource = newAlertResource()
                 .build();
-        final AlertResource created = controller.create(alertResource).getSuccessObjectOrThrowException();
+        AlertResource created = controller.create(alertResource).getSuccessObjectOrThrowException();
 
         // check that it can be found
         assertNotNull(created.getId());

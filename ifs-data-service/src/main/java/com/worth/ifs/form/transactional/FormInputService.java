@@ -40,4 +40,9 @@ public interface FormInputService {
     @PreAuthorize("hasPermission(#formInputResponseCommand, 'SAVE')")
     ServiceResult<FormInputResponse> saveQuestionResponse(@P("formInputResponseCommand")FormInputResponseCommand formInputResponseCommand);
 
+    @PreAuthorize("hasAuthority('comp_admin')")
+    ServiceResult<FormInputResource> save(FormInputResource formInputResource);
+
+    @PreAuthorize("hasAuthority('comp_admin')")
+    ServiceResult<Void> delete(Long id);
 }

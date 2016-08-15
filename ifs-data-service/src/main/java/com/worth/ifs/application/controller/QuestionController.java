@@ -1,19 +1,16 @@
 package com.worth.ifs.application.controller;
 
-import java.util.List;
-import java.util.Set;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.worth.ifs.application.resource.QuestionApplicationCompositeId;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.QuestionType;
 import com.worth.ifs.application.transactional.QuestionService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.rest.ValidationMessages;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -102,5 +99,15 @@ public class QuestionController {
     @RequestMapping("/getQuestionsBySectionIdAndType/{sectionId}/{type}")
     public RestResult<List<QuestionResource>> getQuestionsBySectionIdAndType(@PathVariable("sectionId") final Long sectionId, @PathVariable("type") QuestionType type) {
     	return questionService.getQuestionsBySectionIdAndType(sectionId, type).toGetResponse();
+    }
+	
+	@RequestMapping(path = "/", method = RequestMethod.PUT)
+    public RestResult<QuestionResource> save(@RequestBody final QuestionResource questionResource) {
+        return questionService.save(questionResource).toGetResponse();
+    }
+
+    @RequestMapping("/getQuestionsByAssessment/{assessmentId}")
+    public RestResult<List<QuestionResource>> getQuestionsByAssessmentId(@PathVariable("assessmentId") final Long assessmentId) {
+        return questionService.getQuestionsByAssessmentId(assessmentId).toGetResponse();
     }
 }

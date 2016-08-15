@@ -17,4 +17,8 @@ public interface FormInputService {
     List<FormInputResource> findApplicationInputsByCompetition(Long competitionId);
 
     List<FormInputResource> findAssessmentInputsByCompetition(Long competitionId);
+
+    void delete(Long id);
+
+    FormInputResource save(FormInputResource formInputResource);
 }

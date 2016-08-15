@@ -1,7 +1,7 @@
 package com.worth.ifs.application.finance.view.item;
 
 import com.worth.ifs.application.finance.model.FinanceFormField;
-import com.worth.ifs.finance.resource.cost.CostItem;
+import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import com.worth.ifs.finance.resource.cost.Overhead;
 import com.worth.ifs.finance.resource.cost.OverheadRateType;
 import com.worth.ifs.util.NumberUtils;
@@ -13,10 +13,10 @@ import static com.worth.ifs.util.NullCheckFunctions.allNull;
 /**
  * Handles the conversion of form fields to overhead
  */
-public class OverheadsHandler extends CostHandler {
+public class OverheadsHandler extends FinanceRowHandler {
 
     @Override
-    public CostItem toCostItem(Long id, List<FinanceFormField> financeFormFields) {
+    public FinanceRowItem toFinanceRowItem(Long id, List<FinanceFormField> financeFormFields) {
         Integer customRate = null;
         String rateType = null;
 
@@ -41,7 +41,7 @@ public class OverheadsHandler extends CostHandler {
         return createOverHead(id, rateType, customRate);
     }
 
-    protected CostItem createOverHead(Long id, String rateType, Integer customRate) {
+    protected FinanceRowItem createOverHead(Long id, String rateType, Integer customRate) {
         OverheadRateType overheadRateType = null;
         Integer rate = null;
 

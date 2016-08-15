@@ -43,12 +43,22 @@ public class AssessmentRestServiceImplTest extends BaseRestServiceUnitTest<Asses
     }
 
     @Test
-    public void updateStatus() throws Exception {
+    public void recommend() throws Exception {
         final Long assessmentId = 1L;
 
         ProcessOutcomeResource processOutcome = newProcessOutcomeResource().build();
-        setupPutWithRestResultExpectations(format("%s/%s/status", assessmentRestURL, assessmentId), processOutcome, OK);
-        final RestResult<Void> response = service.updateStatus(assessmentId, processOutcome);
+        setupPutWithRestResultExpectations(format("%s/%s/recommend", assessmentRestURL, assessmentId), processOutcome, OK);
+        final RestResult<Void> response = service.recommend(assessmentId, processOutcome);
+        assertTrue(response.isSuccess());
+    }
+
+    @Test
+    public void rejectInvitation() throws Exception {
+        final Long assessmentId = 1L;
+
+        ProcessOutcomeResource processOutcome = newProcessOutcomeResource().build();
+        setupPutWithRestResultExpectations(format("%s/%s/rejectInvitation", assessmentRestURL, assessmentId), processOutcome, OK);
+        final RestResult<Void> response = service.rejectInvitation(assessmentId, processOutcome);
         assertTrue(response.isSuccess());
     }
 }

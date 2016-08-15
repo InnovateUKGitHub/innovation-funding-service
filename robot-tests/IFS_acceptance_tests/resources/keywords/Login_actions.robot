@@ -35,17 +35,17 @@ The guest user clicks the log-in button
 
 The guest user opens the browser
     Run keyword if    '${VIRTUAL_DISPLAY}' == 'true'   Start Virtual Display    1920    1080
-    Run keyword if    '${SERVER_AUTH}' != ''    Open browser    ${PROTOCOL}${SERVER_AUTH}@${SERVER_BASE}    ${BROWSER}    ff_profile_dir=${FF_PROFILE}    remote_url=${REMOTE_URL}
+    Run keyword if    '${SERVER_AUTH}' != ''    Open browser    ${PROTOCOL}${SERVER_AUTH}@${SERVER_BASE}    ${BROWSER}       remote_url=${REMOTE_URL}
     ...    desired_capabilities=${DESIRED_CAPABILITIES}
-    Run keyword if    '${SERVER_AUTH}' == ''    Open browser    ${PROTOCOL}${SERVER_BASE}    ${BROWSER}    ff_profile_dir=${FF_PROFILE}    remote_url=${REMOTE_URL}
+    Run keyword if    '${SERVER_AUTH}' == ''    Open browser    ${PROTOCOL}${SERVER_BASE}    ${BROWSER}       remote_url=${REMOTE_URL}
     ...    desired_capabilities=${DESIRED_CAPABILITIES}
     Set Selenium Timeout        30
 TestTeardown User closes the browser
-    Run keyword if      '${REMOTE_URL}' != ''        Get Sauce Labs Test Report
+    Run keyword if      '${REMOTE_URL}' != '' and '${REMOTE_URL}' != 'http://ifs-local-dev:4444/wd/hub'       Get Sauce Labs Test Report
     Close any open browsers
 
 The user closes the browser
-    Run keyword if    '${REMOTE_URL}' != ''          Get Sauce Labs Suite Report
+    Run keyword if    '${REMOTE_URL}' != '' and '${REMOTE_URL}' != 'http://ifs-local-dev:4444/wd/hub'       Get Sauce Labs Suite Report
     Close any open browsers
 
 Logout as user

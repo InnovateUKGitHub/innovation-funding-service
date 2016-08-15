@@ -9,6 +9,7 @@ import com.worth.ifs.competition.resource.CollaborationLevel;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.LeadApplicantType;
+import com.worth.ifs.invite.domain.ProcessActivity;
 import com.worth.ifs.user.domain.User;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -22,7 +23,7 @@ import java.util.*;
  * Competition defines database relations and a model to use client side and server side.
  */
 @Entity
-public class Competition {
+public class Competition implements ProcessActivity {
 
 	@Transient
 	private DateProvider dateProvider = new DateProvider();

@@ -1,6 +1,6 @@
 package com.worth.ifs.validator;
 
-import com.worth.ifs.finance.resource.cost.CostItem;
+import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import com.worth.ifs.finance.resource.cost.OtherFunding;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -24,11 +24,11 @@ public class MinRowCountValidator implements Validator {
 
     @Override
     public void validate(Object target, Errors errors) {
-        List<CostItem> response = (List<CostItem>) target;
+        List<FinanceRowItem> response = (List<FinanceRowItem>) target;
 
         int rowCount = 0;
         if(response.size() > 1) {
-            for (final CostItem row : response) {
+            for (final FinanceRowItem row : response) {
                 boolean exclude = row.excludeInRowCount();
                 if (!exclude) {
                     rowCount++;

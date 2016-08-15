@@ -14,23 +14,23 @@ public class MonitoringOfficerResource {
 
     private Long id;
 
-    @NotEmpty(message = "Please enter a first name")
+    @NotEmpty(message = "{validation.standard.firstname.required}")
     private String firstName;
 
-    @NotEmpty(message = "Please enter a last name")
+    @NotEmpty(message = "{validation.standard.lastname.required}")
     private String lastName;
 
-    @Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message = "Please enter a valid email address")
-    @NotEmpty(message = "Please enter an email")
-    @Size(max = 256, message = "The email address has a maximum length of 256 characters")
+    @Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message = "{validation.standard.email.format}")
+    @NotEmpty(message = "{validation.standard.email.required}")
+    @Size(max = 256, message = "{validation.standard.email.length.max}")
     private String email;
 
-    @NotEmpty(message = "Please enter a phone number")
+    @NotEmpty(message = "{validation.standard.phonenumber.required}")
     @Size.List ({
-            @Size(min=8, message="Input for the phone number has a minimum length of 8 characters"),
-            @Size(max=20, message="Input for the phone number has a maximum length of 20 characters")
+            @Size(min=8, message="{validation.standard.phonenumber.length.min}"),
+            @Size(max=20, message="{validation.standard.phonenumber.length.max}")
     })
-    @Pattern(regexp = "([0-9\\ +-])+",  message= "Please enter a valid phone number")
+    @Pattern(regexp = "([0-9\\ +-])+",  message= "{validation.standard.phonenumber.format}")
     private String phoneNumber;
 
     private Long project;

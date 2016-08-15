@@ -1,96 +1,99 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
-<head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Assessor overview'"  th:remove="tag"></div>
-</head>
-<body th:with="context='assessment'" class="assessment assessment-overview">
+    <head>
+        <div th:include="fragments/layout :: head" th:with="pageTitle='Assessor overview'"  th:remove="tag"></div>
+    </head>
 
-<div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
-<div th:include="fragments/modals :: reject-assesment-modal (assessmentId=${assessmentId})" th:remove="tag" />
-<div th:include="fragments/layout :: body-start" th:remove="tag"></div>
-<div th:include="fragments/layout :: global-header" th:remove="tag"></div>
+    <body th:with="context='assessment'" class="assessment assessment-overview">
+        <div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
+        <div th:include="fragments/assessment :: assessment-reject-assesment-modal (assessmentId=${assessmentId})" th:remove="tag" />
+        <div th:include="fragments/layout :: body-start" th:remove="tag"></div>
+        <div th:include="fragments/layout :: global-header" th:remove="tag"></div>
 
+        <main id="content">
+            <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
+            <div th:include="fragments/assessment :: assessment-header-sub" th:with="currentApplication=${currentApplication},linkTitle='Back to competition dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard/competition/{competitionId}(competitionId=${currentCompetition.id})},daysPercentage=${daysLeftPercentage},daysLeft=${daysLeft}"  th:remove="tag"></div>
 
-<main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
-    <div th:include="fragments/assessment :: assessment-header-sub" th:with="currentApplication=${currentApplication},linkTitle='Back to competition dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard/competition/{competitionId}(competitionId=${currentCompetition.id})},daysPercentage=${daysLeftPercentage},daysLeft=${daysLeft}"  th:remove="tag"></div>
+            <div class="page-title">
+                <div th:include="fragments/elements :: application-title (application=${currentApplication})" th:remove="tag" />
+                <h1 class="heading-xlarge">Assessment overview</h1>
+            </div>
 
-    <div class="page-title">
-        <div th:include="fragments/elements :: application-title (application=${currentApplication})" th:remove="tag" />
-        <h1 class="heading-xlarge">Assessment overview</h1>
-    </div>
+            <section th:id="'section-'+${section.getId()}" th:each="section,iteration : ${sections.values()}">
+                <h2 th:text="${section.name}" th:class="${iteration.first} ? 'bold-medium': 'heading-medium no-margin-bottom'"/>
+                <p class="form-hint" th:text="${section.assessorGuidanceDescription}" />
+                <ul th:with="currentUser=${#authentication.getDetails()}" class="list-overview">
+                    <div th:if="${subSections.get(section.id).size() ==0}" th:remove="tag">
+                        <ul th:with="section=${section}, sectionQuestions=${sectionQuestions}, assessmentId=${assessmentId}, questionFeedback=${questionFeedback}" th:remove="tag">
+                            <div th:each="question : ${sectionQuestions.get(section.id)}" th:remove="tag">
+                                <li th:with="currentRow=${questionFeedback?.get(question.id)}" class="grid-row section" th:id="'form-input-'+${question.getId()}">
+                                    <div class="column-two-thirds">
+                                        <h3 class="heading-small">
+                                            <a th:href="@{/{assessmentId}/question/{questionId}(assessmentId=${assessmentId},questionId=${question.id})}"
+                                               th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.shortName}" />
+                                        </h3>
+                                    </div>
+                                    <div class="column-third">
+                                        <span th:unless="${currentRow == null or section.name == 'Project details'}" th:remove="tag">
+                                            <span th:if="${currentRow.assessedScore != null}" th:remove="tag">
+                                                <div class="score"> Score <div th:text="${currentRow.assessedScore}" th:remove="tag" /> / <div th:text="${currentRow.maximumScore}" th:remove="tag" /></div>
+                                            </span>
+                                            <img class="section-status" th:if="${currentRow.hasBeenCompleted}" th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-done-right.png')}" width="30" height="30" th:alt="'The &quot;'+${question.shortName}+'&quot; section has been assessed'" />
+                                        </span>
+                                        <span th:if="${section.name == 'Project details'}" th:remove="tag">
+                                            <p th:unless="${currentRow.hasInput}" class="form-hint">No score required</p>
+                                            <span th:if="${currentRow.hasScope}" th:remove="tag">
+                                                <div class="score"> In scope? <strong th:text="${currentRow.scopeResponse}" /></div>
+                                                <img class="section-status" th:if="${currentRow.hasBeenCompleted}" th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-done-right.png')}" width="30" height="30" th:alt="'The &quot;'+${question.shortName}+'&quot; section has been assessed'" />
+                                            </span>
+                                        </span>
+                                    </div>
+                                </li>
+                            </div>
+                        </ul>
+                    </div>
 
-    <section th:id="'section-'+${section.getId()}" th:each="section,iteration : ${sections.values()}">
-        <h2 th:text="${section.name}" th:class="${iteration.first} ? 'bold-medium': 'heading-medium no-margin-bottom'"/>
-        <p class="form-hint" th:text="${section.assessorGuidanceDescription}" />
-        <ul th:with="currentUser=${#authentication.getDetails()}" class="list-overview">
-            <div th:if="${subSections.get(section.id).size() ==0}" th:remove="tag">
-                <ul th:with="section=${section}, sectionQuestions=${sectionQuestions}, assessmentId=${assessmentId}, questionFeedback=${questionFeedback}" th:remove="tag">
-                    <div th:each="question : ${sectionQuestions.get(section.id)}" th:remove="tag">
-                        <li th:with="currentRow=${questionFeedback?.get(question.id)}" class="grid-row section" th:id="'form-input-'+${question.getId()}">
+                    <!--/* finances overview */-->
+                    <div th:unless="${subSections.get(section.id).size() ==0 }" th:each="childSection : ${subSections.get(section.id)}" th:remove="tag">
+                        <li class="grid-row section" th:if="${childSection.name == 'Finances overview'}">
                             <div class="column-two-thirds">
                                 <h3 class="heading-small">
-                                    <a th:href="@{/{assessmentId}/question/{questionId}(assessmentId=${assessmentId},questionId=${question.id})}"
-                                       th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.shortName}" />
+                                    <a th:href="@{/{id}/finances(id=${assessmentId})}" th:text="${childSection.name}" />
                                 </h3>
-                            </div>
-                            <div class="column-third">
-                                <span th:unless="${currentRow == null or section.name == 'Project details'}" th:remove="tag">
-                                    <span th:if="${currentRow.assessedScore != null}" th:remove="tag">
-                                        <div class="score"> Score <div th:text="${currentRow.assessedScore}" th:remove="tag" /> / <div th:text="${currentRow.maximumScore}" th:remove="tag" /></div>
-                                    </span>
-                                    <img class="section-status" th:if="${currentRow.hasBeenCompleted}" th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-done-right.png')}" width="30" height="30" th:alt="'The &quot;'+${question.shortName}+'&quot; section has been assessed'" />
-                                </span>
-                                <span th:if="${section.name == 'Project details'}" th:remove="tag">
-                                    <p th:unless="${currentRow.hasInput}" class="form-hint">No score required</p>
-                                    <span th:if="${currentRow.hasScope}" th:remove="tag">
-                                        <div class="score"> In scope? <strong th:text="${currentRow.scopeResponse}" /></div>
-                                        <img class="section-status" th:if="${currentRow.hasBeenCompleted}" th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-done-right.png')}" width="30" height="30" th:alt="'The &quot;'+${question.shortName}+'&quot; section has been assessed'" />
-                                    </span>
-                                </span>
                             </div>
                         </li>
                     </div>
                 </ul>
-            </div>
+            </section>
 
-            <!--/* finances overview */-->
-            <div th:unless="${subSections.get(section.id).size() ==0 }" th:each="childSection : ${subSections.get(section.id)}" th:remove="tag">
-                <li class="grid-row section" th:if="${childSection.name == 'Finances overview'}">
-                    <div class="column-two-thirds">
-                        <h3 class="heading-small">
-                            <a th:href="@{/{id}/finances(id=${assessmentId})}" th:text="${childSection.name}" />
-                        </h3>
+            <div th:unless="${#lists.isEmpty(appendices)}" th:remove="tag">
+                <h2 class="heading-medium">Appendices</h2>
+                <div th:each="appendix : ${appendices}" th:remove="tag">
+                    <div class="form-group download">
+                        <h3 class="heading-small no-margin" th:text="|${appendix.title}:|">View project management appendix:</h3>
+                        <a th:href="${appendix.getDownloadURL()}" th:text="${appendix.name + '(' + appendix.getHumanReadableFileSize() + ')'}">Project-plan.pdf (161.96 KB)</a>
                     </div>
-                </li>
+                </div>
             </div>
-        </ul>
-    </section>
-    <div th:unless="${#lists.isEmpty(appendices)}" th:remove="tag">
-        <h2 class="heading-medium">Appendices</h2>
-        <div th:each="appendix : ${appendices}" th:remove="tag">
-            <div class="form-group download">
-                <h3 class="heading-small no-margin" th:text="|${appendix.title}:|">View project management appendix:</h3>
-                <a th:href="${appendix.getDownloadURL()}" th:text="${appendix.name + '(' + appendix.getHumanReadableFileSize() + ')'}">Project-plan.pdf (161.96 KB)</a>
+
+            <div class="alignright-button extra-margin">
+                <a role="button" tabindex="0" class="button large" th:href="@{/{assessmentId}/summary(assessmentId=${assessmentId})}">Review assessment</a>
             </div>
-        </div>
-    </div>
 
-    <div class="extra-margin">
-        <details>
-            <summary><span class="summary">Unable to assess this application?</span></summary>
-            <div class="panel-indent">
-                <p>If you have discovered a conflict of interest or are unable to review this assessment, you can return this application to Innovate UK</p>
-                <button data-js-modal="reject-assesment-modal" class="buttonlink">Reject this application</button>
+            <div class="extra-margin">
+                <details>
+                    <summary><span class="summary">Unable to assess this application?</span></summary>
+                    <div class="panel-indent">
+                        <p>If you have discovered a conflict of interest or are unable to review this assessment, you can return this application to Innovate UK</p>
+                        <a th:href="@{/{assessmentId}/reject/confirm(assessmentId=${assessmentId})}" data-js-modal="reject-assesment-modal" class="buttonlink">Reject this application</a>
+                    </div>
+                </details>
             </div>
-        </details>
-    </div>
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>
-</main>
+            <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>
+        </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag"></div>
-<div th:include="fragments/layout :: body-end" th:remove="tag"></div>
-
-</body>
+        <div th:include="fragments/layout :: footer" th:remove="tag"></div>
+        <div th:include="fragments/layout :: body-end" th:remove="tag"></div>
+    </body>
 </html>

@@ -6,7 +6,7 @@ import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.FileEntryRestService;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.service.ApplicationFinanceRestService;
-import com.worth.ifs.finance.service.CostRestService;
+import com.worth.ifs.finance.service.FinanceRowRestService;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ public class FinanceServiceImpl implements FinanceService {
     private UserRestService userRestService;
 
     @Autowired
-    private CostRestService costRestService;
+    private FinanceRowRestService financeRowRestService;
 
     @Autowired
     private ApplicationFinanceRestService applicationFinanceRestService;
@@ -66,7 +66,7 @@ public class FinanceServiceImpl implements FinanceService {
 
     @Override
     public ValidationMessages addCost(Long applicationFinanceId, Long questionId) {
-        return costRestService.add(applicationFinanceId, questionId, null).getSuccessObjectOrThrowException();
+        return financeRowRestService.add(applicationFinanceId, questionId, null).getSuccessObjectOrThrowException();
     }
 
     @Override

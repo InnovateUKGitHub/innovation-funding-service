@@ -1,8 +1,8 @@
 package com.worth.ifs.invite.domain;
 
-import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.user.domain.User;
+import org.hibernate.annotations.DiscriminatorOptions;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
@@ -10,51 +10,50 @@ import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
 
-/*
-* The Invite is used for saving invites into the database. Data about the Invitee and related Application and organisation is saved through this entity.
-* */
+/**
+ * An invitation for a person (who may or may not be an existing {@link User}) to participate in some business activity,
+ * the target {@link ProcessActivity}
+ *
+ * @param <T> the type of business activity to which we're inviting
+ */
 @Table(
-    uniqueConstraints= @UniqueConstraint(columnNames={"applicationId", "email"})
+        // Does this constraint still hold?
+    uniqueConstraints= @UniqueConstraint(columnNames={"type", "target_id", "email"})
 )
+@DiscriminatorColumn(name="type", discriminatorType=DiscriminatorType.STRING)
+@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @Entity
-public class Invite {
+@DiscriminatorOptions(force = true)
+public abstract class Invite<T extends ProcessActivity, I extends Invite<T,I>> {
     private static final CharSequence HASH_SALT = "b80asdf00poiasd07hn";
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @NotBlank
-    private String name;
+    private  String name;
     @NotBlank
     @Email
-    private String email;
-
-    @ManyToOne
-    @JoinColumn(name = "applicationId", referencedColumnName = "id")
-    private Application application;
-
-    @ManyToOne
-    @JoinColumn(name = "inviteOrganisationId", referencedColumnName = "id")
-    private InviteOrganisation inviteOrganisation;
+    private  String email; // invitee
 
     @ManyToOne
     @JoinColumn(name = "email", referencedColumnName = "email", insertable = false, updatable = false)
     private User user;
 
+    @Column(unique=true)
     private String hash;
 
     @Enumerated(EnumType.STRING)
     private InviteStatusConstants status;
 
-    public Invite() {
+    Invite() {
     	// no-arg constructor
+        this.status=InviteStatusConstants.CREATED;
     }
 
-    public Invite(String name, String email, Application application, InviteOrganisation inviteOrganisation, String hash, InviteStatusConstants status) {
+    protected Invite(String name, String email, String hash, InviteStatusConstants status) {
         this.name = name;
         this.email = email;
-        this.application = application;
-        this.inviteOrganisation = inviteOrganisation;
         this.hash = hash;
         this.status = status;
     }
@@ -83,22 +82,6 @@ public class Invite {
         this.email = email;
     }
 
-    public Application getApplication() {
-        return application;
-    }
-
-    public void setApplication(Application application) {
-        this.application = application;
-    }
-
-    public InviteOrganisation getInviteOrganisation() {
-        return inviteOrganisation;
-    }
-
-    public void setInviteOrganisation(InviteOrganisation inviteOrganisation) {
-        this.inviteOrganisation = inviteOrganisation;
-    }
-
     public String getHash() {
         return hash;
     }
@@ -111,10 +94,24 @@ public class Invite {
         return status;
     }
 
-    public void setStatus(InviteStatusConstants status) {
-        this.status = status;
+    protected void setStatus(final InviteStatusConstants newStatus) {
+        if (newStatus == null) throw new NullPointerException("status cannot be null");
+        switch (newStatus) {
+            case CREATED:
+                if (this.status != null) throw new IllegalStateException("(" + this.status + ") -> (" + newStatus + ") Cannot create an Invite that has already been created.");
+                break;
+            case SEND:
+                if (this.status != InviteStatusConstants.CREATED)
+                    throw new IllegalStateException("(" + this.status + ") -> (" + newStatus + ") Cannot send an Invite that has already been sent.");
+                break;
+            case ACCEPTED:
+                // TODO check legal invite transitions
+//                if (this.status != InviteStatusConstants.SEND || this.status != InviteStatusConstants.ACCEPTED)
+//                    throw new IllegalStateException("(" + this.status + ") -> (" + newStatus + ") Cannot accept an Invite that hasn't been sent");
+                break;
+        }
+        this.status = newStatus;
     }
-
     public User getUser() {
         return user;
     }
@@ -131,5 +128,19 @@ public class Invite {
             hash = encoder.encode(hash);
         }
         return hash;
+    }
+
+    public abstract T getTarget(); // the thing we're being invited to
+
+    public abstract void setTarget(T target);
+
+    public I send() {
+        setStatus(InviteStatusConstants.SEND);
+        return (I) this; // for object chaining
+    }
+
+    public I open () {
+        setStatus(InviteStatusConstants.ACCEPTED);
+        return (I) this; // for object chaining
     }
 }

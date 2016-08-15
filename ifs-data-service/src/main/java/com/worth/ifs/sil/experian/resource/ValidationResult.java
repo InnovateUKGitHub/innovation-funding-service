@@ -3,6 +3,7 @@ package com.worth.ifs.sil.experian.resource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ValidationResult {
@@ -10,7 +11,9 @@ public class ValidationResult {
     private String iban;
     private List<Condition> conditions;
 
-    public ValidationResult() {}
+    public ValidationResult() {
+        this.conditions = new ArrayList<>();
+    }
 
     public ValidationResult(boolean checkPassed, String iban, List<Condition> conditions) {
         this.checkPassed = checkPassed;

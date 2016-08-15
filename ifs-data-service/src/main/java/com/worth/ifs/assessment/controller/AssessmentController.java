@@ -4,6 +4,7 @@ import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.transactional.AssessmentService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
+import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,9 +29,14 @@ public class AssessmentController {
         return assessmentService.findById(id).toGetResponse();
     }
 
-    @RequestMapping(value= "/{id}/status", method = PUT)
-    public RestResult<Void> updateStatus(@PathVariable("id") final Long id,@RequestBody final ProcessOutcome processOutcome) {
-        return assessmentService.updateStatus(id, processOutcome).toPutResponse();
+    @RequestMapping(value= "/{id}/recommend", method = PUT)
+    public RestResult<Void> recommend(@PathVariable("id") final Long id,@RequestBody final ProcessOutcomeResource processOutcome) {
+        return assessmentService.recommend(id, processOutcome).toPutResponse();
+    }
+
+    @RequestMapping(value= "/{id}/rejectInvitation", method = PUT)
+    public RestResult<Void> rejectInvitation(@PathVariable("id") final Long id,@RequestBody final ProcessOutcomeResource processOutcome) {
+        return assessmentService.rejectInvitation(id, processOutcome).toPutResponse();
     }
 
 }

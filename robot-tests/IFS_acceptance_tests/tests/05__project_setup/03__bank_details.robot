@@ -2,10 +2,9 @@
 Documentation     INFUND-3010 As a partner I want to be able to supply bank details for my business so that Innovate UK can verify its suitability for funding purposes
 ...
 ...               INFUND-3282 As a partner I want to be able to supply an existing or new address for my bank account to support the bank details verification process
-
-Suite Setup       Log in as user    steve.smith@empire.com       Passw0rd
+Suite Setup       Log in as user    steve.smith@empire.com    Passw0rd
 Suite Teardown    the user closes the browser
-Force Tags
+Force Tags        Project Setup
 Resource          ../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../resources/variables/User_credentials.robot
@@ -16,9 +15,7 @@ Resource          ../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
 
 *** Variables ***
 
-
 *** Test Cases ***
-
 Bank details server side validations
     [Documentation]    INFUND-3010
     [Tags]
@@ -73,27 +70,15 @@ Bank account postcode lookup
 Bank details experian validations
     [Documentation]    INFUND-3010
     [Tags]    Experian
-    When the user submits the bank account details     12345673      000003
-    Then the user should see the text in the page     Modulus check has failed
-    When the user submits the bank account details     22345616     000003
-    Then the user should see the text in the page      Account does not support Direct Debit transactions
-    When the user submits the bank account details     22345632      000003
-    Then the user should see the text in the page       Account does not support Direct Credit transactions
-    When the user submits the bank account details      22345624     000003
-    Then the user should see the text in the page       Collection account requires a reference or roll account number
-    When the user submits the bank account details      22345683    000003
-    Then the user should see the text in the page       Account does not support AUDDIS transactions
-    When the user submits the bank account details     22345610     000004
-    Then the user should see the text in the page      Alternate information is available for this account
-
-
-
+    # TODO pending INFUND-3259
+    When the user submits the bank account details    12345673    000003
+    Then the user should see the text in the page    Bank account details are incorrect, please check and try again
 
 Bank details submission
     [Documentation]    INFUND-3010
-    [Tags]     Experian
-    When the user enters text to a text field      name=accountNumber         12345677
-    And the user enters text to a text field       name=sortCode              000003
+    [Tags]    Experian
+    When the user enters text to a text field    name=accountNumber    51406795
+    And the user enters text to a text field    name=sortCode    404745
     When the user clicks the button/link    jQuery=.button:contains("Submit bank account details")
     And the user clicks the button/link    jquery=button:contains("Cancel")
     And the user should not see the text in the page    Your bank details have been approved
@@ -104,17 +89,15 @@ Bank details submission
     Then the user navigates to the page    ${project_in_setup_page}
     And the user should see the element    jQuery=ul li.complete:nth-child(2)
 
-
 *** Keywords ***
-
 the user moves focus away from the element
     [Arguments]    ${element}
     mouse out    ${element}
     focus    jQuery=.button:contains("Submit bank account details")
 
 the user submits the bank account details
-   [Arguments]     ${account_number}      ${sort_code}
-   the user enters text to a text field     name=accountNumber    ${account_number}
-   the user enters text to a text field      name=sortCode        ${sort_code}
-   the user clicks the button/link          jQuery=.button:contains("Submit bank account details")
-   the user clicks the button/link          jQuery=.button:contains("Submit")
+    [Arguments]    ${account_number}    ${sort_code}
+    the user enters text to a text field    name=accountNumber    ${account_number}
+    the user enters text to a text field    name=sortCode    ${sort_code}
+    the user clicks the button/link    jQuery=.button:contains("Submit bank account details")
+    the user clicks the button/link    jQuery=.button:contains("Submit")

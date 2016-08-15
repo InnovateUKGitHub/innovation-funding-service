@@ -26,7 +26,7 @@
 
     <div th:replace="fragments/competition-setup-section :: ${currentSectionFragment}" th:remove="tag" />
 
-    <div th:if="${currentSection.toString() != 'HOME'}" th:include="fragments/competition-setup-section :: setup-home" th:remove="tag" />
+    <div th:if="${currentSection.toString() != 'HOME'}" th:include="fragments/competition-setup :: setup-home" th:remove="tag" />
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
 </main>

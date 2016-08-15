@@ -7,6 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +41,7 @@ public class AlertServiceImplTest extends BaseUnitTestMocksTest {
         final AlertResource expected2 = newAlertResource()
                 .build();
 
-        when(alertRepositoryMock.findAllVisible()).thenReturn(alerts);
+        when(alertRepositoryMock.findAllVisible(isA(LocalDateTime.class))).thenReturn(alerts);
         when(alertMapperMock.mapToResource(same(alert1))).thenReturn(expected1);
         when(alertMapperMock.mapToResource(same(alert2))).thenReturn(expected2);
 
@@ -48,7 +49,7 @@ public class AlertServiceImplTest extends BaseUnitTestMocksTest {
 
         assertSame(expected1, found.get(0));
         assertSame(expected2, found.get(1));
-        verify(alertRepositoryMock, only()).findAllVisible();
+        verify(alertRepositoryMock, only()).findAllVisible(isA(LocalDateTime.class));
     }
 
     @Test
@@ -64,7 +65,7 @@ public class AlertServiceImplTest extends BaseUnitTestMocksTest {
         final AlertResource expected2 = newAlertResource()
                 .build();
 
-        when(alertRepositoryMock.findAllVisibleByType(MAINTENANCE)).thenReturn(alerts);
+        when(alertRepositoryMock.findAllVisibleByType(same(MAINTENANCE), isA(LocalDateTime.class))).thenReturn(alerts);
         when(alertMapperMock.mapToResource(same(alert1))).thenReturn(expected1);
         when(alertMapperMock.mapToResource(same(alert2))).thenReturn(expected2);
 
@@ -72,7 +73,7 @@ public class AlertServiceImplTest extends BaseUnitTestMocksTest {
 
         assertSame(expected1, found.get(0));
         assertSame(expected2, found.get(1));
-        verify(alertRepositoryMock, only()).findAllVisibleByType(MAINTENANCE);
+        verify(alertRepositoryMock, only()).findAllVisibleByType(same(MAINTENANCE), isA(LocalDateTime.class));
     }
 
     @Test

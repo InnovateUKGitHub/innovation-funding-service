@@ -139,7 +139,9 @@ the user sees that the radio button is selected
 
 the user selects the option from the drop-down menu
     [Arguments]    ${option}    ${drop-down}
+    wait until element is visible    ${drop-down}
     Select From List    ${drop-down}    ${option}
+    mouse out    ${drop-down}
     # Error checking
     Page Should Not Contain    Error
     Page Should Not Contain    something went wrong
@@ -217,6 +219,7 @@ The user clicks the button/link
     wait until element is visible    ${BUTTON}
     Focus    ${BUTTON}
     click element    ${BUTTON}
+    run keyword and ignore error    confirm action
 
 The user should see the text in the page
     [Arguments]    ${VISIBLE_TEXT}

@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 
 import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
-import static com.worth.ifs.finance.resource.cost.CostType.FINANCE;
+import static com.worth.ifs.finance.resource.cost.FinanceRowType.FINANCE;
 import static java.util.Collections.emptyList;
 
 /**

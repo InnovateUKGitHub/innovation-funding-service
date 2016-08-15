@@ -3,7 +3,7 @@ package com.worth.ifs.registration;
 import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
-import com.worth.ifs.invite.resource.InviteResource;
+import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.registration.service.RegistrationService;
 import com.worth.ifs.registration.service.RegistrationServiceImpl;
 import com.worth.ifs.user.resource.OrganisationResource;
@@ -49,7 +49,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         UserResource userOne = new UserResource();
         userOne.setEmail("email@testOne.com");
 
-        InviteResource inviteResource = newInviteResource().withEmail("email@testTwo.com").build();
+        ApplicationInviteResource inviteResource = newInviteResource().withEmail("email@testTwo.com").build();
         InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().build();
         Map<String, String> result = service.getInvalidInviteMessages(userOne, inviteResource, inviteOrganisationResource);
         assertEquals(1, result.size());
@@ -66,7 +66,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         userOne.setEmail("email@testOne.com");
         userOne.setOrganisations(asList(1L));
 
-        InviteResource inviteResource = newInviteResource().withEmail("email@testOne.com").build();
+        ApplicationInviteResource inviteResource = newInviteResource().withEmail("email@testOne.com").build();
         InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().withOrganisation(2L).build();
         inviteOrganisationResource.setOrganisationNameConfirmed("Name Two");
         Map<String, String> result = service.getInvalidInviteMessages(userOne, inviteResource, inviteOrganisationResource);
@@ -85,7 +85,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         userOne.setOrganisations(asList(1L));
         userOne.setEmail("email@testOne.com");
 
-        InviteResource inviteResource = newInviteResource().withEmail("email@testOne.com").build();
+        ApplicationInviteResource inviteResource = newInviteResource().withEmail("email@testOne.com").build();
         InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().withOrganisation(2L).build();
         inviteOrganisationResource.setOrganisationNameConfirmed("Name Two");
         Map<String, String> result = service.getInvalidInviteMessages(userOne, inviteResource, inviteOrganisationResource);
@@ -102,7 +102,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         UserResource userOne = new UserResource();
         userOne.setEmail("email@testOne.com");
 
-        InviteResource inviteResource = newInviteResource().withEmail("email@testOne.com").build();
+        ApplicationInviteResource inviteResource = newInviteResource().withEmail("email@testOne.com").build();
         InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().build();
         Map<String, String> result = service.getInvalidInviteMessages(userOne, inviteResource, inviteOrganisationResource);
         assertEquals(0, result.size());

@@ -3,9 +3,7 @@ package com.worth.ifs.sil.experian.resource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-public class AccountDetails {
-    private String sortcode;
-    private String accountNumber;
+public class AccountDetails extends SILBankDetails {
     private String companyName;
     private String registrationNumber;
     private String firstName = "NA";
@@ -15,27 +13,10 @@ public class AccountDetails {
     public AccountDetails() {}
 
     public AccountDetails(String sortcode, String accountNumber, String companyName, String registrationNumber, Address address) {
-        this.sortcode = sortcode;
-        this.accountNumber = accountNumber;
+        super(sortcode, accountNumber);
         this.companyName = companyName;
         this.registrationNumber = registrationNumber;
         this.address = address;
-    }
-
-    public String getSortcode() {
-        return sortcode;
-    }
-
-    public void setSortcode(String sortcode) {
-        this.sortcode = sortcode;
-    }
-
-    public String getAccountNumber() {
-        return accountNumber;
-    }
-
-    public void setAccountNumber(String accountNumber) {
-        this.accountNumber = accountNumber;
     }
 
     public String getCompanyName() {
@@ -79,10 +60,11 @@ public class AccountDetails {
         AccountDetails that = (AccountDetails) o;
 
         return new EqualsBuilder()
-                .append(sortcode, that.sortcode)
-                .append(accountNumber, that.accountNumber)
+                .appendSuper(super.equals(o))
                 .append(companyName, that.companyName)
                 .append(registrationNumber, that.registrationNumber)
+                .append(firstName, that.firstName)
+                .append(lastName, that.lastName)
                 .append(address, that.address)
                 .isEquals();
     }
@@ -90,11 +72,23 @@ public class AccountDetails {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(sortcode)
-                .append(accountNumber)
+                .appendSuper(super.hashCode())
                 .append(companyName)
                 .append(registrationNumber)
+                .append(firstName)
+                .append(lastName)
                 .append(address)
                 .toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "AccountDetails{" +
+                "companyName='" + companyName + '\'' +
+                ", registrationNumber='" + registrationNumber + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", address=" + address +
+                '}';
     }
 }

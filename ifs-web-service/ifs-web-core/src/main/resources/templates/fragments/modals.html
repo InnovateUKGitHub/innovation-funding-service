@@ -99,30 +99,6 @@
 </div>
 
 
-<!-- ======== Assessment - reject assessment modal ======= -->
-<div th:fragment="reject-assesment-modal (assessmentId)">
-    <div class="reject-assesment-modal" role="dialog" aria-hidden="true">
-        <form action="#" th:action="@{/{assessmentId}/reject(assessmentId=${assessmentId})}" method="post" th:object="${form}" novalidate="novalidate">
-            <div th:include="fragments/modals :: close-button" th:remove="tag" />
-            <div class="form-group">
-                <label class="form-label" th:for="${#ids.next('rejectReason')}">Please select a reason for rejecting the application</label>
-                <select class="form-control" required="required" th:field="*{rejectReason}">
-                    <option value="">Please select one reason</option>
-                    <option value="conflict-of-interest">Conflict of interest</option>
-                    <option value="not-my-area-of-interest">Not my area of expertise</option>
-                    <option value="too-many-assessments">Too many assessments</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label class="form-label" th:for="${#ids.next('rejectComment')}">Use this space to provide more information</label>
-                <textarea class="form-control width-full" rows="4" th:field="*{rejectComment}"></textarea>
-            </div>
-            <button class="button large button-warning extra-margin" name="submit-app-details">Reject</button>
-        </form>
-    </div>
-</div>
-
-
 <!-- save monotiring officer -->
 <div th:fragment="modal-assign-mo">
 	<div class="modal-assign-mo" role="dialog" aria-hidden="true">
@@ -178,6 +154,24 @@
 		</div>
 </div>
 
+<!-- save finance checks -->
+<div th:fragment="generate-spend-profile">
+<div class="generate-spend-profile" role="dialog" aria-hidden="true" >
+		<div th:include="fragments/modals :: close-button" th:remove="tag" />
 
+		<h2 class="heading-medium no-margin">Generate spend profile</h2>
+		<p>This will generate a flat profile spend for all project partners. This assumes that finance checks have been completed for all partners and this section will be locked.</p>
+		<p>Partners will be notified that they can now create their spend profile.</p>
+		<hr />
+		<div class="grid-row">
+			<div class="column-half">
+					<button type="button" class="js-close button buttonlink large">Cancel</button>
+			</div>
+			<div class="column-half alignright-button" method="post">
+				<button class="button large" name="submit-app-details">Generate spend profile</button>
+			</div>
+		</div>
+</div>
+</div>
 
 </div>
