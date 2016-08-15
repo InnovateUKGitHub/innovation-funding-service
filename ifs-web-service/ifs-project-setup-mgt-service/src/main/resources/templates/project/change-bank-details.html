@@ -1,2 +1,169 @@
-// Amend bank details template to be created here.
-// Form object with name "form" will be available to this template
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+	<div th:include="fragments/layout :: head" th:with="pageTitle='Review bank details'" th:remove="tag" />
+</head>
+<body th:with="context='project-management'" class="project-management review-bank-details">
+
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+<main id="content">
+	<div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+	<div class="grid-row">
+		<div class="column-two-thirds">
+			<div class="page-title">
+				<p class="subtitle no-margin" th:text="|${model.projectNumber}: ${model.projectName}|">0102468: Technology inspired</p>
+				<h1 class="heading-xlarge">Project Details</h1>
+			</div>
+		</div>
+		<div class="column-third alignright extra-margin">
+				<h2 class="bold-small blue-block">Bank account</h2>
+		</div>
+	</div>
+
+	<hr/>
+	<p>Bank account details have been submitted to Innovate UK for use during the project <strong th:text="|${model.projectName} (${model.projectNumber})|">Machine Learning In Robots (10294856)</strong></p>
+
+	<h2 class="heading-medium">Finance contact</h2>
+
+	<p>
+		<th:block th:unless="${#strings.isEmpty(model.financeContactName)}">
+				<th:block th:text="${model.financeContactName}" /><br/>
+		</th:block>
+		<th:block th:unless="${#strings.isEmpty(model.financeContactEmail)}">
+				<a th:href="${'mailto:'+model.financeContactEmail}" th:text="${model.financeContactEmail}" /><br/>
+		</th:block>
+		<th:block th:unless="${#strings.isEmpty(model.financeContactPhoneNumber)}">
+				<th:block th:text="${model.financeContactPhoneNumber}" /><br/>
+		</th:block>
+	</p>
+
+	<form th:object="${form}" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post">
+
+		<div class="error-summary" th:if="${#fields.hasErrors('*')}">
+			<h2 class="heading-medium error-summary-heading">
+				We are unable to save your bank account details:
+			</h2>
+			<ul class="error-summary-list">
+				<li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+			</ul>
+		</div>
+
+		<fieldset>
+
+			<h2 class="heading-medium no-margin-bottom">Company details</h2>
+
+			<legend class="visuallyhidden">Company details</legend>
+
+			<div class="form-group extra-margin">
+				<label class="form-label" for="company-name">
+					<span class="form-label-bold">Company name</span>
+				</label>
+				<input type="text" data-required-errormessage="Please enter a company or organisation name" th:errorclass="field-error" required="required" id="company-name" name="company-name" class="form-control" th:field="*{organisationName}"/>
+			</div>
+
+
+			<div class="form-group">
+				<label class="form-label" for="companies-house-number">
+					<span class="form-label-bold">Companies house number</span>
+				</label>
+				<p class="form-hint">For example: 1548965</p>
+				<input type="text" data-required-errormessage="Please enter a companies house registration number" data-minlength-errormessage="Please enter a valid companies house registration number" th:errorclass="field-error" required="required" maxlength="8" minlength="8" id="companies-house-number" name="companies-house-number" class="form-control" th:field="*{registrationNumber}"/>
+			</div>
+
+
+		</fieldset>
+
+		<fieldset>
+			<h2 class="heading-medium no-margin-bottom">Account details</h2>
+
+			<legend class="visuallyhidden">Account details</legend>
+
+			<p class="form-hint">This is the bank account that the applicant will use for the duration of the project</p>
+
+			<div class="form-group extra-margin">
+				<label class="form-label" for="bank-acc-number">
+					<span class="form-label-bold">Account number</span>
+				</label>
+				<p class="form-hint">For example: 1548965</p>
+				<input type="text" data-required-errormessage="Please enter an account number" data-minlength-errormessage="Please enter a valid account number" th:errorclass="field-error" required="required" maxlength="8" minlength="8" id="bank-acc-number" class="form-control" th:field="*{accountNumber}"/>
+			</div>
+
+			<div class="form-group ">
+				<label class="form-label" for="bank-sort-code">
+					<span class="form-label-bold">Sort code</span>
+				</label>
+				<p class="form-hint">For example: 311212</p>
+				<input type="text" data-required-errormessage="Please enter a sort code" data-minlength-errormessage="Please enter a valid sort code" th:errorclass="field-error" required="required" maxlength="6" minlength="6" id="bank-sort-code" class="form-control width-medium" th:field="*{sortCode}"/>
+			</div>
+
+			<h2 class="heading-medium no-margin-bottom">Billing address</h2>
+
+			<p class="form-hint">This is the billing address of the bank account. This is not the address of the bank.</p>
+
+		</fieldset>
+
+		<fieldset id="address-details" class="extra-margin" style="display: block">
+			<legend class="visuallyhidden">Address details</legend>
+			<div class="form-group">
+				<label class="form-label" for="street">
+					<span class="form-label-bold">Street</span>
+				</label>
+				<input class="form-control street" id="street" name="street" type="text" value="" th:field="*{addressForm.selectedPostcode.addressLine1}"/>
+			</div>
+			<div class="form-group">
+				<label class="form-label visuallyhidden" for="street-2">
+					<span class="form-label-bold">Street line 2</span>
+				</label>
+				<input class="form-control street-2" id="street-2" name="street-2" type="text" th:field="*{addressForm.selectedPostcode.addressLine2}"/>
+			</div>
+			<div class="form-group">
+				<label class="form-label" for="street-2">
+					<span class="form-label-bold visuallyhidden">Street line 3</span>
+				</label>
+				<input class="form-control street-3" id="street-3" name="street-2" type="text" th:field="*{addressForm.selectedPostcode.addressLine3}"/>
+			</div>
+			<div class="form-group">
+				<label class="form-label" for="town">
+					<span class="form-label-bold">Town</span>
+				</label>
+				<input class="form-control town" id="town" name="town" type="text" value="" th:field="*{addressForm.selectedPostcode.town}"/>
+			</div>
+			<div class="form-group">
+				<label class="form-label" for="county">
+					<span class="form-label-bold">County</span>
+				</label>
+				<input class="form-control county" id="county" name="county" type="text" value="" th:field="*{addressForm.selectedPostcode.county}"/>
+			</div>
+			<div class="form-group">
+				<label class="form-label" for="postcode">
+					<span class="form-label-bold">Postcode</span>
+				</label>
+				<input class="form-control postcode" id="postcode" name="postcode" type="text" value="" th:field="*{addressForm.selectedPostcode.postcode}"/>
+			</div>
+		</fieldset>
+	</form>
+
+	<div class="grid-row extra-margin">
+		<div class="column-half">
+			<a th:href="@{/project/{id}/organisation/{orgId}/review-bank-details(id=${model.projectId}, orgId=${model.organisationId})}">Cancel bank account changes</a>
+		</div>
+		<div class="column-half alignright">
+			<form>
+				<button class="no-margin-right button">Update bank account details</button>
+			</form>
+		</div>
+	</div>
+
+
+
+	<div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+
+</body>
+</html>
