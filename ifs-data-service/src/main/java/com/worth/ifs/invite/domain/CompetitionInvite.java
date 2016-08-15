@@ -1,6 +1,5 @@
 package com.worth.ifs.invite.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
 

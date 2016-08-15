@@ -1,7 +1,5 @@
 package com.worth.ifs.invite.domain;
 
-import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.user.domain.Organisation;

@@ -1,21 +1,22 @@
-package com.worth.ifs.competition.domain;
+package com.worth.ifs.invite.domain;
 
 
-import com.worth.ifs.invite.domain.CompetitionInvite;
-import com.worth.ifs.invite.domain.Participant;
+import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.user.domain.User;
 
 import javax.persistence.*;
+
+import java.util.Optional;
 
 import static com.worth.ifs.invite.domain.ParticipantStatus.ACCEPTED;
 import static com.worth.ifs.invite.domain.ParticipantStatus.REJECTED;
 
 /**
- * An Assessor for a {@link Competition}
+ * A {@link Participant} in a {@link Competition}.
  */
 @Entity
 @Table(name = "competition_user")
-public class CompetitionParticipant extends Participant<Competition, CompetitionInvite> {
+public class CompetitionParticipant extends Participant<Competition, CompetitionInvite, CompetitionParticipantRole> {
 
     @Id
     @GeneratedValue
@@ -44,6 +45,26 @@ public class CompetitionParticipant extends Participant<Competition, Competition
         // no-arg constructor
     }
 
+    @Override
+    public Competition getProcess() {
+        return competition;
+    }
+
+    @Override
+    public Optional<CompetitionInvite> getInvite() {
+        return Optional.ofNullable(invite);
+    }
+
+    @Override
+    public CompetitionParticipantRole getRole() {
+        return CompetitionParticipantRole.ASSESSOR;
+    }
+
+    @Override
+    public Optional<User> getUser() {
+        return Optional.ofNullable(user);
+    }
+
     public CompetitionParticipant(Competition competition, User user) {
         this(competition, user, null);
         if (user == null) throw new NullPointerException("user cannot be null");
@@ -54,23 +75,13 @@ public class CompetitionParticipant extends Participant<Competition, Competition
         if (invite == null) throw new NullPointerException("invite cannot be null");
     }
 
-    private CompetitionParticipant(Competition competition, User user, CompetitionInvite invite) {
+    public CompetitionParticipant(Competition competition, User user, CompetitionInvite invite) {
         super();
         if (competition == null) throw new NullPointerException("competition cannot be null");
 
         this.competition = competition;
         this.user = user;
         this.invite = invite;
-    }
-
-    @Override
-    public Competition getProcess() {
-        return competition;
-    }
-
-    @Override
-    public CompetitionInvite getInvite() {
-        return invite;
     }
 
     public CompetitionParticipantRejectionReason getRejectionReason() {
