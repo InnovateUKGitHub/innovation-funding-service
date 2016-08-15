@@ -351,8 +351,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
             grantOfferLetterStatus
         );
 
-
-        final List<RegularPartnerModel> otherPartnersModels = simpleMap(otherOrganisations, partner -> createPartnerModel(project, partner));
+        final List<RegularPartnerModel> otherPartnersModels = otherOrganisations.stream().filter(partner -> !partner.getId().equals(leadOrganisation.getId())).map(partner -> createPartnerModel(project, partner)).collect(Collectors.toList());
 
         return new ProjectConsortiumStatusViewModel(projectId, leadPartnerModel, otherPartnersModels);
     }
