@@ -4,11 +4,13 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class BankDetailsReviewViewModel {
+    private Long projectId;
     private String projectNumber;
     private String projectName;
     private String financeContactName;
     private String financeContactEmail;
     private String financeContactPhoneNumber;
+    private Long organisationId;
     private String organisationName;
     private String registrationNumber;
     private String bankAccountNumber;
@@ -21,12 +23,14 @@ public class BankDetailsReviewViewModel {
     private Boolean approved;
     private Boolean approvedManually;
 
-    public BankDetailsReviewViewModel(String projectNumber, String projectName, String financeContactName, String financeContactEmail, String financeContactPhoneNumber, String organisationName, String registrationNumber, String bankAccountNumber, String sortCode, String organisationAddress, Boolean verified, Short companyNameScore, Boolean registrationNumberMatched, Short addressScore, Boolean approved, Boolean approvedManually) {
+    public BankDetailsReviewViewModel(Long projectId, String projectNumber, String projectName, String financeContactName, String financeContactEmail, String financeContactPhoneNumber, Long organisationId, String organisationName, String registrationNumber, String bankAccountNumber, String sortCode, String organisationAddress, Boolean verified, Short companyNameScore, Boolean registrationNumberMatched, Short addressScore, Boolean approved, Boolean approvedManually) {
+        this.projectId = projectId;
         this.projectNumber = projectNumber;
         this.projectName = projectName;
         this.financeContactName = financeContactName;
         this.financeContactEmail = financeContactEmail;
         this.financeContactPhoneNumber = financeContactPhoneNumber;
+        this.organisationId = organisationId;
         this.organisationName = organisationName;
         this.registrationNumber = registrationNumber;
         this.bankAccountNumber = bankAccountNumber;
@@ -160,6 +164,30 @@ public class BankDetailsReviewViewModel {
         this.approved = approved;
     }
 
+    public String getProjectNumber() {
+        return projectNumber;
+    }
+
+    public void setProjectNumber(String projectNumber) {
+        this.projectNumber = projectNumber;
+    }
+
+    public Long getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
+    }
+
+    public Long getOrganisationId() {
+        return organisationId;
+    }
+
+    public void setOrganisationId(Long organisationId) {
+        this.organisationId = organisationId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -169,9 +197,13 @@ public class BankDetailsReviewViewModel {
         BankDetailsReviewViewModel that = (BankDetailsReviewViewModel) o;
 
         return new EqualsBuilder()
+                .append(projectId, that.projectId)
+                .append(projectNumber, that.projectNumber)
+                .append(projectName, that.projectName)
                 .append(financeContactName, that.financeContactName)
                 .append(financeContactEmail, that.financeContactEmail)
                 .append(financeContactPhoneNumber, that.financeContactPhoneNumber)
+                .append(organisationId, that.organisationId)
                 .append(organisationName, that.organisationName)
                 .append(registrationNumber, that.registrationNumber)
                 .append(bankAccountNumber, that.bankAccountNumber)
@@ -189,9 +221,13 @@ public class BankDetailsReviewViewModel {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
+                .append(projectId)
+                .append(projectNumber)
+                .append(projectName)
                 .append(financeContactName)
                 .append(financeContactEmail)
                 .append(financeContactPhoneNumber)
+                .append(organisationId)
                 .append(organisationName)
                 .append(registrationNumber)
                 .append(bankAccountNumber)
@@ -204,13 +240,5 @@ public class BankDetailsReviewViewModel {
                 .append(approved)
                 .append(approvedManually)
                 .toHashCode();
-    }
-
-    public String getProjectNumber() {
-        return projectNumber;
-    }
-
-    public void setProjectNumber(String projectNumber) {
-        this.projectNumber = projectNumber;
     }
 }

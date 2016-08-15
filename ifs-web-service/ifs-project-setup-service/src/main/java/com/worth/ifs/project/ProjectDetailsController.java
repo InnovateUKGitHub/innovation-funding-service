@@ -2,21 +2,32 @@ package com.worth.ifs.project;
 
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
-import com.worth.ifs.form.AddressForm;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.CompetitionService;
+import com.worth.ifs.bankdetails.form.ProjectDetailsAddressForm;
+import com.worth.ifs.bankdetails.resource.BankDetailsResource;
+import com.worth.ifs.bankdetails.service.BankDetailsRestService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.controller.ValidationHandler;
+import com.worth.ifs.form.AddressForm;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.organisation.service.OrganisationAddressRestService;
+import com.worth.ifs.project.consortiumoverview.viewmodel.ConsortiumPartnerStatus;
+import com.worth.ifs.project.consortiumoverview.viewmodel.LeadPartnerModel;
+import com.worth.ifs.project.consortiumoverview.viewmodel.ProjectConsortiumStatusViewModel;
+import com.worth.ifs.project.consortiumoverview.viewmodel.RegularPartnerModel;
 import com.worth.ifs.project.form.FinanceContactForm;
 import com.worth.ifs.project.form.ProjectManagerForm;
+import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
-import com.worth.ifs.project.viewmodel.*;
+import com.worth.ifs.project.viewmodel.ProjectDetailsAddressViewModel;
+import com.worth.ifs.project.viewmodel.ProjectDetailsStartDateForm;
+import com.worth.ifs.project.viewmodel.ProjectDetailsStartDateViewModel;
+import com.worth.ifs.project.viewmodel.ProjectDetailsViewModel;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
@@ -39,9 +50,11 @@ import java.util.stream.Collectors;
 import static com.worth.ifs.address.resource.OrganisationAddressType.*;
 import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
+import static com.worth.ifs.project.consortiumoverview.viewmodel.ConsortiumPartnerStatus.*;
 import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
 import static com.worth.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
 import static com.worth.ifs.util.CollectionFunctions.*;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
@@ -71,6 +84,9 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
     @Autowired
     private OrganisationAddressRestService organisationAddressRestService;
+
+    @Autowired
+    private BankDetailsRestService bankDetailsService;
 
     @RequestMapping(value = "/{projectId}/details", method = RequestMethod.GET)
     public String projectDetail(Model model, @PathVariable("projectId") final Long projectId,
@@ -197,7 +213,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
     @RequestMapping(value = "/{projectId}/details/project-address", method = RequestMethod.GET)
     public String viewAddress(Model model,
-                              @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressViewModelForm form,
+                              @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressForm form,
                               @PathVariable("projectId") final Long projectId) {
 
         ProjectResource project = projectService.getById(projectId);
@@ -214,7 +230,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
     @RequestMapping(value = "/{projectId}/details/project-address", method = POST)
     public String updateAddress(Model model,
-                                @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressViewModelForm form,
+                                @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressForm form,
                                 @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
                                 @PathVariable("projectId") final Long projectId) {
 
@@ -265,7 +281,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
     @RequestMapping(value = "/{projectId}/details/project-address", params = SEARCH_ADDRESS, method = POST)
     public String searchAddress(Model model,
                                 @PathVariable("projectId") Long projectId,
-                                @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressViewModelForm form,
+                                @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressForm form,
                                 BindingResult bindingResult) {
 
         form.getAddressForm().setSelectedPostcodeIndex(null);
@@ -278,7 +294,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
     @RequestMapping(value = "/{projectId}/details/project-address", params = SELECT_ADDRESS, method = POST)
     public String selectAddress(Model model,
                                 @PathVariable("projectId") Long projectId,
-                                @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressViewModelForm form) {
+                                @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressForm form) {
         form.getAddressForm().setSelectedPostcode(null);
         ProjectResource project = projectService.getById(projectId);
         return viewCurrentAddressForm(model, form, project);
@@ -286,7 +302,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
     @RequestMapping(value = "/{projectId}/details/project-address", params = MANUAL_ADDRESS, method = POST)
     public String manualAddress(Model model,
-                                @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressViewModelForm form,
+                                @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressForm form,
                                 @PathVariable("projectId") Long projectId) {
         AddressForm addressForm = form.getAddressForm();
         addressForm.setManualAddress(true);
@@ -298,6 +314,119 @@ public class ProjectDetailsController extends AddressLookupBaseController {
     public String submitProjectDetails(@PathVariable("projectId") Long projectId) {
         projectService.setApplicationDetailsSubmitted(projectId).getSuccessObjectOrThrowException();
         return redirectToProjectDetails(projectId);
+    }
+
+    @RequestMapping(value="/{projectId}/team-status", method = GET)
+    public String viewProjectTeamStatus(Model model, @PathVariable("projectId") final Long projectId) {
+
+        model.addAttribute("model", getProjectTeamStatusViewModel(projectId));
+        return "project/consortium-status";
+    }
+
+    private ProjectConsortiumStatusViewModel getProjectTeamStatusViewModel(final Long projectId) {
+        ProjectResource project = projectService.getById(projectId);
+        OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
+        List<OrganisationResource> otherOrganisations = projectService.getPartnerOrganisationsForProject(projectId);
+
+        Optional<MonitoringOfficerResource> monitoringOfficer = projectService.getMonitoringOfficerForProject(projectId);
+        Optional<BankDetailsResource> leadBankDetails = bankDetailsService.getBankDetailsByProjectAndOrganisation(projectId, leadOrganisation.getId()).toOptionalIfNotFound().getSuccessObject();
+
+
+        ConsortiumPartnerStatus leadProjectDetailsSubmitted = createProjectDetailsStatus(project);
+        ConsortiumPartnerStatus monitoringOfficerStatus = createMonitoringOfficerStatus(monitoringOfficer, leadProjectDetailsSubmitted);
+        ConsortiumPartnerStatus leadBankDetailsStatus = createBankDetailStatus(leadBankDetails);
+        ConsortiumPartnerStatus financeChecksStatus = createFinanceCheckStatus(leadBankDetails, leadBankDetailsStatus);
+        ConsortiumPartnerStatus spendProfileStatus = createSpendProfileStatus(financeChecksStatus);
+        ConsortiumPartnerStatus otherDocumentsStatus = createOtherDocumentStatus(project);
+        ConsortiumPartnerStatus grantOfferLetterStatus = createGrantOfferLetterStatus();
+
+        final LeadPartnerModel leadPartnerModel = new LeadPartnerModel(
+            leadOrganisation.getName(),
+            leadProjectDetailsSubmitted,
+            monitoringOfficerStatus,
+            leadBankDetailsStatus,
+            financeChecksStatus,
+            spendProfileStatus,
+            otherDocumentsStatus,
+            grantOfferLetterStatus
+        );
+
+
+        final List<RegularPartnerModel> otherPartnersModels = simpleMap(otherOrganisations, partner -> createPartnerModel(project, partner));
+
+        return new ProjectConsortiumStatusViewModel(projectId, leadPartnerModel, otherPartnersModels);
+    }
+
+    private RegularPartnerModel createPartnerModel(final ProjectResource project, final OrganisationResource partner) {
+
+        Optional<BankDetailsResource> bankDetails = bankDetailsService.getBankDetailsByProjectAndOrganisation(project.getId(), partner.getId()).toOptionalIfNotFound().getSuccessObject();
+
+        final String name = partner.getName();
+        final ConsortiumPartnerStatus projectDetailsStatus = createProjectDetailsStatus(project);
+        final ConsortiumPartnerStatus bankDetailsStatus = createBankDetailStatus(bankDetails);
+        final ConsortiumPartnerStatus financeChecksStatus = createFinanceCheckStatus(bankDetails, bankDetailsStatus);
+        final ConsortiumPartnerStatus spendProfileStatus = createSpendProfileStatus(financeChecksStatus);
+
+        return new RegularPartnerModel(
+            name,
+            projectDetailsStatus,
+            bankDetailsStatus,
+            financeChecksStatus,
+            spendProfileStatus
+        );
+    }
+
+    private ConsortiumPartnerStatus createProjectDetailsStatus(final ProjectResource project) {
+        return project.isProjectDetailsSubmitted()?COMPLETE:ACTION_REQUIRED;
+    }
+
+    private ConsortiumPartnerStatus createMonitoringOfficerStatus(final Optional<MonitoringOfficerResource> monitoringOfficer, final ConsortiumPartnerStatus leadProjectDetailsSubmitted) {
+        if(leadProjectDetailsSubmitted.equals(COMPLETE)){
+            return monitoringOfficer.isPresent()? COMPLETE : PENDING;
+        }else{
+            return NOT_STARTED;
+        }
+
+    }
+
+    private ConsortiumPartnerStatus createBankDetailStatus(final Optional<BankDetailsResource> bankDetails) {
+        if(bankDetails.isPresent()){
+            return bankDetails.get().isApproved()?COMPLETE:PENDING;
+        }else{
+            return ACTION_REQUIRED;
+        }
+    }
+
+    private ConsortiumPartnerStatus createFinanceCheckStatus(final Optional<BankDetailsResource> bankDetails, final ConsortiumPartnerStatus bankDetailsStatus) {
+        if(bankDetailsStatus.equals(COMPLETE)){
+            //TODO update logic when Finance checks are implemented
+            return COMPLETE;
+        }
+        else{
+            return NOT_STARTED;
+        }
+    }
+
+    private ConsortiumPartnerStatus createSpendProfileStatus(final ConsortiumPartnerStatus financeChecksStatus) {
+        if(financeChecksStatus.equals(COMPLETE)){
+            //TODO update logic when spend profile is implemented
+            return COMPLETE;
+        }else{
+            return NOT_STARTED;
+        }
+    }
+
+    private ConsortiumPartnerStatus createOtherDocumentStatus(final ProjectResource project) {
+        if(project.getCollaborationAgreement()!= null && project.getExploitationPlan()!= null){
+            return COMPLETE;
+        }else{
+            return ACTION_REQUIRED;
+        }
+    }
+
+    private ConsortiumPartnerStatus createGrantOfferLetterStatus() {
+        //TODO update logic when GrantOfferLetter is implemented
+        return NOT_STARTED;
     }
 
     private ProjectManagerForm populateOriginalProjectManagerForm(final Long projectId) {
@@ -405,7 +534,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         return "project/project-manager";
     }
 
-    private String viewCurrentAddressForm(Model model, ProjectDetailsAddressViewModelForm form,
+    private String viewCurrentAddressForm(Model model, ProjectDetailsAddressForm form,
                                           ProjectResource project){
         ProjectDetailsAddressViewModel projectDetailsAddressViewModel = loadDataIntoModel(project);
         processAddressLookupFields(form);

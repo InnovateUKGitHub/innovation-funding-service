@@ -1,4 +1,4 @@
-package com.worth.ifs.project.viewmodel;
+package com.worth.ifs.bankdetails.form;
 
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.form.AddressForm;
@@ -7,7 +7,7 @@ import com.worth.ifs.controller.BaseBindingResultTarget;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-public class ProjectDetailsAddressViewModelForm  extends BaseBindingResultTarget {
+public class ProjectDetailsAddressForm extends BaseBindingResultTarget {
     @NotNull(message = "{validation.bankdetailsresource.organisation.required}")
     private OrganisationAddressType addressType;
 
@@ -15,7 +15,7 @@ public class ProjectDetailsAddressViewModelForm  extends BaseBindingResultTarget
     private AddressForm addressForm = new AddressForm();
 
     // for spring form binding
-    public ProjectDetailsAddressViewModelForm() {
+    public ProjectDetailsAddressForm() {
     }
 
     public AddressForm getAddressForm() {
