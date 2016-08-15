@@ -517,7 +517,7 @@ the lead applicant invites a registered user
     [Arguments]    ${EMAIL_LEAD}    ${EMAIL_INVITED}
     guest user log-in    ${EMAIL_LEAD}    Passw0rd123
     ${user_does_not_exist}=    Run keyword and ignore error     the user should see the text in the page    Your username/password combination doesn't seem to work
-    run keyword if    ${user_does_not_exist}=='PASS'    the user makes a new account    ${EMAIL_LEAD}
+    run keyword if    ${user_does_not_exist}==('PASS', None)    the user makes a new account    ${EMAIL_LEAD}
     The user clicks the button/link    link=${OPEN_COMPETITION_LINK}
     Click Element    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
     Input Text    name=organisations[1].organisationName    innovate

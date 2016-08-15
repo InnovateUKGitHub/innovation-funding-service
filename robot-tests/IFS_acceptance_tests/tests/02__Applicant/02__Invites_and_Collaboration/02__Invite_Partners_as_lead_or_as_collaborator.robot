@@ -195,7 +195,7 @@ the applicant enters valid inputs
     Click Element    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
     Input Text    name=organisations[1].organisationName    Fannie May
     Input Text    name=organisations[1].invites[0].personName    Adrian Booth
-    Input Text    name=organisations[1].invites[0].email    ${test_mailbox_one}+inviteorg1@gmail.com
+    Input Text    name=organisations[1].invites[0].email    ${test_mailbox_one}+inviteorg${unique_email_number}@gmail.com
     focus    jquery=button:contains("Save Changes")
     Click Element    jquery=button:contains("Save Changes")
 
@@ -264,8 +264,8 @@ the user navigates to the next question
 
 
 the user is on the invites and collaborators page
-    ${status}=      run keyword and ignore error           the user should see the text in the page     jQuery=.button:contains("Invite new contributors")
-    run keyword if      ${status}!='PASS'        log into smoke test application
+    ${status}=      run keyword and ignore error           the user should see the element    jQuery=.button:contains("Invite new contributors")
+    run keyword if      ${status}!=('PASS', None)        log into smoke test application
 
 log into smoke test application
     logout as user

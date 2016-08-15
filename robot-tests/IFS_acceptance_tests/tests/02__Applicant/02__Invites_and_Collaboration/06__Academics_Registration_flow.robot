@@ -59,7 +59,7 @@ Accept invitation as academic
     And If the user goes to the previous page he should redirect to the login page
     And the user opens the mailbox and verifies the email from
     And the user clicks the button/link    jQuery=.button:contains("Sign in")
-    And guest user log-in    ${test_mailbox_one}+inviteacademics@gmail.com    Passw0rd123
+    And guest user log-in    ${test_mailbox_one}+inviteacademics{unique_email_number}@gmail.com    Passw0rd123
     When the user clicks the button/link    link=${OPEN_COMPETITION_LINK}
     And the user clicks the button/link    link=Your finances
     Then the user should see the text in the page    TSB reference
