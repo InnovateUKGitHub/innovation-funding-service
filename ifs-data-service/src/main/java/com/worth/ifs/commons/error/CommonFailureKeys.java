@@ -92,7 +92,9 @@ public enum CommonFailureKeys implements ErrorTemplate {
     BANK_DETAILS_CANNOT_BE_SUBMITTED_BEFORE_PROJECT_DETAILS("Project details must be submitted before bank details", BAD_REQUEST),
     BANK_DETAILS_CAN_ONLY_BE_SUBMITTED_ONCE("Bank details can only be submitted once", BAD_REQUEST),
     BANK_DETAILS_DONT_EXIST_FOR_GIVEN_PROJECT_AND_ORGANISATION("Bank details don't exist on project {0} for organisation {1}", NOT_FOUND),
-    EXPERIAN_VALIDATION_FAILED("Experian validation failed", BAD_REQUEST),
+    EXPERIAN_VALIDATION_FAILED("Bank details cannot be validated", BAD_REQUEST),
+    EXPERIAN_VALIDATION_FAILED_WITH_INCORRECT_ACC_NO("Account number is incorrect, please check and try again", BAD_REQUEST),
+    EXPERIAN_VALIDATION_FAILED_WITH_INCORRECT_BANK_DETAILS("Bank account details are incorrect, please check and try again", BAD_REQUEST),
     EXPERIAN_VERIFICATION_FAILED("Experian verification failed", BAD_REQUEST),
 
     /**
@@ -100,10 +102,18 @@ public enum CommonFailureKeys implements ErrorTemplate {
      */
     PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED("A Monitoring Officer cannot be assigned to a Project until its Project Details have been submitted", BAD_REQUEST),
 
+    /**
+     * Assessment
+     */
+    ASSESSMENT_REJECTION_FAILED("Only assessments which are Open can be rejected.", BAD_REQUEST),
+    ASSESSMENT_RECOMMENDATION_FAILED("Only assessments which are Open can be recommended.", BAD_REQUEST),
+
     /*
      * Forms
      */
-    FORM_WORD_LIMIT_EXCEEDED("The form word limit has been exceeded",BAD_REQUEST)
+    FORM_WORD_LIMIT_EXCEEDED("The form word limit has been exceeded",BAD_REQUEST),
+    SUMMARY_FEEDBACK_WORD_LIMIT_EXCEEDED("The form word limit has been exceeded",BAD_REQUEST),
+    SUMMARY_COMMENT_WORD_LIMIT_EXCEEDED("The form word limit has been exceeded",BAD_REQUEST)
     ;
 
     private ErrorTemplate errorTemplate;

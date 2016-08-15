@@ -9,15 +9,14 @@ import com.worth.ifs.commons.error.exception.ForbiddenActionException;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.controller.ValidationHandler;
+import com.worth.ifs.monitoringofficer.form.ProjectMonitoringOfficerForm;
 import com.worth.ifs.monitoringofficer.viewmodel.ProjectMonitoringOfficerViewModel;
 import com.worth.ifs.project.ProjectService;
-import com.worth.ifs.monitoringofficer.form.ProjectMonitoringOfficerForm;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
-import com.worth.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -59,9 +58,6 @@ public class ProjectMonitoringOfficerController {
 
     @Autowired
     private ApplicationSummaryService applicationSummaryService;
-
-    @Autowired
-    private ProcessRoleService processRoleService;
 
     @RequestMapping(method = GET)
     public String viewMonitoringOfficer(Model model, @PathVariable("projectId") final Long projectId,

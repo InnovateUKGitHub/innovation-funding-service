@@ -11,6 +11,8 @@ import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.finance.view.*;
 import com.worth.ifs.application.resource.*;
 import com.worth.ifs.application.service.*;
+import com.worth.ifs.bankdetails.BankDetailsService;
+import com.worth.ifs.assessment.service.CompetitionInviteRestService;
 import com.worth.ifs.bankdetails.service.BankDetailsRestService;
 import com.worth.ifs.commons.security.UserAuthentication;
 import com.worth.ifs.commons.security.UserAuthenticationService;
@@ -24,13 +26,14 @@ import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.form.service.FormInputResponseService;
 import com.worth.ifs.form.service.FormInputService;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
+import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
-import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.service.InviteOrganisationRestService;
 import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.model.OrganisationDetailsModelPopulator;
 import com.worth.ifs.organisation.service.OrganisationAddressRestService;
 import com.worth.ifs.project.ProjectService;
+import com.worth.ifs.project.finance.ProjectFinanceService;
 import com.worth.ifs.project.service.ProjectRestService;
 import com.worth.ifs.user.resource.*;
 import com.worth.ifs.user.service.OrganisationRestService;
@@ -149,6 +152,8 @@ public class BaseUnitTest {
     @Mock
     public InviteRestService inviteRestService;
     @Mock
+    public CompetitionInviteRestService competitionInviteRestService;
+    @Mock
     public FinanceModelManager financeModelManager;
     @Mock
     public DefaultFinanceModelManager defaultFinanceModelManager;
@@ -165,9 +170,13 @@ public class BaseUnitTest {
     @Mock
     public ProjectService projectService;
     @Mock
+    public ProjectFinanceService projectFinanceService;
+    @Mock
     public ProjectRestService projectRestService;
     @Mock
     public BankDetailsRestService bankDetailsRestService;
+    @Mock
+    public BankDetailsService bankDetailsService;
     @Mock
     public ApplicationSummaryService applicationSummaryService;
 
@@ -217,9 +226,9 @@ public class BaseUnitTest {
     public OrganisationTypeResource researchOrganisationTypeResource;
     public OrganisationTypeResource businessOrganisationType;
     public OrganisationTypeResource researchOrganisationType;
-    public InviteResource invite;
-    public InviteResource acceptedInvite;
-    public InviteResource existingUserInvite;
+    public ApplicationInviteResource invite;
+    public ApplicationInviteResource acceptedInvite;
+    public ApplicationInviteResource existingUserInvite;
 
     public static final String INVITE_HASH = "b157879c18511630f220325b7a64cf3eb782759326d3cbb85e546e0d03e663ec711ec7ca65827a96";
     public static final String INVITE_HASH_EXISTING_USER = "cccccccccc630f220325b7a64cf3eb782759326d3cbb85e546e0d03e663ec711ec7ca65827a96";
@@ -616,7 +625,7 @@ public class BaseUnitTest {
         when(inviteRestService.getInvitesByApplication(isA(Long.class))).thenReturn(restSuccess(emptyList()));
         InviteOrganisationResource inviteOrganisation = new InviteOrganisationResource(2L, "Invited Organisation Ltd", null, null);
 
-        invite = new InviteResource();
+        invite = new ApplicationInviteResource();
         invite.setStatus(InviteStatusConstants.SEND);
         invite.setApplication(1L);
         invite.setName("Some Invitee");
@@ -634,7 +643,7 @@ public class BaseUnitTest {
         when(inviteRestService.getInviteByHash(eq(INVALID_INVITE_HASH))).thenReturn(restFailure(emptyList()));
         when(inviteRestService.getInviteOrganisationByHash(INVITE_HASH)).thenReturn(restSuccess(new InviteOrganisationResource()));
 
-        acceptedInvite = new InviteResource();
+        acceptedInvite = new ApplicationInviteResource();
         acceptedInvite.setStatus(InviteStatusConstants.ACCEPTED);
         acceptedInvite.setApplication(1L);
         acceptedInvite.setName("Some Invitee");
@@ -642,7 +651,7 @@ public class BaseUnitTest {
         acceptedInvite.setEmail(email);
         when(inviteRestService.getInviteByHash(eq(ACCEPTED_INVITE_HASH))).thenReturn(restSuccess(acceptedInvite));
 
-        existingUserInvite = new InviteResource();
+        existingUserInvite = new ApplicationInviteResource();
         existingUserInvite.setStatus(InviteStatusConstants.SEND);
         existingUserInvite.setApplication(1L);
         existingUserInvite.setName("Some Invitee");

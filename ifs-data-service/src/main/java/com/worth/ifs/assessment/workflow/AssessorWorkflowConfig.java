@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.statemachine.config.EnableStateMachine;
 import org.springframework.statemachine.config.StateMachineConfigurerAdapter;
+import org.springframework.statemachine.config.builders.StateMachineConfigurationConfigurer;
 import org.springframework.statemachine.config.builders.StateMachineStateConfigurer;
 import org.springframework.statemachine.config.builders.StateMachineTransitionConfigurer;
 
@@ -25,8 +26,13 @@ import org.springframework.statemachine.config.builders.StateMachineTransitionCo
 public class AssessorWorkflowConfig extends StateMachineConfigurerAdapter<String, String> {
 
     @Override
-    public void configure(StateMachineStateConfigurer<String, String> states) throws Exception {
+    public void configure(StateMachineConfigurationConfigurer<String, String> config) throws Exception {
+        config.withConfiguration().listener(new WorkflowStateMachineListener());
 
+    }
+
+    @Override
+    public void configure(StateMachineStateConfigurer<String, String> states) throws Exception {
         states.withStates()
                 .initial(AssessmentStates.PENDING.getState())
                 .states(AssessmentStates.getStates());

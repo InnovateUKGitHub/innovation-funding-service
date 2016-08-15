@@ -91,7 +91,6 @@ public class CompetitionsRestServiceImpl extends BaseRestService implements Comp
 
     @Override
     public RestResult<String> generateCompetitionCode(Long competitionId, LocalDateTime openingDate) {
-        String url = String.format("%s/generateCompetitionCode/%s", competitionsRestURL, competitionId);
         return postWithRestResult(String.format("%s/generateCompetitionCode/%s", competitionsRestURL, competitionId), openingDate, String.class);
     }
 

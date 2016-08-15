@@ -7,6 +7,7 @@ import com.google.common.base.CharMatcher;
 import com.worth.ifs.application.service.CategoryService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.category.resource.CategoryResource;
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionResource.Status;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
@@ -22,6 +23,7 @@ import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
 
@@ -183,7 +185,7 @@ public class CompetitionSetupController {
     }
 
     @RequestMapping(value = "/{competitionId}/section/application", method = RequestMethod.POST)
-    public String submitApplicationFormSectionDetails(@Valid @ModelAttribute("competitionSetupForm") ApplicationFormForm competitionSetupForm,
+    public String submitApplicationFormSectionDetails(@ModelAttribute("competitionSetupForm") ApplicationFormForm competitionSetupForm,
                                               BindingResult bindingResult,
                                               @PathVariable("competitionId") Long competitionId,
                                               Model model) {
@@ -251,14 +253,33 @@ public class CompetitionSetupController {
             return "redirect:/dashboard";
         }
 
-        if (!bindingResult.hasErrors()) {
-        	competitionSetupService.saveCompetitionSetupSection(competitionSetupForm, competition, section);
+        if (isSuccessfulSaved(competitionSetupForm, competition, section, bindingResult)) {
             return "redirect:/competition/setup/" + competitionId + "/section/" + section.getPath();
         } else {
             LOG.debug("Form errors");
             competitionSetupService.populateCompetitionSectionModelAttributes(model, competition, section);
             return "competition/setup";
         }
+    }
+
+    private Boolean isSuccessfulSaved(CompetitionSetupForm competitionSetupForm, CompetitionResource competition, CompetitionSetupSection section, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+           return false;
+        }
+
+        List<Error> saveSectionResult = competitionSetupService.saveCompetitionSetupSection(competitionSetupForm, competition, section);
+        if(saveSectionResult != null && !saveSectionResult.isEmpty()) {
+            saveSectionResult.forEach(e -> {
+                ObjectError error = new ObjectError("currentSection", e.getErrorMessage());
+                bindingResult.addError(error);
+            });
+        }
+
+        if(bindingResult.hasErrors()) {
+           return false;
+        }
+
+        return true;
     }
 
     private ObjectNode createJsonObjectNode(boolean success, String message) {
