@@ -77,4 +77,6 @@ public interface ProjectService {
     List<ProjectUserResource> getPartners(Long projectId);
 
     ServiceResult<Boolean> isOtherDocumentSubmitAllowed(Long projectId);
+
+    ServiceResult<Void> setPartnerDocumentsSubmitted(Long projectId);
 }

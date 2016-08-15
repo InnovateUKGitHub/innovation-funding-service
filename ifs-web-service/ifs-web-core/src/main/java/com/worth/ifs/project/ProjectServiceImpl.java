@@ -211,6 +211,11 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    public ServiceResult<Void> setPartnerDocumentsSubmitted(Long projectId) {
+        return null;
+    }
+
+    @Override
     public boolean isUserLeadPartner(Long projectId, Long userId) {
         return !simpleFilter(getLeadPartners(projectId), projectUser -> projectUser.getUser().equals(userId)).isEmpty();
     }

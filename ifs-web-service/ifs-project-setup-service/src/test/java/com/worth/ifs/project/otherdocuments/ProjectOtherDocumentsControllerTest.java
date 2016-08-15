@@ -371,7 +371,7 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
         when(projectService.isOtherDocumentSubmitAllowed(projectId)).thenReturn(serviceSuccess(true));
 
         MvcResult result = mockMvc.perform(
-                get("/project/123/partner/documents/ready")).
+                get("/project/123/partner/documents")).
                 andExpect(status().isOk()).
                 andExpect(view().name("project/other-documents")).
                 andReturn();
