@@ -512,26 +512,12 @@ we create a new user
     The guest user clicks the log-in button
     the user closes the browser
 
+
 the lead applicant invites a registered user
     [Arguments]    ${EMAIL_LEAD}    ${EMAIL_INVITED}
-    The guest user opens the browser
-    The user navigates to the page    ${COMPETITION_DETAILS_URL}
-    The user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
-    The user clicks the button/link    jQuery=.button:contains("Create account")
-    The user clicks the button/link    jQuery=.button:contains("Create")
-    The user enters text to a text field    id=organisationSearchName    Innovate
-    The user clicks the button/link    id=org-search
-    The user clicks the button/link    LINK=INNOVATE LTD
-    select Checkbox    address-same
-    The user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
-    The user clicks the button/link    jQuery=.button:contains("Save")
-    The user enters the details and clicks the create account    ${EMAIL_LEAD}
-    The user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
-    And the user opens the mailbox and verifies the email from
-    The user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
-    The user clicks the button/link    jQuery=.button:contains("Sign in")
-    The guest user inserts user email & password    ${EMAIL_LEAD}    Passw0rd123
-    The guest user clicks the log-in button
+    guest user log-in    ${EMAIL_LEAD}    Passw0rd123
+    ${user_does_not_exist}=    Run keyword and ignore error     the user should see the text in the page    Your username/password combination doesn't seem to work
+    run keyword if    ${user_does_not_exist}=='PASS'    the user makes a new account    ${EMAIL_LEAD}
     The user clicks the button/link    link=${OPEN_COMPETITION_LINK}
     Click Element    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
     Input Text    name=organisations[1].organisationName    innovate
@@ -549,6 +535,29 @@ the lead applicant invites a registered user
     #    Should Not Be Empty    ${EMAIL_MATCH}
     #    Delete All Emails
     #    close mailbox
+
+the user makes a new account
+    [Arguments]    ${EMAIL_LEAD}
+    The user navigates to the page    ${COMPETITION_DETAILS_URL}
+    The user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
+    The user clicks the button/link    jQuery=.button:contains("Create account")
+    The user clicks the button/link    jQuery=.button:contains("Create")
+    The user enters text to a text field    id=organisationSearchName    Innovate
+    The user clicks the button/link    id=org-search
+    The user clicks the button/link    LINK=INNOVATE LTD
+    select Checkbox    address-same
+    The user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
+    The user clicks the button/link    jQuery=.button:contains("Save")
+    The user enters the details and clicks the create account    ${EMAIL_LEAD}
+    The user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
+    And the user opens the mailbox and verifies the email from
+    The user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
+    The user clicks the button/link    jQuery=.button:contains("Sign in")
+    The guest user inserts user email & password    ${EMAIL_LEAD}    Passw0rd123
+    The guest user clicks the log-in button
+
+
+
 
 Open mailbox and confirm received email
     [Arguments]    ${USER}    ${PASSWORD}    ${PATTERN}
