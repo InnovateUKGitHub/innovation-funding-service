@@ -1,8 +1,8 @@
 package com.worth.ifs.finance.handler.item;
 
-import com.worth.ifs.finance.domain.Cost;
+import com.worth.ifs.finance.domain.FinanceRow;
 import com.worth.ifs.finance.resource.category.OtherFundingCostCategory;
-import com.worth.ifs.finance.resource.cost.CostItem;
+import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import com.worth.ifs.finance.resource.cost.OtherFunding;
 import com.worth.ifs.validator.OtherFundingValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,20 +17,20 @@ import java.util.List;
  * Handles the other funding, i.e. converts the costs to be stored into the database
  * or for sending it over.
  */
-public class OtherFundingHandler extends CostHandler {
+public class OtherFundingHandler extends FinanceRowHandler {
     public static final String COST_KEY = "other-funding";
 
     @Autowired
     OtherFundingValidator validator;
 
     @Override
-    public void validate(@NotNull CostItem costItem, @NotNull BindingResult bindingResult) {
+    public void validate(@NotNull FinanceRowItem costItem, @NotNull BindingResult bindingResult) {
         super.validate(costItem, bindingResult);
         validator.validate(costItem, bindingResult);
     }
 
-    public Cost toCost(CostItem costItem) {
-        Cost cost = null;
+    public FinanceRow toCost(FinanceRowItem costItem) {
+        FinanceRow cost = null;
         if (costItem instanceof OtherFunding) {
             cost = mapOtherFunding(costItem);
         }
@@ -38,11 +38,11 @@ public class OtherFundingHandler extends CostHandler {
     }
 
     @Override
-    public CostItem toCostItem(Cost cost) {
+    public FinanceRowItem toCostItem(FinanceRow cost) {
         return new OtherFunding(cost.getId(), cost.getItem(), cost.getDescription(), cost.getItem(), cost.getCost());
     }
 
-    private Cost mapOtherFunding(CostItem costItem) {
+    private FinanceRow mapOtherFunding(FinanceRowItem costItem) {
         OtherFunding otherFunding = (OtherFunding) costItem;
         String item;
         if (otherFunding.getOtherPublicFunding() != null) {
@@ -50,17 +50,17 @@ public class OtherFundingHandler extends CostHandler {
         } else {
             item = otherFunding.getSecuredDate();
         }
-        return new Cost(otherFunding.getId(), COST_KEY, item, otherFunding.getFundingSource(), 0, otherFunding.getFundingAmount(), null, null);
+        return new FinanceRow(otherFunding.getId(), COST_KEY, item, otherFunding.getFundingSource(), 0, otherFunding.getFundingAmount(), null, null);
     }
 
     @Override
-    public List<Cost> initializeCost() {
-        ArrayList<Cost> costs = new ArrayList<>();
+    public List<FinanceRow> initializeCost() {
+        ArrayList<FinanceRow> costs = new ArrayList<>();
         costs.add(initializeOtherFunding());
         return costs;
     }
 
-    private Cost initializeOtherFunding() {
+    private FinanceRow initializeOtherFunding() {
         Long id = null;
         String otherPublicFunding = "";
         String fundingSource = OtherFundingCostCategory.OTHER_FUNDING;

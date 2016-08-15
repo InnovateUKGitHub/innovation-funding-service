@@ -1,12 +1,12 @@
 package com.worth.ifs.assessment.builder;
 
 import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.workflow.domain.ProcessOutcome;
 import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
 
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import static com.worth.ifs.BaseBuilderAmendFunctions.setField;
 import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
 
@@ -29,7 +29,19 @@ public class ProcessOutcomeResourceBuilder extends BaseBuilder<ProcessOutcomeRes
         return new ProcessOutcomeResource();
     }
 
-    public ProcessOutcomeResourceBuilder withOutcome(String outcome) {
-        return with(processOutcome -> processOutcome.setOutcome(outcome));
+    public ProcessOutcomeResourceBuilder withOutcome(String... outcomes) {
+        return withArray((outcome, processOutcomeResource) -> setField("outcome", outcome, processOutcomeResource), outcomes);
+    }
+
+    public ProcessOutcomeResourceBuilder withDescription(String... descriptions) {
+        return withArray((description, processOutcomeResource) -> setField("description", description, processOutcomeResource), descriptions);
+    }
+
+    public ProcessOutcomeResourceBuilder withComment(String... comments) {
+        return withArray((comment, processOutcomeResource) -> setField("comment", comment, processOutcomeResource), comments);
+    }
+
+    public ProcessOutcomeResourceBuilder withOutcomeType(String... outcomeTypes) {
+        return withArray((outcomeType, processOutcomeResource) -> setField("outcomeType", outcomeType, processOutcomeResource), outcomeTypes);
     }
 }

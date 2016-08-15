@@ -8,7 +8,7 @@ Documentation     INFUND-2630 As a Competitions team member I want to be able to
 ...               INFUND-2634 As a partner I want to be able to view details of the assigned Monitoring Officer for my project so I can contact them
 Suite Setup       Run Keywords    delete the emails from both test mailboxes
 Suite Teardown    the user closes the browser
-Force Tags
+Force Tags        Project Setup
 Resource          ../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../resources/variables/User_credentials.robot
@@ -20,13 +20,11 @@ Resource          ../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
 *** Variables ***
 ${Successful_Monitoring_Officer_Page}    ${server}/project-setup-management/project/1/monitoring-officer
 
-
 *** Test Cases ***
-
 Before Monitoring Officer is assigned
-    [Documentation]    INFUND-3349
+    [Documentation]    INFUND-2634
     [Tags]    HappyPath
-    [Setup]    Log in as user    steve.smith@empire.com       Passw0rd
+    [Setup]    Log in as user    steve.smith@empire.com    Passw0rd
     Given the user navigates to the page    ${project_in_setup_page}
     And the user should see the text in the page    Innovate UK will assign you a Monitoring Officer
     And the user should not see the element    jQuery=ul li.complete:nth-child(3)
@@ -35,7 +33,7 @@ Before Monitoring Officer is assigned
     And the user should not see the text in the page    A Monitoring Officer has been assigned.
 
 Comp admin can view the Supporting information details on MO page
-    [Documentation]    INFUND-3330
+    [Documentation]    INFUND-2630
     [Tags]    HappyPath
     [Setup]    Log in as user    &{Comp_admin1_credentials}
     When the user navigates to the page    ${Successful_Monitoring_Officer_Page}
@@ -46,14 +44,14 @@ Comp admin can view the Supporting information details on MO page
     And the user should see the text in the page    Riff Street
     And the user should see the text in the page    Bath
     And the user should see the text in the page    BA1 5LR
-    And Element Should Contain    jQuery=p:nth-child(11)    1st Jan 2018
+    And Element Should Contain    jQuery=p:nth-child(11)    1st Jan 2017
     And the user should see the text in the page    test twenty
     And the user should see the text in the page    Vitruvius Stonework Limited
     And the user should see the text in the page    EGGS
     And the user should see the text in the page    Ludlow
 
 MO server-side validation
-    [Documentation]    INFUND-3330
+    [Documentation]    INFUND-2630
     [Tags]    HappyPath
     When the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
     Then the user should see an error    Please enter a first name
@@ -64,7 +62,7 @@ MO server-side validation
     And the user should see an error    Please enter a valid phone number
 
 MO client-side validation
-    [Documentation]    INFUND-3330
+    [Documentation]    INFUND-2630
     [Tags]    HappyPath
     When the user enters text to a text field    id=firstName    Abbey
     Then the user moves focus away from an element for MO    id=firstName
@@ -87,7 +85,9 @@ MO client-side validation
     #    And the user should see an error    Input for your phone number has a minimum length of 8 characters
 
 MO details can be added
-    [Documentation]    INFUND-3330, INFUND-3334
+    [Documentation]    INFUND-2630
+    ...
+    ...    INFUND-2632
     [Tags]    HappyPath
     When standard verification for email address follows
     And the user enters text to a text field    id=emailAddress    ${test_mailbox_two}+monitoringofficer@gmail.com
@@ -107,12 +107,20 @@ MO details can be added
     And Element Should Contain    jQuery=ul li.complete:nth-child(3) p    Your Monitoring Officer for this project is Abbey Abigail.
 
 MO details(email step)
-    [Documentation]    INFUND-3330, INFUND-3334, INFUND-3340
+    [Documentation]    INFUND-2630
+    ...
+    ...    INFUND-2632
+    ...
+    ...    INFUND-2633
     [Tags]    Email
+    # Note that assigning a monitoring officer will send emails out to both the new MO and the PM - this test checks for both emails
     When Open mailbox and confirm received email    ${test_mailbox_two}+monitoringofficer@gmail.com    ${test_mailbox_two_password}    has been assigned to you
-    And Open mailbox and confirm received email     worth.email.test@gmail.com      testtest1       has been assigned a Monitoring officer
+    And Open mailbox and confirm received email    worth.email.test@gmail.com    testtest1    has been assigned a Monitoring officer
+
 MO details can be edited and viewed in the Project setup status page
-    [Documentation]    INFUND-3330, INFUND-3349
+    [Documentation]    INFUND-2630
+    ...
+    ...    INFUND-2634
     [Tags]    HappyPath
     [Setup]    Log in as user    &{Comp_admin1_credentials}
     Given the user navigates to the page    ${Successful_Monitoring_Officer_Page}
@@ -131,14 +139,16 @@ MO details can be edited and viewed in the Project setup status page
     And the user should see the text in the page    08549731414
 
 MO details edit(email step)
-    [Documentation]    INFUND-3330, INFUND-3349
+    [Documentation]    INFUND-2630
+    ...
+    ...    INFUND-2634
     [Tags]    Email
+    # Note that assigning a monitoring officer will send emails out to both the new MO and the PM - this test checks for both emails
     When Open mailbox and confirm received email    ${test_mailbox_two}@gmail.com    ${test_mailbox_two_password}    has been assigned to you
-    And Open mailbox and confirm received email     worth.email.test@gmail.com      testtest1       has been assigned a Monitoring officer
-
+    And Open mailbox and confirm received email    worth.email.test@gmail.com    testtest1    has been assigned a Monitoring officer
 
 MO details accessible/seen by all partners
-    [Documentation]    INFUND-3349
+    [Documentation]    INFUND-2634
     [Tags]    HappyPath
     Given Log in as user    jessica.doe@ludlow.co.uk    Passw0rd
     When the user navigates to the page    ${project_in_setup_page}
@@ -161,7 +171,6 @@ MO details accessible/seen by all partners
     And the user should see the text in the page    08549731414
 
 *** Keywords ***
-
 standard verification for email address follows
     the user enters text to a text field    id=emailAddress    ${EMPTY}
     the user should see an error    Please enter an email address
@@ -189,12 +198,10 @@ standard verification for Phone number follows
     Then the user enters text to a text field    id=phoneNumber    07438620303
     #    And the user moves focus away from an element for MO    id=phoneNumber
 
-
 the user moves focus away from an element for MO
     [Arguments]    ${element}
     mouse out    ${element}
     focus    jQuery=.button:contains("Assign Monitoring Officer")
-
 
 the user edits the MO details
     Input Text    id=firstName    Grace

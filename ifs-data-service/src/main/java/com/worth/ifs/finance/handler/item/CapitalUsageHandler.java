@@ -1,9 +1,9 @@
 package com.worth.ifs.finance.handler.item;
 
-import com.worth.ifs.finance.domain.Cost;
-import com.worth.ifs.finance.domain.CostValue;
+import com.worth.ifs.finance.domain.FinanceRow;
+import com.worth.ifs.finance.domain.FinanceRowMetaValue;
 import com.worth.ifs.finance.resource.cost.CapitalUsage;
-import com.worth.ifs.finance.resource.cost.CostItem;
+import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 
 import java.math.BigDecimal;
 
@@ -11,7 +11,7 @@ import java.math.BigDecimal;
  * Handles the capital usage costs, i.e. converts the costs to be stored into the database
  * or for sending it over.
  */
-public class CapitalUsageHandler extends CostHandler {
+public class CapitalUsageHandler extends FinanceRowHandler {
     public static final String COST_FIELD_EXISTING = "existing";
     public static final String COST_FIELD_RESIDUAL_VALUE = "residual_value";
     public static final String COST_FIELD_UTILISATION = "utilisation";
@@ -19,8 +19,8 @@ public class CapitalUsageHandler extends CostHandler {
 
 
     @Override
-    public Cost toCost(CostItem costItem) {
-        Cost cost = null;
+    public FinanceRow toCost(FinanceRowItem costItem) {
+        FinanceRow cost = null;
         if (costItem instanceof CapitalUsage) {
             return mapCapitalUsage(costItem);
         }
@@ -28,14 +28,14 @@ public class CapitalUsageHandler extends CostHandler {
     }
 
     @Override
-    public CostItem toCostItem(Cost cost) {
+    public FinanceRowItem toCostItem(FinanceRow cost) {
         String existing = "";
         BigDecimal residualValue = BigDecimal.ZERO;
         Integer utilisation = 0;
 
-        for (CostValue costValue : cost.getCostValues()) {
-            if(costValue.getCostField() != null && costValue.getCostField().getTitle() != null){
-                String title = costValue.getCostField().getTitle();
+        for (FinanceRowMetaValue costValue : cost.getCostValues()) {
+            if(costValue.getFinanceRowMetaField() != null && costValue.getFinanceRowMetaField().getTitle() != null){
+                String title = costValue.getFinanceRowMetaField().getTitle();
                 if (title.equals(COST_FIELD_EXISTING)) {
                     existing = costValue.getValue();
                 } else if (title.equals(COST_FIELD_RESIDUAL_VALUE)) {
@@ -50,14 +50,14 @@ public class CapitalUsageHandler extends CostHandler {
                 cost.getCost(), residualValue, utilisation);
     }
 
-    public Cost mapCapitalUsage(CostItem costItem) {
+    public FinanceRow mapCapitalUsage(FinanceRowItem costItem) {
         CapitalUsage capitalUsage = (CapitalUsage) costItem;
-        Cost capitalUsageCost = new Cost(capitalUsage.getId(), COST_KEY, "", capitalUsage.getDescription(), capitalUsage.getDeprecation(),
+        FinanceRow capitalUsageCost = new FinanceRow(capitalUsage.getId(), COST_KEY, "", capitalUsage.getDescription(), capitalUsage.getDeprecation(),
                 capitalUsage.getNpv(), null, null);
         capitalUsageCost.addCostValues(
-                new CostValue(capitalUsageCost, costFields.get(COST_FIELD_EXISTING), capitalUsage.getExisting()),
-                new CostValue(capitalUsageCost, costFields.get(COST_FIELD_RESIDUAL_VALUE), String.valueOf(capitalUsage.getResidualValue())),
-                new CostValue(capitalUsageCost, costFields.get(COST_FIELD_UTILISATION), String.valueOf(capitalUsage.getUtilisation())));
+                new FinanceRowMetaValue(capitalUsageCost, costFields.get(COST_FIELD_EXISTING), capitalUsage.getExisting()),
+                new FinanceRowMetaValue(capitalUsageCost, costFields.get(COST_FIELD_RESIDUAL_VALUE), String.valueOf(capitalUsage.getResidualValue())),
+                new FinanceRowMetaValue(capitalUsageCost, costFields.get(COST_FIELD_UTILISATION), String.valueOf(capitalUsage.getUtilisation())));
 
         return capitalUsageCost;
     }

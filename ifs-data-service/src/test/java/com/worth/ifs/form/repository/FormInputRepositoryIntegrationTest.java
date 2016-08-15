@@ -46,43 +46,43 @@ public class FormInputRepositoryIntegrationTest extends BaseRepositoryIntegratio
 
     @Test
     public void test_findByCompetitionId() {
-        List<FormInput> competitionInputs = repository.findByCompetitionId(1L);
+        List<FormInput> competitionInputs = repository.findByCompetitionIdOrderByPriorityAsc(1L);
         assertEquals(61, competitionInputs.size());
 
         FormInput first = competitionInputs.get(0);
         assertEquals(Long.valueOf(1), first.getId());
 
         FormInput last = competitionInputs.get(competitionInputs.size() - 1);
-        assertEquals(Long.valueOf(190), last.getId());
+        assertEquals(Long.valueOf(186), last.getId());
     }
 
     @Test
     public void test_findByCompetitionId_nonExistentCompetition() {
-        List<FormInput> competitionInputs = repository.findByCompetitionId(999L);
+        List<FormInput> competitionInputs = repository.findByCompetitionIdOrderByPriorityAsc(999L);
         assertEquals(0, competitionInputs.size());
     }
 
     @Test
     public void test_findByCompetitionIdAndScope() {
-        List<FormInput> competitionInputs = repository.findByCompetitionIdAndScope(1L, APPLICATION);
+        List<FormInput> competitionInputs = repository.findByCompetitionIdAndScopeOrderByPriorityAsc(1L, APPLICATION);
         assertEquals(38, competitionInputs.size());
 
         FormInput first = competitionInputs.get(0);
         assertEquals(Long.valueOf(1), first.getId());
 
         FormInput last = competitionInputs.get(competitionInputs.size() - 1);
-        assertEquals(Long.valueOf(42), last.getId());
+        assertEquals(Long.valueOf(18), last.getId());
     }
 
     @Test
     public void test_findByCompetitionIdAndScope_nonExistingCompetition() {
-        List<FormInput> competitionInputs = repository.findByCompetitionIdAndScope(999L, APPLICATION);
+        List<FormInput> competitionInputs = repository.findByCompetitionIdAndScopeOrderByPriorityAsc(999L, APPLICATION);
         assertTrue(competitionInputs.isEmpty());
     }
 
     @Test
     public void test_findByQuestionId() {
-        List<FormInput> questionInputs = repository.findByQuestionId(1L);
+        List<FormInput> questionInputs = repository.findByQuestionIdOrderByPriorityAsc(1L);
         assertThat(questionInputs, hasSize(3));
         assertEquals(Long.valueOf(1), questionInputs.get(0).getId());
         assertEquals(Long.valueOf(168), questionInputs.get(1).getId());
@@ -91,20 +91,20 @@ public class FormInputRepositoryIntegrationTest extends BaseRepositoryIntegratio
 
     @Test
     public void test_findByQuestionId_nonExistingQuestion() {
-        List<FormInput> formInputs = repository.findByQuestionId(999L);
+        List<FormInput> formInputs = repository.findByQuestionIdOrderByPriorityAsc(999L);
         assertTrue(formInputs.isEmpty());
     }
 
     @Test
     public void test_findByQuestionIdAndScope() {
-        List<FormInput> questionInputs = repository.findByQuestionIdAndScope(1L, APPLICATION);
+        List<FormInput> questionInputs = repository.findByQuestionIdAndScopeOrderByPriorityAsc(1L, APPLICATION);
         FormInput first = questionInputs.get(0);
         assertEquals(Long.valueOf(1), first.getId());
     }
 
     @Test
     public void test_findByQuestionIdAndScope_nonExistingQuestion() {
-        List<FormInput> questionInputs = repository.findByQuestionIdAndScope(999L, APPLICATION);
+        List<FormInput> questionInputs = repository.findByQuestionIdAndScopeOrderByPriorityAsc(999L, APPLICATION);
         assertTrue(questionInputs.isEmpty());
     }
 }

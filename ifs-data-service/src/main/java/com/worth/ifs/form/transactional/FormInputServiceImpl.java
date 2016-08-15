@@ -1,18 +1,5 @@
 package com.worth.ifs.form.transactional;
 
-import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
-import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
-import static com.worth.ifs.util.EntityLookupCallbacks.find;
-
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Supplier;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.form.domain.FormInput;
@@ -27,6 +14,18 @@ import com.worth.ifs.form.repository.FormInputTypeRepository;
 import com.worth.ifs.form.resource.*;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.ProcessRole;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Supplier;
+
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static com.worth.ifs.util.EntityLookupCallbacks.find;
 
 @Service
 public class FormInputServiceImpl extends BaseTransactionalService implements FormInputService {
@@ -56,22 +55,22 @@ public class FormInputServiceImpl extends BaseTransactionalService implements Fo
 
     @Override
     public ServiceResult<List<FormInputResource>> findByQuestionId(Long questionId) {
-        return serviceSuccess(formInputToResources(formInputRepository.findByQuestionId(questionId)));
+        return serviceSuccess(formInputToResources(formInputRepository.findByQuestionIdOrderByPriorityAsc(questionId)));
     }
 
     @Override
     public ServiceResult<List<FormInputResource>> findByQuestionIdAndScope(Long questionId, FormInputScope scope) {
-        return serviceSuccess(formInputToResources(formInputRepository.findByQuestionIdAndScope(questionId, scope)));
+        return serviceSuccess(formInputToResources(formInputRepository.findByQuestionIdAndScopeOrderByPriorityAsc(questionId, scope)));
     }
 
     @Override
     public ServiceResult<List<FormInputResource>> findByCompetitionId(Long competitionId) {
-        return serviceSuccess(formInputToResources(formInputRepository.findByCompetitionId(competitionId)));
+        return serviceSuccess(formInputToResources(formInputRepository.findByCompetitionIdOrderByPriorityAsc(competitionId)));
     }
 
     @Override
     public ServiceResult<List<FormInputResource>> findByCompetitionIdAndScope(Long competitionId, FormInputScope scope) {
-        return serviceSuccess(formInputToResources(formInputRepository.findByCompetitionIdAndScope(competitionId, scope)));
+        return serviceSuccess(formInputToResources(formInputRepository.findByCompetitionIdAndScopeOrderByPriorityAsc(competitionId, scope)));
     }
 
     private ServiceResult<FormInput> findFormInputEntity(Long id) {
@@ -115,7 +114,18 @@ public class FormInputServiceImpl extends BaseTransactionalService implements Fo
                 })
             );
     }
-    
+
+    @Override
+    public ServiceResult<FormInputResource> save(FormInputResource formInputResource) {
+        return serviceSuccess(formInputMapper.mapToResource(formInputRepository.save(formInputMapper.mapToDomain(formInputResource))));
+    }
+
+    @Override
+    public ServiceResult<Void> delete(Long id) {
+        formInputRepository.delete(formInputMapper.mapIdToDomain(id));
+        return serviceSuccess();
+    }
+
     private ServiceResult<FormInputResponse> getOrCreateResponse(Application application, FormInput formInput, ProcessRole userAppRole) {
 
     	Optional<FormInputResponse> existingResponse = application.getFormInputResponseByFormInput(formInput);

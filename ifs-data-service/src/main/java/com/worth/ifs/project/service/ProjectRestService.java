@@ -7,6 +7,7 @@ import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 import org.springframework.core.io.ByteArrayResource;
 
@@ -16,6 +17,7 @@ import java.util.Optional;
 
 public interface ProjectRestService {
     RestResult<ProjectResource> getProjectById(Long projectId);
+    RestResult<SpendProfileResource> getSpendProfile(Long projectId, Long organisationId);
     RestResult<Void> updateProjectManager(Long projectId, Long projectManagerUserId);
     RestResult<Void> updateProjectAddress(long leadOrganisationId, long projectId, OrganisationAddressType addressType, AddressResource address);
     RestResult<List<ProjectResource>> findByUserId(long userId);
@@ -36,4 +38,5 @@ public interface ProjectRestService {
     RestResult<FileEntryResource> addCollaborationAgreementDocument(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes);
     RestResult<Void> removeExploitationPlanDocument(Long projectId);
     RestResult<FileEntryResource> addExploitationPlanDocument(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes);
+    RestResult<Boolean> isOtherDocumentsSubmitAllowed(Long projectId);
 }

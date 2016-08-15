@@ -8,8 +8,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
-
 public class ProjectInviteTest {
 
     ProjectInvite setInvite;
@@ -30,7 +28,6 @@ public class ProjectInviteTest {
         project = new Project();
         hash = "123abcdef";
         organisation = new Organisation();
-        status = InviteStatusConstants.CREATED;
 
         setInvite = new ProjectInvite();
         setInvite.setId(inviteId);
@@ -39,9 +36,8 @@ public class ProjectInviteTest {
         setInvite.setTarget(project);
         setInvite.setHash(hash);
         setInvite.setOrganisation(organisation);
-        setInvite.setStatus(status);
 
-        constructedInvite = new ProjectInvite(name, email,hash, organisation,project);
+        constructedInvite = new ProjectInvite(name, email,hash, organisation,project, status);
     }
 
 
@@ -63,7 +59,7 @@ public class ProjectInviteTest {
         Assert.assertEquals(project, setInvite.getTarget());
         Assert.assertEquals(hash, setInvite.getHash());
         Assert.assertEquals(organisation, setInvite.getOrganisation());
-        Assert.assertEquals(status, setInvite.getStatus());
+
     }
 
 }

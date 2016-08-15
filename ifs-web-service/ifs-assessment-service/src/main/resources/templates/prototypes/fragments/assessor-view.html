@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 
-<!-- ===========================Your profile  =========================== --> 
+<!-- ===========================Your profile  =========================== -->
 <div th:fragment="prototype-assessor-profile">
-    <h2 class="heading-medium">Your profile</h2> 
+    <h2 class="heading-medium">Your profile</h2>
     <ul class="list-bullet">
         <li>
             <a href="/prototypes/1178-assessor-profile-details">Your details</a>
@@ -60,7 +60,7 @@
 <div th:fragment="prototype-assessor-feedback">
     <div th:if="${question == null}">
         <fieldset>
-            <legend class="visuallyhidden">Question score</legend> 
+            <legend class="visuallyhidden">Question score</legend>
             <div class="form-group">
             <label class="form-label form-label-bold" for="assessor-question-score">Question score</label>
             <select class="form-control width-medium" name="assessor-question-score" id="assessor-question-score">
@@ -96,30 +96,30 @@
                 </label>
             </div>
         </fieldset>
-    </div>  
-        
+    </div>
+
      <fieldset>
         <legend class="visuallyhidden">Question feedback</legend>
         <div class="form-group">
             <div class="form-group">
-                
+
                  <label class="form-label form-label-bold" for="assessor-question-feedback-text">Feedback
                     <span class="form-hint">Please justify your <span th:text="${(questionTitle == 'scope' ? 'answer' : 'score')}">SCORE</span> by writing two or three sentences which will be returned to the applicant as feedback</span>
                  </label>
 
                  <div th:replace="prototypes/fragments/assessor-view :: ${'prototype-assessor-guidance-' + questionTitle}"  th:remove="tag" />
-            
+
                 <div class="textarea-wrapped word-count">
-        
+
                     <textarea rows="3" cols="60" data-max_words="350" id="assessor-question-feedback-text" name="assessor-question-feedback-text" aria-hidden="true"></textarea>
 
                     <div class="textarea-footer">
-                        
+
                         <span class="count-label">
                                 <span class="count-message">Words remaining:</span>
                                 <span class="count-down positive" aria-live="polite">349</span>
                         </span>
-                
+
                     </div>
                 </div>
             </div>
@@ -184,19 +184,19 @@
                     </tr>
                     <tr>
                         <th scope="row">5-6</th>
-                        <td> 
+                        <td>
                             The business opportunity is plausible but not clearly expressed in terms of customer needs.
                         </td>
                     </tr>
                     <tr>
                         <th scope="row">3-4</th>
-                        <td> 
+                        <td>
                             The business opportunity is unrealistic or poorly defined. The customer's true needs are not well understood and are not linked to the project's objectives.
                         </td>
                     </tr>
                     <tr>
                         <th scope="row">1-2</th>
-                        <td> 
+                        <td>
                             There is little or no business drive to the project. The results are not relevant to the target customers or no customer interests are provided.
                         </td>
                     </tr>
@@ -232,19 +232,19 @@
                     </tr>
                     <tr>
                         <th scope="row">5-6</th>
-                        <td> 
+                        <td>
                             The market size and dynamics are understood but poorly quantified or stated at a level not really relevant for the project. Return on investment is plausible or badly defined.
                         </td>
                     </tr>
                     <tr>
                         <th scope="row">3-4</th>
-                        <td>  
+                        <td>
                             The market size is not quantified but there is some understanding. Return on investment is ill defined or unrealistic.
                         </td>
                     </tr>
                     <tr>
                         <th scope="row">1-2</th>
-                        <td> 
+                        <td>
                            The market is not well defined or is wrong. No sensible return on investment is provided.
                         </td>
                     </tr>
@@ -280,19 +280,19 @@
                     </tr>
                     <tr>
                         <th scope="row">5-6</th>
-                        <td> 
+                        <td>
                             An exploitation method is defined but lacking in detail or is only just feasible. Dissemination is mentioned.
                         </td>
                     </tr>
                     <tr>
                         <th scope="row">3-4</th>
-                        <td>  
+                        <td>
                             The exploitation and dissemination methods described are unrealistic or ill-defined.
                         </td>
                     </tr>
                     <tr>
                         <th scope="row">1-2</th>
-                        <td> 
+                        <td>
                            The exploitation method is missing or un-feasible and unlikely to succeed.
                         </td>
                     </tr>
@@ -327,19 +327,19 @@
                     </tr>
                     <tr>
                         <th scope="row">5-6</th>
-                        <td> 
+                        <td>
                             Some positive outside benefits are described but the methods to exploit these are not obvious. Or the project is likely to have a negative impact but some mitigation or a balance against the internal benefits is proposed.
                         </td>
                     </tr>
                     <tr>
                         <th scope="row">3-4</th>
-                        <td>  
+                        <td>
                             The project has no outside benefits or is potentially damaging to other stakeholders. No mitigation or exploitation is suggested.
                         </td>
                     </tr>
                     <tr>
                         <th scope="row">1-2</th>
-                        <td> 
+                        <td>
                             The project is damaging to other stakeholders with no realistic mitigation or balance described.
                         </td>
                     </tr>
@@ -369,25 +369,25 @@
                     </tr>
                     <tr>
                         <th scope="row">7-8</th>
-                        <td>  
+                        <td>
                             The plan is well described and complete. There is a reasonable chance that it will meet the objectives of the project.
                         </td>
                     </tr>
                     <tr>
                         <th scope="row">5-6</th>
-                        <td> 
+                        <td>
                             The plan is not completely described or there may be deficiencies in some aspects. More work will be required before the plan can be said to be realistic.
                         </td>
                     </tr>
                     <tr>
                         <th scope="row">3-4</th>
-                        <td>  
+                        <td>
                             The plan has serious deficiencies or major missing aspects. The plan has little chance of meeting the objectives of the project.
                         </td>
                     </tr>
                     <tr>
                         <th scope="row">1-2</th>
-                        <td>   
+                        <td>
                             The plan is totally unrealistic or fails to meet the objectives of the project.
                         </td>
                     </tr>
@@ -417,25 +417,25 @@
                     </tr>
                     <tr>
                         <th scope="row">7-8</th>
-                        <td>  
+                        <td>
                             The project will be innovative and relevant to the market. There is high confidence that there is freedom to operate.
                         </td>
                     </tr>
                     <tr>
                         <th scope="row">5-6</th>
-                        <td> 
+                        <td>
                             The project is innovative but there is a lack of presented evidence as to the freedom to operate.
                         </td>
                     </tr>
                     <tr>
                         <th scope="row">3-4</th>
-                        <td>  
+                        <td>
                             The project lacks sufficient innovation both technically and commercially.
                         </td>
                     </tr>
                     <tr>
                         <th scope="row">1-2</th>
-                        <td>   
+                        <td>
                             The project is either not innovative or there is no exploitable route due to previous IP.
                         </td>
                     </tr>
@@ -464,25 +464,25 @@
                     </tr>
                     <tr>
                         <th scope="row">7-8</th>
-                        <td>  
+                        <td>
                             A good risk analysis has been carried out and the management methods and mitigation strategies proposed are realistic.
                         </td>
                     </tr>
                     <tr>
                         <th scope="row">5-6</th>
-                        <td> 
+                        <td>
                             Most major risks have been identified but there are some gaps or the mitigation and management is insufficient to properly control the risks.
                         </td>
                     </tr>
                     <tr>
                         <th scope="row">3-4</th>
-                        <td>  
+                        <td>
                             The risk analysis is poor or misses major areas of risk. The mitigation and management is poor.
                         </td>
                     </tr>
                     <tr>
                         <th scope="row">1-2</th>
-                        <td>   
+                        <td>
                             The risk analysis is superficial with minimal mitigation or management suggested.
                         </td>
                     </tr>
@@ -511,25 +511,25 @@
                     </tr>
                     <tr>
                         <th scope="row">7-8</th>
-                        <td>  
+                        <td>
                             The consortium is strong and contains all the required skills and experience. The consortium is likely to work well.
                         </td>
                     </tr>
                     <tr>
                         <th scope="row">5-6</th>
-                        <td> 
+                        <td>
                             The consortium has most of the required skills and experience but there are a few gaps. The consortium will need to work hard to maintain a good working relationship.
                         </td>
                     </tr>
                     <tr>
                         <th scope="row">3-4</th>
-                        <td>  
+                        <td>
                             There are significant gaps in the consortium or the formation objectives are unclear. There could be some passengers or the balance of work/commitment is poor.
                         </td>
                     </tr>
                     <tr>
                         <th scope="row">1-2</th>
-                        <td>   
+                        <td>
                             The consortium is not capable of either carrying out the project or exploiting the results.
                         </td>
                     </tr>
@@ -559,26 +559,26 @@
                     </tr>
                     <tr>
                         <th scope="row">7-8</th>
-                        <td>  
+                        <td>
                             The project costs are appropriate and should be sufficient to successfully complete the project. Any mix of research and development types is justified and costed correctly.
                         </td>
                     </tr>
                     <tr>
                         <th scope="row">5-6</th>
-                        <td> 
+                        <td>
                             The project costs and justifications are broadly correct but there are some concerns. Any mix of research and development types is just about acceptable.
 
                         </td>
                     </tr>
                     <tr>
                         <th scope="row">3-4</th>
-                        <td>  
+                        <td>
                             The costs are either too high or too low to carry out the project. Poor justification is provided for any research and development type mix.
                         </td>
                     </tr>
                     <tr>
                         <th scope="row">1-2</th>
-                        <td>   
+                        <td>
                             The costs are not appropriate or justified. Any mix of research and development type is not justified.
                         </td>
                     </tr>
@@ -608,26 +608,26 @@
                     </tr>
                     <tr>
                         <th scope="row">7-8</th>
-                        <td>  
+                        <td>
                             The project will increase the industrial partners' commitment to R&#38;D. The additionality arguments are good and justified.
 
                         </td>
                     </tr>
                     <tr>
                         <th scope="row">5-6</th>
-                        <td> 
+                        <td>
                             The project will improve the industrial partners' commitment to R&#38;D. The additionality arguments are just about acceptable.
                         </td>
                     </tr>
                     <tr>
                         <th scope="row">3-4</th>
-                        <td>  
+                        <td>
                             There is not likely to be any improvement to the industrial partner's commitment to R&#38;D. The additionality arguments are poor or not sufficiently justified.
                         </td>
                     </tr>
                     <tr>
                         <th scope="row">1-2</th>
-                        <td>   
+                        <td>
                             The work should be funded internally and does not deserve state funding.
                         </td>
                     </tr>
@@ -654,7 +654,7 @@
                     <div class="column-assessment-status navigation-right">
                         <div class="application-status invite">
                             <p class="subtitle no-margin">Assessment period:</p>
-                            <p class="heading-small no-margin">15 - 25 April</p>
+                            <p class="heading-small no-margin">15 to 25 April</p>
                         </div>
                     </div>
                 </div>
@@ -677,7 +677,7 @@
                     <div class="column-assessment-status navigation-right">
                         <div class="application-status invite">
                             <h4 class="subtitle no-margin">Assessment period:</h4>
-                            <h5 class="heading-medium no-margin">15 - 25 April</h5>
+                            <h5 class="heading-medium no-margin">15 to 25 April</h5>
                         </div>
                     </div>
                 </div>
@@ -699,7 +699,7 @@
                     <p class="greentext"><strong><span>1</span>/<span>4</span> Assessed</strong></p>
                 </div>
                 <div class="column-half">
-                    
+
                     <div class="competition-deadline">
                         <div class="day">
                             31
@@ -709,7 +709,7 @@
                             <!--<span th:text="${#temporals.format(endDate, 'HH:mm')}" />-->
                         </div>
                     </div>
-                    
+
                     <div class="pie-container">
                         <div class="pie"><svg viewBox="0 0 32 32"><title>67%</title><circle r="16" cx="16" cy="16" stroke-dasharray="67 100"></circle></svg></div>
                         <div class="pie-overlay">
@@ -741,9 +741,9 @@
             <h3 class="heading-large">Applications for assessment (<span>3</span>)</h3>
             <ul class="boxed-list bulk-select">
                 <form id="bulk_assessments_submission" method="GET">
-                    
+
                     <div class="modal-confirm-submit" role="dialog" aria-hidden="true">
-                        
+
                         <button class="js-close close" aria-label="Close Popup">X</button>
                         <h2 class="heading-medium no-margin">This is your final chance to make changes to the assessments. </h2>
                         <p>You will not be able to access the applications after this point. Are you sure you want to submit?</p>
@@ -763,13 +763,13 @@
                             </div>
                             <div class="column-assessment-status navigation-right">
                                 <div class="application-status open empty">
-                                    <p>Open</p>                              
+                                    <p>Open</p>
                                 </div>
 
                             </div>
                         </div>
                         <label>
-                            
+
                         </label>
                     </li>
                     <li>
@@ -789,15 +789,15 @@
                                         <a href="#">accept / reject assessment</a>
                                     </p>
                                     <!--otherwise shows the overall score -->
-                                    
+
                                 </div>
                             </div>
                         </div>
                         <label>
-                            
+
                         </label>
                     </li>
-                    
+
                     <li th:if="${param.status != null and param.status[0] == 'accept'}">
                         <div class="grid-row">
                             <div class="column-assessment-details">
@@ -810,13 +810,13 @@
                             <div class="column-assessment-status navigation-right">
 
                                 <div class="application-status open empty">
-                                    <p>Open</p>                              
+                                    <p>Open</p>
                                 </div>
 
                             </div>
                         </div>
                         <label>
-                            
+
                         </label>
                     </li>
 
@@ -834,14 +834,14 @@
                                 <div class="application-status assessed yes">
                                     <p>Assessed</p>
                                     <!--if assessment is pending acceptance-->
-                                    
+
                                     <!--otherwise shows the overall score -->
                                     <p class="application-listing_pending">
                                         </p><h3 class="score"><span>21.0</span> %</h3>
                                         <small>Overall score</small>
                                         <div class="recommend-container">
                                             <p class="recommend yes"> <span>Recommended</span> </p>
-                                            
+
                                         </div>
                                         <p></p>
                                     </div>
@@ -877,7 +877,7 @@
                                 <small>Overall score</small>
                                 <div class="recommend-container">
                                     <p class="recommend yes"> <span>Recommended</span> </p>
-                                    
+
                                 </div>
                             </div>
                         </div>
@@ -898,7 +898,7 @@
             <form method="post" th:action="${backTo}">
 
                 <div class="form-group">
-                    
+
                     <label for="reject-reason" class="form-label">Please select a reason for rejecting the application</label>
                     <select name="decisionReason" id="reject-reason" required="required" class="form-control">
                         <option value="none">Please select one reason</option>
@@ -912,7 +912,7 @@
                     <textarea id="rejection-observations" name="observations" class="form-control"></textarea>
                 </div>
                 <button class="button button-warning large" name="reject" value="rejected" type="submit">Reject</button>
-            </form> 
+            </form>
             <!--<a role="button" tabindex="0" class="button" th:href="@{/application/{id}/submit(id=${currentApplication.getId()})}">Yes, I want to submit my application</a>-->
         </div>
     </div>
@@ -927,14 +927,14 @@
             <form method="post" th:action="${backTo}">
 
                 <div class="form-group">
-                    
+
                     <label for="reject-reason" class="form-label">Please select a reason for rejecting the competition</label>
                     <select name="decisionReason" id="reject-reason" required="required" class="form-control">
                         <option value="none">Please select one reason</option>
                         <option value="not-available">Not available</option>
                         <option value="conflict-of-interest">Conflict of interest</option>
                         <option value="not-my-area-of-interest">Not my area of expertise</option>
-                        
+
 
                     </select>
                 </div>
@@ -943,7 +943,7 @@
                     <textarea id="rejection-observations" name="observations" class="form-control"></textarea>
                 </div>
                 <button class="button button-warning large" name="reject" value="rejected" type="submit">Reject</button>
-            </form> 
+            </form>
             <!--<a role="button" tabindex="0" class="button" th:href="@{/application/{id}/submit(id=${currentApplication.getId()})}">Yes, I want to submit my application</a>-->
         </div>
     </div>
@@ -969,11 +969,11 @@
 
     <h3 class="heading-small">1,2 References to “Contract” mean this contract (and include the Schedules and Annexes). References to “Clauses” and “Schedules” mean clauses of and schedules to this Contract. The provisions of the Schedules shall be binding on the parties as if set out in full in this Contract. </h3>
 
-    <h3 class="heading-small">1.3 Reference to the singular include the plural and vice versa and references to any gender include both genders. References to a person include any individual, firm, unincorporated association or body corporate. </h3> 
+    <h3 class="heading-small">1.3 Reference to the singular include the plural and vice versa and references to any gender include both genders. References to a person include any individual, firm, unincorporated association or body corporate. </h3>
 
     <h2 class="heading-medium">2. SERVICES</h2>
 
-    <p>In consideration of payment by the Contracting Authority of a sum of the appropriate amount(s) shown in the competition specific Letter of Engagement , excluding VAT, (“the Contract Price”), the Contractor shall provide the “Services”, which include acting as “Project Assessor” as defined in the TSB Assessor Guidelines and as defined in Annex A.</p> 
+    <p>In consideration of payment by the Contracting Authority of a sum of the appropriate amount(s) shown in the competition specific Letter of Engagement , excluding VAT, (“the Contract Price”), the Contractor shall provide the “Services”, which include acting as “Project Assessor” as defined in the TSB Assessor Guidelines and as defined in Annex A.</p>
 
     <h3 class="heading-small">3. COMMENCEMENT AND TERM</h3>
 
@@ -992,7 +992,7 @@
 
     <h3 class="heading-small">5. ASSIGNMENT AND SUB-CONTRACTING </h3>
 
-    <p>5.1 The Contractor shall not give, bargain, sell, assign, sub-contract or otherwise dispose of the Contract or any part thereof without the previous consent in writing of the Contracting Authority.</p> 
+    <p>5.1 The Contractor shall not give, bargain, sell, assign, sub-contract or otherwise dispose of the Contract or any part thereof without the previous consent in writing of the Contracting Authority.</p>
 
     <h3 class="heading-small">6. MANAGEMENT AND COMMUNICATIONS</h3>
 
@@ -1043,7 +1043,7 @@
     <p>10.27 is guilty of any fraud or dishonesty or acts in any manner which in the opinion of the Contracting Authority brings or is likely to bring the Contractor or the Contracting Authority into disrepute or is materially adverse to the interests of the Contracting Authority.</p>
     <p>10.3 The rights of the Contracting Authority under clause 10.2 are without prejudice to any other rights that it might have at law to terminate the Contract or to accept any breach of this Contract on the part of the Contractor as having brought the Contract to an end. Any delay by the Contracting Authority in exercising its rights to terminate shall not constitute a waiver thereof.</p>
 
-    <h3 class="heading-small">11. CONFLICT OF INTEREST</h3> 
+    <h3 class="heading-small">11. CONFLICT OF INTEREST</h3>
 
     <p>11.1 The Contractor shall ensure that there is no conflict of interest as to be likely to prejudice his independence and objectivity in performing the Contract and undertakes that upon becoming aware of any such conflict of interest during the performance of the Contract (whether the conflict existed before the award of the Contract or arises during its performance) he shall immediately notify the TSB in writing of the same, giving particulars of its nature and the circumstances in which it exists or arises and shall furnish such further information as the TSB may reasonably require.</p>
     <p>11.2 Where the TSB is of the opinion that the conflict of interest notified to it under paragraph (1) above is capable of being avoided or removed, the TSB may require the Contractor to take such steps as will, in its opinion, avoid, or as the case may be, remove the conflict and:</p>

@@ -3,14 +3,20 @@ package com.worth.ifs.assessment.transactional;
 import com.worth.ifs.assessment.mapper.AssessorFormInputResponseMapper;
 import com.worth.ifs.assessment.repository.AssessorFormInputResponseRepository;
 import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.form.resource.FormInputResource;
+import com.worth.ifs.form.transactional.FormInputService;
 import com.worth.ifs.transactional.BaseTransactionalService;
+import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.error.CommonFailureKeys.FORM_WORD_LIMIT_EXCEEDED;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
@@ -28,6 +34,9 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
     @Autowired
     private AssessorFormInputResponseMapper assessorFormInputResponseMapper;
 
+    @Autowired
+    private FormInputService formInputService;
+
     @Override
     public ServiceResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponses(Long assessmentId) {
         return serviceSuccess(simpleMap(assessorFormInputResponseRepository.findByAssessmentId(assessmentId), assessorFormInputResponseMapper::mapToResource));
@@ -39,8 +48,13 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
     }
 
     @Override
-    public ServiceResult<Void> updateFormInputResponse(Long assessmentId, Long formInputId, String value) {
-        AssessorFormInputResponseResource assessorFormInputResponse = getOrCreateAssessorFormInputResponse(assessmentId, formInputId).getSuccessObjectOrThrowException();
+    public ServiceResult<Void> updateFormInputResponse(AssessorFormInputResponseResource response) {
+        return validateWordCount(response).andOnSuccessReturnVoid(() -> performUpdateFormInputResponse(response));
+    }
+
+    private ServiceResult<Void> performUpdateFormInputResponse(AssessorFormInputResponseResource response) {
+        AssessorFormInputResponseResource assessorFormInputResponse = getOrCreateAssessorFormInputResponse(response.getAssessment(), response.getFormInput()).getSuccessObjectOrThrowException();
+        String value = response.getValue();
         boolean same = (value == null && assessorFormInputResponse.getValue() == null) || (value != null && value.equals(assessorFormInputResponse.getValue()));
         if (!same) {
             assessorFormInputResponse.setUpdatedDate(now());
@@ -59,5 +73,21 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
                     return serviceSuccess(newAssessorFormInputResponseResource);
                 }, assessorFormInputResponseResource -> serviceSuccess(assessorFormInputResponseMapper.mapToResource(assessorFormInputResponseResource))
         );
+    }
+
+    private ServiceResult<Void> validateWordCount(AssessorFormInputResponseResource response) {
+        String value = response.getValue();
+        FormInputResource formInputResource = formInputService.findFormInput(response.getFormInput()).getSuccessObject();
+        Integer wordLimit = formInputResource.getWordCount();
+
+        if (value != null && wordLimit != null && wordLimit > 0) {
+            // clean any HTML markup from the value
+            String cleaned = Jsoup.parse(value).text();
+
+            if (cleaned.split("\\s+").length > formInputResource.getWordCount()) {
+                return serviceFailure(new Error(FORM_WORD_LIMIT_EXCEEDED));
+            }
+        }
+        return serviceSuccess();
     }
 }

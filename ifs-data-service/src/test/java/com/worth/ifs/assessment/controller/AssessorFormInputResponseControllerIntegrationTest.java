@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Optional;
 
+import static com.worth.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -61,7 +62,12 @@ public class AssessorFormInputResponseControllerIntegrationTest extends BaseCont
 
         assertEquals(oldValue, toBeUpdated.get().getValue());
 
-        RestResult<Void> updateResult = controller.updateFormInputResponse(formInputId, assessmentId, newValue);
+        AssessorFormInputResponseResource updatedAssessorResponse = newAssessorFormInputResponseResource()
+                .withAssessment(assessmentId)
+                .withFormInput(formInputId)
+                .withValue(newValue)
+                .build();
+        RestResult<Void> updateResult = controller.updateFormInputResponse(updatedAssessorResponse);
         assertTrue(updateResult.isSuccess());
 
         RestResult<List<AssessorFormInputResponseResource>> allResponsesAfterResult = controller.getAllAssessorFormInputResponsesByAssessmentAndQuestion(assessmentId, questionId);

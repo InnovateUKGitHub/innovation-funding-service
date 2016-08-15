@@ -598,8 +598,53 @@
 </div>
 
 
-<div th:fragment="setup-home">
-    <div class="extra-margin">
-        <a class="button button-secondary" th:href="@{/competition/setup/{competitionId}/(competitionId=${competition.id})}">Return to setup overview</a>
+<!-- =================== Comp setup section - Application questions (5) ============================== -->
+<div th:fragment="section-application">
+    <div class="hgroup extra-margin-bottom">
+        <h1 class="heading-xlarge no-margin">Application questions</h1>
     </div>
+    <div class="panel-indent">
+        These match the template for the competition type you chose - to change questions you can change the competition type in 'Initial details'
+    </div>
+
+    <p>Template: Programme 10 questions</p>
+
+    <h2 class="heading-large">Questions</h2>
+
+    <ul class="list-overview application-questions">
+
+        <li><h2 class="heading-medium">Application details</h2></li>
+        <li><h2 class="heading-medium">Project summary</h2></li>
+        <li><h2 class="heading-medium">Public description</h2></li>
+        <li><h2 class="heading-medium">Scope</h2></li>
+
+        <th:block th:each="question : ${questions}">
+            <th:block th:include="fragments/competition-setup-section-elements :: application-question(${question}, ${editable})" />
+        </th:block>
+    </ul>
+
+    <div class="extra-margin">
+        <form th:action="@{(${editable} ? '/competition/setup/' + ${competition.id} + '/section/application' : '/competition/setup/' + ${competition.id} + '/section/application/edit')}" method="post" novalidate="novalidate">
+            <button th:if="${editable}" type="submit" class="button">Done</button>
+            <button th:if="${!editable}" type="submit" class="button">Edit</button>
+        </form>
+    </div>
+
+    <ul class="pagination">
+        <li class="prev">
+            <a rel="prev" title="Navigate to prev part" th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${competition.id},sectionPath='milestones')}">
+                <span class="pagination-label">Previous</span>
+                <span class="pagination-part-title">Milestones</span>
+            </a>
+        </li>
+        <li class="next">
+            <a rel="next" title="Navigate to next part" th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${competition.id},sectionPath='finance')}">
+                <span class="pagination-label">Next</span>
+                <span class="pagination-part-title">Application Finances</span>
+            </a>
+        </li>
+    </ul>
 </div>
+
+
+

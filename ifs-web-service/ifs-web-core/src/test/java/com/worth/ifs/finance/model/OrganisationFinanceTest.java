@@ -1,10 +1,10 @@
 package com.worth.ifs.finance.model;
 
-import com.worth.ifs.finance.resource.category.CostCategory;
 import com.worth.ifs.finance.resource.category.DefaultCostCategory;
+import com.worth.ifs.finance.resource.category.FinanceRowCostCategory;
 import com.worth.ifs.finance.resource.category.LabourCostCategory;
 import com.worth.ifs.finance.resource.category.OtherFundingCostCategory;
-import com.worth.ifs.finance.resource.cost.CostType;
+import com.worth.ifs.finance.resource.cost.FinanceRowType;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -29,10 +29,10 @@ public class OrganisationFinanceTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
 
-        EnumMap<CostType, CostCategory> costCategories = new EnumMap<>(CostType.class);
-        costCategories.put(CostType.LABOUR, labourCostCategory);
-        costCategories.put(CostType.OTHER_FUNDING, otherFundingCostCategory);
-        costCategories.put(CostType.CAPITAL_USAGE, defaultCostCategory);
+        EnumMap<FinanceRowType, FinanceRowCostCategory> costCategories = new EnumMap<>(FinanceRowType.class);
+        costCategories.put(FinanceRowType.LABOUR, labourCostCategory);
+        costCategories.put(FinanceRowType.OTHER_FUNDING, otherFundingCostCategory);
+        costCategories.put(FinanceRowType.CAPITAL_USAGE, defaultCostCategory);
 
         //organisationFinance = newOrganisationFinance().withGrantClaimPercentage(50).withCostCategories(costCategories).build();
     }

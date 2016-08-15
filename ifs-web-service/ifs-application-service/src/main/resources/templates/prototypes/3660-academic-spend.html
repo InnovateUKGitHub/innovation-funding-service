@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="full-width">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Project setup status'}, ${(param.user != null and param.user[0] == 'nonLead' ? '/prototypes/1588-project-status?user=nonLead' :'/prototypes/1588-project-status')})" th:remove="tag" />
+
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Spend profile'})" th:remove="tag" />
+
+	<div th:include="prototypes/fragments/spend-profile :: prototype-spend-profile-intro" th:with="type=academic" th:remove="tag" />
+
+	<form>
+
+		<div th:include="prototypes/fragments/spend-profile :: prototype-spend-profile-academic-table" th:remove="tag" />
+
+		<div th:include="prototypes/fragments/spend-profile :: prototype-spend-profile-totals" th:remove="tag" />
+
+		<div th:include="prototypes/fragments/spend-profile :: prototype-spend-profile-controls" th:with="type=academic" th:remove="tag" />
+
+	</form>
+
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+	// <![CDATA[
+
+	// ]]>
+</script>
+</body>
+</html>

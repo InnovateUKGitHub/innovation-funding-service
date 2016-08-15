@@ -8,9 +8,9 @@ import javax.validation.constraints.*;
 import java.math.BigDecimal;
 
 /**
- * {@code SubContractingCost} implements {@link CostItem}
+ * {@code SubContractingCost} implements {@link FinanceRowItem}
  */
-public class SubContractingCost implements CostItem {
+public class SubContractingCost implements FinanceRowItem {
     private Long id;
 
     @NotNull
@@ -81,8 +81,8 @@ public class SubContractingCost implements CostItem {
     }
 
     @Override
-    public CostType getCostType() {
-        return CostType.SUBCONTRACTING_COSTS;
+    public FinanceRowType getCostType() {
+        return FinanceRowType.SUBCONTRACTING_COSTS;
     }
 
     public void setCost(BigDecimal cost) {

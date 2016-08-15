@@ -17,10 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -39,7 +36,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
  * Controller backing the Other Documents page
  */
 @Controller
-@RequestMapping("/project/{projectId}/other-documents")
+@RequestMapping("/project/{projectId}/partner/documents")
 public class ProjectOtherDocumentsController {
 
     private static final String FORM_ATTR = "form";
@@ -55,8 +52,19 @@ public class ProjectOtherDocumentsController {
         return doViewOtherDocumentsPage(projectId, model, loggedInUser, form);
     }
 
+    @RequestMapping(value = "/ready", method = RequestMethod.GET)
+    public String projectDetail(Model model, @PathVariable("projectId") final Long projectId,
+                                @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+
+        ProjectOtherDocumentsForm form = new ProjectOtherDocumentsForm();
+        return doViewOtherDocumentsPage(projectId, model, loggedInUser, form);
+    }
+
+
     @RequestMapping(value = "/collaboration-agreement", method = GET)
-    public @ResponseBody ResponseEntity<ByteArrayResource> downloadCollaborationAgreementFile(
+    public
+    @ResponseBody
+    ResponseEntity<ByteArrayResource> downloadCollaborationAgreementFile(
             @PathVariable("projectId") final Long projectId) {
 
         final Optional<ByteArrayResource> content = projectService.getCollaborationAgreementFile(projectId);
@@ -85,18 +93,20 @@ public class ProjectOtherDocumentsController {
 
     @RequestMapping(params = "removeCollaborationAgreementClicked", method = POST)
     public String removeCollaborationAgreementFile(@PathVariable("projectId") final Long projectId,
-                                             @ModelAttribute(FORM_ATTR) ProjectOtherDocumentsForm form,
-                                             @SuppressWarnings("unused") BindingResult bindingResult,
-                                             ValidationHandler validationHandler,
-                                             Model model,
-                                             @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+                                                   @ModelAttribute(FORM_ATTR) ProjectOtherDocumentsForm form,
+                                                   @SuppressWarnings("unused") BindingResult bindingResult,
+                                                   ValidationHandler validationHandler,
+                                                   Model model,
+                                                   @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
         return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "collaborationAgreement", form,
                 () -> projectService.removeCollaborationAgreementDocument(projectId));
     }
 
     @RequestMapping(value = "/exploitation-plan", method = GET)
-    public @ResponseBody ResponseEntity<ByteArrayResource> downloadExploitationPlanFile(
+    public
+    @ResponseBody
+    ResponseEntity<ByteArrayResource> downloadExploitationPlanFile(
             @PathVariable("projectId") final Long projectId) {
 
         final Optional<ByteArrayResource> content = projectService.getExploitationPlanFile(projectId);
@@ -160,19 +170,21 @@ public class ProjectOtherDocumentsController {
 
         boolean leadPartner = projectService.isUserLeadPartner(projectId, loggedInUser.getId());
 
+        boolean isSubmitAllowed = projectService.isOtherDocumentSubmitAllowed(projectId).isSuccess() ? true : false;
+
         // TODO DW - these rejection messages to be covered in other stories
         List<String> rejectionReasons = emptyList();
 
         // TODO DW - these flags to be covered in other stories
-        boolean otherDocumentsSubmitted = false;
         boolean otherDocumentsApproved = false;
+        boolean otherDocumentsSubmitted = false;
 
         return new ProjectOtherDocumentsViewModel(projectId, project.getName(),
                 collaborationAgreement.map(FileDetailsViewModel::new).orElse(null),
                 exploitationPlan.map(FileDetailsViewModel::new).orElse(null),
                 partnerOrganisationNames, rejectionReasons,
-                leadPartner, otherDocumentsSubmitted, otherDocumentsApproved
-        );
+                leadPartner, otherDocumentsSubmitted, otherDocumentsApproved,
+                isSubmitAllowed);
     }
 
     private ResponseEntity<ByteArrayResource> returnFileIfFoundOrThrowNotFoundException(Long projectId, Optional<ByteArrayResource> content, Optional<FileEntryResource> fileDetails) {
@@ -184,6 +196,6 @@ public class ProjectOtherDocumentsController {
     }
 
     private String redirectToOtherDocumentsPage(Long projectId) {
-        return "redirect:/project/" + projectId + "/other-documents";
+        return "redirect:/project/" + projectId + "/partner/documents";
     }
 }

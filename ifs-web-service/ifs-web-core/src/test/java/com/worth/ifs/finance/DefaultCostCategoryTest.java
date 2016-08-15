@@ -1,10 +1,8 @@
 package com.worth.ifs.finance;
 
-import com.worth.ifs.application.resource.QuestionResource;
-import com.worth.ifs.finance.resource.ApplicationFinanceResource;
-import com.worth.ifs.finance.resource.CostResource;
+import com.worth.ifs.finance.resource.FinanceRowResource;
 import com.worth.ifs.finance.resource.category.DefaultCostCategory;
-import com.worth.ifs.finance.resource.cost.CostItem;
+import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,11 +15,11 @@ import java.util.List;
 public class DefaultCostCategoryTest {
 
     DefaultCostCategory defaultCostCategory;
-    List<CostItem> costs;
+    List<FinanceRowItem> costs;
     BigDecimal total;
-    CostResource cost1;
-    CostResource cost2;
-    CostResource cost3;
+    FinanceRowResource cost1;
+    FinanceRowResource cost2;
+    FinanceRowResource cost3;
 
     @Before
     public void setUp() throws Exception {

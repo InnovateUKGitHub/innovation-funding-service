@@ -204,10 +204,10 @@ table.project-changes{
 
 .flex-table{
 	display: flex; 
-	position: relative;
+	position: relative; 
 		
 	.flex-left{
-		flex: 0 0 270px;
+		flex: 0 0 310px;
 		border-right: 1px solid #bfc1c3;
 		margin-right: 5px;
 		-webkit-transform: translateZ(0); // To fix a strange chrome peekaboo style issue
@@ -224,8 +224,22 @@ table.project-changes{
 
 	.fix-left{
 		position: absolute;
-		width: 270px;
+		width: 310px;
 		left: 0;
+		padding: 1.3em 0;
+	}
+
+	.fix-left1{
+		position: absolute;
+		width: 135px;
+		left: 0;
+		padding: 1.3em 0;
+	}
+
+	.fix-left2{
+		position: absolute;
+		width: 175px;
+		left: 135px;
 		padding: 1.3em 0;
 	}
 
@@ -260,11 +274,14 @@ table.project-changes{
 		}
 
 		.fix-left,
+		.fix-left1,
+		.fix-left2,
 		.fix-middle,
 		.fix-right,
 		.fix-right2{
 			position: static;
 			width: auto;
+			padding: .75em 1.25em .5625em 0
 		}
 	}
 

@@ -3,16 +3,21 @@ package com.worth.ifs.project.service;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.service.ApplicationService;
+import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.project.ProjectServiceImpl;
+import com.worth.ifs.project.builder.SpendProfileResourceBuilder;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.core.io.ByteArrayResource;
 
@@ -23,273 +28,307 @@ import java.util.Optional;
 import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static com.worth.ifs.address.resource.OrganisationAddressType.REGISTERED;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_OTHER_DOCUMENTS_MUST_BE_UPLOADED_BEFORE_SUBMIT;
+import static com.worth.ifs.commons.rest.RestResult.restFailure;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static junit.framework.TestCase.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ProjectServiceImplTest {
 
-	@InjectMocks
-	private ProjectServiceImpl service;
+    @InjectMocks
+    private ProjectServiceImpl service;
 
-	@Mock
-	private ProjectRestService projectRestService;
+    @Mock
+    private ProjectRestService projectRestService;
 
-	@Mock
-	private ApplicationService applicationService;
+    @Mock
+    private ApplicationService applicationService;
 
-	@Test
-	public void testGetById(){
-		ProjectResource projectResource = newProjectResource().build();
+    @Test
+    public void testGetById() {
+        ProjectResource projectResource = newProjectResource().build();
 
-		when(projectRestService.getProjectById(projectResource.getId())).thenReturn(restSuccess(projectResource));
+        when(projectRestService.getProjectById(projectResource.getId())).thenReturn(restSuccess(projectResource));
 
-		ProjectResource returnedProjectResource = service.getById(projectResource.getId());
+        ProjectResource returnedProjectResource = service.getById(projectResource.getId());
 
-		assertEquals(projectResource, returnedProjectResource);
+        assertEquals(projectResource, returnedProjectResource);
 
-		verify(projectRestService).getProjectById(projectResource.getId());
-	}
-	
-	@Test
-	public void testUpdateFinanceContact() {
-		Long projectId = 1L;
-		Long organisationId = 2L;
-		Long financeContactId = 3L;
-		
-		when(projectRestService.updateFinanceContact(projectId, organisationId, financeContactId)).thenReturn(restSuccess());
-		
-		service.updateFinanceContact(projectId, organisationId, financeContactId);
-		
-		verify(projectRestService).updateFinanceContact(projectId, organisationId, financeContactId);
-	}
+        verify(projectRestService).getProjectById(projectResource.getId());
+    }
 
-	@Test
-	public void testGetProjectUsersForProject(){
-		Long projectId = 1L;
+    @Test
+    public void testUpdateFinanceContact() {
+        Long projectId = 1L;
+        Long organisationId = 2L;
+        Long financeContactId = 3L;
 
-		List<ProjectUserResource> projectUsers = newProjectUserResource().build(5);
+        when(projectRestService.updateFinanceContact(projectId, organisationId, financeContactId)).thenReturn(restSuccess());
 
-		when(projectRestService.getProjectUsersForProject(projectId)).thenReturn(restSuccess(projectUsers));
+        service.updateFinanceContact(projectId, organisationId, financeContactId);
 
-		List<ProjectUserResource> returnedProjectUsers = service.getProjectUsersForProject(projectId);
+        verify(projectRestService).updateFinanceContact(projectId, organisationId, financeContactId);
+    }
 
-		assertEquals(returnedProjectUsers, projectUsers);
+    @Test
+    public void testGetProjectUsersForProject() {
+        Long projectId = 1L;
 
-		verify(projectRestService).getProjectUsersForProject(projectId);
-	}
+        List<ProjectUserResource> projectUsers = newProjectUserResource().build(5);
 
-	@Test
-	public void testGetByApplicationId(){
-		ApplicationResource applicationResource = newApplicationResource().build();
+        when(projectRestService.getProjectUsersForProject(projectId)).thenReturn(restSuccess(projectUsers));
 
-		ProjectResource projectResource = newProjectResource().withApplication(applicationResource).build();
+        List<ProjectUserResource> returnedProjectUsers = service.getProjectUsersForProject(projectId);
 
-		when(projectRestService.getByApplicationId(applicationResource.getId())).thenReturn(restSuccess(projectResource));
+        assertEquals(returnedProjectUsers, projectUsers);
 
-		ProjectResource returnedProjectResource = service.getByApplicationId(applicationResource.getId());
+        verify(projectRestService).getProjectUsersForProject(projectId);
+    }
 
-		assertEquals(returnedProjectResource, projectResource);
+    @Test
+    public void testGetByApplicationId() {
+        ApplicationResource applicationResource = newApplicationResource().build();
 
-		verify(projectRestService).getByApplicationId(applicationResource.getId());
-	}
+        ProjectResource projectResource = newProjectResource().withApplication(applicationResource).build();
 
-	@Test
-	public void testUpdateProjectManager(){
-		when(projectRestService.updateProjectManager(1L, 2L)).thenReturn(restSuccess());
+        when(projectRestService.getByApplicationId(applicationResource.getId())).thenReturn(restSuccess(projectResource));
 
-		service.updateProjectManager(1L, 2L);
+        ProjectResource returnedProjectResource = service.getByApplicationId(applicationResource.getId());
 
-		verify(projectRestService).updateProjectManager(1L, 2L);
-	}
+        assertEquals(returnedProjectResource, projectResource);
 
-	@Test
-	public void testFindByUser(){
-		List<ProjectResource> projects = newProjectResource().build(3);
+        verify(projectRestService).getByApplicationId(applicationResource.getId());
+    }
 
-		when(projectRestService.findByUserId(1L)).thenReturn(restSuccess(projects));
+    @Test
+    public void testUpdateProjectManager() {
+        when(projectRestService.updateProjectManager(1L, 2L)).thenReturn(restSuccess());
 
-		ServiceResult<List<ProjectResource>> result = service.findByUser(1L);
+        service.updateProjectManager(1L, 2L);
 
-		assertTrue(result.isSuccess());
+        verify(projectRestService).updateProjectManager(1L, 2L);
+    }
 
-		assertEquals(result.getSuccessObject(), projects);
+    @Test
+    public void testFindByUser() {
+        List<ProjectResource> projects = newProjectResource().build(3);
 
-		verify(projectRestService).findByUserId(1L);
-	}
+        when(projectRestService.findByUserId(1L)).thenReturn(restSuccess(projects));
 
-	public void testUpdateProjectStartDate(){
-		LocalDate date = LocalDate.now();
+        ServiceResult<List<ProjectResource>> result = service.findByUser(1L);
 
-		when(projectRestService.updateProjectStartDate(1L, date)).thenReturn(restSuccess());
+        assertTrue(result.isSuccess());
 
-		ServiceResult<Void> result = service.updateProjectStartDate(1L, date);
+        assertEquals(result.getSuccessObject(), projects);
 
-		assertTrue(result.isSuccess());
+        verify(projectRestService).findByUserId(1L);
+    }
 
-		verify(projectRestService).updateProjectStartDate(1L, date).toServiceResult();
-	}
+    public void testUpdateProjectStartDate() {
+        LocalDate date = LocalDate.now();
 
-	@Test
-	public void testUpdateAddress(){
-		Long leadOrgId = 1L;
-		Long projectId = 2L;
-		AddressResource addressResource = newAddressResource().build();
+        when(projectRestService.updateProjectStartDate(1L, date)).thenReturn(restSuccess());
 
-		when(projectRestService.updateProjectAddress(leadOrgId, projectId, REGISTERED, addressResource)).thenReturn(restSuccess());
+        ServiceResult<Void> result = service.updateProjectStartDate(1L, date);
 
-		ServiceResult<Void> result = service.updateAddress(leadOrgId, projectId, REGISTERED, addressResource);
+        assertTrue(result.isSuccess());
 
-		assertTrue(result.isSuccess());
+        verify(projectRestService).updateProjectStartDate(1L, date).toServiceResult();
+    }
 
-		verify(projectRestService).updateProjectAddress(leadOrgId, projectId, REGISTERED, addressResource);
-	}
+    @Test
+    public void testUpdateAddress() {
+        Long leadOrgId = 1L;
+        Long projectId = 2L;
+        AddressResource addressResource = newAddressResource().build();
 
-	@Test
-	public void testSetApplicationDetailsSubmitted(){
-		when(projectRestService.setApplicationDetailsSubmitted(1L)).thenReturn(restSuccess());
+        when(projectRestService.updateProjectAddress(leadOrgId, projectId, REGISTERED, addressResource)).thenReturn(restSuccess());
 
-		ServiceResult<Void> result = service.setApplicationDetailsSubmitted(1L);
+        ServiceResult<Void> result = service.updateAddress(leadOrgId, projectId, REGISTERED, addressResource);
 
-		assertTrue(result.isSuccess());
+        assertTrue(result.isSuccess());
 
-		verify(projectRestService).setApplicationDetailsSubmitted(1L);
-	}
+        verify(projectRestService).updateProjectAddress(leadOrgId, projectId, REGISTERED, addressResource);
+    }
 
-	@Test
-	public void testIsSubmitAllowed(){
-		when(projectRestService.isSubmitAllowed(1L)).thenReturn(restSuccess(false));
+    @Test
+    public void testSetApplicationDetailsSubmitted() {
+        when(projectRestService.setApplicationDetailsSubmitted(1L)).thenReturn(restSuccess());
 
-		ServiceResult<Boolean> result = service.isSubmitAllowed(1L);
+        ServiceResult<Void> result = service.setApplicationDetailsSubmitted(1L);
 
-		assertTrue(result.isSuccess());
+        assertTrue(result.isSuccess());
 
-		verify(projectRestService).isSubmitAllowed(1L);
-	}
+        verify(projectRestService).setApplicationDetailsSubmitted(1L);
+    }
 
-	@Test
-	public void testGetLeadOrganisation(){
-		OrganisationResource organisationResource = newOrganisationResource().build();
+    @Test
+    public void testIsSubmitAllowed() {
+        when(projectRestService.isSubmitAllowed(1L)).thenReturn(restSuccess(false));
 
-		ApplicationResource applicationResource = newApplicationResource().build();
+        ServiceResult<Boolean> result = service.isSubmitAllowed(1L);
 
-		ProjectResource projectResource = newProjectResource().withApplication(applicationResource).build();
+        assertTrue(result.isSuccess());
 
-		when(projectRestService.getProjectById(projectResource.getId())).thenReturn(restSuccess(projectResource));
+        verify(projectRestService).isSubmitAllowed(1L);
+    }
 
-		when(applicationService.getLeadOrganisation(projectResource.getApplication())).thenReturn(organisationResource);
+    @Test
+    public void testGetLeadOrganisation() {
+        OrganisationResource organisationResource = newOrganisationResource().build();
 
-		OrganisationResource returnedOrganisationResource = service.getLeadOrganisation(projectResource.getId());
+        ApplicationResource applicationResource = newApplicationResource().build();
 
-		assertEquals(organisationResource, returnedOrganisationResource);
+        ProjectResource projectResource = newProjectResource().withApplication(applicationResource).build();
 
-		verify(projectRestService).getProjectById(projectResource.getId());
+        when(projectRestService.getProjectById(projectResource.getId())).thenReturn(restSuccess(projectResource));
 
-		verify(applicationService).getLeadOrganisation(projectResource.getApplication());
-	}
+        when(applicationService.getLeadOrganisation(projectResource.getApplication())).thenReturn(organisationResource);
 
-	@Test
-	public void testAddCollaborationAgreement() {
+        OrganisationResource returnedOrganisationResource = service.getLeadOrganisation(projectResource.getId());
 
-		FileEntryResource createdFile = newFileEntryResource().build();
+        assertEquals(organisationResource, returnedOrganisationResource);
 
-		when(projectRestService.addCollaborationAgreementDocument(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes())).
-				thenReturn(restSuccess(createdFile));
+        verify(projectRestService).getProjectById(projectResource.getId());
 
-		ServiceResult<FileEntryResource> result =
-				service.addCollaborationAgreementDocument(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes());
+        verify(applicationService).getLeadOrganisation(projectResource.getApplication());
+    }
 
-		assertTrue(result.isSuccess());
-		assertEquals(createdFile, result.getSuccessObject());
-	}
+    @Test
+    public void testAddCollaborationAgreement() {
 
-	@Test
-	public void testGetCollaborationAgreementFile() {
+        FileEntryResource createdFile = newFileEntryResource().build();
 
-		Optional<ByteArrayResource> content = Optional.of(new ByteArrayResource("My content!".getBytes()));
-		when(projectRestService.getCollaborationAgreementFile(123L)).thenReturn(restSuccess(content));
+        when(projectRestService.addCollaborationAgreementDocument(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes())).
+                thenReturn(restSuccess(createdFile));
 
-		Optional<ByteArrayResource> result = service.getCollaborationAgreementFile(123L);
-		assertEquals(content, result);
-	}
+        ServiceResult<FileEntryResource> result =
+                service.addCollaborationAgreementDocument(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes());
 
-	@Test
-	public void testGetCollaborationAgreementFileDetails() {
+        assertTrue(result.isSuccess());
+        assertEquals(createdFile, result.getSuccessObject());
+    }
 
-		FileEntryResource returnedFile = newFileEntryResource().build();
+    @Test
+    public void testGetCollaborationAgreementFile() {
 
-		Optional<FileEntryResource> response = Optional.of(returnedFile);
-		when(projectRestService.getCollaborationAgreementFileDetails(123L)).thenReturn(restSuccess(response));
+        Optional<ByteArrayResource> content = Optional.of(new ByteArrayResource("My content!".getBytes()));
+        when(projectRestService.getCollaborationAgreementFile(123L)).thenReturn(restSuccess(content));
 
-		Optional<FileEntryResource> result = service.getCollaborationAgreementFileDetails(123L);
-		assertEquals(response, result);
-	}
+        Optional<ByteArrayResource> result = service.getCollaborationAgreementFile(123L);
+        assertEquals(content, result);
+    }
 
-	@Test
-	public void testRemoveCollaborationAgreement() {
+    @Test
+    public void testGetCollaborationAgreementFileDetails() {
 
-		when(projectRestService.removeCollaborationAgreementDocument(123L)).thenReturn(restSuccess());
+        FileEntryResource returnedFile = newFileEntryResource().build();
 
-		ServiceResult<Void> result = service.removeCollaborationAgreementDocument(123L);
+        Optional<FileEntryResource> response = Optional.of(returnedFile);
+        when(projectRestService.getCollaborationAgreementFileDetails(123L)).thenReturn(restSuccess(response));
 
-		assertTrue(result.isSuccess());
+        Optional<FileEntryResource> result = service.getCollaborationAgreementFileDetails(123L);
+        assertEquals(response, result);
+    }
 
-		verify(projectRestService).removeCollaborationAgreementDocument(123L);
-	}
+    @Test
+    public void testRemoveCollaborationAgreement() {
 
-	@Test
-	public void testAddExploitationPlan() {
+        when(projectRestService.removeCollaborationAgreementDocument(123L)).thenReturn(restSuccess());
 
-		FileEntryResource createdFile = newFileEntryResource().build();
+        ServiceResult<Void> result = service.removeCollaborationAgreementDocument(123L);
 
-		when(projectRestService.addExploitationPlanDocument(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes())).
-				thenReturn(restSuccess(createdFile));
+        assertTrue(result.isSuccess());
 
-		ServiceResult<FileEntryResource> result =
-				service.addExploitationPlanDocument(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes());
+        verify(projectRestService).removeCollaborationAgreementDocument(123L);
+    }
 
-		assertTrue(result.isSuccess());
-		assertEquals(createdFile, result.getSuccessObject());
-	}
+    @Test
+    public void testAddExploitationPlan() {
 
-	@Test
-	public void testGetCExploitationPlanFile() {
+        FileEntryResource createdFile = newFileEntryResource().build();
 
-		Optional<ByteArrayResource> content = Optional.of(new ByteArrayResource("My content!".getBytes()));
-		when(projectRestService.getExploitationPlanFile(123L)).thenReturn(restSuccess(content));
+        when(projectRestService.addExploitationPlanDocument(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes())).
+                thenReturn(restSuccess(createdFile));
 
-		Optional<ByteArrayResource> result = service.getExploitationPlanFile(123L);
-		assertEquals(content, result);
-	}
+        ServiceResult<FileEntryResource> result =
+                service.addExploitationPlanDocument(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes());
 
-	@Test
-	public void testGetExploitationPlanFileDetails() {
+        assertTrue(result.isSuccess());
+        assertEquals(createdFile, result.getSuccessObject());
+    }
 
-		FileEntryResource returnedFile = newFileEntryResource().build();
+    @Test
+    public void testGetCExploitationPlanFile() {
 
-		Optional<FileEntryResource> response = Optional.of(returnedFile);
-		when(projectRestService.getExploitationPlanFileDetails(123L)).thenReturn(restSuccess(response));
+        Optional<ByteArrayResource> content = Optional.of(new ByteArrayResource("My content!".getBytes()));
+        when(projectRestService.getExploitationPlanFile(123L)).thenReturn(restSuccess(content));
 
-		Optional<FileEntryResource> result = service.getExploitationPlanFileDetails(123L);
-		assertEquals(response, result);
-	}
+        Optional<ByteArrayResource> result = service.getExploitationPlanFile(123L);
+        assertEquals(content, result);
+    }
 
-	@Test
-	public void testRemoveExploitationPlan() {
+    @Test
+    public void testGetExploitationPlanFileDetails() {
 
-		when(projectRestService.removeExploitationPlanDocument(123L)).thenReturn(restSuccess());
+        FileEntryResource returnedFile = newFileEntryResource().build();
 
-		ServiceResult<Void> result = service.removeExploitationPlanDocument(123L);
+        Optional<FileEntryResource> response = Optional.of(returnedFile);
+        when(projectRestService.getExploitationPlanFileDetails(123L)).thenReturn(restSuccess(response));
 
-		assertTrue(result.isSuccess());
+        Optional<FileEntryResource> result = service.getExploitationPlanFileDetails(123L);
+        assertEquals(response, result);
+    }
 
-		verify(projectRestService).removeExploitationPlanDocument(123L);
-	}
+    @Test
+    public void testRemoveExploitationPlan() {
+
+        when(projectRestService.removeExploitationPlanDocument(123L)).thenReturn(restSuccess());
+
+        ServiceResult<Void> result = service.removeExploitationPlanDocument(123L);
+
+        assertTrue(result.isSuccess());
+
+        verify(projectRestService).removeExploitationPlanDocument(123L);
+    }
+
+    @Test
+    public void testOtherDocumentsSubmitAllowedWhenAllFilesUploaded() throws Exception {
+
+        when(projectRestService.isOtherDocumentsSubmitAllowed(123L)).thenReturn(restSuccess(true));
+
+        ServiceResult<Boolean> submitAllowed = service.isOtherDocumentSubmitAllowed(123L);
+
+        assertTrue(submitAllowed.isSuccess());
+
+        verify(projectRestService).isOtherDocumentsSubmitAllowed(123L);
+    }
+
+    @Test
+    public void testOtherDocumentsSubmitAllowedWhenNotAllFilesUploaded() throws Exception {
+
+        when(projectRestService.isOtherDocumentsSubmitAllowed(123L)).thenReturn(restFailure(new Error(PROJECT_SETUP_OTHER_DOCUMENTS_MUST_BE_UPLOADED_BEFORE_SUBMIT)));
+
+        ServiceResult<Boolean> submitAllowed = null;
+
+        submitAllowed = service.isOtherDocumentSubmitAllowed(123L);
+
+        assertTrue(submitAllowed
+                .getFailure().is(new Error(PROJECT_SETUP_OTHER_DOCUMENTS_MUST_BE_UPLOADED_BEFORE_SUBMIT)));
+
+        verify(projectRestService).isOtherDocumentsSubmitAllowed(123L);
+    }
+
+
 }

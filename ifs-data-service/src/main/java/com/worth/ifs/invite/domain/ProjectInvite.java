@@ -1,7 +1,5 @@
 package com.worth.ifs.invite.domain;
 
-import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.user.domain.Organisation;
@@ -13,7 +11,7 @@ import javax.persistence.ManyToOne;
 
 @Entity
 @DiscriminatorValue("PROJECT")
-public class ProjectInvite extends Invite<Project> {
+public class ProjectInvite extends Invite<Project, ProjectInvite> {
 
     @ManyToOne
     @JoinColumn(name = "owner_id", referencedColumnName = "id")
@@ -27,8 +25,8 @@ public class ProjectInvite extends Invite<Project> {
         // no-arg constructor
     }
 
-    public ProjectInvite(final String name, final String email, final String hash, final Organisation organisation, final Project project) {
-        super(name, email, hash, InviteStatusConstants.CREATED);
+    public ProjectInvite(final String name, final String email, final String hash, final Organisation organisation, final Project project, final InviteStatusConstants status) {
+        super(name, email, hash, status);
         this.project = project;
         this.organisation = organisation;
     }

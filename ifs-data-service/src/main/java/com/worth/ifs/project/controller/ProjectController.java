@@ -1,46 +1,37 @@
 package com.worth.ifs.project.controller;
 
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.bankdetails.resource.BankDetailsResource;
 import com.worth.ifs.bankdetails.transactional.BankDetailsService;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.transactional.FileHttpHeadersValidator;
+import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.user.resource.OrganisationResource;
-
+import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import static com.worth.ifs.file.controller.FileControllerUtils.handleFileDownload;
-import static com.worth.ifs.file.controller.FileControllerUtils.handleFileUpdate;
-import static com.worth.ifs.file.controller.FileControllerUtils.handleFileUpload;
-import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
-import static org.springframework.web.bind.annotation.RequestMethod.PUT;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+
+import static com.worth.ifs.file.controller.FileControllerUtils.*;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 /**
  * ProjectController exposes Project data and operations through a REST API.
@@ -58,6 +49,10 @@ public class ProjectController {
     @Autowired
     @Qualifier("projectSetupOtherDocumentsFileValidator")
     private FileHttpHeadersValidator fileValidator;
+
+    @Autowired
+    private UserAuthenticationService userAuthenticationService;
+
 
     @RequestMapping("/{id}")
     public RestResult<ProjectResource> getProjectById(@PathVariable("id") final Long id) {
@@ -105,6 +100,18 @@ public class ProjectController {
         return projectService.updateFinanceContact(projectId, organisationId, financeContactUserId).toPostResponse();
     }
 
+    @RequestMapping(value = "/{projectId}/invite-finance-contact", method = POST)
+    public RestResult<Void> inviteFinanceContact(@PathVariable("projectId") final Long projectId,
+                                                 @RequestBody @Valid final ApplicationInviteResource inviteResource) {
+       return projectService.inviteFinanceContact(projectId, inviteResource).toPostResponse();
+    }
+
+    @RequestMapping(value = "/{projectId}/invite-project-manager", method = POST)
+    public RestResult<Void> inviteProjectManager(@PathVariable("projectId") final Long projectId,
+                                                 @RequestBody @Valid final ApplicationInviteResource inviteResource) {
+        return projectService.inviteProjectManager(projectId, inviteResource).toPostResponse();
+    }
+
     @RequestMapping(value = "/{projectId}/project-users", method = GET)
     public RestResult<List<ProjectUserResource>> getProjectUsers(@PathVariable("projectId") final Long projectId) {
         return projectService.getProjectUsers(projectId).toGetResponse();
@@ -125,14 +132,14 @@ public class ProjectController {
         return projectService.getMonitoringOfficer(projectId).toGetResponse();
     }
 
-	@RequestMapping(value = "/{projectId}/monitoring-officer", method = PUT)
+    @RequestMapping(value = "/{projectId}/monitoring-officer", method = PUT)
     public RestResult<Void> saveMonitoringOfficer(@PathVariable("projectId") final Long projectId,
                                                   @RequestBody @Valid final MonitoringOfficerResource monitoringOfficerResource) {
-
         return projectService.saveMonitoringOfficer(projectId, monitoringOfficerResource)
                 .andOnSuccess(() -> projectService.notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource))
                 .toPutResponse();
     }
+
     @RequestMapping(value = "/{projectId}/getOrganisationByUser/{userId}", method = GET)
     public RestResult<OrganisationResource> getOrganisationByProjectAndUser(@PathVariable("projectId") final Long projectId,
                                                                             @PathVariable("userId") final Long userId){
@@ -247,5 +254,13 @@ public class ProjectController {
             @PathVariable("projectId") long projectId) throws IOException {
 
         return projectService.deleteExploitationPlanFile(projectId).toDeleteResponse();
+    }
+
+    @RequestMapping(value = "/{projectId}/partner/documents/ready", method = GET)
+    public RestResult<Boolean>isOtherDocumentsSubmitAllowed(@PathVariable("projectId") final Long projectId,
+                                                            HttpServletRequest request) {
+
+        UserResource authenticatedUser = userAuthenticationService.getAuthenticatedUser(request);
+        return projectService.isOtherDocumentsSubmitAllowed(projectId, authenticatedUser.getId()).toGetResponse();
     }
 }

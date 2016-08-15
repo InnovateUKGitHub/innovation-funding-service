@@ -4,10 +4,10 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.finance.handler.OrganisationFinanceDelegate;
-import com.worth.ifs.finance.handler.item.CostHandler;
-import com.worth.ifs.finance.mapper.CostMapper;
-import com.worth.ifs.finance.resource.cost.CostItem;
-import com.worth.ifs.finance.transactional.CostService;
+import com.worth.ifs.finance.handler.item.FinanceRowHandler;
+import com.worth.ifs.finance.mapper.FinanceRowMapper;
+import com.worth.ifs.finance.resource.cost.FinanceRowItem;
+import com.worth.ifs.finance.transactional.FinanceRowService;
 import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.repository.FormInputRepository;
@@ -39,10 +39,10 @@ public class ValidatorServiceImpl extends BaseTransactionalService implements Va
     private OrganisationFinanceDelegate organisationFinanceDelegate;
 
     @Autowired
-    private CostService costService;
+    private FinanceRowService financeRowService;
 
     @Autowired
-    private CostMapper costMapper;
+    private FinanceRowMapper financeRowMapper;
 
     @Autowired
     private ValidationUtil validationUtil;
@@ -78,8 +78,8 @@ public class ValidatorServiceImpl extends BaseTransactionalService implements Va
     @Override
     public List<ValidationMessages> validateCostItem(Long applicationId, Question question, Long markedAsCompleteById) {
         return getProcessRole(markedAsCompleteById).andOnSuccess(role ->
-             costService.financeDetails(applicationId, role.getOrganisation().getId()).andOnSuccess(financeDetails ->
-                 costService.getCostItems(financeDetails.getId(), question.getId()).andOnSuccessReturn(costItems ->
+             financeRowService.financeDetails(applicationId, role.getOrganisation().getId()).andOnSuccess(financeDetails ->
+                 financeRowService.getCostItems(financeDetails.getId(), question.getId()).andOnSuccessReturn(costItems ->
                     validationUtil.validateCostItem(costItems, question)
                 )
             )
@@ -87,7 +87,7 @@ public class ValidatorServiceImpl extends BaseTransactionalService implements Va
     }
 
     @Override
-    public CostHandler getCostHandler(CostItem costItem){
-        return costService.getCostHandler(costItem.getId());
+    public FinanceRowHandler getCostHandler(FinanceRowItem costItem){
+        return financeRowService.getCostHandler(costItem.getId());
     }
 }

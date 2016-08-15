@@ -64,6 +64,13 @@ public abstract class BasePermissionRules {
         return !partnerProjectUser.isEmpty();
     }
 
+    protected boolean isSpecificProjectPartnerByApplicationId(long applicationId, long organisationId, long userId) {
+        Role partnerRole = roleRepository.findOneByName(PARTNER.getName());
+        long projectId = projectRepository.findOneByApplicationId(applicationId).getId();
+        ProjectUser partnerProjectUser = projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRoleId(projectId, userId, organisationId, partnerRole.getId());
+        return partnerProjectUser != null;
+    }
+
     protected boolean partnerBelongsToOrganisation(long projectId, long userId, long organisationId){
         Role partnerRole = roleRepository.findOneByName(PARTNER.getName());
         ProjectUser partnerProjectUser = projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRoleId(projectId, userId, organisationId,partnerRole.getId());

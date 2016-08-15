@@ -161,7 +161,7 @@ Lead applicant invites a non registered user in the same organisation
     When the user clicks the button/link    link=View team members and add collaborators
     When the user clicks the button/link    jQuery=.button:contains("Invite new contributors")
     Then the user should see the text in the page    Manage Contributors
-    And the user clicks the button/link    jQuery=li:nth-child(1) button:contains("Add person")
+    And the user clicks the button/link    jQuery=li:nth-child(1) button:contains("Add another person")
     When the user adds new collaborator
     And the user clicks the button/link    jquery=button:contains("Save Changes")
     Then the user should see the text in the page    Application team
@@ -206,7 +206,7 @@ the user adds new collaborator
     the user should see the element    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input
     Input Text    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input    Roger Axe
     Input Text    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(2) input    ${test_mailbox_one}+inviteorg2@gmail.com
-    focus    jquery=li:nth-child(1) button:contains('Add person')
+    focus    jquery=li:nth-child(1) button:contains('Add another person')
     sleep    300ms
 
 The status of the invited people should be correct in the application team page
@@ -239,12 +239,12 @@ the user can see the updated company name throughout the application
 
 the user can invite another person to their own organisation
     ${OWN_ORG}=    Get WebElement    jQuery=li:has(input[value='NOMENSA LTD'])
-    the user clicks the button/link    jQuery=button:contains('Add person')
+    the user clicks the button/link    jQuery=button:contains('Add another person')
     the user should see the element    jQuery=li[data-invite-org=${OWN_ORG.get_attribute('data-invite-org')}] tr:nth-of-type(2) td:nth-child(2) input:not([readonly])
     the user should not see the element    jQuery=li[data-invite-org=${OWN_ORG.get_attribute('data-invite-org')}] tr:nth-of-type(2) td:nth-child(2) [readonly]
 
 the user cannot invite another person to a different organisation
-    the user should not see the element    jQuery=li:nth-child(1) button:contains("Add person")
+    the user should not see the element    jQuery=li:nth-child(1) button:contains("Add another person")
     #This comments should be removed after the review
     #${OTHER_ORG}=    Get WebElement    jQuery=li:has(input[value='HIVE IT LIMITED'])
     #the user should see the element    jQuery=li[data-invite-org=${OTHER_ORG.get_attribute('data-invite-org')}] tr:nth-of-type(1) td:nth-child(2) [readonly]

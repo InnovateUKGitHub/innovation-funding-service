@@ -61,16 +61,22 @@ public class Section implements Comparable<Section> {
     @Column(name="section_type")
     private SectionType type = SectionType.GENERAL;
 
-    public Section(long id, Competition competition, List<Question> questions, String name, Section parentSection) {
-        this.id = id;
-        this.competition = competition;
-        this.questions = questions;
-        this.name = name;
-        this.parentSection = parentSection;
-    }
-
     public Section () {
     	// no-arg constructor
+    }
+
+    public Section(String name, String description, String assessorGuidanceDescription, Integer priority, boolean questionGroup, Competition competition, List<Question> questions, Section parentSection, List<Section> childSections, boolean displayInAssessmentApplicationSummary, SectionType type) {
+        this.name = name;
+        this.description = description;
+        this.assessorGuidanceDescription = assessorGuidanceDescription;
+        this.priority = priority;
+        this.questionGroup = questionGroup;
+        this.competition = competition;
+        this.questions = questions;
+        this.parentSection = parentSection;
+        this.childSections = childSections;
+        this.displayInAssessmentApplicationSummary = displayInAssessmentApplicationSummary;
+        this.type = type;
     }
 
     public String getName() {
@@ -215,7 +221,6 @@ public class Section implements Comparable<Section> {
             .append(this.assessorGuidanceDescription, rhs.assessorGuidanceDescription)
             .append(this.priority, rhs.priority)
             .append(this.competition, rhs.competition)
-            .append(this.questions, rhs.questions)
             .append(this.childSections, rhs.childSections)
             .append(this.displayInAssessmentApplicationSummary, rhs.displayInAssessmentApplicationSummary)
             .append(this.type, rhs.type)
@@ -231,7 +236,6 @@ public class Section implements Comparable<Section> {
             .append(assessorGuidanceDescription)
             .append(priority)
             .append(competition)
-            .append(questions)
             .append(childSections)
             .append(displayInAssessmentApplicationSummary)
             .append(type)

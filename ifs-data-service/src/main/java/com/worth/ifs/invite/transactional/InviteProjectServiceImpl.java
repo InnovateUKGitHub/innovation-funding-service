@@ -4,16 +4,14 @@ package com.worth.ifs.invite.transactional;
 import com.google.common.collect.Lists;
 import com.worth.ifs.commons.error.CommonErrors;
 import com.worth.ifs.commons.error.Error;
-import com.worth.ifs.commons.service.ServiceFailure;
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.invite.domain.ApplicationInvite;
 import com.worth.ifs.invite.domain.ProjectInvite;
 import com.worth.ifs.invite.mapper.InviteOrganisationMapper;
 import com.worth.ifs.invite.mapper.InviteProjectMapper;
 import com.worth.ifs.invite.repository.InviteProjectRepository;
 import com.worth.ifs.invite.resource.InviteProjectResource;
-import com.worth.ifs.notifications.resource.*;
+import com.worth.ifs.notifications.resource.SystemNotificationSource;
 import com.worth.ifs.notifications.service.NotificationService;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
@@ -21,7 +19,6 @@ import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.project.repository.ProjectUserRepository;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -36,18 +33,17 @@ import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
-import java.util.*;
+import java.util.List;
 import java.util.function.Supplier;
 
-import static com.worth.ifs.commons.error.CommonErrors.*;
-
+import static com.worth.ifs.commons.error.CommonErrors.badRequestError;
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_INVITE_INVALID_PROJECT_ID;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.invite.constant.InviteStatusConstants.CREATED;
 import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
-
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
-
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
@@ -108,7 +104,7 @@ public class InviteProjectServiceImpl extends BaseTransactionalService implement
                 Organisation organisation = organisationRepository.findOne(projectUser.getOrganisation().getId());
                 String hashCode = invite.generateHash();
                 ProjectInvite projectInvite = new ProjectInvite(inviteProjectResource.getName(),inviteProjectResource.getEmail(),
-                        hashCode, organisation, project );
+                        hashCode, organisation, project , CREATED);
 
                 inviteProjectRepository.save(projectInvite);
                 return serviceSuccess();
@@ -139,7 +135,7 @@ public class InviteProjectServiceImpl extends BaseTransactionalService implement
         return find(invite(inviteHash), user(userId)).andOnSuccess((invite, user) -> {
 
             if(invite.getEmail().equalsIgnoreCase(user.getEmail())){
-                invite.setStatus(InviteStatusConstants.ACCEPTED);
+                invite.open();
 
                 invite = inviteProjectRepository.save(invite);
                 // need to check with business if reqquired to save in Project User entity
