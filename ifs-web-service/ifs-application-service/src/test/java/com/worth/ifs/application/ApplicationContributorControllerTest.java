@@ -4,7 +4,7 @@ import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.form.ContributorsForm;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
-import com.worth.ifs.invite.resource.InviteResource;
+import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.lang3.CharEncoding;
 import org.junit.Before;
@@ -383,7 +383,7 @@ public class ApplicationContributorControllerTest extends BaseControllerMockMVCT
     private void setupUserInvite(String name, String email, Long organisationId) {
     	InviteOrganisationResource inviteOrgResource = new InviteOrganisationResource();
     	inviteOrgResource.setOrganisation(organisationId);
-    	inviteOrgResource.setInviteResources(Arrays.asList(new InviteResource(null, name, email, null, null, null, null)));
+    	inviteOrgResource.setInviteResources(Arrays.asList(new ApplicationInviteResource(null, name, email, null, null, null, null)));
     	when(inviteRestService.getInvitesByApplication(isA(Long.class))).thenReturn(restSuccess(Arrays.asList(inviteOrgResource)));
 	}
 

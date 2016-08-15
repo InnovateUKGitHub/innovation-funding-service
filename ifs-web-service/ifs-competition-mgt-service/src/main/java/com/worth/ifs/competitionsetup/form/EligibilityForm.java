@@ -12,17 +12,17 @@ import org.hibernate.validator.constraints.NotEmpty;
  * Form for the eligibility competition setup section.
  */
 public class EligibilityForm extends CompetitionSetupForm {
-	@NotBlank(message = "Please select a stream option")
+	@NotBlank(message = "{Evalidation.eligibilityform.multiplestream.required}")
 	private String multipleStream;
-	@Size(max = 255, message = "Stream name has a maximum length of 255 characters")
+	@Size(max = 255, message = "{validation.eligibilityform.streamname.length.max}")
 	private String streamName;
-	@NotEmpty(message = "Please select at least one research category")
+	@NotEmpty(message = "{validation.eligibilityform.researchcategoryid.required}")
 	private Set<Long> researchCategoryId;
-	@NotBlank(message = "Please select a collaboration level")
+	@NotBlank(message = "{validation.eligibilityform.singleorcollaborative.required}")
 	private String singleOrCollaborative;
-	@NotBlank(message = "Please select a lead applicant type")
+	@NotBlank(message = "{validation.eligibilityform.leadapplicanttype.required}")
 	private String leadApplicantType;
-	@NotNull(message = "Please select a research participation percentage")
+	@NotNull(message = "{validation.eligibilityform.researchparticipationamountId.required}")
 	private Integer researchParticipationAmountId;
 	
 	public String getMultipleStream() {

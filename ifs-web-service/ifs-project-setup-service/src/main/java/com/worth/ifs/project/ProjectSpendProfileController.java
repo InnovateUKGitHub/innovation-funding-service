@@ -1,9 +1,9 @@
 package com.worth.ifs.project;
 
-import com.worth.ifs.application.service.ApplicationService;
-import com.worth.ifs.application.service.CompetitionService;
-import com.worth.ifs.project.viewmodel.ProjectSpendProfileViewModel;
+import com.worth.ifs.project.finance.ProjectFinanceService;
 import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.project.resource.SpendProfileTableResource;
+import com.worth.ifs.project.viewmodel.ProjectSpendProfileViewModel;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,32 +18,30 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
  * This controller will handle all requests that are related to spend profile.
  */
 @Controller
-@RequestMapping("/project/{projectId}/spend-profile")
+@RequestMapping("/project/{projectId}/partner-organisation/{organisationId}/spend-profile")
 public class ProjectSpendProfileController {
 
     @Autowired
     private ProjectService projectService;
 
     @Autowired
-    private ApplicationService applicationService;
-
-    @Autowired
-    private CompetitionService competitionService;
+    private ProjectFinanceService projectFinanceService;
 
     @RequestMapping(method = GET)
-    public String viewSpendProfile(Model model, @PathVariable("projectId") final Long projectId,
-                                        @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+    public String viewSpendProfile(Model model,
+                                   @PathVariable("projectId") final Long projectId,
+                                   @PathVariable("organisationId") final Long organisationId,
+                                   @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        ProjectSpendProfileViewModel viewModel = populateSpendProfileViewModel(projectId);
+        ProjectSpendProfileViewModel viewModel = populateSpendProfileViewModel(projectId, organisationId);
         model.addAttribute("model", viewModel);
-
         return "project/spend-profile";
     }
 
-    private ProjectSpendProfileViewModel populateSpendProfileViewModel(Long projectId) {
+    private ProjectSpendProfileViewModel populateSpendProfileViewModel(final Long projectId, final Long organisationId) {
 
         ProjectResource projectResource = projectService.getById(projectId);
-
-        return new ProjectSpendProfileViewModel(projectResource);
+        SpendProfileTableResource table = projectFinanceService.getSpendProfileTable(projectId, organisationId);
+        return new ProjectSpendProfileViewModel(projectResource, table);
     }
 }

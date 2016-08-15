@@ -7,7 +7,7 @@ import com.worth.ifs.commons.mapper.GlobalMapperConfig;
 import com.worth.ifs.competition.mapper.CompetitionMapper;
 import com.worth.ifs.file.mapper.FileEntryMapper;
 import com.worth.ifs.finance.mapper.ApplicationFinanceMapper;
-import com.worth.ifs.invite.mapper.InviteMapper;
+import com.worth.ifs.invite.mapper.ApplicationInviteMapper;
 import com.worth.ifs.user.mapper.ProcessRoleMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -20,7 +20,7 @@ import org.mapstruct.Mappings;
         ApplicationFinanceMapper.class,
         ApplicationStatusMapper.class,
         CompetitionMapper.class,
-        InviteMapper.class,
+        ApplicationInviteMapper.class,
         FileEntryMapper.class
     }
 )

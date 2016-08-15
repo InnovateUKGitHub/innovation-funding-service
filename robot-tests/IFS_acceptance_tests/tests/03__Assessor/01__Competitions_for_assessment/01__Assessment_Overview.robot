@@ -2,7 +2,7 @@
 Documentation     INFUND-3303: As an Assessor I want the ability to reject the application after I have been given access to the full details so I can make Innovate UK aware.
 Suite Setup
 Suite Teardown    the user closes the browser
-Force Tags        Pending    Assessor
+Force Tags        Assessor
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -19,7 +19,7 @@ Assessment overview should show the expected questions
 
 Other Assessors should not be able to access this application
     [Documentation]    INFUND-3540
-    [Tags]
+    [Tags]  Pending
     [Setup]    guest user log-in    felix.wilson@gmail.com    Passw0rd
     # Note: Here Assessor-Felix rejects application 8 and paul is able to assess the application.
     When the user navigates to the page    ${Assessment_overview_11}

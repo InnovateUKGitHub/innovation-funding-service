@@ -5,16 +5,18 @@ import com.worth.ifs.invite.constant.InviteStatusConstants;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 public class InviteeForm implements Serializable {
     private static final long serialVersionUID = 8494848676778443648L;
 
     private Long userId;
-    @NotEmpty
+    @NotEmpty (message="{validation.standard.personname.required}")
     private String personName;
-    @NotEmpty
-    @Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX)
+    @NotEmpty (message="{validation.standard.email.required}")
+    @Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message="{validation.standard.email.format}")
+    @Size(max = 256, message = "{validation.standard.email.length.max}")
     private String email;
     private InviteStatusConstants inviteStatus;
 

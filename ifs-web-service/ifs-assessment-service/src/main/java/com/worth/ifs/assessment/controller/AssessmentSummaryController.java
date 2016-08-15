@@ -6,6 +6,7 @@ import com.worth.ifs.assessment.model.AssessmentSummaryModelPopulator;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.service.AssessmentService;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.workflow.ProcessOutcomeService;
 import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
 import org.apache.commons.lang3.BooleanUtils;
@@ -19,8 +20,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
+import java.util.function.Supplier;
 
 @Controller
 public class AssessmentSummaryController extends AbstractApplicationController {
@@ -49,13 +52,35 @@ public class AssessmentSummaryController extends AbstractApplicationController {
     @RequestMapping(value = "/{assessmentId}/summary", method = RequestMethod.POST)
     public String save(Model model,
                        HttpServletResponse response,
-                       @ModelAttribute(MODEL_ATTRIBUTE_FORM) AssessmentSummaryForm form,
+                       @Valid @ModelAttribute(MODEL_ATTRIBUTE_FORM) AssessmentSummaryForm form,
                        BindingResult bindingResult,
+                       ValidationHandler validationHandler,
                        @PathVariable("assessmentId") Long assessmentId) {
-        // TODO validation
-        ServiceResult<Void> result = assessmentService.recommend(assessmentId, form.getFundingConfirmation(), form.getFeedback(), form.getComment());
-        // TODO handle service errors
-        return "redirect:/assessor/dashboard/competition/2";
+
+        //TODO change implementation of lambda call to handle exceptions concisely
+        Supplier<String> failureView = () -> {
+            String view = "";
+            try {
+                view = getSummary(model, response, form, bindingResult, assessmentId);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+            return view;
+        };
+
+        return validationHandler.failNowOrSucceedWith(failureView, () -> {
+            ServiceResult<Void> updateResult = assessmentService.recommend(assessmentId, form.getFundingConfirmation(), form.getFeedback(), form.getComment());
+            validationHandler.addAnyErrors(updateResult);
+
+            return validationHandler.
+                    failNowOrSucceedWith(failureView, () -> redirectToCompetitionOfAssessment(assessmentId));
+        });
+    }
+
+    private String redirectToCompetitionOfAssessment(Long assessmentId)  {
+        return "redirect:/assessor/dashboard/competition/" + getAssessment(assessmentId).getCompetition();
     }
 
     private void populateFormWithExistingValues(AssessmentSummaryForm form, Long assessmentId) {

@@ -303,3 +303,52 @@ include::{snippets}/project/delete-exploitation-plan/http-response.adoc[]
 
 ==== Curl Example
 include::{snippets}/project/delete-exploitation-plan/curl-request.adoc[]
+
+
+=== Generate Spend Profile during Project Setup
+
+==== Request
+include::{snippets}/project/generate-spend-profile/http-request.adoc[]
+include::{snippets}/project/generate-spend-profile/request-parameters.adoc[]
+
+==== Response
+include::{snippets}/project/generate-spend-profile/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/project/generate-spend-profile/curl-request.adoc[]
+
+
+=== Get Spend Profile
+==== Success
+===== Request
+include::{snippets}/project/get-spend-profile/http-request.adoc[]
+include::{snippets}/project/get-spend-profile/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/get-spend-profile/http-response.adoc[]
+include::{snippets}/project/get-spend-profile/response-fields.adoc[]
+
+===== Curl Example
+include::{snippets}/project/get-spend-profile/curl-request.adoc[]
+
+==== Failure cases
+===== Get Spend Profile when Spend Profile data is not present in the DB
+include::{snippets}/project/get-spend-profile-when-spend-profile-data-not-in-db/http-response.adoc[]
+
+
+=== Get Spend Profile Table
+==== Success
+===== Request
+include::{snippets}/project/get-spend-profile-table/http-request.adoc[]
+include::{snippets}/project/get-spend-profile-table/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/get-spend-profile-table/http-response.adoc[]
+include::{snippets}/project/get-spend-profile-table/response-fields.adoc[]
+
+===== Curl Example
+include::{snippets}/project/get-spend-profile-table/curl-request.adoc[]
+
+==== Failure cases
+===== Get Spend Profile Table when Spend Profile data is not present in the DB
+include::{snippets}/project/get-spend-profile-table-when-spend-profile-data-not-in-db/http-response.adoc[]

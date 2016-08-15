@@ -7,6 +7,7 @@ import com.worth.ifs.commons.rest.RestResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -25,13 +26,13 @@ public class AddressController {
     @Autowired
     private AddressLookupService addressLookupService;
 
-    @RequestMapping("/doLookup/{lookup}")
-    public RestResult<List<AddressResource>> doLookup(@PathVariable("lookup") final String lookup) {
+    @RequestMapping("/doLookup")
+    public RestResult<List<AddressResource>> doLookup(@RequestParam(name="lookup", defaultValue="") final String lookup) {
         return addressLookupService.doLookup(lookup).toGetResponse();
     }
 
-    @RequestMapping("/validatePostcode/{postcode}")
-    public RestResult<Boolean> validatePostcode(@PathVariable("postcode") final String postcode) {
+    @RequestMapping("/validatePostcode")
+    public RestResult<Boolean> validatePostcode(@RequestParam(name="postcode", defaultValue="") final String postcode) {
         return addressLookupService.validatePostcode(postcode).toGetResponse();
     }
 
