@@ -12,7 +12,7 @@ Resource          ../../../resources/keywords/User_actions.robot
 *** Test Cases ***
 Academic organisations search
     [Documentation]    INFUND-1231
-    [Tags]    HappyPath    Email
+    [Tags]    HappyPath    Email    SmokeTest
     [Setup]    Delete the emails from both test mailboxes
     Given we create a new user    ${test_mailbox_one}+invitedacademics@gmail.com
     Given the lead applicant invites a registered user    ${test_mailbox_one}+invite3@gmail.com    ${test_mailbox_one}+inviteacademics@gmail.com
@@ -39,7 +39,7 @@ Accept invitation as academic
     ...    INFUND-2450
     ...
     ...    INFUND-2256
-    [Tags]    HappyPath    Email
+    [Tags]    HappyPath    Email    SmokeTest
     [Setup]    Delete the emails from both test mailboxes
     When the user enters text to a text field    id=organisationSearchName    Liv
     And the user clicks the button/link    jQuery=.button:contains("Search")

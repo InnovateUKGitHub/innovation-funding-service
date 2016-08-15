@@ -177,6 +177,12 @@ function runTestsRemotely {
 }
 
 
+function runSmokeTests {
+    echo "***************RUNNING SMOKE TEST. PLEASE WATCH YOUR SCREEN!*****************"
+    cd ${scriptDir}
+    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v BROWSER:$browser -v SERVER_BASE:$smokeServer -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:$postcodeLookupImplemented -v UPLOAD_FOLDER:$uploadFileDir -v DOWNLOAD_FOLDER:download_files -v VIRTUAL_DISPLAY:NO -v unsuccessful_login_message:'Your login was unsuccessful because of the following issue(s)' -v test_mailbox_one:$testMailboxOne -v test_mailbox_two:$testMailboxTwo -v test_mailbox_one_password:$testMailboxOnePassword -v test_mailbox_two_password:$testMailboxTwoPassword --include SmokeTest --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal --name IFS $testDirectory
+}
+
 cd "$(dirname "$0")"
 echo "********GETTING ALL THE VARIABLES********"
 scriptDir=`pwd`
@@ -283,7 +289,7 @@ browser="GoogleChrome"
 
 
 testDirectory='IFS_acceptance_tests/tests/*'
-while getopts ":q :t :h :p :r :d: :D :x :f" opt ; do
+while getopts ":q :t :h :p :r :d: :D :x :f :S:" opt ; do
     case $opt in
         q)
          quickTest=1
@@ -311,6 +317,10 @@ while getopts ":q :t :h :p :r :d: :D :x :f" opt ; do
         ;;
         f)
          browser="Firefox"
+        ;;
+        S)
+         smokeTest=1
+         smokeServer="$OPTARG"
         ;;
         \?)
          coloredEcho "Invalid option: -$OPTARG" red >&2
@@ -365,6 +375,10 @@ elif [ "$remoteRun" ]
 then 
     echo "Pointing the tests at the ifs dev server - note that some tests may fail if you haven't scrubbed the dev server's db" >&2
     runTestsRemotely
+elif [ "$smokeTest" ]
+then 
+    echo "Running smoke test against chosen environment"
+    runSmokeTests
 else
     echo "using quickTest:   FALSE" >&2
     stopServers
