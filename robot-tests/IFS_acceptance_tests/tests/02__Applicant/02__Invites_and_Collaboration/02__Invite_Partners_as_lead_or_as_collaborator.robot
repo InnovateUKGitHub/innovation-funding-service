@@ -36,9 +36,10 @@ Application team page
 
 Valid invitation submit
     [Documentation]    INFUND-901
-    [Tags]    HappyPath
+    [Tags]    HappyPath    SmokeTest
     [Setup]    Delete the emails from both test mailboxes
-    Given the user clicks the button/link    jQuery=.button:contains("Invite new contributors")
+    Given the user is on the invites and collaborators page
+    When the user clicks the button/link    jQuery=.button:contains("Invite new contributors")
     When the applicant enters valid inputs
     Then the user should see the text in the page    Application team
     And the user should see the text in the page    Invites sent
@@ -86,7 +87,7 @@ Business organisation (partner accepts invitation)
     ...    INFUND-2286
     ...    INFUND-1779
     ...    INFUND-2336
-    [Tags]    HappyPath    Email
+    [Tags]    HappyPath    Email    SmokeTest
     [Setup]    The guest user opens the browser
     When the user opens the mailbox and accepts the invitation to collaborate
     And the user clicks the button/link    jQuery=.button:contains("Create")
@@ -104,7 +105,7 @@ Business organisation (partner accepts invitation)
 
 Partner should be able to log-in and see the new company name
     [Documentation]    INFUND-2083
-    [Tags]    Email    HappyPath
+    [Tags]    Email    HappyPath    SmokeTest
     Given the user clicks the button/link    jQuery=.button:contains("Sign in")
     When guest user log-in    ${test_mailbox_one}+inviteorg1@gmail.com    Passw0rd123
     Then the user should be redirected to the correct page    ${DASHBOARD_URL}
@@ -256,3 +257,8 @@ pending partners should be visible in the page
 the user navigates to the next question
     The user clicks the button/link    css=.next .pagination-label
     Run Keyword And Ignore Error    confirm action
+
+
+the user is on the invites and collaborators page
+    ${status}=      run keyword and ignore error           the user should see the text in the page     jQuery=.button:contains("Invite new contributors")
+    run keyword if      ${status}!='PASS'          the user clicks the button/link     link=View team members and add collaborators
