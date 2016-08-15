@@ -16,7 +16,7 @@ import java.util.List;
 public class AdditionalInfoForm extends CompetitionSetupForm {
 
     @Size(max = 255, message = "Activity code has a maximum length of 255 characters")
-    @NotEmpty(message = "Please enter a activity code")
+    @NotEmpty(message = "Please enter an activity code")
     private String activityCode;
 
     @Size(max = 255, message = "{validation.additionalinfoform.innovatebudget.size}")
