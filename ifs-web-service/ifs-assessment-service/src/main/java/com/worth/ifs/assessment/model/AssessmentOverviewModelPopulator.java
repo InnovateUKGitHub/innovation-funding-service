@@ -21,7 +21,6 @@ import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.service.ProcessRoleService;
-import com.worth.ifs.util.CollectionFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
@@ -29,8 +28,6 @@ import org.springframework.ui.Model;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -70,8 +67,9 @@ public class AssessmentOverviewModelPopulator {
     @Autowired
     private FormInputResponseService formInputResponseService;
 
-    public void populateModel(Long assessmentId, Long userId, AssessmentOverviewForm form, Model model) throws InterruptedException, ExecutionException {
-        final ApplicationResource application = getApplicationForAssessment(assessmentId);
+    public void populateModel(Long assessmentId, Long userId, AssessmentOverviewForm form, Model model) {
+        final AssessmentResource assessment = getAssessment(assessmentId);
+        final ApplicationResource application = getApplication(assessment.getApplication());
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
         Optional<OrganisationResource> userOrganisation = organisationService.getOrganisationForUser(userId, userApplicationRoles);
@@ -145,13 +143,9 @@ public class AssessmentOverviewModelPopulator {
         List<AssessorFormInputResponseResource> inputResponseList = assessorFormInputResponseService.getAllAssessorFormInputResponses(assessmentId);
 
         return questions.stream().map(question -> {
-                List<FormInputResource> formInputs = formInputService.findAssessmentInputsByQuestion(question.getId());
-                return new AssessmentOverviewRowViewModel(question, formInputs, inputResponseList);
-            }).collect(Collectors.toList());
-    }
-
-    private ApplicationResource getApplicationForAssessment(final Long assessmentId) throws InterruptedException, ExecutionException {
-        return getApplication(getApplicationIdForProcessRole(getProcessRoleForAssessment(getAssessment(assessmentId))));
+            List<FormInputResource> formInputs = formInputService.findAssessmentInputsByQuestion(question.getId());
+            return new AssessmentOverviewRowViewModel(question, formInputs, inputResponseList);
+        }).collect(Collectors.toList());
     }
 
     private AssessmentResource getAssessment(final Long assessmentId) {
@@ -160,14 +154,6 @@ public class AssessmentOverviewModelPopulator {
 
     private ApplicationResource getApplication(final Long applicationId) {
         return applicationService.getById(applicationId);
-    }
-
-    private Future<ProcessRoleResource> getProcessRoleForAssessment(final AssessmentResource assessment) {
-        return processRoleService.getById(assessment.getProcessRole());
-    }
-
-    private Long getApplicationIdForProcessRole(final Future<ProcessRoleResource> processRoleResource) throws InterruptedException, ExecutionException {
-        return processRoleResource.get().getApplication();
     }
 
     private List<SectionResource> getFinanceSectionIds(List<SectionResource> sections) {

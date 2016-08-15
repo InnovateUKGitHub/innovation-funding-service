@@ -31,8 +31,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
 import java.util.*;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -66,9 +64,10 @@ public class AssessmentFinancesSummaryModelPopulator {
     FinanceService financeService;
 
 
-    public void populateModel(Long assessmentId, final Model model) throws InterruptedException, ExecutionException{
+    public void populateModel(Long assessmentId, final Model model) {
 
-        final ApplicationResource application = getApplicationForAssessment(assessmentId);
+        final AssessmentResource assessment = getAssessment(assessmentId);
+        final ApplicationResource application = getApplication(assessment.getApplication());
         CompetitionResource competition = competitionService.getById(application.getCompetition());
 
         addApplicationAndOrganisationDetails(application, model);
@@ -79,24 +78,12 @@ public class AssessmentFinancesSummaryModelPopulator {
         model.addAttribute("currentCompetition", competition);
      }
 
-    private ApplicationResource getApplicationForAssessment(final Long assessmentId) throws InterruptedException, ExecutionException {
-        return getApplication(getApplicationIdForProcessRole(getProcessRoleForAssessment(getAssessment(assessmentId))));
-    }
-
     private AssessmentResource getAssessment(final Long assessmentId) {
         return assessmentService.getById(assessmentId);
     }
 
     private ApplicationResource getApplication(final Long applicationId) {
         return applicationService.getById(applicationId);
-    }
-
-    private Future<ProcessRoleResource> getProcessRoleForAssessment(final AssessmentResource assessment) {
-        return processRoleService.getById(assessment.getProcessRole());
-    }
-
-    private Long getApplicationIdForProcessRole(final Future<ProcessRoleResource> processRoleResource) throws InterruptedException, ExecutionException {
-        return processRoleResource.get().getApplication();
     }
 
     private void addApplicationAndOrganisationDetails(ApplicationResource application, Model model) {
