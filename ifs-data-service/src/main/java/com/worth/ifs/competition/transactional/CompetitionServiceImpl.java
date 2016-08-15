@@ -112,8 +112,8 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<CompetitionSearchResult> searchCompetitions(String searchQuery, int page, int size) {
         String searchQueryLike = String.format("%%%s%%", searchQuery);
-        PageRequest pageRequest = new PageRequest(page, size, Sort.Direction.ASC, "startDate");
-        Page<Competition> pageResult = competitionRepository.findByNameLikeOrCompetitionType_NameLike(searchQueryLike, searchQueryLike, pageRequest);
+        PageRequest pageRequest = new PageRequest(page, size);
+        Page<Competition> pageResult = competitionRepository.search(searchQueryLike, pageRequest);
 
         CompetitionSearchResult result = new CompetitionSearchResult();
         result.setContent((List) competitionMapper.mapToResource(pageResult.getContent()));

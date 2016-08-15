@@ -148,7 +148,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         String searchLike = "%" + searchQuery + "%";
         int page = 1;
         int size = 20;
-        PageRequest pageRequest = new PageRequest(page, size, Sort.Direction.ASC, "startDate");
+        PageRequest pageRequest = new PageRequest(page, size);
         Page<Competition> queryResponse = mock(Page.class);
         long totalElements = 2L;
         int totalPages = 1;
@@ -159,7 +159,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         when(queryResponse.getNumber()).thenReturn(page);
         when(queryResponse.getNumberOfElements()).thenReturn(size);
         when(queryResponse.getContent()).thenReturn(competitions);
-        when(competitionRepository.findByNameLikeOrCompetitionType_NameLike(searchLike, searchLike, pageRequest)).thenReturn(queryResponse);
+        when(competitionRepository.search(searchLike, pageRequest)).thenReturn(queryResponse);
         when(competitionMapper.mapToResource(competitions)).thenReturn(resources);
 
         CompetitionSearchResult response = service.searchCompetitions(searchQuery, page, size).getSuccessObjectOrThrowException();

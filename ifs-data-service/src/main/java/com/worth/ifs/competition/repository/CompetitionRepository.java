@@ -36,6 +36,10 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
     public static final String UPCOMING_COUNT_QUERY = "SELECT COUNT(c) FROM Competition c WHERE CURRENT_TIMESTAMP <= " +
             "(SELECT m.date FROM Milestone m WHERE m.type = 'OPEN_DATE' AND m.competition.id = c.id) OR c.status = 'COMPETITION_SETUP'";
 
+    public static final String SEARCH_QUERY = "SELECT c FROM Competition c LEFT JOIN c.milestones m LEFT JOIN c.competitionType ct " +
+            "WHERE (m.type = 'OPEN_DATE' OR m.type IS NULL) AND (c.name LIKE :searchQuery OR ct.name LIKE :searchQuery) " +
+            "ORDER BY m.date";
+
     @Query(LIVE_QUERY)
     List<Competition> findLive();
 
@@ -54,7 +58,8 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
     @Query(UPCOMING_COUNT_QUERY)
     Long countUpcoming();
 
-    Page<Competition> findByNameLikeOrCompetitionType_NameLike(String searchQuery, String searchQuery2, Pageable pageable);
+    @Query(SEARCH_QUERY)
+    Page<Competition> search(@Param("searchQuery") String searchQuery, Pageable pageable);
 
     List<Competition> findByName(String name);
 
