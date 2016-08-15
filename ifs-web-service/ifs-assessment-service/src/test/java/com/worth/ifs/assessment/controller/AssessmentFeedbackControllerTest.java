@@ -1,6 +1,5 @@
 package com.worth.ifs.assessment.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.form.Form;
 import com.worth.ifs.application.resource.ApplicationResource;
@@ -68,8 +67,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestPropertySource(locations = "classpath:application.properties")
 public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<AssessmentFeedbackController> {
 
-    private ObjectMapper objectMapper = new ObjectMapper();
-
     @Mock
     private AssessmentService assessmentService;
 
@@ -91,7 +88,6 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
     private static Long APPLICATION_ID = 2L; // "Providing sustainable childcare"
     private static Long QUESTION_ID = 20L; // 1. What is the business opportunity that this project addresses?
     private static Long APPLICATION_DETAILS_QUESTION_ID = 1L;
-    private static Long PROCESS_ROLE_ID = 6L;
     private static Long ASSESSMENT_ID = 1L;
     private static Map<String, FormInputTypeResource> FORM_INPUT_TYPES = simpleToMap(asList(
             new FormInputTypeResource(1L, "textarea"),
@@ -105,7 +101,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
 
         this.setupCompetition();
         this.setupApplicationWithRoles();
-        this.setupAssessment(PROCESS_ROLE_ID);
+        this.setupAssessment(APPLICATION_ID);
     }
 
     @Override
@@ -160,7 +156,6 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         assertNull(model.getAppendixDetails());
 
         verify(assessmentService, only()).getById(ASSESSMENT_ID);
-        verify(processRoleService, only()).getById(PROCESS_ROLE_ID);
         verify(applicationService, only()).getById(APPLICATION_ID);
         verify(competitionService, only()).getById(competitionResource.getId());
         verify(questionService, atLeast(1)).getById(same(QUESTION_ID));
@@ -226,7 +221,6 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         assertEquals("Application details", model.getQuestionShortName());
 
         verify(assessmentService, only()).getById(ASSESSMENT_ID);
-        verify(processRoleService, times(1)).getById(PROCESS_ROLE_ID);
         verify(applicationService, only()).getById(APPLICATION_ID);
         verify(competitionService, only()).getById(competitionResource.getId());
         verify(formInputService, only()).findApplicationInputsByQuestion(APPLICATION_DETAILS_QUESTION_ID);
@@ -420,10 +414,10 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         return assessorResponses;
     }
 
-    private AssessmentResource setupAssessment(Long processRoleId) {
+    private AssessmentResource setupAssessment(Long applicationId) {
         AssessmentResource assessment = newAssessmentResource()
                 .withId(1L)
-                .withProcessRole(processRoleId)
+                .withApplication(applicationId)
                 .build();
         when(assessmentService.getById(assessment.getId())).thenReturn(assessment);
         return assessment;

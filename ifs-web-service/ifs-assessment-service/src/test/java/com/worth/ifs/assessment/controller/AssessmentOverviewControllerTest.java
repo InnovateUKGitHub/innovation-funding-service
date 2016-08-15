@@ -27,7 +27,6 @@ import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.form.service.FormInputRestService;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.OrganisationSize;
-import com.worth.ifs.user.resource.ProcessRoleResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,7 +44,6 @@ import java.util.stream.Collectors;
 import static com.google.common.collect.Sets.newHashSet;
 import static com.worth.ifs.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static com.worth.ifs.application.service.Futures.settable;
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static com.worth.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
 import static com.worth.ifs.commons.error.CommonFailureKeys.ASSESSMENT_REJECTION_FAILED;
@@ -58,7 +56,6 @@ import static com.worth.ifs.finance.builder.OrganisationFinanceOverviewBuilder.n
 import static com.worth.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static com.worth.ifs.form.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static com.worth.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static java.lang.String.format;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
@@ -124,8 +121,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
     @Test
     public void AssessmentDetails() throws Exception {
         String SCORE_INPUT_TYPE = "assessor_score";
-        AssessmentResource assessment = newAssessmentResource().withId(1L).withProcessRole(0L).build();
-        ProcessRoleResource processRole = newProcessRoleResource().with(id(0L)).withApplication(1L).build();
+        AssessmentResource assessment = newAssessmentResource().withId(1L).withApplication(1L).build();
         CompetitionResource competition = newCompetitionResource()
                 .withId(1L)
                 .withAssessmentStartDate(LocalDateTime.now().minusDays(2))
@@ -151,9 +147,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         mappedSections.put(organisations.get(0).getId(), sections);
         when(competitionService.getById(app.getCompetition())).thenReturn(competition);
         when(sectionService.getCompletedSectionsByOrganisation(anyLong())).thenReturn(mappedSections);
-        when(applicationService.getById(app.getId())).thenReturn(app);
         when(assessmentService.getById(assessment.getId())).thenReturn(assessment);
-        when(processRoleService.getById(assessment.getProcessRole())).thenReturn(settable(processRole));
         when(assessorFormInputResponseService.getAllAssessorFormInputResponses(assessment.getId())).thenReturn(assessorResponses);
         when(formInputService.findAssessmentInputsByQuestion(anyLong())).thenReturn(formInputs);
         Map<Long, AssessmentOverviewRowViewModel> assessorResponsesMap = new HashMap<>();
@@ -177,8 +171,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
 
     @Test
     public void assessmentFinance() throws Exception {
-        AssessmentResource assessment = newAssessmentResource().withId(1L).withProcessRole(0L).build();
-        ProcessRoleResource processRole = newProcessRoleResource().with(id(0L)).withApplication(1L).build();
+        AssessmentResource assessment = newAssessmentResource().withId(1L).withApplication(1L).build();
         CompetitionResource competition = newCompetitionResource()
                 .withId(1L)
                 .withAssessmentStartDate(LocalDateTime.now().minusDays(2))
@@ -186,9 +179,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                 .build();
         ApplicationResource app = applications.get(0);
         when(competitionService.getById(app.getCompetition())).thenReturn(competition);
-        when(applicationService.getById(app.getId())).thenReturn(app);
         when(assessmentService.getById(assessment.getId())).thenReturn(assessment);
-        when(processRoleService.getById(assessment.getProcessRole())).thenReturn(settable(processRole));
 
         FileEntryResource fileEntry = newFileEntryResource().build();
         FormInputResource formInput = newFormInputResource().withId(1L).build();
