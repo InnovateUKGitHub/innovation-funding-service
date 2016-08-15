@@ -1,6 +1,5 @@
 package com.worth.ifs.assessment.controller;
 
-import com.worth.ifs.application.AbstractApplicationController;
 import com.worth.ifs.assessment.form.AssessmentSummaryForm;
 import com.worth.ifs.assessment.model.AssessmentSummaryModelPopulator;
 import com.worth.ifs.assessment.resource.AssessmentResource;
@@ -22,11 +21,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
 import java.util.function.Supplier;
 
 @Controller
-public class AssessmentSummaryController extends AbstractApplicationController {
+public class AssessmentSummaryController {
+
+    private static final String FORM_ATTR_NAME = "form";
 
     @Autowired
     private AssessmentService assessmentService;
@@ -37,38 +37,25 @@ public class AssessmentSummaryController extends AbstractApplicationController {
     @Autowired
     private AssessmentSummaryModelPopulator assessmentSummaryModelPopulator;
 
-    private static String SUMMARY = "assessment/application-summary";
-
     @RequestMapping(value = "/{assessmentId}/summary", method = RequestMethod.GET)
     public String getSummary(Model model,
                              HttpServletResponse response,
-                             @ModelAttribute(MODEL_ATTRIBUTE_FORM) AssessmentSummaryForm form,
-                             BindingResult bindingResult, @PathVariable("assessmentId") Long assessmentId) throws ExecutionException, InterruptedException {
+                             @ModelAttribute(FORM_ATTR_NAME) AssessmentSummaryForm form,
+                             BindingResult bindingResult, @PathVariable("assessmentId") Long assessmentId) {
         populateFormWithExistingValues(form, assessmentId);
         model.addAttribute("model", assessmentSummaryModelPopulator.populateModel(assessmentId));
-        return SUMMARY;
+        return "assessment/application-summary";
     }
 
     @RequestMapping(value = "/{assessmentId}/summary", method = RequestMethod.POST)
     public String save(Model model,
                        HttpServletResponse response,
-                       @Valid @ModelAttribute(MODEL_ATTRIBUTE_FORM) AssessmentSummaryForm form,
+                       @Valid @ModelAttribute(FORM_ATTR_NAME) AssessmentSummaryForm form,
                        BindingResult bindingResult,
                        ValidationHandler validationHandler,
                        @PathVariable("assessmentId") Long assessmentId) {
 
-        //TODO change implementation of lambda call to handle exceptions concisely
-        Supplier<String> failureView = () -> {
-            String view = "";
-            try {
-                view = getSummary(model, response, form, bindingResult, assessmentId);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            }
-            return view;
-        };
+        Supplier<String> failureView = () -> getSummary(model, response, form, bindingResult, assessmentId);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             ServiceResult<Void> updateResult = assessmentService.recommend(assessmentId, form.getFundingConfirmation(), form.getFeedback(), form.getComment());
@@ -79,7 +66,7 @@ public class AssessmentSummaryController extends AbstractApplicationController {
         });
     }
 
-    private String redirectToCompetitionOfAssessment(Long assessmentId)  {
+    private String redirectToCompetitionOfAssessment(Long assessmentId) {
         return "redirect:/assessor/dashboard/competition/" + getAssessment(assessmentId).getCompetition();
     }
 
