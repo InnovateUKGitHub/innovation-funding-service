@@ -1,12 +1,12 @@
 package com.worth.ifs.assessment.controller;
 
-import com.worth.ifs.application.AbstractApplicationController;
 import com.worth.ifs.assessment.form.AssessmentOverviewForm;
 import com.worth.ifs.assessment.model.AssessmentFinancesSummaryModelPopulator;
 import com.worth.ifs.assessment.model.AssessmentOverviewModelPopulator;
 import com.worth.ifs.assessment.model.RejectAssessmentModelPopulator;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.service.AssessmentService;
+import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.controller.ValidationHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.concurrent.ExecutionException;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
@@ -29,7 +28,12 @@ import static java.lang.String.format;
 
 @Controller
 @RequestMapping(value = "/{assessmentId}")
-public class AssessmentOverviewController extends AbstractApplicationController {
+public class AssessmentOverviewController {
+
+    private static final String FORM_ATTR_NAME = "form";
+
+    @Autowired
+    private UserAuthenticationService userAuthenticationService;
 
     @Autowired
     private AssessmentOverviewModelPopulator assessmentOverviewModelPopulator;
@@ -45,7 +49,7 @@ public class AssessmentOverviewController extends AbstractApplicationController 
 
     @RequestMapping(method = RequestMethod.GET)
     public String getOverview(Model model, AssessmentOverviewForm form, @PathVariable("assessmentId") Long assessmentId,
-                              HttpServletRequest request) throws InterruptedException, ExecutionException {
+                              HttpServletRequest request) {
 
         Long userId = userAuthenticationService.getAuthenticatedUser(request).getId();
         assessmentOverviewModelPopulator.populateModel(assessmentId, userId, form, model);
@@ -54,7 +58,7 @@ public class AssessmentOverviewController extends AbstractApplicationController 
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/finances")
-    public String getFinancesSummary(Model model, @PathVariable("assessmentId") Long assessmentId) throws InterruptedException, ExecutionException {
+    public String getFinancesSummary(Model model, @PathVariable("assessmentId") Long assessmentId) {
 
         assessmentFinancesSummaryModelPopulator.populateModel(assessmentId, model);
 
@@ -64,7 +68,7 @@ public class AssessmentOverviewController extends AbstractApplicationController 
     @RequestMapping(method = RequestMethod.POST, value = "/reject")
     public String rejectInvitation(
             Model model,
-            @Valid @ModelAttribute(MODEL_ATTRIBUTE_FORM) AssessmentOverviewForm form,
+            @Valid @ModelAttribute(FORM_ATTR_NAME) AssessmentOverviewForm form,
             @SuppressWarnings("unused") BindingResult bindingResult,
             ValidationHandler validationHandler,
             @PathVariable("assessmentId") Long assessmentId) {
@@ -83,7 +87,7 @@ public class AssessmentOverviewController extends AbstractApplicationController 
     @RequestMapping(method = RequestMethod.GET, value = "/reject/confirm")
     public String rejectInvitationConfirm(
             Model model,
-            @ModelAttribute(MODEL_ATTRIBUTE_FORM) AssessmentOverviewForm form,
+            @ModelAttribute(FORM_ATTR_NAME) AssessmentOverviewForm form,
             @PathVariable("assessmentId") Long assessmentId) {
         return doViewRejectInvitationConfirm(model, assessmentId);
     }
