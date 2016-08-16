@@ -48,33 +48,47 @@
 
             <div th:include="fragments/assessment :: assessment-summary-total-score((totalGiven=${model.totalScoreGiven}, totalPossible=${model.totalScorePossible}, totalPercentage=${model.totalScorePercentage}))" th:remove="tag" />
 
-            <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}" enctype="multipart/form-data" novalidate="novalidate" data-autosave="assessorFeedback">
+            <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}" enctype="multipart/form-data" novalidate="novalidate">
                 <button class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">Save the form</button>
 
+                <div class="error-summary" th:if="${#fields.hasErrors('*')}">
+                    <h2 class="heading-medium error-summary-heading">We were unable to save your changes:</h2>
+                    <ul class="error-summary-list">
+                        <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+                    </ul>
+                </div>
+
                 <div class="question" th:id="form-input-fundingConfirmation">
-                    <h2 class="heading-medium extra-margin">Do you believe that this application is suitable for funding?</h2>
-                    <fieldset class="inline">
-                        <legend class="visuallyhidden">Do you believe that this application is suitable for funding?</legend>
-                        <div class="form-group">
+                    <div class="form-group" th:classappend="${#fields.hasErrors('fundingConfirmation')}? error">
+                        <fieldset class="inline">
+                            <legend>
+                                <span class="form-label-bold">Do you believe that this application is suitable for funding?</span>
+                                <span th:if="${#fields.hasErrors('fundingConfirmation')}" th:remove="tag">
+                                    <span class="error-message"  th:each="err : ${#fields.errors('fundingConfirmation')}" th:text="${err}" />
+                                </span>
+                            </legend>
                             <label class="block-label" th:each="option : ${ { true, false } }">
                                 <input th:field="*{fundingConfirmation}" th:value="${option}" name="fundingConfirmation" type="radio" />
                                 <span th:text="${option ? 'Yes' : 'No'}" th:remove="tag" />
                             </label>
-                        </div>
-                    </fieldset>
+                        </fieldset>
+                    </div>
                 </div>
 
                 <fieldset>
                     <legend class="visuallyhidden">Question feedback</legend>
                     <div class="question" th:id="form-input-feedback">
-                        <div class="form-group">
+                        <div class="form-group" th:classappend="${#fields.hasErrors('feedback')}? error">
                             <label class="form-label form-label-bold" th:for="form-textarea-feedback" id="form-label-feedback">
                                 Your feedback
                                 <span class="form-hint">Please explain your decision with a few sentences. This feedback will be sent to the applicant.</span>
+                                <span th:if="${#fields.hasErrors('feedback')}" th:remove="tag">
+                                    <span class="error-message"  th:each="err : ${#fields.errors('feedback')}" th:text="${err}" />
+                                </span>
                             </label>
 
                             <div class="textarea-wrapped word-count">
-                                <textarea th:field="*{feedback}" id="form-textarea-feedback" data-max_words="100"></textarea>
+                                <textarea th:errorclass="field-error" th:field="*{feedback}" id="form-textarea-feedback" data-max_words="100"></textarea>
                                 <div class="textarea-footer">
                                     <div th:include="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=100)" th:remove="tag" />
                                 </div>
@@ -83,11 +97,16 @@
                     </div>
 
                     <div class="question" th:id="form-input-comments">
-                        <div class="form-group">
-                            <label class="form-label form-label-bold" th:for="form-textarea-comments" id="form-label-comments">Do you have any other comments about this application? Your comments here will only be shared with Innovate UK. (Optional)</label>
+                        <div class="form-group" th:classappend="${#fields.hasErrors('comment')}? error">
+                            <label class="form-label form-label-bold" th:for="form-textarea-comments" id="form-label-comments">
+                                Do you have any other comments about this application? Your comments here will only be shared with Innovate UK. (Optional)
+                                <span th:if="${#fields.hasErrors('comment')}" th:remove="tag">
+                                    <span class="error-message"  th:each="err : ${#fields.errors('comment')}" th:text="${err}" />
+                                </span>
+                            </label>
 
                             <div class="textarea-wrapped word-count">
-                                <textarea th:field="*{comment}" id="form-textarea-comments" data-max_words="100"></textarea>
+                                <textarea th:errorclass="field-error" th:field="*{comment}" id="form-textarea-comments" data-max_words="100"></textarea>
 
                                 <div class="textarea-footer">
                                     <div th:include="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=100)" th:remove="tag" />
