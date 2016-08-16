@@ -2,41 +2,35 @@ package com.worth.ifs.invite.transactional;
 
 import com.worth.ifs.BaseUnitTestMocksTest;
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.invite.domain.ApplicationInvite;
 import com.worth.ifs.invite.domain.ProjectInvite;
 import com.worth.ifs.invite.mapper.InviteOrganisationMapper;
 import com.worth.ifs.invite.mapper.InviteProjectMapper;
 import com.worth.ifs.invite.resource.InviteProjectResource;
-import com.worth.ifs.notifications.resource.NotificationMedium;
 import com.worth.ifs.notifications.service.NotificationService;
-import com.worth.ifs.project.builder.ProjectBuilder;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.User;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.hibernate.validator.HibernateValidator;
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
+import java.util.List;
+
+import static com.worth.ifs.commons.error.CommonErrors.badRequestError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
-import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.invite.builder.ProjectInviteBuilder.newInvite;
+import static com.worth.ifs.project.builder.ProjectBuilder.newProject;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
+import static java.util.Arrays.asList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
+import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mapstruct.factory.Mappers.getMapper;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
 public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
-    private final Log log = LogFactory.getLog(getClass());
 
     @Mock
     NotificationService notificationService;
@@ -47,19 +41,6 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
 
     @InjectMocks
     private InviteProjectService inviteProjectService = new InviteProjectServiceImpl();
-    private LocalValidatorFactoryBean localValidatorFactory;
-
-
-    @Before
-    public void setup() {
-        when(applicationInviteRepositoryMock.save(any(ApplicationInvite.class))).thenReturn(new ApplicationInvite());
-        ServiceResult<Void> result = serviceSuccess();
-        when(notificationService.sendNotification(any(), eq(NotificationMedium.EMAIL))).thenReturn(result);
-
-        localValidatorFactory = new LocalValidatorFactoryBean();
-        localValidatorFactory.setProviderClass(HibernateValidator.class);
-        localValidatorFactory.afterPropertiesSet();
-    }
 
     @Test
     public void testAcceptProjectInviteSuccess() throws Exception {
@@ -128,12 +109,67 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
     @Test
     public void testSaveFinanceContactInviteSuccess() throws Exception {
         Organisation organisation = newOrganisation().build();
-        Project project = ProjectBuilder.newProject().withName("project name").build();
+        Project project = newProject().withName("project name").build();
         User user = newUser().withEmailAddress("email@example.com").build();
         ProjectInvite projectInvite = newInvite().withProject(project).withOrganisation(organisation).withName("project name").withEmailAddress(user.getEmail()).build();
         InviteProjectResource inviteProjectResource = getMapper(InviteProjectMapper.class).mapToResource(projectInvite);
         when(inviteProjectMapperMock.mapToDomain(inviteProjectResource)).thenReturn(projectInvite);
         ServiceResult<Void> result = inviteProjectService.saveFinanceContactInvite(inviteProjectResource);
         assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void testSaveFinanceContactInviteValidationFailure() throws Exception {
+        Organisation organisation = newOrganisation().build();
+        Project project = newProject().withName("project name").build();
+        User user = newUser().withEmailAddress("email@example.com").build();
+
+        {
+            ProjectInvite projectInviteNoName = newInvite().withProject(project).withOrganisation(organisation).withEmailAddress(user.getEmail()).build();
+            InviteProjectResource projectInviteNoNameResource = getMapper(InviteProjectMapper.class).mapToResource(projectInviteNoName);
+            when(inviteProjectMapperMock.mapToDomain(projectInviteNoNameResource)).thenReturn(projectInviteNoName);
+            ServiceResult<Void> result = inviteProjectService.saveFinanceContactInvite(projectInviteNoNameResource);
+            assertTrue(result.isFailure());
+            assertTrue(result.getFailure().is(badRequestError("The Invite is not valid")));
+        }
+
+        {
+            ProjectInvite projectInviteNoEmail = newInvite().withProject(project).withOrganisation(organisation).withName("project name").build();
+            InviteProjectResource projectInviteNoEmailResource = getMapper(InviteProjectMapper.class).mapToResource(projectInviteNoEmail);
+            when(inviteProjectMapperMock.mapToDomain(projectInviteNoEmailResource)).thenReturn(projectInviteNoEmail);
+            ServiceResult<Void> result = inviteProjectService.saveFinanceContactInvite(projectInviteNoEmailResource);
+            assertTrue(result.isFailure());
+            assertTrue(result.getFailure().is(badRequestError("The Invite is not valid")));
+        }
+
+        {
+            ProjectInvite projectInviteNoOrganisation = newInvite().withProject(project).withName("project name").withEmailAddress(user.getEmail()).build();
+            InviteProjectResource projectInviteNoOrganisationResource = getMapper(InviteProjectMapper.class).mapToResource(projectInviteNoOrganisation);
+            when(inviteProjectMapperMock.mapToDomain(projectInviteNoOrganisationResource)).thenReturn(projectInviteNoOrganisation);
+            ServiceResult<Void> result = inviteProjectService.saveFinanceContactInvite(projectInviteNoOrganisationResource);
+            assertTrue(result.isFailure());
+            assertTrue(result.getFailure().is(badRequestError("The Invite is not valid")));
+        }
+
+        {
+            ProjectInvite projectInviteNoProject = newInvite().withOrganisation(organisation).withName("project name").withEmailAddress(user.getEmail()).build();
+            InviteProjectResource projectInviteNoProjectResource = getMapper(InviteProjectMapper.class).mapToResource(projectInviteNoProject);
+            when(inviteProjectMapperMock.mapToDomain(projectInviteNoProjectResource)).thenReturn(projectInviteNoProject);
+            ServiceResult<Void> result = inviteProjectService.saveFinanceContactInvite(projectInviteNoProjectResource);
+            assertTrue(result.isFailure());
+            assertTrue(result.getFailure().is(badRequestError("The Invite is not valid")));
+        }
+    }
+
+    @Test
+    public void testGetInvitesByProject() throws Exception {
+        Project project = newProject().build();
+        ProjectInvite inviteProject = newInvite().build();
+        InviteProjectResource inviteProjectResource = getMapper(InviteProjectMapper.class).mapToResource(inviteProject);
+        when(inviteProjectRepositoryMock.findByProjectId(project.getId())).thenReturn(asList(inviteProject));
+        when(inviteProjectMapperMock.mapToResource(asList(inviteProject))).thenReturn(asList(inviteProjectResource));
+        ServiceResult<List<InviteProjectResource>> invitesByProject = inviteProjectService.getInvitesByProject(project.getId());
+        assertTrue(invitesByProject.isSuccess());
+        assertEquals(asList(inviteProjectResource), invitesByProject.getSuccessObject());
     }
 }
