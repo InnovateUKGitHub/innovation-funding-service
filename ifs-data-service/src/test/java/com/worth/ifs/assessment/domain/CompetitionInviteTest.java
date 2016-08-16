@@ -6,9 +6,9 @@ import com.worth.ifs.invite.domain.CompetitionInvite;
 import org.junit.Before;
 import org.junit.Test;
 
-import static com.worth.ifs.invite.constant.InviteStatusConstants.ACCEPTED;
-import static com.worth.ifs.invite.constant.InviteStatusConstants.CREATED;
-import static com.worth.ifs.invite.constant.InviteStatusConstants.SEND;
+import static com.worth.ifs.invite.constant.InviteStatus.ACCEPTED;
+import static com.worth.ifs.invite.constant.InviteStatus.CREATED;
+import static com.worth.ifs.invite.constant.InviteStatus.SEND;
 import static org.junit.Assert.assertEquals;
 
 public class CompetitionInviteTest {

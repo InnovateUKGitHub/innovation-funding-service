@@ -24,7 +24,7 @@ import com.worth.ifs.commons.error.exception.InvalidURLException;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
-import com.worth.ifs.invite.constant.InviteStatusConstants;
+import com.worth.ifs.invite.constant.InviteStatus;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
@@ -66,7 +66,7 @@ public class AcceptInviteController extends BaseController {
             return "never should get here because of exception.";
         } else {
             ApplicationInviteResource inviteResource = invite.getSuccessObject();
-            if (!InviteStatusConstants.SEND.equals(inviteResource.getStatus())) {
+            if (!InviteStatus.SEND.equals(inviteResource.getStatus())) {
                 return handleAcceptedInvite(cookieFlashMessageFilter, response);
             } else {
                 CookieUtil.saveToCookie(response, INVITE_HASH, hash);
@@ -132,7 +132,7 @@ public class AcceptInviteController extends BaseController {
 
         if (invite.isSuccess()) {
             ApplicationInviteResource inviteResource = invite.getSuccessObject();
-            if (InviteStatusConstants.SEND.equals(inviteResource.getStatus())) {
+            if (InviteStatus.SEND.equals(inviteResource.getStatus())) {
                 InviteOrganisationResource inviteOrganisation = inviteRestService.getInviteOrganisationByHash(hash).getSuccessObjectOrThrowException();
                 OrganisationResource organisation = organisationService.getOrganisationByIdForAnonymousUserFlow(inviteOrganisation.getOrganisation());
 

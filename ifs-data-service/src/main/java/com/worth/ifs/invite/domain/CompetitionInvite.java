@@ -1,7 +1,7 @@
 package com.worth.ifs.invite.domain;
 
 import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.invite.constant.InviteStatusConstants;
+import com.worth.ifs.invite.constant.InviteStatus;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -19,7 +19,7 @@ public class CompetitionInvite extends Invite<Competition, CompetitionInvite> im
     }
 
     public CompetitionInvite(final String name, final String email, final String hash, final Competition competition) {
-        super(name, email, hash, InviteStatusConstants.CREATED);
+        super(name, email, hash, InviteStatus.CREATED);
         this.competition = competition;
     }
 

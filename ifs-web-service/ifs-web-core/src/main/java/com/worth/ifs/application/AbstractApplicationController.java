@@ -37,7 +37,7 @@ import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.form.service.FormInputResponseService;
 import com.worth.ifs.form.service.FormInputService;
-import com.worth.ifs.invite.constant.InviteStatusConstants;
+import com.worth.ifs.invite.constant.InviteStatus;
 import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.service.InviteRestService;
@@ -327,7 +327,7 @@ public abstract class AbstractApplicationController extends BaseController {
         return pendingAssignableUsersResult.handleSuccessOrFailure(
         		failure -> new ArrayList<>(0),
         		success -> success.stream().flatMap(item -> item.getInviteResources().stream())
-                    .filter(item -> !InviteStatusConstants.ACCEPTED.equals(item.getStatus()))
+                    .filter(item -> !InviteStatus.ACCEPTED.equals(item.getStatus()))
                     .collect(Collectors.toList()));
 	}
 

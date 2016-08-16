@@ -11,7 +11,7 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.competition.resource.CompetitionResource.Status;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
-import com.worth.ifs.invite.constant.InviteStatusConstants;
+import com.worth.ifs.invite.constant.InviteStatus;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
@@ -125,11 +125,11 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
-        ApplicationInviteResource inv1 = inviteResource("kirk", "teamA", InviteStatusConstants.CREATED);
-        ApplicationInviteResource inv2 = inviteResource("spock", "teamA", InviteStatusConstants.SEND);
-        ApplicationInviteResource inv3 = inviteResource("bones", "teamA",  InviteStatusConstants.ACCEPTED);
+        ApplicationInviteResource inv1 = inviteResource("kirk", "teamA", InviteStatus.CREATED);
+        ApplicationInviteResource inv2 = inviteResource("spock", "teamA", InviteStatus.SEND);
+        ApplicationInviteResource inv3 = inviteResource("bones", "teamA",  InviteStatus.ACCEPTED);
 
-        ApplicationInviteResource inv4 = inviteResource("picard", "teamB", InviteStatusConstants.CREATED);
+        ApplicationInviteResource inv4 = inviteResource("picard", "teamB", InviteStatus.CREATED);
        
         InviteOrganisationResource inviteOrgResource1 = inviteOrganisationResource(inv1, inv2, inv3);
         InviteOrganisationResource inviteOrgResource2 = inviteOrganisationResource(inv4);
@@ -162,9 +162,9 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
-        ApplicationInviteResource inv1 = inviteResource("kirk", "teamA", InviteStatusConstants.CREATED);
+        ApplicationInviteResource inv1 = inviteResource("kirk", "teamA", InviteStatus.CREATED);
 
-        ApplicationInviteResource inv2 = inviteResource("picard", "", InviteStatusConstants.CREATED);
+        ApplicationInviteResource inv2 = inviteResource("picard", "", InviteStatus.CREATED);
        
        InviteOrganisationResource inviteOrgResource1 = inviteOrganisationResource(inv1);
        InviteOrganisationResource inviteOrgResource2 = inviteOrganisationResource(inv2);
@@ -197,9 +197,9 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
 
-        ApplicationInviteResource inv1 = inviteResource("kirk", "teamA", InviteStatusConstants.CREATED);
+        ApplicationInviteResource inv1 = inviteResource("kirk", "teamA", InviteStatus.CREATED);
 
-        ApplicationInviteResource inv2 = inviteResource("picard", organisations.get(0).getName(), InviteStatusConstants.CREATED);
+        ApplicationInviteResource inv2 = inviteResource("picard", organisations.get(0).getName(), InviteStatus.CREATED);
        
         InviteOrganisationResource inviteOrgResource1 = inviteOrganisationResource(inv1);
         InviteOrganisationResource inviteOrgResource2 = inviteOrganisationResource(inv2);
@@ -229,7 +229,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
 		return ior;
 	}
 
-	private ApplicationInviteResource inviteResource(String name, String organisation, InviteStatusConstants status) {
+	private ApplicationInviteResource inviteResource(String name, String organisation, InviteStatus status) {
         ApplicationInviteResource invRes = new ApplicationInviteResource();
 		invRes.setName(name);
 		invRes.setInviteOrganisationName(organisation);

@@ -1,6 +1,6 @@
 package com.worth.ifs.invite.domain;
 
-import com.worth.ifs.invite.constant.InviteStatusConstants;
+import com.worth.ifs.invite.constant.InviteStatus;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.user.domain.Organisation;
 
@@ -26,7 +26,7 @@ public class ProjectInvite extends Invite<Project, ProjectInvite> {
     }
 
     public ProjectInvite(final String name, final String email, final String hash, final Organisation organisation, final Project project) {
-        super(name, email, hash, InviteStatusConstants.CREATED);
+        super(name, email, hash, InviteStatus.CREATED);
         this.project = project;
     }
 

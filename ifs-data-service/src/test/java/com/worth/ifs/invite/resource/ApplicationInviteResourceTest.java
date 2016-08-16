@@ -1,6 +1,6 @@
 package com.worth.ifs.invite.resource;
 
-import com.worth.ifs.invite.constant.InviteStatusConstants;
+import com.worth.ifs.invite.constant.InviteStatus;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -17,7 +17,7 @@ public class ApplicationInviteResourceTest {
     Long applicationId;
     String hash;
     long inviteOrganisationId;
-    InviteStatusConstants status;
+    InviteStatus status;
 
     @Before
     public void setUp() throws Exception {
@@ -28,7 +28,7 @@ public class ApplicationInviteResourceTest {
         applicationId = 2L;
         hash = "123abc";
         inviteOrganisationId = 3L;
-        status = InviteStatusConstants.ACCEPTED;
+        status = InviteStatus.ACCEPTED;
 
         setInviteResource = new ApplicationInviteResource();
         setInviteResource.setId(inviteId);

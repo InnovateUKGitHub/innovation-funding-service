@@ -25,7 +25,7 @@ import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.form.service.FormInputResponseService;
 import com.worth.ifs.form.service.FormInputService;
-import com.worth.ifs.invite.constant.InviteStatusConstants;
+import com.worth.ifs.invite.constant.InviteStatus;
 import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.service.InviteOrganisationRestService;
@@ -626,7 +626,7 @@ public class BaseUnitTest {
         InviteOrganisationResource inviteOrganisation = new InviteOrganisationResource(2L, "Invited Organisation Ltd", null, null);
 
         invite = new ApplicationInviteResource();
-        invite.setStatus(InviteStatusConstants.SEND);
+        invite.setStatus(InviteStatus.SEND);
         invite.setApplication(1L);
         invite.setName("Some Invitee");
         invite.setHash(INVITE_HASH);
@@ -644,7 +644,7 @@ public class BaseUnitTest {
         when(inviteRestService.getInviteOrganisationByHash(INVITE_HASH)).thenReturn(restSuccess(new InviteOrganisationResource()));
 
         acceptedInvite = new ApplicationInviteResource();
-        acceptedInvite.setStatus(InviteStatusConstants.ACCEPTED);
+        acceptedInvite.setStatus(InviteStatus.ACCEPTED);
         acceptedInvite.setApplication(1L);
         acceptedInvite.setName("Some Invitee");
         acceptedInvite.setHash(ACCEPTED_INVITE_HASH);
@@ -652,7 +652,7 @@ public class BaseUnitTest {
         when(inviteRestService.getInviteByHash(eq(ACCEPTED_INVITE_HASH))).thenReturn(restSuccess(acceptedInvite));
 
         existingUserInvite = new ApplicationInviteResource();
-        existingUserInvite.setStatus(InviteStatusConstants.SEND);
+        existingUserInvite.setStatus(InviteStatus.SEND);
         existingUserInvite.setApplication(1L);
         existingUserInvite.setName("Some Invitee");
         existingUserInvite.setHash(INVITE_HASH_EXISTING_USER);

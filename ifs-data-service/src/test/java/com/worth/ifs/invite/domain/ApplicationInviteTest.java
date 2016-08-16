@@ -1,7 +1,7 @@
 package com.worth.ifs.invite.domain;
 
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.invite.constant.InviteStatusConstants;
+import com.worth.ifs.invite.constant.InviteStatus;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,7 +18,7 @@ public class ApplicationInviteTest {
     Application application;
     String hash;
     InviteOrganisation inviteOrganisation;
-    InviteStatusConstants status;
+    InviteStatus status;
 
     @Before
     public void setUp() throws Exception {
@@ -28,7 +28,7 @@ public class ApplicationInviteTest {
         application = newApplication().build();
         hash = "123abc";
         inviteOrganisation = newInviteOrganisation().build();
-        status = InviteStatusConstants.ACCEPTED;
+        status = InviteStatus.ACCEPTED;
 
         setInvite = new ApplicationInvite();
         setInvite.setId(inviteId);

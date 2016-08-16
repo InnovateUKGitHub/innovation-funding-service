@@ -5,7 +5,7 @@ package com.worth.ifs.invite.constant;
  * The value of these entries are used when saving to and interpreting from the database.
  */
 
-public enum InviteStatusConstants {
+public enum InviteStatus {
     SEND,
     CREATED,
     ACCEPTED

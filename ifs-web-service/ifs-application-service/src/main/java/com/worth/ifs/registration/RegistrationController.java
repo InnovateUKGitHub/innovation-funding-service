@@ -8,7 +8,7 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.exception.InviteAlreadyAcceptedException;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
-import com.worth.ifs.invite.constant.InviteStatusConstants;
+import com.worth.ifs.invite.constant.InviteStatus;
 import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.registration.form.RegistrationForm;
@@ -155,7 +155,7 @@ public class RegistrationController {
         String inviteHash = CookieUtil.getCookieValue(request, AcceptInviteController.INVITE_HASH);
         if(StringUtils.hasText(inviteHash)){
             RestResult<ApplicationInviteResource> invite = inviteRestService.getInviteByHash(inviteHash);
-            if(invite.isSuccess() && InviteStatusConstants.SEND.equals(invite.getSuccessObject().getStatus())){
+            if(invite.isSuccess() && InviteStatus.SEND.equals(invite.getSuccessObject().getStatus())){
                 ApplicationInviteResource inviteResource = invite.getSuccessObject();
                 registrationForm.setEmail(inviteResource.getEmail());
                 model.addAttribute("invitee", true);

@@ -8,7 +8,7 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.invite.constant.InviteStatusConstants;
+import com.worth.ifs.invite.constant.InviteStatus;
 import com.worth.ifs.invite.domain.ApplicationInvite;
 import com.worth.ifs.invite.repository.ApplicationInviteRepository;
 import com.worth.ifs.invite.resource.ApplicationInviteResource;
@@ -141,7 +141,7 @@ public class ApplicationInviteControllerIntegrationTest extends BaseControllerIn
 
         // Check if invite is accepted
         inviteCreated = getCreatedInvite(testEmail, APPLICATION_ID);
-        assertEquals(InviteStatusConstants.ACCEPTED, inviteCreated.getStatus());
+        assertEquals(InviteStatus.ACCEPTED, inviteCreated.getStatus());
 
         // Check nameConfirmed is name of the userAccount
         invitesResult = controller.getInvitesByApplication(APPLICATION_ID);
