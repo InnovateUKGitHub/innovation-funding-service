@@ -43,4 +43,14 @@ public class FormInputServiceImpl implements FormInputService {
     public List<FormInputResource> findAssessmentInputsByCompetition(Long competitionId) {
         return formInputRestService.getByCompetitionIdAndScope(competitionId, ASSESSMENT).getSuccessObjectOrThrowException();
     }
+
+    @Override
+    public void delete(Long formInputId) {
+        formInputRestService.delete(formInputId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public FormInputResource save(FormInputResource formInputResource) {
+        return formInputRestService.save(formInputResource).getSuccessObjectOrThrowException();
+    }
 }

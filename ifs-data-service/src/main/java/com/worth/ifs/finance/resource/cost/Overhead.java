@@ -9,10 +9,10 @@ import javax.validation.groups.Default;
 import java.math.BigDecimal;
 
 /**
- * {@code Overhead} implements {@link CostItem}
+ * {@code Overhead} implements {@link FinanceRowItem}
  *
  */
-public class Overhead implements CostItem {
+public class Overhead implements FinanceRowItem {
     public interface RateNotZero{}
     private Long id;
     @Enumerated(EnumType.STRING)
@@ -55,8 +55,8 @@ public class Overhead implements CostItem {
     }
 
     @Override
-    public CostType getCostType() {
-        return  CostType.OVERHEADS;
+    public FinanceRowType getCostType() {
+        return  FinanceRowType.OVERHEADS;
     }
 
     public OverheadRateType getRateType() {

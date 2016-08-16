@@ -91,8 +91,11 @@ ${test_mailbox_one_password}    testtest1
 ${test_mailbox_two_password}    testtest1
 ${Providing_Sustainable_Childcare_Application_Overview}    ${server}/management/competition/1/application/2
 ${unsuccessful_login_message}    Your sign in was unsuccessful because of the following issue(s)
+${test_title}      test title
+${unique_email_number}    1
 
 # Assessor variables
 ${Assessment_overview_9}    ${server}/assessment/9
+${Assessment_overview_11}    ${server}/assessment/11
 ${Application_question_url}    ${server}/assessment/9/question/47
 ${Finance_summar_9_url}    ${server}/assessment/9/finances

@@ -1,9 +1,10 @@
 package com.worth.ifs.workflow.transactional;
 
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.security.NotSecured;
-import com.worth.ifs.workflow.domain.ProcessOutcome;
+import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
 
 public interface ProcessOutcomeService {
     @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
-    ProcessOutcome findOne(Long id);
+    ServiceResult<ProcessOutcomeResource> findOne(Long id);
 }

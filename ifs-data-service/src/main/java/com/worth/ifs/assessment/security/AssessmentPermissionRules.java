@@ -1,6 +1,7 @@
 package com.worth.ifs.assessment.security;
 
-import com.worth.ifs.assessment.domain.Assessment;
+import com.worth.ifs.assessment.resource.AssessmentResource;
+import com.worth.ifs.security.BasePermissionRules;
 import com.worth.ifs.security.PermissionRule;
 import com.worth.ifs.security.PermissionRules;
 import com.worth.ifs.user.resource.UserResource;
@@ -13,19 +14,20 @@ import static com.worth.ifs.security.SecurityRuleUtil.isCompAdmin;
  */
 @Component
 @PermissionRules
-public class AssessmentPermissionRules {
+public class AssessmentPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "READ", description = "Assessors and competitionAdmins can read Assessments")
-    public boolean userCanReadAssessment(final Assessment assessment, final UserResource user) {
-        return isCompAdmin(user) || isAssessor(assessment, user);
+    public boolean userCanReadAssessment(final AssessmentResource assessment, final UserResource user) {
+        return isCompAdmin(user) || isAssessorForAssessment(assessment, user);
     }
 
     @PermissionRule(value = "UPDATE", description = "only owners can update Assessments")
-    public boolean userCanUpdateAssessment(final Assessment assessment, final UserResource user) {
-        return isAssessor(assessment, user);
+    public boolean userCanUpdateAssessment(final AssessmentResource assessment, final UserResource user) {
+        return isAssessorForAssessment(assessment, user);
     }
 
-    public boolean isAssessor(final Assessment assessment, final UserResource user) {
-        return assessment.getProcessRole().getUser().getId().equals(user.getId());
+    private boolean isAssessorForAssessment(final AssessmentResource assessment, final UserResource user) {
+        Long assessmentUser = processRoleRepository.findOne(assessment.getProcessRole()).getUser().getId();
+        return user.getId().equals(assessmentUser);
     }
 }

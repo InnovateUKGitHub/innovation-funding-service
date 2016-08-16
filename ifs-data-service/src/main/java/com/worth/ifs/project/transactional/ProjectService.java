@@ -6,9 +6,8 @@ import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.FileAndContents;
-import com.worth.ifs.project.resource.MonitoringOfficerResource;
-import com.worth.ifs.project.resource.ProjectResource;
-import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.invite.resource.ApplicationInviteResource;
+import com.worth.ifs.project.resource.*;
 import com.worth.ifs.security.NotSecured;
 import com.worth.ifs.security.SecuredBySpring;
 import com.worth.ifs.user.resource.OrganisationResource;
@@ -61,6 +60,12 @@ public interface ProjectService {
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'UPDATE_FINANCE_CONTACT')")
     ServiceResult<Void> updateFinanceContact(Long projectId, Long organisationId, Long financeContactUserId);
 
+    @PreAuthorize("hasPermission(#inviteResource, 'INVITE_FINANCE_CONTACT')")
+    ServiceResult<Void> inviteFinanceContact(Long projectId, ApplicationInviteResource inviteResource);
+
+    @PreAuthorize("hasPermission(#inviteResource, 'INVITE_PROJECT_MANAGER')")
+    ServiceResult<Void> inviteProjectManager(Long projectId, ApplicationInviteResource inviteResource);
+
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'READ')")
     ServiceResult<List<ProjectUserResource>> getProjectUsers(Long projectId);
 
@@ -70,8 +75,8 @@ public interface ProjectService {
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'UPDATE_FINANCE_CONTACT')")
     ServiceResult<Boolean> isSubmitAllowed(Long projectId);
 
-    @NotSecured(value = "Only a project manager can submit other documents", mustBeSecuredByOtherServices = false)
-    ServiceResult<Boolean> isOtherDocumentsSubmitAllowed(Long projectId);
+    @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'READ')")
+    ServiceResult<Boolean> isOtherDocumentsSubmitAllowed(Long projectId, Long userId);
 
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'VIEW_MONITORING_OFFICER')")
     ServiceResult<MonitoringOfficerResource> getMonitoringOfficer(Long projectId);

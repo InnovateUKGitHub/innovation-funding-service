@@ -14,7 +14,7 @@ import com.worth.ifs.user.service.UserService;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
-import com.worth.ifs.invite.resource.InviteResource;
+import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.user.resource.OrganisationResource;
@@ -78,7 +78,7 @@ public class ApplicationContributorController{
         List<InviteOrganisationResource> savedInvites = getSavedInviteOrganisations(application);
         if(savedInvites.stream().noneMatch(i -> i.getOrganisation() != null && i.getOrganisation().equals(leadOrganisation.getId()))){
             // Lead organisation has no invites, add it to the list
-            savedInvites.add(0, new InviteOrganisationResource(0L, leadOrganisation.getName(), leadOrganisation.getId(), new ArrayList<InviteResource>())); // make sure the lead organisation is also part of this list.
+            savedInvites.add(0, new InviteOrganisationResource(0L, leadOrganisation.getName(), leadOrganisation.getId(), new ArrayList<ApplicationInviteResource>())); // make sure the lead organisation is also part of this list.
         }else{
             // lead organisation has invites, make sure its the first in the list.
             Optional<InviteOrganisationResource> leadOrg = savedInvites.stream().filter(i -> i.getOrganisation() != null && i.getOrganisation().equals(leadOrganisation.getId())).findAny();
@@ -273,7 +273,7 @@ public class ApplicationContributorController{
     }
     
     private void saveContributor(OrganisationInviteForm organisationInvite, Long applicationId, HttpServletResponse response) {
-    	List<InviteResource> invites = new ArrayList<>();
+    	List<ApplicationInviteResource> invites = new ArrayList<>();
         OrganisationResource existingOrganisation = null;
         if (organisationInvite.getOrganisationId() != null) {
             // check if there is a organisation with this ID, just to make sure the user has not entered a non-existing organisation id.
@@ -281,7 +281,7 @@ public class ApplicationContributorController{
         }
 
         organisationInvite.getInvites().stream().forEach(invite -> {
-            InviteResource inviteResource = new InviteResource(invite.getPersonName(), invite.getEmail(), applicationId);
+            ApplicationInviteResource inviteResource = new ApplicationInviteResource(invite.getPersonName(), invite.getEmail(), applicationId);
             if (organisationInvite.getOrganisationInviteId() != null && !organisationInvite.getOrganisationInviteId().equals(Long.valueOf(0))) {
                 inviteResource.setInviteOrganisation(organisationInvite.getOrganisationInviteId());
             }

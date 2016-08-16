@@ -75,6 +75,20 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
     }
 
     @Test
+    public void testProjectFinanceUsersCanViewProjects() {
+
+        ProjectResource project = newProjectResource().build();
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.equals(projectFinanceUser())) {
+                assertTrue(rules.projectFinanceUsersCanViewProjects(project, user));
+            } else {
+                assertFalse(rules.projectFinanceUsersCanViewProjects(project, user));
+            }
+        });
+    }
+
+    @Test
     public void testLeadPartnersCanUpdateTheBasicProjectDetails() {
 
         ProjectResource project = newProjectResource().build();

@@ -91,7 +91,7 @@
 
     <!-- ===========================Form: labour =========================== -->
     <div th:fragment="labour (complete)" th:remove="tag">
-        <div th:remove="tag" th:with="formInputType=${formInput.formInputType},costCategory=${organisationFinance.get(T(com.worth.ifs.finance.resource.cost.CostType).fromString(formInput.formInputTypeTitle))},type=${formInput.formInputTypeTitle}">
+        <div th:remove="tag" th:with="formInputType=${formInput.formInputType},costCategory=${organisationFinance.get(T(com.worth.ifs.finance.resource.cost.FinanceRowType).fromString(formInput.formInputTypeTitle))},type=${formInput.formInputTypeTitle}">
             <div class="form-group" th:attr="data-repeatable-container=${question.getId()}" th:if="${costCategory!=null}">
                 <div class="form-group inline"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costCategory.workingDaysPerYearCostItem?.id +']}') or #fields.hasErrors('${form.formInput[cost-'+ costCategory.workingDaysPerYearCostItem?.id +'-labourDays]}')} ? 'error' : ''">
                     <label th:for="${'cost-labour-'+costCategory.workingDaysPerYearCostItem?.id+'-labourDaysYearly'}">
@@ -253,7 +253,7 @@
     <!-- ===========================Form: overheads =========================== -->
     <div th:fragment="overheads" th:remove="tag">
         <p ifs:utext="${question.getDescription()}" />
-        <div th:remove="tag" th:with="formInputType=${formInput.formInputType},costCategory=${organisationFinance.get(T(com.worth.ifs.finance.resource.cost.CostType).fromString(formInput.formInputTypeTitle))},type=${formInput.formInputTypeTitle}">
+        <div th:remove="tag" th:with="formInputType=${formInput.formInputType},costCategory=${organisationFinance.get(T(com.worth.ifs.finance.resource.cost.FinanceRowType).fromString(formInput.formInputTypeTitle))},type=${formInput.formInputTypeTitle}">
             <div th:remove="tag" th:with="overheadCosts=${costCategory?.costs?.isEmpty()} ? null : ${costCategory?.costs[0]}, overheadRate=${overheadCosts?.rateType==null} ? ${T(com.worth.ifs.finance.resource.cost.OverheadRateType).NONE} : ${T(com.worth.ifs.finance.resource.cost.OverheadRateType).valueOf(overheadCosts?.rateType)}" >
                 <fieldset>
                     <legend class="visuallyhidden">Overhead costs</legend>
@@ -358,7 +358,7 @@
     <!-- ===========================Form: materials =========================== -->
     <div th:fragment="materials" th:remove="tag">
         <p th:text="${question.getDescription()}"></p>
-        <div th:attr="data-repeatable-container=${question.getId()}" th:with="formInputType=${formInput.formInputType},costCategory=${organisationFinance.get(T(com.worth.ifs.finance.resource.cost.CostType).fromString(formInput.formInputTypeTitle))}">
+        <div th:attr="data-repeatable-container=${question.getId()}" th:with="formInputType=${formInput.formInputType},costCategory=${organisationFinance.get(T(com.worth.ifs.finance.resource.cost.FinanceRowType).fromString(formInput.formInputTypeTitle))}">
             <div class="form-group">
                 <table id="material-costs-table">
                     <thead>
@@ -485,7 +485,7 @@
     <!-- ===========================Form: capital usage =========================== -->
     <div th:fragment="capital_usage" th:remove="tag">
         <p th:text="${question.getDescription()}"></p>
-        <div th:remove="tag" th:with="formInputType=${formInput.formInputType},costCategory=${organisationFinance.get(T(com.worth.ifs.finance.resource.cost.CostType).fromString(formInput.formInputTypeTitle))},type=${formInput.formInputTypeTitle}">
+        <div th:remove="tag" th:with="formInputType=${formInput.formInputType},costCategory=${organisationFinance.get(T(com.worth.ifs.finance.resource.cost.FinanceRowType).fromString(formInput.formInputTypeTitle))},type=${formInput.formInputTypeTitle}">
             <div id="capital_usage">
                 <div th:each="cost : ${costCategory.costs}" th:remove="tag">
                     <div th:include="finance/finance :: capital_usage_row" th:remove="tag"/>
@@ -657,7 +657,7 @@
     <!-- ===========================Form: subcontracting cost =========================== -->
     <div th:fragment="subcontracting">
         <p th:text="${question.getDescription()}"></p>
-        <div th:remove="tag" th:with="formInputType=${formInput.formInputType},costCategory=${organisationFinance.get(T(com.worth.ifs.finance.resource.cost.CostType).fromString(formInput.formInputTypeTitle))},type=${formInput.formInputTypeTitle}">
+        <div th:remove="tag" th:with="formInputType=${formInput.formInputType},costCategory=${organisationFinance.get(T(com.worth.ifs.finance.resource.cost.FinanceRowType).fromString(formInput.formInputTypeTitle))},type=${formInput.formInputTypeTitle}">
 
             <div id="subcontracting">
                 <div th:each="cost : ${costCategory.costs}" th:remove="tag">
@@ -763,7 +763,7 @@
     <!-- ===========================Form: travel cost =========================== -->
     <div th:fragment="travel">
         <p th:text="${question.description}"></p>
-        <div th:attr="data-repeatable-container=${question.getId()}" th:with="formInputType=${formInput.formInputType},costCategory=${organisationFinance.get(T(com.worth.ifs.finance.resource.cost.CostType).fromString(formInput.formInputTypeTitle))},type=${formInput.formInputTypeTitle}">
+        <div th:attr="data-repeatable-container=${question.getId()}" th:with="formInputType=${formInput.formInputType},costCategory=${organisationFinance.get(T(com.worth.ifs.finance.resource.cost.FinanceRowType).fromString(formInput.formInputTypeTitle))},type=${formInput.formInputTypeTitle}">
             <div class="form-group">
                 <table id="travel-costs-table">
                     <thead>
@@ -885,7 +885,7 @@
     <!-- ===========================Form: other cost =========================== -->
     <div th:fragment="other_costs">
         <p th:text="${question.description}" />
-        <div th:attr="data-repeatable-container=${question.getId()}" th:with="formInputType=${formInput.formInputType},costCategory=${organisationFinance.get(T(com.worth.ifs.finance.resource.cost.CostType).fromString(formInput.formInputTypeTitle))},type=${formInput.formInputTypeTitle}">
+        <div th:attr="data-repeatable-container=${question.getId()}" th:with="formInputType=${formInput.formInputType},costCategory=${organisationFinance.get(T(com.worth.ifs.finance.resource.cost.FinanceRowType).fromString(formInput.formInputTypeTitle))},type=${formInput.formInputTypeTitle}">
             <div class="form-group">
                 <table id="other-costs-table">
                     <thead>
@@ -966,7 +966,7 @@
     <!-- ===========================Form: Other funding=========================== -->
     <div th:fragment="other_funding" th:remove="tag"
          th:with="formInputType=${formInput.formInputType},
-                   costCategory=${organisationFinance.get(T(com.worth.ifs.finance.resource.cost.CostType).fromString(formInput.formInputTypeTitle))},
+                   costCategory=${organisationFinance.get(T(com.worth.ifs.finance.resource.cost.FinanceRowType).fromString(formInput.formInputTypeTitle))},
                    type=${formInput.formInputTypeTitle}">
         <div class="form-group"
                 th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costCategory.otherFundingCostItem?.id +'-otherPublicFunding]}') or #fields.hasErrors('${form.formInput['+ question.id +']}')}? 'error'">

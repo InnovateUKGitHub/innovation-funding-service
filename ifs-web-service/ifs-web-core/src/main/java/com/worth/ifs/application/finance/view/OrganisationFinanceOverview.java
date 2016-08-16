@@ -5,7 +5,7 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.FileEntryRestService;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
-import com.worth.ifs.finance.resource.cost.CostType;
+import com.worth.ifs.finance.resource.cost.FinanceRowType;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -70,9 +70,9 @@ public class OrganisationFinanceOverview {
     }
 
 
-    public Map<CostType, BigDecimal> getTotalPerType() {
-        Map<CostType, BigDecimal> totalPerType = new EnumMap<>(CostType.class);
-        for(CostType costType : CostType.values()) {
+    public Map<FinanceRowType, BigDecimal> getTotalPerType() {
+        Map<FinanceRowType, BigDecimal> totalPerType = new EnumMap<>(FinanceRowType.class);
+        for(FinanceRowType costType : FinanceRowType.values()) {
             BigDecimal typeTotal = applicationFinances.stream()
                     .filter(o -> o.getFinanceOrganisationDetails(costType) != null)
                     .map(o -> o.getFinanceOrganisationDetails(costType).getTotal())

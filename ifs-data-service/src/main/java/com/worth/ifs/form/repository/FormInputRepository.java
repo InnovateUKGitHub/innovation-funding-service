@@ -1,11 +1,10 @@
 package com.worth.ifs.form.repository;
 
-import java.util.List;
-
 import com.worth.ifs.form.domain.FormInput;
-
 import com.worth.ifs.form.resource.FormInputScope;
 import org.springframework.data.repository.PagingAndSortingRepository;
+
+import java.util.List;
 
 /**
  * This interface is used to generate Spring Data Repositories.
@@ -15,7 +14,8 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 public interface FormInputRepository extends PagingAndSortingRepository<FormInput, Long> {
     List<FormInput> findAll();
     List<FormInput> findByCompetitionId(Long competitionId);
-    List<FormInput> findByCompetitionIdAndScope(Long competitionId, FormInputScope scope);
-    List<FormInput> findByQuestionId(Long questionId);
-    List<FormInput> findByQuestionIdAndScope(Long questionId, FormInputScope scope);
+    List<FormInput> findByCompetitionIdOrderByPriorityAsc(Long competitionId);
+    List<FormInput> findByCompetitionIdAndScopeOrderByPriorityAsc(Long competitionId, FormInputScope scope);
+    List<FormInput> findByQuestionIdOrderByPriorityAsc(Long questionId);
+    List<FormInput> findByQuestionIdAndScopeOrderByPriorityAsc(Long questionId, FormInputScope scope);
 }

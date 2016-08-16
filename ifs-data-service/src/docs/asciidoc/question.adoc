@@ -133,3 +133,16 @@ include::{snippets}/question/notify/response-fields.adoc[]
 
 ==== Curl Example
 include::{snippets}/question/notify/curl-request.adoc[]
+
+=== Save question
+==== Request
+include::{snippets}/question/save/http-request.adoc[]
+include::{snippets}/question/save/path-parameters.adoc[]
+include::{snippets}/question/save/request-fields.adoc[]
+
+==== Response
+include::{snippets}/question/save/http-response.adoc[]
+include::{snippets}/question/save/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/question/save/curl-request.adoc[]

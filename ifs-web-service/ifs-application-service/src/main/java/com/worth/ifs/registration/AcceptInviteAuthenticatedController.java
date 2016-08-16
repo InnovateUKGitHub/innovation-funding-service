@@ -9,8 +9,8 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
+import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
-import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.registration.service.RegistrationService;
@@ -50,10 +50,10 @@ public class AcceptInviteAuthenticatedController extends BaseController{
         UserResource loggedInUser = userAuthenticationService.getAuthenticatedUser(request);
 
         String hash = CookieUtil.getCookieValue(request, INVITE_HASH);
-        RestResult<InviteResource> invite = inviteRestService.getInviteByHash(hash);
+        RestResult<ApplicationInviteResource> invite = inviteRestService.getInviteByHash(hash);
 
         if (invite.isSuccess()) {
-            InviteResource inviteResource = invite.getSuccessObject();
+            ApplicationInviteResource inviteResource = invite.getSuccessObject();
             if (InviteStatusConstants.SEND.equals(inviteResource.getStatus())) {
                 InviteOrganisationResource inviteOrganisation = inviteRestService.getInviteOrganisationByHash(hash).getSuccessObjectOrThrowException();
 
@@ -86,10 +86,10 @@ public class AcceptInviteAuthenticatedController extends BaseController{
         UserResource loggedInUser = userAuthenticationService.getAuthenticatedUser(request);
 
         String hash = CookieUtil.getCookieValue(request, INVITE_HASH);
-        RestResult<InviteResource> invite = inviteRestService.getInviteByHash(hash);
+        RestResult<ApplicationInviteResource> invite = inviteRestService.getInviteByHash(hash);
 
         if (invite.isSuccess()) {
-            InviteResource inviteResource = invite.getSuccessObject();
+            ApplicationInviteResource inviteResource = invite.getSuccessObject();
             if (InviteStatusConstants.SEND.equals(inviteResource.getStatus())) {
                 InviteOrganisationResource inviteOrganisation = inviteRestService.getInviteOrganisationByHash(hash).getSuccessObjectOrThrowException();
 

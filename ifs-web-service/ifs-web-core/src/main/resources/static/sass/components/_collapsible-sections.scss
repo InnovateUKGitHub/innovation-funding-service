@@ -101,6 +101,12 @@ The collapsible element will show a normal header when there is no javascript, w
 			float:right;
 			font-weight:normal;
 	}
+
+	.section-score {
+		float: right;
+		font-weight: normal;
+		margin-right: 30px;
+	}
 }
 
 .no-js .collapsible > h2,

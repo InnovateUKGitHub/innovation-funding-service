@@ -7,7 +7,7 @@ import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
-public class OtherFunding implements CostItem {
+public class OtherFunding implements FinanceRowItem {
     private Long id;
 
     private String otherPublicFunding;
@@ -61,8 +61,8 @@ public class OtherFunding implements CostItem {
     }
 
     @Override
-    public CostType getCostType() {
-        return CostType.OTHER_FUNDING;
+    public FinanceRowType getCostType() {
+        return FinanceRowType.OTHER_FUNDING;
     }
 
     @Override

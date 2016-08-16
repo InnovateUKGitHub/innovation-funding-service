@@ -12,9 +12,9 @@ import java.math.RoundingMode;
 
 
 /**
- * {@code LabourCost} implements {@link CostItem}
+ * {@code LabourCost} implements {@link FinanceRowItem}
  */
-public class LabourCost implements CostItem {
+public class LabourCost implements FinanceRowItem {
 
     public interface YearlyWorkingDays {}
     private Long id;
@@ -156,8 +156,8 @@ public class LabourCost implements CostItem {
     }
 
     @Override
-    public CostType getCostType() {
-        return CostType.LABOUR;
+    public FinanceRowType getCostType() {
+        return FinanceRowType.LABOUR;
     }
 
     public void setDescription(String description) {

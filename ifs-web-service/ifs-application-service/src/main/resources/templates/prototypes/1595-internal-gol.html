@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Technology inspired'}, ${(param.status != null and param.status[0] == 'accepted' ? '/prototypes/1627-admin-view-project-status-grid?status=setup&#38;stage=5' : '/prototypes/1627-admin-view-project-status-grid?status=setup&#38;stage=3')})" th:unless="${param.status != null and param.status[0] == 'reject'}" th:remove="tag" />
+
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Technology inspired'}, ${'/prototypes/1627-admin-view-project-status-grid?status=setup&#38;stage=5&#38;reject=docs'})" th:if="${param.status != null and param.status[0] == 'reject'}" th:remove="tag" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+	
+	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Grant offer letter'}, ${'Grant offer letter'})" th:remove="tag" />
+
+	<!-- <div th:include="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:with="page='project-setup', status='closed'" th:remove="tag" /> -->
+	
+	<hr />
+
+	<th:block th:if="${param.status != null and param.status[0] == 'GOLAccepted'}">
+		<div class="success-alert extra-margin-bottom">
+			<h2 class="heading-small no-margin-top">The grant offer letter has been received and accepted</h2>
+		</div>
+
+		<p>The grant offer letter provided by Innovate UK has been received. Your consortium has completed project set up and will soon be able to complete the process.</p>
+	</th:block>
+
+	<th:block th:if="${param.status != null and param.status[0] == 'GOLRejected'}">
+		<div class="warning-alert extra-margin-bottom">
+			<h3 class="heading-small">REJECT TEXT REQUIRED</h3>
+			<ul class="list-bullet">
+				<li>TEXT REQUIRED</li>
+			</ul>
+		</div>
+	</th:block>
+
+	<th:block th:if="${param.status == null}">
+		<p>The grant offer letter has been provided by Innovate UK, and has been built from the information provided during project set up.</p>
+	</th:block>
+
+	<th:block th:if="${param.status != null and param.status[0] == 'GOLSent'}">
+		<p>The Grant offer letter is now available to the project team for review, Innovate UK are awaiting receipt of a signed grant offer letter</p>
+	</th:block>
+
+	<th:block th:if="${param.status != null and param.status[0] == 'GOLDecision'}">
+		<p>Please review the Grant offer letter to confirm that this has been signed by the lead partner and the project is ready to begin.</p>
+	</th:block>
+
+	<div class="upload-section unstyled-view">
+		<h2 class="heading-medium no-margin">Grant offer letter</h2>
+
+		<th:block th:if="${param.status == null}">
+		
+			<p>The grant offer letter has been created from the information supplied by the applicants.</p>
+
+			<div class="uploaded-file" id="gol-uploaded" th:unless="${param.action != null and param.action[0] == 'removeGOL'}">
+				<a href="#">Grant offer letter 2016-04-28a.PDF</a> <a th:href="@{?action=removeGOL}" class="extra-margin-left" id="gol-remove">Remove</a>
+			</div>
+
+			<th:block th:if="${param.action != null and param.action[0] == 'removeGOL'}">
+				<div id="upload-gol">
+			        <input type="file" name="file-gol" id="file-gol" class="inputfile" />
+			        <label for="file-gol" class="button-secondary extra-margin">+ Upload</label>
+			        <a th:href="${#httpServletRequest.requestURI}" class="button button-secondary extra-margin-top">Generate GOL</a>
+				</div>
+			</th:block>
+
+		</th:block>
+
+		<th:block th:if="${param.status != null and param.status[0] == 'GOLSent' or param.status != null and param.status[0] == 'GOLDecision' or param.status != null and param.status[0] == 'GOLAccepted' or param.status != null and param.status[0] == 'GOLRejected'}">
+			<p><a href="#">Grant offer letter 2016-04-28a.PDF</a> </p>
+		</th:block>
+
+    </div>
+
+
+    <div class="upload-section unstyled-view">
+		<h2 class="heading-medium no-margin">Appendix 2</h2>
+
+		<th:block th:if="${param.status == null}">
+			<p>Any additional supporting materials should be uploaded to the appendix</p>
+
+	        <input type="file" name="file-appendix" id="file-appendix" class="inputfile" />
+	        <label for="file-appendix" class="button-secondary extra-margin">+ Upload</label>
+        </th:block>
+
+        <th:block th:if="${param.status != null and param.status[0] == 'GOLSent' or param.status != null and param.status[0] == 'GOLDecision' or param.status != null and param.status[0] == 'GOLAccepted' or param.status != null and param.status[0] == 'GOLRejected'}">
+			<p><a href="#">Appendix-on-reform-of-project.PDF</a></p>
+		</th:block>
+
+    </div>
+
+    <th:block th:if="${param.status != null and param.status[0] == 'GOLSent'}">
+		<div class="upload-section unstyled-view">
+			<h2 class="heading-medium no-margin">Signed grant offer letter</h2>
+			<p><strong>Awaiting upload by project manager</strong></p>
+		</div>
+	</th:block>
+
+	 <th:block th:if="${param.status != null and param.status[0] == 'GOLDecision' or param.status != null and param.status[0] == 'GOLAccepted' or param.status != null and param.status[0] == 'GOLRejected'}">
+		<div class="upload-section unstyled-view">
+			<h2 class="heading-medium no-margin">Signed grant offer letter</h2>
+			<p><a href="#">signed-offer-letter.PDF</a></p>
+		</div>
+	</th:block>
+
+
+	<div th:if="${param.status == null}" th:remove="tag">
+
+		<a href="#" data-js-modal="modal-send" class="button large">Send to project team</a>
+		
+		<div class="modal-send" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+	        <button class="js-close close" aria-label="Close Popup">X</button>
+	        <div>
+
+				<h2 class="heading-medium no-margin">Send grant offer letter</h2>
+
+				<p>The grant offer letter will now be sent to the applicants. The project manager will be informed of the availablity of the GOL by email.</p>
+
+				<hr />
+
+	        	<div class="alignright-button">
+					
+					<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a> 
+
+	        		<a th:href="@{'?status=GOLSent'}" class="button">Send to project team</a>
+	        	</div>
+
+	        </div>
+	    </div>
+
+	</div>
+
+
+	<th:block th:if="${param.status != null and param.status[0] == 'GOLSent'}">
+			
+		<h2 class="heading-medium no-margin-bottom">Received GOL by post?</h2>
+		<p>If the grant offer letter has been received by post, please indicate that it has been received for review.</p>
+
+		<div class="form-group">
+	    	<label class="block-label" for="gol-by-post">
+		      <input id="gol-by-post" value="gol-by-post" type="checkbox" />
+		     	The grant offer letter has been received by post
+		    </label>
+	    </div>
+
+	    <button data-js-modal="modal-gol-by-post" id="gol-by-post-button" class="button" type="submit" disabled="disabled">Confirm GOL received by post</button>
+
+	    <div class="modal-gol-by-post" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+	        <button class="js-close close" aria-label="Close Popup">X</button>
+	        <div>
+
+				<h2 class="heading-medium no-margin">Confirm receipt of posted grant offer letter</h2>
+
+				<p>The signed grant offer letter has been uploaded, and a decision can be made on whether the document meets the requirements of Innovate UK.</p>
+
+				<hr />
+
+	        	<div class="alignright-button">
+					
+					<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a> 
+
+	        		<a th:href="@{'?status=GOLDecision'}" class="button">Confirm</a>
+	        	</div>
+
+	        </div>
+	    </div>
+
+	</th:block>
+
+	<div th:if="${param.status != null and param.status[0] == 'GOLDecision'}" th:remove="tag">
+
+		<h2 class="heading-medium">Confirm receipt of grant offer letter</h2>
+		<p>Do the documents supplied meet the requirements for the grant offer letter?</p>
+
+		<a href="#" data-js-modal="modal-accept-gol" class="button large">Accept grant offer letter</a>
+
+		<a href="#" data-js-modal="modal-reject-gol" class="button button-warning large">Reject grant offer letter</a>
+
+		<div class="modal-accept-gol" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+	        <button class="js-close close" aria-label="Close Popup">X</button>
+	        <div>
+
+				<h2 class="heading-medium no-margin">Accept signed grant offer letter</h2>
+
+				<p>This will accept the signed grant offer letter that has been sent by the project manager, and will inform them that it is acceptable.</p>
+
+				<hr />
+
+	        	<div class="alignright-button">
+					
+					<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a> 
+
+	        		<a th:href="@{'?status=GOLAccepted'}" class="button">Accept signed grant offer letter</a>
+	        	</div>
+
+	        </div>
+	    </div>
+
+
+	    <div class="modal-reject-gol" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+	        <button class="js-close close" aria-label="Close Popup">X</button>
+	        <div>
+
+				<h2 class="heading-medium no-margin">Reject signed grant offer letter</h2>
+
+				<p>Rejecting will return access to this section to the lead applicant.</p>
+
+				<p>Before taking this action please contact the project manager to explain why the grant offer letter is being returned to them.</p>
+
+				<hr />
+
+	        	<div class="alignright-button">
+					
+					<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a> 
+
+	        		<a th:href="@{'?status=GOLRejected'}" class="button button-warning">Reject grant offer letter</a>
+	        	</div>
+
+	        </div>
+	    </div>
+
+	</div>
+
+
+	
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<script src="/js/ifs_prototype/jquery.waypoints.min.js" type="text/javascript"></script>
+<script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
+<script type="text/javascript">
+	// <![CDATA[
+	jQuery('input#gol-by-post').on('click',function(e){ 
+		if ( jQuery(this).is(':checked') ) {
+			jQuery("#gol-by-post-button").removeAttr('disabled');
+		}else{
+			jQuery("#gol-by-post-button").attr('disabled','disabled');
+		}
+	});
+	// ]]>
+</script>
+</body>
+</html>

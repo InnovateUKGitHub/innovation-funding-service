@@ -170,6 +170,11 @@ select.form-control{
 		& + label{
 			margin-top: 20px;
 		}
+
+	}
+
+	.button-secondary{
+		margin-top: 20px; 
 	}
 
 	.uploaded-file{
@@ -179,6 +184,31 @@ select.form-control{
 		font-weight: bold;
 		margin: 10px 0;
 	}
+
+	&.unstyled-view{
+		border: none;
+		background: none;
+		padding: 0;
+		
+		.inputfile{
+			& + label{
+				margin-top: 5px;
+			}
+		}
+
+		.button-secondary{
+			margin-top: 5px; 
+		}
+
+		.uploaded-file{
+			background: none;
+			padding: 0;
+		}
+
+
+	}
+
+	
 
 }
 

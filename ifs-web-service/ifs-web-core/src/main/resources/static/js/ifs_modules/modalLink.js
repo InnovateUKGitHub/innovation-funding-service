@@ -60,6 +60,32 @@ IFS.core.modal = (function(){
                     button.closest('form:not([novalidate])').find('input:invalid').first().focus();
                 }
             }
+
+            if(target.find('form').length){
+                target.find('form').on('submit', function(event){
+                    /**
+                     * Validate the modal form fields before submitting
+                     * @requires: formValidation.js
+                     */
+                    var form = this,
+                        submitValid = true;
+
+                    // Validate each required field in the form
+                    jQuery('[required="required"]', form).each(function() {
+                        if(IFS.core.formValidation.checkRequired(jQuery(this),true) !== true) {
+                            submitValid = false;
+                        }
+                    });
+
+                    // If valid submit the form, otherwise prevent submission
+                    if(submitValid) {
+                        return true;
+                    } else {
+                        event.preventDefault();
+                        return false;
+                    }
+                });
+            }
         },
         disableTabPage : function(){
             jQuery(":tabbable").each(function(){

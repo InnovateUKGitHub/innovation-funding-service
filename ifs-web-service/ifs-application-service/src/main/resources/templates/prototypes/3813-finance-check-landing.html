@@ -43,11 +43,10 @@
 
 	<hr />
 
-	<div class="panel-indent">
-		<h2 class="heading-medium no-margin-top">Subcontractor charges</h2>
-        <p><strong>Innovate UK - Finance team </strong> <small th:text="${#dates.format(#dates.createNow(), 'dd MMM yyyy HH:mm')}">26/06/2016 18:23</small></p>
-        <p>Please explain why you are intending to employ the services of a specialist consultant who is based in France? Please provide a breakdown of the work to justify the &pound;150,000</p>
-    </div>
+	<h2 class="heading-medium no-margin-top">Subcontractor charges</h2>
+    <p><strong>Innovate UK - Finance team </strong> <small th:text="${#dates.format(#dates.createNow(), 'dd MMM yyyy HH:mm')}">26/06/2016 18:23</small></p>
+    <p>Please explain why you are intending to employ the services of a specialist consultant who is based in France? Please provide a breakdown of the work to justify the &pound;150,000</p>
+
 
     <form method="get" th:action="${#httpServletRequest.requestURI}" th:unless="${param.action != mull and param.action[0] == 'newResponse' or param.action != mull and param.action[0] == 'postResponse'}">
         <input type="hidden" id="action" name="action" value="newResponse" />

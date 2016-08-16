@@ -20,7 +20,7 @@ public class ApplicationFormSectionSaver implements CompetitionSetupSectionSaver
 
 	@Override
 	public void saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
-		
+
 	}
 
 	@Override

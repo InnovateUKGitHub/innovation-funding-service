@@ -22,6 +22,10 @@ Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
 Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
 
+*** Variables ***
+${application_name}    Invite robot test application
+
+
 *** Test Cases ***
 Application team page
     [Documentation]    INFUND-928
@@ -36,9 +40,10 @@ Application team page
 
 Valid invitation submit
     [Documentation]    INFUND-901
-    [Tags]    HappyPath
+    [Tags]    HappyPath    SmokeTest
     [Setup]    Delete the emails from both test mailboxes
-    Given the user clicks the button/link    jQuery=.button:contains("Invite new contributors")
+    Given the user is on the invites and collaborators page
+    When the user clicks the button/link    jQuery=.button:contains("Invite new contributors")
     When the applicant enters valid inputs
     Then the user should see the text in the page    Application team
     And the user should see the text in the page    Invites sent
@@ -86,7 +91,7 @@ Business organisation (partner accepts invitation)
     ...    INFUND-2286
     ...    INFUND-1779
     ...    INFUND-2336
-    [Tags]    HappyPath    Email
+    [Tags]    HappyPath    Email    SmokeTest
     [Setup]    The guest user opens the browser
     When the user opens the mailbox and accepts the invitation to collaborate
     And the user clicks the button/link    jQuery=.button:contains("Create")
@@ -104,9 +109,9 @@ Business organisation (partner accepts invitation)
 
 Partner should be able to log-in and see the new company name
     [Documentation]    INFUND-2083
-    [Tags]    Email    HappyPath
+    [Tags]    Email    HappyPath    SmokeTest
     Given the user clicks the button/link    jQuery=.button:contains("Sign in")
-    When guest user log-in    ${test_mailbox_one}+inviteorg1@gmail.com    Passw0rd123
+    When guest user log-in    ${test_mailbox_one}+inviteorg${unique_email_number}@gmail.com    Passw0rd123
     Then the user should be redirected to the correct page    ${DASHBOARD_URL}
     And the user can see the updated company name throughout the application
 
@@ -161,7 +166,7 @@ Lead applicant invites a non registered user in the same organisation
     When the user clicks the button/link    link=View team members and add collaborators
     When the user clicks the button/link    jQuery=.button:contains("Invite new contributors")
     Then the user should see the text in the page    Manage Contributors
-    And the user clicks the button/link    jQuery=li:nth-child(1) button:contains("Add person")
+    And the user clicks the button/link    jQuery=li:nth-child(1) button:contains("Add another person")
     When the user adds new collaborator
     And the user clicks the button/link    jquery=button:contains("Save Changes")
     Then the user should see the text in the page    Application team
@@ -190,7 +195,7 @@ the applicant enters valid inputs
     Click Element    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
     Input Text    name=organisations[1].organisationName    Fannie May
     Input Text    name=organisations[1].invites[0].personName    Adrian Booth
-    Input Text    name=organisations[1].invites[0].email    ${test_mailbox_one}+inviteorg1@gmail.com
+    Input Text    name=organisations[1].invites[0].email    ${test_mailbox_one}+inviteorg${unique_email_number}@gmail.com
     focus    jquery=button:contains("Save Changes")
     Click Element    jquery=button:contains("Save Changes")
 
@@ -206,7 +211,7 @@ the user adds new collaborator
     the user should see the element    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input
     Input Text    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input    Roger Axe
     Input Text    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(2) input    ${test_mailbox_one}+inviteorg2@gmail.com
-    focus    jquery=li:nth-child(1) button:contains('Add person')
+    focus    jquery=li:nth-child(1) button:contains('Add another person')
     sleep    300ms
 
 The status of the invited people should be correct in the application team page
@@ -229,22 +234,22 @@ the status of the people should be correct in the Manage contributors page
 
 the user can see the updated company name throughout the application
     Given the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link=Invite robot test application
+    And the user clicks the button/link    link=${application_name}
     And the user clicks the button/link    link=Your finances
     the user should see the text in the page    NOMENSA LTD
     Given the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link=Invite robot test application
+    And the user clicks the button/link    link=${application_name}
     When the user clicks the button/link    link=View team members and add collaborators
     the user should see the text in the page    NOMENSA LTD
 
 the user can invite another person to their own organisation
     ${OWN_ORG}=    Get WebElement    jQuery=li:has(input[value='NOMENSA LTD'])
-    the user clicks the button/link    jQuery=button:contains('Add person')
+    the user clicks the button/link    jQuery=button:contains('Add another person')
     the user should see the element    jQuery=li[data-invite-org=${OWN_ORG.get_attribute('data-invite-org')}] tr:nth-of-type(2) td:nth-child(2) input:not([readonly])
     the user should not see the element    jQuery=li[data-invite-org=${OWN_ORG.get_attribute('data-invite-org')}] tr:nth-of-type(2) td:nth-child(2) [readonly]
 
 the user cannot invite another person to a different organisation
-    the user should not see the element    jQuery=li:nth-child(1) button:contains("Add person")
+    the user should not see the element    jQuery=li:nth-child(1) button:contains("Add another person")
     #This comments should be removed after the review
     #${OTHER_ORG}=    Get WebElement    jQuery=li:has(input[value='HIVE IT LIMITED'])
     #the user should see the element    jQuery=li[data-invite-org=${OTHER_ORG.get_attribute('data-invite-org')}] tr:nth-of-type(1) td:nth-child(2) [readonly]
@@ -256,3 +261,14 @@ pending partners should be visible in the page
 the user navigates to the next question
     The user clicks the button/link    css=.next .pagination-label
     Run Keyword And Ignore Error    confirm action
+
+
+the user is on the invites and collaborators page
+    ${status}=      run keyword and ignore error           the user should see the element    jQuery=.button:contains("Invite new contributors")
+    run keyword if      ${status}!=('PASS', None)        log into smoke test application
+
+log into smoke test application
+    logout as user
+    guest user log-in     ${test_mailbox_one}+${unique_email_number}@gmail.com    Passw0rd123
+    the user clicks the button/link    link=IFS smoke test
+    the user clicks the button/link    link=View team members and add collaborators

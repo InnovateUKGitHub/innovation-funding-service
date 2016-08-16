@@ -1,11 +1,11 @@
 package com.worth.ifs.project.viewmodel;
 
-import java.time.LocalDate;
-
 import com.worth.ifs.project.resource.ProjectResource;
-
+import com.worth.ifs.project.resource.SpendProfileTableResource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+import java.time.LocalDate;
 
 /**
  * View model to back the Spend Profile page
@@ -17,13 +17,15 @@ public class ProjectSpendProfileViewModel {
     private LocalDate targetProjectStartDate;
     private Long durationInMonths;
     private SpendProfileSummaryModel summary;
+    private SpendProfileTableResource table;
 
-    public ProjectSpendProfileViewModel(ProjectResource project, final SpendProfileSummaryModel summary) {
+    public ProjectSpendProfileViewModel(ProjectResource project, SpendProfileTableResource table, SpendProfileSummaryModel summary) {
         this.projectId = project.getId();
         this.projectName = project.getName();
         this.targetProjectStartDate = project.getTargetStartDate();
         this.durationInMonths = project.getDurationInMonths();
         this.summary = summary;
+        this.table = table;
     }
 
     public Long getProjectId() {
@@ -46,20 +48,49 @@ public class ProjectSpendProfileViewModel {
         return summary;
     }
 
+    public SpendProfileTableResource getTable() {
+        return table;
+    }
+
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
+    }
+
+    public void setTargetProjectStartDate(LocalDate targetProjectStartDate) {
+        this.targetProjectStartDate = targetProjectStartDate;
+    }
+
+    public void setDurationInMonths(Long durationInMonths) {
+        this.durationInMonths = durationInMonths;
+    }
+
+    public void setSummary(SpendProfileSummaryModel summary) {
+        this.summary = summary;
+    }
+
+    public void setTable(SpendProfileTableResource table) {
+        this.table = table;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        ProjectSpendProfileViewModel viewModel = (ProjectSpendProfileViewModel) o;
+        ProjectSpendProfileViewModel that = (ProjectSpendProfileViewModel) o;
 
         return new EqualsBuilder()
-                .append(projectId, viewModel.projectId)
-                .append(projectName, viewModel.projectName)
-                .append(targetProjectStartDate, viewModel.targetProjectStartDate)
-                .append(durationInMonths, viewModel.durationInMonths)
-                .append(summary, viewModel.summary)
+                .append(projectId, that.projectId)
+                .append(projectName, that.projectName)
+                .append(targetProjectStartDate, that.targetProjectStartDate)
+                .append(durationInMonths, that.durationInMonths)
+                .append(summary, that.summary)
+                .append(table, that.table)
                 .isEquals();
     }
 
@@ -67,6 +98,11 @@ public class ProjectSpendProfileViewModel {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(projectId)
+                .append(projectName)
+                .append(targetProjectStartDate)
+                .append(durationInMonths)
+                .append(summary)
+                .append(table)
                 .toHashCode();
     }
 }

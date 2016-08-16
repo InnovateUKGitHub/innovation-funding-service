@@ -64,4 +64,138 @@
     </div>
 </div>
 
+
+<!-- ======== Assessment - assessor summary section ======= -->
+<div th:fragment="assessment-summary-section (question)">
+    <h2>
+        <span th:text="${question.displayLabel}" />
+        <div th:if="${question.isComplete()}" class="section-status section-complete">Complete</div>
+        <div th:unless="${question.isComplete()}" class="section-status section-incomplete">Incomplete</div>
+
+        <div class="section-score" th:if="${question.scoreFormInputExists}">
+            Score:
+            <span th:text="|${question.scoreGiven}/${question.scorePossible}|" th:if="${question.scoreGiven}" th:remove="tag" />
+            <span th:unless="${question.scoreGiven}" th:remove="tag">N/A</span>
+        </div>
+    </h2>
+    <div class="question">
+        <div class="form-group">
+            <p th:text="${question.feedback}" />
+            <p><a th:href="@{/{id}/question/{quid}(id=${assessmentId}, quid=${question.questionId})}">Return to this question in the application</a></p>
+            <p th:unless="${question.applicationInScope == null}" class="assessor-score alignright">
+              <span class="score">In scope: <strong th:text="${question.applicationInScope} ? 'Yes' : 'No'" /></span>
+            </p>
+        </div>
+    </div>
+</div>
+
+
+<!-- ======== Assessment - assessor summary total score ======= -->
+<div th:fragment="assessment-summary-total-score(totalGiven, totalPossible, totalPercentage)">
+    <div class="extra-margin alignright">
+        <p class="no-margin">
+            <strong>Total: <span th:text="${totalGiven}" th:remove="tag">0</span>/<span th:text="${totalPossible}" th:remove="tag">100</span></strong>
+        </p>
+        <p>
+            <strong><span th:text="${totalPercentage}+'%'" th:remove="tag">0%</span></strong>
+        </p>
+    </div>
+</div>
+
+
+<!-- ======== Assessment - reject competition modal ======= -->
+<div th:fragment="assessment-reject-competition-modal (competitionId)">
+    <div class="reject-competition-modal" role="dialog" aria-hidden="true">
+        <form action="#" method="post" novalidate="novalidate">
+            <div th:include="fragments/modals :: close-button" th:remove="tag" />
+            <div class="form-group">
+                <label class="form-label">Please select a reason for rejecting the competition</label>
+                <select class="form-control" required="required">
+                    <option value="">Select a reason</option>
+                    <option value="not-available">Not available</option>
+                    <option value="conflict-of-interest">Conflict of interest</option>
+                    <option value="not-my-area-of-interest">Not my area of expertise</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Use this space to provide more information</label>
+                <textarea class="form-control width-full" rows="4"></textarea>
+            </div>
+            <button class="button large button-warning extra-margin" name="submit-app-details">Reject</button>
+        </form>
+    </div>
+</div>
+
+
+<!-- =================== Assessment - Modal reject ============================== -->
+<div th:fragment="prototype-modal-comp-reject">
+    <div class="modal-reject-assessment" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+        <button class="js-close close" aria-label="Close Popup">X</button>
+        <div>
+            <form method="post" th:action="${backTo}">
+
+                <div class="form-group">
+
+                    <label for="reject-reason" class="form-label">Please select a reason for rejecting the competition</label>
+                    <select name="decisionReason" id="reject-reason" required="required" class="form-control">
+                        <option value="none">Please select one reason</option>
+                        <option value="not-available">Not available</option>
+                        <option value="conflict-of-interest">Conflict of interest</option>
+                        <option value="not-my-area-of-interest">Not my area of expertise</option>
+
+
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="rejection-observations" class="form-label">Use this space to provide more information</label>
+                    <textarea id="rejection-observations" name="observations" class="form-control"></textarea>
+                </div>
+                <button class="button button-warning large" name="reject" value="rejected" type="submit">Reject</button>
+            </form>
+            <!--<a role="button" tabindex="0" class="button" th:href="@{/application/{id}/submit(id=${currentApplication.getId()})}">Yes, I want to submit my application</a>-->
+        </div>
+    </div>
+</div>
+
+
+<!-- ======== Assessment - reject assessment modal ======= -->
+<div th:fragment="assessment-reject-assesment-modal (assessmentId)">
+    <div class="reject-assesment-modal" role="dialog" aria-hidden="true">
+        <div th:include="fragments/modals :: close-button" th:remove="tag" />
+
+        <div th:include="fragments/assessment :: assessment-reject-application-form (assessmentId=${assessmentId})" th:remove="tag" />
+    </div>
+</div>
+
+
+<!-- ======== Assessment - reject assessment form for modal and non-js page ======= -->
+<div th:fragment="assessment-reject-application-form (assessmentId)">
+    <form action="#" th:action="@{/{assessmentId}/reject(assessmentId=${assessmentId})}" method="post" th:object="${form}" novalidate="novalidate">
+        <div class="error-summary" th:if="${#fields.hasErrors('global')}">
+            <h2 class="heading-medium error-summary-heading">
+                We were unable to reject the assessment:
+            </h2>
+            <ul class="error-summary-list">
+                <li th:errors="*{global}" />
+            </ul>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label" th:for="${#ids.next('rejectReason')}">Please select a reason for rejecting the application</label>
+            <select class="form-control" required="required" th:field="*{rejectReason}">
+                <option value="">Select a reason</option>
+                <option value="conflict-of-interest">Conflict of interest</option>
+                <option value="not-my-area-of-interest">Not my area of expertise</option>
+                <option value="too-many-assessments">Too many assessments</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="form-label" th:for="${#ids.next('rejectComment')}">Use this space to provide more information</label>
+            <textarea class="form-control width-full" rows="4" th:field="*{rejectComment}"></textarea>
+        </div>
+        <button class="button large button-warning extra-margin" name="submit-app-details">Reject</button>
+    </form>
+</div>
+
+
 </html>

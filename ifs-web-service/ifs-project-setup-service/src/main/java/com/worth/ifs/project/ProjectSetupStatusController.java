@@ -21,7 +21,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.context.request.NativeWebRequest;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 import static com.worth.ifs.user.resource.OrganisationTypeEnum.isResearch;
@@ -50,9 +52,18 @@ public class ProjectSetupStatusController {
 	
     @RequestMapping(value = "/{projectId}", method = RequestMethod.GET)
     public String viewProjectSetupStatus(Model model, @PathVariable("projectId") final Long projectId,
-                                         @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+                                         @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                         NativeWebRequest springRequest) {
+
+        HttpServletRequest request = springRequest.getNativeRequest(HttpServletRequest.class);
+        String dashboardUrl = request.getScheme() + "://" +
+            request.getServerName() +
+            ":" + request.getServerPort() +
+            "/applicant/dashboard";
+
 
         model.addAttribute("model", getProjectSetupStatusViewModel(projectId, loggedInUser));
+        model.addAttribute("url", dashboardUrl);
         return "project/setup-status";
     }
 
@@ -70,7 +81,7 @@ public class ProjectSetupStatusController {
 
         boolean funded = isApplicationFunded(project, organisation, competition);
 
-        return new ProjectSetupStatusViewModel(project, competition, monitoringOfficer, bankDetails, funded);
+        return new ProjectSetupStatusViewModel(project, competition, monitoringOfficer, bankDetails, funded, organisation.getId());
     }
 
     private boolean isApplicationFunded(ProjectResource project, OrganisationResource organisation, CompetitionResource competition){

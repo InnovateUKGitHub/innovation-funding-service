@@ -118,6 +118,16 @@ public class FormInputServiceSecurityTest extends BaseServiceSecurityTest<FormIn
         public ServiceResult<FormInputResponse> saveQuestionResponse(FormInputResponseCommand command) {
             return null;
         }
+
+        @Override
+        public ServiceResult<FormInputResource> save(FormInputResource formInputResource) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> delete(Long id) {
+            return null;
+        }
     }
 }
 

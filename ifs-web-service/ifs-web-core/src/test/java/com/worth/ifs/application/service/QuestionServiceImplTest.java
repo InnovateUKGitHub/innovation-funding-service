@@ -1,36 +1,27 @@
 package com.worth.ifs.application.service;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+import com.worth.ifs.BaseServiceUnitTest;
+import com.worth.ifs.application.resource.QuestionResource;
+import com.worth.ifs.application.resource.QuestionStatusResource;
+import com.worth.ifs.application.resource.QuestionType;
+import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.rest.ValidationMessages;
+import org.junit.Test;
+import org.mockito.Mock;
+
+import java.util.*;
+import java.util.concurrent.Future;
+
 import static com.worth.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.Future;
-
-import org.junit.Test;
-import org.mockito.Mock;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
-import com.worth.ifs.BaseServiceUnitTest;
-import com.worth.ifs.application.resource.QuestionResource;
-import com.worth.ifs.application.resource.QuestionType;
-import com.worth.ifs.application.resource.QuestionStatusResource;
-import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.commons.rest.ValidationMessages;
+import static org.mockito.Mockito.*;
 
 public class QuestionServiceImplTest extends BaseServiceUnitTest<QuestionService> {
-
     @Mock
     private QuestionRestService questionRestService;
 
@@ -44,13 +35,13 @@ public class QuestionServiceImplTest extends BaseServiceUnitTest<QuestionService
     public void testGetQuestionsByType() {
     	QuestionResource section = newQuestionResource().build();
     	when(questionRestService.getQuestionsBySectionIdAndType(1L, QuestionType.COST)).thenReturn(restSuccess(asList(section)));
-    	
+
     	List<QuestionResource> result = service.getQuestionsBySectionIdAndType(1L, QuestionType.COST);
-    	
+
     	assertEquals(1, result.size());
     	assertEquals(section, result.get(0));
     }
-    
+
     @Test
     public void testAssign() throws Exception {
         Long questionId = 1L;
@@ -88,7 +79,6 @@ public class QuestionServiceImplTest extends BaseServiceUnitTest<QuestionService
         verify(questionRestService).markAsInComplete(questionId, applicationId, markedAsInCompleteById);
     }
 
-
     @Test
     public void testFindByCompetition() throws Exception {
         Long competitionId = 1L;
@@ -99,6 +89,7 @@ public class QuestionServiceImplTest extends BaseServiceUnitTest<QuestionService
 
         assertEquals(questions, returnedQuestions);
     }
+
 
     @Test
     public void testGetNotificationsForUser() throws Exception {
@@ -283,5 +274,28 @@ public class QuestionServiceImplTest extends BaseServiceUnitTest<QuestionService
         List<QuestionStatusResource> result = service.findQuestionStatusesByQuestionAndApplicationId(questionId, applicationId);
 
         assertEquals(statuses, result);
+    }
+
+    @Test
+    public void getQuestionsByAssessment() throws Exception {
+        Long assessmentId = 1L;
+        List<QuestionResource> questions = newQuestionResource().build(2);
+
+        when(questionRestService.getQuestionsByAssessment(assessmentId)).thenReturn(restSuccess(questions));
+        List<QuestionResource> result = service.getQuestionsByAssessment(assessmentId);
+
+        assertEquals(questions, result);
+    }
+
+    @Test
+    public void testSave() throws Exception {
+        QuestionResource question = newQuestionResource().build();
+
+        when(questionRestService.save(question)).thenReturn(restSuccess(question));
+        QuestionResource result = service.save(question);
+
+        assertEquals(question, result);
+
+        verify(questionRestService, only()).save(question);
     }
 }

@@ -17,6 +17,7 @@ import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.BasicFileAndContents;
 import com.worth.ifs.file.service.FileAndContents;
 import com.worth.ifs.file.transactional.FileService;
+import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.notifications.resource.ExternalUserNotificationTarget;
 import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.notifications.resource.NotificationTarget;
@@ -28,15 +29,14 @@ import com.worth.ifs.organisation.repository.OrganisationAddressRepository;
 import com.worth.ifs.project.domain.MonitoringOfficer;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
+import com.worth.ifs.project.finance.transactional.ProjectFinanceService;
 import com.worth.ifs.project.mapper.MonitoringOfficerMapper;
 import com.worth.ifs.project.mapper.ProjectMapper;
 import com.worth.ifs.project.mapper.ProjectUserMapper;
 import com.worth.ifs.project.repository.MonitoringOfficerRepository;
 import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.project.repository.ProjectUserRepository;
-import com.worth.ifs.project.resource.MonitoringOfficerResource;
-import com.worth.ifs.project.resource.ProjectResource;
-import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.project.resource.*;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -48,9 +48,11 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -61,6 +63,8 @@ import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.service.ServiceResult.*;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
+import static com.worth.ifs.project.transactional.ProjectServiceImpl.Notifications.INVITE_FINANCE_CONTACT;
+import static com.worth.ifs.project.transactional.ProjectServiceImpl.Notifications.INVITE_PROJECT_MANAGER;
 import static com.worth.ifs.user.resource.UserRoleType.*;
 import static com.worth.ifs.util.CollectionFunctions.*;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
@@ -122,7 +126,10 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     private String webBaseUrl;
 
     enum Notifications {
-        MONITORING_OFFICER_ASSIGNED, MONITORING_OFFICER_ASSIGNED_PROJECT_MANAGER,
+        MONITORING_OFFICER_ASSIGNED,
+        MONITORING_OFFICER_ASSIGNED_PROJECT_MANAGER,
+        INVITE_FINANCE_CONTACT,
+        INVITE_PROJECT_MANAGER
     }
 
     @Override
@@ -234,7 +241,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     }
 
     @Override
-    public ServiceResult<Boolean> isOtherDocumentsSubmitAllowed(Long projectId) {
+    public ServiceResult<Boolean> isOtherDocumentsSubmitAllowed(Long projectId, Long userId) {
         ServiceResult<Project> project = getProject(projectId);
         Optional<ProjectUser> projectManager = getExistingProjectManager(project.getSuccessObject());
         boolean allMatch = retrieveUploadedDocuments(projectId).stream()
@@ -243,7 +250,8 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         if (!allMatch) {
              return serviceFailure(new Error(PROJECT_SETUP_OTHER_DOCUMENTS_MUST_BE_UPLOADED_BEFORE_SUBMIT));
         }
-        return projectManager.isPresent() ? serviceSuccess(true)
+        return projectManager.isPresent()
+                && projectManager.get().getUser().getId().equals(userId) ? serviceSuccess(true)
                 : serviceFailure(new Error(PROJECT_SETUP_OTHER_DOCUMENTS_CAN_ONLY_SUBMITTED_BY_PROJECT_MANAGER));
 
     }
@@ -557,6 +565,50 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
     private ServiceResult<ProjectUser> createFinanceContactProjectUser(User user, Project project, Organisation organisation) {
         return createProjectUserForRole(project, user, organisation, FINANCE_CONTACT);
+    }
+
+    @Override
+    public ServiceResult<Void> inviteFinanceContact(Long projectId, ApplicationInviteResource inviteResource) {
+
+        return inviteContact(projectId, inviteResource, INVITE_FINANCE_CONTACT);
+    }
+
+    @Override
+    public ServiceResult<Void> inviteProjectManager(Long projectId, ApplicationInviteResource inviteResource) {
+
+        return inviteContact(projectId, inviteResource, INVITE_PROJECT_MANAGER);
+    }
+
+    private ServiceResult<Void> inviteContact(Long projectId, ApplicationInviteResource inviteResource, Notifications kindOfNotification) {
+
+        Notification notification = createInviteContactNotification(projectId, inviteResource, kindOfNotification);
+        ServiceResult<Void> inviteContactEmailSendResult = notificationService.sendNotification(notification, EMAIL);
+        return processAnyFailuresOrSucceed(singletonList(inviteContactEmailSendResult));
+    }
+
+    private Notification createInviteContactNotification(Long projectId, ApplicationInviteResource inviteResource, Notifications kindOfNotification) {
+        NotificationTarget notificationTarget = createInviteContactNotificationTarget(inviteResource);
+        Map<String, Object> globalArguments = createGlobalArgsForInviteContactEmail(projectId, inviteResource);
+        return new Notification(systemNotificationSource, singletonList(notificationTarget),
+                kindOfNotification, globalArguments, emptyMap());
+    }
+
+    private NotificationTarget createInviteContactNotificationTarget(ApplicationInviteResource inviteResource) {
+        return new ExternalUserNotificationTarget(inviteResource.getName(), inviteResource.getEmail());
+    }
+
+    private Map<String, Object> createGlobalArgsForInviteContactEmail(Long projectId, ApplicationInviteResource inviteResource) {
+        Project project = projectRepository.findOne(projectId);
+        Map<String, Object> globalArguments = new HashMap<>();
+        globalArguments.put("projectName", project.getName());
+        globalArguments.put("leadOrganisation", inviteResource.getLeadOrganisation());
+        globalArguments.put("inviteOrganisationName", (StringUtils.isEmpty(inviteResource.getInviteOrganisationName())) ? "No org as yet" : inviteResource.getInviteOrganisationName());
+        globalArguments.put("inviteUrl", getInviteUrl(webBaseUrl, inviteResource));
+        return globalArguments;
+    }
+
+    private String getInviteUrl(String baseUrl, ApplicationInviteResource inviteResource) {
+        return String.format("%s/accept-invite/%s", baseUrl, inviteResource.getHash());
     }
 
     private ServiceResult<Void> validateProjectStartDate(LocalDate date) {

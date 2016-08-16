@@ -2,7 +2,7 @@ package com.worth.ifs.invite.builder;
 
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
-import com.worth.ifs.invite.resource.InviteResource;
+import com.worth.ifs.invite.resource.ApplicationInviteResource;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -34,7 +34,7 @@ public class InviteOrganisationResourceBuilder extends BaseBuilder<InviteOrganis
         return withArray((organisationName, inviteResource) -> setField("organisationName", organisationName, inviteResource), organisationNames);
     }
 
-    public InviteOrganisationResourceBuilder withInviteResources(List<InviteResource> inviteResource) {
+    public InviteOrganisationResourceBuilder withInviteResources(List<ApplicationInviteResource> inviteResource) {
         return with(inviteOrganisationResource -> inviteOrganisationResource.setInviteResources(inviteResource));
     }
 

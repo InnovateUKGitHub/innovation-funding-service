@@ -55,12 +55,13 @@ Month field client side
     Then the user should see an error    Please enter a valid date
     When the applicant inserts a valid date
     Then the applicant should not see the validation error any more
+    Capture Page Screenshot
 
 Year field client side
     [Documentation]    INFUND-43
     ...
     ...    INFUND-2843
-    [Tags]    HappyPath    Failing
+    [Tags]    HappyPath
     [Setup]    Run keywords    the user enters text to a text field    id=application_details-title    Robot test application
     ...    AND    the user enters text to a text field    id=application_details-duration    15
     When the applicant inserts an invalid date
@@ -74,7 +75,7 @@ Duration field client side
     [Documentation]    INFUND-43
     ...
     ...    INFUND-2843
-    [Tags]    Failing
+    [Tags]
     [Setup]    Run keywords    the user enters text to a text field    id=application_details-title    Robot test application
     ...    AND    the applicant inserts a valid date
     When the user enters text to a text field    id=application_details-duration    0
@@ -106,25 +107,28 @@ Application details server side
 Empty text area
     [Documentation]    INFUND-43
     [Tags]    Pending
-    # Pending due to chromedriver
+    # Pending INFUND-4462
     Given the user clicks the button/link    css=.pagination-part-title
     When the applicant clears the text area of the "Project Summary"
+    When the user clicks the button/link    jQuery=Button:contains("Mark as complete")
     Then the user should see an error    Please enter some text
-    And the user enters some text in the text area
+    When The user enters text to a text field    css=#form-input-11 .editor    Test 123
     Then the applicant should not see the validation error any more
 
 *** Keywords ***
 the applicant should not see the validation error any more
-    Focus    css=.app-submit-btn
-    run keyword and ignore error    mouse out    css=input
-    Run Keyword And Ignore Error    mouse out    css=.editor
-    Focus    css=.app-submit-btn
+    Run Keyword And Ignore Error    Mouse Out    css=input
+    Run Keyword And Ignore Error    Focus    jQuery=Button:contains("Mark as complete")
+    #Focus    css=.app-submit-btn
+    #run keyword and ignore error    mouse out    css=input
+    #Run Keyword And Ignore Error    mouse out    css=.editor
+    #Focus    css=.app-submit-btn
     sleep    300ms
     wait until element is not visible    css=.error-message
 
 the applicant inserts a valid date
     Clear Element Text    id=application_details-startdate_day
-    Input Text    id=application_details-startdate_day    20
+    Input Text    id=application_details-startdate_day    12
     Clear Element Text    id=application_details-startdate_month
     Input Text    id=application_details-startdate_month    11
     Clear Element Text    id=application_details-startdate_year
@@ -142,17 +146,13 @@ the applicant clears the text area of the "Project Summary"
     Clear Element Text    css=#form-input-11 .editor
     Press Key    css=#form-input-11 .editor    \\8
     Focus    css=.app-submit-btn
-    Comment    Click Element    css=.fa-bold
+    Click Element    css=.fa-bold
     Sleep    300ms
 
 Applicant goes to the application details page of the Robot application
     Given the user navigates to the page    ${DASHBOARD_URL}
     When the user clicks the button/link    link=Robot test application
     And the user clicks the button/link    link=Application details
-
-the user enters some text in the text area
-    Input Text    css=#form-input-11 .editor    Test text
-    Mouse Out    css=#form-input-11 .editor
 
 the applicant should not see the validation error of the duration any more
     Focus    css=.app-submit-btn

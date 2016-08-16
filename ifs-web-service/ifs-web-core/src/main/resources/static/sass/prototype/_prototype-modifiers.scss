@@ -22,8 +22,20 @@
 
 /*--- Extra margins ---*/
 
+.extra-margin-top{
+	margin-top: 30px;
+}
+
+.extra-margin-right{
+	margin-right: 30px;
+}
+
 .extra-margin-bottom{
 	margin-bottom: 30px;
+}
+
+.extra-margin-left{
+	margin-left: 30px;
 }
 
 .collapsible{
@@ -66,6 +78,25 @@
 .cell-border-right{
 	border-right: 1px solid $grey-2;
 }
+
+tr.cell-border-right{
+	td,th{
+		border-right: 1px solid $grey-2;
+	}
+}
+
+.cell-border-top-divide{
+	th,td{
+		border-top: 1px solid $black;
+	}
+}
+
+.cell-border-bottom-divide{
+	th,td{
+		border-bottom: 1px solid $black;
+	}
+}
+
 
 
 /*--- Table overflows for small screens ---*/

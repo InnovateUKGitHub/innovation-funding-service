@@ -3,8 +3,8 @@ package com.worth.ifs.model;
 import com.worth.ifs.application.UserApplicationRole;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
+import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
-import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.OrganisationTypeEnum;
@@ -48,7 +48,7 @@ public class OrganisationDetailsModelPopulator {
         final List<String> activeApplicationOrganisationNames = organisations.stream().map(OrganisationResource::getName).collect(Collectors.toList());
 
         final List<String> pendingOrganisationNames = pendingInvitations(applicationId).stream()
-                .map(InviteResource::getInviteOrganisationNameConfirmedSafe)
+                .map(ApplicationInviteResource::getInviteOrganisationNameConfirmedSafe)
                 .distinct()
                 .filter(orgName -> StringUtils.hasText(orgName)
                         && activeApplicationOrganisationNames.stream().noneMatch(organisationName -> organisationName.equals(orgName))).collect(Collectors.toList());
@@ -92,7 +92,7 @@ public class OrganisationDetailsModelPopulator {
                 .findFirst();
     }
 
-    private List<InviteResource> pendingInvitations(final Long applicationId) {
+    private List<ApplicationInviteResource> pendingInvitations(final Long applicationId) {
         final RestResult<List<InviteOrganisationResource>> pendingAssignableUsersResult = inviteRestService.getInvitesByApplication(applicationId);
 
         return pendingAssignableUsersResult.handleSuccessOrFailure(

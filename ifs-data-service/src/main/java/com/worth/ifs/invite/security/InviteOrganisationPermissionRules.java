@@ -1,7 +1,7 @@
 package com.worth.ifs.invite.security;
 
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
-import com.worth.ifs.invite.resource.InviteResource;
+import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.security.PermissionRule;
 import com.worth.ifs.security.PermissionRules;
 import com.worth.ifs.security.SecurityRuleUtil;
@@ -48,7 +48,7 @@ public class InviteOrganisationPermissionRules {
     }
 
     private final boolean hasRoleForAllApplicationsInOrganisationInvite(final UserRoleType userRoleType, final InviteOrganisationResource inviteOrganisation, final UserResource user) {
-        final List<InviteResource> invites = inviteOrganisation.getInviteResources();
+        final List<ApplicationInviteResource> invites = inviteOrganisation.getInviteResources();
         if (invites == null || invites.isEmpty()) {
             return false; // Unable to check the application so default to false;
         }
