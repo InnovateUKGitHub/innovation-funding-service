@@ -9,6 +9,7 @@ import com.worth.ifs.security.NotSecured;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 
@@ -34,9 +35,9 @@ public interface CompetitionService {
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<CompetitionResource>> findUpcomingCompetitions();
 
-    @PostAuthorize("hasPermission(returnObject, 'READ')")
+    @PreAuthorize("hasAuthority('comp_admin')")
     ServiceResult<CompetitionSearchResult> searchCompetitions(String searchQuery, int page, int size);
 
-    @PostAuthorize("hasPermission(returnObject, 'READ')")
+    @PreAuthorize("hasAuthority('comp_admin')")
     ServiceResult<CompetitionCountResource> countCompetitions();
 }

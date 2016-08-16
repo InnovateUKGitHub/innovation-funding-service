@@ -28,15 +28,11 @@ import static org.mockito.MockitoAnnotations.initMocks;
 public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<CompetitionService> {
 
     private CompetitionPermissionRules rules;
-    private CompetitionCountPermissionRules countRules;
-    private CompetitionSearchResultPermissionRules searchRules;
 
     @Before
     public void lookupPermissionRules() {
 
         rules = getMockPermissionRulesBean(CompetitionPermissionRules.class);
-        countRules = getMockPermissionRulesBean(CompetitionCountPermissionRules.class);
-        searchRules = getMockPermissionRulesBean(CompetitionSearchResultPermissionRules.class);
 
         initMocks(this);
     }
@@ -53,7 +49,7 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         ServiceResult<List<CompetitionResource>> results = service.findAll();
         assertEquals(0, results.getSuccessObject().size());
 
-        verify(rules, times(2)).anyoneCanViewCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
+        verify(rules, times(2)).anyoneCanViewOpenCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
         verifyNoMoreInteractions(rules);
     }
 
@@ -62,7 +58,7 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         setLoggedInUser(null);
 
         assertAccessDenied(() -> service.getCompetitionById(1L), () -> {
-            verify(rules).anyoneCanViewCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
+            verify(rules).anyoneCanViewOpenCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
             verifyNoMoreInteractions(rules);
         });
     }
@@ -74,7 +70,7 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         ServiceResult<List<CompetitionResource>> results = service.findLiveCompetitions();
         assertEquals(0, results.getSuccessObject().size());
 
-        verify(rules, times(2)).anyoneCanViewCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
+        verify(rules, times(2)).anyoneCanViewOpenCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
         verifyNoMoreInteractions(rules);
     }
 
@@ -85,7 +81,7 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         ServiceResult<List<CompetitionResource>> results = service.findProjectSetupCompetitions();
         assertEquals(0, results.getSuccessObject().size());
 
-        verify(rules, times(2)).anyoneCanViewCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
+        verify(rules, times(2)).anyoneCanViewOpenCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
         verifyNoMoreInteractions(rules);
     }
 
@@ -96,7 +92,7 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         ServiceResult<List<CompetitionResource>> results = service.findUpcomingCompetitions();
         assertEquals(0, results.getSuccessObject().size());
 
-        verify(rules, times(2)).anyoneCanViewCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
+        verify(rules, times(2)).anyoneCanViewOpenCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
         verifyNoMoreInteractions(rules);
     }
 
@@ -105,7 +101,6 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         setLoggedInUser(null);
 
         assertAccessDenied(() -> service.countCompetitions(), () -> {
-            verify(countRules).anyoneCanViewCompetitionCounts(isA(CompetitionCountResource.class), isNull(UserResource.class));
             verifyNoMoreInteractions(rules);
         });
     }
@@ -116,7 +111,6 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         setLoggedInUser(null);
 
         assertAccessDenied(() -> service.searchCompetitions("string", 1, 1), () -> {
-            verify(searchRules).anyoneCanSearchCompetitions(isA(CompetitionSearchResult.class), isNull(UserResource.class));
             verifyNoMoreInteractions(rules);
         });
     }

@@ -2,7 +2,13 @@ package com.worth.ifs.competition.security;
 
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
+import com.google.common.collect.Lists;
+import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.user.builder.RoleResourceBuilder;
+import com.worth.ifs.user.builder.UserResourceBuilder;
+import com.worth.ifs.user.resource.UserRoleType;
 import org.junit.Test;
 
 import com.worth.ifs.BasePermissionRulesTest;
@@ -19,7 +25,11 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
 	
     @Test
     public void testAnyoneCanViewACompetition() {
-        assertTrue(rules.anyoneCanViewCompetitions(newCompetitionResource().build(), null));
+        assertFalse(rules.anyoneCanViewOpenCompetitions(newCompetitionResource().build(), null));
+        assertTrue(rules.anyoneCanViewOpenCompetitions(newCompetitionResource().withCompetitionStatus(CompetitionResource.Status.OPEN).build(), null));
+        assertTrue(rules.anyoneCanViewOpenCompetitions(newCompetitionResource().build(),
+                UserResourceBuilder.newUserResource().withRolesGlobal(
+                        Lists.newArrayList(RoleResourceBuilder.newRoleResource().withType(UserRoleType.COMP_ADMIN).build())).build()));
     }
     
 }

@@ -1,9 +1,11 @@
 package com.worth.ifs.competition.security;
 
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.security.BasePermissionRules;
 import com.worth.ifs.security.PermissionRule;
 import com.worth.ifs.security.PermissionRules;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.resource.UserRoleType;
 import org.springframework.stereotype.Component;
 
 /**
@@ -11,14 +13,15 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @PermissionRules
-public class CompetitionPermissionRules {
+public class CompetitionPermissionRules extends BasePermissionRules {
 
-    @PermissionRule(value = "READ", description = "Anyone can view Competitions",
-            additionalComments =
-                    "This seems too powerful a permission that would allow an anonymous user of the API to view the entire " +
-                    "CompetitionResource.  CompetitionResource should be broken into public- and non-public-facing parts")
-    public boolean anyoneCanViewCompetitions(CompetitionResource competition, UserResource user) {
-        return true;
+    @PermissionRule(value = "READ", description = "Anyone can view open Competitions, only comp admin can see others")
+    public boolean anyoneCanViewOpenCompetitions(CompetitionResource competition, UserResource user) {
+        if (CompetitionResource.Status.OPEN.equals(competition.getCompetitionStatus())) {
+            return true;
+        } else {
+            return user != null && user.hasRole(UserRoleType.COMP_ADMIN);
+        }
+
     }
-
 }
