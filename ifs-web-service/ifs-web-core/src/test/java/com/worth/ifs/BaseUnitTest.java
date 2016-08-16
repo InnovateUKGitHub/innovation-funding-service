@@ -626,7 +626,7 @@ public class BaseUnitTest {
         InviteOrganisationResource inviteOrganisation = new InviteOrganisationResource(2L, "Invited Organisation Ltd", null, null);
 
         invite = new ApplicationInviteResource();
-        invite.setStatus(InviteStatus.SEND);
+        invite.setStatus(InviteStatus.SENT);
         invite.setApplication(1L);
         invite.setName("Some Invitee");
         invite.setHash(INVITE_HASH);
@@ -644,7 +644,7 @@ public class BaseUnitTest {
         when(inviteRestService.getInviteOrganisationByHash(INVITE_HASH)).thenReturn(restSuccess(new InviteOrganisationResource()));
 
         acceptedInvite = new ApplicationInviteResource();
-        acceptedInvite.setStatus(InviteStatus.ACCEPTED);
+        acceptedInvite.setStatus(InviteStatus.OPENED);
         acceptedInvite.setApplication(1L);
         acceptedInvite.setName("Some Invitee");
         acceptedInvite.setHash(ACCEPTED_INVITE_HASH);
@@ -652,7 +652,7 @@ public class BaseUnitTest {
         when(inviteRestService.getInviteByHash(eq(ACCEPTED_INVITE_HASH))).thenReturn(restSuccess(acceptedInvite));
 
         existingUserInvite = new ApplicationInviteResource();
-        existingUserInvite.setStatus(InviteStatus.SEND);
+        existingUserInvite.setStatus(InviteStatus.SENT);
         existingUserInvite.setApplication(1L);
         existingUserInvite.setName("Some Invitee");
         existingUserInvite.setHash(INVITE_HASH_EXISTING_USER);

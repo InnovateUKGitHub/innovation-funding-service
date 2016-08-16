@@ -54,7 +54,7 @@ public class AcceptInviteAuthenticatedController extends BaseController{
 
         if (invite.isSuccess()) {
             ApplicationInviteResource inviteResource = invite.getSuccessObject();
-            if (InviteStatus.SEND.equals(inviteResource.getStatus())) {
+            if (InviteStatus.SENT.equals(inviteResource.getStatus())) {
                 InviteOrganisationResource inviteOrganisation = inviteRestService.getInviteOrganisationByHash(hash).getSuccessObjectOrThrowException();
 
                 Map<String, String> failureMessages = registrationService.getInvalidInviteMessages(loggedInUser, inviteResource, inviteOrganisation);
@@ -90,7 +90,7 @@ public class AcceptInviteAuthenticatedController extends BaseController{
 
         if (invite.isSuccess()) {
             ApplicationInviteResource inviteResource = invite.getSuccessObject();
-            if (InviteStatus.SEND.equals(inviteResource.getStatus())) {
+            if (InviteStatus.SENT.equals(inviteResource.getStatus())) {
                 InviteOrganisationResource inviteOrganisation = inviteRestService.getInviteOrganisationByHash(hash).getSuccessObjectOrThrowException();
 
                 Map<String, String> failureMessages = registrationService.getInvalidInviteMessages(loggedInUser, inviteResource, inviteOrganisation);

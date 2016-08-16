@@ -126,8 +126,8 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
         ApplicationInviteResource inv1 = inviteResource("kirk", "teamA", InviteStatus.CREATED);
-        ApplicationInviteResource inv2 = inviteResource("spock", "teamA", InviteStatus.SEND);
-        ApplicationInviteResource inv3 = inviteResource("bones", "teamA",  InviteStatus.ACCEPTED);
+        ApplicationInviteResource inv2 = inviteResource("spock", "teamA", InviteStatus.SENT);
+        ApplicationInviteResource inv3 = inviteResource("bones", "teamA",  InviteStatus.OPENED);
 
         ApplicationInviteResource inv4 = inviteResource("picard", "teamB", InviteStatus.CREATED);
        

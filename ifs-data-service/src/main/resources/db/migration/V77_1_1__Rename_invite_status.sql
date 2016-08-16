@@ -1,0 +1,1 @@
+UPDATE invite SET status = 'OPENED' WHERE status = 'ACCEPTED';

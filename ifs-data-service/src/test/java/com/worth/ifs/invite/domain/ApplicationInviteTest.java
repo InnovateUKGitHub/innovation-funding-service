@@ -28,7 +28,7 @@ public class ApplicationInviteTest {
         application = newApplication().build();
         hash = "123abc";
         inviteOrganisation = newInviteOrganisation().build();
-        status = InviteStatus.ACCEPTED;
+        status = InviteStatus.OPENED;
 
         setInvite = new ApplicationInvite();
         setInvite.setId(inviteId);

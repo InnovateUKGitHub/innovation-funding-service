@@ -66,7 +66,7 @@ public class AcceptInviteController extends BaseController {
             return "never should get here because of exception.";
         } else {
             ApplicationInviteResource inviteResource = invite.getSuccessObject();
-            if (!InviteStatus.SEND.equals(inviteResource.getStatus())) {
+            if (!InviteStatus.SENT.equals(inviteResource.getStatus())) {
                 return handleAcceptedInvite(cookieFlashMessageFilter, response);
             } else {
                 CookieUtil.saveToCookie(response, INVITE_HASH, hash);
@@ -132,7 +132,7 @@ public class AcceptInviteController extends BaseController {
 
         if (invite.isSuccess()) {
             ApplicationInviteResource inviteResource = invite.getSuccessObject();
-            if (InviteStatus.SEND.equals(inviteResource.getStatus())) {
+            if (InviteStatus.SENT.equals(inviteResource.getStatus())) {
                 InviteOrganisationResource inviteOrganisation = inviteRestService.getInviteOrganisationByHash(hash).getSuccessObjectOrThrowException();
                 OrganisationResource organisation = organisationService.getOrganisationByIdForAnonymousUserFlow(inviteOrganisation.getOrganisation());
 

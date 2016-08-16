@@ -155,7 +155,7 @@ public class RegistrationController {
         String inviteHash = CookieUtil.getCookieValue(request, AcceptInviteController.INVITE_HASH);
         if(StringUtils.hasText(inviteHash)){
             RestResult<ApplicationInviteResource> invite = inviteRestService.getInviteByHash(inviteHash);
-            if(invite.isSuccess() && InviteStatus.SEND.equals(invite.getSuccessObject().getStatus())){
+            if(invite.isSuccess() && InviteStatus.SENT.equals(invite.getSuccessObject().getStatus())){
                 ApplicationInviteResource inviteResource = invite.getSuccessObject();
                 registrationForm.setEmail(inviteResource.getEmail());
                 model.addAttribute("invitee", true);

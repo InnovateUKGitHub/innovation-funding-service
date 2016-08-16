@@ -100,13 +100,13 @@ public abstract class Invite<T extends ProcessActivity, I extends Invite<T,I>> {
             case CREATED:
                 if (this.status != null) throw new IllegalStateException("(" + this.status + ") -> (" + newStatus + ") Cannot create an Invite that has already been created.");
                 break;
-            case SEND:
+            case SENT:
                 if (this.status != InviteStatus.CREATED)
                     throw new IllegalStateException("(" + this.status + ") -> (" + newStatus + ") Cannot send an Invite that has already been sent.");
                 break;
-            case ACCEPTED:
+            case OPENED:
                 // TODO check legal invite transitions
-//                if (this.status != InviteStatus.SEND || this.status != InviteStatus.ACCEPTED)
+//                if (this.status != InviteStatus.SENT || this.status != InviteStatus.OPENED)
 //                    throw new IllegalStateException("(" + this.status + ") -> (" + newStatus + ") Cannot accept an Invite that hasn't been sent");
                 break;
         }
@@ -135,12 +135,12 @@ public abstract class Invite<T extends ProcessActivity, I extends Invite<T,I>> {
     public abstract void setTarget(T target);
 
     public I send() {
-        setStatus(InviteStatus.SEND);
+        setStatus(InviteStatus.SENT);
         return (I) this; // for object chaining
     }
 
     public I open () {
-        setStatus(InviteStatus.ACCEPTED);
+        setStatus(InviteStatus.OPENED);
         return (I) this; // for object chaining
     }
 }

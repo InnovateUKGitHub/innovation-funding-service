@@ -141,7 +141,7 @@ public class ApplicationInviteControllerIntegrationTest extends BaseControllerIn
 
         // Check if invite is accepted
         inviteCreated = getCreatedInvite(testEmail, APPLICATION_ID);
-        assertEquals(InviteStatus.ACCEPTED, inviteCreated.getStatus());
+        assertEquals(InviteStatus.OPENED, inviteCreated.getStatus());
 
         // Check nameConfirmed is name of the userAccount
         invitesResult = controller.getInvitesByApplication(APPLICATION_ID);

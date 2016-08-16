@@ -65,7 +65,7 @@ public class OrganisationTypeCreationController {
             validator.validate(organisationTypeForm, bindingResult);
         }
 
-        if (invite.isSuccess() && InviteStatus.SEND.equals(invite.getSuccessObject().getStatus())) {
+        if (invite.isSuccess() && InviteStatus.SENT.equals(invite.getSuccessObject().getStatus())) {
             InviteOrganisationResource inviteOrganisation = inviteRestService.getInviteOrganisationByHash(hash).getSuccessObject();
 
             List<OrganisationTypeResource> types = organisationTypeRestService.getAll().getSuccessObjectOrThrowException();

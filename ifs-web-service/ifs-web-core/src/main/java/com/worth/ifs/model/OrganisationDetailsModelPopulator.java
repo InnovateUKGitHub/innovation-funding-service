@@ -98,7 +98,7 @@ public class OrganisationDetailsModelPopulator {
         return pendingAssignableUsersResult.handleSuccessOrFailure(
                 failure -> new ArrayList<>(0),
                 success -> success.stream().flatMap(item -> item.getInviteResources().stream())
-                        .filter(item -> !InviteStatus.ACCEPTED.equals(item.getStatus()))
+                        .filter(item -> !InviteStatus.OPENED.equals(item.getStatus()))
                         .collect(Collectors.toList()));
     }
 }

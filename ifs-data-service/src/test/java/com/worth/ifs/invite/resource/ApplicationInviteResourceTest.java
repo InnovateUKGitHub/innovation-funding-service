@@ -28,7 +28,7 @@ public class ApplicationInviteResourceTest {
         applicationId = 2L;
         hash = "123abc";
         inviteOrganisationId = 3L;
-        status = InviteStatus.ACCEPTED;
+        status = InviteStatus.OPENED;
 
         setInviteResource = new ApplicationInviteResource();
         setInviteResource.setId(inviteId);
