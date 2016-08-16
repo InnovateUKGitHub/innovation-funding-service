@@ -1,5 +1,6 @@
 package com.worth.ifs.competitionsetup.service.sectionupdaters;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +58,7 @@ public class EligibilitySectionSaver implements CompetitionSetupSectionSaver {
 		
 		competitionService.update(competition);
 		
-        return null;
+        return new ArrayList<>();
 	}
 	
 	@Override

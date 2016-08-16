@@ -35,8 +35,6 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
 
     @Override
     public List<Error> updateMilestonesForCompetition(List<MilestoneResource> milestones, List<MilestonesFormEntry> milestoneEntries, Long competitionId, List<Error> errors) {
-        List<MilestoneResource> updatedMilestones = new ArrayList();
-
         for (int i = 0; i < milestones.size(); i++) {
             MilestonesFormEntry thisMilestonesFormEntry = milestoneEntries.get(i);
             thisMilestonesFormEntry.setMilestoneType(milestones.get(i).getType());
@@ -47,11 +45,11 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
                 milestones.get(i).setDate(temp);
             }
         }
-        if (errors.size() > 0){
+        if (errors.isEmpty()){
             return errors;
         }
         else {
-            return milestoneService.update(updatedMilestones, competitionId);
+            return milestoneService.update(milestones, competitionId);
         }
     }
 
@@ -91,10 +89,11 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
             Integer month = milestone.getMonth();
             Integer year = milestone.getYear();
 
-            if(day == null || month == null || year == null || !isMilestoneDateValid(day, month, year));{
+            if(day == null || month == null || year == null || !isMilestoneDateValid(day, month, year)){
                 if(errors.isEmpty()) {
                     errors.add(new Error("error.milestone.invalid", "Please enter the valid date(s)", HttpStatus.BAD_REQUEST));
-                }}
+                }
+            }
         });
         return errors;
     }
