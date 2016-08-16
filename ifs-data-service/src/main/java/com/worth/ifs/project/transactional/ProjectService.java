@@ -7,10 +7,7 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.FileAndContents;
 import com.worth.ifs.invite.resource.ApplicationInviteResource;
-import com.worth.ifs.project.resource.MonitoringOfficerResource;
-import com.worth.ifs.project.resource.ProjectResource;
-import com.worth.ifs.project.resource.ProjectUserResource;
-import com.worth.ifs.project.resource.SpendProfileResource;
+import com.worth.ifs.project.resource.*;
 import com.worth.ifs.security.NotSecured;
 import com.worth.ifs.security.SecuredBySpring;
 import com.worth.ifs.user.resource.OrganisationResource;
@@ -33,9 +30,6 @@ public interface ProjectService {
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<ProjectResource> getProjectById(@P("projectId") Long projectId);
-
-    @NotSecured(value="", mustBeSecuredByOtherServices = false) // TODO - This needs to be changed once Security is added
-    ServiceResult<SpendProfileResource> getSpendProfile(Long projectId, Long organisationId);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<ProjectResource> getByApplicationId(@P("applicationId") Long applicationId);
@@ -81,8 +75,8 @@ public interface ProjectService {
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'UPDATE_FINANCE_CONTACT')")
     ServiceResult<Boolean> isSubmitAllowed(Long projectId);
 
-    @NotSecured(value = "Only a project manager can submit other documents", mustBeSecuredByOtherServices = false)
-    ServiceResult<Boolean> isOtherDocumentsSubmitAllowed(Long projectId);
+    @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'READ')")
+    ServiceResult<Boolean> isOtherDocumentsSubmitAllowed(Long projectId, Long userId);
 
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'VIEW_MONITORING_OFFICER')")
     ServiceResult<MonitoringOfficerResource> getMonitoringOfficer(Long projectId);

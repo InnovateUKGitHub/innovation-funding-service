@@ -164,6 +164,7 @@ IFS.core.autoSave = (function(){
 
                 //save message
                 setTimeout(function(){
+                    IFS.core.autoSave.populateValidationErrorsOnPageLoad(field);
                     IFS.core.autoSave.clearServerSideValidationErrors(field);
                     autoSaveInfo.html('Saved!');
 
@@ -204,6 +205,14 @@ IFS.core.autoSave = (function(){
             for (var i = 0; i < serverSideValidationErrors.length; i++){
                  IFS.core.formValidation.setValid(field,serverSideValidationErrors[i]);
             }
+        },
+        populateValidationErrorsOnPageLoad : function(field){
+          var formGroup = field.closest('.form-group.error');
+
+            if(formGroup.find('.error-message').text().length > 0 && serverSideValidationErrors.length === 0){
+                var errormsgonLoad = formGroup.find('.error-message').text();
+                 serverSideValidationErrors.push(errormsgonLoad);
+                }
         }
 
     };

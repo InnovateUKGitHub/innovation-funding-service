@@ -6,7 +6,7 @@
 
     <body class="app-dashboard">
         <div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
-        <div th:include="fragments/modals :: reject-competition-modal (competitionId=${1})" th:remove="tag" />
+        <div th:include="fragments/assessment :: assessment-reject-competition-modal (competitionId=${1})" th:remove="tag" />
         <div th:include="fragments/layout :: body-start" th:remove="tag" />
         <div th:include="fragments/layout :: global-header" th:remove="tag" />
 
@@ -46,11 +46,11 @@
                     <legend class="visuallyhidden">Are you available to assess this competition?</legend>
                     <h2 class="heading-medium">Are you available to assess this competition?</h2>
                     <button class="button large" name="accept" value="accepted" type="submit">Accept</button>
-                    <a role="button" tabindex="0" class="button button-warning large" href="#" data-js-modal="reject-competition-modal">Reject</a>
+                    <a class="button button-warning large" href="#" data-js-modal="reject-competition-modal">Reject</a>
                 </fieldset>
             </form>
 
-            <div th:include="prototypes/fragments/assessor-view :: prototype-modal-comp-reject" th:with="backTo='/prototypes/4081-assessor-thank-you'" th:remove="tag" />
+            <div th:include="fragments/assessment :: prototype-modal-comp-reject" th:with="backTo='/prototypes/4081-assessor-thank-you'" th:remove="tag" />
 
             <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
         </main>
