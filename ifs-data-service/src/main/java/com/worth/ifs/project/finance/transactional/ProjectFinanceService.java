@@ -1,6 +1,7 @@
 package com.worth.ifs.project.finance.transactional;
 
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.project.resource.SpendProfileTableResource;
@@ -16,9 +17,9 @@ public interface ProjectFinanceService {
     @SecuredBySpring(value = "GENERATE_SPEND_PROFILE", securedType = ProjectResource.class, description = "A member of the internal Finance Team can generate a Spend Profile for any Project" )
     ServiceResult<Void> generateSpendProfile(Long projectId);
 
-    @PreAuthorize("hasAuthority('project_finance') or hasPermission(#projectId + ':' + #organisationId, 'VIEW_SPEND_PROFILE')")
-    ServiceResult<SpendProfileTableResource> getSpendProfileTable(Long projectId, Long organisationId);
+    @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'VIEW_SPEND_PROFILE')")
+    ServiceResult<SpendProfileTableResource> getSpendProfileTable(ProjectOrganisationCompositeId projectOrganisationCompositeId);
 
-    @PreAuthorize("hasAuthority('project_finance') or hasPermission(#projectId + ':' + #organisationId, 'VIEW_SPEND_PROFILE')")
-    ServiceResult<SpendProfileResource> getSpendProfile(Long projectId, Long organisationId);
+    @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'VIEW_SPEND_PROFILE')")
+    ServiceResult<SpendProfileResource> getSpendProfile(ProjectOrganisationCompositeId projectOrganisationCompositeId);
 }

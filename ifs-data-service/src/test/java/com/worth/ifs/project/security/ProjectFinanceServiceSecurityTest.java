@@ -3,6 +3,7 @@ package com.worth.ifs.project.security;
 import com.worth.ifs.BaseServiceSecurityTest;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.project.finance.transactional.ProjectFinanceService;
+import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
 import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.project.resource.SpendProfileTableResource;
 import com.worth.ifs.user.resource.RoleResource;
@@ -57,33 +58,15 @@ public class ProjectFinanceServiceSecurityTest extends BaseServiceSecurityTest<P
         Long projectId = 1L;
         Long organisationId = 1L;
 
-        assertAccessDenied(() -> service.getSpendProfileTable(projectId, organisationId),
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        assertAccessDenied(() -> service.getSpendProfileTable(projectOrganisationCompositeId),
                 () -> {
 
-                    verify(projectFinancePermissionRules).partnersCanViewTheirOwnSpendProfileData("" + projectId + ":" + organisationId, getLoggedInUser());
+                    verify(projectFinancePermissionRules).partnersCanViewTheirOwnSpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
+                    verify(projectFinancePermissionRules).projectFinanceUserCanViewAnySpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
                     verifyNoMoreInteractions(projectFinancePermissionRules);
                 });
-    }
-
-    @Test
-    public void testGetSpendProfileTableWithProjectFinanceRole() {
-
-        asList(UserRoleType.values()).forEach(role -> {
-            RoleResource roleResource = newRoleResource().withType(role).build();
-            UserResource userWithRole = newUserResource().withRolesGlobal(singletonList(roleResource)).build();
-            setLoggedInUser(userWithRole);
-
-            if (PROJECT_FINANCE.equals(role)) {
-                service.getSpendProfileTable(1L, 1L);
-            } else {
-                try {
-                    service.getSpendProfileTable(1L, 1L);
-                    fail("Should have thrown an AccessDeniedException for any non-Finance Team members");
-                } catch (AccessDeniedException e) {
-                    // expected behaviour
-                }
-            }
-        });
     }
 
     @Test
@@ -92,33 +75,15 @@ public class ProjectFinanceServiceSecurityTest extends BaseServiceSecurityTest<P
         Long projectId = 1L;
         Long organisationId = 1L;
 
-        assertAccessDenied(() -> service.getSpendProfile(projectId, organisationId),
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        assertAccessDenied(() -> service.getSpendProfile(projectOrganisationCompositeId),
                 () -> {
 
-                    verify(projectFinancePermissionRules).partnersCanViewTheirOwnSpendProfileData("" + projectId + ":" + organisationId, getLoggedInUser());
+                    verify(projectFinancePermissionRules).partnersCanViewTheirOwnSpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
+                    verify(projectFinancePermissionRules).projectFinanceUserCanViewAnySpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
                     verifyNoMoreInteractions(projectFinancePermissionRules);
                 });
-    }
-
-    @Test
-    public void testGetSpendProfileWithProjectFinanceRole() {
-
-        asList(UserRoleType.values()).forEach(role -> {
-            RoleResource roleResource = newRoleResource().withType(role).build();
-            UserResource userWithRole = newUserResource().withRolesGlobal(singletonList(roleResource)).build();
-            setLoggedInUser(userWithRole);
-
-            if (PROJECT_FINANCE.equals(role)) {
-                service.getSpendProfile(1L, 1L);
-            } else {
-                try {
-                    service.getSpendProfile(1L, 1L);
-                    fail("Should have thrown an AccessDeniedException for any non-Finance Team members");
-                } catch (AccessDeniedException e) {
-                    // expected behaviour
-                }
-            }
-        });
     }
 
     @Override
@@ -134,12 +99,12 @@ public class ProjectFinanceServiceSecurityTest extends BaseServiceSecurityTest<P
         }
 
         @Override
-        public ServiceResult<SpendProfileTableResource> getSpendProfileTable(Long projectId, Long organisationId) {
+        public ServiceResult<SpendProfileTableResource> getSpendProfileTable(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
             return null;
         }
 
         @Override
-        public ServiceResult<SpendProfileResource> getSpendProfile(Long projectId, Long organisationId) {
+        public ServiceResult<SpendProfileResource> getSpendProfile(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
             return null;
         }
     }
