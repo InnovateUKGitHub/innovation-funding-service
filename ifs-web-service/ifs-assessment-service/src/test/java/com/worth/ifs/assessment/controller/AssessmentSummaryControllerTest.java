@@ -16,12 +16,11 @@ import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Spy;
+import org.mockito.*;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.validation.BindingResult;
 
 import java.util.List;
 import java.util.Map;
@@ -295,10 +294,18 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
         verify(assessmentService, times(1)).recommend(assessmentId, fundingConfirmation, feedback, comment);
 
         Map<String, Object> modelMap = result.getModelAndView().getModel();
-
         AssessmentSummaryForm form = (AssessmentSummaryForm) modelMap.get("form");
-        assertEquals(1, form.getObjectErrors().size());
-        assertEquals(SUMMARY_FEEDBACK_WORD_LIMIT_EXCEEDED.getErrorKey(), form.getObjectErrors().get(0).getCode());
+
+        BindingResult bindingResult = form.getBindingResult();
+        assertEquals(0, bindingResult.getGlobalErrorCount());
+        assertEquals(1, bindingResult.getFieldErrorCount());
+        assertEquals(SUMMARY_FEEDBACK_WORD_LIMIT_EXCEEDED.getErrorKey(), bindingResult.getFieldError("feedback").getCode());
+
+        InOrder inOrder = Mockito.inOrder(assessmentService, applicationService, competitionService);
+        inOrder.verify(assessmentService, calls(1)).getById(assessmentId);
+        inOrder.verify(applicationService, calls(1)).getById(1L);
+        inOrder.verify(competitionService, calls(1)).getById(2L);
+        inOrder.verifyNoMoreInteractions();
     }
 
     private void setupServiceMocks(Long assessmentId, Boolean fundingConfirmation, String feedback, String comment, ServiceResult<Void> result) {

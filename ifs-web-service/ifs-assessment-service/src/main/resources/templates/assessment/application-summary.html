@@ -67,9 +67,10 @@
                 <fieldset>
                     <legend class="visuallyhidden">Question feedback</legend>
                     <div class="question" th:id="form-input-feedback">
-                        <div class="form-group">
+                        <div th:class="${#fields.hasErrors('feedback')}? 'form-group error':'form-group'">
                             <label class="form-label form-label-bold" th:for="form-textarea-feedback" id="form-label-feedback">
                                 Your feedback
+                                <span class="error-message" th:if="${#fields.hasErrors('feedback')}" th:errors="*{feedback}"></span>
                                 <span class="form-hint">Please explain your decision with a few sentences. This feedback will be sent to the applicant.</span>
                             </label>
 
@@ -83,8 +84,11 @@
                     </div>
 
                     <div class="question" th:id="form-input-comments">
-                        <div class="form-group">
-                            <label class="form-label form-label-bold" th:for="form-textarea-comments" id="form-label-comments">Do you have any other comments about this application? Your comments here will only be shared with Innovate UK. (Optional)</label>
+                        <div th:class="${#fields.hasErrors('feedback')}? 'form-group error':'form-group'">
+                            <label class="form-label form-label-bold" th:for="form-textarea-comments" id="form-label-comments">
+                                Do you have any other comments about this application? Your comments here will only be shared with Innovate UK. (Optional)
+                                <span class="error-message" th:if="${#fields.hasErrors('comment')}" th:errors="*{comment}"></span>
+                            </label>
 
                             <div class="textarea-wrapped word-count">
                                 <textarea th:field="*{comment}" id="form-textarea-comments" data-max_words="100"></textarea>
