@@ -15,9 +15,9 @@ import org.springframework.stereotype.Component;
 @PermissionRules
 public class CompetitionPermissionRules extends BasePermissionRules {
 
-    @PermissionRule(value = "READ", description = "Anyone can view open Competitions, only comp admin can see others")
+    @PermissionRule(value = "READ", description = "Anyone can view finished competitions. Only comp admin can see competitions in setup")
     public boolean anyoneCanViewOpenCompetitions(CompetitionResource competition, UserResource user) {
-        if (CompetitionResource.Status.OPEN.equals(competition.getCompetitionStatus())) {
+        if (!CompetitionResource.Status.COMPETITION_SETUP.equals(competition.getCompetitionStatus())) {
             return true;
         } else {
             return user != null && user.hasRole(UserRoleType.COMP_ADMIN);
