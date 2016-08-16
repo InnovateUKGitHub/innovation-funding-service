@@ -276,12 +276,14 @@
             <div th:unless="${readonly} or ${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)} or ${!userIsLeadApplicant}"
                  th:include="question-type/form-elements :: assign-buttons" th:remove="tag"/>
 
-            <!--/* if  readonly we show the edit form button */-->
-            <div th:if="${readonly and userIsLeadApplicant}" th:include="question-type/form-elements :: form-edit-question-button"
-                 th:remove="tag"/>
-            <!--/*  we show mark as complete buttons and the question should be assigned to you or */-->
-            <div th:if="${userIsLeadApplicant}" th:include="question-type/form-elements :: form-mark-as-complete-buttons"
-                 th:remove="tag"/>
+            <div th:if="${competitionIsOpen} == null or ${competitionIsOpen}" th:remove="tag">
+                <!--/* if  readonly we show the edit form button */-->
+                <div th:if="${readonly and userIsLeadApplicant}" th:include="question-type/form-elements :: form-edit-question-button"
+                     th:remove="tag"/>
+                <!--/*  we show mark as complete buttons and the question should be assigned to you or */-->
+                <div th:if="${userIsLeadApplicant}" th:include="question-type/form-elements :: form-mark-as-complete-buttons"
+                     th:remove="tag"/>
+            </div>
         </div>
     </div>
 </div>
