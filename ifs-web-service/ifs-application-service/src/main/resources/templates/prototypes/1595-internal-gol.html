@@ -54,10 +54,10 @@
 	</th:block>
 
 	<th:block th:if="${param.status != null and param.status[0] == 'GOLDecision'}">
-		<p>INTRO TEXT REQUIRED</p>
+		<p>Please review the Grant offer letter to confirm that this has been signed by the lead partner and the project is ready to begin.</p>
 	</th:block>
 
-	<div class="upload-section">
+	<div class="upload-section unstyled-view">
 		<h2 class="heading-medium no-margin">Grant offer letter</h2>
 
 		<th:block th:if="${param.status == null}">
@@ -85,7 +85,7 @@
     </div>
 
 
-    <div class="upload-section">
+    <div class="upload-section unstyled-view">
 		<h2 class="heading-medium no-margin">Appendix 2</h2>
 
 		<th:block th:if="${param.status == null}">
@@ -102,14 +102,14 @@
     </div>
 
     <th:block th:if="${param.status != null and param.status[0] == 'GOLSent'}">
-		<div class="upload-section">
+		<div class="upload-section unstyled-view">
 			<h2 class="heading-medium no-margin">Signed grant offer letter</h2>
 			<p><strong>Awaiting upload by project manager</strong></p>
 		</div>
 	</th:block>
 
 	 <th:block th:if="${param.status != null and param.status[0] == 'GOLDecision' or param.status != null and param.status[0] == 'GOLAccepted' or param.status != null and param.status[0] == 'GOLRejected'}">
-		<div class="upload-section">
+		<div class="upload-section unstyled-view">
 			<h2 class="heading-medium no-margin">Signed grant offer letter</h2>
 			<p><a href="#">signed-offer-letter.PDF</a></p>
 		</div>

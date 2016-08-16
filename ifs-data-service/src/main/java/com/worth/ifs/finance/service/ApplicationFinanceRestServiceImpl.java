@@ -58,7 +58,7 @@ public class ApplicationFinanceRestServiceImpl extends BaseRestService implement
 
     @Override
     public RestResult<ApplicationFinanceResource> getById(Long applicationFinanceId){
-        return getWithRestResult(applicationFinanceRestURL + "/getByProjectIdAndBankDetailsId/" + applicationFinanceId, ApplicationFinanceResource.class);
+        return getWithRestResult(applicationFinanceRestURL + "/getById/" + applicationFinanceId, ApplicationFinanceResource.class);
     }
 
     // TODO DW - INFUND-1555 - remove usage of ObjectNode

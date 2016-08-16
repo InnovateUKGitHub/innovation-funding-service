@@ -166,13 +166,16 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
     }
 
     @Test
-    public void testUpdateFormInputResponse_noValue() throws Exception {
+    public void testUpdateFormInputResponse_nullValue() throws Exception {
         Long assessmentId = 1L;
         Long formInputId = 2L;
+        String value = null;
 
+        ArgumentCaptor<AssessorFormInputResponse> argument = ArgumentCaptor.forClass(AssessorFormInputResponse.class);
         AssessorFormInputResponseResource assessorFormInputResponseResource = newAssessorFormInputResponseResource()
                 .withAssessment(assessmentId)
                 .withFormInput(formInputId)
+                .withValue(value)
                 .build();
         FormInputResource formInput = newFormInputResource()
                 .withId(formInputId)
@@ -182,6 +185,55 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
 
         ServiceResult<Void> result = assessorFormInputResponseService.updateFormInputResponse(assessorFormInputResponseResource);
         assertTrue(result.isSuccess());
+
+        InOrder inOrder = Mockito.inOrder(assessorFormInputResponseRepositoryMock, assessorFormInputResponseMapperMock);
+        inOrder.verify(assessorFormInputResponseRepositoryMock, calls(1)).findByAssessmentIdAndFormInputId(assessmentId, formInputId);
+        inOrder.verify(assessorFormInputResponseMapperMock, calls(1)).mapToDomain(isA(AssessorFormInputResponseResource.class));
+        inOrder.verify(assessorFormInputResponseRepositoryMock, calls(1)).save(argument.capture());
+        inOrder.verifyNoMoreInteractions();
+
+        AssessorFormInputResponse saved = argument.getValue();
+        assertNull(saved.getId());
+        assertEquals(assessmentId, saved.getAssessment().getId());
+        assertEquals(formInputId, saved.getFormInput().getId());
+        assertNull(saved.getValue());
+        assertNotNull(saved.getUpdatedDate());
+    }
+
+    @Test
+    public void testUpdateFormInputResponse_emptyValue() throws Exception {
+        Long assessmentId = 1L;
+        Long formInputId = 2L;
+        String value = "";
+
+        ArgumentCaptor<AssessorFormInputResponse> argument = ArgumentCaptor.forClass(AssessorFormInputResponse.class);
+        AssessorFormInputResponseResource assessorFormInputResponseResource = newAssessorFormInputResponseResource()
+                .withAssessment(assessmentId)
+                .withFormInput(formInputId)
+                .withValue(value)
+                .build();
+        FormInputResource formInput = newFormInputResource()
+                .withId(formInputId)
+                .withWordCount(10)
+                .build();
+        when(formInputServiceMock.findFormInput(formInputId)).thenReturn(serviceSuccess(formInput));
+
+        ServiceResult<Void> result = assessorFormInputResponseService.updateFormInputResponse(assessorFormInputResponseResource);
+        assertTrue(result.isSuccess());
+
+        InOrder inOrder = Mockito.inOrder(assessorFormInputResponseRepositoryMock, assessorFormInputResponseMapperMock);
+        inOrder.verify(assessorFormInputResponseRepositoryMock, calls(1)).findByAssessmentIdAndFormInputId(assessmentId, formInputId);
+        inOrder.verify(assessorFormInputResponseMapperMock, calls(1)).mapToDomain(isA(AssessorFormInputResponseResource.class));
+        inOrder.verify(assessorFormInputResponseRepositoryMock, calls(1)).save(argument.capture());
+        inOrder.verifyNoMoreInteractions();
+
+        AssessorFormInputResponse saved = argument.getValue();
+        assertNull(saved.getId());
+        assertEquals(assessmentId, saved.getAssessment().getId());
+        assertEquals(formInputId, saved.getFormInput().getId());
+        // Make sure that the empty string value is reduced to null
+        assertNull(saved.getValue());
+        assertNotNull(saved.getUpdatedDate());
     }
 
     @Test

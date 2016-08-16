@@ -26,9 +26,8 @@ Day field client side
     [Documentation]    INFUND-43
     ...
     ...    INFUND-2843
-    [Tags]    HappyPath    Pending
+    [Tags]    HappyPath
     [Setup]    The applicant inserts a valid date
-    #Pending INFUND-4461
     When the user enters text to a text field    id=application_details-startdate_day    32
     Then the user should see an error    Please enter a valid date
     When the user enters text to a text field    id=application_details-startdate_day    0
@@ -44,9 +43,8 @@ Month field client side
     [Documentation]    INFUND-43
     ...
     ...    INFUND-2843
-    [Tags]    Pending
+    [Tags]
     [Setup]    The applicant inserts a valid date
-    #Pending INFUND-4461
     When the user enters text to a text field    id=application_details-startdate_month    0
     Then the user should see an error    Please enter a valid date
     When the user enters text to a text field    id=application_details-startdate_month    13
@@ -63,10 +61,9 @@ Year field client side
     [Documentation]    INFUND-43
     ...
     ...    INFUND-2843
-    [Tags]    HappyPath    Pending
+    [Tags]    HappyPath
     [Setup]    Run keywords    the user enters text to a text field    id=application_details-title    Robot test application
     ...    AND    the user enters text to a text field    id=application_details-duration    15
-    #Pending INFUND-4461
     When the applicant inserts an invalid date
     Then the user should see an error    Please enter a future date
     When the user enters text to a text field    id=application_details-startdate_year    ${EMPTY}
@@ -78,10 +75,9 @@ Duration field client side
     [Documentation]    INFUND-43
     ...
     ...    INFUND-2843
-    [Tags]    Pending
+    [Tags]
     [Setup]    Run keywords    the user enters text to a text field    id=application_details-title    Robot test application
     ...    AND    the applicant inserts a valid date
-    #Pending INFUND-4461
     When the user enters text to a text field    id=application_details-duration    0
     Then the user should see an error    Please enter a valid duration between 1 and 36 months
     When the user enters text to a text field    id=application_details-duration    -1

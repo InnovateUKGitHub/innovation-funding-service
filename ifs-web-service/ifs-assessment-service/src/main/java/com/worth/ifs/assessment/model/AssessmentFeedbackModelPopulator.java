@@ -2,10 +2,13 @@ package com.worth.ifs.assessment.model;
 
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionResource;
+import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.application.service.QuestionService;
+import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
 import com.worth.ifs.assessment.resource.AssessorFormInputType;
+import com.worth.ifs.assessment.service.AssessmentService;
 import com.worth.ifs.assessment.service.AssessorFormInputResponseService;
 import com.worth.ifs.assessment.viewmodel.AssessmentFeedbackViewModel;
 import com.worth.ifs.commons.rest.RestResult;
@@ -35,6 +38,12 @@ import static java.util.stream.Collectors.toList;
 public class AssessmentFeedbackModelPopulator {
 
     @Autowired
+    private ApplicationService applicationService;
+
+    @Autowired
+    private AssessmentService assessmentService;
+
+    @Autowired
     private CompetitionService competitionService;
 
     @Autowired
@@ -49,7 +58,9 @@ public class AssessmentFeedbackModelPopulator {
     @Autowired
     private AssessorFormInputResponseService assessorFormInputResponseService;
 
-    public AssessmentFeedbackViewModel populateModel(Long assessmentId, Long questionId, ApplicationResource application) {
+    public AssessmentFeedbackViewModel populateModel(Long assessmentId, Long questionId) {
+        AssessmentResource assessment = getAssessment(assessmentId);
+        ApplicationResource application = getApplication(assessment.getApplication());
         CompetitionResource competition = getCompetition(application.getCompetition());
         QuestionResource question = getQuestion(questionId);
         List<FormInputResource> applicationFormInputs = getApplicationFormInputs(questionId);
@@ -74,6 +85,14 @@ public class AssessmentFeedbackModelPopulator {
         }
 
         return new AssessmentFeedbackViewModel(competition.getAssessmentDaysLeft(), competition.getAssessmentDaysLeftPercentage(), competition, application, question.getId(), question.getQuestionNumber(), question.getShortName(), question.getName(), question.getAssessorMaximumScore(), applicantResponseValue, assessmentFormInputs, assessorResponses, scoreFormInputExists, scopeFormInputExists);
+    }
+
+    private AssessmentResource getAssessment(Long assessmentId) {
+        return assessmentService.getById(assessmentId);
+    }
+
+    private ApplicationResource getApplication(Long applicationId) {
+        return applicationService.getById(applicationId);
     }
 
     private CompetitionResource getCompetition(Long competitionId) {
