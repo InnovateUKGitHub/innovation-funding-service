@@ -1,18 +1,23 @@
 package com.worth.ifs.project.domain;
 
+import com.worth.ifs.invite.domain.Participant;
+import com.worth.ifs.invite.domain.ProjectInvite;
+import com.worth.ifs.invite.domain.ProjectParticipantRole;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
+import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
+import java.util.Optional;
 
 /**
  * ProjectUser defines a User's role on a Project and in relation to a particular Organisation.
  */
 @Entity
-public class ProjectUser {
+public class ProjectUser extends Participant<Project, ProjectInvite, ProjectParticipantRole> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -35,6 +40,23 @@ public class ProjectUser {
 
     public ProjectUser(){
     	// no-arg constructor
+    }
+
+    @Override
+    public Project getProcess() {
+        return project;
+    }
+
+    @Override
+    public Optional<ProjectInvite> getInvite() {
+        throw new NotImplementedException("ProjectUser.getInvite() is not currently implemented");
+    }
+
+
+    // thhs is the enum
+    @Override
+    public ProjectParticipantRole getParticipantRole() {
+        return null;
     }
 
     public ProjectUser(Long id, User user, Project project, Role role, Organisation organisation) {

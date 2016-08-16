@@ -56,13 +56,13 @@ public class CompetitionParticipant extends Participant<Competition, Competition
     }
 
     @Override
-    public CompetitionParticipantRole getRole() {
+    public CompetitionParticipantRole getParticipantRole() {
         return CompetitionParticipantRole.ASSESSOR;
     }
 
     @Override
-    public Optional<User> getUser() {
-        return Optional.ofNullable(user);
+    public User getUser() {
+        return user;
     }
 
     public CompetitionParticipant(Competition competition, User user) {

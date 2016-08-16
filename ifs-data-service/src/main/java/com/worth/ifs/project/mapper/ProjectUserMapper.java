@@ -31,7 +31,7 @@ public abstract class ProjectUserMapper extends BaseMapper<ProjectUser, ProjectU
     @Override
     public abstract ProjectUserResource mapToResource(ProjectUser domain);
 
-    public Long mapProjectUserToId(ProjectUser object) {
+    public Long mapProjectUserToIdX(ProjectUser object) {
         if (object == null) {
             return null;
         }
