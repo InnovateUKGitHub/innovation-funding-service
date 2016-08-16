@@ -88,7 +88,7 @@
                             </label>
 
                             <div class="textarea-wrapped word-count">
-                                <textarea th:classappend="${#fields.hasErrors('feedback')}? field-error" th:field="*{feedback}" id="form-textarea-feedback" data-max_words="100"></textarea>
+                                <textarea th:errorclass="field-error" th:field="*{feedback}" id="form-textarea-feedback" data-max_words="100"></textarea>
                                 <div class="textarea-footer">
                                     <div th:include="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=100)" th:remove="tag" />
                                 </div>
@@ -106,7 +106,7 @@
                             </label>
 
                             <div class="textarea-wrapped word-count">
-                                <textarea th:classappend="${#fields.hasErrors('comment')}? field-error" th:field="*{comment}" id="form-textarea-comments" data-max_words="100"></textarea>
+                                <textarea th:errorclass="field-error" th:field="*{comment}" id="form-textarea-comments" data-max_words="100"></textarea>
 
                                 <div class="textarea-footer">
                                     <div th:include="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=100)" th:remove="tag" />
