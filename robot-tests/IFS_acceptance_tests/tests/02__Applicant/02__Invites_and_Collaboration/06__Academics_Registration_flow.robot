@@ -12,10 +12,10 @@ Resource          ../../../resources/keywords/User_actions.robot
 *** Test Cases ***
 Academic organisations search
     [Documentation]    INFUND-1231
-    [Tags]    HappyPath    Email
+    [Tags]    HappyPath    Email    SmokeTest
     [Setup]    Delete the emails from both test mailboxes
-    Given we create a new user    ${test_mailbox_one}+invitedacademics@gmail.com
-    Given the lead applicant invites a registered user    ${test_mailbox_one}+invite3@gmail.com    ${test_mailbox_one}+inviteacademics@gmail.com
+    Given we create a new user    ${test_mailbox_one}+invitedacademics${unique_email_number}@gmail.com
+    Given the lead applicant invites a registered user    ${test_mailbox_one}+${unique_email_number}@gmail.com    ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com
     When the user opens the mailbox and accepts the invitation to collaborate
     And the user clicks the button/link    jQuery=.button:contains("Create")
     When the user selects the radio button    organisationType    2
@@ -39,7 +39,7 @@ Accept invitation as academic
     ...    INFUND-2450
     ...
     ...    INFUND-2256
-    [Tags]    HappyPath    Email
+    [Tags]    HappyPath    Email    SmokeTest
     [Setup]    Delete the emails from both test mailboxes
     When the user enters text to a text field    id=organisationSearchName    Liv
     And the user clicks the button/link    jQuery=.button:contains("Search")
@@ -59,7 +59,7 @@ Accept invitation as academic
     And If the user goes to the previous page he should redirect to the login page
     And the user opens the mailbox and verifies the email from
     And the user clicks the button/link    jQuery=.button:contains("Sign in")
-    And guest user log-in    ${test_mailbox_one}+inviteacademics@gmail.com    Passw0rd123
+    And guest user log-in    ${test_mailbox_one}+inviteacademics{unique_email_number}@gmail.com    Passw0rd123
     When the user clicks the button/link    link=${OPEN_COMPETITION_LINK}
     And the user clicks the button/link    link=Your finances
     Then the user should see the text in the page    TSB reference

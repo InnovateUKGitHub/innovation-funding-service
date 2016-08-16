@@ -16,7 +16,6 @@ Documentation     -INFUND-172: As a lead applicant and I am on the application s
 ...
 ...
 ...               INFUND-1786 As a lead applicant I would like view the submitting an application terms and conditions page so that I know what I am agreeing to
-Suite Setup       new account complete all but one
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Applicant    Submit
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
@@ -26,7 +25,17 @@ Resource          ../../../resources/keywords/User_actions.robot
 Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
 
+*** Variables ***
+${submit_application_name}    Robot submit test application
+
+
 *** Test Cases ***
+Set up an application to submit
+    [Documentation]    INFUND-205
+    [Tags]    HappyPath
+    new account complete all but one
+    # please note that this test case has been moved out of suite setup as it isn't required for smoke testing, but should still run for HappyPath and full test runs
+
 Submit button disabled when the application is incomplete
     [Documentation]    INFUND-195
     [Tags]    Email    HappyPath
@@ -54,10 +63,10 @@ Submit flow (complete application)
     ...    INFUND-3107
     ...
     ...    INFUND-4010
-    [Tags]    HappyPath    Email
+    [Tags]    HappyPath    Email    SmokeTest
     [Setup]    Delete the emails from both test mailboxes
     Given the user navigates to the page    ${SERVER}
-    And the user clicks the button/link    link=Robot submit test application
+    And the user clicks the button/link    link=${submit_application_name}
     When the user clicks the button/link    link=Review & submit
     And the user should be redirected to the correct page    summary
     Then the applicant accepts the terms and conditions
