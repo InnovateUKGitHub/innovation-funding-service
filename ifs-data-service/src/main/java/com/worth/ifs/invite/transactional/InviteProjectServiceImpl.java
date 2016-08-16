@@ -138,7 +138,7 @@ public class InviteProjectServiceImpl extends BaseTransactionalService implement
                 invite.open();
 
                 invite = inviteProjectRepository.save(invite);
-                // need to check with business if reqquired to save in Project User entity
+                // need to check with business if required to save in Project User entity
 
                 return serviceSuccess();
             }

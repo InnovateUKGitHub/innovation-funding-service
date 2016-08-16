@@ -2,34 +2,44 @@ package com.worth.ifs.invite.security;
 
 
 import com.worth.ifs.BasePermissionRulesTest;
-import com.worth.ifs.invite.domain.ProjectInvite;
 import com.worth.ifs.invite.resource.InviteProjectResource;
-import com.worth.ifs.project.builder.ProjectBuilder;
 import com.worth.ifs.project.domain.Project;
-import com.worth.ifs.user.builder.OrganisationBuilder;
+import com.worth.ifs.project.domain.ProjectUser;
 import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.domain.Role;
+import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.mapper.UserMapper;
 import org.junit.Before;
 import org.junit.Test;
+import org.mapstruct.factory.Mappers;
 
-import static com.worth.ifs.invite.builder.ProjectInviteBuilder.newInvite;
+import static com.worth.ifs.invite.builder.ProjectInviteResourceBuilder.newInviteProjectResource;
+import static com.worth.ifs.project.builder.ProjectBuilder.newProject;
 import static com.worth.ifs.project.builder.ProjectUserBuilder.newProjectUser;
-import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
-import static com.worth.ifs.project.builder.ProjectUserBuilder.newProjectUser;
-import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static com.worth.ifs.user.resource.UserRoleType.COLLABORATOR;
+import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
+import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 public class ProjectInvitePermissionRulesTest extends BasePermissionRulesTest<ProjectInvitePermissionRules> {
 
-    private UserResource initiatingInvitePartner;
-    private UserResource invitedPartner;
-    private ProjectInvite projectInvite;
-    private InviteProjectResource inviteProjectResource;
 
+    private UserMapper userMapper = Mappers.getMapper(UserMapper.class);
+    private Project project;
+    private Organisation organisationOne;
+    private Organisation organisationTwo;
+    private User userOnProjectForOrganisationOne;
+    private User userOnProjectForOrganisationTwo;
+    private User userNotOnProject;
+    private ProjectUser projectUserForUserOnOgranisationOne;
+    private ProjectUser projectUserForUserOnOgranisationTwo;
+    private InviteProjectResource inviteProjectResourceForOrganisationOne;
+    private InviteProjectResource inviteProjectResourceForOrganisationTwo;
+    private Role partnerRole;
 
     @Override
     protected ProjectInvitePermissionRules supplyPermissionRulesUnderTest() {
@@ -38,42 +48,47 @@ public class ProjectInvitePermissionRulesTest extends BasePermissionRulesTest<Pr
 
     @Before
     public void setup() throws Exception {
+        project = newProject().build();
+        organisationOne = newOrganisation().build();
+        organisationTwo = newOrganisation().build();
+        userOnProjectForOrganisationOne = newUser().build();
+        userOnProjectForOrganisationTwo = newUser().build();
+        userNotOnProject = newUser().build();
+        projectUserForUserOnOgranisationOne = newProjectUser().withOrganisation(organisationOne).withProject(project).withUser(userOnProjectForOrganisationOne).build();
+        projectUserForUserOnOgranisationTwo = newProjectUser().withOrganisation(organisationTwo).withProject(project).withUser(userOnProjectForOrganisationTwo).build();
+        inviteProjectResourceForOrganisationOne = newInviteProjectResource().withProject(project.getId()).withOrganisation(organisationOne.getId()).build();
+        inviteProjectResourceForOrganisationTwo = newInviteProjectResource().withProject(project.getId()).withOrganisation(organisationTwo.getId()).build();
+        partnerRole = getRole(PARTNER);
 
-        initiatingInvitePartner = newUserResource().withId(10L).build();
-        invitedPartner = newUserResource().withId(40L).build();
+        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRoleId(project.getId(), userOnProjectForOrganisationOne.getId(), getRole(PARTNER).getId())).thenReturn(asList(projectUserForUserOnOgranisationOne));
+        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRoleId(project.getId(), userOnProjectForOrganisationTwo.getId(), getRole(PARTNER).getId())).thenReturn(asList(projectUserForUserOnOgranisationTwo));
+        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRoleId(project.getId(), userNotOnProject.getId(), getRole(PARTNER).getId())).thenReturn(emptyList());
+        when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRoleId(project.getId(), userOnProjectForOrganisationOne.getId(), organisationOne.getId(), partnerRole.getId())).thenReturn(projectUserForUserOnOgranisationOne);
+        when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRoleId(project.getId(), userOnProjectForOrganisationTwo.getId(), organisationTwo.getId(), partnerRole.getId())).thenReturn(projectUserForUserOnOgranisationTwo);
+    }
 
-        {
-            final Organisation organisation = OrganisationBuilder.newOrganisation().withId(25L).build();
-            final Project project = ProjectBuilder.newProject().withId(1L).build();
+    @Test
+    public void testPartnersOnProjectCanSaveInvite() {
+        assertTrue(rules.partnersOnProjectCanSaveInvite(inviteProjectResourceForOrganisationOne, userMapper.mapToResource(userOnProjectForOrganisationOne)));
+        assertTrue(rules.partnersOnProjectCanSaveInvite(inviteProjectResourceForOrganisationTwo, userMapper.mapToResource(userOnProjectForOrganisationTwo)));
+        assertFalse(rules.partnersOnProjectCanSaveInvite(inviteProjectResourceForOrganisationOne, userMapper.mapToResource(userOnProjectForOrganisationTwo)));
+        assertFalse(rules.partnersOnProjectCanSaveInvite(inviteProjectResourceForOrganisationOne, userMapper.mapToResource(userNotOnProject)));
+    }
 
-            projectInvite = newInvite().withProject(project).withOrganisation(organisation).build();
-            inviteProjectResource = new InviteProjectResource();
-            inviteProjectResource.setProject(project.getId());
-            inviteProjectResource.setOrganisation(organisation.getId());
-
-            when(organisationRepositoryMock.findOne(organisation.getId())).thenReturn(organisation);
-            when(inviteProjectRepositoryMock.findOne(projectInvite.getId())).thenReturn(projectInvite);
-
-            when(projectUserRepositoryMock.findByProjectIdAndRoleIdAndUserId(project.getId(),getRole(PARTNER).getId(),
-                    initiatingInvitePartner.getId())).thenReturn(newProjectUser().withRole(getRole(PARTNER)).build());
-
-            when(projectUserRepositoryMock.findByProjectIdAndRoleIdAndUserId(project.getId(), getRole(PARTNER).getId(),
-                    invitedPartner.getId())).thenReturn(newProjectUser().withRole(getRole(PARTNER)).build());
-
-
-
-            when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRoleId(project.getId(),
-                    invitedPartner.getId(), organisation.getId(), getRole(PARTNER).getId())).
-                    thenReturn(newProjectUser().withRole(getRole(PARTNER)).build());
-
-        }
+    @Test
+    public void testPartnersOnProjectCanSendInvite() {
+        assertTrue(rules.partnersOnProjectCanSendInvite(inviteProjectResourceForOrganisationOne, userMapper.mapToResource(userOnProjectForOrganisationOne)));
+        assertTrue(rules.partnersOnProjectCanSendInvite(inviteProjectResourceForOrganisationTwo, userMapper.mapToResource(userOnProjectForOrganisationTwo)));
+        assertFalse(rules.partnersOnProjectCanSendInvite(inviteProjectResourceForOrganisationOne, userMapper.mapToResource(userOnProjectForOrganisationTwo)));
+        assertFalse(rules.partnersOnProjectCanSendInvite(inviteProjectResourceForOrganisationOne, userMapper.mapToResource(userNotOnProject)));
 
     }
 
     @Test
-    public void testPartnersCanViewOtherPartnersInviteForSameProject() {
-         assertFalse(rules.partnersOnProjectCanViewInvite(inviteProjectResource, initiatingInvitePartner));
-
+    public void testPartnersOnProjectCanViewInvite(){
+        assertTrue(rules.partnersOnProjectCanViewInvite(inviteProjectResourceForOrganisationOne, userMapper.mapToResource(userOnProjectForOrganisationOne)));
+        assertTrue(rules.partnersOnProjectCanViewInvite(inviteProjectResourceForOrganisationOne, userMapper.mapToResource(userOnProjectForOrganisationTwo)));
+        assertFalse(rules.partnersOnProjectCanViewInvite(inviteProjectResourceForOrganisationOne, userMapper.mapToResource(userNotOnProject)));
     }
 
 }
