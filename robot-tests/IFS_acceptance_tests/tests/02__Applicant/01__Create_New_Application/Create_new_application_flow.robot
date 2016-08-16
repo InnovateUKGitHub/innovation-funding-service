@@ -42,7 +42,7 @@ Non registered users CH route
     And the user selects the checkbox    id=address-same
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
     And the user clicks the button/link    jQuery=.button:contains("Save")
-    And the user enters the details and clicks the create account    ${test_mailbox_one}+1@gmail.com
+    And the user enters the details and clicks the create account    ${test_mailbox_one}+${unique_email_number}@gmail.com
     And the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
 
 Non registered users CH route (email step)
@@ -119,20 +119,20 @@ Verify the name of the new application
     [Documentation]    INFUND-669
     ...
     ...    INFUND-1163
-    [Tags]    HappyPath    Email
+    [Tags]    HappyPath    Email    SmokeTest
     [Setup]    The guest user opens the browser
     When guest user log-in    ${test_mailbox_one}+1@gmail.com    Passw0rd123
     And the user edits the competition title
-    Then the user should see the text in the page    test title
+    Then the user should see the text in the page    ${test_title}
     And the progress indicator should show 0
     And the user clicks the button/link    link=View team members and add collaborators
     And the user should see the text in the page    Application team
     And the user should see the text in the page    View and manage your contributors and partners
     And the new application should be visible in the dashboard page
-    And the user clicks the button/link    link=test title
-    And the user should see the text in the page    test title
+    And the user clicks the button/link    link=${test_title}
+    And the user should see the text in the page    ${test_title}
 
-Special Projecct Finance role
+Special Project Finance role
     [Documentation]    INFUND-2609
     [Tags]
     [Setup]    The guest user opens the browser
@@ -161,7 +161,7 @@ Special Project Finance role (email step)
 the new application should be visible in the dashboard page
     the user clicks the button/link    link= My dashboard
     sleep    500ms
-    the user should see the text in the page    test title
+    the user should see the text in the page    ${test_title}
     the user should see the text in the page    Application number: 0000
 
 the user clicks the Not on company house link
@@ -178,7 +178,7 @@ the user edits the competition title
     the user clicks the button/link    link=${OPEN_COMPETITION_LINK}
     the user should see the element    link=Application details
     the user clicks the button/link    link=Application details
-    Input Text    id=application_details-title    test title
+    Input Text    id=application_details-title    ${test_title}
     the user clicks the button/link    jQuery=button:contains("Save and return")
 
 the progress indicator should show 0
