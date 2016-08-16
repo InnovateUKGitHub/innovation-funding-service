@@ -50,6 +50,8 @@ Choosing 'not in scope' should update on the overview page
 
 Scope section: Autosave
     [Documentation]    INFUND-1483
+    ...
+    ...    INFUND-3780
     [Tags]
     Given the user navigates to the page    ${Assessment_overview_9}
     And the user clicks the button/link    link=Scope
@@ -76,26 +78,21 @@ Scope section: Status in the overview
     And the user should see the text in the page    In scope? Yes
     And the user should see the element    css=.column-third > img    #green flag
 
-Autosave and edit the Application question - How many
-    [Documentation]    INFUND-3552
+How Many: Autosave
+    [Documentation]    INFUND-3780
     [Tags]
     Given the user navigates to the page    ${Assessment_overview_9}
-    When the user clicks the button/link    link=1. How many
-    Then the user should see the text in the page    Please review the answer provided and score the answer out of 20 points.
-    the user selects the option from the drop-down menu    9    id=assessor-question-score
-    the user enters text to a text field    css=#form-input-195 .editor    This is to test the feedback entry.
-    Sleep    500ms
-    And the user reloads the page
-    the user should see the text in the page    This is to test the feedback entry.
-    the user selects the option from the drop-down menu    3    id=assessor-question-score
-    the user enters text to a text field    css=#form-input-195 .editor    This is to test the feedback entry is modified.
-    Sleep    500ms
-    And the user reloads the page
-    And the user enters text to a text field    css=#form-input-195 .editor    This is to test the feedback entry is modified.
+    And the user clicks the button/link    link=1. How many
+    When the user selects the option from the drop-down menu    9    id=assessor-question-score
+    And the user enters text to a text field    css=#form-input-195 .editor    This is to test the feedback entry.
+    And the user clicks the button/link    jQuery=a:contains(Back to assessment overview)
+    And the user clicks the button/link    link=1. How many
+    Then the user should see the text in the page    This is to test the feedback entry.
+    And the user should see the text in the page    9
 
 Feedback should accept up to 100 words
     [Documentation]    INFUND-3402
-    [Tags]  Pending
+    [Tags]    Pending
     Given the user navigates to the page    ${Application_question_url}
     Then the user should see the text in the page    Words remaining: 91
     When the user enters text to a text field    css=#form-input-195 .editor    This is to test the feedback entry is modified. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris test @.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris test @.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris test @.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris test @.

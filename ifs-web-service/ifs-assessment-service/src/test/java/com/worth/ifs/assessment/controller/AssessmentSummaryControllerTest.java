@@ -28,7 +28,6 @@ import java.util.Map;
 
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
-import static com.worth.ifs.application.service.Futures.settable;
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static com.worth.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
 import static com.worth.ifs.assessment.builder.ProcessOutcomeResourceBuilder.newProcessOutcomeResource;
@@ -38,7 +37,6 @@ import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static com.worth.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
-import static com.worth.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static java.lang.Boolean.TRUE;
 import static java.time.LocalDateTime.now;
 import static java.util.Arrays.asList;
@@ -72,19 +70,14 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
     @Test
     public void getSummary() throws Exception {
         Long competitionId = 1L;
-        Long processRoleId = 2L;
-        Long applicationId = 3L;
-        Long assessmentId = 4L;
+        Long applicationId = 2L;
+        Long assessmentId = 3L;
         String anotherTypeOfFormInputTitle = RESEARCH_CATEGORY.getTitle();
 
         when(assessmentService.getById(assessmentId)).thenReturn(newAssessmentResource()
-                .withProcessRole(processRoleId)
+                .withApplication(applicationId)
                 .withProcessOutcome(asList())
                 .build());
-
-        when(processRoleService.getById(processRoleId)).thenReturn(settable(newProcessRoleResource()
-                .withApplication(applicationId)
-                .build()));
 
         ApplicationResource expectedApplication = newApplicationResource()
                 .withCompetition(competitionId)
@@ -208,21 +201,16 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
     @Test
     public void getSummary_withExistingOutcome() throws Exception {
         Long competitionId = 1L;
-        Long processRoleId = 2L;
-        Long applicationId = 3L;
-        Long assessmentId = 4L;
+        Long applicationId = 2L;
+        Long assessmentId = 3L;
         Long latestProcessOutcomeId = 100L;
         String expectedFeedback = "feedback";
         String expectedComment = "comment";
 
         when(assessmentService.getById(assessmentId)).thenReturn(newAssessmentResource()
-                .withProcessRole(processRoleId)
+                .withApplication(applicationId)
                 .withProcessOutcome(asList(1L, 2L, 3L, latestProcessOutcomeId))
                 .build());
-
-        when(processRoleService.getById(processRoleId)).thenReturn(settable(newProcessRoleResource()
-                .withApplication(applicationId)
-                .build()));
 
         ApplicationResource expectedApplication = newApplicationResource()
                 .withCompetition(competitionId)
@@ -267,7 +255,6 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
     @Test
     public void save() throws Exception {
         Long assessmentId = 1L;
-        Long competitionId = 1L;
         Boolean fundingConfirmation = TRUE;
         String feedback = "feedback";
         String comment = "comment";
@@ -280,7 +267,7 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
                 .param("feedback", feedback)
                 .param("comment", comment))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/assessor/dashboard/competition/" + competitionId))
+                .andExpect(redirectedUrl("/assessor/dashboard/competition/2"))
                 .andReturn();
 
         verify(assessmentService, times(1)).recommend(assessmentId, fundingConfirmation, feedback, comment);
@@ -315,20 +302,16 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
     }
 
     private void setupServiceMocks(Long assessmentId, Boolean fundingConfirmation, String feedback, String comment, ServiceResult<Void> result) {
-        Long processRoleId = 2L;
-        Long applicationId = 3L;
-        Long competitionId = 1L;
+        Long applicationId = 1L;
+        Long competitionId = 2L;
         Long latestProcessOutcomeId = 100L;
 
         when(assessmentService.recommend(assessmentId, fundingConfirmation, feedback, comment)).thenReturn(result);
         when(assessmentService.getById(assessmentId)).thenReturn(newAssessmentResource()
-                .withProcessRole(processRoleId)
+                .withApplication(applicationId)
                 .withProcessOutcome(asList(1L, 2L, 3L, latestProcessOutcomeId))
                 .withCompetition(competitionId)
                 .build());
-        when(processRoleService.getById(processRoleId)).thenReturn(settable(newProcessRoleResource()
-                .withApplication(applicationId)
-                .build()));
         CompetitionResource competition = newCompetitionResource()
                 .withAssessmentStartDate(now().minusDays(2))
                 .withAssessmentEndDate(now().plusDays(4))
