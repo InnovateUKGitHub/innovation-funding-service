@@ -50,7 +50,7 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
     @Autowired
     protected MessageSource messageSource;
 
-    private static final String REMOVE_FINANCE_DOCUMENT = "remove_uploaded_file";
+    private static final String REMOVE_FINANCE_DOCUMENT = "remove_finance_document";
 
     @Override
     public ValidationMessages update(HttpServletRequest request, Long userId, Long applicationId) {
@@ -184,9 +184,8 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
 
         final Map<String, String[]> params = request.getParameterMap();
 
-
         if (params.containsKey(REMOVE_FINANCE_DOCUMENT)) {
-        	ApplicationFinanceResource applicationFinance = financeService.getApplicationFinance(userId, applicationId);
+            ApplicationFinanceResource applicationFinance = financeService.getApplicationFinance(userId, applicationId);
             financeService.removeFinanceDocument(applicationFinance.getId()).getSuccessObjectOrThrowException();
         } else {
             final Map<String, MultipartFile> fileMap = ((StandardMultipartHttpServletRequest) request).getFileMap();
