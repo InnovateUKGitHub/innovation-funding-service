@@ -131,8 +131,11 @@ function runTests() {
         wait $job
     done
 
-    results=`find target/* -regex ".*/output\.xml"`
-    rebot -d target ${results}
+    if [ "$parallel" ]
+    then
+      results=`find target/* -regex ".*/output\.xml"`
+      rebot -d target ${results}
+    fi
 }
 
 setEnv
@@ -172,7 +175,7 @@ unset testScrub
 unset parallel
 
 testDirectory='IFS_acceptance_tests/tests'
-while getopts ":q :t :d:" opt ; do
+while getopts ":p :q :t :d:" opt ; do
     case $opt in
         p)
          parallel=1
@@ -206,9 +209,11 @@ done
 
 startSeleniumGrid
 
+
 if [ "$quickTest" ]
 then
     echo "using quickTest:   TRUE" >&2
+    resetDB
     addTestFiles
     runTests
 elif [ "$testScrub" ]
