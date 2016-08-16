@@ -25,9 +25,12 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
 	
     @Test
     public void testAnyoneCanViewACompetition() {
-        assertFalse(rules.anyoneCanViewOpenCompetitions(newCompetitionResource().build(), null));
+        //null user cannot see competition in setup.
+        assertFalse(rules.anyoneCanViewOpenCompetitions(newCompetitionResource().withCompetitionStatus(CompetitionResource.Status.COMPETITION_SETUP).build(), null));
+        //null user can see open competitions
         assertTrue(rules.anyoneCanViewOpenCompetitions(newCompetitionResource().withCompetitionStatus(CompetitionResource.Status.OPEN).build(), null));
-        assertTrue(rules.anyoneCanViewOpenCompetitions(newCompetitionResource().build(),
+        //Comp admin can see competition in setup
+        assertTrue(rules.anyoneCanViewOpenCompetitions(newCompetitionResource().withCompetitionStatus(CompetitionResource.Status.COMPETITION_SETUP).build(),
                 UserResourceBuilder.newUserResource().withRolesGlobal(
                         Lists.newArrayList(RoleResourceBuilder.newRoleResource().withType(UserRoleType.COMP_ADMIN).build())).build()));
     }
