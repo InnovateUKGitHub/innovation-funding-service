@@ -5,7 +5,6 @@ import com.google.common.collect.Lists;
 import com.worth.ifs.commons.error.CommonErrors;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.invite.domain.ApplicationInvite;
 import com.worth.ifs.invite.domain.ProjectInvite;
 import com.worth.ifs.invite.mapper.InviteOrganisationMapper;
 import com.worth.ifs.invite.mapper.InviteProjectMapper;
@@ -13,13 +12,10 @@ import com.worth.ifs.invite.repository.InviteProjectRepository;
 import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.notifications.resource.SystemNotificationSource;
 import com.worth.ifs.notifications.service.NotificationService;
-import com.worth.ifs.project.domain.Project;
-import com.worth.ifs.project.domain.ProjectUser;
 import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.project.repository.ProjectUserRepository;
 import com.worth.ifs.transactional.BaseTransactionalService;
-import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.Role;
+import com.worth.ifs.user.domain.User;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -41,8 +37,6 @@ import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_INVITE_INVALID_PROJECT_ID;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.invite.constant.InviteStatusConstants.CREATED;
-import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
@@ -88,24 +82,14 @@ public class InviteProjectServiceImpl extends BaseTransactionalService implement
     public ServiceResult<Void> saveFinanceContactInvite(@P("inviteProjectResource") InviteProjectResource inviteProjectResource) {
 
         if (inviteProjectResourceIsValid(inviteProjectResource)) {
-            ProjectInvite invite = inviteMapper.mapToDomain(inviteProjectResource);
-            Errors errors = new BeanPropertyBindingResult(invite, invite.getClass().getName());
-            validator.validate(invite, errors);
+            ProjectInvite projectInvite = inviteMapper.mapToDomain(inviteProjectResource);
+            Errors errors = new BeanPropertyBindingResult(projectInvite, projectInvite.getClass().getName());
+            validator.validate(projectInvite, errors);
             if (errors.hasErrors()) {
                 errors.getFieldErrors().stream().peek(e -> LOG.debug(String.format("Field error: %s ", e.getField())));
                 return serviceFailure(badRequestError(errors.toString()));
-
-            } else{
-
-                Project project = projectRepository.findOne(inviteProjectResource.getProject());
-                Role partnerRole = roleRepository.findOneByName(PARTNER.getName());
-                final ProjectUser projectUser = projectUserRepository.findByProjectIdAndRoleIdAndUserId(project.getId(),
-                        partnerRole.getId(), inviteProjectResource.getUser());
-                Organisation organisation = organisationRepository.findOne(projectUser.getOrganisation().getId());
-                String hashCode = invite.generateHash();
-                ProjectInvite projectInvite = new ProjectInvite(inviteProjectResource.getName(),inviteProjectResource.getEmail(),
-                        hashCode, organisation, project , CREATED);
-
+            } else {
+                projectInvite.getHash();
                 inviteProjectRepository.save(projectInvite);
                 return serviceSuccess();
             }
@@ -157,7 +141,7 @@ public class InviteProjectServiceImpl extends BaseTransactionalService implement
                     if(u.isPresent()){
                         return serviceSuccess();
                     }else{
-                        return serviceFailure(CommonErrors.notFoundError(ApplicationInvite.class, hash));
+                        return serviceFailure(CommonErrors.notFoundError(User.class));
                     }
                 })
                 .andOnSuccessReturnVoid();
