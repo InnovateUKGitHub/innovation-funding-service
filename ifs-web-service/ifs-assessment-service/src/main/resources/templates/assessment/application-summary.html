@@ -51,13 +51,6 @@
             <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}" enctype="multipart/form-data" novalidate="novalidate" data-autosave="assessorFeedback">
                 <button class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">Save the form</button>
 
-                <div class="error-summary" th:if="${#fields.hasErrors('global')}">
-                    <h2 class="heading-medium error-summary-heading">We were unable to save your changes</h2>
-                    <ul class="error-summary-list">
-                        <li th:errors="*{global}" />
-                    </ul>
-                </div>
-
                 <div class="question" th:id="form-input-fundingConfirmation">
                     <h2 class="heading-medium extra-margin">Do you believe that this application is suitable for funding?</h2>
                     <fieldset class="inline">
