@@ -14,6 +14,8 @@ import org.mapstruct.Mapper;
 )
 public abstract class MilestoneMapper extends BaseMapper<Milestone, MilestoneResource, Long> {
 
+    public abstract MilestoneResource mapToResource(Milestone domain);
+
     public Long mapMilestoneToId(Milestone object) {
         if (object == null) {
             return null;
