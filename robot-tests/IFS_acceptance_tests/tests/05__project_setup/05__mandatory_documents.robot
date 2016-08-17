@@ -100,7 +100,7 @@ Non-lead partner cannot remove either document
     [Documentation]    INFUND-3013
     [Tags]
     When the user should not see the text in the page    Remove
-    And the user should not see the element    name=removeCollaborationAgreemntClicked
+    And the user should not see the element    name=removeCollaborationAgreementClicked
     And the user should not see the element    name=removeExploitationPlanClicked
 
 Non-lead partner does not have the option to submit the mandatory documents
@@ -123,17 +123,46 @@ PM can view both documents
     Then the user should not see an error in the page
     And the user goes back to the previous page
 
-PM can remove both documents
+PM can remove the second document
     [Documentation]    INFUND-3011
     [Tags]
-    When the user clicks the button/link    name=removeCollaborationAgreementClicked
-    And the user clicks the button/link    name=removeExploitationPlanClicked
+    When the user clicks the button/link    name=removeExploitationPlanClicked
     Then the user should not see an error in the page
-    And the user should not see the element    link=${valid_pdf}
+    [Teardown]    logout as user
+
+Non-lead partner can still view the first document
+    [Documentation]    INFUND-4252
+    [Setup]    guest user log-in    jessica.doe@ludlow.co.uk    Passw0rd
+    When the user navigates to the page    ${project_in_setup_page}
+    And the user clicks the button/link    link=Other documents
+    Then the user should see the text in the page    ${valid_pdf}
+    [Teardown]    logout as user
+
+PM can remove the first document
+    [Documentation]    INFUND-3011
+    [Tags]
+    [Setup]    guest user log-in    worth.email.test+projectlead@gmail.com    Passw0rd
+    Given the user navigates to the page    ${project_in_setup_page}
+    And the user clicks the button/link    link=Other documents
+    When the user clicks the button/link    name=removeCollaborationAgreementClicked
+    Then the user should not see the text in the page    ${valid_pdf}
+    [Teardown]    logout as user
+
+
+Non-lead partner cannot view either document once removed
+    [Documentation]    INFUND-4252
+    [Setup]    guest user log-in    jessica.doe@ludlow.co.uk    Passw0rd
+    When the user navigates to the page    ${project_in_setup_page}
+    And the user clicks the button/link    link=Other documents
+    Then the user should not see the text in the page    ${valid_pdf}
+    [Teardown]    logout as user
 
 PM can upload both documents
     [Documentation]    INFUND-3011
     [Tags]
+    [Setup]    guest user log-in    worth.email.test+projectlead@gmail.com    Passw0rd
+    Given the user navigates to the page    ${project_in_setup_page}
+    And the user clicks the button/link    link=Other documents
     When the user uploads to the collaboration agreement question    ${valid_pdf}
     Then the user should see the text in the page    ${valid_pdf}
     When the user uploads to the exploitation plan question    ${valid_pdf}
