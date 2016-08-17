@@ -516,8 +516,7 @@ we create a new user
 the lead applicant invites a registered user
     [Arguments]    ${EMAIL_LEAD}    ${EMAIL_INVITED}
     guest user log-in    ${EMAIL_LEAD}    Passw0rd123
-    ${user_does_not_exist}=    Run keyword and ignore error     the user should see the text in the page    Your username/password combination doesn't seem to work
-    run keyword if    ${user_does_not_exist}==('PASS', None)    the user makes a new account    ${EMAIL_LEAD}
+    run keyword if    ${smoke_test}!=1    the user makes a new account    ${EMAIL_LEAD}
     The user clicks the button/link    link=${OPEN_COMPETITION_LINK}
     Click Element    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
     Input Text    name=organisations[1].organisationName    innovate
@@ -539,7 +538,7 @@ the lead applicant invites a registered user
 the user makes a new account
     [Arguments]    ${EMAIL_LEAD}
     The user navigates to the page    ${COMPETITION_DETAILS_URL}
-    The user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
+    The user clicks the button/link    jQuery=.button:contains("Apply now")
     The user clicks the button/link    jQuery=.button:contains("Create account")
     The user clicks the button/link    jQuery=.button:contains("Create")
     The user enters text to a text field    id=organisationSearchName    Innovate
