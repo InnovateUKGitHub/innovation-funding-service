@@ -1,10 +1,7 @@
 package com.worth.ifs.competition.service;
 
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.competition.resource.CompetitionCountResource;
-import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.resource.CompetitionSetupSection;
-import com.worth.ifs.competition.resource.CompetitionTypeResource;
+import com.worth.ifs.competition.resource.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,6 +15,7 @@ public interface CompetitionsRestService {
     RestResult<List<CompetitionResource>> findLiveCompetitions();
     RestResult<List<CompetitionResource>> findProjectSetupCompetitions();
     RestResult<List<CompetitionResource>> findUpcomingCompetitions();
+    RestResult<CompetitionSearchResult> searchCompetitions(String searchQuery, int page, int size);
     RestResult<CompetitionCountResource> countCompetitions();
     RestResult<CompetitionResource> getCompetitionById(Long competitionId);
     RestResult<List<CompetitionTypeResource>> getCompetitionTypes();

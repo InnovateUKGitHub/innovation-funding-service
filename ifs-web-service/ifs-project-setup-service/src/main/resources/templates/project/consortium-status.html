@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Project team status'" th:remove="tag" />
+</head>
+<body >
+
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{id}(id=${model.projectId})}"  th:remove="tag"></div>
+
+    <div class="page-title">
+        <h1 class="heading-xlarge">Project team status</h1>
+    </div>
+    <p>Additional information is needed before your project can begin. This table will help you to keep track of what tasks have been completed and what is outstanding.</p>
+
+    <div class="table-overflow">
+
+        <table id="table-project-status">
+            <caption>Project setup stages</caption>
+            <thead>
+              <tr>
+                  <th scope="col" rowspan="2">Partner</th>
+                  <th class="status" scope="col">Project details</th>
+                  <th class="status" scope="col">Monitoring Officer</th>
+                  <th class="status" scope="col">Bank details</th>
+                  <th class="status" scope="col">Finance checks</th>
+                  <th class="status" scope="col">Spend profile</th>
+                  <th class="status" scope="col">Other docs</th>
+                  <th class="status" scope="col">Grant offer letter</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:include="project/fragments :: consortium-partner-status-row(${model.leadPartner})" />
+              <th:block th:each="partner : ${model.otherPartners}">
+                  <tr th:include="project/fragments :: consortium-partner-status-row(${partner})"/>
+              </th:block>
+              </tbody>
+        </table>
+    </div>
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+</body>
+
+</html>

@@ -2,6 +2,7 @@ package com.worth.ifs.project.controller;
 
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.project.finance.transactional.ProjectFinanceService;
+import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
 import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.project.resource.SpendProfileTableResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,12 +30,17 @@ public class ProjectFinanceController {
     @RequestMapping("/{projectId}/partner-organisation/{organisationId}/spend-profile-table")
     public RestResult<SpendProfileTableResource> getSpendProfileTable(@PathVariable("projectId") final Long projectId,
                                                                  @PathVariable("organisationId") final Long organisationId) {
-        return projectFinanceService.getSpendProfileTable(projectId, organisationId).toGetResponse();
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        return projectFinanceService.getSpendProfileTable(projectOrganisationCompositeId).toGetResponse();
     }
 
     @RequestMapping("/{projectId}/partner-organisation/{organisationId}/spend-profile")
     public RestResult<SpendProfileResource> getSpendProfile(@PathVariable("projectId") final Long projectId,
                                                             @PathVariable("organisationId") final Long organisationId) {
-        return projectFinanceService.getSpendProfile(projectId, organisationId).toGetResponse();
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        return projectFinanceService.getSpendProfile(projectOrganisationCompositeId).toGetResponse();
     }
 }

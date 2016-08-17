@@ -3,6 +3,7 @@ package com.worth.ifs.competition.service;
 import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.competition.resource.CompetitionCountResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionSearchResult;
 import com.worth.ifs.competition.resource.CompetitionTypeResource;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
@@ -140,6 +141,20 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
         setupGetWithRestResultExpectations(competitionsRestURL + "/count", CompetitionCountResource.class, returnedResponse);
 
         CompetitionCountResource responses = service.countCompetitions().getSuccessObject();
+        assertNotNull(responses);
+        assertEquals(returnedResponse, responses);
+    }
+
+    @Test
+    public void test_searchCompetitions() {
+        CompetitionSearchResult returnedResponse = new CompetitionSearchResult();
+        String searchQuery = "SearchQuery";
+        int page = 1;
+        int size = 20;
+
+        setupGetWithRestResultExpectations(competitionsRestURL + "/search/" + page + "/" + size + "?searchQuery=" + searchQuery, CompetitionSearchResult.class, returnedResponse);
+
+        CompetitionSearchResult responses = service.searchCompetitions(searchQuery, page, size).getSuccessObject();
         assertNotNull(responses);
         assertEquals(returnedResponse, responses);
     }
