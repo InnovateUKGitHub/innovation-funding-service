@@ -35,6 +35,7 @@ import com.worth.ifs.finance.domain.FinanceRowMetaValue;
 import com.worth.ifs.form.domain.FormInputType;
 import com.worth.ifs.form.domain.FormValidator;
 import com.worth.ifs.invite.domain.InviteOrganisation;
+import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
@@ -89,6 +90,7 @@ public class POJOTest {
             CompetitionSummaryResource.class,
             Project.class,
             ProjectResource.class,
+            InviteProjectResource.class,
             ProjectUser.class,
             ProjectUserResource.class,
             AddressType.class,
