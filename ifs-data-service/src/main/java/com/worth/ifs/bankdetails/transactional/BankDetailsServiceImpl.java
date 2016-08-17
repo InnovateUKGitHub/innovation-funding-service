@@ -66,18 +66,30 @@ public class BankDetailsServiceImpl implements BankDetailsService{
     }
 
     @Override
-    public ServiceResult<Void> updateBankDetails(BankDetailsResource bankDetailsResource) {
+    public ServiceResult<Void> submitBankDetails(BankDetailsResource bankDetailsResource) {
         return projectDetailsExist(bankDetailsResource.getProject()).
                 andOnSuccess(() ->
                         bankDetailsDontExist(bankDetailsResource.getProject(), bankDetailsResource.getOrganisation()).
                                 andOnSuccess(() ->
                                         validateBankDetails(bankDetailsResource).
                                                 andOnSuccess(
-                                                        accountDetails -> saveBankDetails(accountDetails, bankDetailsResource)).
+                                                        accountDetails -> saveSubmittedBankDetails(accountDetails, bankDetailsResource)).
                                                 andOnSuccess(accountDetails -> {
                                                     BankDetails bankDetails = bankDetailsRepository.findByProjectIdAndOrganisationId(bankDetailsResource.getProject(), bankDetailsResource.getOrganisation());
                                                     return verifyBankDetails(accountDetails, bankDetails);
                                                 })
+                                )
+                );
+    }
+
+    @Override
+    public ServiceResult<Void> updateBankDetails(BankDetailsResource bankDetailsResource) {
+        return projectDetailsExist(bankDetailsResource.getProject()).
+                andOnSuccess(() ->
+                        validateBankDetails(bankDetailsResource).
+                                andOnSuccess(
+                                        accountDetails -> updatedExistingBankDetails(accountDetails, bankDetailsResource).
+                                                andOnSuccess(() -> serviceSuccess())
                                 )
                 );
     }
@@ -108,7 +120,7 @@ public class BankDetailsServiceImpl implements BankDetailsService{
         return serviceSuccess();
     }
 
-    private ServiceResult<AccountDetails> saveBankDetails(AccountDetails accountDetails, BankDetailsResource bankDetailsResource){
+    private ServiceResult<AccountDetails> saveSubmittedBankDetails(AccountDetails accountDetails, BankDetailsResource bankDetailsResource){
         OrganisationAddressResource organisationAddressResource = bankDetailsResource.getOrganisationAddress();
         AddressResource addressResource = organisationAddressResource.getAddress();
         BankDetails bankDetails = bankDetailsMapper.mapToDomain(bankDetailsResource);
@@ -127,11 +139,19 @@ public class BankDetailsServiceImpl implements BankDetailsService{
         return serviceSuccess(accountDetails);
     }
 
+    private ServiceResult<AccountDetails> updatedExistingBankDetails(AccountDetails accountDetails, BankDetailsResource bankDetailsResource) {
+        BankDetails existingBankDetails = bankDetailsRepository.findByProjectIdAndOrganisationId(bankDetailsResource.getProject(), bankDetailsResource.getOrganisation());
+        if(existingBankDetails != null){
+            bankDetailsResource.setId(existingBankDetails.getId());
+        }
+        return saveSubmittedBankDetails(accountDetails, bankDetailsResource);
+    }
+
     private ServiceResult<AccountDetails> validateBankDetails(BankDetailsResource bankDetailsResource){
         AccountDetails accountDetails = silBankDetailsMapper.toAccountDetails(bankDetailsResource);
         SILBankDetails silBankDetails = silBankDetailsMapper.toSILBankDetails(bankDetailsResource);
-            return silExperianEndpoint.validate(silBankDetails).
-                    handleSuccessOrFailure(
+        return silExperianEndpoint.validate(silBankDetails).
+                handleSuccessOrFailure(
                         failure -> serviceFailure(failure.getErrors()),
                         validationResult -> {
                             if(validationResult.isCheckPassed()) {

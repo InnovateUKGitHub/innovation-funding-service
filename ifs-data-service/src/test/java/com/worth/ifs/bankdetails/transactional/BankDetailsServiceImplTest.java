@@ -94,7 +94,7 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
         VerificationResult verificationResult = new VerificationResult();
         when(silExperianEndpointMock.verify(accountDetails)).thenReturn(serviceSuccess(verificationResult));
         when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(bankDetailsResource.getProject(), bankDetailsResource.getOrganisation())).thenReturn(null, bankDetails);
-        ServiceResult<Void> result = service.updateBankDetails(bankDetailsResource);
+        ServiceResult<Void> result = service.submitBankDetails(bankDetailsResource);
         assertTrue(result.isSuccess());
     }
 
@@ -102,7 +102,7 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
     public void testBankDetailsCannotBeSubmittedBeforeProjectDetails(){
         project.setSubmittedDate(null);
         bankDetailsResource.setOrganisationAddress(null);
-        ServiceResult<Void> result = service.updateBankDetails(bankDetailsResource);
+        ServiceResult<Void> result = service.submitBankDetails(bankDetailsResource);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(BANK_DETAILS_CANNOT_BE_SUBMITTED_BEFORE_PROJECT_DETAILS));
     }
@@ -113,7 +113,7 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
         ValidationResult validationResult = new ValidationResult();
         validationResult.setCheckPassed(false);
         when(silExperianEndpointMock.validate(silBankDetails)).thenReturn(serviceSuccess(validationResult));
-        ServiceResult<Void> result = service.updateBankDetails(bankDetailsResource);
+        ServiceResult<Void> result = service.submitBankDetails(bankDetailsResource);
         verify(silExperianEndpointMock, never()).verify(accountDetails);
         verify(bankDetailsRepositoryMock, times(1)).findByProjectIdAndOrganisationId(bankDetailsResource.getProject(), bankDetailsResource.getOrganisation());
     }
@@ -127,7 +127,7 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
         when(silExperianEndpointMock.validate(silBankDetails)).thenReturn(serviceSuccess(validationResult));
         when(silExperianEndpointMock.verify(accountDetails)).thenReturn(serviceSuccess(verificationResult));
         when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(bankDetailsResource.getProject(), bankDetailsResource.getOrganisation())).thenReturn(null, bankDetails);
-        ServiceResult<Void> result = service.updateBankDetails(bankDetailsResource);
+        ServiceResult<Void> result = service.submitBankDetails(bankDetailsResource);
         verify(silExperianEndpointMock, times(1)).verify(accountDetails);
         verify(bankDetailsRepositoryMock, times(2)).findByProjectIdAndOrganisationId(bankDetailsResource.getProject(), bankDetailsResource.getOrganisation());
     }

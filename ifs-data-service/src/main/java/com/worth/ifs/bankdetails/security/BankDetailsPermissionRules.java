@@ -13,10 +13,17 @@ import static com.worth.ifs.security.SecurityRuleUtil.isProjectFinanceUser;
 @PermissionRules
 public class BankDetailsPermissionRules extends BasePermissionRules {
     @PermissionRule(
-            value = "UPDATE",
-            description = "Partners can update their own organisations bank details")
+            value = "SUBMIT",
+            description = "Partners can submit their own organisations bank details")
     public boolean partnersCanUpdateTheirOwnOrganisationsBankDetails(BankDetailsResource bankDetailsResource, UserResource user) {
         return isPartner(bankDetailsResource.getProject(), user.getId()) && partnerBelongsToOrganisation(bankDetailsResource.getProject(), user.getId(), bankDetailsResource.getOrganisation());
+    }
+
+    @PermissionRule(
+            value = "UPDATE",
+            description = "Project finance users can update any organisations bank details")
+    public boolean projectFinanceUsersCanUpdateAnyOrganisationsBankDetails(BankDetailsResource bankDetailsResource, UserResource user) {
+        return isProjectFinanceUser(user);
     }
 
     @PermissionRule(

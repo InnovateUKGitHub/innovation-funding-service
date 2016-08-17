@@ -19,7 +19,7 @@
 			</div>
 		</div>
 		<div class="column-third alignright extra-margin">
-				<h2 class="bold-small blue-block">Bank account</h2>
+			<h2 class="bold-small blue-block">Bank account</h2>
 		</div>
 	</div>
 
@@ -30,13 +30,13 @@
 
 	<p>
 		<th:block th:unless="${#strings.isEmpty(model.financeContactName)}">
-				<th:block th:text="${model.financeContactName}" /><br/>
+			<th:block th:text="${model.financeContactName}" /><br/>
 		</th:block>
 		<th:block th:unless="${#strings.isEmpty(model.financeContactEmail)}">
-				<a th:href="${'mailto:'+model.financeContactEmail}" th:text="${model.financeContactEmail}" /><br/>
+			<a th:href="${'mailto:'+model.financeContactEmail}" th:text="${model.financeContactEmail}" /><br/>
 		</th:block>
 		<th:block th:unless="${#strings.isEmpty(model.financeContactPhoneNumber)}">
-				<th:block th:text="${model.financeContactPhoneNumber}" /><br/>
+			<th:block th:text="${model.financeContactPhoneNumber}" /><br/>
 		</th:block>
 	</p>
 
@@ -144,20 +144,16 @@
 				<input class="form-control postcode" id="postcode" name="postcode" type="text" value="" th:field="*{addressForm.selectedPostcode.postcode}"/>
 			</div>
 		</fieldset>
-	</form>
 
-	<div class="grid-row extra-margin">
-		<div class="column-half">
-			<a th:href="@{/project/{id}/organisation/{orgId}/review-bank-details(id=${model.projectId}, orgId=${model.organisationId})}">Cancel bank account changes</a>
-		</div>
-		<div class="column-half alignright">
-			<form>
+		<div class="grid-row extra-margin">
+			<div class="column-half">
+				<a th:href="@{/project/{id}/organisation/{orgId}/review-bank-details(id=${model.projectId}, orgId=${model.organisationId})}">Cancel bank account changes</a>
+			</div>
+			<div class="column-half alignright">
 				<button class="no-margin-right button">Update bank account details</button>
-			</form>
+			</div>
 		</div>
-	</div>
-
-
+	</form>
 
 	<div th:include="fragments/layout :: main-content-end" th:remove="tag" />
 </main>

@@ -12,11 +12,9 @@ import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.FileAndContents;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder;
-import com.worth.ifs.project.builder.SpendProfileResourceBuilder;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
-import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -338,7 +336,7 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
     }
 
     @Test
-    public void updateBanksDetailsSuccessfully() throws Exception {
+    public void submitBanksDetailsSuccessfully() throws Exception {
         Long projectId = 1L;
         Long organisationId = 1L;
         OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource().build();
@@ -349,9 +347,9 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
                 .withOrganiationAddress(organisationAddressResource)
                 .build();
 
-        when(bankDetailsServiceMock.updateBankDetails(bankDetailsResource)).thenReturn(serviceSuccess());
+        when(bankDetailsServiceMock.submitBankDetails(bankDetailsResource)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/project/{projectId}/bank-details", projectId).contentType(APPLICATION_JSON).content(toJson(bankDetailsResource))).andExpect(status().isOk()).andReturn();
+        mockMvc.perform(put("/project/{projectId}/bank-details", projectId).contentType(APPLICATION_JSON).content(toJson(bankDetailsResource))).andExpect(status().isOk()).andReturn();
     }
 
     @Test
@@ -366,7 +364,7 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
                 .withOrganiationAddress(organisationAddressResource)
                 .build();
 
-        when(bankDetailsServiceMock.updateBankDetails(bankDetailsResource)).thenReturn(serviceSuccess());
+        when(bankDetailsServiceMock.submitBankDetails(bankDetailsResource)).thenReturn(serviceSuccess());
 
         Error invalidSortCodeError = fieldError("sortCode", "123", "Pattern");
         Error sortCodeNotProvided = fieldError("sortCode", null, "NotBlank");

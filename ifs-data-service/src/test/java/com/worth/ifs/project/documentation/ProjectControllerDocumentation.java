@@ -19,7 +19,6 @@ import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.test.web.servlet.MvcResult;
 
 import javax.servlet.http.HttpServletRequest;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -399,7 +398,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
     }
 
     @Test
-    public void updateBanksDetail() throws Exception {
+    public void submitBanksDetail() throws Exception {
         Long projectId = 1L;
         Long organisationId = 1L;
         OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource().build();
@@ -410,10 +409,10 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                 .withOrganiationAddress(organisationAddressResource)
                 .build();
 
-        when(bankDetailsServiceMock.updateBankDetails(bankDetailsResource)).thenReturn(serviceSuccess());
+        when(bankDetailsServiceMock.submitBankDetails(bankDetailsResource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(
-                post("/project/{projectId}/bank-details", projectId).
+                put("/project/{projectId}/bank-details", projectId).
                         contentType(APPLICATION_JSON).
                         content(toJson(bankDetailsResource)))
                 .andExpect(status().isOk())
@@ -443,7 +442,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
 
         RestErrorResponse expectedErrors = new RestErrorResponse(asList(invalidSortCodeError, invalidAccountNumberError));
 
-        when(bankDetailsServiceMock.updateBankDetails(bankDetailsResource)).thenReturn(serviceSuccess());
+        when(bankDetailsServiceMock.submitBankDetails(bankDetailsResource)).thenReturn(serviceSuccess());
         mockMvc.perform(
                 post("/project/{projectId}/bank-details", projectId).
                         contentType(APPLICATION_JSON).

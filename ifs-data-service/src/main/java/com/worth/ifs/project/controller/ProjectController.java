@@ -8,11 +8,9 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.transactional.FileHttpHeadersValidator;
-import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
-import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
@@ -144,6 +142,11 @@ public class ProjectController {
     public RestResult<OrganisationResource> getOrganisationByProjectAndUser(@PathVariable("projectId") final Long projectId,
                                                                             @PathVariable("userId") final Long userId){
         return projectService.getOrganisationByProjectAndUser(projectId, userId).toGetResponse();
+    }
+
+    @RequestMapping(value = "/{projectId}/bank-details", method = PUT)
+    public RestResult<Void> submitBanksDetail(@RequestBody @Valid final BankDetailsResource bankDetailsResource) {
+        return bankDetailsService.submitBankDetails(bankDetailsResource).toPutResponse();
     }
 
     @RequestMapping(value = "/{projectId}/bank-details", method = POST)
