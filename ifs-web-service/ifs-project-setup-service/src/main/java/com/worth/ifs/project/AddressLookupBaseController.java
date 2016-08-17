@@ -7,7 +7,7 @@ import com.worth.ifs.address.service.AddressRestService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.form.AddressForm;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
-import com.worth.ifs.project.viewmodel.ProjectDetailsAddressViewModelForm;
+import com.worth.ifs.bankdetails.form.ProjectDetailsAddressForm;
 import com.worth.ifs.user.resource.OrganisationResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -34,7 +34,7 @@ public class AddressLookupBaseController {
     @Autowired
     private AddressRestService addressRestService;
 
-    void processAddressLookupFields(ProjectDetailsAddressViewModelForm form) {
+    void processAddressLookupFields(ProjectDetailsAddressForm form) {
         addAddressOptions(form);
         addSelectedAddress(form);
     }
@@ -44,7 +44,7 @@ public class AddressLookupBaseController {
     }
 
     OrganisationAddressResource getOrganisationAddressResourceOrNull(
-            ProjectDetailsAddressViewModelForm form,
+            ProjectDetailsAddressForm form,
             OrganisationResource organisationResource,
             OrganisationAddressType addressTypeToUseForNewAddress){
         OrganisationAddressResource organisationAddressResource = null;
@@ -68,7 +68,7 @@ public class AddressLookupBaseController {
     /**
      * Get the list of postcode options, with the entered postcode. Add those results to the form.
      */
-    private void addAddressOptions(ProjectDetailsAddressViewModelForm projectDetailsAddressViewModelForm) {
+    private void addAddressOptions(ProjectDetailsAddressForm projectDetailsAddressViewModelForm) {
         if (StringUtils.hasText(projectDetailsAddressViewModelForm.getAddressForm().getPostcodeInput())) {
             AddressForm addressForm = projectDetailsAddressViewModelForm.getAddressForm();
             addressForm.setPostcodeOptions(searchPostcode(projectDetailsAddressViewModelForm.getAddressForm().getPostcodeInput()));
@@ -79,7 +79,7 @@ public class AddressLookupBaseController {
     /**
      * if user has selected a address from the dropdown, get it from the list, and set it as selected.
      */
-    private void addSelectedAddress(ProjectDetailsAddressViewModelForm projectDetailsAddressViewModelForm) {
+    private void addSelectedAddress(ProjectDetailsAddressForm projectDetailsAddressViewModelForm) {
         AddressForm addressForm = projectDetailsAddressViewModelForm.getAddressForm();
         if (StringUtils.hasText(addressForm.getSelectedPostcodeIndex()) && addressForm.getSelectedPostcode() == null) {
             addressForm.setSelectedPostcode(addressForm.getPostcodeOptions().get(Integer.parseInt(addressForm.getSelectedPostcodeIndex())));

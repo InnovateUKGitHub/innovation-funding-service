@@ -2,7 +2,6 @@ package com.worth.ifs.form;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.address.resource.AddressResource;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.Valid;
 import java.io.Serializable;
@@ -14,7 +13,6 @@ public class AddressForm  implements Serializable {
     private boolean triedToSave = false;
     private boolean triedToSearch = false;
 
-    @NotEmpty(message="Please enter a UK postcode")
     private String postcodeInput = "";
     private String selectedPostcodeIndex;
     @Valid

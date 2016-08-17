@@ -10,6 +10,7 @@ import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.category.resource.CategoryResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionTypeResource;
+import com.worth.ifs.competition.resource.MilestoneResource;
 import com.worth.ifs.finance.domain.FinanceRow;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.FinanceRowMetaFieldResource;
@@ -147,5 +148,8 @@ public final class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<List<ValidationMessages>> validationMessagesListType() {
         return new ParameterizedTypeReference<List<ValidationMessages>>() {};
+    }
+    public static ParameterizedTypeReference<List<MilestoneResource>> milestoneResourceListType() {
+        return new ParameterizedTypeReference<List<MilestoneResource>>() {};
     }
 }

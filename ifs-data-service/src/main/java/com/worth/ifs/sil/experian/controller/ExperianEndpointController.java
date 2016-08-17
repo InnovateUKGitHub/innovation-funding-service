@@ -234,6 +234,32 @@ public class ExperianEndpointController {
 
     private static void buildVerficiationTestData() {
         verificationResults = new HashMap<>();
+
+        verificationResults.put(
+                fromJson("{\n" +
+                        "  \"sortcode\":\"404745\",\n" +
+                        "  \"accountNumber\":\"51406795\",\n" +
+                        "  \"companyName\": \"Vitruvius Stonework Limited\",\n" +
+                        "  \"registrationNumber\": \"60674010\",\n" +
+                        "  \"firstName\": \"NA\",\n" +
+                        "  \"lastName\": \"NA\",\n" +
+                        "  \"address\": {\"organisation\":\"\", \"buildingName\":\"1\", \"street\":\"Riff Street\",\"locality\":\"\",\"town\":\"Bath\",\"postcode\": \"BA1 5LR\"}\n" +
+                        "}", AccountDetails.class),
+                fromJson("{\n" +
+                        "  \"VerificationResult\": {\n" +
+                        "    \"personalDetailsScore\": 1,\n" +
+                        "    \"addressScore\": 1,\n" +
+                        "    \"companyNameScore\": 9,\n" +
+                        "    \"regNumberScore\": \"Match\",\n" +
+                        "    \"conditions\": {\n" +
+                        "      \"severity\": \"warning\",\n" +
+                        "      \"code\": 2,\n" +
+                        "      \"description\": \"Modulus check algorithm is unavailable for these account details\"\n" +
+                        "    }\n" +
+                        "  }\n" +
+                        "}", VerificationResultWrapper.class)
+        );
+
         verificationResults.put(
                 fromJson("{\n" +
                         "  \"sortcode\":\"404745\",\n" +

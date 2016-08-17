@@ -40,7 +40,7 @@ User can navigate to the competition setup form
     ...
     ...    IFUND-3888
     [Tags]    HappyPath
-    Given the user clicks the button/link    id=section-2
+    Given the user clicks the button/link    id=section-3
     When the user clicks the button/link    jQuery=.button:contains("Create competition")
     Then the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
     When the user clicks the button/link    link=Initial Details
@@ -81,23 +81,23 @@ Initial details client-side validations
     ...    INFUND-3888
     [Tags]    HappyPath
     When the user enters text to a text field    id=title    Competition title
-    Then the user should not see the error any more    Please enter a title
     When the user selects the option from the drop-down menu    Additive Manufacturing    id=competitionTypeId
-    Then the user should not see the error any more    Please select a competition type
     When the user selects the option from the drop-down menu    Health and life sciences    id=innovationSectorCategoryId
-    Then the user should not see the error any more    Please select an innovation sector
     When the user selects the option from the drop-down menu    Advanced Therapies    id=innovationAreaCategoryId
-    Then the user should not see the error any more    Please select an innovation area
     When the user enters text to a text field    id=openingDateDay    01
-    Then the user should not see the error any more    Please enter an opening day
     When the user enters text to a text field    Id=openingDateMonth    12
-    Then the user should not see the error any more    Please enter an opening month
     When the user enters text to a text field    id=openingDateYear    2017
-    Then the user should not see the error any more    Please enter an opening year
     When the user selects the option from the drop-down menu    Competition Technologist One    id=leadTechnologistUserId
-    Then the user should not see the error any more    Please select a lead technologist
     When the user selects the option from the drop-down menu    Competition Executive Two    id=executiveUserId
     Then the user should not see the text in the page    Please select a competition executive    #using this keyword because there is no error element in the page
+    Then the user should not see the error any more    Please enter a title
+    Then the user should not see the error any more    Please select a competition type
+    Then the user should not see the error any more    Please select an innovation sector
+    Then the user should not see the error any more    Please select an innovation area
+    #Then the user should not see the error any more    Please enter an opening day
+    #Then the user should not see the error any more    Please enter an opening month
+    #Then the user should not see the error any more    Please enter an opening year
+    Then the user should not see the error any more    Please select a lead technologist
     ##    State aid value is tested in 'Initial details correct state aid status'
 
 Initial details correct state aid status

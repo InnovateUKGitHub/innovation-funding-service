@@ -110,7 +110,7 @@
 <!-- dayReadonly is an optional parameter that will make the day portion readonly -->
 
 <div th:fragment="form-dateinput (id, field)">
-    <div class="date-group js-future-date" th:attr="data-field-group-name=${field},data-field-group-id=${id}">
+    <div class="date-group" data-future-date="" th:attr="data-field-group-name=${field},data-field-group-id=${id}">
 
     	<div th:with="dateFieldPresent=*{__${field}__ != null}" th:remove="tag">
 
