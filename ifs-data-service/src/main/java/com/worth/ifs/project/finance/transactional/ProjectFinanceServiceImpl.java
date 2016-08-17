@@ -6,6 +6,7 @@ import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.finance.domain.*;
 import com.worth.ifs.project.finance.repository.SpendProfileRepository;
 import com.worth.ifs.project.repository.ProjectRepository;
+import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.project.resource.SpendProfileTableResource;
@@ -66,9 +67,10 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     }
 
     @Override
-    public ServiceResult<SpendProfileTableResource> getSpendProfileTable(Long projectId, Long organisationId) {
+    public ServiceResult<SpendProfileTableResource> getSpendProfileTable(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
 
-        return find(spendProfile(projectId, organisationId), project(projectId)).andOnSuccess((spendProfile, project) -> {
+        return find(spendProfile(projectOrganisationCompositeId.getProjectId(), projectOrganisationCompositeId.getOrganisationId()),
+                project(projectOrganisationCompositeId.getProjectId())).andOnSuccess((spendProfile, project) -> {
 
             CostGroup eligibleCosts = spendProfile.getEligibleCosts();
             CostGroup spendProfileFigures = spendProfile.getSpendProfileFigures();
@@ -100,8 +102,9 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     }
 
     @Override
-    public ServiceResult<SpendProfileResource> getSpendProfile(Long projectId, Long organisationId) {
-        return getSpendProfileEntity(projectId, organisationId).andOnSuccessReturn(profile -> {
+    public ServiceResult<SpendProfileResource> getSpendProfile(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
+        return getSpendProfileEntity(projectOrganisationCompositeId.getProjectId(), projectOrganisationCompositeId.getOrganisationId())
+                .andOnSuccessReturn(profile -> {
             SpendProfileResource resource = new SpendProfileResource();
             resource.setId(profile.getId());
             return resource;

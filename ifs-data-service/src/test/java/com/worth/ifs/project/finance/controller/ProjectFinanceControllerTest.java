@@ -4,6 +4,7 @@ import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.commons.rest.LocalDateResource;
 import com.worth.ifs.project.builder.SpendProfileResourceBuilder;
 import com.worth.ifs.project.controller.ProjectFinanceController;
+import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
 import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.project.resource.SpendProfileTableResource;
 import org.junit.Test;
@@ -40,6 +41,8 @@ public class ProjectFinanceControllerTest extends BaseControllerMockMVCTest<Proj
         Long projectId = 1L;
         Long organisationId = 1L;
 
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
         SpendProfileTableResource expectedTable = new SpendProfileTableResource();
 
         expectedTable.setMonths(asList(
@@ -58,7 +61,7 @@ public class ProjectFinanceControllerTest extends BaseControllerMockMVCTest<Proj
                 "Materials", asList(new BigDecimal("70"), new BigDecimal("50"), new BigDecimal("60")),
                 "Other costs", asList(new BigDecimal("50"), new BigDecimal("5"), new BigDecimal("0"))));
 
-        when(projectFinanceServiceMock.getSpendProfileTable(projectId, organisationId)).thenReturn(serviceSuccess(expectedTable));
+        when(projectFinanceServiceMock.getSpendProfileTable(projectOrganisationCompositeId)).thenReturn(serviceSuccess(expectedTable));
 
         mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile-table", projectId, organisationId))
                 .andExpect(status().isOk())
@@ -71,9 +74,11 @@ public class ProjectFinanceControllerTest extends BaseControllerMockMVCTest<Proj
         Long projectId = 1L;
         Long organisationId = 1L;
 
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
         SpendProfileResource spendProfileResource = SpendProfileResourceBuilder.newSpendProfileResource().build();
 
-        when(projectFinanceServiceMock.getSpendProfile(projectId, organisationId)).thenReturn(serviceSuccess(spendProfileResource));
+        when(projectFinanceServiceMock.getSpendProfile(projectOrganisationCompositeId)).thenReturn(serviceSuccess(spendProfileResource));
 
         mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile", projectId, organisationId))
                 .andExpect(status().isOk())

@@ -6,6 +6,8 @@ import com.worth.ifs.commons.error.CommonErrors;
 import com.worth.ifs.commons.rest.LocalDateResource;
 import com.worth.ifs.project.builder.SpendProfileResourceBuilder;
 import com.worth.ifs.project.controller.ProjectFinanceController;
+import com.worth.ifs.project.finance.domain.SpendProfile;
+import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
 import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.project.resource.SpendProfileTableResource;
 import org.junit.Before;
@@ -66,12 +68,14 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
         Long projectId = 1L;
         Long organisationId = 1L;
 
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
         SpendProfileTableResource table = new SpendProfileTableResource();
         table.setMonths(asList(new LocalDateResource(2016, 1, 1), new LocalDateResource(2016, 2, 1), new LocalDateResource(2016, 3, 1)));
         table.setEligibleCostPerCategoryMap(buildEligibleCostPerCategoryMap());
         table.setMonthlyCostsPerCategoryMap(buildSpendProfileCostsPerCategoryMap());
 
-        when(projectFinanceServiceMock.getSpendProfileTable(projectId, organisationId)).thenReturn(serviceSuccess(table));
+        when(projectFinanceServiceMock.getSpendProfileTable(projectOrganisationCompositeId)).thenReturn(serviceSuccess(table));
 
         mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile-table", projectId, organisationId))
                 .andExpect(status().isOk())
@@ -91,7 +95,9 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
         Long projectId = 1L;
         Long organisationId = 1L;
 
-        when(projectFinanceServiceMock.getSpendProfileTable(projectId, organisationId)).
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        when(projectFinanceServiceMock.getSpendProfileTable(projectOrganisationCompositeId)).
                     thenReturn(serviceFailure(notFoundError(SpendProfileResource.class, projectId, organisationId)));
 
         mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile-table", projectId, organisationId))
@@ -110,9 +116,11 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
         Long projectId = 1L;
         Long organisationId = 1L;
 
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
         SpendProfileResource spendProfileResource = SpendProfileResourceBuilder.newSpendProfileResource().build();
 
-        when(projectFinanceServiceMock.getSpendProfile(projectId, organisationId)).thenReturn(serviceSuccess(spendProfileResource));
+        when(projectFinanceServiceMock.getSpendProfile(projectOrganisationCompositeId)).thenReturn(serviceSuccess(spendProfileResource));
 
         mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile", projectId, organisationId))
                 .andExpect(status().isOk())
@@ -132,12 +140,10 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
         Long projectId = 1L;
         Long organisationId = 1L;
 
-        when(projectFinanceServiceMock.getSpendProfile(projectId, organisationId)).
-            /*
-             * TODO - When the Spend Profile domain model is done,  SpendProfileResource.class should be replaced with SpendProfile.class
-             * We don't have this class as yet, and hence we are returning SpendProfileResource.class directly at the moment
-             */
-                    thenReturn(serviceFailure(CommonErrors.notFoundError(SpendProfileResource.class, projectId, organisationId)));
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        when(projectFinanceServiceMock.getSpendProfile(projectOrganisationCompositeId)).
+                    thenReturn(serviceFailure(CommonErrors.notFoundError(SpendProfile.class, projectId, organisationId)));
 
         mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile", projectId, organisationId)
         )
