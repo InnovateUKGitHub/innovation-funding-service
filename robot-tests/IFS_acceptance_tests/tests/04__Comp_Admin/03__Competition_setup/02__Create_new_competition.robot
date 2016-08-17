@@ -300,7 +300,7 @@ Application questions: server side validations
     Then the validation error above the question should be visible    jQuery=label:contains(Question title)    This field cannot be left blank
     And the validation error above the question should be visible    jQuery=label:contains(Question guidance title)    This field cannot be left blank
     #To do: investigate why this step fails with chrome driver    INFUND-4514
-    #And the validation error above the question should be visible    jQuery=div:nth-child(4) div:nth-child(4) label:contains(Question guidance)    This field cannot be left blank
+    And the validation error above the question should be visible    jQuery=div:nth-child(4) div:nth-child(4) label:contains(Question guidance)    This field cannot be left blank
 
 Application questions: Client side validations
     [Documentation]    INFUND-3000
@@ -342,10 +342,10 @@ the total should be correct
     Wait Until Element Contains    css=.no-margin    ${Total}
 
 the user leaves all the question field empty
-    The user enters text to a text field    css=.editor    ${EMPTY}
-    Mouse Out    css=.editor
+    Clear Element Text    css=.editor
+    Press Key    css=.editor    \\8
     focus    jQuery=.button[value="Save and close"]
-    sleep    200ms
+    sleep    5000
     The user enters text to a text field    id=question.title    ${EMPTY}
     The user enters text to a text field    id=question.guidanceTitle    ${EMPTY}
     The user enters text to a text field    jQuery=[id="question.maxWords"]    ${EMPTY}
