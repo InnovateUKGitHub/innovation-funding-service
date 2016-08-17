@@ -105,8 +105,8 @@ public class AcceptProjectInviteController extends BaseController {
                     return organisationRestService.getOrganisationByIdForAnonymousUserFlow(invite.getOrganisation())
                             .andOnSuccessReturn(organisation -> {
                                 JoinAProjectViewModel japvm = new JoinAProjectViewModel();
-                                // TODO japvm.setCompetitionName(invite.getCompetitionName());
-                                // TODO japvm.setLeadApplicantName(invite.getLeadApplicant());
+                                japvm.setCompetitionName(invite.getCompetitionName());
+                                japvm.setLeadApplicantName(invite.getLeadApplicant());
                                 if (organisation.getAddresses() != null && !organisation.getAddresses().isEmpty()) {
                                     japvm.setOrganisationAddress(organisation.getAddresses().get(0));
                                 }
