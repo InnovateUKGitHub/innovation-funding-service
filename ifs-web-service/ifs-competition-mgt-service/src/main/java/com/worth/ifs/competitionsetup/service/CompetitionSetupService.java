@@ -18,4 +18,10 @@ public interface CompetitionSetupService {
 
 	void saveCompetitionSetupSection(CompetitionSetupForm competitionSetupForm,
 			CompetitionResource competitionResource, CompetitionSetupSection section);
+
+	boolean isCompetitionReadyToOpen(CompetitionResource competitionResource);
+
+	void setCompetitionAsReadyToOpen(Long competitionId);
+
+	void setCompetitionAsCompetitionSetup(Long competitionId);
 }

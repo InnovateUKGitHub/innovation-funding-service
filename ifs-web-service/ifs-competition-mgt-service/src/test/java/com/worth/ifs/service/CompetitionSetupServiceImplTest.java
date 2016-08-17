@@ -1,18 +1,14 @@
 package com.worth.ifs.service;
 
-import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static java.util.Arrays.asList;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.List;
-
+import com.worth.ifs.application.service.CompetitionService;
+import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionSetupSection;
+import com.worth.ifs.competitionsetup.form.AdditionalInfoForm;
+import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupServiceImpl;
+import com.worth.ifs.competitionsetup.service.formpopulator.CompetitionSetupFormPopulator;
+import com.worth.ifs.competitionsetup.service.modelpopulator.CompetitionSetupSectionModelPopulator;
+import com.worth.ifs.competitionsetup.service.sectionupdaters.CompetitionSetupSectionSaver;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -21,14 +17,15 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.Model;
 
-import com.worth.ifs.application.service.CompetitionService;
-import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.resource.CompetitionSetupSection;
-import com.worth.ifs.competitionsetup.form.AdditionalInfoForm;
-import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
-import com.worth.ifs.competitionsetup.service.formpopulator.CompetitionSetupFormPopulator;
-import com.worth.ifs.competitionsetup.service.modelpopulator.CompetitionSetupSectionModelPopulator;
-import com.worth.ifs.competitionsetup.service.sectionupdaters.CompetitionSetupSectionSaver;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static java.util.Arrays.asList;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CompetitionSetupServiceImplTest {
@@ -144,5 +141,83 @@ public class CompetitionSetupServiceImplTest {
 		verify(matchingSaver).saveSection(competitionResource, competitionSetupForm);
 		verify(otherSaver, never()).saveSection(competitionResource, competitionSetupForm);
 	}
-	
+
+	@Test
+	public void testIsCompetitionReadyToOpen() {
+		Map<CompetitionSetupSection, Boolean> testSectionStatus = new HashMap<>();
+		testSectionStatus.put(CompetitionSetupSection.INITIAL_DETAILS, Boolean.TRUE);
+		testSectionStatus.put(CompetitionSetupSection.ADDITIONAL_INFO, Boolean.TRUE);
+		testSectionStatus.put(CompetitionSetupSection.ELIGIBILITY, Boolean.TRUE);
+		testSectionStatus.put(CompetitionSetupSection.MILESTONES, Boolean.TRUE);
+		testSectionStatus.put(CompetitionSetupSection.APPLICATION_FORM, Boolean.TRUE);
+
+		CompetitionResource competitionResource = newCompetitionResource().build();
+		competitionResource.setSectionSetupStatus(testSectionStatus);
+
+		assertTrue(service.isCompetitionReadyToOpen(competitionResource));
+	}
+
+
+	@Test
+	public void testIsCompetitionReadyToOpenFailure() {
+		Map<CompetitionSetupSection, Boolean> testSectionStatus = new HashMap<>();
+		testSectionStatus.put(CompetitionSetupSection.INITIAL_DETAILS, Boolean.TRUE);
+		testSectionStatus.put(CompetitionSetupSection.ADDITIONAL_INFO, Boolean.FALSE);
+		testSectionStatus.put(CompetitionSetupSection.ELIGIBILITY, Boolean.TRUE);
+		testSectionStatus.put(CompetitionSetupSection.MILESTONES, Boolean.TRUE);
+		testSectionStatus.put(CompetitionSetupSection.APPLICATION_FORM, Boolean.TRUE);
+
+		CompetitionResource competitionResource = newCompetitionResource().build();
+		competitionResource.setSectionSetupStatus(testSectionStatus);
+
+		assertFalse(service.isCompetitionReadyToOpen(competitionResource));
+	}
+
+
+
+	@Test
+	public void testSetCompetitionAsReadyToOpenWhenReadyToOpen() {
+		CompetitionResource competitionResource = newCompetitionResource().withCompetitionStatus(CompetitionResource.Status.READY_TO_OPEN).build();
+		when(competitionService.getById(any(Long.class))).thenReturn(competitionResource);
+		service.setCompetitionAsReadyToOpen(2L);
+		assertEquals(competitionResource.getCompetitionStatus(), CompetitionResource.Status.READY_TO_OPEN);
+
+	}
+
+	@Test
+	public void testSetCompetitionAsReadyToOpenSuccess() {
+		Map<CompetitionSetupSection, Boolean> testSectionStatus = new HashMap<>();
+		testSectionStatus.put(CompetitionSetupSection.INITIAL_DETAILS, Boolean.TRUE);
+		testSectionStatus.put(CompetitionSetupSection.ADDITIONAL_INFO, Boolean.TRUE);
+		testSectionStatus.put(CompetitionSetupSection.ELIGIBILITY, Boolean.TRUE);
+		testSectionStatus.put(CompetitionSetupSection.MILESTONES, Boolean.TRUE);
+		testSectionStatus.put(CompetitionSetupSection.APPLICATION_FORM, Boolean.TRUE);
+		CompetitionResource competitionResource = newCompetitionResource()
+				.withCompetitionStatus(CompetitionResource.Status.COMPETITION_SETUP)
+				.build();
+		competitionResource.setSectionSetupStatus(testSectionStatus);
+
+		when(competitionService.getById(any(Long.class))).thenReturn(competitionResource);
+		service.setCompetitionAsReadyToOpen(2L);
+		assertEquals(competitionResource.getCompetitionStatus(), CompetitionResource.Status.READY_TO_OPEN);
+
+	}
+
+
+	@Test(expected=IllegalArgumentException.class)
+	public void testSetCompetitionAsReadyToOpenFail() {
+		Map<CompetitionSetupSection, Boolean> testSectionStatus = new HashMap<>();
+		testSectionStatus.put(CompetitionSetupSection.INITIAL_DETAILS, Boolean.TRUE);
+		testSectionStatus.put(CompetitionSetupSection.ADDITIONAL_INFO, Boolean.FALSE);
+		testSectionStatus.put(CompetitionSetupSection.ELIGIBILITY, Boolean.TRUE);
+		testSectionStatus.put(CompetitionSetupSection.MILESTONES, Boolean.TRUE);
+		testSectionStatus.put(CompetitionSetupSection.APPLICATION_FORM, Boolean.TRUE);
+		CompetitionResource competitionResource = newCompetitionResource()
+				.withCompetitionStatus(CompetitionResource.Status.COMPETITION_SETUP)
+				.build();
+		competitionResource.setSectionSetupStatus(testSectionStatus);
+
+		when(competitionService.getById(any(Long.class))).thenReturn(competitionResource);
+		service.setCompetitionAsReadyToOpen(2L);
+	}
 }
