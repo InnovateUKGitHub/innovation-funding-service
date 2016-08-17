@@ -19,8 +19,9 @@ public class AssessmentSummaryForm implements BindingResultTarget {
     @NotNull(message = "Please indicate your decision")
     private Boolean fundingConfirmation;
     @NotEmpty(message = "Please enter your feedback")
-    @Size (max = 5000)
+    @Size (max = 5000, message = "Content can not exceed {max} characters")
     private String feedback;
+    @Size (max = 5000, message = "Content can not exceed {max} characters")
     private String comment;
     private BindingResult bindingResult;
     private List<ObjectError> objectErrors;

@@ -55,11 +55,12 @@
                     <h2 class="heading-medium extra-margin">Do you believe that this application is suitable for funding?</h2>
                     <fieldset class="inline">
                         <legend class="visuallyhidden">Do you believe that this application is suitable for funding?</legend>
-                        <div class="form-group">
+                        <div th:class="${#fields.hasErrors('fundingConfirmation')}? 'form-group error':'form-group'">
                             <label class="block-label" th:each="option : ${ { true, false } }">
                                 <input th:field="*{fundingConfirmation}" th:value="${option}" name="fundingConfirmation" type="radio" />
                                 <span th:text="${option ? 'Yes' : 'No'}" th:remove="tag" />
                             </label>
+                            <span class="error-message" th:if="${#fields.hasErrors('fundingConfirmation')}" th:errors="*{fundingConfirmation}"></span>
                         </div>
                     </fieldset>
                 </div>
@@ -75,7 +76,7 @@
                             </label>
 
                             <div class="textarea-wrapped word-count">
-                                <textarea th:field="*{feedback}" id="form-textarea-feedback" data-max_words="100"></textarea>
+                                <textarea  th:field="*{feedback}" th:value="*{feedback}" id="form-textarea-feedback" data-max_words="100"></textarea>
                                 <div class="textarea-footer">
                                     <div th:include="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=100)" th:remove="tag" />
                                 </div>
@@ -84,7 +85,7 @@
                     </div>
 
                     <div class="question" th:id="form-input-comments">
-                        <div th:class="${#fields.hasErrors('feedback')}? 'form-group error':'form-group'">
+                        <div th:class="${#fields.hasErrors('comment')}? 'form-group error':'form-group'">
                             <label class="form-label form-label-bold" th:for="form-textarea-comments" id="form-label-comments">
                                 Do you have any other comments about this application? Your comments here will only be shared with Innovate UK. (Optional)
                                 <span class="error-message" th:if="${#fields.hasErrors('comment')}" th:errors="*{comment}"></span>
