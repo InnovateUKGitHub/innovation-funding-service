@@ -29,9 +29,9 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
     @Query("SELECT count(c) FROM Competition c WHERE CURRENT_TIMESTAMP >= c.assessorFeedbackDate AND c.status = 'COMPETITION_SETUP_FINISHED'")
     Long countProjectSetup();
 
-    @Query("SELECT c FROM Competition c WHERE (CURRENT_TIMESTAMP <= c.startDate AND c.status = 'COMPETITION_SETUP_FINISHED') OR c.status = 'COMPETITION_SETUP' OR c.status = 'READY_TO_OPEN'")
+    @Query("SELECT c FROM Competition c WHERE (CURRENT_TIMESTAMP <= c.startDate AND c.status = 'COMPETITION_SETUP_FINISHED') OR c.status = 'COMPETITION_SETUP'")
     List<Competition> findUpcoming();
-    @Query("SELECT count(c) FROM Competition c WHERE (CURRENT_TIMESTAMP <= c.startDate AND c.status = 'COMPETITION_SETUP_FINISHED') OR c.status = 'COMPETITION_SETUP'  OR c.status = 'READY_TO_OPEN'")
+    @Query("SELECT count(c) FROM Competition c WHERE (CURRENT_TIMESTAMP <= c.startDate AND c.status = 'COMPETITION_SETUP_FINISHED') OR c.status = 'COMPETITION_SETUP'")
     Long countUpcoming();
 
 }
