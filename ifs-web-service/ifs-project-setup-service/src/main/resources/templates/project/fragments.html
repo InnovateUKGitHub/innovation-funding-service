@@ -4,19 +4,6 @@
 
 <!-- ===========================Project setup select address=========================== -->
 
-<th:block th:fragment="spend-profile-label(label)">
-  <th:block th:switch="${label}">
-       <th:block th:case="'LabourCost'">Labour</th:block>
-       <th:block th:case="'AdminSupportCost'">Admin support costs</th:block>
-       <th:block th:case="'MaterialCost'">Materials</th:block>
-       <th:block th:case="'CapitalCost'">Capital usage</th:block>
-       <th:block th:case="'SubcontractingCost'">Subcontracting costs</th:block>
-       <th:block th:case="'TravelAndSubsistenceCost'">Travel &amp; subsistence</th:block>
-       <th:block th:case="'OtherCost'">Other</th:block>
-  </th:block>
-</th:block>
-
-
 <div th:fragment="select-address">
     <fieldset>
       <div class="form-group" th:classappend="${#fields.hasErrors('*{addressType}') ? 'error' : ''}">
@@ -86,5 +73,27 @@
     <div id="custom-postcode">
         <div th:include="fragments/addresses :: company-address-details"  th:with="form=${form}" th:remove="tag"/>
     </div>
+</div>
+
+<div th:fragment="consortium-partner-status-row(partner)">
+    <th scope="row" th:text="${partner.name}" />
+    <div th:include="project/fragments :: consortium-partner-status-indicator(${partner.projectDetailsStatus})" th:remove="tag" />
+    <div th:include="project/fragments :: consortium-partner-status-indicator(${partner.monitoringOfficerStatus})" th:remove="tag" />
+    <div th:include="project/fragments :: consortium-partner-status-indicator(${partner.bankDetailsStatus})" th:remove="tag" />
+    <div th:include="project/fragments :: consortium-partner-status-indicator(${partner.financeChecksStatus})" th:remove="tag" />
+    <div th:include="project/fragments :: consortium-partner-status-indicator(${partner.spendProfileStatus})" th:remove="tag" />
+    <div th:include="project/fragments :: consortium-partner-status-indicator(${partner.otherDocumentsStatus})" th:remove="tag" />
+    <div th:include="project/fragments :: consortium-partner-status-indicator(${partner.grantOfferLetterStatus})" th:remove="tag" />
+</div>
+
+<div th:fragment="consortium-partner-status-indicator(status)">
+    <th:block th:switch="${status.name()}">
+        <td th:case="'COMPLETE'" class="status ok"><span class="visuallyhidden">Stage complete</span></td>
+        <td th:case="'ACTION_REQUIRED'" class="status action"><span class="visuallyhidden">Requires action</span></td>
+        <td th:case="'NOT_STARTED'" class="status">- <span class="visuallyhidden">Stage is not yet available</span></td>
+        <td th:case="'NOT_REQUIRED'" class="status na"><span class="visuallyhidden">Not required for this partner</span></td>
+        <td th:case="'PENDING'" class="status waiting"><span class="visuallyhidden">Awaiting review from Innovate UK</span></td>
+        <td th:case="*"></td><!--/* just in case there is a different status we put out an empty td to not break the table */-->
+    </th:block>
 </div>
 </html>

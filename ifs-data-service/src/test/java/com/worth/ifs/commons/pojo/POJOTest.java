@@ -24,6 +24,7 @@ import com.worth.ifs.authentication.resource.CreateUserResource;
 import com.worth.ifs.authentication.resource.UpdateUserResource;
 import com.worth.ifs.bankdetails.domain.BankDetails;
 import com.worth.ifs.bankdetails.resource.BankDetailsResource;
+import com.worth.ifs.commons.rest.LocalDateResource;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.resource.CompetitionCoFunderResource;
 import com.worth.ifs.competition.resource.CompetitionCountResource;
@@ -34,6 +35,7 @@ import com.worth.ifs.finance.domain.FinanceRowMetaValue;
 import com.worth.ifs.form.domain.FormInputType;
 import com.worth.ifs.form.domain.FormValidator;
 import com.worth.ifs.invite.domain.InviteOrganisation;
+import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
@@ -88,6 +90,7 @@ public class POJOTest {
             CompetitionSummaryResource.class,
             Project.class,
             ProjectResource.class,
+            InviteProjectResource.class,
             ProjectUser.class,
             ProjectUserResource.class,
             AddressType.class,
@@ -98,7 +101,8 @@ public class POJOTest {
             SpendProfileResource.class,
             SpendProfileTableResource.class,
             CompetitionCoFunderResource.class,
-            CompetitionCountResource.class
+            CompetitionCountResource.class,
+            LocalDateResource.class
     );
 
     @Before

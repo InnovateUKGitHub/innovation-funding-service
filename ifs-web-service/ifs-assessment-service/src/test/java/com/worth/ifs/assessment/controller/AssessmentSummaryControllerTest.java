@@ -1,6 +1,5 @@
 package com.worth.ifs.assessment.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionResource;
@@ -11,6 +10,7 @@ import com.worth.ifs.assessment.service.AssessmentService;
 import com.worth.ifs.assessment.service.AssessorFormInputResponseService;
 import com.worth.ifs.assessment.viewmodel.AssessmentSummaryQuestionViewModel;
 import com.worth.ifs.assessment.viewmodel.AssessmentSummaryViewModel;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
@@ -24,18 +24,19 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.List;
+import java.util.Map;
 
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
-import static com.worth.ifs.application.service.Futures.settable;
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static com.worth.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
 import static com.worth.ifs.assessment.builder.ProcessOutcomeResourceBuilder.newProcessOutcomeResource;
 import static com.worth.ifs.assessment.resource.AssessorFormInputType.*;
+import static com.worth.ifs.commons.error.CommonFailureKeys.SUMMARY_FEEDBACK_WORD_LIMIT_EXCEEDED;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static com.worth.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
-import static com.worth.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static java.lang.Boolean.TRUE;
 import static java.time.LocalDateTime.now;
 import static java.util.Arrays.asList;
@@ -69,19 +70,14 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
     @Test
     public void getSummary() throws Exception {
         Long competitionId = 1L;
-        Long processRoleId = 2L;
-        Long applicationId = 3L;
-        Long assessmentId = 4L;
+        Long applicationId = 2L;
+        Long assessmentId = 3L;
         String anotherTypeOfFormInputTitle = RESEARCH_CATEGORY.getTitle();
 
         when(assessmentService.getById(assessmentId)).thenReturn(newAssessmentResource()
-                .withProcessRole(processRoleId)
+                .withApplication(applicationId)
                 .withProcessOutcome(asList())
                 .build());
-
-        when(processRoleService.getById(processRoleId)).thenReturn(settable(newProcessRoleResource()
-                .withApplication(applicationId)
-                .build()));
 
         ApplicationResource expectedApplication = newApplicationResource()
                 .withCompetition(competitionId)
@@ -205,21 +201,16 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
     @Test
     public void getSummary_withExistingOutcome() throws Exception {
         Long competitionId = 1L;
-        Long processRoleId = 2L;
-        Long applicationId = 3L;
-        Long assessmentId = 4L;
+        Long applicationId = 2L;
+        Long assessmentId = 3L;
         Long latestProcessOutcomeId = 100L;
         String expectedFeedback = "feedback";
         String expectedComment = "comment";
 
         when(assessmentService.getById(assessmentId)).thenReturn(newAssessmentResource()
-                .withProcessRole(processRoleId)
+                .withApplication(applicationId)
                 .withProcessOutcome(asList(1L, 2L, 3L, latestProcessOutcomeId))
                 .build());
-
-        when(processRoleService.getById(processRoleId)).thenReturn(settable(newProcessRoleResource()
-                .withApplication(applicationId)
-                .build()));
 
         ApplicationResource expectedApplication = newApplicationResource()
                 .withCompetition(competitionId)
@@ -268,7 +259,7 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
         String feedback = "feedback";
         String comment = "comment";
 
-        when(assessmentService.recommend(assessmentId, fundingConfirmation, feedback, comment)).thenReturn(serviceSuccess());
+        setupServiceMocks(assessmentId, fundingConfirmation, feedback, comment, serviceSuccess());
 
         MvcResult result = mockMvc.perform(post("/{assessmentId}/summary", assessmentId)
                 .contentType(APPLICATION_FORM_URLENCODED)
@@ -280,5 +271,55 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
                 .andReturn();
 
         verify(assessmentService, times(1)).recommend(assessmentId, fundingConfirmation, feedback, comment);
+    }
+
+    @Test
+    public void saveValidation() throws Exception {
+        Long assessmentId = 1L;
+        Boolean fundingConfirmation = TRUE;
+        String feedback = "feedback";
+        String comment = "comment";
+
+        setupServiceMocks(assessmentId, fundingConfirmation, feedback, comment, serviceFailure(SUMMARY_FEEDBACK_WORD_LIMIT_EXCEEDED));
+
+        MvcResult result = mockMvc.perform(post("/{assessmentId}/summary", assessmentId)
+                .contentType(APPLICATION_FORM_URLENCODED)
+                .param("fundingConfirmation", fundingConfirmation.toString())
+                .param("feedback", feedback)
+                .param("comment", comment))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("model"))
+                .andExpect(view().name("assessment/application-summary"))
+                .andReturn();
+
+        verify(assessmentService, times(1)).recommend(assessmentId, fundingConfirmation, feedback, comment);
+
+        Map<String, Object> modelMap = result.getModelAndView().getModel();
+
+        AssessmentSummaryForm form = (AssessmentSummaryForm) modelMap.get("form");
+        assertEquals(1, form.getObjectErrors().size());
+        assertEquals(SUMMARY_FEEDBACK_WORD_LIMIT_EXCEEDED.getErrorKey(), form.getObjectErrors().get(0).getCode());
+    }
+
+    private void setupServiceMocks(Long assessmentId, Boolean fundingConfirmation, String feedback, String comment, ServiceResult<Void> result) {
+        Long applicationId = 1L;
+        Long competitionId = 2L;
+        Long latestProcessOutcomeId = 100L;
+
+        when(assessmentService.recommend(assessmentId, fundingConfirmation, feedback, comment)).thenReturn(result);
+        when(assessmentService.getById(assessmentId)).thenReturn(newAssessmentResource()
+                .withApplication(applicationId)
+                .withProcessOutcome(asList(1L, 2L, 3L, latestProcessOutcomeId))
+                .withCompetition(competitionId)
+                .build());
+        CompetitionResource competition = newCompetitionResource()
+                .withAssessmentStartDate(now().minusDays(2))
+                .withAssessmentEndDate(now().plusDays(4))
+                .build();
+        when(competitionService.getById(competitionId)).thenReturn(competition);
+        ApplicationResource application = newApplicationResource()
+                .withCompetition(competitionId)
+                .build();
+        when(applicationService.getById(applicationId)).thenReturn(application);
     }
 }

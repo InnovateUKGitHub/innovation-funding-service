@@ -15,15 +15,15 @@ import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
+import java.util.Arrays;
+
 import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static com.worth.ifs.assessment.builder.ProcessOutcomeBuilder.newProcessOutcome;
 import static com.worth.ifs.assessment.builder.ProcessOutcomeResourceBuilder.newProcessOutcomeResource;
-import static com.worth.ifs.commons.error.CommonFailureKeys.ASSESSMENT_RECOMMENDATION_FAILED;
-import static com.worth.ifs.commons.error.CommonFailureKeys.ASSESSMENT_REJECTION_FAILED;
+import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.*;
 
@@ -83,6 +83,67 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         inOrder.verify(processOutcomeMapperMock, calls(1)).mapToDomain(processOutcomeResource);
         inOrder.verify(assessmentWorkflowEventHandler, calls(1)).recommend(processRoleId, assessment, processOutcome);
         inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void recommend_DescriptionExceedsWordLimit() throws Exception {
+        Long assessmentId = 1L;
+        Long processRoleId = 2L;
+        String[] feedbackArray = new String[120];
+        Arrays.fill(feedbackArray, "feedback ");
+        String feedback = Arrays.toString(feedbackArray);
+
+        ProcessRole processRole = newProcessRole().withId(processRoleId).build();
+        Assessment assessment = newAssessment()
+                .withId(assessmentId)
+                .withProcessStatus(AssessmentStates.OPEN)
+                .withProcessRole(processRole)
+                .build();
+
+        ProcessOutcome processOutcome = newProcessOutcome().build();
+
+        ProcessOutcomeResource processOutcomeResource = newProcessOutcomeResource()
+                .withDescription(feedback.substring(1, feedback.length()-1).replaceAll(",", ""))
+                .withOutcomeType(AssessmentOutcomes.RECOMMEND.getType())
+                .build();
+
+        when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
+        when(processOutcomeMapperMock.mapToDomain(processOutcomeResource)).thenReturn(processOutcome);
+
+        ServiceResult<Void> result = assessmentService.recommend(assessmentId, processOutcomeResource);
+        assertTrue(result.isFailure());
+        assertEquals(SUMMARY_FEEDBACK_WORD_LIMIT_EXCEEDED.getErrorKey(),result.getErrors().get(0).getErrorKey());
+    }
+
+    @Test
+    public void recommend_CommentExceedsWordLimit() throws Exception {
+        Long assessmentId = 1L;
+        Long processRoleId = 2L;
+        String[] commentArray = new String[120];
+        Arrays.fill(commentArray, "comment ");
+        String comment = Arrays.toString(commentArray);
+
+        ProcessRole processRole = newProcessRole().withId(processRoleId).build();
+        Assessment assessment = newAssessment()
+                .withId(assessmentId)
+                .withProcessStatus(AssessmentStates.OPEN)
+                .withProcessRole(processRole)
+                .build();
+
+        ProcessOutcome processOutcome = newProcessOutcome().build();
+
+        ProcessOutcomeResource processOutcomeResource = newProcessOutcomeResource()
+                .withComment(comment.substring(1, comment.length()-1).replaceAll(",", ""))
+                .withOutcomeType(AssessmentOutcomes.RECOMMEND.getType())
+                .build();
+
+        when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
+        when(processOutcomeMapperMock.mapToDomain(processOutcomeResource)).thenReturn(processOutcome);
+
+        ServiceResult<Void> result = assessmentService.recommend(assessmentId, processOutcomeResource);
+
+        assertTrue(result.isFailure());
+        assertEquals(SUMMARY_COMMENT_WORD_LIMIT_EXCEEDED.getErrorKey(),result.getErrors().get(0).getErrorKey());
     }
 
     @Test

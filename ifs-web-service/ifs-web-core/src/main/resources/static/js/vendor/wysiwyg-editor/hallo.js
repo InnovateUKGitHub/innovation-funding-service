@@ -203,14 +203,10 @@
         return this.element.html(contents);
       },
       isModified: function() {
-        var changed;
-        if (typeof this.previousContent === 'undefined') {
-          this.previousContent = false;
-          return true;
+        if (!this.previousContent) {
+          this.previousContent = this.originalContent;
         }
-        changed = this.previousContent !== this.getContents();
-        this.previousContent = this.getContents();
-        return changed;
+        return this.previousContent !== this.getContents();
       },
       setUnmodified: function() {
         jQuery(this.element).removeClass('isModified');

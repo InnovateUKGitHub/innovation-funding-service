@@ -25,7 +25,10 @@ strong {
 img {
 	max-width: 100%;
 }
-
+caption {
+	font-weight:bold;
+	text-align:left;
+}
 .icon {
 	@include inline-block;
 	vertical-align: middle;
@@ -171,7 +174,13 @@ p.subtitle {
 .alignright {
 	text-align:right;
 }
+.aligncentre {
+	text-align:center;
+}
 
+col.border {
+	border-right: 1px solid $border-colour;
+}
 /*
 
 ###Added icons
