@@ -38,6 +38,14 @@ Non-lead partner can see the project setup page
     And the user should see the text in the page    Monitoring Officer
     And the user should see the text in the page    Bank details
 
+Non-lead partner can click the Dashboard link
+    [Documentation]    INFUND-4426
+    [Tags]
+    When the user clicks the button/link    link=Dashboard
+    Then the user should not see an error in the page
+    And the user should see the text in the page    Projects in setup
+    [Teardown]    the user goes back to the previous page
+
 Non-lead partner can see the application overview
     [Documentation]    INFUND-2612
     [Tags]    HappyPath
@@ -62,6 +70,14 @@ Lead partner can see the project setup page
     And the user should see the text in the page    Monitoring Officer
     And the user should see the text in the page    Bank details
     And the user should see the text in the page    Other documents
+
+Lead partner can click the Dashboard link
+    [Documentation]    INFUND-4426
+    [Tags]
+    When the user clicks the button/link    link=Dashboard
+    Then the user should not see an error in the page
+    And the user should see the text in the page    Projects in setup
+    [Teardown]    the user goes back to the previous page
 
 Lead partner can see the application overview
     [Documentation]    INFUND-2612

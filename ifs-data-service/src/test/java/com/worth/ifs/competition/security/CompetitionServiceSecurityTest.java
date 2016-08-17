@@ -5,6 +5,7 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.resource.CompetitionCountResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionSearchResult;
 import com.worth.ifs.competition.transactional.CompetitionService;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -27,13 +28,11 @@ import static org.mockito.MockitoAnnotations.initMocks;
 public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<CompetitionService> {
 
     private CompetitionPermissionRules rules;
-    private CompetitionCountPermissionRules countRules;
 
     @Before
     public void lookupPermissionRules() {
 
         rules = getMockPermissionRulesBean(CompetitionPermissionRules.class);
-        countRules = getMockPermissionRulesBean(CompetitionCountPermissionRules.class);
 
         initMocks(this);
     }
@@ -50,7 +49,7 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         ServiceResult<List<CompetitionResource>> results = service.findAll();
         assertEquals(0, results.getSuccessObject().size());
 
-        verify(rules, times(2)).anyoneCanViewCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
+        verify(rules, times(2)).anyoneCanViewOpenCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
         verifyNoMoreInteractions(rules);
     }
 
@@ -59,7 +58,7 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         setLoggedInUser(null);
 
         assertAccessDenied(() -> service.getCompetitionById(1L), () -> {
-            verify(rules).anyoneCanViewCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
+            verify(rules).anyoneCanViewOpenCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
             verifyNoMoreInteractions(rules);
         });
     }
@@ -71,7 +70,7 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         ServiceResult<List<CompetitionResource>> results = service.findLiveCompetitions();
         assertEquals(0, results.getSuccessObject().size());
 
-        verify(rules, times(2)).anyoneCanViewCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
+        verify(rules, times(2)).anyoneCanViewOpenCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
         verifyNoMoreInteractions(rules);
     }
 
@@ -82,7 +81,7 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         ServiceResult<List<CompetitionResource>> results = service.findProjectSetupCompetitions();
         assertEquals(0, results.getSuccessObject().size());
 
-        verify(rules, times(2)).anyoneCanViewCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
+        verify(rules, times(2)).anyoneCanViewOpenCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
         verifyNoMoreInteractions(rules);
     }
 
@@ -93,7 +92,7 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         ServiceResult<List<CompetitionResource>> results = service.findUpcomingCompetitions();
         assertEquals(0, results.getSuccessObject().size());
 
-        verify(rules, times(2)).anyoneCanViewCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
+        verify(rules, times(2)).anyoneCanViewOpenCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
         verifyNoMoreInteractions(rules);
     }
 
@@ -102,7 +101,16 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         setLoggedInUser(null);
 
         assertAccessDenied(() -> service.countCompetitions(), () -> {
-            verify(countRules).anyoneCanViewCompetitionCounts(isA(CompetitionCountResource.class), isNull(UserResource.class));
+            verifyNoMoreInteractions(rules);
+        });
+    }
+
+
+    @Test
+    public void testSearchCompetitions() {
+        setLoggedInUser(null);
+
+        assertAccessDenied(() -> service.searchCompetitions("string", 1, 1), () -> {
             verifyNoMoreInteractions(rules);
         });
     }
@@ -139,6 +147,11 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         @Override
         public ServiceResult<List<CompetitionResource>> findUpcomingCompetitions() {
             return serviceSuccess(newCompetitionResource().build(2));
+        }
+
+        @Override
+        public ServiceResult<CompetitionSearchResult> searchCompetitions(String searchQuery, int page, int size) {
+            return serviceSuccess(new CompetitionSearchResult());
         }
 
         @Override
