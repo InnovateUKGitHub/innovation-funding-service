@@ -9,10 +9,14 @@ import com.worth.ifs.competition.mapper.CompetitionMapper;
 import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.competition.resource.CompetitionCountResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionSearchResult;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -103,6 +107,22 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
         return serviceSuccess((List) competitionMapper.mapToResource(
                 competitionRepository.findUpcoming().stream().map(this::addCategories).collect(Collectors.toList())
             ));
+    }
+
+    @Override
+    public ServiceResult<CompetitionSearchResult> searchCompetitions(String searchQuery, int page, int size) {
+        String searchQueryLike = String.format("%%%s%%", searchQuery);
+        PageRequest pageRequest = new PageRequest(page, size);
+        Page<Competition> pageResult = competitionRepository.search(searchQueryLike, pageRequest);
+
+        CompetitionSearchResult result = new CompetitionSearchResult();
+        result.setContent((List) competitionMapper.mapToResource(pageResult.getContent()));
+        result.setNumber(pageRequest.getPageNumber());
+        result.setSize(size);
+        result.setTotalElements(pageResult.getTotalElements());
+        result.setTotalPages(pageResult.getTotalPages());
+
+        return serviceSuccess(result);
     }
 
     @Override

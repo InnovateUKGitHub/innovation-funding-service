@@ -3,6 +3,7 @@ package com.worth.ifs.competition.controller;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.competition.resource.CompetitionCountResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionSearchResult;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.transactional.CompetitionService;
 import com.worth.ifs.competition.transactional.CompetitionSetupService;
@@ -24,10 +25,6 @@ public class CompetitionController {
     @Autowired
     private CompetitionSetupService competitionSetupService;
 
-    /****
-     * General Competition methods
-     ****/
-
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public RestResult<CompetitionResource> getCompetitionById(@PathVariable("id") final Long id) {
         return competitionService.getCompetitionById(id).toGetResponse();
@@ -38,10 +35,6 @@ public class CompetitionController {
         return competitionService.findAll().toGetResponse();
     }
 
-
-    /***
-     * Get methods for the competition dashboard.
-     */
     @RequestMapping(value="/live", method= RequestMethod.GET)
     public RestResult<List<CompetitionResource>> live() {
         return competitionService.findLiveCompetitions().toGetResponse();
@@ -57,14 +50,16 @@ public class CompetitionController {
         return competitionService.findUpcomingCompetitions().toGetResponse();
     }
 
+    @RequestMapping(value="/search/{page}/{size}", method= RequestMethod.GET)
+    public RestResult<CompetitionSearchResult> search(@RequestParam("searchQuery") String searchQuery,
+                                                      @PathVariable("page") int page,
+                                                      @PathVariable("size") int size) {
+        return competitionService.searchCompetitions(searchQuery, page, size).toGetResponse();
+    }
     @RequestMapping(value="/count", method= RequestMethod.GET)
     public RestResult<CompetitionCountResource> count() {
         return competitionService.countCompetitions().toGetResponse();
     }
-
-    /****
-     * Competition Setup methods
-     ****/
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public RestResult<CompetitionResource> saveCompetition(@RequestBody CompetitionResource competitionResource, @PathVariable("id") final Long id) {
@@ -76,9 +71,6 @@ public class CompetitionController {
     	return competitionSetupService.initialiseFormForCompetitionType(competitionId, competitionType).toGetResponse();
     }
 
-    /**
-     * Generate and save the competition code
-     */
     @RequestMapping(value = "/generateCompetitionCode/{id}", method = RequestMethod.POST)
     public RestResult<String> generateCompetitionCode(@RequestBody LocalDateTime dateTime, @PathVariable("id") final Long id) {
         return competitionSetupService.generateCompetitionCode(id, dateTime).toGetResponse();
@@ -94,9 +86,6 @@ public class CompetitionController {
         return competitionSetupService.markSectionInComplete(competitionId, section).toGetResponse();
     }
 
-    /**
-     * Create a new competition object, and return it.
-     */
     @RequestMapping(value = "", method = RequestMethod.POST)
     public RestResult<CompetitionResource> create() {
         return competitionSetupService.create().toPostCreateResponse();

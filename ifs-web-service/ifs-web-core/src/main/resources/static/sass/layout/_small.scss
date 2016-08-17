@@ -25,7 +25,10 @@ strong {
 img {
 	max-width: 100%;
 }
-
+caption {
+	font-weight:bold;
+	text-align:left;
+}
 .icon {
 	@include inline-block;
 	vertical-align: middle;

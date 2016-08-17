@@ -139,7 +139,12 @@ table td{
         float:left;
     }
 }
-
+tr.date-group.error {
+    border:none;
+    .error-message {
+      display: none;
+    }
+}
 .form-date{
     overflow: hidden;
     margin-bottom: 30px;

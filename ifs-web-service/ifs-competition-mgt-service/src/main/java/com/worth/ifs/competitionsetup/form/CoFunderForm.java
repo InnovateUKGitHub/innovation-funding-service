@@ -1,9 +1,6 @@
 package com.worth.ifs.competitionsetup.form;
 
-import org.hibernate.validator.constraints.NotEmpty;
-
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 /**
@@ -11,11 +8,8 @@ import java.math.BigDecimal;
  */
 public class CoFunderForm {
 
-    @NotEmpty(message = "Please enter a funder name")
     private String coFunder;
-
     @Min(value=0, message = "Please a valid number.")
-    @NotNull(message = "Please enter a budget")
     private BigDecimal coFunderBudget;
 
     public String getCoFunder() {
