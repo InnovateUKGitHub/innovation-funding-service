@@ -11,18 +11,24 @@ import com.worth.ifs.competition.mapper.CompetitionMapper;
 import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.competition.resource.CompetitionCountResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionSearchResult;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import static com.worth.ifs.competition.transactional.CompetitionServiceImpl.COMPETITION_CLASS_NAME;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
- *
+ * Tests the CompetitionServiceImpl with mocked repositories/mappers.
  */
 public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionServiceImpl> {
     @Mock
@@ -134,5 +140,34 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         assertEquals(countLive, response.getLiveCount());
         assertEquals(countProjectSetup, response.getProjectSetupCount());
         assertEquals(countUpcoming, response.getUpcomingCount());
+    }
+
+    @Test
+    public void test_searchCompetitions() throws Exception {
+        String searchQuery = "SearchQuery";
+        String searchLike = "%" + searchQuery + "%";
+        int page = 1;
+        int size = 20;
+        PageRequest pageRequest = new PageRequest(page, size);
+        Page<Competition> queryResponse = mock(Page.class);
+        long totalElements = 2L;
+        int totalPages = 1;
+        List<Competition> competitions = Lists.newArrayList(new Competition());
+        List<CompetitionResource> resources = Lists.newArrayList(new CompetitionResource());
+        when(queryResponse.getTotalElements()).thenReturn(totalElements);
+        when(queryResponse.getTotalPages()).thenReturn(totalPages);
+        when(queryResponse.getNumber()).thenReturn(page);
+        when(queryResponse.getNumberOfElements()).thenReturn(size);
+        when(queryResponse.getContent()).thenReturn(competitions);
+        when(competitionRepository.search(searchLike, pageRequest)).thenReturn(queryResponse);
+        when(competitionMapper.mapToResource(competitions)).thenReturn(resources);
+
+        CompetitionSearchResult response = service.searchCompetitions(searchQuery, page, size).getSuccessObjectOrThrowException();
+
+        assertEquals(totalElements, response.getTotalElements());
+        assertEquals(totalPages, response.getTotalPages());
+        assertEquals(page, response.getNumber());
+        assertEquals(size, response.getSize());
+        assertEquals(resources, response.getContent());
     }
 }

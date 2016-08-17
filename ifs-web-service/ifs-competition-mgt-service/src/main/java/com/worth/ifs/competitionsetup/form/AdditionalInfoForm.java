@@ -2,9 +2,7 @@ package com.worth.ifs.competitionsetup.form;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.validation.Valid;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -14,32 +12,22 @@ import java.util.List;
  * Form for the additional info competition setup section.
  */
 public class AdditionalInfoForm extends CompetitionSetupForm {
-
-    @Size(max = 255, message = "Activity code has a maximum length of 255 characters")
-    @NotEmpty(message = "Please enter an activity code")
+    @Size(max = 255, message = "{validation.additionalinfoform.activitycode.size}")
     private String activityCode;
-
     @Size(max = 255, message = "{validation.additionalinfoform.innovatebudget.size}")
     private String innovateBudget;
-
-    @Size(max = 255, message = "Funder has a maximum length of 255 characters")
-    @NotEmpty(message = "Please enter a funder name")
+    @Size(max = 255, message = "{validation.additionalinfoform.funder.size}")
     private String funder;
-
-    @Min(value=0, message = "Please a valid number.")
-    @NotNull(message = "Please enter a budget")
+    @Min(value=0, message = "{validation.additionalinfoform.funderbudget.min}")
     private BigDecimal funderBudget;
-
     @NotEmpty(message = "{validation.additionalinfoform.pafnumber.required}")
-     private String pafNumber;
-
+    private String pafNumber;
     @NotEmpty(message = "{validation.additionalinfoform.competitioncode.required}")
     private String competitionCode;
-
     @NotEmpty(message = "{validation.additionalinfoform.budgetcode.required}")
     private String budgetCode;
 
-    @Valid
+
     private List<CoFunderForm> coFunders = new ArrayList<>();
 
 
