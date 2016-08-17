@@ -1,17 +1,5 @@
 package com.worth.ifs.competitionsetup.service;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
-
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
@@ -19,6 +7,16 @@ import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.service.formpopulator.CompetitionSetupFormPopulator;
 import com.worth.ifs.competitionsetup.service.modelpopulator.CompetitionSetupSectionModelPopulator;
 import com.worth.ifs.competitionsetup.service.sectionupdaters.CompetitionSetupSectionSaver;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
+
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 
 @Service
 public class CompetitionSetupServiceImpl implements CompetitionSetupService {
@@ -90,6 +88,56 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 		
 		competitionService.setSetupSectionMarkedAsComplete(competitionResource.getId(), section);
 	}
+
+	@Override
+	public boolean isCompetitionReadyToOpen(CompetitionResource competitionResource) {
+		if (competitionResource.getCompetitionStatus() == CompetitionResource.Status.READY_TO_OPEN) {
+			return false;
+		}
+		Optional<CompetitionSetupSection> notDoneSection = getRequiredSectionsForReadyToOpen().stream().filter(section ->
+				(!competitionResource.getSectionSetupStatus().containsKey(section) ||
+						!competitionResource.getSectionSetupStatus().get(section))).findFirst();
+
+		return !notDoneSection.isPresent() ;
+	}
+
+	@Override
+	public void setCompetitionAsReadyToOpen(Long competitionId) {
+		CompetitionResource competitionResource = competitionService.getById(competitionId);
+		if (competitionResource.getCompetitionStatus() == CompetitionResource.Status.READY_TO_OPEN) {
+			return;
+		}
+
+		if (isCompetitionReadyToOpen(competitionResource)) {
+			competitionResource.setCompetitionStatus(CompetitionResource.Status.READY_TO_OPEN);
+			competitionService.update(competitionResource);
+		} else {
+			LOG.error("Requesting to set a competition (id:" + competitionId + ") as Read to Open, But the competition is not ready to open yet. " +
+					"Please check all the madatory sections are done");
+			throw new IllegalArgumentException();
+		}
+	}
+
+	@Override
+	public void setCompetitionAsCompetitionSetup(Long competitionId) {
+		CompetitionResource competitionResource = competitionService.getById(competitionId);
+		competitionResource.setCompetitionStatus(CompetitionResource.Status.COMPETITION_SETUP);
+		competitionService.update(competitionResource);
+	}
+
+
+	private List<CompetitionSetupSection> getRequiredSectionsForReadyToOpen() {
+		List<CompetitionSetupSection> requiredSections = new ArrayList<>();
+		requiredSections.add(CompetitionSetupSection.INITIAL_DETAILS);
+		requiredSections.add(CompetitionSetupSection.ADDITIONAL_INFO);
+		requiredSections.add(CompetitionSetupSection.ELIGIBILITY);
+		/* TODO Need to enable these when INFUND-4468 is worked on.
+		requiredSections.add(CompetitionSetupSection.MILESTONES);
+		requiredSections.add(CompetitionSetupSection.APPLICATION_FORM);
+		*/
+		return requiredSections;
+	}
+
 
 	private void populateGeneralModelAttributes(Model model, CompetitionResource competitionResource, CompetitionSetupSection section) {
 		List<CompetitionSetupSection> completedSections = competitionService
