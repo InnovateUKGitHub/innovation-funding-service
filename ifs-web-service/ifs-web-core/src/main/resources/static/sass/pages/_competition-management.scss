@@ -93,3 +93,9 @@
     border-bottom: 1px solid $border-colour;
   }
 }
+.milestones-table thead th {
+  width: 10%;
+  &#milestone {
+    width: 40%;
+  }
+}
