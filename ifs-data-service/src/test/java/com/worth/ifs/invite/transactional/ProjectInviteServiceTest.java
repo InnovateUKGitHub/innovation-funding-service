@@ -26,6 +26,7 @@ import static java.util.Arrays.asList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static junit.framework.TestCase.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mapstruct.factory.Mappers.getMapper;
 import static org.mockito.Mockito.when;
@@ -82,15 +83,16 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
         ProjectInvite projectInvite = newInvite().withEmailAddress(user.getEmail()).withHash("hash").build();
         when(inviteProjectRepositoryMock.getByHash(projectInvite.getHash())).thenReturn(projectInvite);
         when(userRepositoryMock.findByEmail(projectInvite.getEmail())).thenReturn(of(user));
-        ServiceResult<Void> result = inviteProjectService.checkUserExistingByInviteHash(projectInvite.getHash());
+        ServiceResult<Boolean> result = inviteProjectService.checkUserExistingByInviteHash(projectInvite.getHash());
         assertTrue(result.isSuccess());
+        assertTrue(result.getSuccessObject());
     }
 
     @Test
     public void testCheckUserExistingByInviteHashHashNotFound() throws Exception {
         String hash = "hash";
         when(inviteProjectRepositoryMock.getByHash(hash)).thenReturn(null);
-        ServiceResult<Void> result = inviteProjectService.checkUserExistingByInviteHash(hash);
+        ServiceResult<Boolean> result = inviteProjectService.checkUserExistingByInviteHash(hash);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(notFoundError(ProjectInvite.class, hash)));
     }
@@ -100,9 +102,9 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
         ProjectInvite projectInvite = newInvite().withEmailAddress("email@example.com").withHash("hash").build();
         when(inviteProjectRepositoryMock.getByHash(projectInvite.getHash())).thenReturn(projectInvite);
         when(userRepositoryMock.findByEmail(projectInvite.getEmail())).thenReturn(empty());
-        ServiceResult<Void> result = inviteProjectService.checkUserExistingByInviteHash(projectInvite.getHash());
-        assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(notFoundError(User.class)));
+        ServiceResult<Boolean> result = inviteProjectService.checkUserExistingByInviteHash(projectInvite.getHash());
+        assertTrue(result.isSuccess());
+        assertFalse(result.getSuccessObject());
     }
 
 

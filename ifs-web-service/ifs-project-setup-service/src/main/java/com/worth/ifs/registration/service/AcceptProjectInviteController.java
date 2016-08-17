@@ -108,7 +108,9 @@ public class AcceptProjectInviteController extends BaseController {
                                 JoinAProjectViewModel japvm = new JoinAProjectViewModel();
                                 japvm.setCompetitionName(invite.getCompetitionName());
                                 japvm.setLeadApplicantName(invite.getLeadApplicant());
-                                // TODO japvm.setOrganisationAddress(organisation.getAddresses().get(0));
+                                if (organisation.getAddresses() != null && !organisation.getAddresses().isEmpty()) {
+                                    japvm.setOrganisationAddress(organisation.getAddresses().get(0));
+                                }
                                 japvm.setOrganisationName(organisation.getName());
                                 japvm.setProjectName("TODO");
                                 model.addAttribute("model", japvm);

@@ -2,20 +2,15 @@ package com.worth.ifs.invite.transactional;
 
 
 import com.google.common.collect.Lists;
-import com.worth.ifs.commons.error.CommonErrors;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.invite.domain.ProjectInvite;
-import com.worth.ifs.invite.mapper.InviteOrganisationMapper;
 import com.worth.ifs.invite.mapper.InviteProjectMapper;
 import com.worth.ifs.invite.repository.InviteProjectRepository;
 import com.worth.ifs.invite.resource.InviteProjectResource;
-import com.worth.ifs.notifications.resource.SystemNotificationSource;
-import com.worth.ifs.notifications.service.NotificationService;
-import com.worth.ifs.project.repository.ProjectRepository;
-import com.worth.ifs.project.repository.ProjectUserRepository;
 import com.worth.ifs.transactional.BaseTransactionalService;
-import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.mapper.UserMapper;
+import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -52,22 +47,10 @@ public class InviteProjectServiceImpl extends BaseTransactionalService implement
     private InviteProjectMapper inviteMapper;
 
     @Autowired
-    private InviteOrganisationMapper inviteOrganisationMapper;
-
-    @Autowired
     private InviteProjectRepository inviteProjectRepository;
 
     @Autowired
-    private ProjectRepository projectRepository;
-
-    @Autowired
-    private ProjectUserRepository projectUserRepository;
-
-    @Autowired
-    private NotificationService notificationService;
-
-    @Autowired
-    private SystemNotificationSource systemNotificationSource;
+    private UserMapper userMapper;
 
     LocalValidatorFactoryBean validator;
 
@@ -132,19 +115,20 @@ public class InviteProjectServiceImpl extends BaseTransactionalService implement
         });
     }
 
-
     @Override
-    public ServiceResult<Void> checkUserExistingByInviteHash(@P("hash") String hash) {
+    public ServiceResult<Boolean> checkUserExistingByInviteHash(@P("hash") String hash) {
         return getByHash(hash)
                 .andOnSuccessReturn(i -> userRepository.findByEmail(i.getEmail()))
-                .andOnSuccess(u -> {
-                    if(u.isPresent()){
-                        return serviceSuccess();
-                    }else{
-                        return serviceFailure(CommonErrors.notFoundError(User.class));
-                    }
-                })
-                .andOnSuccessReturnVoid();
+                .andOnSuccess(u -> serviceSuccess(u.isPresent()));
+    }
+
+    @Override
+    public ServiceResult<UserResource> getUserByInviteHash(@P("hash") String hash) {
+        return getByHash(hash)
+                .andOnSuccessReturn(i -> userRepository.findByEmail(i.getEmail()).map(userMapper::mapToResource))
+                .andOnSuccess(u -> u.isPresent() ?
+                        serviceSuccess(u.get()) :
+                        serviceFailure(notFoundError(UserResource.class)));
     }
 
     private boolean inviteProjectResourceIsValid(InviteProjectResource inviteProjectResource) {
@@ -154,11 +138,6 @@ public class InviteProjectServiceImpl extends BaseTransactionalService implement
             return false;
         }
         return true;
-    }
-
-
-    private String getInviteUrl(String baseUrl, ProjectInvite invite) {
-        return String.format("%s/accept-invite/%s", baseUrl, invite.getHash());
     }
 
     private Supplier<ServiceResult<ProjectInvite>> invite(final String hash) {
