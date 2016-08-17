@@ -50,11 +50,12 @@ Non pdf uploads not allowed
     And the user clicks the button/link    link=5. Technical approach
     When the user uploads the file to the 'technical approach' question    ${text_file}
     Then the user should get an error page    ${wrong_filetype_validation_error}
+    [Teardown]    Logout as user
 
 Lead applicant can upload a pdf file
     [Documentation]    INFUND-832
-    [Tags]    HappyPath
-    [Setup]
+    [Tags]    HappyPath    SmokeTest
+    [Setup]    Guest user log-in      &{lead_applicant_credentials}
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=5. Technical approach
@@ -63,7 +64,7 @@ Lead applicant can upload a pdf file
 
 Lead applicant can view a file
     [Documentation]    INFUND-2720
-    [Tags]    HappyPath
+    [Tags]    HappyPath    SmokeTest
     Given the user should see the element    link=${valid_pdf}
     And the file has been scanned for viruses
     When the applicant opens the uploaded file
@@ -81,7 +82,7 @@ Lead applicant can download a pdf file
 
 Collaborators can view a file
     [Documentation]    INFUND-2306
-    [Tags]    HappyPath
+    [Tags]    HappyPath    SmokeTest
     [Setup]    Guest user log-in    ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
@@ -115,7 +116,7 @@ Collaborators cannot remove a file if not assigned
 Questions can be assigned with appendices
     [Documentation]    INFUND-832
     ...    INFUND-409
-    [Tags]
+    [Tags]    SmokeTest
     [Setup]    Guest user log-in    &{lead_applicant_credentials}
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
@@ -129,7 +130,7 @@ Questions can be assigned with appendices
 
 Collaborators can view a file when the question is assigned
     [Documentation]    INFUND_2720
-    [Tags]
+    [Tags]    SmokeTest
     [Setup]    Guest user log-in    ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
@@ -160,7 +161,7 @@ Collaborator can remove a file when the question is assigned
 
 Collaborators can upload a file when the question is assigned
     [Documentation]    INFUND_3007
-    [Tags]
+    [Tags]    SmokeTest
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=6. Innovation
