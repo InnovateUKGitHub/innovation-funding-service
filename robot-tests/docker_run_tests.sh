@@ -33,6 +33,16 @@ function addTestFiles() {
     docker-compose -p ifs exec data cp ${uploadFileDir}/8 ${virusScanQuarantinedFolder}/8
 }
 
+function resetLDAP() {
+    cd ../setup-files/scripts/docker
+    ./syncShib.sh
+}
+
+function resetDB(){
+  cd ${dataServiceCodeDir}
+  ./gradlew -Pprofile=docker flywayClean flywayMigrate
+  resetLDAP
+}
 
 function buildAndDeploy() {
     echo "********BUILD AND DEPLOY THE APPLICATION********"
@@ -43,28 +53,12 @@ function buildAndDeploy() {
     mv docker-build.gradle docker-build.gradle.tmp
     mv webtest.gradle.tmp docker-build.gradle
     ./gradlew -Pprofile=docker clean deployToTomcat
-    ./gradlew -Pprofile=docker flywayClean flywayMigrate
     ## Replace the webtest build environment with the one we had before.
     echo "********SWAPPING BACK THE ORIGINAL BUILD PROPERTIES********"
     mv docker-build.gradle.tmp docker-build.gradle
 
     cd ${webServiceCodeDir}
     ./gradlew -Pprofile=docker clean deployToTomcat
-
-}
-
-function resetLDAP() {
-    cd ../setup-files/scripts/docker
-    ./syncShib.sh
-}
-
-function startServers() {
-    pwd
-    cd ../setup-files/scripts/docker
-    ./startup.sh
-    ./deploy.sh all -x test
-    ./migrate.sh
-    wait
 
     echo "**********WAIT FOR SUCCESSFUL DEPLOYMENT OF THE DATASERVICE**********"
     docker-compose -p ifs logs -ft --tail 10 data | while read logLine
@@ -76,14 +70,26 @@ function startServers() {
     do
       [[ "${logLine}" == *"Deployment of web application archive"* ]] && pkill -P $$ tail
     done
-    resetLDAP
+
+}
+
+function startServers() {
+    cd ../setup-files/scripts/docker
+    ./startup.sh
+    wait
 }
 
 function startSeleniumGrid() {
     cd ../robot-tests
     cd ${testDirectory}
     cd ${scriptDir}
-    declare -i suiteCount=$(find ${testDirectory}/* -maxdepth 0 -type d | wc -l)
+
+    if [ "$parallel" ]
+    then
+      declare -i suiteCount=$(find ${testDirectory}/* -maxdepth 0 -type d | wc -l)
+    else
+      declare -i suiteCount=1
+    fi
     echo ${suiteCount}
     docker-compose -p robot up -d
     docker-compose -p robot scale chrome=${suiteCount}
@@ -94,7 +100,6 @@ function stopSeleniumGrid() {
     cd ../robot-tests
     cd ${testDirectory}
     cd ${scriptDir}
-
     docker-compose -p robot down -v --remove-orphans
 }
 
@@ -108,18 +113,29 @@ function runTests() {
     echo "**********RUN THE WEB TESTS**********"
     cd ${scriptDir}
 
-    for D in `find ${testDirectory}/* -maxdepth 0 -type d`
-    do
-        startPybot ${D}
-    done
+
+
+    if [ "$parallel" ]
+    then
+      for D in `find ${testDirectory}/* -maxdepth 0 -type d`
+      do
+          startPybot ${D}
+      done
+    else
+      startPybot ${testDirectory}
+    fi
+
 
     for job in `jobs -p`
     do
         wait $job
     done
 
-    results=`find target/* -regex ".*/output\.xml"`
-    rebot -d target ${results}
+    if [ "$parallel" ]
+    then
+      results=`find target/* -regex ".*/output\.xml"`
+      rebot -d target ${results}
+    fi
 }
 
 setEnv
@@ -156,11 +172,14 @@ echo "webBase:           ${webBase}"
 unset opt
 unset quickTest
 unset testScrub
-
+unset parallel
 
 testDirectory='IFS_acceptance_tests/tests'
-while getopts ":q :t :d:" opt ; do
+while getopts ":p :q :t :d:" opt ; do
     case $opt in
+        p)
+         parallel=1
+        ;;
         q)
          quickTest=1
         ;;
@@ -190,22 +209,25 @@ done
 
 startSeleniumGrid
 
+
 if [ "$quickTest" ]
 then
     echo "using quickTest:   TRUE" >&2
-    resetLDAP
+    resetDB
     addTestFiles
     runTests
 elif [ "$testScrub" ]
 then
     echo "using testScrub mode: this will do all the dirty work but omit the tests" >&2
-    buildAndDeploy
     startServers
+    #buildAndDeploy
+    resetDB
     addTestFiles
 else
     echo "using quickTest:   FALSE" >&2
-    buildAndDeploy
     startServers
+    #buildAndDeploy toDO: fix this with docker
+    resetDB
     addTestFiles
     runTests
 fi
