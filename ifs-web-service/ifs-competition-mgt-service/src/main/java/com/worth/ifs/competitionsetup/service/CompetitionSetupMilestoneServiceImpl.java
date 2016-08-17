@@ -45,7 +45,7 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
                 milestones.get(i).setDate(temp);
             }
         }
-        if (errors.isEmpty()){
+        if (!errors.isEmpty()){
             return errors;
         }
         else {
