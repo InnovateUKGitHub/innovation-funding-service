@@ -171,11 +171,11 @@
         </th:block>
     </div>
 
-    <a th:if="${model.isShowSubmitDocumentsButton() and  model.isSubmitAllowed()}"
+    <a th:if="${model.isShowSubmitDocumentsButton() and  model.submitAllowed and model.submitDate == null}"
        th:href="@{/project/{id}/partner/documents/confirm(id=${model.getProjectId()})}" class="button extra-margin"
        data-js-modal="modal-partner-documents">Submit partner documents</a>
     <div class="extra-margin"
-         th:if="${!model.isSubmitAllowed() and project.submittedDate == null}">
+         th:if="${!model.submitAllowed and model.submitDate == null}">
         <p>You are not able to submit until all files are uploaded. And you must be the project manager</p>
         <button disabled="disabled" class="button">Submit partner documents</button>
     </div>

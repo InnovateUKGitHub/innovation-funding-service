@@ -147,7 +147,7 @@ public class ProjectOtherDocumentsController {
         ProjectResource projectResource = projectService.getById(projectId);
         model.addAttribute("model", viewModel);
         model.addAttribute("form", form);
-        model.addAttribute("project", projectResource);
+       // model.addAttribute("project", projectResource);
         model.addAttribute("currentUser", loggedInUser);
 
         return "project/other-documents";
@@ -186,7 +186,7 @@ public class ProjectOtherDocumentsController {
                 exploitationPlan.map(FileDetailsViewModel::new).orElse(null),
                 partnerOrganisationNames, rejectionReasons,
                 leadPartner, otherDocumentsSubmitted, otherDocumentsApproved,
-                isSubmitAllowed);
+                isSubmitAllowed, project.getDocumentsSubmittedDate());
     }
 
     private ResponseEntity<ByteArrayResource> returnFileIfFoundOrThrowNotFoundException(Long projectId, Optional<ByteArrayResource> content, Optional<FileEntryResource> fileDetails) {

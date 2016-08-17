@@ -34,6 +34,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_ATOM_XML;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
@@ -396,6 +397,15 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
         assertNull(form.getCollaborationAgreement());
         assertNull(form.getExploitationPlan());
     }
+
+    @Test
+    public void testSubmitPartnerDocuments() throws Exception {
+        when(projectService.setPartnerDocumentsSubmitted(1L)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{id}/partner/documents/submit", 1L)).
+                andExpect(redirectedUrl("/project/1/partner/documents"));
+    }
+
 
     @Override
     protected ProjectOtherDocumentsController supplyControllerUnderTest() {

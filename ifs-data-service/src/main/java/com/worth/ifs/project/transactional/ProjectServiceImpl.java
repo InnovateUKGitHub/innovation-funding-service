@@ -255,6 +255,11 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     }
 
     @Override
+    public ServiceResult<Boolean> saveDocumentsSubmitDateTime(Long projectId, LocalDateTime date) {
+        return null;
+    }
+
+    @Override
     public ServiceResult<Boolean> isOtherDocumentsSubmitAllowed(Long projectId, Long userId) {
         ServiceResult<Project> project = getProject(projectId);
         Optional<ProjectUser> projectManager = getExistingProjectManager(project.getSuccessObject());
@@ -764,7 +769,11 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     }
 
     private boolean validateIsReadyForSubmission(final Project project) {
-        return !(project.getAddress() == null || !getExistingProjectManager(project).isPresent() || project.getTargetStartDate() == null || allFinanceContactsNotSet(project.getId()) || project.getSubmittedDate() != null);
+        return !(project.getAddress() == null
+                || !getExistingProjectManager(project).isPresent()
+                || project.getTargetStartDate() == null
+                || allFinanceContactsNotSet(project.getId())
+                || project.getSubmittedDate() != null);
     }
 
     private boolean allFinanceContactsNotSet(Long projectId){

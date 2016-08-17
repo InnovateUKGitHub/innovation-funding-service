@@ -212,7 +212,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public ServiceResult<Void> setPartnerDocumentsSubmitted(Long projectId) {
-        return null;
+        return projectRestService.setPartnerDocumentsSubmitted(projectId).toServiceResult();
     }
 
     @Override
