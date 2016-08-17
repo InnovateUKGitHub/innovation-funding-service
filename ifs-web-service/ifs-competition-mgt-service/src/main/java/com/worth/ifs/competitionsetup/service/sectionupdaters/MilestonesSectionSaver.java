@@ -7,12 +7,14 @@ import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.MilestoneResource;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.form.MilestonesForm;
-import com.worth.ifs.competitionsetup.form.MilestonesFormEntry;
+import com.worth.ifs.competitionsetup.model.MilestoneEntry;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
+import org.apache.commons.collections4.map.LinkedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Competition setup section saver for the milestones section.
@@ -35,12 +37,24 @@ public class MilestonesSectionSaver implements CompetitionSetupSectionSaver {
 	public List<Error> saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
 
         MilestonesForm milestonesForm = (MilestonesForm) competitionSetupForm;
-        List<MilestonesFormEntry> milestoneEntries = milestonesForm.getMilestonesFormEntryList();
+        LinkedMap<String, MilestoneEntry> milestoneEntries = milestonesForm.getMilestoneEntries();
+
         List<MilestoneResource> milestones = milestoneService.getAllDatesByCompetitionId(competition.getId());
         milestones.sort((c1, c2) -> c1.getType().compareTo(c2.getType()));
 
         List<Error> errors = competitionSetupMilestoneService.validateMilestoneDates(milestoneEntries);
-        return competitionSetupMilestoneService.updateMilestonesForCompetition(milestones, milestoneEntries, competition.getId(), errors);
+        if(!errors.isEmpty()) {
+            List<MilestoneEntry> sortedMilestones = milestoneEntries.values().stream().sorted((o1, o2) -> o1.getMilestoneType().ordinal() - o2.getMilestoneType().ordinal()).collect(Collectors.toList());
+            LinkedMap<String, MilestoneEntry> milestoneFormEntries = new LinkedMap<>();
+            sortedMilestones.stream().forEachOrdered(milestone -> {
+                milestoneFormEntries.put(milestone.getMilestoneType().name(), milestone);
+            });
+            ((MilestonesForm) competitionSetupForm).setMilestoneEntries(milestoneFormEntries);
+
+            return errors;
+        }
+
+        return competitionSetupMilestoneService.updateMilestonesForCompetition(milestones, milestoneEntries, competition.getId());
     }
 
 

@@ -4,7 +4,8 @@ import com.worth.ifs.application.service.MilestoneService;
 import com.worth.ifs.competition.resource.*;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.form.MilestonesForm;
-import com.worth.ifs.competitionsetup.form.MilestonesFormEntry;
+import com.worth.ifs.competitionsetup.model.MilestoneEntry;
+import org.apache.commons.collections4.map.LinkedMap;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -63,13 +64,13 @@ public class MilestoneFormPopulatorTest {
         assertTrue(result instanceof MilestonesForm);
 
         MilestonesForm form = (MilestonesForm) result;
-        List<MilestonesFormEntry> milestonesFormEntryList = form.getMilestonesFormEntryList();
+        LinkedMap<String, MilestoneEntry> milestoneEntryLinkedMap = form.getMilestoneEntries();
 
-        assertFalse(form.getMilestonesFormEntryList().isEmpty());
-        assertTrue(milestonesFormEntryList.get(0).getMilestoneType().equals(MilestoneType.OPEN_DATE));
-        assertTrue(milestonesFormEntryList.get(0).getDay() == null);
-        assertTrue(milestonesFormEntryList.get(0).getMonth()== null);
-        assertTrue(milestonesFormEntryList.get(0).getYear() == null);
-        assertTrue(milestonesFormEntryList.get(0).getMilestoneType().getMilestoneDescription().equals("1. Open date"));
+        assertFalse(form.getMilestoneEntries().isEmpty());
+        assertTrue(milestoneEntryLinkedMap.get(MilestoneType.OPEN_DATE.name()).getMilestoneType().equals(MilestoneType.OPEN_DATE));
+        assertTrue(milestoneEntryLinkedMap.get(MilestoneType.OPEN_DATE.name()).getDay() == null);
+        assertTrue(milestoneEntryLinkedMap.get(MilestoneType.OPEN_DATE.name()).getMonth()== null);
+        assertTrue(milestoneEntryLinkedMap.get(MilestoneType.OPEN_DATE.name()).getYear() == null);
+        assertTrue(milestoneEntryLinkedMap.get(MilestoneType.OPEN_DATE.name()).getMilestoneType().getMilestoneDescription().equals("1. Open date"));
     }
 }

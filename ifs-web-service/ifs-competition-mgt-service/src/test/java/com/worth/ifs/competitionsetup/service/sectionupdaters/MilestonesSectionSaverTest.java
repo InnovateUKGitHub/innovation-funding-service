@@ -5,8 +5,9 @@ import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.MilestoneResource;
 import com.worth.ifs.competition.resource.MilestoneType;
 import com.worth.ifs.competitionsetup.form.MilestonesForm;
-import com.worth.ifs.competitionsetup.form.MilestonesFormEntry;
+import com.worth.ifs.competitionsetup.model.MilestoneEntry;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
+import org.apache.commons.collections4.map.LinkedMap;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -20,10 +21,7 @@ import java.util.List;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static com.worth.ifs.competition.builder.MilestoneResourceBuilder.newMilestoneResource;
 import static org.codehaus.groovy.runtime.InvokerHelper.asList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyList;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.when;
 
@@ -58,7 +56,7 @@ public class MilestonesSectionSaverTest {
         List<MilestoneResource> resourceList = new ArrayList<>();
         resourceList.add(milestoneresource);
 
-        competitionSetupForm.setMilestonesFormEntryList(populateMilestoneFormEntry());
+        competitionSetupForm.setMilestoneEntries(populateMilestoneFormEntry());
 
         when(milestoneService.getAllDatesByCompetitionId(anyLong())).thenReturn(resourceList);
         service.saveSection(competition, competitionSetupForm);
@@ -70,10 +68,10 @@ public class MilestonesSectionSaverTest {
         assertTrue(resourceList.get(0).getType().equals(MilestoneType.OPEN_DATE));
     }
 
-    private List<MilestonesFormEntry> populateMilestoneFormEntry() {
-        List<MilestonesFormEntry> milestoneList = new ArrayList<>();
+    private LinkedMap<String, MilestoneEntry> populateMilestoneFormEntry() {
+        LinkedMap<String, MilestoneEntry>  milestoneList = new LinkedMap<>();
 
-        MilestonesFormEntry milestone = new MilestonesFormEntry();
+        MilestoneEntry milestone = new MilestoneEntry();
 
         milestone.setMilestoneType(MilestoneType.OPEN_DATE);
         milestone.setDay(1);
@@ -81,7 +79,7 @@ public class MilestonesSectionSaverTest {
         milestone.setYear(2017);
         milestone.setDayOfWeek("Wed");
 
-        milestoneList.add(milestone);
+        milestoneList.put(MilestoneType.OPEN_DATE.name(), milestone);
 
         return milestoneList;
     }

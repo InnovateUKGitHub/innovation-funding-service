@@ -1,6 +1,5 @@
-package com.worth.ifs.competitionsetup.form;
+package com.worth.ifs.competitionsetup.model;
 
-import com.worth.ifs.competition.resource.MilestoneResource;
 import com.worth.ifs.competition.resource.MilestoneType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -11,7 +10,7 @@ import java.time.LocalDateTime;
 /**
  * Milestone Form Entry for the Milestones form.
  */
-public class MilestonesFormEntry extends CompetitionSetupForm {
+public class MilestoneEntry {
     @Range(min = 1, max = 31)
     private Integer day;
     @Range(min = 1, max = 12)
@@ -21,7 +20,7 @@ public class MilestonesFormEntry extends CompetitionSetupForm {
     private MilestoneType milestoneType;
     private String dayOfWeek;
 
-    private static final Log LOG = LogFactory.getLog(MilestonesFormEntry.class);
+    private static final Log LOG = LogFactory.getLog(MilestoneEntry.class);
 
     public Integer getDay() {
         return day;
@@ -61,6 +60,10 @@ public class MilestonesFormEntry extends CompetitionSetupForm {
 
     public void setMilestoneType(MilestoneType milestoneType) {
         this.milestoneType = milestoneType;
+    }
+
+    public String getMilestoneNameType() {
+        return milestoneType.name();
     }
 
     private String getNameOfDay() {
