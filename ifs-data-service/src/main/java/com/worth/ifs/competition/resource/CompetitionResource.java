@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 public class CompetitionResource {
     public static final ChronoUnit CLOSING_SOON_CHRONOUNIT = ChronoUnit.HOURS;
     public static final int CLOSING_SOON_AMOUNT = 3;
-    private static final DateTimeFormatter ASSESSMENT_DATE_FORMAT = DateTimeFormatter.ofPattern("dd MMMM YYYY");
+    private static final DateTimeFormatter ASSESSMENT_DATE_FORMAT = DateTimeFormatter.ofPattern("MMMM YYYY");
     private static final DateTimeFormatter START_DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/YYYY");
 
     private Long id;
@@ -434,7 +434,7 @@ public class CompetitionResource {
     }
 
     public enum Status {
-        COMPETITION_SETUP, COMPETITION_SETUP_FINISHED, NOT_STARTED, OPEN, CLOSED, IN_ASSESSMENT, FUNDERS_PANEL, ASSESSOR_FEEDBACK, PROJECT_SETUP
+        COMPETITION_SETUP,COMPETITION_SETUP_FINISHED,NOT_STARTED,READY_TO_OPEN,OPEN,CLOSED,IN_ASSESSMENT,FUNDERS_PANEL,ASSESSOR_FEEDBACK,PROJECT_SETUP
     }
 
     public String getActivityCode() {
