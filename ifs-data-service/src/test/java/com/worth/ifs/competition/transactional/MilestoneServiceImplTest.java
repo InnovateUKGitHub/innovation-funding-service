@@ -11,14 +11,13 @@ import static org.mockito.Mockito.when;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.competition.resource.MilestoneType;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
 import com.worth.ifs.commons.service.ServiceResult;
@@ -29,8 +28,7 @@ import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.competition.repository.MilestoneRepository;
 import com.worth.ifs.competition.resource.MilestoneResource;
 
-@RunWith(MockitoJUnitRunner.class)
-public class MilestoneServiceImplTest {
+public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServiceImpl>{
 	@InjectMocks
 	private MilestoneServiceImpl service;
 	@Mock
@@ -153,4 +151,7 @@ public class MilestoneServiceImplTest {
 		resource.setDate(date);
 		return resource;
 	}
+
+	@Override
+	protected MilestoneServiceImpl supplyServiceUnderTest() { return new MilestoneServiceImpl(); }
 }
