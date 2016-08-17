@@ -40,7 +40,7 @@ User can navigate to the competition setup form
     ...
     ...    IFUND-3888
     [Tags]    HappyPath
-    Given the user clicks the button/link    id=section-2
+    Given the user clicks the button/link    id=section-3
     When the user clicks the button/link    jQuery=.button:contains("Create competition")
     Then the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
     When the user clicks the button/link    link=Initial Details
