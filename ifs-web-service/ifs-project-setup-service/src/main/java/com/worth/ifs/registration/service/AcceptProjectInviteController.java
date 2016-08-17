@@ -3,9 +3,8 @@ package com.worth.ifs.registration.service;
 import com.worth.ifs.BaseController;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.rest.ValidationMessages;
-import com.worth.ifs.invite.resource.ApplicationInviteResource;
-import com.worth.ifs.invite.resource.InviteOrganisationResource;
-import com.worth.ifs.invite.service.InviteRestService;
+import com.worth.ifs.invite.resource.InviteProjectResource;
+import com.worth.ifs.invite.service.ProjectInviteRestService;
 import com.worth.ifs.project.service.ProjectRestService;
 import com.worth.ifs.project.viewmodel.JoinAProjectViewModel;
 import com.worth.ifs.user.resource.UserResource;
@@ -37,7 +36,7 @@ public class AcceptProjectInviteController extends BaseController {
 
     public static final String INVITE_HASH = "project_invite_hash";
     @Autowired
-    private InviteRestService inviteRestService;
+    private ProjectInviteRestService projectInviteRestService;
     @Autowired
     private ProjectRestService projectRestService;
     @Autowired
@@ -63,7 +62,7 @@ public class AcceptProjectInviteController extends BaseController {
             HttpServletResponse response,
             Model model,
             @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-        return find(inviteByHash(hash), inviteOrganisationByHash(hash), checkUserExistsByHash(hash)).andOnSuccess((invite, inviteOrganisation, userExists) -> {
+        return find(inviteByHash(hash), checkUserExistsByHash(hash)).andOnSuccess((invite, userExists) -> {
             ValidationMessages errors = errorMessages(loggedInUser, invite);
             if (errors.hasErrors()) {
                 return populateModelWithErrorsAndReturnErrorView(errors, model);
@@ -97,17 +96,17 @@ public class AcceptProjectInviteController extends BaseController {
 
     private String acceptInviteShowProject(HttpServletRequest request, Model model, UserResource loggedInUser) {
         String hash = getCookieValue(request, INVITE_HASH);
-        return find(inviteByHash(hash), inviteOrganisationByHash(hash))
-                .andOnSuccess((invite, inviteOrganisation) -> {
+        return projectInviteRestService.getInviteByHash(hash)
+                .andOnSuccess(invite -> {
                     ValidationMessages errors = errorMessages(loggedInUser, invite);
                     if (errors.hasErrors()) {
                         return populateModelWithErrorsAndReturnErrorView(errors, model);
                     }
-                    return organisationRestService.getOrganisationByIdForAnonymousUserFlow(inviteOrganisation.getOrganisation())
+                    return organisationRestService.getOrganisationByIdForAnonymousUserFlow(invite.getOrganisation())
                             .andOnSuccessReturn(organisation -> {
                                 JoinAProjectViewModel japvm = new JoinAProjectViewModel();
-                                japvm.setCompetitionName(invite.getCompetitionName());
-                                japvm.setLeadApplicantName(invite.getLeadApplicant());
+                                // TODO japvm.setCompetitionName(invite.getCompetitionName());
+                                // TODO japvm.setLeadApplicantName(invite.getLeadApplicant());
                                 if (organisation.getAddresses() != null && !organisation.getAddresses().isEmpty()) {
                                     japvm.setOrganisationAddress(organisation.getAddresses().get(0));
                                 }
@@ -128,15 +127,15 @@ public class AcceptProjectInviteController extends BaseController {
     @RequestMapping(value = ACCEPT_INVITE_USER_EXIST_CONFIRM_MAPPING, method = RequestMethod.GET)
     public String acceptInviteUserDoesExistConfirm(HttpServletRequest request, @ModelAttribute("loggedInUser") UserResource loggedInUser, Model model) {
         String hash = getCookieValue(request, INVITE_HASH);
-        return find(inviteByHash(hash), inviteOrganisationByHash(hash), userByHash(hash)).andOnSuccess((invite, inviteOrganisation, userExists) -> {
+        return find(inviteByHash(hash), userByHash(hash)).andOnSuccess((invite, userExists) -> {
                     ValidationMessages errors = errorMessages(loggedInUser, invite);
                     if (errors.hasErrors()) {
                         return populateModelWithErrorsAndReturnErrorView(errors, model);
                     }
                     // Add the user to the project
-                    return projectRestService.addPartner(1L, userExists.getId(), inviteOrganisation.getOrganisation())
+                    return projectRestService.addPartner(invite.getProject(), userExists.getId(), invite.getOrganisation())
                             // TODO accept project invite - maybe role addPartner into it.
-                            .andOnSuccess(() -> inviteRestService.acceptInvite(hash, userExists.getId()))
+                            .andOnSuccess(() -> projectInviteRestService.acceptInvite(hash, userExists.getId()))
                             .andOnSuccessReturn(() -> "redirect:/");
 
                 }
@@ -153,7 +152,7 @@ public class AcceptProjectInviteController extends BaseController {
         return restSuccess(ACCEPT_INVITE_FAILURE);
     }
 
-    public static ValidationMessages errorMessages(UserResource loggedInUser, ApplicationInviteResource invite) {
+    public static ValidationMessages errorMessages(UserResource loggedInUser, InviteProjectResource invite) {
         ValidationMessages errors = new ValidationMessages();
         if (!invite.getStatus().equals(SEND)) {
             errors.addError(globalError("registration.INVITE_ALREADY_ACCEPTED"));
@@ -163,20 +162,16 @@ public class AcceptProjectInviteController extends BaseController {
         return errors;
     }
 
-    private Supplier<RestResult<ApplicationInviteResource>> inviteByHash(String hash) {
-        return () -> inviteRestService.getInviteByHash(hash);
-    }
-
-    private Supplier<RestResult<InviteOrganisationResource>> inviteOrganisationByHash(String hash) {
-        return () -> inviteRestService.getInviteOrganisationByHash(hash);
+    private Supplier<RestResult<InviteProjectResource>> inviteByHash(String hash) {
+        return () -> projectInviteRestService.getInviteByHash(hash);
     }
 
     private Supplier<RestResult<Boolean>> checkUserExistsByHash(String hash) {
-        return () -> inviteRestService.checkExistingUser(hash);
+        return () -> projectInviteRestService.checkExistingUser(hash);
     }
 
     private Supplier<RestResult<UserResource>> userByHash(String hash) {
-        return () -> inviteRestService.getUser(hash);
+        return () -> projectInviteRestService.getUser(hash);
     }
 
 }

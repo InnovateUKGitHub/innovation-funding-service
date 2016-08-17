@@ -2,7 +2,7 @@ package com.worth.ifs.invite.service;
 
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
-import com.worth.ifs.invite.resource.ApplicationInviteResource;
+import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Service;
 
@@ -27,8 +27,14 @@ public class ProjectInviteRestServiceImpl extends BaseRestService implements Pro
     }
 
     @Override
-    public RestResult<ApplicationInviteResource> getInviteByHash(String hash) {
+    public RestResult<InviteProjectResource> getInviteByHash(String hash) {
         String url = PROJECT_INVITE_BASE_URL + GET_INVITE_BY_HASH + hash;
-        return getWithRestResultAnonymous(url, ApplicationInviteResource.class);
+        return getWithRestResultAnonymous(url, InviteProjectResource.class);
+    }
+
+    @Override
+    public RestResult<Void> acceptInvite(String inviteHash, Long userId) {
+        String url = PROJECT_INVITE_BASE_URL + ACCEPT_INVITE + inviteHash + "/" + userId;
+        return putWithRestResultAnonymous(url, Void.class);
     }
 }

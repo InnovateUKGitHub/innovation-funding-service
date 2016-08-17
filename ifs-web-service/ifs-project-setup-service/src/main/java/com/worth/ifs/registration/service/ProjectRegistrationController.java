@@ -3,9 +3,7 @@ package com.worth.ifs.registration.service;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.security.UserAuthenticationService;
-import com.worth.ifs.invite.resource.ApplicationInviteResource;
-import com.worth.ifs.invite.resource.InviteOrganisationResource;
-import com.worth.ifs.invite.service.InviteRestService;
+import com.worth.ifs.invite.service.ProjectInviteRestService;
 import com.worth.ifs.project.service.ProjectRestService;
 import com.worth.ifs.registration.form.RegistrationForm;
 import com.worth.ifs.user.resource.UserResource;
@@ -24,12 +22,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.function.Supplier;
 
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.registration.service.AcceptProjectInviteController.*;
 import static com.worth.ifs.util.CookieUtil.getCookieValue;
-import static com.worth.ifs.util.RestLookupCallbacks.find;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Controller
@@ -42,7 +38,7 @@ public class ProjectRegistrationController {
     private UserService userService;
 
     @Autowired
-    private InviteRestService inviteRestService;
+    private ProjectInviteRestService projectInviteRestService;
 
     @Autowired
     protected UserAuthenticationService userAuthenticationService;
@@ -64,7 +60,7 @@ public class ProjectRegistrationController {
                                HttpServletResponse response,
                                @ModelAttribute("loggedInUser") UserResource loggedInUser) {
         String hash = getCookieValue(request, INVITE_HASH);
-        return find(inviteByHash(hash), inviteOrganisationByHash(hash)).andOnSuccess((invite, inviteOrganisation) -> {
+        return projectInviteRestService.getInviteByHash(hash).andOnSuccess(invite -> {
                     ValidationMessages errors = errorMessages(loggedInUser, invite);
                     if (errors.hasErrors()) {
                         return populateModelWithErrorsAndReturnErrorView(errors, model);
@@ -83,7 +79,7 @@ public class ProjectRegistrationController {
                                      Model model,
                                      @ModelAttribute("loggedInUser") UserResource loggedInUser) {
         String hash = getCookieValue(request, INVITE_HASH);
-        return find(inviteByHash(hash), inviteOrganisationByHash(hash)).andOnSuccess((invite, inviteOrganisation) -> {
+        return projectInviteRestService.getInviteByHash(hash).andOnSuccess(invite -> {
             registrationForm.setEmail(invite.getEmail());
             ValidationMessages errors = errorMessages(loggedInUser, invite);
             if (errors.hasErrors()) {
@@ -93,11 +89,11 @@ public class ProjectRegistrationController {
                 bindingResult.addError(new FieldError(EMAIL_FIELD_NAME, EMAIL_FIELD_NAME, registrationForm.getEmail(), false, null, null, "Email address is already in use"));
                 return restSuccess(REGISTRATION_REGISTER_VIEW);
             }
-            RestResult<String> result = createUser(registrationForm, inviteOrganisation.getOrganisation())
+            RestResult<String> result = createUser(registrationForm, invite.getOrganisation())
                     // TODO accept project invite - maybe role addPartner into it.
-                    .andOnSuccess(newUser -> projectRestService.addPartner(1L, newUser.getId(), inviteOrganisation.getOrganisation()).
+                    .andOnSuccess(newUser -> projectRestService.addPartner(invite.getProject(), newUser.getId(), invite.getOrganisation()).
                             andOnSuccess(() -> {
-                                inviteRestService.acceptInvite(hash, newUser.getId());
+                                projectInviteRestService.acceptInvite(hash, newUser.getId());
                                 return restSuccess(REGISTRATION_SUCCESS_VIEW);
                             }));
             if (result.isSuccess()) {
@@ -123,14 +119,6 @@ public class ProjectRegistrationController {
                 registrationForm.getTitle(),
                 registrationForm.getPhoneNumber(),
                 organisationId);
-    }
-
-    private Supplier<RestResult<ApplicationInviteResource>> inviteByHash(String hash) {
-        return () -> inviteRestService.getInviteByHash(hash);
-    }
-
-    private Supplier<RestResult<InviteOrganisationResource>> inviteOrganisationByHash(String hash) {
-        return () -> inviteRestService.getInviteOrganisationByHash(hash);
     }
 
 }

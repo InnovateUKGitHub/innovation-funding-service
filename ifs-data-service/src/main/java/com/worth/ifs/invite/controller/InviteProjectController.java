@@ -26,7 +26,8 @@ public class InviteProjectController {
     public static final String PROJECT_INVITE_BASE_URL = "/projectinvite";
     public static final String CHECK_EXISTING_USER_URL = "/checkExistingUser/";
     public static final String GET_USER_BY_HASH_MAPPING = "/getUser/";
-    public static final String GET_INVITE_BY_HASH = "getProjectInviteByHash";
+    public static final String GET_INVITE_BY_HASH = "/getProjectInviteByHash/";
+    public static final String ACCEPT_INVITE = "/acceptInvite/";
 
     @Autowired
     private InviteProjectService inviteProjectService;
@@ -48,7 +49,7 @@ public class InviteProjectController {
         return inviteProjectService.getInvitesByProject(projectId).toGetResponse();
     }
 
-    @RequestMapping(value = "/acceptInvite/{hash}/{userId}", method = RequestMethod.POST)
+    @RequestMapping(value = ACCEPT_INVITE  + "{hash}/{userId}", method = RequestMethod.POST)
     public RestResult<Void> acceptInvite( @PathVariable("hash") String hash, @PathVariable("userId") Long userId) {
         return inviteProjectService.acceptProjectInvite(hash, userId).toPostResponse();
     }
