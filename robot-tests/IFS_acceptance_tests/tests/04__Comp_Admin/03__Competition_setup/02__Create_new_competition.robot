@@ -94,9 +94,9 @@ Initial details client-side validations
     Then the user should not see the error any more    Please select a competition type
     Then the user should not see the error any more    Please select an innovation sector
     Then the user should not see the error any more    Please select an innovation area
-    Then the user should not see the error any more    Please enter an opening day
-    Then the user should not see the error any more    Please enter an opening month
-    Then the user should not see the error any more    Please enter an opening year
+    #Then the user should not see the error any more    Please enter an opening day
+    #Then the user should not see the error any more    Please enter an opening month
+    #Then the user should not see the error any more    Please enter an opening year
     Then the user should not see the error any more    Please select a lead technologist
     ##    State aid value is tested in 'Initial details correct state aid status'
 
