@@ -23,6 +23,7 @@ import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
+import static com.worth.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
 import static java.util.Collections.emptyList;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -316,6 +317,27 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
         assertFalse(rules.leadPartnersCanDeleteOtherDocuments(project, user));
     }
 
+    @Test
+    public void testOnlyProjectManagerCanSubmitDocuments() {
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+
+        setUpUserAsProjectManager(project, user);
+
+        assertTrue(rules.onlyProjectManagerCanMarkDocumentsAsSubmit(project, user));
+
+    }
+
+    private void setUpUserAsProjectManager(ProjectResource projectResource, UserResource user) {
+        Role projectManagerRole = newRole().build();
+
+        List<ProjectUser> projectManagerUser = newProjectUser().build(1);
+
+        when(roleRepositoryMock.findOneByName(PROJECT_MANAGER.getName())).thenReturn(projectManagerRole);
+        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRoleId(projectResource.getId(), user.getId(), projectManagerRole.getId() ))
+                .thenReturn(projectManagerUser);
+    }
+
     private void setupUserAsPartner(ProjectResource project, UserResource user) {
         setupPartnerExpectations(project, user, true);
     }
@@ -331,4 +353,5 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
         when(roleRepositoryMock.findOneByName(PARTNER.getName())).thenReturn(partnerRole);
         when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRoleId(project.getId(), user.getId(), partnerRole.getId())).thenReturn(userIsPartner ? partnerProjectUser : emptyList());
     }
+
 }

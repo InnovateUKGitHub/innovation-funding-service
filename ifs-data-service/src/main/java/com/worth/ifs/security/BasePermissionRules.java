@@ -88,4 +88,12 @@ public abstract class BasePermissionRules {
         ProjectUser partnerProjectUser = projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRoleId(projectId, userId, leadOrganisation.getId(), partnerRole.getId());
         return partnerProjectUser != null;
     }
+
+    protected boolean isProjectManager(long projectId, long userId) {
+
+        Role projectManagerRole = roleRepository.findOneByName(PROJECT_MANAGER.getName());
+        List<ProjectUser> projectManagerUsers = projectUserRepository.findByProjectIdAndUserIdAndRoleId(projectId, userId, projectManagerRole.getId());
+
+        return projectManagerUsers != null && !projectManagerUsers.isEmpty();
+    }
 }
