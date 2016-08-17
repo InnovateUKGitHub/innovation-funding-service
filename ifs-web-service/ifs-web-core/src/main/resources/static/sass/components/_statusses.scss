@@ -246,12 +246,34 @@ Status is displayed in the collapsible header area.
 
 }
 
-//compadmin
+//project setup statusses overview
+caption {
+	font-weight:bold;
+	text-align:left;
+}
 
-.inline-nav{
-	.marked-as-complete{
-		@extend %mark-done-right;
-		background-position: 100% 0%;
-		background-size: 20px;
+td.status,
+th.status {
+	width: 70px;
+	text-align: center;
+	padding-left: 0.625em;
+	padding-right: 0.625em;
+	background-position: 50% 50%;
+
+	&.na{
+		background: $grey-3;
+	}
+	&.ok{
+		@extend %icon-tick;
+	}
+	&.rejected{
+		@extend  %icon-cross;
+	}
+	&.action{
+		@extend  %icon-assigned-to-me;
+	}
+	&.waiting{
+		@extend  %icon-timer;
+		background-size: 33px 30px;
 	}
 }
