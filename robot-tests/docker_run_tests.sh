@@ -30,7 +30,7 @@ function addTestFiles() {
     echo "***********Making the quarantined directory ***************"
     docker-compose -p ifs exec data mkdir -p ${virusScanQuarantinedFolder}
     echo "***********Adding pretend quarantined file ***************"
-    docker-compose -p ifs exec data cp ${uploadFileDir}/8 ${virusScanQuarantinedFolder}/8
+    docker-compose -p ifs exec data cp -R ${uploadFileDir}/8 ${virusScanQuarantinedFolder}/8
 }
 
 function resetLDAP() {
@@ -106,14 +106,18 @@ function stopSeleniumGrid() {
 function startPybot() {
     echo "********** starting pybot for ${1} **************"
     targetDir=`basename ${1}`
-    pybot --outputdir target/${targetDir} --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:$postcodeLookupImplemented -v UPLOAD_FOLDER:$uploadFileDir -v DOWNLOAD_FOLDER:download_files -v BROWSER=chrome -v unsuccessful_login_message:'Your login was unsuccessful because of the following issue(s)' -v REMOTE_URL:'http://ifs-local-dev:4444/wd/hub' --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal --exclude Email --name IFS ${1}/* &
+    if [ "$happyPath" ]
+      then
+        local includeHappyPath='--include happyPath'
+      else
+        local includeHappyPath=''
+    fi
+    pybot --outputdir target/${targetDir} --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:$postcodeLookupImplemented -v UPLOAD_FOLDER:$uploadFileDir -v DOWNLOAD_FOLDER:download_files -v BROWSER=chrome -v unsuccessful_login_message:'Your login was unsuccessful because of the following issue(s)' -v REMOTE_URL:'http://ifs-local-dev:4444/wd/hub' $includeHappyPath --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal --exclude Email --name IFS ${1}/* &
 }
 
 function runTests() {
     echo "**********RUN THE WEB TESTS**********"
     cd ${scriptDir}
-
-
 
     if [ "$parallel" ]
     then
@@ -131,8 +135,11 @@ function runTests() {
         wait $job
     done
 
-    results=`find target/* -regex ".*/output\.xml"`
-    rebot -d target ${results}
+    if [ "$parallel" ]
+    then
+      results=`find target/* -regex ".*/output\.xml"`
+      rebot -d target ${results}
+    fi
 }
 
 setEnv
@@ -172,7 +179,7 @@ unset testScrub
 unset parallel
 
 testDirectory='IFS_acceptance_tests/tests'
-while getopts ":q :t :d:" opt ; do
+while getopts ":p :h :q :t :d:" opt ; do
     case $opt in
         p)
          parallel=1
@@ -180,11 +187,15 @@ while getopts ":q :t :d:" opt ; do
         q)
          quickTest=1
         ;;
+        h)
+         happyPath=1
+        ;;
         t)
          testScrub=1
         ;;
         d)
          testDirectory="$OPTARG"
+         parallel=0
         ;;
         \?)
          coloredEcho "Invalid option: -$OPTARG" red >&2
@@ -206,9 +217,11 @@ done
 
 startSeleniumGrid
 
+
 if [ "$quickTest" ]
 then
     echo "using quickTest:   TRUE" >&2
+    resetDB
     addTestFiles
     runTests
 elif [ "$testScrub" ]
