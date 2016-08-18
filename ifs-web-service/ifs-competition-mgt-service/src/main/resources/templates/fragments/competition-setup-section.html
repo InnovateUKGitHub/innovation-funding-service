@@ -84,7 +84,7 @@
                             <span class="error-message"  th:each="err : ${#fields.errors('openingDate*')}" th:text="${err}" />
                       </span>
                   </legend>
-                  <div class="date-group js-future-date">
+                  <div class="date-group" data-future-date="">
                       <div class="day">
                           <label class="form-label" for="competitionSetupForm.openingDateDay">
                               <div>Day</div>
@@ -598,6 +598,143 @@
 </div>
 
 
+
+<!-- =================Section: Milestones (4) =========================== -->
+
+<div th:fragment="section-milestones">
+
+    <div class="page-title">
+        <h1 class="heading-xlarge">Milestones</h1>
+    </div>
+
+    <div class="panel-indent">
+        Here you can define the Competiton milestones. Submission date will generate other dates. You will be able to edit those, but it will override the dates calculated if you do.
+    </div>
+
+    <form th:action="@{(${editable} ? '' : 'milestones/edit')}" id="milestones" method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
+
+        <div class="error-summary" th:attr="aria-hidden=${!#fields.hasAnyErrors()}">
+           <h2 class="heading-medium error-summary-heading">
+               Unable to save section
+           </h2>
+
+           <ul class="error-summary-list">
+               <li th:each="err : ${#fields.allErrors()}" th:text="${err}"></li>
+           </ul>
+       </div>
+
+        <fieldset th:if="${editable}" id="section-4-edit">
+
+
+            <legend class="visuallyhidden">Milestones</legend>
+
+            <table class="milestones-table">
+                <thead>
+                <tr>
+                    <th scope="col" id="milestone">Milestone</th>
+                    <th scope="col">Weekday</th>
+                    <th scope="col">Day</th>
+                    <th scope="col">Month</th>
+                    <th scope="col">Year</th>
+                </tr>
+                </thead>
+                <tbody>
+                  <tr th:each="(milestoneEntry : ${competitionSetupForm.milestoneEntries})"
+                      class="date-group"
+                      data-future-date=""
+                      th:attr="data-date-invalid-errormessage=${milestoneEntry.value.milestoneType.milestoneDescription + ': please enter a valid date'},
+                               data-date-future-errormessage=${milestoneEntry.value.milestoneType.milestoneDescription  + ': please enter a future date that is after the previous milestone'}">
+
+                      <td class="labelledby" th:id="${'milestone-' + milestoneEntry.key}">
+                        <span th:text="${milestoneEntry.value.milestoneType.milestoneDescription}" />
+                      </td>
+                      <input type="hidden"
+                             required="required"
+                             th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].milestoneType'"
+                             th:value="${milestoneEntry.key}"  />
+                      <td class="js-addWeekDay" th:text="${milestoneEntry.value.dayOfWeek}"></td>
+                      <td class="day">
+                          <input type="number"
+                                placeholder="DD"
+                                min="1"
+                                max="31"
+                                required="required"
+                                class="form-control width-small"
+                                th:attr="aria-labelledby=${'milestone-' + milestoneEntry.key}"
+                                th:value="${milestoneEntry.value.day}"
+                                th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].day'"
+                          />
+                      </td>
+                      <td class="month">
+                          <input type="number"
+                                placeholder="MM"
+                                min="1"
+                                max="12"
+                                required="required"
+                                class="form-control width-small"
+                                th:attr="aria-labelledby=${'milestone-' + milestoneEntry.key}"
+                                th:value="${milestoneEntry.value.month}"
+                                th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].month'" />
+                      </td>
+                      <td class="year" >
+                          <input type="number"
+                                 placeholder="YYYY"
+                                 th:attr="aria-labelledby=${'milestone-' + milestoneEntry.key}"
+                                 required="required"
+                                 class="form-control width-small"
+                                 th:value="${milestoneEntry.value.year}"
+                                 th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].year'"/>
+                      </td>
+                  </tr>
+                </tbody>
+            </table>
+            <button class="button extra-margin">Done</button>
+
+        </fieldset>
+
+        <th:block th:if="${!editable}">
+            <table>
+                <thead>
+                    <tr>
+                      <th scope="col" id="milestone">Milestone</th>
+                      <th scope="col">Weekday</th>
+                      <th scope="col">Day</th>
+                      <th scope="col">Month</th>
+                      <th scope="col">Year</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="milestoneEntry : ${competitionSetupForm.milestoneEntries}" >
+                        <td th:text="${milestoneEntry.value.milestoneType.milestoneDescription}"></td>
+                        <td th:text="${milestoneEntry.value.dayOfWeek}"></td>
+                        <td th:text="${milestoneEntry.value.day}"></td>
+                        <td th:text="${milestoneEntry.value.month}"></td>
+                        <td th:text="${milestoneEntry.value.year}" />
+                    </tr>
+                </tbody>
+            </table>
+            <button type="submit" class="button extra-margin">Edit</button>
+        </th:block>
+    </form>
+
+    <ul class="pagination">
+        <li class="prev">
+            <a rel="prev" title="Navigate to next part"
+               th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${competition.id},sectionPath='eligibility')}">
+                <span class="pagination-label">Previous</span>
+                <span class="pagination-part-title">Eligibility</span>
+            </a>
+        </li>
+        <li class="next">
+            <a rel="next" title="Navigate to next part"
+               th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${competition.id},sectionPath='application')}">
+                <span class="pagination-label">Next</span>
+                <span class="pagination-part-title">Application questions</span>
+            </a>
+        </li>
+    </ul>
+</div>
+
 <!-- =================== Comp setup section - Application questions (5) ============================== -->
 <div th:fragment="section-application">
     <div class="hgroup extra-margin-bottom">
@@ -645,6 +782,3 @@
         </li>
     </ul>
 </div>
-
-
-

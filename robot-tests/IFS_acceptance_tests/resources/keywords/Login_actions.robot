@@ -39,14 +39,13 @@ The guest user opens the browser
     ...    desired_capabilities=${DESIRED_CAPABILITIES}
     Run keyword if    '${SERVER_AUTH}' == ''    Open browser    ${PROTOCOL}${SERVER_BASE}    ${BROWSER}       remote_url=${REMOTE_URL}
     ...    desired_capabilities=${DESIRED_CAPABILITIES}
-    Run keyword if    '${REMOTE_URL}' != 'http://ifs-local-dev:4444/wd/hub'       Set Selenium Timeout        30
-    
+    Run keyword if    '${REMOTE_URL}' != 'http://ifs-local-dev:4444/wd/hub'     Set Selenium Timeout        30
 TestTeardown User closes the browser
-    Run keyword if      '${REMOTE_URL}' != '' and '${REMOTE_URL}' != 'http://ifs-local-dev:4444/wd/hub'       Get Sauce Labs Test Report
+    Run keyword if      '${REMOTE_URL}' != '' and '${REMOTE_URL}' != 'http://ifs-local-dev:4444/wd/hub'        Get Sauce Labs Test Report
     Close any open browsers
 
 The user closes the browser
-    Run keyword if    '${REMOTE_URL}' != '' and '${REMOTE_URL}' != 'http://ifs-local-dev:4444/wd/hub'       Get Sauce Labs Suite Report
+    Run keyword if    '${REMOTE_URL}' != '' and '${REMOTE_URL}' != 'http://ifs-local-dev:4444/wd/hub'         Get Sauce Labs Suite Report
     Close any open browsers
 
 Logout as user

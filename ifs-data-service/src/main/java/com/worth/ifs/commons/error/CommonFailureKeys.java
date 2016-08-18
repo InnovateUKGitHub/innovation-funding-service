@@ -85,6 +85,7 @@ public enum CommonFailureKeys implements ErrorTemplate {
 	PROJECT_SETUP_PROJECT_ID_IN_URL_MUST_MATCH_PROJECT_ID_IN_MONITORING_OFFICER_RESOURCE("The project id in the url must match the project id in the Monitoring Officer Resource request body", BAD_REQUEST),
     PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_UPDATED_IF_ALREADY_SUBMITTED("Project details cannot be updated if they are already submitted", BAD_REQUEST),
     CANNOT_FIND_ORG_FOR_GIVEN_PROJECT_AND_USER("Cannot find organisation for given project and user", NOT_FOUND),
+    PROJECT_INVITE_INVALID_PROJECT_ID("Invalid project id",BAD_REQUEST),
 
     /**
      * Project Bank details

@@ -4,10 +4,12 @@ import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.controller.CompetitionController;
 import com.worth.ifs.competition.resource.CompetitionCountResource;
+import com.worth.ifs.competition.resource.CompetitionSearchResult;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.transactional.CompetitionService;
 import com.worth.ifs.competition.transactional.CompetitionSetupService;
 import com.worth.ifs.documentation.CompetitionCountResourceDocs;
+import com.worth.ifs.documentation.CompetitionSearchResultDocs;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -25,6 +27,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class CompetitionControllerDocumentation extends BaseControllerMockMVCTest<CompetitionController> {
@@ -159,6 +162,26 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
     }
 
     @Test
+    public void search() throws Exception {
+        CompetitionSearchResult results = new CompetitionSearchResult();
+        String searchQuery = "test";
+        int page = 1;
+        int size = 20;
+        when(competitionService.searchCompetitions(searchQuery, page, size)).thenReturn(ServiceResult.serviceSuccess(results));
+
+        mockMvc.perform(get("/competition/search/{page}/{size}/?searchQuery=" + searchQuery, page, size))
+                .andExpect(status().isOk())
+                .andDo(this.document.snippets(
+                        requestParameters(parameterWithName("searchQuery").description("The search query to lookup")),
+                        pathParameters(
+                                parameterWithName("page").description("The page number to be requested"),
+                                parameterWithName("size").description("The number of competitions per page")
+                        ),
+                        responseFields(CompetitionSearchResultDocs.competitionSearchResultFields)
+                ));
+    }
+
+    @Test
     public void initialiseFormForCompetitionType() throws Exception {
         Long competitionId = 2L;
         Long competitionTypeId = 3L;
@@ -173,6 +196,5 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
                         )
                 ));
     }
-
 
 }

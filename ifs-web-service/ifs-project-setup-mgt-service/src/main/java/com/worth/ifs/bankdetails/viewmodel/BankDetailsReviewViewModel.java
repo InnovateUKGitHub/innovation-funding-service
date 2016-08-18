@@ -188,6 +188,14 @@ public class BankDetailsReviewViewModel {
         this.organisationId = organisationId;
     }
 
+    public boolean getCompanyNameVerified(){
+        return companyNameScore > 6;
+    }
+
+    public boolean getAddressScoreVerified(){
+        return addressScore > 6;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
