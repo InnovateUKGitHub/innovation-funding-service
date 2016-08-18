@@ -1,12 +1,11 @@
 package com.worth.ifs.competitionsetup.form;
 
-import java.util.Set;
+import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.NotEmpty;
+import java.util.Set;
 
 /**
  * Form for the eligibility competition setup section.
@@ -24,6 +23,8 @@ public class EligibilityForm extends CompetitionSetupForm {
 	private String leadApplicantType;
 	@NotNull(message = "{validation.eligibilityform.researchparticipationamountId.required}")
 	private Integer researchParticipationAmountId;
+	@NotBlank(message = "{Evalidation.eligibilityform.resubmission.required}")
+	private String resubmission;
 	
 	public String getMultipleStream() {
 		return multipleStream;
@@ -31,7 +32,16 @@ public class EligibilityForm extends CompetitionSetupForm {
 	public void setMultipleStream(String multipleStream) {
 		this.multipleStream = multipleStream;
 	}
-	public String getStreamName() {
+
+    public String getResubmission() {
+        return resubmission;
+    }
+
+    public void setResubmission(String resubmission) {
+        this.resubmission = resubmission;
+    }
+
+    public String getStreamName() {
 		return streamName;
 	}
 	public void setStreamName(String streamName) {

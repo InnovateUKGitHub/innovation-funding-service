@@ -49,6 +49,12 @@ public class EligibilityFormPopulator implements CompetitionSetupFormPopulator {
 			competitionSetupForm.setLeadApplicantType(type.getCode());
 		}
 
+		if(competitionResource.isResubmission()) {
+			competitionSetupForm.setResubmission("yes");
+		} else {
+			competitionSetupForm.setResubmission("no");
+		}
+
 		return competitionSetupForm;
 	}
 
