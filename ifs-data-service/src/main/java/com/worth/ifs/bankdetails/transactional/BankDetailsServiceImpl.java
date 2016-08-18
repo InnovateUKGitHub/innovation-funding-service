@@ -1,6 +1,9 @@
 package com.worth.ifs.bankdetails.transactional;
 
+import com.worth.ifs.address.domain.AddressType;
+import com.worth.ifs.address.mapper.AddressMapper;
 import com.worth.ifs.address.repository.AddressRepository;
+import com.worth.ifs.address.repository.AddressTypeRepository;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.bankdetails.domain.BankDetails;
 import com.worth.ifs.bankdetails.domain.VerificationCondition;
@@ -11,6 +14,7 @@ import com.worth.ifs.bankdetails.resource.BankDetailsResource;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
+import com.worth.ifs.organisation.mapper.OrganisationAddressMapper;
 import com.worth.ifs.organisation.repository.OrganisationAddressRepository;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.project.repository.ProjectRepository;
@@ -25,6 +29,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.worth.ifs.address.resource.OrganisationAddressType.BANK_DETAILS;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
@@ -43,6 +48,12 @@ public class BankDetailsServiceImpl implements BankDetailsService{
     private BankDetailsMapper bankDetailsMapper;
 
     @Autowired
+    private OrganisationAddressMapper organisationAddressMapper;
+
+    @Autowired
+    private AddressMapper addressMapper;
+
+    @Autowired
     private BankDetailsRepository bankDetailsRepository;
 
     @Autowired
@@ -50,6 +61,9 @@ public class BankDetailsServiceImpl implements BankDetailsService{
 
     @Autowired
     private AddressRepository addressRepository;
+
+    @Autowired
+    private AddressTypeRepository addressTypeRepository;
 
     @Autowired
     private ProjectRepository projectRepository;
@@ -121,16 +135,31 @@ public class BankDetailsServiceImpl implements BankDetailsService{
     }
 
     private ServiceResult<AccountDetails> saveSubmittedBankDetails(AccountDetails accountDetails, BankDetailsResource bankDetailsResource){
+        BankDetails bankDetails = bankDetailsMapper.mapToDomain(bankDetailsResource);
         OrganisationAddressResource organisationAddressResource = bankDetailsResource.getOrganisationAddress();
         AddressResource addressResource = organisationAddressResource.getAddress();
-        BankDetails bankDetails = bankDetailsMapper.mapToDomain(bankDetailsResource);
 
         if (organisationAddressResource.getId() != null) {
             OrganisationAddress organisationAddress = organisationAddressRepository.findOne(organisationAddressResource.getId());
             bankDetails.setOrganisationAddress(organisationAddress);
-
             if (addressResource.getId() != null) { // Existing address selected.
                 organisationAddress.setAddress(addressRepository.findOne(addressResource.getId()));
+            }
+        } else {
+            if(organisationAddressResource.getAddressType().getId().equals(BANK_DETAILS.getOrdinal())) {
+                AddressType addressType = addressTypeRepository.findOne(BANK_DETAILS.getOrdinal());
+                List<OrganisationAddress> bankOrganisationAddresses = organisationAddressRepository.findByOrganisationIdAndAddressType(bankDetailsResource.getOrganisation(), addressType);
+
+                OrganisationAddress newOrganisationAddress;
+                if(bankOrganisationAddresses != null && bankOrganisationAddresses.size() > 0) {
+                    newOrganisationAddress = bankOrganisationAddresses.get(0);
+                    long oldAddressId = newOrganisationAddress.getAddress().getId();
+                    newOrganisationAddress.setAddress(addressMapper.mapToDomain(addressResource));
+                    addressRepository.delete(oldAddressId);
+                } else {
+                    newOrganisationAddress = organisationAddressRepository.save(organisationAddressMapper.mapToDomain(organisationAddressResource));
+                }
+                bankDetails.setOrganisationAddress(newOrganisationAddress);
             }
         }
 
