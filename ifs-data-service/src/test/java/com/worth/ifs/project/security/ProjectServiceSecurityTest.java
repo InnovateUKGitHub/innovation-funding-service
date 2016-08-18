@@ -8,7 +8,9 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.FileAndContents;
 import com.worth.ifs.invite.builder.InviteResourceBuilder;
+import com.worth.ifs.invite.builder.ProjectInviteResourceBuilder;
 import com.worth.ifs.invite.resource.ApplicationInviteResource;
+import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.project.resource.*;
 import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.user.resource.OrganisationResource;
@@ -171,7 +173,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         Long projectId = 1L;
 
-        ApplicationInviteResource inviteResource = InviteResourceBuilder.newInviteResource()
+        InviteProjectResource inviteResource = ProjectInviteResourceBuilder.newInviteProjectResource()
                 .withName("Abc Xyz")
                 .withEmail("Abc.xyz@gmail.com")
                 .withLeadOrganisation("Lead Organisation 1")
@@ -182,6 +184,26 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         assertAccessDenied(() -> service.inviteProjectManager(projectId, inviteResource),
                 () -> {
                     verify(projectPermissionRules).partnersCanInviteTheirOwnOrganisationsProjectManager(inviteResource, getLoggedInUser());
+                    verifyNoMoreInteractions(projectPermissionRules);
+                });
+    }
+
+    @Test
+    public void testInviteFinanceContact() {
+
+        Long projectId = 1L;
+
+        InviteProjectResource inviteResource = ProjectInviteResourceBuilder.newInviteProjectResource()
+                .withName("Abc Xyz")
+                .withEmail("Abc.xyz@gmail.com")
+                .withLeadOrganisation("Lead Organisation 1")
+                .withInviteOrganisationName("Invite Organisation 1")
+                .withHash("sample/url")
+                .build();
+
+        assertAccessDenied(() -> service.inviteFinanceContact(projectId, inviteResource),
+                () -> {
+                    verify(projectPermissionRules).partnersCanInviteTheirOwnOrganisationsFinanceContacts(inviteResource, getLoggedInUser());
                     verifyNoMoreInteractions(projectPermissionRules);
                 });
     }
@@ -452,12 +474,12 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         }
 
         @Override
-        public ServiceResult<Void> inviteFinanceContact(Long projectId, ApplicationInviteResource inviteResource) {
+        public ServiceResult<Void> inviteFinanceContact(Long projectId, InviteProjectResource inviteResource) {
             return null;
         }
 
         @Override
-        public ServiceResult<Void> inviteProjectManager(Long projectId, ApplicationInviteResource inviteResource) {
+        public ServiceResult<Void> inviteProjectManager(Long projectId, InviteProjectResource inviteResource) {
             return null;
         }
 

@@ -59,10 +59,6 @@ public class ProjectBuilder extends BaseBuilder<Project, ProjectBuilder> {
         return withArray((app, project) -> project.setApplication(app), application);
     }
 
-    public ProjectBuilder withName(String... names){
-        return withArray((name, project) -> project.setName(name), names);
-    }
-
     public ProjectBuilder withProjectUsers(List<ProjectUser>... projectUsers){
         return withArray((users, project) -> project.setProjectUsers(users), projectUsers);
     }

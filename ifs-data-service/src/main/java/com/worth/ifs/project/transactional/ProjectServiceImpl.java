@@ -18,6 +18,7 @@ import com.worth.ifs.file.service.BasicFileAndContents;
 import com.worth.ifs.file.service.FileAndContents;
 import com.worth.ifs.file.transactional.FileService;
 import com.worth.ifs.invite.resource.ApplicationInviteResource;
+import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.notifications.resource.ExternalUserNotificationTarget;
 import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.notifications.resource.NotificationTarget;
@@ -568,46 +569,46 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     }
 
     @Override
-    public ServiceResult<Void> inviteFinanceContact(Long projectId, ApplicationInviteResource inviteResource) {
+    public ServiceResult<Void> inviteFinanceContact(Long projectId, InviteProjectResource inviteResource) {
 
         return inviteContact(projectId, inviteResource, INVITE_FINANCE_CONTACT);
     }
 
     @Override
-    public ServiceResult<Void> inviteProjectManager(Long projectId, ApplicationInviteResource inviteResource) {
+    public ServiceResult<Void> inviteProjectManager(Long projectId, InviteProjectResource inviteResource) {
 
         return inviteContact(projectId, inviteResource, INVITE_PROJECT_MANAGER);
     }
 
-    private ServiceResult<Void> inviteContact(Long projectId, ApplicationInviteResource inviteResource, Notifications kindOfNotification) {
+    private ServiceResult<Void> inviteContact(Long projectId, InviteProjectResource inviteResource, Notifications kindOfNotification) {
 
         Notification notification = createInviteContactNotification(projectId, inviteResource, kindOfNotification);
         ServiceResult<Void> inviteContactEmailSendResult = notificationService.sendNotification(notification, EMAIL);
         return processAnyFailuresOrSucceed(singletonList(inviteContactEmailSendResult));
     }
 
-    private Notification createInviteContactNotification(Long projectId, ApplicationInviteResource inviteResource, Notifications kindOfNotification) {
+    private Notification createInviteContactNotification(Long projectId, InviteProjectResource inviteResource, Notifications kindOfNotification) {
         NotificationTarget notificationTarget = createInviteContactNotificationTarget(inviteResource);
         Map<String, Object> globalArguments = createGlobalArgsForInviteContactEmail(projectId, inviteResource);
         return new Notification(systemNotificationSource, singletonList(notificationTarget),
                 kindOfNotification, globalArguments, emptyMap());
     }
 
-    private NotificationTarget createInviteContactNotificationTarget(ApplicationInviteResource inviteResource) {
+    private NotificationTarget createInviteContactNotificationTarget(InviteProjectResource inviteResource) {
         return new ExternalUserNotificationTarget(inviteResource.getName(), inviteResource.getEmail());
     }
 
-    private Map<String, Object> createGlobalArgsForInviteContactEmail(Long projectId, ApplicationInviteResource inviteResource) {
+    private Map<String, Object> createGlobalArgsForInviteContactEmail(Long projectId, InviteProjectResource inviteResource) {
         Project project = projectRepository.findOne(projectId);
         Map<String, Object> globalArguments = new HashMap<>();
         globalArguments.put("projectName", project.getName());
-        globalArguments.put("leadOrganisation", inviteResource.getLeadOrganisation());
-        globalArguments.put("inviteOrganisationName", (StringUtils.isEmpty(inviteResource.getInviteOrganisationName())) ? "No org as yet" : inviteResource.getInviteOrganisationName());
+            globalArguments.put("leadOrganisation", inviteResource.getLeadOrganisation());
+            globalArguments.put("inviteOrganisationName", (StringUtils.isEmpty(inviteResource.getInviteOrganisationName())) ? "No org as yet" : inviteResource.getInviteOrganisationName());
         globalArguments.put("inviteUrl", getInviteUrl(webBaseUrl, inviteResource));
         return globalArguments;
     }
 
-    private String getInviteUrl(String baseUrl, ApplicationInviteResource inviteResource) {
+    private String getInviteUrl(String baseUrl, InviteProjectResource inviteResource) {
         return String.format("%s/accept-invite/%s", baseUrl, inviteResource.getHash());
     }
 

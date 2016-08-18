@@ -12,7 +12,9 @@ import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.FileAndContents;
 import com.worth.ifs.invite.builder.InviteResourceBuilder;
+import com.worth.ifs.invite.builder.ProjectInviteResourceBuilder;
 import com.worth.ifs.invite.resource.ApplicationInviteResource;
+import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
 import com.worth.ifs.project.builder.MonitoringOfficerBuilder;
 import com.worth.ifs.project.builder.ProjectBuilder;
@@ -460,7 +462,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         Long projectId = 1L;
 
-        ApplicationInviteResource inviteResource = InviteResourceBuilder.newInviteResource()
+        InviteProjectResource inviteResource = ProjectInviteResourceBuilder.newInviteProjectResource()
                 .withName("Abc Xyz")
                 .withEmail("Abc.xyz@gmail.com")
                 .withLeadOrganisation("Lead Organisation 1")
@@ -496,7 +498,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         Long projectId = 1L;
 
-        ApplicationInviteResource inviteResource = InviteResourceBuilder.newInviteResource()
+        InviteProjectResource inviteResource = ProjectInviteResourceBuilder.newInviteProjectResource()
                 .withName("Abc Xyz")
                 .withEmail("Abc.xyz@gmail.com")
                 .withLeadOrganisation("Lead Organisation 1")
@@ -524,7 +526,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         Long projectId = 1L;
 
-        ApplicationInviteResource inviteResource = InviteResourceBuilder.newInviteResource()
+        InviteProjectResource inviteResource = ProjectInviteResourceBuilder.newInviteProjectResource()
                 .withName("Abc Xyz")
                 .withEmail("Abc.xyz@gmail.com")
                 .withLeadOrganisation("Lead Organisation 1")
@@ -541,6 +543,32 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(notificationServiceMock.sendNotification(any(), any())).thenReturn(serviceSuccess());
 
         ServiceResult<Void> result = service.inviteProjectManager(projectId, inviteResource);
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void testInviteFinanceContactSuccess() {
+
+        Long projectId = 1L;
+
+        InviteProjectResource inviteResource = ProjectInviteResourceBuilder.newInviteProjectResource()
+                .withName("Abc Xyz")
+                .withEmail("Abc.xyz@gmail.com")
+                .withLeadOrganisation("Lead Organisation 1")
+                .withInviteOrganisationName("Invite Organisation 1")
+                .withHash("sample/url")
+                .build();
+
+        Project projectInDB = ProjectBuilder.newProject()
+                .withName("Project 1")
+                .build();
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
+
+        when(notificationServiceMock.sendNotification(any(), any())).thenReturn(serviceSuccess());
+
+        ServiceResult<Void> result = service.inviteFinanceContact(projectId, inviteResource);
 
         assertTrue(result.isSuccess());
     }

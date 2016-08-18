@@ -7,7 +7,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 /**
  * DTO to transfer Project Invite related Entities
  */
-public class InviteProjectResource {
+public class InviteProjectResource extends InviteResource {
 
     private Long id;
     private Long user;
@@ -20,7 +20,9 @@ public class InviteProjectResource {
     private String projectName;
     private String hash;
     private InviteStatusConstants status;
-
+    private String leadOrganisation;
+    private Long inviteOrganisation;
+    private String inviteOrganisationName;
 
     public InviteProjectResource() {
         // no-arg constructor
@@ -88,6 +90,30 @@ public class InviteProjectResource {
 
     public void setStatus(InviteStatusConstants status) { this.status = status; }
 
+    public String getLeadOrganisation() {
+        return leadOrganisation;
+    }
+
+    public void setLeadOrganisation(String leadOrganisation) {
+        this.leadOrganisation = leadOrganisation;
+    }
+
+    public String getInviteOrganisationName() {
+        return inviteOrganisationName;
+    }
+
+    public void setInviteOrganisationName(String inviteOrganisationName) {
+        this.inviteOrganisationName = inviteOrganisationName;
+    }
+
+    public Long getInviteOrganisation() {
+        return inviteOrganisation;
+    }
+
+    public void setInviteOrganisation(Long inviteOrganisation) {
+        this.inviteOrganisation = inviteOrganisation;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -108,6 +134,9 @@ public class InviteProjectResource {
                 .append(projectName, that.projectName)
                 .append(hash, that.hash)
                 .append(status, that.status)
+                .append(leadOrganisation, that.leadOrganisation)
+                .append(inviteOrganisation, that.inviteOrganisation)
+                .append(inviteOrganisationName, that.inviteOrganisationName)
                 .isEquals();
     }
 

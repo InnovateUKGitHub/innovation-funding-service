@@ -8,6 +8,7 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.transactional.FileHttpHeadersValidator;
+import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
@@ -102,13 +103,13 @@ public class ProjectController {
 
     @RequestMapping(value = "/{projectId}/invite-finance-contact", method = POST)
     public RestResult<Void> inviteFinanceContact(@PathVariable("projectId") final Long projectId,
-                                                 @RequestBody @Valid final ApplicationInviteResource inviteResource) {
+                                                 @RequestBody @Valid final InviteProjectResource inviteResource) {
        return projectService.inviteFinanceContact(projectId, inviteResource).toPostResponse();
     }
 
     @RequestMapping(value = "/{projectId}/invite-project-manager", method = POST)
     public RestResult<Void> inviteProjectManager(@PathVariable("projectId") final Long projectId,
-                                                 @RequestBody @Valid final ApplicationInviteResource inviteResource) {
+                                                 @RequestBody @Valid final InviteProjectResource inviteResource) {
         return projectService.inviteProjectManager(projectId, inviteResource).toPostResponse();
     }
 

@@ -52,6 +52,10 @@ public class ProjectInviteResourceBuilder  extends BaseBuilder<InviteProjectReso
         return with((inviteResource) -> inviteResource.setStatus(status));
     }
 
+    public ProjectInviteResourceBuilder withHash(final String hash) {
+        return with((inviteResource) -> inviteResource.setHash(hash));
+    }
+
     public ProjectInviteResourceBuilder withProject(final Long projectId) {
         return with((inviteResource) -> inviteResource.setProject(projectId));
     }
@@ -60,6 +64,13 @@ public class ProjectInviteResourceBuilder  extends BaseBuilder<InviteProjectReso
         return with((inviteResource) -> inviteResource.setOrganisation(organisationId));
     }
 
+    public  ProjectInviteResourceBuilder withLeadOrganisation(final String leadOrganisation) {
+        return with((inviteResource) -> inviteResource.setLeadOrganisation(leadOrganisation));
+    }
+
+    public  ProjectInviteResourceBuilder withInviteOrganisationName(final String inviteOrganisationName) {
+        return with((inviteResource) -> inviteResource.setInviteOrganisationName(inviteOrganisationName));
+    }
 
     public ProjectInviteResourceBuilder withIds(Long... ids) {
         return withArray((id, inviteResource) -> setField("id", id, inviteResource), ids);
