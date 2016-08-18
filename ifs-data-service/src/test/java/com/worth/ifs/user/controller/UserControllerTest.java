@@ -71,7 +71,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         final Long organisationId = 9999L;
 
         final UserResource userResource = newUserResource().build();
-        when(registrationServiceMock.createApplicantUser(organisationId, userResource)).thenReturn(serviceSuccess(userResource));
+        when(registrationServiceMock.createOrganisationUser(organisationId, userResource)).thenReturn(serviceSuccess(userResource));
         when(registrationServiceMock.sendUserVerificationEmail(userResource, empty())).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/user/createLeadApplicantForOrganisation/{organisationId}",organisationId)
@@ -80,7 +80,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
                 .andExpect(status().isCreated())
                 .andExpect(content().string(new ObjectMapper().writeValueAsString(userResource)));
 
-        verify(registrationServiceMock, times(1)).createApplicantUser(organisationId, userResource);
+        verify(registrationServiceMock, times(1)).createOrganisationUser(organisationId, userResource);
         verify(registrationServiceMock, times(1)).sendUserVerificationEmail(userResource, empty());
         verifyNoMoreInteractions(registrationServiceMock);
     }
@@ -91,7 +91,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         final Long competitionId = 8888L;
 
         final UserResource userResource = newUserResource().build();
-        when(registrationServiceMock.createApplicantUser(organisationId, of(competitionId), userResource)).thenReturn(serviceSuccess(userResource));
+        when(registrationServiceMock.createOrganisationUser(organisationId, userResource)).thenReturn(serviceSuccess(userResource));
         when(registrationServiceMock.sendUserVerificationEmail(userResource, of(competitionId))).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/user/createLeadApplicantForOrganisation/{organisationId}/{competitionId}",organisationId, competitionId)
@@ -100,7 +100,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
                 .andExpect(status().isCreated())
                 .andExpect(content().string(new ObjectMapper().writeValueAsString(userResource)));
 
-        verify(registrationServiceMock, times(1)).createApplicantUser(organisationId, of(competitionId), userResource);
+        verify(registrationServiceMock, times(1)).createOrganisationUser(organisationId, userResource);
         verify(registrationServiceMock, times(1)).sendUserVerificationEmail(userResource, of(competitionId));
         verifyNoMoreInteractions(registrationServiceMock);
     }

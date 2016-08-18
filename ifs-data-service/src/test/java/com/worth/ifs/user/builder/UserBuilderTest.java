@@ -17,14 +17,15 @@ public class UserBuilderTest {
     public void testUsersBuiltWithInitialSetOfValuesDefined() {
 
         List<User> users = newUser().build(2);
+        Long initialId = users.get(0).getId();
 
-        assertEquals(Long.valueOf(1), users.get(0).getId());
-        assertEquals(Long.valueOf(2), users.get(1).getId());
+        assertEquals(Long.valueOf(initialId), users.get(0).getId());
+        assertEquals(Long.valueOf(initialId + 1), users.get(1).getId());
 
-        assertEquals("User 1", users.get(0).getName());
-        assertEquals("User 2", users.get(1).getName());
+        assertEquals("User " + initialId, users.get(0).getName());
+        assertEquals("User " + (initialId + 1), users.get(1).getName());
 
-        assertEquals("user1@example.com", users.get(0).getEmail());
-        assertEquals("user2@example.com", users.get(1).getEmail());
+        assertEquals("user" + initialId + "@example.com", users.get(0).getEmail());
+        assertEquals("user" + (initialId + 1) + "@example.com", users.get(1).getEmail());
     }
 }
