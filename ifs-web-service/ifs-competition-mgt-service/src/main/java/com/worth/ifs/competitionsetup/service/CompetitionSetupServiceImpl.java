@@ -1,6 +1,7 @@
 package com.worth.ifs.competitionsetup.service;
 
 import com.worth.ifs.application.service.CompetitionService;
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
@@ -75,7 +76,7 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 	}
 	
 	@Override
-	public void saveCompetitionSetupSection(CompetitionSetupForm competitionSetupForm,
+	public List<Error> saveCompetitionSetupSection(CompetitionSetupForm competitionSetupForm,
 			CompetitionResource competitionResource, CompetitionSetupSection section) {
 		
 		CompetitionSetupSectionSaver saver = sectionSavers.get(section);
@@ -84,9 +85,13 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 			throw new IllegalArgumentException();
 		}
 		
-		saver.saveSection(competitionResource, competitionSetupForm);
+		List<Error> errors = saver.saveSection(competitionResource, competitionSetupForm);
 		
-		competitionService.setSetupSectionMarkedAsComplete(competitionResource.getId(), section);
+		if(errors.isEmpty()) {
+			competitionService.setSetupSectionMarkedAsComplete(competitionResource.getId(), section);
+		}
+		
+		return errors;
 	}
 
 	@Override
