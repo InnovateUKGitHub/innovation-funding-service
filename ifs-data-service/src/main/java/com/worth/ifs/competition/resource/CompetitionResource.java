@@ -54,6 +54,7 @@ public class CompetitionResource {
     private String budgetCode;
     private String code;
 
+    private boolean resubmission;
     private boolean multiStream;
     private String streamName;
     private CollaborationLevel collaborationLevel;
@@ -399,6 +400,14 @@ public class CompetitionResource {
 
     public void setMultiStream(boolean multiStream) {
         this.multiStream = multiStream;
+    }
+
+    public boolean isResubmission() {
+        return resubmission;
+    }
+
+    public void setResubmission(boolean resubmission) {
+        this.resubmission = resubmission;
     }
 
     public String getStreamName() {
