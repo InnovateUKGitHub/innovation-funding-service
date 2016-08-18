@@ -9,18 +9,17 @@ import com.worth.ifs.competition.resource.MilestoneResource;
 import com.worth.ifs.competition.resource.MilestoneType;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.form.InitialDetailsForm;
-import com.worth.ifs.competitionsetup.form.MilestonesFormEntry;
+import com.worth.ifs.competitionsetup.model.MilestoneEntry;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupService;
+import org.apache.commons.collections4.map.LinkedMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * Competition setup section saver for the initial details section.
@@ -82,11 +81,11 @@ public class InitialDetailsSectionSaver implements CompetitionSetupSectionSaver 
 	}
 
 	private void saveOpeningDateAsMilestone(LocalDateTime openingDate, Long competitionId) {
-	    MilestonesFormEntry milestonesFormEntry = new MilestonesFormEntry();
-        milestonesFormEntry.setMilestoneType(MilestoneType.OPEN_DATE);
-		milestonesFormEntry.setDay(openingDate.getDayOfMonth());
-        milestonesFormEntry.setMonth(openingDate.getMonth().getValue());
-        milestonesFormEntry.setYear(openingDate.getYear());
+	    MilestoneEntry milestoneEntry = new MilestoneEntry();
+        milestoneEntry.setMilestoneType(MilestoneType.OPEN_DATE);
+		milestoneEntry.setDay(openingDate.getDayOfMonth());
+        milestoneEntry.setMonth(openingDate.getMonth().getValue());
+        milestoneEntry.setYear(openingDate.getYear());
 
         List<MilestoneResource> milestones = milestoneService.getAllDatesByCompetitionId(competitionId);
         if(milestones.isEmpty()) {
@@ -94,7 +93,10 @@ public class InitialDetailsSectionSaver implements CompetitionSetupSectionSaver 
         }
         milestones.sort((c1, c2) -> c1.getType().compareTo(c2.getType()));
 
-		competitionSetupMilestoneService.updateInitialDetailsOpenDateForCompetition(milestones, Arrays.asList(milestonesFormEntry), competitionId);
+		LinkedMap<String, MilestoneEntry> milestoneEntryMap = new LinkedMap<>();
+		milestoneEntryMap.put(MilestoneType.OPEN_DATE.name(), milestoneEntry);
+
+		competitionSetupMilestoneService.updateMilestonesForCompetition(milestones, milestoneEntryMap, competitionId);
 	}
 
 	@Override
