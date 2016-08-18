@@ -88,7 +88,7 @@ public class BankDetailsServiceImpl implements BankDetailsService{
                 andOnSuccess(() ->
                         validateBankDetails(bankDetailsResource).
                                 andOnSuccess(
-                                        accountDetails -> updatedExistingBankDetails(accountDetails, bankDetailsResource).
+                                        accountDetails -> updateExistingBankDetails(accountDetails, bankDetailsResource).
                                                 andOnSuccess(() -> serviceSuccess())
                                 )
                 );
@@ -139,7 +139,7 @@ public class BankDetailsServiceImpl implements BankDetailsService{
         return serviceSuccess(accountDetails);
     }
 
-    private ServiceResult<AccountDetails> updatedExistingBankDetails(AccountDetails accountDetails, BankDetailsResource bankDetailsResource) {
+    private ServiceResult<AccountDetails> updateExistingBankDetails(AccountDetails accountDetails, BankDetailsResource bankDetailsResource) {
         BankDetails existingBankDetails = bankDetailsRepository.findByProjectIdAndOrganisationId(bankDetailsResource.getProject(), bankDetailsResource.getOrganisation());
         if(existingBankDetails != null){
             bankDetailsResource.setId(existingBankDetails.getId());
