@@ -144,10 +144,8 @@ public class ProjectOtherDocumentsController {
     private String doViewOtherDocumentsPage(Long projectId, Model model, UserResource loggedInUser, ProjectOtherDocumentsForm form) {
         ProjectOtherDocumentsViewModel viewModel = getOtherDocumentsViewModel(projectId, loggedInUser);
 
-        ProjectResource projectResource = projectService.getById(projectId);
         model.addAttribute("model", viewModel);
         model.addAttribute("form", form);
-       // model.addAttribute("project", projectResource);
         model.addAttribute("currentUser", loggedInUser);
 
         return "project/other-documents";
