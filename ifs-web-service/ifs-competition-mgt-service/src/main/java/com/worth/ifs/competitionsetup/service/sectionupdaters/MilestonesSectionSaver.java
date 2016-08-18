@@ -13,6 +13,7 @@ import org.apache.commons.collections4.map.LinkedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,12 +45,11 @@ public class MilestonesSectionSaver implements CompetitionSetupSectionSaver {
 
         List<Error> errors = competitionSetupMilestoneService.validateMilestoneDates(milestoneEntries);
         if(!errors.isEmpty()) {
-            List<MilestoneEntry> sortedMilestones = milestoneEntries.values().stream().sorted((o1, o2) -> o1.getMilestoneType().ordinal() - o2.getMilestoneType().ordinal()).collect(Collectors.toList());
-            LinkedMap<String, MilestoneEntry> milestoneFormEntries = new LinkedMap<>();
-            sortedMilestones.stream().forEachOrdered(milestone -> {
-                milestoneFormEntries.put(milestone.getMilestoneType().name(), milestone);
-            });
-            ((MilestonesForm) competitionSetupForm).setMilestoneEntries(milestoneFormEntries);
+
+            ((MilestonesForm) competitionSetupForm)
+                    .setMilestoneEntries(
+                        sortMilestoneEntries(milestoneEntries.values())
+                    );
 
             return errors;
         }
@@ -57,6 +57,17 @@ public class MilestonesSectionSaver implements CompetitionSetupSectionSaver {
         return competitionSetupMilestoneService.updateMilestonesForCompetition(milestones, milestoneEntries, competition.getId());
     }
 
+
+    private LinkedMap<String, MilestoneEntry> sortMilestoneEntries(Collection<MilestoneEntry> milestones) {
+        List<MilestoneEntry> sortedMilestones = milestones.stream().sorted((o1, o2) -> o1.getMilestoneType().ordinal() - o2.getMilestoneType().ordinal()).collect(Collectors.toList());
+
+        LinkedMap<String, MilestoneEntry> milestoneFormEntries = new LinkedMap<>();
+        sortedMilestones.stream().forEachOrdered(milestone ->
+            milestoneFormEntries.put(milestone.getMilestoneType().name(), milestone)
+        );
+
+        return milestoneFormEntries;
+    }
 
 
     @Override
