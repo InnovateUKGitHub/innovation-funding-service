@@ -649,16 +649,20 @@
                 </tr>
                 </thead>
                 <tbody>
-                  <tr th:each="milestonesFormEntryList, iterStat : ${competitionSetupForm.milestonesFormEntryList}"
+                  <tr th:each="(milestoneEntry : ${competitionSetupForm.milestoneEntries})"
                       class="date-group"
                       data-future-date=""
-                      th:attr="data-date-invalid-errormessage=${milestonesFormEntryList.milestoneType.milestoneDescription+': please enter a valid date'},
-                               data-date-future-errormessage=${milestonesFormEntryList.milestoneType.milestoneDescription +': please enter a future date that is after the previous milestone'}">
+                      th:attr="data-date-invalid-errormessage=${milestoneEntry.value.milestoneType.milestoneDescription + ': please enter a valid date'},
+                               data-date-future-errormessage=${milestoneEntry.value.milestoneType.milestoneDescription  + ': please enter a future date that is after the previous milestone'}">
 
-                      <td class="labelledby" th:id="${'milestone-'+iterStat.index}">
-                        <span th:text="${milestonesFormEntryList.milestoneType.milestoneDescription}" />
+                      <td class="labelledby" th:id="${'milestone-' + milestoneEntry.key}">
+                        <span th:text="${milestoneEntry.value.milestoneType.milestoneDescription}" />
                       </td>
-                      <td class="js-addWeekDay" th:text="${milestonesFormEntryList.dayOfWeek}"></td>
+                      <input type="hidden"
+                             required="required"
+                             th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].milestoneType'"
+                             th:value="${milestoneEntry.key}"  />
+                      <td class="js-addWeekDay" th:text="${milestoneEntry.value.dayOfWeek}"></td>
                       <td class="day">
                           <input type="number"
                                 placeholder="DD"
@@ -666,8 +670,10 @@
                                 max="31"
                                 required="required"
                                 class="form-control width-small"
-                                th:attr="aria-labelledby=${'milestone-'+iterStat.index}"
-                                th:field="*{milestonesFormEntryList[__${iterStat.index}__].day}" />
+                                th:attr="aria-labelledby=${'milestone-' + milestoneEntry.key}"
+                                th:value="${milestoneEntry.value.day}"
+                                th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].day'"
+                          />
                       </td>
                       <td class="month">
                           <input type="number"
@@ -676,16 +682,18 @@
                                 max="12"
                                 required="required"
                                 class="form-control width-small"
-                                th:attr="aria-labelledby=${'milestone-'+iterStat.index}"
-                                th:field="*{milestonesFormEntryList[__${iterStat.index}__].month}" />
+                                th:attr="aria-labelledby=${'milestone-' + milestoneEntry.key}"
+                                th:value="${milestoneEntry.value.month}"
+                                th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].month'" />
                       </td>
                       <td class="year" >
                           <input type="number"
                                  placeholder="YYYY"
-                                 th:attr="aria-labelledby=${'milestone-'+iterStat.index}"
+                                 th:attr="aria-labelledby=${'milestone-' + milestoneEntry.key}"
                                  required="required"
                                  class="form-control width-small"
-                                 th:field="*{milestonesFormEntryList[__${iterStat.index}__].year}" />
+                                 th:value="${milestoneEntry.value.year}"
+                                 th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].year'"/>
                       </td>
                   </tr>
                 </tbody>
@@ -706,12 +714,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="milestonesFormEntryList : ${competitionSetupForm.milestonesFormEntryList}" >
-                        <td th:text="${milestonesFormEntryList.milestoneType.milestoneDescription}"></td>
-                        <td th:text="${milestonesFormEntryList.dayOfWeek}"></td>
-                        <td th:text="${milestonesFormEntryList.day}"></td>
-                        <td th:text="${milestonesFormEntryList.month}"></td>
-                        <td th:text="${milestonesFormEntryList.year}" />
+                    <tr th:each="milestoneEntry : ${competitionSetupForm.milestoneEntries}" >
+                        <td th:text="${milestoneEntry.value.milestoneType.milestoneDescription}"></td>
+                        <td th:text="${milestoneEntry.value.dayOfWeek}"></td>
+                        <td th:text="${milestoneEntry.value.day}"></td>
+                        <td th:text="${milestoneEntry.value.month}"></td>
+                        <td th:text="${milestoneEntry.value.year}" />
                     </tr>
                 </tbody>
             </table>
