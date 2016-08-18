@@ -305,6 +305,8 @@ Application questions: server side validations
 
 Application questions: Client side validations
     [Documentation]    INFUND-3000
+    [Tags]    Pending
+    # TODO after 3002
     Given the user fills the empty question fields
     Then the validation error above the question should not be visible    jQuery=label:contains(Question title)    This field cannot be left blank
     And the validation error above the question should not be visible    jQuery=label:contains(Question guidance title)    This field cannot be left blank
@@ -316,6 +318,8 @@ Application questions: Client side validations
 
 Application questions: Mark as done and the Edit again
     [Documentation]    INFUND-3000
+    [Tags]    Pending
+    # TODO fix after 3002
     [Setup]    The user clicks the button/link    jQuery=.grid-row div:nth-child(2) label:contains(Yes)
     When The user clicks the button/link    jQuery=.button[value="Save and close"]
     Then The user should see the text in the page    Test title
