@@ -10,8 +10,9 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-
-    <div th:include="competition/dashboard :: comp-dashboard-header" th:remove="tag" />
+    <form role="search" method="get" id="searchform" th:action="@{'/dashboard/search'}">
+        <div th:include="competition/dashboard :: comp-dashboard-header (searchQuery=${''})" th:remove="tag" />
+    </form>
     <div th:include="competition/dashboard :: comp-dashboard-navigation (tab=${'live'}, counts=${counts})" th:remove="tag" />
 
     <section th:with="openComps=${competitions.get(T(com.worth.ifs.competition.resource.CompetitionResource.Status).OPEN)}">

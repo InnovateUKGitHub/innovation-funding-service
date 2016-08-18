@@ -83,8 +83,8 @@
               </form>
               <!--/* not allowed to edit */-->
               <th:block th:unless="${model.isEditable()}">
-                <a th:if="${model.exploitationPlanFileDetails}" th:href="@{/project/{id}/partner/documents/exploitation-plan(id=${model.projectId})}" class="uploaded-file" th:text="${model.exploitationPlanFileDetails.filename}">The-uploaded-file-example.pdf</a>
-                <p th:unless="${model.exploitationPlanFileDetails}" class="uploaded-file">Awaiting upload by lead partner</p>
+                <a th:if="${model.collaborationAgreementFileDetails}" th:href="@{/project/{id}/partner/documents/collaboration-agreement(id=${model.projectId})}" class="uploaded-file" th:text="${model.collaborationAgreementFileDetails.filename}">The-uploaded-file-example.pdf</a>
+                <p th:unless="${model.collaborationAgreementFileDetails}" class="uploaded-file">Awaiting upload by lead partner</p>
               </th:block>
         </div>
 
