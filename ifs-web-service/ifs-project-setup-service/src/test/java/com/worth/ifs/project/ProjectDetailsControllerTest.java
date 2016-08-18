@@ -5,6 +5,7 @@ import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.AddressTypeResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.bankdetails.form.ProjectDetailsAddressForm;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.project.resource.ProjectResource;
@@ -299,7 +300,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         assertEquals(addressResource, viewModel.getRegisteredAddress());
         assertNull(viewModel.getProjectAddress());
 
-        ProjectDetailsAddressViewModelForm form = (ProjectDetailsAddressViewModelForm) model.get(ProjectDetailsController.FORM_ATTR_NAME);
+        ProjectDetailsAddressForm form = (ProjectDetailsAddressForm) model.get(ProjectDetailsController.FORM_ATTR_NAME);
         assertEquals(OrganisationAddressType.valueOf(organisationAddressResource.getAddressType().getName()), form.getAddressType());
     }
 

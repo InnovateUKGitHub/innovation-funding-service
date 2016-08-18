@@ -81,23 +81,23 @@ Initial details client-side validations
     ...    INFUND-3888
     [Tags]    HappyPath
     When the user enters text to a text field    id=title    Competition title
-    Then the user should not see the error any more    Please enter a title
     When the user selects the option from the drop-down menu    Additive Manufacturing    id=competitionTypeId
-    Then the user should not see the error any more    Please select a competition type
     When the user selects the option from the drop-down menu    Health and life sciences    id=innovationSectorCategoryId
-    Then the user should not see the error any more    Please select an innovation sector
     When the user selects the option from the drop-down menu    Advanced Therapies    id=innovationAreaCategoryId
-    Then the user should not see the error any more    Please select an innovation area
     When the user enters text to a text field    id=openingDateDay    01
-    Then the user should not see the error any more    Please enter an opening day
     When the user enters text to a text field    Id=openingDateMonth    12
-    Then the user should not see the error any more    Please enter an opening month
     When the user enters text to a text field    id=openingDateYear    2017
-    Then the user should not see the error any more    Please enter an opening year
     When the user selects the option from the drop-down menu    Competition Technologist One    id=leadTechnologistUserId
-    Then the user should not see the error any more    Please select a lead technologist
     When the user selects the option from the drop-down menu    Competition Executive Two    id=executiveUserId
     Then the user should not see the text in the page    Please select a competition executive    #using this keyword because there is no error element in the page
+    Then the user should not see the error any more    Please enter a title
+    Then the user should not see the error any more    Please select a competition type
+    Then the user should not see the error any more    Please select an innovation sector
+    Then the user should not see the error any more    Please select an innovation area
+    #Then the user should not see the error any more    Please enter an opening day
+    #Then the user should not see the error any more    Please enter an opening month
+    #Then the user should not see the error any more    Please enter an opening year
+    Then the user should not see the error any more    Please select a lead technologist
     ##    State aid value is tested in 'Initial details correct state aid status'
 
 Initial details correct state aid status
@@ -300,7 +300,7 @@ Application questions: server side validations
     Then the validation error above the question should be visible    jQuery=label:contains(Question title)    This field cannot be left blank
     And the validation error above the question should be visible    jQuery=label:contains(Question guidance title)    This field cannot be left blank
     #To do: investigate why this step fails with chrome driver    INFUND-4514
-    #And the validation error above the question should be visible    jQuery=div:nth-child(4) div:nth-child(4) label:contains(Question guidance)    This field cannot be left blank
+    And the validation error above the question should be visible    jQuery=div:nth-child(4) div:nth-child(4) label:contains(Question guidance)    This field cannot be left blank
 
 Application questions: Client side validations
     [Documentation]    INFUND-3000
@@ -342,10 +342,10 @@ the total should be correct
     Wait Until Element Contains    css=.no-margin    ${Total}
 
 the user leaves all the question field empty
-    The user enters text to a text field    css=.editor    ${EMPTY}
-    Mouse Out    css=.editor
+    Clear Element Text    css=.editor
+    Press Key    css=.editor    \\8
     focus    jQuery=.button[value="Save and close"]
-    sleep    200ms
+    sleep    5000
     The user enters text to a text field    id=question.title    ${EMPTY}
     The user enters text to a text field    id=question.guidanceTitle    ${EMPTY}
     The user enters text to a text field    jQuery=[id="question.maxWords"]    ${EMPTY}

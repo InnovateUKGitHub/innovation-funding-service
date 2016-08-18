@@ -261,12 +261,8 @@ http://hallojs.org
 
     # Check whether the editable has been modified
     isModified: ->
-      if typeof @previousContent == 'undefined'
-        @previousContent = false
-        return true
-      changed = @previousContent != @getContents()
-      @previousContent = @getContents()
-      changed
+      @previousContent = @originalContent unless @previousContent
+      @previousContent isnt @getContents()
 
     # Set the editable as unmodified
     setUnmodified: ->

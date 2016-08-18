@@ -75,5 +75,6 @@ public class CompetitionResourceDocs {
             .withActivityCode("Activity-Code")
             .withInnovateBudget("INNOVATE-Budget")
             .withFunder("funder, funder")
+            .withMilestones(asList(1L, 2L, 3L))
             .withFunderBudget(new BigDecimal(1234), new BigDecimal(23423));
 }

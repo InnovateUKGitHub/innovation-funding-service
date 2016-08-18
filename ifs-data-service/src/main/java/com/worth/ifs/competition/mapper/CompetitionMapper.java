@@ -39,7 +39,7 @@ public abstract class CompetitionMapper extends BaseMapper<Competition, Competit
     public abstract CompetitionResource mapToResource(Competition domain);
 
     @Mappings({
-            @Mapping(source = "competitionStatus", target = "status")
+            @Mapping(target = "status", ignore=true)
     })
     public abstract Competition mapToDomain(CompetitionResource domain);
 
