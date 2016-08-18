@@ -74,6 +74,10 @@ public class ProjectInviteResourceBuilder  extends BaseBuilder<InviteProjectReso
         return withArray((name, inviteResource) -> setField("name", name, inviteResource), names);
     }
 
+    public ProjectInviteResourceBuilder withProjectName(final String... names) {
+        return withArray((name, inviteResource) -> setField("projectName", name, inviteResource), names);
+    }
+
     public ProjectInviteResourceBuilder withStatuss(final InviteStatusConstants... statusses) {
         return withArray((status, inviteResource) -> setField("status", status, inviteResource), statusses);
     }

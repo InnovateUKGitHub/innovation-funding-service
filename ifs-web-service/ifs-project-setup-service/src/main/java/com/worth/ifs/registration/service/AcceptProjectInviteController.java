@@ -5,7 +5,6 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.invite.service.ProjectInviteRestService;
-import com.worth.ifs.project.service.ProjectRestService;
 import com.worth.ifs.project.viewmodel.JoinAProjectViewModel;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.OrganisationRestService;
@@ -38,18 +37,16 @@ public class AcceptProjectInviteController extends BaseController {
     @Autowired
     private ProjectInviteRestService projectInviteRestService;
     @Autowired
-    private ProjectRestService projectRestService;
-    @Autowired
     private OrganisationRestService organisationRestService;
 
-    private static final String ACCEPT_INVITE_MAPPING = "/accept-invite/";
-    private static final String ACCEPT_INVITE_USER_DOES_NOT_YET_EXIST_SHOW_PROJECT_MAPPING = "/registration/accept-invite-user-does-not-yet-exist-show-project";
-    private static final String ACCEPT_INVITE_USER_EXIST_SHOW_PROJECT_MAPPING = "/registration/accept-invite-user-exist-show-project";
-    private static final String ACCEPT_INVITE_USER_EXIST_CONFIRM_MAPPING = "/registration/accept-invite-user-exist-confirm";
+    public static final String ACCEPT_INVITE_MAPPING = "/accept-invite/";
+    public static final String ACCEPT_INVITE_USER_DOES_NOT_YET_EXIST_SHOW_PROJECT_MAPPING = "/registration/accept-invite-user-does-not-yet-exist-show-project";
+    public static final String ACCEPT_INVITE_USER_EXIST_SHOW_PROJECT_MAPPING = "/registration/accept-invite-user-exist-show-project";
+    public static final String ACCEPT_INVITE_USER_EXIST_CONFIRM_MAPPING = "/registration/accept-invite-user-exist-confirm";
 
-    private static final String ACCEPT_INVITE_USER_EXISTS_BUT_NOT_LOGGED_IN_VIEW = "project/registration/accept-invite-user-exists-but-not-logged-in";
-    private static final String ACCEPT_INVITE_SHOW_PROJECT = "project/registration/accept-invite-show-project";
-    private static final String ACCEPT_INVITE_FAILURE = "project/registration/accept-invite-failure";
+    public static final String ACCEPT_INVITE_USER_EXISTS_BUT_NOT_LOGGED_IN_VIEW = "project/registration/accept-invite-user-exists-but-not-logged-in";
+    public static final String ACCEPT_INVITE_SHOW_PROJECT = "project/registration/accept-invite-show-project";
+    public static final String ACCEPT_INVITE_FAILURE = "project/registration/accept-invite-failure";
 
 
     //===================================
@@ -111,7 +108,7 @@ public class AcceptProjectInviteController extends BaseController {
                                     japvm.setOrganisationAddress(organisation.getAddresses().get(0));
                                 }
                                 japvm.setOrganisationName(organisation.getName());
-                                japvm.setProjectName("TODO");
+                                japvm.setProjectName(invite.getProjectName());
                                 model.addAttribute("model", japvm);
                                 return ACCEPT_INVITE_SHOW_PROJECT;
                             });
