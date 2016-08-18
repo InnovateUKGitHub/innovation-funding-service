@@ -39,7 +39,7 @@ IFS.core.formValidation = (function(){
                 messageInvalid : "Please enter a valid email address"
             },
             required : {
-                fields: '[required]',
+                fields: '[required]:not([data-date])',
                 messageInvalid : "This field cannot be left blank"
             },
             minlength : {
@@ -90,7 +90,7 @@ IFS.core.formValidation = (function(){
           jQuery('body').on('change',s.minlength.fields,function(){ IFS.core.formValidation.checkMinLength(jQuery(this),true); });
           jQuery('body').on('change',s.maxlength.fields,function(){ IFS.core.formValidation.checkMaxLength(jQuery(this),true); });
           jQuery('body').on('change',s.tel.fields,function(){ IFS.core.formValidation.checkTel(jQuery(this),true); });
-          jQuery('body').on('change',s.date.fields,function(){ IFS.core.formValidation.checkDate(jQuery(this),true); });
+          jQuery('body').on('change',s.date.fields,function(){  IFS.core.formValidation.checkDate(jQuery(this),true); });
 
           //set data attribute on date fields
           //which has the combined value of the dates
@@ -130,44 +130,50 @@ IFS.core.formValidation = (function(){
         checkPasswordPolicy : function(field,showMessage){
             var password = field.val();
             var confirmsToPasswordPolicy = true;
+
             //we only check for the policies if there is something filled in
             if(password.length){
+              var upperCaseErrorMessage =  IFS.core.formValidation.getErrorMessage(field,'passwordPolicy-uppercase');
+              var lowerCaseErrorMessage =  IFS.core.formValidation.getErrorMessage(field,'passwordPolicy-lowercase');
+              var numberErrorMessage =  IFS.core.formValidation.getErrorMessage(field,'passwordPolicy-number');
+              var nameErrorMessage =  IFS.core.formValidation.getErrorMessage(field,'passwordPolicy-name');
+
               var uppercase = /(?=\S*?[A-Z])/;
               if(uppercase.test(password) === false){
-                  if(showMessage){ IFS.core.formValidation.setInvalid(field,s.passwordPolicy.messageInvalid.uppercase); }
+                  if(showMessage){ IFS.core.formValidation.setInvalid(field,upperCaseErrorMessage); }
                   confirmsToPasswordPolicy = false;
               }
               else {
-                  if(showMessage){ IFS.core.formValidation.setValid(field,s.passwordPolicy.messageInvalid.uppercase); }
+                  if(showMessage){ IFS.core.formValidation.setValid(field,upperCaseErrorMessage); }
               }
 
               var lowercase = /(?=\S*?[a-z])/;
               if(lowercase.test(password) === false){
-                  if(showMessage){ IFS.core.formValidation.setInvalid(field,s.passwordPolicy.messageInvalid.lowercase); }
+                  if(showMessage){ IFS.core.formValidation.setInvalid(field,lowerCaseErrorMessage); }
                   confirmsToPasswordPolicy = false;
               }
               else {
-                  if(showMessage){ IFS.core.formValidation.setValid(field,s.passwordPolicy.messageInvalid.lowercase); }
+                  if(showMessage){ IFS.core.formValidation.setValid(field,lowerCaseErrorMessage); }
               }
 
               var number = /(?=\S*?[0-9])/;
               if(number.test(password) === false){
-                  if(showMessage){ IFS.core.formValidation.setInvalid(field,s.passwordPolicy.messageInvalid.number); }
+                  if(showMessage){ IFS.core.formValidation.setInvalid(field,numberErrorMessage); }
                   confirmsToPasswordPolicy = false;
               }
               else {
-                  if(showMessage){ IFS.core.formValidation.setValid(field,s.passwordPolicy.messageInvalid.number); }
+                  if(showMessage){ IFS.core.formValidation.setValid(field,numberErrorMessage); }
               }
 
               var firstname = jQuery(s.passwordPolicy.fields.firstname).val();
               var lastname = jQuery(s.passwordPolicy.fields.lastname).val();
               if(firstname.replace(' ','').length || lastname.replace(' ','').length){
                 if((password.toLowerCase().indexOf(firstname.toLowerCase()) > -1) || (password.toLowerCase().indexOf(lastname.toLowerCase()) > -1)){
-                  if(showMessage){ IFS.core.formValidation.setInvalid(field,s.passwordPolicy.messageInvalid.name);}
+                  if(showMessage){ IFS.core.formValidation.setInvalid(field,nameErrorMessage);}
                   confirmsToPasswordPolicy = false;
                 }
                 else {
-                    if(showMessage){ IFS.core.formValidation.setValid(field,s.passwordPolicy.messageInvalid.name);}
+                    if(showMessage){ IFS.core.formValidation.setValid(field,nameErrorMessage);}
                 }
               }
             }
@@ -363,15 +369,18 @@ IFS.core.formValidation = (function(){
         checkDate : function(field,showMessage){
           var dateGroup = field.closest('.date-group');
           field.addClass('js-visited');
+          var valid;
 
           var d = dateGroup.find('.day input');
           var m = dateGroup.find('.month input');
           var y = dateGroup.find('.year input');
+          var addWeekDay = dateGroup.find('.js-addWeekDay');
 
           var allFields = d.add(m).add(y);
           var fieldsVisited = (d.hasClass('js-visited') && m.hasClass('js-visited') && y.hasClass('js-visited'));
           var filledOut = ((d.val().length > 0) && (m.val().length > 0) && (y.val().length > 0));
           var validNumbers = IFS.core.formValidation.checkNumber(d,false) && IFS.core.formValidation.checkNumber(m,false) && IFS.core.formValidation.checkNumber(y,false);
+          var invalidErrorMessage = IFS.core.formValidation.getErrorMessage(dateGroup,'date-invalid');
 
           if(validNumbers && filledOut){
             var month = parseInt(m.val(),10);
@@ -380,43 +389,92 @@ IFS.core.formValidation = (function(){
             var date = new Date(year,month-1,day); //parse as date to check if it is a valid date
 
             if ((date.getDate() == day) && (date.getMonth() + 1 == month) && (date.getFullYear() == year)) {
-                if(showMessage){ IFS.core.formValidation.setValid(allFields,s.date.messageInvalid.invalid); }
+                valid = true;
+
+                if(showMessage){ IFS.core.formValidation.setValid(allFields,invalidErrorMessage); }
+
                 allFields.attr('data-date',day+'-'+month+'-'+year);
+                //adding day of week which is not really validation
+                //so could be better of somehwere else
+                if(addWeekDay.length){
+                  var days = ['Sun','Mon','Tues','Wed','Thurs','Fri','Sat'];
+                  var weekday = days[date.getDay()];
+                  addWeekDay.text(weekday);
+                }
                 field.trigger('ifsAutosave');
 
-                if(dateGroup.hasClass("js-future-date")){
-                  var now = new Date();
-                  if(now < date){
-                    if(showMessage){ IFS.core.formValidation.setValid(allFields,s.date.messageInvalid.future); }
-                    return true;
-                  }
-                  else {
-                    if(showMessage){ IFS.core.formValidation.setInvalid(allFields,s.date.messageInvalid.future); }
-                    return false;
-                  }
+                if(dateGroup.is("[data-future-date]")){
+                    valid = IFS.core.formValidation.checkFutureDate(dateGroup,date,showMessage);
                 }
-                return true;
             } else {
-                if(showMessage){ IFS.core.formValidation.setInvalid(allFields,s.date.messageInvalid.invalid); }
+                if(showMessage){ IFS.core.formValidation.setInvalid(allFields,invalidErrorMessage); }
                 allFields.attr({'data-date':''});
-                return false;
+                valid = false;
             }
           }
           else if (filledOut || fieldsVisited){
-                if(showMessage){ IFS.core.formValidation.setInvalid(allFields,s.date.messageInvalid.invalid); }
+                if(showMessage){ IFS.core.formValidation.setInvalid(allFields,invalidErrorMessage); }
                 allFields.attr({'data-date':''});
-                return false;
+                valid = false;
           }
           else {
+            valid = false;
+          }
+
+          if(!valid && addWeekDay.length){
+            addWeekDay.text('-');
+          }
+
+          return valid;
+        },
+        checkFutureDate : function(dateGroup,date,showMessage){
+          var futureErrorMessage = IFS.core.formValidation.getErrorMessage(dateGroup,'date-future');
+          var allFields = dateGroup.find('.day input, .month input, .year input');
+          var futureDate;
+          if(jQuery.trim(dateGroup.attr('data-future-date')).length === 0){
+            //if no future date is set we assume today
+            futureDate = new Date();
+          }
+          else {
+            var futureDateString = dateGroup.attr('data-future-date').split('-');
+            var futureDay = parseInt(futureDateString[0],10);
+            var futureMonth = parseInt(futureDateString[1],10)-1;
+            var futureYear = parseInt(futureDateString[2],10);
+            futureDate = new Date(futureYear,futureMonth,futureDay);
+          }
+          if(futureDate.setHours(0,0,0,0) <= date.setHours(0,0,0,0)){
+            if(showMessage){ IFS.core.formValidation.setValid(allFields,futureErrorMessage); }
+            return true;
+          }
+          else {
+            if(showMessage){ IFS.core.formValidation.setInvalid(allFields,futureErrorMessage); }
             return false;
           }
         },
         getErrorMessage : function(field,type){
             //first look if there is a custom message defined on the element
             var errorMessage = field.attr('data-'+type+'-errormessage');
+
+            //support for submessages for one type (i.e date invalid / date future) and different password policys
+            var subtype;
+            if(type.indexOf('-') !== -1){
+               var types = type.split('-');
+               type = types[0];
+               subtype = types[1];
+            }
+            else {
+               type = type;
+               subtype = false;
+            }
+
             //if there is no data-errormessage we use the default messagging defined in the settings object
             if (typeof(errorMessage) == 'undefined') {
-              errorMessage = s[type].messageInvalid;
+              if(subtype === false){
+                errorMessage = s[type].messageInvalid;
+              }
+              else {
+                errorMessage = s[type].messageInvalid[subtype];
+              }
             }
             //replace value so we can have text like; this cannot be under %max%
             if(errorMessage.indexOf('%'+type+'%') !== -1){
@@ -425,7 +483,7 @@ IFS.core.formValidation = (function(){
             return errorMessage;
         },
         setInvalid : function(field,message){
-            var formGroup = field.closest('.form-group');
+            var formGroup = field.closest('.form-group,tr.date-group');
             if(formGroup){
                 if(s.html5validationMode){ field[0].setCustomValidity(message);}
                 field.addClass('field-error');
@@ -434,7 +492,7 @@ IFS.core.formValidation = (function(){
                 if(errorEl.length === 0){
                     formGroup.addClass('error');
                     var html = '<span class="error-message">'+message+'</span>';
-                    formGroup.find('legend,label').first().append(html);
+                    formGroup.find('legend,label,.labelledby').first().append(html);
                 }
             }
             if(jQuery('ul.error-summary-list li:contains('+message+')').length === 0){
@@ -444,7 +502,8 @@ IFS.core.formValidation = (function(){
             jQuery(window).trigger('updateWysiwygPosition');
         },
         setValid : function(field,message){
-            var formGroup = field.closest('.form-group.error');
+
+            var formGroup = field.closest('.form-group.error,tr.date-group.error');
             if(formGroup){
               formGroup.find('.error-message:contains("'+message+'")').remove();
 
