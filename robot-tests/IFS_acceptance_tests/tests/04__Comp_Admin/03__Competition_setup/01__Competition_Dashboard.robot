@@ -62,7 +62,7 @@ Upcoming competitions calculations
     ...
     ...    INFUND-3003
     Then the calculations should be correct    In preparation    //section[1]/ul/li
-    And the calculations should be correct    Ready to open    //section[2]/ul/li
+    And the calculations should be correct    Ready to open    //section[2]/div/div/ul/li
     And the calculations should be correct    Upcoming    //section/ul/li
 
 Upcoming competitions ready for open
