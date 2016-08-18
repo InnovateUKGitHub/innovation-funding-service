@@ -33,8 +33,6 @@ public class Competition implements ProcessActivity {
         if(status.equals(CompetitionResource.Status.COMPETITION_SETUP) ||
                 status.equals(CompetitionResource.Status.READY_TO_OPEN)){
             return status;
-        } else if (status.equals(CompetitionResource.Status.COMPETITION_SETUP_FINISHED)) {
-            return CompetitionResource.Status.READY_TO_OPEN;
         } else if(getStartDate() == null || getStartDate().isAfter(today)){
             return CompetitionResource.Status.NOT_STARTED;
         }else if(getEndDate() != null && getEndDate().isAfter(today)) {

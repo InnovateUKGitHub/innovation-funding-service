@@ -14,13 +14,29 @@
     <div th:include="competition/dashboard :: comp-dashboard-header" th:remove="tag" />
     <div th:include="competition/dashboard :: comp-dashboard-navigation (tab=${'upcoming'}, counts=${counts})" th:remove="tag" />
 
-    <section th:with="inPrepComps=${competitions.get(T(com.worth.ifs.competition.resource.CompetitionResource.Status).COMPETITION_SETUP)},
-    inPrepCompsFinished=${competitions.get(T(com.worth.ifs.competition.resource.CompetitionResource.Status).NOT_STARTED)}">
-        <div th:with="inPrepCompsSize=${inPrepComps == null ? 0 : inPrepComps.size()}">
-        <div th:with="inPrepCompsFinishedSize=${inPrepCompsFinished == null ? 0 : inPrepCompsFinished.size()}">
-            <h2 class="heading-medium" th:text="'In preparation ('+${inPrepCompsSize + inPrepCompsFinishedSize}+')'"></h2>
+    <section th:with="inPrepComps=${competitions.get(T(com.worth.ifs.competition.resource.CompetitionResource.Status).COMPETITION_SETUP)}">
+        <h2 class="heading-medium"
+            th:text="'In preparation ('+${inPrepComps == null ? '0' : inPrepComps.size()}+')'"></h2>
+        <ul class="list-overview">
+            <li class="grid-row section" th:each="competition : ${inPrepComps}">
+                <th:block
+                        th:include="competition/dashboard :: dashboard-row"
+                        th:with="competition=${competition},
+                    cell3=${competition.innovationAreaName},
+                    cell4=${competition.startDateDisplay()}">
+                </th:block>
+            </li>
+        </ul>
+    </section>
+
+    <section th:with="readyToOpenComps=${competitions.get(T(com.worth.ifs.competition.resource.CompetitionResource.Status).READY_TO_OPEN)},
+             notStartedComps=${competitions.get(T(com.worth.ifs.competition.resource.CompetitionResource.Status).NOT_STARTED)}">
+        <div th:with="readyToOpenCompsSize=${readyToOpenComps == null ? 0 : readyToOpenComps.size()}">
+        <div th:with="notStartedCompsSize=${notStartedComps == null ? 0 : notStartedComps.size()}">
+            <h2 class="heading-medium"
+                th:text="'Ready to open ('+${readyToOpenCompsSize + notStartedCompsSize}+')'"></h2>
             <ul class="list-overview">
-                <li class="grid-row section" th:each="competition : ${inPrepComps}">
+                <li class="grid-row section" th:each="competition : ${readyToOpenComps}">
                     <th:block
                         th:include="competition/dashboard :: dashboard-row"
                         th:with="competition=${competition},
@@ -28,7 +44,7 @@
                         cell4=${competition.startDateDisplay()}">
                     </th:block>
                 </li>
-                <li class="grid-row section" th:each="competition : ${inPrepCompsFinished}">
+                <li class="grid-row section" th:each="competition : ${notStartedComps}">
                     <th:block
                             th:include="competition/dashboard :: dashboard-row"
                             th:with="competition=${competition},
@@ -39,21 +55,6 @@
             </ul>
         </div>
         </div>
-    </section>
-
-    <section th:with="readyToOpenComps=${competitions.get(T(com.worth.ifs.competition.resource.CompetitionResource.Status).READY_TO_OPEN)}">
-        <h2 class="heading-medium"
-            th:text="'Ready to open ('+${readyToOpenComps == null ? '0' : readyToOpenComps.size()}+')'"></h2>
-        <ul class="list-overview">
-            <li class="grid-row section" th:each="competition : ${readyToOpenComps}">
-                <th:block
-                    th:include="competition/dashboard :: dashboard-row"
-                    th:with="competition=${competition},
-                    cell3=${competition.innovationAreaName},
-                    cell4=${competition.startDateDisplay()}">
-                </th:block>
-            </li>
-        </ul>
     </section>
     <a th:href="@{/competition/create}" class="button button-large extra-margin" th:text="#{ifs.competition.create_competition}">Create Competition</a>
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
