@@ -27,23 +27,22 @@ public class Competition implements ProcessActivity {
 
 	@Transient
 	private DateProvider dateProvider = new DateProvider();
-	
+
     public CompetitionResource.Status getCompetitionStatus() {
         LocalDateTime today = dateProvider.provideDate();
-        if(status.equals(CompetitionResource.Status.COMPETITION_SETUP) ||
-                status.equals(CompetitionResource.Status.READY_TO_OPEN)){
+        if(status.equals(CompetitionResource.Status.COMPETITION_SETUP)){
             return status;
-        } else if(getStartDate() == null || getStartDate().isAfter(today)){
+        }else if(getStartDate() == null || getStartDate().isAfter(today)){
             return CompetitionResource.Status.NOT_STARTED;
         }else if(getEndDate() != null && getEndDate().isAfter(today)) {
             return CompetitionResource.Status.OPEN;
         }else if (getEndDate() != null && getEndDate().isBefore(today)
-                  && getAssessmentStartDate() != null && getAssessmentStartDate().isAfter(today)) {
+                && getAssessmentStartDate() != null && getAssessmentStartDate().isAfter(today)) {
             return CompetitionResource.Status.CLOSED;
         }else if(getAssessmentEndDate() != null && getAssessmentEndDate().isAfter(today)){
             return CompetitionResource.Status.IN_ASSESSMENT;
         }else if(getFundersPanelEndDate() == null || getFundersPanelEndDate().isAfter(today)) {
-        	return CompetitionResource.Status.FUNDERS_PANEL;
+            return CompetitionResource.Status.FUNDERS_PANEL;
         }else if(getAssessorFeedbackDate() == null || getAssessorFeedbackDate().isAfter(today)) {
             return CompetitionResource.Status.ASSESSOR_FEEDBACK;
         }

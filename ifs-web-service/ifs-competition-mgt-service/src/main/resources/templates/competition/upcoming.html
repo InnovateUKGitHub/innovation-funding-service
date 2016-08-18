@@ -32,28 +32,28 @@
     <section th:with="readyToOpenComps=${competitions.get(T(com.worth.ifs.competition.resource.CompetitionResource.Status).READY_TO_OPEN)},
              notStartedComps=${competitions.get(T(com.worth.ifs.competition.resource.CompetitionResource.Status).NOT_STARTED)}">
         <div th:with="readyToOpenCompsSize=${readyToOpenComps == null ? 0 : readyToOpenComps.size()}">
-        <div th:with="notStartedCompsSize=${notStartedComps == null ? 0 : notStartedComps.size()}">
-            <h2 class="heading-medium"
-                th:text="'Ready to open ('+${readyToOpenCompsSize + notStartedCompsSize}+')'"></h2>
-            <ul class="list-overview">
-                <li class="grid-row section" th:each="competition : ${readyToOpenComps}">
-                    <th:block
-                        th:include="competition/dashboard :: dashboard-row"
-                        th:with="competition=${competition},
+            <div th:with="notStartedCompsSize=${notStartedComps == null ? 0 : notStartedComps.size()}">
+                <h2 class="heading-medium"
+                    th:text="'Ready to open ('+${readyToOpenCompsSize + notStartedCompsSize}+')'"></h2>
+                <ul class="list-overview">
+                    <li class="grid-row section" th:each="competition : ${readyToOpenComps}">
+                        <th:block
+                                th:include="competition/dashboard :: dashboard-row"
+                                th:with="competition=${competition},
                         cell3=${competition.innovationAreaName},
                         cell4=${competition.startDateDisplay()}">
-                    </th:block>
-                </li>
-                <li class="grid-row section" th:each="competition : ${notStartedComps}">
-                    <th:block
-                            th:include="competition/dashboard :: dashboard-row"
-                            th:with="competition=${competition},
+                        </th:block>
+                    </li>
+                    <li class="grid-row section" th:each="competition : ${notStartedComps}">
+                        <th:block
+                                th:include="competition/dashboard :: dashboard-row"
+                                th:with="competition=${competition},
                         cell3=${competition.innovationAreaName},
                         cell4=${competition.startDateDisplay()}">
-                    </th:block>
-                </li>
-            </ul>
-        </div>
+                        </th:block>
+                    </li>
+                </ul>
+            </div>
         </div>
     </section>
     <a th:href="@{/competition/create}" class="button button-large extra-margin" th:text="#{ifs.competition.create_competition}">Create Competition</a>
