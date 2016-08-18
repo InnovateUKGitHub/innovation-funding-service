@@ -292,6 +292,7 @@ Application questions: All the sections should be visible
 
 Application questions: server side validations
     [Documentation]    INFUND-3000
+    [Tags]    Pending
     Given The user clicks the button/link    jQuery=li:nth-child(5) .button:contains(Edit)
     And The user should see the element    jQuery=.button[value="Save and close"]
     When the user leaves all the question field empty
