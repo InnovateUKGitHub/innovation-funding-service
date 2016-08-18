@@ -122,4 +122,9 @@ public interface ProjectService {
 
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'DOWNLOAD_OTHER_DOCUMENTS')")
     List<ServiceResult<FileAndContents>>  retrieveUploadedDocuments(Long projectId);
+
+    @PreAuthorize("hasAuthority('system_registrar')")
+    @SecuredBySpring(value = "ADD_PARTNER",
+            description = "The System Registration user can add a partner to a project")
+    ServiceResult<Void> addPartner(Long projectId, Long userId, Long organisationId);
 }
