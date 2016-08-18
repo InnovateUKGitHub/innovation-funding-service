@@ -1,15 +1,15 @@
 package com.worth.ifs.invite.builder;
 
+import com.worth.ifs.BaseBuilder;
+import com.worth.ifs.invite.constant.InviteStatusConstants;
+import com.worth.ifs.invite.resource.InviteProjectResource;
+
 import java.util.List;
 import java.util.function.BiConsumer;
 
 import static com.worth.ifs.BaseBuilderAmendFunctions.setField;
-import static java.util.Collections.emptyList;
-
 import static com.worth.ifs.BaseBuilderAmendFunctions.uniqueIds;
-import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.invite.constant.InviteStatusConstants;
-import com.worth.ifs.invite.resource.InviteProjectResource;
+import static java.util.Collections.emptyList;
 
 
 public class ProjectInviteResourceBuilder  extends BaseBuilder<InviteProjectResource, ProjectInviteResourceBuilder> {
@@ -19,10 +19,6 @@ public class ProjectInviteResourceBuilder  extends BaseBuilder<InviteProjectReso
     }
 
     public static ProjectInviteResourceBuilder newInviteProjectResource() {
-        return new ProjectInviteResourceBuilder(emptyList()).with(uniqueIds());
-    }
-
-    public static ProjectInviteResourceBuilder newInviteProjectResources() {
         return new ProjectInviteResourceBuilder(emptyList()).with(uniqueIds());
     }
 
@@ -56,13 +52,17 @@ public class ProjectInviteResourceBuilder  extends BaseBuilder<InviteProjectReso
         return with((inviteResource) -> inviteResource.setProject(projectId));
     }
 
-    public  ProjectInviteResourceBuilder withOrganisation(final Long organisationId) {
+    public ProjectInviteResourceBuilder withOrganisation(final Long organisationId) {
         return with((inviteResource) -> inviteResource.setOrganisation(organisationId));
     }
 
-
     public ProjectInviteResourceBuilder withIds(Long... ids) {
         return withArray((id, inviteResource) -> setField("id", id, inviteResource), ids);
+
+    }
+
+    public ProjectInviteResourceBuilder withHash(String... hashes) {
+        return withArray((hash, inviteResource) -> setField("hash", hash, inviteResource), hashes);
 
     }
 

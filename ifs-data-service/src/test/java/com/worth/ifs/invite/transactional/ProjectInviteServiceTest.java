@@ -18,6 +18,7 @@ import java.util.List;
 
 import static com.worth.ifs.commons.error.CommonErrors.badRequestError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.invite.builder.ProjectInviteBuilder.newInvite;
 import static com.worth.ifs.project.builder.ProjectBuilder.newProject;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
@@ -40,15 +41,20 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
     @Mock
     InviteOrganisationMapper inviteOrganisationMapper;
 
+
     @InjectMocks
     private InviteProjectService inviteProjectService = new InviteProjectServiceImpl();
 
     @Test
     public void testAcceptProjectInviteSuccess() throws Exception {
+        Project project = newProject().build();
+        Organisation organisation = newOrganisation().build();
         User user = newUser().withEmailAddress("email@example.com").build();
-        ProjectInvite projectInvite = newInvite().withEmailAddress(user.getEmail()).withHash("hash").build();
+        ProjectInvite projectInvite = newInvite().withEmailAddress(user.getEmail()).withHash("hash").withProject(project).withOrganisation(organisation).build();
         when(inviteProjectRepositoryMock.getByHash(projectInvite.getHash())).thenReturn(projectInvite);
         when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+        when(inviteProjectRepositoryMock.save(projectInvite)).thenReturn(projectInvite);
+        when(projectServiceMock.addPartner(projectInvite.getTarget().getId(), user.getId(), projectInvite.getOrganisation().getId())).thenReturn(serviceSuccess());
         ServiceResult<Void> result = inviteProjectService.acceptProjectInvite(projectInvite.getHash(), user.getId());
         assertTrue(result.isSuccess());
     }
