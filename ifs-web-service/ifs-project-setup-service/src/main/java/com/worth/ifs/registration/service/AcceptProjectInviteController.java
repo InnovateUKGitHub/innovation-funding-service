@@ -125,18 +125,17 @@ public class AcceptProjectInviteController extends BaseController {
     //======================================================
 
     @RequestMapping(value = ACCEPT_INVITE_USER_EXIST_CONFIRM_MAPPING, method = RequestMethod.GET)
-    public String acceptInviteUserDoesExistConfirm(HttpServletRequest request, @ModelAttribute("loggedInUser") UserResource loggedInUser, Model model) {
+    public String acceptInviteUserDoesExistConfirm(HttpServletRequest request,
+                                                   @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                                   Model model) {
         String hash = getCookieValue(request, INVITE_HASH);
         return find(inviteByHash(hash), userByHash(hash)).andOnSuccess((invite, userExists) -> {
                     ValidationMessages errors = errorMessages(loggedInUser, invite);
                     if (errors.hasErrors()) {
                         return populateModelWithErrorsAndReturnErrorView(errors, model);
                     }
-                    // Add the user to the project
-                    return projectRestService.addPartner(invite.getProject(), userExists.getId(), invite.getOrganisation())
-                            // TODO accept project invite - maybe role addPartner into it.
-                            .andOnSuccess(() -> projectInviteRestService.acceptInvite(hash, userExists.getId()))
-                            .andOnSuccessReturn(() -> "redirect:/");
+                    // Accept the invite - adding the user to the project
+                    return projectInviteRestService.acceptInvite(hash, userExists.getId()).andOnSuccessReturn(() -> "redirect:/");
 
                 }
         ).getSuccessObject();

@@ -8,6 +8,7 @@ import com.worth.ifs.invite.domain.ProjectInvite;
 import com.worth.ifs.invite.mapper.InviteProjectMapper;
 import com.worth.ifs.invite.repository.InviteProjectRepository;
 import com.worth.ifs.invite.resource.InviteProjectResource;
+import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.mapper.UserMapper;
 import com.worth.ifs.user.resource.UserResource;
@@ -33,6 +34,7 @@ import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_INVITE_INVAL
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
+import static java.lang.String.format;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
@@ -48,6 +50,9 @@ public class InviteProjectServiceImpl extends BaseTransactionalService implement
 
     @Autowired
     private InviteProjectRepository inviteProjectRepository;
+
+    @Autowired
+    private ProjectService projectService;
 
     @Autowired
     private UserMapper userMapper;
@@ -69,7 +74,7 @@ public class InviteProjectServiceImpl extends BaseTransactionalService implement
             Errors errors = new BeanPropertyBindingResult(projectInvite, projectInvite.getClass().getName());
             validator.validate(projectInvite, errors);
             if (errors.hasErrors()) {
-                errors.getFieldErrors().stream().peek(e -> LOG.debug(String.format("Field error: %s ", e.getField())));
+                errors.getFieldErrors().stream().peek(e -> LOG.debug(format("Field error: %s ", e.getField())));
                 return serviceFailure(badRequestError(errors.toString()));
             } else {
                 projectInvite.getHash();
@@ -98,19 +103,13 @@ public class InviteProjectServiceImpl extends BaseTransactionalService implement
 
     @Override
     public ServiceResult<Void> acceptProjectInvite(String inviteHash, Long userId) {
-        LOG.error(String.format("acceptInvite %s => %s ", inviteHash, userId));
         return find(invite(inviteHash), user(userId)).andOnSuccess((invite, user) -> {
-
             if(invite.getEmail().equalsIgnoreCase(user.getEmail())){
-                invite.open();
-
-                invite = inviteProjectRepository.save(invite);
-                // need to check with business if required to save in Project User entity
-
-                return serviceSuccess();
+                invite = inviteProjectRepository.save(invite.open());
+                return projectService.addPartner(invite.getTarget().getId(), user.getId(), invite.getOrganisation().getId());
             }
-            LOG.error(String.format("Invited emailaddress not the same as the users emailaddress %s => %s ", user.getEmail(), invite.getEmail()));
-            Error e = new Error("Invited emailaddress not the same as the users emailaddress", HttpStatus.NOT_ACCEPTABLE);
+            LOG.error(format("Invited email address not the same as the users email address %s => %s ", user.getEmail(), invite.getEmail()));
+            Error e = new Error("Invited email address not the same as the users email address", HttpStatus.NOT_ACCEPTABLE);
             return serviceFailure(e);
         });
     }

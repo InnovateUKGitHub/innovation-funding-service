@@ -90,12 +90,10 @@ public class ProjectRegistrationController {
                 return restSuccess(REGISTRATION_REGISTER_VIEW);
             }
             RestResult<String> result = createUser(registrationForm, invite.getOrganisation())
-                    // TODO accept project invite - maybe role addPartner into it.
-                    .andOnSuccess(newUser -> projectRestService.addPartner(invite.getProject(), newUser.getId(), invite.getOrganisation()).
-                            andOnSuccess(() -> {
-                                projectInviteRestService.acceptInvite(hash, newUser.getId());
-                                return restSuccess(REGISTRATION_SUCCESS_VIEW);
-                            }));
+                    .andOnSuccess(newUser -> {
+                        projectInviteRestService.acceptInvite(hash, newUser.getId());
+                        return restSuccess(REGISTRATION_SUCCESS_VIEW);
+                    });
             if (result.isSuccess()) {
                 return result;
             } else {
