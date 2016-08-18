@@ -32,7 +32,7 @@ ${submit_application_name}    Robot submit test application
 *** Test Cases ***
 Set up an application to submit
     [Documentation]    INFUND-205
-    [Tags]    HappyPath
+    [Tags]    HappyPath    Email
     new account complete all but one
     # please note that this test case has been moved out of suite setup as it isn't required for smoke testing, but should still run for HappyPath and full test runs
 
