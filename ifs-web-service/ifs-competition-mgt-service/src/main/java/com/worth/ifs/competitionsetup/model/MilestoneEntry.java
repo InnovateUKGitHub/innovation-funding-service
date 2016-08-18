@@ -5,6 +5,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.validator.constraints.Range;
 
+import java.time.DateTimeException;
 import java.time.LocalDateTime;
 
 /**
@@ -82,10 +83,15 @@ public class MilestoneEntry {
     }
 
     private String getMilestoneDate (Integer day, Integer month, Integer year) {
-        if (day != null && month != null && year != null){
-            return LocalDateTime.of(year, month, day, 0, 0).getDayOfWeek().name();
-        } else {
-            return null;
+        if (day != null && month != null && year != null) {
+            try {
+                return LocalDateTime.of(year, month, day, 0, 0).getDayOfWeek().name();
+            } catch (DateTimeException ex) {
+                LOG.error("Invalid date");
+                LOG.debug(ex.getMessage());
+            }
         }
+
+        return null;
     }
 }

@@ -13,6 +13,7 @@ import org.apache.commons.collections4.map.LinkedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -40,10 +41,8 @@ public class MilestonesSectionSaver implements CompetitionSetupSectionSaver {
         MilestonesForm milestonesForm = (MilestonesForm) competitionSetupForm;
         LinkedMap<String, MilestoneEntry> milestoneEntries = milestonesForm.getMilestoneEntries();
 
-        List<MilestoneResource> milestones = milestoneService.getAllDatesByCompetitionId(competition.getId());
-        milestones.sort((c1, c2) -> c1.getType().compareTo(c2.getType()));
 
-        List<Error> errors = competitionSetupMilestoneService.validateMilestoneDates(milestoneEntries);
+        List<Error> errors = returnErrorsFoundOnSave(milestoneEntries, competition.getId());
         if(!errors.isEmpty()) {
 
             ((MilestonesForm) competitionSetupForm)
@@ -54,12 +53,26 @@ public class MilestonesSectionSaver implements CompetitionSetupSectionSaver {
             return errors;
         }
 
-        return competitionSetupMilestoneService.updateMilestonesForCompetition(milestones, milestoneEntries, competition.getId());
+        return new ArrayList<>();
     }
 
 
+    private List<Error> returnErrorsFoundOnSave(LinkedMap<String, MilestoneEntry> milestoneEntries, Long competitionId){
+        List<MilestoneResource> milestones = milestoneService.getAllDatesByCompetitionId(competitionId);
+
+        List<Error> errors = competitionSetupMilestoneService.validateMilestoneDates(milestoneEntries);
+
+        if(!errors.isEmpty()) {
+            return errors;
+        }
+
+        return competitionSetupMilestoneService.updateMilestonesForCompetition(milestones, milestoneEntries, competitionId);
+    }
+
     private LinkedMap<String, MilestoneEntry> sortMilestoneEntries(Collection<MilestoneEntry> milestones) {
-        List<MilestoneEntry> sortedMilestones = milestones.stream().sorted((o1, o2) -> o1.getMilestoneType().ordinal() - o2.getMilestoneType().ordinal()).collect(Collectors.toList());
+        List<MilestoneEntry> sortedMilestones = milestones.stream()
+                .sorted((o1, o2) -> o1.getMilestoneType().ordinal() - o2.getMilestoneType().ordinal())
+                .collect(Collectors.toList());
 
         LinkedMap<String, MilestoneEntry> milestoneFormEntries = new LinkedMap<>();
         sortedMilestones.stream().forEachOrdered(milestone ->
