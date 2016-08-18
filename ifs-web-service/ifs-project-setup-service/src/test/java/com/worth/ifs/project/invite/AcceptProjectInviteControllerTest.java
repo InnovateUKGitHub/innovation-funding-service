@@ -1,7 +1,6 @@
 package com.worth.ifs.project.invite;
 
 import com.worth.ifs.BaseUnitTest;
-import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.invite.service.ProjectInviteRestService;
 import com.worth.ifs.project.viewmodel.JoinAProjectViewModel;
@@ -16,7 +15,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.validation.Validator;
 
 import javax.servlet.http.Cookie;
 
@@ -28,9 +26,7 @@ import static com.worth.ifs.invite.constant.InviteStatusConstants.SEND;
 import static com.worth.ifs.registration.service.AcceptProjectInviteController.*;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -42,11 +38,6 @@ public class AcceptProjectInviteControllerTest extends BaseUnitTest {
     private AcceptProjectInviteController acceptProjectInviteController;
 
     @Mock
-    private Validator validator;
-    @Mock
-    private CookieFlashMessageFilter cookieFlashMessageFilter;
-
-    @Mock
     private ProjectInviteRestService projectInviteRestServiceMock;
 
     @Before
@@ -54,7 +45,6 @@ public class AcceptProjectInviteControllerTest extends BaseUnitTest {
         MockitoAnnotations.initMocks(this);
         mockMvc = setupMockMvc(acceptProjectInviteController, () -> loggedInUser, env, messageSource);
     }
-
 
     @Test
     public void testFailureUserExistsButIsLoggedInWithTheWrongUser() throws Exception {
