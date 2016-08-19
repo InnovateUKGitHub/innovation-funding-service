@@ -292,7 +292,7 @@ Application questions: All the sections should be visible
 
 Application questions: server side validations
     [Documentation]    INFUND-3000
-    [Tags]    Pending
+    [Tags]
     Given The user clicks the button/link    jQuery=li:nth-child(5) .button:contains(Edit)
     And The user should see the element    jQuery=.button[value="Save and close"]
     When the user leaves all the question field empty
@@ -305,6 +305,8 @@ Application questions: server side validations
 
 Application questions: Client side validations
     [Documentation]    INFUND-3000
+    [Tags]    Pending
+    # TODO after 3002
     Given the user fills the empty question fields
     Then the validation error above the question should not be visible    jQuery=label:contains(Question title)    This field cannot be left blank
     And the validation error above the question should not be visible    jQuery=label:contains(Question guidance title)    This field cannot be left blank
@@ -316,6 +318,8 @@ Application questions: Client side validations
 
 Application questions: Mark as done and the Edit again
     [Documentation]    INFUND-3000
+    [Tags]    Pending
+    # TODO fix after 3002
     [Setup]    The user clicks the button/link    jQuery=.grid-row div:nth-child(2) label:contains(Yes)
     When The user clicks the button/link    jQuery=.button[value="Save and close"]
     Then The user should see the text in the page    Test title
@@ -346,7 +350,7 @@ the user leaves all the question field empty
     Clear Element Text    css=.editor
     Press Key    css=.editor    \\8
     focus    jQuery=.button[value="Save and close"]
-    sleep    5000
+    sleep    200ms
     The user enters text to a text field    id=question.title    ${EMPTY}
     The user enters text to a text field    id=question.guidanceTitle    ${EMPTY}
     The user enters text to a text field    jQuery=[id="question.maxWords"]    ${EMPTY}

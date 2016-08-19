@@ -36,7 +36,6 @@ import static com.worth.ifs.util.MapFunctions.asMap;
 import static java.lang.String.format;
 import static java.time.LocalDateTime.now;
 import static java.util.Collections.singletonList;
-import static java.util.Optional.empty;
 
 /**
  * A service around Registration and general user-creation operations
@@ -86,11 +85,6 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
-    @Override
-    public ServiceResult<UserResource> createApplicantUser(Long organisationId, UserResource userResource) {
-        return createApplicantUser(organisationId, empty(), userResource);
-    }
-
     private boolean isUserCompAdmin(final String email) {
         if(StringUtils.hasText(email)) {
             CompAdminEmail existingUserSearch = compAdminEmailRepository.findOneByEmail(email);
@@ -112,7 +106,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 	}
 
     @Override
-    public ServiceResult<UserResource> createApplicantUser(Long organisationId, Optional<Long> competitionId, UserResource userResource) {
+    public ServiceResult<UserResource> createOrganisationUser(Long organisationId, UserResource userResource) {
         String roleName;
         if(isUserCompAdmin(userResource.getEmail())){
             roleName = COMP_ADMIN.getName();
@@ -124,7 +118,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         User newUser = assembleUserFromResource(userResource);
         return validateUser(userResource, userResource.getPassword()).andOnSuccess(validUser -> addOrganisationToUser(newUser, organisationId).andOnSuccess(user ->
                 addRoleToUser(user, roleName))).andOnSuccess(() ->
-                createUserWithUid(newUser, userResource.getPassword(), competitionId));
+                createUserWithUid(newUser, userResource.getPassword()));
     }
 
 	private ServiceResult<UserResource> validateUser(UserResource userResource, String password) {
@@ -140,7 +134,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         });
     }
 
-    private ServiceResult<UserResource> createUserWithUid(User user, String password, Optional<Long> competitionId) {
+    private ServiceResult<UserResource> createUserWithUid(User user, String password) {
 
         ServiceResult<String> uidFromIdpResult = idpService.createUserRecordWithUid(user.getEmail(), password);
 

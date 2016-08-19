@@ -145,7 +145,7 @@ public class InviteProjectControllerTest  extends BaseControllerMockMVCTest<Invi
 
         Long projectId = 123L;
 
-        List<InviteProjectResource> inviteProjectResources = ProjectInviteResourceBuilder.newInviteProjectResources().
+        List<InviteProjectResource> inviteProjectResources = ProjectInviteResourceBuilder.newInviteProjectResource().
                 withIds(1L).
                 withEmails("testProject-invite@mail.com").
                 withNames("test-project-invitece").
@@ -218,7 +218,7 @@ public class InviteProjectControllerTest  extends BaseControllerMockMVCTest<Invi
 
         String hash = "has545967h";
 
-        when(inviteProjectServiceMock.checkUserExistingByInviteHash(hash)).thenReturn(serviceSuccess());
+        when(inviteProjectServiceMock.checkUserExistingByInviteHash(hash)).thenReturn(serviceSuccess(true));
 
         mockMvc.perform(get("/projectinvite/checkExistingUser/{hash}", hash)
                 .accept(APPLICATION_JSON))
