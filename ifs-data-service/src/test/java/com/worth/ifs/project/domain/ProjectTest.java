@@ -3,7 +3,6 @@ package com.worth.ifs.project.domain;
 import com.worth.ifs.address.domain.Address;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,7 +14,7 @@ import java.util.function.Predicate;
 import static com.worth.ifs.project.builder.ProjectBuilder.newProject;
 import static com.worth.ifs.project.builder.ProjectUserBuilder.newProjectUser;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
-import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_FINANCE_OFFICER;
+import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
 import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
 import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static java.util.Arrays.asList;
@@ -93,7 +92,7 @@ public class ProjectTest {
     @Test
     public void testGetProjectUsersWithRole() {
         ProjectUser pu1 = newProjectUser().withRole(PROJECT_PARTNER).build();
-        ProjectUser pu2 = newProjectUser().withRole(PROJECT_FINANCE_OFFICER).build();
+        ProjectUser pu2 = newProjectUser().withRole(PROJECT_FINANCE_CONTACT).build();
         Project project = newProject().withProjectUsers(asList(pu1, pu2)).build();
         assertNotNull(project.getProjectUsersWithRole(PROJECT_PARTNER));
         assertEquals(1, project.getProjectUsersWithRole(PROJECT_PARTNER).size());

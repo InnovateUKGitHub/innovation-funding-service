@@ -44,12 +44,20 @@ public abstract class ProjectUserMapper extends BaseMapper<ProjectUser, ProjectU
     }
 
     public Long map(ProjectParticipantRole role) {
-        if (role == null) return null;
-        else return role.getId();
+        if (role == null) {
+            return null;
+        }
+        else {
+            return role.getId();
+        }
     }
 
     public ProjectParticipantRole mapIdToRole(Long id) {
-        if (id == null) return null;
-        else return ProjectParticipantRole.getById(id);
+        if (id == null) {
+            return null;
+        }
+        else {
+            return ProjectParticipantRole.getById(id);
+        }
     }
 }

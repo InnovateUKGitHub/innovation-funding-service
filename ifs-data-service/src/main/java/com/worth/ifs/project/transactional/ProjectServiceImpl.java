@@ -30,7 +30,6 @@ import com.worth.ifs.organisation.repository.OrganisationAddressRepository;
 import com.worth.ifs.project.domain.MonitoringOfficer;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
-import com.worth.ifs.project.finance.transactional.ProjectFinanceService;
 import com.worth.ifs.project.mapper.MonitoringOfficerMapper;
 import com.worth.ifs.project.mapper.ProjectMapper;
 import com.worth.ifs.project.mapper.ProjectUserMapper;
@@ -41,10 +40,8 @@ import com.worth.ifs.project.resource.*;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.OrganisationResource;
-import com.worth.ifs.user.resource.UserRoleType;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -53,7 +50,6 @@ import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.io.InputStream;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -64,7 +60,7 @@ import static com.worth.ifs.commons.error.CommonErrors.badRequestError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.service.ServiceResult.*;
-import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_FINANCE_OFFICER;
+import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
 import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
 import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
@@ -580,7 +576,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
     private void addFinanceContactToProject(Project project, ProjectUser financeContact) {
 
-        ProjectUser existingUser = project.getExistingProjectUserWithRoleForOrganisation(ProjectParticipantRole.PROJECT_FINANCE_OFFICER, financeContact.getOrganisation());
+        ProjectUser existingUser = project.getExistingProjectUserWithRoleForOrganisation(ProjectParticipantRole.PROJECT_FINANCE_CONTACT, financeContact.getOrganisation());
 
         if (existingUser != null) {
             project.removeProjectUser(existingUser);
@@ -590,7 +586,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     }
 
     private ServiceResult<ProjectUser> createFinanceContactProjectUser(User user, Project project, Organisation organisation) {
-        return createProjectUserForRole(project, user, organisation, PROJECT_FINANCE_OFFICER);
+        return createProjectUserForRole(project, user, organisation, PROJECT_FINANCE_CONTACT);
     }
 
     @Override
