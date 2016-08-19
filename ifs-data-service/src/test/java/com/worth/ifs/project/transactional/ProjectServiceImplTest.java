@@ -51,6 +51,7 @@ import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressRes
 import static com.worth.ifs.address.builder.AddressTypeBuilder.newAddressType;
 import static com.worth.ifs.address.resource.OrganisationAddressType.*;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
+import static com.worth.ifs.commons.error.CommonErrors.badRequestError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
@@ -1014,6 +1015,60 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 project::setExploitationPlan,
                 () -> service.isOtherDocumentsSubmitAllowed(123L, 1L));
 
+    }
+
+
+
+    @Test
+    public void testAddPartnerOrganisationNotOnProject(){
+        Organisation o = newOrganisation().build();
+        Organisation organisationNotOnProject = newOrganisation().build();
+        User u = newUser().build();
+        List<ProjectUser> pu = newProjectUser().withRole(PARTNER).withUser(u).withOrganisation(o).build(1);
+        Project p = newProject().withProjectUsers(pu).build();
+        when(projectRepositoryMock.findOne(p.getId())).thenReturn(p);
+        when(organisationRepositoryMock.findOne(o.getId())).thenReturn(o);
+        when(organisationRepositoryMock.findOne(organisationNotOnProject.getId())).thenReturn(organisationNotOnProject);
+        when(userRepositoryMock.findOne(u.getId())).thenReturn(u);
+        // Method under test
+        ServiceResult<Void> shouldFail = service.addPartner(p.getId(), u.getId(), organisationNotOnProject.getId());
+        // Expectations
+        assertTrue(shouldFail.isFailure());
+        assertTrue(shouldFail.getFailure().is(badRequestError("project does not contain organisation")));
+    }
+
+    @Test
+    public void testAddPartnerPartnerAlreadyExists(){
+        Organisation o = newOrganisation().build();
+        User u = newUser().build();
+        List<ProjectUser> pu = newProjectUser().withRole(PARTNER).withUser(u).withOrganisation(o).build(1);
+        Project p = newProject().withProjectUsers(pu).build();
+        when(projectRepositoryMock.findOne(p.getId())).thenReturn(p);
+        when(organisationRepositoryMock.findOne(o.getId())).thenReturn(o);
+        when(userRepositoryMock.findOne(u.getId())).thenReturn(u);
+        // Method under test
+        ServiceResult<Void> shouldFail = service.addPartner(p.getId(), u.getId(), o.getId());
+        // Expectations
+        verifyZeroInteractions(projectUserRepositoryMock);
+        assertTrue(shouldFail.isSuccess());
+    }
+
+    @Test
+    public void testAddPartner(){
+        Organisation o = newOrganisation().build();
+        User u = newUser().build();
+        List<ProjectUser> pu = newProjectUser().withRole(PARTNER).withUser(u).withOrganisation(o).build(1);
+        Project p = newProject().withProjectUsers(pu).build();
+        User newUser = newUser().build();
+        when(projectRepositoryMock.findOne(p.getId())).thenReturn(p);
+        when(organisationRepositoryMock.findOne(o.getId())).thenReturn(o);
+        when(userRepositoryMock.findOne(u.getId())).thenReturn(u);
+        when(userRepositoryMock.findOne(newUser.getId())).thenReturn(u);
+        // Method under test
+        ServiceResult<Void> shouldFail = service.addPartner(p.getId(), newUser.getId(), o.getId());
+        // Expectations
+        verify(projectUserRepositoryMock).save(isA(ProjectUser.class));
+        assertTrue(shouldFail.isSuccess());
     }
 
 

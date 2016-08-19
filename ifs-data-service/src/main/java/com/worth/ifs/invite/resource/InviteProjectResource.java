@@ -23,12 +23,15 @@ public class InviteProjectResource extends InviteResource {
     private String leadOrganisation;
     private Long inviteOrganisation;
     private String inviteOrganisationName;
+    private String leadApplicant;
+    private String competitionName;
+
 
     public InviteProjectResource() {
         // no-arg constructor
     }
 
-    public InviteProjectResource(Long id, Long user, String name, String email, Long project, Long organisation, Long applicationId, String hash, InviteStatusConstants status) {
+    public InviteProjectResource(Long id, Long user, String name, String email, Long project, Long organisation, Long applicationId, String hash, InviteStatusConstants status, String leadApplicant, String competitionName) {
         this.id = id;
         this.user = user;
         this.name = name;
@@ -38,6 +41,8 @@ public class InviteProjectResource extends InviteResource {
         this.applicationId  = applicationId;
         this.hash = hash;
         this.status = status;
+        this.competitionName = competitionName;
+        this.leadApplicant = leadApplicant;
     }
 
     public InviteProjectResource(String name, String email, Long project) {
@@ -114,6 +119,22 @@ public class InviteProjectResource extends InviteResource {
         this.inviteOrganisation = inviteOrganisation;
     }
 
+    public String getLeadApplicant() {
+        return leadApplicant;
+    }
+
+    public void setLeadApplicant(String leadApplicant) {
+        this.leadApplicant = leadApplicant;
+    }
+
+    public String getCompetitionName() {
+        return competitionName;
+    }
+
+    public void setCompetitionName(String competitionName) {
+        this.competitionName = competitionName;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -137,6 +158,8 @@ public class InviteProjectResource extends InviteResource {
                 .append(leadOrganisation, that.leadOrganisation)
                 .append(inviteOrganisation, that.inviteOrganisation)
                 .append(inviteOrganisationName, that.inviteOrganisationName)
+                .append(leadApplicant, that.leadApplicant)
+                .append(competitionName, that.competitionName)
                 .isEquals();
     }
 
@@ -154,6 +177,8 @@ public class InviteProjectResource extends InviteResource {
                 .append(projectName)
                 .append(hash)
                 .append(status)
+                .append(leadApplicant)
+                .append(competitionName)
                 .toHashCode();
     }
 }

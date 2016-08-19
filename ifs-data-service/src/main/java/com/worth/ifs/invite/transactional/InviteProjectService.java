@@ -4,13 +4,12 @@ package com.worth.ifs.invite.transactional;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.security.SecuredBySpring;
+import com.worth.ifs.user.resource.UserResource;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.access.prepost.PreFilter;
 
 import java.util.List;
-import java.util.Set;
 
 
 public interface InviteProjectService {
@@ -38,6 +37,12 @@ public interface InviteProjectService {
     @SecuredBySpring(value = "CHECK_EXISTENCE_OF_INVITE_ON_HASH",
             description = "The System Registration user can check to see if there is an invite for a given hash",
             additionalComments = "The hash should be unguessable so the only way to successfully call this method would be to have been given the hash in the first place")
-    ServiceResult<Void> checkUserExistingByInviteHash(@P("hash") String hash);
+    ServiceResult<Boolean> checkUserExistingByInviteHash(@P("hash") String hash);
+
+    @PreAuthorize("hasAuthority('system_registrar')")
+    @SecuredBySpring(value = "GET_USER_ON_HASH",
+            description = "The System Registration user can see if there is a user for a given hash",
+            additionalComments = "The hash should be unguessable so the only way to successfully call this method would be to have been given the hash in the first place")
+    ServiceResult<UserResource> getUserByInviteHash(@P("hash") String hash);
 
 }

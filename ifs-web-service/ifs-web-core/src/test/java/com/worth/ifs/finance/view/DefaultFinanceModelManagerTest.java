@@ -18,6 +18,9 @@ import static org.mockito.Mockito.when;
 import java.util.List;
 import java.util.Map;
 
+import com.worth.ifs.finance.resource.category.FinanceRowCostCategory;
+import com.worth.ifs.finance.resource.cost.FinanceRowItem;
+import com.worth.ifs.finance.resource.cost.FinanceRowType;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,10 +45,7 @@ import com.worth.ifs.application.service.QuestionService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionResource.Status;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
-import com.worth.ifs.finance.resource.category.CostCategory;
 import com.worth.ifs.finance.resource.category.LabourCostCategory;
-import com.worth.ifs.finance.resource.cost.CostItem;
-import com.worth.ifs.finance.resource.cost.CostType;
 import com.worth.ifs.finance.resource.cost.LabourCost;
 import com.worth.ifs.form.service.FormInputService;
 import com.worth.ifs.user.resource.OrganisationTypeResource;
@@ -152,7 +152,7 @@ public class DefaultFinanceModelManagerTest {
 		when(competitionService.getById(competitionId)).thenReturn(competition);
 	
 		ApplicationFinanceResource applicationFinance = newApplicationFinanceResource().withOrganisation(organisationId).build();
-		Map<CostType, CostCategory> financeOrganisationDetails = MapFunctions.asMap(CostType.LABOUR, new LabourCostCategory());
+		Map<FinanceRowType, FinanceRowCostCategory> financeOrganisationDetails = MapFunctions.asMap(FinanceRowType.LABOUR, new LabourCostCategory());
 		applicationFinance.setFinanceOrganisationDetails(financeOrganisationDetails);
 		when(financeService.getApplicationFinanceDetails(userId, applicationId)).thenReturn(applicationFinance);
 		OrganisationTypeResource organisationTypeResource = newOrganisationTypeResource().build();
@@ -164,8 +164,8 @@ public class DefaultFinanceModelManagerTest {
 		when(financeHandler.getFinanceFormHandler(organisationType)).thenReturn(financeFormHandler);
 		
     	when(formInputService.findApplicationInputsByQuestion(isA(Long.class))).thenReturn(asList(newFormInputResource().withFormInputTypeTitle("labour").build()));
-		
-		CostItem costItem = new LabourCost();
+
+		FinanceRowItem costItem = new LabourCost();
 		when(financeFormHandler.addCostWithoutPersisting(applicationId, userId, costsQuestions.get(0).getId())).thenReturn(costItem);
 	}
 }
