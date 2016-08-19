@@ -23,6 +23,7 @@ Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
 Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
+# TODO Known bug INFUND-4681, enforces the Competition Type (in Initial Details) to be Programme else Application Questions lead to 404, please do not change the value!
 
 *** Test Cases ***
 User can navigate to the competition setup form
@@ -102,7 +103,7 @@ Initial details client-side validations
     # TODO Update Date validation messages after INFUND-4676 is done.
     When the user enters text to a text field    id=title    Competition title
     Then the user should not see the error any more    Please enter a title
-    When the user selects the option from the drop-down menu    Additive Manufacturing    id=competitionTypeId
+    When the user selects the option from the drop-down menu    Programme    id=competitionTypeId
     Then the user should not see the error any more    Please select a competition type
     When the user selects the option from the drop-down menu    Health and life sciences    id=innovationSectorCategoryId
     Then the user should not see the error any more    Please select an innovation sector
@@ -134,7 +135,7 @@ Initial details mark as done
     And the user should see the text in the page    Competition title
     And the user should see the text in the page    Health and life sciences
     And the user should see the text in the page    Advanced Therapies
-    And the user should see the text in the page    Additive Manufacturing
+    And the user should see the text in the page    Programme
     And the user should see the text in the page    NO
     And the user should see the element    jQuery=.button:contains("Edit")
 
@@ -152,7 +153,7 @@ Initial details can be edited again
     And the user should see the text in the page    Test competition
     And the user should see the text in the page    Health and life sciences
     And the user should see the text in the page    Advanced Therapies
-    And the user should see the text in the page    Additive Manufacturing
+    And the user should see the text in the page    Programme
     And the user should see the text in the page    NO
     When The user clicks the button/link    link=Competition set up
     Then the user should not see the element    jQuery=.button:contains("Save as Ready To Open")
@@ -302,11 +303,11 @@ Save as Ready To Open button
     When the user clicks the button/link         link=All competitions
     And the user clicks the button/link          id=section-3
     Then element text should be                  //*[@id="content"]/section[2]/div/div/ul/li[1]/div[1]/h3/a    Test competition
+    # The above line checks that the first competition in the section 'Ready to Open' is named Test competition
     [Teardown]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
 
 Application questions: All the sections should be visible
     [Documentation]    INFUND-3000
-    [Tags]    Pending
     [Setup]    go to    ${COMP_MANAGEMENT_COMP_SETUP}
     When The user clicks the button/link    link=Application Questions
     Then The user should see the text in the page    Template: Programme 10 questions
@@ -323,7 +324,6 @@ Application questions: All the sections should be visible
 
 Application questions: server side validations
     [Documentation]    INFUND-3000
-    [Tags]    Pending
     Given The user clicks the button/link    jQuery=li:nth-child(5) .button:contains(Edit)
     And The user should see the element    jQuery=.button[value="Save and close"]
     When the user leaves all the question field empty
@@ -331,12 +331,11 @@ Application questions: server side validations
     And The user clicks the button/link    jQuery=.button[value="Save and close"]
     Then the validation error above the question should be visible    jQuery=label:contains(Question title)    This field cannot be left blank
     And the validation error above the question should be visible    jQuery=label:contains(Question guidance title)    This field cannot be left blank
-    #To do: investigate why this step fails with chrome driver    INFUND-4514
+    #Todo: investigate why this step fails with chrome driver    INFUND-4514
     And the validation error above the question should be visible    jQuery=div:nth-child(4) div:nth-child(4) label:contains(Question guidance)    This field cannot be left blank
 
 Application questions: Client side validations
     [Documentation]    INFUND-3000
-    [Tags]    Pending
     Given the user fills the empty question fields
     Then the validation error above the question should not be visible    jQuery=label:contains(Question title)    This field cannot be left blank
     And the validation error above the question should not be visible    jQuery=label:contains(Question guidance title)    This field cannot be left blank
@@ -348,7 +347,6 @@ Application questions: Client side validations
 
 Application questions: Mark as done and the Edit again
     [Documentation]    INFUND-3000
-    [Tags]    Pending
     [Setup]    The user clicks the button/link    jQuery=.grid-row div:nth-child(2) label:contains(Yes)
     When The user clicks the button/link    jQuery=.button[value="Save and close"]
     Then The user should see the text in the page    Test title
