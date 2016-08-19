@@ -29,8 +29,12 @@ import javax.validation.groups.Default;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.worth.ifs.commons.rest.ValidationMessages.reject;
+import static com.worth.ifs.commons.rest.ValidationMessages.rejectValue;
 import static com.worth.ifs.form.resource.FormInputScope.APPLICATION;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyMap;
 
 @Component
 public class ValidationUtil {
@@ -73,11 +77,19 @@ public class ValidationUtil {
                 }
                 propertyName = propertyName.substring(0, propertyName.length() - 1);
             }
-            String constraintName = v.getConstraintDescriptor().getAnnotation().annotationType().getSimpleName();
+
+            Map<String, Object> attributes = v.getConstraintDescriptor().getAttributes();
+            Map<String, Object> messageArguments =
+                    attributes != null ?
+                            simpleFilter(attributes, (key, value) -> !asList("groups", "message", "payload", "inclusive").contains(key))
+                            : emptyMap();
+
+            List<Object> messageArgumentValues = new ArrayList<>(messageArguments.values());
+
             if (propertyName == null || "".equals(propertyName)) {
-                result.reject(constraintName, v.getMessage());
+                reject(result, v.getMessage(), messageArgumentValues.toArray());
             } else {
-                result.rejectValue(propertyName, constraintName, v.getMessage());
+                rejectValue(result, propertyName, v.getMessage(), messageArgumentValues.toArray());
             }
         }
     }

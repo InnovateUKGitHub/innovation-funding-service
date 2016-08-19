@@ -155,12 +155,11 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
         assertEquals("costItem", messages.getObjectName());
 
         List<Error> expectedErrors = asList(
-                fieldError("labourDays", -50, "This field should be 1 or higher"),
-                fieldError("grossAnnualSalary", new BigDecimal("-500000"), "This field should be 1 or higher"),
-                fieldError("role", "", "This field cannot be left blank"));
+                fieldError("labourDays", -50, "validation.field.max.value.or.higher", 1),
+                fieldError("grossAnnualSalary", new BigDecimal("-500000"), "validation.field.max.value.or.higher", 1),
+                fieldError("role", "", "validation.field.must.not.be.blank"));
 
-        assertEquals(expectedErrors.size(), messages.getErrors().size());
-        expectedErrors.forEach(error -> assertTrue(messages.getErrors().contains(error)));
+        assertErrorsAsExpected(messages, expectedErrors);
     }
 
     @Rollback
@@ -208,10 +207,9 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
         assertEquals("costItem", messages.getObjectName());
 
         List<Error> expectedErrors = singletonList(
-                fieldError("rate", -10, "This field should be 1 or higher"));
+                fieldError("rate", -10, "validation.field.max.value.or.higher", 1));
 
-        assertEquals(expectedErrors.size(), messages.getErrors().size());
-        expectedErrors.forEach(error -> assertTrue(messages.getErrors().contains(error)));
+        assertErrorsAsExpected(messages, expectedErrors);
     }
 
     @Rollback
@@ -228,10 +226,9 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
         assertEquals("costItem", messages.getObjectName());
 
         List<Error> expectedErrors = singletonList(
-                fieldError("rate", 150, "This field should be 100 or lower"));
+                fieldError("rate", 150, "validation.field.max.value.or.lower", 100));
 
-        assertEquals(expectedErrors.size(), messages.getErrors().size());
-        expectedErrors.forEach(error -> assertTrue(messages.getErrors().contains(error)));
+        assertErrorsAsExpected(messages, expectedErrors);
     }
 
 
@@ -262,12 +259,11 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
         assertEquals("costItem", messages.getObjectName());
 
         List<Error> expectedErrors = asList(
-                fieldError("item", "", "This field cannot be left blank"),
-                fieldError("quantity", -5, "This field should be 1 or higher"),
-                fieldError("cost", new BigDecimal("-5"), "This field should be 1 or higher"));
+                fieldError("item", "", "validation.field.must.not.be.blank"),
+                fieldError("quantity", -5, "validation.field.max.value.or.higher", 1),
+                fieldError("cost", new BigDecimal("-5"), "validation.field.max.value.or.higher", 1));
 
-        assertEquals(expectedErrors.size(), messages.getErrors().size());
-        expectedErrors.forEach(error -> assertTrue(messages.getErrors().contains(error)));
+        assertErrorsAsExpected(messages, expectedErrors);
     }
 
     @Rollback
@@ -321,15 +317,14 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
         assertEquals("costItem", messages.getObjectName());
 
         List<Error> expectedErrors = asList(
-                fieldError("description", "", "This field cannot be left blank"),
-                fieldError("existing", "", "This field cannot be left blank"),
-                fieldError("deprecation", -5, "This field should be 1 or higher"),
-                fieldError("residualValue", new BigDecimal("-100000"), "This field should be 0 or higher"),
-                fieldError("npv", new BigDecimal("-10000"), "This field should be 1 or higher"),
-                fieldError("utilisation", -5, "This field should be 0 or higher"));
+                fieldError("description", "", "validation.field.must.not.be.blank"),
+                fieldError("existing", "", "validation.field.must.not.be.blank"),
+                fieldError("deprecation", -5, "validation.field.max.value.or.higher", 1),
+                fieldError("residualValue", new BigDecimal("-100000"), "validation.field.max.value.or.higher", 0),
+                fieldError("npv", new BigDecimal("-10000"), "validation.field.max.value.or.higher", 0),
+                fieldError("utilisation", -5, "validation.field.max.value.or.higher", 0));
 
-        assertEquals(expectedErrors.size(), messages.getErrors().size());
-        expectedErrors.forEach(error -> assertTrue(messages.getErrors().contains(error)));
+        assertErrorsAsExpected(messages, expectedErrors);
     }
 
     @Rollback
@@ -349,11 +344,10 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
         assertEquals("costItem", messages.getObjectName());
 
         List<Error> expectedErrors = asList(
-                fieldError("existing", overMaxAllowedTextSize, "This field cannot contain more than 255 characters"),
-                fieldError("utilisation", 200, "This field should be 100 or lower"));
+                fieldError("existing", overMaxAllowedTextSize, "validation.field.too.many.characters", 255),
+                fieldError("utilisation", 200, "validation.field.max.value.or.lower", 100));
 
-        assertEquals(expectedErrors.size(), messages.getErrors().size());
-        expectedErrors.forEach(error -> assertTrue(messages.getErrors().contains(error)));
+        assertErrorsAsExpected(messages, expectedErrors);
     }
 
     /* SubContracting Section Tests */
@@ -387,12 +381,11 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
         assertEquals("costItem", messages.getObjectName());
 
         List<Error> expectedErrors = asList(
-                fieldError("item", null, "This field cannot be left blank"),
+                fieldError("item", null, "validation.field.must.not.be.blank"),
                 fieldError("cost", null, "may not be null"),
                 fieldError("quantity", null, "may not be null"));
 
-        assertEquals(expectedErrors.size(), messages.getErrors().size());
-        expectedErrors.forEach(error -> assertTrue(messages.getErrors().contains(error)));
+        assertErrorsAsExpected(messages, expectedErrors);
     }
 
     @Rollback
@@ -437,12 +430,11 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
         assertEquals("costItem", messages.getObjectName());
 
         List<Error> expectedErrors = asList(
-                fieldError("item", "", "This field cannot be left blank"),
-                fieldError("cost", new BigDecimal("-1000"), "This field should be 1 or higher"),
-                fieldError("quantity", -500, "This field should be 1 or higher"));
+                fieldError("item", "", "validation.field.must.not.be.blank"),
+                fieldError("cost", new BigDecimal("-1000"), "validation.field.max.value.or.higher", 1),
+                fieldError("quantity", -500, "validation.field.max.value.or.higher", 1));
 
-        assertEquals(expectedErrors.size(), messages.getErrors().size());
-        expectedErrors.forEach(error -> assertTrue(messages.getErrors().contains(error)));
+        assertErrorsAsExpected(messages, expectedErrors);
     }
 
     @Rollback
@@ -462,11 +454,10 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
         assertEquals("costItem", messages.getObjectName());
 
         List<Error> expectedErrors = asList(
-                fieldError("cost", new BigDecimal("0"), "This field should be 1 or higher"),
-                fieldError("quantity", 0, "This field should be 1 or higher"));
+                fieldError("cost", new BigDecimal("0"), "validation.field.max.value.or.higher", 1),
+                fieldError("quantity", 0, "validation.field.max.value.or.higher", 1));
 
-        assertEquals(expectedErrors.size(), messages.getErrors().size());
-        expectedErrors.forEach(error -> assertTrue(messages.getErrors().contains(error)));
+        assertErrorsAsExpected(messages, expectedErrors);
     }
 
     /* Other FinanceRow Section Tests */
@@ -496,10 +487,9 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
         assertEquals("costItem", messages.getObjectName());
 
         List<Error> expectedErrors = singletonList(
-                fieldError("cost", new BigDecimal("0"), "This field should be 1 or higher"));
+                fieldError("cost", new BigDecimal("0"), "validation.field.max.value.or.higher", 1));
 
-        assertEquals(expectedErrors.size(), messages.getErrors().size());
-        expectedErrors.forEach(error -> assertTrue(messages.getErrors().contains(error)));
+        assertErrorsAsExpected(messages, expectedErrors);
     }
 
     @Rollback
@@ -516,11 +506,10 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
         assertEquals("costItem", messages.getObjectName());
 
         List<Error> expectedErrors = asList(
-                fieldError("description", "", "This field cannot be left blank"),
-                fieldError("cost", new BigDecimal("-1000"), "This field should be 1 or higher"));
+                fieldError("description", "", "validation.field.must.not.be.blank"),
+                fieldError("cost", new BigDecimal("-1000"), "validation.field.max.value.or.higher", 1));
 
-        assertEquals(expectedErrors.size(), messages.getErrors().size());
-        expectedErrors.forEach(error -> assertTrue(messages.getErrors().contains(error)));
+        assertErrorsAsExpected(messages, expectedErrors);
     }
 
      /* Other funding section Tests */
@@ -554,12 +543,11 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
         assertEquals("costItem", messages.getObjectName());
 
         List<Error> expectedErrors = asList(
-                fieldError("securedDate", "15-1000", "Invalid secured date.  Please use MM-YYYY format."),
-                fieldError("fundingSource", "SomethingWrongHere", "Funding source cannot be blank."),
-                fieldError("fundingAmount", new BigDecimal("0"), "This field should be 1 or higher"));
+                fieldError("securedDate", "15-1000", "validation.finance.secured.date.invalid"),
+                fieldError("fundingSource", "SomethingWrongHere", "validation.finance.funding.source.blank."),
+                fieldError("fundingAmount", new BigDecimal("0"), "validation.field.max.value.or.higher", 1));
 
-        assertEquals(expectedErrors.size(), messages.getErrors().size());
-        expectedErrors.forEach(error -> assertTrue(messages.getErrors().contains(error)));
+        assertErrorsAsExpected(messages, expectedErrors);
     }
 
     /* Grant Claim Section Tests - Small Organisation Size */
@@ -590,10 +578,9 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
         assertEquals("costItem", messages.getObjectName());
 
         List<Error> expectedErrors = singletonList(
-                fieldError("grantClaimPercentage", 71, "This field should be 70% or lower"));
+                fieldError("grantClaimPercentage", 71, "validation.field.percentage.max.value.or.lower", 70));
 
-        assertEquals(expectedErrors.size(), messages.getErrors().size());
-        expectedErrors.forEach(error -> assertTrue(messages.getErrors().contains(error)));
+        assertErrorsAsExpected(messages, expectedErrors);
     }
 
     @Rollback
@@ -611,10 +598,9 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
         assertEquals("costItem", messages.getObjectName());
 
         List<Error> expectedErrors = singletonList(
-                fieldError("grantClaimPercentage", -1, "This field should be 0% or higher"));
+                fieldError("grantClaimPercentage", -1, "validation.field.percentage.max.value.or.higher", 0));
 
-        assertEquals(expectedErrors.size(), messages.getErrors().size());
-        expectedErrors.forEach(error -> assertTrue(messages.getErrors().contains(error)));
+        assertErrorsAsExpected(messages, expectedErrors);
     }
 
      /* Grant Claim Section Tests - Medium Organisation Size */
@@ -649,10 +635,9 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
         assertEquals("costItem", messages.getObjectName());
 
         List<Error> expectedErrors = singletonList(
-                fieldError("grantClaimPercentage", 61, "This field should be 60% or lower"));
+                fieldError("grantClaimPercentage", 61, "validation.field.percentage.max.value.or.lower", 60));
 
-        assertEquals(expectedErrors.size(), messages.getErrors().size());
-        expectedErrors.forEach(error -> assertTrue(messages.getErrors().contains(error)));
+        assertErrorsAsExpected(messages, expectedErrors);
     }
 
     @Rollback
@@ -671,10 +656,9 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
         assertEquals("costItem", messages.getObjectName());
 
         List<Error> expectedErrors = singletonList(
-                fieldError("grantClaimPercentage", -1, "This field should be 0% or higher"));
+                fieldError("grantClaimPercentage", -1, "validation.field.percentage.max.value.or.higher", 0));
 
-        assertEquals(expectedErrors.size(), messages.getErrors().size());
-        expectedErrors.forEach(error -> assertTrue(messages.getErrors().contains(error)));
+        assertErrorsAsExpected(messages, expectedErrors);
     }
 
     /* Grant Claim Section Tests - Large Organisation Size */
@@ -709,10 +693,9 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
         assertEquals("costItem", messages.getObjectName());
 
         List<Error> expectedErrors = singletonList(
-                fieldError("grantClaimPercentage", 51, "This field should be 50% or lower"));
+                fieldError("grantClaimPercentage", 51, "validation.field.percentage.max.value.or.lower", 50));
 
-        assertEquals(expectedErrors.size(), messages.getErrors().size());
-        expectedErrors.forEach(error -> assertTrue(messages.getErrors().contains(error)));
+        assertErrorsAsExpected(messages, expectedErrors);
     }
 
     @Rollback
@@ -732,9 +715,13 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
         assertEquals("costItem", messages.getObjectName());
 
         List<Error> expectedErrors = singletonList(
-                fieldError("grantClaimPercentage", -1, "This field should be 0% or higher"));
+                fieldError("grantClaimPercentage", -1, "validation.field.percentage.max.value.or.higher", 0));
 
+        assertErrorsAsExpected(messages, expectedErrors);
+    }
+
+    private void assertErrorsAsExpected(ValidationMessages messages, List<Error> expectedErrors) {
         assertEquals(expectedErrors.size(), messages.getErrors().size());
-        expectedErrors.forEach(error -> assertTrue(messages.getErrors().contains(error)));
+        expectedErrors.forEach(error -> assertTrue("Expected to find " + error.getErrorKey(), messages.getErrors().contains(error)));
     }
 }

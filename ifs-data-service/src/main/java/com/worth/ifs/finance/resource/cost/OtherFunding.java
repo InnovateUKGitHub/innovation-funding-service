@@ -14,8 +14,8 @@ public class OtherFunding implements FinanceRowItem {
     private String fundingSource;
     private String securedDate;
 
-    @NotNull
-    @Digits(integer = MAX_DIGITS, fraction = MAX_FRACTION)
+    @NotNull(message = NOT_BLANK_MESSAGE)
+    @Digits(integer = MAX_DIGITS, fraction = MAX_FRACTION, message = MAX_DIGITS_MESSAGE)
     private BigDecimal fundingAmount;
 
     private String name;

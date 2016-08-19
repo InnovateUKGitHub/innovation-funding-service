@@ -54,9 +54,9 @@ public class GrantClaimValidator implements Validator {
     	if(response.getGrantClaimPercentage() == null) {
             rejectValue(errors, "grantClaimPercentage", "org.hibernate.validator.constraints.NotBlank.message");
         } else if(response.getGrantClaimPercentage() > max){
-            rejectValue(errors, "grantClaimPercentage", "validation.field.max.value.or.lower", max);
+            rejectValue(errors, "grantClaimPercentage", "validation.field.percentage.max.value.or.lower", max);
         } else if(response.getGrantClaimPercentage().intValue() < 0){
-            rejectValue(errors, "grantClaimPercentage", "validation.field.max.value.or.higher", 0);
+            rejectValue(errors, "grantClaimPercentage", "validation.field.percentage.max.value.or.higher", 0);
         }
     }
     

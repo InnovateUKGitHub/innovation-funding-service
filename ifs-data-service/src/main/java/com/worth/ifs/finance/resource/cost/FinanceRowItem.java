@@ -28,7 +28,12 @@ public interface FinanceRowItem {
     int MAX_FRACTION = 8;
     int MAX_STRING_LENGTH = 255; // when to show the validation message and when to disable mark as complete
     int MAX_DB_STRING_LENGTH = 255; // max string length to send to the db.
-    String MAX_LENGTH_MESSAGE = "{org.hibernate.validator.constraints.MaxLength.message}";
+
+    String MAX_LENGTH_MESSAGE = "{validation.field.too.many.characters}";
+    String NOT_BLANK_MESSAGE = "{validation.field.must.not.be.blank}";
+    String MAX_DIGITS_MESSAGE = "{validation.field.max.number.of.digits}";
+    String VALUE_MUST_BE_HIGHER_MESSAGE = "{validation.field.max.value.or.higher}";
+    String VALUE_MUST_BE_LOWER_MESSAGE = "{validation.field.max.value.or.lower}";
 
     public Long getId();
     public BigDecimal getTotal();

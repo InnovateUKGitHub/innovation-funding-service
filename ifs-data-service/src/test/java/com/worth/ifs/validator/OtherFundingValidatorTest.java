@@ -1,32 +1,5 @@
 package com.worth.ifs.validator;
 
-import static com.worth.ifs.finance.handler.item.OtherFundingHandler.COST_KEY;
-import static com.worth.ifs.finance.resource.category.OtherFundingCostCategory.OTHER_FUNDING;
-import static com.worth.ifs.validator.ValidatorTestUtil.getBindingResult;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.when;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import com.worth.ifs.finance.domain.FinanceRow;
-import com.worth.ifs.finance.resource.cost.FinanceRowType;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.context.support.ReloadableResourceBundleMessageSource;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.Validator;
-
 import com.worth.ifs.application.builder.QuestionBuilder;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.transactional.QuestionService;
@@ -34,9 +7,30 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.finance.builder.ApplicationFinanceBuilder;
 import com.worth.ifs.finance.builder.FinanceRowBuilder;
 import com.worth.ifs.finance.domain.ApplicationFinance;
+import com.worth.ifs.finance.domain.FinanceRow;
 import com.worth.ifs.finance.repository.FinanceRowRepository;
+import com.worth.ifs.finance.resource.cost.FinanceRowType;
 import com.worth.ifs.finance.resource.cost.OtherFunding;
-import com.worth.ifs.util.MessageUtil;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.validation.Validator;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.worth.ifs.finance.handler.item.OtherFundingHandler.COST_KEY;
+import static com.worth.ifs.finance.resource.category.OtherFundingCostCategory.OTHER_FUNDING;
+import static com.worth.ifs.validator.ValidatorTestUtil.getBindingResult;
+import static org.junit.Assert.*;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class OtherFundingValidatorTest {
@@ -62,37 +56,37 @@ public class OtherFundingValidatorTest {
     public void testInvalidSecuredDateYear() {
         mockWithRadio("Yes");
         OtherFunding otherFunding = new OtherFunding(1L, "Yes", "Source1", "2342", new BigDecimal(100));
-        expectErrors(1, Collections.singletonList(MessageUtil.getFromMessageBundle(messageSource, "validation.finance.secured.date.invalid", null, null)), otherFunding);
+        expectError(otherFunding, "validation.finance.secured.date.invalid");
     }
     @Test
     public void testInvalidSecuredDateMonth() {
         mockWithRadio("Yes");
         OtherFunding otherFunding = new OtherFunding(2L, "Yes", "Source1", "15-2014", new BigDecimal(100));
-        expectErrors(1, Collections.singletonList(MessageUtil.getFromMessageBundle(messageSource, "validation.finance.secured.date.invalid", null, null)), otherFunding);
+        expectError(otherFunding, "validation.finance.secured.date.invalid");
     }
     @Test
     public void testInvalidSecuredDateNoMonth() {
         mockWithRadio("Yes");
         OtherFunding otherFunding = new OtherFunding(3L, "Yes", "Source1", "2014", new BigDecimal(100));
-        expectErrors(1, Collections.singletonList(MessageUtil.getFromMessageBundle(messageSource, "validation.finance.secured.date.invalid", null, null)), otherFunding);
+        expectError(otherFunding, "validation.finance.secured.date.invalid");
     }
     @Test
     public void testInvalidMinimum() {
         mockWithRadio("Yes");
         OtherFunding otherFunding = new OtherFunding(3L, "Yes", "Source1", "12-2014", new BigDecimal(0));
-        expectErrors(1, Collections.singletonList(MessageUtil.getFromMessageBundle(messageSource, "javax.validation.constraints.DecimalMin.message", null, new Integer[]{1}, null)), otherFunding);
+        expectError(otherFunding, "javax.validation.constraints.DecimalMin.message", 1);
     }
     @Test
     public void testInvalidSecuredDate() {
         mockWithRadio("Yes");
         OtherFunding otherFunding = new OtherFunding(4L, "Yes", "Source1", "12-2014hvhvh", new BigDecimal(100));
-        expectErrors(1, Collections.singletonList(MessageUtil.getFromMessageBundle(messageSource, "validation.finance.secured.date.invalid", null, null)), otherFunding);
+        expectError(otherFunding, "validation.finance.secured.date.invalid");
     }
     @Test
     public void testInvalidSecuredDateNoSource() {
         mockWithRadio("Yes");
         OtherFunding otherFunding = new OtherFunding(4L, "Yes", null, "12-2014hvhvh", new BigDecimal(100));
-        expectErrors(1, Collections.singletonList(MessageUtil.getFromMessageBundle(messageSource, "validation.finance.secured.date.invalid", null, null)), otherFunding);
+        expectError(otherFunding, "validation.finance.secured.date.invalid");
     }
     @Test
     public void testValidFullAmount() {
@@ -131,17 +125,10 @@ public class OtherFundingValidatorTest {
         expectNoErrors(otherFunding);
     }
 
-    private void expectErrors(int count, List<String> messages, OtherFunding otherFunding){
+    private void expectError(OtherFunding otherFunding, String errorKey, Object... arguments){
         BindingResult bindingResult = getBindingResult(otherFunding);
         validator.validate(otherFunding, bindingResult);
-        assertTrue(bindingResult.hasErrors());
-        assertEquals(count, bindingResult.getErrorCount());
-
-        int i = 0;
-        for(String message : messages){
-            assertEquals(message, bindingResult.getAllErrors().get(i).getDefaultMessage());
-            i++;
-        }
+        verifyError(bindingResult, errorKey, arguments);
     }
 
     private void expectNoErrors(OtherFunding otherFunding){
@@ -149,6 +136,16 @@ public class OtherFundingValidatorTest {
         validator.validate(otherFunding, bindingResult);
         assertFalse(bindingResult.hasErrors());
         assertEquals(0, bindingResult.getErrorCount());
+    }
+
+    private void verifyError(BindingResult bindingResult, String errorCode, Object... expectedArguments) {
+        assertTrue(bindingResult.hasErrors());
+        assertEquals(1, bindingResult.getAllErrors().size());
+        ObjectError actualError = bindingResult.getAllErrors().get(0);
+
+        assertEquals(errorCode, actualError.getCode());
+        assertEquals(errorCode, actualError.getDefaultMessage());
+        assertArrayEquals(expectedArguments, actualError.getArguments());
     }
 
     private void mockWithRadio(String value){
