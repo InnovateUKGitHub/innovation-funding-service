@@ -33,11 +33,11 @@
       </ul>
     </div>
     <div th:each="organisationInviteResource, organisationStats : ${ organisationInvites }">
-        <h2 class="heading-medium" th:if="${organisationStats.index == 0}" >
+        <h2 class="heading-medium" th:if="${organisationInviteResource.id == 0}" >
           <span th:remove="tag" th:text="${leadOrganisation.name}"/>
           <small>(Lead organisation)</small>
         </h2>
-        <h2 class="heading-medium"  th:unless="${organisationStats.index == 0}">
+        <h2 class="heading-medium"  th:unless="${organisationInviteResource.id == 0}">
 
           <div th:if="${organisationInviteResource.organisationNameConfirmed != null}" th:remove="tag">
               <div th:text="${organisationInviteResource.organisationNameConfirmed}" th:remove="tag"/>
@@ -48,7 +48,7 @@
           </div>
         </h2>
         <ul class="list-bullet">
-            <li th:if="${organisationStats.index == 0}">
+            <li th:if="${organisationInviteResource.id == 0}">
               <a th:href="${'mailto:'+leadApplicant.email}" th:text="${leadApplicant.name}" />
               <small>(Lead Applicant)</small>
             </li>
