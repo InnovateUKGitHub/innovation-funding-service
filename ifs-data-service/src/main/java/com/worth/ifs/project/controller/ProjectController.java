@@ -12,7 +12,6 @@ import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
-import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
@@ -263,7 +262,7 @@ public class ProjectController {
         return projectService.isOtherDocumentsSubmitAllowed(projectId, authenticatedUser.getId()).toGetResponse();
     }
 
-    @RequestMapping(value = "/{projectId}/partner/documents/submit", method = GET)
+    @RequestMapping(value = "/{projectId}/partner/documents/submit", method = POST)
     public RestResult<Void>setPartnerDocumentsSubmitted(@PathVariable("projectId") final Long projectId) {
         return projectService.saveDocumentsSubmitDateTime(projectId, LocalDateTime.now()).toPostResponse();
     }
