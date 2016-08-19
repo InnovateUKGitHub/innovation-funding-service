@@ -51,7 +51,7 @@ public class ProjectUserBuilder extends BaseBuilder<ProjectUser, ProjectUserBuil
         return withArray((proj, projectUser) -> setField("project", proj, projectUser), project);
     }
 
-    public ProjectUserBuilder withOrganisation(Organisation... organisations) {
+    public ProjectUserBuilder       withOrganisation(Organisation... organisations) {
         return withArray((organisation, projectUser) -> setField("organisation", organisation, projectUser), organisations);
     }
 

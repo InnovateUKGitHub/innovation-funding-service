@@ -93,6 +93,7 @@ ${Providing_Sustainable_Childcare_Application_Overview}    ${server}/management/
 ${unsuccessful_login_message}    Your sign in was unsuccessful because of the following issue(s)
 ${test_title}      test title
 ${unique_email_number}    1
+${smoke_test}    0
 
 # Assessor variables
 ${Assessment_overview_9}    ${server}/assessment/9

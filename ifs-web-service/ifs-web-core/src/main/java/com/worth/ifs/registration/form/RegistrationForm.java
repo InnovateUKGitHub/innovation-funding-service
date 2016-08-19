@@ -87,6 +87,11 @@ public class RegistrationForm {
         this.email = email;
     }
 
+    public RegistrationForm withEmail(String email) {
+        this.email = email;
+        return this;
+    }
+
     public String getRetypedPassword() {
         return retypedPassword;
     }

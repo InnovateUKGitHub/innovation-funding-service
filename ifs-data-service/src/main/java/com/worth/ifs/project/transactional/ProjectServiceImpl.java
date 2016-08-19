@@ -60,12 +60,14 @@ import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static com.worth.ifs.commons.error.CommonErrors.badRequestError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.service.ServiceResult.*;
 import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_FINANCE_OFFICER;
 import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
 import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static com.worth.ifs.project.transactional.ProjectServiceImpl.Notifications.INVITE_FINANCE_CONTACT;
 import static com.worth.ifs.project.transactional.ProjectServiceImpl.Notifications.INVITE_PROJECT_MANAGER;
@@ -75,6 +77,7 @@ import static com.worth.ifs.util.EntityLookupCallbacks.getOnlyElementOrFail;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
@@ -189,8 +192,8 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
             project.setAddress(existingAddress);
         } else {
             Address newAddress = addressMapper.mapToDomain(address);
-            if(address.getOrganisations() == null || address.getOrganisations().size() == 0){
-                AddressType addressType = addressTypeRepository.findOne((long)organisationAddressType.getOrdinal());
+            if (address.getOrganisations() == null || address.getOrganisations().size() == 0) {
+                AddressType addressType = addressTypeRepository.findOne((long) organisationAddressType.getOrdinal());
                 List<OrganisationAddress> existingOrgAddresses = organisationAddressRepository.findByOrganisationIdAndAddressType(leadOrganisation.getId(), addressType);
                 existingOrgAddresses.stream().forEach(oA -> organisationAddressRepository.delete(oA));
                 OrganisationAddress organisationAddress = new OrganisationAddress(leadOrganisation, newAddress, addressType);
@@ -210,7 +213,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     @Override
     public ServiceResult<List<ProjectResource>> findByUserId(final Long userId) {
         List<ProjectUser> projectUsers = projectUserRepository.findByUserId(userId);
-        List<Project> projects = simpleMap(projectUsers, ProjectUser::getProcess).parallelStream().distinct().collect(Collectors.toList());     //Users may have multiple roles (e.g. partner and finance contact, in which case there will be multiple project_user entries, so this is flatting it).
+        List<Project> projects = simpleMap(projectUsers, ProjectUser::getProcess).parallelStream().distinct().collect(toList());     //Users may have multiple roles (e.g. partner and finance contact, in which case there will be multiple project_user entries, so this is flatting it).
         return serviceSuccess(simpleMap(projects, projectMapper::mapToResource));
     }
 
@@ -229,7 +232,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         return getProject(projectId).
                 andOnSuccess(
                         project -> {
-                            if(validateIsReadyForSubmission(project)){
+                            if (validateIsReadyForSubmission(project)) {
                                 return setSubmittedDate(project, date);
                             } else {
                                 return serviceFailure(new Error(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_SUBMITTED_IF_INCOMPLETE));
@@ -248,10 +251,10 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         ServiceResult<Project> project = getProject(projectId);
         Optional<ProjectUser> projectManager = getExistingProjectManager(project.getSuccessObject());
         boolean allMatch = retrieveUploadedDocuments(projectId).stream()
-        .allMatch(serviceResult -> (serviceResult.isSuccess()) && (serviceResult.getSuccessObject().getFileEntry().getFilesizeBytes() > 0));
+                .allMatch(serviceResult -> (serviceResult.isSuccess()) && (serviceResult.getSuccessObject().getFileEntry().getFilesizeBytes() > 0));
 
         if (!allMatch) {
-             return serviceFailure(new Error(PROJECT_SETUP_OTHER_DOCUMENTS_MUST_BE_UPLOADED_BEFORE_SUBMIT));
+            return serviceFailure(new Error(PROJECT_SETUP_OTHER_DOCUMENTS_MUST_BE_UPLOADED_BEFORE_SUBMIT));
         }
         return projectManager.isPresent()
                 && projectManager.get().getUser().getId().equals(userId) ? serviceSuccess(true)
@@ -403,6 +406,30 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         return serviceResults;
     }
 
+    @Override
+    public ServiceResult<Void> addPartner(Long projectId, Long userId, Long organisationId) {
+        return find(getProject(projectId), getOrganisation(organisationId), getUser(userId)).
+                andOnSuccess((project, organisation, user) -> {
+                    if (project.getOrganisations(o -> organisationId.equals(o.getId())).isEmpty()){
+                        return serviceFailure(badRequestError("project does not contain organisation"));
+                    }
+                    List<ProjectUser> partners = project.getProjectUsersWithRole(PARTNER);
+                    if (partners.stream().map(p -> p.getId()).collect(toList()).contains(userId)){
+                        return serviceSuccess(); // Already a partner
+                    } else {
+                        ProjectUser pu = new ProjectUser();
+                        pu.setOrganisation(organisation);
+                        pu.setRole(roleRepository.findOneByName(PARTNER.getName()));
+                        pu.setProject(project);
+                        pu.setUser(user);
+                        projectUserRepository.save(pu);
+                        user.addUserOrganisation(organisation);
+                        userRepository.save(user);
+                        return serviceSuccess();
+                    }
+                });
+    }
+
     private ServiceResult<FileEntry> getCollaborationAgreement(Project project) {
         if (project.getCollaborationAgreement() == null) {
             return serviceFailure(notFoundError(FileEntry.class));
@@ -470,6 +497,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         return new ExternalUserNotificationTarget(fullName, monitoringOfficer.getEmail());
 
     }
+
     private String getMonitoringOfficerFullName(MonitoringOfficerResource monitoringOfficer) {
         // At this stage, validation has already been done to ensure that first name and last name are not empty
         return monitoringOfficer.getFirstName() + " " + monitoringOfficer.getLastName();
@@ -537,7 +565,6 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
     @Override
     public ServiceResult<OrganisationResource> getOrganisationByProjectAndUser(Long projectId, Long userId) {
-//        Role partnerRole = roleRepository.findOneByName(PARTNER.getName());
         ProjectUser projectUser = projectUserRepository.findByProjectIdAndRoleAndUserId(projectId, PROJECT_PARTNER, userId);
         if(projectUser != null && projectUser.getOrganisation() != null) {
             return serviceSuccess(organisationMapper.mapToResource(organisationRepository.findOne(projectUser.getOrganisation().getId())));
@@ -661,7 +688,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         List<ProjectUser> leadPartners = getLeadPartners(project);
         List<ProjectUser> matchingProjectUsers = simpleFilter(leadPartners, pu -> pu.getUser().getId().equals(projectManagerUserId));
 
-        if(!matchingProjectUsers.isEmpty()) {
+        if (!matchingProjectUsers.isEmpty()) {
             return getOnlyElementOrFail(matchingProjectUsers);
         } else {
             return serviceFailure(new Error(PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_LEAD_PARTNER));
@@ -671,7 +698,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     private List<ProjectUser> getLeadPartners(Project project) {
         Application application = project.getApplication();
         Organisation leadPartnerOrganisation = application.getLeadOrganisation();
-        return simpleFilter(project.getProjectUsers(),  pu -> organisationsEqual(leadPartnerOrganisation, pu)
+        return simpleFilter(project.getProjectUsers(), pu -> organisationsEqual(leadPartnerOrganisation, pu)
                 && pu.getRole().isPartner());
     }
 
@@ -679,7 +706,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         return pu.getOrganisation().getId().equals(leadPartnerOrganisation.getId());
     }
 
-    private ServiceResult<ProjectResource> createProjectFromApplicationId(final Long applicationId){
+    private ServiceResult<ProjectResource> createProjectFromApplicationId(final Long applicationId) {
         return getApplication(applicationId).andOnSuccess(application -> {
             Project project = new Project();
             project.setApplication(application);
@@ -723,7 +750,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         return !(project.getAddress() == null || !getExistingProjectManager(project).isPresent() || project.getTargetStartDate() == null || allFinanceContactsNotSet(project.getId()) || project.getSubmittedDate() != null);
     }
 
-    private boolean allFinanceContactsNotSet(Long projectId){
+    private boolean allFinanceContactsNotSet(Long projectId) {
         List<ProjectUser> projectUserObjs = getProjectUsersByProjectId(projectId);
         List<ProjectUserResource> projectUserResources = simpleMap(projectUserObjs, projectUserMapper::mapToResource);
         List<Organisation> partnerOrganisations = getPartnerOrganisations(projectUserResources);
