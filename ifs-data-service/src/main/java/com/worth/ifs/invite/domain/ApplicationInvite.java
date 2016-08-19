@@ -2,7 +2,7 @@ package com.worth.ifs.invite.domain;
 
 
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.invite.constant.InviteStatusConstants;
+import com.worth.ifs.invite.constant.InviteStatus;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -28,7 +28,7 @@ public class ApplicationInvite extends Invite<Application, ApplicationInvite> {
         // no-arg constructor
     }
 
-    public ApplicationInvite(String name, String email, Application application, InviteOrganisation inviteOrganisation,  String hash, InviteStatusConstants status) {
+    public ApplicationInvite(String name, String email, Application application, InviteOrganisation inviteOrganisation,  String hash, InviteStatus status) {
         super(name, email, hash, status);
         this.application = application;
         this.inviteOrganisation = inviteOrganisation;

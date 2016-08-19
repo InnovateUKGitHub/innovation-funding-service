@@ -56,7 +56,7 @@
             <li th:each="invite, inviteStats: ${organisationInviteResource.inviteResources}">
                 <a th:if="${invite.nameConfirmed == null}" th:href="${'mailto:'+invite.email}" th:text="${invite.name}" />
                 <a th:unless="${invite.nameConfirmed == null}" th:href="${'mailto:'+invite.email}" th:text="${invite.nameConfirmed}" />
-                <small th:if="${invite.status.name() ==  T(com.worth.ifs.invite.constant.InviteStatusConstants).CREATED.name() || invite.status.name() == T(com.worth.ifs.invite.constant.InviteStatusConstants).SEND.name()}">(pending)</small>
+                <small th:if="${invite.status.name() ==  T(com.worth.ifs.invite.constant.InviteStatus).CREATED.name() || invite.status.name() == T(com.worth.ifs.invite.constant.InviteStatus).SENT.name()}">(pending)</small>
             </li>
         </ul>
     </div>

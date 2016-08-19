@@ -7,6 +7,7 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.FileAndContents;
 import com.worth.ifs.invite.resource.ApplicationInviteResource;
+import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.project.resource.*;
 import com.worth.ifs.security.NotSecured;
 import com.worth.ifs.security.SecuredBySpring;
@@ -61,10 +62,10 @@ public interface ProjectService {
     ServiceResult<Void> updateFinanceContact(Long projectId, Long organisationId, Long financeContactUserId);
 
     @PreAuthorize("hasPermission(#inviteResource, 'INVITE_FINANCE_CONTACT')")
-    ServiceResult<Void> inviteFinanceContact(Long projectId, ApplicationInviteResource inviteResource);
+    ServiceResult<Void> inviteFinanceContact(Long projectId, InviteProjectResource inviteResource);
 
     @PreAuthorize("hasPermission(#inviteResource, 'INVITE_PROJECT_MANAGER')")
-    ServiceResult<Void> inviteProjectManager(Long projectId, ApplicationInviteResource inviteResource);
+    ServiceResult<Void> inviteProjectManager(Long projectId, InviteProjectResource inviteResource);
 
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'READ')")
     ServiceResult<List<ProjectUserResource>> getProjectUsers(Long projectId);

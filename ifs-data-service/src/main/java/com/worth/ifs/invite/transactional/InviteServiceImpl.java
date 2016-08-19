@@ -7,7 +7,7 @@ import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.BaseEitherBackedResult;
 import com.worth.ifs.commons.service.ServiceFailure;
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.invite.constant.InviteStatusConstants;
+import com.worth.ifs.invite.constant.InviteStatus;
 import com.worth.ifs.invite.domain.ApplicationInvite;
 import com.worth.ifs.invite.domain.InviteOrganisation;
 import com.worth.ifs.invite.mapper.ApplicationInviteMapper;
@@ -353,7 +353,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         if (newInviteOrganisation == null && inviteResource.getInviteOrganisation() != null) {
             newInviteOrganisation = inviteOrganisationRepository.findOne(inviteResource.getInviteOrganisation());
         }
-        ApplicationInvite invite = new ApplicationInvite(inviteResource.getName(), inviteResource.getEmail(), application, newInviteOrganisation, null, InviteStatusConstants.CREATED);
+        ApplicationInvite invite = new ApplicationInvite(inviteResource.getName(), inviteResource.getEmail(), application, newInviteOrganisation, null, InviteStatus.CREATED);
         if (newInviteOrganisation.getOrganisation() != null) {
             List<InviteOrganisation> existingOrgInvite = inviteOrganisationRepository.findByOrganisationId(newInviteOrganisation.getOrganisation().getId());
             if (!existingOrgInvite.isEmpty()) {
@@ -422,7 +422,6 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
         return errors;
     }
-
 
     private Boolean validateUniqueEmail(ApplicationInviteResource inviteResource) {
         if(inviteResource.getEmail() == null) {
