@@ -4,9 +4,7 @@ import com.worth.ifs.invite.domain.Participant;
 import com.worth.ifs.invite.domain.ProjectInvite;
 import com.worth.ifs.invite.domain.ProjectParticipantRole;
 import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
-import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -23,23 +21,27 @@ public class ProjectUser extends Participant<Project, ProjectInvite, ProjectPart
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name="userId", referencedColumnName="id")
+    @JoinColumn(name = "userId", referencedColumnName = "id")
     private User user;
 
     @ManyToOne
-    @JoinColumn(name="projectId", referencedColumnName="id")
+    @JoinColumn(name = "projectId", referencedColumnName = "id")
     private Project project;
 
     @Enumerated(EnumType.STRING)
-    @Column(name="project_role")
+    @Column(name = "project_role")
     private ProjectParticipantRole role;
 
     @ManyToOne
-    @JoinColumn(name="organisationId", referencedColumnName="id")
+    @JoinColumn(name = "organisationId", referencedColumnName = "id")
     private Organisation organisation;
 
-    public ProjectUser(){
-    	// no-arg constructor
+    @ManyToOne
+    @JoinColumn(name = "invite_id", referencedColumnName = "id")
+    private ProjectInvite invite;
+
+    public ProjectUser() {
+        // no-arg constructor
     }
 
     public ProjectUser(Long id, User user, Project project, ProjectParticipantRole role, Organisation organisation) {
@@ -59,8 +61,7 @@ public class ProjectUser extends Participant<Project, ProjectInvite, ProjectPart
 
     @Override
     public Optional<ProjectInvite> getInvite() {
-        // TODO add invite to ProjectUser
-        throw new NotImplementedException("ProjectUser.getInvite() is not currently implemented");
+        return Optional.ofNullable(invite);
     }
 
     @Override

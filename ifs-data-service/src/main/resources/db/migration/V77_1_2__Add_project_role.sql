@@ -19,7 +19,7 @@ UPDATE project_user SET project_role = 'PROJECT_MANAGER' WHERE role_id = 11;
 UPDATE project_user SET project_role = 'PROJECT_FINANCE_OFFICER' WHERE role_id = 9;
 
 -- add the fk constraint to project_user.project_role
-ALTER TABLE project_user ADD CONSTRAINT project_user_to_projet_role_FK FOREIGN KEY (project_role) REFERENCES project_role(name);
+ALTER TABLE project_user ADD CONSTRAINT project_user_to_projet_role_fk FOREIGN KEY (project_role) REFERENCES project_role(name);
 
 -- drop the old role column
 ALTER TABLE project_user
