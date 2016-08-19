@@ -12,10 +12,10 @@ import javax.validation.constraints.Min;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 
-import static com.worth.ifs.user.resource.UserRoleType.roleNames;
 import static com.worth.ifs.util.CollectionFunctions.getOnlyElement;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static java.util.stream.Collectors.toList;
@@ -148,8 +148,8 @@ public class Project implements ProcessActivity {
         return projectUsers.stream().filter(filter).collect(toList());
     }
 
-    public List<ProjectUser> getProjectUsersWithRole(UserRoleType... roles){
-        return getProjectUsers(pu -> roleNames(roles).contains(pu.getRole().getName()));
+    public List<ProjectUser> getProjectUsersWithRole(ProjectParticipantRole... roles){
+        return getProjectUsers(pu -> Arrays.stream(roles).anyMatch(pu.getRole()::equals));
     }
 
     public List<Organisation> getOrganisations(){

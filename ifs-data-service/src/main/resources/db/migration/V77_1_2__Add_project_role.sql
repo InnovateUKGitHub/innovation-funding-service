@@ -6,9 +6,9 @@ CREATE TABLE project_role (
 
 INSERT INTO project_role (id, name)
 VALUES
-  (1, "PROJECT_PARTNER"),
-  (2, "PROJECT_MANAGER"),
-  (3, "PROJECT_FINANCE_OFFICER");
+  (1, 'PROJECT_PARTNER'),
+  (2, 'PROJECT_MANAGER'),
+  (3, 'PROJECT_FINANCE_OFFICER');
 
 -- add invite column to competition_user
 ALTER TABLE project_user ADD COLUMN project_role VARCHAR(255) NOT NULL;

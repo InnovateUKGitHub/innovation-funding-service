@@ -413,15 +413,11 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
                     if (project.getOrganisations(o -> organisationId.equals(o.getId())).isEmpty()){
                         return serviceFailure(badRequestError("project does not contain organisation"));
                     }
-                    List<ProjectUser> partners = project.getProjectUsersWithRole(PARTNER);
+                    List<ProjectUser> partners = project.getProjectUsersWithRole(PROJECT_PARTNER);
                     if (partners.stream().map(p -> p.getId()).collect(toList()).contains(userId)){
                         return serviceSuccess(); // Already a partner
                     } else {
-                        ProjectUser pu = new ProjectUser();
-                        pu.setOrganisation(organisation);
-                        pu.setRole(roleRepository.findOneByName(PARTNER.getName()));
-                        pu.setProject(project);
-                        pu.setUser(user);
+                        ProjectUser pu = new ProjectUser(user, project, PROJECT_PARTNER, organisation);
                         projectUserRepository.save(pu);
                         user.addUserOrganisation(organisation);
                         userRepository.save(user);

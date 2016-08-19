@@ -887,7 +887,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         Organisation o = newOrganisation().build();
         Organisation organisationNotOnProject = newOrganisation().build();
         User u = newUser().build();
-        List<ProjectUser> pu = newProjectUser().withRole(PARTNER).withUser(u).withOrganisation(o).build(1);
+        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_PARTNER).withUser(u).withOrganisation(o).build(1);
         Project p = newProject().withProjectUsers(pu).build();
         when(projectRepositoryMock.findOne(p.getId())).thenReturn(p);
         when(organisationRepositoryMock.findOne(o.getId())).thenReturn(o);
@@ -904,7 +904,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     public void testAddPartnerPartnerAlreadyExists(){
         Organisation o = newOrganisation().build();
         User u = newUser().build();
-        List<ProjectUser> pu = newProjectUser().withRole(PARTNER).withUser(u).withOrganisation(o).build(1);
+        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_PARTNER).withUser(u).withOrganisation(o).build(1);
         Project p = newProject().withProjectUsers(pu).build();
         when(projectRepositoryMock.findOne(p.getId())).thenReturn(p);
         when(organisationRepositoryMock.findOne(o.getId())).thenReturn(o);
@@ -920,7 +920,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     public void testAddPartner(){
         Organisation o = newOrganisation().build();
         User u = newUser().build();
-        List<ProjectUser> pu = newProjectUser().withRole(PARTNER).withUser(u).withOrganisation(o).build(1);
+        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_PARTNER).withUser(u).withOrganisation(o).build(1);
         Project p = newProject().withProjectUsers(pu).build();
         User newUser = newUser().build();
         when(projectRepositoryMock.findOne(p.getId())).thenReturn(p);

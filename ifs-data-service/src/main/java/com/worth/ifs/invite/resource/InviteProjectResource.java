@@ -20,7 +20,6 @@ public class InviteProjectResource {
     private String projectName;
     private String hash;
     private InviteStatus status;
-    private InviteStatusConstants status;
     private String leadApplicant;
     private String competitionName;
 
@@ -89,7 +88,7 @@ public class InviteProjectResource {
 
     public void setHash(String hash) { this.hash = hash; }
 
-    public InviteStatusConstants getStatus() { return status; }
+    public InviteStatus getStatus() { return status; }
 
     public void setStatus(InviteStatus status) { this.status = status; }
 
