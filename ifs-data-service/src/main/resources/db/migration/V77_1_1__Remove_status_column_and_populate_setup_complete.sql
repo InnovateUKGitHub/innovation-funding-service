@@ -1,6 +1,7 @@
-
 ALTER TABLE `competition` DROP COLUMN `status`;
+
 ALTER TABLE `competition` ADD `setup_complete` bit;
+
 UPDATE `competition` SET `setup_complete`=1 WHERE `id`='1';
 UPDATE `competition` SET `setup_complete`=1 WHERE `id`='2';
 UPDATE `competition` SET `setup_complete`=1 WHERE `id`='3';
