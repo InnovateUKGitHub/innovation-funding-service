@@ -59,7 +59,7 @@ Other internal users cannot access this page
 
 Project partners cannot access this page
     [Documentation]    INFUND-3763
-    [Tags]
+    [Tags]    Pending    # Pending due to INFUND-4680
     [Setup]    guest user log-in    steve.smith@empire.com    Passw0rd
     the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/1/organisation/31/review-bank-details    You do not have the necessary permissions for your your request
     [Teardown]    logout as user
