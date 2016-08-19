@@ -1,20 +1,20 @@
 package com.worth.ifs.competitionsetup.form;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.worth.ifs.competitionsetup.model.MilestoneEntry;
+import org.apache.commons.collections4.map.LinkedMap;
 
 /**
  * List of Milestone Form Entries for the Milestone form.
  */
 public class MilestonesForm extends CompetitionSetupForm {
 
-    private List<MilestonesFormEntry> milestonesFormEntryList = new ArrayList<>();
+    private LinkedMap<String, MilestoneEntry> milestoneEntries = new LinkedMap<>();
 
-    public List<MilestonesFormEntry> getMilestonesFormEntryList() {
-        return milestonesFormEntryList;
+    public LinkedMap<String, MilestoneEntry> getMilestoneEntries() {
+        return milestoneEntries;
     }
 
-    public void setMilestonesFormEntryList(List<MilestonesFormEntry> milestonesFormEntryList) {
-        this.milestonesFormEntryList = milestonesFormEntryList;
+    public void setMilestoneEntries(LinkedMap<String, MilestoneEntry> milestoneEntries) {
+        this.milestoneEntries = milestoneEntries;
     }
 }

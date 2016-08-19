@@ -43,7 +43,7 @@ Non-lead partner can click the Dashboard link
     [Tags]
     When the user clicks the button/link    link=Dashboard
     Then the user should not see an error in the page
-    And the user should see the text in the page    Your Dashboard
+    And the user should see the text in the page    Projects in setup
     [Teardown]    the user goes back to the previous page
 
 Non-lead partner can see the application overview
@@ -76,7 +76,7 @@ Lead partner can click the Dashboard link
     [Tags]
     When the user clicks the button/link    link=Dashboard
     Then the user should not see an error in the page
-    And the user should see the text in the page    Your Dashboard
+    And the user should see the text in the page    Projects in setup
     [Teardown]    the user goes back to the previous page
 
 Lead partner can see the application overview
