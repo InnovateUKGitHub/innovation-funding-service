@@ -1,9 +1,10 @@
-<!-- =================== Comp setup section - Navigation ============================== -->
-<div th:fragment="comp-setup-navigation(sections, completedStatuses, currentSection, competition)">
+<!-- =================== Comp setup section - Initial Details (1) ============================== -->
+
+<div th:fragment="comp-setup-navigation(sections, allCompletedSections, currentSection, competition, readyToOpen)">
     <div th:class="${(param.section != null ? 'visuallyhidden' : '')}">
         <ul class="list-overview">
-            <li th:each="(section, iteration : ${sections})" th:if="${section.toString() != 'HOME'}"
-                th:classappend="${(section == currentSection) || (currentSection == null and iteration.index==0) ? 'selected' : ''} + '' + ${completedStatuses.contains(section) ? 'marked-as-complete' : ''}">
+            <li th:each="(section, iteration : ${sections})" th:if="${section.toString() != 'HOME'}">
+                <img width="30" height="30" th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-done-right.png')}" th:title="'The &quot;'+${section.name}+'&quot; section is done'" th:alt="'The &quot;'+${section.name}+'&quot; section is done'" th:if="${allCompletedSections.contains(section)}" class="section-status" />
                 <h3 class="heading-small">
                     <a th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${competition.id},sectionPath=${section.path})}"
                         th:text="${section.name}">Section Name</a>
@@ -12,7 +13,8 @@
         </ul>
 
         <div class="extra-margin">
-            <a href="#" class="button no-margin-right" id="compCTA">Save as in preparation</a>
+            <a th:if="${readyToOpen}" th:href="@{/competition/setup/{competitionId}/ready-to-open(competitionId=${competition.id})}"
+               class="button no-margin-right" id="compCTA">Save as Ready To Open</a>
         </div>
     </div>
 </div>

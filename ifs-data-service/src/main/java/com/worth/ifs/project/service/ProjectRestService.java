@@ -40,4 +40,6 @@ public interface ProjectRestService {
     RestResult<FileEntryResource> addExploitationPlanDocument(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes);
     RestResult<Boolean> isOtherDocumentsSubmitAllowed(Long projectId);
     RestResult<Void> setPartnerDocumentsSubmitted(Long projectId);
+    RestResult<Void> addPartner(Long projectId, Long userId, Long organisationId);
+
 }

@@ -11,10 +11,10 @@ import org.springframework.util.StringUtils;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -37,29 +37,29 @@ public class User implements Serializable {
     @Enumerated(EnumType.STRING)
     private UserStatus status;
 
-    @Column(unique=true)
+    @Column(unique = true)
     private String uid;
 
-    @Column(unique=true)
+    @Column(unique = true)
     private String email;
 
-    @OneToMany(mappedBy="user")
+    @OneToMany(mappedBy = "user")
     private List<ProcessRole> processRoles = new ArrayList<>();
 
     @ManyToMany
-    @JoinTable(name="user_organisation",
-            joinColumns={@JoinColumn(name="user_id", referencedColumnName = "id")},
-            inverseJoinColumns={@JoinColumn(name="organisation_id", referencedColumnName = "id")})
+    @JoinTable(name = "user_organisation",
+            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "organisation_id", referencedColumnName = "id")})
     private List<Organisation> organisations = new ArrayList<>();
 
     @ManyToMany
-    @JoinTable(name="user_role",
-            joinColumns={@JoinColumn(name="user_id", referencedColumnName = "id")},
-            inverseJoinColumns={@JoinColumn(name="role_id", referencedColumnName = "id")})
+    @JoinTable(name = "user_role",
+            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
     private List<Role> roles = new ArrayList<>();
 
     public User() {
-    	// no-arg constructor
+        // no-arg constructor
     }
 
     public User(String firstName, String lastName, String email, String imageUrl,
@@ -117,18 +117,20 @@ public class User implements Serializable {
         this.organisations = organisations;
     }
 
-    public void addUserApplicationRole(ProcessRole... r){
-        if(this.processRoles == null){
+    public void addUserApplicationRole(ProcessRole... r) {
+        if (this.processRoles == null) {
             this.processRoles = new ArrayList<>();
         }
-        this.processRoles.addAll(Arrays.asList(r));
+        this.processRoles.addAll(asList(r));
     }
 
-    public void addUserOrganisation(Organisation... o){
-        if(this.organisations == null){
-            this.organisations  = new ArrayList<>();
-        }
-        this.organisations.addAll(Arrays.asList(o));
+    public void addUserOrganisation(Organisation... orgs) {
+        organisations = organisations == null ? new ArrayList<>() : organisations;
+        asList(orgs).forEach(o -> {
+            if (!organisations.stream().map(Organisation::getId).collect(toList()).contains(o.getId())){
+                organisations.add(o);
+            }
+        });
     }
 
     public List<Role> getRoles() {
@@ -154,7 +156,7 @@ public class User implements Serializable {
     @JsonIgnore
     public String getName() {
         StringBuilder stringBuilder = new StringBuilder();
-        if(StringUtils.hasText(firstName)){
+        if (StringUtils.hasText(firstName)) {
             stringBuilder.append(firstName)
                     .append(" ");
         }

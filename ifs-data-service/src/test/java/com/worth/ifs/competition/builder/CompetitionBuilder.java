@@ -118,6 +118,8 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
         } else if(Status.COMPETITION_SETUP_FINISHED.equals(status)) {
             return withStatus(Status.COMPETITION_SETUP_FINISHED)
                     .withStartDate(now.plusDays(1L));
+        } else if(Status.READY_TO_OPEN.equals(status)) {
+            return withStatus(Status.READY_TO_OPEN);
         } else {
                 throw new RuntimeException("status " + status + " not yet supported by CompetitionBuilder.withCompetitionStatus method");
             }

@@ -23,6 +23,7 @@ import org.springframework.security.access.method.P;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,8 +38,11 @@ import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.UserRoleType.APPLICANT;
 import static com.worth.ifs.user.resource.UserRoleType.COMP_ADMIN;
+import static com.worth.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static java.util.EnumSet.complementOf;
+import static java.util.EnumSet.of;
 import static java.util.stream.Collectors.toList;
 import static junit.framework.TestCase.fail;
 import static org.mockito.Matchers.isA;
@@ -336,6 +340,41 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         });
     }
 
+
+    @Test
+    public void testAddPartnerDeniedIfNotSystemRegistrar() {
+        EnumSet<UserRoleType> nonSystemRegistrationRoles = complementOf(of(SYSTEM_REGISTRATION_USER));
+        nonSystemRegistrationRoles.forEach(role -> {
+            setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
+            try {
+                service.addPartner(1L, 2L, 3L);
+                Assert.fail("Should not have been able to add a partner without the system registrar role");
+            } catch (AccessDeniedException e) {
+                // expected behaviour
+            }
+        });
+    }
+    @Test
+    public void testAddPartnerAllowedIfSystemRegistrar() {
+            setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(SYSTEM_REGISTRATION_USER).build())).build());
+            service.addPartner(1L, 2L, 3L);
+            // There should be no exception thrown
+    }
+
+    @Test
+    public void test_createApplicationByAppNameForUserIdAndCompetitionId_deniedIfNotCorrectGlobalRolesOrASystemRegistrar() {
+        EnumSet<UserRoleType> nonSystemRegistrationRoles = complementOf(of(SYSTEM_REGISTRATION_USER));
+        nonSystemRegistrationRoles.forEach(role -> {
+            setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
+            try {
+                service.addPartner(1L, 2L, 3L);
+                Assert.fail("Should not have been able to add a partner without the system registrar role");
+            } catch (AccessDeniedException e) {
+                // expected behaviour
+            }
+        });
+    }
+
     @Override
     protected Class<TestProjectService> getServiceClass() {
         return TestProjectService.class;
@@ -502,6 +541,11 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         @Override
         public List<ServiceResult<FileAndContents>>  retrieveUploadedDocuments(Long projectId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> addPartner(Long projectId, Long userId, Long organisationId) {
             return null;
         }
     }

@@ -268,4 +268,10 @@ public class ProjectController {
         return projectService.saveDocumentsSubmitDateTime(projectId, LocalDateTime.now()).toPostResponse();
     }
 
+    @RequestMapping(value = "/{projectId}/partners", method = POST)
+    public RestResult<Void> addPartner(@PathVariable(value = "projectId")Long projectId,
+                                       @RequestParam(value = "userId", required = true) Long userId,
+                                       @RequestParam(value = "organisationId", required = true) Long organisationId) {
+        return projectService.addPartner(projectId, userId, organisationId).toPostResponse();
+    }
 }

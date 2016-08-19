@@ -52,8 +52,8 @@ public class ProjectInviteBuilder extends BaseBuilder<ProjectInvite, ProjectInvi
         return withArray((email, invite) -> invite.setEmail(email), emails);
     }
 
-    public ProjectInviteBuilder withHash(String... hashs) {
-        return withArray((hash, invite) -> invite.setHash(hash), hashs);
+    public ProjectInviteBuilder withHash(String... hashes) {
+        return withArray((hash, invite) -> invite.setHash(hash), hashes);
     }
 
 
