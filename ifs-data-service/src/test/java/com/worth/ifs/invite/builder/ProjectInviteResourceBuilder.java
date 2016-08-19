@@ -48,12 +48,24 @@ public class ProjectInviteResourceBuilder  extends BaseBuilder<InviteProjectReso
         return with((inviteResource) -> inviteResource.setStatus(status));
     }
 
+    public ProjectInviteResourceBuilder withHash(final String hash) {
+        return with((inviteResource) -> inviteResource.setHash(hash));
+    }
+
     public ProjectInviteResourceBuilder withProject(final Long projectId) {
         return with((inviteResource) -> inviteResource.setProject(projectId));
     }
 
-    public ProjectInviteResourceBuilder withOrganisation(final Long organisationId) {
+    public  ProjectInviteResourceBuilder withOrganisation(final Long organisationId) {
         return with((inviteResource) -> inviteResource.setOrganisation(organisationId));
+    }
+
+    public  ProjectInviteResourceBuilder withLeadOrganisation(final String leadOrganisation) {
+        return with((inviteResource) -> inviteResource.setLeadOrganisation(leadOrganisation));
+    }
+
+    public  ProjectInviteResourceBuilder withInviteOrganisationName(final String inviteOrganisationName) {
+        return with((inviteResource) -> inviteResource.setInviteOrganisationName(inviteOrganisationName));
     }
 
     public ProjectInviteResourceBuilder withIds(Long... ids) {
