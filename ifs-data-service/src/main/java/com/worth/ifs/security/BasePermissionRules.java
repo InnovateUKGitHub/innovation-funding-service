@@ -1,5 +1,6 @@
 package com.worth.ifs.security;
 
+import com.worth.ifs.invite.domain.ProjectParticipantRole;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
 import com.worth.ifs.project.repository.ProjectRepository;
@@ -87,10 +88,7 @@ public abstract class BasePermissionRules {
     }
 
     protected boolean isProjectManager(long projectId, long userId) {
-
-        Role projectManagerRole = roleRepository.findOneByName(PROJECT_MANAGER.getName());
-        List<ProjectUser> projectManagerUsers = projectUserRepository.findByProjectIdAndUserIdAndRoleId(projectId, userId, projectManagerRole.getId());
-
+        List<ProjectUser> projectManagerUsers = projectUserRepository.findByProjectIdAndUserIdAndRole(projectId, userId, ProjectParticipantRole.PROJECT_MANAGER);
         return projectManagerUsers != null && !projectManagerUsers.isEmpty();
     }
 }

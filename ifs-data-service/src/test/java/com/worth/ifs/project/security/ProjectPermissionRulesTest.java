@@ -2,6 +2,7 @@ package com.worth.ifs.project.security;
 
 import com.worth.ifs.BasePermissionRulesTest;
 import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.invite.domain.ProjectParticipantRole;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
 import com.worth.ifs.project.resource.ProjectResource;
@@ -24,7 +25,6 @@ import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
-import static com.worth.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
 import static java.util.Collections.emptyList;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -334,8 +334,7 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
 
         List<ProjectUser> projectManagerUser = newProjectUser().build(1);
 
-        when(roleRepositoryMock.findOneByName(PROJECT_MANAGER.getName())).thenReturn(projectManagerRole);
-        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRoleId(projectResource.getId(), user.getId(), projectManagerRole.getId() ))
+        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(projectResource.getId(), user.getId(), ProjectParticipantRole.PROJECT_MANAGER ))
                 .thenReturn(projectManagerUser);
     }
 
