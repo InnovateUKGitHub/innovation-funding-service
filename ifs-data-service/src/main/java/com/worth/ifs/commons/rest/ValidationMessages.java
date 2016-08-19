@@ -212,7 +212,24 @@ public class ValidationMessages implements ErrorHolder, Serializable {
             return emptyList();
         }
 
-        return simpleMap(asList(originalArguments), arg -> arg instanceof MessageSourceResolvable ? "" : arg);
+        return simpleMap(asList(originalArguments), arg -> validMessageArgument(arg) ? arg : "");
+    }
+
+    private boolean validMessageArgument(Object arg) {
+
+        if (arg == null) {
+            return true;
+        }
+
+        if (arg instanceof MessageSourceResolvable) {
+            return false;
+        }
+
+        if (arg.getClass().isArray() && ((Object[]) arg).length == 0) {
+            return false;
+        }
+
+        return true;
     }
 
     public static void rejectValue(Errors errors, String fieldName, String errorKey, Object... arguments) {

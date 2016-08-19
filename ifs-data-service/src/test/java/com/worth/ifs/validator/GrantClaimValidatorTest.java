@@ -116,7 +116,7 @@ public class GrantClaimValidatorTest {
         
         validator.validate(claim, bindingResult);
         
-        verifyError("validation.field.max.value.or.higher", 0);
+        verifyError("validation.field.percentage.max.value.or.higher", 0);
     }
     
     @Test
@@ -136,7 +136,7 @@ public class GrantClaimValidatorTest {
         
         validator.validate(claim, bindingResult);
 
-        verifyError("validation.field.max.value.or.lower", 100);
+        verifyError("validation.field.percentage.max.value.or.lower", 100);
     }
     
     @Test
@@ -146,7 +146,7 @@ public class GrantClaimValidatorTest {
         
         validator.validate(claim, bindingResult);
 
-        verifyError("validation.field.max.value.or.lower", 60);
+        verifyError("validation.field.percentage.max.value.or.lower", 60);
     }
     
     @Test
@@ -156,7 +156,7 @@ public class GrantClaimValidatorTest {
         
         validator.validate(claim, bindingResult);
 
-        verifyError("validation.field.max.value.or.lower", 60);
+        verifyError("validation.field.percentage.max.value.or.lower", 60);
     }
     
     @Test
@@ -176,7 +176,7 @@ public class GrantClaimValidatorTest {
         
         validator.validate(claim, bindingResult);
 
-        verifyError("validation.field.max.value.or.higher", 0);
+        verifyError("validation.field.percentage.max.value.or.higher", 0);
     }
     
     @Test
@@ -186,7 +186,7 @@ public class GrantClaimValidatorTest {
         
         validator.validate(claim, bindingResult);
 
-        verifyError("validation.field.max.value.or.higher", 0);
+        verifyError("validation.field.percentage.max.value.or.higher", 0);
     }
     
     @Test
