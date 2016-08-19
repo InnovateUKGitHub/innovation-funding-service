@@ -13,9 +13,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
+import static com.worth.ifs.user.resource.UserRoleType.roleNames;
 import static com.worth.ifs.util.CollectionFunctions.getOnlyElement;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
+import static java.util.stream.Collectors.toList;
 
 /**
  *  A project represents an application that has been accepted (and is now in project setup phase).
@@ -139,6 +142,22 @@ public class Project implements ProcessActivity {
 
     public List<ProjectUser> getProjectUsers() {
         return projectUsers;
+    }
+
+    public List<ProjectUser> getProjectUsers(Predicate<ProjectUser> filter){
+        return projectUsers.stream().filter(filter).collect(toList());
+    }
+
+    public List<ProjectUser> getProjectUsersWithRole(UserRoleType... roles){
+        return getProjectUsers(pu -> roleNames(roles).contains(pu.getRole().getName()));
+    }
+
+    public List<Organisation> getOrganisations(){
+        return projectUsers.stream().map(pu -> pu.getOrganisation()).distinct().collect(toList());
+    }
+
+    public List<Organisation> getOrganisations(Predicate<Organisation> predicate){
+        return getOrganisations().stream().filter(predicate).collect(toList());
     }
 
     public void setProjectUsers(List<ProjectUser> projectUsers) {

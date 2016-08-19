@@ -22,7 +22,8 @@ import org.mapstruct.Mappings;
 public abstract class InviteProjectMapper extends BaseMapper<ProjectInvite, InviteProjectResource, Long> {
 
     @Mappings({
-
+            @Mapping(source = "target.application.competition.name", target = "competitionName"),
+            @Mapping(source = "target.application.leadApplicant.name", target = "leadApplicant"),
             @Mapping(source = "organisation.id", target = "organisation"),
             @Mapping(source = "target.id", target = "project"),
             @Mapping(source = "target.name", target = "projectName"),

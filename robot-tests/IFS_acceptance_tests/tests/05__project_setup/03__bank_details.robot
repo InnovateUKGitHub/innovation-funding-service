@@ -53,10 +53,8 @@ Bank account postcode lookup
     [Tags]
     When the user selects the radio button    addressType    ADD_NEW
     When the user enters text to a text field    name=addressForm.postcodeInput    ${EMPTY}
-    # TODO the following two steps have been commented out as they are
-    # Pending due to INFUND-4043
-    # And the user clicks the button/link    jQuery=.button:contains("Find UK address")
-    # Then the user should see the element    css=.form-label .error-message
+    And the user clicks the button/link    jQuery=.button:contains("Find UK address")
+    Then the user should see the element    css=.form-label .error-message
     When the user enters text to a text field    name=addressForm.postcodeInput    BS14NT/
     And the user clicks the button/link    jQuery=.button:contains("Find UK address")
     Then the user should see the element    name=addressForm.selectedPostcodeIndex
@@ -70,13 +68,14 @@ Bank account postcode lookup
 Bank details experian validations
     [Documentation]    INFUND-3010
     [Tags]    Experian
-    # TODO pending INFUND-3259
+    # Please note that the bank details for these Experian tests are dummy data specfically chosen to elicit certain responses from the stub.
     When the user submits the bank account details    12345673    000003
     Then the user should see the text in the page    Bank account details are incorrect, please check and try again
 
 Bank details submission
     [Documentation]    INFUND-3010
     [Tags]    Experian
+    # Please note that the bank details for these Experian tests are dummy data specfically chosen to elicit certain responses from the stub.
     When the user enters text to a text field    name=accountNumber    51406795
     And the user enters text to a text field    name=sortCode    404745
     When the user clicks the button/link    jQuery=.button:contains("Submit bank account details")
@@ -88,6 +87,44 @@ Bank details submission
     And the user should see the element    css=.success-alert
     Then the user navigates to the page    ${project_in_setup_page}
     And the user should see the element    jQuery=ul li.complete:nth-child(2)
+    [Teardown]    logout as user
+
+Bank details for non-lead partner
+    [Documentation]    INFUND-3010
+    [Tags]    Experian
+    # Please note that the bank details for these Experian tests are dummy data specfically chosen to elicit certain responses from the stub.
+    Given guest user log-in    pete.tom@egg.com    Passw0rd
+    And the user clicks the button/link    link=00000001: best riffs
+    And the user clicks the button/link    link=Bank details
+    When the user enters text to a text field    name=accountNumber    51406795
+    And the user enters text to a text field    name=sortCode    404745
+    When the user selects the radio button    addressType    ADD_NEW
+    And the user enters text to a text field    id=addressForm.postcodeInput    BS14NT
+    And the user clicks the button/link    id=postcode-lookup
+    Then the user should see the element    css=#select-address-block
+    And the user clicks the button/link    css=#select-address-block > button
+    And the address fields should be filled
+    When the user clicks the button/link    jQuery=.button:contains("Submit bank account details")
+    And the user clicks the button/link    jquery=button:contains("Cancel")
+    And the user should not see the text in the page    Your bank details have been approved
+    When the user clicks the button/link    jQuery=.button:contains("Submit bank account details")
+    And the user clicks the button/link    jquery=button:contains("Submit")
+    And the user should see the text in the page    Your bank details have been approved
+    And the user should see the element    css=.success-alert
+    Then the user navigates to the page    ${project_in_setup_page}
+    And the user should see the element    jQuery=ul li.complete:nth-child(2)
+    [Teardown]    logout as user
+
+Bank details don't show for partner with no finance details
+    [Documentation]    INFUND-3010
+    [Tags]
+    Given guest user log-in  jessica.doe@ludlow.co.uk    Passw0rd
+    When the user clicks the button/link    link=00000001: best riffs
+    Then the user should not see the element    link=Bank details
+    And the user should see the text in the page    Bank details (not required)
+
+
+
 
 *** Keywords ***
 the user moves focus away from the element

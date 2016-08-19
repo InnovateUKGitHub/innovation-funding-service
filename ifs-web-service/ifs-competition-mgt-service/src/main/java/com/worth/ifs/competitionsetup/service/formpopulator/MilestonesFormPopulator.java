@@ -6,12 +6,12 @@ import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.MilestoneResource;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.form.MilestonesForm;
-import com.worth.ifs.competitionsetup.form.MilestonesFormEntry;
+import com.worth.ifs.competitionsetup.model.MilestoneEntry;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
+import org.apache.commons.collections4.map.LinkedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -42,17 +42,19 @@ public class MilestonesFormPopulator implements CompetitionSetupFormPopulator {
             milestonesByCompetition.sort((c1, c2) -> c1.getType().compareTo(c2.getType()));
         }
 
-        List<MilestonesFormEntry> milestoneFormEntries = new ArrayList<>();
-        milestonesByCompetition.forEach(milestone -> {
-            milestoneFormEntries.add(populateMilestoneFormEntries(milestone));
+        LinkedMap<String, MilestoneEntry> milestoneFormEntries = new LinkedMap<>();
+        milestonesByCompetition.stream().forEachOrdered(milestone -> {
+            milestoneFormEntries.put(milestone.getType().name(), populateMilestoneFormEntries(milestone));
         });
-        competitionSetupForm.setMilestonesFormEntryList(milestoneFormEntries);
+
+
+        competitionSetupForm.setMilestoneEntries(milestoneFormEntries);
 
         return competitionSetupForm;
     }
 
-    private MilestonesFormEntry populateMilestoneFormEntries(MilestoneResource milestone) {
-        MilestonesFormEntry newMilestone = new MilestonesFormEntry();
+    private MilestoneEntry populateMilestoneFormEntries(MilestoneResource milestone) {
+        MilestoneEntry newMilestone = new MilestoneEntry();
         newMilestone.setMilestoneType(milestone.getType());
         if (milestone.getDate() != null) {
             newMilestone.setDay(milestone.getDate().getDayOfMonth());

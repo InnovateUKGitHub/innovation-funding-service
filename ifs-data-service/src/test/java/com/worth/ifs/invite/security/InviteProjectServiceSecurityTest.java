@@ -51,6 +51,11 @@ public class InviteProjectServiceSecurityTest extends BaseServiceSecurityTest<In
     }
 
     @Test
+    public void testGetUserByInviteHashOnlyAllowedForSystemRegistrar() {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> service.getUserByInviteHash("hash"), SYSTEM_REGISTRATION_USER);
+    }
+
+    @Test
     public void testSaveFinanceContact() {
         final InviteProjectResource invite = newInviteProjectResource().build();
         assertAccessDenied(
@@ -98,7 +103,12 @@ public class InviteProjectServiceSecurityTest extends BaseServiceSecurityTest<In
         }
 
         @Override
-        public ServiceResult<Void> checkUserExistingByInviteHash(@P("hash") String hash) {
+        public ServiceResult<Boolean> checkUserExistingByInviteHash(@P("hash") String hash) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<UserResource> getUserByInviteHash(@P("hash") String hash) {
             return null;
         }
     }
