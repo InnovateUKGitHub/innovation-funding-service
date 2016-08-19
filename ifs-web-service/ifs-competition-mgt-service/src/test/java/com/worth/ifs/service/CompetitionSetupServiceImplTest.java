@@ -17,6 +17,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.Model;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -151,7 +152,9 @@ public class CompetitionSetupServiceImplTest {
 		testSectionStatus.put(CompetitionSetupSection.MILESTONES, Boolean.TRUE);
 		testSectionStatus.put(CompetitionSetupSection.APPLICATION_FORM, Boolean.TRUE);
 
-		CompetitionResource competitionResource = newCompetitionResource().build();
+		CompetitionResource competitionResource = newCompetitionResource()
+				.withCompetitionStatus(CompetitionResource.Status.COMPETITION_SETUP)
+				.withStartDate(LocalDateTime.now().plusDays(1)).build();
 		competitionResource.setSectionSetupStatus(testSectionStatus);
 
 		assertTrue(service.isCompetitionReadyToOpen(competitionResource));
@@ -167,7 +170,9 @@ public class CompetitionSetupServiceImplTest {
 		testSectionStatus.put(CompetitionSetupSection.MILESTONES, Boolean.TRUE);
 		testSectionStatus.put(CompetitionSetupSection.APPLICATION_FORM, Boolean.TRUE);
 
-		CompetitionResource competitionResource = newCompetitionResource().build();
+		CompetitionResource competitionResource = newCompetitionResource()
+				.withCompetitionStatus(CompetitionResource.Status.COMPETITION_SETUP)
+				.withStartDate(LocalDateTime.now().plusDays(1)).build();
 		competitionResource.setSectionSetupStatus(testSectionStatus);
 
 		assertFalse(service.isCompetitionReadyToOpen(competitionResource));
@@ -199,7 +204,7 @@ public class CompetitionSetupServiceImplTest {
 
 		when(competitionService.getById(any(Long.class))).thenReturn(competitionResource);
 		service.setCompetitionAsReadyToOpen(2L);
-		assertEquals(competitionResource.getCompetitionStatus(), CompetitionResource.Status.READY_TO_OPEN);
+		assertEquals(competitionResource.getSetupComplete(), true);
 
 	}
 

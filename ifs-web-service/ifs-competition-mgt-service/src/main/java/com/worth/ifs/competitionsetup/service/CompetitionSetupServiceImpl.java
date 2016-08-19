@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -96,7 +97,8 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 
 	@Override
 	public boolean isCompetitionReadyToOpen(CompetitionResource competitionResource) {
-		if (competitionResource.getCompetitionStatus() == CompetitionResource.Status.READY_TO_OPEN) {
+		if (competitionResource.getCompetitionStatus() != CompetitionResource.Status.COMPETITION_SETUP
+				&& competitionResource.getStartDate().isAfter(LocalDateTime.now())) {
 			return false;
 		}
 		Optional<CompetitionSetupSection> notDoneSection = getRequiredSectionsForReadyToOpen().stream().filter(section ->
@@ -114,7 +116,7 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 		}
 
 		if (isCompetitionReadyToOpen(competitionResource)) {
-			competitionResource.setCompetitionStatus(CompetitionResource.Status.READY_TO_OPEN);
+			competitionResource.setSetupComplete(true);
 			competitionService.update(competitionResource);
 		} else {
 			LOG.error("Requesting to set a competition (id:" + competitionId + ") as Read to Open, But the competition is not ready to open yet. " +
@@ -126,7 +128,7 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 	@Override
 	public void setCompetitionAsCompetitionSetup(Long competitionId) {
 		CompetitionResource competitionResource = competitionService.getById(competitionId);
-		competitionResource.setCompetitionStatus(CompetitionResource.Status.COMPETITION_SETUP);
+		competitionResource.setSetupComplete(false);
 		competitionService.update(competitionResource);
 	}
 

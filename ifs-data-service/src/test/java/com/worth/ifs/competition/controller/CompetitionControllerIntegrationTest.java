@@ -359,7 +359,7 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         List<CompetitionResource> existingComps = getAllCompetitions(2);
 
         CompetitionResource notStartedCompetition = createWithDates(oneDayAhead, twoDaysAhead, threeDaysAhead, fourDaysAhead, fiveDaysAhead, sixDaysAhead);
-        assertThat(notStartedCompetition.getCompetitionStatus(), equalTo(CompetitionResource.Status.NOT_STARTED));
+        assertThat(notStartedCompetition.getCompetitionStatus(), equalTo(CompetitionResource.Status.READY_TO_OPEN));
 
         CompetitionResource openCompetition = createWithDates(oneDayAgo, oneDayAhead, twoDaysAhead, threeDaysAhead, fourDaysAhead, fiveDaysAhead);
         assertThat(openCompetition.getCompetitionStatus(), equalTo(CompetitionResource.Status.OPEN));
@@ -472,7 +472,7 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
 
        //TODO replace with controller endpoint for competition setup finished
        Competition compEntity = competitionRepository.findById(comp.getId());
-       compEntity.setStatus(CompetitionResource.Status.COMPETITION_SETUP_FINISHED);
+       compEntity.setSetupComplete(true);
        competitionRepository.save(compEntity);
        flushAndClearSession();
 

@@ -68,6 +68,9 @@ public class CompetitionResource {
     private BigDecimal funderBudget;
 
 
+    private boolean setupComplete;
+
+
     public CompetitionResource() {
         // no-arg constructor
     }
@@ -89,6 +92,15 @@ public class CompetitionResource {
         this.description = description;
         this.startDate = startDate;
         this.endDate = endDate;
+    }
+
+
+    public boolean getSetupComplete() {
+        return setupComplete;
+    }
+
+    public void setSetupComplete(boolean setupComplete) {
+        this.setupComplete = setupComplete;
     }
 
     @JsonIgnore
@@ -434,7 +446,7 @@ public class CompetitionResource {
     }
 
     public enum Status {
-        COMPETITION_SETUP,COMPETITION_SETUP_FINISHED,NOT_STARTED,READY_TO_OPEN,OPEN,CLOSED,IN_ASSESSMENT,FUNDERS_PANEL,ASSESSOR_FEEDBACK,PROJECT_SETUP
+        COMPETITION_SETUP,READY_TO_OPEN,OPEN,CLOSED,IN_ASSESSMENT,FUNDERS_PANEL,ASSESSOR_FEEDBACK,PROJECT_SETUP
     }
 
     public String getActivityCode() {

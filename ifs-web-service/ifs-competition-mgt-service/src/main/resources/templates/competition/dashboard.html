@@ -28,15 +28,13 @@
         <h3 class="heading-small">
             <a th:href="@{'/competition/setup/'+${competition.id}}" th:if="${
                 (competition.competitionStatus == T(com.worth.ifs.competition.resource.CompetitionResource.Status).COMPETITION_SETUP)
-                || (competition.competitionStatus == T(com.worth.ifs.competition.resource.CompetitionResource.Status).READY_TO_OPEN)
-                || (competition.competitionStatus == T(com.worth.ifs.competition.resource.CompetitionResource.Status).NOT_STARTED)}">
+                || (competition.competitionStatus == T(com.worth.ifs.competition.resource.CompetitionResource.Status).READY_TO_OPEN)}">
                 <span th:unless="${#strings.isEmpty(competition.name)}" th:text="${competition.name}" th:remove="tag" />
                 <span th:if="${#strings.isEmpty(competition.name)}" th:text="#{ifs.competition.no_title}" th:remove="tag" />
             </a>
             <a th:href="@{'/competition/'+${competition.id}}" th:unless="${
                 (competition.competitionStatus == T(com.worth.ifs.competition.resource.CompetitionResource.Status).COMPETITION_SETUP)
-                || (competition.competitionStatus == T(com.worth.ifs.competition.resource.CompetitionResource.Status).READY_TO_OPEN)
-                || (competition.competitionStatus == T(com.worth.ifs.competition.resource.CompetitionResource.Status).NOT_STARTED)}">
+                || (competition.competitionStatus == T(com.worth.ifs.competition.resource.CompetitionResource.Status).READY_TO_OPEN)}">
                 <span th:unless="${#strings.isEmpty(competition.name)}" th:text="${competition.name}" th:remove="tag" />
                 <span th:if="${#strings.isEmpty(competition.name)}" th:text="#{ifs.competition.no_title}" th:remove="tag" />
             </a>

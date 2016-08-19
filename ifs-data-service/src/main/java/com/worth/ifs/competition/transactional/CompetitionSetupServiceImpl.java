@@ -147,7 +147,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     @Override
     public ServiceResult<CompetitionResource> create() {
         Competition competition = new Competition();
-        competition.setStatus(Status.COMPETITION_SETUP);
+        competition.setSetupComplete(false);
         return serviceSuccess(competitionMapper.mapToResource(competitionRepository.save(competition)));
     }
 
