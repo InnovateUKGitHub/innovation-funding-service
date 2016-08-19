@@ -30,9 +30,9 @@ public class ProjectUser extends Participant<Project, ProjectInvite, ProjectPart
     @JoinColumn(name="projectId", referencedColumnName="id")
     private Project project;
 
-    @ManyToOne
-    @JoinColumn(name="roleId", referencedColumnName="id")
-    private Role role;
+    @Enumerated(EnumType.STRING)
+    @Column(name="project_role")
+    private ProjectParticipantRole role;
 
     @ManyToOne
     @JoinColumn(name="organisationId", referencedColumnName="id")
@@ -42,24 +42,7 @@ public class ProjectUser extends Participant<Project, ProjectInvite, ProjectPart
     	// no-arg constructor
     }
 
-    @Override
-    public Project getProcess() {
-        return project;
-    }
-
-    @Override
-    public Optional<ProjectInvite> getInvite() {
-        throw new NotImplementedException("ProjectUser.getInvite() is not currently implemented");
-    }
-
-
-    // thhs is the enum
-    @Override
-    public ProjectParticipantRole getParticipantRole() {
-        return null;
-    }
-
-    public ProjectUser(Long id, User user, Project project, Role role, Organisation organisation) {
+    public ProjectUser(Long id, User user, Project project, ProjectParticipantRole role, Organisation organisation) {
         this.id = id;
         this.user = user;
         this.project = project;
@@ -67,14 +50,21 @@ public class ProjectUser extends Participant<Project, ProjectInvite, ProjectPart
         this.organisation = organisation;
     }
 
-    public ProjectUser(User user, Project project, Role role, Organisation organisation) {
+    public ProjectUser(User user, Project project, ProjectParticipantRole role, Organisation organisation) {
         this.user = user;
         this.project = project;
         this.role = role;
         this.organisation = organisation;
     }
 
-    public Role getRole() {
+    @Override
+    public Optional<ProjectInvite> getInvite() {
+        // TODO add invite to ProjectUser
+        throw new NotImplementedException("ProjectUser.getInvite() is not currently implemented");
+    }
+
+    @Override
+    public ProjectParticipantRole getRole() {
         return role;
     }
 
@@ -82,7 +72,8 @@ public class ProjectUser extends Participant<Project, ProjectInvite, ProjectPart
         return user;
     }
 
-    public Project getProject() {
+    @Override
+    public Project getProcess() {
         return project;
     }
 
@@ -92,14 +83,6 @@ public class ProjectUser extends Participant<Project, ProjectInvite, ProjectPart
 
     public Long getId() {
         return id;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-    public void setProject(Project project) {
-        this.project = project;
     }
 
     public void setOrganisation(Organisation organisation) {

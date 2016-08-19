@@ -8,7 +8,7 @@ import static java.util.Collections.emptyList;
 
 import static com.worth.ifs.BaseBuilderAmendFunctions.uniqueIds;
 import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.invite.constant.InviteStatusConstants;
+import com.worth.ifs.invite.constant.InviteStatus;
 import com.worth.ifs.invite.resource.InviteProjectResource;
 
 
@@ -48,7 +48,7 @@ public class ProjectInviteResourceBuilder  extends BaseBuilder<InviteProjectReso
         return with((inviteResource) -> inviteResource.setName(name));
     }
 
-    public ProjectInviteResourceBuilder withStatus(final InviteStatusConstants status) {
+    public ProjectInviteResourceBuilder withStatus(final InviteStatus status) {
         return with((inviteResource) -> inviteResource.setStatus(status));
     }
 
@@ -74,7 +74,7 @@ public class ProjectInviteResourceBuilder  extends BaseBuilder<InviteProjectReso
         return withArray((name, inviteResource) -> setField("name", name, inviteResource), names);
     }
 
-    public ProjectInviteResourceBuilder withStatuss(final InviteStatusConstants... statusses) {
+    public ProjectInviteResourceBuilder withStatuss(final InviteStatus... statusses) {
         return withArray((status, inviteResource) -> setField("status", status, inviteResource), statusses);
     }
 

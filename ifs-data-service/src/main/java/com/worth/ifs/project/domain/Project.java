@@ -4,8 +4,8 @@ import com.worth.ifs.address.domain.Address;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.invite.domain.ProcessActivity;
+import com.worth.ifs.invite.domain.ProjectParticipantRole;
 import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.resource.UserRoleType;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
@@ -75,8 +75,8 @@ public class Project implements ProcessActivity {
         return projectUsers.remove(projectUser);
     }
 
-    public ProjectUser getExistingProjectUserWithRoleForOrganisation(UserRoleType roleType, Organisation organisation) {
-        List<ProjectUser> matchingUser = simpleFilter(projectUsers, projectUser -> projectUser.getRole().isOfType(roleType) && projectUser.getOrganisation().equals(organisation));
+    public ProjectUser getExistingProjectUserWithRoleForOrganisation(ProjectParticipantRole role, Organisation organisation) {
+        List<ProjectUser> matchingUser = simpleFilter(projectUsers, projectUser -> projectUser.getRole()==role && projectUser.getOrganisation().equals(organisation));
 
         if (matchingUser.isEmpty()) {
             return null;

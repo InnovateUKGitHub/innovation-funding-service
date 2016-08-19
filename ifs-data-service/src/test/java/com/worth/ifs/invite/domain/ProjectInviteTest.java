@@ -1,7 +1,7 @@
 package com.worth.ifs.invite.domain;
 
 
-import com.worth.ifs.invite.constant.InviteStatusConstants;
+import com.worth.ifs.invite.constant.InviteStatus;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.user.domain.Organisation;
 import org.junit.Assert;
@@ -18,7 +18,7 @@ public class ProjectInviteTest {
     Project project;
     String hash;
     Organisation organisation;
-    InviteStatusConstants status;
+    InviteStatus status;
 
     @Before
     public void setUp() throws Exception {

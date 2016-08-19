@@ -14,6 +14,7 @@ import org.junit.Test;
 import org.mapstruct.factory.Mappers;
 
 import static com.worth.ifs.invite.builder.ProjectInviteResourceBuilder.newInviteProjectResource;
+import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static com.worth.ifs.project.builder.ProjectBuilder.newProject;
 import static com.worth.ifs.project.builder.ProjectUserBuilder.newProjectUser;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
@@ -60,11 +61,11 @@ public class ProjectInvitePermissionRulesTest extends BasePermissionRulesTest<Pr
         inviteProjectResourceForOrganisationTwo = newInviteProjectResource().withProject(project.getId()).withOrganisation(organisationTwo.getId()).build();
         partnerRole = getRole(PARTNER);
 
-        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRoleId(project.getId(), userOnProjectForOrganisationOne.getId(), getRole(PARTNER).getId())).thenReturn(asList(projectUserForUserOnOgranisationOne));
-        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRoleId(project.getId(), userOnProjectForOrganisationTwo.getId(), getRole(PARTNER).getId())).thenReturn(asList(projectUserForUserOnOgranisationTwo));
-        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRoleId(project.getId(), userNotOnProject.getId(), getRole(PARTNER).getId())).thenReturn(emptyList());
-        when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRoleId(project.getId(), userOnProjectForOrganisationOne.getId(), organisationOne.getId(), partnerRole.getId())).thenReturn(projectUserForUserOnOgranisationOne);
-        when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRoleId(project.getId(), userOnProjectForOrganisationTwo.getId(), organisationTwo.getId(), partnerRole.getId())).thenReturn(projectUserForUserOnOgranisationTwo);
+        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(project.getId(), userOnProjectForOrganisationOne.getId(), PROJECT_PARTNER)).thenReturn(asList(projectUserForUserOnOgranisationOne));
+        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(project.getId(), userOnProjectForOrganisationTwo.getId(), PROJECT_PARTNER)).thenReturn(asList(projectUserForUserOnOgranisationTwo));
+        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(project.getId(), userNotOnProject.getId(), PROJECT_PARTNER)).thenReturn(emptyList());
+        when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(project.getId(), userOnProjectForOrganisationOne.getId(), organisationOne.getId(), PROJECT_PARTNER)).thenReturn(projectUserForUserOnOgranisationOne);
+        when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(project.getId(), userOnProjectForOrganisationTwo.getId(), organisationTwo.getId(), PROJECT_PARTNER)).thenReturn(projectUserForUserOnOgranisationTwo);
     }
 
     @Test

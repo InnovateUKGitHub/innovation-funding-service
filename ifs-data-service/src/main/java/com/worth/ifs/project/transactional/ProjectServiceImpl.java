@@ -17,6 +17,7 @@ import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.BasicFileAndContents;
 import com.worth.ifs.file.service.FileAndContents;
 import com.worth.ifs.file.transactional.FileService;
+import com.worth.ifs.invite.domain.ProjectParticipantRole;
 import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.notifications.resource.ExternalUserNotificationTarget;
 import com.worth.ifs.notifications.resource.Notification;
@@ -62,10 +63,12 @@ import java.util.stream.Collectors;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.service.ServiceResult.*;
+import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_FINANCE_OFFICER;
+import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
+import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static com.worth.ifs.project.transactional.ProjectServiceImpl.Notifications.INVITE_FINANCE_CONTACT;
 import static com.worth.ifs.project.transactional.ProjectServiceImpl.Notifications.INVITE_PROJECT_MANAGER;
-import static com.worth.ifs.user.resource.UserRoleType.*;
 import static com.worth.ifs.util.CollectionFunctions.*;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static com.worth.ifs.util.EntityLookupCallbacks.getOnlyElementOrFail;
@@ -207,7 +210,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     @Override
     public ServiceResult<List<ProjectResource>> findByUserId(final Long userId) {
         List<ProjectUser> projectUsers = projectUserRepository.findByUserId(userId);
-        List<Project> projects = simpleMap(projectUsers, ProjectUser::getProject).parallelStream().distinct().collect(Collectors.toList());     //Users may have multiple roles (e.g. partner and finance contact, in which case there will be multiple project_user entries, so this is flatting it).
+        List<Project> projects = simpleMap(projectUsers, ProjectUser::getProcess).parallelStream().distinct().collect(Collectors.toList());     //Users may have multiple roles (e.g. partner and finance contact, in which case there will be multiple project_user entries, so this is flatting it).
         return serviceSuccess(simpleMap(projects, projectMapper::mapToResource));
     }
 
@@ -534,8 +537,8 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
     @Override
     public ServiceResult<OrganisationResource> getOrganisationByProjectAndUser(Long projectId, Long userId) {
-        Role partnerRole = roleRepository.findOneByName(PARTNER.getName());
-        ProjectUser projectUser = projectUserRepository.findByProjectIdAndRoleIdAndUserId(projectId, partnerRole.getId(), userId);
+//        Role partnerRole = roleRepository.findOneByName(PARTNER.getName());
+        ProjectUser projectUser = projectUserRepository.findByProjectIdAndRoleAndUserId(projectId, PROJECT_PARTNER, userId);
         if(projectUser != null && projectUser.getOrganisation() != null) {
             return serviceSuccess(organisationMapper.mapToResource(organisationRepository.findOne(projectUser.getOrganisation().getId())));
         } else {
@@ -554,7 +557,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
     private void addFinanceContactToProject(Project project, ProjectUser financeContact) {
 
-        ProjectUser existingUser = project.getExistingProjectUserWithRoleForOrganisation(FINANCE_CONTACT, financeContact.getOrganisation());
+        ProjectUser existingUser = project.getExistingProjectUserWithRoleForOrganisation(ProjectParticipantRole.PROJECT_FINANCE_OFFICER, financeContact.getOrganisation());
 
         if (existingUser != null) {
             project.removeProjectUser(existingUser);
@@ -564,7 +567,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     }
 
     private ServiceResult<ProjectUser> createFinanceContactProjectUser(User user, Project project, Organisation organisation) {
-        return createProjectUserForRole(project, user, organisation, FINANCE_CONTACT);
+        return createProjectUserForRole(project, user, organisation, PROJECT_FINANCE_OFFICER);
     }
 
     @Override
@@ -697,11 +700,11 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     }
 
     private ServiceResult<ProjectUser> createPartnerProjectUser(Project project, User user, Organisation organisation) {
-        return createProjectUserForRole(project, user, organisation, PARTNER);
+        return createProjectUserForRole(project, user, organisation, PROJECT_PARTNER);
     }
 
-    private ServiceResult<ProjectUser> createProjectUserForRole(Project project, User user, Organisation organisation, UserRoleType roleType) {
-        return getRole(roleType).andOnSuccessReturn(role -> new ProjectUser(user, project, role, organisation));
+    private ServiceResult<ProjectUser> createProjectUserForRole(Project project, User user, Organisation organisation, ProjectParticipantRole role) {
+        return serviceSuccess(new ProjectUser(user, project, role, organisation));
     }
 
     private List<ProjectResource> projectsToResources(List<Project> filtered) {
@@ -736,7 +739,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         final Supplier<SortedSet<Organisation>> supplier = () -> new TreeSet<>(compareById);
 
         SortedSet<Organisation> organisationSet = projectRoles.stream()
-                .filter(uar -> uar.getRoleName().equals(PARTNER.getName()))
+                .filter(uar -> uar.getRoleName().equals(PROJECT_PARTNER.getName()))
                 .map(uar -> organisationRepository.findOne(uar.getOrganisation()))
                 .collect(Collectors.toCollection(supplier));
 
@@ -753,12 +756,12 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
             pm.setOrganisation(leadPartnerUser.getOrganisation());
             return serviceSuccess();
 
-        }).orElseGet(() -> getRole(PROJECT_MANAGER).andOnSuccessReturnVoid(projectManagerRole -> {
-
-            ProjectUser projectUser = new ProjectUser(leadPartnerUser.getUser(), leadPartnerUser.getProject(),
-                    projectManagerRole, leadPartnerUser.getOrganisation());
+        }).orElseGet(() -> {
+            ProjectUser projectUser = new ProjectUser(leadPartnerUser.getUser(), leadPartnerUser.getProcess(),
+                    PROJECT_MANAGER, leadPartnerUser.getOrganisation());
             project.addProjectUser(projectUser);
-        }));
+            return serviceSuccess();
+        });
     }
 
     private Optional<ProjectUser> getExistingProjectManager(Project project) {

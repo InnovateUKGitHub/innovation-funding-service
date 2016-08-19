@@ -1,5 +1,6 @@
 package com.worth.ifs.project.repository;
 
+import com.worth.ifs.invite.domain.ProjectParticipantRole;
 import com.worth.ifs.project.domain.ProjectUser;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
@@ -9,11 +10,11 @@ public interface ProjectUserRepository extends PagingAndSortingRepository<Projec
 
     List<ProjectUser> findByProjectId(Long projectId);
 
-    ProjectUser findOneByProjectIdAndUserIdAndOrganisationIdAndRoleId(long projectId, long userId, long organisationId, long roleId);
+    ProjectUser findOneByProjectIdAndUserIdAndOrganisationIdAndRole(long projectId, long userId, long organisationId, ProjectParticipantRole role);
 
-    List<ProjectUser> findByProjectIdAndUserIdAndRoleId(long projectId, long userId, long roleId);
+    List<ProjectUser> findByProjectIdAndUserIdAndRole(long projectId, long userId, ProjectParticipantRole role);
 
     List<ProjectUser> findByUserId(long userId);
 
-    ProjectUser findByProjectIdAndRoleIdAndUserId(long projectId, long roleId, long userId);
+    ProjectUser findByProjectIdAndRoleAndUserId(long projectId, ProjectParticipantRole role, long userId);
 }

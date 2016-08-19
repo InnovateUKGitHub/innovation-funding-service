@@ -37,7 +37,7 @@ public abstract class Invite<T extends ProcessActivity, I extends Invite<T,I>> {
     private  String email; // invitee
 
     @ManyToOne
-    @JoinColumn(name = "email", referencedColumnName = "email", insertable = false, updatable = false)
+    @JoinColumn(name = "email", referencedColumnName = "email", insertable = false, updatable = false) // case sensitive? remove anyway
     private User user;
 
     @Column(unique=true)
