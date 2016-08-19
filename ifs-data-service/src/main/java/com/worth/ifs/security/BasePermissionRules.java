@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
+import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static com.worth.ifs.security.SecurityRuleUtil.checkProcessRole;
 import static com.worth.ifs.user.resource.UserRoleType.*;
 
@@ -59,21 +60,18 @@ public abstract class BasePermissionRules {
     }
 
     protected boolean isPartner(long projectId, long userId) {
-        Role partnerRole = roleRepository.findOneByName(PARTNER.getName());
-        List<ProjectUser> partnerProjectUser = projectUserRepository.findByProjectIdAndUserIdAndRoleId(projectId, userId, partnerRole.getId());
+        List<ProjectUser> partnerProjectUser = projectUserRepository.findByProjectIdAndUserIdAndRole(projectId, userId, PROJECT_PARTNER);
         return !partnerProjectUser.isEmpty();
     }
 
     protected boolean isSpecificProjectPartnerByApplicationId(long applicationId, long organisationId, long userId) {
-        Role partnerRole = roleRepository.findOneByName(PARTNER.getName());
         long projectId = projectRepository.findOneByApplicationId(applicationId).getId();
-        ProjectUser partnerProjectUser = projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRoleId(projectId, userId, organisationId, partnerRole.getId());
+        ProjectUser partnerProjectUser = projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(projectId, userId, organisationId, PROJECT_PARTNER);
         return partnerProjectUser != null;
     }
 
     protected boolean partnerBelongsToOrganisation(long projectId, long userId, long organisationId){
-        Role partnerRole = roleRepository.findOneByName(PARTNER.getName());
-        ProjectUser partnerProjectUser = projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRoleId(projectId, userId, organisationId,partnerRole.getId());
+        ProjectUser partnerProjectUser = projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(projectId, userId, organisationId, PROJECT_PARTNER);
         return partnerProjectUser != null;
     }
 
@@ -84,8 +82,7 @@ public abstract class BasePermissionRules {
         ProcessRole leadApplicantProcessRole = processRoleRepository.findOneByApplicationIdAndRoleId(project.getApplication().getId(), leadApplicantRole.getId());
         Organisation leadOrganisation = leadApplicantProcessRole.getOrganisation();
 
-        Role partnerRole = roleRepository.findOneByName(PARTNER.getName());
-        ProjectUser partnerProjectUser = projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRoleId(projectId, userId, leadOrganisation.getId(), partnerRole.getId());
+        ProjectUser partnerProjectUser = projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(projectId, userId, leadOrganisation.getId(), PROJECT_PARTNER);
         return partnerProjectUser != null;
     }
 }

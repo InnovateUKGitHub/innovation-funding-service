@@ -3,7 +3,6 @@ package com.worth.ifs.project.domain;
 import com.worth.ifs.address.domain.Address;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,8 +14,9 @@ import java.util.function.Predicate;
 import static com.worth.ifs.project.builder.ProjectBuilder.newProject;
 import static com.worth.ifs.project.builder.ProjectUserBuilder.newProjectUser;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
-import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
-import static com.worth.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
+import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
+import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
+import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 
@@ -80,9 +80,9 @@ public class ProjectTest {
 
     @Test
     public void testGetProjectUsersFilter() {
-        Project project = newProject().withProjectUsers(newProjectUser().withRole(PARTNER).build(1)).build();
-        Predicate<ProjectUser> shouldRemove = pu -> !PARTNER.getName().equals(pu.getRole().getName());
-        Predicate<ProjectUser> shouldNotRemove = pu -> PARTNER.getName().equals(pu.getRole().getName());
+        Project project = newProject().withProjectUsers(newProjectUser().withRole(PROJECT_PARTNER).build(1)).build();
+        Predicate<ProjectUser> shouldRemove = pu -> PROJECT_PARTNER != pu.getRole();
+        Predicate<ProjectUser> shouldNotRemove = pu -> PROJECT_PARTNER == pu.getRole();
         assertNotNull(project.getProjectUsers(shouldRemove));
         assertTrue(project.getProjectUsers(shouldRemove).isEmpty());
         assertNotNull(project.getProjectUsers(shouldNotRemove));
@@ -91,12 +91,12 @@ public class ProjectTest {
 
     @Test
     public void testGetProjectUsersWithRole() {
-        ProjectUser pu1 = newProjectUser().withRole(PARTNER).build();
-        ProjectUser pu2 = newProjectUser().withRole(UserRoleType.FINANCE_CONTACT).build();
+        ProjectUser pu1 = newProjectUser().withRole(PROJECT_PARTNER).build();
+        ProjectUser pu2 = newProjectUser().withRole(PROJECT_FINANCE_CONTACT).build();
         Project project = newProject().withProjectUsers(asList(pu1, pu2)).build();
-        assertNotNull(project.getProjectUsersWithRole(PARTNER));
-        assertEquals(1, project.getProjectUsersWithRole(PARTNER).size());
-        assertEquals(pu1, project.getProjectUsersWithRole(PARTNER).get(0));
+        assertNotNull(project.getProjectUsersWithRole(PROJECT_PARTNER));
+        assertEquals(1, project.getProjectUsersWithRole(PROJECT_PARTNER).size());
+        assertEquals(pu1, project.getProjectUsersWithRole(PROJECT_PARTNER).get(0));
         assertNotNull(project.getProjectUsersWithRole(PROJECT_MANAGER));
         assertTrue(project.getProjectUsersWithRole(PROJECT_MANAGER).isEmpty());
     }

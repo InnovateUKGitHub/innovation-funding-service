@@ -91,7 +91,6 @@ public class POJOTest {
             Project.class,
             ProjectResource.class,
             InviteProjectResource.class,
-            ProjectUser.class,
             ProjectUserResource.class,
             AddressType.class,
             AddressTypeResource.class,

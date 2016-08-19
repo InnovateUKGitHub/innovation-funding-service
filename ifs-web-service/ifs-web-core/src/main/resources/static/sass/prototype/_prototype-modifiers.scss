@@ -52,6 +52,24 @@
 	}
 }
 
+/*--- Responsive shoe and hide ---*/
+.show-mobile{
+	display: none !important;
+}
+
+.hide-mobile{
+	display: block !important;
+}
+
+@include media-down(mobile) {
+	.show-mobile{
+		display: initial !important;
+	}
+
+	.hide-mobile{
+		display: none !important;
+	}
+}
 
 /*--- Assign team dropdown js issue ---*/
 
