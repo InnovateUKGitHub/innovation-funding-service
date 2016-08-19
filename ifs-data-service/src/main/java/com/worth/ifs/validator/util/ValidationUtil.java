@@ -35,7 +35,6 @@ import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 @Component
 public class ValidationUtil {
     private final static Log LOG = LogFactory.getLog(ValidationUtil.class);
-    private MessageSource messageSource;
     private ValidatorService validatorService;
     private MinRowCountValidator minRowCountValidator;
 
@@ -43,12 +42,10 @@ public class ValidationUtil {
     @Autowired
     @Lazy
     private ValidationUtil(ValidatorService validatorService,
-                           MinRowCountValidator minRowCountValidator,
-                           MessageSource messageSource
+                           MinRowCountValidator minRowCountValidator
     ) {
         this.validatorService = validatorService;
         this.minRowCountValidator = minRowCountValidator;
-        this.messageSource = messageSource;
     }
 
     /**
@@ -154,7 +151,7 @@ public class ValidationUtil {
         List<BindingResult> bindingResults = validatorService.validateFormInputResponse(application.getId(), formInput.getId());
         for (BindingResult bindingResult : bindingResults) {
             if (bindingResult.hasErrors()) {
-                validationMessages.add(new ValidationMessages(messageSource, formInput.getId(), bindingResult));
+                validationMessages.add(new ValidationMessages(formInput.getId(), bindingResult));
             }
         }
         return validationMessages;
@@ -169,7 +166,7 @@ public class ValidationUtil {
             BindingResult validationResult = validatorService.validateFormInputResponse(application.getId(), formInput.getId(), markedAsCompleteById);
 
             if (validationResult.hasErrors()) {
-                validationMessages.add(new ValidationMessages(messageSource, formInput.getId(), validationResult));
+                validationMessages.add(new ValidationMessages(formInput.getId(), validationResult));
             }
         }
 
@@ -190,7 +187,7 @@ public class ValidationUtil {
         BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(question, "question");
         invokeEmptyRowValidator(costItems, bindingResult);
         if (bindingResult.hasErrors()) {
-            return new ValidationMessages(messageSource, question.getId(), bindingResult);
+            return new ValidationMessages(question.getId(), bindingResult);
         }
         return null;
     }
@@ -227,12 +224,10 @@ public class ValidationUtil {
                 bindingResult.getFieldErrors().stream().forEach(e -> LOG.debug("Field Error: " + e.getRejectedValue() + e.getDefaultMessage()));
                 bindingResult.getAllErrors().stream().forEach(e -> LOG.debug("Error: " + e.getObjectName() + e.getDefaultMessage()));
             }
-            return new ValidationMessages(messageSource, costItem.getId(), bindingResult);
+            return new ValidationMessages(costItem.getId(), bindingResult);
         } else {
             LOG.debug("validated, no messages");
-            ValidationMessages validationMessages = new ValidationMessages();
-            validationMessages.setObjectId(costItem.getId());
-            return validationMessages;
+            return ValidationMessages.noErrors(costItem.getId());
         }
     }
 

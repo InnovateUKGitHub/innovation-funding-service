@@ -22,6 +22,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import static com.worth.ifs.commons.rest.ValidationMessages.rejectValue;
 import static com.worth.ifs.finance.handler.item.OtherFundingHandler.COST_KEY;
 import static com.worth.ifs.finance.resource.category.OtherFundingCostCategory.OTHER_FUNDING;
 
@@ -64,7 +65,7 @@ public class OtherFundingValidator implements Validator {
 
     private void validateFundingAmount(BigDecimal fundingAmount, Errors errors) {
         if(fundingAmount == null || fundingAmount.compareTo(BigDecimal.ZERO) != 1){
-            errors.rejectValue("fundingAmount", "javax.validation.constraints.DecimalMin.message", new Integer[]{1}, null);
+            rejectValue(errors, "fundingAmount", "javax.validation.constraints.DecimalMin.message", 1);
 
         }
     }
@@ -72,15 +73,15 @@ public class OtherFundingValidator implements Validator {
     private void validateDate(OtherFunding otherFunding, Errors errors){
         String securedDate = otherFunding.getSecuredDate();
         if(StringUtils.isBlank(securedDate)){
-            errors.rejectValue("securedDate", "org.hibernate.validator.constraints.NotBlank.message");
+            rejectValue(errors, "securedDate", "org.hibernate.validator.constraints.NotBlank.message");
         }else if(!isValidDate(securedDate)) {
-            errors.rejectValue("securedDate", "validation.finance.secured.date.invalid");
+            rejectValue(errors, "securedDate", "validation.finance.secured.date.invalid");
         }
     }
 
     private void validateFundingSource(String fundingSource, Errors errors){
         if(StringUtils.isBlank(fundingSource)){
-            errors.rejectValue("fundingSource", "validation.finance.funding.source.blank");
+            rejectValue(errors, "fundingSource", "validation.finance.funding.source.blank");
         }
 
     }

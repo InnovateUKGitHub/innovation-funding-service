@@ -89,9 +89,9 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
         storedItemErrors.forEach((costId, validationMessages) ->
             validationMessages.getErrors().stream().forEach(e -> {
                 if(StringUtils.hasText(e.getErrorKey())){
-                    errors.addError(fieldError("formInput[cost-" + costId + "-" + e.getFieldName() + "]", e.getFieldRejectedValue(), e.getErrorMessage()));
+                    errors.addError(fieldError("formInput[cost-" + costId + "-" + e.getFieldName() + "]", e.getFieldRejectedValue(), e.getErrorKey(), e.getArguments()));
                 }else{
-                    errors.addError(fieldError("formInput[cost-" + costId + "]", e.getFieldRejectedValue(), e.getErrorMessage()));
+                    errors.addError(fieldError("formInput[cost-" + costId + "]", e.getFieldRejectedValue(), e.getErrorKey(), e.getArguments()));
                 }
             })
         );

@@ -71,7 +71,7 @@ public class FormInputResponseController {
             formInputResponseRepository.save(response);
             LOG.debug("Single question saved!");
 
-            return new ValidationMessages(messageSource, null, bindingResult);
+            return new ValidationMessages(bindingResult);
         });
 
         return result.toPutWithBodyResponse();
