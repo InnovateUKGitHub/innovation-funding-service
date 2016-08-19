@@ -241,9 +241,22 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     }
 
     @Override
-    public ServiceResult<Boolean> saveDocumentsSubmitDateTime(Long projectId, LocalDateTime date) {
-        // TODO Implement set the documents SUbmit Date - INFUND-3012
-        return null;
+    public ServiceResult<Void> saveDocumentsSubmitDateTime(Long projectId, LocalDateTime date) {
+        return getProject(projectId).
+                andOnSuccess(
+                        project -> {
+                            if(validateDocumentsUploaded(project)){
+                                return setDocumentsSubmittedDate(project, date);
+                            } else {
+                                return serviceFailure(new Error(PROJECT_SETUP_OTHER_DOCUMENTS_MUST_BE_UPLOADED_BEFORE_SUBMIT));
+                            }
+                        }
+                ).andOnSuccessReturnVoid();
+    }
+
+    private ServiceResult<Void> setDocumentsSubmittedDate(Project project, LocalDateTime date) {
+        project.setDocumentsSubmittedDate(date);
+        return serviceSuccess();
     }
 
     @Override
@@ -729,6 +742,14 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
                 || allFinanceContactsNotSet(project.getId())
                 || project.getSubmittedDate() != null);
     }
+
+    private boolean validateDocumentsUploaded(final Project project) {
+        return project.getExploitationPlan() != null
+                && project.getCollaborationAgreement() != null
+                && getExistingProjectManager(project).isPresent()
+                && project.getDocumentsSubmittedDate() == null;
+    }
+
 
     private boolean allFinanceContactsNotSet(Long projectId){
         List<ProjectUser> projectUserObjs = getProjectUsersByProjectId(projectId);

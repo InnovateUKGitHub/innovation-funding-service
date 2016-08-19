@@ -893,6 +893,72 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
     }
 
+    @Test
+    public void testSaveDocumentsSubmitDateTimeIsSuccessfulWhenUploadsComplete() {
+        ProjectUser projectUserToSet = newProjectUser()
+                .withId(1L)
+                .withUser(newUser().withid(1L).build())
+                .withRole(projectManagerRole)
+                .build();
+        List<ProjectUser> projectUsers = new ArrayList<>();
+        projectUsers.add(projectUserToSet);
+        Project project = newProject().build();
+        project.setProjectUsers(projectUsers);
+
+        when(projectUserRepositoryMock.findByProjectId(project.getId())).thenReturn(projectUsers);
+        when(projectRepositoryMock.findOne(project.getId())).thenReturn(project);
+
+        assertSetDocumentsDateimeIfProjectManagerAndFilesExist(
+                project::setCollaborationAgreement,
+                project::setExploitationPlan,
+                () -> service.saveDocumentsSubmitDateTime(project.getId(), LocalDateTime.now()));
+
+        assertNotNull(project.getCollaborationAgreement());
+        assertNotNull(project.getExploitationPlan());
+        assertTrue(project.getProjectUsers().get(0).getRole().getName()
+                .equals(UserRoleType.PROJECT_MANAGER.getName()));
+        assertNotNull(project.getDocumentsSubmittedDate());
+    }
+
+    @Test
+    public void testSaveDocumentsSubmitDateTimeFailsWhenUploadsImcomplete() {
+        ProjectUser projectUserToSet = newProjectUser()
+                .withId(1L)
+                .withUser(newUser().withid(1L).build())
+                .withRole(projectManagerRole)
+                .build();
+        List<ProjectUser> projectUsers = new ArrayList<>();
+        projectUsers.add(projectUserToSet);
+        Project project = newProject().build();
+        project.setProjectUsers(projectUsers);
+
+        when(projectUserRepositoryMock.findByProjectId(project.getId())).thenReturn(projectUsers);
+        when(projectRepositoryMock.findOne(project.getId())).thenReturn(project);
+
+        ServiceResult<Void> result = service.saveDocumentsSubmitDateTime(project.getId(), LocalDateTime.now());
+
+        assertTrue(result.isFailure());
+        assertNull(project.getCollaborationAgreement());
+        assertNull(project.getExploitationPlan());
+        assertTrue(project.getProjectUsers().get(0).getRole().getName()
+                .equals(UserRoleType.PROJECT_MANAGER.getName()));
+        assertNull(project.getDocumentsSubmittedDate());
+    }
+
+
+    private void assertSetDocumentsDateimeIfProjectManagerAndFilesExist(Consumer<FileEntry> fileSetter1,
+                                                                       Consumer<FileEntry> fileSetter2,
+                                                                       Supplier<ServiceResult<Void>> getConditionFn) {
+        Supplier<InputStream> inputStreamSupplier1 = () -> null;
+        Supplier<InputStream> inputStreamSupplier2 = () -> null;
+
+        getFileEntryResources(fileSetter1, fileSetter2, inputStreamSupplier1, inputStreamSupplier2);
+        ServiceResult<Void> result = getConditionFn.get();
+
+        assertTrue(result.isSuccess());
+
+    }
+
 
     private void assertFilesCannotBeSubmittedIfNotByProjectManager(Consumer<FileEntry> fileSetter1,
                                                                    Consumer<FileEntry> fileSetter2,

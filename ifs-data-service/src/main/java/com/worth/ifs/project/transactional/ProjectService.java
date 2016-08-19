@@ -7,8 +7,9 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.FileAndContents;
 import com.worth.ifs.invite.resource.ApplicationInviteResource;
-import com.worth.ifs.project.resource.*;
-import com.worth.ifs.security.NotSecured;
+import com.worth.ifs.project.resource.MonitoringOfficerResource;
+import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.security.SecuredBySpring;
 import com.worth.ifs.user.resource.OrganisationResource;
 import org.springframework.security.access.method.P;
@@ -76,7 +77,7 @@ public interface ProjectService {
     ServiceResult<Boolean> isSubmitAllowed(Long projectId);
 
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'UPDATE_PROJECT_MANAGER')")
-    ServiceResult<Boolean> saveDocumentsSubmitDateTime(Long projectId, LocalDateTime date);
+    ServiceResult<Void> saveDocumentsSubmitDateTime(Long projectId, LocalDateTime date);
 
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'READ')")
     ServiceResult<Boolean> isOtherDocumentsSubmitAllowed(Long projectId, Long userId);

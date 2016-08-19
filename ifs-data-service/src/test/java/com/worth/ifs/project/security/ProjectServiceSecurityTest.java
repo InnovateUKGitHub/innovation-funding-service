@@ -411,7 +411,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         }
 
         @Override
-        public ServiceResult<Boolean> saveDocumentsSubmitDateTime(Long projectId, LocalDateTime date) {
+        public ServiceResult<Void> saveDocumentsSubmitDateTime(Long projectId, LocalDateTime date) {
             return null;
         }
 
