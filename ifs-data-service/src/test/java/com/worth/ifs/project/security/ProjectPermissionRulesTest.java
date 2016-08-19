@@ -14,6 +14,7 @@ import org.junit.Test;
 import java.util.List;
 
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
+import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static com.worth.ifs.project.builder.ProjectBuilder.newProject;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static com.worth.ifs.project.builder.ProjectUserBuilder.newProjectUser;
@@ -56,7 +57,7 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
         Role partnerRole = newRole().build();
 
         when(roleRepositoryMock.findOneByName(PARTNER.getName())).thenReturn(partnerRole);
-        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRoleId(project.getId(), user.getId(), partnerRole.getId())).thenReturn(emptyList());
+        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(project.getId(), user.getId(), PROJECT_PARTNER)).thenReturn(emptyList());
 
         assertFalse(rules.partnersOnProjectCanView(project, user));
     }
@@ -124,8 +125,8 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
 
         // see if the user is a partner on the lead organisation
         when(roleRepositoryMock.findOneByName(PARTNER.getName())).thenReturn(partnerRole);
-        when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRoleId(
-                project.getId(), user.getId(), leadOrganisation.getId(), partnerRole.getId())).thenReturn(userIsLeadPartner ? newProjectUser().build() : null);
+        when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(
+                project.getId(), user.getId(), leadOrganisation.getId(), PROJECT_PARTNER)).thenReturn(userIsLeadPartner ? newProjectUser().build() : null);
     }
 
     @Test
@@ -147,8 +148,8 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
 
         // see if the user is a partner on the lead organisation
         when(roleRepositoryMock.findOneByName(PARTNER.getName())).thenReturn(partnerRole);
-        when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRoleId(
-                project.getId(), user.getId(), leadOrganisation.getId(), partnerRole.getId())).thenReturn(null);
+        when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(
+                project.getId(), user.getId(), leadOrganisation.getId(), PROJECT_PARTNER)).thenReturn(null);
 
         assertFalse(rules.leadPartnersCanUpdateTheBasicProjectDetails(project, user));
     }
@@ -171,7 +172,7 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
         Role partnerRole = newRole().build();
 
         when(roleRepositoryMock.findOneByName(PARTNER.getName())).thenReturn(partnerRole);
-        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRoleId(project.getId(), user.getId(), partnerRole.getId())).thenReturn(emptyList());
+        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(project.getId(), user.getId(), PROJECT_PARTNER)).thenReturn(emptyList());
 
         assertFalse(rules.partnersCanUpdateTheirOwnOrganisationsFinanceContacts(project, user));
     }
@@ -210,7 +211,7 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
         Role partnerRole = newRole().build();
 
         when(roleRepositoryMock.findOneByName(PARTNER.getName())).thenReturn(partnerRole);
-        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRoleId(project.getId(), user.getId(), partnerRole.getId())).thenReturn(emptyList());
+        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(project.getId(), user.getId(), PROJECT_PARTNER)).thenReturn(emptyList());
 
         assertFalse(rules.partnersCanViewMonitoringOfficersOnTheirProjects(project, user));
     }
@@ -351,7 +352,7 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
         List<ProjectUser> partnerProjectUser = newProjectUser().build(1);
 
         when(roleRepositoryMock.findOneByName(PARTNER.getName())).thenReturn(partnerRole);
-        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRoleId(project.getId(), user.getId(), partnerRole.getId())).thenReturn(userIsPartner ? partnerProjectUser : emptyList());
+        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(project.getId(), user.getId(), PROJECT_PARTNER)).thenReturn(userIsPartner ? partnerProjectUser : emptyList());
     }
 
 }

@@ -6,12 +6,19 @@ import com.worth.ifs.address.domain.AddressType;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.commons.error.CommonFailureKeys;
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.FileAndContents;
+import com.worth.ifs.invite.domain.ProjectParticipantRole;
+import com.worth.ifs.invite.builder.InviteResourceBuilder;
+import com.worth.ifs.invite.builder.ProjectInviteResourceBuilder;
+import com.worth.ifs.invite.resource.ApplicationInviteResource;
+import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
 import com.worth.ifs.project.builder.MonitoringOfficerBuilder;
+import com.worth.ifs.project.builder.ProjectBuilder;
 import com.worth.ifs.project.domain.MonitoringOfficer;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
@@ -48,9 +55,13 @@ import static com.worth.ifs.application.builder.ApplicationBuilder.newApplicatio
 import static com.worth.ifs.commons.error.CommonErrors.badRequestError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.file.domain.builders.FileEntryBuilder.newFileEntry;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
+import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
+import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
+import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static com.worth.ifs.organisation.builder.OrganisationAddressBuilder.newOrganisationAddress;
 import static com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
 import static com.worth.ifs.project.builder.ProjectBuilder.newProject;
@@ -80,7 +91,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     private Organisation organisation;
     private Role leadApplicantRole;
     private Role projectManagerRole;
-    private Role partnerRole;
     private User user;
     private ProcessRole leadApplicantProcessRole;
     private ProjectUser leadPartnerProjectUser;
@@ -92,9 +102,8 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         organisation = newOrganisation().build();
 
-        leadApplicantRole = newRole(LEADAPPLICANT).build();
-        projectManagerRole = newRole(PROJECT_MANAGER).build();
-        partnerRole = newRole(PARTNER).build();
+        leadApplicantRole = newRole(UserRoleType.LEADAPPLICANT).build();
+        projectManagerRole = newRole(UserRoleType.PROJECT_MANAGER).build();
 
         user = newUser().
                 withid(userId).
@@ -108,7 +117,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         leadPartnerProjectUser = newProjectUser().
                 withOrganisation(organisation).
-                withRole(partnerRole).
+                withRole(PROJECT_PARTNER).
                 withUser(user).
                 build();
 
@@ -197,7 +206,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withId().
                 withProject(project).
                 withOrganisation(organisation).
-                withRole(projectManagerRole).
+                withRole(PROJECT_MANAGER).
                 withUser(user).
                 build();
 
@@ -214,7 +223,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         ProjectUser existingProjenullctManager = newProjectUser().
                 withId(456L).
                 withProject(project).
-                withRole(projectManagerRole).
+                withRole(PROJECT_MANAGER).
                 withOrganisation(differentOrganisation).
                 withUser(differentUser).
                 build();
@@ -228,7 +237,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withId(456L).
                 withProject(project).
                 withOrganisation(organisation).
-                withRole(projectManagerRole).
+                withRole(PROJECT_MANAGER).
                 withUser(user).
                 build();
 
@@ -332,12 +341,9 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         User user = newUser().withid(7L).build();
 
         Role partnerRole = newRole().withType(PARTNER).build();
-        newProjectUser().withOrganisation(organisation).withUser(user).withProject(project).withRole(partnerRole).build();
-
-        Role financeContactRole = newRole().withType(FINANCE_CONTACT).build();
+        newProjectUser().withOrganisation(organisation).withUser(user).withProject(project).withRole(PROJECT_PARTNER).build();
 
         when(projectRepositoryMock.findOne(123L)).thenReturn(project);
-        when(roleRepositoryMock.findOneByName(FINANCE_CONTACT.getName())).thenReturn(financeContactRole);
 
         ServiceResult<Void> updateResult = service.updateFinanceContact(123L, 5L, 7L);
 
@@ -346,8 +352,8 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         List<ProjectUser> foundFinanceContacts = simpleFilter(project.getProjectUsers(), projectUser ->
                 projectUser.getOrganisation().equals(organisation) &&
                         projectUser.getUser().equals(user) &&
-                        projectUser.getProject().equals(project) &&
-                        projectUser.getRole().equals(financeContactRole));
+                        projectUser.getProcess().equals(project) &&
+                        projectUser.getRole().equals(PROJECT_FINANCE_CONTACT));
 
         assertEquals(1, foundFinanceContacts.size());
     }
@@ -355,26 +361,22 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     @Test
     public void testUpdateFinanceContactWithExistingFinanceContactChosenForSameOrganisation() {
 
-        Role partnerRole = newRole().withType(PARTNER).build();
-        Role financeContactRole = newRole().withType(FINANCE_CONTACT).build();
-
         Project project = newProject().withId(123L).build();
         Organisation organisation = newOrganisation().withId(5L).build();
 
         User newFinanceContactUser = newUser().withid(7L).build();
-        newProjectUser().withOrganisation(organisation).withUser(newFinanceContactUser).withProject(project).withRole(partnerRole).build();
+        newProjectUser().withOrganisation(organisation).withUser(newFinanceContactUser).withProject(project).withRole(PROJECT_PARTNER).build();
 
         User existingFinanceContactUser = newUser().withid(9999L).build();
-        newProjectUser().withOrganisation(organisation).withUser(existingFinanceContactUser).withProject(project).withRole(partnerRole).build();
-        newProjectUser().withOrganisation(organisation).withUser(existingFinanceContactUser).withProject(project).withRole(financeContactRole).build();
+        newProjectUser().withOrganisation(organisation).withUser(existingFinanceContactUser).withProject(project).withRole(PROJECT_PARTNER).build();
+        newProjectUser().withOrganisation(organisation).withUser(existingFinanceContactUser).withProject(project).withRole(PROJECT_FINANCE_CONTACT).build();
 
         when(projectRepositoryMock.findOne(123L)).thenReturn(project);
-        when(roleRepositoryMock.findOneByName(FINANCE_CONTACT.getName())).thenReturn(financeContactRole);
 
         List<ProjectUser> existingFinanceContactForOrganisation = simpleFilter(project.getProjectUsers(), projectUser ->
                 projectUser.getOrganisation().equals(organisation) &&
-                        projectUser.getProject().equals(project) &&
-                        projectUser.getRole().equals(financeContactRole));
+                        projectUser.getProcess().equals(project) &&
+                        projectUser.getRole().equals(PROJECT_FINANCE_CONTACT));
 
         assertEquals(1, existingFinanceContactForOrganisation.size());
 
@@ -385,8 +387,8 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         List<ProjectUser> foundFinanceContacts = simpleFilter(project.getProjectUsers(), projectUser ->
                 projectUser.getOrganisation().equals(organisation) &&
                         projectUser.getUser().equals(newFinanceContactUser) &&
-                        projectUser.getProject().equals(project) &&
-                        projectUser.getRole().equals(financeContactRole));
+                        projectUser.getProcess().equals(project) &&
+                        projectUser.getRole().equals(PROJECT_FINANCE_CONTACT));
 
         assertEquals(1, foundFinanceContacts.size());
     }
@@ -394,12 +396,10 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     @Test
     public void testUpdateFinanceContactButUserIsNotExistingPartner() {
 
-        Role projectManagerRole = newRole().withType(PROJECT_MANAGER).build();
-
         Project project = newProject().withId(123L).build();
         Organisation organisation = newOrganisation().withId(5L).build();
         User user = newUser().withid(7L).build();
-        newProjectUser().withOrganisation(organisation).withUser(user).withProject(project).withRole(projectManagerRole).build();
+        newProjectUser().withOrganisation(organisation).withUser(user).withProject(project).withRole(PROJECT_MANAGER).build();
 
         when(projectRepositoryMock.findOne(123L)).thenReturn(project);
 
@@ -425,7 +425,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         Organisation organisation = newOrganisation().withId(5L).build();
         User user = newUser().withid(7L).build();
-        newProjectUser().withOrganisation(organisation).withUser(user).withProject(anotherProject).withRole(partnerRole).build();
+        newProjectUser().withOrganisation(organisation).withUser(user).withProject(anotherProject).withRole(PROJECT_PARTNER).build();
 
         ServiceResult<Void> updateResult = service.updateFinanceContact(123L, 5L, userIdForUserNotOnProject);
 
@@ -452,17 +452,130 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     }
 
     @Test
+    public void testInviteProjectManagerWhenProjectNotInDB() {
+
+        Long projectId = 1L;
+
+        InviteProjectResource inviteResource = ProjectInviteResourceBuilder.newInviteProjectResource()
+                .withName("Abc Xyz")
+                .withEmail("Abc.xyz@gmail.com")
+                .withLeadOrganisation("Lead Organisation 1")
+                .withInviteOrganisationName("Invite Organisation 1")
+                .withHash("sample/url")
+                .build();
+
+
+        when(projectRepositoryMock.findOne(projectId)).thenThrow(new IllegalArgumentException());
+
+        ServiceResult<Void> result = null;
+
+        try {
+            result = service.inviteProjectManager(projectId, inviteResource);
+        } catch (Exception e) {
+
+            // We expect an exception to be thrown
+            assertTrue(e instanceof IllegalArgumentException);
+
+            assertNull(result);
+            verify(notificationServiceMock, never()).sendNotification(any(), any());
+
+            // This exception flow is the only expected flow, so return from here and assertFalse if no exception
+            return;
+        }
+
+        // Should not reach here - we must get an exception
+        assertFalse(true);
+    }
+
+    @Test
+    public void testInviteProjectManagerWhenUnableToSendNotification() {
+
+        Long projectId = 1L;
+
+        InviteProjectResource inviteResource = ProjectInviteResourceBuilder.newInviteProjectResource()
+                .withName("Abc Xyz")
+                .withEmail("Abc.xyz@gmail.com")
+                .withLeadOrganisation("Lead Organisation 1")
+                .withInviteOrganisationName("Invite Organisation 1")
+                .withHash("sample/url")
+                .build();
+
+        Project projectInDB = ProjectBuilder.newProject()
+                .withName("Project 1")
+                .build();
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
+
+        when(notificationServiceMock.sendNotification(any(), any())).
+                thenReturn(serviceFailure(new Error(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE)));
+
+        ServiceResult<Void> result = service.inviteProjectManager(projectId, inviteResource);
+
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE));
+    }
+
+    @Test
+    public void testInviteProjectManagerSuccess() {
+
+        Long projectId = 1L;
+
+        InviteProjectResource inviteResource = ProjectInviteResourceBuilder.newInviteProjectResource()
+                .withName("Abc Xyz")
+                .withEmail("Abc.xyz@gmail.com")
+                .withLeadOrganisation("Lead Organisation 1")
+                .withInviteOrganisationName("Invite Organisation 1")
+                .withHash("sample/url")
+                .build();
+
+        Project projectInDB = ProjectBuilder.newProject()
+                .withName("Project 1")
+                .build();
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
+
+        when(notificationServiceMock.sendNotification(any(), any())).thenReturn(serviceSuccess());
+
+        ServiceResult<Void> result = service.inviteProjectManager(projectId, inviteResource);
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void testInviteFinanceContactSuccess() {
+
+        Long projectId = 1L;
+
+        InviteProjectResource inviteResource = ProjectInviteResourceBuilder.newInviteProjectResource()
+                .withName("Abc Xyz")
+                .withEmail("Abc.xyz@gmail.com")
+                .withLeadOrganisation("Lead Organisation 1")
+                .withInviteOrganisationName("Invite Organisation 1")
+                .withHash("sample/url")
+                .build();
+
+        Project projectInDB = ProjectBuilder.newProject()
+                .withName("Project 1")
+                .build();
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
+
+        when(notificationServiceMock.sendNotification(any(), any())).thenReturn(serviceSuccess());
+
+        ServiceResult<Void> result = service.inviteFinanceContact(projectId, inviteResource);
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
     public void testFindByUserIdReturnsOnlyDistinctProjects() {
 
         Project project = newProject().withId(123L).build();
         Organisation organisation = newOrganisation().withId(5L).build();
         User user = newUser().withid(7L).build();
 
-        Role partnerRole = newRole().withType(PARTNER).build();
-        Role financeContactRole = newRole().withType(FINANCE_CONTACT).build();
-
-        ProjectUser projectUserWithPartnerRole = newProjectUser().withOrganisation(organisation).withUser(user).withProject(project).withRole(partnerRole).build();
-        ProjectUser projectUserWithFinanceRole = newProjectUser().withOrganisation(organisation).withUser(user).withProject(project).withRole(financeContactRole).build();
+        ProjectUser projectUserWithPartnerRole = newProjectUser().withOrganisation(organisation).withUser(user).withProject(project).withRole(PROJECT_PARTNER).build();
+        ProjectUser projectUserWithFinanceRole = newProjectUser().withOrganisation(organisation).withUser(user).withProject(project).withRole(PROJECT_FINANCE_CONTACT).build();
 
         List<ProjectUser> projectUserRecords = asList(projectUserWithPartnerRole, projectUserWithFinanceRole);
 
@@ -539,9 +652,9 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         Organisation organisation2 = newOrganisation().build();
         Organisation organisation3 = newOrganisation().build();
 
-        Role projectManagerRole = newRole().withType(PROJECT_MANAGER).build();
+        Role projectManagerRole = newRole().withType(UserRoleType.PROJECT_MANAGER).build();
 
-        ProjectUser projectManagerProjectUser = newProjectUser().withRole(projectManagerRole).build();
+        ProjectUser projectManagerProjectUser = newProjectUser().withRole(PROJECT_MANAGER).build();
         Address address = newAddress().build();
         Project project = newProject().withId(1L).withAddress(address).withProjectUsers(singletonList(projectManagerProjectUser)).withTargetStartDate(LocalDate.now()).build();
 
@@ -550,12 +663,12 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         List<ProjectUser> projectUserObjs;
 
-        ProjectUser projectUser1WithPartnerRole = newProjectUser().withProject(project).withOrganisation(organisation1).withRole(partnerRole).build();
-        ProjectUser projectUser1WithFinanceRole = newProjectUser().withProject(project).withOrganisation(organisation1).withRole(financeContactRole).build();
-        ProjectUser projectUser2WithPartnerRole = newProjectUser().withProject(project).withOrganisation(organisation2).withRole(partnerRole).build();
-        ProjectUser projectUser2WithFinanceRole = newProjectUser().withProject(project).withOrganisation(organisation2).withRole(financeContactRole).build();
-        ProjectUser projectUser3WithPartnerRole = newProjectUser().withProject(project).withOrganisation(organisation3).withRole(partnerRole).build();
-        ProjectUser projectUser3WithFinanceRole = newProjectUser().withProject(project).withOrganisation(organisation3).withRole(financeContactRole).build();
+        ProjectUser projectUser1WithPartnerRole = newProjectUser().withProject(project).withOrganisation(organisation1).withRole(PROJECT_PARTNER).build();
+        ProjectUser projectUser1WithFinanceRole = newProjectUser().withProject(project).withOrganisation(organisation1).withRole(PROJECT_FINANCE_CONTACT).build();
+        ProjectUser projectUser2WithPartnerRole = newProjectUser().withProject(project).withOrganisation(organisation2).withRole(PROJECT_PARTNER).build();
+        ProjectUser projectUser2WithFinanceRole = newProjectUser().withProject(project).withOrganisation(organisation2).withRole(PROJECT_FINANCE_CONTACT).build();
+        ProjectUser projectUser3WithPartnerRole = newProjectUser().withProject(project).withOrganisation(organisation3).withRole(PROJECT_PARTNER).build();
+        ProjectUser projectUser3WithFinanceRole = newProjectUser().withProject(project).withOrganisation(organisation3).withRole(PROJECT_FINANCE_CONTACT).build();
 
         ProjectUserResource projectUser1WithPartnerRoleResource = newProjectUserResource().withProject(project.getId()).withOrganisation(organisation1.getId()).withRole(partnerRole.getId()).withRoleName(PARTNER.getName()).build();
         ProjectUserResource projectUser1WithFinanceRoleResource = newProjectUserResource().withProject(project.getId()).withOrganisation(organisation1.getId()).withRole(financeContactRole.getId()).withRoleName(FINANCE_CONTACT.getName()).build();
@@ -591,9 +704,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         Organisation organisation2 = newOrganisation().build();
         Organisation organisation3 = newOrganisation().build();
 
-        Role projectManagerRole = newRole().withType(PROJECT_MANAGER).build();
-
-        ProjectUser projectManagerProjectUser = newProjectUser().withRole(projectManagerRole).build();
+        ProjectUser projectManagerProjectUser = newProjectUser().withRole(PROJECT_MANAGER).build();
         Address address = newAddress().build();
         Project project = newProject().withId(1L).withAddress(address).withProjectUsers(singletonList(projectManagerProjectUser)).withTargetStartDate(LocalDate.now()).build();
 
@@ -602,11 +713,11 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         List<ProjectUser> projectUserObjs;
 
-        ProjectUser projectUser1WithPartnerRole = newProjectUser().withProject(project).withOrganisation(organisation1).withRole(partnerRole).build();
-        ProjectUser projectUser1WithFinanceRole = newProjectUser().withProject(project).withOrganisation(organisation1).withRole(financeContactRole).build();
-        ProjectUser projectUser2WithPartnerRole = newProjectUser().withProject(project).withOrganisation(organisation2).withRole(partnerRole).build();
-        ProjectUser projectUser2WithFinanceRole = newProjectUser().withProject(project).withOrganisation(organisation2).withRole(financeContactRole).build();
-        ProjectUser projectUserWithPartnerRole = newProjectUser().withProject(project).withOrganisation(organisation3).withRole(partnerRole).build();
+        ProjectUser projectUser1WithPartnerRole = newProjectUser().withProject(project).withOrganisation(organisation1).withRole(PROJECT_PARTNER).build();
+        ProjectUser projectUser1WithFinanceRole = newProjectUser().withProject(project).withOrganisation(organisation1).withRole(PROJECT_FINANCE_CONTACT).build();
+        ProjectUser projectUser2WithPartnerRole = newProjectUser().withProject(project).withOrganisation(organisation2).withRole(PROJECT_PARTNER).build();
+        ProjectUser projectUser2WithFinanceRole = newProjectUser().withProject(project).withOrganisation(organisation2).withRole(PROJECT_FINANCE_CONTACT).build();
+        ProjectUser projectUserWithPartnerRole = newProjectUser().withProject(project).withOrganisation(organisation3).withRole(PROJECT_PARTNER).build();
 
         ProjectUserResource projectUser1WithPartnerRoleResource = newProjectUserResource().withProject(project.getId()).withOrganisation(organisation1.getId()).withRole(partnerRole.getId()).withRoleName(PARTNER.getName()).build();
         ProjectUserResource projectUser1WithFinanceRoleResource = newProjectUserResource().withProject(project.getId()).withOrganisation(organisation1.getId()).withRole(financeContactRole.getId()).withRoleName(FINANCE_CONTACT.getName()).build();
@@ -639,9 +750,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         Organisation organisation2 = newOrganisation().build();
         Organisation organisation3 = newOrganisation().build();
 
-        Role projectManagerRole = newRole().withType(PROJECT_MANAGER).build();
-
-        ProjectUser projectManagerProjectUser = newProjectUser().withRole(projectManagerRole).build();
+        ProjectUser projectManagerProjectUser = newProjectUser().withRole(PROJECT_MANAGER).build();
         Address address = newAddress().build();
         Project project = newProject().withId(1L).withAddress(address).withProjectUsers(singletonList(projectManagerProjectUser)).build();
 
@@ -651,11 +760,11 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         List<ProjectUser> projectUserObjs;
 
-        ProjectUser projectUser1WithPartnerRole = newProjectUser().withProject(project).withOrganisation(organisation1).withRole(partnerRole).build();
-        ProjectUser projectUser1WithFinanceRole = newProjectUser().withProject(project).withOrganisation(organisation1).withRole(financeContactRole).build();
-        ProjectUser projectUser2WithPartnerRole = newProjectUser().withProject(project).withOrganisation(organisation2).withRole(partnerRole).build();
-        ProjectUser projectUser2WithFinanceRole = newProjectUser().withProject(project).withOrganisation(organisation2).withRole(financeContactRole).build();
-        ProjectUser projectUserWithPartnerRole = newProjectUser().withProject(project).withOrganisation(organisation3).withRole(partnerRole).build();
+        ProjectUser projectUser1WithPartnerRole = newProjectUser().withProject(project).withOrganisation(organisation1).withRole(PROJECT_PARTNER).build();
+        ProjectUser projectUser1WithFinanceRole = newProjectUser().withProject(project).withOrganisation(organisation1).withRole(PROJECT_FINANCE_CONTACT).build();
+        ProjectUser projectUser2WithPartnerRole = newProjectUser().withProject(project).withOrganisation(organisation2).withRole(PROJECT_PARTNER).build();
+        ProjectUser projectUser2WithFinanceRole = newProjectUser().withProject(project).withOrganisation(organisation2).withRole(PROJECT_FINANCE_CONTACT).build();
+        ProjectUser projectUserWithPartnerRole = newProjectUser().withProject(project).withOrganisation(organisation3).withRole(PROJECT_PARTNER).build();
 
         ProjectUserResource projectUser1WithPartnerRoleResource = newProjectUserResource().withProject(project.getId()).withOrganisation(organisation1.getId()).withRole(partnerRole.getId()).withRoleName(PARTNER.getName()).build();
         ProjectUserResource projectUser1WithFinanceRoleResource = newProjectUserResource().withProject(project.getId()).withOrganisation(organisation1.getId()).withRole(financeContactRole.getId()).withRoleName(FINANCE_CONTACT.getName()).build();
@@ -967,7 +1076,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         Organisation o = newOrganisation().build();
         Organisation organisationNotOnProject = newOrganisation().build();
         User u = newUser().build();
-        List<ProjectUser> pu = newProjectUser().withRole(PARTNER).withUser(u).withOrganisation(o).build(1);
+        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_PARTNER).withUser(u).withOrganisation(o).build(1);
         Project p = newProject().withProjectUsers(pu).build();
         when(projectRepositoryMock.findOne(p.getId())).thenReturn(p);
         when(organisationRepositoryMock.findOne(o.getId())).thenReturn(o);
@@ -984,7 +1093,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     public void testAddPartnerPartnerAlreadyExists(){
         Organisation o = newOrganisation().build();
         User u = newUser().build();
-        List<ProjectUser> pu = newProjectUser().withRole(PARTNER).withUser(u).withOrganisation(o).build(1);
+        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_PARTNER).withUser(u).withOrganisation(o).build(1);
         Project p = newProject().withProjectUsers(pu).build();
         when(projectRepositoryMock.findOne(p.getId())).thenReturn(p);
         when(organisationRepositoryMock.findOne(o.getId())).thenReturn(o);
@@ -1000,7 +1109,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     public void testAddPartner(){
         Organisation o = newOrganisation().build();
         User u = newUser().build();
-        List<ProjectUser> pu = newProjectUser().withRole(PARTNER).withUser(u).withOrganisation(o).build(1);
+        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_PARTNER).withUser(u).withOrganisation(o).build(1);
         Project p = newProject().withProjectUsers(pu).build();
         User newUser = newUser().build();
         when(projectRepositoryMock.findOne(p.getId())).thenReturn(p);
@@ -1019,8 +1128,8 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                                                                    Consumer<FileEntry> fileSetter2,
                                                                    Supplier<ServiceResult<Boolean>> getConditionFn) {
         List<ProjectUser> projectUsers = new ArrayList<>();
-        Arrays.stream(UserRoleType.values())
-                .filter(roleType -> !roleType.getName().equals(UserRoleType.PROJECT_MANAGER.getName()))
+        Arrays.stream(ProjectParticipantRole.values())
+                .filter(roleType -> roleType != PROJECT_MANAGER)
                 .forEach(roleType -> {
                     ProjectUser projectUser = newProjectUser()
                             .withId(3L)
@@ -1050,7 +1159,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         ProjectUser projectUserToSet = newProjectUser()
                 .withId(1L)
                 .withUser(newUser().withid(1L).build())
-                .withRole(projectManagerRole)
+                .withRole(PROJECT_MANAGER)
                 .build();
         List<ProjectUser> projectUsers = new ArrayList<>();
         projectUsers.add(projectUserToSet);
@@ -1207,7 +1316,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
                 assertEquals(1, matchingProjectUser.size());
                 assertEquals(PARTNER.getName(), matchingProjectUser.get(0).getRole().getName());
-                assertEquals(project, matchingProjectUser.get(0).getProject());
+                assertEquals(project, matchingProjectUser.get(0).getProcess());
             });
         });
     }
