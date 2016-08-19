@@ -22,7 +22,7 @@ import java.util.function.Supplier;
 
 import static com.worth.ifs.commons.error.Error.globalError;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
-import static com.worth.ifs.invite.constant.InviteStatusConstants.SEND;
+import static com.worth.ifs.invite.constant.InviteStatus.SENT;
 import static com.worth.ifs.util.CookieUtil.getCookieValue;
 import static com.worth.ifs.util.CookieUtil.saveToCookie;
 import static com.worth.ifs.util.RestLookupCallbacks.find;
@@ -150,7 +150,7 @@ public class AcceptProjectInviteController extends BaseController {
 
     public static ValidationMessages errorMessages(UserResource loggedInUser, InviteProjectResource invite) {
         ValidationMessages errors = new ValidationMessages();
-        if (!invite.getStatus().equals(SEND)) {
+        if (!invite.getStatus().equals(SENT)) {
             errors.addError(globalError("registration.INVITE_ALREADY_ACCEPTED"));
         } else if (loggedInUser != null && !invite.getEmail().equalsIgnoreCase(loggedInUser.getEmail())) {
             errors.addError(globalError("registration.LOGGED_IN_WITH_OTHER_ACCOUNT"));
