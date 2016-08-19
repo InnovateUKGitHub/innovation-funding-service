@@ -29,6 +29,7 @@ public class ProjectTest {
     Long durationInMonths;
     String name;
     LocalDateTime submittedDate;
+    LocalDateTime documentsSubmittedDate;
 
     @Before
     public void setUp() throws Exception {
@@ -39,7 +40,7 @@ public class ProjectTest {
         durationInMonths = 12L;
         name = "My Project";
         submittedDate = LocalDateTime.now();
-        project = new Project(id, application, startDate, address, durationInMonths, name, submittedDate);
+        project = new Project(id, application, startDate, address, durationInMonths, name, submittedDate, documentsSubmittedDate);
     }
 
     @Test
@@ -51,6 +52,7 @@ public class ProjectTest {
         assertEquals(project.getDurationInMonths(), durationInMonths);
         assertEquals(project.getName(), name);
         assertEquals(project.getSubmittedDate(), submittedDate);
+        assertEquals(project.getDocumentsSubmittedDate(), documentsSubmittedDate);
     }
 
     @Test

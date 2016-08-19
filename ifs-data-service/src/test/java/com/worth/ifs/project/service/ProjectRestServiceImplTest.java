@@ -404,4 +404,14 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
 
         setupDeleteWithRestResultVerifications(expectedUrl);
     }
+
+    @Test
+    public void testSetPartnerDocumentsSubmitted(){
+        setupPostWithRestResultExpectations(projectRestURL + "/" + 123L + "/partner/documents/submit", null, OK);
+
+        RestResult<Void> result = service.setPartnerDocumentsSubmitted(123L);
+
+        assertTrue(result.isSuccess());
+    }
+
 }

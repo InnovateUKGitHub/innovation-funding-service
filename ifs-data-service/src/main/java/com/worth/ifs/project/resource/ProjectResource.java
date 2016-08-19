@@ -19,6 +19,7 @@ public class ProjectResource {
     private AddressResource address;
     private String name;
     private LocalDateTime submittedDate;
+    private LocalDateTime documentsSubmittedDate;
     private List<Long> projectUsers;
     private Long collaborationAgreement;
     private Long exploitationPlan;
@@ -98,6 +99,14 @@ public class ProjectResource {
 
     public void setSubmittedDate(LocalDateTime submittedDate) {
         this.submittedDate = submittedDate;
+    }
+
+    public LocalDateTime getDocumentsSubmittedDate() {
+        return documentsSubmittedDate;
+    }
+
+    public void setDocumentsSubmittedDate(LocalDateTime documentsSubmittedDate) {
+        this.documentsSubmittedDate = documentsSubmittedDate;
     }
 
     public Long getCollaborationAgreement() {

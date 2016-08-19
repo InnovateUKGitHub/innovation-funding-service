@@ -47,6 +47,8 @@ public class Project implements ProcessActivity {
 
     private LocalDateTime submittedDate;
 
+    private LocalDateTime documentsSubmittedDate;
+
     @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProjectUser> projectUsers = new ArrayList<>();
 
@@ -60,7 +62,9 @@ public class Project implements ProcessActivity {
 
     public Project() {}
 
-    public Project(Long id, Application application, LocalDate targetStartDate, Address address, Long durationInMonths, String name, LocalDateTime submittedDate) {
+    public Project(Long id, Application application, LocalDate targetStartDate, Address address,
+                   Long durationInMonths, String name, LocalDateTime submittedDate,
+                   LocalDateTime documentsSubmittedDate) {
         this.id = id;
         this.application = application;
         this.targetStartDate = targetStartDate;
@@ -68,6 +72,7 @@ public class Project implements ProcessActivity {
         this.durationInMonths = durationInMonths;
         this.name = name;
         this.submittedDate = submittedDate;
+        this.documentsSubmittedDate = documentsSubmittedDate;
     }
 
     public void addProjectUser(ProjectUser projectUser) {
@@ -171,6 +176,14 @@ public class Project implements ProcessActivity {
 
     public void setSubmittedDate(LocalDateTime submittedDate) {
         this.submittedDate = submittedDate;
+    }
+
+    public LocalDateTime getDocumentsSubmittedDate() {
+        return documentsSubmittedDate;
+    }
+
+    public void setDocumentsSubmittedDate(LocalDateTime documentsSubmittedDate) {
+        this.documentsSubmittedDate = documentsSubmittedDate;
     }
 
     public FileEntry getCollaborationAgreement() {

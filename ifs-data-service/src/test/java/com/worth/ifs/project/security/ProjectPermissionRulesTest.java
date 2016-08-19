@@ -2,6 +2,7 @@ package com.worth.ifs.project.security;
 
 import com.worth.ifs.BasePermissionRulesTest;
 import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.invite.domain.ProjectParticipantRole;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
 import com.worth.ifs.project.resource.ProjectResource;
@@ -317,6 +318,26 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
         assertFalse(rules.leadPartnersCanDeleteOtherDocuments(project, user));
     }
 
+    @Test
+    public void testOnlyProjectManagerCanSubmitDocuments() {
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+
+        setUpUserAsProjectManager(project, user);
+
+        assertTrue(rules.onlyProjectManagerCanMarkDocumentsAsSubmit(project, user));
+
+    }
+
+    private void setUpUserAsProjectManager(ProjectResource projectResource, UserResource user) {
+        Role projectManagerRole = newRole().build();
+
+        List<ProjectUser> projectManagerUser = newProjectUser().build(1);
+
+        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(projectResource.getId(), user.getId(), ProjectParticipantRole.PROJECT_MANAGER ))
+                .thenReturn(projectManagerUser);
+    }
+
     private void setupUserAsPartner(ProjectResource project, UserResource user) {
         setupPartnerExpectations(project, user, true);
     }
@@ -332,4 +353,5 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
         when(roleRepositoryMock.findOneByName(PARTNER.getName())).thenReturn(partnerRole);
         when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(project.getId(), user.getId(), PROJECT_PARTNER)).thenReturn(userIsPartner ? partnerProjectUser : emptyList());
     }
+
 }

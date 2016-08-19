@@ -11,10 +11,8 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.FileAndContents;
-import com.worth.ifs.invite.domain.ProjectParticipantRole;
-import com.worth.ifs.invite.builder.InviteResourceBuilder;
 import com.worth.ifs.invite.builder.ProjectInviteResourceBuilder;
-import com.worth.ifs.invite.resource.ApplicationInviteResource;
+import com.worth.ifs.invite.domain.ProjectParticipantRole;
 import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
 import com.worth.ifs.project.builder.MonitoringOfficerBuilder;
@@ -59,9 +57,7 @@ import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.file.domain.builders.FileEntryBuilder.newFileEntry;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
-import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
-import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
-import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static com.worth.ifs.invite.domain.ProjectParticipantRole.*;
 import static com.worth.ifs.organisation.builder.OrganisationAddressBuilder.newOrganisationAddress;
 import static com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
 import static com.worth.ifs.project.builder.ProjectBuilder.newProject;
@@ -72,7 +68,8 @@ import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
-import static com.worth.ifs.user.resource.UserRoleType.*;
+import static com.worth.ifs.user.resource.UserRoleType.FINANCE_CONTACT;
+import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -1000,6 +997,72 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 project::setCollaborationAgreement,
                 project::setExploitationPlan,
                 () -> service.isOtherDocumentsSubmitAllowed(123L, 1L));
+
+    }
+
+    @Test
+    public void testSaveDocumentsSubmitDateTimeIsSuccessfulWhenUploadsComplete() {
+        ProjectUser projectUserToSet = newProjectUser()
+                .withId(1L)
+                .withUser(newUser().withid(1L).build())
+                .withRole(ProjectParticipantRole.PROJECT_MANAGER)
+                .build();
+        List<ProjectUser> projectUsers = new ArrayList<>();
+        projectUsers.add(projectUserToSet);
+        Project project = newProject().build();
+        project.setProjectUsers(projectUsers);
+
+        when(projectUserRepositoryMock.findByProjectId(project.getId())).thenReturn(projectUsers);
+        when(projectRepositoryMock.findOne(project.getId())).thenReturn(project);
+
+        assertSetDocumentsDateimeIfProjectManagerAndFilesExist(
+                project::setCollaborationAgreement,
+                project::setExploitationPlan,
+                () -> service.saveDocumentsSubmitDateTime(project.getId(), LocalDateTime.now()));
+
+        assertNotNull(project.getCollaborationAgreement());
+        assertNotNull(project.getExploitationPlan());
+        assertTrue(project.getProjectUsers().get(0).getRole().getName()
+                .equals(UserRoleType.PROJECT_MANAGER.getName()));
+        assertNotNull(project.getDocumentsSubmittedDate());
+    }
+
+    @Test
+    public void testSaveDocumentsSubmitDateTimeFailsWhenUploadsImcomplete() {
+        ProjectUser projectUserToSet = newProjectUser()
+                .withId(1L)
+                .withUser(newUser().withid(1L).build())
+                .withRole(ProjectParticipantRole.PROJECT_MANAGER)
+                .build();
+        List<ProjectUser> projectUsers = new ArrayList<>();
+        projectUsers.add(projectUserToSet);
+        Project project = newProject().build();
+        project.setProjectUsers(projectUsers);
+
+        when(projectUserRepositoryMock.findByProjectId(project.getId())).thenReturn(projectUsers);
+        when(projectRepositoryMock.findOne(project.getId())).thenReturn(project);
+
+        ServiceResult<Void> result = service.saveDocumentsSubmitDateTime(project.getId(), LocalDateTime.now());
+
+        assertTrue(result.isFailure());
+        assertNull(project.getCollaborationAgreement());
+        assertNull(project.getExploitationPlan());
+        assertTrue(project.getProjectUsers().get(0).getRole().getName()
+                .equals(UserRoleType.PROJECT_MANAGER.getName()));
+        assertNull(project.getDocumentsSubmittedDate());
+    }
+
+
+    private void assertSetDocumentsDateimeIfProjectManagerAndFilesExist(Consumer<FileEntry> fileSetter1,
+                                                                       Consumer<FileEntry> fileSetter2,
+                                                                       Supplier<ServiceResult<Void>> getConditionFn) {
+        Supplier<InputStream> inputStreamSupplier1 = () -> null;
+        Supplier<InputStream> inputStreamSupplier2 = () -> null;
+
+        getFileEntryResources(fileSetter1, fileSetter2, inputStreamSupplier1, inputStreamSupplier2);
+        ServiceResult<Void> result = getConditionFn.get();
+
+        assertTrue(result.isSuccess());
 
     }
 

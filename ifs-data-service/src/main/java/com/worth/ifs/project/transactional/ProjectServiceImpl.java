@@ -37,7 +37,9 @@ import com.worth.ifs.project.mapper.ProjectUserMapper;
 import com.worth.ifs.project.repository.MonitoringOfficerRepository;
 import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.project.repository.ProjectUserRepository;
-import com.worth.ifs.project.resource.*;
+import com.worth.ifs.project.resource.MonitoringOfficerResource;
+import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -244,6 +246,25 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     }
 
     @Override
+    public ServiceResult<Void> saveDocumentsSubmitDateTime(Long projectId, LocalDateTime date) {
+        return getProject(projectId).
+                andOnSuccess(
+                        project -> {
+                            if (validateDocumentsUploaded(project)) {
+                                return setDocumentsSubmittedDate(project, date);
+                            } else {
+                                return serviceFailure(new Error(PROJECT_SETUP_OTHER_DOCUMENTS_MUST_BE_UPLOADED_BEFORE_SUBMIT));
+                            }
+                        }
+                ).andOnSuccessReturnVoid();
+    }
+
+    private ServiceResult<Void> setDocumentsSubmittedDate(Project project, LocalDateTime date) {
+        project.setDocumentsSubmittedDate(date);
+        return serviceSuccess();
+    }
+
+    @Override
     public ServiceResult<Boolean> isOtherDocumentsSubmitAllowed(Long projectId, Long userId) {
         ServiceResult<Project> project = getProject(projectId);
         Optional<ProjectUser> projectManager = getExistingProjectManager(project.getSuccessObject());
@@ -407,7 +428,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     public ServiceResult<Void> addPartner(Long projectId, Long userId, Long organisationId) {
         return find(getProject(projectId), getOrganisation(organisationId), getUser(userId)).
                 andOnSuccess((project, organisation, user) -> {
-                    if (project.getOrganisations(o -> organisationId.equals(o.getId())).isEmpty()){
+                    if (project.getOrganisations(o -> organisationId.equals(o.getId())).isEmpty()) {
                         return serviceFailure(badRequestError("project does not contain organisation"));
                     }
                     List<ProjectUser> partners = project.getProjectUsersWithRole(PROJECT_PARTNER);
@@ -735,12 +756,23 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         return find(projectRepository.findOne(projectId), notFoundError(Project.class, projectId));
     }
 
-    private ServiceResult<Project> getProjectByApplication(long applicationId){
+    private ServiceResult<Project> getProjectByApplication(long applicationId) {
         return find(projectRepository.findOneByApplicationId(applicationId), notFoundError(Project.class, applicationId));
     }
 
     private boolean validateIsReadyForSubmission(final Project project) {
-        return !(project.getAddress() == null || !getExistingProjectManager(project).isPresent() || project.getTargetStartDate() == null || allFinanceContactsNotSet(project.getId()) || project.getSubmittedDate() != null);
+        return !(project.getAddress() == null
+                || !getExistingProjectManager(project).isPresent()
+                || project.getTargetStartDate() == null
+                || allFinanceContactsNotSet(project.getId())
+                || project.getSubmittedDate() != null);
+    }
+
+    private boolean validateDocumentsUploaded(final Project project) {
+        return project.getExploitationPlan() != null
+                && project.getCollaborationAgreement() != null
+                && getExistingProjectManager(project).isPresent()
+                && project.getDocumentsSubmittedDate() == null;
     }
 
     private boolean allFinanceContactsNotSet(Long projectId) {

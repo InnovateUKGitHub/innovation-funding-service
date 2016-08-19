@@ -108,4 +108,12 @@ public class ProjectPermissionRules extends BasePermissionRules {
     public boolean leadPartnersCanDeleteOtherDocuments(ProjectResource project, UserResource user) {
         return isLeadPartner(project.getId(), user.getId());
     }
+
+    @PermissionRule(
+            value = "SUBMIT_OTHER_DOCUMENTS",
+                description = "Only a project manager can submit completed partner documents")
+    public boolean onlyProjectManagerCanMarkDocumentsAsSubmit(ProjectResource project, UserResource user) {
+        return isProjectManager(project.getId(), user.getId());
+    }
+
 }
