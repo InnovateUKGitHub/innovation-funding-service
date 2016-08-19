@@ -235,12 +235,13 @@
                               <span class="error-message"  th:each="err : ${#fields.errors('funder')}" th:text="${err}" />
                         </th:block>
                     </label>
-                    <input class="form-control width-x-large"
+                    <input class="form-control width-x-large" required="required"
                            th:errorclass="field-error"
                            type="text"
                            th:field="${competitionSetupForm.funder}"
                            maxlength="255"
-                           data-maxlength-errormessage="Co-funders has a maximum length of 255 characters" />
+                           data-maxlength-errormessage="Funder has a maximum length of 255 characters"
+                           data-required-errormessage="Please enter a funder name"/>
                 </div>
                 </div>
 
@@ -252,10 +253,11 @@
                                 <span class="error-message"  th:each="err : ${#fields.errors('funderBudget')}" th:text="${err}" />
                             </th:block>
                         </label>
-                        <input th:class="${#fields.hasErrors('funderBudget') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
+                        <input required="required" th:class="${#fields.hasErrors('funderBudget') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
                                type="number" min="0"
                                id="funderBudget"
-                               th:field="${competitionSetupForm.funderBudget}" />
+                               th:field="${competitionSetupForm.funderBudget}"
+                               data-required-errormessage="Please enter a budget" />
                     </div>
                 </div>
             </div>
@@ -263,21 +265,28 @@
             <div  th:each="(coFunder, iteration : ${competitionSetupForm.coFunders})" class="grid-row" id="co-funder-row-2">
                 <div class="column-half">
                     <div th:class="${#fields.hasErrors('coFunders[__${iteration.index}__].coFunder')}? 'form-group error':'form-group'">
-                        <label class="form-label visuallyhidden" for="comp-co-funder-${iteration.index}">
-                            <span class="form-label-bold">Funder</span>
+                        <label class="form-label" th:for="coFunders[__${iteration.index}__].coFunder">
+                            <th:block th:if="${#fields.hasErrors('coFunders[__${iteration.index}__].coFunder')}">
+                                <span class="error-message"  th:each="err : ${#fields.errors('coFunders[__${iteration.index}__].coFunder')}" th:text="${err}" />
+                            </th:block>
                         </label>
-                        <input class="form-control width-x-large" th:field="${competitionSetupForm.coFunders[__${iteration.index}__].coFunder}"
-                               value="" />
+                        <input required="required" class="form-control width-x-large" th:class="${#fields.hasErrors('coFunders[__${iteration.index}__].coFunder') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
+                                th:field="${competitionSetupForm.coFunders[__${iteration.index}__].coFunder}"
+                               value="" data-required-errormessage="Please enter a funder name" />
                     </div>
                 </div>
 
                 <div class="column-half">
                     <div th:class="${#fields.hasErrors('coFunders[__${iteration.index}__].coFunderBudget')}? 'form-group error':'form-group'">
-                        <label class="form-label visuallyhidden" for="comp-co-funders-budget-${iteration.index}">
-                            <span class="form-label-bold">Budget</span>
+                        <label class="form-label" for="comp-co-funders-budget-${iteration.index}">
+                            <th:block th:if="${#fields.hasErrors('coFunders[__${iteration.index}__].coFunderBudget')}">
+                                <span class="error-message"  th:each="err : ${#fields.errors('coFunders[__${iteration.index}__].coFunderBudget')}" th:text="${err}" />
+                            </th:block>
                         </label>
-                        <input type="number" min="0"  class="form-control width-x-large" th:id="${iteration.index}+'-funderBudget'"
-                               th:field="${competitionSetupForm.coFunders[__${iteration.index}__].coFunderBudget}" value="" />
+                        <input required="required" type="number" min="0"  th:class="${#fields.hasErrors('coFunders[__${iteration.index}__].coFunderBudget') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
+                                th:id="${iteration.index}+'-funderBudget'"
+                               th:field="${competitionSetupForm.coFunders[__${iteration.index}__].coFunderBudget}" value=""
+                               data-required-errormessage="Please enter a budget" />
                     </div>
                 </div>
             </div>
@@ -288,7 +297,7 @@
                     &nbsp;
                 </div>
                 <div class="column-half">
-                    <p class="heading-small no-margin">Total: <span data-calculation-operations="+" data-calculation-fields="input[id*=funderBudget]" th:text="${competitionSetupForm.totalFunding == 0 ? '' : '&pound;' + #numbers.formatDecimal(competitionSetupForm.totalFunding, 0, 'COMMA', 2, 'POINT')}">£0</span></p>
+                    <p class="heading-small no-margin">Total: <span data-calculation-operations="+" data-calculation-fields="input[id*=funderBudget]" th:text="${competitionSetupForm.totalFunding == 0 ? '' : '&pound;' + #numbers.formatDecimal(competitionSetupForm.totalFunding, 0, 'COMMA', 0, 'POINT')}">£0</span></p>
 
                     <div class="alignright">
                         <input type="hidden" name="coFunderCount" id="co-funder-count" th:value="${competitionSetupForm.coFundersCount}" />
@@ -341,10 +350,11 @@
                         </span>
                     </label>
                     <input th:class="${#fields.hasErrors('activityCode') ? 'form-control field-error width-large' : 'form-control width-large'}"
-                    type="text"
+                    type="text" required="required"
                     th:field="${competitionSetupForm.activityCode}"
                     maxlength="255"
-                    data-maxlength-errormessage="Activity code has a maximum length of 255 characters" />
+                    data-maxlength-errormessage="Activity code has a maximum length of 255 characters"
+                           data-required-errormessage="Please enter a activity code" />
                 </div>
 
                 <div th:class="${#fields.hasErrors('competitionCode')}? 'form-group error':'form-group'">
@@ -380,17 +390,17 @@
                 <tfoot>
                 <tr>
                     <th>Total</th>
-                    <td class="numeric" th:text="${competitionSetupForm.totalFunding == 0 ? '' : '&pound;' + #numbers.formatDecimal(competitionSetupForm.totalFunding, 0, 'COMMA', 2, 'POINT')}">Total</td>
+                    <td class="numeric" th:text="${competitionSetupForm.totalFunding == 0 ? '' : '&pound;' + #numbers.formatDecimal(competitionSetupForm.totalFunding, 0, 'COMMA', 0, 'POINT')}">Total</td>
                 </tr>
                 </tfoot>
                 <tbody>
                 <tr>
                     <td th:text="${competitionSetupForm.funder}">Funder Name</td>
-                    <td class="numeric" th:text="${competitionSetupForm.funderBudget == 0 ? '' : '&pound;' + #numbers.formatDecimal(competitionSetupForm.funderBudget, 0, 'COMMA', 2, 'POINT')}">Funder Budget</td>
+                    <td class="numeric" th:text="${competitionSetupForm.funderBudget == 0 ? '' : '&pound;' + #numbers.formatDecimal(competitionSetupForm.funderBudget, 0, 'COMMA', 0, 'POINT')}">Funder Budget</td>
                 </tr>
                 <tr  th:each="(coFunder, iteration : ${competitionSetupForm.coFunders})">
                     <td th:text="${coFunder.coFunder}">Co-Funder Name</td>
-                    <td class="numeric" th:text="${'&pound;' + #numbers.formatDecimal(coFunder.coFunderBudget, 0, 'COMMA', 2, 'POINT')}">Co-Funder Budget</td>
+                    <td class="numeric" th:text="${'&pound;' + #numbers.formatDecimal(coFunder.coFunderBudget, 0, 'COMMA', 0, 'POINT')}">Co-Funder Budget</td>
                 </tr>
                 </tbody>
             </table>

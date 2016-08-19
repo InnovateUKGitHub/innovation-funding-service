@@ -5,6 +5,7 @@ import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResultsResource;
 import com.worth.ifs.invite.transactional.InviteService;
+import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import java.util.Set;
 @RequestMapping("/invite")
 public class ApplicationInviteController {
     private static final Log LOG = LogFactory.getLog(ApplicationInviteController.class);
+    public static final String GET_USER_BY_HASH_MAPPING = "/getUser/";
     @Autowired
     private InviteService inviteService;
 
@@ -56,8 +58,13 @@ public class ApplicationInviteController {
     }
 
     @RequestMapping(value = "/checkExistingUser/{hash}", method = RequestMethod.GET)
-    public RestResult<Void> checkExistingUser( @PathVariable("hash") String hash) {
+    public RestResult<Boolean> checkExistingUser( @PathVariable("hash") String hash) {
         return inviteService.checkUserExistingByInviteHash(hash).toGetResponse();
+    }
+
+    @RequestMapping(value = GET_USER_BY_HASH_MAPPING + "{hash}", method = RequestMethod.GET)
+    public RestResult<UserResource> getUser( @PathVariable("hash") String hash) {
+        return inviteService.getUserByInviteHash(hash).toGetResponse();
     }
 
 }
