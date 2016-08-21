@@ -37,29 +37,45 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTest<BankDetailsManagementController> {
     private ProjectResource project;
     private OrganisationResource organisationResource;
+    private OrganisationResource updatedOrganisationResource;
 
     private BankDetailsResource bankDetailsResource;
+    private BankDetailsResource notUpdatedBankDetailsResource;
     private BankDetailsResource updatedBankDetailsResource;
+    private BankDetailsResource updatedAddressBankDetailsResource;
 
     private List<ProjectUserResource> projectUsers;
     private BankDetailsReviewViewModel bankDetailsReviewViewModel;
     private ChangeBankDetailsViewModel notUpdatedChangeBankDetailsViewModel;
-    private ChangeBankDetailsViewModel updatedChangeBankDetailsViewModel;
+    private ChangeBankDetailsViewModel updatedSortCodeViewModel;
+    private ChangeBankDetailsViewModel updatedAddressViewModel;
+    private ChangeBankDetailsViewModel updatedOrganisationDetailsViewModel;
+
 
     @Before
     public void setUp(){
         super.setUp();
         organisationResource = newOrganisationResource().withName("Vitruvius Stonework Limited").withCompanyHouseNumber("60674010").build();
+        updatedOrganisationResource = newOrganisationResource().withId(organisationResource.getId()).withName("Vitruvius Stonework").withCompanyHouseNumber("60674010").build();
         OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource().withOrganisation(organisationResource.getId()).withAddress(newAddressResource().withAddressLine1("Montrose House 1").withAddressLine2("Clayhill Park").withAddressLine3("Cheshire West and Chester").withTown("Neston").withCounty("Cheshire").withPostcode("CH64 3RU").build()).build();
         project = newProjectResource().build();
 
         bankDetailsResource = newBankDetailsResource().withProject(project.getId()).withOrganisation(organisationResource.getId()).withOrganiationAddress(organisationAddressResource).withAccountNumber("51406795").withSortCode("404745").withCompanyName(organisationResource.getName()).withRegistrationNumber(organisationResource.getCompanyHouseNumber()).build();
 
         AddressTypeResource addressTypeResource = new AddressTypeResource(BANK_DETAILS.getOrdinal(), BANK_DETAILS.name());
-        OrganisationAddressResource updatedOrganisationAddressResource = newOrganisationAddressResource().withOrganisation(organisationResource.getId()).withAddressType(addressTypeResource).withAddress(newAddressResource().withAddressLine1("Montrose House 1").withAddressLine2("Clayhill Park").withAddressLine3("Cheshire West and Chester").withTown("Neston").withCounty("Cheshire").withPostcode("CH64 3RU").build()).build();
-        updatedOrganisationAddressResource.setId(null);
-        updatedOrganisationAddressResource.getAddress().setId(null);
-        updatedBankDetailsResource = newBankDetailsResource().withId(bankDetailsResource.getId()).withProject(project.getId()).withOrganisation(organisationResource.getId()).withOrganiationAddress(updatedOrganisationAddressResource).withAccountNumber(bankDetailsResource.getAccountNumber()).withSortCode("404746").withCompanyName(organisationResource.getName()).withRegistrationNumber(bankDetailsResource.getRegistrationNumber()).build();
+
+        OrganisationAddressResource unmodifiedOrganisationAddressResource = newOrganisationAddressResource().withOrganisation(organisationResource.getId()).withAddressType(addressTypeResource).withAddress(newAddressResource().withAddressLine1("Montrose House 1").withAddressLine2("Clayhill Park").withAddressLine3("Cheshire West and Chester").withTown("Neston").withCounty("Cheshire").withPostcode("CH64 3RU").build()).build();
+        unmodifiedOrganisationAddressResource.setId(null);
+        unmodifiedOrganisationAddressResource.getAddress().setId(null);
+
+        updatedBankDetailsResource = newBankDetailsResource().withId(bankDetailsResource.getId()).withProject(project.getId()).withOrganisation(organisationResource.getId()).withOrganiationAddress(unmodifiedOrganisationAddressResource).withAccountNumber(bankDetailsResource.getAccountNumber()).withSortCode("404746").withCompanyName(organisationResource.getName()).withRegistrationNumber(bankDetailsResource.getRegistrationNumber()).build();
+
+        notUpdatedBankDetailsResource = newBankDetailsResource().withId(bankDetailsResource.getId()).withProject(project.getId()).withOrganisation(organisationResource.getId()).withOrganiationAddress(unmodifiedOrganisationAddressResource).withAccountNumber(bankDetailsResource.getAccountNumber()).withSortCode(bankDetailsResource.getSortCode()).withCompanyName(organisationResource.getName()).withRegistrationNumber(bankDetailsResource.getRegistrationNumber()).build();
+
+        OrganisationAddressResource updatedLine1OrganisationAddressResource = newOrganisationAddressResource().withOrganisation(organisationResource.getId()).withAddressType(addressTypeResource).withAddress(newAddressResource().withAddressLine1("Montrose House 2").withAddressLine2("Clayhill Park").withAddressLine3("Cheshire West and Chester").withTown("Neston").withCounty("Cheshire").withPostcode("CH64 3RU").build()).build();
+        updatedLine1OrganisationAddressResource.setId(null);
+        updatedLine1OrganisationAddressResource.getAddress().setId(null);
+        updatedAddressBankDetailsResource = newBankDetailsResource().withId(bankDetailsResource.getId()).withProject(project.getId()).withOrganisation(organisationResource.getId()).withOrganiationAddress(updatedLine1OrganisationAddressResource).withAccountNumber(bankDetailsResource.getAccountNumber()).withSortCode(bankDetailsResource.getSortCode()).withCompanyName(organisationResource.getName()).withRegistrationNumber(bankDetailsResource.getRegistrationNumber()).build();
 
         projectUsers = newProjectUserResource().build(3);
         projectUsers.get(0).setRoleName(FINANCE_CONTACT.getName());
@@ -68,7 +84,9 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
         bankDetailsReviewViewModel = buildModelView(project, projectUsers.get(0), organisationResource, bankDetailsResource);
 
         notUpdatedChangeBankDetailsViewModel = new ChangeBankDetailsViewModel(bankDetailsReviewViewModel.getProjectId(), bankDetailsReviewViewModel.getProjectNumber(), bankDetailsReviewViewModel.getProjectName(), bankDetailsReviewViewModel.getFinanceContactName(), bankDetailsReviewViewModel.getFinanceContactEmail(), bankDetailsReviewViewModel.getFinanceContactPhoneNumber(), bankDetailsReviewViewModel.getOrganisationId(), bankDetailsReviewViewModel.getOrganisationName(), bankDetailsReviewViewModel.getRegistrationNumber(), bankDetailsReviewViewModel.getBankAccountNumber(), bankDetailsReviewViewModel.getSortCode(), bankDetailsReviewViewModel.getOrganisationAddress(), bankDetailsReviewViewModel.getVerified(), bankDetailsReviewViewModel.getCompanyNameScore(), bankDetailsReviewViewModel.getRegistrationNumberMatched(), bankDetailsReviewViewModel.getAddressScore(), bankDetailsReviewViewModel.getApproved(), bankDetailsReviewViewModel.getApprovedManually(), false);
-        updatedChangeBankDetailsViewModel = new ChangeBankDetailsViewModel(bankDetailsReviewViewModel.getProjectId(), bankDetailsReviewViewModel.getProjectNumber(), bankDetailsReviewViewModel.getProjectName(), bankDetailsReviewViewModel.getFinanceContactName(), bankDetailsReviewViewModel.getFinanceContactEmail(), bankDetailsReviewViewModel.getFinanceContactPhoneNumber(), bankDetailsReviewViewModel.getOrganisationId(), bankDetailsReviewViewModel.getOrganisationName(), bankDetailsReviewViewModel.getRegistrationNumber(), bankDetailsReviewViewModel.getBankAccountNumber(), updatedBankDetailsResource.getSortCode(), bankDetailsReviewViewModel.getOrganisationAddress(), bankDetailsReviewViewModel.getVerified(), bankDetailsReviewViewModel.getCompanyNameScore(), bankDetailsReviewViewModel.getRegistrationNumberMatched(), bankDetailsReviewViewModel.getAddressScore(), bankDetailsReviewViewModel.getApproved(), bankDetailsReviewViewModel.getApprovedManually(), true);
+        updatedSortCodeViewModel = new ChangeBankDetailsViewModel(bankDetailsReviewViewModel.getProjectId(), bankDetailsReviewViewModel.getProjectNumber(), bankDetailsReviewViewModel.getProjectName(), bankDetailsReviewViewModel.getFinanceContactName(), bankDetailsReviewViewModel.getFinanceContactEmail(), bankDetailsReviewViewModel.getFinanceContactPhoneNumber(), bankDetailsReviewViewModel.getOrganisationId(), bankDetailsReviewViewModel.getOrganisationName(), bankDetailsReviewViewModel.getRegistrationNumber(), bankDetailsReviewViewModel.getBankAccountNumber(), updatedBankDetailsResource.getSortCode(), bankDetailsReviewViewModel.getOrganisationAddress(), bankDetailsReviewViewModel.getVerified(), bankDetailsReviewViewModel.getCompanyNameScore(), bankDetailsReviewViewModel.getRegistrationNumberMatched(), bankDetailsReviewViewModel.getAddressScore(), bankDetailsReviewViewModel.getApproved(), bankDetailsReviewViewModel.getApprovedManually(), true);
+        updatedAddressViewModel = new ChangeBankDetailsViewModel(bankDetailsReviewViewModel.getProjectId(), bankDetailsReviewViewModel.getProjectNumber(), bankDetailsReviewViewModel.getProjectName(), bankDetailsReviewViewModel.getFinanceContactName(), bankDetailsReviewViewModel.getFinanceContactEmail(), bankDetailsReviewViewModel.getFinanceContactPhoneNumber(), bankDetailsReviewViewModel.getOrganisationId(), bankDetailsReviewViewModel.getOrganisationName(), bankDetailsReviewViewModel.getRegistrationNumber(), bankDetailsReviewViewModel.getBankAccountNumber(), bankDetailsReviewViewModel.getSortCode(), updatedLine1OrganisationAddressResource.getAddress().getAsSingleLine(), bankDetailsReviewViewModel.getVerified(), bankDetailsReviewViewModel.getCompanyNameScore(), bankDetailsReviewViewModel.getRegistrationNumberMatched(), bankDetailsReviewViewModel.getAddressScore(), bankDetailsReviewViewModel.getApproved(), bankDetailsReviewViewModel.getApprovedManually(), true);
+        updatedOrganisationDetailsViewModel = new ChangeBankDetailsViewModel(bankDetailsReviewViewModel.getProjectId(), bankDetailsReviewViewModel.getProjectNumber(), bankDetailsReviewViewModel.getProjectName(), bankDetailsReviewViewModel.getFinanceContactName(), bankDetailsReviewViewModel.getFinanceContactEmail(), bankDetailsReviewViewModel.getFinanceContactPhoneNumber(), bankDetailsReviewViewModel.getOrganisationId(), updatedOrganisationResource.getName(), updatedOrganisationResource.getCompanyHouseNumber(), bankDetailsReviewViewModel.getBankAccountNumber(), bankDetailsReviewViewModel.getSortCode(), bankDetailsReviewViewModel.getOrganisationAddress(), bankDetailsReviewViewModel.getVerified(), bankDetailsReviewViewModel.getCompanyNameScore(), bankDetailsReviewViewModel.getRegistrationNumberMatched(), bankDetailsReviewViewModel.getAddressScore(), bankDetailsReviewViewModel.getApproved(), bankDetailsReviewViewModel.getApprovedManually(), true);
     }
 
     private BankDetailsReviewViewModel buildModelView(ProjectResource project, ProjectUserResource financeContact, OrganisationResource organisation, BankDetailsResource bankDetails){
@@ -138,6 +156,7 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
         when(bankDetailsService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(bankDetailsResource);
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
         when(bankDetailsService.updateBankDetails(project.getId(), updatedBankDetailsResource)).thenReturn(serviceSuccess());
+        when(organisationService.save(organisationResource)).thenReturn(organisationResource);
 
         MvcResult result = mockMvc.perform(post("/project/" + project.getId() + "/organisation/" + organisationResource.getId() + "/review-bank-details/change").
                 contentType(MediaType.APPLICATION_FORM_URLENCODED).
@@ -153,11 +172,70 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
                 param("addressForm.selectedPostcode.postcode", "CH64 3RU")).
                 andExpect(status().isOk()).
                 andExpect(view().name("project/change-bank-details")).
-                //andExpect(model().attributeHasFieldErrors("form", "accountNumber")).
                 andReturn();
 
         Map<String, Object> modelMap = result.getModelAndView().getModel();
         BankDetailsReviewViewModel model = (BankDetailsReviewViewModel) modelMap.get("model");
-        assertEquals(model, updatedChangeBankDetailsViewModel);
+        assertEquals(model, updatedSortCodeViewModel);
+    }
+
+    @Test
+    public void canUpdateBankAddress() throws Exception {
+        when(organisationService.getOrganisationById(organisationResource.getId())).thenReturn(organisationResource);
+        when(projectService.getById(project.getId())).thenReturn(project);
+        when(bankDetailsService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(bankDetailsResource);
+        when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
+        when(bankDetailsService.updateBankDetails(project.getId(), updatedAddressBankDetailsResource)).thenReturn(serviceSuccess());
+        when(organisationService.save(organisationResource)).thenReturn(organisationResource);
+
+        MvcResult result = mockMvc.perform(post("/project/" + project.getId() + "/organisation/" + organisationResource.getId() + "/review-bank-details/change").
+                contentType(MediaType.APPLICATION_FORM_URLENCODED).
+                param("organisationName", "Vitruvius Stonework Limited").
+                param("registrationNumber", "60674010").
+                param("accountNumber", "51406795").
+                param("sortCode", "404745").
+                param("addressForm.selectedPostcode.addressLine1", "Montrose House 2").
+                param("addressForm.selectedPostcode.addressLine2", "Clayhill Park").
+                param("addressForm.selectedPostcode.addressLine3", "Cheshire West and Chester").
+                param("addressForm.selectedPostcode.town", "Neston").
+                param("addressForm.selectedPostcode.county", "Cheshire").
+                param("addressForm.selectedPostcode.postcode", "CH64 3RU")).
+                andExpect(status().isOk()).
+                andExpect(view().name("project/change-bank-details")).
+                andReturn();
+
+        Map<String, Object> modelMap = result.getModelAndView().getModel();
+        BankDetailsReviewViewModel model = (BankDetailsReviewViewModel) modelMap.get("model");
+        assertEquals(model, updatedAddressViewModel);
+    }
+
+    @Test
+    public void canUpdateOrganisationDetails() throws Exception {
+        when(organisationService.getOrganisationById(organisationResource.getId())).thenReturn(organisationResource);
+        when(projectService.getById(project.getId())).thenReturn(project);
+        when(bankDetailsService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(bankDetailsResource);
+        when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
+        when(bankDetailsService.updateBankDetails(project.getId(), notUpdatedBankDetailsResource)).thenReturn(serviceSuccess());
+        when(organisationService.save(updatedOrganisationResource)).thenReturn(updatedOrganisationResource);
+
+        MvcResult result = mockMvc.perform(post("/project/" + project.getId() + "/organisation/" + organisationResource.getId() + "/review-bank-details/change").
+                contentType(MediaType.APPLICATION_FORM_URLENCODED).
+                param("organisationName", "Vitruvius Stonework").
+                param("registrationNumber", "60674010").
+                param("accountNumber", "51406795").
+                param("sortCode", "404745").
+                param("addressForm.selectedPostcode.addressLine1", "Montrose House 1").
+                param("addressForm.selectedPostcode.addressLine2", "Clayhill Park").
+                param("addressForm.selectedPostcode.addressLine3", "Cheshire West and Chester").
+                param("addressForm.selectedPostcode.town", "Neston").
+                param("addressForm.selectedPostcode.county", "Cheshire").
+                param("addressForm.selectedPostcode.postcode", "CH64 3RU")).
+                andExpect(status().isOk()).
+                andExpect(view().name("project/change-bank-details")).
+                andReturn();
+
+        Map<String, Object> modelMap = result.getModelAndView().getModel();
+        BankDetailsReviewViewModel model = (BankDetailsReviewViewModel) modelMap.get("model");
+        assertEquals(model, updatedOrganisationDetailsViewModel);
     }
 }

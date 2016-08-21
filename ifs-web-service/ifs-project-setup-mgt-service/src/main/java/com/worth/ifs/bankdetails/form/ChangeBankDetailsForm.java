@@ -11,7 +11,7 @@ import javax.validation.constraints.Pattern;
 
 import static com.worth.ifs.address.resource.OrganisationAddressType.BANK_DETAILS;
 
-public class AmendBankDetailsForm {
+public class ChangeBankDetailsForm {
 
     private String registrationNumber;
     private String organisationName;
@@ -45,10 +45,10 @@ public class AmendBankDetailsForm {
         this.accountNumber = accountNumber;
     }
 
-    public AmendBankDetailsForm() {
+    public ChangeBankDetailsForm() {
     }
 
-    public AmendBankDetailsForm(String registrationNumber, String organisationName) {
+    public ChangeBankDetailsForm(String registrationNumber, String organisationName) {
         this.registrationNumber = registrationNumber;
         this.organisationName = organisationName;
     }
@@ -83,7 +83,7 @@ public class AmendBankDetailsForm {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        AmendBankDetailsForm that = (AmendBankDetailsForm) o;
+        ChangeBankDetailsForm that = (ChangeBankDetailsForm) o;
 
         return new EqualsBuilder()
                 .appendSuper(super.equals(o))

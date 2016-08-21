@@ -4,7 +4,7 @@ import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.AddressTypeResource;
 import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.bankdetails.BankDetailsService;
-import com.worth.ifs.bankdetails.form.AmendBankDetailsForm;
+import com.worth.ifs.bankdetails.form.ChangeBankDetailsForm;
 import com.worth.ifs.bankdetails.resource.BankDetailsResource;
 import com.worth.ifs.bankdetails.viewmodel.BankDetailsReviewViewModel;
 import com.worth.ifs.bankdetails.viewmodel.ChangeBankDetailsViewModel;
@@ -27,9 +27,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.function.Supplier;
 
 import static com.worth.ifs.address.resource.OrganisationAddressType.BANK_DETAILS;
 import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
+import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 import static com.worth.ifs.util.CollectionFunctions.getOnlyElement;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -84,7 +86,7 @@ public class BankDetailsManagementController {
             @PathVariable("projectId") Long projectId,
             @PathVariable("organisationId") Long organisationId,
             @ModelAttribute("loggedInUser") UserResource loggedInUser,
-            @ModelAttribute(FORM_ATTR_NAME) AmendBankDetailsForm form) {
+            @ModelAttribute(FORM_ATTR_NAME) ChangeBankDetailsForm form) {
         final OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
         final ProjectResource project = projectService.getById(projectId);
         final BankDetailsResource bankDetailsResource = bankDetailsService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId());
@@ -98,32 +100,37 @@ public class BankDetailsManagementController {
             @PathVariable("projectId") Long projectId,
             @PathVariable("organisationId") Long organisationId,
             @ModelAttribute("loggedInUser") UserResource loggedInUser,
-            @Valid @ModelAttribute(FORM_ATTR_NAME) AmendBankDetailsForm form,
+            @Valid @ModelAttribute(FORM_ATTR_NAME) ChangeBankDetailsForm form,
             @SuppressWarnings("unused") BindingResult bindingResult,
             ValidationHandler validationHandler) {
         final OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
         final ProjectResource project = projectService.getById(projectId);
         final BankDetailsResource existingBankDetails = bankDetailsService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId());
-        final OrganisationAddressResource organisationAddressResource = buildOrganisationAddressResource(organisationResource, form);
-        return validationHandler.failNowOrSucceedWith(
-                () -> doViewChangeBankDetailsNotUpdated(organisationResource, project, existingBankDetails, model), () -> {
-                    final BankDetailsResource updatedBankDetailsResource = buildBankDetailsResource(existingBankDetails, projectId, organisationResource, organisationAddressResource, form);
-                    if (!existingBankDetails.equals(updatedBankDetailsResource)) {
-                        ServiceResult<Void> updateResult = bankDetailsService.updateBankDetails(projectId, updatedBankDetailsResource);
-                        if (updateResult.isFailure()) {
-                            validationHandler.addAnyErrors(updateResult, asGlobalErrors());
-                        }
-                        return doViewChangeBankDetailsUpdated(organisationResource, project, updatedBankDetailsResource, model);
-                    } else {
-                        return doViewChangeBankDetailsNotUpdated(organisationResource, project, existingBankDetails, model);
-                    }
-                }
-        );
+
+        Supplier<String> failureView = () -> doViewChangeBankDetailsNotUpdated(organisationResource, project, existingBankDetails, model);
+
+        return validationHandler.failNowOrSucceedWith(failureView, () -> {
+            final OrganisationAddressResource updatedOrganisationAddressResource = buildOrganisationAddressResource(organisationResource, form);
+            final BankDetailsResource updatedBankDetailsResource = buildBankDetailsResource(existingBankDetails, projectId, organisationResource, updatedOrganisationAddressResource, form);
+            final ServiceResult<Void> updateResult = bankDetailsService.updateBankDetails(projectId, updatedBankDetailsResource);
+            return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors()).failNowOrSucceedWith(
+                    failureView, () -> {
+                        OrganisationResource updatedOrganisationResource = buildOrganisationResource(organisationResource, form);
+                        updatedOrganisationResource = organisationService.save(updatedOrganisationResource);
+                        return doViewChangeBankDetailsUpdated(updatedOrganisationResource, project, updatedBankDetailsResource, model);
+                    });
+        });
     }
 
-    private OrganisationAddressResource buildOrganisationAddressResource(OrganisationResource organisation, AmendBankDetailsForm form){
+    private OrganisationAddressResource buildOrganisationAddressResource(OrganisationResource organisation, ChangeBankDetailsForm form){
         AddressResource address = form.getAddressForm().getSelectedPostcode();
         return new OrganisationAddressResource(organisation, address, new AddressTypeResource(BANK_DETAILS.getOrdinal(), BANK_DETAILS.name()));
+    }
+
+    private OrganisationResource buildOrganisationResource(final OrganisationResource organisationResource, ChangeBankDetailsForm form){
+        organisationResource.setName(form.getOrganisationName());
+        organisationResource.setCompanyHouseNumber(form.getRegistrationNumber());
+        return organisationResource;
     }
 
     private BankDetailsResource buildBankDetailsResource(
@@ -131,7 +138,7 @@ public class BankDetailsManagementController {
             Long projectId,
             OrganisationResource organisation,
             OrganisationAddressResource organisationAddressResource,
-            AmendBankDetailsForm form){
+            ChangeBankDetailsForm form){
         BankDetailsResource bankDetailsResource = new BankDetailsResource();
 
         bankDetailsResource.setId(existingBankDetailsResource.getId());
@@ -213,7 +220,7 @@ public class BankDetailsManagementController {
     }
 
 
-    private void populateExitingBankDetailsInForm(OrganisationResource organisation, BankDetailsResource bankDetails, AmendBankDetailsForm form){
+    private void populateExitingBankDetailsInForm(OrganisationResource organisation, BankDetailsResource bankDetails, ChangeBankDetailsForm form){
         form.setOrganisationName(organisation.getName());
         form.setRegistrationNumber(organisation.getCompanyHouseNumber());
         form.setSortCode(bankDetails.getSortCode());
