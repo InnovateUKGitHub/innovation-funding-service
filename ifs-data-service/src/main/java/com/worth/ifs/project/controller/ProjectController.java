@@ -267,6 +267,11 @@ public class ProjectController {
         return projectService.isOtherDocumentsSubmitAllowed(projectId, authenticatedUser.getId()).toGetResponse();
     }
 
+    @RequestMapping(value = "/{projectId}/partner/documents/submit", method = POST)
+    public RestResult<Void>setPartnerDocumentsSubmitted(@PathVariable("projectId") final Long projectId) {
+        return projectService.saveDocumentsSubmitDateTime(projectId, LocalDateTime.now()).toPostResponse();
+    }
+
     @RequestMapping(value = "/{projectId}/partners", method = POST)
     public RestResult<Void> addPartner(@PathVariable(value = "projectId")Long projectId,
                                        @RequestParam(value = "userId", required = true) Long userId,

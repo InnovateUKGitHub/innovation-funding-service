@@ -8,7 +8,7 @@ import com.worth.ifs.commons.error.exception.InvalidURLException;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
-import com.worth.ifs.invite.constant.InviteStatusConstants;
+import com.worth.ifs.invite.constant.InviteStatus;
 import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.service.InviteRestService;
@@ -54,7 +54,7 @@ public class AcceptInviteAuthenticatedController extends BaseController{
 
         if (invite.isSuccess()) {
             ApplicationInviteResource inviteResource = invite.getSuccessObject();
-            if (InviteStatusConstants.SEND.equals(inviteResource.getStatus())) {
+            if (InviteStatus.SENT.equals(inviteResource.getStatus())) {
                 InviteOrganisationResource inviteOrganisation = inviteRestService.getInviteOrganisationByHash(hash).getSuccessObjectOrThrowException();
 
                 Map<String, String> failureMessages = registrationService.getInvalidInviteMessages(loggedInUser, inviteResource, inviteOrganisation);
@@ -90,7 +90,7 @@ public class AcceptInviteAuthenticatedController extends BaseController{
 
         if (invite.isSuccess()) {
             ApplicationInviteResource inviteResource = invite.getSuccessObject();
-            if (InviteStatusConstants.SEND.equals(inviteResource.getStatus())) {
+            if (InviteStatus.SENT.equals(inviteResource.getStatus())) {
                 InviteOrganisationResource inviteOrganisation = inviteRestService.getInviteOrganisationByHash(hash).getSuccessObjectOrThrowException();
 
                 Map<String, String> failureMessages = registrationService.getInvalidInviteMessages(loggedInUser, inviteResource, inviteOrganisation);

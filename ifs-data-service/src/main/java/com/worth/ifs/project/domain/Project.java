@@ -4,18 +4,18 @@ import com.worth.ifs.address.domain.Address;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.invite.domain.ProcessActivity;
+import com.worth.ifs.invite.domain.ProjectParticipantRole;
 import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.resource.UserRoleType;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 
-import static com.worth.ifs.user.resource.UserRoleType.roleNames;
 import static com.worth.ifs.util.CollectionFunctions.getOnlyElement;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static java.util.stream.Collectors.toList;
@@ -47,6 +47,8 @@ public class Project implements ProcessActivity {
 
     private LocalDateTime submittedDate;
 
+    private LocalDateTime documentsSubmittedDate;
+
     @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProjectUser> projectUsers = new ArrayList<>();
 
@@ -60,7 +62,9 @@ public class Project implements ProcessActivity {
 
     public Project() {}
 
-    public Project(Long id, Application application, LocalDate targetStartDate, Address address, Long durationInMonths, String name, LocalDateTime submittedDate) {
+    public Project(Long id, Application application, LocalDate targetStartDate, Address address,
+                   Long durationInMonths, String name, LocalDateTime submittedDate,
+                   LocalDateTime documentsSubmittedDate) {
         this.id = id;
         this.application = application;
         this.targetStartDate = targetStartDate;
@@ -68,6 +72,7 @@ public class Project implements ProcessActivity {
         this.durationInMonths = durationInMonths;
         this.name = name;
         this.submittedDate = submittedDate;
+        this.documentsSubmittedDate = documentsSubmittedDate;
     }
 
     public void addProjectUser(ProjectUser projectUser) {
@@ -78,8 +83,8 @@ public class Project implements ProcessActivity {
         return projectUsers.remove(projectUser);
     }
 
-    public ProjectUser getExistingProjectUserWithRoleForOrganisation(UserRoleType roleType, Organisation organisation) {
-        List<ProjectUser> matchingUser = simpleFilter(projectUsers, projectUser -> projectUser.getRole().isOfType(roleType) && projectUser.getOrganisation().equals(organisation));
+    public ProjectUser getExistingProjectUserWithRoleForOrganisation(ProjectParticipantRole role, Organisation organisation) {
+        List<ProjectUser> matchingUser = simpleFilter(projectUsers, projectUser -> projectUser.getRole()==role && projectUser.getOrganisation().equals(organisation));
 
         if (matchingUser.isEmpty()) {
             return null;
@@ -148,8 +153,8 @@ public class Project implements ProcessActivity {
         return projectUsers.stream().filter(filter).collect(toList());
     }
 
-    public List<ProjectUser> getProjectUsersWithRole(UserRoleType... roles){
-        return getProjectUsers(pu -> roleNames(roles).contains(pu.getRole().getName()));
+    public List<ProjectUser> getProjectUsersWithRole(ProjectParticipantRole... roles){
+        return getProjectUsers(pu -> Arrays.stream(roles).anyMatch(pu.getRole()::equals));
     }
 
     public List<Organisation> getOrganisations(){
@@ -171,6 +176,14 @@ public class Project implements ProcessActivity {
 
     public void setSubmittedDate(LocalDateTime submittedDate) {
         this.submittedDate = submittedDate;
+    }
+
+    public LocalDateTime getDocumentsSubmittedDate() {
+        return documentsSubmittedDate;
+    }
+
+    public void setDocumentsSubmittedDate(LocalDateTime documentsSubmittedDate) {
+        this.documentsSubmittedDate = documentsSubmittedDate;
     }
 
     public FileEntry getCollaborationAgreement() {

@@ -1,13 +1,15 @@
 package com.worth.ifs.invite.domain;
 
+import com.worth.ifs.user.domain.User;
+
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import java.util.Optional;
 
 /**
- * Participant in a {@link ProcessActivity}
+ * A Participant in a {@link ProcessActivity}.
  */
-public abstract class Participant<T extends ProcessActivity, I extends Invite<T,I>> {
-
+public abstract class Participant<P extends ProcessActivity, I extends Invite<P,I>, R extends ParticipantRole<P>> {
     @Enumerated(EnumType.STRING)
     private ParticipantStatus status;
 
@@ -15,13 +17,18 @@ public abstract class Participant<T extends ProcessActivity, I extends Invite<T,
         this.status = ParticipantStatus.PENDING;
     }
 
-    public abstract T getProcess();
-
-    public abstract I getInvite();
-
     public ParticipantStatus getStatus() {
         return status;
     }
+
+    public abstract P getProcess();
+
+    public abstract Optional<I> getInvite();
+
+    public abstract R getRole();
+
+    // TODO make this Optional<User>
+    public abstract User getUser();
 
     protected void setStatus(ParticipantStatus newStatus) {
         switch (newStatus) {

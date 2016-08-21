@@ -1,7 +1,7 @@
 package com.worth.ifs.application.form;
 
 import com.worth.ifs.commons.validation.ValidationConstants;
-import com.worth.ifs.invite.constant.InviteStatusConstants;
+import com.worth.ifs.invite.constant.InviteStatus;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -18,7 +18,7 @@ public class InviteeForm implements Serializable {
     @Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message="{validation.standard.email.format}")
     @Size(max = 256, message = "{validation.standard.email.length.max}")
     private String email;
-    private InviteStatusConstants inviteStatus;
+    private InviteStatus inviteStatus;
 
     public InviteeForm(Long userId, String personName, String email) {
         this.userId = userId;
@@ -55,11 +55,11 @@ public class InviteeForm implements Serializable {
         this.userId = userId;
     }
 
-    public void setInviteStatus(InviteStatusConstants inviteStatus) {
+    public void setInviteStatus(InviteStatus inviteStatus) {
         this.inviteStatus = inviteStatus;
     }
 
-    public InviteStatusConstants getInviteStatus() {
+    public InviteStatus getInviteStatus() {
         return inviteStatus;
     }
 }

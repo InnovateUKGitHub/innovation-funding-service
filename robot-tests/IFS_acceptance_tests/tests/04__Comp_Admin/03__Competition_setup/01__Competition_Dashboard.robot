@@ -61,11 +61,10 @@ Upcoming competitions calculations
     [Documentation]    INFUND-3832
     ...
     ...    INFUND-3003
-    [tags]    Pending
-    # TODO fix after 3002
+    ...    INFUND-3876
     Then the calculations should be correct    In preparation    //section[1]/ul/li
     And the calculations should be correct    Ready to open    //section[2]/div/div/ul/li
-    And the calculations should be correct    Upcoming    //section/ul/li
+    And the calculations should be correct    Upcoming    //ul[@class="list-overview"]
 
 Upcoming competitions ready for open
     [Documentation]    INFUND-3003

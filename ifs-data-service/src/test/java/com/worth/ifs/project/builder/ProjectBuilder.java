@@ -72,7 +72,7 @@ public class ProjectBuilder extends BaseBuilder<Project, ProjectBuilder> {
 
         // add Hibernate-style backlinks to the Project Users
         project.getProjectUsers().forEach(pu -> {
-            pu.setProject(project);
+            setField("project", project, pu);
         });
     }
 }

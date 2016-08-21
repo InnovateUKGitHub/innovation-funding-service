@@ -1,6 +1,6 @@
 package com.worth.ifs.invite.resource;
 
-import com.worth.ifs.invite.constant.InviteStatusConstants;
+import com.worth.ifs.invite.constant.InviteStatus;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -25,14 +25,14 @@ public class ApplicationInviteResource extends InviteResource {
     private String inviteOrganisationName;
     private String inviteOrganisationNameConfirmed;
     private String hash;
-    private InviteStatusConstants status;
+    private InviteStatus status;
 
     public ApplicationInviteResource() {
     	// no-arg constructor
     }
 
 
-    public ApplicationInviteResource(Long id, String name, String email, Long application, Long inviteOrganisation, String hash, InviteStatusConstants status) {
+    public ApplicationInviteResource(Long id, String name, String email, Long application, Long inviteOrganisation, String hash, InviteStatus status) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -96,11 +96,11 @@ public class ApplicationInviteResource extends InviteResource {
         this.hash = hash;
     }
 
-    public InviteStatusConstants getStatus() {
+    public InviteStatus getStatus() {
         return status;
     }
 
-    public void setStatus(InviteStatusConstants status) {
+    public void setStatus(InviteStatus status) {
         this.status = status;
     }
 
