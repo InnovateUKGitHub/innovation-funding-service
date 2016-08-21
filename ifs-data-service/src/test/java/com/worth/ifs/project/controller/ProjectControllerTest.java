@@ -353,7 +353,7 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
     }
 
     @Test
-    public void updateBanksDetailsWithInvalidAccountDetailsReturnsError() throws Exception {
+    public void submitBankDetailsWithInvalidAccountDetailsReturnsError() throws Exception {
         Long projectId = 1L;
         Long organisationId = 1L;
         OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource().build();
@@ -365,6 +365,65 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
                 .build();
 
         when(bankDetailsServiceMock.submitBankDetails(bankDetailsResource)).thenReturn(serviceSuccess());
+
+        Error invalidSortCodeError = fieldError("sortCode", "123", "Pattern");
+        Error sortCodeNotProvided = fieldError("sortCode", null, "NotBlank");
+        Error invalidAccountNumberError = fieldError("accountNumber", "1234567", "Pattern");
+        Error accountNumberNotProvided = fieldError("accountNumber", null, "NotBlank");
+        Error organisationAddressNotProvided = fieldError("organisationAddress", null, "NotNull");
+        Error organisationIdNotProvided = fieldError("organisation", null, "NotNull");
+        Error projectIdNotProvided = fieldError("project", null, "NotNull");
+
+        RestErrorResponse expectedErrors = new RestErrorResponse(asList(invalidSortCodeError, invalidAccountNumberError));
+
+        mockMvc.perform(put("/project/{projectId}/bank-details", projectId)
+                .contentType(APPLICATION_JSON)
+                .content(toJson(bankDetailsResource)))
+                .andExpect(status().isNotAcceptable())
+                .andExpect(content().json(toJson(expectedErrors)))
+                .andReturn();
+
+        bankDetailsResource = newBankDetailsResource().build();
+
+        expectedErrors = new RestErrorResponse(asList(sortCodeNotProvided, accountNumberNotProvided, organisationAddressNotProvided, organisationIdNotProvided, projectIdNotProvided));
+
+        mockMvc.perform(put("/project/{projectId}/bank-details", projectId)
+                .contentType(APPLICATION_JSON)
+                .content(toJson(bankDetailsResource)))
+                .andExpect(status().isNotAcceptable())
+                .andExpect(content().json(toJson(expectedErrors)));
+    }
+
+    @Test
+    public void updateBanksDetailsSuccessfully() throws Exception {
+        Long projectId = 1L;
+        Long organisationId = 1L;
+        OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource().build();
+        BankDetailsResource bankDetailsResource = newBankDetailsResource()
+                .withProject(projectId).withSortCode("123456")
+                .withAccountNumber("12345678")
+                .withOrganisation(organisationId)
+                .withOrganiationAddress(organisationAddressResource)
+                .build();
+
+        when(bankDetailsServiceMock.updateBankDetails(bankDetailsResource)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/bank-details", projectId).contentType(APPLICATION_JSON).content(toJson(bankDetailsResource))).andExpect(status().isOk()).andReturn();
+    }
+
+    @Test
+    public void updateBankDetailsWithInvalidAccountDetailsReturnsError() throws Exception {
+        Long projectId = 1L;
+        Long organisationId = 1L;
+        OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource().build();
+        BankDetailsResource bankDetailsResource = newBankDetailsResource()
+                .withProject(projectId).withSortCode("123")
+                .withAccountNumber("1234567")
+                .withOrganisation(organisationId)
+                .withOrganiationAddress(organisationAddressResource)
+                .build();
+
+        when(bankDetailsServiceMock.updateBankDetails(bankDetailsResource)).thenReturn(serviceSuccess());
 
         Error invalidSortCodeError = fieldError("sortCode", "123", "Pattern");
         Error sortCodeNotProvided = fieldError("sortCode", null, "NotBlank");
