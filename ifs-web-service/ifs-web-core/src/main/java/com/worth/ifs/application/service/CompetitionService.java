@@ -47,4 +47,8 @@ public interface CompetitionService {
     void initApplicationFormByCompetitionType(Long competitionId, Long competitionTypeId);
 
     String generateCompetitionCode(Long competitionId, LocalDateTime openingDate);
+
+    void returnToSetup(Long competitionId);
+
+    void markAsSetup(Long competitionId);
 }
