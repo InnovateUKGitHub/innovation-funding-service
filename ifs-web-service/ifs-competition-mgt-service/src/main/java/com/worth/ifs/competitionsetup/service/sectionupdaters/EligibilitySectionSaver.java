@@ -1,16 +1,19 @@
 package com.worth.ifs.competitionsetup.service.sectionupdaters;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.worth.ifs.application.service.CompetitionService;
+import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.competition.form.enumerable.ResearchParticipationAmount;
 import com.worth.ifs.competition.resource.CollaborationLevel;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.LeadApplicantType;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.form.EligibilityForm;
-import com.worth.ifs.competition.form.enumerable.ResearchParticipationAmount;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Competition setup section saver for the eligibility section.
@@ -27,7 +30,7 @@ public class EligibilitySectionSaver implements CompetitionSetupSectionSaver {
 	}
 
 	@Override
-	public void saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
+	public List<Error> saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
 		
 		EligibilityForm eligibilityForm = (EligibilityForm) competitionSetupForm;
 		
@@ -53,6 +56,8 @@ public class EligibilitySectionSaver implements CompetitionSetupSectionSaver {
 		competition.setLeadApplicantType(type);
 		
 		competitionService.update(competition);
+		
+        return Collections.emptyList();
 	}
 	
 	@Override

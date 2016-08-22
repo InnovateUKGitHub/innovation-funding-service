@@ -3,6 +3,7 @@ package com.worth.ifs.application.service;
 import com.worth.ifs.competition.resource.CompetitionCountResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
+import com.worth.ifs.competition.resource.CompetitionSearchResult;
 import com.worth.ifs.competition.resource.CompetitionTypeResource;
 import com.worth.ifs.competition.service.CompetitionsRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,8 @@ import java.util.stream.Collectors;
 // TODO DW - INFUND-1555 - get this service to return RestResults
 @Service
 public class CompetitionServiceImpl implements CompetitionService {
+
+    public static final int COMPETITION_PAGE_SIZE = 20;
 
     @Autowired
     private CompetitionsRestService competitionsRestService;
@@ -81,6 +84,13 @@ public class CompetitionServiceImpl implements CompetitionService {
     }
 
     @Override
+    public CompetitionSearchResult searchCompetitions(String searchQuery, int page) {
+        CompetitionSearchResult searchResult = competitionsRestService.searchCompetitions(searchQuery, page, COMPETITION_PAGE_SIZE).getSuccessObjectOrThrowException();
+        searchResult.setMappedCompetitions(mapToStatus(searchResult.getContent()));
+        return searchResult;
+    }
+
+    @Override
     public CompetitionCountResource getCompetitionCounts() {
         return competitionsRestService.countCompetitions().getSuccessObjectOrThrowException();
     }
@@ -112,6 +122,16 @@ public class CompetitionServiceImpl implements CompetitionService {
     @Override
     public String generateCompetitionCode(Long competitionId, LocalDateTime openingDate) {
         return competitionsRestService.generateCompetitionCode(competitionId, openingDate).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public void returnToSetup(Long competitionId) {
+        competitionsRestService.returnToSetup(competitionId);
+    }
+
+    @Override
+    public void markAsSetup(Long competitionId) {
+        competitionsRestService.markAsSetup(competitionId);
     }
 
 

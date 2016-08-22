@@ -7,6 +7,7 @@ import com.google.common.base.CharMatcher;
 import com.worth.ifs.application.service.CategoryService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.category.resource.CategoryResource;
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionResource.Status;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
@@ -22,6 +23,7 @@ import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
 
@@ -53,6 +55,8 @@ public class CompetitionSetupController {
     @Autowired
     private CategoryService categoryService;
 
+    public static final String READY_TO_OPEN_KEY = "readyToOpen";
+
     @Autowired
     private Validator validator;
 
@@ -61,21 +65,17 @@ public class CompetitionSetupController {
 
         CompetitionResource competition = competitionService.getById(competitionId);
 
-        if(competition == null || !Status.COMPETITION_SETUP.equals(competition.getCompetitionStatus())) {
+        if(isSendToDashboard(competition)) {
         	LOG.error("Competition is not found in setup state");
             return "redirect:/dashboard";
         }
 
         CompetitionSetupSection section = CompetitionSetupSection.fromPath("home");
         competitionSetupService.populateCompetitionSectionModelAttributes(model, competition, section);
+
+        model.addAttribute(READY_TO_OPEN_KEY, competitionSetupService.isCompetitionReadyToOpen(competition));
         return "competition/setup";
     }
-
-    @RequestMapping(value = "/{competitionId}/home", method = RequestMethod.GET)
-    public String competitionSetupHome(Model model, @PathVariable("competitionId") Long competitionId) {
-          return "competition/setup-home";
-    }
-
 
     @RequestMapping(value = "/{competitionId}/section/{sectionPath}/edit", method = RequestMethod.POST)
     public String setSectionAsIncomplete(@PathVariable("competitionId") Long competitionId, @PathVariable("sectionPath") String sectionPath) {
@@ -87,6 +87,8 @@ public class CompetitionSetupController {
     	}
 
         competitionService.setSetupSectionMarkedAsIncomplete(competitionId, section);
+
+        competitionSetupService.setCompetitionAsCompetitionSetup(competitionId);
 
         return "redirect:/competition/setup/" + competitionId + "/section/" + section.getPath();
     }
@@ -123,8 +125,8 @@ public class CompetitionSetupController {
 
         CompetitionResource competition = competitionService.getById(competitionId);
 
-        if(competition == null || !Status.COMPETITION_SETUP.equals(competition.getCompetitionStatus())) {
-            LOG.error("Competition is not found in setup state");
+        if(isSendToDashboard(competition)) {
+        	LOG.error("Competition is not found in setup state");
             return "redirect:/dashboard";
         }
 
@@ -220,6 +222,12 @@ public class CompetitionSetupController {
         return genericCompetitionSetupSection(competitionSetupForm, bindingResult, competitionId, CompetitionSetupSection.FINANCE, model);
     }
 
+    @RequestMapping(value = "/{competitionId}/ready-to-open", method = RequestMethod.GET)
+    public String setAsReadyToOpen(@PathVariable("competitionId") Long competitionId) {
+        competitionSetupService.setCompetitionAsReadyToOpen(competitionId);
+        return String.format("redirect:/competition/setup/%d", competitionId);
+    }
+
     /* AJAX Function */
     @RequestMapping(value = "/getInnovationArea/{innovationSectorId}", method = RequestMethod.GET)
     @ResponseBody
@@ -246,19 +254,49 @@ public class CompetitionSetupController {
     private String genericCompetitionSetupSection(CompetitionSetupForm competitionSetupForm, BindingResult bindingResult, Long competitionId, CompetitionSetupSection section, Model model) {
         CompetitionResource competition = competitionService.getById(competitionId);
 
-        if(competition == null || !Status.COMPETITION_SETUP.equals(competition.getCompetitionStatus())) {
+        if(isSendToDashboard(competition)) {
         	LOG.error("Competition is not found in setup state");
             return "redirect:/dashboard";
         }
 
-        if (!bindingResult.hasErrors()) {
-        	competitionSetupService.saveCompetitionSetupSection(competitionSetupForm, competition, section);
+        if (isSuccessfulSaved(competitionSetupForm, competition, section, bindingResult)) {
             return "redirect:/competition/setup/" + competitionId + "/section/" + section.getPath();
         } else {
             LOG.debug("Form errors");
             competitionSetupService.populateCompetitionSectionModelAttributes(model, competition, section);
             return "competition/setup";
         }
+    }
+
+    private Boolean isSuccessfulSaved(CompetitionSetupForm competitionSetupForm, CompetitionResource competition, CompetitionSetupSection section, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+           return false;
+        }
+
+        List<Error> saveSectionResult = competitionSetupService.saveCompetitionSetupSection(competitionSetupForm, competition, section);
+        if(saveSectionResult != null && !saveSectionResult.isEmpty()) {
+            saveSectionResult.forEach(e -> {
+                if(e.getFieldName() != null) {
+                    bindingResult.rejectValue(e.getFieldName(), e.getErrorKey(), e.getErrorMessage());
+                } else {
+                    ObjectError error = new ObjectError("currentSection",
+                            e.getErrorMessage());
+                    bindingResult.addError(error);
+                }
+            });
+        }
+
+        if(bindingResult.hasErrors()) {
+           return false;
+        }
+
+        return true;
+    }
+
+    private boolean isSendToDashboard(CompetitionResource competition) {
+        return competition == null ||
+                (!Status.COMPETITION_SETUP.equals(competition.getCompetitionStatus()) &&
+                !Status.READY_TO_OPEN.equals(competition.getCompetitionStatus()));
     }
 
     private ObjectNode createJsonObjectNode(boolean success, String message) {

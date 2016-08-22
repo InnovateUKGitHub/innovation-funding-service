@@ -17,6 +17,13 @@ IFS.competition_management.setup = (function(){
         jQuery("body.competition-management.competition-setup").on('change','[name="innovationSectorCategoryId"]',function(){
           IFS.competition_management.setup.handleInnovationSector();
         });
+
+        jQuery("form#milestones").on('change','input[data-date]',function(){
+          IFS.competition_management.setup.milestonesExtraValidation();
+          IFS.competition_management.setup.milestonesSetFutureDate(jQuery(this));
+        });
+        IFS.competition_management.setup.mileStoneValidateOnPageLoad();
+
     },
     handleCompetitionCode : function(){
         jQuery(document).on('click','#generate-code',function(){
@@ -31,7 +38,8 @@ IFS.competition_management.setup = (function(){
               success: function(data) {
                 if(typeof(data) !== 'undefined'){
                   if(data.success === "true"){
-                    IFS.core.formValidation.setValid(field,data.message);
+                    //Code is now valid, remove all error messages.
+                    IFS.core.formValidation.setValid(field,"");
                     field.val(data.message);
                   }
                   else {
@@ -81,8 +89,37 @@ IFS.competition_management.setup = (function(){
           jQuery('#co-funder-count').val(count + 1);
           return false;
       });
+    },
+    milestonesExtraValidation : function(){
+      //some extra javascript to hide the server side messages when the field is valid
+      var fieldErrors = jQuery('#milestones .field-error');
+      var emptyInputs = jQuery("#milestones input").filter(function() { return !this.value; });
+      if(fieldErrors.length === 0 && emptyInputs.length === 0){
+        jQuery('#milestones .error-summary').attr('aria-hidden','true');
+      }
+    },
+    mileStoneValidateOnPageLoad : function(){
+        jQuery('#milestones .day input').each(function(index,value){
+          var field = jQuery(value);
+          if(index===0){
+            IFS.core.formValidation.checkDate(field,true);
+          }
+          IFS.competition_management.setup.milestonesSetFutureDate(field);
+        });
+    },
+    milestonesSetFutureDate : function(field){
+      setTimeout(function(){
+        var nextRow = field.closest('tr').next('tr');
+        var date = field.attr('data-date');
 
+        if(nextRow.length){
+            nextRow.attr({'data-future-date':date});
+            if(jQuery.trim(date.length) !== 0){
+              var input = nextRow.find('.day input');
+              IFS.core.formValidation.checkDate(input,true);
+            }
+        }
+      },0);
     }
-
   };
 })();

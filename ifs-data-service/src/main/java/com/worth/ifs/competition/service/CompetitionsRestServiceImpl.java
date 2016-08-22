@@ -3,10 +3,7 @@ package com.worth.ifs.competition.service;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.competition.resource.CompetitionCountResource;
-import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.resource.CompetitionSetupSection;
-import com.worth.ifs.competition.resource.CompetitionTypeResource;
+import com.worth.ifs.competition.resource.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.xmlbeans.impl.jam.internal.elements.VoidClassImpl;
@@ -52,6 +49,11 @@ public class CompetitionsRestServiceImpl extends BaseRestService implements Comp
     }
 
     @Override
+    public RestResult<CompetitionSearchResult> searchCompetitions(String searchQuery, int page, int size) {
+        return getWithRestResult(competitionsRestURL + "/search/" + page + "/" + size + "?searchQuery=" + searchQuery, CompetitionSearchResult.class);
+    }
+
+    @Override
     public RestResult<CompetitionCountResource> countCompetitions() {
         return getWithRestResult(competitionsRestURL + "/count", CompetitionCountResource.class);
     }
@@ -89,13 +91,22 @@ public class CompetitionsRestServiceImpl extends BaseRestService implements Comp
 
     @Override
     public RestResult<String> generateCompetitionCode(Long competitionId, LocalDateTime openingDate) {
-        String url = String.format("%s/generateCompetitionCode/%s", competitionsRestURL, competitionId);
         return postWithRestResult(String.format("%s/generateCompetitionCode/%s", competitionsRestURL, competitionId), openingDate, String.class);
     }
 
     @Override
     public RestResult<Void> initApplicationForm(Long competitionId, Long competitionTypeId) {
         return postWithRestResult(String.format("%s/%s/initialise-form/%s", competitionsRestURL, competitionId, competitionTypeId), Void.class);
+    }
+
+    @Override
+    public RestResult<Void> markAsSetup(Long competitionId) {
+        return postWithRestResult(String.format("%s/%s/mark-as-setup", competitionsRestURL, competitionId), Void.class);
+    }
+
+    @Override
+    public RestResult<Void> returnToSetup(Long competitionId) {
+        return postWithRestResult(String.format("%s/%s/return-to-setup", competitionsRestURL, competitionId), Void.class);
     }
 
 }

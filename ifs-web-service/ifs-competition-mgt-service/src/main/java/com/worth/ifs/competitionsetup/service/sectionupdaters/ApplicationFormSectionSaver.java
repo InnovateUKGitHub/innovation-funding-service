@@ -1,11 +1,14 @@
 package com.worth.ifs.competitionsetup.service.sectionupdaters;
 
-import org.springframework.stereotype.Service;
-
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competitionsetup.form.ApplicationFormForm;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
+import org.springframework.stereotype.Service;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Competition setup section saver for the application form section.
@@ -19,8 +22,8 @@ public class ApplicationFormSectionSaver implements CompetitionSetupSectionSaver
 	}
 
 	@Override
-	public void saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
-
+	public List<Error> saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
+        return Collections.emptyList();
 	}
 
 	@Override

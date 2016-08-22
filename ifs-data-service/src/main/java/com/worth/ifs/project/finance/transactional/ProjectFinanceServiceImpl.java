@@ -6,6 +6,7 @@ import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.finance.domain.*;
 import com.worth.ifs.project.finance.repository.SpendProfileRepository;
 import com.worth.ifs.project.repository.ProjectRepository;
+import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.project.resource.SpendProfileTableResource;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -66,21 +68,22 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     }
 
     @Override
-    public ServiceResult<SpendProfileTableResource> getSpendProfileTable(Long projectId, Long organisationId) {
+    public ServiceResult<SpendProfileTableResource> getSpendProfileTable(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
 
-        return find(spendProfile(projectId, organisationId), project(projectId)).andOnSuccess((spendProfile, project) -> {
+        return find(spendProfile(projectOrganisationCompositeId.getProjectId(), projectOrganisationCompositeId.getOrganisationId()),
+                project(projectOrganisationCompositeId.getProjectId())).andOnSuccess((spendProfile, project) -> {
 
             CostGroup eligibleCosts = spendProfile.getEligibleCosts();
             CostGroup spendProfileFigures = spendProfile.getSpendProfileFigures();
 
             Map<String, BigDecimal> eligibleCostsPerCategory =
-                    simpleToMap(eligibleCosts.getCosts(), c -> c.getCostCategory().get().getName(), Cost::getValue);
+                    simpleToLinkedMap(eligibleCosts.getCosts(), c -> c.getCostCategory().get().getName(), cost -> cost.getValue());
 
             Map<CostCategory, List<Cost>> spendProfileCostsPerCategory =
-                    spendProfileFigures.getCosts().stream().collect(groupingBy(c -> c.getCostCategory().get()));
+                    spendProfileFigures.getCosts().stream().collect(groupingBy(c -> c.getCostCategory().get(), LinkedHashMap::new, toList()));
 
             Map<String, List<Cost>> spendFiguresPerCategory =
-                    simpleMapKey(spendProfileCostsPerCategory, CostCategory::getName);
+                    simpleLinkedMapKey(spendProfileCostsPerCategory, costCategory -> costCategory.getName());
 
             LocalDate startDate = spendProfile.getProject().getTargetStartDate();
             int durationInMonths = spendProfile.getProject().getDurationInMonths().intValue();
@@ -89,7 +92,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
             List<LocalDateResource> monthResources = simpleMap(months, LocalDateResource::new);
 
             Map<String, List<BigDecimal>> spendFiguresPerCategoryOrderedByMonth =
-                    simpleMapValue(spendFiguresPerCategory, costs -> orderCostsByMonths(costs, months, project.getTargetStartDate()));
+                    simpleLinkedMapValue(spendFiguresPerCategory, costs -> orderCostsByMonths(costs, months, project.getTargetStartDate()));
 
             SpendProfileTableResource table = new SpendProfileTableResource();
             table.setMonths(monthResources);
@@ -100,8 +103,9 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     }
 
     @Override
-    public ServiceResult<SpendProfileResource> getSpendProfile(Long projectId, Long organisationId) {
-        return getSpendProfileEntity(projectId, organisationId).andOnSuccessReturn(profile -> {
+    public ServiceResult<SpendProfileResource> getSpendProfile(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
+        return getSpendProfileEntity(projectOrganisationCompositeId.getProjectId(), projectOrganisationCompositeId.getOrganisationId())
+                .andOnSuccessReturn(profile -> {
             SpendProfileResource resource = new SpendProfileResource();
             resource.setId(profile.getId());
             return resource;

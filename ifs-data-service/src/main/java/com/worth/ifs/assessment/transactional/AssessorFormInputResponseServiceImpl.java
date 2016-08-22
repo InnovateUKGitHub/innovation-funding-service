@@ -8,6 +8,7 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.transactional.FormInputService;
 import com.worth.ifs.transactional.BaseTransactionalService;
+import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -54,7 +55,7 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
 
     private ServiceResult<Void> performUpdateFormInputResponse(AssessorFormInputResponseResource response) {
         AssessorFormInputResponseResource assessorFormInputResponse = getOrCreateAssessorFormInputResponse(response.getAssessment(), response.getFormInput()).getSuccessObjectOrThrowException();
-        String value = response.getValue();
+        String value = StringUtils.stripToNull(response.getValue());
         boolean same = (value == null && assessorFormInputResponse.getValue() == null) || (value != null && value.equals(assessorFormInputResponse.getValue()));
         if (!same) {
             assessorFormInputResponse.setUpdatedDate(now());

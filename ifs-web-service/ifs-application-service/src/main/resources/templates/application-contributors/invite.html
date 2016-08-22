@@ -130,7 +130,7 @@
                                 <input th:id="'invited-'+${iteration.count}+'-email'" class="form-control width-full" type="text" readonly="readonly" th:value="${invite.email}" />
                             </td>
                             <td class="alignright">
-                              <div th:remove="tag" th:if="${invite.status.name() == 'CREATED' || invite.status.name() == 'SEND'}">(pending)</div>
+                              <div th:remove="tag" th:if="${invite.status.name() == 'CREATED' || invite.status.name() == 'SENT'}">(pending)</div>
                             </td>
                         </tr>
                     </div>
@@ -139,9 +139,9 @@
                             th:unless="${user.getInviteStatus() != null}">
                             <label th:for="'organisations'+${organisationStats.index}+'.invites'+${userStats.index}+'.personName'">
                                   <span class="visuallyhidden">Name</span>
-                                  <span th:if="${#fields.hasErrors('organisations[__${organisationStats.index}__].invites[__${userStats.index}__].personName')}" th:remove="tag">
+                                  <sspan th:if="${#fields.hasErrors('organisations[__${organisationStats.index}__].invites[__${userStats.index}__].personName')}" th:remove="tag">
                                         <span class="error-message"  th:each="err : ${#fields.errors('organisations[__${organisationStats.index}__].invites[__${userStats.index}__].personName')}" th:text="${err}" />
-                                  </span>
+                                  </sspan>
                             </label>
                             <input type="text" class="form-control width-full"
                                    placeholder="name"
