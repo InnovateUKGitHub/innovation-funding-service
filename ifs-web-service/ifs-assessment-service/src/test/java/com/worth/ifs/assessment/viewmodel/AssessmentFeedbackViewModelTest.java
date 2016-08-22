@@ -5,6 +5,7 @@ import com.worth.ifs.form.resource.FormInputResource;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -37,7 +38,7 @@ public class AssessmentFeedbackViewModelTest {
 
         AssessmentFeedbackViewModel assessmentFeedbackViewModel = setupViewModelWithFormInputsAndResponses(maxWordCount, asListOfPairs(formInputId, "This value is made up of eight words."));
 
-        assertEquals(Integer.valueOf(92), assessmentFeedbackViewModel.getWordsRemaining(formInputId));
+        assertEquals(Integer.valueOf(92), assessmentFeedbackViewModel.getWordsRemaining(formInputId, false, ""));
     }
 
     @Test
@@ -47,7 +48,7 @@ public class AssessmentFeedbackViewModelTest {
 
         AssessmentFeedbackViewModel assessmentFeedbackViewModel = setupViewModelWithFormInputsAndResponses(maxWordCount, asListOfPairs(formInputId, "<td><p style=\"font-variant: small-caps\">This value is made up of fifteen words even though it is wrapped within HTML.</p></td>"));
 
-        assertEquals(Integer.valueOf(85), assessmentFeedbackViewModel.getWordsRemaining(formInputId));
+        assertEquals(Integer.valueOf(85), assessmentFeedbackViewModel.getWordsRemaining(formInputId, false, ""));
     }
 
     @Test
@@ -58,7 +59,7 @@ public class AssessmentFeedbackViewModelTest {
         AssessmentFeedbackViewModel assessmentFeedbackViewModel = setupViewModelWithFormInputsAndResponses(maxWordCount, asListOfPairs(formInputId, "No word limit imposed here."));
 
         // Peeking into the behaviour of com.worth.ifs.form.resource.FormInputResource.getWordCount() reveals it treats no maximum word count as 0
-        assertEquals(Integer.valueOf(-5), assessmentFeedbackViewModel.getWordsRemaining(formInputId));
+        assertEquals(Integer.valueOf(-5), assessmentFeedbackViewModel.getWordsRemaining(formInputId, false, ""));
     }
 
     @Test
@@ -68,7 +69,7 @@ public class AssessmentFeedbackViewModelTest {
 
         AssessmentFeedbackViewModel assessmentFeedbackViewModel = setupViewModelWithFormInputsAndResponses(maxWordCount, asListOfPairs(formInputId, "Value of ten words here, exceeding the max word count."));
 
-        assertEquals(Integer.valueOf(-5), assessmentFeedbackViewModel.getWordsRemaining(formInputId));
+        assertEquals(Integer.valueOf(-5), assessmentFeedbackViewModel.getWordsRemaining(formInputId, false, ""));
     }
 
     @Test
@@ -79,7 +80,7 @@ public class AssessmentFeedbackViewModelTest {
 
         AssessmentFeedbackViewModel assessmentFeedbackViewModel = setupViewModelWithFormInputsAndResponses(maxWordCount, asListOfPairs(formInputId, "Not the form input under test."));
 
-        assertNull(assessmentFeedbackViewModel.getWordsRemaining(otherFormInputId));
+        assertNull(assessmentFeedbackViewModel.getWordsRemaining(otherFormInputId, false, ""));
     }
 
 
@@ -101,7 +102,7 @@ public class AssessmentFeedbackViewModelTest {
 
         AssessmentFeedbackViewModel assessmentFeedbackViewModel = new AssessmentFeedbackViewModel(0L, 0L, null, null, null, null, null, null, null, null, assessmentFormInputs, assessorResponses, false, false);
 
-        assertNull(assessmentFeedbackViewModel.getWordsRemaining(formInputId));
+        assertNull(assessmentFeedbackViewModel.getWordsRemaining(formInputId, false, ""));
     }
 
     @Test
@@ -111,7 +112,20 @@ public class AssessmentFeedbackViewModelTest {
 
         AssessmentFeedbackViewModel assessmentFeedbackViewModel = setupViewModelWithFormInputsAndResponses(maxWordCount, asListOfPairs(formInputId, null));
 
-        assertEquals(Integer.valueOf(100), assessmentFeedbackViewModel.getWordsRemaining(formInputId));
+        assertEquals(Integer.valueOf(100), assessmentFeedbackViewModel.getWordsRemaining(formInputId, false, ""));
+    }
+
+    @Test
+    public void testGetWordsRemaining_withInvalidContent() throws Exception {
+        String[] feedbackArray = new String[120];
+        Arrays.fill(feedbackArray, "feedback ");
+        String feedback = Arrays.toString(feedbackArray);
+        Long formInputId = 1L;
+        Integer maxWordCount = 100;
+
+        AssessmentFeedbackViewModel assessmentFeedbackViewModel = setupViewModelWithFormInputsAndResponses(maxWordCount, asListOfPairs(formInputId, null));
+
+        assertEquals(Integer.valueOf(-20), assessmentFeedbackViewModel.getWordsRemaining(formInputId, true, feedback.substring(1, feedback.length()-1).replaceAll(",", "")));
     }
 
     private AssessmentFeedbackViewModel setupViewModelWithFormInputsAndResponses(Integer maxWordCount, List<Pair<Long, String>> idAndValuePairs) {

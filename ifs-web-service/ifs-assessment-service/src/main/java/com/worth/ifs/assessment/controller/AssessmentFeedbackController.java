@@ -31,7 +31,8 @@ import java.util.Map;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
+import static com.worth.ifs.commons.error.CommonFailureKeys.FORM_WORD_LIMIT_EXCEEDED;
+import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.mappingErrorKeyToField;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static com.worth.ifs.util.CollectionFunctions.simpleToMap;
 import static com.worth.ifs.util.MapFunctions.toListOfPairs;
@@ -67,17 +68,18 @@ public class AssessmentFeedbackController {
                               BindingResult bindingResult,
                               @PathVariable("assessmentId") Long assessmentId,
                               @PathVariable("questionId") Long questionId) {
+
         if (isApplicationDetailsQuestion(questionId)) {
             return getApplicationDetails(model, assessmentId, questionId);
         }
 
         AssessmentFeedbackViewModel viewModel = assessmentFeedbackModelPopulator.populateModel(assessmentId, questionId);
-
-        Map<Long, AssessorFormInputResponseResource> mappedResponses = viewModel.getAssessorResponses();
-        mappedResponses.forEach((k, v) ->
-                form.addFormInput(k.toString(), v.getValue())
-        );
-
+        if (!bindingResult.hasErrors()) {
+            Map<Long, AssessorFormInputResponseResource> mappedResponses = viewModel.getAssessorResponses();
+            mappedResponses.forEach((k, v) ->
+                    form.addFormInput(k.toString(), v.getValue())
+            );
+        }
         model.addAttribute("model", viewModel);
         model.addAttribute("navigation", assessmentFeedbackNavigationModelPopulator.populateModel(assessmentId, questionId));
 
@@ -113,7 +115,7 @@ public class AssessmentFeedbackController {
             formInputResponses.stream().forEach(responsePair -> {
                 // TODO INFUND-4105 optimise this to save multiple responses at a time
                 ServiceResult<Void> updateResult = assessorFormInputResponseService.updateFormInputResponse(assessmentId, responsePair.getLeft(), responsePair.getRight());
-                validationHandler.addAnyErrors(updateResult, toField("formErrors"));
+                validationHandler.addAnyErrors(updateResult,mappingErrorKeyToField(FORM_WORD_LIMIT_EXCEEDED, "formInput[" + String.valueOf(responsePair.getLeft()) + "]"));
             });
 
             return validationHandler.

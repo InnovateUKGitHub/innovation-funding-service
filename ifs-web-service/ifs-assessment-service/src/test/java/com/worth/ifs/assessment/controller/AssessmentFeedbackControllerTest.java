@@ -32,6 +32,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.validation.BindingResult;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -347,8 +348,10 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         AssessmentFeedbackViewModel model = (AssessmentFeedbackViewModel) modelMap.get("model");
 
         Form form = (Form) modelMap.get("form");
-        assertEquals(1, form.getObjectErrors().size());
-        assertEquals(FORM_WORD_LIMIT_EXCEEDED.getErrorKey(), form.getObjectErrors().get(0).getCode());
+        BindingResult bindingResult = form.getBindingResult();
+        assertEquals(0, bindingResult.getGlobalErrorCount());
+        assertEquals(1, bindingResult.getFieldErrorCount());
+        assertEquals(FORM_WORD_LIMIT_EXCEEDED.getErrorKey(), bindingResult.getFieldError("formInput[" + formInputIdFeedback + "]").getCode());
     }
 
     @Override

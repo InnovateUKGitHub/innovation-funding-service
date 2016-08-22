@@ -130,7 +130,7 @@ public class AssessmentFeedbackViewModel {
         return format("View %s appendix", lowerCase(getQuestionShortName()));
     }
 
-    public Integer getWordsRemaining(Long formInputId) {
+    public Integer getWordsRemaining(Long formInputId, Boolean hasError, String content) {
         Optional<FormInputResource> formInput = simpleFindFirst(assessmentFormInputs, assessmentFormInput -> formInputId.equals(assessmentFormInput.getId()));
         Optional<AssessorFormInputResponseResource> response = ofNullable(assessorResponses.get(formInputId));
 
@@ -142,6 +142,12 @@ public class AssessmentFeedbackViewModel {
         // Peeking into com.worth.ifs.form.resource.FormInputResource.getWordCount() reveals it will returning 0 rather than null if the word count has not been set, but handling this case anyway.
         if (maxWordCount == null) {
             return null;
+        }
+
+        if (hasError) {
+            AssessorFormInputResponseResource formResponse = new AssessorFormInputResponseResource();
+            formResponse.setValue(content);
+            response = Optional.of(formResponse);
         }
 
         return maxWordCount - getResponseWords(response);

@@ -45,9 +45,9 @@ public class AssessmentSummaryController {
     public String getSummary(Model model,
                              HttpServletResponse response,
                              @ModelAttribute(FORM_ATTR_NAME) AssessmentSummaryForm form,
-                              @PathVariable("assessmentId") Long assessmentId,
-                                boolean formSaveError) {
-        if (!formSaveError) {
+                             BindingResult bindingResult,
+                             @PathVariable("assessmentId") Long assessmentId) {
+        if (!bindingResult.hasErrors()) {
             populateFormWithExistingValues(form, assessmentId);
         }
         model.addAttribute("model", assessmentSummaryModelPopulator.populateModel(assessmentId));
@@ -62,7 +62,7 @@ public class AssessmentSummaryController {
                        ValidationHandler validationHandler,
                        @PathVariable("assessmentId") Long assessmentId) {
 
-        Supplier<String> failureView = () -> getSummary(model, response, form, assessmentId, true);
+        Supplier<String> failureView = () -> getSummary(model, response, form, bindingResult, assessmentId);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             ServiceResult<Void> updateResult = assessmentService.recommend(assessmentId, form.getFundingConfirmation(), form.getFeedback(), form.getComment());
