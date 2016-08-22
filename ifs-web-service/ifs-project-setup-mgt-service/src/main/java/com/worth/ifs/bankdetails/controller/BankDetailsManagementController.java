@@ -117,7 +117,7 @@ public class BankDetailsManagementController {
                     failureView, () -> {
                         OrganisationResource updatedOrganisationResource = buildOrganisationResource(organisationResource, form);
                         updatedOrganisationResource = organisationService.updateNameAndRegistration(updatedOrganisationResource);
-                        return doViewChangeBankDetailsUpdated(updatedOrganisationResource, project, updatedBankDetailsResource, model);
+                        return doViewReviewBankDetails(updatedOrganisationResource, project, updatedBankDetailsResource, model);
                     });
         });
     }

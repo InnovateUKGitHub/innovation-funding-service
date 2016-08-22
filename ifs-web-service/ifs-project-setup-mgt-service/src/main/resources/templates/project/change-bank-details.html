@@ -8,6 +8,8 @@
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
 <div th:include="fragments/layout :: global-header" th:remove="tag" />
 
+<div th:include="fragments/modals :: modal-overlay" th:remove="tag" />
+
 <main id="content">
 	<div th:include="fragments/layout :: main-content-start" th:remove="tag" />
 
@@ -149,8 +151,10 @@
 			<div class="column-half">
 				<a th:href="@{/project/{id}/organisation/{orgId}/review-bank-details(id=${model.projectId}, orgId=${model.organisationId})}">Cancel bank account changes</a>
 			</div>
+
+			<div th:include="fragments/modals :: modal-partner-change-bank-details" th:remove="tag" />
 			<div class="column-half alignright">
-				<button class="no-margin-right button">Update bank account details</button>
+				<button class="no-margin-right button" data-js-modal="modal-partner-change-bank-details">Update bank account details</button>
 			</div>
 		</div>
 	</form>

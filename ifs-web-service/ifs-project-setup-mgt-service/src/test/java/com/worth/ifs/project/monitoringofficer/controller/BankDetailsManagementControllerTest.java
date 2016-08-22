@@ -47,9 +47,9 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
     private List<ProjectUserResource> projectUsers;
     private BankDetailsReviewViewModel bankDetailsReviewViewModel;
     private ChangeBankDetailsViewModel notUpdatedChangeBankDetailsViewModel;
-    private ChangeBankDetailsViewModel updatedSortCodeViewModel;
-    private ChangeBankDetailsViewModel updatedAddressViewModel;
-    private ChangeBankDetailsViewModel updatedOrganisationDetailsViewModel;
+    private BankDetailsReviewViewModel updatedSortCodeViewModel;
+    private BankDetailsReviewViewModel updatedAddressViewModel;
+    private BankDetailsReviewViewModel updatedOrganisationDetailsViewModel;
 
 
     @Before
@@ -84,9 +84,9 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
         bankDetailsReviewViewModel = buildModelView(project, projectUsers.get(0), organisationResource, bankDetailsResource);
 
         notUpdatedChangeBankDetailsViewModel = new ChangeBankDetailsViewModel(bankDetailsReviewViewModel.getProjectId(), bankDetailsReviewViewModel.getProjectNumber(), bankDetailsReviewViewModel.getProjectName(), bankDetailsReviewViewModel.getFinanceContactName(), bankDetailsReviewViewModel.getFinanceContactEmail(), bankDetailsReviewViewModel.getFinanceContactPhoneNumber(), bankDetailsReviewViewModel.getOrganisationId(), bankDetailsReviewViewModel.getOrganisationName(), bankDetailsReviewViewModel.getRegistrationNumber(), bankDetailsReviewViewModel.getBankAccountNumber(), bankDetailsReviewViewModel.getSortCode(), bankDetailsReviewViewModel.getOrganisationAddress(), bankDetailsReviewViewModel.getVerified(), bankDetailsReviewViewModel.getCompanyNameScore(), bankDetailsReviewViewModel.getRegistrationNumberMatched(), bankDetailsReviewViewModel.getAddressScore(), bankDetailsReviewViewModel.getApproved(), bankDetailsReviewViewModel.getApprovedManually(), false);
-        updatedSortCodeViewModel = new ChangeBankDetailsViewModel(bankDetailsReviewViewModel.getProjectId(), bankDetailsReviewViewModel.getProjectNumber(), bankDetailsReviewViewModel.getProjectName(), bankDetailsReviewViewModel.getFinanceContactName(), bankDetailsReviewViewModel.getFinanceContactEmail(), bankDetailsReviewViewModel.getFinanceContactPhoneNumber(), bankDetailsReviewViewModel.getOrganisationId(), bankDetailsReviewViewModel.getOrganisationName(), bankDetailsReviewViewModel.getRegistrationNumber(), bankDetailsReviewViewModel.getBankAccountNumber(), updatedBankDetailsResource.getSortCode(), bankDetailsReviewViewModel.getOrganisationAddress(), bankDetailsReviewViewModel.getVerified(), bankDetailsReviewViewModel.getCompanyNameScore(), bankDetailsReviewViewModel.getRegistrationNumberMatched(), bankDetailsReviewViewModel.getAddressScore(), bankDetailsReviewViewModel.getApproved(), bankDetailsReviewViewModel.getApprovedManually(), true);
-        updatedAddressViewModel = new ChangeBankDetailsViewModel(bankDetailsReviewViewModel.getProjectId(), bankDetailsReviewViewModel.getProjectNumber(), bankDetailsReviewViewModel.getProjectName(), bankDetailsReviewViewModel.getFinanceContactName(), bankDetailsReviewViewModel.getFinanceContactEmail(), bankDetailsReviewViewModel.getFinanceContactPhoneNumber(), bankDetailsReviewViewModel.getOrganisationId(), bankDetailsReviewViewModel.getOrganisationName(), bankDetailsReviewViewModel.getRegistrationNumber(), bankDetailsReviewViewModel.getBankAccountNumber(), bankDetailsReviewViewModel.getSortCode(), updatedLine1OrganisationAddressResource.getAddress().getAsSingleLine(), bankDetailsReviewViewModel.getVerified(), bankDetailsReviewViewModel.getCompanyNameScore(), bankDetailsReviewViewModel.getRegistrationNumberMatched(), bankDetailsReviewViewModel.getAddressScore(), bankDetailsReviewViewModel.getApproved(), bankDetailsReviewViewModel.getApprovedManually(), true);
-        updatedOrganisationDetailsViewModel = new ChangeBankDetailsViewModel(bankDetailsReviewViewModel.getProjectId(), bankDetailsReviewViewModel.getProjectNumber(), bankDetailsReviewViewModel.getProjectName(), bankDetailsReviewViewModel.getFinanceContactName(), bankDetailsReviewViewModel.getFinanceContactEmail(), bankDetailsReviewViewModel.getFinanceContactPhoneNumber(), bankDetailsReviewViewModel.getOrganisationId(), updatedOrganisationResource.getName(), updatedOrganisationResource.getCompanyHouseNumber(), bankDetailsReviewViewModel.getBankAccountNumber(), bankDetailsReviewViewModel.getSortCode(), bankDetailsReviewViewModel.getOrganisationAddress(), bankDetailsReviewViewModel.getVerified(), bankDetailsReviewViewModel.getCompanyNameScore(), bankDetailsReviewViewModel.getRegistrationNumberMatched(), bankDetailsReviewViewModel.getAddressScore(), bankDetailsReviewViewModel.getApproved(), bankDetailsReviewViewModel.getApprovedManually(), true);
+        updatedSortCodeViewModel = new BankDetailsReviewViewModel(bankDetailsReviewViewModel.getProjectId(), bankDetailsReviewViewModel.getProjectNumber(), bankDetailsReviewViewModel.getProjectName(), bankDetailsReviewViewModel.getFinanceContactName(), bankDetailsReviewViewModel.getFinanceContactEmail(), bankDetailsReviewViewModel.getFinanceContactPhoneNumber(), bankDetailsReviewViewModel.getOrganisationId(), bankDetailsReviewViewModel.getOrganisationName(), bankDetailsReviewViewModel.getRegistrationNumber(), bankDetailsReviewViewModel.getBankAccountNumber(), updatedBankDetailsResource.getSortCode(), bankDetailsReviewViewModel.getOrganisationAddress(), bankDetailsReviewViewModel.getVerified(), bankDetailsReviewViewModel.getCompanyNameScore(), bankDetailsReviewViewModel.getRegistrationNumberMatched(), bankDetailsReviewViewModel.getAddressScore(), bankDetailsReviewViewModel.getApproved(), bankDetailsReviewViewModel.getApprovedManually());
+        updatedAddressViewModel = new BankDetailsReviewViewModel(bankDetailsReviewViewModel.getProjectId(), bankDetailsReviewViewModel.getProjectNumber(), bankDetailsReviewViewModel.getProjectName(), bankDetailsReviewViewModel.getFinanceContactName(), bankDetailsReviewViewModel.getFinanceContactEmail(), bankDetailsReviewViewModel.getFinanceContactPhoneNumber(), bankDetailsReviewViewModel.getOrganisationId(), bankDetailsReviewViewModel.getOrganisationName(), bankDetailsReviewViewModel.getRegistrationNumber(), bankDetailsReviewViewModel.getBankAccountNumber(), bankDetailsReviewViewModel.getSortCode(), updatedLine1OrganisationAddressResource.getAddress().getAsSingleLine(), bankDetailsReviewViewModel.getVerified(), bankDetailsReviewViewModel.getCompanyNameScore(), bankDetailsReviewViewModel.getRegistrationNumberMatched(), bankDetailsReviewViewModel.getAddressScore(), bankDetailsReviewViewModel.getApproved(), bankDetailsReviewViewModel.getApprovedManually());
+        updatedOrganisationDetailsViewModel = new BankDetailsReviewViewModel(bankDetailsReviewViewModel.getProjectId(), bankDetailsReviewViewModel.getProjectNumber(), bankDetailsReviewViewModel.getProjectName(), bankDetailsReviewViewModel.getFinanceContactName(), bankDetailsReviewViewModel.getFinanceContactEmail(), bankDetailsReviewViewModel.getFinanceContactPhoneNumber(), bankDetailsReviewViewModel.getOrganisationId(), updatedOrganisationResource.getName(), updatedOrganisationResource.getCompanyHouseNumber(), bankDetailsReviewViewModel.getBankAccountNumber(), bankDetailsReviewViewModel.getSortCode(), bankDetailsReviewViewModel.getOrganisationAddress(), bankDetailsReviewViewModel.getVerified(), bankDetailsReviewViewModel.getCompanyNameScore(), bankDetailsReviewViewModel.getRegistrationNumberMatched(), bankDetailsReviewViewModel.getAddressScore(), bankDetailsReviewViewModel.getApproved(), bankDetailsReviewViewModel.getApprovedManually());
     }
 
     private BankDetailsReviewViewModel buildModelView(ProjectResource project, ProjectUserResource financeContact, OrganisationResource organisation, BankDetailsResource bankDetails){
@@ -171,7 +171,7 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
                 param("addressForm.selectedPostcode.county", "Cheshire").
                 param("addressForm.selectedPostcode.postcode", "CH64 3RU")).
                 andExpect(status().isOk()).
-                andExpect(view().name("project/change-bank-details")).
+                andExpect(view().name("project/review-bank-details")).
                 andReturn();
 
         Map<String, Object> modelMap = result.getModelAndView().getModel();
@@ -201,7 +201,7 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
                 param("addressForm.selectedPostcode.county", "Cheshire").
                 param("addressForm.selectedPostcode.postcode", "CH64 3RU")).
                 andExpect(status().isOk()).
-                andExpect(view().name("project/change-bank-details")).
+                andExpect(view().name("project/review-bank-details")).
                 andReturn();
 
         Map<String, Object> modelMap = result.getModelAndView().getModel();
@@ -231,7 +231,7 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
                 param("addressForm.selectedPostcode.county", "Cheshire").
                 param("addressForm.selectedPostcode.postcode", "CH64 3RU")).
                 andExpect(status().isOk()).
-                andExpect(view().name("project/change-bank-details")).
+                andExpect(view().name("project/review-bank-details")).
                 andReturn();
 
         Map<String, Object> modelMap = result.getModelAndView().getModel();
