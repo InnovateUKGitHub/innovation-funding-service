@@ -17,6 +17,7 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
     private Long applicationId;
     private String competitionName;
     private boolean projectDetailsSubmitted;
+    private boolean partnerDocumentsSubmitted;
     private boolean monitoringOfficerAssigned;
     private String monitoringOfficerName;
     private BankDetailsResource bankDetails;
@@ -29,6 +30,7 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
         this.applicationId = project.getApplication();
         this.competitionName = competition.getName();
         this.projectDetailsSubmitted = project.isProjectDetailsSubmitted();
+        this.partnerDocumentsSubmitted = project.isPartnerDocumentsSubmitted();
         this.monitoringOfficerAssigned = monitoringOfficerResource.isPresent();
         this.monitoringOfficerName = monitoringOfficerResource.map(mo -> mo.getFullName()).orElse("");
         this.bankDetails = bankDetails.orElse(null);
@@ -54,6 +56,10 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
 
     public boolean isProjectDetailsSubmitted() {
         return projectDetailsSubmitted;
+    }
+
+    public boolean isPartnerDocumentsSubmitted() {
+        return partnerDocumentsSubmitted;
     }
 
     public boolean isMonitoringOfficerAssigned() {

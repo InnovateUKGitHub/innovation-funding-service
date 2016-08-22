@@ -32,6 +32,11 @@ public class ProjectResource {
         return submittedDate != null;
     }
 
+    @JsonIgnore
+    public boolean isPartnerDocumentsSubmitted(){
+        return documentsSubmittedDate != null;
+    }
+
     public Long getId() {
         return id;
     }
