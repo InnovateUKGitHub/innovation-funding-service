@@ -6,9 +6,7 @@ import static com.worth.ifs.competitiontemplate.builder.FormInputTemplateBuilder
 import static com.worth.ifs.competitiontemplate.builder.QuestionTemplateBuilder.newQuestionTemplate;
 import static com.worth.ifs.competitiontemplate.builder.SectionTemplateBuilder.newSectionTemplate;
 import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyList;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.when;
@@ -185,4 +183,27 @@ public class CompetitionSetupServiceImplTest {
     	assertEquals(parentSection, child2Section.getParentSection());
     	assertNull(child2Section.getChildSections());
     }
+
+	@Test
+	public void testMarkAsSetup() {
+		Long competitionId = 1L;
+		Competition comp = new Competition();
+		when(competitionRepository.findById(competitionId)).thenReturn(comp);
+
+		service.markAsSetup(competitionId);
+
+		assertTrue(comp.getSetupComplete());
+	}
+
+	@Test
+	public void testReturnToSetup() {
+		Long competitionId = 1L;
+		Competition comp = new Competition();
+		when(competitionRepository.findById(competitionId)).thenReturn(comp);
+
+		service.returnToSetup(competitionId);
+
+		assertFalse(comp.getSetupComplete());
+	}
+
 }

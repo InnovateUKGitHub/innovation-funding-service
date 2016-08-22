@@ -26,25 +26,26 @@ public class Competition implements ProcessActivity {
 
     public CompetitionResource.Status getCompetitionStatus() {
         LocalDateTime today = dateProvider.provideDate();
-        if(status.equals(CompetitionResource.Status.COMPETITION_SETUP)
-                || status.equals(CompetitionResource.Status.READY_TO_OPEN)){
-            return status;
-        }else if(getStartDate() == null || getStartDate().isAfter(today)){
-            return CompetitionResource.Status.NOT_STARTED;
-        }else if(getEndDate() != null && getEndDate().isAfter(today)) {
-            return CompetitionResource.Status.OPEN;
-        }else if (getEndDate() != null && getEndDate().isBefore(today)
-                && getAssessmentStartDate() != null && getAssessmentStartDate().isAfter(today)) {
-            return CompetitionResource.Status.CLOSED;
-        }else if(getAssessmentEndDate() != null && getAssessmentEndDate().isAfter(today)){
-            return CompetitionResource.Status.IN_ASSESSMENT;
-        }else if(getFundersPanelEndDate() == null || getFundersPanelEndDate().isAfter(today)) {
-            return CompetitionResource.Status.FUNDERS_PANEL;
-        }else if(getAssessorFeedbackDate() == null || getAssessorFeedbackDate().isAfter(today)) {
-            return CompetitionResource.Status.ASSESSOR_FEEDBACK;
+        if (setupComplete) {
+            if (getStartDate() == null || getStartDate().isAfter(today)) {
+                return CompetitionResource.Status.READY_TO_OPEN;
+            } else if (getEndDate() != null && getEndDate().isAfter(today)) {
+                return CompetitionResource.Status.OPEN;
+            } else if (getEndDate() != null && getEndDate().isBefore(today)
+                    && getAssessmentStartDate() != null && getAssessmentStartDate().isAfter(today)) {
+                return CompetitionResource.Status.CLOSED;
+            } else if (getAssessmentEndDate() != null && getAssessmentEndDate().isAfter(today)) {
+                return CompetitionResource.Status.IN_ASSESSMENT;
+            } else if (getFundersPanelEndDate() == null || getFundersPanelEndDate().isAfter(today)) {
+                return CompetitionResource.Status.FUNDERS_PANEL;
+            } else if (getAssessorFeedbackDate() == null || getAssessorFeedbackDate().isAfter(today)) {
+                return CompetitionResource.Status.ASSESSOR_FEEDBACK;
+            } else {
+                return CompetitionResource.Status.PROJECT_SETUP;
+            }
+        } else {
+            return CompetitionResource.Status.COMPETITION_SETUP;
         }
-
-        return CompetitionResource.Status.PROJECT_SETUP;
     }
 
     @Id
@@ -68,9 +69,6 @@ public class Competition implements ProcessActivity {
 
     @Column( length = 5000 )
     private String description;
-
-    @Enumerated(EnumType.STRING)
-    private CompetitionResource.Status status;
 
     @ManyToOne
     @JoinColumn(name="competitionTypeId", referencedColumnName="id")
@@ -120,9 +118,10 @@ public class Competition implements ProcessActivity {
     @Column(name="status")
     private Map<CompetitionSetupSection, Boolean> sectionSetupStatus = new HashMap<>();
 
+    private Boolean setupComplete;
+
     public Competition() {
-    	// no-arg constructor
-        status = CompetitionResource.Status.COMPETITION_SETUP;
+        setupComplete = false;
     }
     public Competition(Long id, List<Application> applications, List<Question> questions, List<Section> sections, String name, String description, LocalDateTime startDate, LocalDateTime endDate) {
         this.id = id;
@@ -133,7 +132,7 @@ public class Competition implements ProcessActivity {
         this.description = description;
         this.setStartDate(startDate);
         this.setEndDate(endDate);
-        status = CompetitionResource.Status.COMPETITION_SETUP_FINISHED;
+        this.setupComplete = true;
     }
     public Competition(long id, String name, String description, LocalDateTime startDate, LocalDateTime endDate) {
         this.id = id;
@@ -141,7 +140,7 @@ public class Competition implements ProcessActivity {
         this.description = description;
         this.setStartDate(startDate);
         this.setEndDate(endDate);
-        status = CompetitionResource.Status.COMPETITION_SETUP_FINISHED;
+        this.setupComplete = true;
     }
 
 
@@ -168,6 +167,14 @@ public class Competition implements ProcessActivity {
 
     public String getName() {
         return name;
+    }
+
+    public Boolean getSetupComplete() {
+        return setupComplete;
+    }
+
+    public void setSetupComplete(Boolean setupComplete) {
+        this.setupComplete = setupComplete;
     }
 
 	public void setSections(List<Section> sections) {
@@ -327,14 +334,6 @@ public class Competition implements ProcessActivity {
 	protected void setDateProvider(DateProvider dateProvider) {
 		this.dateProvider = dateProvider;
 	}
-
-    public CompetitionResource.Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(CompetitionResource.Status status) {
-        this.status = status;
-    }
 
     protected static class DateProvider {
     	public LocalDateTime provideDate() {

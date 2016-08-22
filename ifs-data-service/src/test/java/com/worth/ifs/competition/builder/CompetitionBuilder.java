@@ -32,6 +32,10 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
         return with(competition -> competition.setSections(sections));
     }
 
+    public CompetitionBuilder withSetupComplete(boolean setupComplete) {
+        return with(competition -> setField("setupComplete", setupComplete, competition));
+    }
+
     public CompetitionBuilder withStartDate(LocalDateTime startDate) {
         return with(competition -> setField("startDate", startDate, competition));
     }
@@ -77,49 +81,44 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
 
     public CompetitionBuilder withCompetitionStatus(Status status) {
         LocalDateTime now = LocalDateTime.now();
-        if(Status.NOT_STARTED.equals(status)) {
-    		return withStatus(Status.COMPETITION_SETUP_FINISHED)
+        if(Status.READY_TO_OPEN.equals(status)) {
+    		return withSetupComplete(true)
                     .withStartDate(now.plusDays(1L));
     	} else if(Status.OPEN.equals(status)) {
-    		return withStatus(Status.COMPETITION_SETUP_FINISHED)
+    		return withSetupComplete(true)
                     .withStartDate(now.minusDays(1L))
     				.withEndDate(now.plusDays(1L));
     	} else if(Status.CLOSED.equals(status)) {
-            return withStatus(Status.COMPETITION_SETUP_FINISHED)
+            return withSetupComplete(true)
                     .withStartDate(now.minusDays(2L))
                     .withEndDate(now.minusDays(1L))
     				.withAssessmentStartDate(now.plusDays(1L));
         } else if(Status.IN_ASSESSMENT.equals(status)) {
-    		return withStatus(Status.COMPETITION_SETUP_FINISHED)
+    		return withSetupComplete(true)
                     .withStartDate(now.minusDays(2L))
     				.withEndDate(now.minusDays(1L))
     				.withAssessmentEndDate(now.plusDays(1L));
     	} else if(Status.FUNDERS_PANEL.equals(status)) {
-    		return withStatus(Status.COMPETITION_SETUP_FINISHED)
+    		return withSetupComplete(true)
                     .withStartDate(now.minusDays(3L))
     				.withEndDate(now.minusDays(2L))
     				.withAssessmentEndDate(now.minusDays(1L))
     				.withFundersPanelEndDate(null);
     	} else if(Status.ASSESSOR_FEEDBACK.equals(status)) {
-            return withStatus(Status.COMPETITION_SETUP_FINISHED)
+            return withSetupComplete(true)
                     .withStartDate(now.minusDays(4L))
                     .withEndDate(now.minusDays(3L))
                     .withAssessmentEndDate(now.minusDays(2L))
                     .withFundersPanelEndDate(now.minusDays(1L));
         } else if(Status.PROJECT_SETUP.equals(status)) {
-            return withStatus(Status.COMPETITION_SETUP_FINISHED)
+            return withSetupComplete(true)
                     .withStartDate(now.minusDays(5L))
                     .withEndDate(now.minusDays(4L))
                     .withAssessmentEndDate(now.minusDays(3L))
                     .withFundersPanelEndDate(now.minusDays(2L))
                     .withAssessorFeedbackDate(now.minusDays(1L));
         } else if(Status.COMPETITION_SETUP.equals(status)) {
-            return withStatus(Status.COMPETITION_SETUP);
-        } else if(Status.COMPETITION_SETUP_FINISHED.equals(status)) {
-            return withStatus(Status.COMPETITION_SETUP_FINISHED)
-                    .withStartDate(now.plusDays(1L));
-        } else if(Status.READY_TO_OPEN.equals(status)) {
-            return withStatus(Status.READY_TO_OPEN);
+            return withSetupComplete(false);
         } else {
                 throw new RuntimeException("status " + status + " not yet supported by CompetitionBuilder.withCompetitionStatus method");
             }
