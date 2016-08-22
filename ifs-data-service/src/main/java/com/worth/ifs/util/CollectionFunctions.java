@@ -258,6 +258,17 @@ public final class CollectionFunctions {
     }
 
     /**
+     * A simple wrapper, producing a Linked Hash Map, around a 1-stage mapping function, to remove boilerplate from production code
+     */
+    public static <S, T, R, U> Map<R, U> simpleLinkedMapKeyAndValue(Map<S, T> map, Function<S, R> keyMappingFn, Function<T, U> valueMappingFn) {
+
+        List<Pair<R, U>> list = simpleMap(map.entrySet(), entry ->
+                Pair.of(keyMappingFn.apply(entry.getKey()), valueMappingFn.apply(entry.getValue())));
+
+        return simpleToLinkedMap(list, Pair::getKey, Pair::getValue);
+    }
+
+    /**
      * A simple wrapper around a 1-stage mapping function, to remove boilerplate from production code
      */
     public static <S, T, R> Map<R, T> simpleMapKey(Map<S, T> map, Function<S, R> mappingFn) {
@@ -265,10 +276,24 @@ public final class CollectionFunctions {
     }
 
     /**
+     * A simple wrapper, producing a Linked Hash Map, around a 1-stage mapping function, to remove boilerplate from production code
+     */
+    public static <S, T, R> Map<R, T> simpleLinkedMapKey(Map<S, T> map, Function<S, R> mappingFn) {
+        return simpleLinkedMapKeyAndValue(map, mappingFn, value -> value);
+    }
+
+    /**
      * A simple wrapper around a 1-stage mapping function, to remove boilerplate from production code
      */
     public static <S, T, R> Map<S, R> simpleMapValue(Map<S, T> map, Function<T, R> mappingFn) {
         return simpleMapKeyAndValue(map, key -> key, mappingFn);
+    }
+
+    /**
+     * A simple wrapper, producing a Linked Hash Map, around a 1-stage mapping function, to remove boilerplate from production code
+     */
+    public static <S, T, R> Map<S, R> simpleLinkedMapValue(Map<S, T> map, Function<T, R> mappingFn) {
+        return simpleLinkedMapKeyAndValue(map, key -> key, mappingFn);
     }
 
     /**
@@ -369,6 +394,32 @@ public final class CollectionFunctions {
         }
 
         return list.stream().collect(toMap(keyMapper, valueMapper));
+    }
+
+    /**
+     * A simple function to convert a list of items to a Linked Hash Map given a key generating function and a value generating function
+     *
+     * @param keyMapper
+     * @param valueMapper
+     * @param <T>
+     * @param <K>
+     * @param <U>
+     * @return
+     */
+    public static <T, K, U> Map<K, U> simpleToLinkedMap(
+            List<T> list,
+            Function<? super T, ? extends K> keyMapper,
+            Function<? super T, ? extends U> valueMapper) {
+
+        if (list == null || list.isEmpty()) {
+            return Collections.emptyMap();
+        }
+
+        return list.stream().collect(toMap(keyMapper, valueMapper, throwingMerger(), LinkedHashMap::new));
+    }
+
+    private static <T> BinaryOperator<T> throwingMerger() {
+        return (u,v) -> { throw new IllegalStateException(String.format("Duplicate key %s", u)); };
     }
 
     /**
