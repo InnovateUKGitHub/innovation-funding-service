@@ -44,7 +44,7 @@ public class InitialDetailsSectionSaverTest {
         competitionSetupForm.setExecutiveUserId(1L);
         competitionSetupForm.setOpeningDateDay(1);
         competitionSetupForm.setOpeningDateMonth(12);
-        competitionSetupForm.setOpeningDateYear(2000);
+        competitionSetupForm.setOpeningDateYear(2020);
         competitionSetupForm.setCompetitionTypeId(2L);
         competitionSetupForm.setLeadTechnologistUserId(3L);
         competitionSetupForm.setInnovationAreaCategoryId(4L);
@@ -69,7 +69,7 @@ public class InitialDetailsSectionSaverTest {
         assertEquals(Long.valueOf(3L), competition.getLeadTechnologist());
         assertEquals(Long.valueOf(4L), competition.getInnovationArea());
         assertEquals(Long.valueOf(5L), competition.getInnovationSector());
-        assertEquals(LocalDateTime.of(2000, 12, 1, 0, 0), competition.getStartDate());
+        assertEquals(LocalDateTime.of(2020, 12, 1, 0, 0), competition.getStartDate());
 
         verify(competitionService).update(competition);
     }
@@ -78,7 +78,7 @@ public class InitialDetailsSectionSaverTest {
         MilestoneResource milestone = new MilestoneResource();
         milestone.setId(10L);
         milestone.setType(MilestoneType.OPEN_DATE);
-        milestone.setDate(LocalDateTime.of(2000, 12, 1, 0, 0));
+        milestone.setDate(LocalDateTime.of(2020, 12, 1, 0, 0));
         milestone.setCompetition(1L);
         return milestone;
     }
