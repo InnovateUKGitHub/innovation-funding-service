@@ -99,8 +99,6 @@ public class AssessorFormInputResponseControllerTest extends BaseControllerMockM
                 .withValue(value)
                 .build();
 
-        when(assessorFormInputResponseServiceMock.updateFormInputResponse(response)).thenReturn(serviceSuccess());
-
         Error sizeError = fieldError("value", value, "Size");
 
         mockMvc.perform(put("/assessorFormInputResponse")
