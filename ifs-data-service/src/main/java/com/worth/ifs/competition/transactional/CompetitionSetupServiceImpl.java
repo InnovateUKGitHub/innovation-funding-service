@@ -165,6 +165,20 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
         return serviceSuccess();
     }
 
+    @Override
+    public ServiceResult<Void> returnToSetup(Long competitionId) {
+        Competition competition = competitionRepository.findById(competitionId);
+        competition.setSetupComplete(false);
+        return serviceSuccess();
+    }
+
+    @Override
+    public ServiceResult<Void> markAsSetup(Long competitionId) {
+        Competition competition = competitionRepository.findById(competitionId);
+        competition.setSetupComplete(true);
+        return serviceSuccess();
+    }
+
 
     @Override
     public ServiceResult<List<CompetitionTypeResource>> findAllTypes() {

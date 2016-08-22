@@ -28,6 +28,12 @@ public interface CompetitionSetupService {
     ServiceResult<Void> markSectionInComplete(Long competitionId, CompetitionSetupSection section);
 
     @PreAuthorize("hasAuthority('comp_admin')")
+    ServiceResult<Void> returnToSetup(Long competitionId);
+
+    @PreAuthorize("hasAuthority('comp_admin')")
+    ServiceResult<Void> markAsSetup(Long competitionId);
+
+    @PreAuthorize("hasAuthority('comp_admin')")
     ServiceResult<List<CompetitionTypeResource>> findAllTypes();
     
     @PreAuthorize("hasAuthority('comp_admin')")

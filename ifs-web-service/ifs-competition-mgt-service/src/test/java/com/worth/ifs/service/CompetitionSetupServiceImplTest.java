@@ -191,6 +191,7 @@ public class CompetitionSetupServiceImplTest {
 
 	@Test
 	public void testSetCompetitionAsReadyToOpenSuccess() {
+		long id = 2L;
 		Map<CompetitionSetupSection, Boolean> testSectionStatus = new HashMap<>();
 		testSectionStatus.put(CompetitionSetupSection.INITIAL_DETAILS, Boolean.TRUE);
 		testSectionStatus.put(CompetitionSetupSection.ADDITIONAL_INFO, Boolean.TRUE);
@@ -203,8 +204,8 @@ public class CompetitionSetupServiceImplTest {
 		competitionResource.setSectionSetupStatus(testSectionStatus);
 
 		when(competitionService.getById(any(Long.class))).thenReturn(competitionResource);
-		service.setCompetitionAsReadyToOpen(2L);
-		assertEquals(competitionResource.getSetupComplete(), true);
+		service.setCompetitionAsReadyToOpen(id);
+		verify(competitionService).markAsSetup(id);
 
 	}
 
@@ -224,5 +225,7 @@ public class CompetitionSetupServiceImplTest {
 
 		when(competitionService.getById(any(Long.class))).thenReturn(competitionResource);
 		service.setCompetitionAsReadyToOpen(2L);
+		verify(competitionService.getById(any(Long.class)));
+		verifyNoMoreInteractions(competitionResource);
 	}
 }

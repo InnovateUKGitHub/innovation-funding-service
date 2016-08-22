@@ -116,8 +116,7 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 		}
 
 		if (isCompetitionReadyToOpen(competitionResource)) {
-			competitionResource.setSetupComplete(true);
-			competitionService.update(competitionResource);
+			competitionService.markAsSetup(competitionId);
 		} else {
 			LOG.error("Requesting to set a competition (id:" + competitionId + ") as Read to Open, But the competition is not ready to open yet. " +
 					"Please check all the madatory sections are done");
@@ -127,9 +126,7 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 
 	@Override
 	public void setCompetitionAsCompetitionSetup(Long competitionId) {
-		CompetitionResource competitionResource = competitionService.getById(competitionId);
-		competitionResource.setSetupComplete(false);
-		competitionService.update(competitionResource);
+		competitionService.returnToSetup(competitionId);
 	}
 
 

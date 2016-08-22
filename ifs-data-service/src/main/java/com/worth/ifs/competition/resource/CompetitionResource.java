@@ -68,9 +68,6 @@ public class CompetitionResource {
     private BigDecimal funderBudget;
 
 
-    private boolean setupComplete;
-
-
     public CompetitionResource() {
         // no-arg constructor
     }
@@ -92,15 +89,6 @@ public class CompetitionResource {
         this.description = description;
         this.startDate = startDate;
         this.endDate = endDate;
-    }
-
-
-    public boolean getSetupComplete() {
-        return setupComplete;
-    }
-
-    public void setSetupComplete(boolean setupComplete) {
-        this.setupComplete = setupComplete;
     }
 
     @JsonIgnore

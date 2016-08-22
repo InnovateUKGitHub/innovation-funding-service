@@ -307,7 +307,38 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         assertEquals(Boolean.FALSE, competitionsResult.getSuccessObject().getSectionSetupStatus().get(CompetitionSetupSection.INITIAL_DETAILS));
     }
 
+    @Rollback
+    @Test
+    public void testMarkAsSetup() throws Exception {
+        getAllCompetitions(2);
 
+        // Create new competition
+        CompetitionResource competition = createNewCompetition();
+
+        getAllCompetitions(3);
+
+        controller.markAsSetup(competition.getId()).getSuccessObject();
+
+        RestResult<CompetitionResource> competitionsResult = controller.getCompetitionById(competition.getId());
+        competitionsResult.getSuccessObject().getCompetitionStatus().equals(CompetitionResource.Status.READY_TO_OPEN);
+    }
+
+    @Rollback
+    @Test
+    public void testReturnToSetup() throws Exception {
+        getAllCompetitions(2);
+
+        // Create new competition
+        CompetitionResource competition = createNewCompetition();
+
+        getAllCompetitions(3);
+
+        controller.markAsSetup(competition.getId()).getSuccessObject();
+        controller.returnToSetup(competition.getId()).getSuccessObject();
+
+        RestResult<CompetitionResource> competitionsResult = controller.getCompetitionById(competition.getId());
+        competitionsResult.getSuccessObject().getCompetitionStatus().equals(CompetitionResource.Status.COMPETITION_SETUP);
+    }
     @Rollback
     @Test
     public void testCompetitionSearch() throws Exception {

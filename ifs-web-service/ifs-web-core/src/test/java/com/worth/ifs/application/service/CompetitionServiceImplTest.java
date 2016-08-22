@@ -205,4 +205,20 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
         service.initApplicationFormByCompetitionType(competitionId, competitionTypeId);
     }
+
+    @Test
+    public void test_markAsSetup() throws Exception {
+        Long competitionId = Long.MAX_VALUE;
+        when(competitionsRestService.markAsSetup(competitionId)).thenReturn(restSuccess());
+
+        service.markAsSetup(competitionId);
+    }
+
+    @Test
+    public void test_returnToSetup() throws Exception {
+        Long competitionId = Long.MAX_VALUE;
+        when(competitionsRestService.returnToSetup(competitionId)).thenReturn(restSuccess());
+
+        service.returnToSetup(competitionId);
+    }
 }

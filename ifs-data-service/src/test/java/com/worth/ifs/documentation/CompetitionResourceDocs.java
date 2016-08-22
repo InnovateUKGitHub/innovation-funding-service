@@ -47,8 +47,7 @@ public class CompetitionResourceDocs {
             fieldWithPath("innovateBudget").description("the innovate budget entered during competition setup"),
             fieldWithPath("funder").description("the funder entered during competition setup"),
             fieldWithPath("funderBudget").description("the funder budget entered during competition setup"),
-            fieldWithPath("coFunders").description("the Co-Funders for this competition"),
-            fieldWithPath("setupComplete").description("Has the competition been marked as ready to open")
+            fieldWithPath("coFunders").description("the Co-Funders for this competition")
     };
 
     public static final CompetitionResourceBuilder competitionResourceBuilder = newCompetitionResource()
