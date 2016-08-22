@@ -23,6 +23,7 @@ Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
 Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
+# TODO Known bug INFUND-4681, enforces the Competition Type (in Initial Details) to be Programme else Application Questions lead to 404, please do not change the value!
 
 *** Test Cases ***
 User can navigate to the competition setup form
@@ -39,6 +40,9 @@ User can navigate to the competition setup form
     ...
     ...
     ...    IFUND-3888
+    ...
+    ...
+    ...    INFUND-3002  As a Competition Executive and I have added all information in all obligatory fields I want to mark the competition ready for open.
     [Tags]    HappyPath
     Given the user clicks the button/link    id=section-3
     When the user clicks the button/link    jQuery=.button:contains("Create competition")
@@ -75,31 +79,6 @@ Initial details server-side validations
     And the user should see an error    Please select a lead technologist
     And the user should see an error    Please select a competition executive
 
-Initial details client-side validations
-    [Documentation]    INFUND-2982
-    ...
-    ...    INFUND-3888
-    [Tags]    HappyPath
-    When the user enters text to a text field    id=title    Competition title
-    When the user selects the option from the drop-down menu    Additive Manufacturing    id=competitionTypeId
-    When the user selects the option from the drop-down menu    Health and life sciences    id=innovationSectorCategoryId
-    When the user selects the option from the drop-down menu    Advanced Therapies    id=innovationAreaCategoryId
-    When the user enters text to a text field    id=openingDateDay    01
-    When the user enters text to a text field    Id=openingDateMonth    12
-    When the user enters text to a text field    id=openingDateYear    2017
-    When the user selects the option from the drop-down menu    Competition Technologist One    id=leadTechnologistUserId
-    When the user selects the option from the drop-down menu    Competition Executive Two    id=executiveUserId
-    Then the user should not see the text in the page    Please select a competition executive    #using this keyword because there is no error element in the page
-    Then the user should not see the error any more    Please enter a title
-    Then the user should not see the error any more    Please select a competition type
-    Then the user should not see the error any more    Please select an innovation sector
-    Then the user should not see the error any more    Please select an innovation area
-    #Then the user should not see the error any more    Please enter an opening day
-    #Then the user should not see the error any more    Please enter an opening month
-    #Then the user should not see the error any more    Please enter an opening year
-    Then the user should not see the error any more    Please select a lead technologist
-    ##    State aid value is tested in 'Initial details correct state aid status'
-
 Initial details correct state aid status
     [Documentation]    INFUND-2982
     ...
@@ -115,6 +94,32 @@ Initial details correct state aid status
     Then the user should see the element    css=.yes
     When the user selects the option from the drop-down menu    Programme    id=competitionTypeId
     Then the user should see the element    css=.yes
+
+Initial details client-side validations
+    [Documentation]    INFUND-2982
+    ...
+    ...    INFUND-3888
+    [Tags]    HappyPath
+    # TODO Update Date validation messages after INFUND-4676 is done.
+    When the user enters text to a text field    id=title    Competition title
+    Then the user should not see the error any more    Please enter a title
+    When the user selects the option from the drop-down menu    Programme    id=competitionTypeId
+    Then the user should not see the error any more    Please select a competition type
+    When the user selects the option from the drop-down menu    Health and life sciences    id=innovationSectorCategoryId
+    Then the user should not see the error any more    Please select an innovation sector
+    When the user selects the option from the drop-down menu    Advanced Therapies    id=innovationAreaCategoryId
+    Then the user should not see the error any more    Please select an innovation area
+    When the user enters text to a text field    id=openingDateDay    01
+#    Then the user should not see the error any more    Please enter an opening day
+    When the user enters text to a text field    Id=openingDateMonth    12
+#    Then the user should not see the error any more    Please enter an opening month
+    When the user enters text to a text field    id=openingDateYear    2017
+#    Then the user should not see the error any more    Please enter an opening year
+    When the user selects the option from the drop-down menu    Competition Technologist One    id=leadTechnologistUserId
+    Then the user should not see the error any more    Please select a lead technologist
+    When the user selects the option from the drop-down menu    Competition Executive Two    id=executiveUserId
+    Then the user should not see the error any more    Please select a competition executive
+    ##    State aid value is tested in 'Initial details correct state aid status'
 
 Initial details mark as done
     [Documentation]    INFUND-2982
@@ -138,7 +143,8 @@ Initial details can be edited again
     [Documentation]    INFUND-2985
     ...
     ...    INFUND-3182
-    [Tags]    Pending
+    ...    INFUND-3876
+    [Tags]    HappyPath
     When the user clicks the button/link    jQuery=.button:contains("Edit")
     And the user enters text to a text field    id=title    Test competition
     And the user clicks the button/link    jQuery=.button:contains("Done")
@@ -149,42 +155,39 @@ Initial details can be edited again
     And the user should see the text in the page    Advanced Therapies
     And the user should see the text in the page    Programme
     And the user should see the text in the page    NO
-    [Teardown]    The user clicks the button/link    link=Competition set up
+    When The user clicks the button/link    link=Competition set up
+    Then the user should not see the element    jQuery=.button:contains("Save as Ready To Open")
 
 Funding information server-side validations
     [Documentation]    INFUND-2985
-    [Tags]    Pending
-    # TODO update when story INFUND-3002 is completed
     Given the user clicks the button/link    link=Funding Information
-    Given the user redirects to the page    Funding information    Reporting fields
+    And the user redirects to the page    Funding information    Reporting fields
     When the user clicks the button/link    jQuery=.button:contains("Done")
-    ## Fill in for Funder, Budget
-    Then the user should see an error    Please enter a PAF number
+    Then the user should see an error    Please enter a funder name
+    And the user should see an error    Please enter a budget
+    And the user should see an error    Please enter a PAF number
     And the user should see an error    Please enter a budget code
-    ## Fill in for Activity code
+    And the user should see an error    Please enter an activity code
     And the user should see an error    Please generate a competition code
 
 Funding information client-side validations
     [Documentation]    INFUND-2985
-    [Tags]    Pending
-    #To do: add the validation errors
-    When the user enters text to a text field    id=funder    Test
-    #pending the error
+    # TODO Update validation messages after INFUND-4676 is done.
+    When the user enters text to a text field    id=funder    FunderName
+    Then the user should not see the error any more    Please enter a funder name
     And the user enters text to a text field    id=funderBudget    20000
-    #pending the error
+    Then the user should not see the error any more    Please enter a budget
     When the user enters text to a text field    id=pafNumber    2016
     Then the user should not see the error any more    Please enter a PAF number
     And the user enters text to a text field    id=budgetCode    2004
     Then the user should not see the error any more    Please enter a budget code
     And the user enters text to a text field    id=activityCode    4242
-    #pending the error
-    # pending/INFUND-4254
+#    Then the user should not see the error any more    Please enter an activity code
     When the user clicks the button/link    jQuery=.button:contains("Generate code")
-    Then The user should not see the text in the page    Please generate a competition code
+#    Then The user should not see the text in the page    Please generate a competition code
 
 Funding informations calculations
     [Documentation]    INFUND-2985
-    [Tags]    Pending
     When the user clicks the button/link    jQuery=Button:contains("+Add co-funder")
     and the user should see the element    jQuery=Button:contains("+Add co-funder")
     Then the user should see the element    css=#co-funder-row-0
@@ -194,16 +197,24 @@ Funding informations calculations
 
 Funding Information can be saved
     [Documentation]    INFUND-3182
-    [Tags]    Pending
-    And the user clicks the button/link    jQuery=.button:contains("Done")
-    And the user should see the text in the page    FunderName
+    When the user clicks the button/link    jQuery=.button:contains("Done")
+    Then the user should see the text in the page    FunderName
     And the user should see the text in the page    FunderName2
-    And the user should see the text in the page    £21,000.00
+    And the user should see the text in the page    £21,000
     And the user should see the text in the page    2016
     And the user should see the text in the page    2004
     And the user should see the text in the page    4242
     And the user should see the text in the page    1712-1
     And the user should see the element    jQuery=.button:contains("Edit")
+
+Funding Information can be edited
+    [Documentation]    INFUND-3876
+    When the user clicks the button/link        jQuery=.button:contains("Edit")
+    And the user enters text to a text field    id=funder    testFunder
+    When the user clicks the button/link    jQuery=.button:contains("Done")
+    Then the user should see the text in the page   testFunder
+    When the user clicks the button/link    link=Competition set up
+    Then the user should not see the element    jQuery=.button:contains("Save as Ready To Open")
 
 Eligibility page should contain the correct options
     [Documentation]    INFUND-2989
@@ -261,6 +272,7 @@ Eligibility can be marked as done then edit again
     [Documentation]    INFUND-3051
     ...
     ...    INFUND-3872
+    ...    INFUND-3876
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Done")
     Then the user should see the text in the page    Yes
@@ -270,9 +282,29 @@ Eligibility can be marked as done then edit again
     And the user should see the text in the page    Test stream name
     And the user should see the text in the page    Technical feasibility, Industrial research, Experimental development
     And The user should not see the element    id=streamName
-    When the user clicks the button/link    jQuery=.button:contains("Edit")
+    When the user clicks the button/link    link=Competition set up
+    Then the user should see the element    jQuery=.button:contains("Save as Ready To Open")
+    When the user clicks the button/link    link=Eligibility
+    And the user clicks the button/link    jQuery=.button:contains("Edit")
+    When the user clicks the button/link    link=Competition set up
+    Then the user should not see the element    jQuery=.button:contains("Save as Ready To Open")
+    When the user clicks the button/link    link=Eligibility
     And the user clicks the button/link    jQuery=.button:contains("Done")
-    [Teardown]    The user clicks the button/link    jQuery=.button:contains("Edit")
+    [Teardown]    The user clicks the button/link    link=Competition set up
+
+Save as Ready To Open button
+    [Documentation]    INFUND-3876
+    [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
+    Given the user should see the element        jQuery=.button:contains("Save as Ready To Open")
+    When the user clicks the button/link         jQuery=.button:contains("Save as Ready To Open")
+    Then the user should see the element         jQuery=img.section-status:eq(0)
+    And the user should see the element          jQuery=img.section-status:eq(1)
+    And the user should see the element          jQuery=img.section-status:eq(2)
+    When the user clicks the button/link         link=All competitions
+    And the user clicks the button/link          id=section-3
+    Then element text should be                  //*[@id="content"]/section[2]/div/div/ul/li[1]/div[1]/h3/a    Test competition
+    # The above line checks that the first competition in the section 'Ready to Open' is named Test competition
+    [Teardown]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
 
 Application questions: All the sections should be visible
     [Documentation]    INFUND-3000
@@ -299,7 +331,7 @@ Application questions: server side validations
     And The user clicks the button/link    jQuery=.button[value="Save and close"]
     Then the validation error above the question should be visible    jQuery=label:contains(Question title)    This field cannot be left blank
     And the validation error above the question should be visible    jQuery=label:contains(Question guidance title)    This field cannot be left blank
-    #To do: investigate why this step fails with chrome driver    INFUND-4514
+    #Todo: investigate why this step fails with chrome driver    INFUND-4514
     And the validation error above the question should be visible    jQuery=div:nth-child(4) div:nth-child(4) label:contains(Question guidance)    This field cannot be left blank
 
 Application questions: Client side validations
@@ -345,7 +377,7 @@ the user leaves all the question field empty
     Clear Element Text    css=.editor
     Press Key    css=.editor    \\8
     focus    jQuery=.button[value="Save and close"]
-    sleep    5000
+    sleep    200ms
     The user enters text to a text field    id=question.title    ${EMPTY}
     The user enters text to a text field    id=question.guidanceTitle    ${EMPTY}
     The user enters text to a text field    jQuery=[id="question.maxWords"]    ${EMPTY}

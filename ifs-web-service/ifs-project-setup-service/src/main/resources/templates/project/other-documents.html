@@ -1,153 +1,191 @@
-
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Other documents'" th:remove="tag" />
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Other documents'" th:remove="tag"/>
 </head>
 <body th:with="context='project'" class="project-other-documents">
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag"/>
+<div th:include="fragments/layout :: global-header" th:remove="tag"/>
+<div th:include="fragments/modals :: modal-partner-documents" th:remove="tag"/>
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{projectId}(projectId=${model.projectId})}"  th:remove="tag" />
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag"/>
+    <div th:include="fragments/layout :: header-sub"
+         th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{projectId}(projectId=${model.projectId})}"
+         th:remove="tag"/>
 
     <div class="page-title">
-        <div th:include="fragments/elements :: project-title (projectId=${model.projectId}, projectName=${model.projectName})" th:remove="tag" />
+        <div th:include="fragments/elements :: project-title (projectId=${model.projectId}, projectName=${model.projectName})"
+             th:remove="tag"/>
         <h1 class="heading-xlarge">Other documents</h1>
     </div>
 
-    <div th:if="${model.isShowApprovedMessage()}" class="success-alert" >
+    <div th:if="${model.isShowApprovedMessage()}" class="success-alert">
         <h2 class="heading-small no-margin">These documents have been approved by Innovate UK.</h2>
     </div>
 
     <div th:if="${model.isShowRejectionMessages()}" class="warning-alert">
-      <h2 class="heading-small">These documents have been returned to the project team, the following reason was given;</h2>
-      <ul class="list-bullet">
-        <li th:each="reason : ${model.rejectionReasons}" th:text="${reason}" />
-      </ul>
+        <h2 class="heading-small">These documents have been returned to the project team, the following reason was
+            given;</h2>
+        <ul class="list-bullet">
+            <li th:each="reason : ${model.rejectionReasons}" th:text="${reason}"/>
+        </ul>
     </div>
 
     <th:block th:if="${model.leadPartner}">
-			<p>As the lead partner in this project you must supply additional documents to support your grant application.</p>
-			<p>These documents are:</p>
-			<ul class="list-bullet">
-				<li>the collaboration agreement</li>
-				<li>the exploitation plan</li>
-			</ul>
-			<p>You should review these documents with the other partners in the project.</p>
-			<p>Further details on what is required from these documents is available below.</p>
+        <p>As the lead partner in this project you must supply additional documents to support your grant
+            application.</p>
+        <p>These documents are:</p>
+        <ul class="list-bullet">
+            <li>the collaboration agreement</li>
+            <li>the exploitation plan</li>
+        </ul>
+        <p>You should review these documents with the other partners in the project.</p>
+        <p>Further details on what is required from these documents is available below.</p>
     </th:block>
 
-        <div class="upload-section">
-            <h2 class="heading-medium no-margin">Collaboration agreement</h2>
-            <p class="form-hint">The collaboration agreement covers how the consortium will work together on the project. It must be signed by all partners.</p>
-            <details>
-                <summary><span class="summary">What should I include in the collaboration agreement?</span></summary>
-                <div class="panel-indent">
-                  <p>This is an agreement between project partners and will cover how the project will operate. It will also include details of how you will exploit the results of the project. Please allow enough time to complete this process before your project start date.</p>
-      						<p>The following partners need to sign this collaboration agreement:</p>
+    <div class="upload-section">
+        <h2 class="heading-medium no-margin">Collaboration agreement</h2>
+        <p class="form-hint">The collaboration agreement covers how the consortium will work together on the project. It
+            must be signed by all partners.</p>
+        <details>
+            <summary><span class="summary">What should I include in the collaboration agreement?</span></summary>
+            <div class="panel-indent">
+                <p>This is an agreement between project partners and will cover how the project will operate. It will
+                    also include details of how you will exploit the results of the project. Please allow enough time to
+                    complete this process before your project start date.</p>
+                <p>The following partners need to sign this collaboration agreement:</p>
 
-      						<ul class="list-bullet" th:unless="${#lists.isEmpty(model.partnerOrganisationNames)}">
-      							<li th:each="partner : ${model.partnerOrganisationNames}" th:text="${partner}" />
-      						</ul>
-      						<p>An example of a collaboration agreement can be found on the <a href="http://www.ipo.gov.uk/lambert">Lambert Agreement website</a>.</p>
-      						<p>The uploaded collaboration agreement must:</p>
-      						<ul class="list-bullet">
-      							<li>be in a Portable Document Format (.pdf)</li>
-      							<li>be legible at 100% magnification</li>
-      							<li>be less than 1mb in file size</li>
-      						</ul>
-                </div>
-              </details>
+                <ul class="list-bullet" th:unless="${#lists.isEmpty(model.partnerOrganisationNames)}">
+                    <li th:each="partner : ${model.partnerOrganisationNames}" th:text="${partner}"/>
+                </ul>
+                <p>An example of a collaboration agreement can be found on the <a href="http://www.ipo.gov.uk/lambert">Lambert
+                    Agreement website</a>.</p>
+                <p>The uploaded collaboration agreement must:</p>
+                <ul class="list-bullet">
+                    <li>be in a Portable Document Format (.pdf)</li>
+                    <li>be legible at 100% magnification</li>
+                    <li>be less than 1mb in file size</li>
+                </ul>
+            </div>
+        </details>
 
-              <!--/* allowed to edit */-->
-              <form th:action="@{/project/{id}/partner/documents(id=${model.projectId})}" th:if="${model.isEditable()}" th:object="${form}" method="post" enctype="multipart/form-data">
+        <!--/* allowed to edit */-->
+        <form th:action="@{/project/{id}/partner/documents(id=${model.projectId})}" th:if="${model.isEditable()}"
+              th:object="${form}" method="post" enctype="multipart/form-data">
 
-                <!-- /* file is not uploaded */-->
-                <div th:classappend="${#fields.hasErrors('collaborationAgreement') ? 'error' : ''}"  th:unless="${model.collaborationAgreementFileDetails}">
-                  <th:block th:if="${#fields.hasErrors('collaborationAgreement')}">
-                      <span class="error-message" th:each="err : ${#fields.errors('collaborationAgreement')}" th:text="${err}" />
-                  </th:block>
-                  <input th:field="*{collaborationAgreement}" type="file" id="collaborationAgreement" class="inputfile" />
-                  <label for="collaborationAgreement" class="button-secondary extra-margin">+ Upload</label>
-                  <button name="uploadCollaborationAgreementClicked" class="button-secondary" type="submit" data-for-file-upload="collaborationAgreement">Save</button>
-                </div>
+            <!-- /* file is not uploaded */-->
+            <div th:classappend="${#fields.hasErrors('collaborationAgreement') ? 'error' : ''}"
+                 th:unless="${model.collaborationAgreementFileDetails}">
+                <th:block th:if="${#fields.hasErrors('collaborationAgreement')}">
+                    <span class="error-message" th:each="err : ${#fields.errors('collaborationAgreement')}"
+                          th:text="${err}"/>
+                </th:block>
+                <input th:field="*{collaborationAgreement}" type="file" id="collaborationAgreement" class="inputfile"/>
+                <label for="collaborationAgreement" class="button-secondary extra-margin">+ Upload</label>
+                <button name="uploadCollaborationAgreementClicked" class="button-secondary" type="submit"
+                        data-for-file-upload="collaborationAgreement">Save
+                </button>
+            </div>
 
-                <!--/* file is uploaded */-->
-                <th:block th:if="${model.collaborationAgreementFileDetails}">
-                  <a th:href="@{/project/{id}/partner/documents/collaboration-agreement(id=${model.projectId})}" class="uploaded-file" th:text="${model.collaborationAgreementFileDetails.filename}">The-uploaded-file-example.pdf</a>
-                  <button name="removeCollaborationAgreementClicked" class="button-secondary no-margin-right" type="submit">Remove</button>
+            <!--/* file is uploaded */-->
+            <th:block th:if="${model.collaborationAgreementFileDetails}">
+                <a th:href="@{/project/{id}/partner/documents/collaboration-agreement(id=${model.projectId})}"
+                   class="uploaded-file" th:text="${model.collaborationAgreementFileDetails.filename}">The-uploaded-file-example.pdf</a>
+                <button name="removeCollaborationAgreementClicked" class="button-secondary no-margin-right"
+                        type="submit">Remove
+                </button>
+            </th:block>
+
+        </form>
+        <!--/* not allowed to edit */-->
+        <th:block th:unless="${model.isEditable()}">
+            <a th:if="${model.collaborationAgreementFileDetails}"
+               th:href="@{/project/{id}/partner/documents/collaboration-agreement(id=${model.projectId})}"
+               class="uploaded-file" th:text="${model.collaborationAgreementFileDetails.filename}">The-uploaded-file-example.pdf</a>
+            <p th:unless="${model.collaborationAgreementFileDetails}" class="uploaded-file">Awaiting upload by lead
+                partner</p>
+        </th:block>
+    </div>
+
+    <div class="upload-section">
+        <h2 class="heading-medium no-margin">Exploitation plan</h2>
+        <p class="form-hint">The plan aims to confirm the benefits realisation that the project hopes to achieve. You
+            should describe the partner activities that will exploit the results of the project.</p>
+        <details>
+            <summary><span class="summary">What should I include in the exploitation plan?</span></summary>
+            <div class="panel-indent">
+                <p>This plan will evolve and change during the lifetime of the project. Its aim is to confirm the
+                    business case for the project. It should also describe partner activities that will exploit the
+                    results of the project so that:</p>
+                <ul class="list-bullet">
+                    <li>changes in the commercial environment can be monitored and accounted for</li>
+                    <li>adequate resources are committed to exploitation</li>
+                    <li>exploitation can be monitored by the stakeholders</li>
+                </ul>
+
+                <p>A framework of the exploitation plan is available for <a href="#">download</a></p>
+                <p>The uploaded exploitation plan must:</p>
+                <ul class="list-bullet">
+                    <li>be in a Portable Document Format (.pdf)</li>
+                    <li>be legible at 100% magnification</li>
+                    <li>be less than 1mb in file size</li>
+                </ul>
+            </div>
+        </details>
+
+        <!--/* allowed to edit */-->
+        <form th:action="@{/project/{id}/partner/documents(id=${model.projectId})}" th:if="${model.isEditable()}"
+              th:object="${form}" method="post" enctype="multipart/form-data">
+            <!--/* file is not uploaded */-->
+            <div th:classappend="${#fields.hasErrors('exploitationPlan') ? 'error' : ''}"
+                 th:unless="${model.exploitationPlanFileDetails}">
+                <th:block th:if="${#fields.hasErrors('exploitationPlan')}">
+                    <span class="error-message" th:each="err : ${#fields.errors('exploitationPlan')}" th:text="${err}"/>
                 </th:block>
 
-              </form>
-              <!--/* not allowed to edit */-->
-              <th:block th:unless="${model.isEditable()}">
-                <a th:if="${model.collaborationAgreementFileDetails}" th:href="@{/project/{id}/partner/documents/collaboration-agreement(id=${model.projectId})}" class="uploaded-file" th:text="${model.collaborationAgreementFileDetails.filename}">The-uploaded-file-example.pdf</a>
-                <p th:unless="${model.collaborationAgreementFileDetails}" class="uploaded-file">Awaiting upload by lead partner</p>
-              </th:block>
-        </div>
+                <input th:errorclass="field-error" th:field="*{exploitationPlan}" type="file" id="exploitationPlan"
+                       class="inputfile"/>
+                <label for="exploitationPlan" class="button-secondary extra-margin">+ Upload</label>
+                <button name="uploadExploitationPlanClicked" class="button-secondary" type="submit"
+                        data-for-file-upload="exploitationPlan">Save
+                </button>
+            </div>
 
-          <div class="upload-section">
-              <h2 class="heading-medium no-margin">Exploitation plan</h2>
-              <p class="form-hint">The plan aims to confirm the benefits realisation that the project hopes to achieve. You should describe the partner activities that will exploit the results of the project.</p>
-              <details>
-                  <summary><span class="summary">What should I include in the exploitation plan?</span></summary>
-                  <div class="panel-indent">
-                    <p>This plan will evolve and change during the lifetime of the project. Its aim is to confirm the business case for the project. It should also describe partner activities that will exploit the results of the project so that:</p>
-        						<ul class="list-bullet">
-        							<li>changes in the commercial environment can be monitored and accounted for</li>
-        							<li>adequate resources are committed to exploitation</li>
-        							<li>exploitation can be monitored by the stakeholders</li>
-        						</ul>
+            <!--/* file is uploaded */-->
+            <th:block th:if="${model.exploitationPlanFileDetails}">
+                <a th:href="@{/project/{id}/partner/documents/exploitation-plan(id=${model.projectId})}"
+                   class="uploaded-file" th:text="${model.exploitationPlanFileDetails.filename}">The-uploaded-file-example.pdf</a>
+                <button name="removeExploitationPlanClicked" class="button-secondary no-margin-right" type="submit">
+                    Remove
+                </button>
+            </th:block>
+        </form>
+        <!--/* not allowed to edit */-->
+        <th:block th:unless="${model.isEditable()}">
+            <a th:if="${model.exploitationPlanFileDetails}"
+               th:href="@{/project/{id}/partner/documents/exploitation-plan(id=${model.projectId})}"
+               class="uploaded-file" th:text="${model.exploitationPlanFileDetails.filename}">The-uploaded-file-example.pdf</a>
+            <p th:unless="${model.exploitationPlanFileDetails}" class="uploaded-file">Awaiting upload by lead
+                partner</p>
+        </th:block>
+    </div>
 
-        						<p>A framework of the exploitation plan is available for <a href="#">download</a></p>
-        						<p>The uploaded exploitation plan must:</p>
-        						<ul class="list-bullet">
-        							<li>be in a Portable Document Format (.pdf)</li>
-        							<li>be legible at 100% magnification</li>
-        							<li>be less than 1mb in file size</li>
-        						</ul>
-                  </div>
-              </details>
-
-              <!--/* allowed to edit */-->
-              <form th:action="@{/project/{id}/partner/documents(id=${model.projectId})}" th:if="${model.isEditable()}" th:object="${form}" method="post" enctype="multipart/form-data">
-                <!--/* file is not uploaded */-->
-                <div th:classappend="${#fields.hasErrors('exploitationPlan') ? 'error' : ''}" th:unless="${model.exploitationPlanFileDetails}">
-                  <th:block th:if="${#fields.hasErrors('exploitationPlan')}">
-                      <span class="error-message" th:each="err : ${#fields.errors('exploitationPlan')}" th:text="${err}" />
-                  </th:block>
-
-                  <input th:errorclass="field-error" th:field="*{exploitationPlan}" type="file" id="exploitationPlan" class="inputfile" />
-                  <label for="exploitationPlan" class="button-secondary extra-margin">+ Upload</label>
-                  <button name="uploadExploitationPlanClicked" class="button-secondary" type="submit" data-for-file-upload="exploitationPlan">Save</button>
-                </div>
-
-                <!--/* file is uploaded */-->
-                <th:block th:if="${model.exploitationPlanFileDetails}">
-                  <a th:href="@{/project/{id}/partner/documents/exploitation-plan(id=${model.projectId})}" class="uploaded-file" th:text="${model.exploitationPlanFileDetails.filename}">The-uploaded-file-example.pdf</a>
-                  <button name="removeExploitationPlanClicked" class="button-secondary no-margin-right" type="submit">Remove</button>
-                </th:block>
-              </form>
-              <!--/* not allowed to edit */-->
-              <th:block th:unless="${model.isEditable()}">
-                <a th:if="${model.exploitationPlanFileDetails}" th:href="@{/project/{id}/partner/documents/exploitation-plan(id=${model.projectId})}" class="uploaded-file" th:text="${model.exploitationPlanFileDetails.filename}">The-uploaded-file-example.pdf</a>
-                <p th:unless="${model.exploitationPlanFileDetails}" class="uploaded-file">Awaiting upload by lead partner</p>
-              </th:block>
-          </div>
-
-      <form th:if="${model.isShowSubmitDocumentsButton() and  model.isSubmitAllowed()}" action="#">
-          <p>When you are have uploaded your collaboration agreement and exploitation plan, they must be submitted to Innovate UK for review. If these documents require further clarification Innovate UK will contact you.</p>
-          <!--/* todo for mr Brent, js-modal */-->
-          <button class="button">Submit documents</button>
-      </form>
-
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <p>When you are have uploaded your collaboration agreement and exploitation plan, they must be submitted to Innovate
+        UK for review. If these documents require further clarification Innovate UK will contact you.</p>
+    <a th:if="${model.isShowSubmitDocumentsButton() and  model.submitAllowed and model.submitDate == null}"
+       th:href="@{/project/{id}/partner/documents/confirm(id=${model.getProjectId()})}" class="button extra-margin"
+       data-js-modal="modal-partner-documents">Submit partner documents</a>
+    <div class="extra-margin"
+         th:if="${!model.submitAllowed and model.submitDate == null}">
+        <p>You are not able to submit until all files are uploaded. And you must be the project manager</p>
+        <button disabled="disabled" class="button">Submit partner documents</button>
+    </div>
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag"/>
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<div th:include="fragments/layout :: footer" th:remove="tag"/>
+<div th:include="fragments/layout :: body-end" th:remove="tag"/>
 
 </body>
 </html>

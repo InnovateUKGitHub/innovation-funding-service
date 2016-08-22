@@ -515,46 +515,37 @@ we create a new user
 
 the lead applicant invites a registered user
     [Arguments]    ${EMAIL_LEAD}    ${EMAIL_INVITED}
-    guest user log-in    ${EMAIL_LEAD}    Passw0rd123
-    ${user_does_not_exist}=    Run keyword and ignore error     the user should see the text in the page    Your username/password combination doesn't seem to work
-    run keyword if    ${user_does_not_exist}==('PASS', None)    the user makes a new account    ${EMAIL_LEAD}
-    The user clicks the button/link    link=${OPEN_COMPETITION_LINK}
-    Click Element    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
+    run keyword if    ${smoke_test}!=1    invite a registered user    ${EMAIL_LEAD}    ${EMAIL_INVITED}
+
+invite a registered user
+    [Arguments]    ${EMAIL_LEAD}    ${EMAIL_INVITED}
+    the guest user opens the browser
+    the user navigates to the page    ${COMPETITION_DETAILS_URL}
+    the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
+    the user clicks the button/link    jQuery=.button:contains("Create account")
+    the user clicks the button/link    jQuery=.button:contains("Create")
+    the user enters text to a text field    id=organisationSearchName    Innovate
+    the user clicks the button/link    id=org-search
+    the user clicks the button/link    LINK=INNOVATE LTD
+    the user selects the checkbox    address-same
+    the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
+    the user clicks the button/link    jQuery=.button:contains("Save")
+    the user enters the details and clicks the create account    ${EMAIL_LEAD}
+    the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
+    the user opens the mailbox and verifies the email from
+    the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
+    the user clicks the button/link    jQuery=.button:contains("Sign in")
+    the guest user inserts user email & password    ${EMAIL_LEAD}    Passw0rd123
+    the guest user clicks the log-in button
+    the user clicks the button/link    link=${OPEN_COMPETITION_LINK}
+    the user clicks the button/link    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
     Input Text    name=organisations[1].organisationName    innovate
     Input Text    name=organisations[1].invites[0].personName    Partner name
     Input Text    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(2) input    ${EMAIL_INVITED}
-    And the user clicks the button/link    jQuery=.button:contains("Begin application")
-    And the user should see the text in the page    Application overview
+    the user clicks the button/link    jQuery=.button:contains("Begin application")
+    the user should see the text in the page    Application overview
     the user closes the browser
-    The guest user opens the browser
-    #Open mailbox and verify the content
-    #    [Arguments]    ${USER}    ${PASSWORD}    ${CONTENT}
-    #    [Documentation]    This Keyword checks the content of the 1st email in a given inbox
-    #    Open Mailbox    server=imap.googlemail.com    user=${USER}    password=${PASSWORD}
-    #    ${EMAIL_MATCH}=    Get Matches From Email    1    ${CONTENT}
-    #    Should Not Be Empty    ${EMAIL_MATCH}
-    #    Delete All Emails
-    #    close mailbox
-
-the user makes a new account
-    [Arguments]    ${EMAIL_LEAD}
-    The user navigates to the page    ${COMPETITION_DETAILS_URL}
-    The user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
-    The user clicks the button/link    jQuery=.button:contains("Create account")
-    The user clicks the button/link    jQuery=.button:contains("Create")
-    The user enters text to a text field    id=organisationSearchName    Innovate
-    The user clicks the button/link    id=org-search
-    The user clicks the button/link    LINK=INNOVATE LTD
-    select Checkbox    address-same
-    The user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
-    The user clicks the button/link    jQuery=.button:contains("Save")
-    The user enters the details and clicks the create account    ${EMAIL_LEAD}
-    The user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
-    And the user opens the mailbox and verifies the email from
-    The user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
-    The user clicks the button/link    jQuery=.button:contains("Sign in")
-    The guest user inserts user email & password    ${EMAIL_LEAD}    Passw0rd123
-    The guest user clicks the log-in button
+    the guest user opens the browser
 
 
 

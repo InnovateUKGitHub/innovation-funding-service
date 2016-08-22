@@ -1,14 +1,12 @@
 package com.worth.ifs.project.builder;
 
 import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.Builder;
 import com.worth.ifs.BuilderAmendFunctions;
+import com.worth.ifs.invite.domain.ProjectParticipantRole;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
 import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.resource.UserRoleType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +14,6 @@ import java.util.function.BiConsumer;
 
 import static com.worth.ifs.BuilderAmendFunctions.setField;
 import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
-import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static java.util.Collections.emptyList;
 
 /**
@@ -46,23 +43,15 @@ public class ProjectUserBuilder extends BaseBuilder<ProjectUser, ProjectUserBuil
         return withArray((id, projectUser) -> projectUser.setId(id), ids);
     }
 
-    public ProjectUserBuilder withRole(Builder<Role, ?> role) {
-        return with(projectUser -> projectUser.setRole(role.build()));
-    }
-
-    public ProjectUserBuilder withRole(Role... roles) {
-        return withArray((role, projectUser) -> projectUser.setRole(role), roles);
-    }
-
-    public ProjectUserBuilder withRole(UserRoleType... roles) {
-        return withArray((role, projectUser) -> projectUser.setRole(newRole().withType(role).build()), roles);
+    public ProjectUserBuilder withRole(ProjectParticipantRole... roles) {
+        return withArray((role, projectUser) -> setField("role", role, projectUser), roles);
     }
 
     public ProjectUserBuilder withProject(Project... project) {
-        return withArray((proj, projectUser) -> projectUser.setProject(proj), project);
+        return withArray((proj, projectUser) -> setField("project", proj, projectUser), project);
     }
 
-    public ProjectUserBuilder withOrganisation(Organisation... organisations) {
+    public ProjectUserBuilder       withOrganisation(Organisation... organisations) {
         return withArray((organisation, projectUser) -> setField("organisation", organisation, projectUser), organisations);
     }
 
@@ -73,7 +62,7 @@ public class ProjectUserBuilder extends BaseBuilder<ProjectUser, ProjectUserBuil
     @Override
     public void postProcess(int index, ProjectUser projectUser) {
 
-        Project project = projectUser.getProject();
+        Project project = projectUser.getProcess();
 
         if (project != null) {
 

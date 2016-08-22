@@ -17,7 +17,9 @@ import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.BasicFileAndContents;
 import com.worth.ifs.file.service.FileAndContents;
 import com.worth.ifs.file.transactional.FileService;
+import com.worth.ifs.invite.domain.ProjectParticipantRole;
 import com.worth.ifs.invite.resource.ApplicationInviteResource;
+import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.notifications.resource.ExternalUserNotificationTarget;
 import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.notifications.resource.NotificationTarget;
@@ -29,21 +31,20 @@ import com.worth.ifs.organisation.repository.OrganisationAddressRepository;
 import com.worth.ifs.project.domain.MonitoringOfficer;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
-import com.worth.ifs.project.finance.transactional.ProjectFinanceService;
 import com.worth.ifs.project.mapper.MonitoringOfficerMapper;
 import com.worth.ifs.project.mapper.ProjectMapper;
 import com.worth.ifs.project.mapper.ProjectUserMapper;
 import com.worth.ifs.project.repository.MonitoringOfficerRepository;
 import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.project.repository.ProjectUserRepository;
-import com.worth.ifs.project.resource.*;
+import com.worth.ifs.project.resource.MonitoringOfficerResource;
+import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.OrganisationResource;
-import com.worth.ifs.user.resource.UserRoleType;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -52,26 +53,30 @@ import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.io.InputStream;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static com.worth.ifs.commons.error.CommonErrors.badRequestError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.service.ServiceResult.*;
+import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
+import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
+import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static com.worth.ifs.project.transactional.ProjectServiceImpl.Notifications.INVITE_FINANCE_CONTACT;
 import static com.worth.ifs.project.transactional.ProjectServiceImpl.Notifications.INVITE_PROJECT_MANAGER;
-import static com.worth.ifs.user.resource.UserRoleType.*;
 import static com.worth.ifs.util.CollectionFunctions.*;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static com.worth.ifs.util.EntityLookupCallbacks.getOnlyElementOrFail;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
@@ -186,8 +191,8 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
             project.setAddress(existingAddress);
         } else {
             Address newAddress = addressMapper.mapToDomain(address);
-            if(address.getOrganisations() == null || address.getOrganisations().size() == 0){
-                AddressType addressType = addressTypeRepository.findOne((long)organisationAddressType.getOrdinal());
+            if (address.getOrganisations() == null || address.getOrganisations().size() == 0) {
+                AddressType addressType = addressTypeRepository.findOne((long) organisationAddressType.getOrdinal());
                 List<OrganisationAddress> existingOrgAddresses = organisationAddressRepository.findByOrganisationIdAndAddressType(leadOrganisation.getId(), addressType);
                 existingOrgAddresses.stream().forEach(oA -> organisationAddressRepository.delete(oA));
                 OrganisationAddress organisationAddress = new OrganisationAddress(leadOrganisation, newAddress, addressType);
@@ -207,7 +212,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     @Override
     public ServiceResult<List<ProjectResource>> findByUserId(final Long userId) {
         List<ProjectUser> projectUsers = projectUserRepository.findByUserId(userId);
-        List<Project> projects = simpleMap(projectUsers, ProjectUser::getProject).parallelStream().distinct().collect(Collectors.toList());     //Users may have multiple roles (e.g. partner and finance contact, in which case there will be multiple project_user entries, so this is flatting it).
+        List<Project> projects = simpleMap(projectUsers, ProjectUser::getProcess).parallelStream().distinct().collect(toList());     //Users may have multiple roles (e.g. partner and finance contact, in which case there will be multiple project_user entries, so this is flatting it).
         return serviceSuccess(simpleMap(projects, projectMapper::mapToResource));
     }
 
@@ -226,7 +231,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         return getProject(projectId).
                 andOnSuccess(
                         project -> {
-                            if(validateIsReadyForSubmission(project)){
+                            if (validateIsReadyForSubmission(project)) {
                                 return setSubmittedDate(project, date);
                             } else {
                                 return serviceFailure(new Error(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_SUBMITTED_IF_INCOMPLETE));
@@ -241,14 +246,33 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     }
 
     @Override
+    public ServiceResult<Void> saveDocumentsSubmitDateTime(Long projectId, LocalDateTime date) {
+        return getProject(projectId).
+                andOnSuccess(
+                        project -> {
+                            if (validateDocumentsUploaded(project)) {
+                                return setDocumentsSubmittedDate(project, date);
+                            } else {
+                                return serviceFailure(new Error(PROJECT_SETUP_OTHER_DOCUMENTS_MUST_BE_UPLOADED_BEFORE_SUBMIT));
+                            }
+                        }
+                ).andOnSuccessReturnVoid();
+    }
+
+    private ServiceResult<Void> setDocumentsSubmittedDate(Project project, LocalDateTime date) {
+        project.setDocumentsSubmittedDate(date);
+        return serviceSuccess();
+    }
+
+    @Override
     public ServiceResult<Boolean> isOtherDocumentsSubmitAllowed(Long projectId, Long userId) {
         ServiceResult<Project> project = getProject(projectId);
         Optional<ProjectUser> projectManager = getExistingProjectManager(project.getSuccessObject());
         boolean allMatch = retrieveUploadedDocuments(projectId).stream()
-        .allMatch(serviceResult -> (serviceResult.isSuccess()) && (serviceResult.getSuccessObject().getFileEntry().getFilesizeBytes() > 0));
+                .allMatch(serviceResult -> (serviceResult.isSuccess()) && (serviceResult.getSuccessObject().getFileEntry().getFilesizeBytes() > 0));
 
         if (!allMatch) {
-             return serviceFailure(new Error(PROJECT_SETUP_OTHER_DOCUMENTS_MUST_BE_UPLOADED_BEFORE_SUBMIT));
+            return serviceFailure(new Error(PROJECT_SETUP_OTHER_DOCUMENTS_MUST_BE_UPLOADED_BEFORE_SUBMIT));
         }
         return projectManager.isPresent()
                 && projectManager.get().getUser().getId().equals(userId) ? serviceSuccess(true)
@@ -400,6 +424,26 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         return serviceResults;
     }
 
+    @Override
+    public ServiceResult<Void> addPartner(Long projectId, Long userId, Long organisationId) {
+        return find(getProject(projectId), getOrganisation(organisationId), getUser(userId)).
+                andOnSuccess((project, organisation, user) -> {
+                    if (project.getOrganisations(o -> organisationId.equals(o.getId())).isEmpty()) {
+                        return serviceFailure(badRequestError("project does not contain organisation"));
+                    }
+                    List<ProjectUser> partners = project.getProjectUsersWithRole(PROJECT_PARTNER);
+                    if (partners.stream().map(p -> p.getId()).collect(toList()).contains(userId)){
+                        return serviceSuccess(); // Already a partner
+                    } else {
+                        ProjectUser pu = new ProjectUser(user, project, PROJECT_PARTNER, organisation);
+                        projectUserRepository.save(pu);
+                        user.addUserOrganisation(organisation);
+                        userRepository.save(user);
+                        return serviceSuccess();
+                    }
+                });
+    }
+
     private ServiceResult<FileEntry> getCollaborationAgreement(Project project) {
         if (project.getCollaborationAgreement() == null) {
             return serviceFailure(notFoundError(FileEntry.class));
@@ -467,6 +511,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         return new ExternalUserNotificationTarget(fullName, monitoringOfficer.getEmail());
 
     }
+
     private String getMonitoringOfficerFullName(MonitoringOfficerResource monitoringOfficer) {
         // At this stage, validation has already been done to ensure that first name and last name are not empty
         return monitoringOfficer.getFirstName() + " " + monitoringOfficer.getLastName();
@@ -534,8 +579,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
     @Override
     public ServiceResult<OrganisationResource> getOrganisationByProjectAndUser(Long projectId, Long userId) {
-        Role partnerRole = roleRepository.findOneByName(PARTNER.getName());
-        ProjectUser projectUser = projectUserRepository.findByProjectIdAndRoleIdAndUserId(projectId, partnerRole.getId(), userId);
+        ProjectUser projectUser = projectUserRepository.findByProjectIdAndRoleAndUserId(projectId, PROJECT_PARTNER, userId);
         if(projectUser != null && projectUser.getOrganisation() != null) {
             return serviceSuccess(organisationMapper.mapToResource(organisationRepository.findOne(projectUser.getOrganisation().getId())));
         } else {
@@ -554,7 +598,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
     private void addFinanceContactToProject(Project project, ProjectUser financeContact) {
 
-        ProjectUser existingUser = project.getExistingProjectUserWithRoleForOrganisation(FINANCE_CONTACT, financeContact.getOrganisation());
+        ProjectUser existingUser = project.getExistingProjectUserWithRoleForOrganisation(ProjectParticipantRole.PROJECT_FINANCE_CONTACT, financeContact.getOrganisation());
 
         if (existingUser != null) {
             project.removeProjectUser(existingUser);
@@ -564,50 +608,50 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     }
 
     private ServiceResult<ProjectUser> createFinanceContactProjectUser(User user, Project project, Organisation organisation) {
-        return createProjectUserForRole(project, user, organisation, FINANCE_CONTACT);
+        return createProjectUserForRole(project, user, organisation, PROJECT_FINANCE_CONTACT);
     }
 
     @Override
-    public ServiceResult<Void> inviteFinanceContact(Long projectId, ApplicationInviteResource inviteResource) {
+    public ServiceResult<Void> inviteFinanceContact(Long projectId, InviteProjectResource inviteResource) {
 
         return inviteContact(projectId, inviteResource, INVITE_FINANCE_CONTACT);
     }
 
     @Override
-    public ServiceResult<Void> inviteProjectManager(Long projectId, ApplicationInviteResource inviteResource) {
+    public ServiceResult<Void> inviteProjectManager(Long projectId, InviteProjectResource inviteResource) {
 
         return inviteContact(projectId, inviteResource, INVITE_PROJECT_MANAGER);
     }
 
-    private ServiceResult<Void> inviteContact(Long projectId, ApplicationInviteResource inviteResource, Notifications kindOfNotification) {
+    private ServiceResult<Void> inviteContact(Long projectId, InviteProjectResource inviteResource, Notifications kindOfNotification) {
 
         Notification notification = createInviteContactNotification(projectId, inviteResource, kindOfNotification);
         ServiceResult<Void> inviteContactEmailSendResult = notificationService.sendNotification(notification, EMAIL);
         return processAnyFailuresOrSucceed(singletonList(inviteContactEmailSendResult));
     }
 
-    private Notification createInviteContactNotification(Long projectId, ApplicationInviteResource inviteResource, Notifications kindOfNotification) {
+    private Notification createInviteContactNotification(Long projectId, InviteProjectResource inviteResource, Notifications kindOfNotification) {
         NotificationTarget notificationTarget = createInviteContactNotificationTarget(inviteResource);
         Map<String, Object> globalArguments = createGlobalArgsForInviteContactEmail(projectId, inviteResource);
         return new Notification(systemNotificationSource, singletonList(notificationTarget),
                 kindOfNotification, globalArguments, emptyMap());
     }
 
-    private NotificationTarget createInviteContactNotificationTarget(ApplicationInviteResource inviteResource) {
+    private NotificationTarget createInviteContactNotificationTarget(InviteProjectResource inviteResource) {
         return new ExternalUserNotificationTarget(inviteResource.getName(), inviteResource.getEmail());
     }
 
-    private Map<String, Object> createGlobalArgsForInviteContactEmail(Long projectId, ApplicationInviteResource inviteResource) {
+    private Map<String, Object> createGlobalArgsForInviteContactEmail(Long projectId, InviteProjectResource inviteResource) {
         Project project = projectRepository.findOne(projectId);
         Map<String, Object> globalArguments = new HashMap<>();
         globalArguments.put("projectName", project.getName());
-        globalArguments.put("leadOrganisation", inviteResource.getLeadOrganisation());
-        globalArguments.put("inviteOrganisationName", (StringUtils.isEmpty(inviteResource.getInviteOrganisationName())) ? "No org as yet" : inviteResource.getInviteOrganisationName());
+            globalArguments.put("leadOrganisation", inviteResource.getLeadOrganisation());
+            globalArguments.put("inviteOrganisationName", (StringUtils.isEmpty(inviteResource.getInviteOrganisationName())) ? "No org as yet" : inviteResource.getInviteOrganisationName());
         globalArguments.put("inviteUrl", getInviteUrl(webBaseUrl, inviteResource));
         return globalArguments;
     }
 
-    private String getInviteUrl(String baseUrl, ApplicationInviteResource inviteResource) {
+    private String getInviteUrl(String baseUrl, InviteProjectResource inviteResource) {
         return String.format("%s/accept-invite/%s", baseUrl, inviteResource.getHash());
     }
 
@@ -658,7 +702,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         List<ProjectUser> leadPartners = getLeadPartners(project);
         List<ProjectUser> matchingProjectUsers = simpleFilter(leadPartners, pu -> pu.getUser().getId().equals(projectManagerUserId));
 
-        if(!matchingProjectUsers.isEmpty()) {
+        if (!matchingProjectUsers.isEmpty()) {
             return getOnlyElementOrFail(matchingProjectUsers);
         } else {
             return serviceFailure(new Error(PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_LEAD_PARTNER));
@@ -668,7 +712,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     private List<ProjectUser> getLeadPartners(Project project) {
         Application application = project.getApplication();
         Organisation leadPartnerOrganisation = application.getLeadOrganisation();
-        return simpleFilter(project.getProjectUsers(),  pu -> organisationsEqual(leadPartnerOrganisation, pu)
+        return simpleFilter(project.getProjectUsers(), pu -> organisationsEqual(leadPartnerOrganisation, pu)
                 && pu.getRole().isPartner());
     }
 
@@ -676,7 +720,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         return pu.getOrganisation().getId().equals(leadPartnerOrganisation.getId());
     }
 
-    private ServiceResult<ProjectResource> createProjectFromApplicationId(final Long applicationId){
+    private ServiceResult<ProjectResource> createProjectFromApplicationId(final Long applicationId) {
         return getApplication(applicationId).andOnSuccess(application -> {
             Project project = new Project();
             project.setApplication(application);
@@ -697,11 +741,11 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     }
 
     private ServiceResult<ProjectUser> createPartnerProjectUser(Project project, User user, Organisation organisation) {
-        return createProjectUserForRole(project, user, organisation, PARTNER);
+        return createProjectUserForRole(project, user, organisation, PROJECT_PARTNER);
     }
 
-    private ServiceResult<ProjectUser> createProjectUserForRole(Project project, User user, Organisation organisation, UserRoleType roleType) {
-        return getRole(roleType).andOnSuccessReturn(role -> new ProjectUser(user, project, role, organisation));
+    private ServiceResult<ProjectUser> createProjectUserForRole(Project project, User user, Organisation organisation, ProjectParticipantRole role) {
+        return serviceSuccess(new ProjectUser(user, project, role, organisation));
     }
 
     private List<ProjectResource> projectsToResources(List<Project> filtered) {
@@ -712,15 +756,26 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         return find(projectRepository.findOne(projectId), notFoundError(Project.class, projectId));
     }
 
-    private ServiceResult<Project> getProjectByApplication(long applicationId){
+    private ServiceResult<Project> getProjectByApplication(long applicationId) {
         return find(projectRepository.findOneByApplicationId(applicationId), notFoundError(Project.class, applicationId));
     }
 
     private boolean validateIsReadyForSubmission(final Project project) {
-        return !(project.getAddress() == null || !getExistingProjectManager(project).isPresent() || project.getTargetStartDate() == null || allFinanceContactsNotSet(project.getId()) || project.getSubmittedDate() != null);
+        return !(project.getAddress() == null
+                || !getExistingProjectManager(project).isPresent()
+                || project.getTargetStartDate() == null
+                || allFinanceContactsNotSet(project.getId())
+                || project.getSubmittedDate() != null);
     }
 
-    private boolean allFinanceContactsNotSet(Long projectId){
+    private boolean validateDocumentsUploaded(final Project project) {
+        return project.getExploitationPlan() != null
+                && project.getCollaborationAgreement() != null
+                && getExistingProjectManager(project).isPresent()
+                && project.getDocumentsSubmittedDate() == null;
+    }
+
+    private boolean allFinanceContactsNotSet(Long projectId) {
         List<ProjectUser> projectUserObjs = getProjectUsersByProjectId(projectId);
         List<ProjectUserResource> projectUserResources = simpleMap(projectUserObjs, projectUserMapper::mapToResource);
         List<Organisation> partnerOrganisations = getPartnerOrganisations(projectUserResources);
@@ -736,7 +791,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         final Supplier<SortedSet<Organisation>> supplier = () -> new TreeSet<>(compareById);
 
         SortedSet<Organisation> organisationSet = projectRoles.stream()
-                .filter(uar -> uar.getRoleName().equals(PARTNER.getName()))
+                .filter(uar -> uar.getRoleName().equals(PROJECT_PARTNER.getName()))
                 .map(uar -> organisationRepository.findOne(uar.getOrganisation()))
                 .collect(Collectors.toCollection(supplier));
 
@@ -753,12 +808,12 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
             pm.setOrganisation(leadPartnerUser.getOrganisation());
             return serviceSuccess();
 
-        }).orElseGet(() -> getRole(PROJECT_MANAGER).andOnSuccessReturnVoid(projectManagerRole -> {
-
-            ProjectUser projectUser = new ProjectUser(leadPartnerUser.getUser(), leadPartnerUser.getProject(),
-                    projectManagerRole, leadPartnerUser.getOrganisation());
+        }).orElseGet(() -> {
+            ProjectUser projectUser = new ProjectUser(leadPartnerUser.getUser(), leadPartnerUser.getProcess(),
+                    PROJECT_MANAGER, leadPartnerUser.getOrganisation());
             project.addProjectUser(projectUser);
-        }));
+            return serviceSuccess();
+        });
     }
 
     private Optional<ProjectUser> getExistingProjectManager(Project project) {

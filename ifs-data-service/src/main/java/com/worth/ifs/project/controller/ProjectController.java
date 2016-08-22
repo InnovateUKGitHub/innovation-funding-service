@@ -8,15 +8,13 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.transactional.FileHttpHeadersValidator;
-import com.worth.ifs.invite.resource.InviteResource;
+import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
-import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
-import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -102,13 +100,13 @@ public class ProjectController {
 
     @RequestMapping(value = "/{projectId}/invite-finance-contact", method = POST)
     public RestResult<Void> inviteFinanceContact(@PathVariable("projectId") final Long projectId,
-                                                 @RequestBody @Valid final ApplicationInviteResource inviteResource) {
+                                                 @RequestBody @Valid final InviteProjectResource inviteResource) {
        return projectService.inviteFinanceContact(projectId, inviteResource).toPostResponse();
     }
 
     @RequestMapping(value = "/{projectId}/invite-project-manager", method = POST)
     public RestResult<Void> inviteProjectManager(@PathVariable("projectId") final Long projectId,
-                                                 @RequestBody @Valid final ApplicationInviteResource inviteResource) {
+                                                 @RequestBody @Valid final InviteProjectResource inviteResource) {
         return projectService.inviteProjectManager(projectId, inviteResource).toPostResponse();
     }
 
@@ -262,5 +260,17 @@ public class ProjectController {
 
         UserResource authenticatedUser = userAuthenticationService.getAuthenticatedUser(request);
         return projectService.isOtherDocumentsSubmitAllowed(projectId, authenticatedUser.getId()).toGetResponse();
+    }
+
+    @RequestMapping(value = "/{projectId}/partner/documents/submit", method = POST)
+    public RestResult<Void>setPartnerDocumentsSubmitted(@PathVariable("projectId") final Long projectId) {
+        return projectService.saveDocumentsSubmitDateTime(projectId, LocalDateTime.now()).toPostResponse();
+    }
+
+    @RequestMapping(value = "/{projectId}/partners", method = POST)
+    public RestResult<Void> addPartner(@PathVariable(value = "projectId")Long projectId,
+                                       @RequestParam(value = "userId", required = true) Long userId,
+                                       @RequestParam(value = "organisationId", required = true) Long organisationId) {
+        return projectService.addPartner(projectId, userId, organisationId).toPostResponse();
     }
 }

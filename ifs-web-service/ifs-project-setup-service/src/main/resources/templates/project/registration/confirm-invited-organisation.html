@@ -1,0 +1,53 @@
+
+
+
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Accept Invite'" th:remove="tag"/>
+</head>
+<body th:with="context='applicant'" class="create-application-eligibility">
+
+<div th:include="fragments/layout :: body-start" th:remove="tag"/>
+<div th:include="fragments/layout :: global-header" th:remove="tag"/>
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag"/>
+
+    <h1 class="heading-large">Your organisation</h1>
+
+    <h2 class="heading-medium">Business Organisation</h2>
+
+    <fieldset>
+        <legend class="visuallyhidden">Business Organisation</legend>
+        <div class="form-block">
+            <h3 class="heading-small">Organisation name</h3>
+            <p th:text="${organisation.name}">Nomensa</p>
+            <h3 class="heading-small">Registration number</h3>
+            <p th:text="${organisation.companyHouseNumber}">0123456789</p>
+
+
+            <div>
+                <h3 class="heading-small">Address</h3>
+                <div th:text="${organisationAddress?.addressLine1}"></div>
+                <div th:text="${organisationAddress?.addressLine2}"></div>
+                <div th:text="${organisationAddress?.addressLine3}"></div>
+                <div th:text="${organisationAddress?.town}"></div>
+                <div th:text="${organisationAddress?.county}"></div>
+                <div th:text="${organisationAddress?.postcode}"></div>
+            </div>
+        </div>
+    </fieldset>
+
+    <p>If this is not the correct organisation <a th:href="${'mailto:'+ invite.leadApplicantEmail}">email the application lead</a></p>
+    <p><strong>Please note</strong>, if you are representing a different organisation then you will need to make a new account.</p>
+
+    <a th:href="${registerUrl}" class="button button-large extra-margin">Continue</a>
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag"/>
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag"/>
+<div th:include="fragments/layout :: body-end" th:remove="tag"/>
+</body>
+</html>

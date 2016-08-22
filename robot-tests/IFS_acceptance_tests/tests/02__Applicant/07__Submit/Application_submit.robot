@@ -32,7 +32,7 @@ ${submit_application_name}    Robot submit test application
 *** Test Cases ***
 Set up an application to submit
     [Documentation]    INFUND-205
-    [Tags]    HappyPath
+    [Tags]    HappyPath    Email
     new account complete all but one
     # please note that this test case has been moved out of suite setup as it isn't required for smoke testing, but should still run for HappyPath and full test runs
 
@@ -75,7 +75,7 @@ Submit flow (complete application)
     And the applicant clicks Yes in the submit modal
     Then the user should be redirected to the correct page    submit
     And the user should see the text in the page    Application submitted
-    And the user should see the text in the page    you will be notified of our decision by 31 December 2016
+    And the user should see the text in the page    you will be notified of our decision by December 2016
 
 The applicant should get a confirmation email
     [Documentation]    INFUND-1887

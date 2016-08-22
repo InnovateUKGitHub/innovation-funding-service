@@ -2,20 +2,16 @@ package com.worth.ifs.invite.transactional;
 
 
 import com.google.common.collect.Lists;
-import com.worth.ifs.commons.error.CommonErrors;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.invite.domain.ProjectInvite;
-import com.worth.ifs.invite.mapper.InviteOrganisationMapper;
 import com.worth.ifs.invite.mapper.InviteProjectMapper;
 import com.worth.ifs.invite.repository.InviteProjectRepository;
 import com.worth.ifs.invite.resource.InviteProjectResource;
-import com.worth.ifs.notifications.resource.SystemNotificationSource;
-import com.worth.ifs.notifications.service.NotificationService;
-import com.worth.ifs.project.repository.ProjectRepository;
-import com.worth.ifs.project.repository.ProjectUserRepository;
+import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.transactional.BaseTransactionalService;
-import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.mapper.UserMapper;
+import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -38,6 +34,7 @@ import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_INVITE_INVAL
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
+import static java.lang.String.format;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
@@ -52,22 +49,13 @@ public class InviteProjectServiceImpl extends BaseTransactionalService implement
     private InviteProjectMapper inviteMapper;
 
     @Autowired
-    private InviteOrganisationMapper inviteOrganisationMapper;
-
-    @Autowired
     private InviteProjectRepository inviteProjectRepository;
 
     @Autowired
-    private ProjectRepository projectRepository;
+    private ProjectService projectService;
 
     @Autowired
-    private ProjectUserRepository projectUserRepository;
-
-    @Autowired
-    private NotificationService notificationService;
-
-    @Autowired
-    private SystemNotificationSource systemNotificationSource;
+    private UserMapper userMapper;
 
     LocalValidatorFactoryBean validator;
 
@@ -86,7 +74,7 @@ public class InviteProjectServiceImpl extends BaseTransactionalService implement
             Errors errors = new BeanPropertyBindingResult(projectInvite, projectInvite.getClass().getName());
             validator.validate(projectInvite, errors);
             if (errors.hasErrors()) {
-                errors.getFieldErrors().stream().peek(e -> LOG.debug(String.format("Field error: %s ", e.getField())));
+                errors.getFieldErrors().stream().peek(e -> LOG.debug(format("Field error: %s ", e.getField())));
                 return serviceFailure(badRequestError(errors.toString()));
             } else {
                 projectInvite.getHash();
@@ -115,36 +103,31 @@ public class InviteProjectServiceImpl extends BaseTransactionalService implement
 
     @Override
     public ServiceResult<Void> acceptProjectInvite(String inviteHash, Long userId) {
-        LOG.error(String.format("acceptInvite %s => %s ", inviteHash, userId));
         return find(invite(inviteHash), user(userId)).andOnSuccess((invite, user) -> {
-
             if(invite.getEmail().equalsIgnoreCase(user.getEmail())){
-                invite.open();
-
-                invite = inviteProjectRepository.save(invite);
-                // need to check with business if required to save in Project User entity
-
-                return serviceSuccess();
+                invite = inviteProjectRepository.save(invite.open());
+                return projectService.addPartner(invite.getTarget().getId(), user.getId(), invite.getOrganisation().getId());
             }
-            LOG.error(String.format("Invited emailaddress not the same as the users emailaddress %s => %s ", user.getEmail(), invite.getEmail()));
-            Error e = new Error("Invited emailaddress not the same as the users emailaddress", HttpStatus.NOT_ACCEPTABLE);
+            LOG.error(format("Invited email address not the same as the users email address %s => %s ", user.getEmail(), invite.getEmail()));
+            Error e = new Error("Invited email address not the same as the users email address", HttpStatus.NOT_ACCEPTABLE);
             return serviceFailure(e);
         });
     }
 
-
     @Override
-    public ServiceResult<Void> checkUserExistingByInviteHash(@P("hash") String hash) {
+    public ServiceResult<Boolean> checkUserExistingByInviteHash(@P("hash") String hash) {
         return getByHash(hash)
                 .andOnSuccessReturn(i -> userRepository.findByEmail(i.getEmail()))
-                .andOnSuccess(u -> {
-                    if(u.isPresent()){
-                        return serviceSuccess();
-                    }else{
-                        return serviceFailure(CommonErrors.notFoundError(User.class));
-                    }
-                })
-                .andOnSuccessReturnVoid();
+                .andOnSuccess(u -> serviceSuccess(u.isPresent()));
+    }
+
+    @Override
+    public ServiceResult<UserResource> getUserByInviteHash(@P("hash") String hash) {
+        return getByHash(hash)
+                .andOnSuccessReturn(i -> userRepository.findByEmail(i.getEmail()).map(userMapper::mapToResource))
+                .andOnSuccess(u -> u.isPresent() ?
+                        serviceSuccess(u.get()) :
+                        serviceFailure(notFoundError(UserResource.class)));
     }
 
     private boolean inviteProjectResourceIsValid(InviteProjectResource inviteProjectResource) {
@@ -154,11 +137,6 @@ public class InviteProjectServiceImpl extends BaseTransactionalService implement
             return false;
         }
         return true;
-    }
-
-
-    private String getInviteUrl(String baseUrl, ProjectInvite invite) {
-        return String.format("%s/accept-invite/%s", baseUrl, invite.getHash());
     }
 
     private Supplier<ServiceResult<ProjectInvite>> invite(final String hash) {

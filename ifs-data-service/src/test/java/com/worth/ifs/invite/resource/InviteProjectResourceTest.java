@@ -1,7 +1,7 @@
 package com.worth.ifs.invite.resource;
 
 
-import com.worth.ifs.invite.constant.InviteStatusConstants;
+import com.worth.ifs.invite.constant.InviteStatus;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -21,7 +21,9 @@ public class InviteProjectResourceTest {
     Long applicationId;
     String hash;
     Long organisation;
-    InviteStatusConstants status;
+    InviteStatus status;
+    String leadApplicant;
+    String competitionName;
 
     @Before
     public void setUp() throws Exception {
@@ -34,7 +36,9 @@ public class InviteProjectResourceTest {
         applicationId = 2L;
         hash = "123abc";
         organisation = 3L;
-        status = InviteStatusConstants.ACCEPTED;
+        status = InviteStatus.OPENED;
+        leadApplicant = "leadApplicant";
+        competitionName = "competitionName";
 
         setInviteResource = new InviteProjectResource();
         setInviteResource.setId(inviteId);
@@ -45,8 +49,10 @@ public class InviteProjectResourceTest {
         setInviteResource.setHash(hash);
         setInviteResource.setOrganisation(organisation);
         setInviteResource.setStatus(status);
+        setInviteResource.setCompetitionName(competitionName);
+        setInviteResource.setLeadApplicant(leadApplicant);
 
-        constructedInviteResource = new InviteProjectResource(inviteId, userId, name, email, project, organisation, applicationId, hash, status);
+        constructedInviteResource = new InviteProjectResource(inviteId, userId, name, email, project, organisation, applicationId, hash, status, leadApplicant, competitionName);
 
     }
 
@@ -57,8 +63,10 @@ public class InviteProjectResourceTest {
         assertEquals(email, constructedInviteResource.getEmail());
         assertEquals(applicationId, constructedInviteResource.getApplicationId());
         assertEquals(hash, constructedInviteResource.getHash());
-        assertEquals((Long)organisation, constructedInviteResource.getOrganisation());
+        assertEquals(organisation, constructedInviteResource.getOrganisation());
         assertEquals(status, constructedInviteResource.getStatus());
+        assertEquals(leadApplicant, constructedInviteResource.getLeadApplicant());
+        assertEquals(competitionName, constructedInviteResource.getCompetitionName());
     }
 
 
@@ -70,7 +78,9 @@ public class InviteProjectResourceTest {
         assertEquals(email, setInviteResource.getEmail());
         assertEquals(applicationId, setInviteResource.getApplicationId());
         assertEquals(hash, setInviteResource.getHash());
-        assertEquals((Long)organisation, setInviteResource.getOrganisation());
+        assertEquals(organisation, setInviteResource.getOrganisation());
         assertEquals(status, setInviteResource.getStatus());
+        assertEquals(leadApplicant, setInviteResource.getLeadApplicant());
+        assertEquals(competitionName, setInviteResource.getCompetitionName());
     }
 }
