@@ -1,7 +1,7 @@
 package com.worth.ifs.invite.resource;
 
 
-import com.worth.ifs.invite.constant.InviteStatusConstants;
+import com.worth.ifs.invite.constant.InviteStatus;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -21,7 +21,7 @@ public class InviteProjectResourceTest {
     Long applicationId;
     String hash;
     Long organisation;
-    InviteStatusConstants status;
+    InviteStatus status;
     String leadApplicant;
     String competitionName;
 
@@ -36,7 +36,7 @@ public class InviteProjectResourceTest {
         applicationId = 2L;
         hash = "123abc";
         organisation = 3L;
-        status = InviteStatusConstants.ACCEPTED;
+        status = InviteStatus.OPENED;
         leadApplicant = "leadApplicant";
         competitionName = "competitionName";
 

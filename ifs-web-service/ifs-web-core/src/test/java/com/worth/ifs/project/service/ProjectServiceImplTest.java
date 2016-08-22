@@ -329,6 +329,15 @@ public class ProjectServiceImplTest {
 
         verify(projectRestService).isOtherDocumentsSubmitAllowed(123L);
     }
+    @Test
+    public void testSetPartnerDocumentsAsSubmitted()  throws Exception {
 
+        when(projectRestService.setPartnerDocumentsSubmitted(1L)).thenReturn(restSuccess());
 
+        ServiceResult<Void> submitted = service.setPartnerDocumentsSubmitted(1L);
+
+        assertTrue(submitted.isSuccess());
+
+        verify(projectRestService).setPartnerDocumentsSubmitted(1L);
+    }
 }
