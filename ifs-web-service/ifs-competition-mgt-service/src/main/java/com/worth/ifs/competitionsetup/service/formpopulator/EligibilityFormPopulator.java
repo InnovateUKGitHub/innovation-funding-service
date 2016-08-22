@@ -33,12 +33,11 @@ public class EligibilityFormPopulator implements CompetitionSetupFormPopulator {
 		}
 		
 		if(competitionResource.isMultiStream()) {
-			competitionSetupForm.setMultipleStream("yes");
 			competitionSetupForm.setStreamName(competitionResource.getStreamName());
-		} else {
-			competitionSetupForm.setMultipleStream("no");
 		}
-		
+
+		competitionSetupForm.setMultipleStream(booleanToText(competitionResource.isMultiStream()));
+
 		CollaborationLevel level = competitionResource.getCollaborationLevel();
 		if(level != null) {
 			competitionSetupForm.setSingleOrCollaborative(level.getCode());
@@ -49,13 +48,13 @@ public class EligibilityFormPopulator implements CompetitionSetupFormPopulator {
 			competitionSetupForm.setLeadApplicantType(type.getCode());
 		}
 
-		if(competitionResource.isResubmission()) {
-			competitionSetupForm.setResubmission("yes");
-		} else {
-			competitionSetupForm.setResubmission("no");
-		}
+        competitionSetupForm.setResubmission(booleanToText(competitionResource.isResubmission()));
 
 		return competitionSetupForm;
 	}
+
+    private String booleanToText(Boolean value) {
+        return value ? "yes" : "no";
+    }
 
 }

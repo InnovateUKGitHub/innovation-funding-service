@@ -24,29 +24,6 @@ public class Competition implements ProcessActivity {
 	@Transient
 	private DateProvider dateProvider = new DateProvider();
 
-    public CompetitionResource.Status getCompetitionStatus() {
-        LocalDateTime today = dateProvider.provideDate();
-        if(status.equals(CompetitionResource.Status.COMPETITION_SETUP)
-                || status.equals(CompetitionResource.Status.READY_TO_OPEN)){
-            return status;
-        }else if(getStartDate() == null || getStartDate().isAfter(today)){
-            return CompetitionResource.Status.NOT_STARTED;
-        }else if(getEndDate() != null && getEndDate().isAfter(today)) {
-            return CompetitionResource.Status.OPEN;
-        }else if (getEndDate() != null && getEndDate().isBefore(today)
-                && getAssessmentStartDate() != null && getAssessmentStartDate().isAfter(today)) {
-            return CompetitionResource.Status.CLOSED;
-        }else if(getAssessmentEndDate() != null && getAssessmentEndDate().isAfter(today)){
-            return CompetitionResource.Status.IN_ASSESSMENT;
-        }else if(getFundersPanelEndDate() == null || getFundersPanelEndDate().isAfter(today)) {
-            return CompetitionResource.Status.FUNDERS_PANEL;
-        }else if(getAssessorFeedbackDate() == null || getAssessorFeedbackDate().isAfter(today)) {
-            return CompetitionResource.Status.ASSESSOR_FEEDBACK;
-        }
-
-        return CompetitionResource.Status.PROJECT_SETUP;
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -122,9 +99,10 @@ public class Competition implements ProcessActivity {
     private Map<CompetitionSetupSection, Boolean> sectionSetupStatus = new HashMap<>();
 
     public Competition() {
-    	// no-arg constructor
+        // no-arg constructor
         status = CompetitionResource.Status.COMPETITION_SETUP;
     }
+
     public Competition(Long id, List<Application> applications, List<Question> questions, List<Section> sections, String name, String description, LocalDateTime startDate, LocalDateTime endDate) {
         this.id = id;
         this.applications = applications;
@@ -136,6 +114,7 @@ public class Competition implements ProcessActivity {
         this.setEndDate(endDate);
         status = CompetitionResource.Status.COMPETITION_SETUP_FINISHED;
     }
+
     public Competition(long id, String name, String description, LocalDateTime startDate, LocalDateTime endDate) {
         this.id = id;
         this.name = name;
@@ -145,6 +124,28 @@ public class Competition implements ProcessActivity {
         status = CompetitionResource.Status.COMPETITION_SETUP_FINISHED;
     }
 
+    public CompetitionResource.Status getCompetitionStatus() {
+        LocalDateTime today = dateProvider.provideDate();
+        if(status.equals(CompetitionResource.Status.COMPETITION_SETUP)
+                || status.equals(CompetitionResource.Status.READY_TO_OPEN)){
+            return status;
+        }else if(getStartDate() == null || getStartDate().isAfter(today)){
+            return CompetitionResource.Status.NOT_STARTED;
+        }else if(getEndDate() != null && getEndDate().isAfter(today)) {
+            return CompetitionResource.Status.OPEN;
+        }else if (getEndDate() != null && getEndDate().isBefore(today)
+                && getAssessmentStartDate() != null && getAssessmentStartDate().isAfter(today)) {
+            return CompetitionResource.Status.CLOSED;
+        }else if(getAssessmentEndDate() != null && getAssessmentEndDate().isAfter(today)){
+            return CompetitionResource.Status.IN_ASSESSMENT;
+        }else if(getFundersPanelEndDate() == null || getFundersPanelEndDate().isAfter(today)) {
+            return CompetitionResource.Status.FUNDERS_PANEL;
+        }else if(getAssessorFeedbackDate() == null || getAssessorFeedbackDate().isAfter(today)) {
+            return CompetitionResource.Status.ASSESSOR_FEEDBACK;
+        }
+
+        return CompetitionResource.Status.PROJECT_SETUP;
+    }
 
     public List<Section> getSections() {
         return sections;
@@ -165,7 +166,6 @@ public class Competition implements ProcessActivity {
     public Long getId() {
         return id;
     }
-
 
     public String getName() {
         return name;
@@ -301,8 +301,7 @@ public class Competition implements ProcessActivity {
             return 100;
         }
         double deadlineProgress = 100-( ( (double)daysLeft/(double)totalDays )* 100);
-        long startDateToEndDatePercentage = (long) deadlineProgress;
-        return startDateToEndDatePercentage;
+        return (long) deadlineProgress;
     }
 
     public Integer getMaxResearchRatio() {
@@ -490,7 +489,6 @@ public class Competition implements ProcessActivity {
     public void setFunder(String funder) {
         this.funder = funder;
     }
-
 
     public BigDecimal getFunderBudget() {
         return funderBudget;
