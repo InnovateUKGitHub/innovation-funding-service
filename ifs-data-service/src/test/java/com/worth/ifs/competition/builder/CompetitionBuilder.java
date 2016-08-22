@@ -3,6 +3,7 @@ package com.worth.ifs.competition.builder;
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.competition.domain.Milestone;
 import com.worth.ifs.competition.resource.CompetitionResource.Status;
 
 import java.time.LocalDateTime;
@@ -63,6 +64,10 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
         return with(competition -> setField("funderBudget", funderBudget, competition));
     }
 
+    public CompetitionBuilder withMilestones(List<Milestone> milestones){
+        return with(competition -> competition.setMilestones(milestones));
+    }
+
     public CompetitionBuilder withName(String name) {
         return with(competition -> setField("name", name, competition));
     }
@@ -113,6 +118,8 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
         } else if(Status.COMPETITION_SETUP_FINISHED.equals(status)) {
             return withStatus(Status.COMPETITION_SETUP_FINISHED)
                     .withStartDate(now.plusDays(1L));
+        } else if(Status.READY_TO_OPEN.equals(status)) {
+            return withStatus(Status.READY_TO_OPEN);
         } else {
                 throw new RuntimeException("status " + status + " not yet supported by CompetitionBuilder.withCompetitionStatus method");
             }

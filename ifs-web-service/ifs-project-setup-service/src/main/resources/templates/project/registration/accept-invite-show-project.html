@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+	<div th:include="fragments/layout :: head" th:with="pageTitle='Join an application'" th:remove="tag"/>
+</head>
+<body th:with="context='applicant'" class="create-application-eligibility">
+
+<div th:include="fragments/layout :: body-start" th:remove="tag"/>
+<div th:include="fragments/layout :: global-header" th:remove="tag"/>
+
+<main id="content">
+	<h1 class="heading-large">Join a project</h1>
+
+	<div class="panel-indent">
+		<p>You have been invited to join a collaborative project.</p>
+
+		<dl class="standard-definition-list">
+			<dt>Project</dt>
+			<dd>A novel solution to an old problem</dd>
+
+			<dt>Competition</dt>
+			<dd>Technology inspired</dd>
+
+			<dt>Lead organisation</dt>
+			<dd>Empire Ltd</dd>
+
+			<dt>Lead applicant</dt>
+			<dd>Steve Smith</dd>
+		</dl>
+
+		<p>You have been invited to join this project on behalf of the following organisation: <strong>Nomensa</strong></p>
+	</div>
+
+	<h2 class="heading-medium">Your Organisation</h2>
+
+	<fieldset>
+		<legend class="visuallyhidden">Your Organisation</legend>
+		<div class="form-block">
+			<h3 class="heading-small">Organisation name</h3>
+			<p>Nomensa</p>
+			<h3 class="heading-small">Registration number</h3>
+			<p>0123456789</p>
+			<h3 class="heading-small">Address</h3>
+			<p>13 Queens Square <br />
+				Bristol <br />
+				BS1 4NT
+			</p>
+		</div>
+	</fieldset>
+
+	<a th:href="@{/registration/accept-invite-user-exist-confirm}" class="button button-large extra-margin" name="select-org-size" th:unless="${!userExists}">Continue to project</a>
+
+	<a th:href="@{/registration/register}" class="button button-large extra-margin" name="select-org-size" th:unless="${userExists}">Create account</a>
+
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag"/>
+<div th:include="fragments/layout :: body-end" th:remove="tag"/>
+</body>
+</html>

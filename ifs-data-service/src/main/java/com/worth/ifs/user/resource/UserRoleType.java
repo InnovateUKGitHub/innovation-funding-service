@@ -1,5 +1,10 @@
 package com.worth.ifs.user.resource;
 
+import java.util.List;
+
+import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
+
 /**
  * The UserRoleType enumeration defines the available user roles.
  */
@@ -37,5 +42,9 @@ public enum UserRoleType {
             }
         }
         throw new IllegalArgumentException("No UserRoleType with name " + name);
+    }
+
+    public static List<String> roleNames(UserRoleType... roles){
+        return asList(roles).stream().map(r -> r.getName()).collect(toList());
     }
 }

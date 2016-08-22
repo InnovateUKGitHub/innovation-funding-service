@@ -1,12 +1,22 @@
 package com.worth.ifs.registration;
 
-import java.util.Map;
-import java.util.Optional;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.worth.ifs.BaseController;
+import com.worth.ifs.address.resource.AddressResource;
+import com.worth.ifs.address.resource.OrganisationAddressType;
+import com.worth.ifs.application.service.OrganisationService;
+import com.worth.ifs.commons.error.exception.InvalidURLException;
+import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.security.UserAuthenticationService;
+import com.worth.ifs.filter.CookieFlashMessageFilter;
+import com.worth.ifs.invite.constant.InviteStatus;
+import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.ApplicationInviteResource;
+import com.worth.ifs.invite.service.InviteRestService;
+import com.worth.ifs.organisation.resource.OrganisationAddressResource;
+import com.worth.ifs.registration.service.RegistrationService;
+import com.worth.ifs.user.resource.OrganisationResource;
+import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.util.CookieUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,22 +26,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.worth.ifs.BaseController;
-import com.worth.ifs.address.resource.AddressResource;
-import com.worth.ifs.address.resource.OrganisationAddressType;
-import com.worth.ifs.application.service.OrganisationService;
-import com.worth.ifs.commons.error.exception.InvalidURLException;
-import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.commons.security.UserAuthenticationService;
-import com.worth.ifs.filter.CookieFlashMessageFilter;
-import com.worth.ifs.invite.constant.InviteStatusConstants;
-import com.worth.ifs.invite.resource.InviteOrganisationResource;
-import com.worth.ifs.invite.service.InviteRestService;
-import com.worth.ifs.organisation.resource.OrganisationAddressResource;
-import com.worth.ifs.registration.service.RegistrationService;
-import com.worth.ifs.user.resource.OrganisationResource;
-import com.worth.ifs.user.resource.UserResource;
-import com.worth.ifs.util.CookieUtil;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
+import java.util.Optional;
+
 
 /**
  * This class is use as an entry point to accept a invite, to a application.
@@ -66,14 +65,14 @@ public class AcceptInviteController extends BaseController {
             return "never should get here because of exception.";
         } else {
             ApplicationInviteResource inviteResource = invite.getSuccessObject();
-            if (!InviteStatusConstants.SEND.equals(inviteResource.getStatus())) {
+            if (!InviteStatus.SENT.equals(inviteResource.getStatus())) {
                 return handleAcceptedInvite(cookieFlashMessageFilter, response);
             } else {
                 CookieUtil.saveToCookie(response, INVITE_HASH, hash);
                 InviteOrganisationResource inviteOrganisation = inviteRestService.getInviteOrganisationByHash(hash).getSuccessObjectOrThrowException();
 
                 // check if there already is a user with this emailaddress
-                RestResult<Void> existingUserSearch = inviteRestService.checkExistingUser(hash);
+                RestResult<Boolean> existingUserSearch = inviteRestService.checkExistingUser(hash);
                 // User already registered?
                 String redirectUrl = handleExistingUser(hash, response, request, model, inviteResource, existingUserSearch, inviteOrganisation);
                 if (redirectUrl != null) return redirectUrl;
@@ -91,8 +90,10 @@ public class AcceptInviteController extends BaseController {
         return "redirect:/login";
     }
 
-    private String handleExistingUser(@PathVariable("hash") String hash, HttpServletResponse response, HttpServletRequest request, Model model, ApplicationInviteResource inviteResource, RestResult<Void> existingUserSearch, InviteOrganisationResource inviteOrganisation) {
-        if (existingUserSearch.isSuccess()) {
+
+    private String handleExistingUser(@PathVariable("hash") String hash, HttpServletResponse response, HttpServletRequest request, Model model, ApplicationInviteResource inviteResource, RestResult<Boolean> existingUserSearch, InviteOrganisationResource inviteOrganisation) {
+        if (existingUserSearch.getSuccessObject()) {
+
             model.addAttribute("emailAddressRegistered", "true");
 
             UserResource loggedInUser = userAuthenticationService.getAuthenticatedUser(request);
@@ -132,7 +133,7 @@ public class AcceptInviteController extends BaseController {
 
         if (invite.isSuccess()) {
             ApplicationInviteResource inviteResource = invite.getSuccessObject();
-            if (InviteStatusConstants.SEND.equals(inviteResource.getStatus())) {
+            if (InviteStatus.SENT.equals(inviteResource.getStatus())) {
                 InviteOrganisationResource inviteOrganisation = inviteRestService.getInviteOrganisationByHash(hash).getSuccessObjectOrThrowException();
                 OrganisationResource organisation = organisationService.getOrganisationByIdForAnonymousUserFlow(inviteOrganisation.getOrganisation());
 

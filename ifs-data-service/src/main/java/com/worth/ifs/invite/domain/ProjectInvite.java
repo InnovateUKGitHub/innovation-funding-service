@@ -1,8 +1,6 @@
 package com.worth.ifs.invite.domain;
 
-import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.invite.constant.InviteStatusConstants;
+import com.worth.ifs.invite.constant.InviteStatus;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.user.domain.Organisation;
 
@@ -23,13 +21,14 @@ public class ProjectInvite extends Invite<Project, ProjectInvite> {
     @JoinColumn(name = "target_id", referencedColumnName = "id")
     private Project project;
 
-    ProjectInvite() {
+    public ProjectInvite() {
         // no-arg constructor
     }
 
-    public ProjectInvite(final String name, final String email, final String hash, final Organisation organisation, final Project project) {
-        super(name, email, hash, InviteStatusConstants.CREATED);
+    public ProjectInvite(final String name, final String email, final String hash, final Organisation organisation, final Project project, final InviteStatus status) {
+        super(name, email, hash, status);
         this.project = project;
+        this.organisation = organisation;
     }
 
     public Organisation getOrganisation() {

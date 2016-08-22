@@ -21,6 +21,7 @@ import com.worth.ifs.user.builder.UserResourceBuilder;
 import com.worth.ifs.user.resource.UserRoleType;
 import com.worth.ifs.user.service.UserService;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -101,8 +102,8 @@ public class CompetitionSetupControllerTest {
         ct1.setName("Comptype with stateAid");
         ct1.setStateAid(true);
         ct1.setCompetitions(asList(COMPETITION_ID));
-
         when(competitionService.getAllCompetitionTypes()).thenReturn(asList(ct1));
+
 
     }
     
@@ -244,8 +245,9 @@ public class CompetitionSetupControllerTest {
         				.param("singleOrCollaborative", "collaborative")
         				.param("leadApplicantType", "business")
         				.param("researchParticipationAmountId", "1"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/eligibility"));
+                        .andExpect(status().is3xxRedirection())
+                        .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/eligibility"));
+
 
         verify(competitionSetupService).saveCompetitionSetupSection(isA(CompetitionSetupForm.class), eq(competition), eq(CompetitionSetupSection.ELIGIBILITY));
     }
@@ -324,6 +326,43 @@ public class CompetitionSetupControllerTest {
 
         verify(competitionSetupService, atLeastOnce()).saveCompetitionSetupSection(any(AdditionalInfoForm.class),
                 any(CompetitionResource.class), any(CompetitionSetupSection.class));
+    }
+
+
+    @Test
+    public void testSendToDashboard() throws Exception {
+        CompetitionResource competition = newCompetitionResource()
+                .withActivityCode("Activity Code")
+                .withInnovateBudget("Innovate Budget")
+                .withFunder("Funder")
+                .withFunderBudget(new BigDecimal(1234))
+                .withCompetitionCode("c123")
+                .withPafCode("p123")
+                .withBudgetCode("b123")
+                .withCompetitionStatus(Status.COMPETITION_SETUP_FINISHED)
+                .withCoFunders(CompetitionCoFundersFixture.getTestCoFunders())
+                .withId(COMPETITION_ID).build();
+
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+
+        mockMvc.perform(get(URL_PREFIX + "/" + COMPETITION_ID))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/dashboard"));
+    }
+
+
+
+    @Test
+    public void testSetCompetitionAsReadyToOpen()  throws Exception {
+        CompetitionResource competition = newCompetitionResource()
+                .withCompetitionStatus(Status.COMPETITION_SETUP_FINISHED)
+                .withId(COMPETITION_ID).build();
+
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+
+        mockMvc.perform(get(URL_PREFIX + "/" + COMPETITION_ID + "/ready-to-open"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/competition/setup/"+COMPETITION_ID));
     }
 
 }

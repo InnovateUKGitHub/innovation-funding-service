@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 public class MilestoneResource {
     private Long id;
-    private String name;
+    private MilestoneType type;
     private LocalDateTime date;
     private Long competition;
 
@@ -17,12 +17,12 @@ public class MilestoneResource {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public MilestoneType getType() {
+        return type;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setType(MilestoneType milestoneType) {
+        this.type = milestoneType;
     }
 
     public LocalDateTime getDate() {
@@ -40,4 +40,6 @@ public class MilestoneResource {
     public void setCompetition(Long competition) {
         this.competition = competition;
     }
+    
+
 }

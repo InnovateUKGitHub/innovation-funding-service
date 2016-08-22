@@ -13,10 +13,7 @@ import java.util.Optional;
 public interface RegistrationService {
 
     @PreAuthorize("hasPermission(#user, 'CREATE')")
-    ServiceResult<UserResource> createApplicantUser(Long organisationId, @P("user") UserResource userResource);
-
-    @PreAuthorize("hasPermission(#user, 'CREATE')")
-    ServiceResult<UserResource> createApplicantUser(Long organisationId, Optional<Long> competitionId, @P("user") UserResource userResource);
+    ServiceResult<UserResource> createOrganisationUser(Long organisationId, @P("user") UserResource userResource);
 
     @PreAuthorize("hasPermission(#user, 'VERIFY')")
     ServiceResult<Void> sendUserVerificationEmail(@P("user") final UserResource user, final Optional<Long> competitionId);
