@@ -22,8 +22,7 @@ Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
-Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
-# TODO Known bug INFUND-4681, enforces the Competition Type (in Initial Details) to be Programme else Application Questions lead to 404, please do not change the value!
+Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot    # TODO Known bug INFUND-4681, enforces the Competition Type (in Initial Details) to be Programme else Application Questions lead to 404, please do not change the value!
 
 *** Test Cases ***
 User can navigate to the competition setup form
@@ -42,7 +41,7 @@ User can navigate to the competition setup form
     ...    IFUND-3888
     ...
     ...
-    ...    INFUND-3002  As a Competition Executive and I have added all information in all obligatory fields I want to mark the competition ready for open.
+    ...    INFUND-3002 As a Competition Executive and I have added all information in all obligatory fields I want to mark the competition ready for open.
     [Tags]    HappyPath
     Given the user clicks the button/link    id=section-3
     When the user clicks the button/link    jQuery=.button:contains("Create competition")
@@ -110,11 +109,11 @@ Initial details client-side validations
     When the user selects the option from the drop-down menu    Advanced Therapies    id=innovationAreaCategoryId
     Then the user should not see the error any more    Please select an innovation area
     When the user enters text to a text field    id=openingDateDay    01
-#    Then the user should not see the error any more    Please enter an opening day
+    #    Then the user should not see the error any more    Please enter an opening day
     When the user enters text to a text field    Id=openingDateMonth    12
-#    Then the user should not see the error any more    Please enter an opening month
+    #    Then the user should not see the error any more    Please enter an opening month
     When the user enters text to a text field    id=openingDateYear    2017
-#    Then the user should not see the error any more    Please enter an opening year
+    #    Then the user should not see the error any more    Please enter an opening year
     When the user selects the option from the drop-down menu    Competition Technologist One    id=leadTechnologistUserId
     Then the user should not see the error any more    Please select a lead technologist
     When the user selects the option from the drop-down menu    Competition Executive Two    id=executiveUserId
@@ -182,9 +181,9 @@ Funding information client-side validations
     And the user enters text to a text field    id=budgetCode    2004
     Then the user should not see the error any more    Please enter a budget code
     And the user enters text to a text field    id=activityCode    4242
-#    Then the user should not see the error any more    Please enter an activity code
+    #    Then the user should not see the error any more    Please enter an activity code
     When the user clicks the button/link    jQuery=.button:contains("Generate code")
-#    Then The user should not see the text in the page    Please generate a competition code
+    #    Then The user should not see the text in the page    Please generate a competition code
 
 Funding informations calculations
     [Documentation]    INFUND-2985
@@ -209,10 +208,10 @@ Funding Information can be saved
 
 Funding Information can be edited
     [Documentation]    INFUND-3876
-    When the user clicks the button/link        jQuery=.button:contains("Edit")
+    When the user clicks the button/link    jQuery=.button:contains("Edit")
     And the user enters text to a text field    id=funder    testFunder
     When the user clicks the button/link    jQuery=.button:contains("Done")
-    Then the user should see the text in the page   testFunder
+    Then the user should see the text in the page    testFunder
     When the user clicks the button/link    link=Competition set up
     Then the user should not see the element    jQuery=.button:contains("Save as Ready To Open")
 
@@ -295,14 +294,14 @@ Eligibility can be marked as done then edit again
 Save as Ready To Open button
     [Documentation]    INFUND-3876
     [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
-    Given the user should see the element        jQuery=.button:contains("Save as Ready To Open")
-    When the user clicks the button/link         jQuery=.button:contains("Save as Ready To Open")
-    Then the user should see the element         jQuery=img.section-status:eq(0)
-    And the user should see the element          jQuery=img.section-status:eq(1)
-    And the user should see the element          jQuery=img.section-status:eq(2)
-    When the user clicks the button/link         link=All competitions
-    And the user clicks the button/link          id=section-3
-    Then element text should be                  //*[@id="content"]/section[2]/div/div/ul/li[1]/div[1]/h3/a    Test competition
+    Given the user should see the element    jQuery=.button:contains("Save as Ready To Open")
+    When the user clicks the button/link    jQuery=.button:contains("Save as Ready To Open")
+    Then the user should see the element    jQuery=img.section-status:eq(0)
+    And the user should see the element    jQuery=img.section-status:eq(1)
+    And the user should see the element    jQuery=img.section-status:eq(2)
+    When the user clicks the button/link    link=All competitions
+    And the user clicks the button/link    id=section-3
+    Then element text should be    //*[@id="content"]/section[2]/div/div/ul/li[1]/div[1]/h3/a    Test competition
     # The above line checks that the first competition in the section 'Ready to Open' is named Test competition
     [Teardown]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
 
@@ -331,7 +330,6 @@ Application questions: server side validations
     And The user clicks the button/link    jQuery=.button[value="Save and close"]
     Then the validation error above the question should be visible    jQuery=label:contains(Question title)    This field cannot be left blank
     And the validation error above the question should be visible    jQuery=label:contains(Question guidance title)    This field cannot be left blank
-    #Todo: investigate why this step fails with chrome driver    INFUND-4514
     And the validation error above the question should be visible    jQuery=div:nth-child(4) div:nth-child(4) label:contains(Question guidance)    This field cannot be left blank
 
 Application questions: Client side validations
@@ -340,9 +338,7 @@ Application questions: Client side validations
     Then the validation error above the question should not be visible    jQuery=label:contains(Question title)    This field cannot be left blank
     And the validation error above the question should not be visible    jQuery=label:contains(Question guidance title)    This field cannot be left blank
     And the validation error above the question should not be visible    jQuery=div:nth-child(4) div:nth-child(4) label:contains(Question guidance)    This field cannot be left blank
-    And The user enters text to a text field    id=question.maxWords    ${EMPTY}
-    And the validation error above the question should be visible    jQuery=label:contains(Max word count)    This field cannot be left blank
-    And input text    jQuery=[id="question.maxWords"]    150
+    And the validation error above the question should not be visible    jQuery=label:contains(Max word count)    This field cannot be left blank
     And the validation error above the question should not be visible    jQuery=label:contains(Max word count)    This field cannot be left blank
 
 Application questions: Mark as done and the Edit again
