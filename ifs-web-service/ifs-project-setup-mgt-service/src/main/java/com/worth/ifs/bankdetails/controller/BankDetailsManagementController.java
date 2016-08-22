@@ -116,7 +116,7 @@ public class BankDetailsManagementController {
             return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors()).failNowOrSucceedWith(
                     failureView, () -> {
                         OrganisationResource updatedOrganisationResource = buildOrganisationResource(organisationResource, form);
-                        updatedOrganisationResource = organisationService.save(updatedOrganisationResource);
+                        updatedOrganisationResource = organisationService.updateNameAndRegistration(updatedOrganisationResource);
                         return doViewChangeBankDetailsUpdated(updatedOrganisationResource, project, updatedBankDetailsResource, model);
                     });
         });

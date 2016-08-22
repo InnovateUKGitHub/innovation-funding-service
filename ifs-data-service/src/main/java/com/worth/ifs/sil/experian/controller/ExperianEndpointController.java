@@ -447,6 +447,6 @@ public class ExperianEndpointController {
                         "  \"description\": \"Invalid Parameter\"\n" +
                         "}", SilError.class)
         );
-        defaultVerificationResult = new VerificationResultWrapper(new VerificationResult("7", "7", "7", "Match", singletonList(new Condition("warning", 2, "Modulus check algorithm is unavailable for these account details"))));
+        defaultVerificationResult = new VerificationResultWrapper(new VerificationResult("1", "7", "3", "No Match", singletonList(new Condition("warning", 2, "Modulus check algorithm is unavailable for these account details"))));
     }
 }

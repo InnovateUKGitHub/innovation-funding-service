@@ -4,7 +4,9 @@ import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.user.resource.OrganisationResource;
 import org.junit.Test;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.util.UriUtils;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.organisationResourceListType;
@@ -50,5 +52,24 @@ public class OrganisationRestServiceMocksTest extends BaseRestServiceUnitTest<Or
 
         OrganisationResource response = service.getOrganisationById(123L).getSuccessObject();
         assertEquals(returnedResponse, response);
+    }
+
+    @Test
+    public void updateOrganisationNameAndRegistation() throws UnsupportedEncodingException {
+        Long organisationId = 1L;
+
+        OrganisationResource organisationResource= newOrganisationResource()
+                .withId(organisationId)
+                .withName("Vitruvius Stonework Limited")
+                .withCompanyHouseNumber("60674010")
+                .build();
+
+        String organisationNameEncoded = UriUtils.encode(organisationResource.getName(), "UTF-8");
+
+        setupPostWithRestResultExpectations(organisationsUrl + "/updateNameAndRegistration/" + organisationId + "?name=" + organisationNameEncoded + "&registration=" + organisationResource.getCompanyHouseNumber(), OrganisationResource.class, null, organisationResource, OK);
+
+        OrganisationResource receivedResource = service.updateNameAndRegistration(organisationResource).getSuccessObject();
+
+        assertEquals(organisationResource, receivedResource);
     }
 }

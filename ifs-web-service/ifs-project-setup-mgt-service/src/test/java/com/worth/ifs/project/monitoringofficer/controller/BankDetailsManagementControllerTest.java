@@ -156,7 +156,7 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
         when(bankDetailsService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(bankDetailsResource);
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
         when(bankDetailsService.updateBankDetails(project.getId(), updatedBankDetailsResource)).thenReturn(serviceSuccess());
-        when(organisationService.save(organisationResource)).thenReturn(organisationResource);
+        when(organisationService.updateNameAndRegistration(organisationResource)).thenReturn(organisationResource);
 
         MvcResult result = mockMvc.perform(post("/project/" + project.getId() + "/organisation/" + organisationResource.getId() + "/review-bank-details/change").
                 contentType(MediaType.APPLICATION_FORM_URLENCODED).
@@ -186,7 +186,7 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
         when(bankDetailsService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(bankDetailsResource);
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
         when(bankDetailsService.updateBankDetails(project.getId(), updatedAddressBankDetailsResource)).thenReturn(serviceSuccess());
-        when(organisationService.save(organisationResource)).thenReturn(organisationResource);
+        when(organisationService.updateNameAndRegistration(organisationResource)).thenReturn(organisationResource);
 
         MvcResult result = mockMvc.perform(post("/project/" + project.getId() + "/organisation/" + organisationResource.getId() + "/review-bank-details/change").
                 contentType(MediaType.APPLICATION_FORM_URLENCODED).
@@ -216,7 +216,7 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
         when(bankDetailsService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(bankDetailsResource);
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
         when(bankDetailsService.updateBankDetails(project.getId(), notUpdatedBankDetailsResource)).thenReturn(serviceSuccess());
-        when(organisationService.save(updatedOrganisationResource)).thenReturn(updatedOrganisationResource);
+        when(organisationService.updateNameAndRegistration(updatedOrganisationResource)).thenReturn(updatedOrganisationResource);
 
         MvcResult result = mockMvc.perform(post("/project/" + project.getId() + "/organisation/" + organisationResource.getId() + "/review-bank-details/change").
                 contentType(MediaType.APPLICATION_FORM_URLENCODED).
