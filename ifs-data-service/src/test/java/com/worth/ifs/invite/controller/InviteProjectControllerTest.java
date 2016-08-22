@@ -3,7 +3,7 @@ package com.worth.ifs.invite.controller;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.invite.builder.ProjectInviteResourceBuilder;
-import com.worth.ifs.invite.constant.InviteStatusConstants;
+import com.worth.ifs.invite.constant.InviteStatus;
 import com.worth.ifs.invite.domain.ProjectInvite;
 import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.user.domain.User;
@@ -47,7 +47,7 @@ public class InviteProjectControllerTest  extends BaseControllerMockMVCTest<Invi
                 withId(1L).
                 withEmail("testProject-invite@mail.com").
                 withName("test-project-invitece").
-                withStatus(InviteStatusConstants.CREATED).
+                withStatus(InviteStatus.CREATED).
                 withOrganisation(25L).
                 withProject(2L).
                 build();
@@ -110,7 +110,7 @@ public class InviteProjectControllerTest  extends BaseControllerMockMVCTest<Invi
                 withId(1L).
                 withEmail("testProject-invite@mail.com").
                 withName("test-project-invitece").
-                withStatus(InviteStatusConstants.CREATED).
+                withStatus(InviteStatus.CREATED).
                 withOrganisation(25L).
                 withProject(2L).
                 build();
@@ -145,11 +145,11 @@ public class InviteProjectControllerTest  extends BaseControllerMockMVCTest<Invi
 
         Long projectId = 123L;
 
-        List<InviteProjectResource> inviteProjectResources = ProjectInviteResourceBuilder.newInviteProjectResources().
+        List<InviteProjectResource> inviteProjectResources = ProjectInviteResourceBuilder.newInviteProjectResource().
                 withIds(1L).
                 withEmails("testProject-invite@mail.com").
                 withNames("test-project-invitece").
-                withStatuss(InviteStatusConstants.CREATED).
+                withStatuss(InviteStatus.CREATED).
                 withOrganisations(25L).
                 withProjects(2L).
                 build(5);
@@ -218,7 +218,7 @@ public class InviteProjectControllerTest  extends BaseControllerMockMVCTest<Invi
 
         String hash = "has545967h";
 
-        when(inviteProjectServiceMock.checkUserExistingByInviteHash(hash)).thenReturn(serviceSuccess());
+        when(inviteProjectServiceMock.checkUserExistingByInviteHash(hash)).thenReturn(serviceSuccess(true));
 
         mockMvc.perform(get("/projectinvite/checkExistingUser/{hash}", hash)
                 .accept(APPLICATION_JSON))

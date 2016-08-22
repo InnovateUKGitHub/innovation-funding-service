@@ -6,9 +6,9 @@ import com.worth.ifs.invite.domain.CompetitionInvite;
 import org.junit.Before;
 import org.junit.Test;
 
-import static com.worth.ifs.invite.constant.InviteStatusConstants.ACCEPTED;
-import static com.worth.ifs.invite.constant.InviteStatusConstants.CREATED;
-import static com.worth.ifs.invite.constant.InviteStatusConstants.SEND;
+import static com.worth.ifs.invite.constant.InviteStatus.OPENED;
+import static com.worth.ifs.invite.constant.InviteStatus.CREATED;
+import static com.worth.ifs.invite.constant.InviteStatus.SENT;
 import static org.junit.Assert.assertEquals;
 
 public class CompetitionInviteTest {
@@ -34,13 +34,13 @@ public class CompetitionInviteTest {
     @Test
     public void send() {
         invite.send();
-        assertEquals(SEND, invite.getStatus());
+        assertEquals(SENT, invite.getStatus());
     }
 
     @Test(expected = IllegalStateException.class)
     public void send_sent() {
         invite.send().send();
-        assertEquals(SEND, invite.getStatus());
+        assertEquals(SENT, invite.getStatus());
     }
 
     @Test(expected = IllegalStateException.class)
@@ -52,18 +52,18 @@ public class CompetitionInviteTest {
     public void open_created() {
         // this probably shouldn't allow an invite that hasn't been sent from being opened
         invite.open();
-        assertEquals(ACCEPTED, invite.getStatus());
+        assertEquals(OPENED, invite.getStatus());
     }
 
     @Test
     public void open_sent() {
         invite.send().open();
-        assertEquals(ACCEPTED, invite.getStatus());
+        assertEquals(OPENED, invite.getStatus());
     }
 
     @Test
     public void open_opened() {
         invite.open().open();
-        assertEquals(ACCEPTED, invite.getStatus());
+        assertEquals(OPENED, invite.getStatus());
     }
 }

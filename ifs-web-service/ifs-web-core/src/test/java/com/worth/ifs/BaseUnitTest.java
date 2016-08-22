@@ -25,7 +25,7 @@ import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.form.service.FormInputResponseService;
 import com.worth.ifs.form.service.FormInputService;
-import com.worth.ifs.invite.constant.InviteStatusConstants;
+import com.worth.ifs.invite.constant.InviteStatus;
 import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.service.InviteOrganisationRestService;
@@ -626,7 +626,7 @@ public class BaseUnitTest {
         InviteOrganisationResource inviteOrganisation = new InviteOrganisationResource(2L, "Invited Organisation Ltd", null, null);
 
         invite = new ApplicationInviteResource();
-        invite.setStatus(InviteStatusConstants.SEND);
+        invite.setStatus(InviteStatus.SENT);
         invite.setApplication(1L);
         invite.setName("Some Invitee");
         invite.setHash(INVITE_HASH);
@@ -638,13 +638,13 @@ public class BaseUnitTest {
         when(inviteRestService.getInviteByHash(eq(INVITE_HASH))).thenReturn(restSuccess(invite));
         when(inviteOrganisationRestService.findOne(eq(invite.getInviteOrganisation()))).thenReturn(restSuccess(inviteOrganisation));
         when(inviteOrganisationRestService.put(any())).thenReturn(restSuccess());
-        when(inviteRestService.checkExistingUser(eq(INVITE_HASH))).thenReturn(restFailure(notFoundError(UserResource.class, INVITE_HASH)));
+        when(inviteRestService.checkExistingUser(eq(INVITE_HASH))).thenReturn(restSuccess(false));
         when(inviteRestService.checkExistingUser(eq(INVALID_INVITE_HASH))).thenReturn(restFailure(notFoundError(UserResource.class, email)));
         when(inviteRestService.getInviteByHash(eq(INVALID_INVITE_HASH))).thenReturn(restFailure(emptyList()));
         when(inviteRestService.getInviteOrganisationByHash(INVITE_HASH)).thenReturn(restSuccess(new InviteOrganisationResource()));
 
         acceptedInvite = new ApplicationInviteResource();
-        acceptedInvite.setStatus(InviteStatusConstants.ACCEPTED);
+        acceptedInvite.setStatus(InviteStatus.OPENED);
         acceptedInvite.setApplication(1L);
         acceptedInvite.setName("Some Invitee");
         acceptedInvite.setHash(ACCEPTED_INVITE_HASH);
@@ -652,12 +652,12 @@ public class BaseUnitTest {
         when(inviteRestService.getInviteByHash(eq(ACCEPTED_INVITE_HASH))).thenReturn(restSuccess(acceptedInvite));
 
         existingUserInvite = new ApplicationInviteResource();
-        existingUserInvite.setStatus(InviteStatusConstants.SEND);
+        existingUserInvite.setStatus(InviteStatus.SENT);
         existingUserInvite.setApplication(1L);
         existingUserInvite.setName("Some Invitee");
         existingUserInvite.setHash(INVITE_HASH_EXISTING_USER);
         existingUserInvite.setEmail("existing@email.com");
-        when(inviteRestService.checkExistingUser(eq(INVITE_HASH_EXISTING_USER))).thenReturn(restSuccess());
+        when(inviteRestService.checkExistingUser(eq(INVITE_HASH_EXISTING_USER))).thenReturn(restSuccess(true));
         when(inviteRestService.getInviteByHash(eq(INVITE_HASH_EXISTING_USER))).thenReturn(restSuccess(existingUserInvite));
 
         when(inviteRestService.getInvitesByApplication(isA(Long.class))).thenReturn(restSuccess(emptyList()));

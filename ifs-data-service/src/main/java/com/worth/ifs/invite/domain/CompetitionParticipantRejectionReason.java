@@ -1,4 +1,4 @@
-package com.worth.ifs.competition.domain;
+package com.worth.ifs.invite.domain;
 
 import javax.persistence.*;
 

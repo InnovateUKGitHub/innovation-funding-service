@@ -1,13 +1,13 @@
 package com.worth.ifs.invite.resource;
 
-import com.worth.ifs.invite.constant.InviteStatusConstants;
+import com.worth.ifs.invite.constant.InviteStatus;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * DTO to transfer Project Invite related Entities
  */
-public class InviteProjectResource {
+public class InviteProjectResource extends InviteResource {
 
     private Long id;
     private Long user;
@@ -19,14 +19,19 @@ public class InviteProjectResource {
     private Long organisation;
     private String projectName;
     private String hash;
-    private InviteStatusConstants status;
+    private InviteStatus status;
+    private String leadOrganisation;
+    private Long inviteOrganisation;
+    private String inviteOrganisationName;
+    private String leadApplicant;
+    private String competitionName;
 
 
     public InviteProjectResource() {
         // no-arg constructor
     }
 
-    public InviteProjectResource(Long id, Long user, String name, String email, Long project, Long organisation, Long applicationId, String hash, InviteStatusConstants status) {
+    public InviteProjectResource(Long id, Long user, String name, String email, Long project, Long organisation, Long applicationId, String hash, InviteStatus status, String leadApplicant, String competitionName) {
         this.id = id;
         this.user = user;
         this.name = name;
@@ -36,6 +41,8 @@ public class InviteProjectResource {
         this.applicationId  = applicationId;
         this.hash = hash;
         this.status = status;
+        this.competitionName = competitionName;
+        this.leadApplicant = leadApplicant;
     }
 
     public InviteProjectResource(String name, String email, Long project) {
@@ -84,9 +91,49 @@ public class InviteProjectResource {
 
     public void setHash(String hash) { this.hash = hash; }
 
-    public InviteStatusConstants getStatus() { return status; }
+    public InviteStatus getStatus() { return status; }
 
-    public void setStatus(InviteStatusConstants status) { this.status = status; }
+    public void setStatus(InviteStatus status) { this.status = status; }
+
+    public String getLeadOrganisation() {
+        return leadOrganisation;
+    }
+
+    public void setLeadOrganisation(String leadOrganisation) {
+        this.leadOrganisation = leadOrganisation;
+    }
+
+    public String getInviteOrganisationName() {
+        return inviteOrganisationName;
+    }
+
+    public void setInviteOrganisationName(String inviteOrganisationName) {
+        this.inviteOrganisationName = inviteOrganisationName;
+    }
+
+    public Long getInviteOrganisation() {
+        return inviteOrganisation;
+    }
+
+    public void setInviteOrganisation(Long inviteOrganisation) {
+        this.inviteOrganisation = inviteOrganisation;
+    }
+
+    public String getLeadApplicant() {
+        return leadApplicant;
+    }
+
+    public void setLeadApplicant(String leadApplicant) {
+        this.leadApplicant = leadApplicant;
+    }
+
+    public String getCompetitionName() {
+        return competitionName;
+    }
+
+    public void setCompetitionName(String competitionName) {
+        this.competitionName = competitionName;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -108,6 +155,11 @@ public class InviteProjectResource {
                 .append(projectName, that.projectName)
                 .append(hash, that.hash)
                 .append(status, that.status)
+                .append(leadOrganisation, that.leadOrganisation)
+                .append(inviteOrganisation, that.inviteOrganisation)
+                .append(inviteOrganisationName, that.inviteOrganisationName)
+                .append(leadApplicant, that.leadApplicant)
+                .append(competitionName, that.competitionName)
                 .isEquals();
     }
 
@@ -125,6 +177,8 @@ public class InviteProjectResource {
                 .append(projectName)
                 .append(hash)
                 .append(status)
+                .append(leadApplicant)
+                .append(competitionName)
                 .toHashCode();
     }
 }

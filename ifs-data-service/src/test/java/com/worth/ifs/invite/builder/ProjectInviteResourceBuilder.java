@@ -1,15 +1,15 @@
 package com.worth.ifs.invite.builder;
 
+import com.worth.ifs.BaseBuilder;
+import com.worth.ifs.invite.constant.InviteStatus;
+import com.worth.ifs.invite.resource.InviteProjectResource;
+
 import java.util.List;
 import java.util.function.BiConsumer;
 
 import static com.worth.ifs.BaseBuilderAmendFunctions.setField;
-import static java.util.Collections.emptyList;
-
 import static com.worth.ifs.BaseBuilderAmendFunctions.uniqueIds;
-import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.invite.constant.InviteStatusConstants;
-import com.worth.ifs.invite.resource.InviteProjectResource;
+import static java.util.Collections.emptyList;
 
 
 public class ProjectInviteResourceBuilder  extends BaseBuilder<InviteProjectResource, ProjectInviteResourceBuilder> {
@@ -19,10 +19,6 @@ public class ProjectInviteResourceBuilder  extends BaseBuilder<InviteProjectReso
     }
 
     public static ProjectInviteResourceBuilder newInviteProjectResource() {
-        return new ProjectInviteResourceBuilder(emptyList()).with(uniqueIds());
-    }
-
-    public static ProjectInviteResourceBuilder newInviteProjectResources() {
         return new ProjectInviteResourceBuilder(emptyList()).with(uniqueIds());
     }
 
@@ -48,8 +44,12 @@ public class ProjectInviteResourceBuilder  extends BaseBuilder<InviteProjectReso
         return with((inviteResource) -> inviteResource.setName(name));
     }
 
-    public ProjectInviteResourceBuilder withStatus(final InviteStatusConstants status) {
+    public ProjectInviteResourceBuilder withStatus(final InviteStatus status) {
         return with((inviteResource) -> inviteResource.setStatus(status));
+    }
+
+    public ProjectInviteResourceBuilder withHash(final String hash) {
+        return with((inviteResource) -> inviteResource.setHash(hash));
     }
 
     public ProjectInviteResourceBuilder withProject(final Long projectId) {
@@ -60,10 +60,20 @@ public class ProjectInviteResourceBuilder  extends BaseBuilder<InviteProjectReso
         return with((inviteResource) -> inviteResource.setOrganisation(organisationId));
     }
 
+    public  ProjectInviteResourceBuilder withLeadOrganisation(final String leadOrganisation) {
+        return with((inviteResource) -> inviteResource.setLeadOrganisation(leadOrganisation));
+    }
+
+    public  ProjectInviteResourceBuilder withInviteOrganisationName(final String inviteOrganisationName) {
+        return with((inviteResource) -> inviteResource.setInviteOrganisationName(inviteOrganisationName));
+    }
 
     public ProjectInviteResourceBuilder withIds(Long... ids) {
         return withArray((id, inviteResource) -> setField("id", id, inviteResource), ids);
+    }
 
+    public ProjectInviteResourceBuilder withHash(String... hashes) {
+        return withArray((hash, inviteResource) -> setField("hash", hash, inviteResource), hashes);
     }
 
     public ProjectInviteResourceBuilder withEmails(final String... emailAddresses) {
@@ -74,7 +84,11 @@ public class ProjectInviteResourceBuilder  extends BaseBuilder<InviteProjectReso
         return withArray((name, inviteResource) -> setField("name", name, inviteResource), names);
     }
 
-    public ProjectInviteResourceBuilder withStatuss(final InviteStatusConstants... statusses) {
+    public ProjectInviteResourceBuilder withProjectName(final String... names) {
+        return withArray((name, inviteResource) -> setField("projectName", name, inviteResource), names);
+    }
+
+    public ProjectInviteResourceBuilder withStatuss(final InviteStatus... statusses) {
         return withArray((status, inviteResource) -> setField("status", status, inviteResource), statusses);
     }
 
