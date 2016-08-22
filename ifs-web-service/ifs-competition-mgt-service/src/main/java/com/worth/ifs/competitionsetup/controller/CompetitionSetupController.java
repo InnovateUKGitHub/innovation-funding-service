@@ -294,10 +294,9 @@ public class CompetitionSetupController {
     }
 
     private boolean isSendToDashboard(CompetitionResource competition) {
-        return (competition == null ||
+        return competition == null ||
                 (!Status.COMPETITION_SETUP.equals(competition.getCompetitionStatus()) &&
-                !Status.READY_TO_OPEN.equals(competition.getCompetitionStatus())) &&
-                        !Status.NOT_STARTED.equals(competition.getCompetitionStatus())) ? true : false;
+                !Status.READY_TO_OPEN.equals(competition.getCompetitionStatus()));
     }
 
     private ObjectNode createJsonObjectNode(boolean success, String message) {
