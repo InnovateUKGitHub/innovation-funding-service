@@ -203,7 +203,7 @@ Funding information client-side validations
     And the user enters text to a text field    id=activityCode    4242
     #    Then the user should not see the error any more    Please enter an activity code
     When the user clicks the button/link    jQuery=.button:contains("Generate code")
-    #    Then The user should not see the text in the page    Please generate a competition code
+    Then The user should not see the text in the page    Please generate a competition code
 
 Funding informations calculations
     [Documentation]    INFUND-2985
