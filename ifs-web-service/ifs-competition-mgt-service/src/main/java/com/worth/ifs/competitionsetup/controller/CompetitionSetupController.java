@@ -276,8 +276,13 @@ public class CompetitionSetupController {
         List<Error> saveSectionResult = competitionSetupService.saveCompetitionSetupSection(competitionSetupForm, competition, section);
         if(saveSectionResult != null && !saveSectionResult.isEmpty()) {
             saveSectionResult.forEach(e -> {
-                ObjectError error = new ObjectError("currentSection", e.getErrorMessage());
-                bindingResult.addError(error);
+                if(e.getFieldName() != null) {
+                    bindingResult.rejectValue(e.getFieldName(), e.getErrorKey(), e.getErrorMessage());
+                } else {
+                    ObjectError error = new ObjectError("currentSection",
+                            e.getErrorMessage());
+                    bindingResult.addError(error);
+                }
             });
         }
 
