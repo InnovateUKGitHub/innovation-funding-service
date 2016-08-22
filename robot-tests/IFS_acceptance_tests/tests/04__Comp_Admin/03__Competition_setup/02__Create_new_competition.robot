@@ -65,7 +65,7 @@ Initial details server-side validations
     [Documentation]    INFUND-2982
     ...
     ...    IFUND-3888
-    [Tags]
+    [Tags]    HappyPath
     Given the user should not see the element    css=#stateAid
     When the user clicks the button/link    jQuery=.button:contains("Done")
     Then the user should see an error    Please enter a title
@@ -84,7 +84,7 @@ Initial details correct state aid status
     ...    INFUND-2983
     ...
     ...    INFUND-3888
-    [Tags]    HappyPath
+    [Tags]
     When the user selects the option from the drop-down menu    SBRI    id=competitionTypeId
     Then the user should see the element    css=.no
     When the user selects the option from the drop-down menu    Special    id=competitionTypeId
@@ -143,7 +143,7 @@ Initial details can be edited again
     ...
     ...    INFUND-3182
     ...    INFUND-3876
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Edit")
     And the user enters text to a text field    id=title    Test competition
     And the user clicks the button/link    jQuery=.button:contains("Done")
@@ -159,6 +159,8 @@ Initial details can be edited again
 
 Funding information server-side validations
     [Documentation]    INFUND-2985
+    [Tags]    HappyPath
+    [Setup]    go to    ${COMP_MANAGEMENT_COMP_SETUP}
     Given the user clicks the button/link    link=Funding Information
     And the user redirects to the page    Funding information    Reporting fields
     When the user clicks the button/link    jQuery=.button:contains("Done")
@@ -171,6 +173,7 @@ Funding information server-side validations
 
 Funding information client-side validations
     [Documentation]    INFUND-2985
+    [Tags]    HappyPath
     # TODO Update validation messages after INFUND-4676 is done.
     When the user enters text to a text field    id=funder    FunderName
     Then the user should not see the error any more    Please enter a funder name
@@ -187,6 +190,7 @@ Funding information client-side validations
 
 Funding informations calculations
     [Documentation]    INFUND-2985
+    [Tags]    HappyPath
     When the user clicks the button/link    jQuery=Button:contains("+Add co-funder")
     and the user should see the element    jQuery=Button:contains("+Add co-funder")
     Then the user should see the element    css=#co-funder-row-0
@@ -196,6 +200,7 @@ Funding informations calculations
 
 Funding Information can be saved
     [Documentation]    INFUND-3182
+    [Tags]    HappyPath
     When the user clicks the button/link    jQuery=.button:contains("Done")
     Then the user should see the text in the page    FunderName
     And the user should see the text in the page    FunderName2
@@ -219,6 +224,7 @@ Eligibility page should contain the correct options
     [Documentation]    INFUND-2989
     ...
     ...    INFUND-2990
+    [Tags]    HappyPath
     [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
     Given the user clicks the button/link    link=Eligibility
     And the user should see the text in the page    Does the competition have multiple stream?
@@ -235,7 +241,7 @@ Eligibility page should contain the correct options
 
 Eligibility server-side validations
     [Documentation]    INFUND-2986
-    [Tags]
+    [Tags]    HappyPath
     [Setup]
     Given the user selects the radio button    multipleStream    yes
     When the user clicks the button/link    jQuery=.button:contains("Done")
@@ -250,7 +256,7 @@ Eligibility client-side validations
     ...    IINFUND-2988
     ...
     ...    INFUND-3888
-    [Tags]
+    [Tags]    HappyPath
     Given the user selects the radio button    multipleStream    yes
     When the user selects the checkbox    id=research-categories-33
     And the user selects the checkbox    id=research-categories-34
@@ -307,6 +313,7 @@ Save as Ready To Open button
 
 Application questions: All the sections should be visible
     [Documentation]    INFUND-3000
+    [Tags]    HappyPath
     [Setup]    go to    ${COMP_MANAGEMENT_COMP_SETUP}
     When The user clicks the button/link    link=Application Questions
     Then The user should see the text in the page    Template: Programme 10 questions
@@ -323,6 +330,7 @@ Application questions: All the sections should be visible
 
 Application questions: server side validations
     [Documentation]    INFUND-3000
+    [Tags]    HappyPath
     Given The user clicks the button/link    jQuery=li:nth-child(5) .button:contains(Edit)
     And The user should see the element    jQuery=.button[value="Save and close"]
     When the user leaves all the question field empty
@@ -334,6 +342,7 @@ Application questions: server side validations
 
 Application questions: Client side validations
     [Documentation]    INFUND-3000
+    [Tags]    HappyPath
     Given the user fills the empty question fields
     Then the validation error above the question should not be visible    jQuery=label:contains(Question title)    This field cannot be left blank
     And the validation error above the question should not be visible    jQuery=label:contains(Question guidance title)    This field cannot be left blank
@@ -343,6 +352,7 @@ Application questions: Client side validations
 
 Application questions: Mark as done and the Edit again
     [Documentation]    INFUND-3000
+    [Tags]    HappyPath
     [Setup]    The user clicks the button/link    jQuery=.grid-row div:nth-child(2) label:contains(Yes)
     When The user clicks the button/link    jQuery=.button[value="Save and close"]
     Then The user should see the text in the page    Test title
