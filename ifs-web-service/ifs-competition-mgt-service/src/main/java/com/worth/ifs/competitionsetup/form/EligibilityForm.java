@@ -11,7 +11,7 @@ import java.util.Set;
  * Form for the eligibility competition setup section.
  */
 public class EligibilityForm extends CompetitionSetupForm {
-	@NotBlank(message = "{Evalidation.eligibilityform.multiplestream.required}")
+	@NotBlank(message = "{validation.eligibilityform.multiplestream.required}")
 	private String multipleStream;
 	@Size(max = 255, message = "{validation.eligibilityform.streamname.length.max}")
 	private String streamName;
@@ -23,7 +23,7 @@ public class EligibilityForm extends CompetitionSetupForm {
 	private String leadApplicantType;
 	@NotNull(message = "{validation.eligibilityform.researchparticipationamountId.required}")
 	private Integer researchParticipationAmountId;
-	@NotBlank(message = "{Evalidation.eligibilityform.resubmission.required}")
+	@NotBlank(message = "{validation.eligibilityform.resubmission.required}")
 	private String resubmission;
 	
 	public String getMultipleStream() {

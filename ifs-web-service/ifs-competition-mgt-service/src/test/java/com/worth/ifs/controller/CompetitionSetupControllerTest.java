@@ -21,7 +21,6 @@ import com.worth.ifs.user.builder.UserResourceBuilder;
 import com.worth.ifs.user.resource.UserRoleType;
 import com.worth.ifs.user.service.UserService;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -244,7 +243,8 @@ public class CompetitionSetupControllerTest {
         				.param("researchCategoryId", "1", "2", "3")
         				.param("singleOrCollaborative", "collaborative")
         				.param("leadApplicantType", "business")
-        				.param("researchParticipationAmountId", "1"))
+        				.param("researchParticipationAmountId", "1")
+                        .param("resubmission", "yes"))
                         .andExpect(status().is3xxRedirection())
                         .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/eligibility"));
 
