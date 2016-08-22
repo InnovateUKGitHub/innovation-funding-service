@@ -339,7 +339,7 @@ public class CompetitionSetupControllerTest {
                 .withCompetitionCode("c123")
                 .withPafCode("p123")
                 .withBudgetCode("b123")
-                .withCompetitionStatus(Status.COMPETITION_SETUP_FINISHED)
+                .withCompetitionStatus(Status.OPEN)
                 .withCoFunders(CompetitionCoFundersFixture.getTestCoFunders())
                 .withId(COMPETITION_ID).build();
 
@@ -355,7 +355,7 @@ public class CompetitionSetupControllerTest {
     @Test
     public void testSetCompetitionAsReadyToOpen()  throws Exception {
         CompetitionResource competition = newCompetitionResource()
-                .withCompetitionStatus(Status.COMPETITION_SETUP_FINISHED)
+                .withCompetitionStatus(Status.READY_TO_OPEN)
                 .withId(COMPETITION_ID).build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
