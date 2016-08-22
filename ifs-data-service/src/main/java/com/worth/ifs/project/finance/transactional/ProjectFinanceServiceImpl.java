@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -76,13 +77,13 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
             CostGroup spendProfileFigures = spendProfile.getSpendProfileFigures();
 
             Map<String, BigDecimal> eligibleCostsPerCategory =
-                    simpleToMap(eligibleCosts.getCosts(), c -> c.getCostCategory().get().getName(), Cost::getValue);
+                    simpleToLinkedMap(eligibleCosts.getCosts(), c -> c.getCostCategory().get().getName(), cost -> cost.getValue());
 
             Map<CostCategory, List<Cost>> spendProfileCostsPerCategory =
-                    spendProfileFigures.getCosts().stream().collect(groupingBy(c -> c.getCostCategory().get()));
+                    spendProfileFigures.getCosts().stream().collect(groupingBy(c -> c.getCostCategory().get(), LinkedHashMap::new, toList()));
 
             Map<String, List<Cost>> spendFiguresPerCategory =
-                    simpleMapKey(spendProfileCostsPerCategory, CostCategory::getName);
+                    simpleLinkedMapKey(spendProfileCostsPerCategory, costCategory -> costCategory.getName());
 
             LocalDate startDate = spendProfile.getProject().getTargetStartDate();
             int durationInMonths = spendProfile.getProject().getDurationInMonths().intValue();
@@ -91,7 +92,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
             List<LocalDateResource> monthResources = simpleMap(months, LocalDateResource::new);
 
             Map<String, List<BigDecimal>> spendFiguresPerCategoryOrderedByMonth =
-                    simpleMapValue(spendFiguresPerCategory, costs -> orderCostsByMonths(costs, months, project.getTargetStartDate()));
+                    simpleLinkedMapValue(spendFiguresPerCategory, costs -> orderCostsByMonths(costs, months, project.getTargetStartDate()));
 
             SpendProfileTableResource table = new SpendProfileTableResource();
             table.setMonths(monthResources);
