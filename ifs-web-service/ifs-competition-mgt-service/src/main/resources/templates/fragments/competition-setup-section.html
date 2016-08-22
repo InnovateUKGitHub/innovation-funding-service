@@ -670,6 +670,7 @@
                                 max="31"
                                 required="required"
                                 class="form-control width-small"
+                                data-date-in-table=""
                                 th:attr="aria-labelledby=${'milestone-' + milestoneEntry.key}"
                                 th:value="${milestoneEntry.value.day}"
                                 th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].day'"
@@ -682,6 +683,7 @@
                                 max="12"
                                 required="required"
                                 class="form-control width-small"
+                                data-date-in-table=""
                                 th:attr="aria-labelledby=${'milestone-' + milestoneEntry.key}"
                                 th:value="${milestoneEntry.value.month}"
                                 th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].month'" />
@@ -692,6 +694,7 @@
                                  th:attr="aria-labelledby=${'milestone-' + milestoneEntry.key}"
                                  required="required"
                                  class="form-control width-small"
+                                 data-date-in-table=""
                                  th:value="${milestoneEntry.value.year}"
                                  th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].year'"/>
                       </td>
