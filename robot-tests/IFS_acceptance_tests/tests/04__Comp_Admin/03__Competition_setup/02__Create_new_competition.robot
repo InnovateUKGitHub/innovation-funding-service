@@ -16,6 +16,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               INFUND-3000 As a competitions team member I want to be able to configure application form questions during Competition Setup so that correct details are provided for each competition
 ...
 ...               INFUND-3002 As a Competition Executive and I have added all information in all obligatory fields I want to mark the competition ready for open
+...
+...               INFUND-4682 Initial details can be saved with an opening date in the past
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin    CompSetup
@@ -123,6 +125,15 @@ Initial details client-side validations
     Then the user should not see the error any more    Please select a competition executive
     ##    State aid value is tested in 'Initial details correct state aid status'
 
+Initial details user should not be able to mark as complete when date is in the past
+    [Documentation]    INFUND-4682
+    Given the user enters text to a text field    id=openingDateDay    01
+    And the user enters text to a text field    Id=openingDateMonth    12
+    And the user enters text to a text field    id=openingDateYear    2015
+    When the user clicks the button/link    jQuery=.button:contains("Done")
+    Then The user should not see the element    jQuery=.button:contains("Edit")
+    [Teardown]    When the user enters text to a text field    id=openingDateYear    2017
+
 Initial details mark as done
     [Documentation]    INFUND-2982
     ...
@@ -145,7 +156,6 @@ Initial details can be edited again
     [Documentation]    INFUND-2985
     ...
     ...    INFUND-3182
-    ...
     [Tags]    HappyPath
     When the user clicks the button/link    jQuery=.button:contains("Edit")
     And the user enters text to a text field    id=title    Test competition
