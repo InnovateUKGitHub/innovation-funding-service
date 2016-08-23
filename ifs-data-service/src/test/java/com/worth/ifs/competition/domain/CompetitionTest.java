@@ -126,9 +126,9 @@ public class CompetitionTest {
     }
 
     @Test
-    public void competitionStatusNotStarted(){
+    public void competitionStatusReadyToOpen(){
         competition.setStartDate(LocalDateTime.now().plusDays(1));
-        assertEquals(CompetitionResource.Status.NOT_STARTED, competition.getCompetitionStatus());
+        assertEquals(CompetitionResource.Status.READY_TO_OPEN, competition.getCompetitionStatus());
     }
 
     @Test

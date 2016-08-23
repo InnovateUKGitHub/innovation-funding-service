@@ -121,12 +121,12 @@
             </div>
         </section>
 
-        <section th:with="notStartedComps=${results.mappedCompetitions.get(T(com.worth.ifs.competition.resource.CompetitionResource.Status).NOT_STARTED)}">
-            <div th:unless="${notStartedComps == null}">
+        <section th:with="readyToOpenComps=${results.mappedCompetitions.get(T(com.worth.ifs.competition.resource.CompetitionResource.Status).READY_TO_OPEN)}">
+            <div th:unless="${readyToOpenComps == null}">
                 <h2 class="heading-medium"
-                    th:text="'Ready to open ('+${notStartedComps == null ? '0' : notStartedComps.size()}+')'"></h2>
+                    th:text="'Ready to open ('+${readyToOpenComps == null ? '0' : readyToOpenComps.size()}+')'"></h2>
                 <ul class="list-overview">
-                    <li class="grid-row section" th:each="competition : ${notStartedComps}">
+                    <li class="grid-row section" th:each="competition : ${readyToOpenComps}">
                         <th:block
                             th:include="competition/dashboard :: dashboard-row"
                             th:with="competition=${competition},

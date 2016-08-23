@@ -164,13 +164,13 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     @Test
     public void test_getUpcomingCompetitions() throws Exception {
         CompetitionResource resource1 = CompetitionResourceBuilder.newCompetitionResource().withCompetitionStatus(CompetitionResource.Status.COMPETITION_SETUP).build();
-        CompetitionResource resource2 = CompetitionResourceBuilder.newCompetitionResource().withCompetitionStatus(CompetitionResource.Status.NOT_STARTED).build();
+        CompetitionResource resource2 = CompetitionResourceBuilder.newCompetitionResource().withCompetitionStatus(CompetitionResource.Status.READY_TO_OPEN).build();
         when(competitionsRestService.findUpcomingCompetitions()).thenReturn(restSuccess(Lists.newArrayList(resource1, resource2)));
 
         Map<CompetitionResource.Status, List<CompetitionResource>> result = service.getUpcomingCompetitions();
 
         assertTrue(result.get(CompetitionResource.Status.COMPETITION_SETUP).contains(resource1));
-        assertTrue(result.get(CompetitionResource.Status.NOT_STARTED).contains(resource2));
+        assertTrue(result.get(CompetitionResource.Status.READY_TO_OPEN).contains(resource2));
         assertEquals(result.get(CompetitionResource.Status.ASSESSOR_FEEDBACK), null);
     }
 
@@ -204,5 +204,21 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         when(competitionsRestService.initApplicationForm(competitionId, competitionTypeId)).thenReturn(restSuccess());
 
         service.initApplicationFormByCompetitionType(competitionId, competitionTypeId);
+    }
+
+    @Test
+    public void test_markAsSetup() throws Exception {
+        Long competitionId = Long.MAX_VALUE;
+        when(competitionsRestService.markAsSetup(competitionId)).thenReturn(restSuccess());
+
+        service.markAsSetup(competitionId);
+    }
+
+    @Test
+    public void test_returnToSetup() throws Exception {
+        Long competitionId = Long.MAX_VALUE;
+        when(competitionsRestService.returnToSetup(competitionId)).thenReturn(restSuccess());
+
+        service.returnToSetup(competitionId);
     }
 }

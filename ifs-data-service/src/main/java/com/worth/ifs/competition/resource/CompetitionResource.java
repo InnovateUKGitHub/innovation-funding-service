@@ -54,6 +54,7 @@ public class CompetitionResource {
     private String budgetCode;
     private String code;
 
+    private boolean resubmission;
     private boolean multiStream;
     private String streamName;
     private CollaborationLevel collaborationLevel;
@@ -66,7 +67,6 @@ public class CompetitionResource {
     private String innovateBudget;
     private String funder;
     private BigDecimal funderBudget;
-
 
     public CompetitionResource() {
         // no-arg constructor
@@ -164,15 +164,16 @@ public class CompetitionResource {
     }
 
     public String assementEndDateDisplay() {
-        if (getAssessmentEndDate() != null) {
-            return getAssessmentEndDate().format(ASSESSMENT_DATE_FORMAT);
-        }
-        return "";
+        return displayDate(getAssessmentEndDate(), ASSESSMENT_DATE_FORMAT);
     }
 
     public String startDateDisplay() {
-        if (getStartDate() != null) {
-            return getStartDate().format(START_DATE_FORMAT);
+        return displayDate(getStartDate(), START_DATE_FORMAT);
+    }
+
+    private String displayDate(LocalDateTime date, DateTimeFormatter formatter) {
+        if (date != null) {
+            return date.format(formatter);
         }
         return "";
     }
@@ -217,9 +218,6 @@ public class CompetitionResource {
         long hoursToGo = CLOSING_SOON_CHRONOUNIT.between(LocalDateTime.now(), this.endDate);
         return isOpen() && hoursToGo < CLOSING_SOON_AMOUNT;
     }
-
-
-    /* Keep it D.R.Y */
 
     @JsonIgnore
     public long getAssessmentTotalDays() {
@@ -401,6 +399,14 @@ public class CompetitionResource {
         this.multiStream = multiStream;
     }
 
+    public boolean isResubmission() {
+        return resubmission;
+    }
+
+    public void setResubmission(boolean resubmission) {
+        this.resubmission = resubmission;
+    }
+
     public String getStreamName() {
         return streamName;
     }
@@ -434,7 +440,7 @@ public class CompetitionResource {
     }
 
     public enum Status {
-        COMPETITION_SETUP,COMPETITION_SETUP_FINISHED,NOT_STARTED,READY_TO_OPEN,OPEN,CLOSED,IN_ASSESSMENT,FUNDERS_PANEL,ASSESSOR_FEEDBACK,PROJECT_SETUP
+        COMPETITION_SETUP,READY_TO_OPEN,OPEN,CLOSED,IN_ASSESSMENT,FUNDERS_PANEL,ASSESSOR_FEEDBACK,PROJECT_SETUP
     }
 
     public String getActivityCode() {
