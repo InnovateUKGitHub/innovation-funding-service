@@ -21,7 +21,6 @@ import com.worth.ifs.user.builder.UserResourceBuilder;
 import com.worth.ifs.user.resource.UserRoleType;
 import com.worth.ifs.user.service.UserService;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -244,7 +243,8 @@ public class CompetitionSetupControllerTest {
         				.param("researchCategoryId", "1", "2", "3")
         				.param("singleOrCollaborative", "collaborative")
         				.param("leadApplicantType", "business")
-        				.param("researchParticipationAmountId", "1"))
+        				.param("researchParticipationAmountId", "1")
+                        .param("resubmission", "yes"))
                         .andExpect(status().is3xxRedirection())
                         .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/eligibility"));
 
@@ -339,7 +339,7 @@ public class CompetitionSetupControllerTest {
                 .withCompetitionCode("c123")
                 .withPafCode("p123")
                 .withBudgetCode("b123")
-                .withCompetitionStatus(Status.COMPETITION_SETUP_FINISHED)
+                .withCompetitionStatus(Status.OPEN)
                 .withCoFunders(CompetitionCoFundersFixture.getTestCoFunders())
                 .withId(COMPETITION_ID).build();
 
@@ -355,7 +355,7 @@ public class CompetitionSetupControllerTest {
     @Test
     public void testSetCompetitionAsReadyToOpen()  throws Exception {
         CompetitionResource competition = newCompetitionResource()
-                .withCompetitionStatus(Status.COMPETITION_SETUP_FINISHED)
+                .withCompetitionStatus(Status.READY_TO_OPEN)
                 .withId(COMPETITION_ID).build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
