@@ -135,7 +135,7 @@
                         <span class="form-label-bold">Create password</span>
                         <span class="form-hint">Your password is case-sensitive and needs to:
                           <ul class="list-bullet">
-                            <li>be between 10 and 30 characters long</li>
+                            <li>be between 6 and 30 characters long</li>
                             <li>contain at least 1 capital letter</li>
                             <li>contain at least 1 number</li>
                           </ul>
@@ -149,10 +149,10 @@
                            type="password"
                            th:field="*{password}"
                            required="required"
-                           minlength="10"
+                           minlength="6"
                            maxlength="30"
                            data-required-errormessage="Password must contain some text"
-                           data-minlength-errormessage="Password must at least be 10 characters"
+                           data-minlength-errormessage="Password must at least be 6 characters"
                            data-maxlength-errormessage="Password must not be more than 30 characters"
                             />
                 </div>
@@ -167,10 +167,10 @@
                            type="password"
                            th:field="*{retypedPassword}"
                            required="required"
-                           minlength="10"
+                           minlength="6"
                            maxlength="30"
                            data-required-errormessage="Password must contain some text"
-                           data-minlength-errormessage="Password must at least be 10 characters"
+                           data-minlength-errormessage="Password must at least be 6 characters"
                            data-maxlength-errormessage="Password must not be more than 30 characters"
                            />
                 </div>
