@@ -18,6 +18,9 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               INFUND-3002 As a Competition Executive and I have added all information in all obligatory fields I want to mark the competition ready for open
 ...
 ...               INFUND-4682 Initial details can be saved with an opening date in the past
+...
+...
+...               INFUND-2980 As a Competition Executive I want to see a newly created competition listed in the Competition Dashboard so that I can view and update further details
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin    CompSetup
@@ -29,7 +32,7 @@ Resource          ../../../resources/keywords/User_actions.robot
 Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot    # TODO Known bug INFUND-4681, enforces the Competition Type (in Initial Details) to be Programme else Application Questions lead to 404, please do not change the value!
 
 *** Test Cases ***
-User can navigate to the competition setup form
+User can create a new competition
     [Documentation]    INFUND-2945
     ...
     ...
@@ -51,9 +54,12 @@ User can navigate to the competition setup form
     When the user clicks the button/link    jQuery=.button:contains("Create competition")
     Then the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
     And The user should not see the element    jQuery('.button:contains("Save as Ready To Open")
-    When the user clicks the button/link    link=Initial Details
-    Then the user redirects to the page    Initial details    This will create a new Competition
-    And the user should not see the element    css=#stateAid
+
+New competition shows in Preparation section with the default name
+    [Documentation]    INFUND-2980
+    Given The user clicks the button/link    link=All competitions
+    And The user clicks the button/link    id=section-3
+    Then the competition should show in the correct section    css=section:nth-child(4) > ul > li:nth-child(2)    No competition title defined    #this keyword checks if the new application shows in the second line of the "In preparation" competitions
 
 Competition code validation
     [Documentation]    INFUND-2985
@@ -61,17 +67,19 @@ Competition code validation
     ...    INFUND-3182
     ...
     ...    IFUND-3888
-    [Setup]    The user clicks the button/link    css=.next a
+    [Setup]    Then the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
+    Given the user clicks the button/link    link=Funding Information
     When the user clicks the button/link    jQuery=.button:contains("Generate code")
     Then the user should see an error    Please set a start date for your competition before generating the competition code, you can do this in the Initial Details section
-    [Teardown]    The user clicks the button/link    css=.prev a
 
 Initial details server-side validations
     [Documentation]    INFUND-2982
     ...
     ...    IFUND-3888
     [Tags]    HappyPath
-    Given the user should not see the element    css=#stateAid
+    [Setup]    Then the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
+    Given The user clicks the button/link    link=Initial Details
+    and the user should not see the element    css=#stateAid
     When the user clicks the button/link    jQuery=.button:contains("Done")
     Then the user should see an error    Please enter a title
     And the user should see an error    Please select a competition type
@@ -125,7 +133,7 @@ Initial details client-side validations
     Then the user should not see the error any more    Please select a competition executive
     ##    State aid value is tested in 'Initial details correct state aid status'
 
-Initial details user should not be able to mark as complete when date is in the past
+Initial details should not allow to mark as complete when date is in past
     [Documentation]    INFUND-4682
     Given the user enters text to a text field    id=openingDateDay    01
     And the user enters text to a text field    Id=openingDateMonth    12
@@ -175,9 +183,16 @@ Initial details should have a green check
     Then the user should see the element    jQuery=img.section-status:eq(0)
     And the user should not see the element    jQuery=.button:contains("Save as Ready To Open")
 
+New application shows in Preparation section with the new name
+    [Documentation]    INFUND-4682
+    Given The user clicks the button/link    link=All competitions
+    And The user clicks the button/link    id=section-3
+    Then the competition should show in the correct section    css=section:nth-child(4) > ul    Test competition    #This keyword checks if the new competition shows in the "In preparation" test
+
 Funding information server-side validations
     [Documentation]    INFUND-2985
     [Tags]    HappyPath
+    [Setup]    Then the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
     Given the user clicks the button/link    link=Funding Information
     And the user redirects to the page    Funding information    Reporting fields
     When the user clicks the button/link    jQuery=.button:contains("Done")
@@ -329,7 +344,7 @@ Save as Ready To Open button
     When the user clicks the button/link    jQuery=.button:contains("Save as Ready To Open")
     And the user clicks the button/link    link=All competitions
     And the user clicks the button/link    id=section-3
-    Then Element Should Contain    css=section:nth-child(5) ul    Test competition
+    Then the competition should show in the correct section    css=section:nth-child(5) ul    Test competition
     # The above line checks that the section 'Ready to Open' there is a competition named Test competition
 
 Application questions: All the sections should be visible
@@ -425,3 +440,7 @@ the validation error above the question should not be visible
     focus    jQuery=.button[value="Save and close"]
     wait until element is not visible    css=error-message
     Element Should not Contain    ${QUESTION}    ${ERROR}
+
+The competition should show in the correct section
+    [Arguments]    ${SECTION}    ${COMP_NAME}
+    Element should contain    ${SECTION}    ${COMP_NAME}
