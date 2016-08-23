@@ -41,28 +41,11 @@ public class CompetitionParticipant extends Participant<Competition, Competition
     @Column(name = "rejection_comment")
     private String rejectionReasonComment;
 
+    @Column(name = "competition_role_id") // hopefully the converter will do its stuff
+    private CompetitionParticipantRole role;
+
     CompetitionParticipant() {
         // no-arg constructor
-    }
-
-    @Override
-    public Competition getProcess() {
-        return competition;
-    }
-
-    @Override
-    public Optional<CompetitionInvite> getInvite() {
-        return Optional.ofNullable(invite);
-    }
-
-    @Override
-    public CompetitionParticipantRole getRole() {
-        return CompetitionParticipantRole.ASSESSOR;
-    }
-
-    @Override
-    public User getUser() {
-        return user;
     }
 
     public CompetitionParticipant(Competition competition, User user) {
@@ -82,6 +65,27 @@ public class CompetitionParticipant extends Participant<Competition, Competition
         this.competition = competition;
         this.user = user;
         this.invite = invite;
+        this.role = CompetitionParticipantRole.ASSESSOR;
+    }
+
+    @Override
+    public Competition getProcess() {
+        return competition;
+    }
+
+    @Override
+    public Optional<CompetitionInvite> getInvite() {
+        return Optional.ofNullable(invite);
+    }
+
+    @Override
+    public CompetitionParticipantRole getRole() {
+        return role;
+    }
+
+    @Override
+    public User getUser() {
+        return user;
     }
 
     public CompetitionParticipantRejectionReason getRejectionReason() {
