@@ -244,7 +244,7 @@ The user should see an error
     [Arguments]    ${ERROR_TEXT}
     Run Keyword And Ignore Error    Mouse Out    css=input
     Run Keyword And Ignore Error    Focus    jQuery=Button:contains("Mark as complete")
-    sleep    300ms
+    sleep    100ms
     wait until page contains element    css=.error-message
     Wait Until Page Contains    ${ERROR_TEXT}
 
@@ -511,7 +511,6 @@ we create a new user
     The guest user inserts user email & password    ${EMAIL_INVITED}    Passw0rd123
     The guest user clicks the log-in button
     the user closes the browser
-
 
 the lead applicant invites a registered user
     [Arguments]    ${EMAIL_LEAD}    ${EMAIL_INVITED}
