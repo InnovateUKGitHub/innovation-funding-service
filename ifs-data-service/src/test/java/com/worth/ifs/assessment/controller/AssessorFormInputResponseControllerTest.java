@@ -37,7 +37,7 @@ public class AssessorFormInputResponseControllerTest extends BaseControllerMockM
         mockMvc.perform(get("/assessorFormInputResponse/assessment/{assessmentId}", assessmentId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(content().string(new ObjectMapper().writeValueAsString(expected)));
+                .andExpect(content().string(objectMapper.writeValueAsString(expected)));
 
         verify(assessorFormInputResponseServiceMock, only()).getAllAssessorFormInputResponses(assessmentId);
     }
@@ -55,7 +55,7 @@ public class AssessorFormInputResponseControllerTest extends BaseControllerMockM
         mockMvc.perform(get("/assessorFormInputResponse/assessment/{assessmentId}/question/{questionId}", assessmentId, questionId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(content().string(new ObjectMapper().writeValueAsString(expected)));
+                .andExpect(content().string(objectMapper.writeValueAsString(expected)));
 
         verify(assessorFormInputResponseServiceMock, only()).getAllAssessorFormInputResponsesByAssessmentAndQuestion(assessmentId, questionId);
     }
