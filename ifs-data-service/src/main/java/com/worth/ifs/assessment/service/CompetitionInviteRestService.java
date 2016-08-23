@@ -1,5 +1,6 @@
 package com.worth.ifs.assessment.service;
 
+import com.worth.ifs.assessment.resource.CompetitionRejectionReasonResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.invite.resource.CompetitionInviteResource;
 
@@ -9,4 +10,8 @@ import com.worth.ifs.invite.resource.CompetitionInviteResource;
 public interface CompetitionInviteRestService {
 
     RestResult<CompetitionInviteResource> openInvite(String inviteHash);
+
+    RestResult<Void> acceptInvite(String inviteHash);
+
+    RestResult<Void> rejectInvite(String inviteHash, CompetitionRejectionReasonResource rejectionReason);
 }

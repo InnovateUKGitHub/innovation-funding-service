@@ -23,15 +23,15 @@ public class CompetitionParticipant extends Participant<Competition, Competition
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "competition", insertable = false, updatable = false)
+    @JoinColumn(name = "competition_id", referencedColumnName = "id", insertable = false, updatable = false)
     private Competition competition;
 
     @ManyToOne
-    @JoinColumn(name = "user", insertable = false, updatable = false)
+    @JoinColumn(name = "user_id", insertable = false, updatable = false)
     private User user;
 
-    @OneToOne
-    @JoinColumn(name = "invite")
+    @OneToOne(cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
     private CompetitionInvite invite;
 
     @ManyToOne
@@ -96,16 +96,18 @@ public class CompetitionParticipant extends Participant<Competition, Competition
         return rejectionReasonComment;
     }
 
-    public void accept() {
+    public CompetitionParticipant accept() {
         if (getStatus() == REJECTED)
             throw new IllegalStateException("Cannot accept a CompetitionParticipant that has been rejected");
         if (getStatus() == ACCEPTED)
             throw new IllegalStateException("CompetitionParticipant has already been accepted");
 
         setStatus(ACCEPTED);
+
+        return this;
     }
 
-    public void reject(CompetitionParticipantRejectionReason rejectionReason, String comment) {
+    public CompetitionParticipant reject(CompetitionParticipantRejectionReason rejectionReason, String comment) {
         if (rejectionReason == null) throw new NullPointerException("reason cannot be null");
         if (comment == null) throw new NullPointerException("comment cannot be null");
 
@@ -117,5 +119,7 @@ public class CompetitionParticipant extends Participant<Competition, Competition
         this.rejectionReason = rejectionReason;
         this.rejectionReasonComment = comment;
         setStatus(REJECTED);
+
+        return this;
     }
 }

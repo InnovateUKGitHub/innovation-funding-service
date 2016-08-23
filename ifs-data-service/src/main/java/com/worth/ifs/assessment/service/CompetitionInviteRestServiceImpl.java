@@ -1,5 +1,6 @@
 package com.worth.ifs.assessment.service;
 
+import com.worth.ifs.assessment.resource.CompetitionRejectionReasonResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.invite.resource.CompetitionInviteResource;
@@ -18,5 +19,15 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
     @Override
     public RestResult<CompetitionInviteResource> openInvite(String inviteHash) {
         return postWithRestResultAnonymous(format("%s/%s/%s", competitionInviteRestUrl, "/openInvite", inviteHash), CompetitionInviteResource.class);
+    }
+
+    @Override
+    public RestResult<Void> acceptInvite(String inviteHash) {
+        return postWithRestResultAnonymous(format("%s/%s/%s", competitionInviteRestUrl, "/acceptInvite", inviteHash), Void.class);
+    }
+
+    @Override
+    public RestResult<Void> rejectInvite(String inviteHash, CompetitionRejectionReasonResource rejectionReason) {
+        return postWithRestResultAnonymous(format("%s/%s/%s", competitionInviteRestUrl, "/rejectInvite", inviteHash), rejectionReason, Void.class);
     }
 }

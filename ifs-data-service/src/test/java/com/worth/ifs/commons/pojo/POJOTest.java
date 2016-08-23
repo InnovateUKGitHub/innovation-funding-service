@@ -58,7 +58,7 @@ import java.util.List;
 
 public class POJOTest {
     // Configured for expectation, so we know when a class gets added or removed.
-    private static final int EXPECTED_RESOURCES = 35;
+    private static final int EXPECTED_RESOURCES = 36;
 
     // The package to test
     private static final String POJO_PACKAGE = "com.worth.ifs";

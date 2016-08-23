@@ -26,7 +26,7 @@ public class CompetitionInviteController extends BaseController {
     @Autowired
     private CompetitionInviteRestService inviteRestService;
 
-    @RequestMapping(value = "competition/{inviteHash}", method= RequestMethod.GET)
+    @RequestMapping(value = "competition/{inviteHash}", method = RequestMethod.GET)
     public String openInvite(@PathVariable("inviteHash") String inviteHash, HttpServletResponse response,
                              HttpServletRequest request,
                              Model model) {
@@ -43,5 +43,24 @@ public class CompetitionInviteController extends BaseController {
 
             return "assessor-competition-invite";
         }
+    }
+
+
+    @RequestMapping(value = "competition/{inviteHash}/accept", method = RequestMethod.GET)
+    public String acceptInvite(@PathVariable("inviteHash") String inviteHash, HttpServletResponse response,
+                               HttpServletRequest request) {
+        inviteRestService.acceptInvite(inviteHash);
+
+        return "";
+    }
+
+    @RequestMapping(value = "competition/{inviteHash}/reject", method = RequestMethod.GET)
+    public String rejectInvite(@PathVariable("inviteHash") String inviteHash, HttpServletResponse response,
+                               HttpServletRequest request) {
+
+        // TODO this needs rejection reason
+        inviteRestService.rejectInvite(inviteHash, null);
+
+        return "";
     }
 }
