@@ -154,7 +154,7 @@ Assessor should see remaining words to enter in feedback form
 Assessors should see word count when edit feedbackform
     [Documentation]   INFUND-3859
     [Tags]    Pending
-    # Note: this test case Failed - INFUND-4654
+    #  Pending due to INFUND-4654
     Given I am on the assessor assessment overview page
     And the user clicks the button/link   link=4. Attire
     And I enter feedback of 100 words     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco
@@ -183,6 +183,8 @@ No error message when feedback words reduced to 100 or less
 Scope: Status in the overview
     [Documentation]    INFUND-1483
     [Tags]
+    Given the user navigates to the page    ${Assessment_overview_9}
+    And the user clicks the button/link    link=Scope
     When the user clicks the button/link    jQuery=label:contains(Yes)
     And the user clicks the button/link    jquery=button:contains("Save and return to assessment overview")
     And the user should see the text in the page    In scope? Yes
