@@ -116,7 +116,17 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
 			return null;
 		}
 
-		@Override
+        @Override
+        public ServiceResult<Void> returnToSetup(Long competitionId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> markAsSetup(Long competitionId) {
+            return null;
+        }
+
+        @Override
 		public ServiceResult<Void> initialiseFormForCompetitionType(Long competitionId, Long competitionType) {
 			return null;
 		}

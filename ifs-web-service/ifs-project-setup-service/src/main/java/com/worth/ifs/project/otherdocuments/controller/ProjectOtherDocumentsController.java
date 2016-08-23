@@ -170,14 +170,13 @@ public class ProjectOtherDocumentsController {
 
         boolean leadPartner = projectService.isUserLeadPartner(projectId, loggedInUser.getId());
 
-        boolean isSubmitAllowed = projectService.isOtherDocumentSubmitAllowed(projectId).isSuccess() ? true : false;
+        boolean isSubmitAllowed = projectService.isOtherDocumentSubmitAllowed(projectId).isSuccess();
 
         // TODO DW - these rejection messages to be covered in other stories
         List<String> rejectionReasons = emptyList();
 
-        // TODO DW - these flags to be covered in other stories
-        boolean otherDocumentsApproved = false;
-        boolean otherDocumentsSubmitted = false;
+        boolean otherDocumentsSubmitted = project.getDocumentsSubmittedDate() != null;
+        boolean otherDocumentsApproved = otherDocumentsSubmitted;
 
         return new ProjectOtherDocumentsViewModel(projectId, project.getName(),
                 collaborationAgreement.map(FileDetailsViewModel::new).orElse(null),
