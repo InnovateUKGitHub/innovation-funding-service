@@ -14,6 +14,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               IFUND-3888 Rearrangement of Competitions setup
 ...
 ...               INFUND-3000 As a competitions team member I want to be able to configure application form questions during Competition Setup so that correct details are provided for each competition
+...
+...               INFUND-3002 As a Competition Executive and I have added all information in all obligatory fields I want to mark the competition ready for open
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin    CompSetup
@@ -22,8 +24,7 @@ Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
-Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
-# TODO Known bug INFUND-4681, enforces the Competition Type (in Initial Details) to be Programme else Application Questions lead to 404, please do not change the value!
+Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot    # TODO Known bug INFUND-4681, enforces the Competition Type (in Initial Details) to be Programme else Application Questions lead to 404, please do not change the value!
 
 *** Test Cases ***
 User can navigate to the competition setup form
@@ -42,11 +43,12 @@ User can navigate to the competition setup form
     ...    IFUND-3888
     ...
     ...
-    ...    INFUND-3002  As a Competition Executive and I have added all information in all obligatory fields I want to mark the competition ready for open.
+    ...    INFUND-3002
     [Tags]    HappyPath
     Given the user clicks the button/link    id=section-3
     When the user clicks the button/link    jQuery=.button:contains("Create competition")
     Then the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
+    And The user should not see the element    jQuery('.button:contains("Save as Ready To Open")
     When the user clicks the button/link    link=Initial Details
     Then the user redirects to the page    Initial details    This will create a new Competition
     And the user should not see the element    css=#stateAid
@@ -66,7 +68,7 @@ Initial details server-side validations
     [Documentation]    INFUND-2982
     ...
     ...    IFUND-3888
-    [Tags]
+    [Tags]    HappyPath
     Given the user should not see the element    css=#stateAid
     When the user clicks the button/link    jQuery=.button:contains("Done")
     Then the user should see an error    Please enter a title
@@ -85,7 +87,7 @@ Initial details correct state aid status
     ...    INFUND-2983
     ...
     ...    INFUND-3888
-    [Tags]    HappyPath
+    [Tags]
     When the user selects the option from the drop-down menu    SBRI    id=competitionTypeId
     Then the user should see the element    css=.no
     When the user selects the option from the drop-down menu    Special    id=competitionTypeId
@@ -110,11 +112,11 @@ Initial details client-side validations
     When the user selects the option from the drop-down menu    Advanced Therapies    id=innovationAreaCategoryId
     Then the user should not see the error any more    Please select an innovation area
     When the user enters text to a text field    id=openingDateDay    01
-#    Then the user should not see the error any more    Please enter an opening day
+    #    Then the user should not see the error any more    Please enter an opening day
     When the user enters text to a text field    Id=openingDateMonth    12
-#    Then the user should not see the error any more    Please enter an opening month
+    #    Then the user should not see the error any more    Please enter an opening month
     When the user enters text to a text field    id=openingDateYear    2017
-#    Then the user should not see the error any more    Please enter an opening year
+    #    Then the user should not see the error any more    Please enter an opening year
     When the user selects the option from the drop-down menu    Competition Technologist One    id=leadTechnologistUserId
     Then the user should not see the error any more    Please select a lead technologist
     When the user selects the option from the drop-down menu    Competition Executive Two    id=executiveUserId
@@ -143,7 +145,7 @@ Initial details can be edited again
     [Documentation]    INFUND-2985
     ...
     ...    INFUND-3182
-    ...    INFUND-3876
+    ...
     [Tags]    HappyPath
     When the user clicks the button/link    jQuery=.button:contains("Edit")
     And the user enters text to a text field    id=title    Test competition
@@ -155,11 +157,17 @@ Initial details can be edited again
     And the user should see the text in the page    Advanced Therapies
     And the user should see the text in the page    Programme
     And the user should see the text in the page    NO
+
+Initial details should have a green check
+    [Documentation]    INFUND-3002
+    [Tags]    HappyPath
     When The user clicks the button/link    link=Competition set up
-    Then the user should not see the element    jQuery=.button:contains("Save as Ready To Open")
+    Then the user should see the element    jQuery=img.section-status:eq(0)
+    And the user should not see the element    jQuery=.button:contains("Save as Ready To Open")
 
 Funding information server-side validations
     [Documentation]    INFUND-2985
+    [Tags]    HappyPath
     Given the user clicks the button/link    link=Funding Information
     And the user redirects to the page    Funding information    Reporting fields
     When the user clicks the button/link    jQuery=.button:contains("Done")
@@ -172,6 +180,7 @@ Funding information server-side validations
 
 Funding information client-side validations
     [Documentation]    INFUND-2985
+    [Tags]    HappyPath
     # TODO Update validation messages after INFUND-4676 is done.
     When the user enters text to a text field    id=funder    FunderName
     Then the user should not see the error any more    Please enter a funder name
@@ -182,12 +191,13 @@ Funding information client-side validations
     And the user enters text to a text field    id=budgetCode    2004
     Then the user should not see the error any more    Please enter a budget code
     And the user enters text to a text field    id=activityCode    4242
-#    Then the user should not see the error any more    Please enter an activity code
+    #    Then the user should not see the error any more    Please enter an activity code
     When the user clicks the button/link    jQuery=.button:contains("Generate code")
-#    Then The user should not see the text in the page    Please generate a competition code
+    #    Then The user should not see the text in the page    Please generate a competition code
 
 Funding informations calculations
     [Documentation]    INFUND-2985
+    [Tags]    HappyPath
     When the user clicks the button/link    jQuery=Button:contains("+Add co-funder")
     and the user should see the element    jQuery=Button:contains("+Add co-funder")
     Then the user should see the element    css=#co-funder-row-0
@@ -197,6 +207,7 @@ Funding informations calculations
 
 Funding Information can be saved
     [Documentation]    INFUND-3182
+    [Tags]    HappyPath
     When the user clicks the button/link    jQuery=.button:contains("Done")
     Then the user should see the text in the page    FunderName
     And the user should see the text in the page    FunderName2
@@ -208,18 +219,24 @@ Funding Information can be saved
     And the user should see the element    jQuery=.button:contains("Edit")
 
 Funding Information can be edited
-    [Documentation]    INFUND-3876
-    When the user clicks the button/link        jQuery=.button:contains("Edit")
+    [Documentation]    INFUND-3002
+    When the user clicks the button/link    jQuery=.button:contains("Edit")
     And the user enters text to a text field    id=funder    testFunder
     When the user clicks the button/link    jQuery=.button:contains("Done")
-    Then the user should see the text in the page   testFunder
-    When the user clicks the button/link    link=Competition set up
-    Then the user should not see the element    jQuery=.button:contains("Save as Ready To Open")
+    Then the user should see the text in the page    testFunder
+
+Funding information should have a green check
+    [Documentation]    INFUND-3002
+    [Tags]    HappyPath
+    When The user clicks the button/link    link=Competition set up
+    Then the user should see the element    jQuery=img.section-status:eq(1)
+    And the user should not see the element    jQuery=.button:contains("Save as Ready To Open")
 
 Eligibility page should contain the correct options
     [Documentation]    INFUND-2989
     ...
     ...    INFUND-2990
+    [Tags]    HappyPath
     [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
     Given the user clicks the button/link    link=Eligibility
     And the user should see the text in the page    Does the competition have multiple stream?
@@ -236,7 +253,7 @@ Eligibility page should contain the correct options
 
 Eligibility server-side validations
     [Documentation]    INFUND-2986
-    [Tags]
+    [Tags]    HappyPath
     [Setup]
     Given the user selects the radio button    multipleStream    yes
     When the user clicks the button/link    jQuery=.button:contains("Done")
@@ -251,7 +268,7 @@ Eligibility client-side validations
     ...    IINFUND-2988
     ...
     ...    INFUND-3888
-    [Tags]
+    [Tags]    HappyPath
     Given the user selects the radio button    multipleStream    yes
     When the user selects the checkbox    id=research-categories-33
     And the user selects the checkbox    id=research-categories-34
@@ -272,8 +289,9 @@ Eligibility can be marked as done then edit again
     [Documentation]    INFUND-3051
     ...
     ...    INFUND-3872
-    ...    INFUND-3876
-    [Tags]
+    ...
+    ...    INFUND-3002
+    [Tags]    HappyPath
     When the user clicks the button/link    jQuery=.button:contains("Done")
     Then the user should see the text in the page    Yes
     And the user should see the text in the page    Single
@@ -286,28 +304,27 @@ Eligibility can be marked as done then edit again
     Then the user should see the element    jQuery=.button:contains("Save as Ready To Open")
     When the user clicks the button/link    link=Eligibility
     And the user clicks the button/link    jQuery=.button:contains("Edit")
-    When the user clicks the button/link    link=Competition set up
-    Then the user should not see the element    jQuery=.button:contains("Save as Ready To Open")
-    When the user clicks the button/link    link=Eligibility
     And the user clicks the button/link    jQuery=.button:contains("Done")
-    [Teardown]    The user clicks the button/link    link=Competition set up
+
+Eligibility should have a green check
+    [Documentation]    INFUND-3002
+    [Tags]    HappyPath
+    When The user clicks the button/link    link=Competition set up
+    Then the user should see the element    jQuery=img.section-status:eq(2)
 
 Save as Ready To Open button
-    [Documentation]    INFUND-3876
-    [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
-    Given the user should see the element        jQuery=.button:contains("Save as Ready To Open")
-    When the user clicks the button/link         jQuery=.button:contains("Save as Ready To Open")
-    Then the user should see the element         jQuery=img.section-status:eq(0)
-    And the user should see the element          jQuery=img.section-status:eq(1)
-    And the user should see the element          jQuery=img.section-status:eq(2)
-    When the user clicks the button/link         link=All competitions
-    And the user clicks the button/link          id=section-3
-    Then element text should be                  //*[@id="content"]/section[2]/div/div/ul/li[1]/div[1]/h3/a    Test competition
-    # The above line checks that the first competition in the section 'Ready to Open' is named Test competition
-    [Teardown]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
+    [Documentation]    INFUND-3002
+    [Tags]    HappyPath
+    Given the user should see the element    jQuery=.button:contains("Save as Ready To Open")
+    When the user clicks the button/link    jQuery=.button:contains("Save as Ready To Open")
+    And the user clicks the button/link    link=All competitions
+    And the user clicks the button/link    id=section-3
+    Then Element Should Contain    css=section:nth-child(5) ul    Test competition
+    # The above line checks that the section 'Ready to Open' there is a competition named Test competition
 
 Application questions: All the sections should be visible
     [Documentation]    INFUND-3000
+    [Tags]    HappyPath
     [Setup]    go to    ${COMP_MANAGEMENT_COMP_SETUP}
     When The user clicks the button/link    link=Application Questions
     Then The user should see the text in the page    Template: Programme 10 questions
@@ -324,6 +341,7 @@ Application questions: All the sections should be visible
 
 Application questions: server side validations
     [Documentation]    INFUND-3000
+    [Tags]    HappyPath
     Given The user clicks the button/link    jQuery=li:nth-child(5) .button:contains(Edit)
     And The user should see the element    jQuery=.button[value="Save and close"]
     When the user leaves all the question field empty
@@ -331,22 +349,21 @@ Application questions: server side validations
     And The user clicks the button/link    jQuery=.button[value="Save and close"]
     Then the validation error above the question should be visible    jQuery=label:contains(Question title)    This field cannot be left blank
     And the validation error above the question should be visible    jQuery=label:contains(Question guidance title)    This field cannot be left blank
-    #Todo: investigate why this step fails with chrome driver    INFUND-4514
     And the validation error above the question should be visible    jQuery=div:nth-child(4) div:nth-child(4) label:contains(Question guidance)    This field cannot be left blank
 
 Application questions: Client side validations
     [Documentation]    INFUND-3000
+    [Tags]    HappyPath
     Given the user fills the empty question fields
     Then the validation error above the question should not be visible    jQuery=label:contains(Question title)    This field cannot be left blank
     And the validation error above the question should not be visible    jQuery=label:contains(Question guidance title)    This field cannot be left blank
     And the validation error above the question should not be visible    jQuery=div:nth-child(4) div:nth-child(4) label:contains(Question guidance)    This field cannot be left blank
-    And The user enters text to a text field    id=question.maxWords    ${EMPTY}
-    And the validation error above the question should be visible    jQuery=label:contains(Max word count)    This field cannot be left blank
-    And input text    jQuery=[id="question.maxWords"]    150
+    And the validation error above the question should not be visible    jQuery=label:contains(Max word count)    This field cannot be left blank
     And the validation error above the question should not be visible    jQuery=label:contains(Max word count)    This field cannot be left blank
 
 Application questions: Mark as done and the Edit again
     [Documentation]    INFUND-3000
+    [Tags]    HappyPath
     [Setup]    The user clicks the button/link    jQuery=.grid-row div:nth-child(2) label:contains(Yes)
     When The user clicks the button/link    jQuery=.button[value="Save and close"]
     Then The user should see the text in the page    Test title

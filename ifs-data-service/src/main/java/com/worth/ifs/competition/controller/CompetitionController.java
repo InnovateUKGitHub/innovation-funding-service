@@ -86,6 +86,15 @@ public class CompetitionController {
         return competitionSetupService.markSectionInComplete(competitionId, section).toGetResponse();
     }
 
+    @RequestMapping(value = "/{id}/mark-as-setup", method = RequestMethod.POST)
+    public RestResult<Void> markAsSetup(@PathVariable("id") final Long competitionId) {
+        return competitionSetupService.markAsSetup(competitionId).toPostResponse();
+    }
+    @RequestMapping(value = "/{id}/return-to-setup", method = RequestMethod.POST)
+    public RestResult<Void> returnToSetup(@PathVariable("id") final Long competitionId) {
+        return competitionSetupService.returnToSetup(competitionId).toPostResponse();
+    }
+
     @RequestMapping(value = "", method = RequestMethod.POST)
     public RestResult<CompetitionResource> create() {
         return competitionSetupService.create().toPostCreateResponse();

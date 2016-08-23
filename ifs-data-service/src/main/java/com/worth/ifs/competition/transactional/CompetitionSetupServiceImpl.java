@@ -147,7 +147,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     @Override
     public ServiceResult<CompetitionResource> create() {
         Competition competition = new Competition();
-        competition.setStatus(Status.COMPETITION_SETUP);
+        competition.setSetupComplete(false);
         return serviceSuccess(competitionMapper.mapToResource(competitionRepository.save(competition)));
     }
 
@@ -162,6 +162,20 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     public ServiceResult<Void> markSectionInComplete(Long competitionId, CompetitionSetupSection section) {
     	Competition competition = competitionRepository.findById(competitionId);
     	competition.getSectionSetupStatus().put(section, Boolean.FALSE);
+        return serviceSuccess();
+    }
+
+    @Override
+    public ServiceResult<Void> returnToSetup(Long competitionId) {
+        Competition competition = competitionRepository.findById(competitionId);
+        competition.setSetupComplete(false);
+        return serviceSuccess();
+    }
+
+    @Override
+    public ServiceResult<Void> markAsSetup(Long competitionId) {
+        Competition competition = competitionRepository.findById(competitionId);
+        competition.setSetupComplete(true);
         return serviceSuccess();
     }
 
