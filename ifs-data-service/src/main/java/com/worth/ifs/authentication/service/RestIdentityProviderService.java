@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -37,6 +38,10 @@ import static org.springframework.http.HttpStatus.OK;
 public class RestIdentityProviderService implements IdentityProviderService {
 
     private static final Log LOG = LogFactory.getLog(RestIdentityProviderService.class);
+
+    static final String INVALID_PASSWORD_KEY = "INVALID_PASSWORD";
+    static final String PASSWORD_FIELD_KEY = "password";
+
 
     @Autowired
     @Qualifier("shibboleth_adaptor")
@@ -73,7 +78,15 @@ public class RestIdentityProviderService implements IdentityProviderService {
             LOG.warn("Expected to get some error messages in the response body from the IDP Rest API, but got none.  Returning an error with same HTTP status code");
             return singletonList(new Error(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR, "Empty error response encountered from IDP API", code));
         }
-        return asList(errors).stream().map(e -> new Error(e.getKey(), code)).collect(toList());
+        return asList(errors).stream().map(e -> buildErrorFromIdentiryProviderError(e, code)).collect(toList());
+    }
+
+    private static final Error buildErrorFromIdentiryProviderError(IdentityProviderError identityProviderError, HttpStatus code) {
+        if (StringUtils.hasText(identityProviderError.getKey()) && identityProviderError.getKey().equals(INVALID_PASSWORD_KEY)) {
+            return Error.fieldError(PASSWORD_FIELD_KEY, code.getReasonPhrase(), identityProviderError.getKey());
+        } else {
+            return new Error(identityProviderError.getKey(), code);
+        }
     }
 
     protected <T, R> Either<ResponseEntity<R>, T> restPost(String path, Object postEntity, Class<T> successClass, Class<R> failureClass, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {

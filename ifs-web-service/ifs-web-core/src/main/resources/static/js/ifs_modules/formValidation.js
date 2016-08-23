@@ -31,7 +31,8 @@ IFS.core.formValidation = (function(){
                   uppercase : 'Password must contain at least one upper case letter',
                   number : 'Password must contain at least one number',
                   name : 'Password should not contain either your first or last name',
-                  organisation : 'Password should not contain your organisation name'
+                  organisation : 'Password should not contain your organisation name',
+                  tooWeak : 'Password is too weak'
                 }
             },
             email : {
@@ -177,6 +178,10 @@ IFS.core.formValidation = (function(){
                 }
               }
             }
+
+            //onchange clear tooWeakPassword message as this is validated in the back end.
+            $('span:contains('+IFS.core.formValidation.getErrorMessage(field,'passwordPolicy-tooWeak')+')').remove();
+
             return confirmsToPasswordPolicy;
         },
         checkEmail : function(field,showMessage){
