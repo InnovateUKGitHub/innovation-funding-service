@@ -8,7 +8,9 @@
         This will create a new Competition - you will be able to specify more details as you proceed
     </div>
 
-    <form th:action="@{(${editable} ? '' : 'initial/edit')}" method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
+    <form th:action="@{(${editable} ? '' : 'initial/edit')}"
+          data-autosave="compSetup" th:attr="data-competition=${competition.id}" data-section="initial"
+          method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
 
         <fieldset th:if="${editable}" id="section-1-edit">
 
@@ -27,10 +29,6 @@
                        required="required"
                        data-required-errormessage="Please enter a title" />
             </div>
-
-
-
-
 
             <div th:class="${#fields.hasErrors('competitionTypeId')}? 'form-group error':'form-group'">
                 <label class="form-label" for="competitionTypeId">
