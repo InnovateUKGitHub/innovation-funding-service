@@ -21,6 +21,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...
 ...
 ...               INFUND-2980 As a Competition Executive I want to see a newly created competition listed in the Competition Dashboard so that I can view and update further details
+...
+...               INFUND-2993 As a competitions team member I want to be able to add milestones when creating my competition so these can be used manage its progress
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin    CompSetup
@@ -347,6 +349,48 @@ Save as Ready To Open button
     Then the competition should show in the correct section    css=section:nth-child(5) ul    Test competition
     # The above line checks that the section 'Ready to Open' there is a competition named Test competition
 
+Milestones: Page should contain the correct fields
+    [Documentation]    INFUND-2993
+    [Tags]    HappyPath
+    [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
+    When the user clicks the button/link    link=Milestones
+    Then The user should see the text in the page    1. Open date
+    And the user should see the text in the page    2. Briefing event
+    And the user should see the text in the page    3. Submission date
+    And the user should see the text in the page    4. Allocate accessors
+    And the user should see the text in the page    5. Assessor briefing
+    And the user should see the text in the page    6. Assessor accepts
+    And the user should see the text in the page    7. Assessor deadline
+    And the user should see the text in the page    8. Line draw
+    And the user should see the text in the page    9. Assessment panel
+    And the user should see the text in the page    10. Panel date
+    And the user should see the text in the page    11. Funders panel
+    And the user should see the text in the page    12. Notifications
+    And the user should see the text in the page    13. Release feedback
+
+Milestones: Server side validations
+    [Documentation]    INFUND-2993
+    When the user fills the milestones with invalid data
+    And the user clicks the button/link    jQuery=button:contains(Done)
+    Then Validation summary should be visible
+
+Milestones: Client side validations
+    [Documentation]    INFUND-2993
+    [Tags]    HappyPath
+    When the user fills the milestones with valid data
+    Then The user should not see the text in the page    please enter a future date that is after the previous milestone
+
+Milestones: Correct Weekdays should show
+    [Documentation]    INFUND-2993
+    [Tags]    HappyPath
+    When the user clicks the button/link    jQuery=button:contains(Done)
+    Then the weekdays should be correct
+
+Milestones: Green check should show
+    [Documentation]    INFUND-2993
+    When The user clicks the button/link    link=Competition set up
+    Then the user should see the element    css=li:nth-child(4) .section-status
+
 Application questions: All the sections should be visible
     [Documentation]    INFUND-3000
     [Tags]    HappyPath
@@ -444,3 +488,116 @@ the validation error above the question should not be visible
 The competition should show in the correct section
     [Arguments]    ${SECTION}    ${COMP_NAME}
     Element should contain    ${SECTION}    ${COMP_NAME}
+
+the user fills the milestones with invalid data
+    input text    name=milestoneEntries[OPEN_DATE].day    15
+    input text    name=milestoneEntries[OPEN_DATE].month    1
+    input text    name=milestoneEntries[OPEN_DATE].year    2019
+    input text    name=milestoneEntries[BRIEFING_EVENT].day    14
+    input text    name=milestoneEntries[BRIEFING_EVENT].month    1
+    input text    name=milestoneEntries[BRIEFING_EVENT].year    2019
+    input text    name=milestoneEntries[SUBMISSION_DATE].day    13
+    input text    name=milestoneEntries[SUBMISSION_DATE].month    1
+    input text    name=milestoneEntries[SUBMISSION_DATE].year    2019
+    input text    name=milestoneEntries[ALLOCATE_ASSESSORS].day    12
+    input text    name=milestoneEntries[ALLOCATE_ASSESSORS].month    1
+    input text    name=milestoneEntries[ALLOCATE_ASSESSORS].year    2019
+    input text    name=milestoneEntries[ASSESSOR_BRIEFING].day    11
+    input text    name=milestoneEntries[ASSESSOR_BRIEFING].month    1
+    input text    name=milestoneEntries[ASSESSOR_BRIEFING].year    2019
+    input text    name=milestoneEntries[ASSESSOR_ACCEPTS].day    10
+    input text    name=milestoneEntries[ASSESSOR_ACCEPTS].month    1
+    input text    name=milestoneEntries[ASSESSOR_ACCEPTS].year    2019
+    input text    name=milestoneEntries[ASSESSOR_DEADLINE].day    9
+    input text    name=milestoneEntries[ASSESSOR_DEADLINE].month    1
+    input text    name=milestoneEntries[ASSESSOR_DEADLINE].year    2019
+    input text    name=milestoneEntries[LINE_DRAW].day    8
+    input text    name=milestoneEntries[LINE_DRAW].month    1
+    input text    name=milestoneEntries[LINE_DRAW].year    2019
+    input text    name=milestoneEntries[ASSESSMENT_PANEL].day    7
+    input text    name=milestoneEntries[ASSESSMENT_PANEL].month    1
+    input text    name=milestoneEntries[ASSESSMENT_PANEL].year    2019
+    input text    name=milestoneEntries[PANEL_DATE].day    6
+    input text    name=milestoneEntries[PANEL_DATE].month    1
+    input text    name=milestoneEntries[PANEL_DATE].year    2019
+    input text    name=milestoneEntries[FUNDERS_PANEL].day    5
+    input text    name=milestoneEntries[FUNDERS_PANEL].month    1
+    input text    name=milestoneEntries[FUNDERS_PANEL].year    2019
+    input text    name=milestoneEntries[NOTIFICATIONS].day    4
+    input text    name=milestoneEntries[NOTIFICATIONS].month    1
+    input text    name=milestoneEntries[NOTIFICATIONS].year    2019
+    input text    name=milestoneEntries[RELEASE_FEEDBACK].day    3
+    input text    name=milestoneEntries[RELEASE_FEEDBACK].month    1
+    input text    name=milestoneEntries[RELEASE_FEEDBACK].year    2019
+
+Validation summary should be visible
+    Then The user should see the text in the page    2. Briefing event: please enter a future date that is after the previous milestone
+    And the user should see the text in the page    3. Submission date: please enter a future date that is after the previous milestone
+    And the user should see the text in the page    4. Allocate accessors: please enter a future date that is after the previous milestone
+    And the user should see the text in the page    5. Assessor briefing: please enter a future date that is after the previous milestone
+    And the user should see the text in the page    6. Assessor accepts: please enter a future date that is after the previous milestone
+    And the user should see the text in the page    7. Assessor deadline: please enter a future date that is after the previous milestone
+    And the user should see the text in the page    8. Line draw: please enter a future date that is after the previous milestone
+    And the user should see the text in the page    9. Assessment panel: please enter a future date that is after the previous milestone
+    And the user should see the text in the page    10. Panel date: please enter a future date that is after the previous milestone
+    And the user should see the text in the page    11. Funders panel: please enter a future date that is after the previous milestone
+    And the user should see the text in the page    12. Notifications: please enter a future date that is after the previous milestone
+    And the user should see the text in the page    13. Release feedback: please enter a future date that is after the previous milestone
+
+the user fills the milestones with valid data
+    input text    name=milestoneEntries[OPEN_DATE].day    10
+    input text    name=milestoneEntries[OPEN_DATE].month    1
+    input text    name=milestoneEntries[OPEN_DATE].year    2019
+    input text    name=milestoneEntries[BRIEFING_EVENT].day    11
+    input text    name=milestoneEntries[BRIEFING_EVENT].month    1
+    input text    name=milestoneEntries[BRIEFING_EVENT].year    2019
+    input text    name=milestoneEntries[SUBMISSION_DATE].day    12
+    input text    name=milestoneEntries[SUBMISSION_DATE].month    1
+    input text    name=milestoneEntries[SUBMISSION_DATE].year    2019
+    input text    name=milestoneEntries[ALLOCATE_ASSESSORS].day    13
+    input text    name=milestoneEntries[ALLOCATE_ASSESSORS].month    1
+    input text    name=milestoneEntries[ALLOCATE_ASSESSORS].year    2019
+    input text    name=milestoneEntries[ASSESSOR_BRIEFING].day    14
+    input text    name=milestoneEntries[ASSESSOR_BRIEFING].month    1
+    input text    name=milestoneEntries[ASSESSOR_BRIEFING].year    2019
+    input text    name=milestoneEntries[ASSESSOR_ACCEPTS].day    15
+    input text    name=milestoneEntries[ASSESSOR_ACCEPTS].month    1
+    input text    name=milestoneEntries[ASSESSOR_ACCEPTS].year    2019
+    input text    name=milestoneEntries[ASSESSOR_DEADLINE].day    16
+    input text    name=milestoneEntries[ASSESSOR_DEADLINE].month    1
+    input text    name=milestoneEntries[ASSESSOR_DEADLINE].year    2019
+    input text    name=milestoneEntries[LINE_DRAW].day    17
+    input text    name=milestoneEntries[LINE_DRAW].month    1
+    input text    name=milestoneEntries[LINE_DRAW].year    2019
+    input text    name=milestoneEntries[ASSESSMENT_PANEL].day    18
+    input text    name=milestoneEntries[ASSESSMENT_PANEL].month    1
+    input text    name=milestoneEntries[ASSESSMENT_PANEL].year    2019
+    input text    name=milestoneEntries[PANEL_DATE].day    19
+    input text    name=milestoneEntries[PANEL_DATE].month    1
+    input text    name=milestoneEntries[PANEL_DATE].year    2019
+    input text    name=milestoneEntries[FUNDERS_PANEL].day    20
+    input text    name=milestoneEntries[FUNDERS_PANEL].month    1
+    input text    name=milestoneEntries[FUNDERS_PANEL].year    2019
+    input text    name=milestoneEntries[NOTIFICATIONS].day    21
+    input text    name=milestoneEntries[NOTIFICATIONS].month    1
+    input text    name=milestoneEntries[NOTIFICATIONS].year    2019
+    input text    name=milestoneEntries[RELEASE_FEEDBACK].day    22
+    input text    name=milestoneEntries[RELEASE_FEEDBACK].month    1
+    input text    name=milestoneEntries[RELEASE_FEEDBACK].year    2019
+    Focus    jQuery=button:contains(Done)
+    sleep    500ms
+
+the weekdays should be correct
+    element should contain    css=tr:nth-child(1) td:nth-child(2)    Thu
+    element should contain    css=tr:nth-child(2) td:nth-child(2)    Fri
+    element should contain    css=tr:nth-child(3) td:nth-child(2)    Sat
+    element should contain    css=tr:nth-child(4) td:nth-child(2)    Sun
+    element should contain    css=tr:nth-child(5) td:nth-child(2)    Mon
+    element should contain    css=tr:nth-child(6) td:nth-child(2)    Tue
+    element should contain    css=tr:nth-child(7) td:nth-child(2)    Wed
+    element should contain    css=tr:nth-child(8) td:nth-child(2)    Thu
+    element should contain    css=tr:nth-child(9) td:nth-child(2)    Fri
+    element should contain    css=tr:nth-child(10) td:nth-child(2)    Sat
+    element should contain    css=tr:nth-child(11) td:nth-child(2)    Sun
+    element should contain    css=tr:nth-child(12) td:nth-child(2)    Mon
+    element should contain    css=tr:nth-child(13) td:nth-child(2)    Tue
