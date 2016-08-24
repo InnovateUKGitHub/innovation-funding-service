@@ -9,6 +9,8 @@ Documentation     INFUND-3780: As an Assessor I want the system to autosave my w
 ...
 ...               INFUND-3394 Acceptance Test: Assessor should be able to view the full application and finance summaries for assessment
 ...
+...               INFUND-3859: As an Assessor I want to see how many words I can enter as feedback so that I know how much I can write.
+...
 ...
 ...               INFUND-550 As an assessor I want the ‘Assessment summary’ page to show me complete and incomplete sections, so that I can easily judge how much of the application is left to do
 Suite Setup       guest user log-in    paul.plum@gmail.com    Passw0rd
@@ -134,9 +136,55 @@ Scope: Word count
     When the user enters text to a text field    css=#form-input-193 .editor    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco ullamco
     Then the user should see the text in the page    Words remaining: 0
 
+Assessor should see word count underfeedback form
+    [Documentation]  INFUND-3859
+    [Tags]
+    Given I am on the assessor assessment overview page
+    When I open one of the application questions   link=4. Attire
+    Then I should see word count underneath feedback form    Words remaining: 100
+
+Assessor should see remaining words to enter in feedback form
+    [Documentation]   INFUND-3859
+    [Tags]
+    Given I am on the assessor assessment overview page
+    When the user clicks the button/link   link=4. Attire
+    And I enter feedback of 10 words   Test words count to enter only 10 words test test
+    Then I should see word count underneath feedback form    Words remaining: 90
+
+Assessors should see word count when edit feedbackform
+    [Documentation]   INFUND-3859
+    [Tags]    Pending
+    #  Pending due to INFUND-4654
+    Given I am on the assessor assessment overview page
+    And the user clicks the button/link   link=4. Attire
+    And I enter feedback of 100 words     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco
+    And the user clicks the button/link    jquery=button:contains("Save and return to assessment overview")
+    When the user clicks the button/link   link=4. Attire
+    Then I should see word count underneath feedback form    Words remaining: 0
+
+Validation messaage when more than 100 words entered
+    [Documentation]   INFUND-3859
+    Given I am on the assessor assessment overview page
+    When the user clicks the button/link   link=4. Attire
+    And I enter feedback which is more than 100 words     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco test test
+    Then I should see validation message above the feedback form text field   The form word limit has been exceeded
+
+No error message when feedback words reduced to 100 or less
+    [Documentation]   INFUND-3859
+      Given I am on the assessor assessment overview page
+      And the user clicks the button/link   link=4. Attire
+      And I enter feedback which is more than 100 words     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco test test
+      And I should see validation message above the feedback form text field   The form word limit has been exceeded
+      And Clear Element Text     css=#form-input-225 .editor
+      And I enter feedback which is less than 100 words    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco
+      Then The user should not see the text in the page   The form word limit has been exceeded
+
+
 Scope: Status in the overview
     [Documentation]    INFUND-1483
     [Tags]
+    Given the user navigates to the page    ${Assessment_overview_9}
+    And the user clicks the button/link    link=Scope
     When the user clicks the button/link    jQuery=label:contains(Yes)
     And the user clicks the button/link    jquery=button:contains("Save and return to assessment overview")
     And the user should see the text in the page    In scope? Yes
@@ -237,6 +285,40 @@ the user clicks next and goes to the page
     [Arguments]    ${page_content}
     the user clicks the button/link    css=.next
     the user should see the text in the page    ${page_content}
+
+I enter feedback of 100 words
+    [Arguments]    ${feedback_message}
+    the user enters text to a text field    css=#form-input-225 .editor   ${feedback_message}
+
+I enter feedback of 10 words
+    [Arguments]    ${feedback_message}
+    the user enters text to a text field    css=#form-input-225 .editor   ${feedback_message}
+
+I enter feedback which is more than 100 words
+    [Arguments]   ${feedback_message}
+    the user enters text to a text field    css=#form-input-225 .editor   ${feedback_message}
+
+I should see word count underneath feedback form
+    [Arguments]     ${wordCount}
+     the user should see the text in the page   ${wordCount}
+
+I should see validation message above the feedback form text field
+    [Arguments]     ${error_message}
+    the user should see the text in the page   ${error_message}
+
+I enter feedback which is less than 100 words
+    [Arguments]   ${feedback_message}
+    the user enters text to a text field    css=#form-input-225 .editor    ${feedback_message}
+I am on the assessor assessment overview page
+    the user navigates to the page  ${Assessment_overview_9}
+
+I open one of the application questions
+    [Arguments]   ${application_question}
+    the user clicks the button/link    ${application_question}
+
+the user clears the element text field
+    [Arguments]    ${text_field}
+    Clear Element Text    ${TEXT_FIELD}
 
 the user clicks previous and goes to the page
     [Arguments]    ${page_content}

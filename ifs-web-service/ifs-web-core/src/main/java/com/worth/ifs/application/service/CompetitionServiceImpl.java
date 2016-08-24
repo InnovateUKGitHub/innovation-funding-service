@@ -124,5 +124,15 @@ public class CompetitionServiceImpl implements CompetitionService {
         return competitionsRestService.generateCompetitionCode(competitionId, openingDate).getSuccessObjectOrThrowException();
     }
 
+    @Override
+    public void returnToSetup(Long competitionId) {
+        competitionsRestService.returnToSetup(competitionId);
+    }
+
+    @Override
+    public void markAsSetup(Long competitionId) {
+        competitionsRestService.markAsSetup(competitionId);
+    }
+
 
 }

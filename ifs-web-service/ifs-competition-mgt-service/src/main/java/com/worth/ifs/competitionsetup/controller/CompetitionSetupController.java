@@ -276,8 +276,13 @@ public class CompetitionSetupController {
         List<Error> saveSectionResult = competitionSetupService.saveCompetitionSetupSection(competitionSetupForm, competition, section);
         if(saveSectionResult != null && !saveSectionResult.isEmpty()) {
             saveSectionResult.forEach(e -> {
-                ObjectError error = new ObjectError("currentSection", e.getErrorMessage());
-                bindingResult.addError(error);
+                if(e.getFieldName() != null) {
+                    bindingResult.rejectValue(e.getFieldName(), e.getErrorKey(), e.getErrorMessage());
+                } else {
+                    ObjectError error = new ObjectError("currentSection",
+                            e.getErrorMessage());
+                    bindingResult.addError(error);
+                }
             });
         }
 
@@ -289,10 +294,9 @@ public class CompetitionSetupController {
     }
 
     private boolean isSendToDashboard(CompetitionResource competition) {
-        return (competition == null ||
+        return competition == null ||
                 (!Status.COMPETITION_SETUP.equals(competition.getCompetitionStatus()) &&
-                !Status.READY_TO_OPEN.equals(competition.getCompetitionStatus())) &&
-                        !Status.NOT_STARTED.equals(competition.getCompetitionStatus())) ? true : false;
+                !Status.READY_TO_OPEN.equals(competition.getCompetitionStatus()));
     }
 
     private ObjectNode createJsonObjectNode(boolean success, String message) {

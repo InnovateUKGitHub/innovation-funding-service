@@ -3,6 +3,7 @@ package com.worth.ifs.project.otherdocuments.viewmodel;
 import com.worth.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import com.worth.ifs.project.viewmodel.BasicProjectDetailsViewModel;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -20,9 +21,10 @@ public class ProjectOtherDocumentsViewModel implements BasicProjectDetailsViewMo
     private boolean approved;
     private boolean leadPartner;
     private boolean submitAllowed;
+    private LocalDateTime submitDate;
 
     public ProjectOtherDocumentsViewModel(Long projectId, String projectName, FileDetailsViewModel collaborationAgreementFileDetails,
-                                          FileDetailsViewModel exploitationPlanFileDetails, List<String> partnerOrganisationNames, List<String> rejectionReasons, boolean leadPartner, boolean otherDocumentsSubmitted, boolean otherDocumentsApproved, boolean submitAllowed) {
+                                          FileDetailsViewModel exploitationPlanFileDetails, List<String> partnerOrganisationNames, List<String> rejectionReasons, boolean leadPartner, boolean otherDocumentsSubmitted, boolean otherDocumentsApproved, boolean submitAllowed, LocalDateTime submitDate) {
         this.projectId = projectId;
         this.projectName = projectName;
         this.collaborationAgreementFileDetails = collaborationAgreementFileDetails;
@@ -33,6 +35,7 @@ public class ProjectOtherDocumentsViewModel implements BasicProjectDetailsViewMo
         this.approved = otherDocumentsApproved;
         this.leadPartner = leadPartner;
         this.submitAllowed = submitAllowed;
+        this.submitDate = submitDate;
     }
 
     public Long getProjectId() {
@@ -94,5 +97,9 @@ public class ProjectOtherDocumentsViewModel implements BasicProjectDetailsViewMo
 
     public boolean isSubmitAllowed() {
         return submitAllowed;
+    }
+
+    public LocalDateTime getSubmitDate() {
+        return submitDate;
     }
 }

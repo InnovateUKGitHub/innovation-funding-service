@@ -27,7 +27,7 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import com.worth.ifs.file.resource.FileEntryResource;
-import com.worth.ifs.invite.constant.InviteStatusConstants;
+import com.worth.ifs.invite.constant.InviteStatus;
 import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.service.InviteRestService;
@@ -205,7 +205,7 @@ public class ApplicationOverviewModelPopulator {
         return pendingAssignableUsersResult.handleSuccessOrFailure(
             failure -> new ArrayList<>(0),
             success -> success.stream().flatMap(item -> item.getInviteResources().stream())
-                .filter(item -> !InviteStatusConstants.ACCEPTED.equals(item.getStatus()))
+                .filter(item -> !InviteStatus.OPENED.equals(item.getStatus()))
                 .collect(Collectors.toList()));
     }
 

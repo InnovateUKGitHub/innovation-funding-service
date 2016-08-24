@@ -37,8 +37,20 @@ public class InviteResourceBuilder extends BaseBuilder<ApplicationInviteResource
         return withArray((name, inviteResource) -> setField("name", name, inviteResource), names);
     }
 
+    public InviteResourceBuilder withHash(final String... hashes) {
+        return withArray((hash, inviteResource) -> setField("hash", hash, inviteResource), hashes);
+    }
+
     public InviteResourceBuilder withApplication(final Long... applicationIds) {
         return withArray((applicationId, inviteResource) -> setField("application", applicationId, inviteResource), applicationIds);
+    }
+
+    public InviteResourceBuilder withLeadOrganisation(final String... leadOrganisations) {
+        return withArray((leadOrganisation, inviteResource) -> setField("leadOrganisation", leadOrganisation, inviteResource), leadOrganisations);
+    }
+
+    public InviteResourceBuilder withInviteOrganisationName(final String... inviteOrganisationNames) {
+        return withArray((inviteOrganisationName, inviteResource) -> setField("inviteOrganisationName", inviteOrganisationName, inviteResource), inviteOrganisationNames);
     }
 
     public InviteResourceBuilder withOrganisation(final Long... organisationIds) {

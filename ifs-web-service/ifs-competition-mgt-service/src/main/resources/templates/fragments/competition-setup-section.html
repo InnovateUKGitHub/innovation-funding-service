@@ -354,7 +354,7 @@
                     th:field="${competitionSetupForm.activityCode}"
                     maxlength="255"
                     data-maxlength-errormessage="Activity code has a maximum length of 255 characters"
-                           data-required-errormessage="Please enter a activity code" />
+                           data-required-errormessage="Please enter an activity code" />
                 </div>
 
                 <div th:class="${#fields.hasErrors('competitionCode')}? 'form-group error':'form-group'">
@@ -559,6 +559,26 @@
                 </fieldset>
             </div>
 
+            <div th:class="${#fields.hasErrors('resubmission')}? 'form-group error':'form-group'">
+                <fieldset class="inline">
+                    <legend>
+                        <span class="form-label-bold">Are resubmissions allowed</span>
+                        <span class="hint">Please indicate whether you wish to make resubmission allowed</span>
+		                <span th:if="${#fields.hasErrors('resubmission')}" th:remove="tag">
+		                      <span class="error-message"  th:each="err : ${#fields.errors('resubmission')}" th:text="${err}" />
+		                </span>
+                    </legend>
+                    <label class="block-label" for="comp-resubmissions-yes">
+                        <input id="comp-resubmissions-yes" value="yes" type="radio" th:field="*{resubmission}" required="required" data-required-errormessage="Please select a resubmissions option"></input>
+                        Yes
+                    </label>
+                    <label class="block-label" for="comp-resubmissions-no">
+                        <input id="comp-resubmissions-no" value="no" type="radio" th:field="*{resubmission}" required="required" data-required-errormessage="Please select a resubmissions option"></input>
+                        No
+                    </label>
+                </fieldset>
+            </div>
+
             <button class="button">Done</button>
         </fieldset>
 
@@ -584,6 +604,9 @@
 
                 <dt>Research participation</dt>
                 <dd th:each="(researchParticipationAmount : ${researchParticipationAmounts})" th:if="${researchParticipationAmount.id == competitionSetupForm.researchParticipationAmountId}" th:text="${researchParticipationAmount.name}">Research category</dd>
+
+                <dt>Are resubmissions allowed</dt>
+                <dd th:text="${#strings.capitalize(competitionSetupForm.resubmission)}"></dd>
 
             </dl>
 
@@ -670,6 +693,7 @@
                                 max="31"
                                 required="required"
                                 class="form-control width-small"
+                                data-date-in-table=""
                                 th:attr="aria-labelledby=${'milestone-' + milestoneEntry.key}"
                                 th:value="${milestoneEntry.value.day}"
                                 th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].day'"
@@ -682,6 +706,7 @@
                                 max="12"
                                 required="required"
                                 class="form-control width-small"
+                                data-date-in-table=""
                                 th:attr="aria-labelledby=${'milestone-' + milestoneEntry.key}"
                                 th:value="${milestoneEntry.value.month}"
                                 th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].month'" />
@@ -692,6 +717,7 @@
                                  th:attr="aria-labelledby=${'milestone-' + milestoneEntry.key}"
                                  required="required"
                                  class="form-control width-small"
+                                 data-date-in-table=""
                                  th:value="${milestoneEntry.value.year}"
                                  th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].year'"/>
                       </td>
