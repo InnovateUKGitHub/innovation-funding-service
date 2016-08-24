@@ -42,7 +42,6 @@ public class RestIdentityProviderService implements IdentityProviderService {
     static final String INVALID_PASSWORD_KEY = "INVALID_PASSWORD";
     static final String PASSWORD_FIELD_KEY = "password";
 
-
     @Autowired
     @Qualifier("shibboleth_adaptor")
     private AbstractRestTemplateAdaptor adaptor;
@@ -78,10 +77,10 @@ public class RestIdentityProviderService implements IdentityProviderService {
             LOG.warn("Expected to get some error messages in the response body from the IDP Rest API, but got none.  Returning an error with same HTTP status code");
             return singletonList(new Error(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR, "Empty error response encountered from IDP API", code));
         }
-        return asList(errors).stream().map(e -> buildErrorFromIdentiryProviderError(e, code)).collect(toList());
+        return asList(errors).stream().map(e -> buildErrorFromIdentityProviderError(e, code)).collect(toList());
     }
 
-    private static final Error buildErrorFromIdentiryProviderError(IdentityProviderError identityProviderError, HttpStatus code) {
+    private static final Error buildErrorFromIdentityProviderError(IdentityProviderError identityProviderError, HttpStatus code) {
         if (StringUtils.hasText(identityProviderError.getKey()) && identityProviderError.getKey().equals(INVALID_PASSWORD_KEY)) {
             return Error.fieldError(PASSWORD_FIELD_KEY, code.getReasonPhrase(), identityProviderError.getKey());
         } else {
