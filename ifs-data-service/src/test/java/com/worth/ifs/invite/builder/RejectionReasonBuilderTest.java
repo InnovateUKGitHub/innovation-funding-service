@@ -28,8 +28,8 @@ public class RejectionReasonBuilderTest {
 
         assertEquals(expectedId, rejectionReason.getId());
         assertEquals(expectedReason, rejectionReason.getReason());
-        assertEquals(expectedActive, rejectionReason.getActive());
-        assertEquals(expectedPriority, rejectionReason.getPriority());
+        assertEquals(expectedActive, rejectionReason.isActive());
+        assertEquals(expectedPriority.intValue(), rejectionReason.getPriority());
     }
 
     @Test
@@ -49,13 +49,13 @@ public class RejectionReasonBuilderTest {
         RejectionReason first = rejectionReasons.get(0);
         assertEquals(expectedIds[0], first.getId());
         assertEquals(expectedReasons[0], first.getReason());
-        assertEquals(expectedActives[0], first.getActive());
-        assertEquals(expectedPriorities[0], first.getPriority());
+        assertEquals(expectedActives[0], first.isActive());
+        assertEquals(expectedPriorities[0].intValue(), first.getPriority());
 
         RejectionReason second = rejectionReasons.get(1);
         assertEquals(expectedIds[1], second.getId());
         assertEquals(expectedReasons[1], second.getReason());
-        assertEquals(expectedActives[1], second.getActive());
-        assertEquals(expectedPriorities[1], second.getPriority());
+        assertEquals(expectedActives[1], second.isActive());
+        assertEquals(expectedPriorities[1].intValue(), second.getPriority());
     }
 }

@@ -3,6 +3,8 @@ package com.worth.ifs.invite.domain;
 
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.user.domain.User;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
 
@@ -23,29 +25,30 @@ public class CompetitionParticipant extends Participant<Competition, Competition
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "competition_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JoinColumn(name = "competition_id", referencedColumnName = "id")
     private Competition competition;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @PrimaryKeyJoinColumn
+    @JoinColumn(name = "invite_id")
     private CompetitionInvite invite;
 
     @ManyToOne
-    @JoinColumn(name = "rejection_reason_id", insertable = false, updatable = false)
-    private CompetitionParticipantRejectionReason rejectionReason;
+    @JoinColumn(name = "rejection_reason_id")
+    private RejectionReason rejectionReason;
 
     @Column(name = "rejection_comment")
     private String rejectionReasonComment;
 
-    @Column(name = "competition_role_id") // hopefully the converter will do its stuff
+    @Column(name = "competition_role_id")
     private CompetitionParticipantRole role;
 
     CompetitionParticipant() {
         // no-arg constructor
+        this.competition = null;
     }
 
     public CompetitionParticipant(Competition competition, User user) {
@@ -69,6 +72,11 @@ public class CompetitionParticipant extends Participant<Competition, Competition
     }
 
     @Override
+    public Long getId() {
+        return id;
+    }
+
+    @Override
     public Competition getProcess() {
         return competition;
     }
@@ -88,7 +96,7 @@ public class CompetitionParticipant extends Participant<Competition, Competition
         return user;
     }
 
-    public CompetitionParticipantRejectionReason getRejectionReason() {
+    public RejectionReason getRejectionReason() {
         return rejectionReason;
     }
 
@@ -107,7 +115,7 @@ public class CompetitionParticipant extends Participant<Competition, Competition
         return this;
     }
 
-    public CompetitionParticipant reject(CompetitionParticipantRejectionReason rejectionReason, String comment) {
+    public CompetitionParticipant reject(RejectionReason rejectionReason, String comment) {
         if (rejectionReason == null) throw new NullPointerException("reason cannot be null");
         if (comment == null) throw new NullPointerException("comment cannot be null");
 
@@ -121,5 +129,39 @@ public class CompetitionParticipant extends Participant<Competition, Competition
         setStatus(REJECTED);
 
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CompetitionParticipant that = (CompetitionParticipant) o;
+
+        return new EqualsBuilder()
+                .appendSuper(super.equals(o))
+                .append(id, that.id)
+                .append(competition.getId(), that.competition.getId())
+                .append(user, that.user)
+                .append(invite, that.invite)
+                .append(rejectionReason, that.rejectionReason)
+                .append(rejectionReasonComment, that.rejectionReasonComment)
+                .append(role, that.role)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .appendSuper(super.hashCode())
+                .append(id)
+                .append(competition.getId())
+                .append(user)
+                .append(invite)
+                .append(rejectionReason)
+                .append(rejectionReasonComment)
+                .append(role)
+                .toHashCode();
     }
 }

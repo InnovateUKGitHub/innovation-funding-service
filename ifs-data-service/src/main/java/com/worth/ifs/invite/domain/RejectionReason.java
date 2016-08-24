@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
  * A reason for rejecting an invitation to be a {@link CompetitionParticipant}.
  */
 @Entity
-public class RejectionReason {
+public class RejectionReason implements Comparable<RejectionReason> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -23,16 +23,17 @@ public class RejectionReason {
     private String reason;
 
     @NotNull
-    private Boolean active;
+    private boolean active;
 
     @NotNull
-    private Integer priority;
+    private int priority;
 
     public RejectionReason() {
     }
 
-    public RejectionReason(Long id, String reason, Boolean active, Integer priority) {
-        this.id = id;
+    public RejectionReason(String reason, boolean active, int priority) {
+        if (reason == null) throw new NullPointerException("reason cannot be null");
+        if (reason.isEmpty()) throw new IllegalArgumentException("reason cannot be empty");
         this.reason = reason;
         this.active = active;
         this.priority = priority;
@@ -42,32 +43,16 @@ public class RejectionReason {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getReason() {
         return reason;
     }
 
-    public void setReason(String reason) {
-        this.reason = reason;
-    }
-
-    public Boolean getActive() {
+    public boolean isActive() {
         return active;
     }
 
-    public void setActive(Boolean active) {
-        this.active = active;
-    }
-
-    public Integer getPriority() {
+    public int getPriority() {
         return priority;
-    }
-
-    public void setPriority(Integer priority) {
-        this.priority = priority;
     }
 
     @Override
@@ -98,5 +83,10 @@ public class RejectionReason {
                 .append(active)
                 .append(priority)
                 .toHashCode();
+    }
+
+    @Override
+    public int compareTo(RejectionReason o) {
+        return Integer.compare(this.priority, o.priority);
     }
 }

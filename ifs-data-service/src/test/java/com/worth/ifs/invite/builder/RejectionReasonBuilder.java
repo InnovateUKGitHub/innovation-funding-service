@@ -32,7 +32,7 @@ public class RejectionReasonBuilder extends BaseBuilder<RejectionReason, Rejecti
     }
 
     public RejectionReasonBuilder withId(Long... ids) {
-        return withArray(BuilderAmendFunctions::setId, ids);
+        return withArray((id, rejectionReason) -> setField("id", id, rejectionReason) , ids);
     }
 
     public RejectionReasonBuilder withReason(String... reasons) {
