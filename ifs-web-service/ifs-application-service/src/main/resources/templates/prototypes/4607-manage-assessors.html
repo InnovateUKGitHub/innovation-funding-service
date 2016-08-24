@@ -132,17 +132,11 @@
 				<li id="assessor-area" class="width-half">Innovation area</li> 
 			</ul>
 			
-			<ul class="tabular-list__row">
-				<li class="width-quarter" aria-describedby="assessor-name">Bill Knightly</li>
-				<li class="width-quarter" aria-describedby="assessor-type">Industry</li>
-				<li class="width-half"  aria-describedby="assessor-area">Electronics, sensors &#38; photonics, Materials</li>
-				<li class="width-full">
-					<ul class="tabular-list__row--internal">
-						<li class="width-half">Contract and DOI: <strong>Yes</strong></li>
-						<li class="width-half alignright"><a href="#" class="button button-secondary">+ Add to invite list</a></li>
-					</ul>
-				</li>
-			</ul>
+			<div th:include="prototypes/fragments/manage-assessors :: prototype-assesor-row-find" th:with="row=1,name=${'John Barnes'},type=Industry,doi=Yes,area=${'Electronics, sensors &#38; photonics, Materials'}" th:remove="tag" />
+
+			<div th:include="prototypes/fragments/manage-assessors :: prototype-assesor-row-find" th:with="row=2,name=${'Oliver Romero'},type=Academic,doi=Yes,area=${'Healthcare, Regenerative medicine, Stratified medicine'}" th:remove="tag" />
+
+			<div th:include="prototypes/fragments/manage-assessors :: prototype-assesor-row-find" th:with="row=3,name=${'Jeffrey Carlson'},type=Academic,doi=Yes,area=${'Healthcare, Analytical science'}" th:remove="tag" />
 
 		</div>
 
@@ -153,6 +147,26 @@
 
 			<h2 class="heading-small">Invite people to become an assessor for this competition</h2>
 			<p>You can invite people on your list either individually or as a group.</p>
+
+			<details class="extra-margin-bottom">
+				<summary><span class="summary">Add non-registered assessor to list</span></summary>
+				<div class="panel-indent">
+					<form>
+						<fieldset>
+							<legend>Enter the new assessor's details below to add them to your invite list</legend>
+						</fieldset>
+						<div class="form-group extra-margin">
+							<label class="form-label" for="name">Name</label>
+							<input class="form-control" id="name" type="text" />
+						</div>
+						<div class="form-group">
+							<label class="form-label" for="email">Email</label>
+							<input class="form-control" id="email" type="text" />
+						</div>
+						<button class="button">Add new assessor to list</button>
+					</form>
+				</div>
+			</details>
 
 			<ul class="tabular-list__row-header">
 				<li class="width-third">		
@@ -174,71 +188,13 @@
 				</li>
 				<li class="width-third alignright"><a href="#" class="button button-secondary disabled">Invite group</a></li>
 			</ul>
-			
-			<ul class="tabular-list__row">
-				<li class="width-third">
-					<h3 class="heading-small no-margin"><a href="#">Dave Smith</a></h3>
-					<p>Professor of Health Technology<br />
-						Cardiff University
-					</p>
-				</li>
-				<li class="width-third">
-					<label for="includeInGroupRow1">
-				        <input id="includeInGroupRow1" class="include-in-group" value="Irish" type="checkbox" />
-				        Include in group invite
-				    </label>
-				</li>
-				<li class="width-third alignright">
-					<a href="#" class="button">Invite individual</a>
 
-					<p>
-						<a href="#" class="extra-margin-right">Remove from list</a>
-					</p>
-				</li>
-			</ul>
+			<div th:include="prototypes/fragments/manage-assessors :: prototype-assesor-row-invite" th:with="row=1,name=${'Dave Smith'},org=${'Cardiff University'},position=${'Professor of Health Technology'}" th:remove="tag" />
 
-			<ul class="tabular-list__row">
-				<li class="width-third">
-					<h3 class="heading-small no-margin"><a href="#">Dave Smith</a></h3>
-					<p>Professor of Health Technology<br />
-						Cardiff University
-					</p>
-				</li>
-				<li class="width-third">
-					<label for="includeInGroupRow1">
-				        <input id="includeInGroupRow1" class="include-in-group" value="Irish" type="checkbox" />
-				        Include in group invite
-				    </label>
-				</li>
-				<li class="width-third alignright">
-					<a href="#" class="button">Invite individual</a>
+			<div th:include="prototypes/fragments/manage-assessors :: prototype-assesor-row-invite" th:with="row=2,name=${'Martin Trollope'},org=${'Cardiff University'},position=${'Reader, Healthcare outcome measurement'},status=${'Invite declined'},msg=${'Invite declined as person is too busy'}" th:remove="tag" />
 
-					<p>
-						<a href="#" class="extra-margin-right">Remove from list</a>
-					</p>
-				</li>
-			</ul>
+			<div th:include="prototypes/fragments/manage-assessors :: prototype-assesor-row-invite" th:with="row=3,name=${'Chantel Secrete'},org=${'University College London'},position=${'Reader, Technology Interventions'},status=${'Invite sent 12/02/2016'}" th:remove="tag" />
 
-			<ul class="tabular-list__row">
-				<li class="width-third">
-					<h3 class="heading-small no-margin"><a href="#">Dave Smith</a></h3>
-					<p>Professor of Health Technology<br />
-						Cardiff University
-					</p>
-				</li>
-				<li class="width-third">
-					<p>
-						Invite declined as person is too busy
-					</p>
-				</li>
-				<li class="width-third alignright">
-					<p>Status: <strong>Invite declined</strong></p>
-
-					<p>
-						<a href="#" class="extra-margin-right">Remove from list</a>
-					</p>
-				</li>
-			</ul>
 		</div>
 	</th:block>
 
@@ -247,14 +203,19 @@
 		<div class="grid-row">
 			<div class="column-half">
 				<label for="view">Change view
+					
 					<select class="form-control extra-margin-right" id="view" name="view">
-						
+
+						<th:block th:if="${param.view != null and param.view[0] == 'assessor'}">
+							<option value="assessor">Assessor</option>
+						</th:block>
 
 						<option value="application">Application</option>
 						<option value="assessor">Assessor</option>
 
 					</select>
-					<button class="button button-secondary">Update view</button>
+
+					<button class="button button-secondary hidden">Update view</button>
 				</label>
 			</div>
 			<div class="column-half alignright">
@@ -269,7 +230,7 @@
 
 	</th:block>
 
-	<th:block th:if="${param.tab != null and param.tab[0] == 'assign' and param.view == null}">
+	<th:block th:if="${param.tab != null and param.tab[0] == 'assign' and param.view == null or param.view != null and param.view[0] == 'application'}">
 		<div class="tabular-list" id="assessors-assign-application">
 				
 			<ul class="tabular-list__row-header">
@@ -292,23 +253,12 @@
 				</li>
 			</ul>
 
-			<ul class="tabular-list__row">
-				<li class="width-half">
-					<p class="no-margin">No: <a href="#" class="extra-margin-right">100100000</a> Status: <strong>Unassigned</strong></p>
-				</li>
-				<li class="width-quarter" aria-describedby="assign-lead-org">
-					Wessex University
-				</li>
-				<li class="width-quarter" aria-describedby="assign-assessors">
-					<strong>0</strong> <span class="show-mobile">Assigned assessors</span>
-				</li>
-				<li class="width-full">
-					<ul class="tabular-list__row--internal">
-						<li class="width-half"><h3 class="heading-small no-margin-top"><a href="#">The potential for glucose based contact lens monitoring in the management of type 2 diabetes</a></h3></li>
-						<li class="width-half alignright"><a href="#" class="button button-secondary alignright">Remove from list</a></li>
-					</ul>
-				</li>
-			</ul>
+			<div th:include="prototypes/fragments/manage-assessors :: prototype-assesor-row-assign-application" th:with="row=1,application=${'The potential for glucose based contact lens monitoring in the management of type 2 diabetes'},number=${'10001000000'},org=${'Wessex University'},status=${'Unassigned'},assessors=0,button=${'Assign'}" th:remove="tag" />
+
+			<div th:include="prototypes/fragments/manage-assessors :: prototype-assesor-row-assign-application" th:with="row=2,application=${'Mobility problems and the potential for internet enabled zimmer frame'},number=${'10001000001'},org=${'Plymouth University'},status=${'In progress'},assessors=1,button=${'Assign'}" th:remove="tag" />
+
+
+
 		</div>
 
 	</th:block>
@@ -334,20 +284,10 @@
 				</li>
 			</ul>
 
-			<ul class="tabular-list__row">
-				<li class="width-half">
-					<h3 class="heading-small no-margin"><a href="#">Dave Smith</a></h3>
-					<p>Professor of Health Technology<br />
-						Cardiff University
-					</p>
-				</li>
-				<li class="width-quarter">
-					<strong>1</strong>
-				</li>
-				<li class="width-quarter alignright">
-					<a href="#" class="button button-secondary">Assign</a>
-				</li>
-			</ul>
+			<div th:include="prototypes/fragments/manage-assessors :: prototype-assesor-row-assign-assessor" th:with="row=1,name=${'Dave Smith'},org=${'Cardiff University'},position=${'Professor of Health Technology'},applications=1" th:remove="tag" />
+
+			<div th:include="prototypes/fragments/manage-assessors :: prototype-assesor-row-assign-assessor" th:with="row=2,name=${'Christopher Soames'},org=${'Public Health England'},position=${'Senior Adviser on technology deployment'},applications=1" th:remove="tag" />
+
 		</div>
 
 	</th:block>
@@ -368,7 +308,11 @@
 
 <script type="text/javascript">
 	// <![CDATA[
-	
+	$(document).ready(function() {
+        $('#view').on('change', function() {
+            this.form.submit();
+        });
+    });
 	// ]]>
 </script>
 </body>

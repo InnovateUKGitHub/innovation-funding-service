@@ -39,7 +39,7 @@ IFS.core.formValidation = (function(){
                 messageInvalid : "Please enter a valid email address"
             },
             required : {
-                fields: '[required]:not([data-date])',
+                fields: '[required]:not([data-date-in-table])',
                 messageInvalid : "This field cannot be left blank"
             },
             minlength : {
