@@ -180,7 +180,7 @@ IFS.core.formValidation = (function(){
             }
 
             //onchange clear tooWeakPassword message as this is validated in the back end.
-            $('span:contains('+IFS.core.formValidation.getErrorMessage(field,'passwordPolicy-tooWeak')+')').remove();
+            IFS.core.formValidation.setValid(field, IFS.core.formValidation.getErrorMessage(field, 'passwordPolicy-tooWeak'));
 
             return confirmsToPasswordPolicy;
         },
