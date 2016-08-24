@@ -106,8 +106,7 @@ Application details server side
 
 Empty text area
     [Documentation]    INFUND-43
-    [Tags]    Pending
-    # Pending INFUND-4462
+    [Tags]
     Given the user clicks the button/link    css=.pagination-part-title
     When the applicant clears the text area of the "Project Summary"
     When the user clicks the button/link    jQuery=Button:contains("Mark as complete")
@@ -146,7 +145,7 @@ the applicant clears the text area of the "Project Summary"
     Clear Element Text    css=#form-input-11 .editor
     Press Key    css=#form-input-11 .editor    \\8
     Focus    css=.app-submit-btn
-    Click Element    css=.fa-bold
+    #Click Element    css=.fa-bold
     Sleep    300ms
 
 Applicant goes to the application details page of the Robot application
