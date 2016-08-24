@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Other documents'" th:remove="tag" />
+</head>
+<body th:with="context='project'" class="project-other-documents">
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{projectId}(projectId=${model.projectId})}"  th:remove="tag" />
+
+    <div class="page-title">
+        <div th:include="fragments/elements :: project-title (projectId=${model.projectId}, projectName=${model.projectName})" th:remove="tag" />
+        <h1 class="heading-xlarge">Other documents</h1>
+
+        <span th:text="${model.leadPartnerOrganisationName}" />
+
+        <ul class="list-bullet" th:unless="${#lists.isEmpty(model.partnerOrganisationNames)}">
+            <li th:each="partner : ${model.partnerOrganisationNames}" th:text="${partner}" />
+        </ul>
+
+        <span th:text="${model.projectManagerName}" />
+
+        <span th:text="${model.projectManagerTelephone}" />
+
+        <span th:text="${model.projectManagerEmail}" />
+
+    </div>
+
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+
+</body>
+</html>
