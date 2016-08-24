@@ -526,7 +526,7 @@ the user fills the milestones with invalid data
     input text    name=milestoneEntries[NOTIFICATIONS].day    4
     input text    name=milestoneEntries[NOTIFICATIONS].month    1
     input text    name=milestoneEntries[NOTIFICATIONS].year    2019
-    input text    name=milestoneEntries[RELEASE_FEEDBACK].day    3
+    input text    name=milestoneEntries[RELEASE_FEEDBACK].day    333
     input text    name=milestoneEntries[RELEASE_FEEDBACK].month    1
     input text    name=milestoneEntries[RELEASE_FEEDBACK].year    2019
 
@@ -542,7 +542,7 @@ Validation summary should be visible
     And the user should see the text in the page    10. Panel date: please enter a future date that is after the previous milestone
     And the user should see the text in the page    11. Funders panel: please enter a future date that is after the previous milestone
     And the user should see the text in the page    12. Notifications: please enter a future date that is after the previous milestone
-    And the user should see the text in the page    13. Release feedback: please enter a future date that is after the previous milestone
+    And the user should see the text in the page    13. Release feedback: please enter a valid date
 
 the user fills the milestones with valid data
     input text    name=milestoneEntries[OPEN_DATE].day    10
