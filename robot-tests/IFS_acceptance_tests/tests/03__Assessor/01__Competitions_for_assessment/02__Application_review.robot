@@ -147,17 +147,17 @@ Assessor should see remaining words to enter in feedback form
     [Documentation]   INFUND-3859
     [Tags]
     Given I am on the assessor assessment overview page
-    When the user clicks the button/link   link=4. Attire
-    And I enter feedback of 10 words   Test words count to enter only 10 words test test
+    When I open one of the application questions   link=4. Attire
+    And I enter feedback of words   Test words count to enter only 10 words test test
     Then I should see word count underneath feedback form    Words remaining: 90
 
 Assessors should see word count when edit feedbackform
     [Documentation]   INFUND-3859
     [Tags]    Pending
-    # Note: this test case Failed - INFUND-4654
+    # Pending INFUND-4654
     Given I am on the assessor assessment overview page
-    And the user clicks the button/link   link=4. Attire
-    And I enter feedback of 100 words     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco
+    And I open one of the application questions   link=4. Attire
+    And I enter feedback of words     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco
     And the user clicks the button/link    jquery=button:contains("Save and return to assessment overview")
     When the user clicks the button/link   link=4. Attire
     Then I should see word count underneath feedback form    Words remaining: 0
@@ -165,18 +165,18 @@ Assessors should see word count when edit feedbackform
 Validation messaage when more than 100 words entered
     [Documentation]   INFUND-3859
     Given I am on the assessor assessment overview page
-    When the user clicks the button/link   link=4. Attire
-    And I enter feedback which is more than 100 words     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco test test
+    When I open one of the application questions   link=4. Attire
+    And I enter feedback of words     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco test test
     Then I should see validation message above the feedback form text field   The form word limit has been exceeded
 
 No error message when feedback words reduced to 100 or less
     [Documentation]   INFUND-3859
       Given I am on the assessor assessment overview page
-      And the user clicks the button/link   link=4. Attire
-      And I enter feedback which is more than 100 words     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco test test
+      And I open one of the application questions   link=4. Attire
+      And I enter feedback of words     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco test test
       And I should see validation message above the feedback form text field   The form word limit has been exceeded
       And Clear Element Text     css=#form-input-225 .editor
-      And I enter feedback which is less than 100 words    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco
+      And I enter feedback of words    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco
       Then The user should not see the text in the page   The form word limit has been exceeded
 
 
@@ -284,16 +284,8 @@ the user clicks next and goes to the page
     the user clicks the button/link    css=.next
     the user should see the text in the page    ${page_content}
 
-I enter feedback of 100 words
-    [Arguments]    ${feedback_message}
-    the user enters text to a text field    css=#form-input-225 .editor   ${feedback_message}
-
-I enter feedback of 10 words
-    [Arguments]    ${feedback_message}
-    the user enters text to a text field    css=#form-input-225 .editor   ${feedback_message}
-
-I enter feedback which is more than 100 words
-    [Arguments]   ${feedback_message}
+I enter feedback of words
+    [Arguments]  ${feedback_message}
     the user enters text to a text field    css=#form-input-225 .editor   ${feedback_message}
 
 I should see word count underneath feedback form
@@ -304,9 +296,6 @@ I should see validation message above the feedback form text field
     [Arguments]     ${error_message}
     the user should see the text in the page   ${error_message}
 
-I enter feedback which is less than 100 words
-    [Arguments]   ${feedback_message}
-    the user enters text to a text field    css=#form-input-225 .editor    ${feedback_message}
 I am on the assessor assessment overview page
     the user navigates to the page  ${Assessment_overview_9}
 
