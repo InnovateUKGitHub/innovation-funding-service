@@ -18,7 +18,7 @@ public class ProjectPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "READ", description = "A user can see projects that they are partners on")
     public boolean partnersOnProjectCanView(ProjectResource project, UserResource user) {
-        return isPartner(project.getId(), user.getId());
+        return project != null && isPartner(project.getId(), user.getId());
     }
 
     @PermissionRule(value = "READ", description = "Comp admins can see project resources")
