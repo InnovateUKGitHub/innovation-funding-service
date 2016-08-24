@@ -30,5 +30,4 @@ public class LabourCostBuilder extends BaseBuilder<LabourCost, LabourCostBuilder
     protected LabourCost createInitial() {
         return new LabourCost();
     }
-
 }
