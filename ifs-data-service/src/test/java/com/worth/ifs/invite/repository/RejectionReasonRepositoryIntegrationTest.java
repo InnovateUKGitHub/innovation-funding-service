@@ -41,7 +41,7 @@ public class RejectionReasonRepositoryIntegrationTest extends BaseRepositoryInte
         repository.deleteAll();
 
         List<RejectionReason> saved = newRejectionReason()
-                .withId(1L, 2L, 3L, 4L)
+                .withId(null, null, null, null)
                 .withActive(TRUE, TRUE, TRUE, FALSE)
                 .withReason("Visible 3", "Visible 1", "Visible 2", "Hidden")
                 .withPriority(3, 1, 2, 4)
