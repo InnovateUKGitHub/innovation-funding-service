@@ -98,46 +98,7 @@ public class InitialDetailsSectionSaver implements CompetitionSetupSectionSaver 
 		List<Error> errors = new ArrayList<>();
 
 	    try {
-            switch (fieldName) {
-                case "title":
-                    competitionResource.setName(value);
-                    break;
-                case "competitionTypeId":
-                    competitionResource.setCompetitionType(Long.parseLong(value));
-                    break;
-                case "innovationSectorCategoryId":
-                    competitionResource.setInnovationSector(Long.parseLong(value));
-                    break;
-                case "innovationAreaCategoryId":
-                    competitionResource.setInnovationArea(Long.parseLong(value));
-                    break;
-                case "leadTechnologistUserId":
-                    competitionResource.setLeadTechnologist(Long.parseLong(value));
-                    break;
-                case "executiveUserId":
-                    competitionResource.setExecutive(Long.parseLong(value));
-                    break;
-                case "openingDate":
-                    try {
-                        String[] dateParts = value.split("-");
-                        LocalDateTime startDate = LocalDateTime.of(
-                                Integer.parseInt(dateParts[2]),
-                                Integer.parseInt(dateParts[1]),
-                                Integer.parseInt(dateParts[0]),
-                                0, 0, 0);
-                        competitionResource.setStartDate(startDate);
-
-                        errors.addAll(saveOpeningDateAsMilestone(startDate, competitionResource.getId()));
-                        if(!errors.isEmpty()) {
-                            return errors;
-                        }
-                    } catch (Exception e) {
-                        LOG.error(e.getMessage());
-                        return asList(Error.fieldError(OPENINGDATE_FIELDNAME, null, "Unable to save opening date"));
-                    }
-                default:
-                    return asList(new Error("Field not found", HttpStatus.BAD_REQUEST));
-            }
+            errors = updateCompetitionResourceWithAutosave(errors, competitionResource, fieldName, value);
         } catch (Exception e) {
             errors.add(new Error(e.getMessage(), HttpStatus.BAD_REQUEST));
         }
@@ -150,6 +111,52 @@ public class InitialDetailsSectionSaver implements CompetitionSetupSectionSaver 
 
 		return Collections.emptyList();
 	}
+
+	private List<Error> updateCompetitionResourceWithAutosave(List<Error> errors, CompetitionResource competitionResource, String fieldName, String value) {
+        switch (fieldName) {
+            case "title":
+                competitionResource.setName(value);
+                break;
+            case "competitionTypeId":
+                competitionResource.setCompetitionType(Long.parseLong(value));
+                break;
+            case "innovationSectorCategoryId":
+                competitionResource.setInnovationSector(Long.parseLong(value));
+                break;
+            case "innovationAreaCategoryId":
+                competitionResource.setInnovationArea(Long.parseLong(value));
+                break;
+            case "leadTechnologistUserId":
+                competitionResource.setLeadTechnologist(Long.parseLong(value));
+                break;
+            case "executiveUserId":
+                competitionResource.setExecutive(Long.parseLong(value));
+                break;
+            case "openingDate":
+                try {
+                    String[] dateParts = value.split("-");
+                    LocalDateTime startDate = LocalDateTime.of(
+                            Integer.parseInt(dateParts[2]),
+                            Integer.parseInt(dateParts[1]),
+                            Integer.parseInt(dateParts[0]),
+                            0, 0, 0);
+                    competitionResource.setStartDate(startDate);
+
+                    errors.addAll(saveOpeningDateAsMilestone(startDate, competitionResource.getId()));
+                    if(!errors.isEmpty()) {
+                        return errors;
+                    }
+                } catch (Exception e) {
+                    LOG.error(e.getMessage());
+                    return asList(Error.fieldError(OPENINGDATE_FIELDNAME, null, "Unable to save opening date"));
+                }
+                break;
+            default:
+                return asList(new Error("Field not found", HttpStatus.BAD_REQUEST));
+        }
+
+        return errors;
+    }
 
 	private List<Error> validateOpeningDate(LocalDateTime openingDate) {
         if (openingDate.isBefore(LocalDateTime.now())) {
