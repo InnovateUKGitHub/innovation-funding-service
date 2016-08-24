@@ -32,4 +32,11 @@ public class ProjectFinanceServiceImpl implements ProjectFinanceService {
     public Optional<SpendProfileResource> getSpendProfile(Long projectId, Long organisationId) {
         return projectFinanceRestService.getSpendProfile(projectId, organisationId).toOptionalIfNotFound().getSuccessObjectOrThrowException();
     }
+
+    @Override
+    public ServiceResult<Void> saveSpendProfile(Long projectId, Long organisationId, SpendProfileTableResource table) {
+
+        return projectFinanceRestService.saveSpendProfile(projectId, organisationId, table).toServiceResult();
+
+    }
 }

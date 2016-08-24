@@ -28,4 +28,12 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
 
         return isProjectFinanceUser(user);
     }
+
+    @PermissionRule(
+            value = "EDIT_SPEND_PROFILE",
+            description = "Partners can edit their own Spend Profile data")
+    public boolean partnersCanEditTheirOwnSpendProfileData(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
+
+        return partnerBelongsToOrganisation(projectOrganisationCompositeId.getProjectId(), user.getId(), projectOrganisationCompositeId.getOrganisationId());
+    }
 }

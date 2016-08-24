@@ -7,6 +7,7 @@ import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.project.resource.SpendProfileTableResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -42,5 +43,15 @@ public class ProjectFinanceController {
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         return projectFinanceService.getSpendProfile(projectOrganisationCompositeId).toGetResponse();
+    }
+
+    @RequestMapping(value = "/{projectId}/partner-organisation/{organisationId}/spend-profile", method = POST)
+    public RestResult<Void> saveSpendProfile(@PathVariable("projectId") final Long projectId,
+                                             @PathVariable("organisationId") final Long organisationId,
+                                             @RequestBody SpendProfileTableResource table) {
+
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        return projectFinanceService.saveSpendProfile(projectOrganisationCompositeId, table).toPostResponse();
     }
 }

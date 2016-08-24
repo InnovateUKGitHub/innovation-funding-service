@@ -14,4 +14,6 @@ public interface ProjectFinanceRestService {
     RestResult<SpendProfileTableResource> getSpendProfileTable(Long projectId, Long organisationId);
 
     RestResult<SpendProfileResource> getSpendProfile(Long projectId, Long organisationId);
+
+    RestResult<Void> saveSpendProfile(Long projectId, Long organisationId, SpendProfileTableResource table);
 }

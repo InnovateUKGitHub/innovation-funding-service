@@ -1,5 +1,6 @@
 package com.worth.ifs.project.finance.transactional;
 
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.LocalDateResource;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.project.domain.Project;
@@ -14,10 +15,12 @@ import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.Organisation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +30,7 @@ import java.util.stream.IntStream;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.processAnyFailuresOrSucceed;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.project.finance.domain.CostTimePeriod.TimeUnit.MONTH;
 import static com.worth.ifs.util.CollectionFunctions.*;
@@ -55,6 +59,8 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
     @Autowired
     private SpendProfileCostCategorySummaryStrategy spendProfileCostCategorySummaryStrategy;
+
+    private static final String SPEND_PROFILE_TOTAL_FOR_ALL_MONTHS_INCORRECT_ERROR_KEY = "PROJECT_SETUP_SPEND_PROFILE_TOTAL_FOR_ALL_MONTHS_DOES_NOT_MATCH_ELIGIBLE_TOTAL_FOR_SPECIFIED_CATEGORY";
 
     @Override
     public ServiceResult<Void> generateSpendProfile(Long projectId) {
@@ -110,6 +116,55 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
             resource.setId(profile.getId());
             return resource;
         });
+    }
+
+    @Override
+    public ServiceResult<Void> saveSpendProfile(ProjectOrganisationCompositeId projectOrganisationCompositeId, SpendProfileTableResource table) {
+
+        return saveSpendProfileData(projectOrganisationCompositeId, table) // We have to save the data even if the totals don't match, so we do that first
+                .andOnSuccess(() -> validateSpendProfileTableResource(table));
+    }
+
+    private ServiceResult<Void> validateSpendProfileTableResource(SpendProfileTableResource table) {
+
+        List<Error> categoriesWithIncorrectTotal = checkTotalForMonths(table);
+
+        if (categoriesWithIncorrectTotal.isEmpty()) {
+            return serviceSuccess();
+        } else {
+            return serviceFailure(categoriesWithIncorrectTotal);
+        }
+    }
+
+    private List<Error> checkTotalForMonths(SpendProfileTableResource table) {
+
+        Map<String, List<BigDecimal>> monthlyCostsPerCategoryMap = table.getMonthlyCostsPerCategoryMap();
+        Map<String, BigDecimal> eligibleCostPerCategoryMap = table.getEligibleCostPerCategoryMap();
+
+        List<Error> categoriesWithIncorrectTotal = new ArrayList<>();
+
+        for (Map.Entry<String, List<BigDecimal>> entry : monthlyCostsPerCategoryMap.entrySet()) {
+            String category = entry.getKey();
+            List<BigDecimal> monthlyCosts = entry.getValue();
+
+            BigDecimal actualTotalCost = monthlyCosts.stream().reduce(new BigDecimal("0"), (d1, d2) -> d1.add(d2));
+            BigDecimal expectedTotalCost = eligibleCostPerCategoryMap.get(category);
+
+            if (!actualTotalCost.equals(expectedTotalCost)) {
+                String readableErrorMessage = String.format("Spend Profile: The total for all months does not match the eligible total for category: %s", category);
+
+                categoriesWithIncorrectTotal.add(new Error(SPEND_PROFILE_TOTAL_FOR_ALL_MONTHS_INCORRECT_ERROR_KEY, readableErrorMessage, HttpStatus.BAD_REQUEST));
+            }
+        }
+
+        return categoriesWithIncorrectTotal;
+    }
+
+    private ServiceResult<Void> saveSpendProfileData(ProjectOrganisationCompositeId projectOrganisationCompositeId, SpendProfileTableResource table) {
+
+        // Need to check how to convert the table to SpendProfileResource and save it.
+        // The SpendProfileResource currently only has an id
+        return serviceSuccess();
     }
 
     private List<BigDecimal> orderCostsByMonths(List<Cost> costs, List<LocalDate> months, LocalDate startDate) {
