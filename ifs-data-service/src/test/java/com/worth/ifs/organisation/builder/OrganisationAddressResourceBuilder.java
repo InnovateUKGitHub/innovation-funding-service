@@ -39,4 +39,8 @@ public class OrganisationAddressResourceBuilder extends BaseBuilder<Organisation
         return withArray((address, orgAddress) -> setField("address", address, orgAddress), addresses);
     }
 
+    public OrganisationAddressResourceBuilder withOrganisation(Long... organisations){
+        return withArray((organisation, orgId) -> setField("organisation", organisation, orgId), organisations);
+    }
+
 }
