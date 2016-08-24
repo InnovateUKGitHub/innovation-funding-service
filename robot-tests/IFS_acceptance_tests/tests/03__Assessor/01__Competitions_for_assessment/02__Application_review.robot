@@ -136,6 +136,15 @@ Scope: Word count
     When the user enters text to a text field    css=#form-input-193 .editor    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco ullamco
     Then the user should see the text in the page    Words remaining: 0
 
+Scope: Status in the overview
+    [Documentation]    INFUND-1483
+    [Tags]
+    When the user clicks the button/link    jQuery=label:contains(Yes)
+    And the user clicks the button/link    jquery=button:contains("Save and return to assessment overview")
+    And the user should see the text in the page    In scope? Yes
+    And the user should see the element    css=.column-third > img    #green flag
+
+
 Assessor should see word count underfeedback form
     [Documentation]  INFUND-3859
     [Tags]
@@ -180,13 +189,7 @@ No error message when feedback words reduced to 100 or less
       Then The user should not see the text in the page   The form word limit has been exceeded
 
 
-Scope: Status in the overview
-    [Documentation]    INFUND-1483
-    [Tags]
-    When the user clicks the button/link    jQuery=label:contains(Yes)
-    And the user clicks the button/link    jquery=button:contains("Save and return to assessment overview")
-    And the user should see the text in the page    In scope? Yes
-    And the user should see the element    css=.column-third > img    #green flag
+
 
 Question 1: Autosave
     [Documentation]    INFUND-3780
