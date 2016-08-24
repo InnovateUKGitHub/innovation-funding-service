@@ -429,6 +429,31 @@ public class ExperianEndpointController {
                 new VerificationResultWrapper(new VerificationResult("9", "8", "6", "No Match", emptyList()))
         );
 
+        verificationResults.put(
+                fromJson("{\n" +
+                        "  \"sortcode\":\"404745\",\n" +
+                        "  \"accountNumber\":\"51406795\",\n" +
+                        "  \"companyName\": \"Vitruvius Stonework Limited\",\n" +
+                        "  \"registrationNumber\": \"60674010\",\n" +
+                        "  \"firstName\": \"NA\",\n" +
+                        "  \"lastName\": \"NA\",\n" +
+                        "  \"address\": {\"organisation\":\"\", \"buildingName\":\"Montrose House 1\", \"street\":\"Clayhill Park\",\"locality\":\"Cheshire West and Chester\",\"town\":\"Neston\",\"postcode\": \"CH64 3RU\"}\n" +
+                        "}", AccountDetails.class),
+                fromJson("{\n" +
+                        "  \"VerificationResult\": {\n" +
+                        "    \"personalDetailsScore\": 1,\n" +
+                        "    \"addressScore\": 5,\n" +
+                        "    \"companyNameScore\": 9,\n" +
+                        "    \"regNumberScore\": \"Match\",\n" +
+                        "    \"conditions\": {\n" +
+                        "      \"severity\": \"warning\",\n" +
+                        "      \"code\": 2,\n" +
+                        "      \"description\": \"Modulus check algorithm is unavailable for these account details\"\n" +
+                        "    }\n" +
+                        "  }\n" +
+                        "}", VerificationResultWrapper.class)
+        );
+
         otherErrorsDuringVerification = new HashMap<>();
         otherErrorsDuringVerification.put(
                 fromJson("{\n" +
@@ -447,6 +472,7 @@ public class ExperianEndpointController {
                         "  \"description\": \"Invalid Parameter\"\n" +
                         "}", SilError.class)
         );
+
         defaultVerificationResult = new VerificationResultWrapper(new VerificationResult("1", "7", "3", "No Match", singletonList(new Condition("warning", 2, "Modulus check algorithm is unavailable for these account details"))));
     }
 }
