@@ -2,7 +2,6 @@ package com.worth.ifs.assessment.transactional;
 
 import com.worth.ifs.assessment.mapper.CompetitionInviteMapper;
 import com.worth.ifs.assessment.resource.CompetitionRejectionReasonResource;
-import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.invite.domain.CompetitionInvite;
 import com.worth.ifs.invite.domain.CompetitionParticipant;

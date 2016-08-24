@@ -1,21 +1,26 @@
 package com.worth.ifs.invite.domain;
 
 import com.worth.ifs.user.domain.User;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+import javax.persistence.*;
 import java.util.Optional;
 
 /**
  * A Participant in a {@link ProcessActivity}.
  */
+@MappedSuperclass
 public abstract class Participant<P extends ProcessActivity, I extends Invite<P,I>, R extends ParticipantRole<P>> {
-    @Enumerated(EnumType.STRING)
+
+    @Column(name = "participant_status_id")
     private ParticipantStatus status;
 
     protected Participant() {
         this.status = ParticipantStatus.PENDING;
     }
+
+    public abstract Long getId();
 
     public ParticipantStatus getStatus() {
         return status;
@@ -43,5 +48,25 @@ public abstract class Participant<P extends ProcessActivity, I extends Invite<P,
         }
 
         this.status = newStatus;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Participant<?, ?, ?> that = (Participant<?, ?, ?>) o;
+
+        return new EqualsBuilder()
+                .append(status, that.status)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(status)
+                .toHashCode();
     }
 }
