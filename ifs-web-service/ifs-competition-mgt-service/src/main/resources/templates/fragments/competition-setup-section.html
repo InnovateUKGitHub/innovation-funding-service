@@ -28,6 +28,7 @@
                        th:field="${competitionSetupForm.title}"
                        required="required"
                        data-required-errormessage="Please enter a title" />
+                <span class="autosave-info" />
             </div>
 
             <div th:class="${#fields.hasErrors('competitionTypeId')}? 'form-group error':'form-group'">
@@ -41,6 +42,7 @@
                     <option value="" disabled="disabled" th:selected="${competitionSetupForm.competitionTypeId == null}">Please select &hellip;</option>
                     <option th:each="(competitionType : ${competitionTypes})" th:attr="data-stateaid=${competitionType.stateAid}" th:text="${competitionType.name}"  th:value="${competitionType.id}" th:selected="${competitionSetupForm.competitionTypeId == competitionType.id}">Competition Type</option>
                 </select>
+                <span class="autosave-info" />
             </div>
 
 
@@ -56,6 +58,7 @@
                     <option value="" disabled="disabled" th:selected="${competitionSetupForm.innovationSectorCategoryId == null}">Please select &hellip;</option>
                     <option th:each="(innovationSector : ${innovationSectors})" th:text="${innovationSector.name}" th:value="${innovationSector.id}" th:selected="${competitionSetupForm.innovationSectorCategoryId == innovationSector.id}">Innovation Sector</option>
                 </select>
+                <span class="autosave-info" />
             </div>
 
             <div th:class="${#fields.hasErrors('innovationAreaCategoryId')}? 'form-group error':'form-group'">
@@ -70,6 +73,7 @@
                     <option th:unless="${competitionSetupForm.innovationSectorCategoryId == null}" value="" disabled="disabled" th:selected="${competitionSetupForm.innovationAreaCategoryId == null}">Please select &hellip;</option>
                     <option th:unless="${competitionSetupForm.innovationSectorCategoryId == null}" th:each="(innovationArea : ${innovationAreas})" th:text="${innovationArea.name}" th:value="${innovationArea.id}" th:selected="${competitionSetupForm.innovationAreaCategoryId == innovationArea.id}">Innovation Area</option>
                 </select>
+                <span class="autosave-info" />
             </div>
 
 
@@ -83,6 +87,7 @@
                       </span>
                   </legend>
                   <div class="date-group" data-future-date="">
+                      <input type="hidden" name="openingDate" />
                       <div class="day">
                           <label class="form-label" for="competitionSetupForm.openingDateDay">
                               <div>Day</div>
@@ -118,6 +123,7 @@
                                  data-required-errormessage="Please enter an opening year"
                                  th:field="${competitionSetupForm.openingDateYear}" />
                       </div>
+                      <span class="autosave-info" />
                   </div>
                 </div>
             </fieldset>
@@ -133,6 +139,7 @@
                     <option value="" th:selected="${competitionSetupForm.leadTechnologistUserId == null}" disabled="disabled">Please select &hellip;</option>
                     <option th:each="(competitionLeadTechUser : ${competitionLeadTechUsers})" th:text="${competitionLeadTechUser.name}" th:value="${competitionLeadTechUser.id}" th:selected="${competitionSetupForm.leadTechnologistUserId == competitionLeadTechUser.id}">Lead technologist</option>
                 </select>
+                <span class="autosave-info" />
             </div>
 
             <div th:class="${#fields.hasErrors('executiveUserId')}? 'form-group error':'form-group'">
@@ -146,6 +153,7 @@
                     <option value="" disabled="disabled" th:selected="${competitionSetupForm.executiveUserId == null}">Please select &hellip;</option>
                     <option th:each="(competitionExecutiveUser : ${competitionExecutiveUsers})" th:text="${competitionExecutiveUser.name}" th:value="${competitionExecutiveUser.id}" th:selected="${competitionSetupForm.executiveUserId == competitionExecutiveUser.id}">User</option>
                 </select>
+                <span class="autosave-info" />
             </div>
 
 

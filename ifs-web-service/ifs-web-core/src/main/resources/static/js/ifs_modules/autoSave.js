@@ -88,10 +88,19 @@ IFS.core.autoSave = (function(){
                         };
                         break;
                   case 'compSetup':
-                        jsonObj = {
-                          fieldName: field.prop('name'),
-                          value: field.val()
-                        };
+                        var dateField = field.is('[data-date]');
+                        if(dateField){
+                          var fieldInfo = field.closest('.date-group').find('input[type="hidden"]');
+                          jsonObj = {
+                            value: field.attr('data-date'),
+                            fieldName: fieldInfo.prop('name')
+                          };
+                        } else {
+                          jsonObj = {
+                            fieldName: field.prop('name'),
+                            value: field.val()
+                          };
+                        }
                         break;
                   case 'assessorFeedback':
                         jsonObj = {

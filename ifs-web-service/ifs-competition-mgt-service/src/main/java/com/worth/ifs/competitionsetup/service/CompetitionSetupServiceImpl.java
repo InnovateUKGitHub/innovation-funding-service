@@ -75,7 +75,20 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 		
 		return populator.populateForm(competitionResource);
 	}
-	
+
+
+	@Override
+	public List<Error> autoSaveCompetitionSetupSection(CompetitionResource competitionResource, CompetitionSetupSection section, String fieldName, String value) {
+
+		CompetitionSetupSectionSaver saver = sectionSavers.get(section);
+		if(saver == null) {
+			LOG.error("unable to save section " + section);
+			throw new IllegalArgumentException();
+		}
+
+		return saver.autoSaveSectionField(competitionResource, fieldName, value);
+	}
+
 	@Override
 	public List<Error> saveCompetitionSetupSection(CompetitionSetupForm competitionSetupForm,
 			CompetitionResource competitionResource, CompetitionSetupSection section) {
