@@ -45,7 +45,6 @@ import java.util.Optional;
 public class CompetitionSetupController {
 
     private static final Log LOG = LogFactory.getLog(CompetitionSetupController.class);
-    private static final String BINDING_RESULT_COMPETITION_SETUP_FORM = "org.springframework.validation.BindingResult.applicationFormForm";
 
     @Autowired
     private UserAuthenticationService userAuthenticationService;
@@ -94,7 +93,6 @@ public class CompetitionSetupController {
     	}
 
         competitionService.setSetupSectionMarkedAsIncomplete(competitionId, section);
-
         competitionSetupService.setCompetitionAsCompetitionSetup(competitionId);
 
         return "redirect:/competition/setup/" + competitionId + "/section/" + section.getPath();
@@ -205,6 +203,7 @@ public class CompetitionSetupController {
     	if("yes".equals(competitionSetupForm.getMultipleStream()) && StringUtils.isEmpty(competitionSetupForm.getStreamName())){
     		bindingResult.addError(new FieldError("competitionSetupForm", "streamName", "A stream name is required"));
     	}
+
         return genericCompetitionSetupSection(competitionSetupForm, bindingResult, competitionId, CompetitionSetupSection.ELIGIBILITY, model);
     }
 
@@ -231,7 +230,6 @@ public class CompetitionSetupController {
                                               BindingResult bindingResult,
                                               @PathVariable("competitionId") Long competitionId,
                                               Model model) {
-
 
         return genericCompetitionSetupSection(competitionSetupForm, bindingResult, competitionId, CompetitionSetupSection.APPLICATION_FORM, model);
     }
@@ -283,13 +281,13 @@ public class CompetitionSetupController {
     @ResponseBody
     public JsonNode generateCompetitionCode(@PathVariable("competitionId") Long competitionId, HttpServletRequest request) {
 
-      CompetitionResource competition = competitionService.getById(competitionId);
-      if (competition.getStartDate() != null) {
-        return this.createJsonObjectNode(true, competitionService.generateCompetitionCode(competitionId, competition.getStartDate()));
-      }
-      else {
-        return this.createJsonObjectNode(false, "Please set a start date for your competition before generating the competition code, you can do this in the Initial Details section");
-      }
+        CompetitionResource competition = competitionService.getById(competitionId);
+        if (competition.getStartDate() != null) {
+            return this.createJsonObjectNode(true, competitionService.generateCompetitionCode(competitionId, competition.getStartDate()));
+        }
+        else {
+            return this.createJsonObjectNode(false, "Please set a start date for your competition before generating the competition code, you can do this in the Initial Details section");
+        }
     }
 
 
@@ -346,6 +344,7 @@ public class CompetitionSetupController {
         ObjectNode node = mapper.createObjectNode();
         node.put("success", success ? "true" : "false");
         node.put("message", CharMatcher.is('\"').trimFrom(message));
+
         return node;
     }
 
@@ -353,6 +352,7 @@ public class CompetitionSetupController {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode node = mapper.createObjectNode();
         node.put("success", success ? "true" : "false");
+
         if (!success) {
             ArrayNode errorsNode = mapper.createArrayNode();
             errors.stream().forEach(errorsNode::add);
@@ -372,7 +372,5 @@ public class CompetitionSetupController {
                 LOG.error("Question(" + questionId + ") not found");
             }
         }
-
     }
-
 }
