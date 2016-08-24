@@ -97,9 +97,9 @@ public class ProjectPermissionRules extends BasePermissionRules {
 
     @PermissionRule(
             value = "VIEW_OTHER_DOCUMENTS_DETAILS",
-            description = "Partners can view Other Documents (Collaboration Agreement, Exploitation Plan) details that their lead partners have uploaded")
+            description = "Partners and competitions admins can view Other Documents (Collaboration Agreement, Exploitation Plan) details that their lead partners have uploaded")
     public boolean partnersCanViewOtherDocumentsDetails(ProjectResource project, UserResource user) {
-        return isPartner(project.getId(), user.getId());
+        return isPartner(project.getId(), user.getId()) || isCompAdmin(user);
     }
 
     @PermissionRule(
