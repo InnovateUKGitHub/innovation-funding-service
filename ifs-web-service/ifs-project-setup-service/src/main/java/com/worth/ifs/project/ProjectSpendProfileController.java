@@ -38,12 +38,11 @@ public class ProjectSpendProfileController {
                                    @PathVariable("organisationId") final Long organisationId,
                                    @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        ProjectSpendProfileViewModel viewModel = populateSpendProfileViewModel(projectId, organisationId);
-        model.addAttribute("model", viewModel);
+        buildSpendProfileViewModel(model, projectId, organisationId);
+
         return "project/spend-profile";
     }
 
-    // TODO - Optimise the common functionality in viewSpendProfile and editSpendProfile
     @RequestMapping(value = "/edit", method = GET)
     public String editSpendProfile(Model model,
                                    @PathVariable("projectId") final Long projectId,
@@ -51,11 +50,7 @@ public class ProjectSpendProfileController {
                                    @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
 
-
-
-        ProjectSpendProfileViewModel viewModel = populateSpendProfileViewModel(projectId, organisationId);
-
-        model.addAttribute("model", viewModel);
+        ProjectSpendProfileViewModel viewModel = buildSpendProfileViewModel(model, projectId, organisationId);
 
         SpendProfileForm form = new SpendProfileForm();
         form.setTable(viewModel.getTable());
@@ -64,7 +59,6 @@ public class ProjectSpendProfileController {
         return "project/spend-profile/edit";
     }
 
-    // TODO - Optimise the common functionality in saveSpendProfile and confirmSpendProfile
     @RequestMapping(value = "/edit", method = POST)
     public String saveSpendProfile(Model model,
                                    @PathVariable("projectId") final Long projectId,
@@ -72,37 +66,42 @@ public class ProjectSpendProfileController {
                                    @ModelAttribute(FORM_ATTR_NAME) SpendProfileForm form,
                                    @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        ServiceResult<Void> result = projectFinanceService.saveSpendProfile(projectId, organisationId, form.getTable());
-        if (result.isFailure()) {
-
-            // If this model attribute is set, it means there are some categories where the totals don't match
-            model.addAttribute("errorCategories", result.getFailure().getErrors());
-        }
-
-        // We go the the same view, irrespective of whether there were some categories in error or not, to enable
-        // the user to mark the Spend Profile as complete
-
-        return "project/spend-profile/edit";
+        return editOrMarkAsCompleteSpendProfile(model, projectId, organisationId, form, false, "project/spend-profile/edit");
     }
 
     @RequestMapping(value = "/confirm", method = POST)
-    public String confirmSpendProfile(Model model,
+    public String markAsCompleteSpendProfile(Model model,
                                    @PathVariable("projectId") final Long projectId,
                                    @PathVariable("organisationId") final Long organisationId,
                                    @ModelAttribute(FORM_ATTR_NAME) SpendProfileForm form,
                                    @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        ServiceResult<Void> result = projectFinanceService.saveSpendProfile(projectId, organisationId, form.getTable());
-
-        if (result.isFailure()) {
-            model.addAttribute("errorCategories", result.getFailure().getErrors());
-            return "project/spend-profile/edit";
-        }
-
-        return "project/spend-profile/confirm";
+        return editOrMarkAsCompleteSpendProfile(model, projectId, organisationId, form, true, "project/spend-profile/confirm");
     }
 
+    private String editOrMarkAsCompleteSpendProfile(Model model, Long projectId, Long organisationId, SpendProfileForm form, boolean isMarkAsComplete, String successView) {
 
+        ServiceResult<Void> result = projectFinanceService.saveSpendProfile(projectId, organisationId, form.getTable());
+        if (result.isFailure()) {
+
+            // If this model attribute is set, it means there are some categories where the totals don't match
+            model.addAttribute("errorCategories", result.getFailure().getErrors());
+
+            if (isMarkAsComplete) {
+                return "project/spend-profile/edit";
+            }
+        }
+
+        return successView;
+    }
+
+    private ProjectSpendProfileViewModel buildSpendProfileViewModel(Model model, Long projectId, Long organisationId) {
+
+        ProjectSpendProfileViewModel viewModel = populateSpendProfileViewModel(projectId, organisationId);
+        model.addAttribute("model", viewModel);
+
+        return viewModel;
+    }
 
     private ProjectSpendProfileViewModel populateSpendProfileViewModel(final Long projectId, final Long organisationId) {
 
