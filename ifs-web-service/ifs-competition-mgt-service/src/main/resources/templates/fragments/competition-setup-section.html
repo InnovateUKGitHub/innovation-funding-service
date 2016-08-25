@@ -201,7 +201,7 @@
         </fieldset>
 
     </form>
-    <ul class="pagination">
+    <ul class="pagination" th:if="${isInitialComplete}">
         <li class="next">
             <a rel="next" title="Navigate to next part" th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${competition.id},sectionPath='additional')}">
                 <span class="pagination-label">Next</span>

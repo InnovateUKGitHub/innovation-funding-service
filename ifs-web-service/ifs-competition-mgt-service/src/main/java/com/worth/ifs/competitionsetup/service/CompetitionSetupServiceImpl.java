@@ -156,6 +156,7 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 
 		model.addAttribute("allSections", CompetitionSetupSection.values());
 		model.addAttribute("allCompletedSections", completedSections);
+        model.addAttribute("isInitialComplete", completedSections.contains(CompetitionSetupSection.INITIAL_DETAILS));
 		model.addAttribute("subTitle",
 				(competitionResource.getCode() != null ? competitionResource.getCode() : "Unknown") + ": "
 						+ (competitionResource.getName() != null ? competitionResource.getName() : "Unknown"));
