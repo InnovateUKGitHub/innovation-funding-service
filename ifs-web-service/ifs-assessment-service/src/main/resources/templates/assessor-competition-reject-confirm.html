@@ -11,42 +11,13 @@
         <main id="content">
             <div th:include="fragments/layout :: main-content-start" th:remove="tag"/>
 
-            <p th:text="|Are you sure you want to reject ${model.competitionName}?|"></p>
+            <div class="page-title">
+                <h1 class="heading-xlarge">Confirm rejection</h1>
+            </div>
 
-            <form action="#" th:action="@{/invite/competition/{inviteHash}/reject(inviteHash=${model.competitionInviteHash})}" method="post" th:object="${form}" novalidate="novalidate">
-                <div class="error-summary" th:if="${#fields.hasErrors('*')}">
-                    <h2 class="heading-medium error-summary-heading">We were unable to reject the competition:</h2>
-                    <ul class="error-summary-list">
-                        <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
-                    </ul>
-                </div>
+            <p>Are you sure you want to reject <strong>'<span th:text="${model.competitionName}" th:remove="tag" />'</strong>?</p>
 
-                <div class="form-group" th:classappend="${#fields.hasErrors('rejectReason')}? error">
-                    <label class="form-label" th:for="${#ids.next('rejectReason')}">
-                        Please select a reason for rejecting the competition
-                        <span th:if="${#fields.hasErrors('rejectReason')}" th:remove="tag">
-                    <span class="error-message"  th:each="err : ${#fields.errors('rejectReason')}" th:text="${err}" />
-                </span>
-                    </label>
-                    <select class="form-control" th:errorclass="field-error" required="required" th:field="*{rejectReason}">
-                        <option value="">Select a reason</option>
-                        <option th:each="reason : ${rejectionReasons}"
-                                th:value="${reason.id}"
-                                th:text="${reason.reason}"
-                                value="1">Not available</option>
-                    </select>
-                </div>
-                <div class="form-group" th:classappend="${#fields.hasErrors('rejectComment')}? error">
-                    <label class="form-label" th:for="${#ids.next('rejectComment')}">
-                        Use this space to provide more information
-                        <span th:if="${#fields.hasErrors('rejectComment')}" th:remove="tag">
-                    <span class="error-message"  th:each="err : ${#fields.errors('rejectComment')}" th:text="${err}" />
-                </span>
-                    </label>
-                    <textarea class="form-control width-full" th:errorclass="field-error" rows="4" th:field="*{rejectComment}"></textarea>
-                </div>
-                <button class="button large button-warning extra-margin" name="submit-app-details">Reject</button>
-            </form>
+            <div th:include="fragments/assessment :: assessor-reject-competition-form (inviteHash=${model.competitionInviteHash})" th:remove="tag" />
 
             <div th:include="fragments/layout :: main-content-end" th:remove="tag"/>
         </main>
