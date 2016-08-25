@@ -8,11 +8,13 @@ import com.worth.ifs.application.service.CategoryService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.category.resource.CategoryResource;
 import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionResource.Status;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competitionsetup.form.*;
 import com.worth.ifs.competitionsetup.model.Question;
+import com.worth.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupService;
 import org.apache.commons.logging.Log;
@@ -54,6 +56,9 @@ public class CompetitionSetupController {
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private CompetitionSetupMilestoneService competitionSetupMilestoneService;
 
     public static final String READY_TO_OPEN_KEY = "readyToOpen";
 
@@ -171,7 +176,9 @@ public class CompetitionSetupController {
                                               BindingResult bindingResult,
                                               @PathVariable("competitionId") Long competitionId,
                                               Model model) {
-
+        if (bindingResult.hasErrors()) {
+            competitionSetupMilestoneService.sortMilestones(competitionSetupForm);
+        }
         return genericCompetitionSetupSection(competitionSetupForm, bindingResult, competitionId, CompetitionSetupSection.MILESTONES, model);
     }
 
@@ -289,7 +296,6 @@ public class CompetitionSetupController {
         if(bindingResult.hasErrors()) {
            return false;
         }
-
         return true;
     }
 
@@ -317,7 +323,5 @@ public class CompetitionSetupController {
                 LOG.error("Question(" + questionId + ") not found");
             }
         }
-
     }
-
 }
