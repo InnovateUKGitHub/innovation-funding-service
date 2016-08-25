@@ -28,7 +28,7 @@ public class CompetitionInviteController {
     }
 
     @RequestMapping(value = "/rejectInvite/{inviteHash}", method = RequestMethod.POST)
-    public RestResult<Void> rejectInvite(@PathVariable String inviteHash, @RequestBody CompetitionRejectionReasonResource rejectionReason) {
-        return competitionInviteService.rejectInvite(inviteHash, rejectionReason).toGetResponse();
+    public RestResult<Void> rejectInvite(@PathVariable String inviteHash, @RequestBody CompetitionRejectionReasonResource rejectionReason, String rejectionComment) {
+        return competitionInviteService.rejectInvite(inviteHash, rejectionReason, rejectionComment).toGetResponse();
     }
 }
