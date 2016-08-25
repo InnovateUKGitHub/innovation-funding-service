@@ -26,6 +26,7 @@ import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressRes
 import static com.worth.ifs.bankdetails.builder.BankDetailsBuilder.newBankDetails;
 import static com.worth.ifs.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
 import static com.worth.ifs.commons.error.CommonFailureKeys.BANK_DETAILS_CANNOT_BE_SUBMITTED_BEFORE_PROJECT_DETAILS;
+import static com.worth.ifs.commons.error.CommonFailureKeys.BANK_DETAILS_CANNOT_BE_UPDATED_BEFORE_BEING_SUBMITTED;
 import static com.worth.ifs.commons.error.CommonFailureKeys.BANK_DETAILS_DONT_EXIST_FOR_GIVEN_PROJECT_AND_ORGANISATION;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.organisation.builder.OrganisationAddressBuilder.newOrganisationAddress;
@@ -94,7 +95,7 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
         VerificationResult verificationResult = new VerificationResult();
         when(silExperianEndpointMock.verify(accountDetails)).thenReturn(serviceSuccess(verificationResult));
         when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(bankDetailsResource.getProject(), bankDetailsResource.getOrganisation())).thenReturn(null, bankDetails);
-        ServiceResult<Void> result = service.updateBankDetails(bankDetailsResource);
+        ServiceResult<Void> result = service.submitBankDetails(bankDetailsResource);
         assertTrue(result.isSuccess());
     }
 
@@ -102,7 +103,7 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
     public void testBankDetailsCannotBeSubmittedBeforeProjectDetails(){
         project.setSubmittedDate(null);
         bankDetailsResource.setOrganisationAddress(null);
-        ServiceResult<Void> result = service.updateBankDetails(bankDetailsResource);
+        ServiceResult<Void> result = service.submitBankDetails(bankDetailsResource);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(BANK_DETAILS_CANNOT_BE_SUBMITTED_BEFORE_PROJECT_DETAILS));
     }
@@ -113,7 +114,7 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
         ValidationResult validationResult = new ValidationResult();
         validationResult.setCheckPassed(false);
         when(silExperianEndpointMock.validate(silBankDetails)).thenReturn(serviceSuccess(validationResult));
-        ServiceResult<Void> result = service.updateBankDetails(bankDetailsResource);
+        ServiceResult<Void> result = service.submitBankDetails(bankDetailsResource);
         verify(silExperianEndpointMock, never()).verify(accountDetails);
         verify(bankDetailsRepositoryMock, times(1)).findByProjectIdAndOrganisationId(bankDetailsResource.getProject(), bankDetailsResource.getOrganisation());
     }
@@ -127,9 +128,35 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
         when(silExperianEndpointMock.validate(silBankDetails)).thenReturn(serviceSuccess(validationResult));
         when(silExperianEndpointMock.verify(accountDetails)).thenReturn(serviceSuccess(verificationResult));
         when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(bankDetailsResource.getProject(), bankDetailsResource.getOrganisation())).thenReturn(null, bankDetails);
-        ServiceResult<Void> result = service.updateBankDetails(bankDetailsResource);
+        ServiceResult<Void> result = service.submitBankDetails(bankDetailsResource);
         verify(silExperianEndpointMock, times(1)).verify(accountDetails);
         verify(bankDetailsRepositoryMock, times(2)).findByProjectIdAndOrganisationId(bankDetailsResource.getProject(), bankDetailsResource.getOrganisation());
+    }
+
+    @Test
+    public void testUpdateOfBankDetailsWithExistingBankDetailsPresent(){
+        project.setSubmittedDate(LocalDateTime.now());
+        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(bankDetailsResource.getProject(), bankDetailsResource.getOrganisation())).thenReturn(bankDetails);
+        ServiceResult<Void> result = service.updateBankDetails(bankDetailsResource);
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void testUpdateOfBankDetailsWithProjectDetailsNotSubmited(){
+        project.setSubmittedDate(null);
+        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(bankDetailsResource.getProject(), bankDetailsResource.getOrganisation())).thenReturn(bankDetails);
+        ServiceResult<Void> result = service.updateBankDetails(bankDetailsResource);
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(BANK_DETAILS_CANNOT_BE_SUBMITTED_BEFORE_PROJECT_DETAILS));
+    }
+
+    @Test
+    public void testUpdateOfBankDetailsWithExistingBankDetailsNotPresent(){
+        project.setSubmittedDate(LocalDateTime.now());
+        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(bankDetailsResource.getProject(), bankDetailsResource.getOrganisation())).thenReturn(null);
+        ServiceResult<Void> result = service.updateBankDetails(bankDetailsResource);
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(BANK_DETAILS_CANNOT_BE_UPDATED_BEFORE_BEING_SUBMITTED));
     }
 
     @Override

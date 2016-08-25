@@ -25,6 +25,11 @@ public class BankDetailsServiceImpl implements BankDetailsService {
     }
 
     @Override
+    public ServiceResult<Void> submitBankDetails(Long projectId, BankDetailsResource bankDetailsResource) {
+        return bankDetailsRestService.submitBankDetails(projectId, bankDetailsResource).toServiceResult();
+    }
+
+    @Override
     public ServiceResult<Void> updateBankDetails(Long projectId, BankDetailsResource bankDetailsResource) {
         return bankDetailsRestService.updateBankDetails(projectId, bankDetailsResource).toServiceResult();
     }

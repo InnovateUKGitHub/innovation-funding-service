@@ -114,7 +114,6 @@ Initial details client-side validations
     ...
     ...    INFUND-3888
     [Tags]    HappyPath
-    # TODO Update Date validation messages after INFUND-4676 is done.
     When the user enters text to a text field    id=title    Competition title
     Then the user should not see the error any more    Please enter a title
     When the user selects the option from the drop-down menu    Programme    id=competitionTypeId
@@ -124,15 +123,15 @@ Initial details client-side validations
     When the user selects the option from the drop-down menu    Advanced Therapies    id=innovationAreaCategoryId
     Then the user should not see the error any more    Please select an innovation area
     When the user enters text to a text field    id=openingDateDay    01
-    #    Then the user should not see the error any more    Please enter an opening day
+    Then the user should not see the error any more    Please enter an opening day
     When the user enters text to a text field    Id=openingDateMonth    12
-    #    Then the user should not see the error any more    Please enter an opening month
+    Then the user should not see the error any more    Please enter an opening month
     When the user enters text to a text field    id=openingDateYear    2017
-    #    Then the user should not see the error any more    Please enter an opening year
+    Then the user should not see the error any more    Please enter an opening year
     When the user selects the option from the drop-down menu    Competition Technologist One    id=leadTechnologistUserId
     Then the user should not see the error any more    Please select a lead technologist
     When the user selects the option from the drop-down menu    Competition Executive Two    id=executiveUserId
-    Then the user should not see the error any more    Please select a competition executive
+    Then The user should not see the text in the page    Please select a competition executive    #Couldn't use this keyword : "Then the user should not see the error any more" . Because there is not any error in the page
     ##    State aid value is tested in 'Initial details correct state aid status'
 
 Initial details should not allow to mark as complete when date is in past
@@ -208,7 +207,6 @@ Funding information server-side validations
 Funding information client-side validations
     [Documentation]    INFUND-2985
     [Tags]    HappyPath
-    # TODO Update validation messages after INFUND-4676 is done.
     When the user enters text to a text field    id=funder    FunderName
     Then the user should not see the error any more    Please enter a funder name
     And the user enters text to a text field    id=funderBudget    20000
@@ -218,7 +216,7 @@ Funding information client-side validations
     And the user enters text to a text field    id=budgetCode    2004
     Then the user should not see the error any more    Please enter a budget code
     And the user enters text to a text field    id=activityCode    4242
-    #    Then the user should not see the error any more    Please enter an activity code
+    Then the user should not see the error any more    Please enter an activity code
     When the user clicks the button/link    jQuery=.button:contains("Generate code")
     Then The user should not see the text in the page    Please generate a competition code
 
