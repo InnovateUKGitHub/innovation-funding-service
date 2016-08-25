@@ -17,6 +17,7 @@ IFS.competition_management.setup = (function(){
         jQuery("body.competition-management.competition-setup").on('change','[name="innovationSectorCategoryId"]',function(){
           IFS.competition_management.setup.handleInnovationSector();
         });
+        IFS.competition_management.setup.innovationSectorOnPageLoad();
 
         jQuery("form#milestones").on('change','input[data-date]',function(){
           IFS.competition_management.setup.milestonesExtraValidation();
@@ -67,7 +68,19 @@ IFS.competition_management.setup = (function(){
               }
           });
           }
-
+    },
+    innovationSectorOnPageLoad : function() {
+        var sectorInput = jQuery('[name="innovationSectorCategoryId"]');
+        var sector = sectorInput.val();
+        if (sectorInput.length) {
+            if (!sector) {
+                var innovationCategory = jQuery('[name="innovationAreaCategoryId"]');
+                innovationCategory.children().remove();
+                innovationCategory.append('<option value="innovation sector" disabled="disabled" selected="selected">Please select an innovation sector first &hellip;</option>');
+            } else {
+                IFS.competition_management.setup.handleInnovationSector();
+            }
+        }
     },
     handleStateAid : function(){
        var stateAid =  jQuery('#competitionTypeId').find('[value="'+jQuery('#competitionTypeId').val()+'"]').attr('data-stateaid');
