@@ -48,6 +48,6 @@ public class FinanceRowRestServiceImpl extends BaseRestService implements Financ
 
     @Override
     public RestResult<FinanceRowItem> findById(Long id) {
-        return getWithRestResult(costRestURL + "/findById/" + id, FinanceRowItem.class);
+        return getWithRestResult(costRestURL + "/" + id, FinanceRowItem.class);
     }
 }

@@ -203,3 +203,20 @@
     </div>
 </div>
 
+<!-- change bank details as internal user -->
+<div th:fragment="modal-partner-change-bank-details">
+    <div class="modal-partner-change-bank-details" role="dialog" aria-hidden="true">
+        <div th:include="fragments/modals :: close-button" th:remove="tag"/>
+        <h2 class="heading-medium no-margin">Update bank account details</h2>
+        <p>Please confirm that any updates match the information supplied by the finance contact. After this update has been completed, previously supplied details will be overwritten.</p>
+        <hr/>
+        <div class="grid-row">
+            <div class="column-half">
+                <button type="button" class="js-close button buttonlink large">Cancel</button>
+            </div>
+            <div class="column-half alignright-button" method="post">
+                <button class="button large" name="submit-change-bank-details">Update bank account details</button>
+            </div>
+        </div>
+    </div>
+</div>

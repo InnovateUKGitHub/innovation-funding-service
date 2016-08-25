@@ -139,7 +139,10 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                 .withId(1L, 2L, 3L, 4L)
                 .withFormInputTypeTitle(SCORE_INPUT_TYPE)
                 .build(4);
-        List<QuestionResource> questions = QuestionResourceBuilder.newQuestionResource().withId(32L, 33L, 1L, 20L, 21L, 22L, 23L, 10L, 30L, 31L).build(10);
+        List<QuestionResource> questions = QuestionResourceBuilder.newQuestionResource()
+                .withId(32L, 33L, 1L, 20L, 21L, 22L, 23L, 10L, 30L, 31L)
+                .withShortName("Question short name")
+                .build(10);
 
         ApplicationResource app = applications.get(0);
         Set<Long> sections = newHashSet(1L, 2L);
@@ -150,13 +153,14 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         when(assessmentService.getById(assessment.getId())).thenReturn(assessment);
         when(assessorFormInputResponseService.getAllAssessorFormInputResponses(assessment.getId())).thenReturn(assessorResponses);
         when(formInputService.findAssessmentInputsByQuestion(anyLong())).thenReturn(formInputs);
+        when(questionService.getById(32L)).thenReturn(questions.get(0));
         Map<Long, AssessmentOverviewRowViewModel> assessorResponsesMap = new HashMap<>();
         questions.forEach(question -> assessorResponsesMap.put(question.getId(), new AssessmentOverviewRowViewModel(question, formInputs, assessorResponses)));
 
         FileEntryResource fileEntry = newFileEntryResource().build();
-        FormInputResource formInput = newFormInputResource().withId(1L).build();
+        FormInputResource formInput = newFormInputResource().withId(1L).withQuestion(32L).build();
         setupFormInputAndFileEntry(fileEntry, formInput, app);
-        List<AppendixResource> appendices = setUpAppendices(fileEntry, formInput, app);
+        List<AppendixResource> appendices = setUpAppendices(fileEntry, formInput, app, questions.get(0));
 
         mockMvc.perform(get("/" + assessment.getId()))
                 .andExpect(status().isOk())
@@ -405,7 +409,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         when(fileEntryRestService.findOne(formInputResponse.getFileEntry())).thenReturn(restSuccess(fileEntry));
     }
 
-    private List<AppendixResource> setUpAppendices(FileEntryResource fileEntry, FormInputResource formInput, ApplicationResource app) {
-        return singletonList(new AppendixResource(app.getId(), formInput.getId(), "test", fileEntry));
+    private List<AppendixResource> setUpAppendices(FileEntryResource fileEntry, FormInputResource formInput, ApplicationResource app, QuestionResource appendixQuestion) {
+        return singletonList(new AppendixResource(app.getId(), formInput.getId(), appendixQuestion.getShortName(), fileEntry));
     }
 }

@@ -46,8 +46,6 @@ public class RestIdentityProviderServiceTest extends BaseUnitTestMocksTest  {
 
     private AbstractRestTemplateAdaptor adaptor;
 
-
-
     @Before
     public void setupServiceWithMockTemplateAndSpringSecurity() {
         final RestTemplateAdaptorFactory factory = new RestTemplateAdaptorFactory();
@@ -69,14 +67,12 @@ public class RestIdentityProviderServiceTest extends BaseUnitTestMocksTest  {
         successResponse.setUuid("new-uid");
         ResponseEntity<String> successResponseEntity = new ResponseEntity<>(asJson(successResponse), CREATED);
 
-
         when(mockRestTemplate.postForEntity("http://idprest/user", adaptor.jsonEntity(createRequest), String.class)).thenReturn(successResponseEntity);
 
         ServiceResult<String> result = service.createUserRecordWithUid("email@example.com", "thepassword");
         assertTrue(result.isSuccess());
         assertEquals("new-uid", result.getSuccessObject());
     }
-
 
     @Test
     public void testCreateUserRecordWithUidButDuplicateEmailFailureResponseReturned() throws JsonProcessingException {
@@ -131,7 +127,6 @@ public class RestIdentityProviderServiceTest extends BaseUnitTestMocksTest  {
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(internalServerErrorError()));
     }
-
 
     @Test
     public void testWeakPasswordError() throws JsonProcessingException {
