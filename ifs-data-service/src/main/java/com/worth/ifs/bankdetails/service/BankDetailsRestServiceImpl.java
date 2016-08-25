@@ -16,6 +16,11 @@ public class BankDetailsRestServiceImpl extends BaseRestService implements BankD
     }
 
     @Override
+    public RestResult<Void> submitBankDetails(final Long projectId, final BankDetailsResource bankDetailsResource){
+        return putWithRestResult(projectRestURL + "/" + projectId + "/bank-details", bankDetailsResource, Void.class);
+    }
+
+    @Override
     public RestResult<Void> updateBankDetails(final Long projectId, final BankDetailsResource bankDetailsResource){
         return postWithRestResult(projectRestURL + "/" + projectId + "/bank-details", bankDetailsResource, Void.class);
     }

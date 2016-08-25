@@ -23,7 +23,7 @@
 	<div class="grid-row">
 		<div class="column-two-thirds">
 			
-			<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title(${'Innovate UK, Technology inspired, (4891061)'}, ${'Assign assessors'})" th:remove="tag" />
+			<h1 class="heading-xlarge no-margin-bottom">Assign assessor</h1>
 			
 			<th:block th:if="${param.view == null or param.view != null and param.view[0] == 'application'}">
 
@@ -54,17 +54,31 @@
 		</div>
 	</div>
 
+	<th:block th:if="${param.view == null or param.view != null and param.view[0] == 'application'}">
+		<div class="grid-row extra-margin-bottom">
+			<div class="column-half">
+				<a href="#">View application details</a>
+			</div>
+			<div class="column-half alignright">
+				<a href="/prototypes/4607-manage-assessors?view=application&#38;tab=assign" class="button button-secondary">Return to assign tab</a>
+			</div>
+		</div>
+	</th:block>
+
 
 	<th:block th:if="${param.view == null or param.view != null and param.view[0] == 'application'}">
 		<div class="tabular-list">
 
 			<ul class="tabular-list__row-header hide-mobile">
-				<li id="assessor-name" class="width-third">Assigned applications</li>
-				<li id="assessor-type" class="width-third">Lead organisation</li>
-				<li id="assessor-area" class="width-third alignright">Number of assigned applications</li> 
+				<li id="assessor-name" class="width-half">Assigned applications</li>
+				<li id="assessor-area" class="width-half">Number of assigned applications</li> 
 			</ul>
 
-			<p class="aligncentre extra-margin">There are currently no applications assigned to this assessor</p>
+			<p class="aligncentre extra-margin" th:unless="${param.action != null and param.action[0] == 'application-assigned'}">There are currently no applications assigned to this assessor</p>
+
+			<th:block th:if="${param.action != null and param.action[0] == 'application-assigned'}">
+				<div th:include="prototypes/fragments/manage-assessors :: prototype-assesor-row-assign-assessor" th:with="row=1,name=${param.name[0]},org=${param.org[0]},position=${param.position[0]},applications=${#numbers.formatInteger(param.applications[0],0)} + 1,type=remove" th:remove="tag" />
+			</th:block>
 
 		</div>
 
