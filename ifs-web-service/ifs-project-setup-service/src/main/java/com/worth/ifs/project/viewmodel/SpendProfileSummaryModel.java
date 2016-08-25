@@ -1,10 +1,14 @@
 package com.worth.ifs.project.viewmodel;
 
-import java.util.List;
-
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.util.List;
+
+/**
+ * View model used to display financial year-wise summary below spend profile
+ */
 public class SpendProfileSummaryModel {
     List<SpendProfileSummaryYearModel> years;
 
@@ -34,6 +38,13 @@ public class SpendProfileSummaryModel {
         return new HashCodeBuilder(17, 37)
             .append(years)
             .toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("years", years)
+                .toString();
     }
 }
 

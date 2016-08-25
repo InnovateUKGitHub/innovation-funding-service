@@ -5,8 +5,6 @@ import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
 import com.worth.ifs.commons.rest.LocalDateResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.SpendProfileTableResource;
-import com.worth.ifs.project.util.DateUtil;
-import com.worth.ifs.project.util.FinancialYearDate;
 import com.worth.ifs.project.viewmodel.ProjectSpendProfileViewModel;
 import com.worth.ifs.project.viewmodel.SpendProfileSummaryModel;
 import com.worth.ifs.project.viewmodel.SpendProfileSummaryYearModel;
@@ -14,8 +12,8 @@ import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.IntStream;
 
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
@@ -109,7 +107,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         when(projectFinanceService.getSpendProfileTable(projectResource.getId(), organisationId)).thenReturn(expectedTable);
 
-        List<SpendProfileSummaryYearModel> years = createSpendProfileSummaryYears(projectResource, expectedTable);
+        List<SpendProfileSummaryYearModel> years = createSpendProfileSummaryYears();
 
         SpendProfileSummaryModel summary = new SpendProfileSummaryModel(years);
 
@@ -123,28 +121,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
     }
 
-    private List<SpendProfileSummaryYearModel> createSpendProfileSummaryYears(ProjectResource project, SpendProfileTableResource table){
-        Integer startYear = new FinancialYearDate(DateUtil.asDate(project.getTargetStartDate())).getFiscalYear();
-        Integer endYear = new FinancialYearDate(DateUtil.asDate(project.getTargetStartDate().plusMonths(project.getDurationInMonths()))).getFiscalYear();
-        return IntStream.range(startYear, endYear + 1).
-                mapToObj(
-                        year -> {
-                            Set<String> keys = table.getMonthlyCostsPerCategoryMap().keySet();
-                            BigDecimal totalForYear = BigDecimal.ZERO;
-
-                            for(String key : keys){
-                                List<BigDecimal> values = table.getMonthlyCostsPerCategoryMap().get(key);
-                                for(int i = 0; i < values.size(); i++){
-                                    LocalDateResource month = table.getMonths().get(i);
-                                    FinancialYearDate financialYearDate = new FinancialYearDate(DateUtil.asDate(month.getLocalDate()));
-                                    if(year == financialYearDate.getFiscalYear()){
-                                        totalForYear = totalForYear.add(values.get(i));
-                                    }
-                                }
-                            }
-                            return new SpendProfileSummaryYearModel(year, totalForYear.toPlainString());
-                        }
-
-                ).collect(toList());
+    private List<SpendProfileSummaryYearModel> createSpendProfileSummaryYears() {
+        return Collections.singletonList(new SpendProfileSummaryYearModel(2018, "335"));
     }
 }

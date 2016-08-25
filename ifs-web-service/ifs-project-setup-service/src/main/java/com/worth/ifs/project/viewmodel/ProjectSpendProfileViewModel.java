@@ -4,11 +4,12 @@ import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.SpendProfileTableResource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.time.LocalDate;
 
 /**
- * View model to back the Spend Profile page
+ * View model to back the Spend Profile page. Also wraps SpendProfileSummaryModel for summary table below spend profile.
  */
 public class ProjectSpendProfileViewModel {
 
@@ -104,5 +105,17 @@ public class ProjectSpendProfileViewModel {
                 .append(summary)
                 .append(table)
                 .toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("projectId", projectId)
+                .append("projectName", projectName)
+                .append("targetProjectStartDate", targetProjectStartDate)
+                .append("durationInMonths", durationInMonths)
+                .append("summary", summary)
+                .append("table", table)
+                .toString();
     }
 }

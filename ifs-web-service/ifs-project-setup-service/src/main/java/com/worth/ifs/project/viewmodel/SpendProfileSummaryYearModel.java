@@ -2,7 +2,11 @@ package com.worth.ifs.project.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
+/**
+ * View model used to display each individual row for spend profile summary by financial year.
+ */
 public class SpendProfileSummaryYearModel {
     private int year;
     private String amount;
@@ -40,5 +44,13 @@ public class SpendProfileSummaryYearModel {
             .append(year)
             .append(amount)
             .toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("year", year)
+                .append("amount", amount)
+                .toString();
     }
 }

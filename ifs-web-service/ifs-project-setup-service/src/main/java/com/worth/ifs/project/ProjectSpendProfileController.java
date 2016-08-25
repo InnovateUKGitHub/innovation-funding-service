@@ -76,8 +76,6 @@ public class ProjectSpendProfileController {
                                     }
                                 }
                             }
-
-                            //BigDecimal totalSpend = table.getMonthlyCostsPerCategoryMap().values().stream().flatMap(Collection::stream).reduce(BigDecimal.ZERO, BigDecimal::add);
                             return new SpendProfileSummaryYearModel(year, totalForYear.toPlainString());
                         }
 
