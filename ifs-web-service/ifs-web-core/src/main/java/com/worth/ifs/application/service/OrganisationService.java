@@ -22,6 +22,8 @@ public interface OrganisationService {
 
     OrganisationResource save(OrganisationResource organisation);
 
+    OrganisationResource updateNameAndRegistration(OrganisationResource organisation);
+
     OrganisationSearchResult getCompanyHouseOrganisation(String organisationId);
 
     OrganisationResource addAddress(OrganisationResource organisation, AddressResource address, OrganisationAddressType type);
