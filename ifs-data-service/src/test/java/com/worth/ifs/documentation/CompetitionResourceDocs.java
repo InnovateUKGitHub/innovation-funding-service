@@ -37,6 +37,7 @@ public class CompetitionResourceDocs {
             fieldWithPath("pafCode").description("the paf code entered during competition setup"),
             fieldWithPath("budgetCode").description("the budget code entered during competition setup"),
             fieldWithPath("code").description("the unique competition code entered during competition setup"),
+            fieldWithPath("resubmission").description("indicates if the competition has the ability to do a resubmission"),
             fieldWithPath("multiStream").description("indicates if the competition has multiple streams"),
             fieldWithPath("streamName").description("the name of the stream"),
             fieldWithPath("collaborationLevel").description("collaboration level (single, collaborative...)"),

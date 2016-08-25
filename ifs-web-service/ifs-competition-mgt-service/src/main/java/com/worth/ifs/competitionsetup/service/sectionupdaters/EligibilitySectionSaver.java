@@ -49,6 +49,9 @@ public class EligibilitySectionSaver implements CompetitionSetupSectionSaver {
 			competition.setStreamName(null);
 		}
 
+		boolean resubmission = "yes".equals(eligibilityForm.getResubmission());
+		competition.setResubmission(resubmission);
+
 		CollaborationLevel level = CollaborationLevel.fromCode(eligibilityForm.getSingleOrCollaborative());
 		competition.setCollaborationLevel(level);
 		

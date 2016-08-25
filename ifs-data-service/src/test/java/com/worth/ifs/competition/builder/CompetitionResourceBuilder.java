@@ -47,7 +47,11 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
     public CompetitionResourceBuilder withResearchCategories(Set<Long> categories) {
         return with(competition -> competition.setResearchCategories(categories));
     }
-    
+
+    public CompetitionResourceBuilder withResubmission(boolean resubmission) {
+        return with(competition -> competition.setResubmission(resubmission));
+    }
+
     public CompetitionResourceBuilder withMultiStream(boolean multiStream) {
         return with(competition -> competition.setMultiStream(multiStream));
     }

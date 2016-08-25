@@ -4,12 +4,12 @@ import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.AddressTypeResource;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.bankdetails.form.BankDetailsForm;
 import com.worth.ifs.bankdetails.resource.BankDetailsResource;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.project.BankDetailsController;
-import com.worth.ifs.bankdetails.form.BankDetailsForm;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 import org.junit.Test;
@@ -32,9 +32,7 @@ import static com.worth.ifs.project.AddressLookupBaseController.FORM_ATTR_NAME;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -69,7 +67,7 @@ public class BankDetailsControllerTest extends BaseControllerMockMVCTest<BankDet
     }
 
     @Test
-    public void testUpdateBankDetailsWithAddressToBeSameAsRegistered() throws Exception {
+    public void testsubmitBankDetailsWithAddressToBeSameAsRegistered() throws Exception {
         OrganisationResource organisationResource = newOrganisationResource().build();
         AddressResource addressResource = newAddressResource().withOrganisationList(Collections.singletonList(organisationResource.getId())).build();
         AddressTypeResource addressTypeResource = newAddressTypeResource().withId((long)REGISTERED.getOrdinal()).withName(REGISTERED.name()).build();
@@ -95,7 +93,7 @@ public class BankDetailsControllerTest extends BaseControllerMockMVCTest<BankDet
         when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
         when(projectService.getOrganisationByProjectAndUser(projectResource.getId(), loggedInUser.getId())).thenReturn(organisationResource);
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectResource.getId(), organisationResource.getId())).thenReturn(restSuccess(bankDetailsResource));
-        when(bankDetailsRestService.updateBankDetails(projectResource.getId(), bankDetailsResource)).thenReturn(restSuccess());
+        when(bankDetailsRestService.submitBankDetails(projectResource.getId(), bankDetailsResource)).thenReturn(restSuccess());
 
         mockMvc.perform(post("/project/{id}/bank-details", projectResource.getId()).
                 contentType(MediaType.APPLICATION_FORM_URLENCODED).
@@ -108,9 +106,9 @@ public class BankDetailsControllerTest extends BaseControllerMockMVCTest<BankDet
     }
 
     @Test
-    public void testUpdateBankDetailsWhenAddressResourceIsNull() throws Exception {
+    public void testsubmitBankDetailsWhenAddressResourceIsNull() throws Exception {
 
-        ProjectResource projectResource = setUpMockingForUpdateBankDetails();
+        ProjectResource projectResource = setUpMockingForsubmitBankDetails();
 
         mockMvc.perform(post("/project/{id}/bank-details", projectResource.getId()).
                 contentType(MediaType.APPLICATION_FORM_URLENCODED).
@@ -119,11 +117,11 @@ public class BankDetailsControllerTest extends BaseControllerMockMVCTest<BankDet
                 param("addressType", ADD_NEW.name())).
                 andExpect(view().name("project/bank-details"));
 
-        verify(bankDetailsRestService, never()).updateBankDetails(any(), any());
+        verify(bankDetailsRestService, never()).submitBankDetails(any(), any());
 
     }
 
-    private ProjectResource setUpMockingForUpdateBankDetails() {
+    private ProjectResource setUpMockingForsubmitBankDetails() {
 
         CompetitionResource competitionResource = newCompetitionResource().build();
         ApplicationResource applicationResource = newApplicationResource().withCompetition(competitionResource.getId()).build();
