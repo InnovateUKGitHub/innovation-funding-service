@@ -195,6 +195,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected CompetitionInviteRepository competitionInviteRepositoryMock;
 
     @Mock
+    protected CompetitionParticipantRepository competitionParticipantRepositoryMock;
+
+    @Mock
     protected CompetitionInviteMapper competitionInviteMapperMock;
 
     @Mock

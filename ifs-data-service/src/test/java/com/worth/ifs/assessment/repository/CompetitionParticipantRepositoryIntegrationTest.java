@@ -1,8 +1,10 @@
 package com.worth.ifs.assessment.repository;
 
 import com.worth.ifs.BaseRepositoryIntegrationTest;
+import com.worth.ifs.assessment.builder.CompetitionInviteBuilder;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.repository.CompetitionRepository;
+import com.worth.ifs.invite.constant.InviteStatus;
 import com.worth.ifs.invite.domain.*;
 import com.worth.ifs.invite.repository.CompetitionParticipantRepository;
 import com.worth.ifs.invite.repository.RejectionReasonRepository;
@@ -11,6 +13,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static com.worth.ifs.invite.constant.InviteStatus.OPENED;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -91,7 +94,14 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
     @Test
     public void save_accepted() {
-        CompetitionInvite invite = new CompetitionInvite("name1", "tom1@poly.io", "hash", competition);
+        CompetitionInvite invite = CompetitionInviteBuilder
+                .newCompetitionInviteWithoutId() // can we do this for all
+                .withName("name1")
+                .withEmail("tom@poly.io")
+                .withHash("hash")
+                .withCompetition(competition)
+                .withStatus(OPENED).build();
+
         CompetitionParticipant savedParticipant = repository.save( (new CompetitionParticipant(competition, invite)).accept() );
 
         flushAndClearSession();
@@ -106,7 +116,14 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
     @Test
     public void save_rejected() {
-        CompetitionInvite invite = new CompetitionInvite("name1", "tom1@poly.io", "hash", competition);
+        CompetitionInvite invite = CompetitionInviteBuilder
+                .newCompetitionInviteWithoutId() // added this to prevent so we can persist
+                .withName("name1")
+                .withEmail("tom@poly.io")
+                .withHash("hash")
+                .withCompetition(competition)
+                .withStatus(OPENED).build();
+
         RejectionReason reason = rejectionReasonRepository.findAll().get(0);
         CompetitionParticipant savedParticipant = repository.save( (new CompetitionParticipant(competition, invite)).reject(reason, "too busy") );
 
