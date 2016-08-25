@@ -40,6 +40,9 @@ public class ProjectOtherDocumentsViewModel implements BasicProjectDetailsViewMo
         this.collaborationAgreementFileDetails = collaborationAgreementFileDetails;
         this.exploitationPlanFileDetails = exploitationPlanFileDetails;
         this.partnerOrganisationNames = partnerOrganisationNames;
+        this.approved = approved;
+        this.rejected = rejected;
+        this.rejectionReasons = rejectionReasons;
     }
 
     @Override

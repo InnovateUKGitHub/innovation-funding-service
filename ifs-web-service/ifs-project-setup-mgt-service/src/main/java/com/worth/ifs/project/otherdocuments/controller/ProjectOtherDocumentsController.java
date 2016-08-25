@@ -1,9 +1,6 @@
 package com.worth.ifs.project.otherdocuments.controller;
 
-import com.worth.ifs.commons.error.exception.ForbiddenActionException;
 import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
-import com.worth.ifs.commons.service.FailingOrSucceedingResult;
-import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.project.ProjectService;
@@ -18,25 +15,16 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static com.sun.org.apache.xalan.internal.xsltc.compiler.sym.error;
-import static com.worth.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
 import static com.worth.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static com.worth.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
 import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
-import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
-import static org.codehaus.groovy.runtime.DefaultGroovyMethods.collect;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -44,7 +32,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
  * Controller backing the Other Documents page
  */
 @Controller
-@RequestMapping("/project/{projectId}/other-documents")
+@RequestMapping("/project/{projectId}/partner/documents")
 public class ProjectOtherDocumentsController {
 
     private static final String FORM_ATTR = "form";
@@ -56,7 +44,7 @@ public class ProjectOtherDocumentsController {
     private void checkInCorrectStateToAdministerOtherDocumentsPage(Long projectId) {
         ProjectResource project = projectService.getById(projectId);
 
-       //check what test should be made (same test that sets the dashboard flag ?)
+        //check what test should be made (same test that sets the dashboard flag ?)
 //        if (!project.isProjectDetailsSubmitted()) {
 //            throw new ForbiddenActionException("This project is not ready for documentation checking.  Not all the documents have been submitted");
 //        }
@@ -69,14 +57,15 @@ public class ProjectOtherDocumentsController {
 
         checkInCorrectStateToAdministerOtherDocumentsPage(projectId);
 
-        return doViewOtherDocumentsPage(model, projectId, loggedInUser);
+        return doViewOtherDocumentsPage(model, null, projectId, loggedInUser);
 
     }
 
     @RequestMapping(method = POST)
-    public String acceptorrejectOtherDocuments(Model model, @ModelAttribute(FORM_ATTR) ProjectOtherDocumentsForm form,
-                                                @PathVariable("projectId") Long projectId,
-                                                @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+    public String acceptOrRejectOtherDocuments(Model model, @ModelAttribute(FORM_ATTR) ProjectOtherDocumentsForm form,
+                                               @PathVariable("projectId") Long projectId,
+                                               //  @ModelAttribute("observations") String  rejectionReason,
+                                               @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
         checkInCorrectStateToAdministerOtherDocumentsPage(projectId);
 
@@ -88,7 +77,7 @@ public class ProjectOtherDocumentsController {
         //TODO: Add these attributes to the project / project documents object when we have created it
 
 
-        return doViewOtherDocumentsPage(model, projectId, loggedInUser);
+        return doViewOtherDocumentsPage(model, form, projectId, loggedInUser);
 
     }
 
@@ -115,25 +104,23 @@ public class ProjectOtherDocumentsController {
         return returnFileIfFoundOrThrowNotFoundException(projectId, content, fileDetails);
     }
 
-    private String doViewOtherDocumentsPage(Model model, Long projectId, UserResource loggedInUser) {
+    private String doViewOtherDocumentsPage(Model model, ProjectOtherDocumentsForm form, Long projectId, UserResource loggedInUser) {
 
-        ProjectOtherDocumentsViewModel viewModel = getOtherDocumentsViewModel(projectId, loggedInUser);
+        ProjectOtherDocumentsViewModel viewModel = getOtherDocumentsViewModel(form, projectId, loggedInUser);
         model.addAttribute("model", viewModel);
 
-        if (viewModel.isApproved() ) {
+        if (viewModel.isApproved()) {
             return "project/other-documents-approved";
-        }
-        else if (viewModel.isRejected()) {
+        } else if (viewModel.isRejected()) {
             return "project/other-documents-rejected";
-        }
-        else{
-            ProjectOtherDocumentsForm form = new ProjectOtherDocumentsForm();
+        } else {
+            form = new ProjectOtherDocumentsForm();
             model.addAttribute("form", form);
-            return "project/other-documents";
+            return "project/other-documents-review";
         }
     }
 
-    private ProjectOtherDocumentsViewModel getOtherDocumentsViewModel(Long projectId, UserResource loggedInUser) {
+    private ProjectOtherDocumentsViewModel getOtherDocumentsViewModel(ProjectOtherDocumentsForm form, Long projectId, UserResource loggedInUser) {
 
         ProjectResource project = projectService.getById(projectId);
         Optional<FileEntryResource> collaborationAgreement = projectService.getCollaborationAgreementFileDetails(projectId);
@@ -151,12 +138,13 @@ public class ProjectOtherDocumentsController {
                 .filter(s -> s != leadPartnerOrganisationName)
                 .collect(Collectors.toList());
 
-       return new ProjectOtherDocumentsViewModel(projectId, project.getName(), leadPartnerOrganisationName,
+        return new ProjectOtherDocumentsViewModel(projectId, project.getName(), leadPartnerOrganisationName,
                 projectManagerName, projectManagerTelephone, projectManagerEmail,
                 collaborationAgreement.map(FileDetailsViewModel::new).orElse(null),
                 exploitationPlan.map(FileDetailsViewModel::new).orElse(null),
-                partnerOrganisationNames, false, false, null);
-}
+                partnerOrganisationNames, form != null && form.isApproved(),
+                form != null && form.isRejected(), form != null ? form.getRejectionReasons() : null);
+    }
 
     private ResponseEntity<ByteArrayResource> returnFileIfFoundOrThrowNotFoundException(Long projectId, Optional<ByteArrayResource> content, Optional<FileEntryResource> fileDetails) {
         if (content.isPresent() && fileDetails.isPresent()) {
