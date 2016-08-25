@@ -175,7 +175,8 @@ public class AssessmentOverviewModelPopulator {
                 map(fir -> {
                     FormInputResource formInputResource = formInputRestService.getById(fir.getFormInput()).getSuccessObject();
                     FileEntryResource fileEntryResource = fileEntryRestService.findOne(fir.getFileEntry()).getSuccessObject();
-                    String title = formInputResource.getDescription() != null ? formInputResource.getDescription() : fileEntryResource.getName();
+                    QuestionResource question = questionService.getById(formInputResource.getQuestion());
+                    String title = question.getShortName() == null ? question.getName() : question.getShortName();
                     return new AppendixResource(applicationId, formInputResource.getId(), title, fileEntryResource);
                 }).
                 collect(Collectors.toList());

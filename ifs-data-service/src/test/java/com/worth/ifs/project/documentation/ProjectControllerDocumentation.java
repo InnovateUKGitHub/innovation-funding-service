@@ -19,7 +19,6 @@ import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.test.web.servlet.MvcResult;
 
 import javax.servlet.http.HttpServletRequest;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -35,8 +34,8 @@ import static com.worth.ifs.documentation.ProjectDocs.projectResourceBuilder;
 import static com.worth.ifs.documentation.ProjectDocs.projectResourceFields;
 import static com.worth.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
-import static com.worth.ifs.util.JsonMappingUtil.toJson;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static com.worth.ifs.util.JsonMappingUtil.toJson;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.isA;
@@ -399,7 +398,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
     }
 
     @Test
-    public void updateBanksDetail() throws Exception {
+    public void submitBanksDetail() throws Exception {
         Long projectId = 1L;
         Long organisationId = 1L;
         OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource().build();
@@ -410,10 +409,10 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                 .withOrganiationAddress(organisationAddressResource)
                 .build();
 
-        when(bankDetailsServiceMock.updateBankDetails(bankDetailsResource)).thenReturn(serviceSuccess());
+        when(bankDetailsServiceMock.submitBankDetails(bankDetailsResource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(
-                post("/project/{projectId}/bank-details", projectId).
+                put("/project/{projectId}/bank-details", projectId).
                         contentType(APPLICATION_JSON).
                         content(toJson(bankDetailsResource)))
                 .andExpect(status().isOk())
@@ -443,7 +442,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
 
         RestErrorResponse expectedErrors = new RestErrorResponse(asList(invalidSortCodeError, invalidAccountNumberError));
 
-        when(bankDetailsServiceMock.updateBankDetails(bankDetailsResource)).thenReturn(serviceSuccess());
+        when(bankDetailsServiceMock.submitBankDetails(bankDetailsResource)).thenReturn(serviceSuccess());
         mockMvc.perform(
                 post("/project/{projectId}/bank-details", projectId).
                         contentType(APPLICATION_JSON).
@@ -496,4 +495,16 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                 .andReturn();
         assertTrue(mvcResult.getResponse().getContentAsString().equals("false"));
     }
+
+    @Test
+    public void setPartnerDocumentsSubmittedDate() throws Exception {
+        when(projectServiceMock.saveDocumentsSubmitDateTime(isA(Long.class), isA(LocalDateTime.class))).thenReturn(serviceSuccess());
+        mockMvc.perform(post("/project/{projectId}/partner/documents/submit", 123L))
+                .andExpect(status().isOk())
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project for which the documents are being submitted to.")
+                        )));
+    }
+
 }

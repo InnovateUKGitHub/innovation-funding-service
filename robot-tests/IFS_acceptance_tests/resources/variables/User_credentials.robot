@@ -1,6 +1,9 @@
 *** Variables ***
 &{assessor_credentials}    email=paul.plum@gmail.com    password=Passw0rd
 &{assessor2_credentials}    email=felix.wilson@gmail.com    password=Passw0rd
+&{existing_assessor1_credentials}    email=worth.email.test+assessor1@gmail.com    password=Passw0rd
+&{nonexisting_assessor2_credentials}    email=worth.email.test+assessor2@gmail.com    password=Passw0rd
+&{nonexisting_assessor3_credentials}    email=worth.email.test+assessor3@gmail.com    password=Passw0rd
 &{lead_applicant_credentials}    email=steve.smith@empire.com    password=Passw0rd
 &{collaborator1_credentials}    email=jessica.doe@ludlow.co.uk    password=Passw0rd
 &{collaborator2_credentials}    email=pete.tom@egg.com    password=Passw0rd
