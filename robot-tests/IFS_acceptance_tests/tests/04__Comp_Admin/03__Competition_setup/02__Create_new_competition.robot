@@ -365,6 +365,7 @@ Milestones: Page should contain the correct fields
     And the user should see the text in the page    11. Funders panel
     And the user should see the text in the page    12. Notifications
     And the user should see the text in the page    13. Release feedback
+    And the pre-field date should be correct
 
 Milestones: Server side validations
     [Documentation]    INFUND-2993
@@ -599,3 +600,12 @@ the weekdays should be correct
     element should contain    css=tr:nth-child(11) td:nth-child(2)    Sun
     element should contain    css=tr:nth-child(12) td:nth-child(2)    Mon
     element should contain    css=tr:nth-child(13) td:nth-child(2)    Tue
+
+the pre-field date should be correct
+    Element Should Contain    css=#milestone-OPEN_DATE~ .js-addWeekDay    Fri
+    ${YEAR} =    Get Value    css=.date-group:nth-child(1) .year .width-small
+    Should Be Equal As Strings    ${YEAR}    2017
+    ${MONTH} =    Get Value    css=.date-group:nth-child(1) .month .width-small
+    Should Be Equal As Strings    ${MONTH}    12
+    ${DAY} =    Get Value    css=.date-group:nth-child(1) .js-visited
+    Should Be Equal As Strings    ${DAY}    1
