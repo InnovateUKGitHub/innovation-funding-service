@@ -1,15 +1,18 @@
 package com.worth.ifs.project;
 
+import com.worth.ifs.application.form.validation.ApplicationStartDateValidator;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.project.finance.ProjectFinanceService;
 import com.worth.ifs.project.form.SpendProfileForm;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.SpendProfileTableResource;
+import com.worth.ifs.project.validation.SpendProfileCostValidator;
 import com.worth.ifs.project.viewmodel.ProjectSpendProfileViewModel;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -80,6 +83,13 @@ public class ProjectSpendProfileController {
     }
 
     private String editOrMarkAsCompleteSpendProfile(Model model, Long projectId, Long organisationId, SpendProfileForm form, boolean isMarkAsComplete, String successView) {
+
+        BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(form.getTable(), "");
+        new SpendProfileCostValidator().validate(form.getTable(), bindingResult);
+
+        if (bindingResult.hasErrors()) {
+            return "project/spend-profile/edit";
+        }
 
         ServiceResult<Void> result = projectFinanceService.saveSpendProfile(projectId, organisationId, form.getTable());
         if (result.isFailure()) {
