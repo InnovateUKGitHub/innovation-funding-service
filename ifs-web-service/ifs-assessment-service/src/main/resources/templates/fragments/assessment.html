@@ -108,7 +108,24 @@
     <div class="reject-competition-modal" role="dialog" aria-hidden="true">
         <div th:include="fragments/modals :: close-button" th:remove="tag" />
 
-        <div th:include="fragments/assessment :: assessor-reject-competition-form (inviteHash=${inviteHash})" th:remove="tag" />
+        <!--/* FORM TO BE REPLACED BY NON-JS FRAGMENT
+        <div th:include="fragments/assessment :: assessor-reject-competition-form (inviteHash=${inviteHash})" th:remove="tag" /*/-->
+        <form action="#" th:action="@{/invite/competition/{inviteHash}/reject(inviteHash=${inviteHash})}" method="post" th:object="${form}" novalidate="novalidate">
+            <div class="form-group">
+                <label class="form-label">Please select a reason for rejecting the competition</label>
+                <select class="form-control" required="required">
+                    <option value="">Select a reason</option>
+                    <option value="not-available">Not available</option>
+                    <option value="conflict-of-interest">Conflict of interest</option>
+                    <option value="not-my-area-of-interest">Not my area of expertise</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Use this space to provide more information</label>
+                <textarea class="form-control width-full" rows="4"></textarea>
+            </div>
+            <button class="button large button-warning extra-margin" name="submit-app-details">Reject</button>
+        </form>
     </div>
 </div>
 

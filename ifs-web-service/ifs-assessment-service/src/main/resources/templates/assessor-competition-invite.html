@@ -6,7 +6,7 @@
 
     <body class="app-dashboard">
         <div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
-        <div th:include="fragments/assessment :: assessor-reject-competition-modal (inviteHash=${1})" th:remove="tag" />
+        <div th:include="fragments/assessment :: assessor-reject-competition-modal (inviteHash=${model.competitionInviteHash})" th:remove="tag" />
         <div th:include="fragments/layout :: body-start" th:remove="tag" />
         <div th:include="fragments/layout :: global-header" th:remove="tag" />
 
@@ -42,12 +42,9 @@
             </section>
 
             <form>
-                <fieldset>
-                    <legend class="visuallyhidden">Are you available to assess this competition?</legend>
-                    <h2 class="heading-medium">Are you available to assess this competition?</h2>
-                    <button class="button large extra-margin" name="accept" value="accepted" type="submit">Accept</button>
-                    <a class="button button-warning large extra-margin" href="#" data-js-modal="reject-competition-modal">Reject</a>
-                </fieldset>
+                <h2 class="heading-medium">Are you available to assess this competition?</h2>
+                <button class="button large extra-margin" name="accept" value="accepted" type="submit">Accept</button>
+                <a class="button button-warning large extra-margin" th:href="@{/invite/competition/{inviteHash}/reject/confirm(inviteHash=${model.competitionInviteHash})}" data-js-modal="reject-competition-modal">Reject</a>
             </form>
 
             <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
