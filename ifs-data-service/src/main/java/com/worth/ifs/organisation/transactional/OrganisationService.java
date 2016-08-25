@@ -31,6 +31,9 @@ public interface OrganisationService {
     ServiceResult<OrganisationResource> update(@P("organisation") OrganisationResource organisationResource);
 
     @PreAuthorize("hasPermission(#organisationId, 'com.worth.ifs.user.resource.OrganisationResource', 'UPDATE')")
+    public ServiceResult<OrganisationResource> updateOrganisationNameAndRegistration(final Long organisationId, final String organisationName, final String registrationNumber);
+
+    @PreAuthorize("hasPermission(#organisationId, 'com.worth.ifs.user.resource.OrganisationResource', 'UPDATE')")
     ServiceResult<OrganisationResource> addAddress(@P("organisationId") Long organisationId, OrganisationAddressType addressType, AddressResource addressResource);
 
     @PostFilter("hasPermission(filterObject, 'READ')")

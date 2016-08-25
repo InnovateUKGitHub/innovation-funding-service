@@ -13,6 +13,9 @@ public interface BankDetailsService {
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<BankDetailsResource> getByProjectAndOrganisation(final Long projectId, final Long organisationId);
 
+    @PreAuthorize("hasPermission(#bankDetailsResource, 'SUBMIT')")
+    ServiceResult<Void> submitBankDetails(@P("bankDetailsResource") final BankDetailsResource bankDetailsResource);
+
     @PreAuthorize("hasPermission(#bankDetailsResource, 'UPDATE')")
-    ServiceResult<Void> updateBankDetails(@P("bankDetailsResource") final BankDetailsResource bankDetailsResource);
+    ServiceResult<Void> updateBankDetails(BankDetailsResource bankDetailsResource);
 }

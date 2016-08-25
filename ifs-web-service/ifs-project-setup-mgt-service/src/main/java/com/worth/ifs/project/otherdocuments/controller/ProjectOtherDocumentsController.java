@@ -110,7 +110,7 @@ public class ProjectOtherDocumentsController {
         model.addAttribute("model", viewModel);
 
         if (viewModel.isApproved()) {
-            return "project/other-documents-approved";
+            return "project/other-documents-accepted";
         } else if (viewModel.isRejected()) {
             return "project/other-documents-rejected";
         } else {
