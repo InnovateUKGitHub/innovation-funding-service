@@ -36,7 +36,7 @@ import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 public class InitialDetailsSectionSaver implements CompetitionSetupSectionSaver {
 
 	private static Log LOG = LogFactory.getLog(InitialDetailsSectionSaver.class);
-    public static String OPENINGDATE_FIELDNAME = "openingDate";
+    public final static String OPENINGDATE_FIELDNAME = "openingDate";
 
 	@Autowired
 	private CompetitionService competitionService;
@@ -127,7 +127,7 @@ public class InitialDetailsSectionSaver implements CompetitionSetupSectionSaver 
 		return Collections.emptyList();
 	}
 
-	private List<Error> updateCompetitionResourceWithAutosave(List<Error> errors, CompetitionResource competitionResource, String fieldName, String value) {
+	private List<Error> updateCompetitionResourceWithAutosave(List<Error> errors, CompetitionResource competitionResource, String fieldName, String value) throws Exception {
         switch (fieldName) {
             case "title":
                 competitionResource.setName(value);
