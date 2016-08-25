@@ -3,13 +3,13 @@ package com.worth.ifs.assessment.controller;
 import com.worth.ifs.BaseController;
 import com.worth.ifs.assessment.form.RejectCompetitionForm;
 import com.worth.ifs.assessment.model.RejectCompetitionModelPopulator;
-import com.worth.ifs.assessment.resource.CompetitionRejectionReasonResource;
 import com.worth.ifs.assessment.service.CompetitionInviteRestService;
 import com.worth.ifs.assessment.viewmodel.CompetitionInviteViewModel;
 import com.worth.ifs.commons.error.exception.InvalidURLException;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.invite.resource.CompetitionInviteResource;
+import com.worth.ifs.invite.resource.CompetitionRejectionResource;
 import com.worth.ifs.invite.resource.RejectionReasonResource;
 import com.worth.ifs.invite.service.RejectionReasonRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,8 +68,8 @@ public class CompetitionInviteController extends BaseController {
     @RequestMapping(value = "competition/{inviteHash}/accept", method = RequestMethod.POST)
     public String acceptInvite(@PathVariable("inviteHash") String inviteHash, HttpServletResponse response,
                                HttpServletRequest request) {
-        inviteRestService.acceptInvite(inviteHash);
-        return "";
+        return inviteRestService.acceptInvite(inviteHash)
+                .andOnSuccessReturn(() -> "").getSuccessObject();
     }
 
     @RequestMapping(value = "competition/{inviteHash}/reject", method = RequestMethod.POST)
@@ -84,7 +84,7 @@ public class CompetitionInviteController extends BaseController {
 
             // TODO replace CompetitionRejectionReasonResource with RejectionReasonResource
             // TODO this needs rejection comment from the form
-            RestResult<Void> updateResult = inviteRestService.rejectInvite(inviteHash, new CompetitionRejectionReasonResource(form.getRejectReason().getId()));
+            RestResult<Void> updateResult = inviteRestService.rejectInvite(inviteHash, new CompetitionRejectionResource(form.getRejectReason(), form.getRejectComment()));
 
             // TODO should the succeed be a redirect, e.g. GET competition/reject/thank-you instead?
             return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors()).

@@ -1,9 +1,9 @@
 package com.worth.ifs.assessment.service;
 
-import com.worth.ifs.assessment.resource.CompetitionRejectionReasonResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.invite.resource.CompetitionInviteResource;
+import com.worth.ifs.invite.resource.CompetitionRejectionResource;
 import org.springframework.stereotype.Service;
 
 import static java.lang.String.format;
@@ -32,7 +32,7 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
     }
 
     @Override
-    public RestResult<Void> rejectInvite(String inviteHash, CompetitionRejectionReasonResource rejectionReason) {
+    public RestResult<Void> rejectInvite(String inviteHash, CompetitionRejectionResource rejectionReason) {
         return postWithRestResultAnonymous(format("%s/%s/%s", competitionInviteRestUrl, "/rejectInvite", inviteHash), rejectionReason, Void.class);
     }
 }

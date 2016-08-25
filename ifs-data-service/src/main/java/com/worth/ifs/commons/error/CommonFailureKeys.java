@@ -119,7 +119,8 @@ public enum CommonFailureKeys implements ErrorTemplate {
     /**
      * Competition Participant
      */
-    COMPETITION_PARTICIPANT_CANNOT_ACCEPT_UNOPENED_INVITE("Cannot accept a CompetitionParticipant where their Invite has not been opened", BAD_REQUEST)
+    COMPETITION_PARTICIPANT_CANNOT_ACCEPT_UNOPENED_INVITE("Cannot accept a CompetitionParticipant where their Invite has not been opened", BAD_REQUEST),
+    COMPETITION_PARTICIPANT_CANNOT_REJECT_UNOPENED_INVITE("Cannot reject a CompetitionParticipant where their Invite has not been opened", BAD_REQUEST)
     ;
 
     private ErrorTemplate errorTemplate;
