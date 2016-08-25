@@ -2,10 +2,9 @@ package com.worth.ifs.assessment.controller;
 
 import com.worth.ifs.BaseController;
 import com.worth.ifs.assessment.form.RejectCompetitionForm;
+import com.worth.ifs.assessment.model.CompetitionInviteModelPopulator;
 import com.worth.ifs.assessment.model.RejectCompetitionModelPopulator;
 import com.worth.ifs.assessment.service.CompetitionInviteRestService;
-import com.worth.ifs.assessment.viewmodel.CompetitionInviteViewModel;
-import com.worth.ifs.commons.error.exception.InvalidURLException;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.invite.resource.CompetitionInviteResource;
@@ -44,26 +43,16 @@ public class CompetitionInviteController extends BaseController {
     private RejectionReasonRestService rejectionReasonRestService;
 
     @Autowired
+    private CompetitionInviteModelPopulator competitionInviteModelPopulator;
+
+    @Autowired
     private RejectCompetitionModelPopulator rejectCompetitionModelPopulator;
 
     @RequestMapping(value = "competition/{inviteHash}", method = RequestMethod.GET)
-    public String openInvite(@PathVariable("inviteHash") String inviteHash, HttpServletResponse response,
-                             HttpServletRequest request,
-                             Model model) {
-
-        RestResult<CompetitionInviteResource> invite = inviteRestService.openInvite(inviteHash);
-
-        if (invite.isFailure()) {
-            throw new InvalidURLException("Invite url is not valid", null);
-        } else {
-            CompetitionInviteResource inviteResource = invite.getSuccessObject();
-
-            model.addAttribute("model", new CompetitionInviteViewModel(inviteResource.getCompetitionName()));
-
-            return "assessor-competition-invite";
-        }
+    public String openInvite(@PathVariable("inviteHash") String inviteHash, Model model) {
+        model.addAttribute("model", competitionInviteModelPopulator.populateModel(inviteHash));
+        return "assessor-competition-invite";
     }
-
 
     @RequestMapping(value = "competition/{inviteHash}/accept", method = RequestMethod.POST)
     public String acceptInvite(@PathVariable("inviteHash") String inviteHash, HttpServletResponse response,
