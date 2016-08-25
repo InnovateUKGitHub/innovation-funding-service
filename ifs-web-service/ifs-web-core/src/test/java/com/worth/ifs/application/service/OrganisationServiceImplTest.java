@@ -16,6 +16,7 @@ import org.mockito.Mock;
 import java.util.Optional;
 
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
+import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
@@ -86,6 +87,16 @@ public class OrganisationServiceImplTest extends BaseServiceUnitTest<Organisatio
         OrganisationResource returnedOrganisation = service.save(resourceToSave);
 
         assertEquals(organisation, returnedOrganisation);
+    }
+
+    @Test
+    public void testUpdateNameAndRegistration() throws Exception {
+        OrganisationResource organisation = newOrganisationResource().withName("Vitruvius Stonework").withCompanyHouseNumber("60674010").build();
+        OrganisationResource updatedOrganisation = newOrganisationResource().withId(organisation.getId()).withName("Vitruvius Stonework Limited").withCompanyHouseNumber("60674010").build();
+        when(organisationRestService.updateNameAndRegistration(updatedOrganisation)).thenReturn(restSuccess(updatedOrganisation));
+        OrganisationResource returnedOrganisationResource = service.updateNameAndRegistration(updatedOrganisation);
+        assertEquals(returnedOrganisationResource.getCompanyHouseNumber(), updatedOrganisation.getCompanyHouseNumber());
+        assertEquals(returnedOrganisationResource.getName(), updatedOrganisation.getName());
     }
 
     @Test
