@@ -144,8 +144,8 @@
             <label class="form-label" th:for="${#ids.next('rejectReason')}">
                 Please select a reason for rejecting the competition
                 <span th:if="${#fields.hasErrors('rejectReason')}" th:remove="tag">
-            <span class="error-message"  th:each="err : ${#fields.errors('rejectReason')}" th:text="${err}" />
-        </span>
+                    <span class="error-message"  th:each="err : ${#fields.errors('rejectReason')}" th:text="${err}" />
+                </span>
             </label>
             <select class="form-control" th:errorclass="field-error" required="required" th:field="*{rejectReason}">
                 <option value="">Select a reason</option>
@@ -159,8 +159,8 @@
             <label class="form-label" th:for="${#ids.next('rejectComment')}">
                 Use this space to provide more information
                 <span th:if="${#fields.hasErrors('rejectComment')}" th:remove="tag">
-            <span class="error-message"  th:each="err : ${#fields.errors('rejectComment')}" th:text="${err}" />
-        </span>
+                    <span class="error-message"  th:each="err : ${#fields.errors('rejectComment')}" th:text="${err}" />
+                </span>
             </label>
             <textarea class="form-control width-full" th:errorclass="field-error" rows="4" th:field="*{rejectComment}"></textarea>
         </div>
