@@ -10,6 +10,7 @@ public class CompetitionType {
     private Long id;
     private String name;
     private Boolean stateAid;
+    private Boolean isActive;
 
 
     @OneToMany(mappedBy="competitionType")
@@ -46,5 +47,13 @@ public class CompetitionType {
 
     public void setStateAid(Boolean stateAid) {
         this.stateAid = stateAid;
+    }
+
+    public Boolean getActive() {
+        return isActive;
+    }
+
+    public void setActive(Boolean active) {
+        isActive = active;
     }
 }
