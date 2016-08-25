@@ -22,6 +22,16 @@ The user navigates to the page
     # Wait Until Page Contains Element    link=Contact Us
     # Page Should Contain Link    href=${SERVER}/info/contact
 
+
+The user navigates to the assessor page
+    [Arguments]    ${TARGET_URL}
+    Go To    ${TARGET_URL}
+    Run Keyword And Ignore Error    Confirm Action
+    # Error checking
+    Page Should Not Contain    Error
+    Page Should Not Contain    something went wrong
+
+
 The user navigates to the page without the usual headers
     [Arguments]    ${TARGET_URL}
     Go To    ${TARGET_URL}
