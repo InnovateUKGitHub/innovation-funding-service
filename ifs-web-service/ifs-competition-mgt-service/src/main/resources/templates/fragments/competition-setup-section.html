@@ -68,9 +68,8 @@
                     </span>
                 </label>
                 <select class="form-control width-x-large" name="innovationAreaCategoryId" id="innovationAreaCategoryId" required="required" data-required-errormessage="Please select an innovation area">
-                    <option th:if="${competitionSetupForm.innovationSectorCategoryId == null}" value="innovation sector" disabled="disabled" selected="selected">Please select an innovation sector first &hellip;</option>
-                    <option th:unless="${competitionSetupForm.innovationSectorCategoryId == null}" value="" disabled="disabled" th:selected="${competitionSetupForm.innovationAreaCategoryId == null}">Please select &hellip;</option>
-                    <option th:unless="${competitionSetupForm.innovationSectorCategoryId == null}" th:each="(innovationArea : ${innovationAreas})" th:text="${innovationArea.name}" th:value="${innovationArea.id}" th:selected="${competitionSetupForm.innovationAreaCategoryId == innovationArea.id}">Innovation Area</option>
+                    <option th:if="${competitionSetupForm.innovationAreaCategoryId == null}" value="" disabled="disabled" th:selected="${competitionSetupForm.innovationAreaCategoryId == null}">Please select &hellip;</option>
+                    <option th:each="(innovationArea : ${innovationAreas})" th:text="${innovationArea.name}" th:value="${innovationArea.id}" th:selected="${competitionSetupForm.innovationAreaCategoryId == innovationArea.id}">Innovation Area</option>
                 </select>
             </div>
 
@@ -354,7 +353,7 @@
                     th:field="${competitionSetupForm.activityCode}"
                     maxlength="255"
                     data-maxlength-errormessage="Activity code has a maximum length of 255 characters"
-                           data-required-errormessage="Please enter a activity code" />
+                           data-required-errormessage="Please enter an activity code" />
                 </div>
 
                 <div th:class="${#fields.hasErrors('competitionCode')}? 'form-group error':'form-group'">
@@ -693,6 +692,7 @@
                                 max="31"
                                 required="required"
                                 class="form-control width-small"
+                                data-date-in-table=""
                                 th:attr="aria-labelledby=${'milestone-' + milestoneEntry.key}"
                                 th:value="${milestoneEntry.value.day}"
                                 th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].day'"
@@ -705,6 +705,7 @@
                                 max="12"
                                 required="required"
                                 class="form-control width-small"
+                                data-date-in-table=""
                                 th:attr="aria-labelledby=${'milestone-' + milestoneEntry.key}"
                                 th:value="${milestoneEntry.value.month}"
                                 th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].month'" />
@@ -715,6 +716,7 @@
                                  th:attr="aria-labelledby=${'milestone-' + milestoneEntry.key}"
                                  required="required"
                                  class="form-control width-small"
+                                 data-date-in-table=""
                                  th:value="${milestoneEntry.value.year}"
                                  th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].year'"/>
                       </td>
