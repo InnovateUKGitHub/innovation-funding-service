@@ -2,6 +2,7 @@ package com.worth.ifs.project;
 
 import com.worth.ifs.application.form.validation.ApplicationStartDateValidator;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.project.finance.ProjectFinanceService;
 import com.worth.ifs.project.form.SpendProfileForm;
 import com.worth.ifs.project.resource.ProjectResource;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -67,9 +69,10 @@ public class ProjectSpendProfileController {
                                    @PathVariable("projectId") final Long projectId,
                                    @PathVariable("organisationId") final Long organisationId,
                                    @ModelAttribute(FORM_ATTR_NAME) SpendProfileForm form,
+                                   @SuppressWarnings("unused") BindingResult bindingResult,
                                    @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        return editOrMarkAsCompleteSpendProfile(model, projectId, organisationId, form, false, "project/spend-profile/edit");
+        return editOrMarkAsCompleteSpendProfile(model, bindingResult, form, projectId, organisationId, false, "project/spend-profile/edit");
     }
 
     @RequestMapping(value = "/confirm", method = POST)
@@ -77,17 +80,25 @@ public class ProjectSpendProfileController {
                                    @PathVariable("projectId") final Long projectId,
                                    @PathVariable("organisationId") final Long organisationId,
                                    @ModelAttribute(FORM_ATTR_NAME) SpendProfileForm form,
+                                   @SuppressWarnings("unused") BindingResult bindingResult,
                                    @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        return editOrMarkAsCompleteSpendProfile(model, projectId, organisationId, form, true, "project/spend-profile/confirm");
+        return editOrMarkAsCompleteSpendProfile(model, bindingResult, form, projectId, organisationId, true, "project/spend-profile/confirm");
     }
 
-    private String editOrMarkAsCompleteSpendProfile(Model model, Long projectId, Long organisationId, SpendProfileForm form, boolean isMarkAsComplete, String successView) {
+    private String editOrMarkAsCompleteSpendProfile(Model model,
+                                                    BindingResult bindingResult,
+                                                    SpendProfileForm form,
+                                                    Long projectId,
+                                                    Long organisationId,
+                                                    boolean isMarkAsComplete,
+                                                    String successView) {
 
-        BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(form.getTable(), "");
+        //BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(form.getTable(), "");
+        ValidationHandler validationHandler = ValidationHandler.newBindingResultHandler(bindingResult);
         new SpendProfileCostValidator().validate(form.getTable(), bindingResult);
 
-        if (bindingResult.hasErrors()) {
+        if (validationHandler.hasErrors()) {
             return "project/spend-profile/edit";
         }
 

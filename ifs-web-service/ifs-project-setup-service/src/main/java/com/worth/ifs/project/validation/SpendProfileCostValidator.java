@@ -10,7 +10,7 @@ import java.util.Map;
 
 /**
  * This is responsible for validating the Spend Profile Monthly Costs.
-     * It ensures that the cost is not fractional, is greater than or equal to zero, and is less than a million
+ * It ensures that the cost is not fractional, is greater than or equal to zero, and is less than a million
  */
 public class SpendProfileCostValidator implements Validator {
 
