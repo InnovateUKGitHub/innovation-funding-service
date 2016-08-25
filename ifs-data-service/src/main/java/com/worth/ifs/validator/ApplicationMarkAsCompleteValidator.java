@@ -35,14 +35,14 @@ public class ApplicationMarkAsCompleteValidator implements Validator {
             errors.rejectValue("name", "response.emptyResponse", "Please enter the full title of the project");
         }
 
-        if (StringUtils.isEmpty(application.getDurationInMonths()) || application.getDurationInMonths() < 1 || application.getDurationInMonths() > 36) {
-            LOG.debug("MarkAsComplete application details validation message for duration in months: " + application.getDurationInMonths());
-            errors.rejectValue("durationInMonths", "response.emptyResponse", "Your project should last between 1 and 36 months");
-        }
-
         if (StringUtils.isEmpty(application.getStartDate()) || (application.getStartDate().isBefore(currentDate))) {
            LOG.debug("MarkAsComplete application details validation message for start date: " + application.getStartDate());
             errors.rejectValue("startDate", "response.emptyResponse", "Please enter a future date");
+        }
+
+        if (StringUtils.isEmpty(application.getDurationInMonths()) || application.getDurationInMonths() < 1 || application.getDurationInMonths() > 36) {
+            LOG.debug("MarkAsComplete application details validation message for duration in months: " + application.getDurationInMonths());
+            errors.rejectValue("durationInMonths", "response.emptyResponse", "Your project should last between 1 and 36 months");
         }
     }
 }
