@@ -4,15 +4,15 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class SpendProfileSummaryYearModel {
-    private Long year;
+    private int year;
     private String amount;
 
-    public SpendProfileSummaryYearModel(final Long year, final String amount) {
+    public SpendProfileSummaryYearModel(final int year, final String amount) {
         this.year = year;
         this.amount = amount;
     }
 
-    public Long getYear() {
+    public int getYear() {
         return year;
     }
 

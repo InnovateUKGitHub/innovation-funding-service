@@ -2,18 +2,26 @@ package com.worth.ifs.project;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
+import com.worth.ifs.commons.rest.LocalDateResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.SpendProfileTableResource;
+import com.worth.ifs.project.util.DateUtil;
+import com.worth.ifs.project.util.FinancialYearDate;
 import com.worth.ifs.project.viewmodel.ProjectSpendProfileViewModel;
 import com.worth.ifs.project.viewmodel.SpendProfileSummaryModel;
 import com.worth.ifs.project.viewmodel.SpendProfileSummaryYearModel;
 import org.junit.Test;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.LongStream;
+import java.util.Set;
+import java.util.stream.IntStream;
 
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static com.worth.ifs.util.MapFunctions.asMap;
+import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -69,21 +77,44 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         ProjectResource projectResource = newProjectResource()
                 .withName("projectName1")
-                .withTargetStartDate(LocalDate.of(2018, 03, 01))
+                .withTargetStartDate(LocalDate.of(2018, 3, 1))
                 .withDuration(3L)
                 .build();
 
-        SpendProfileTableResource spendProfileTable = new SpendProfileTableResource();
+        SpendProfileTableResource expectedTable = new SpendProfileTableResource();
+
+        expectedTable.setMonths(asList(
+                new LocalDateResource(2018, 3, 1),
+                new LocalDateResource(2018, 4, 1),
+                new LocalDateResource(2018, 5, 1)
+        ));
+
+        expectedTable.setEligibleCostPerCategoryMap(asMap(
+                "Labour", new BigDecimal("100"),
+                "Materials", new BigDecimal("150"),
+                "Other costs", new BigDecimal("55")));
+
+        expectedTable.setMonthlyCostsPerCategoryMap(asMap(
+                "Labour", asList(new BigDecimal("30"), new BigDecimal("30"), new BigDecimal("40")),
+                "Materials", asList(new BigDecimal("70"), new BigDecimal("50"), new BigDecimal("60")),
+                "Other costs", asList(new BigDecimal("50"), new BigDecimal("5"), new BigDecimal("0"))));
+
+
+        List<LocalDate> months = IntStream.range(0, projectResource.getDurationInMonths().intValue()).mapToObj(projectResource.getTargetStartDate()::plusMonths).collect(toList());
+        List<LocalDateResource> monthResources = simpleMap(months, LocalDateResource::new);
+
+        expectedTable.setMonths(monthResources);
 
         when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
 
-        when(projectFinanceService.getSpendProfileTable(projectResource.getId(), organisationId)).thenReturn(spendProfileTable);
+        when(projectFinanceService.getSpendProfileTable(projectResource.getId(), organisationId)).thenReturn(expectedTable);
 
-        List<SpendProfileSummaryYearModel> years = createSpendProfileSummaryYears(projectResource);
+        List<SpendProfileSummaryYearModel> years = createSpendProfileSummaryYears(projectResource, expectedTable);
+
         SpendProfileSummaryModel summary = new SpendProfileSummaryModel(years);
 
         // Assert that the view model is populated with the correct values
-        ProjectSpendProfileViewModel expectedViewModel = new ProjectSpendProfileViewModel(projectResource, spendProfileTable, summary);
+        ProjectSpendProfileViewModel expectedViewModel = new ProjectSpendProfileViewModel(projectResource, expectedTable, summary);
 
         mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile", projectResource.getId(), organisationId))
                 .andExpect(status().isOk())
@@ -92,10 +123,28 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
     }
 
-    private List<SpendProfileSummaryYearModel> createSpendProfileSummaryYears(ProjectResource project){
-        Integer startYear = project.getTargetStartDate().getYear();
-        Integer endYear = project.getTargetStartDate().plusMonths(project.getDurationInMonths()).getYear()+1;
-        //TODO add logic for populating the table with the correct values after this has been implemented
-        return LongStream.range(startYear, endYear).mapToObj(year -> new SpendProfileSummaryYearModel(year, "123456.78")).collect(toList());
+    private List<SpendProfileSummaryYearModel> createSpendProfileSummaryYears(ProjectResource project, SpendProfileTableResource table){
+        Integer startYear = new FinancialYearDate(DateUtil.asDate(project.getTargetStartDate())).getFiscalYear();
+        Integer endYear = new FinancialYearDate(DateUtil.asDate(project.getTargetStartDate().plusMonths(project.getDurationInMonths()))).getFiscalYear();
+        return IntStream.range(startYear, endYear + 1).
+                mapToObj(
+                        year -> {
+                            Set<String> keys = table.getMonthlyCostsPerCategoryMap().keySet();
+                            BigDecimal totalForYear = BigDecimal.ZERO;
+
+                            for(String key : keys){
+                                List<BigDecimal> values = table.getMonthlyCostsPerCategoryMap().get(key);
+                                for(int i = 0; i < values.size(); i++){
+                                    LocalDateResource month = table.getMonths().get(i);
+                                    FinancialYearDate financialYearDate = new FinancialYearDate(DateUtil.asDate(month.getLocalDate()));
+                                    if(year == financialYearDate.getFiscalYear()){
+                                        totalForYear = totalForYear.add(values.get(i));
+                                    }
+                                }
+                            }
+                            return new SpendProfileSummaryYearModel(year, totalForYear.toPlainString());
+                        }
+
+                ).collect(toList());
     }
 }
