@@ -80,10 +80,10 @@ Bank details submission
     And the user enters text to a text field    name=sortCode    404745
     When the user clicks the button/link    jQuery=.button:contains("Submit bank account details")
     And the user clicks the button/link    jquery=button:contains("Cancel")
-    And the user should not see the text in the page    Your bank details have been approved
+    And the user should not see the text in the page    Bank account details below are now being reviewed
     When the user clicks the button/link    jQuery=.button:contains("Submit bank account details")
     And the user clicks the button/link    jquery=button:contains("Submit")
-    And the user should see the text in the page    Your bank details have been approved
+    And the user should see the text in the page    Bank account details below are now being reviewed
     And the user should see the element    css=.success-alert
     Then the user navigates to the page    ${project_in_setup_page}
     And the user should see the element    jQuery=ul li.complete:nth-child(2)
@@ -106,10 +106,10 @@ Bank details for non-lead partner
     And the address fields should be filled
     When the user clicks the button/link    jQuery=.button:contains("Submit bank account details")
     And the user clicks the button/link    jquery=button:contains("Cancel")
-    And the user should not see the text in the page    Your bank details have been approved
+    And the user should not see the text in the page    Bank details below are now being reviewed
     When the user clicks the button/link    jQuery=.button:contains("Submit bank account details")
     And the user clicks the button/link    jquery=button:contains("Submit")
-    And the user should see the text in the page    Your bank details have been approved
+    And the user should see the text in the page    Bank account details below are now being reviewed
     And the user should see the element    css=.success-alert
     Then the user navigates to the page    ${project_in_setup_page}
     And the user should see the element    jQuery=ul li.complete:nth-child(2)

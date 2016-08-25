@@ -5,6 +5,7 @@ import com.worth.ifs.commons.rest.RestResult;
 
 public interface BankDetailsRestService {
     RestResult<BankDetailsResource> getByProjectIdAndBankDetailsId(final Long projectId, final Long bankDetailsId);
+    RestResult<Void> submitBankDetails(final Long projectId, final BankDetailsResource bankDetailsResource);
     RestResult<Void> updateBankDetails(final Long projectId, final BankDetailsResource bankDetailsResource);
     RestResult<BankDetailsResource> getBankDetailsByProjectAndOrganisation(final Long projectId, final Long organisationId);
 }

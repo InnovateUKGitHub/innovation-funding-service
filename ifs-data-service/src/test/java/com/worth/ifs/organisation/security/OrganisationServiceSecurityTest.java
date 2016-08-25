@@ -86,6 +86,7 @@ public class OrganisationServiceSecurityTest extends BaseServiceSecurityTest<Org
         assertAccessDenied(() -> service.update(newOrganisationResource().build()), () -> {
             verify(rules).systemRegistrationUserCanUpdateOrganisationsNotYetConnectedToApplicationsOrUsers(isA(OrganisationResource.class), eq(getLoggedInUser()));
             verify(rules).memberOfOrganisationCanUpdateOwnOrganisation(isA(OrganisationResource.class), eq(getLoggedInUser()));
+            verify(rules).projectFinanceUserCanUpdateAnyOrganisation(isA(OrganisationResource.class), eq(getLoggedInUser()));
             verifyNoMoreInteractions(rules);
         });
     }
@@ -98,6 +99,7 @@ public class OrganisationServiceSecurityTest extends BaseServiceSecurityTest<Org
         assertAccessDenied(() -> service.addAddress(123L, REGISTERED, newAddressResource().build()), () -> {
             verify(rules).systemRegistrationUserCanUpdateOrganisationsNotYetConnectedToApplicationsOrUsers(isA(OrganisationResource.class), eq(getLoggedInUser()));
             verify(rules).memberOfOrganisationCanUpdateOwnOrganisation(isA(OrganisationResource.class), eq(getLoggedInUser()));
+            verify(rules).projectFinanceUserCanUpdateAnyOrganisation(isA(OrganisationResource.class), eq(getLoggedInUser()));
             verifyNoMoreInteractions(rules);
         });
     }
@@ -143,6 +145,11 @@ public class OrganisationServiceSecurityTest extends BaseServiceSecurityTest<Org
 
         @Override
         public ServiceResult<OrganisationResource> update(OrganisationResource organisationResource) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<OrganisationResource> updateOrganisationNameAndRegistration(Long organisationId, String organisationName, String registrationNumber) {
             return null;
         }
 

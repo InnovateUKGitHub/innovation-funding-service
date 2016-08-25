@@ -114,7 +114,6 @@ Initial details client-side validations
     ...
     ...    INFUND-3888
     [Tags]    HappyPath
-    # TODO Update Date validation messages after INFUND-4676 is done.
     When the user enters text to a text field    id=title    Competition title
     Then the user should not see the error any more    Please enter a title
     When the user selects the option from the drop-down menu    Programme    id=competitionTypeId
@@ -208,7 +207,6 @@ Funding information server-side validations
 Funding information client-side validations
     [Documentation]    INFUND-2985
     [Tags]    HappyPath
-    # TODO Update validation messages after INFUND-4676 is done.
     When the user enters text to a text field    id=funder    FunderName
     Then the user should not see the error any more    Please enter a funder name
     And the user enters text to a text field    id=funderBudget    20000
@@ -218,7 +216,7 @@ Funding information client-side validations
     And the user enters text to a text field    id=budgetCode    2004
     Then the user should not see the error any more    Please enter a budget code
     And the user enters text to a text field    id=activityCode    4242
-    #    Then the user should not see the error any more    Please enter an activity code
+    Then the user should not see the error any more    Please enter an activity code
     When the user clicks the button/link    jQuery=.button:contains("Generate code")
     Then The user should not see the text in the page    Please generate a competition code
 
