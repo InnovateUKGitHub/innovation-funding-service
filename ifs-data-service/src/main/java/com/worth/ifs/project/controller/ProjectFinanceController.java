@@ -50,7 +50,6 @@ public class ProjectFinanceController {
                                              @PathVariable("organisationId") final Long organisationId,
                                              @RequestBody SpendProfileTableResource table) {
 
-
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         return projectFinanceService.saveSpendProfile(projectOrganisationCompositeId, table).toPostResponse();
     }
