@@ -380,7 +380,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         List<Error> sortedErrors = errors.getErrors().stream().filter(error ->
                 error.getErrorKey().equals("application.validation.MarkAsCompleteFailed")).collect(Collectors.toList());
         sortedErrors.addAll(errors.getErrors());
-        return sortedErrors;
+        return sortedErrors.parallelStream().distinct().collect(Collectors.toList());
     }
 
     private void logSaveApplicationDetails(Map<String, String[]> params) {
