@@ -1,9 +1,8 @@
 package com.worth.ifs.assessment.transactional;
 
-import com.worth.ifs.assessment.resource.CompetitionRejectionReasonResource;
-import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.invite.resource.CompetitionInviteResource;
+import com.worth.ifs.invite.resource.RejectionReasonResource;
 import com.worth.ifs.security.SecuredBySpring;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -35,5 +34,5 @@ public interface CompetitionInviteService {
     @SecuredBySpring(value = "READ_INVITE_ON_HASH",
             description = "The System Registration user can read an invite for a given hash",
             additionalComments = "The hash should be unguessable so the only way to successfully call this method would be to have been given the hash in the first place")
-    ServiceResult<Void> rejectInvite(@P("inviteHash") String inviteHash, CompetitionRejectionReasonResource rejectionReason, String rejectionComment);
+    ServiceResult<Void> rejectInvite(@P("inviteHash") String inviteHash, RejectionReasonResource rejectionReason, String rejectionComment);
 }

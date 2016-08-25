@@ -1,7 +1,6 @@
 package com.worth.ifs.assessment.transactional;
 
 import com.worth.ifs.assessment.mapper.CompetitionInviteMapper;
-import com.worth.ifs.assessment.resource.CompetitionRejectionReasonResource;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.invite.domain.CompetitionInvite;
 import com.worth.ifs.invite.domain.CompetitionParticipant;
@@ -10,11 +9,13 @@ import com.worth.ifs.invite.repository.CompetitionInviteRepository;
 import com.worth.ifs.invite.repository.CompetitionParticipantRepository;
 import com.worth.ifs.invite.repository.RejectionReasonRepository;
 import com.worth.ifs.invite.resource.CompetitionInviteResource;
+import com.worth.ifs.invite.resource.RejectionReasonResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.COMPETITION_PARTICIPANT_CANNOT_ACCEPT_UNOPENED_INVITE;
+import static com.worth.ifs.commons.error.CommonFailureKeys.COMPETITION_PARTICIPANT_CANNOT_REJECT_UNOPENED_INVITE;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -53,10 +54,10 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     }
 
     @Override
-    public ServiceResult<Void> rejectInvite(String inviteHash, CompetitionRejectionReasonResource rejectionReason, String rejectionComment) {
+    public ServiceResult<Void> rejectInvite(String inviteHash, RejectionReasonResource rejectionReason, String rejectionComment) {
         return getRejectionReason(rejectionReason)
                 .andOnSuccess(reason -> getParticipantByInviteHash(inviteHash)
-                        .andOnSuccessReturnVoid(invite -> reject(invite, reason, rejectionComment)));
+                        .andOnSuccess(invite -> reject(invite, reason, rejectionComment))).andOnSuccessReturnVoid();
     }
 
     private ServiceResult<CompetitionInvite> getByHash(String inviteHash) {
@@ -72,7 +73,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
         return find(competitionParticipantRepository.getByInviteHash(inviteHash), notFoundError(CompetitionParticipant.class, inviteHash));
     }
 
-    private ServiceResult<CompetitionParticipant> accept(CompetitionParticipant participant) throws IllegalStateException {
+    private ServiceResult<CompetitionParticipant> accept(CompetitionParticipant participant) {
         try {
             participant.accept();
         }
@@ -82,11 +83,17 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
         return ServiceResult.serviceSuccess(competitionParticipantRepository.save(participant));
     }
 
-    private CompetitionParticipant reject(CompetitionParticipant participant, RejectionReason rejectionReason, String rejectionComment) {
-        return competitionParticipantRepository.save(participant.reject(rejectionReason, rejectionComment));
+    private ServiceResult<CompetitionParticipant> reject(CompetitionParticipant participant, RejectionReason rejectionReason, String rejectionComment) {
+        try {
+            participant.reject(rejectionReason, rejectionComment);
+        }
+        catch (IllegalStateException e) {
+            return ServiceResult.serviceFailure(COMPETITION_PARTICIPANT_CANNOT_REJECT_UNOPENED_INVITE);
+        }
+        return ServiceResult.serviceSuccess(competitionParticipantRepository.save(participant));
     }
 
-    private ServiceResult<RejectionReason> getRejectionReason(final CompetitionRejectionReasonResource rejectionReason) {
+    private ServiceResult<RejectionReason> getRejectionReason(final RejectionReasonResource rejectionReason) {
         return find(rejectionReasonRepository.findOne(rejectionReason.getId()), notFoundError(RejectionReason.class, rejectionReason.getId()));
     }
 }

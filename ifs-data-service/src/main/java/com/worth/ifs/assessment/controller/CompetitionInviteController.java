@@ -1,9 +1,9 @@
 package com.worth.ifs.assessment.controller;
 
-import com.worth.ifs.assessment.resource.CompetitionRejectionReasonResource;
 import com.worth.ifs.assessment.transactional.CompetitionInviteService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.invite.resource.CompetitionInviteResource;
+import com.worth.ifs.invite.resource.CompetitionRejectionResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,7 +33,7 @@ public class CompetitionInviteController {
     }
 
     @RequestMapping(value = "/rejectInvite/{inviteHash}", method = RequestMethod.POST)
-    public RestResult<Void> rejectInvite(@PathVariable String inviteHash, @RequestBody CompetitionRejectionReasonResource rejectionReason, String rejectionComment) {
-        return competitionInviteService.rejectInvite(inviteHash, rejectionReason, rejectionComment).toGetResponse();
+    public RestResult<Void> rejectInvite(@PathVariable String inviteHash, @RequestBody CompetitionRejectionResource rejection) {
+        return competitionInviteService.rejectInvite(inviteHash, rejection.getRejectionReasonResource(), rejection.getRejectionComment()).toGetResponse();
     }
 }
