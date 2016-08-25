@@ -84,7 +84,20 @@
         <li class="width-full">
             <ul class="tabular-list__row--internal">
                 <li class="width-half"><h3 class="heading-small no-margin-top extra-margin-bottom"><a href="#" th:text="${application}">APPLICATION</a></h3></li>
-                <li class="width-half alignright"><a th:href="${'/prototypes/4607-manage-assessors-assign?view=application&#38;number='+ number + '&#38;application=' + application}" class="button button-secondary alignright" th:text="${button}">BUTTON TEXT</a></li>
+                <li class="width-half alignright">
+
+                    <th:block th:if="${type != null and type == 'assign'}">
+                        <a th:href="${'/prototypes/4607-manage-assessors-assign?view=assessor&#38;row='+ row + '&#38;number='+ number + '&#38;application=' + application + '&#38;assessors=' + assessors + '&#38;name=' + name + '&#38;action=application-assigned'}" class="button button-secondary alignright" th:text="${button}">BUTTON TEXT</a>
+                    </th:block>
+
+
+
+                    <th:block th:if="${type == null}">
+                        <a th:href="${'/prototypes/4607-manage-assessors-assign?view=application&#38;number='+ number + '&#38;application=' + application + '&#38;assessors=' + assessors}" class="button button-secondary alignright" th:text="${button}">BUTTON TEXT</a>
+                    </th:block>
+
+
+                </li>
             </ul>
         </li>
     </ul>
@@ -107,12 +120,16 @@
                 <a th:href="${'/prototypes/4607-manage-assessors-assign?view=application&#38;number='+ param.number[0] + '&#38;application=' + param.application[0] + '&#38;name='+ name +'&#38;org='+ org +'&#38;position='+ position +'&#38;applications='+ applications +'&#38;row=' + row + '&#38;action=application-assigned'}" class="button button-secondary">Assign to application</a>
             </th:block>
 
+            <th:block th:if="${type != null and type == 'assign-assessor'}">
+                <a th:href="${'/prototypes/4607-manage-assessors-assign?view=assessor&#38;name='+ name}" class="button button-secondary">Assign</a>
+            </th:block>
+
              <th:block th:if="${type != null and type == 'remove'}">
-                <a th:href="${'/prototypes/4607-manage-assessors-assign?view=application&#38;number='+ param.number[0] + '&#38;application=' + param.application[0] + '&#38;name='+ name +'&#38;org='+ org +'&#38;position='+ position +'&#38;applications='+ applications +'&#38;row=' + row + '&#38;action=application-assigned'}" class="button button-secondary">Remove</a>
+                <a th:href="${'/prototypes/4607-manage-assessors-assign?view=application&#38;number='+ param.number[0] + '&#38;application=' + param.application[0] + '&#38;name='+ name +'&#38;org='+ org +'&#38;position='+ position +'&#38;applications='+ applications +'&#38;row=' + row + '&#38;action=remove-assigned'}" class="button button-secondary">Remove</a>
             </th:block>
 
             <th:block th:if="${type == null}">
-                <a th:href="${'/prototypes/4607-manage-assessors-assign?view=assessor&#38;name='+ name}" class="button button-secondary">Assign</a>
+                <a th:href="${'/prototypes/4607-manage-assessors-assign?view=application&#38;name='+ name}" class="button button-secondary">Assign</a>
             </th:block>
 
         </li>
