@@ -17,6 +17,11 @@ public class CompetitionInviteController {
     @Autowired
     private CompetitionInviteService competitionInviteService;
 
+    @RequestMapping(value = "/getInvite/{inviteHash}", method = RequestMethod.GET)
+    public RestResult<CompetitionInviteResource> getInvite(@PathVariable String inviteHash) {
+        return competitionInviteService.getInvite(inviteHash).toGetResponse();
+    }
+
     @RequestMapping(value = "/openInvite/{inviteHash}", method = RequestMethod.POST)
     public RestResult<CompetitionInviteResource> openInvite(@PathVariable String inviteHash) {
         return competitionInviteService.openInvite(inviteHash).toGetResponse();

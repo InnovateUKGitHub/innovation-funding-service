@@ -44,6 +44,15 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
     }
 
     @Test
+    public void getInvite() {
+        RestResult<CompetitionInviteResource> serviceResult = controller.getInvite("hash");
+        assertTrue(serviceResult.isSuccess());
+
+        CompetitionInviteResource inviteResource = serviceResult.getSuccessObjectOrThrowException();
+        assertEquals("Connected digital additive manufacturing", inviteResource.getCompetitionName());
+    }
+
+    @Test
     public void openInvite() {
         RestResult<CompetitionInviteResource> serviceResult = controller.openInvite("hash");
         assertTrue(serviceResult.isSuccess());

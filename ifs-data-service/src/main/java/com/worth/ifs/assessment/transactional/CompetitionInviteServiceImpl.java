@@ -29,6 +29,10 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     @Autowired
     private CompetitionInviteMapper mapper;
 
+    @Override
+    public ServiceResult<CompetitionInviteResource> getInvite(String inviteHash) {
+        return getByHash(inviteHash).andOnSuccessReturn(mapper::mapToResource);
+    }
 
     @Override
     public ServiceResult<CompetitionInviteResource> openInvite(String inviteHash) {

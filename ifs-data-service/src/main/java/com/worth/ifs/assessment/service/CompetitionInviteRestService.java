@@ -9,6 +9,8 @@ import com.worth.ifs.invite.resource.CompetitionInviteResource;
  */
 public interface CompetitionInviteRestService {
 
+    RestResult<CompetitionInviteResource> getInvite(String inviteHash);
+
     RestResult<CompetitionInviteResource> openInvite(String inviteHash);
 
     RestResult<Void> acceptInvite(String inviteHash);

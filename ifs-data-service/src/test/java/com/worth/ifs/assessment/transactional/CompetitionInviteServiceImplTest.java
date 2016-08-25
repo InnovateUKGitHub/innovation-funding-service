@@ -38,6 +38,34 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
+    public void getInvite() throws Exception {
+        ServiceResult<CompetitionInviteResource> inviteServiceResult = competitionInviteService.getInvite("inviteHash");
+
+        assertTrue(inviteServiceResult.isSuccess());
+
+        CompetitionInviteResource competitionInviteResource = inviteServiceResult.getSuccessObjectOrThrowException();
+        assertEquals("my competition", competitionInviteResource.getCompetitionName());
+
+        InOrder inOrder = inOrder(competitionInviteRepositoryMock, competitionInviteMapperMock);
+        inOrder.verify(competitionInviteRepositoryMock, calls(1)).getByHash("inviteHash");
+        inOrder.verify(competitionInviteMapperMock, calls(1)).mapToResource(any(CompetitionInvite.class));
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void getInvite_hashNotExists() throws Exception {
+        when(competitionInviteRepositoryMock.getByHash(anyString())).thenReturn(null);
+
+        ServiceResult<CompetitionInviteResource> inviteServiceResult = competitionInviteService.getInvite("inviteHashNotExists");
+
+        assertTrue(inviteServiceResult.isFailure());
+
+        InOrder inOrder = inOrder(competitionInviteRepositoryMock, competitionInviteMapperMock);
+        inOrder.verify(competitionInviteRepositoryMock, calls(1)).getByHash("inviteHashNotExists");
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
     public void openInvite() throws Exception {
         ServiceResult<CompetitionInviteResource> inviteServiceResult = competitionInviteService.openInvite("inviteHash");
 

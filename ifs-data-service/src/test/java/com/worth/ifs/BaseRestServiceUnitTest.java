@@ -105,6 +105,10 @@ public abstract class BaseRestServiceUnitTest<ServiceType extends BaseRestServic
         return httpEntityForRestCall(null);
     }
 
+    protected HttpEntity<String> httpEntityForRestCallAnonymous() {
+        return httpEntityForRestCallAnonymous(null);
+    }
+
     protected HttpEntity<String> httpEntityForRestGetWithoutAuthToken() {
         return httpEntityForRestCallWithoutAuthToken("");
     }
@@ -126,6 +130,12 @@ public abstract class BaseRestServiceUnitTest<ServiceType extends BaseRestServic
     protected <T> ResponseEntity<T> setupGetWithRestResultExpectations(String nonBaseUrl, ParameterizedTypeReference<T> responseType, T responseBody, HttpStatus responseCode) {
         ResponseEntity<T> response = new ResponseEntity<>(responseBody, responseCode);
         when(mockRestTemplate.exchange(dataServicesUrl + nonBaseUrl, GET, httpEntityForRestCall(), responseType)).thenReturn(response);
+        return response;
+    }
+
+    protected <T> ResponseEntity<T> setupGetWithRestResultAnonymousExpectations(String nonBaseUrl, ParameterizedTypeReference<T> responseType, T responseBody, HttpStatus responseCode) {
+        ResponseEntity<T> response = new ResponseEntity<>(responseBody, responseCode);
+        when(mockRestTemplate.exchange(dataServicesUrl + nonBaseUrl, GET, httpEntityForRestCallAnonymous(), responseType)).thenReturn(response);
         return response;
     }
 
@@ -195,7 +205,7 @@ public abstract class BaseRestServiceUnitTest<ServiceType extends BaseRestServic
 
     protected <T> ResponseEntity<T> setupGetWithRestResultAnonymousExpectations(String nonBaseUrl, Class<T> responseType, T responseBody) {
         ResponseEntity<T> response = new ResponseEntity<>(responseBody, OK);
-        when(mockRestTemplate.exchange(dataServicesUrl + nonBaseUrl, GET, httpEntityForRestCallAnonymous(null), responseType)).thenReturn(response);
+        when(mockRestTemplate.exchange(dataServicesUrl + nonBaseUrl, GET, httpEntityForRestCallAnonymous(), responseType)).thenReturn(response);
         return response;
     }
 

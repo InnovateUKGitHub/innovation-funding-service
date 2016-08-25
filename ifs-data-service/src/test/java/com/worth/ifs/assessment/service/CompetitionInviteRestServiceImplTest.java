@@ -6,20 +6,27 @@ import com.worth.ifs.invite.resource.CompetitionInviteResource;
 import org.junit.Test;
 
 import static com.worth.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
+import static java.lang.String.format;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
-import static java.lang.String.format;
 
 public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTest<CompetitionInviteRestServiceImpl> {
-
     private static final String restUrl = "/competitioninvite";
 
     @Override
     protected CompetitionInviteRestServiceImpl registerRestServiceUnderTest() {
         CompetitionInviteRestServiceImpl competitionInviteRestService = new CompetitionInviteRestServiceImpl();
         return competitionInviteRestService;
+    }
+
+    @Test
+    public void getInvite() throws Exception {
+        CompetitionInviteResource expected = newCompetitionInviteResource().withCompetitionName("my competition").build();
+        setupGetWithRestResultAnonymousExpectations(format("%s/%s/%s", restUrl, "/getInvite", "hash"), CompetitionInviteResource.class, expected);
+        CompetitionInviteResource actual = service.getInvite("hash").getSuccessObject();
+        assertEquals(expected, actual);
     }
 
     @Test
