@@ -2,6 +2,7 @@ package com.worth.ifs.assessment.controller;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.assessment.form.RejectCompetitionForm;
+import com.worth.ifs.assessment.model.CompetitionInviteModelPopulator;
 import com.worth.ifs.assessment.model.RejectCompetitionModelPopulator;
 import com.worth.ifs.assessment.viewmodel.CompetitionInviteViewModel;
 import com.worth.ifs.assessment.viewmodel.RejectCompetitionViewModel;
@@ -36,6 +37,10 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
 
     @Spy
     @InjectMocks
+    private CompetitionInviteModelPopulator competitionInviteModelPopulator;
+
+    @Spy
+    @InjectMocks
     private RejectCompetitionModelPopulator rejectCompetitionModelPopulator;
 
     private List<RejectionReasonResource> rejectionReasons = newRejectionReasonResource()
@@ -60,11 +65,13 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
     public void openInvite() throws Exception {
         CompetitionInviteResource inviteResource = newCompetitionInviteResource().withCompetitionName("my competition").build();
 
+        CompetitionInviteViewModel expectedViewModel = new CompetitionInviteViewModel("hash", "my competition");
+
         when(competitionInviteRestService.openInvite("hash")).thenReturn(restSuccess(inviteResource));
         mockMvc.perform(get(restUrl + "hash"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("assessor-competition-invite"))
-                .andExpect(model().attribute("model", new CompetitionInviteViewModel("my competition")));
+                .andExpect(model().attribute("model", expectedViewModel));
 
         verify(competitionInviteRestService).openInvite("hash");
     }
@@ -74,7 +81,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
         when(competitionInviteRestService.openInvite("notExistHash")).thenReturn(restFailure(notFoundError(CompetitionInviteResource.class, "notExistHash")));
         mockMvc.perform(get(restUrl + "notExistHash"))
                 .andExpect(model().attributeDoesNotExist("model"))
-                .andExpect(status().is2xxSuccessful());
+                .andExpect(status().isNotFound());
 
         verify(competitionInviteRestService).openInvite("notExistHash");
     }
