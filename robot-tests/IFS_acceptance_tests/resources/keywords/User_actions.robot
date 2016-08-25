@@ -229,6 +229,11 @@ The user should see the text in the page
     Page Should Not Contain    You do not have the necessary permissions for your request
     Page Should Not Contain    something went wrong
 
+The user should see expected text on the page
+    [Arguments]    ${VISIBLE_TEXT}
+    wait until page contains    ${VISIBLE_TEXT}
+    Page Should Contain    You do not have the necessary permissions for your request
+
 The user should not see the text in the page
     [Arguments]    ${NOT_VISIBLE_TEXT}
     sleep    100ms
