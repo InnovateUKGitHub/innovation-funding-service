@@ -3,6 +3,9 @@ package com.worth.ifs.sil.experian.resource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+/**
+ * Address object used to generate json for SIL.  Nulls are replaced with empty strings.
+ */
 public class Address {
     private String organisation;
     private String buildingName;
@@ -14,12 +17,12 @@ public class Address {
     public Address() {}
 
     public Address(String organisation, String buildingName, String street, String locality, String town, String postcode) {
-        this.organisation = organisation;
-        this.buildingName = buildingName;
-        this.street = street;
-        this.locality = locality;
-        this.town = town;
-        this.postcode = postcode;
+        this.organisation = organisation == null ? "" : organisation;
+        this.buildingName = buildingName == null ? "" : buildingName;
+        this.street = street == null ? "" : street;
+        this.locality = locality == null ? "" : locality;
+        this.town = town == null ? "" : town;
+        this.postcode = postcode == null ? "" : postcode;
     }
 
     public String getOrganisation() {
@@ -27,7 +30,7 @@ public class Address {
     }
 
     public void setOrganisation(String organisation) {
-        this.organisation = organisation;
+        this.organisation = organisation == null ? "" : organisation;
     }
 
     public String getBuildingName() {
@@ -35,7 +38,7 @@ public class Address {
     }
 
     public void setBuildingName(String buildingName) {
-        this.buildingName = buildingName;
+        this.buildingName = buildingName == null ? "" : buildingName;
     }
 
     public String getStreet() {
@@ -43,7 +46,7 @@ public class Address {
     }
 
     public void setStreet(String street) {
-        this.street = street;
+        this.street = street == null ? "" : street;
     }
 
     public String getLocality() {
@@ -51,7 +54,7 @@ public class Address {
     }
 
     public void setLocality(String locality) {
-        this.locality = locality;
+        this.locality = locality == null ? "" : locality;
     }
 
     public String getTown() {
@@ -59,7 +62,7 @@ public class Address {
     }
 
     public void setTown(String town) {
-        this.town = town;
+        this.town = town == null ? "" : town;
     }
 
     public String getPostcode() {
@@ -67,7 +70,7 @@ public class Address {
     }
 
     public void setPostcode(String postcode) {
-        this.postcode = postcode;
+        this.postcode = postcode == null ? "" : postcode;
     }
 
     @Override
