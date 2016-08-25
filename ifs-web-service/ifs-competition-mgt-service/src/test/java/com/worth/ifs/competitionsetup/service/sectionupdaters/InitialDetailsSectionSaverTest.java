@@ -1,8 +1,12 @@
 package com.worth.ifs.competitionsetup.service.sectionupdaters;
 
+import com.google.common.collect.Lists;
+import com.worth.ifs.application.service.CategoryService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.application.service.MilestoneService;
 import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.category.builder.CategoryResourceBuilder;
+import com.worth.ifs.category.resource.CategoryResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.MilestoneResource;
 import com.worth.ifs.competition.resource.MilestoneType;
@@ -39,6 +43,9 @@ public class InitialDetailsSectionSaverTest {
     private MilestoneService milestoneService;
 
     @Mock
+    private CategoryService categoryService;
+
+    @Mock
     private CompetitionSetupMilestoneService competitionSetupMilestoneService;
 
     @Test
@@ -51,8 +58,11 @@ public class InitialDetailsSectionSaverTest {
         competitionSetupForm.setOpeningDateYear(2020);
         competitionSetupForm.setCompetitionTypeId(2L);
         competitionSetupForm.setLeadTechnologistUserId(3L);
-        competitionSetupForm.setInnovationAreaCategoryId(4L);
-        competitionSetupForm.setInnovationSectorCategoryId(5L);
+
+        long innovationSectorId = 5L;
+        competitionSetupForm.setInnovationSectorCategoryId(innovationSectorId);
+        CategoryResource innovationArea = CategoryResourceBuilder.newCategoryResource().build();
+        competitionSetupForm.setInnovationAreaCategoryId(innovationArea.getId());
 
         List<MilestoneResource> milestones = new ArrayList<>();
         milestones.add(getMilestone());
@@ -65,14 +75,16 @@ public class InitialDetailsSectionSaverTest {
         competition.setMilestones(milestonesIds);
 
         when(milestoneService.getAllDatesByCompetitionId(1L)).thenReturn(milestones);
+        when(categoryService.getCategoryByParentId(innovationSectorId)).thenReturn(Lists.newArrayList(innovationArea));
+
         service.saveSection(competition, competitionSetupForm);
 
         assertEquals("title", competition.getName());
         assertEquals(Long.valueOf(1L), competition.getExecutive());
         assertEquals(Long.valueOf(2L), competition.getCompetitionType());
         assertEquals(Long.valueOf(3L), competition.getLeadTechnologist());
-        assertEquals(Long.valueOf(4L), competition.getInnovationArea());
-        assertEquals(Long.valueOf(5L), competition.getInnovationSector());
+        assertEquals(Long.valueOf(innovationArea.getId()), competition.getInnovationArea());
+        assertEquals(Long.valueOf(innovationSectorId), competition.getInnovationSector());
         assertEquals(LocalDateTime.of(2020, 12, 1, 0, 0), competition.getStartDate());
 
         verify(competitionService).update(competition);

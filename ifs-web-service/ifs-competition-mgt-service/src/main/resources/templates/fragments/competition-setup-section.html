@@ -69,9 +69,8 @@
                     </span>
                 </label>
                 <select class="form-control width-x-large" name="innovationAreaCategoryId" id="innovationAreaCategoryId" required="required" data-required-errormessage="Please select an innovation area">
-                    <option th:if="${competitionSetupForm.innovationSectorCategoryId == null}" value="innovation sector" disabled="disabled" selected="selected">Please select an innovation sector first &hellip;</option>
-                    <option th:unless="${competitionSetupForm.innovationSectorCategoryId == null}" value="" disabled="disabled" th:selected="${competitionSetupForm.innovationAreaCategoryId == null}">Please select &hellip;</option>
-                    <option th:unless="${competitionSetupForm.innovationSectorCategoryId == null}" th:each="(innovationArea : ${innovationAreas})" th:text="${innovationArea.name}" th:value="${innovationArea.id}" th:selected="${competitionSetupForm.innovationAreaCategoryId == innovationArea.id}">Innovation Area</option>
+                    <option th:if="${competitionSetupForm.innovationAreaCategoryId == null}" value="" disabled="disabled" th:selected="${competitionSetupForm.innovationAreaCategoryId == null}">Please select &hellip;</option>
+                    <option th:each="(innovationArea : ${innovationAreas})" th:text="${innovationArea.name}" th:value="${innovationArea.id}" th:selected="${competitionSetupForm.innovationAreaCategoryId == innovationArea.id}">Innovation Area</option>
                 </select>
                 <span class="autosave-info" />
             </div>

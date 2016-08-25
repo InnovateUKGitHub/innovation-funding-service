@@ -1,7 +1,9 @@
 package com.worth.ifs.competitionsetup.service.sectionupdaters;
 
+import com.worth.ifs.application.service.CategoryService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.application.service.MilestoneService;
+import com.worth.ifs.category.resource.CategoryResource;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
@@ -23,6 +25,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 
@@ -46,6 +49,9 @@ public class InitialDetailsSectionSaver implements CompetitionSetupSectionSaver 
 
 	@Autowired
 	private CompetitionSetupMilestoneService competitionSetupMilestoneService;
+
+	@Autowired
+	private CategoryService categoryService;
 
 	@Override
 	public CompetitionSetupSection sectionToSave() {
@@ -81,8 +87,17 @@ public class InitialDetailsSectionSaver implements CompetitionSetupSectionSaver 
 		competition.setCompetitionType(initialDetailsForm.getCompetitionTypeId());
 		competition.setLeadTechnologist(initialDetailsForm.getLeadTechnologistUserId());
 
-		competition.setInnovationArea(initialDetailsForm.getInnovationAreaCategoryId());
 		competition.setInnovationSector(initialDetailsForm.getInnovationSectorCategoryId());
+
+		List<CategoryResource> children = categoryService.getCategoryByParentId(competition.getInnovationSector());
+		List<CategoryResource> matchingChild =
+				children.stream().filter(child -> child.getId().equals(initialDetailsForm.getInnovationAreaCategoryId())).collect(Collectors.toList());
+		if (matchingChild.isEmpty()) {
+			return asList(Error.fieldError("innovationAreaCategoryId",
+					initialDetailsForm.getInnovationAreaCategoryId(),
+					"Please choose one of the following sub categories of the innovation sector: " + children.stream().map(child -> child.getName()).collect(Collectors.joining(", "))));
+		}
+		competition.setInnovationArea(initialDetailsForm.getInnovationAreaCategoryId());
 
 		competitionService.update(competition);
 
