@@ -21,7 +21,7 @@
 	
 
 	<div class="grid-row">
-		<div class="column-two-thirds">
+		<div class="column-three-quarters">
 			
 			<h1 class="heading-xlarge no-margin-bottom">Manage assessor</h1>
 
@@ -30,7 +30,7 @@
 
 			<p>Choose a tab to find people, invite them to assess this competition and assign assessors to one or more applications.</p>
 		</div>
-		<div class="column-third aligncentre">
+		<div class="column-quarter aligncentre">
 			<h2 class="heading-medium extra-margin">
 				Panel status
 			</h2>
@@ -52,9 +52,9 @@
 	</div>
 
 	<ul class="inline-nav">
-		<li th:class="${(param.tab == null or param.tab[0] == 'find' ? 'selected' : 'not-selected' )}"><a th:href="@{'?tab=find'}">Find</a></li>
-		<li th:class="${(param.tab != null and param.tab[0] == 'invite' ? 'selected' : 'not-selected' )}"><a th:href="@{'?tab=invite'}">Invite</a></li>
-		<li th:class="${(param.tab != null and param.tab[0] == 'assign' ? 'selected' : 'not-selected' )}"><a th:href="@{'?tab=assign'}">Assign</a></li>
+		<li th:class="${(param.tab == null or param.tab[0] == 'find' ? 'selected' : 'not-selected' )}"><a th:href="@{'?tab=find'}"><strong>Find</strong></a></li>
+		<li th:class="${(param.tab != null and param.tab[0] == 'invite' ? 'selected' : 'not-selected' )}"><a th:href="@{'?tab=invite'}"><strong>Invite</strong></a></li>
+		<li th:class="${(param.tab != null and param.tab[0] == 'assign' ? 'selected' : 'not-selected' )}"><a th:href="@{'?tab=assign'}"><strong>Assign</strong></a></li>
 	</ul>
 
 	<form th:action="${#httpServletRequest.requestURI}">
@@ -241,7 +241,12 @@
 				
 				<input type="hidden" name="tab" value="assign" />
 
-				<a href="#" class="button button-secondary disabled">Notify assessor(s)</a>
+				<a href="#" class="button button-secondary disabled" th:unless="${param.action != null and param.action[0] == 'notify'}">Notify assessor(s)</a>
+
+				<th:block th:if="${param.action != null and param.action[0] == 'notify'}">
+					<a href="/prototypes/4607-manage-assessors-notify" class="button">Notify assessor(s)</a>
+				</th:block>
+
 			</div>
 		</div>
 
@@ -303,9 +308,9 @@
 				</li>
 			</ul>
 
-			<div th:include="prototypes/fragments/manage-assessors :: prototype-assesor-row-assign-assessor" th:with="row=1,name=${'Dave Smith'},org=${'Cardiff University'},position=${'Professor of Health Technology'},applications=1" th:remove="tag" />
+			<div th:include="prototypes/fragments/manage-assessors :: prototype-assesor-row-assign-assessor" th:with="row=1,name=${'Dave Smith'},org=${'Cardiff University'},position=${'Professor of Health Technology'},applications=1,type=assign-assessor" th:remove="tag" />
 
-			<div th:include="prototypes/fragments/manage-assessors :: prototype-assesor-row-assign-assessor" th:with="row=2,name=${'Christopher Soames'},org=${'Public Health England'},position=${'Senior Adviser on technology deployment'},applications=1" th:remove="tag" />
+			<div th:include="prototypes/fragments/manage-assessors :: prototype-assesor-row-assign-assessor" th:with="row=2,name=${'Christopher Soames'},org=${'Public Health England'},position=${'Senior Adviser on technology deployment'},applications=1,type=assign-assessor" th:remove="tag" />
 
 		</div>
 
