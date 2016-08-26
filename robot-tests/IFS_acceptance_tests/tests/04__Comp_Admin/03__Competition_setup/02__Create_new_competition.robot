@@ -326,7 +326,6 @@ Eligibility can be marked as done then edit again
     And the user should see the text in the page    Technical feasibility, Industrial research, Experimental development
     And The user should not see the element    id=streamName
     When the user clicks the button/link    link=Competition set up
-    Then the user should see the element    jQuery=.button:contains("Save as Ready To Open")
     When the user clicks the button/link    link=Eligibility
     And the user clicks the button/link    jQuery=.button:contains("Edit")
     And the user clicks the button/link    jQuery=.button:contains("Done")
@@ -336,16 +335,6 @@ Eligibility should have a green check
     [Tags]    HappyPath
     When The user clicks the button/link    link=Competition set up
     Then the user should see the element    jQuery=img.section-status:eq(2)
-
-Save as Ready To Open button
-    [Documentation]    INFUND-3002
-    [Tags]    HappyPath
-    Given the user should see the element    jQuery=.button:contains("Save as Ready To Open")
-    When the user clicks the button/link    jQuery=.button:contains("Save as Ready To Open")
-    And the user clicks the button/link    link=All competitions
-    And the user clicks the button/link    id=section-3
-    Then the competition should show in the correct section    css=section:nth-child(5) ul    Test competition
-    # The above line checks that the section 'Ready to Open' there is a competition named Test competition
 
 Milestones: Page should contain the correct fields
     [Documentation]    INFUND-2993
@@ -440,6 +429,18 @@ Application questions: Mark as done and the Edit again
     And the user should see the text in the page    Guidance text test
     And the user should see the text in the page    150
     And the user should see the text in the page    Yes
+    And The user clicks the button/link    jQuery=button:contains(Done)
+
+Save as Ready To Open button
+    [Documentation]    INFUND-3002
+    [Tags]    HappyPath
+    [Setup]    Then the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
+    Given the user should see the element    jQuery=.button:contains("Save as Ready To Open")
+    When the user clicks the button/link    jQuery=.button:contains("Save as Ready To Open")
+    And the user clicks the button/link    link=All competitions
+    And the user clicks the button/link    id=section-3
+    Then the competition should show in the correct section    css=section:nth-child(5) ul    Test competition
+    # The above line checks that the section 'Ready to Open' there is a competition named Test competition
 
 *** Keywords ***
 the user moves focus to a different part of the page
