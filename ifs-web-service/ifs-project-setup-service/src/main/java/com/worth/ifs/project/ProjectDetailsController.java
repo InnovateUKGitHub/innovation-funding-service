@@ -5,7 +5,6 @@ import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.CompetitionService;
-import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.bankdetails.form.ProjectDetailsAddressForm;
 import com.worth.ifs.bankdetails.resource.BankDetailsResource;
 import com.worth.ifs.bankdetails.service.BankDetailsRestService;
@@ -14,10 +13,7 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.form.AddressForm;
-import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.invite.resource.InviteProjectResource;
-import com.worth.ifs.invite.resource.InviteResource;
-import com.worth.ifs.invite.service.ProjectInviteRestService;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.organisation.service.OrganisationAddressRestService;
 import com.worth.ifs.project.consortiumoverview.viewmodel.ConsortiumPartnerStatus;
@@ -45,7 +41,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.*;
@@ -605,16 +600,16 @@ public class ProjectDetailsController extends AddressLookupBaseController {
     }
 
     private InviteProjectResource createProjectInviteResource(Long projectId, Long userId, Long organisationId) {
-
         UserResource user = userService.findById (userId);
         ProjectResource projectResource = projectService.getById(projectId);
+        OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
 
         InviteProjectResource inviteResource = new InviteProjectResource(user.getName(), user.getEmail(), projectId);
-
+        inviteResource.setUser(user.getId());
         inviteResource.setOrganisation(organisationId);
         inviteResource.setInviteOrganisation(organisationId);
         inviteResource.setApplicationId(projectResource.getApplication());
-        inviteResource.setLeadOrganisation(applicationService.getLeadOrganisation(projectResource.getApplication()).getName());
+        inviteResource.setLeadOrganisation(leadOrganisation.getName());
 
         return inviteResource;
     }

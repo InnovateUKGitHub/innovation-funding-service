@@ -11,7 +11,10 @@ import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
-import com.worth.ifs.project.viewmodel.*;
+import com.worth.ifs.project.viewmodel.ProjectDetailsAddressViewModel;
+import com.worth.ifs.project.viewmodel.ProjectDetailsStartDateForm;
+import com.worth.ifs.project.viewmodel.ProjectDetailsStartDateViewModel;
+import com.worth.ifs.project.viewmodel.ProjectDetailsViewModel;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
@@ -39,7 +42,9 @@ import static com.worth.ifs.organisation.builder.OrganisationAddressResourceBuil
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -231,35 +236,58 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     @Test
     public void testUpdateFinanceContact() throws Exception {
 
+        long competitionId = 1L;
+        long applicationId = 1L;
+        long projectId = 1L;
+        long organisationId = 1L;
+        long loggedInUserId= 1L;
+        long invitedUserId = 2L;
+
+        UserResource financeContactUserResource = newUserResource().withId(invitedUserId).withFirstName("First").withLastName("Last").withEmail("test@test.com").build();
+
+
+        String invitedUserName = "First Last";
+        String invitedUserEmail = "test@test.com";
+
+        CompetitionResource competitionResource = newCompetitionResource().withId(competitionId).build();
+        ApplicationResource applicationResource = newApplicationResource().withId(applicationId).withCompetition(competitionId).build();
+        ProjectResource projectResource = newProjectResource().withId(projectId).withApplication(applicationId).build();
+
         List<ProjectUserResource> availableUsers = newProjectUserResource().
-                withUser(loggedInUser.getId(), 789L).
-                withOrganisation(8L).
+                withUser(loggedInUser.getId(), loggedInUserId).
+                withOrganisation(organisationId).
                 withRoleName(PARTNER).
                 build(2);
 
-        InviteProjectResource inviteProjectResource = new InviteProjectResource("TestName", "test@test.com", 8L);
+        OrganisationResource leadOrganisation = newOrganisationResource().withName("Lead Organisation").build();
 
-        inviteProjectResource.setOrganisation(8L);
-        inviteProjectResource.setInviteOrganisation(8L);
-        inviteProjectResource.setApplicationId(999L);
-        inviteProjectResource.setLeadOrganisation("test Org");
+        InviteProjectResource inviteProjectResource = new InviteProjectResource(invitedUserName, invitedUserEmail, projectId);
+        inviteProjectResource.setUser(invitedUserId);
+        inviteProjectResource.setOrganisation(organisationId);
+        inviteProjectResource.setInviteOrganisation(organisationId);
+        inviteProjectResource.setApplicationId(applicationId);
+        inviteProjectResource.setLeadOrganisation(leadOrganisation.getName());
 
+        when(projectService.getProjectUsersForProject(projectId)).thenReturn(availableUsers);
+        when(projectService.updateFinanceContact(projectId, organisationId, invitedUserId)).thenReturn(serviceSuccess());
+        when(userService.findById(invitedUserId)).thenReturn(financeContactUserResource);
+        when(projectService.getById(projectId)).thenReturn(projectResource);
+        when(projectService.getLeadOrganisation(projectId)).thenReturn(leadOrganisation);
+        when(applicationService.getById(applicationId)).thenReturn(applicationResource);
+        when(competitionService.getById(applicationResource.getCompetition())).thenReturn(competitionResource);
+        when(userService.getOrganisationProcessRoles(applicationResource, organisationId)).thenReturn(emptyList());
+        when(projectService.saveProjectInvite(inviteProjectResource)).thenReturn(serviceSuccess());
+        when(projectService.inviteFinanceContact(projectId, inviteProjectResource)).thenReturn(serviceSuccess());
 
-        when(projectService.getProjectUsersForProject(123L)).thenReturn(availableUsers);
-        when(projectService.updateFinanceContact(123L, 8L, 789L)).thenReturn(serviceSuccess());
-        //when(createProjectInviteResource).thenReturn(inviteProjectResource);
-
-
-        mockMvc.perform(post("/project/{id}/details/finance-contact", 123L).
+        mockMvc.perform(post("/project/{id}/details/finance-contact", projectId).
                     contentType(MediaType.APPLICATION_FORM_URLENCODED).
-                    param("organisation", "8").
-                    param("financeContact", "789")).
+                    param("organisation", "1").
+                    param("financeContact", "2")).
                 andExpect(status().is3xxRedirection()).
-                andExpect(view().name("redirect:/project/123/details")).
+                andExpect(view().name("redirect:/project/" + projectId  + "/details")).
                 andReturn();
 
-        verify(projectService).updateFinanceContact(123L, 8L, 789L);
-
+        verify(projectService).updateFinanceContact(projectId, organisationId, invitedUserId);
     }
 
     @Test
