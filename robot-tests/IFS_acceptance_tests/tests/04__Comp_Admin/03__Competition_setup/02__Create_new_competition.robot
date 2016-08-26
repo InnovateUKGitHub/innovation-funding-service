@@ -23,6 +23,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               INFUND-2980 As a Competition Executive I want to see a newly created competition listed in the Competition Dashboard so that I can view and update further details
 ...
 ...               INFUND-2993 As a competitions team member I want to be able to add milestones when creating my competition so these can be used manage its progress
+...
+...               INFUND-4468 As a Competitions team member I want to include additional criteria in Competitions Setup so that the "Ready to Open" state cannot be set until these conditions are met
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin    CompSetup
@@ -335,6 +337,7 @@ Eligibility should have a green check
     [Tags]    HappyPath
     When The user clicks the button/link    link=Competition set up
     Then the user should see the element    jQuery=img.section-status:eq(2)
+    And the user should not see the element    jQuery=.button:contains("Save as Ready To Open")
 
 Milestones: Page should contain the correct fields
     [Documentation]    INFUND-2993
@@ -378,6 +381,7 @@ Milestones: Green check should show
     [Documentation]    INFUND-2993
     When The user clicks the button/link    link=Competition set up
     Then the user should see the element    css=li:nth-child(4) .section-status
+    And the user should not see the element    jQuery=.button:contains("Save as Ready To Open")
 
 Application questions: All the sections should be visible
     [Documentation]    INFUND-3000
@@ -431,11 +435,32 @@ Application questions: Mark as done and the Edit again
     And the user should see the text in the page    Yes
     And The user clicks the button/link    jQuery=button:contains(Done)
 
-Save as Ready To Open button
-    [Documentation]    INFUND-3002
+Application questions: should have a green check
     [Tags]    HappyPath
-    [Setup]    Then the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
-    Given the user should see the element    jQuery=.button:contains("Save as Ready To Open")
+    When The user clicks the button/link    link=Competition set up
+    Then the user should see the element    css=ul > li:nth-child(5) > img
+
+Ready To Open button should be visible
+    [Documentation]    INFUND-3002
+    ...
+    ...    INFUND-4468
+    [Tags]    HappyPath
+    Then the user should see the element    jQuery=.button:contains("Save as Ready To Open")
+
+Ready to open button shouldn't be visible when the user re-edits the question
+    [Documentation]    INFUND-4468
+    [Setup]
+    Given The user clicks the button/link    link=Initial Details
+    When the user clicks the button/link    jQuery=.button:contains("Edit")
+    And The user clicks the button/link    link=Competition set up
+    Then the user should not see the element    jQuery=.button:contains("Save as Ready To Open")
+    [Teardown]    Run keywords    Given The user clicks the button/link    link=Initial Details
+    ...    AND    The user clicks the button/link    jQuery=.button:contains("Done")
+    ...    AND    And The user clicks the button/link    link=Competition set up
+
+User should be able to Save the competition as open
+    [Documentation]    INFUND-4468
+    [Tags]    HappyPath
     When the user clicks the button/link    jQuery=.button:contains("Save as Ready To Open")
     And the user clicks the button/link    link=All competitions
     And the user clicks the button/link    id=section-3

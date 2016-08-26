@@ -47,6 +47,7 @@ Non-lead partner can see the project setup page
     When the user clicks the button/link            link=What's the status of each of my partners?
     Then the user navigates to the page             ${project_in_setup_page}/team-status
     And the user should see the text in the page    Project team status
+    And the user should see the element             jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(1)
 
 Non-lead partner can click the Dashboard link
     [Documentation]    INFUND-4426
@@ -87,6 +88,7 @@ Lead partner can see the project setup page
     When the user clicks the button/link            link=What's the status of each of my partners?
     Then the user navigates to the page             ${project_in_setup_page}/team-status
     And the user should see the text in the page    Project team status
+    And the user should see the element             jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(1)
 
 Lead partner can click the Dashboard link
     [Documentation]    INFUND-4426
@@ -100,6 +102,7 @@ Lead partner can click the Dashboard link
 Lead partner can see the application overview
     [Documentation]    INFUND-2612
     [Tags]    HappyPath
+    Given the user navigates to the page    ${project_in_setup_page}
     When the user clicks the button/link    link=View application and feedback
     Then the user should see the text in the page    Congratulations, your application has been successful
     And the user should see the text in the page    Application questions
