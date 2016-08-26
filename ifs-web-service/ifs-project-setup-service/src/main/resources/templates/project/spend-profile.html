@@ -66,6 +66,39 @@
     <div class="grid-container">
       <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
     </div>
+    <div class="page-title">
+        <div th:include="fragments/elements :: project-title (projectId=${model.projectId}, projectName=${model.projectName})" th:remove="tag" />
+        <h1 class="heading-xlarge">Spend Profile</h1>
+    </div>
+    <p>Your project costs have been reviewed and confirmed by Innovate UK.
+       We now require a <strong>spend profile</strong> from you so that we can plan allocation of the grant funding to your project.
+       This spend profile should be developed collaboratively with your project partners.
+    </p>
+    <dl class="standard-definition-list">
+        <dt>Project start date</dt>
+        <dd>
+    <th:block th:include="fragments/elements :: ordinal-day (date=${model.targetProjectStartDate})" />
+    <th:block th:text="${#temporals.format(model.targetProjectStartDate, 'MMMM yyyy')}" />
+        </dd>
+        <dt>Duration</dt>
+        <dd><th:block th:text="${model.durationInMonths}" /> Months</dd>
+    </dl>
+    <p>The spend profile that you submit will be used as the base for your project spend over the following financial years</p>
+    <table class="extra-margin-bottom" style="width: 50%;">
+        <thead>
+        <tr>
+            <th scope="col" style="width: 50%">Financial year</th>
+            <th scope="col" style="width: 50%">Project spend</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item : ${model.summary.years}">
+            <td th:text="${item.year + ' - ' + (item.year + 1)}"></td>
+            <td th:text="${'£' + item.amount}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
 </main>
 
 <div th:include="fragments/layout :: footer" th:remove="tag" />

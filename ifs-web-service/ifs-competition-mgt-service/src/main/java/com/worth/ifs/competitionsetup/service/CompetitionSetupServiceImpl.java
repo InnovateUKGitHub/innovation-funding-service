@@ -135,10 +135,8 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 		requiredSections.add(CompetitionSetupSection.INITIAL_DETAILS);
 		requiredSections.add(CompetitionSetupSection.ADDITIONAL_INFO);
 		requiredSections.add(CompetitionSetupSection.ELIGIBILITY);
-		/* TODO Need to enable these when INFUND-4468 is worked on.
 		requiredSections.add(CompetitionSetupSection.MILESTONES);
 		requiredSections.add(CompetitionSetupSection.APPLICATION_FORM);
-		*/
 		return requiredSections;
 	}
 
