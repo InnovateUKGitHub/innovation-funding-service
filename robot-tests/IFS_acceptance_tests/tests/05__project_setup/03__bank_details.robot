@@ -93,7 +93,6 @@ Bank details submission
     Then the user navigates to the page             ${project_in_setup_page}/team-status
     And the user should see the text in the page    Project team status
     And the user should see the element             jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(3)
-
     [Teardown]    logout as user
 
 Bank details for non-lead partner
@@ -120,7 +119,7 @@ Bank details for non-lead partner
     And the user should see the element    css=.success-alert
     Then the user navigates to the page    ${project_in_setup_page}
     And the user should see the element    jQuery=ul li.complete:nth-child(2)
-    # TODO uncomment below when INFUND-4735
+    # TODO uncomment below when INFUND-4735 is done
 #    When the user clicks the button/link    link=What's the status of each of my partners?
 #    Then the user navigates to the page     ${project_in_setup_page}/team-status
 #    And the user should see the text in the page    Project team status
