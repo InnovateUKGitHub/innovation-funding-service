@@ -14,6 +14,7 @@ import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.project.service.ProjectRestService;
 import com.worth.ifs.user.resource.OrganisationResource;
+import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -246,4 +247,5 @@ public class ProjectServiceImpl implements ProjectService {
     {
         return projectRestService.inviteFinanceContact (projectId, inviteProjectResource).toServiceResult();
     }
+
 }

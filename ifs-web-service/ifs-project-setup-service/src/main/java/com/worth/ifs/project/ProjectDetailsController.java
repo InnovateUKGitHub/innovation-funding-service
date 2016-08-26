@@ -151,11 +151,30 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             ServiceResult<Void> updateResult = projectService.updateFinanceContact(projectId, form.getOrganisation(), form.getFinanceContact());
 
-            InviteProjectResource inviteProjectResource = createProjectInviteResource (projectId, form.getFinanceContact(), form.getOrganisation());
+            return validationHandler.addAnyErrors(updateResult, toField("financeContact")).
+                    addAnyErrors(saveResult, toField("financeContact")).
+                    addAnyErrors(inviteResult, toField("financeContact")).
+                    failNowOrSucceedWith(failureView, () -> redirectToProjectDetails(projectId));
+        });
+    }
+
+    @RequestMapping(value = "/{projectId}/details/invite-contact", method = POST)
+    public String updateFinanceContact(Model model,
+                                       @PathVariable("projectId") final Long projectId,
+                                       @Valid @ModelAttribute(FORM_ATTR_NAME) FinanceContactForm form,
+                                       @Valid @ModelAttribute(FORM_ATTR_NAME) InviteContactForm formInviteContact,
+                                       @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
+                                       @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+
+        Supplier<String> failureView = () -> doViewFinanceContact(model, projectId, form.getOrganisation(), loggedInUser, form, false);
+
+        return validationHandler.failNowOrSucceedWith(failureView, () -> {
+
+            InviteProjectResource inviteProjectResource = createProjectInviteResource (projectId, form.getOrganisation());
 
             ServiceResult<Void> saveResult = projectService.saveProjectInvite(inviteProjectResource);
 
-            ServiceResult<Void> inviteResult = projectService.inviteFinanceContact(projectId, inviteProjectResource);
+            //ServiceResult<Void> inviteResult = projectService.inviteFinanceContact(projectId, inviteProjectResource);
 
             return validationHandler.addAnyErrors(updateResult, toField("financeContact")).
                     addAnyErrors(saveResult, toField("financeContact")).
