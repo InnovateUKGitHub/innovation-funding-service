@@ -69,8 +69,8 @@ public class ProjectOtherDocumentsControllerMockMvcTest extends BaseControllerMo
 
         setupViewOtherDocumentsTestExpectations (project);
 
-        MvcResult result = mockMvc.perform(get("/project/123/other-documents")).
-                andExpect(view().name("project/other-documents")).
+        MvcResult result = mockMvc.perform(get("/project/123/partner/documents")).
+                andExpect(view().name("project/other-documents-review")).
                 andReturn();
 
         Map<String, Object> modelMap = result.getModelAndView().getModel();
@@ -94,8 +94,8 @@ public class ProjectOtherDocumentsControllerMockMvcTest extends BaseControllerMo
         when(projectService.getCollaborationAgreementFileDetails(projectId)).thenReturn(Optional.of(existingCollaborationAgreement));
         when(projectService.getExploitationPlanFileDetails(projectId)).thenReturn(Optional.of(existingExplotationPlan));
 
-        MvcResult result = mockMvc.perform(get("/project/123/other-documents")).
-                andExpect(view().name("project/other-documents")).
+        MvcResult result = mockMvc.perform(get("/project/123/partner/documents")).
+                andExpect(view().name("project/other-documents-review")).
                 andReturn();
 
         Map<String, Object> modelMap = result.getModelAndView().getModel();
@@ -121,7 +121,7 @@ public class ProjectOtherDocumentsControllerMockMvcTest extends BaseControllerMo
         when(projectService.getCollaborationAgreementFileDetails(123L)).
                 thenReturn(Optional.of(fileDetails));
 
-        MvcResult result = mockMvc.perform(get("/project/123/other-documents/collaboration-agreement")).
+        MvcResult result = mockMvc.perform(get("/project/123/partner/documents/collaboration-agreement")).
                 andExpect(status().isOk()).
                 andReturn();
 
@@ -139,7 +139,7 @@ public class ProjectOtherDocumentsControllerMockMvcTest extends BaseControllerMo
         when(projectService.getExploitationPlanFileDetails(123L)).
                 thenReturn(Optional.empty());
 
-        mockMvc.perform(get("/project/123/other-documents/exploitation-plan")).
+        mockMvc.perform(get("/project/123/partner/documents/exploitation-plan")).
                 andExpect(status().isNotFound()).
                 andExpect(view().name("404"));
     }
@@ -156,7 +156,7 @@ public class ProjectOtherDocumentsControllerMockMvcTest extends BaseControllerMo
         when(projectService.getExploitationPlanFileDetails(123L)).
                 thenReturn(Optional.of(fileDetails));
 
-        MvcResult result = mockMvc.perform(get("/project/123/other-documents/exploitation-plan")).
+        MvcResult result = mockMvc.perform(get("/project/123/partner/documents/exploitation-plan")).
                 andExpect(status().isOk()).
                 andReturn();
 
@@ -174,7 +174,7 @@ public class ProjectOtherDocumentsControllerMockMvcTest extends BaseControllerMo
         when(projectService.getExploitationPlanFileDetails(123L)).
                 thenReturn(Optional.empty());
 
-        mockMvc.perform(get("/project/123/other-documents/exploitation-plan")).
+        mockMvc.perform(get("/project/123/partner/documents/exploitation-plan")).
                 andExpect(status().isNotFound()).
                 andExpect(view().name("404"));
     }
