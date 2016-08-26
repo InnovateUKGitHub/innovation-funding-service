@@ -14,8 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
-import static com.worth.ifs.commons.error.CommonFailureKeys.COMPETITION_PARTICIPANT_CANNOT_ACCEPT_UNOPENED_INVITE;
-import static com.worth.ifs.commons.error.CommonFailureKeys.COMPETITION_PARTICIPANT_CANNOT_REJECT_UNOPENED_INVITE;
+import static com.worth.ifs.commons.error.CommonFailureKeys.*;
+import static com.worth.ifs.invite.constant.InviteStatus.OPENED;
+import static com.worth.ifs.invite.domain.ParticipantStatus.ACCEPTED;
+import static com.worth.ifs.invite.domain.ParticipantStatus.REJECTED;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -49,7 +51,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     @Override
     public ServiceResult<Void> acceptInvite(String inviteHash) {
         return getParticipantByInviteHash(inviteHash)
-                .andOnSuccess(invite -> accept(invite))
+                .andOnSuccess(this::accept)
                 .andOnSuccessReturnVoid();
     }
 
@@ -74,23 +76,33 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     }
 
     private ServiceResult<CompetitionParticipant> accept(CompetitionParticipant participant) {
-        try {
-            participant.accept();
-        }
-        catch (IllegalStateException e) {
+        if (participant.getInvite().get().getStatus() != OPENED) {
             return ServiceResult.serviceFailure(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_UNOPENED_INVITE);
         }
-        return ServiceResult.serviceSuccess(competitionParticipantRepository.save(participant));
+        else if (participant.getStatus() == ACCEPTED) {
+            return ServiceResult.serviceFailure(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_ALREADY_ACCEPTED_INVITE);
+        }
+        else if (participant.getStatus() == REJECTED) {
+            return ServiceResult.serviceFailure(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_ALREADY_REJECTED_INVITE);
+        }
+        else {
+            return ServiceResult.serviceSuccess(competitionParticipantRepository.save(participant.accept()));
+        }
     }
 
     private ServiceResult<CompetitionParticipant> reject(CompetitionParticipant participant, RejectionReason rejectionReason, String rejectionComment) {
-        try {
-            participant.reject(rejectionReason, rejectionComment);
-        }
-        catch (IllegalStateException e) {
+        if (participant.getInvite().get().getStatus() != OPENED) {
             return ServiceResult.serviceFailure(COMPETITION_PARTICIPANT_CANNOT_REJECT_UNOPENED_INVITE);
         }
-        return ServiceResult.serviceSuccess(competitionParticipantRepository.save(participant));
+        else if (participant.getStatus() == ACCEPTED) {
+            return ServiceResult.serviceFailure(COMPETITION_PARTICIPANT_CANNOT_REJECT_ALREADY_ACCEPTED_INVITE);
+        }
+        else if (participant.getStatus() == REJECTED) {
+            return ServiceResult.serviceFailure(COMPETITION_PARTICIPANT_CANNOT_REJECT_ALREADY_REJECTED_INVITE);
+        }
+        else {
+            return ServiceResult.serviceSuccess(competitionParticipantRepository.save(participant.reject(rejectionReason, rejectionComment)));
+        }
     }
 
     private ServiceResult<RejectionReason> getRejectionReason(final RejectionReasonResource rejectionReason) {
