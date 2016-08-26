@@ -23,7 +23,7 @@
 	<div class="grid-row">
 		<div class="column-two-thirds">
 			
-			<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title(${'Innovate UK, Technology inspired, (4891061)'}, ${'Assign assessors'})" th:remove="tag" />
+			<h1 class="heading-xlarge no-margin-bottom">Assign assessor</h1>
 			
 			<th:block th:if="${param.view == null or param.view != null and param.view[0] == 'application'}">
 
@@ -54,21 +54,67 @@
 		</div>
 	</div>
 
+	<th:block th:if="${param.view == null or param.view != null and param.view[0] == 'application'}">
+		<div class="grid-row extra-margin-bottom">
+			<div class="column-half">
+				<a href="#">View application details</a>
+			</div>
+			<div class="column-half alignright">
+				<a href="/prototypes/4607-manage-assessors?view=application&#38;tab=assign&#38;action=notify" class="button button-secondary">Return to assign tab</a>
+			</div>
+		</div>
+	</th:block>
+
+	<th:block th:if="${param.view == null or param.view != null and param.view[0] == 'assessor'}">
+		<div class="alignright extra-margin-bottom">
+			<a href="/prototypes/4607-manage-assessors?view=application&#38;tab=assign&#38;action=notify" class="button button-secondary">Return to assign tab</a>
+		</div>
+	</th:block>
+
+
+
 
 	<th:block th:if="${param.view == null or param.view != null and param.view[0] == 'application'}">
 		<div class="tabular-list">
 
 			<ul class="tabular-list__row-header hide-mobile">
-				<li id="assessor-name" class="width-third">Assigned applications</li>
-				<li id="assessor-type" class="width-third">Lead organisation</li>
-				<li id="assessor-area" class="width-third alignright">Number of assigned applications</li> 
+				<li id="assessor-name" class="width-half">Assigned applications</li>
+				<li id="assessor-area" class="width-half">Number of assigned applications</li> 
 			</ul>
 
-			<p class="aligncentre extra-margin">There are currently no applications assigned to this assessor</p>
+			<p class="aligncentre extra-margin" th:unless="${param.action != null and param.action[0] == 'application-assigned'}">There are currently no applications assigned to this assessor</p>
+
+			<th:block th:if="${param.action != null and param.action[0] == 'application-assigned'}">
+				<div th:include="prototypes/fragments/manage-assessors :: prototype-assesor-row-assign-assessor" th:with="row=1,name=${param.name[0]},org=${param.org[0]},position=${param.position[0]},applications=${#numbers.formatInteger(param.applications[0],0)} + 1,type=remove" th:remove="tag" />
+			</th:block>
 
 		</div>
 
 		<h2 class="heading-medium">Assessors</h2>
+
+		<div class="search-filters extra-margin-top">
+			<div class="grid-row">
+				<div class="column-half">
+					<label class="form-label" for="filterSearch">Filter by keyword</label>
+                     <input type="text" class="form-control" id="filterSearch" name="filterSearch" />
+				</div>
+
+				<div class="column-half">
+					
+					<div class="grid-row">
+						<div class="column-half">
+							<div class="extra-margin-top">
+								<a th:href="${#httpServletRequest.requestURI}">Clear all filters</a>
+							</div>
+						</div>
+						<div class="column-half alignright">
+							<button class="button">Filter</button>
+						</div>
+					</div>
+					
+				</div>
+			</div>
+		</div>
 
 		<div class="tabular-list">
 
@@ -77,7 +123,7 @@
 				<li id="assessor-type" class="width-half"><a href="#">Number of applications</a></li>
 			</ul>
 
-			<div th:include="prototypes/fragments/manage-assessors :: prototype-assesor-row-assign-assessor" th:with="row=1,name=${'Dave Smith'},org=${'Cardiff University'},position=${'Professor of Health Technology'},applications=0,type=assign" th:remove="tag" />
+			<div th:include="prototypes/fragments/manage-assessors :: prototype-assesor-row-assign-assessor" th:with="row=1,name=${'Dave Smith'},org=${'Cardiff University'},position=${'Professor of Health Technology'},applications=0,type=assign" th:unless="${param.action != null and param.action[0] == 'application-assigned' and param.row != null and param.row[0] == '1'}" th:remove="tag" />
 
 			<div th:include="prototypes/fragments/manage-assessors :: prototype-assesor-row-assign-assessor" th:with="row=2,name=${'Christopher Soames'},org=${'Public Health England'},position=${'Senior Adviser on technology deployment'},applications=1,type=assign" th:remove="tag" />
 
@@ -99,44 +145,51 @@
 				<li id="assessor-area" class="width-quarter">Number of assigned applications</li> 
 			</ul>
 
-			<p class="aligncentre extra-margin">There are currently no applications assigned to this assessor</p>
+			<p class="aligncentre extra-margin" th:unless="${param.action != null and param.action[0] == 'application-assigned'}">There are currently no applications assigned to this assessor</p>
 
+			<!-- <th:block th:if="${param.action != null and param.action[0] == 'application-assigned'}">
+				<div th:include="prototypes/fragments/manage-assessors :: prototype-assesor-row-assign-application" th:with="row=${param.row[0]},name=${param.name[0]},org=${param.org[0]},application=${param.application[0]},assessors=${#numbers.formatInteger(param.assessesors[0],0)} + 1,type=remove" th:remove="tag" />
+			</th:block> -->
+
+		</div>
+
+		<h2 class="heading-medium">Applications</h2>
+
+		<div class="search-filters extra-margin-top">
+			<div class="grid-row">
+				<div class="column-half">
+					<label class="form-label" for="filterSearch">Filter by keyword</label>
+                     <input type="text" class="form-control" id="filterSearch" name="filterSearch" />
+				</div>
+
+				<div class="column-half">
+					
+					<div class="grid-row">
+						<div class="column-half">
+							<div class="extra-margin-top">
+								<a th:href="${#httpServletRequest.requestURI}">Clear all filters</a>
+							</div>
+						</div>
+						<div class="column-half alignright">
+							<button class="button">Filter</button>
+						</div>
+					</div>
+					
+				</div>
+			</div>
 		</div>
 
 		<div class="tabular-list">
 
 			<ul class="tabular-list__row-header hide-mobile">
 				<li id="assessor-name" class="width-half">Applications</li>
+				<li id="assessor-type" class="width-quarter">Lead organisation</li>
+				<li id="assessor-area" class="width-quarter">Number of assigned applications</li> 
 			</ul>
 
-			<div class="search-filters extra-margin-top">
-				<div class="grid-row">
-					<div class="column-half">
-						<label class="form-label" for="filterSearch">Filter by keyword</label>
-	                     <input type="text" class="form-control" id="filterSearch" name="filterSearch" />
-					</div>
+			<div th:include="prototypes/fragments/manage-assessors :: prototype-assesor-row-assign-application" th:with="row=1,application=${'The potential for glucose based contact lens monitoring in the management of type 2 diabetes'},number=${'10001000000'},org=${'Wessex University'},assessors=0,button=${'Assign'},type=assign,name=${param.name[0]}" th:remove="tag" />
 
-					<div class="column-half">
-						
-						<div class="grid-row">
-							<div class="column-half">
-								<div class="extra-margin-top">
-									<a th:href="${#httpServletRequest.requestURI}">Clear all filters</a>
-								</div>
-							</div>
-							<div class="column-half alignright">
-								<button class="button">Filter</button>
-							</div>
-						</div>
-						
-					</div>
-				</div>
-			</div>
-
-
-			<div th:include="prototypes/fragments/manage-assessors :: prototype-assesor-row-assign-application" th:with="row=1,application=${'The potential for glucose based contact lens monitoring in the management of type 2 diabetes'},number=${'10001000000'},org=${'Wessex University'},assessors=0,button=${'Assign to application'}" th:remove="tag" />
-
-			<div th:include="prototypes/fragments/manage-assessors :: prototype-assesor-row-assign-application" th:with="row=2,application=${'Mobility problems and the potential for internet enabled zimmer frame'},number=${'10001000001'},org=${'Plymouth University'},,assessors=1,button=${'Assign to application'}" th:remove="tag" />
+			<div th:include="prototypes/fragments/manage-assessors :: prototype-assesor-row-assign-application" th:with="row=2,application=${'Mobility problems and the potential for internet enabled zimmer frame'},number=${'10001000001'},org=${'Plymouth University'},assessors=1,button=${'Assign'},type=assign,name=${param.name[0]}" th:remove="tag" />
 
 		</div>
 	

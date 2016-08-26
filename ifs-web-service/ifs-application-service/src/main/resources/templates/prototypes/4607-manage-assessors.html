@@ -13,7 +13,7 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competitions dashboard'}, ${'#'})" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Opportunity overview'}, ${'#'})" th:remove="tag" />
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->
@@ -21,17 +21,20 @@
 	
 
 	<div class="grid-row">
-		<div class="column-two-thirds">
+		<div class="column-three-quarters">
 			
-			<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title(${'Innovate UK, Technology inspired, (4891061)'}, ${'Manage assessors'})" th:remove="tag" />
+			<h1 class="heading-xlarge no-margin-bottom">Manage assessor</h1>
+
+			<h2 class="heading-medium extra-margin-top">Technology inspired <br/> Ref: 0102468</h2>
+
 
 			<p>Choose a tab to find people, invite them to assess this competition and assign assessors to one or more applications.</p>
 		</div>
-		<div class="column-third aligncentre">
-			<h2 class="heading-medium no-margin">
+		<div class="column-quarter aligncentre">
+			<h2 class="heading-medium extra-margin">
 				Panel status
 			</h2>
-			<ul>
+			<ul class="extra-margin">
 				<li>
 					<h3 class="heading-large no-margin">1</h3>
 					<p>invited</p>
@@ -49,9 +52,9 @@
 	</div>
 
 	<ul class="inline-nav">
-		<li th:class="${(param.tab == null or param.tab[0] == 'find' ? 'selected' : 'not-selected' )}"><a th:href="@{'?tab=find'}">Find</a></li>
-		<li th:class="${(param.tab != null and param.tab[0] == 'invite' ? 'selected' : 'not-selected' )}"><a th:href="@{'?tab=invite'}">Invite</a></li>
-		<li th:class="${(param.tab != null and param.tab[0] == 'assign' ? 'selected' : 'not-selected' )}"><a th:href="@{'?tab=assign'}">Assign</a></li>
+		<li th:class="${(param.tab == null or param.tab[0] == 'find' ? 'selected' : 'not-selected' )}"><a th:href="@{'?tab=find'}"><strong>Find</strong></a></li>
+		<li th:class="${(param.tab != null and param.tab[0] == 'invite' ? 'selected' : 'not-selected' )}"><a th:href="@{'?tab=invite'}"><strong>Invite</strong></a></li>
+		<li th:class="${(param.tab != null and param.tab[0] == 'assign' ? 'selected' : 'not-selected' )}"><a th:href="@{'?tab=assign'}"><strong>Assign</strong></a></li>
 	</ul>
 
 	<form th:action="${#httpServletRequest.requestURI}">
@@ -145,40 +148,48 @@
 	<th:block th:if="${param.tab != null and param.tab[0] == 'invite'}">
 		<div class="tabular-list" id="assessors-invite">
 
-			<h2 class="heading-small">Invite people to become an assessor for this competition</h2>
-			<p>You can invite people on your list either individually or as a group.</p>
+			<div class="grid-row">
+				<div class="column-two-thirds">
+					<h2 class="heading-small">Invite people to become an assessor for this competition</h2>
+					<p>You can invite people on your list either individually or as a group.</p>
+				</div>
+			</div>
 
 			<details class="extra-margin-bottom">
 				<summary><span class="summary">Add non-registered assessor to list</span></summary>
 				<div class="panel-indent">
-					<form>
+					<form th:action="${#httpServletRequest.requestURI}">
 						<fieldset>
 							<legend>Enter the new assessor's details below to add them to your invite list</legend>
 						</fieldset>
 						<div class="form-group extra-margin">
 							<label class="form-label" for="name">Name</label>
-							<input class="form-control" id="name" type="text" />
+							<input class="form-control" id="name" name="name" type="text" required="required" />
 						</div>
 						<div class="form-group">
 							<label class="form-label" for="email">Email</label>
-							<input class="form-control" id="email" type="text" />
+							<input class="form-control" id="email" name="email" type="text" required="required" />
 						</div>
+						<input type="hidden" name="status" value="invite-new" />
+						<input type="hidden" name="tab" value="invite" />
 						<button class="button">Add new assessor to list</button>
 					</form>
 				</div>
 			</details>
 
 			<ul class="tabular-list__row-header">
-				<li class="width-third">		
-					<label for="inviteFilter">Filter by
-					<select class="form-control" id="inviteFilter" name="inviteFilter">           
-						<option value="">All</option>
-						<option value="">To be invited</option>
-						<option value="">Invite accepted</option>
-						<option value="">Invite sent</option>
-						<option value="">Invite declined</option>
-					</select>
-					</label>
+				<li class="width-third">
+					<form th:action="${#httpServletRequest.requestURI}">
+						<label for="inviteFilter">Filter by
+						<select class="form-control" id="inviteFilter" name="inviteFilter">           
+							<option value="">All</option>
+							<option value="">To be invited</option>
+							<option value="">Invite accepted</option>
+							<option value="">Invite sent</option>
+							<option value="">Invite declined</option>
+						</select>
+						</label>
+					</form>
 				</li>
 				<li class="width-third">
 					<label for="includeAll">
@@ -186,14 +197,22 @@
 				        Include all for group invite
 				    </label>
 				</li>
-				<li class="width-third alignright"><a href="#" class="button button-secondary disabled">Invite group</a></li>
+				<li class="width-third alignright"><a href="/prototypes/4607-manage-assessors-invite?status=invite-group" class="button button-secondary disabled" id="invite-group">Invite group</a></li>
 			</ul>
 
-			<div th:include="prototypes/fragments/manage-assessors :: prototype-assesor-row-invite" th:with="row=1,name=${'Dave Smith'},org=${'Cardiff University'},position=${'Professor of Health Technology'}" th:remove="tag" />
+			<th:block th:if="${param.status != null and param.status[0] == 'invite-new'}">
+				<div th:include="prototypes/fragments/manage-assessors :: prototype-assesor-row-invite" th:with="row=0,name=${param.name[0]},org=null,position=null,status=null" th:remove="tag" />
+			</th:block>
 
-			<div th:include="prototypes/fragments/manage-assessors :: prototype-assesor-row-invite" th:with="row=2,name=${'Martin Trollope'},org=${'Cardiff University'},position=${'Reader, Healthcare outcome measurement'},status=${'Invite declined'},msg=${'Invite declined as person is too busy'}" th:remove="tag" />
+			<div th:include="prototypes/fragments/manage-assessors :: prototype-assesor-row-invite" th:with="row=1,name=${'Dave Smith'},org=${'Cardiff University'},position=${'Professor of Health Technology'},status=${param.status != null and param.status[0] == 'invite-individual' or param.status != null and param.status[0] == 'invite-group' ? 'Invite sent ' + #dates.format(#dates.createNow(), 'dd/MM/yyyy'): null}" th:remove="tag" />
 
-			<div th:include="prototypes/fragments/manage-assessors :: prototype-assesor-row-invite" th:with="row=3,name=${'Chantel Secrete'},org=${'University College London'},position=${'Reader, Technology Interventions'},status=${'Invite sent 12/02/2016'}" th:remove="tag" />
+			<div th:include="prototypes/fragments/manage-assessors :: prototype-assesor-row-invite" th:with="row=2,name=${'Christopher Soames'},org=${'Public Health England'},position=${'Senior Adviser on technology deployment'},status=${param.status != null and param.status[0] == 'invite-group' ? 'Invite sent ' + #dates.format(#dates.createNow(), 'dd/MM/yyyy'): null}" th:remove="tag" />
+
+			<div th:include="prototypes/fragments/manage-assessors :: prototype-assesor-row-invite" th:with="row=3,name=${'Martin Trollope'},org=${'Cardiff University'},position=${'Reader, Healthcare outcome measurement'},status=${'Invite declined'},msg=${'Invite declined as person is too busy'}" th:remove="tag" />
+
+			<div th:include="prototypes/fragments/manage-assessors :: prototype-assesor-row-invite" th:with="row=4,name=${'Chantel Secrete'},org=${'University College London'},position=${'Reader, Technology Interventions'},status=${'Invite sent 12/02/2016'}" th:remove="tag" />
+
+			<div th:include="prototypes/fragments/manage-assessors :: prototype-assesor-row-invite" th:with="row=5,name=${'Richard Turner'},org=${'Reading University'},position=${'Lecturer of physics'},status=${'Invite accepted'}" th:remove="tag" />
 
 		</div>
 	</th:block>
@@ -222,7 +241,12 @@
 				
 				<input type="hidden" name="tab" value="assign" />
 
-				<a href="#" class="button button-secondary">Notify assessor(s)</a>
+				<a href="#" class="button button-secondary disabled" th:unless="${param.action != null and param.action[0] == 'notify'}">Notify assessor(s)</a>
+
+				<th:block th:if="${param.action != null and param.action[0] == 'notify'}">
+					<a href="/prototypes/4607-manage-assessors-notify" class="button">Notify assessor(s)</a>
+				</th:block>
+
 			</div>
 		</div>
 
@@ -284,9 +308,9 @@
 				</li>
 			</ul>
 
-			<div th:include="prototypes/fragments/manage-assessors :: prototype-assesor-row-assign-assessor" th:with="row=1,name=${'Dave Smith'},org=${'Cardiff University'},position=${'Professor of Health Technology'},applications=1" th:remove="tag" />
+			<div th:include="prototypes/fragments/manage-assessors :: prototype-assesor-row-assign-assessor" th:with="row=1,name=${'Dave Smith'},org=${'Cardiff University'},position=${'Professor of Health Technology'},applications=1,type=assign-assessor" th:remove="tag" />
 
-			<div th:include="prototypes/fragments/manage-assessors :: prototype-assesor-row-assign-assessor" th:with="row=2,name=${'Christopher Soames'},org=${'Public Health England'},position=${'Senior Adviser on technology deployment'},applications=1" th:remove="tag" />
+			<div th:include="prototypes/fragments/manage-assessors :: prototype-assesor-row-assign-assessor" th:with="row=2,name=${'Christopher Soames'},org=${'Public Health England'},position=${'Senior Adviser on technology deployment'},applications=1,type=assign-assessor" th:remove="tag" />
 
 		</div>
 
@@ -312,6 +336,56 @@
         $('#view').on('change', function() {
             this.form.submit();
         });
+
+        /*$('#inviteFilter').on('change', function() {
+            this.form.submit();
+        });*/
+
+		jQuery('#includeAll').on('click',function(e){ 
+			//e.preventDefault();
+
+			if ( jQuery(this).is(':checked')) {
+				jQuery('#invite-group').removeClass('disabled');
+				jQuery('#invite-group').removeClass('button-secondary');
+				jQuery('.include-in-group').attr('checked', 'checked');
+
+				jQuery('.invite-individual').addClass('disabled');
+				jQuery('.invite-individual').addClass('button-secondary');
+
+			}
+
+			else if ( jQuery(this).not(':checked')) {
+				jQuery('.invite-individual').removeClass('disabled');
+				jQuery('.invite-individual').removeClass('button-secondary');
+
+				jQuery('#invite-group').addClass('disabled');
+				jQuery('#invite-group').addClass('button-secondary');
+				jQuery('.include-in-group').Attr('checked', '');
+
+				
+			}
+			
+		});
+
+
+		jQuery('.add-to-invite').on('click',function(e){ 
+			e.preventDefault();
+
+			if(jQuery(this).hasClass('added')){
+
+				jQuery(this).removeClass('added');
+				jQuery(this).text('+ Add to invite list');
+
+
+			}else{
+
+				jQuery(this).addClass('added');
+				jQuery(this).text('- Remove from invite list');
+
+			}
+
+		});
+
     });
 	// ]]>
 </script>
