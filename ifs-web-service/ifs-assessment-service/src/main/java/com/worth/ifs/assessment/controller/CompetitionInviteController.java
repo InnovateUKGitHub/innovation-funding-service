@@ -7,7 +7,6 @@ import com.worth.ifs.assessment.model.RejectCompetitionModelPopulator;
 import com.worth.ifs.assessment.service.CompetitionInviteRestService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.controller.ValidationHandler;
-import com.worth.ifs.invite.resource.CompetitionInviteResource;
 import com.worth.ifs.invite.resource.CompetitionRejectionResource;
 import com.worth.ifs.invite.resource.RejectionReasonResource;
 import com.worth.ifs.invite.service.RejectionReasonRestService;
@@ -20,8 +19,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.function.Supplier;
@@ -49,14 +46,15 @@ public class CompetitionInviteController extends BaseController {
     private RejectCompetitionModelPopulator rejectCompetitionModelPopulator;
 
     @RequestMapping(value = "competition/{inviteHash}", method = RequestMethod.GET)
-    public String openInvite(@PathVariable("inviteHash") String inviteHash, Model model) {
+    public String openInvite(@PathVariable("inviteHash") String inviteHash,
+                             @ModelAttribute("form") RejectCompetitionForm form,
+                             Model model) {
         model.addAttribute("model", competitionInviteModelPopulator.populateModel(inviteHash));
         return "assessor-competition-invite";
     }
 
     @RequestMapping(value = "competition/{inviteHash}/accept", method = RequestMethod.POST)
-    public String acceptInvite(@PathVariable("inviteHash") String inviteHash, HttpServletResponse response,
-                               HttpServletRequest request) {
+    public String acceptInvite(@PathVariable("inviteHash") String inviteHash) {
         return inviteRestService.acceptInvite(inviteHash)
                 .andOnSuccessReturn(() -> "").getSuccessObject();
     }
@@ -71,8 +69,6 @@ public class CompetitionInviteController extends BaseController {
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
-            // TODO replace CompetitionRejectionReasonResource with RejectionReasonResource
-            // TODO this needs rejection comment from the form
             RestResult<Void> updateResult = inviteRestService.rejectInvite(inviteHash, new CompetitionRejectionResource(form.getRejectReason(), form.getRejectComment()));
 
             // TODO should the succeed be a redirect, e.g. GET competition/reject/thank-you instead?
