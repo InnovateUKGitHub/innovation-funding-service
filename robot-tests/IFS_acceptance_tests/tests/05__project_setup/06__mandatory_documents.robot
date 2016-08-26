@@ -4,6 +4,8 @@ Documentation     INFUND-3013 As a partner I want to be able to download mandato
 ...               INFUND-3011 As a lead partner I need to provide mandatory documents so that they can be reviewed by all partners before submitting to Innovate UK
 ...
 ...               INFUND-3012: As a project manager I want to be able to submit all mandatory documents on behalf of all partners so that Innovate UK can review additional information to support our project setup
+...
+...               INFUND-2621 As a contributor I want to be able to review the current Project Setup status of all partners in my project so I can get an indication of the overall status of the consortium
 Suite Setup       Log in as user    jessica.doe@ludlow.co.uk    Passw0rd
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -19,11 +21,15 @@ Resource          ../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
 
 *** Test Cases ***
 Non-lead partner cannot upload either document
-    [Documentation]    INFUND-3011
+    [Documentation]    INFUND-3011, INFUND-2621
     [Tags]
     Given the user navigates to the page    ${project_in_setup_page}
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Upload
+    When the user navigates to the page    ${project_in_setup_page}
+    #TODO uncomment below when INFUND-4735 is done
+#    And the user clicks the button/link    link=What's the status of each of my partners?
+#    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
     [Teardown]    Logout as user
 
 PM cannot submit when both documents are not uploaded
@@ -67,7 +73,7 @@ Lead partner can upload both documents
     Then the user should not see an error in the page
 
 Lead partner can view both documents
-    [Documentation]    INFUND-3011
+    [Documentation]    INFUND-3011, INFUND-2621
     [Tags]
     Given the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Other documents
@@ -77,6 +83,11 @@ Lead partner can view both documents
     When the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
     And the user goes back to the previous page
+    #TODO Go back doesnt seem to work
+#    And the user should see the element    link=What's the status of each of my partners?
+#    When the user clicks the button/link    link=What's the status of each of my partners?
+#    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(6)
+#    And the user goes back to the previous page
 
 Lead partner cannot remove either document
     [Documentation]    INFUND-3011
@@ -93,7 +104,7 @@ Lead partner does not have the option to submit the mandatory documents
     And the user should not see the element    jQuery=.button.enabled:contains("Submit partner documents")
 
 Non-lead partner can view both documents
-    [Documentation]    INFUND-3011
+    [Documentation]    INFUND-3011, INFUND-2621
     ...
     ...
     ...    INFUND-3013
@@ -108,6 +119,11 @@ Non-lead partner can view both documents
     When the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
     And the user goes back to the previous page
+    #TODO Go back doesnt seem to work
+#    And the user should see the element    link=What's the status of each of my partners?
+#    When the user clicks the button/link    link=What's the status of each of my partners?
+#    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(6)
+#    And the user goes back to the previous page
 
 Non-lead partner cannot remove either document
     [Documentation]    INFUND-3013
@@ -194,7 +210,7 @@ Mandatory document submission
     Given the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Other documents
     When the user clicks the button/link    jQuery=.button:contains("Submit partner documents")
-    And the user clicks the button/link    jQuery=.button:contains("Cancel")
+    And the user clicks the button/link    jQuery=.button:contains("Cancel")   # seems to be failing
     Then the user should see the element    name=removeExploitationPlanClicked    # testing here that the section has not become read-only
     When the user clicks the button/link    jQuery=.button:contains("Submit partner documents")
     And the user clicks the button/link    jQuery=.button:contains("Submit")
