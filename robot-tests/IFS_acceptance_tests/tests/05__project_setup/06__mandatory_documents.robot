@@ -27,7 +27,7 @@ Non-lead partner cannot upload either document
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Upload
     When the user navigates to the page    ${project_in_setup_page}
-    #TODO uncomment below when INFUND-4735 is done
+    #TODO update after INFUND-4735
 #    And the user clicks the button/link    link=What's the status of each of my partners?
 #    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
     [Teardown]    Logout as user
@@ -38,7 +38,9 @@ PM cannot submit when both documents are not uploaded
     Given Guest user log-in    worth.email.test+projectlead@gmail.com    Passw0rd
     When the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Other documents
-    And the user should see the text in the page    Upload
+    #Then the user should see the 2 Upload buttons
+    And the user should see the element    jQuery=#content div:nth-child(9) form div label
+    And the user should see the element    jQuery=#content div:nth-child(10) form div label
     Then the user should not see the element    jQuery=.button.enabled:contains("Submit partner documents")
     [Teardown]    Logout as user
 
@@ -64,6 +66,12 @@ Non pdf files not allowed for either document
     Then the user should see an error    ${wrong_filetype_validation_error}
     And the user should not see the text in the page    ${text_file}
 
+Lead partner cannot remove either document
+    [Documentation]    INFUND-3011
+    When the user should not see the text in the page    Remove
+    And the user should not see the element    name=removeCollaborationAgreementClicked
+    And the user should not see the element    name=removeExploitationPlanClicked
+
 Lead partner can upload both documents
     [Documentation]    INFUND-3011
     [Tags]
@@ -82,24 +90,17 @@ Lead partner can view both documents
     And the user goes back to the previous page
     When the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
-    And the user goes back to the previous page
-    #TODO Go back doesnt seem to work
-#    And the user should see the element    link=What's the status of each of my partners?
+    And the user navigates to the page    ${project_in_setup_page}
+    And the user should see the element    link=What's the status of each of my partners?
+    #TODO uncomment when INFUND-4735 is done  and INFUND-4744(status should be waiting)
 #    When the user clicks the button/link    link=What's the status of each of my partners?
-#    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(6)
-#    And the user goes back to the previous page
-
-Lead partner cannot remove either document
-    [Documentation]    INFUND-3011
-    [Tags]    Pending
-    # Pending due to INFUND-4253
-    When the user should not see the text in the page    Remove
-    And the user should not see the element    name=removeCollaborationAgreementClicked
-    And the user should not see the element    name=removeExploitationPlanClicked
+#    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(6)
+    [Teardown]  the user navigates to the page    ${project_in_setup_page}
 
 Lead partner does not have the option to submit the mandatory documents
     [Documentation]    INFUND-3011
     [Tags]
+    [Setup]  the user navigates to the page    ${project_in_setup_page}/partner/documents
     When the user should not see an error in the page
     And the user should not see the element    jQuery=.button.enabled:contains("Submit partner documents")
 
@@ -118,28 +119,22 @@ Non-lead partner can view both documents
     And the user goes back to the previous page
     When the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
-    And the user goes back to the previous page
-    #TODO Go back doesnt seem to work
-#    And the user should see the element    link=What's the status of each of my partners?
+    And the user navigates to the page    ${project_in_setup_page}
+    #TODO uncomment when INFUND-4735 is done
 #    When the user clicks the button/link    link=What's the status of each of my partners?
 #    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(6)
 #    And the user goes back to the previous page
 
-Non-lead partner cannot remove either document
+Non-lead partner cannot remove or submit right
     [Documentation]    INFUND-3013
     [Tags]
     When the user should not see the text in the page    Remove
     And the user should not see the element    name=removeCollaborationAgreementClicked
     And the user should not see the element    name=removeExploitationPlanClicked
-
-Non-lead partner does not have the option to submit the mandatory documents
-    [Documentation]    INFUND-3013
-    [Tags]
-    When the user should not see the element    jQuery=.button.enabled:contains("Submit partner documents")
-
+    And the user should not see the element    jQuery=.button.enabled:contains("Submit partner documents")
 
 PM can view both documents
-    [Documentation]    INFUND-3011
+    [Documentation]    INFUND-3011, INFUND-2621
     [Setup]    Logout as user
     [Tags]
     Given Guest user log-in    worth.email.test+projectlead@gmail.com    Passw0rd
@@ -150,11 +145,15 @@ PM can view both documents
     And the user goes back to the previous page
     When the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
-    And the user goes back to the previous page
+    And the user navigates to the page    ${project_in_setup_page}
+    #TODO update after INFUND-4735
+#    When the user clicks the button/link    link=What's the status of each of my partners?
+#    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(6)
 
 PM can remove the second document
     [Documentation]    INFUND-3011
     [Tags]
+    Given the user navigates to the page    ${project_in_setup_page}/partner/documents
     When the user clicks the button/link    name=removeExploitationPlanClicked
     Then the user should not see an error in the page
     [Teardown]    logout as user
@@ -207,10 +206,11 @@ Mandatory document submission
     [Documentation]    INFUND-3011
     [Setup]    guest user log-in    worth.email.test+projectlead@gmail.com    Passw0rd
     [Tags]
+    # This ticket assumes that Project_details suite has set as PM the 'test twenty'
     Given the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Other documents
     When the user clicks the button/link    jQuery=.button:contains("Submit partner documents")
-    And the user clicks the button/link    jQuery=.button:contains("Cancel")   # seems to be failing
+    And the user clicks the button/link    jQuery=.button:contains("Cancel")
     Then the user should see the element    name=removeExploitationPlanClicked    # testing here that the section has not become read-only
     When the user clicks the button/link    jQuery=.button:contains("Submit partner documents")
     And the user clicks the button/link    jQuery=.button:contains("Submit")

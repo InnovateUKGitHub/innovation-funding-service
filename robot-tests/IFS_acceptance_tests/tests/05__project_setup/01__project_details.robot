@@ -102,6 +102,7 @@ Lead partner can click the Dashboard link
 Lead partner can see the application overview
     [Documentation]    INFUND-2612
     [Tags]    HappyPath
+    Given the user navigates to the page    ${project_in_setup_page}
     When the user clicks the button/link    link=View application and feedback
     Then the user should see the text in the page    Congratulations, your application has been successful
     And the user should see the text in the page    Application questions
