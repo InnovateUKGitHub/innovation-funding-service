@@ -36,15 +36,6 @@ public class InviteProjectController {
     @Autowired
     private InviteProjectService inviteProjectService;
 
-//
-//    @Autowired
-//    private InviteService inviteService;
-
-//    @RequestMapping("/create-project-invite")
-//    public RestResult<InviteResultsResource> createProjectInvite(@RequestBody InviteOrganisationResource inviteOrganisationResource) {
-//        return inviteService.createApplicationInvites(inviteOrganisationResource).toPostCreateResponse();
-//    }
-
     @RequestMapping(value = PROJECT_INVITE_SAVE, method = RequestMethod.POST)
     public RestResult<Void> saveProjectInvites(@RequestBody @Valid InviteProjectResource inviteProjectResource) {
         return inviteProjectService.saveProjectInvite(inviteProjectResource).toPutResponse();

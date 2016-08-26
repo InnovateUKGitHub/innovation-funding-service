@@ -122,7 +122,6 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
         ProjectInvite projectInvite = newInvite().withProject(project).withOrganisation(organisation).withName("project name").withEmailAddress(user.getEmail()).build();
         InviteProjectResource inviteProjectResource = getMapper(InviteProjectMapper.class).mapToResource(projectInvite);
         when(inviteProjectMapperMock.mapToDomain(inviteProjectResource)).thenReturn(projectInvite);
-        //ServiceResult<Void> result = inviteProjectService.saveFinanceContactInvite(inviteProjectResource);
         ServiceResult<Void> result = inviteProjectService.saveProjectInvite(inviteProjectResource);
         assertTrue(result.isSuccess());
     }
@@ -137,7 +136,6 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
             ProjectInvite projectInviteNoName = newInvite().withProject(project).withOrganisation(organisation).withEmailAddress(user.getEmail()).build();
             InviteProjectResource projectInviteNoNameResource = getMapper(InviteProjectMapper.class).mapToResource(projectInviteNoName);
             when(inviteProjectMapperMock.mapToDomain(projectInviteNoNameResource)).thenReturn(projectInviteNoName);
-            //ServiceResult<Void> result = inviteProjectService.saveFinanceContactInvite(projectInviteNoNameResource);
             ServiceResult<Void> result = inviteProjectService.saveProjectInvite(projectInviteNoNameResource);
             assertTrue(result.isFailure());
             assertTrue(result.getFailure().is(badRequestError("The Invite is not valid")));
@@ -147,7 +145,6 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
             ProjectInvite projectInviteNoEmail = newInvite().withProject(project).withOrganisation(organisation).withName("project name").build();
             InviteProjectResource projectInviteNoEmailResource = getMapper(InviteProjectMapper.class).mapToResource(projectInviteNoEmail);
             when(inviteProjectMapperMock.mapToDomain(projectInviteNoEmailResource)).thenReturn(projectInviteNoEmail);
-            //ServiceResult<Void> result = inviteProjectService.saveFinanceContactInvite(projectInviteNoEmailResource);
             ServiceResult<Void> result = inviteProjectService.saveProjectInvite(projectInviteNoEmailResource);
             assertTrue(result.isFailure());
             assertTrue(result.getFailure().is(badRequestError("The Invite is not valid")));
@@ -158,7 +155,6 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
             InviteProjectResource projectInviteNoOrganisationResource = getMapper(InviteProjectMapper.class).mapToResource(projectInviteNoOrganisation);
             when(inviteProjectMapperMock.mapToDomain(projectInviteNoOrganisationResource)).thenReturn(projectInviteNoOrganisation);
             ServiceResult<Void> result = inviteProjectService.saveProjectInvite(projectInviteNoOrganisationResource);
-            //ServiceResult<Void> result = inviteProjectService.saveFinanceContactInvite(projectInviteNoOrganisationResource);
             assertTrue(result.isFailure());
             assertTrue(result.getFailure().is(badRequestError("The Invite is not valid")));
         }
@@ -168,7 +164,6 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
             InviteProjectResource projectInviteNoProjectResource = getMapper(InviteProjectMapper.class).mapToResource(projectInviteNoProject);
             when(inviteProjectMapperMock.mapToDomain(projectInviteNoProjectResource)).thenReturn(projectInviteNoProject);
             ServiceResult<Void> result = inviteProjectService.saveProjectInvite(projectInviteNoProjectResource);
-            //ServiceResult<Void> result = inviteProjectService.saveFinanceContactInvite(projectInviteNoProjectResource);
             assertTrue(result.isFailure());
             assertTrue(result.getFailure().is(badRequestError("The Invite is not valid")));
         }

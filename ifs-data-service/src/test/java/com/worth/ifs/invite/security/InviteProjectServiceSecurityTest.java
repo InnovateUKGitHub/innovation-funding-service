@@ -82,11 +82,6 @@ public class InviteProjectServiceSecurityTest extends BaseServiceSecurityTest<In
 
         static final int ARRAY_SIZE_FOR_POST_FILTER_TESTS = 2;
 
-//        @Override
-//        public ServiceResult<Void> saveFinanceContactInvite(@P("inviteProjectResource") InviteProjectResource inviteProjectResource) {
-//            return null;
-//        }
-
         @Override
         public ServiceResult<Void> saveProjectInvite(@P("inviteProjectResource") InviteProjectResource inviteProjectResource)  {
             return null;
@@ -116,8 +111,5 @@ public class InviteProjectServiceSecurityTest extends BaseServiceSecurityTest<In
         public ServiceResult<UserResource> getUserByInviteHash(@P("hash") String hash) {
             return null;
         }
-
-
-
     }
 }

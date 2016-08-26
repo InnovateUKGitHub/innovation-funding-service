@@ -7,12 +7,14 @@ import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.bankdetails.form.ProjectDetailsAddressForm;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.project.viewmodel.*;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
+import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -235,8 +237,18 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 withRoleName(PARTNER).
                 build(2);
 
+        InviteProjectResource inviteProjectResource = new InviteProjectResource("TestName", "test@test.com", 8L);
+
+        inviteProjectResource.setOrganisation(8L);
+        inviteProjectResource.setInviteOrganisation(8L);
+        inviteProjectResource.setApplicationId(999L);
+        inviteProjectResource.setLeadOrganisation("test Org");
+
+
         when(projectService.getProjectUsersForProject(123L)).thenReturn(availableUsers);
         when(projectService.updateFinanceContact(123L, 8L, 789L)).thenReturn(serviceSuccess());
+        //when(createProjectInviteResource).thenReturn(inviteProjectResource);
+
 
         mockMvc.perform(post("/project/{id}/details/finance-contact", 123L).
                     contentType(MediaType.APPLICATION_FORM_URLENCODED).
@@ -247,6 +259,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 andReturn();
 
         verify(projectService).updateFinanceContact(123L, 8L, 789L);
+
     }
 
     @Test

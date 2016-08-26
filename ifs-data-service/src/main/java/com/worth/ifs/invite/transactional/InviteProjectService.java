@@ -2,9 +2,7 @@ package com.worth.ifs.invite.transactional;
 
 
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteProjectResource;
-import com.worth.ifs.invite.resource.InviteResultsResource;
 import com.worth.ifs.security.SecuredBySpring;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.security.access.method.P;
@@ -16,12 +14,6 @@ import java.util.List;
 
 public interface InviteProjectService {
 
-//    @PreAuthorize("hasPermission(#inviteProjectResource, 'SAVE_PROJECT_INVITE')")  //SEND ??
-//    ServiceResult<InviteResultsResource> createProjectInvite();  //@P("inviteOrganisationResource") final InviteOrganisationResource inviteOrganisationResource
-
-//  BKD
-//    @PreAuthorize("hasPermission(#inviteProjectResource, 'SAVE_PROJECT_INVITE')")
-//    ServiceResult<Void> saveFinanceContactInvite(@P("inviteProjectResource") InviteProjectResource inviteProjectResource);
 
     @PreAuthorize("hasPermission(#inviteProjectResource, 'SAVE_PROJECT_INVITE')")
     ServiceResult<Void> saveProjectInvite(@P("inviteProjectResource") InviteProjectResource inviteProjectResource);

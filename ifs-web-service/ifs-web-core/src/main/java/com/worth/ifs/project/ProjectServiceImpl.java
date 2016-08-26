@@ -239,13 +239,11 @@ public class ProjectServiceImpl implements ProjectService {
     public ServiceResult<Void> saveProjectInvite (InviteProjectResource inviteProjectResource)
     {
         return projectInviteRestService.saveProjectInvite (inviteProjectResource).toServiceResult();
-
     }
 
     @Override
     public ServiceResult<Void> inviteFinanceContact (Long projectId, InviteProjectResource inviteProjectResource)
     {
-        System.out.println("IN ProjectServiceImpl inviteFinanceContact: " + inviteProjectResource.getName());
         return projectRestService.inviteFinanceContact (projectId, inviteProjectResource).toServiceResult();
     }
 }
