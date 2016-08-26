@@ -5,6 +5,7 @@ import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.CompetitionService;
+import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.bankdetails.form.ProjectDetailsAddressForm;
 import com.worth.ifs.bankdetails.resource.BankDetailsResource;
 import com.worth.ifs.bankdetails.service.BankDetailsRestService;
@@ -13,6 +14,10 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.form.AddressForm;
+import com.worth.ifs.invite.resource.ApplicationInviteResource;
+import com.worth.ifs.invite.resource.InviteProjectResource;
+import com.worth.ifs.invite.resource.InviteResource;
+import com.worth.ifs.invite.service.ProjectInviteRestService;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.organisation.service.OrganisationAddressRestService;
 import com.worth.ifs.project.consortiumoverview.viewmodel.ConsortiumPartnerStatus;
@@ -40,6 +45,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.*;
@@ -75,7 +81,10 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
     @Autowired
     private CompetitionService competitionService;
-    
+
+    @Autowired
+    private OrganisationService organisationService;
+
     @Autowired
     private OrganisationRestService organisationRestService;
 
@@ -148,11 +157,41 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
             ServiceResult<Void> updateResult = projectService.updateFinanceContact(projectId, form.getOrganisation(), form.getFinanceContact());
 
+            InviteProjectResource inviteProjectResource = createProjectInviteResource (projectId, form.getFinanceContact(), form.getOrganisation());
+
+            //TODO: Add invite to db
+            projectService.saveProjectInvite(inviteProjectResource);
+
+            //TODO: Send Invitation
+            projectService.inviteFinanceContact(projectId, inviteProjectResource).toPostResponse();
+
             return validationHandler.addAnyErrors(updateResult, toField("financeContact")).
                     failNowOrSucceedWith(failureView, () -> redirectToProjectDetails(projectId));
         });
     }
-    
+
+    //TODO: Productionise
+    private InviteProjectResource createProjectInviteResource(Long projectId, Long userId, Long organisationId) {
+
+        UserResource user = userService.findById (userId);
+        ProjectResource projectResource = projectService.getById(projectId);
+        OrganisationResource org = organisationService.getOrganisationById(organisationId);
+
+        InviteProjectResource inviteResource = new InviteProjectResource(user.getName(), user.getEmail(), projectId);
+        inviteResource.setOrganisation(organisationId);
+
+        System.out.println ("inviteResource.setInviteOrganisationName(:  org.getName()" + org.getName());
+        inviteResource.setInviteOrganisation(organisationId);
+        inviteResource.setInviteOrganisationName(org.getName());
+        inviteResource.setApplicationId(projectResource.getApplication());
+        inviteResource.setLeadOrganisation(applicationService.getLeadOrganisation(projectResource.getApplication()).getName());
+
+        return inviteResource;
+    }
+
+
+
+
     @RequestMapping(value = "/{projectId}/details/project-manager", method = RequestMethod.GET)
     public String viewProjectManager(Model model, @PathVariable("projectId") final Long projectId,
                                      @ModelAttribute("loggedInUser") UserResource loggedInUser) throws InterruptedException, ExecutionException {

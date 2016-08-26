@@ -66,18 +66,47 @@ public class InviteProjectServiceImpl extends BaseTransactionalService implement
         validator.afterPropertiesSet();
     }
 
+//BKD
+//    @Override
+//    public ServiceResult<Void> saveFinanceContactInvite(@P("inviteProjectResource") InviteProjectResource inviteProjectResource) {
+//
+//        if (inviteProjectResourceIsValid(inviteProjectResource)) {
+//            ProjectInvite projectInvite = inviteMapper.mapToDomain(inviteProjectResource);
+//            Errors errors = new BeanPropertyBindingResult(projectInvite, projectInvite.getClass().getName());
+//            validator.validate(projectInvite, errors);
+//            if (errors.hasErrors()) {
+//                errors.getFieldErrors().stream().peek(e -> LOG.debug(format("Field error: %s ", e.getField())));
+//                return serviceFailure(badRequestError(errors.toString()));
+//            } else {
+//                //BKD
+//                //projectInvite.getHash();
+//                projectInvite.generateHash();
+//                inviteProjectRepository.save(projectInvite);
+//                return serviceSuccess();
+//            }
+//        }
+//        return serviceFailure(badRequestError("The Invite is not valid"));
+//
+//    }
+
     @Override
-    public ServiceResult<Void> saveFinanceContactInvite(@P("inviteProjectResource") InviteProjectResource inviteProjectResource) {
+    public ServiceResult<Void> saveProjectInvite(@P("inviteProjectResource") InviteProjectResource inviteProjectResource) {
+        System.out.println("IN InviteProjectServiceImpl saveProjectInvite");
 
         if (inviteProjectResourceIsValid(inviteProjectResource)) {
             ProjectInvite projectInvite = inviteMapper.mapToDomain(inviteProjectResource);
             Errors errors = new BeanPropertyBindingResult(projectInvite, projectInvite.getClass().getName());
             validator.validate(projectInvite, errors);
+
             if (errors.hasErrors()) {
+                System.out.println("IN InviteProjectServiceImpl saveProjectInvite ERRORS");
                 errors.getFieldErrors().stream().peek(e -> LOG.debug(format("Field error: %s ", e.getField())));
                 return serviceFailure(badRequestError(errors.toString()));
             } else {
-                projectInvite.getHash();
+                //BKD
+                //projectInvite.getHash();
+                System.out.println("IN InviteProjectServiceImpl saveProjectInvite SAVING");
+                projectInvite.generateHash();
                 inviteProjectRepository.save(projectInvite);
                 return serviceSuccess();
             }
@@ -85,7 +114,6 @@ public class InviteProjectServiceImpl extends BaseTransactionalService implement
         return serviceFailure(badRequestError("The Invite is not valid"));
 
     }
-
 
     @Override
     public ServiceResult<InviteProjectResource> getInviteByHash(String hash) {
@@ -131,11 +159,13 @@ public class InviteProjectServiceImpl extends BaseTransactionalService implement
     }
 
     private boolean inviteProjectResourceIsValid(InviteProjectResource inviteProjectResource) {
-
+        System.out.println("IN inviteProjectResourceIsValid");
         if (StringUtils.isEmpty(inviteProjectResource.getEmail()) || StringUtils.isEmpty(inviteProjectResource.getName())
                 || inviteProjectResource.getProject() == null ||inviteProjectResource.getOrganisation() == null ){
+            System.out.println("IN inviteProjectResourceIsValid: FALSE");
             return false;
         }
+        System.out.println("IN inviteProjectResourceIsValid: TRUE");
         return true;
     }
 

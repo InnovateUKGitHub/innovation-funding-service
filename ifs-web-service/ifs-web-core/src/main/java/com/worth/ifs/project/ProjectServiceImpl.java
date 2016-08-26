@@ -6,6 +6,8 @@ import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
+import com.worth.ifs.invite.resource.InviteProjectResource;
+import com.worth.ifs.invite.service.ProjectInviteRestService;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
@@ -33,6 +35,9 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Autowired
     private ProjectRestService projectRestService;
+
+    @Autowired
+    private ProjectInviteRestService projectInviteRestService;
 
     @Autowired
     private ApplicationService applicationService;
@@ -228,5 +233,19 @@ public class ProjectServiceImpl implements ProjectService {
     private List<ProjectUserResource> getProjectUsersWithPartnerRole(Long projectId) {
         List<ProjectUserResource> projectUsers = getProjectUsersForProject(projectId);
         return simpleFilter(projectUsers, pu -> PARTNER.getName().equals(pu.getRoleName()));
+    }
+
+    @Override
+    public ServiceResult<Void> saveProjectInvite (InviteProjectResource inviteProjectResource)
+    {
+        return projectInviteRestService.saveProjectInvite (inviteProjectResource).toServiceResult();
+
+    }
+
+    @Override
+    public ServiceResult<Void> inviteFinanceContact (Long projectId, InviteProjectResource inviteProjectResource)
+    {
+        System.out.println("IN ProjectServiceImpl inviteFinanceContact: " + inviteProjectResource.getName());
+        return projectRestService.inviteFinanceContact (projectId, inviteProjectResource).toServiceResult();
     }
 }

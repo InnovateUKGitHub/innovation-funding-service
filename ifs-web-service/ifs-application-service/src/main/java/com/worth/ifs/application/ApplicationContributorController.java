@@ -110,7 +110,8 @@ public class ApplicationContributorController{
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(application);
         OrganisationResource leadOrganisation = organisationService.getOrganisationById(leadApplicantProcessRole.getOrganisation());
-        UserResource leadApplicant = userService.findById(leadApplicantProcessRole.getUser());
+        UserResource leadApplicant =
+                userService.findById(leadApplicantProcessRole.getUser());
 
         List<InviteOrganisationResource> savedInvites = getSavedInviteOrganisations(application);
         Map<Long, InviteOrganisationResource> organisationInvites = savedInvites.stream().collect(Collectors.toMap(InviteOrganisationResource::getId, Function.identity()));

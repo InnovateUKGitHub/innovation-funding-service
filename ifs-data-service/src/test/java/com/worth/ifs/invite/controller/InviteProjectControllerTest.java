@@ -57,7 +57,7 @@ public class InviteProjectControllerTest  extends BaseControllerMockMVCTest<Invi
     public void saveProjectInviteWhenErrorWhilstSaving() throws Exception {
 
 
-        when(inviteProjectServiceMock.saveFinanceContactInvite(inviteProjectResource)).
+        when(inviteProjectServiceMock.saveProjectInvite(inviteProjectResource)).
                 thenReturn(serviceFailure(badRequestError("The Invite is not valid")));
 
 
@@ -66,7 +66,7 @@ public class InviteProjectControllerTest  extends BaseControllerMockMVCTest<Invi
                 .content(toJson(inviteProjectResource)))
                 .andExpect(status().isBadRequest());
 
-        verify(inviteProjectServiceMock).saveFinanceContactInvite(inviteProjectResource);
+        verify(inviteProjectServiceMock).saveProjectInvite(inviteProjectResource);
         
     }
 
@@ -74,7 +74,7 @@ public class InviteProjectControllerTest  extends BaseControllerMockMVCTest<Invi
     public void saveProjectInviteSuccess() throws Exception {
 
 
-        when(inviteProjectServiceMock.saveFinanceContactInvite(inviteProjectResource)).thenReturn(serviceSuccess());
+        when(inviteProjectServiceMock.saveProjectInvite(inviteProjectResource)).thenReturn(serviceSuccess());
 
 
         mockMvc.perform(put("/projectinvite/save-finance-contact-invite")
@@ -82,7 +82,7 @@ public class InviteProjectControllerTest  extends BaseControllerMockMVCTest<Invi
                 .content(toJson(inviteProjectResource)))
                 .andExpect(status().isOk());
 
-        verify(inviteProjectServiceMock).saveFinanceContactInvite(inviteProjectResource);
+        verify(inviteProjectServiceMock).saveProjectInvite(inviteProjectResource);
 
 
     }

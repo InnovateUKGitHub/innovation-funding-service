@@ -9,4 +9,5 @@ public interface ProjectInviteRestService {
     RestResult<UserResource> getUser(String inviteHash);
     RestResult<InviteProjectResource> getInviteByHash(String hash);
     RestResult<Void> acceptInvite(String inviteHash, Long userId);
+    RestResult<Void> saveProjectInvite(InviteProjectResource inviteProjectResource);
 }

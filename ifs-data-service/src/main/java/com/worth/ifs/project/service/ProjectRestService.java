@@ -3,7 +3,9 @@ package com.worth.ifs.project.service;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
+import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
@@ -41,5 +43,6 @@ public interface ProjectRestService {
     RestResult<Boolean> isOtherDocumentsSubmitAllowed(Long projectId);
     RestResult<Void> setPartnerDocumentsSubmitted(Long projectId);
     RestResult<Void> addPartner(Long projectId, Long userId, Long organisationId);
+    RestResult<Void> inviteFinanceContact(Long projectId, InviteProjectResource inviteResource);
 
 }
