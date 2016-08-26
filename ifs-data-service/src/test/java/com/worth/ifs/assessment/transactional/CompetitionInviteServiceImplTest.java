@@ -344,4 +344,53 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
         inOrder.verify(competitionParticipantRepositoryMock, calls(1)).getByInviteHash("inviteHash");
         inOrder.verifyNoMoreInteractions();
     }
+
+    @Test
+    public void rejectInvite_unknownRejectionReason() {
+        competitionInviteService.openInvite("inviteHash");
+
+        assertEquals(ParticipantStatus.PENDING, competitionParticipant.getStatus());
+
+
+        RejectionReasonResource rejectionReasonResource = RejectionReasonResourceBuilder
+                .newRejectionReasonResource()
+                .withId(2L)
+                .build();
+
+        ServiceResult<Void> serviceResult = competitionInviteService.rejectInvite("inviteHash", rejectionReasonResource, "too busy");
+
+        assertTrue(serviceResult.isFailure());
+        assertEquals(GENERAL_NOT_FOUND.getErrorKey(), serviceResult.getFailure().getErrors().get(0).getErrorKey());
+
+        assertEquals(ParticipantStatus.PENDING, competitionParticipant.getStatus());
+
+        InOrder inOrder = inOrder(competitionParticipantRepositoryMock, rejectionReasonRepositoryMock);
+        inOrder.verify(rejectionReasonRepositoryMock, calls(1)).findOne(2L);
+
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void rejectInvite_emptyComment() {
+        competitionInviteService.openInvite("inviteHash");
+
+        assertEquals(ParticipantStatus.PENDING, competitionParticipant.getStatus());
+
+
+        RejectionReasonResource rejectionReasonResource = RejectionReasonResourceBuilder
+                .newRejectionReasonResource()
+                .withId(1L)
+                .build();
+
+        ServiceResult<Void> serviceResult = competitionInviteService.rejectInvite("inviteHash", rejectionReasonResource, "");
+
+        assertTrue(serviceResult.isFailure());
+        assertTrue(serviceResult.getFailure().is(COMPETITION_PARTICIPANT_CANNOT_REJECT_WITHOUT_A_REASON_COMMENT));
+
+        InOrder inOrder = inOrder(competitionParticipantRepositoryMock, rejectionReasonRepositoryMock);
+        inOrder.verify(rejectionReasonRepositoryMock, calls(1)).findOne(1L);
+        inOrder.verify(competitionParticipantRepositoryMock, calls(1)).getByInviteHash("inviteHash");
+
+        inOrder.verifyNoMoreInteractions();
+    }
 }

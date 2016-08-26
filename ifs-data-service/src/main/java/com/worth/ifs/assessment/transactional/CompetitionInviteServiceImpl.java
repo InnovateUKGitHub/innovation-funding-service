@@ -100,6 +100,9 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
         else if (participant.getStatus() == REJECTED) {
             return ServiceResult.serviceFailure(COMPETITION_PARTICIPANT_CANNOT_REJECT_ALREADY_REJECTED_INVITE);
         }
+        else if (rejectionComment.isEmpty()) {
+            return ServiceResult.serviceFailure(COMPETITION_PARTICIPANT_CANNOT_REJECT_WITHOUT_A_REASON_COMMENT);
+        }
         else {
             return ServiceResult.serviceSuccess(competitionParticipantRepository.save(participant.reject(rejectionReason, rejectionComment)));
         }

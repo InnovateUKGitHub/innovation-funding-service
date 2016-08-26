@@ -124,7 +124,8 @@ public enum CommonFailureKeys implements ErrorTemplate {
     COMPETITION_PARTICIPANT_CANNOT_ACCEPT_ALREADY_ACCEPTED_INVITE("Cannot accept a CompetitionParticipant that has already been accepted", BAD_REQUEST),
     COMPETITION_PARTICIPANT_CANNOT_REJECT_ALREADY_ACCEPTED_INVITE("Cannot reject a CompetitionParticipant that has already been accepted", BAD_REQUEST),
     COMPETITION_PARTICIPANT_CANNOT_ACCEPT_ALREADY_REJECTED_INVITE("Cannot accept a CompetitionParticipant that has already been rejected", BAD_REQUEST),
-    COMPETITION_PARTICIPANT_CANNOT_REJECT_ALREADY_REJECTED_INVITE("Cannot reject a CompetitionParticipant that has already been rejected", BAD_REQUEST)
+    COMPETITION_PARTICIPANT_CANNOT_REJECT_ALREADY_REJECTED_INVITE("Cannot reject a CompetitionParticipant that has already been rejected", BAD_REQUEST),
+    COMPETITION_PARTICIPANT_CANNOT_REJECT_WITHOUT_A_REASON_COMMENT("Cannot reject a CompetitionParticipant without a reason comment", BAD_REQUEST)
     ;
 
     private ErrorTemplate errorTemplate;
