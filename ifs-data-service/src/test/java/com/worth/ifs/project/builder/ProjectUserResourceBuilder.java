@@ -64,4 +64,13 @@ public class ProjectUserResourceBuilder extends BaseBuilder<ProjectUserResource,
     public ProjectUserResourceBuilder withUserName(String... username) {
         return withArray((name, projectUser) -> projectUser.setUserName(name), username);
     }
+
+    public ProjectUserResourceBuilder withEmail(String... email) {
+        return withArray((name, projectUser) -> projectUser.setEmail(name), email);
+    }
+
+    public ProjectUserResourceBuilder withPhoneNumber(String... phoneNumber) {
+        return withArray((number, projectUser) -> projectUser.setPhoneNumber(number), phoneNumber);
+    }
+
 }
