@@ -1,12 +1,6 @@
 package com.worth.ifs.project.otherdocuments.form;
 
 import com.worth.ifs.controller.BaseBindingResultTarget;
-import com.worth.ifs.util.BooleanFunctions;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
-
-import static com.sun.jmx.snmp.EnumRowStatus.active;
 
 /**
  * Form backing the Other Documents page
@@ -15,7 +9,7 @@ public class ProjectOtherDocumentsForm extends BaseBindingResultTarget {
 
     private boolean rejected;
     private boolean approved;
-    private List<String> rejectionReasons;
+    private String rejectionReason;
 
     public boolean isApproved(){return this.approved;}
 
@@ -25,12 +19,12 @@ public class ProjectOtherDocumentsForm extends BaseBindingResultTarget {
 
     public void setRejected(boolean rejected){this.rejected = rejected;}
 
-    public List<String> getRejectionReasons() {
-        return rejectionReasons;
+    public String getRejectionReason() {
+        return rejectionReason;
     }
 
-    public void setRejectionReasons(List<String> rejectionReasons) {
-        this.rejectionReasons = rejectionReasons;
+    public void setRejectionReason(String rejectionReasons) {
+        this.rejectionReason = rejectionReason;
     }
 
 

@@ -22,14 +22,14 @@ public class ProjectOtherDocumentsViewModel implements BasicProjectDetailsViewMo
     private String projectManagerEmail;
 
     //TODO: Probably a new projectDocuments object
-    private List<String> rejectionReasons;
+    private String rejectionReason;
     private boolean approved;
     private boolean rejected;
 
     public ProjectOtherDocumentsViewModel(Long projectId, String projectName, String leadPartnerOrganisationName, String projectManagerName,
                                           String projectManagerTelephone, String projectManagerEmail, FileDetailsViewModel collaborationAgreementFileDetails,
                                           FileDetailsViewModel exploitationPlanFileDetails, List<String> partnerOrganisationNames, boolean approved,
-                                          boolean rejected, List<String> rejectionReasons
+                                          boolean rejected, String rejectionReason
                                           ) {
         this.projectId = projectId;
         this.projectName = projectName;
@@ -42,7 +42,7 @@ public class ProjectOtherDocumentsViewModel implements BasicProjectDetailsViewMo
         this.partnerOrganisationNames = partnerOrganisationNames;
         this.approved = approved;
         this.rejected = rejected;
-        this.rejectionReasons = rejectionReasons;
+        this.rejectionReason = rejectionReason;
     }
 
     @Override
@@ -76,15 +76,15 @@ public class ProjectOtherDocumentsViewModel implements BasicProjectDetailsViewMo
     public String getProjectManagerEmail() { return projectManagerEmail;}
 
     public boolean isShowRejectionMessages() {
-        return !rejectionReasons.isEmpty();
+        return rejectionReason != null;
     }
 
     public boolean isRejected() {
         return rejected;
     }
 
-    public List<String> getRejectionReasons() {
-        return rejectionReasons;
+    public String getRejectionReasons() {
+        return rejectionReason;
     }
 
     public boolean isApproved() {

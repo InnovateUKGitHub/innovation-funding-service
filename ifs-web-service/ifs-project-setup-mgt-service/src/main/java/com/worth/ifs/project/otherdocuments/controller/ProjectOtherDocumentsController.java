@@ -40,45 +40,19 @@ public class ProjectOtherDocumentsController {
     @Autowired
     private ProjectService projectService;
 
-
-    private void checkInCorrectStateToAdministerOtherDocumentsPage(Long projectId) {
-        ProjectResource project = projectService.getById(projectId);
-
-        //check what test should be made (same test that sets the dashboard flag ?)
-//        if (!project.isProjectDetailsSubmitted()) {
-//            throw new ForbiddenActionException("This project is not ready for documentation checking.  Not all the documents have been submitted");
-//        }
-    }
-
-
     @RequestMapping(method = GET)
     public String viewOtherDocumentsPage(Model model, @PathVariable("projectId") Long projectId,
                                          @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-
-        checkInCorrectStateToAdministerOtherDocumentsPage(projectId);
-
         return doViewOtherDocumentsPage(model, null, projectId, loggedInUser);
-
     }
 
     @RequestMapping(method = POST)
     public String acceptOrRejectOtherDocuments(Model model, @ModelAttribute(FORM_ATTR) ProjectOtherDocumentsForm form,
                                                @PathVariable("projectId") Long projectId,
-                                               //  @ModelAttribute("observations") String  rejectionReason,
                                                @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        checkInCorrectStateToAdministerOtherDocumentsPage(projectId);
-
-        //TODO:  Check for cancelled action ?
-        boolean rejected = form.isRejected();
-        boolean approved = form.isApproved();
-        List<String> rejectionReasons = form.getRejectionReasons();
-
-        //TODO: Add these attributes to the project / project documents object when we have created it
-
-
+        //TODO Needs further work -  INFUND-4621 INFUND-4620
         return doViewOtherDocumentsPage(model, form, projectId, loggedInUser);
-
     }
 
     @RequestMapping(value = "/collaboration-agreement", method = GET)
@@ -108,16 +82,7 @@ public class ProjectOtherDocumentsController {
 
         ProjectOtherDocumentsViewModel viewModel = getOtherDocumentsViewModel(form, projectId, loggedInUser);
         model.addAttribute("model", viewModel);
-
-        if (viewModel.isApproved()) {
-            return "project/other-documents-accepted";
-        } else if (viewModel.isRejected()) {
-            return "project/other-documents-rejected";
-        } else {
-            form = new ProjectOtherDocumentsForm();
-            model.addAttribute("form", form);
-            return "project/other-documents-review";
-        }
+        return "project/other-documents";
     }
 
     private ProjectOtherDocumentsViewModel getOtherDocumentsViewModel(ProjectOtherDocumentsForm form, Long projectId, UserResource loggedInUser) {
@@ -143,7 +108,7 @@ public class ProjectOtherDocumentsController {
                 collaborationAgreement.map(FileDetailsViewModel::new).orElse(null),
                 exploitationPlan.map(FileDetailsViewModel::new).orElse(null),
                 partnerOrganisationNames, form != null && form.isApproved(),
-                form != null && form.isRejected(), form != null ? form.getRejectionReasons() : null);
+                form != null && form.isRejected(), form != null ? form.getRejectionReason() : null);
     }
 
     private ResponseEntity<ByteArrayResource> returnFileIfFoundOrThrowNotFoundException(Long projectId, Optional<ByteArrayResource> content, Optional<FileEntryResource> fileDetails) {
@@ -154,16 +119,10 @@ public class ProjectOtherDocumentsController {
         }
     }
 
-    private String redirectToOtherDocumentsPage(Long projectId) {
-        return "redirect:/project/" + projectId + "/partner/documents";
-    }
-
-
     private Optional<ProjectUserResource> getProjectManagerResource(ProjectResource project) {
         List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(project.getId());
         Optional<ProjectUserResource> projectManager = simpleFindFirst(projectUsers, pu -> PROJECT_MANAGER.getName().equals(pu.getRoleName()));
 
         return projectManager;
     }
-
 }

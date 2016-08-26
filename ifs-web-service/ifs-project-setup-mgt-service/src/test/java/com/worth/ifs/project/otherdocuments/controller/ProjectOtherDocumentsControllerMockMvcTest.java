@@ -8,7 +8,6 @@ import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 import org.junit.Test;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.*;
@@ -70,13 +69,12 @@ public class ProjectOtherDocumentsControllerMockMvcTest extends BaseControllerMo
         setupViewOtherDocumentsTestExpectations (project);
 
         MvcResult result = mockMvc.perform(get("/project/123/partner/documents")).
-                andExpect(view().name("project/other-documents-review")).
+                andExpect(view().name("project/other-documents")).
                 andReturn();
 
         Map<String, Object> modelMap = result.getModelAndView().getModel();
         ProjectOtherDocumentsViewModel model = (ProjectOtherDocumentsViewModel) result.getModelAndView().getModel().get("model");
 
-        // assert the project details are correct
         assertProjectDetailsPrepopulatedOk(model);
 
     }
@@ -95,7 +93,7 @@ public class ProjectOtherDocumentsControllerMockMvcTest extends BaseControllerMo
         when(projectService.getExploitationPlanFileDetails(projectId)).thenReturn(Optional.of(existingExplotationPlan));
 
         MvcResult result = mockMvc.perform(get("/project/123/partner/documents")).
-                andExpect(view().name("project/other-documents-review")).
+                andExpect(view().name("project/other-documents")).
                 andReturn();
 
         Map<String, Object> modelMap = result.getModelAndView().getModel();
@@ -108,27 +106,6 @@ public class ProjectOtherDocumentsControllerMockMvcTest extends BaseControllerMo
         FileDetailsViewModel expectedExploitationPlan = new FileDetailsViewModel(existingExplotationPlan);
 
    }
-
-    @Test
-    public void testDownloadCollaborationAgreement() throws Exception {
-
-        FileEntryResource fileDetails = newFileEntryResource().withName("A name").build();
-        ByteArrayResource fileContents = new ByteArrayResource("My content!".getBytes());
-
-        when(projectService.getCollaborationAgreementFile(123L)).
-                thenReturn(Optional.of(fileContents));
-
-        when(projectService.getCollaborationAgreementFileDetails(123L)).
-                thenReturn(Optional.of(fileDetails));
-
-        MvcResult result = mockMvc.perform(get("/project/123/partner/documents/collaboration-agreement")).
-                andExpect(status().isOk()).
-                andReturn();
-
-        assertEquals("My content!", result.getResponse().getContentAsString());
-        assertEquals("inline; filename=\"" + fileDetails.getName() + "\"",
-                result.getResponse().getHeader("Content-Disposition"));
-    }
 
     @Test
     public void testDownloadCollaborationAgreementButFileDoesntExist() throws Exception {
@@ -144,26 +121,6 @@ public class ProjectOtherDocumentsControllerMockMvcTest extends BaseControllerMo
                 andExpect(view().name("404"));
     }
 
-    @Test
-    public void testDownloadExploitationPlan() throws Exception {
-
-        FileEntryResource fileDetails = newFileEntryResource().withName("A name").build();
-        ByteArrayResource fileContents = new ByteArrayResource("My content!".getBytes());
-
-        when(projectService.getExploitationPlanFile(123L)).
-                thenReturn(Optional.of(fileContents));
-
-        when(projectService.getExploitationPlanFileDetails(123L)).
-                thenReturn(Optional.of(fileDetails));
-
-        MvcResult result = mockMvc.perform(get("/project/123/partner/documents/exploitation-plan")).
-                andExpect(status().isOk()).
-                andReturn();
-
-        assertEquals("My content!", result.getResponse().getContentAsString());
-        assertEquals("inline; filename=\"" + fileDetails.getName() + "\"",
-                result.getResponse().getHeader("Content-Disposition"));
-    }
 
     @Test
     public void testDownloadExploitationPlanButFileDoesntExist() throws Exception {

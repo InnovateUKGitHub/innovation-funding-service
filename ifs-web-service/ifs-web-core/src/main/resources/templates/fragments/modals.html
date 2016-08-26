@@ -245,11 +245,11 @@
             They will then need to provide new versions of the documents before the project can begin.</p>
         <hr/>
         <form class="column-half alignright-button"
-              th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}(rejected=true,rejectionReasons=${rejectionReasons})}" th:object="${form}" method="post">
+              th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}(rejected=true,rejectionReasonsfdgdgd=${rejectionReason})}" th:object="${form}" method="post">
 
             <div class="form-group">
                 <label for="rejection-observations" class="form-label">Please provide a reason for rejection.</label>
-                <textarea th:field="*{rejectionReasons}" id="rejection-observations" name="observations" class="form-control"></textarea>
+                <textarea th:field="*{rejectionReason}" id="rejection-observations" name="observations" class="form-control"></textarea>
             </div>
 
             <hr/>
