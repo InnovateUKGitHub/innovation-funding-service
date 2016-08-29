@@ -34,9 +34,8 @@ Academic finances should be editable when lead marks them as complete
 
 Academic finance validations
     [Documentation]    INFUND-2399
-    [Tags]    HappyPath    Pending
+    [Tags]    HappyPath
     [Setup]    Guest user log-in    ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
-    #Pending INFUND-4057
     When The user navigates to the academic application finances
     And the applicant enters invalid inputs
     Mark academic finances as complete
@@ -123,8 +122,7 @@ Academic finances JeS link showing
 
 Mark all as complete
     [Documentation]    INFUND-918
-    [Tags]    Pending
-    # Pending INFUND-4057
+    [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Mark all as complete")
     Then the user redirects to the page    Please provide Innovate UK with information about your project.    Application overview
     and the user navigates to the finance overview of the academic
@@ -132,16 +130,14 @@ Mark all as complete
 
 User should not be able to edit or upload the form
     [Documentation]    INFUND-2437
-    [Tags]    Pending
-    #Pending INFUND-4057
+    [Tags]
     When The user navigates to the academic application finances
     Then the user should not see the element    jQuery=button:contains("Remove")
     And the user should see the element    css=#incurred-staff[readonly]
 
 File delete should not be allowed when marked as complete
     [Documentation]    INFUND-2437
-    [Tags]    Pending
-    #Pending INFUND-4057
+    [Tags]
     When The user navigates to the academic application finances
     Then the user should not see the text in the page    Remove
 
@@ -149,8 +145,7 @@ Academic finance overview
     [Documentation]    INFUND-917
     ...
     ...    INFUND-2399
-    [Tags]    Pending
-    #Pending INFUND-4057
+    [Tags]
     Given the user navigates to the finance overview of the academic
     Then the finance table should be correct
     When the user clicks the button/link    link=testing.pdf
