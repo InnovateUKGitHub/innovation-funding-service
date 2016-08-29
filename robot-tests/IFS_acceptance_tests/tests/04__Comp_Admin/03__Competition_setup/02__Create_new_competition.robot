@@ -19,7 +19,6 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...
 ...               INFUND-4682 Initial details can be saved with an opening date in the past
 ...
-...
 ...               INFUND-2980 As a Competition Executive I want to see a newly created competition listed in the Competition Dashboard so that I can view and update further details
 ...
 ...               INFUND-2993 As a competitions team member I want to be able to add milestones when creating my competition so these can be used manage its progress
@@ -38,21 +37,12 @@ Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot    # TO
 *** Test Cases ***
 User can create a new competition
     [Documentation]    INFUND-2945
-    ...
-    ...
     ...    INFUND-2982
-    ...
-    ...
     ...    INFUND-2983
-    ...
-    ...
     ...    INFUND-2986
-    ...
-    ...
     ...    IFUND-3888
-    ...
-    ...
     ...    INFUND-3002
+    ...    INFUND-2980
     [Tags]    HappyPath
     Given the user clicks the button/link    id=section-3
     When the user clicks the button/link    jQuery=.button:contains("Create competition")
@@ -63,7 +53,7 @@ New competition shows in Preparation section with the default name
     [Documentation]    INFUND-2980
     Given The user clicks the button/link    link=All competitions
     And The user clicks the button/link    id=section-3
-    Then the competition should show in the correct section    css=section:nth-child(4) > ul > li:nth-child(2)    No competition title defined    #this keyword checks if the new application shows in the second line of the "In preparation" competitions
+    Then the competition should show in the correct section    css=section:nth-child(4) li:nth-child(2)    No competition title defined    #this keyword checks if the new application shows in the second line of the "In preparation" competitions
 
 Competition code validation
     [Documentation]    INFUND-2985
@@ -71,7 +61,7 @@ Competition code validation
     ...    INFUND-3182
     ...
     ...    IFUND-3888
-    [Setup]    Then the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
+    [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
     Given the user clicks the button/link    link=Funding Information
     When the user clicks the button/link    jQuery=.button:contains("Generate code")
     Then the user should see an error    Please set a start date for your competition before generating the competition code, you can do this in the Initial Details section
@@ -81,7 +71,7 @@ Initial details server-side validations
     ...
     ...    IFUND-3888
     [Tags]    HappyPath
-    [Setup]    Then the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
+    [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
     Given The user clicks the button/link    link=Initial Details
     and the user should not see the element    css=#stateAid
     When the user clicks the button/link    jQuery=.button:contains("Done")
@@ -143,7 +133,7 @@ Initial details should not allow to mark as complete when date is in past
     And the user enters text to a text field    id=openingDateYear    2015
     When the user clicks the button/link    jQuery=.button:contains("Done")
     Then The user should not see the element    jQuery=.button:contains("Edit")
-    [Teardown]    When the user enters text to a text field    id=openingDateYear    2017
+    [Teardown]    the user enters text to a text field    id=openingDateYear    2017
 
 Initial details mark as done
     [Documentation]    INFUND-2982
@@ -187,7 +177,7 @@ Initial details should have a green check
     And the user should not see the element    jQuery=.button:contains("Save as Ready To Open")
 
 New application shows in Preparation section with the new name
-    [Documentation]    INFUND-4682
+    [Documentation]    INFUND-2980
     Given The user clicks the button/link    link=All competitions
     And The user clicks the button/link    id=section-3
     Then the competition should show in the correct section    css=section:nth-child(4) > ul    Test competition    #This keyword checks if the new competition shows in the "In preparation" test
@@ -195,7 +185,7 @@ New application shows in Preparation section with the new name
 Funding information server-side validations
     [Documentation]    INFUND-2985
     [Tags]    HappyPath
-    [Setup]    Then the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
+    [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
     Given the user clicks the button/link    link=Funding Information
     And the user redirects to the page    Funding information    Reporting fields
     When the user clicks the button/link    jQuery=.button:contains("Done")
