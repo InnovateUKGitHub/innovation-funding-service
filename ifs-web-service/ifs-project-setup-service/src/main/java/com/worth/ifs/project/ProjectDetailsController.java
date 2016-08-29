@@ -34,7 +34,6 @@ import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.OrganisationRestService;
-import com.worth.ifs.user.service.ProcessRoleService;
 import com.worth.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -80,9 +79,6 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
     @Autowired
     private OrganisationRestService organisationRestService;
-
-    @Autowired
-    private ProcessRoleService processRoleService;
 
     @Autowired
     private OrganisationAddressRestService organisationAddressRestService;
