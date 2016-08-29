@@ -7,13 +7,12 @@ Documentation     INFUND-228: As an Assessor I can see competitions that I have 
 Suite Setup       Guest user log-in    &{existing_assessor1_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Assessor
-Resource          ../../../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../../../resources/keywords/Login_actions.robot
-Resource          ../../../../../resources/keywords/User_actions.robot
-Resource          ../../../../../resources/variables/User_credentials.robot
-Resource          ../../../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
-
+Resource          ../../../resources/GLOBAL_LIBRARIES.robot
+Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
+Resource          ../../../resources/keywords/Login_actions.robot
+Resource          ../../../resources/keywords/User_actions.robot
+Resource          ../../../resources/variables/User_credentials.robot
+Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
 
 *** Test Cases ***
 Existing assessor - Accept invitation
@@ -22,7 +21,7 @@ Existing assessor - Accept invitation
     Given the user navigates to the page    ${Invitation_to_assess_existing}
     Then the user should see the text in the page    Invitation to assess 'Juggling Craziness'
     And the user should see the text in the page    You are invited to act as an assessor for the competition 'Juggling Craziness'.
-  #  And the user clicks the button/link    jQuery=.button:contains("Accept")
+    #    And the user clicks the button/link    jQuery=.button:contains("Accept")
     # TODO when INFUND-304 is ready to test
     #And guest user log-in    worth.email.test+assessor1@gmail.com    Passw0rd123
     #Then the user should be redirected to the correct page    ${Assessor_Dashboard}    #The variable needs to be declared
