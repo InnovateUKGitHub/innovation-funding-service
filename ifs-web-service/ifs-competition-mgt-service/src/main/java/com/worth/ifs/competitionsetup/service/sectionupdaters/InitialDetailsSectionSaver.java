@@ -17,6 +17,7 @@ import com.worth.ifs.competitionsetup.service.CompetitionSetupService;
 import org.apache.commons.collections4.map.LinkedMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.el.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -113,8 +114,8 @@ public class InitialDetailsSectionSaver implements CompetitionSetupSectionSaver 
 		List<Error> errors = new ArrayList<>();
 
 	    try {
-            errors = updateCompetitionResourceWithAutosave(errors, competitionResource, fieldName, value);
-        } catch (Exception e) {
+            errors = updateCompetitionResourceWithAutoSave(errors, competitionResource, fieldName, value);
+        } catch (ParseException e) {
             errors.add(new Error(e.getMessage(), HttpStatus.BAD_REQUEST));
         }
 
@@ -127,7 +128,7 @@ public class InitialDetailsSectionSaver implements CompetitionSetupSectionSaver 
 		return Collections.emptyList();
 	}
 
-	private List<Error> updateCompetitionResourceWithAutosave(List<Error> errors, CompetitionResource competitionResource, String fieldName, String value) throws Exception {
+	private List<Error> updateCompetitionResourceWithAutoSave(List<Error> errors, CompetitionResource competitionResource, String fieldName, String value) throws ParseException {
         switch (fieldName) {
             case "title":
                 competitionResource.setName(value);
