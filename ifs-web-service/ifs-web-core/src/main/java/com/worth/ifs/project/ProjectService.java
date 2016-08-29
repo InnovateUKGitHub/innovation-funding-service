@@ -2,6 +2,7 @@ package com.worth.ifs.project;
 
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.invite.resource.InviteProjectResource;
@@ -84,4 +85,7 @@ public interface ProjectService {
     ServiceResult<Void> inviteFinanceContact (Long projectId, InviteProjectResource inviteProjectResource);
 
     ServiceResult<Void> saveProjectInvite(InviteProjectResource inviteProjectResource);
+
+    List<InviteProjectResource> getInvitesByProject (Long projectId);
+
 }

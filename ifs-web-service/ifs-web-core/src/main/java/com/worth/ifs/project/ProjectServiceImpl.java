@@ -248,4 +248,10 @@ public class ProjectServiceImpl implements ProjectService {
         return projectRestService.inviteFinanceContact (projectId, inviteProjectResource).toServiceResult();
     }
 
+    @Override
+    public ServiceResult<List<InviteProjectResource>> getInvitesByProject (Long projectId)
+    {
+        return projectInviteRestService.getInvitesByProject (projectId).toServiceResult();
+    }
+
 }

@@ -18,6 +18,8 @@ import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
+import com.worth.ifs.invite.resource.InviteProjectResource;
+import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.user.resource.OrganisationResource;
@@ -110,6 +112,10 @@ public final class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<List<InviteOrganisationResource>> inviteOrganisationResourceListType() {
         return new ParameterizedTypeReference<List<InviteOrganisationResource>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<InviteProjectResource>> inviteProjectResourceListType() {
+        return new ParameterizedTypeReference<List<InviteProjectResource>>() {};
     }
 
     public static ParameterizedTypeReference<List<FinanceRow>> costListType() {
