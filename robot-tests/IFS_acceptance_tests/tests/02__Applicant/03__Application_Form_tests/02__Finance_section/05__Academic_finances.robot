@@ -34,7 +34,7 @@ Academic finances should be editable when lead marks them as complete
 
 Academic finance validations
     [Documentation]    INFUND-2399
-    [Tags]    HappyPath
+    [Tags]    Pending
     [Setup]    Guest user log-in    ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
     When The user navigates to the academic application finances
     And the applicant enters invalid inputs
@@ -48,7 +48,7 @@ Academic finance calculations
     [Documentation]    INFUND-917
     ...
     ...    INFUND-2399
-    [Tags]    HappyPath
+    [Tags]    Pending
     [Setup]    Guest user log-in    ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
     Given The user navigates to the academic application finances
     When the academic partner fills the finances
