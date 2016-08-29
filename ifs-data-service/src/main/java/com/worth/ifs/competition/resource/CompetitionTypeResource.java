@@ -8,7 +8,7 @@ public class CompetitionTypeResource {
     private String name;
     private List<Long> competitions;
     private Boolean stateAid;
-    private Boolean isActive;
+    private Boolean active;
 
     public CompetitionTypeResource() {
         // no-arg constructor
@@ -47,10 +47,10 @@ public class CompetitionTypeResource {
     }
 
     public Boolean getActive() {
-        return isActive;
+        return active;
     }
 
     public void setActive(Boolean active) {
-        isActive = active;
+        this.active = active;
     }
 }

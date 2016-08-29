@@ -10,7 +10,7 @@ public class CompetitionType {
     private Long id;
     private String name;
     private Boolean stateAid;
-    private Boolean isActive;
+    private Boolean active;
 
 
     @OneToMany(mappedBy="competitionType")
@@ -50,10 +50,10 @@ public class CompetitionType {
     }
 
     public Boolean getActive() {
-        return isActive;
+        return active;
     }
 
     public void setActive(Boolean active) {
-        isActive = active;
+        this.active = active;
     }
 }
