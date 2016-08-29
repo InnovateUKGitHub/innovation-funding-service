@@ -1,6 +1,5 @@
 package com.worth.ifs.project.security;
 
-import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.security.BasePermissionRules;
@@ -101,6 +100,21 @@ public class ProjectPermissionRules extends BasePermissionRules {
     public boolean partnersCanViewOtherDocumentsDetails(ProjectResource project, UserResource user) {
         return isPartner(project.getId(), user.getId());
     }
+
+    @PermissionRule(
+            value = "VIEW_OTHER_DOCUMENTS_DETAILS",
+            description = "Competitions admins can view Other Documents (Collaboration Agreement, Exploitation Plan) details that their lead partners have uploaded")
+    public boolean competitionAdminCanViewOtherDocumentsDetails(ProjectResource project, UserResource user) {
+        return isCompAdmin(user);
+    }
+
+    @PermissionRule(
+            value = "VIEW_OTHER_DOCUMENTS_DETAILS",
+            description = "Project Finance Users can view Other Documents (Collaboration Agreement, Exploitation Plan) details that their lead partners have uploaded")
+    public boolean projectFinanceUserCanViewOtherDocumentsDetails(ProjectResource project, UserResource user) {
+        return isProjectFinanceUser(user);
+    }
+
 
     @PermissionRule(
             value = "DELETE_OTHER_DOCUMENTS",

@@ -68,7 +68,7 @@ public class RegistrationForm {
     @Pattern(regexp = "([0-9\\ +-])+",  message= "{validation.standard.phonenumber.format}")
     private String phoneNumber;
 
-    @NotBlank(message = "{validation.bankaccount.termsandconditions.required}")
+    @NotBlank(message = "{validation.account.termsandconditions.required}")
     private String termsAndConditions;
 
     public String getPassword() {
