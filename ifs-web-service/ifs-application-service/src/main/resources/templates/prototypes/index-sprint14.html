@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Prototype index page'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+
+</head>
+<body class="app-dashboard">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+
+<header role="banner" id="global-header" class="">
+  <div class="header-wrapper">
+    <div class="header-global">
+
+        <div th:include="fragments/elements :: header-logo"></div>
+    </div>
+  </div>
+</header>
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+	<div th:include="prototypes/fragments/layout :: prototype-sprint-nav" th:with="sprint='sprint14'"  th:remove="tag" />
+
+	
+	<section class="grid-row">
+		<div class="row">
+			<h1 class="heading-large">Sprint 14</h1>
+
+			<section>
+				
+				<h2 class="heading-medium">Internal user - project set up</h2>
+
+				<ul class="list-bullet">
+					
+					<li>
+						<h3 class="heading-small">INFUND-4607</h3>
+						<p>Assessor management (invite / assign)</p>
+						<ul class="list-bullet">
+							<li>
+								<a href="/prototypes/4607-manage-assessors">INFUND-4607</a> Find assessors
+							</li>
+							<li>
+								<a href="/prototypes/4607-manage-assessors?tab=invite">INFUND-4607</a> Invite assessors
+							</li>
+							<li>
+								<a href="/prototypes/4607-manage-assessors-invite">INFUND-4607</a> Invite individual - edit email content
+							</li>
+							<li>
+								<a href="/prototypes/4607-manage-assessors?tab=assign">INFUND-4607</a> Assign assessors
+							</li>
+							<li>
+								<a href="/prototypes/4607-manage-assessors-assign?view=application&#38;number=10001000000&#38;application=The%20potential%20for%20glucose%20based%20contact%20lens%20monitoring%20in%20the%20management%20of%20type%202%20diabetes">INFUND-4607</a> Assign assessors to application
+							</li>
+							<li>
+								<a href="/prototypes/4607-manage-assessors-assign?view=assessor&#38;name=Dave%20Smith">INFUND-4607</a> Assign application to assessor
+							</li>
+							<li>
+								<a href="/prototypes/4607-manage-assessors-notify">INFUND-4607</a> Notify assessors confirmation page
+							</li>
+						</ul>
+					</li>
+
+				</ul>
+
+			</section>
+		</div>
+	</section>
+
+			
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<div th:include="prototypes/fragments/layout :: prototype-js" th:remove="tag" />
+
+</body>
+</html>

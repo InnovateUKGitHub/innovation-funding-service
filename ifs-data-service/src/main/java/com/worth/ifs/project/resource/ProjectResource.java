@@ -19,6 +19,7 @@ public class ProjectResource {
     private AddressResource address;
     private String name;
     private LocalDateTime submittedDate;
+    private LocalDateTime documentsSubmittedDate;
     private List<Long> projectUsers;
     private Long collaborationAgreement;
     private Long exploitationPlan;
@@ -29,6 +30,11 @@ public class ProjectResource {
     @JsonIgnore
     public boolean isProjectDetailsSubmitted(){
         return submittedDate != null;
+    }
+
+    @JsonIgnore
+    public boolean isPartnerDocumentsSubmitted(){
+        return documentsSubmittedDate != null;
     }
 
     public Long getId() {
@@ -98,6 +104,14 @@ public class ProjectResource {
 
     public void setSubmittedDate(LocalDateTime submittedDate) {
         this.submittedDate = submittedDate;
+    }
+
+    public LocalDateTime getDocumentsSubmittedDate() {
+        return documentsSubmittedDate;
+    }
+
+    public void setDocumentsSubmittedDate(LocalDateTime documentsSubmittedDate) {
+        this.documentsSubmittedDate = documentsSubmittedDate;
     }
 
     public Long getCollaborationAgreement() {

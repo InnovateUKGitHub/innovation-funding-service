@@ -138,6 +138,11 @@ public class ProjectRestServiceImpl extends BaseRestService implements ProjectRe
     }
 
     @Override
+    public RestResult<Void> setPartnerDocumentsSubmitted(Long projectId) {
+        return postWithRestResult(projectRestURL + "/" + projectId + "/partner/documents/submit", Void.class);
+    }
+
+    @Override
     public RestResult<Void> removeExploitationPlanDocument(Long projectId) {
         return deleteWithRestResult(projectRestURL + "/" + projectId + "/exploitation-plan");
     }

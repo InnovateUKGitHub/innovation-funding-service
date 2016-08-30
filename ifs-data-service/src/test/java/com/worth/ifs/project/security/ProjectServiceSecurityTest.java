@@ -7,8 +7,11 @@ import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.FileAndContents;
-import com.worth.ifs.invite.resource.ApplicationInviteResource;
-import com.worth.ifs.project.resource.*;
+import com.worth.ifs.invite.builder.ProjectInviteResourceBuilder;
+import com.worth.ifs.invite.resource.InviteProjectResource;
+import com.worth.ifs.project.resource.MonitoringOfficerResource;
+import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.RoleResource;
@@ -36,9 +39,7 @@ import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectRes
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static com.worth.ifs.user.resource.UserRoleType.APPLICANT;
-import static com.worth.ifs.user.resource.UserRoleType.COMP_ADMIN;
-import static com.worth.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
+import static com.worth.ifs.user.resource.UserRoleType.*;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.EnumSet.complementOf;
@@ -170,6 +171,46 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
     }
 
     @Test
+    public void testInviteProjectManager() {
+
+        Long projectId = 1L;
+
+        InviteProjectResource inviteResource = ProjectInviteResourceBuilder.newInviteProjectResource()
+                .withName("Abc Xyz")
+                .withEmail("Abc.xyz@gmail.com")
+                .withLeadOrganisation("Lead Organisation 1")
+                .withInviteOrganisationName("Invite Organisation 1")
+                .withHash("sample/url")
+                .build();
+
+        assertAccessDenied(() -> service.inviteProjectManager(projectId, inviteResource),
+                () -> {
+                    verify(projectPermissionRules).partnersCanInviteTheirOwnOrganisationsProjectManager(inviteResource, getLoggedInUser());
+                    verifyNoMoreInteractions(projectPermissionRules);
+                });
+    }
+
+    @Test
+    public void testInviteFinanceContact() {
+
+        Long projectId = 1L;
+
+        InviteProjectResource inviteResource = ProjectInviteResourceBuilder.newInviteProjectResource()
+                .withName("Abc Xyz")
+                .withEmail("Abc.xyz@gmail.com")
+                .withLeadOrganisation("Lead Organisation 1")
+                .withInviteOrganisationName("Invite Organisation 1")
+                .withHash("sample/url")
+                .build();
+
+        assertAccessDenied(() -> service.inviteFinanceContact(projectId, inviteResource),
+                () -> {
+                    verify(projectPermissionRules).partnersCanInviteTheirOwnOrganisationsFinanceContacts(inviteResource, getLoggedInUser());
+                    verifyNoMoreInteractions(projectPermissionRules);
+                });
+    }
+
+    @Test
     public void testSetProjectManager() {
 
         ProjectResource project = newProjectResource().build();
@@ -257,6 +298,8 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         assertAccessDenied(() -> service.getCollaborationAgreementFileEntryDetails(123L), () -> {
             verify(projectPermissionRules).partnersCanViewOtherDocumentsDetails(project, getLoggedInUser());
+            verify(projectPermissionRules).competitionAdminCanViewOtherDocumentsDetails(project, getLoggedInUser());
+            verify(projectPermissionRules).projectFinanceUserCanViewOtherDocumentsDetails(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
         });
     }
@@ -309,6 +352,8 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
 
         assertAccessDenied(() -> service.getExploitationPlanFileEntryDetails(123L), () -> {
+            verify(projectPermissionRules).competitionAdminCanViewOtherDocumentsDetails(project, getLoggedInUser());
+            verify(projectPermissionRules).projectFinanceUserCanViewOtherDocumentsDetails(project, getLoggedInUser());
             verify(projectPermissionRules).partnersCanViewOtherDocumentsDetails(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
         });
@@ -450,6 +495,11 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         }
 
         @Override
+        public ServiceResult<Void> saveDocumentsSubmitDateTime(Long projectId, LocalDateTime date) {
+            return null;
+        }
+
+        @Override
         public ServiceResult<Boolean> isOtherDocumentsSubmitAllowed(Long projectId, Long userId) {
             return null;
         }
@@ -470,12 +520,12 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         }
 
         @Override
-        public ServiceResult<Void> inviteFinanceContact(Long projectId, ApplicationInviteResource inviteResource) {
+        public ServiceResult<Void> inviteFinanceContact(Long projectId, InviteProjectResource inviteResource) {
             return null;
         }
 
         @Override
-        public ServiceResult<Void> inviteProjectManager(Long projectId, ApplicationInviteResource inviteResource) {
+        public ServiceResult<Void> inviteProjectManager(Long projectId, InviteProjectResource inviteResource) {
             return null;
         }
 

@@ -52,14 +52,11 @@ public class ProjectOtherDocumentsController {
         return doViewOtherDocumentsPage(projectId, model, loggedInUser, form);
     }
 
-    @RequestMapping(value = "/ready", method = RequestMethod.GET)
-    public String projectDetail(Model model, @PathVariable("projectId") final Long projectId,
-                                @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-
-        ProjectOtherDocumentsForm form = new ProjectOtherDocumentsForm();
-        return doViewOtherDocumentsPage(projectId, model, loggedInUser, form);
+    @RequestMapping(value = "/submit", method = RequestMethod.POST)
+    public String submitPatnerDocuments(Model model, @PathVariable("projectId") final Long projectId) {
+        projectService.setPartnerDocumentsSubmitted(projectId).getSuccessObjectOrThrowException();
+        return redirectToOtherDocumentsPage(projectId);
     }
-
 
     @RequestMapping(value = "/collaboration-agreement", method = GET)
     public
@@ -146,8 +143,11 @@ public class ProjectOtherDocumentsController {
 
     private String doViewOtherDocumentsPage(Long projectId, Model model, UserResource loggedInUser, ProjectOtherDocumentsForm form) {
         ProjectOtherDocumentsViewModel viewModel = getOtherDocumentsViewModel(projectId, loggedInUser);
+
         model.addAttribute("model", viewModel);
         model.addAttribute("form", form);
+        model.addAttribute("currentUser", loggedInUser);
+
         return "project/other-documents";
     }
 
@@ -170,21 +170,20 @@ public class ProjectOtherDocumentsController {
 
         boolean leadPartner = projectService.isUserLeadPartner(projectId, loggedInUser.getId());
 
-        boolean isSubmitAllowed = projectService.isOtherDocumentSubmitAllowed(projectId).isSuccess() ? true : false;
+        boolean isSubmitAllowed = projectService.isOtherDocumentSubmitAllowed(projectId).isSuccess();
 
         // TODO DW - these rejection messages to be covered in other stories
         List<String> rejectionReasons = emptyList();
 
-        // TODO DW - these flags to be covered in other stories
-        boolean otherDocumentsApproved = false;
-        boolean otherDocumentsSubmitted = false;
+        boolean otherDocumentsSubmitted = project.getDocumentsSubmittedDate() != null;
+        boolean otherDocumentsApproved = otherDocumentsSubmitted;
 
         return new ProjectOtherDocumentsViewModel(projectId, project.getName(),
                 collaborationAgreement.map(FileDetailsViewModel::new).orElse(null),
                 exploitationPlan.map(FileDetailsViewModel::new).orElse(null),
                 partnerOrganisationNames, rejectionReasons,
                 leadPartner, otherDocumentsSubmitted, otherDocumentsApproved,
-                isSubmitAllowed);
+                isSubmitAllowed, project.getDocumentsSubmittedDate());
     }
 
     private ResponseEntity<ByteArrayResource> returnFileIfFoundOrThrowNotFoundException(Long projectId, Optional<ByteArrayResource> content, Optional<FileEntryResource> fileDetails) {

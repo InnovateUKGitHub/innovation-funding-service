@@ -64,7 +64,7 @@ public class CompetitionManagementController {
     	model.addAttribute("competitionSummary", competitionSummary);
     	 
     	switch(competitionSummary.getCompetitionStatus()) {
-    		case NOT_STARTED:
+			case READY_TO_OPEN:
     			return "comp-mgt-not-started";
 	    	case OPEN:
 	    		return openCompetition(model, competitionSummary, queryForm, bindingResult);

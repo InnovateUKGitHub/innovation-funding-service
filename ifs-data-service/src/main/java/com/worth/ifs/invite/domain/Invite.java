@@ -1,6 +1,6 @@
 package com.worth.ifs.invite.domain;
 
-import com.worth.ifs.invite.constant.InviteStatusConstants;
+import com.worth.ifs.invite.constant.InviteStatus;
 import com.worth.ifs.user.domain.User;
 import org.hibernate.annotations.DiscriminatorOptions;
 import org.hibernate.validator.constraints.Email;
@@ -37,21 +37,21 @@ public abstract class Invite<T extends ProcessActivity, I extends Invite<T,I>> {
     private  String email; // invitee
 
     @ManyToOne
-    @JoinColumn(name = "email", referencedColumnName = "email", insertable = false, updatable = false)
+    @JoinColumn(name = "email", referencedColumnName = "email", insertable = false, updatable = false) // case sensitive? remove anyway
     private User user;
 
     @Column(unique=true)
     private String hash;
 
     @Enumerated(EnumType.STRING)
-    private InviteStatusConstants status;
+    private InviteStatus status;
 
     Invite() {
     	// no-arg constructor
-        this.status=InviteStatusConstants.CREATED;
+        this.status= InviteStatus.CREATED;
     }
 
-    protected Invite(String name, String email, String hash, InviteStatusConstants status) {
+    protected Invite(String name, String email, String hash, InviteStatus status) {
         this.name = name;
         this.email = email;
         this.hash = hash;
@@ -90,23 +90,23 @@ public abstract class Invite<T extends ProcessActivity, I extends Invite<T,I>> {
         this.hash = hash;
     }
 
-    public InviteStatusConstants getStatus() {
+    public InviteStatus getStatus() {
         return status;
     }
 
-    protected void setStatus(final InviteStatusConstants newStatus) {
+    protected void setStatus(final InviteStatus newStatus) {
         if (newStatus == null) throw new NullPointerException("status cannot be null");
         switch (newStatus) {
             case CREATED:
                 if (this.status != null) throw new IllegalStateException("(" + this.status + ") -> (" + newStatus + ") Cannot create an Invite that has already been created.");
                 break;
-            case SEND:
-                if (this.status != InviteStatusConstants.CREATED)
+            case SENT:
+                if (this.status != InviteStatus.CREATED)
                     throw new IllegalStateException("(" + this.status + ") -> (" + newStatus + ") Cannot send an Invite that has already been sent.");
                 break;
-            case ACCEPTED:
+            case OPENED:
                 // TODO check legal invite transitions
-//                if (this.status != InviteStatusConstants.SEND || this.status != InviteStatusConstants.ACCEPTED)
+//                if (this.status != InviteStatus.SENT || this.status != InviteStatus.OPENED)
 //                    throw new IllegalStateException("(" + this.status + ") -> (" + newStatus + ") Cannot accept an Invite that hasn't been sent");
                 break;
         }
@@ -135,12 +135,12 @@ public abstract class Invite<T extends ProcessActivity, I extends Invite<T,I>> {
     public abstract void setTarget(T target);
 
     public I send() {
-        setStatus(InviteStatusConstants.SEND);
+        setStatus(InviteStatus.SENT);
         return (I) this; // for object chaining
     }
 
     public I open () {
-        setStatus(InviteStatusConstants.ACCEPTED);
+        setStatus(InviteStatus.OPENED);
         return (I) this; // for object chaining
     }
 }
