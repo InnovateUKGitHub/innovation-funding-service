@@ -47,6 +47,6 @@ public class AdditionalInfoFormPopulatorTest {
 		assertEquals("p123", form.getPafNumber());
 		assertEquals("b123", form.getBudgetCode());
 		assertEquals(CompetitionCoFundersFixture.getTestCoFunders().size(), form.getCoFundersCount());
-		assertEquals("coFunder1", form.getCoFunders().get(0).getCoFunder());
+		assertEquals("coFunder1", form.getFunders().get(0).getFunder());
 	}
 }

@@ -3,7 +3,7 @@ package com.worth.ifs.competitionsetup.service.formpopulator;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competitionsetup.form.AdditionalInfoForm;
-import com.worth.ifs.competitionsetup.form.CoFunderForm;
+import com.worth.ifs.competitionsetup.model.Funder;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.springframework.stereotype.Service;
 
@@ -24,18 +24,17 @@ public class AdditionalInfoFormPopulator implements CompetitionSetupFormPopulato
 
 		competitionSetupForm.setActivityCode(competitionResource.getActivityCode());
 		competitionSetupForm.setInnovateBudget(competitionResource.getInnovateBudget());
-		competitionSetupForm.setFunder(competitionResource.getFunder());
-		competitionSetupForm.setFunderBudget(competitionResource.getFunderBudget());
 
 		competitionSetupForm.setCompetitionCode(competitionResource.getCode());
 		competitionSetupForm.setPafNumber(competitionResource.getPafCode());
 		competitionSetupForm.setBudgetCode(competitionResource.getBudgetCode());
 
-		competitionResource.getCoFunders().forEach(coFunderResource ->  {
-			CoFunderForm coFunderForm = new CoFunderForm();
-			coFunderForm.setCoFunder(coFunderResource.getCoFunder());
-			coFunderForm.setCoFunderBudget(coFunderResource.getCoFunderBudget());
-			competitionSetupForm.getCoFunders().add(coFunderForm);
+		competitionResource.getFunders().forEach(funderResource ->  {
+			Funder funder = new Funder();
+			funder.setFunder(funderResource.getFunder());
+			funder.setFunderBudget(funderResource.getFunderBudget());
+			funder.setCoFunder(funderResource.getCoFunder());
+			competitionSetupForm.getFunders().add(funder);
 		});
 
 		return competitionSetupForm;

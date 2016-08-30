@@ -43,10 +43,10 @@ public class AdditionalInfoSectionSaver implements CompetitionSetupSectionSaver 
 		competition.setPafCode(additionalInfoForm.getPafNumber());
 		additionalInfoForm.setCompetitionCode(competition.getCode());
 		competition.setCoFunders(new ArrayList<>());
-		additionalInfoForm.getCoFunders().forEach(coFunderForm -> {
+		additionalInfoForm.getFunders().forEach(coFunderForm -> {
 			CompetitionCoFunderResource competitionCoFunderResource = new CompetitionCoFunderResource();
-			competitionCoFunderResource.setCoFunder(coFunderForm.getCoFunder());
-			competitionCoFunderResource.setCoFunderBudget(coFunderForm.getCoFunderBudget());
+			competitionCoFunderResource.setCoFunder(coFunderForm.getFunder());
+			competitionCoFunderResource.setCoFunderBudget(coFunderForm.getFunderBudget());
 			competition.getCoFunders().add(competitionCoFunderResource);
 		});
         competitionService.update(competition);

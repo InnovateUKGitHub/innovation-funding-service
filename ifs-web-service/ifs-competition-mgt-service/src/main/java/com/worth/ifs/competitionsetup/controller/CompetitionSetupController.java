@@ -15,6 +15,7 @@ import com.worth.ifs.competition.resource.CompetitionResource.Status;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competitionsetup.form.*;
 import com.worth.ifs.competitionsetup.model.Question;
+import com.worth.ifs.competitionsetup.model.Funder;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupService;
 import com.worth.ifs.profiling.ProfileExecution;
@@ -198,9 +199,9 @@ public class CompetitionSetupController {
                 return "redirect:/competition/setup/" + competitionId + "/section/additional";
             }
         } else if (request.getParameterMap().containsKey("add-cofunder")) {
-            List<CoFunderForm> coFunders = competitionSetupForm.getCoFunders();
-            coFunders.add(new CoFunderForm());
-            competitionSetupForm.setCoFunders(coFunders);
+            List<Funder> funders = competitionSetupForm.getFunders();
+            coFunders.add(new Funder());
+            competitionSetupForm.setFunders(coFunders);
         }
 
         return genericCompetitionSetupSection(competitionSetupForm, bindingResult, competitionId, CompetitionSetupSection.ADDITIONAL_INFO, model);

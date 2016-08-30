@@ -154,7 +154,7 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
     }
 
     public CompetitionResourceBuilder withCoFunders(List<CompetitionFunderResource> coFundersList) {
-        return withList(coFundersList, (coFunders, section) -> section.setCoFunders(coFundersList));
+        return withList(coFundersList, (coFunders, section) -> section.setFunders(coFundersList));
     }
 
     public CompetitionResourceBuilder withMilestones(List<Long> milestonesList) {

@@ -10,7 +10,6 @@ import com.worth.ifs.invite.domain.ProcessActivity;
 import com.worth.ifs.user.domain.User;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -77,8 +76,6 @@ public class Competition implements ProcessActivity {
 
     private String activityCode;
     private String innovateBudget;
-    private String funder;
-    private BigDecimal funderBudget;
 
     private boolean multiStream;
     private boolean resubmission;

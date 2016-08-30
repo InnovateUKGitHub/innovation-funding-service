@@ -30,7 +30,7 @@ public class CompetitionCoFunderServiceImpl extends BaseTransactionalService imp
         Competition competition = competitionRepository.findById(resource.getId());
 
         competitionCoFunderRepository.deleteByCompetitionId(resource.getId());
-        resource.getCoFunders().forEach(coFunderResource -> {
+        resource.getFunders().forEach(coFunderResource -> {
             CompetitionFunder competitionFunder = new CompetitionFunder();
             competitionFunder.setFunder(coFunderResource.getFunder());
             competitionFunder.setFunderBudget(coFunderResource.getFunderBudget());
