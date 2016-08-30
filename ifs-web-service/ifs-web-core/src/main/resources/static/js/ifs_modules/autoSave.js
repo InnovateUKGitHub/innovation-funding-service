@@ -87,6 +87,21 @@ IFS.core.autoSave = (function(){
                           fundingDecision: field.val()
                         };
                         break;
+                  case 'compSetup':
+                        var dateField = field.is('[data-date]');
+                        if(dateField){
+                          var fieldInfo = field.closest('.date-group').find('input[type="hidden"]');
+                          jsonObj = {
+                            value: field.attr('data-date'),
+                            fieldName: fieldInfo.prop('name')
+                          };
+                        } else {
+                          jsonObj = {
+                            fieldName: field.prop('name'),
+                            value: field.val()
+                          };
+                        }
+                        break;
                   case 'assessorFeedback':
                         jsonObj = {
                           value : field.val()
@@ -108,6 +123,11 @@ IFS.core.autoSave = (function(){
                 case 'fundingDecision':
                   var competitionId = field.attr('data-competition');
                   url = '/management/funding/' + competitionId;
+                  break;
+                case 'compSetup':
+                  var competitionId = form.attr('data-competition');
+                  var section = form.attr('data-section');
+                  url = '/management/competition/setup/' + competitionId + '/section/' + section + '/saveFormElement';
                   break;
                 case 'assessorFeedback':
                   var formInputId = field.closest('.question').prop('id').replace('form-input-','');

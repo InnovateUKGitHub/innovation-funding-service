@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.worth.ifs.application.service.CategoryService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.application.service.MilestoneService;
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.category.builder.CategoryResourceBuilder;
 import com.worth.ifs.category.resource.CategoryResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
@@ -22,7 +23,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -84,6 +88,42 @@ public class InitialDetailsSectionSaverTest {
         assertEquals(LocalDateTime.of(2020, 12, 1, 0, 0), competition.getStartDate());
 
         verify(competitionService).update(competition);
+    }
+
+    @Test
+    public void testAutoSaveCompetitionSetupSection() {
+        when(milestoneService.getAllDatesByCompetitionId(1L)).thenReturn(asList(getMilestone()));
+
+        CompetitionResource competition = newCompetitionResource().build();
+        competition.setMilestones(asList(10L));
+
+        List<Error> errors = service.autoSaveSectionField(competition, "openingDate", "20-10-2020");
+
+        assertTrue(errors.isEmpty());
+        verify(competitionService).update(competition);
+    }
+
+    @Test
+    public void testAutoSaveCompetitionSetupSectionErrors() {
+        when(milestoneService.getAllDatesByCompetitionId(1L)).thenReturn(asList(getMilestone()));
+
+        CompetitionResource competition = newCompetitionResource().build();
+        competition.setMilestones(asList(10L));
+
+        List<Error> errors = service.autoSaveSectionField(competition, "openingDate", "20-10-2000");
+
+        assertTrue(!errors.isEmpty());
+        verify(competitionService, never()).update(competition);
+    }
+
+    @Test
+    public void testAutoSaveCompetitionSetupSectionUnknown() {
+        CompetitionResource competition = newCompetitionResource().build();
+
+        List<Error> errors = service.autoSaveSectionField(competition, "notExisting", "Strange!@#1Value");
+
+        assertTrue(!errors.isEmpty());
+        verify(competitionService, never()).update(competition);
     }
 
     private MilestoneResource getMilestone(){
