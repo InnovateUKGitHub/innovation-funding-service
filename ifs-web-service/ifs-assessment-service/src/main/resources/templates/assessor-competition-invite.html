@@ -41,9 +41,9 @@
                 </ul>
             </section>
 
-            <form>
+            <form th:action="@{/invite/competition/{inviteHash}/accept(inviteHash=${model.competitionInviteHash})}" method="POST">
                 <h2 class="heading-medium">Are you available to assess this competition?</h2>
-                <button class="button large extra-margin" name="accept" value="accepted" type="submit">Accept</button>
+                <button class="button large extra-margin" type="submit">Accept</button>
                 <a class="button button-warning large extra-margin" th:href="@{/invite/competition/{inviteHash}/reject/confirm(inviteHash=${model.competitionInviteHash})}" data-js-modal="reject-competition-modal">Reject</a>
             </form>
 
