@@ -46,6 +46,6 @@ public class ErrorToObjectErrorConverterFactory {
     }
 
     private static FieldError newFieldError(Error e, String fieldName, Object rejectedValue) {
-        return new FieldError("", fieldName, rejectedValue, true, new String[] {e.getErrorKey()}, e.getArguments().toArray(), e.getErrorMessage());
+        return new FieldError("", fieldName, rejectedValue, true, new String[] {e.getErrorKey()}, e.getArguments().toArray(), null);
     }
 }
