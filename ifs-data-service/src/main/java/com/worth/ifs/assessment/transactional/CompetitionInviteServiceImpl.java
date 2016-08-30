@@ -29,7 +29,6 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     @Autowired
     private CompetitionInviteMapper mapper;
 
-
     @Override
     public ServiceResult<CompetitionInviteResource> openInvite(String inviteHash) {
         return getByHash(inviteHash).andOnSuccessReturn(invite -> mapper.mapToResource(openInvite(invite)));
@@ -52,7 +51,6 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     private CompetitionInvite openInvite(CompetitionInvite invite) {
         return competitionInviteRepository.save(invite.open());
     }
-
 
     private ServiceResult<CompetitionParticipant> getParticipantByInviteHash(String inviteHash) {
         return find(competitionParticipantRepository.getByInviteHash(inviteHash), notFoundError(CompetitionParticipant.class, inviteHash));

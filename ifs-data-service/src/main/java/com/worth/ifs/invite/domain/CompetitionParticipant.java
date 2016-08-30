@@ -8,8 +8,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
 
-import java.util.Optional;
-
 import static com.worth.ifs.invite.domain.ParticipantStatus.ACCEPTED;
 import static com.worth.ifs.invite.domain.ParticipantStatus.REJECTED;
 
@@ -46,7 +44,7 @@ public class CompetitionParticipant extends Participant<Competition, Competition
     @Column(name = "competition_role_id")
     private CompetitionParticipantRole role;
 
-    CompetitionParticipant() {
+    public CompetitionParticipant() {
         // no-arg constructor
         this.competition = null;
     }
@@ -82,8 +80,8 @@ public class CompetitionParticipant extends Participant<Competition, Competition
     }
 
     @Override
-    public Optional<CompetitionInvite> getInvite() {
-        return Optional.ofNullable(invite);
+    public CompetitionInvite getInvite() {
+        return invite;
     }
 
     @Override

@@ -32,7 +32,6 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
 
         when(competitionInviteRepositoryMock.getByHash("inviteHash")).thenReturn(competitionInvite);
 
-
         when(competitionInviteRepositoryMock.save(same(competitionInvite))).thenReturn(competitionInvite);
         when(competitionInviteMapperMock.mapToResource(same(competitionInvite))).thenReturn(expected);
     }
@@ -52,7 +51,6 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
         inOrder.verify(competitionInviteMapperMock, calls(1)).mapToResource(any(CompetitionInvite.class));
         inOrder.verifyNoMoreInteractions();
     }
-
 
     @Test
     public void openInvite_hashNotExists() throws Exception {
