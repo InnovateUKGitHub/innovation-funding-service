@@ -24,6 +24,9 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               INFUND-2993 As a competitions team member I want to be able to add milestones when creating my competition so these can be used manage its progress
 ...
 ...               INFUND-4468 As a Competitions team member I want to include additional criteria in Competitions Setup so that the "Ready to Open" state cannot be set until these conditions are met
+...
+...
+...               INFUND-3001 As a Competitions team member I want the service to automatically save my edits while I work through Initial Details section in Competition Setup the so that I do not lose my changes
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin    CompSetup
@@ -125,6 +128,13 @@ Initial details client-side validations
     When the user selects the option from the drop-down menu    Competition Executive Two    id=executiveUserId
     Then The user should not see the text in the page    Please select a competition executive    #Couldn't use this keyword : "Then the user should not see the error any more" . Because there is not any error in the page
     ##    State aid value is tested in 'Initial details correct state aid status'
+
+Initial details: Autosave
+    [Documentation]    INFUND-3001
+    [Tags]    Pending
+    When the user clicks the button/link    link=Competition set up
+    and the user clicks the button/link    link=Initial Details
+    Then the user should see the correct values in the initial details form
 
 Initial details should not allow to mark as complete when date is in past
     [Documentation]    INFUND-4682
@@ -467,6 +477,7 @@ the user should not see the error any more
     Focus    jQuery=.button:contains("Done")
     sleep    200ms
     Wait Until Element Does Not Contain    css=.error-message    ${ERROR_TEXT}
+    Wait Until Page Does Not Contain    Saving...
 
 the total should be correct
     [Arguments]    ${Total}
@@ -625,3 +636,18 @@ the pre-field date should be correct
     Should Be Equal As Strings    ${MONTH}    12
     ${DAY} =    Get Value    css=.date-group:nth-child(1) .js-visited
     Should Be Equal As Strings    ${DAY}    1
+
+the user should see the correct values in the initial details form
+    ${input_value} =    Get Value    id=title
+    Should Be Equal    ${input_value}    Competition title
+    Page Should Contain    Programme
+    Page Should Contain    Health and life sciences
+    Page Should Contain    Advanced Therapies
+    ${input_value} =    Get Value    id=openingDateDay
+    Should Be Equal As Strings    ${input_value}    01
+    ${input_value} =    Get Value    Id=openingDateMonth
+    Should Be Equal As Strings    ${input_value}    12
+    ${input_value} =    Get Value    id=openingDateYear
+    Should Be Equal As Strings    ${input_value}    2017
+    Page Should Contain    Competition Technologist One
+    page should contain    Competition Executive Two
