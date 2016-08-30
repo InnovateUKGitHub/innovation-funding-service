@@ -3,6 +3,8 @@ services:
 
   shib:
     image: g2g3/ifs-local-dev
+    cap_add:
+      - SYS_PTRACE
     ports:
       - "443:443"
       - "389:389"
