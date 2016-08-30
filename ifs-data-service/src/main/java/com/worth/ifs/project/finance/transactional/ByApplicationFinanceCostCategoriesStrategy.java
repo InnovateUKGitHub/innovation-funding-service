@@ -12,10 +12,7 @@ import com.worth.ifs.project.transactional.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.CollectionFunctions.*;
@@ -53,21 +50,24 @@ public class ByApplicationFinanceCostCategoriesStrategy implements CostCategoryT
 
         List<String> categoryNamesToSupport = simpleMap(spendRows, FinanceRowType::getName);
 
+        List<String> orderedCategoryNames = new ArrayList<>(categoryNamesToSupport);
+        orderedCategoryNames.sort((o1, o2) -> FinanceRowType.valueOf(o1).compareTo(FinanceRowType.valueOf(o2)));
+
         List<CostCategoryType> existingCostCategoryTypes = costCategoryTypeRepository.findAll();
 
         Optional<CostCategoryType> existingCostCategoryTypeWithMatchingCategories = simpleFindFirst(existingCostCategoryTypes, costCategoryType -> {
             List<String> existingCostCategoryNames = simpleMap(costCategoryType.getCostCategories(), CostCategory::getName);
-            return existingCostCategoryNames.size() == categoryNamesToSupport.size() &&
-                    existingCostCategoryNames.containsAll(categoryNamesToSupport);
+            return existingCostCategoryNames.size() == orderedCategoryNames.size() &&
+                    existingCostCategoryNames.containsAll(orderedCategoryNames);
         });
 
         return existingCostCategoryTypeWithMatchingCategories.orElseGet(() -> {
 
-            List<CostCategory> costCategories = simpleMap(categoryNamesToSupport, CostCategory::new);
-            String costCategoryGroupDescription = "Cost Category Group for Categories " + simpleJoiner(categoryNamesToSupport, ", ");
+            List<CostCategory> costCategories = simpleMap(orderedCategoryNames, CostCategory::new);
+            String costCategoryGroupDescription = "Cost Category Group for Categories " + simpleJoiner(orderedCategoryNames, ", ");
             CostCategoryGroup costCategoryGroup = new CostCategoryGroup(costCategoryGroupDescription, costCategories);
 
-            String costCategoryTypeName = "Cost Category Type for Categories " + simpleJoiner(categoryNamesToSupport, ", ");
+            String costCategoryTypeName = "Cost Category Type for Categories " + simpleJoiner(orderedCategoryNames, ", ");
             CostCategoryType costCategoryTypeToCreate = new CostCategoryType(costCategoryTypeName, costCategoryGroup);
             return costCategoryTypeRepository.save(costCategoryTypeToCreate);
         });
