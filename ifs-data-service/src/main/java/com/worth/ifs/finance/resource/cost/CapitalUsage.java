@@ -13,20 +13,22 @@ import java.math.BigDecimal;
 public class CapitalUsage implements FinanceRowItem {
     Long id;
     String name;
-    @NotBlank(message = NOT_BLANK_MESSAGE)
+    @NotNull(message = NOT_BLANK_MESSAGE)
     @Min(value = 1, message = VALUE_MUST_BE_HIGHER_MESSAGE)
     @Digits(integer = MAX_DIGITS_INT, fraction = MAX_FRACTION, message = MAX_DIGITS_MESSAGE)
     Integer deprecation;
 
     @NotBlank(message = NOT_BLANK_MESSAGE)
+    @NotNull(message = NOT_BLANK_MESSAGE)
     @Length(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
     String description;
 
     @NotBlank(message = NOT_BLANK_MESSAGE)
+    @NotNull(message = NOT_BLANK_MESSAGE)
     @Length(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
     String existing;
 
-    @NotBlank(message = NOT_BLANK_MESSAGE)
+    @NotNull(message = NOT_BLANK_MESSAGE)
     @DecimalMin(value = "1", message = VALUE_MUST_BE_HIGHER_MESSAGE)
     @Digits(integer = MAX_DIGITS, fraction = MAX_FRACTION, message = MAX_DIGITS_MESSAGE)
     BigDecimal npv;
@@ -35,7 +37,7 @@ public class CapitalUsage implements FinanceRowItem {
     @Digits(integer = MAX_DIGITS, fraction = MAX_FRACTION, message = MAX_DIGITS_MESSAGE)
     BigDecimal residualValue;
 
-    @NotBlank(message = NOT_BLANK_MESSAGE)
+    @NotNull(message = NOT_BLANK_MESSAGE)
     @Min(value = 0, message = VALUE_MUST_BE_HIGHER_MESSAGE)
     @Max(value = 100, message = VALUE_MUST_BE_LOWER_MESSAGE)
     @Digits(integer = MAX_DIGITS_INT, fraction = MAX_FRACTION, message = MAX_DIGITS_MESSAGE)
@@ -95,7 +97,7 @@ public class CapitalUsage implements FinanceRowItem {
 
         return npv.subtract(residualValue)
                 .multiply(new BigDecimal(utilisation)
-                .divide(new BigDecimal(100), 2, BigDecimal.ROUND_HALF_EVEN));
+                        .divide(new BigDecimal(100), 2, BigDecimal.ROUND_HALF_EVEN));
     }
 
     @Override
