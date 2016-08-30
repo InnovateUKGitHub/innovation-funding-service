@@ -74,7 +74,7 @@ public class OtherFundingValidatorTest {
     public void testInvalidMinimum() {
         mockWithRadio("Yes");
         OtherFunding otherFunding = new OtherFunding(3L, "Yes", "Source1", "12-2014", new BigDecimal(0));
-        expectError(otherFunding, "javax.validation.constraints.DecimalMin.message", 1);
+        expectError(otherFunding, "validation.field.max.value.or.higher", 1);
     }
     @Test
     public void testInvalidSecuredDate() {

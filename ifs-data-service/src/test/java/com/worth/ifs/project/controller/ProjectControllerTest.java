@@ -1,4 +1,4 @@
-package com.worth.ifs.project.controller;
+  package com.worth.ifs.project.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
@@ -368,13 +368,13 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
 
         when(bankDetailsServiceMock.submitBankDetails(bankDetailsResource)).thenReturn(serviceSuccess());
 
-        Error invalidSortCodeError = fieldError("sortCode", "123", "Pattern");
-        Error sortCodeNotProvided = fieldError("sortCode", null, "NotBlank");
-        Error invalidAccountNumberError = fieldError("accountNumber", "1234567", "Pattern");
-        Error accountNumberNotProvided = fieldError("accountNumber", null, "NotBlank");
-        Error organisationAddressNotProvided = fieldError("organisationAddress", null, "NotNull");
-        Error organisationIdNotProvided = fieldError("organisation", null, "NotNull");
-        Error projectIdNotProvided = fieldError("project", null, "NotNull");
+        Error invalidSortCodeError = fieldError("sortCode", "123", "validation.standard.sortcode.format", "", "", "\\d{6}");
+        Error sortCodeNotProvided = fieldError("sortCode", null, "validation.standard.sortcode.required", "");
+        Error invalidAccountNumberError = fieldError("accountNumber", "1234567", "validation.standard.accountnumber.format", "", "", "\\d{8}");
+        Error accountNumberNotProvided = fieldError("accountNumber", null, "validation.standard.accountnumber.required", "");
+        Error organisationAddressNotProvided = fieldError("organisationAddress", null, "validation.bankdetailsresource.organisationaddress.required", "");
+        Error organisationIdNotProvided = fieldError("organisation", null, "validation.bankdetailsresource.organisation.required", "");
+        Error projectIdNotProvided = fieldError("project", null, "validation.bankdetailsresource.project.required", "");
 
         RestErrorResponse expectedErrors = new RestErrorResponse(asList(invalidSortCodeError, invalidAccountNumberError));
 
