@@ -8,75 +8,71 @@ Documentation     INFUND-917: As an academic partner i want to input my finances
 ...               INFUND-2399: As a Academic partner I want to be able to add my finances including decimals for accurate recording of my finances
 Suite Setup       Log in create a new invite application invite academic collaborators and accept the invite
 Suite Teardown    the user closes the browser
-Force Tags        Finances    Email    Applicant
+Force Tags        Finances    Email    Applicant    Pending
 Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../../resources/variables/User_credentials.robot
 Resource          ../../../../resources/keywords/Login_actions.robot
 Resource          ../../../../resources/keywords/User_actions.robot
 Resource          ../../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
-
+#TODO it seems not possible to mark the finances as complete as Academic. Have created ticket INFUND-4747
 *** Variables ***
-${valid_pdf}      testing.pdf
-${valid_pdf excerpt}    Adobe PDF is an ideal format for electronic document distribution
-${text_file}      testing.txt
-${too_large_pdf}    large.pdf
+
 
 *** Test Cases ***
 Academic finances should be editable when lead marks them as complete
     [Documentation]    INFUND-2314
-    [Tags]
+    [Tags]    Academic
     [Setup]    Lead applicant marks the finances as complete
     Given guest user log-in    ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
     When The user navigates to the academic application finances
     Then the user should not see the element    css=#incurred-staff[readonly]
+    And the user logs out if they are logged in
     [Teardown]    Lead applicant marks the finances as incomplete
 
 Academic finance validations
     [Documentation]    INFUND-2399
-    [Tags]    Pending
+    [Tags]    Academic
     [Setup]    Guest user log-in    ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
     When The user navigates to the academic application finances
     And the applicant enters invalid inputs
-    Mark academic finances as complete
+    And Mark academic finances as complete
     Then the user should see an error    This field should be 0 or higher
     Then the user should see an error    This field cannot be left blank
     And the user should see the element    css=.error-summary-list
     And the field should not contain the currency symbol
 
 Academic finance calculations
-    [Documentation]    INFUND-917
-    ...
-    ...    INFUND-2399
-    [Tags]    Pending
-    [Setup]    Guest user log-in    ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
+    [Documentation]    INFUND-917, INFUND-2399
+    [Tags]    Academic
     Given The user navigates to the academic application finances
     When the academic partner fills the finances
     Then the calculations should be correct and the totals rounded to the second decimal
 
 Large pdf upload not allowed
     [Documentation]    INFUND-2720
-    [Tags]    Upload
+    [Tags]    Upload    Academic
     When the academic partner uploads a file    ${too_large_pdf}
     Then the user should get an error page    ${too_large_pdf_validation_error}
+    And the user should see the text in the page    Attempt to upload a large file
 
 Non pdf uploads not allowed
     [Documentation]    INFUND-2720
-    [Tags]
+    [Tags]    Upload    Academic
     [Setup]    The user navigates to the academic application finances
     When the academic partner uploads a file    ${text_file}
     Then the user should get an error page    ${wrong_filetype_validation_error}
 
 Lead applicant can't upload a JeS file
     [Documentation]    INFUND-2720
-    [Tags]
+    [Tags]    Pending
     [Setup]    Guest user log-in    &{lead_applicant_credentials}
     When The user navigates to the academic application finances
     Then the user should not see the element    name=jes-upload
 
 Academics upload
     [Documentation]    INFUND-917
-    [Tags]    HappyPath
+    [Tags]    HappyPath    Academic
     [Setup]    Guest user log-in    ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
     When The user navigates to the academic application finances
     When the academic partner uploads a file    ${valid_pdf}
@@ -86,28 +82,28 @@ Academics upload
 
 Academic partner can view the file on the finances
     [Documentation]    INFUND-917
-    [Tags]    HappyPath
+    [Tags]    HappyPath    Academic    Pending
     When The user navigates to the academic application finances
     When the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
 
 Academic partner can view the file on the finances overview
     [Documentation]    INFUND-917
-    [Tags]
+    [Tags]    Academic    Pending
     Given The user navigates to the finance overview of the academic
     When the user clicks the button/link    link=testing.pdf
     Then the user should not see an error in the page
 
 Lead applicant can't view the file on the finances page
     [Documentation]    INFUND-917
-    [Tags]
+    [Tags]    Pending
     [Setup]    Guest user log-in    &{lead_applicant_credentials}
     When The user navigates to the academic application finances
     Then the user should not see the text in the page    ${valid_pdf}
 
 Lead applicant can view the file on the finances overview page
     [Documentation]    INFUND-917
-    [Tags]
+    [Tags]    Pending
     Given The user navigates to the finance overview of the academic
     And the user should see the text in the page    ${valid_pdf}
     When the user clicks the button/link    link=${valid_pdf}
@@ -115,14 +111,19 @@ Lead applicant can view the file on the finances overview page
 
 Academic finances JeS link showing
     [Documentation]    INFUND-2402
-    [Tags]    Academic
+    [Tags]    Academic    Pending
     [Setup]    Guest user log-in    ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
     When The user navigates to the academic application finances
     Then the user can see the link for more JeS details
 
 Mark all as complete
     [Documentation]    INFUND-918
-    [Tags]
+    [Tags]    Academic
+    Given log in as user    ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
+    And The user navigates to the academic application finances
+    And the user should see the element    link=testing.pdf
+    When the user enters text to a text field    id=tsb-ref    123123
+    Then textfield value should be    id=tsb-ref    123123
     When the user clicks the button/link    jQuery=.button:contains("Mark all as complete")
     Then the user redirects to the page    Please provide Innovate UK with information about your project.    Application overview
     and the user navigates to the finance overview of the academic
@@ -130,14 +131,14 @@ Mark all as complete
 
 User should not be able to edit or upload the form
     [Documentation]    INFUND-2437
-    [Tags]
+    [Tags]   Pending
     When The user navigates to the academic application finances
     Then the user should not see the element    jQuery=button:contains("Remove")
     And the user should see the element    css=#incurred-staff[readonly]
 
 File delete should not be allowed when marked as complete
     [Documentation]    INFUND-2437
-    [Tags]
+    [Tags]    Pending
     When The user navigates to the academic application finances
     Then the user should not see the text in the page    Remove
 
@@ -145,7 +146,7 @@ Academic finance overview
     [Documentation]    INFUND-917
     ...
     ...    INFUND-2399
-    [Tags]
+    [Tags]    Pending
     Given the user navigates to the finance overview of the academic
     Then the finance table should be correct
     When the user clicks the button/link    link=testing.pdf

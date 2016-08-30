@@ -21,7 +21,7 @@ ${ASSESSOR_REVIEW_SUMMARY}    ${SERVER}/assessment/9/summary
 Guest user can't access the assessor dashboard
     [Documentation]    INFUND-1683
     [Tags]
-    [Setup]    Given the guest user opens the browser
+    [Setup]    the guest user opens the browser
     When the user navigates to the page    ${ASSESSOR_DASHBOARD}
     Then the user should be redirected to the correct page    ${LOGGED_OUT_URL_FRAGMENT}
 
@@ -47,7 +47,7 @@ Guest user can't access the review summary page
 Applicant can't access the assessor's dashboard page
     [Documentation]    INFUND-1683
     [Tags]    Pending
-    [Setup]    Given guest user log-in    &{collaborator2_credentials}
+    [Setup]    guest user log-in    &{collaborator2_credentials}
     # pending INFUND-4746
     Then the user navigates to the page and gets a custom error message    ${ASSESSOR_DASHBOARD}    You do not have the necessary permissions for your request
 
@@ -72,7 +72,7 @@ First Assessor shouldn't be able to see second assessor's assessments
     [Tags]
     [Setup]    guest user log-in    paul.plum@gmail.com    Passw0rd
     When the user navigates to the assessor page    ${Assessment_overview_11}
-    Then The user should see expected text on the page    You do not have the necessary permissions for your request
+    Then The user should see no permissions message
     [Teardown]    the user closes the browser
 
 Second assessor shouldn't be able to see first assessor's assessments
@@ -80,12 +80,12 @@ Second assessor shouldn't be able to see first assessor's assessments
     [Tags]
     [Setup]    guest user log-in    felix.wilson@gmail.com    Passw0rd
     When the user navigates to the assessor page    ${Assessment_overview_9}
-    Then The user should see expected text on the page    You do not have the necessary permissions for your request
+    Then The user should see no permissions message
 
 Second assessor shouldn't be able to access first assessor's application questions
     [Documentation]    INFUND-4569
     [Tags]
     When the user navigates to the assessor page    ${Application_question_url}
-    Then The user should see expected text on the page    You do not have the necessary permissions for your request
+    Then The user should see no permissions message
 
 *** Keywords ***
