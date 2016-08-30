@@ -124,8 +124,15 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     public ServiceResult<Void> saveSpendProfile(ProjectOrganisationCompositeId projectOrganisationCompositeId, SpendProfileTableResource table) {
 
         return validateSpendProfileCosts(table)
-                .andOnSuccess(() -> saveSpendProfileData(projectOrganisationCompositeId, table)) // We have to save the data even if the totals don't match, so we do that first
+                .andOnSuccess(() -> saveSpendProfileData(projectOrganisationCompositeId, table, false)) // We have to save the data even if the totals don't match, so we do that first
                 .andOnSuccess(() -> validateSpendProfileTotals(table));
+    }
+
+    @Override
+    public ServiceResult<Void> markSpendProfileComplete(ProjectOrganisationCompositeId projectOrganisationCompositeId, SpendProfileTableResource table) {
+        return validateSpendProfileCosts(table)
+                .andOnSuccess(() -> validateSpendProfileTotals(table))
+                .andOnSuccess(() -> saveSpendProfileData(projectOrganisationCompositeId, table, true));
     }
 
     private ServiceResult<Void> validateSpendProfileCosts(SpendProfileTableResource table) {
@@ -228,7 +235,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         return categoriesWithIncorrectTotal;
     }
 
-    private ServiceResult<Void> saveSpendProfileData(ProjectOrganisationCompositeId projectOrganisationCompositeId, SpendProfileTableResource table) {
+    private ServiceResult<Void> saveSpendProfileData(ProjectOrganisationCompositeId projectOrganisationCompositeId, SpendProfileTableResource table, boolean markAsComplete) {
 
         // Need to check how to convert the table to SpendProfileResource and save it.
         // The SpendProfileResource currently only has an id

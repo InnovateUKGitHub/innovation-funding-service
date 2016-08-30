@@ -18,6 +18,8 @@ public class SpendProfileResource {
 
     private CostGroupResource spendProfileFigures;
 
+    private boolean markedAsComplete;
+
     public Long getId() {
         return id;
     }
@@ -66,6 +68,14 @@ public class SpendProfileResource {
         this.spendProfileFigures = spendProfileFigures;
     }
 
+    public boolean isMarkedAsComplete() {
+        return markedAsComplete;
+    }
+
+    public void setMarkedAsComplete(boolean markedAsComplete) {
+        this.markedAsComplete = markedAsComplete;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -75,6 +85,7 @@ public class SpendProfileResource {
         SpendProfileResource that = (SpendProfileResource) o;
 
         return new EqualsBuilder()
+                .append(markedAsComplete, that.markedAsComplete)
                 .append(id, that.id)
                 .append(organisation, that.organisation)
                 .append(project, that.project)
@@ -90,6 +101,10 @@ public class SpendProfileResource {
                 .append(id)
                 .append(organisation)
                 .append(project)
+                .append(costCategoryType)
+                .append(eligibleCosts)
+                .append(spendProfileFigures)
+                .append(markedAsComplete)
                 .toHashCode();
     }
 }
