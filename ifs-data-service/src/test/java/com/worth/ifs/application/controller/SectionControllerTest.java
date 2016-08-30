@@ -161,7 +161,7 @@ public class SectionControllerTest extends BaseControllerMockMVCTest<SectionCont
 
         mockMvc.perform(RestDocumentationRequestBuilders.get("/section/markAsComplete/{sectionId}/{applicationId}/{processRoleId}", section.getId(), applicationId, processRoleId))
                 .andExpect(status().isOk())
-                .andExpect(content().string("[{\"objectName\":\"costItem\",\"objectId\":1,\"errors\":[{\"errorKey\":\"\",\"fieldName\":null,\"fieldRejectedValue\":null,\"arguments\":[],\"errorMessage\":\"this section should contains at least 1 row\"}]}]"))
+                .andExpect(content().string("[{\"objectName\":\"costItem\",\"objectId\":1,\"errors\":[{\"errorKey\":\"this section should contains at least 1 row\",\"fieldName\":null,\"fieldRejectedValue\":null,\"arguments\":[],\"errorMessage\":null}]}]"))
                 .andDo(
                         document(
                             "section/mark-as-complete-invalid",

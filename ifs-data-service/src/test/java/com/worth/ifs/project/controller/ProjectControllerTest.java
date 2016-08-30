@@ -311,11 +311,11 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
                 .withPhoneNumber("hello")
                 .build();
 
-        Error firstNameError = fieldError("firstName", "", "NotEmpty");
-        Error lastNameError = fieldError("lastName", "", "NotEmpty");
-        Error emailError = fieldError("email", "abc", "Email");
-        Error phoneNumberError = fieldError("phoneNumber", "hello", "Pattern");
-        Error phoneNumberLengthError = fieldError("phoneNumber", "hello", "Size");
+        Error firstNameError = fieldError("firstName", "", "validation.standard.firstname.required", "");
+        Error lastNameError = fieldError("lastName", "", "validation.standard.lastname.required", "");
+        Error emailError = fieldError("email", "abc", "validation.standard.email.format", "", "", "^[^{}|]*$");
+        Error phoneNumberError = fieldError("phoneNumber", "hello", "validation.standard.phonenumber.format", "", "", "([0-9\\ +-])+");
+        Error phoneNumberLengthError = fieldError("phoneNumber", "hello", "validation.standard.phonenumber.length.min", "", "2147483647", "8");
 
         MvcResult result = mockMvc.perform(put("/project/{projectId}/monitoring-officer", projectId)
                 .contentType(APPLICATION_JSON)
@@ -328,7 +328,9 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
         asList(firstNameError, lastNameError, emailError, phoneNumberError, phoneNumberLengthError).forEach(e -> {
             String fieldName = e.getFieldName();
             String errorKey = e.getErrorKey();
-            List<Error> matchingErrors = simpleFilter(response.getErrors(), error -> fieldName.equals(error.getFieldName()) && errorKey.equals(error.getErrorKey()));
+            List<Error> matchingErrors = simpleFilter(response.getErrors(), error ->
+                    fieldName.equals(error.getFieldName()) && errorKey.equals(error.getErrorKey()) &&
+                    e.getArguments().containsAll(error.getArguments()));
             assertEquals(1, matchingErrors.size());
         });
 
@@ -425,13 +427,13 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
 
         when(bankDetailsServiceMock.updateBankDetails(bankDetailsResource)).thenReturn(serviceSuccess());
 
-        Error invalidSortCodeError = fieldError("sortCode", "123", "Pattern");
-        Error sortCodeNotProvided = fieldError("sortCode", null, "NotBlank");
-        Error invalidAccountNumberError = fieldError("accountNumber", "1234567", "Pattern");
-        Error accountNumberNotProvided = fieldError("accountNumber", null, "NotBlank");
-        Error organisationAddressNotProvided = fieldError("organisationAddress", null, "NotNull");
-        Error organisationIdNotProvided = fieldError("organisation", null, "NotNull");
-        Error projectIdNotProvided = fieldError("project", null, "NotNull");
+        Error invalidSortCodeError = fieldError("sortCode", "123", "validation.standard.sortcode.format", "", "", "\\d{6}");
+        Error sortCodeNotProvided = fieldError("sortCode", null, "validation.standard.sortcode.required", "");
+        Error invalidAccountNumberError = fieldError("accountNumber", "1234567", "validation.standard.accountnumber.format", "", "", "\\d{8}");
+        Error accountNumberNotProvided = fieldError("accountNumber", null, "validation.standard.accountnumber.required", "");
+        Error organisationAddressNotProvided = fieldError("organisationAddress", null, "validation.bankdetailsresource.organisationaddress.required", "");
+        Error organisationIdNotProvided = fieldError("organisation", null, "validation.bankdetailsresource.organisation.required", "");
+        Error projectIdNotProvided = fieldError("project", null, "validation.bankdetailsresource.project.required", "");
 
         RestErrorResponse expectedErrors = new RestErrorResponse(asList(invalidSortCodeError, invalidAccountNumberError));
 

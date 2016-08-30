@@ -321,7 +321,7 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
                 fieldError("existing", "", "validation.field.must.not.be.blank"),
                 fieldError("deprecation", -5, "validation.field.max.value.or.higher", 1),
                 fieldError("residualValue", new BigDecimal("-100000"), "validation.field.max.value.or.higher", 0),
-                fieldError("npv", new BigDecimal("-10000"), "validation.field.max.value.or.higher", 0),
+                fieldError("npv", new BigDecimal("-10000"), "validation.field.max.value.or.higher", 1),
                 fieldError("utilisation", -5, "validation.field.max.value.or.higher", 0));
 
         assertErrorsAsExpected(messages, expectedErrors);
@@ -344,7 +344,7 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
         assertEquals("costItem", messages.getObjectName());
 
         List<Error> expectedErrors = asList(
-                fieldError("existing", overMaxAllowedTextSize, "validation.field.too.many.characters", 255),
+                fieldError("existing", overMaxAllowedTextSize, "validation.field.too.many.characters", 0, 255),
                 fieldError("utilisation", 200, "validation.field.max.value.or.lower", 100));
 
         assertErrorsAsExpected(messages, expectedErrors);
@@ -382,8 +382,8 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
 
         List<Error> expectedErrors = asList(
                 fieldError("item", null, "validation.field.must.not.be.blank"),
-                fieldError("cost", null, "may not be null"),
-                fieldError("quantity", null, "may not be null"));
+                fieldError("cost", null, "validation.field.must.not.be.blank"),
+                fieldError("quantity", null, "validation.field.must.not.be.blank"));
 
         assertErrorsAsExpected(messages, expectedErrors);
     }
