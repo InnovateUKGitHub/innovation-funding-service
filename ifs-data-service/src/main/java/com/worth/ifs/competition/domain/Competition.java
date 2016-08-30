@@ -35,7 +35,7 @@ public class Competition implements ProcessActivity {
     private List<Question> questions = new ArrayList<>();
 
     @OneToMany(mappedBy="competition")
-    private List<CompetitionCoFunder> coFunders = new ArrayList<>();
+    private List<CompetitionFunder> funders = new ArrayList<>();
 
     @OneToMany(mappedBy="competition")
     @OrderBy("priority ASC")
@@ -481,28 +481,12 @@ public class Competition implements ProcessActivity {
         this.innovateBudget = innovateBudget;
     }
 
-    public String getFunder() {
-        return funder;
+    public List<CompetitionFunder> getFunders() {
+        return funders;
     }
 
-    public void setFunder(String funder) {
-        this.funder = funder;
-    }
-
-    public BigDecimal getFunderBudget() {
-        return funderBudget;
-    }
-
-    public void setFunderBudget(BigDecimal funderBudget) {
-        this.funderBudget = funderBudget;
-    }
-
-    public List<CompetitionCoFunder> getCoFunders() {
-        return coFunders;
-    }
-
-    public void setCoFunders(List<CompetitionCoFunder> coFunders) {
-        this.coFunders = coFunders;
+    public void setFunders(List<CompetitionFunder> funders) {
+        this.funders = funders;
     }
 }
 

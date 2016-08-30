@@ -1,40 +1,39 @@
 package com.worth.ifs.util.fixtures;
 
-import com.worth.ifs.competition.domain.CompetitionCoFunder;
-import com.worth.ifs.competition.resource.CompetitionCoFunderResource;
+import com.worth.ifs.competition.domain.CompetitionFunder;
+import com.worth.ifs.competition.resource.CompetitionFunderResource;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by skistapur on 21/07/2016.
- */
 public class CompetitionCoFundersFixture {
 
 
-    public static List<CompetitionCoFunder> getTestCoFunders(int count) {
-        List<CompetitionCoFunder> returnList = new ArrayList<>();
+    public static List<CompetitionFunder> getTestCoFunders(int count) {
+        List<CompetitionFunder> returnList = new ArrayList<>();
 
         for (int i = 0; i < count; i++) {
-            CompetitionCoFunder coFunder = new CompetitionCoFunder();
+            CompetitionFunder coFunder = new CompetitionFunder();
             coFunder.setId(Long.valueOf(i));
-            coFunder.setCoFunder("coFunder-"+i);
-            coFunder.setCoFunderBudget(new BigDecimal(1));
+            coFunder.setFunder("coFunder-"+i);
+            coFunder.setFunderBudget(new BigDecimal(1));
+            coFunder.setCoFunder(true);
             returnList.add(coFunder);
         }
         return returnList;
     }
 
 
-    public static List<CompetitionCoFunderResource> getTestCoFundersResouces(int count, Long competitionId) {
-        List<CompetitionCoFunderResource> returnList = new ArrayList<>();
+    public static List<CompetitionFunderResource> getTestCoFundersResouces(int count, Long competitionId) {
+        List<CompetitionFunderResource> returnList = new ArrayList<>();
 
         for (int i = 0; i < count; i++) {
-            CompetitionCoFunderResource coFunder1 = new CompetitionCoFunderResource();
+            CompetitionFunderResource coFunder1 = new CompetitionFunderResource();
             coFunder1.setId(Long.valueOf(i));
-            coFunder1.setCoFunder("coFunder-"+i);
-            coFunder1.setCoFunderBudget(new BigDecimal(1));
+            coFunder1.setFunder("coFunder-"+i);
+            coFunder1.setFunderBudget(new BigDecimal(1));
+            coFunder1.setCoFunder(true);
             coFunder1.setCompetitionId(competitionId != null ? competitionId : Long.valueOf(i));
             returnList.add(coFunder1);
         }
@@ -42,13 +41,14 @@ public class CompetitionCoFundersFixture {
         return returnList;
     }
 
-    public static List<CompetitionCoFunderResource> getNewTestCoFundersResouces(int count, Long competitionId) {
-        List<CompetitionCoFunderResource> returnList = new ArrayList<>();
+    public static List<CompetitionFunderResource> getNewTestCoFundersResouces(int count, Long competitionId) {
+        List<CompetitionFunderResource> returnList = new ArrayList<>();
 
         for (int i = 0; i < count; i++) {
-            CompetitionCoFunderResource coFunder1 = new CompetitionCoFunderResource();
-            coFunder1.setCoFunder("coFunder-"+i);
-            coFunder1.setCoFunderBudget(new BigDecimal(1));
+            CompetitionFunderResource coFunder1 = new CompetitionFunderResource();
+            coFunder1.setFunder("coFunder-"+i);
+            coFunder1.setFunderBudget(new BigDecimal(1));
+            coFunder1.setCoFunder(true);
             coFunder1.setCompetitionId(competitionId != null ? competitionId : Long.valueOf(i));
             returnList.add(coFunder1);
         }

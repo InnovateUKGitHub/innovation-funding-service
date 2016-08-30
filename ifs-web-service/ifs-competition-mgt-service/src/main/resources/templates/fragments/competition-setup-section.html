@@ -227,7 +227,8 @@
         <h1 class="heading-xlarge">Funding information</h1>
     </div>
 
-    <form th:action="@{(${editable} ? '' : 'additional/edit')}" method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
+    <form data-autosave="compSetup" th:attr="data-competition=${competition.id}" data-section="additional"
+          th:action="@{(${editable} ? '' : 'additional/edit')}" method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
 
         <fieldset th:if="${editable}">
             <legend class="visuallyhidden">Funding information</legend>
@@ -267,31 +268,35 @@
                 </div>
             </div>
 
-            <div  th:each="(coFunder, iteration : ${competitionSetupForm.coFunders})" class="grid-row" id="co-funder-row-2">
+            <div  th:each="(funder, iteration : ${competitionSetupForm.funders})" class="grid-row" id="co-funder-row-2">
                 <div class="column-half">
-                    <div th:class="${#fields.hasErrors('coFunders[__${iteration.index}__].coFunder')}? 'form-group error':'form-group'">
-                        <label class="form-label" th:for="coFunders[__${iteration.index}__].coFunder">
-                            <th:block th:if="${#fields.hasErrors('coFunders[__${iteration.index}__].coFunder')}">
-                                <span class="error-message"  th:each="err : ${#fields.errors('coFunders[__${iteration.index}__].coFunder')}" th:text="${err}" />
+                    <div th:class="${#fields.hasErrors('funders[__${iteration.index}__].funder')}? 'form-group error':'form-group'">
+                        <label class="form-label" th:for="funders[__${iteration.index}__].funder">
+                            <th:block th:if="${#fields.hasErrors('funders[__${iteration.index}__].funder')}">
+                                <span class="error-message"  th:each="err : ${#fields.errors('funders[__${iteration.index}__].funder')}" th:text="${err}" />
                             </th:block>
                         </label>
-                        <input required="required" class="form-control width-x-large" th:class="${#fields.hasErrors('coFunders[__${iteration.index}__].coFunder') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
-                                th:field="${competitionSetupForm.coFunders[__${iteration.index}__].coFunder}"
+                        <input required="required" class="form-control width-x-large"
+                               th:class="${#fields.hasErrors('funders[__${iteration.index}__].funder') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
+                               th:field="${competitionSetupForm.funders[__${iteration.index}__].funder}"
                                value="" data-required-errormessage="Please enter a funder name" />
+                        <span class="autosave-info" />
                     </div>
                 </div>
 
                 <div class="column-half">
-                    <div th:class="${#fields.hasErrors('coFunders[__${iteration.index}__].coFunderBudget')}? 'form-group error':'form-group'">
+                    <div th:class="${#fields.hasErrors('funders[__${iteration.index}__].funderBudget')}? 'form-group error':'form-group'">
                         <label class="form-label" for="comp-co-funders-budget-${iteration.index}">
-                            <th:block th:if="${#fields.hasErrors('coFunders[__${iteration.index}__].coFunderBudget')}">
-                                <span class="error-message"  th:each="err : ${#fields.errors('coFunders[__${iteration.index}__].coFunderBudget')}" th:text="${err}" />
+                            <th:block th:if="${#fields.hasErrors('funders[__${iteration.index}__].funderBudget')}">
+                                <span class="error-message"  th:each="err : ${#fields.errors('funders[__${iteration.index}__].funderBudget')}" th:text="${err}" />
                             </th:block>
                         </label>
-                        <input required="required" type="number" min="0"  th:class="${#fields.hasErrors('coFunders[__${iteration.index}__].coFunderBudget') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
-                                th:id="${iteration.index}+'-funderBudget'"
-                               th:field="${competitionSetupForm.coFunders[__${iteration.index}__].coFunderBudget}" value=""
+                        <input required="required" type="number" min="0"
+                               th:class="${#fields.hasErrors('funders[__${iteration.index}__].funderBudget') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
+                               th:id="${iteration.index}+'-funderBudget'"
+                               th:field="${competitionSetupForm.funders[__${iteration.index}__].funderBudget}" value=""
                                data-required-errormessage="Please enter a budget" />
+                        <span class="autosave-info" />
                     </div>
                 </div>
             </div>
@@ -330,6 +335,7 @@
                            th:field="${competitionSetupForm.pafNumber}"
                            required="required"
                            data-required-errormessage="Please enter a PAF number" />
+                    <span class="autosave-info" />
                 </div>
 
                 <div th:class="${#fields.hasErrors('budgetCode')}? 'form-group error':'form-group'">
@@ -344,6 +350,7 @@
                            th:field="${competitionSetupForm.budgetCode}"
                            required="required"
                            data-required-errormessage="Please enter a budget code" />
+                    <span class="autosave-info" />
                 </div>
 
 
@@ -360,6 +367,7 @@
                     maxlength="255"
                     data-maxlength-errormessage="Activity code has a maximum length of 255 characters"
                            data-required-errormessage="Please enter an activity code" />
+                    <span class="autosave-info" />
                 </div>
 
                 <div th:class="${#fields.hasErrors('competitionCode')}? 'form-group error':'form-group'">
@@ -374,7 +382,8 @@
                            type="text"
                            th:field="${competitionSetupForm.competitionCode}"
                            required="required"
-                           data-required-errormessage="Please generate a competition code"/>
+                           data-required-errormessage="Please generate a competition code"
+                           data-autosave-disabled="data-autosave-disabled" />
                     <button class="button button-secondary" th:if="${#strings.isEmpty(competitionSetupForm.competitionCode)}" type="button" id="generate-code" th:value="${competition.id}">Generate code</button>
                 </div>
 
@@ -403,9 +412,9 @@
                     <td th:text="${competitionSetupForm.funder}">Funder Name</td>
                     <td class="numeric" th:text="${competitionSetupForm.funderBudget == 0 ? '' : '&pound;' + #numbers.formatDecimal(competitionSetupForm.funderBudget, 0, 'COMMA', 0, 'POINT')}">Funder Budget</td>
                 </tr>
-                <tr  th:each="(coFunder, iteration : ${competitionSetupForm.coFunders})">
-                    <td th:text="${coFunder.coFunder}">Co-Funder Name</td>
-                    <td class="numeric" th:text="${'&pound;' + #numbers.formatDecimal(coFunder.coFunderBudget, 0, 'COMMA', 0, 'POINT')}">Co-Funder Budget</td>
+                <tr  th:each="(funder, iteration : ${competitionSetupForm.funders})">
+                    <td th:text="${funder.funder}">Co-Funder Name</td>
+                    <td class="numeric" th:text="${'&pound;' + #numbers.formatDecimal(funder.funderBudget, 0, 'COMMA', 0, 'POINT')}">Co-Funder Budget</td>
                 </tr>
                 </tbody>
             </table>

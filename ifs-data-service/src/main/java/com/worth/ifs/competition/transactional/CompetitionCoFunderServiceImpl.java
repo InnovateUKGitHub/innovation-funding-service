@@ -1,7 +1,7 @@
 package com.worth.ifs.competition.transactional;
 
 import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.competition.domain.CompetitionCoFunder;
+import com.worth.ifs.competition.domain.CompetitionFunder;
 import com.worth.ifs.competition.repository.CompetitionCoFunderRepository;
 import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.competition.resource.CompetitionResource;
@@ -31,11 +31,11 @@ public class CompetitionCoFunderServiceImpl extends BaseTransactionalService imp
 
         competitionCoFunderRepository.deleteByCompetitionId(resource.getId());
         resource.getCoFunders().forEach(coFunderResource -> {
-            CompetitionCoFunder competitionCoFunder = new CompetitionCoFunder();
-            competitionCoFunder.setCoFunder(coFunderResource.getCoFunder());
-            competitionCoFunder.setCoFunderBudget(coFunderResource.getCoFunderBudget());
-            competitionCoFunder.setCompetition(competition);
-            competitionCoFunderRepository.save(competitionCoFunder);
+            CompetitionFunder competitionFunder = new CompetitionFunder();
+            competitionFunder.setFunder(coFunderResource.getFunder());
+            competitionFunder.setFunderBudget(coFunderResource.getFunderBudget());
+            competitionFunder.setCompetition(competition);
+            competitionCoFunderRepository.save(competitionFunder);
         });
 
 

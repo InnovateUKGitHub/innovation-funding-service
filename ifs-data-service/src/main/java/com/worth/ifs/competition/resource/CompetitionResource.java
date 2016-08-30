@@ -24,7 +24,7 @@ public class CompetitionResource {
     private List<Long> questions = new ArrayList<>();
     private List<Long> sections = new ArrayList<>();
     private List<Long> milestones = new ArrayList<>();
-    private List<CompetitionCoFunderResource> coFunders = new ArrayList<>();
+    private List<CompetitionFunderResource> coFunders = new ArrayList<>();
 
     private String name;
     private String description;
@@ -475,11 +475,11 @@ public class CompetitionResource {
         this.funderBudget = funderBudget;
     }
 
-    public List<CompetitionCoFunderResource> getCoFunders() {
+    public List<CompetitionFunderResource> getCoFunders() {
         return coFunders;
     }
 
-    public void setCoFunders(List<CompetitionCoFunderResource> coFunders) {
+    public void setCoFunders(List<CompetitionFunderResource> coFunders) {
         this.coFunders = coFunders;
     }
 }
