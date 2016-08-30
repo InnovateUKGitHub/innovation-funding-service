@@ -49,6 +49,7 @@ IFS.competition_management.setup = (function(){
                 }
               }
             });
+            return false;
         });
     },
     handleInnovationSector : function(pageLoad){
