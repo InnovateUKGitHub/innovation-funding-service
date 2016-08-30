@@ -189,7 +189,19 @@ public class CompetitionSetupController {
     public String submitAdditionalSectionDetails(@Valid @ModelAttribute("competitionSetupForm") AdditionalInfoForm competitionSetupForm,
                                               BindingResult bindingResult,
                                               @PathVariable("competitionId") Long competitionId,
-                                              Model model) {
+                                              Model model, HttpServletRequest request) {
+
+        if (request.getParameterMap().containsKey("generate-code")) {
+            CompetitionResource competition = competitionService.getById(competitionId);
+            if (competition.getStartDate() != null) {
+                competitionService.generateCompetitionCode(competitionId, competition.getStartDate());
+                return "redirect:/competition/setup/" + competitionId + "/section/additional";
+            }
+        } else if (request.getParameterMap().containsKey("add-cofunder")) {
+            List<CoFunderForm> coFunders = competitionSetupForm.getCoFunders();
+            coFunders.add(new CoFunderForm());
+            competitionSetupForm.setCoFunders(coFunders);
+        }
 
         return genericCompetitionSetupSection(competitionSetupForm, bindingResult, competitionId, CompetitionSetupSection.ADDITIONAL_INFO, model);
     }
