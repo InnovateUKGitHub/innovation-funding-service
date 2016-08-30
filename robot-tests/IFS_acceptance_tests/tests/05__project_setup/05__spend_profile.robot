@@ -56,6 +56,7 @@ Calculations in the spend profile table
 #    And the sum of tds equals the total    div.spend-profile-table   4    37    104354    # Labour
     [Teardown]    Logout as user
 
+
 Non-lead partner can view spend profile page
     [Documentation]    INFUND-3970
     [Tags]
