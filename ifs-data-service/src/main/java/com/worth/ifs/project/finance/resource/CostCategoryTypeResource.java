@@ -1,15 +1,15 @@
-package com.worth.ifs.project.resource;
+package com.worth.ifs.project.finance.resource;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-public class CostCategoryResource {
+public class CostCategoryTypeResource {
 
     private Long id;
 
     private String name;
 
-    private CostCategoryGroupResource costCategoryGroup;
+    private Long costCategoryGroup;
 
     public Long getId() {
         return id;
@@ -27,11 +27,11 @@ public class CostCategoryResource {
         this.name = name;
     }
 
-    public CostCategoryGroupResource getCostCategoryGroup() {
+    public Long getCostCategoryGroup() {
         return costCategoryGroup;
     }
 
-    public void setCostCategoryGroup(CostCategoryGroupResource costCategoryGroup) {
+    public void setCostCategoryGroup(Long costCategoryGroup) {
         this.costCategoryGroup = costCategoryGroup;
     }
 
@@ -41,7 +41,7 @@ public class CostCategoryResource {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        CostCategoryResource that = (CostCategoryResource) o;
+        CostCategoryTypeResource that = (CostCategoryTypeResource) o;
 
         return new EqualsBuilder()
                 .append(id, that.id)

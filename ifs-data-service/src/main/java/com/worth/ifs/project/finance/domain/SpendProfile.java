@@ -37,7 +37,7 @@ public class SpendProfile {
     @JoinColumn(name = "spend_profile_figures_cost_group_id")
     private CostGroup spendProfileFigures;
 
-    SpendProfile() {
+    public SpendProfile() {
         // for ORM use
     }
 

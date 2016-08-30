@@ -1,4 +1,4 @@
-package com.worth.ifs.project.resource;
+package com.worth.ifs.project.finance.resource;
 
 
 import com.worth.ifs.project.finance.domain.TimeUnit;
