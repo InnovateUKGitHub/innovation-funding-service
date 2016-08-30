@@ -39,7 +39,7 @@ public class SpendProfile {
 
     private boolean markedAsComplete;
 
-    SpendProfile() {
+    public SpendProfile() {
         // for ORM use
     }
 

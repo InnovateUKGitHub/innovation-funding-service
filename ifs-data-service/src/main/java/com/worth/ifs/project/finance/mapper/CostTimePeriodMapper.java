@@ -1,9 +1,9 @@
-package com.worth.ifs.project.mapper;
+package com.worth.ifs.project.finance.mapper;
 
 import com.worth.ifs.commons.mapper.BaseMapper;
 import com.worth.ifs.commons.mapper.GlobalMapperConfig;
 import com.worth.ifs.project.finance.domain.CostTimePeriod;
-import com.worth.ifs.project.resource.CostTimePeriodResource;
+import com.worth.ifs.project.finance.resource.CostTimePeriodResource;
 import org.mapstruct.Mapper;
 
 @Mapper(
