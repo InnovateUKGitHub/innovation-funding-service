@@ -323,10 +323,10 @@
               <select name="assign_question" class="prog-menu">
                   <div th:remove="tag" th:each="assignableUser : ${assignableUsers}">
                       <option th:value="${question.getId()}+'_'+${assignableUser.getId()}"
-                              th:unless="${(questionAssignee?.assignee == assignableUser.getId()) or ((questionAssignee?.assignee == null) and (leadApplicant?.getId() == assignableUser.getId()))}"
+                              th:unless="${(questionAssignee?.assigneeUserId == assignableUser.getUser()) or ((questionAssignee?.assignee == null) and (leadApplicant?.getId() == assignableUser.getUser()))}"
                               th:text="${assignableUser.userName}"
                               />
-                      <option th:if="${(questionAssignee?.assignee == assignableUser.getId()) or ((questionAssignee?.assignee == null) and (leadApplicant?.getId() == assignableUser.getId()))}"
+                      <option th:if="${(questionAssignee?.assigneeUserId == assignableUser.getUser()) or ((questionAssignee?.assignee == null) and (leadApplicant?.getId() == assignableUser.getUser()))}"
                               th:text="${assignableUser?.userName}"
                               selected="selected"
                               disabled="disabled"/>

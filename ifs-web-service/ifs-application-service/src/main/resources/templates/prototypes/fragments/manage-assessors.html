@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+
+<!-- =========================== Manage assessor find =========================== --> 
+<div th:fragment="prototype-assesor-row-find">
+   
+    <ul class="tabular-list__row">
+        <li class="width-quarter" aria-describedby="assessor-name"><a href="#" th:text="${name}">NAME</a></li>
+        <li class="width-quarter" aria-describedby="assessor-type" th:text="${type}">INDUSTRY</li>
+        <li class="width-half"  aria-describedby="assessor-area" th:text="${area}">Electronics, sensors &#38; photonics, Materials</li>
+        <li class="width-full">
+            <ul class="tabular-list__row--internal">
+                <li class="width-half">Contract and DOI: <strong th:text="${doi}">Yes</strong></li>
+                <li class="width-half alignright"><a href="#" class="button button-secondary add-to-invite">+ Add to invite list</a></li>
+            </ul>
+        </li>
+    </ul>
+
+</div>
+
+
+<!-- =========================== Manage assessor invite =========================== --> 
+<div th:fragment="prototype-assesor-row-invite">
+   
+    <ul class="tabular-list__row">
+        <li class="width-third">
+            <h3 class="heading-small no-margin"><a href="#" th:text="${name}">NAME</a></h3>
+            <p class="no-margin" th:text="${position}">POSITION</p>
+            <p class="no-margin-top" th:text="${org}">ORG</p>
+        </li>
+        
+        <li class="width-third">
+
+            <th:block th:if="${status == null}">
+
+                <label th:for="${'includeInGroupRow' + row}">
+                    <input th:id="${'includeInGroupRow' + row}" class="include-in-group" value="Irish" type="checkbox" />
+                    Include in group invite
+                </label>
+
+            </th:block>
+
+            <th:block th:if="status != null">
+                <p th:text="${msg}"></p>
+            </th:block>
+
+        </li>
+
+        <li class="width-third alignright">
+
+            <th:block th:if="${status == null}">
+                <a th:href="${'/prototypes/4607-manage-assessors-invite?status=invite-individual&#38;name='+name}" class="button invite-individual">Invite individual</a>
+            </th:block>
+            
+            <th:block th:if="${status != null}">
+                <p class="extra-margin-right">Status: <strong th:text="${status}"></strong></p>
+            </th:block>
+
+            <p>
+                <a href="#" class="extra-margin-right">Remove from list</a>
+            </p>
+        </li>
+    </ul>
+
+</div>
+
+
+<!-- =========================== Manage assessor assign by application =========================== --> 
+<div th:fragment="prototype-assesor-row-assign-application">
+    <ul class="tabular-list__row">
+        <li class="width-half">
+            <p class="no-margin">No: <a href="#" class="extra-margin-right" th:text="${number}">NUMBER</a> 
+                <th:block th:if="${status != null}">
+                    Status: <strong th:text="${status}">STATUS</strong>
+                </th:block>
+            </p>
+        </li>
+        <li class="width-quarter" aria-describedby="assign-lead-org" th:text="${org}">
+            ORG
+        </li>
+        <li class="width-quarter" aria-describedby="assign-assessors">
+            <strong th:text="${assessors}">0</strong> <span class="show-mobile">Assigned assessors</span>
+        </li>
+        <li class="width-full">
+            <ul class="tabular-list__row--internal">
+                <li class="width-half"><h3 class="heading-small no-margin-top extra-margin-bottom"><a href="#" th:text="${application}">APPLICATION</a></h3></li>
+                <li class="width-half alignright">
+
+                    <th:block th:if="${type != null and type == 'assign'}">
+                        <a th:href="${'/prototypes/4607-manage-assessors-assign?view=assessor&#38;row='+ row + '&#38;number='+ number + '&#38;application=' + application + '&#38;assessors=' + assessors + '&#38;name=' + name + '&#38;action=application-assigned'}" class="button button-secondary alignright" th:text="${button}">BUTTON TEXT</a>
+                    </th:block>
+
+
+
+                    <th:block th:if="${type == null}">
+                        <a th:href="${'/prototypes/4607-manage-assessors-assign?view=application&#38;number='+ number + '&#38;application=' + application + '&#38;assessors=' + assessors}" class="button button-secondary alignright" th:text="${button}">BUTTON TEXT</a>
+                    </th:block>
+
+
+                </li>
+            </ul>
+        </li>
+    </ul>
+</div>
+
+<!-- =========================== Manage assessor assign by assessor =========================== --> 
+<div th:fragment="prototype-assesor-row-assign-assessor">
+    <ul class="tabular-list__row">
+        <li class="width-half">
+            <h3 class="heading-small no-margin"><a href="#" th:text="${name}">NAME</a></h3>
+            <p class="no-margin" th:text="${position}">POSITION</p>
+            <p class="no-margin-top" th:text="${org}">ORG</p>
+        </li>
+        <li class="width-quarter">
+            <strong th:text="${applications}">1</strong>
+        </li>
+        <li class="width-quarter alignright">
+            
+            <th:block th:if="${type != null and type == 'assign'}">
+                <a th:href="${'/prototypes/4607-manage-assessors-assign?view=application&#38;number='+ param.number[0] + '&#38;application=' + param.application[0] + '&#38;name='+ name +'&#38;org='+ org +'&#38;position='+ position +'&#38;applications='+ applications +'&#38;row=' + row + '&#38;action=application-assigned'}" class="button button-secondary">Assign to application</a>
+            </th:block>
+
+            <th:block th:if="${type != null and type == 'assign-assessor'}">
+                <a th:href="${'/prototypes/4607-manage-assessors-assign?view=assessor&#38;name='+ name}" class="button button-secondary">Assign</a>
+            </th:block>
+
+             <th:block th:if="${type != null and type == 'remove'}">
+                <a th:href="${'/prototypes/4607-manage-assessors-assign?view=application&#38;number='+ param.number[0] + '&#38;application=' + param.application[0] + '&#38;name='+ name +'&#38;org='+ org +'&#38;position='+ position +'&#38;applications='+ applications +'&#38;row=' + row + '&#38;action=remove-assigned'}" class="button button-secondary">Remove</a>
+            </th:block>
+
+            <th:block th:if="${type == null}">
+                <a th:href="${'/prototypes/4607-manage-assessors-assign?view=application&#38;name='+ name}" class="button button-secondary">Assign</a>
+            </th:block>
+
+        </li>
+    </ul>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</html>

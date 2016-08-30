@@ -26,7 +26,7 @@ public class BankDetails {
     @JoinColumn(name = "projectId" , referencedColumnName = "id")
     private Project project;
 
-    @OneToOne (cascade = CascadeType.ALL, orphanRemoval = true)   // Using cascade because entries with type "BANK_DETAILS" should be added/removed via bank details
+    @OneToOne (cascade = CascadeType.ALL)   // Using cascade because entries with type "BANK_DETAILS" should be added/removed via bank details
     @JoinColumn(name = "organisationAddressId", referencedColumnName = "id")
     private OrganisationAddress organisationAddress;
 

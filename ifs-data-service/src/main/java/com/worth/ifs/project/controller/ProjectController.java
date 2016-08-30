@@ -144,13 +144,18 @@ public class ProjectController {
         return projectService.getOrganisationByProjectAndUser(projectId, userId).toGetResponse();
     }
 
+    @RequestMapping(value = "/{projectId}/bank-details", method = PUT)
+    public RestResult<Void> submitBanksDetail(@PathVariable("projectId") final Long projectId, @RequestBody @Valid final BankDetailsResource bankDetailsResource) {
+        return bankDetailsService.submitBankDetails(bankDetailsResource).toPutResponse();
+    }
+
     @RequestMapping(value = "/{projectId}/bank-details", method = POST)
-    public RestResult<Void> updateBanksDetail(@RequestBody @Valid final BankDetailsResource bankDetailsResource) {
+    public RestResult<Void> updateBanksDetail(@PathVariable("projectId") final Long projectId, @RequestBody @Valid final BankDetailsResource bankDetailsResource) {
         return bankDetailsService.updateBankDetails(bankDetailsResource).toPostResponse();
     }
 
     @RequestMapping(value = "/{projectId}/bank-details", method = GET, params = "bankDetailsId")
-    public RestResult<BankDetailsResource> getBankDetails(@RequestParam("bankDetailsId") final Long bankDetailsId) {
+    public RestResult<BankDetailsResource> getBankDetails(@PathVariable("projectId") final Long projectId, @RequestParam("bankDetailsId") final Long bankDetailsId) {
         return bankDetailsService.getById(bankDetailsId).toGetResponse();
     }
 

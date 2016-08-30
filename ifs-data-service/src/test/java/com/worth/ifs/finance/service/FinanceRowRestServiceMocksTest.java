@@ -1,19 +1,17 @@
 package com.worth.ifs.finance.service;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
-import com.worth.ifs.finance.domain.FinanceRow;
+import com.worth.ifs.commons.rest.ValidationMessages;
+import com.worth.ifs.finance.builder.LabourCostBuilder;
+import com.worth.ifs.finance.resource.cost.FinanceRowItem;
+import com.worth.ifs.finance.resource.cost.LabourCost;
 import org.junit.Test;
-import org.springframework.http.ResponseEntity;
-
+import org.springframework.http.HttpStatus;
+import java.util.ArrayList;
 import java.util.List;
 
-import static com.worth.ifs.BuilderAmendFunctions.id;
-import static com.worth.ifs.commons.service.ParameterizedTypeReferences.costListType;
-import static com.worth.ifs.finance.builder.FinanceRowBuilder.newFinanceRow;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.http.HttpMethod.*;
-import static org.springframework.http.HttpStatus.OK;
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.costItemListType;
+import static org.junit.Assert.*;
 
 /**
  *
@@ -28,39 +26,35 @@ public class FinanceRowRestServiceMocksTest extends BaseRestServiceUnitTest<Fina
         return costService;
     }
 
-    //@Test
+    @Test
     public void test_getCosts_forApplicationFinanceId() {
 
-        List<FinanceRow> returnedResponse = newFinanceRow().build(3);
+        List<FinanceRowItem> returnedResponse = new ArrayList<>();
 
-        setupGetWithRestResultExpectations(costRestURL + "/get/123", costListType(), returnedResponse);
-        /* List<FinanceRow> costs = service.getCosts(123L);
+        setupGetWithRestResultExpectations(costRestURL + "/get/123", costItemListType(), returnedResponse);
+        List<FinanceRowItem> costs = service.getCosts(123L).getSuccessObject();
         assertNotNull(costs);
-        assertEquals(returnedResponse[0], costs.get(0));
-        assertEquals(returnedResponse[1], costs.get(1));
-        assertEquals(returnedResponse[2], costs.get(2)); */
+        assertEquals(returnedResponse, costs);
     }
 
-    //@Test
+    @Test
     public void test_findById() {
+        String expectedUrl = dataServicesUrl + costRestURL + "/123";
+        FinanceRowItem returnedResponse = new LabourCost();
 
-        String expectedUrl = dataServicesUrl + costRestURL + "/findById/123";
-        FinanceRow returnedResponse = newFinanceRow().build();
-        ResponseEntity<FinanceRow> returnedEntity = new ResponseEntity<>(returnedResponse, OK);
+        setupGetWithRestResultExpectations(costRestURL + "/123", FinanceRowItem.class, returnedResponse);
 
-        when(mockRestTemplate.exchange(expectedUrl, GET, httpEntityForRestCall(), FinanceRow.class)).thenReturn(returnedEntity);
-
-        /* FinanceRow cost = service.findById(123L);
+        FinanceRowItem cost = service.findById(123L).getSuccessObject();
         assertNotNull(cost);
-        assertEquals(returnedResponse, cost); */
+        assertEquals(returnedResponse, cost);
     }
 
-    //@Test
+    @Test
     public void test_add_byApplicationFinanceIdAndQuestionId() {
-
-        String expectedUrl = dataServicesUrl + costRestURL + "/add/123/456";
-        service.add(123L, 456L, null);
-        verify(mockRestTemplate).exchange(expectedUrl, PUT, httpEntityForRestCall(), Void.class);
+        LabourCost costToUpdate = LabourCostBuilder.newLabourCost().build();
+        String expectedUrl = costRestURL + "/add/123/456";
+        setupPostWithRestResultExpectations(expectedUrl, ValidationMessages.class, costToUpdate, new ValidationMessages(), HttpStatus.OK);
+        service.add(123L, 456L, costToUpdate).getSuccessObject();
     }
 
     @Test
@@ -70,14 +64,11 @@ public class FinanceRowRestServiceMocksTest extends BaseRestServiceUnitTest<Fina
         setupDeleteWithRestResultVerifications(costRestURL + "/delete/123");
     }
 
-    //@Test
+    @Test
     public void test_update_byCost() {
-
-        FinanceRow costToUpdate = newFinanceRow().with(id(123L)).build();
-
-        String expectedUrl = dataServicesUrl + costRestURL + "/update/123";
-
-        //service.update(costToUpdate);
-        verify(mockRestTemplate).exchange(expectedUrl, PUT, httpEntityForRestCall(costToUpdate), Void.class);
+        LabourCost costToUpdate = LabourCostBuilder.newLabourCost().build();
+        String expectedUrl = costRestURL + "/update/" + costToUpdate.getId();
+        setupPutWithRestResultExpectations(expectedUrl, ValidationMessages.class, costToUpdate, new ValidationMessages());
+        service.update(costToUpdate).getSuccessObject();
     }
 }

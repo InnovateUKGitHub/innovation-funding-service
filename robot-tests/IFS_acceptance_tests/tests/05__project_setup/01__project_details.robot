@@ -288,7 +288,7 @@ the matching status checkbox is updated
     the user should see the element    jQuery=#${table_id} tr:nth-of-type(${COLUMN}) .${STATUS}
 
 the duration should be visible
-    Element Should Contain    xpath=//*[@id="content"]/form/fieldset/div/p[5]/strong    3 months
+    Element Should Contain    xpath=//*[@id="content"]/form/fieldset/div/p[5]/strong    36 months
 
 the user shouldn't be able to edit the day field as all projects start on the first of the month
     the user should see the element    css=.day [readonly]

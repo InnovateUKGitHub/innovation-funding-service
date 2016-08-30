@@ -27,6 +27,11 @@ public class ApplicationFormSectionSaver implements CompetitionSetupSectionSaver
 	}
 
 	@Override
+	public List<Error> autoSaveSectionField(CompetitionResource competitionResource, String fieldName, String value) {
+		return Collections.emptyList();
+	}
+
+	@Override
 	public boolean supportsForm(Class<? extends CompetitionSetupForm> clazz) {
 		return ApplicationFormForm.class.equals(clazz);
 	}
