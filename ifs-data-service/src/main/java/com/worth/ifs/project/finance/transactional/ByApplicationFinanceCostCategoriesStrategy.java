@@ -50,24 +50,21 @@ public class ByApplicationFinanceCostCategoriesStrategy implements CostCategoryT
 
         List<String> categoryNamesToSupport = simpleMap(spendRows, FinanceRowType::getName);
 
-        List<String> orderedCategoryNames = new ArrayList<>(categoryNamesToSupport);
-        orderedCategoryNames.sort((o1, o2) -> FinanceRowType.valueOf(o1).compareTo(FinanceRowType.valueOf(o2)));
-
         List<CostCategoryType> existingCostCategoryTypes = costCategoryTypeRepository.findAll();
 
         Optional<CostCategoryType> existingCostCategoryTypeWithMatchingCategories = simpleFindFirst(existingCostCategoryTypes, costCategoryType -> {
             List<String> existingCostCategoryNames = simpleMap(costCategoryType.getCostCategories(), CostCategory::getName);
-            return existingCostCategoryNames.size() == orderedCategoryNames.size() &&
-                    existingCostCategoryNames.containsAll(orderedCategoryNames);
+            return existingCostCategoryNames.size() == categoryNamesToSupport.size() &&
+                    existingCostCategoryNames.containsAll(categoryNamesToSupport);
         });
 
         return existingCostCategoryTypeWithMatchingCategories.orElseGet(() -> {
 
-            List<CostCategory> costCategories = simpleMap(orderedCategoryNames, CostCategory::new);
-            String costCategoryGroupDescription = "Cost Category Group for Categories " + simpleJoiner(orderedCategoryNames, ", ");
+            List<CostCategory> costCategories = simpleMap(categoryNamesToSupport, CostCategory::new);
+            String costCategoryGroupDescription = "Cost Category Group for Categories " + simpleJoiner(categoryNamesToSupport, ", ");
             CostCategoryGroup costCategoryGroup = new CostCategoryGroup(costCategoryGroupDescription, costCategories);
 
-            String costCategoryTypeName = "Cost Category Type for Categories " + simpleJoiner(orderedCategoryNames, ", ");
+            String costCategoryTypeName = "Cost Category Type for Categories " + simpleJoiner(categoryNamesToSupport, ", ");
             CostCategoryType costCategoryTypeToCreate = new CostCategoryType(costCategoryTypeName, costCategoryGroup);
             return costCategoryTypeRepository.save(costCategoryTypeToCreate);
         });
