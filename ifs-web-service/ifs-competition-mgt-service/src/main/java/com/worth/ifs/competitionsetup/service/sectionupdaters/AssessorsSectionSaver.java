@@ -25,7 +25,12 @@ public class AssessorsSectionSaver implements CompetitionSetupSectionSaver {
 	public List<Error> saveSection(CompetitionResource competitionResource, CompetitionSetupForm competitionSetupForm) {
         return Collections.emptyList();
 	}
-	
+
+	@Override
+	public List<Error> autoSaveSectionField(CompetitionResource competitionResource, String fieldName, String value) {
+		return Collections.emptyList();
+	}
+
 	@Override
 	public boolean supportsForm(Class<? extends CompetitionSetupForm> clazz) {
 		return AssessorsForm.class.equals(clazz);
