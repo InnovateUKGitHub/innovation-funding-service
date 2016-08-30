@@ -5,6 +5,7 @@ import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.invite.resource.InviteResultsResource;
+import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Service;
 
@@ -54,7 +55,6 @@ public class ProjectInviteRestServiceImpl extends BaseRestService implements Pro
     public RestResult<List<InviteProjectResource>> getInvitesByProject (Long projectId){
         String url = PROJECT_INVITE_BASE_URL + GET_PROJECT_INVITE_LIST + projectId;
         return getWithRestResult(url, inviteProjectResourceListType());
-
     }
 
 }

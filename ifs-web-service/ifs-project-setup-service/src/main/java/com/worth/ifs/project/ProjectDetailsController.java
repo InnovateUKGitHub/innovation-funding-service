@@ -538,7 +538,10 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
         //TODO: turn into a straight list ?!
         //TODO: filter by organisation
-        List <InviteProjectResource> invitedContacts = projectService.getInvitesByProject(projectId);
+        List <InviteProjectResource> invitedContacts = projectService.getInvitesByProject(projectId)
+                .stream()
+                .filter(l -> l.getInviteOrganisation().equals(organisationId))
+                .collect(Collectors.toList());
 
         model.addAttribute("organisationUsers", thisOrganisationUsers);
         model.addAttribute(FORM_ATTR_NAME, form);
@@ -548,8 +551,6 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         model.addAttribute("competition", competitionResource);
         model.addAttribute("newContactFor", inviteContactForm);
         model.addAttribute("invitedContacts", invitedContacts);
-
-
 
         return "project/finance-contact";
     }
