@@ -16,10 +16,14 @@ import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.repository.OrganisationTypeRepository;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.OrganisationTypeEnum;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.UriUtils;
 
+import java.io.UnsupportedEncodingException;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -37,6 +41,8 @@ import static java.util.stream.Collectors.toCollection;
  */
 @Service
 public class OrganisationServiceImpl extends BaseTransactionalService implements OrganisationService {
+
+    private static final Log log = LogFactory.getLog(OrganisationServiceImpl.class);
 
     @Autowired
     private AcademicRepository academicRepository;
@@ -72,8 +78,25 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
         if (organisation.getOrganisationType() == null) {
             organisation.setOrganisationType(organisationTypeRepository.findOne(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId()));
         }
+
         Organisation savedOrganisation = organisationRepository.save(organisation);
         return serviceSuccess(organisationMapper.mapToResource(savedOrganisation));
+    }
+
+    @Override
+    public ServiceResult<OrganisationResource> updateOrganisationNameAndRegistration(final Long organisationId, final String organisationName, final String registrationNumber) {
+        return find(organisation(organisationId)).andOnSuccess(organisation -> {
+            String organisationNameDecoded;
+            try {
+                organisationNameDecoded = UriUtils.decode(organisationName, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                log.error("Unable to decode company name " + organisationName + " . Saving original encoded value.", e);
+                organisationNameDecoded = organisationName;
+            }
+            organisation.setName(organisationNameDecoded);
+            organisation.setCompanyHouseNumber(registrationNumber);
+            return serviceSuccess(organisationMapper.mapToResource(organisation));
+        });
     }
 
     @Override

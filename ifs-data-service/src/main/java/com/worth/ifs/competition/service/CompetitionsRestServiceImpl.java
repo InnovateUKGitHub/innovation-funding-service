@@ -99,4 +99,14 @@ public class CompetitionsRestServiceImpl extends BaseRestService implements Comp
         return postWithRestResult(String.format("%s/%s/initialise-form/%s", competitionsRestURL, competitionId, competitionTypeId), Void.class);
     }
 
+    @Override
+    public RestResult<Void> markAsSetup(Long competitionId) {
+        return postWithRestResult(String.format("%s/%s/mark-as-setup", competitionsRestURL, competitionId), Void.class);
+    }
+
+    @Override
+    public RestResult<Void> returnToSetup(Long competitionId) {
+        return postWithRestResult(String.format("%s/%s/return-to-setup", competitionsRestURL, competitionId), Void.class);
+    }
+
 }

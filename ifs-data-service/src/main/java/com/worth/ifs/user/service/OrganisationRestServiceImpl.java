@@ -6,8 +6,12 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.resource.OrganisationResource;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.UriUtils;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.organisationResourceListType;
@@ -19,6 +23,7 @@ import static com.worth.ifs.commons.service.ParameterizedTypeReferences.organisa
  */
 @Service
 public class OrganisationRestServiceImpl extends BaseRestService implements OrganisationRestService {
+    private static final Log log = LogFactory.getLog(OrganisationRestServiceImpl.class);
 
     private String organisationRestURL = "/organisation";
 
@@ -45,6 +50,18 @@ public class OrganisationRestServiceImpl extends BaseRestService implements Orga
     @Override
     public RestResult<OrganisationResource> update(OrganisationResource organisation) {
         return putWithRestResult(organisationRestURL + "/update", organisation, OrganisationResource.class);
+    }
+
+    @Override
+    public RestResult<OrganisationResource> updateNameAndRegistration(OrganisationResource organisation) {
+        String organisationName;
+        try {
+            organisationName = UriUtils.encode(organisation.getName(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            log.error(e);
+            organisationName = organisation.getName();
+        }
+        return postWithRestResult(organisationRestURL + "/updateNameAndRegistration/" +  organisation.getId() + "?name=" + organisationName + "&registration=" + organisation.getCompanyHouseNumber(), OrganisationResource.class);
     }
 
     @Override

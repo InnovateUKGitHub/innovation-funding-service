@@ -409,6 +409,116 @@ public class CollectionFunctionsTest {
     }
 
     @Test
+    public void simpleToLinkedMapWhenInputListIsNull() {
+
+        Map<Integer, Integer> toLinkedMap = CollectionFunctions.simpleToLinkedMap(null, identity(), identity());
+        assertTrue(toLinkedMap.isEmpty());
+    }
+
+    @Test
+    public void simpleToLinkedMapWhenInputListIsEmpty() {
+
+        Map<Integer, Integer> toLinkedMap = CollectionFunctions.simpleToLinkedMap(Collections.EMPTY_LIST, identity(), identity());
+        assertTrue(toLinkedMap.isEmpty());
+    }
+
+    @Test
+    public void simpleToLinkedMap() {
+
+        List<Integer> inputList = Arrays.asList(1, 2, 3, 4, 5, 6);
+        Map<Integer, String> toLinkedMap = CollectionFunctions.simpleToLinkedMap(inputList, element -> element + 10, element -> element + " value");
+
+        // Assertion
+        int index = 0;
+        for (Entry<Integer, String> entry : toLinkedMap.entrySet()) {
+
+            // Ensure that the elements are present in the correct order
+
+            Integer expectedKey = inputList.get(index) + 10;
+            String expectedValue = inputList.get(index) + " value";
+
+            assertEquals(expectedKey, entry.getKey());
+            assertEquals(expectedValue, entry.getValue());
+            index++;
+        }
+    }
+
+    @Test
+    public void simpleLinkedMapKeyAndValue() {
+
+        Map<Integer, String> inputMap = new LinkedHashMap<>();
+        inputMap.put(1, "Test1");
+        inputMap.put(2, "Test2");
+        inputMap.put(3, "Test3");
+
+        Map<Integer, String> toLinkedMap = CollectionFunctions.simpleLinkedMapKeyAndValue(inputMap, element -> element + 10, element -> element + " value");
+
+        // Assertion
+        int inputKey = 1;
+        for (Entry<Integer, String> entry : toLinkedMap.entrySet()) {
+
+            // Ensure that the elements are present in the correct order
+
+            Integer expectedKey = inputKey + 10;
+            String expectedValue = inputMap.get(inputKey) + " value";
+
+            assertEquals(expectedKey, entry.getKey());
+            assertEquals(expectedValue, entry.getValue());
+            inputKey++;
+        }
+    }
+
+    @Test
+    public void simpleLinkedMapKey() {
+
+        Map<Integer, String> inputMap = new LinkedHashMap<>();
+        inputMap.put(1, "Test1");
+        inputMap.put(2, "Test2");
+        inputMap.put(3, "Test3");
+
+        Map<Integer, String> toLinkedMap = CollectionFunctions.simpleLinkedMapKey(inputMap, element -> element + 10);
+
+        // Assertion
+        int inputKey = 1;
+        for (Entry<Integer, String> entry : toLinkedMap.entrySet()) {
+
+            // Ensure that the elements are present in the correct order
+
+            Integer expectedKey = inputKey + 10;
+            String expectedValue = inputMap.get(inputKey);
+
+            assertEquals(expectedKey, entry.getKey());
+            assertEquals(expectedValue, entry.getValue());
+            inputKey++;
+        }
+    }
+
+    @Test
+    public void simpleLinkedMapValue() {
+
+        Map<Integer, String> inputMap = new LinkedHashMap<>();
+        inputMap.put(1, "Test1");
+        inputMap.put(2, "Test2");
+        inputMap.put(3, "Test3");
+
+        Map<Integer, String> toLinkedMap = CollectionFunctions.simpleLinkedMapValue(inputMap, element -> element + " value");
+
+        // Assertion
+        int inputKey = 1;
+        for (Entry<Integer, String> entry : toLinkedMap.entrySet()) {
+
+            // Ensure that the elements are present in the correct order
+
+            Integer expectedKey = inputKey;
+            String expectedValue = inputMap.get(inputKey) + " value";
+
+            assertEquals(expectedKey, entry.getKey());
+            assertEquals(expectedValue, entry.getValue());
+            inputKey++;
+        }
+    }
+
+    @Test
     public void testFindPermutations() {
 
         List<List<String>> permutations = CollectionFunctions.findPermutations(asList("a", "b", "c"));

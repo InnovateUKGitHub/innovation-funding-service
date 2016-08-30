@@ -7,7 +7,6 @@ import org.junit.Test;
 
 import java.time.LocalDateTime;
 
-import static com.worth.ifs.competition.resource.CompetitionResource.Status.COMPETITION_SETUP_FINISHED;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -32,15 +31,20 @@ public class CompetitionStatusTest {
     	when(dateProvider.provideDate()).thenReturn(currentDate);
     	
     	competition = new Competition();
-        competition.setStatus(COMPETITION_SETUP_FINISHED);
+        competition.setSetupComplete(true);
     	competition.setDateProvider(dateProvider);
     }
-    
     @Test
-    public void competitionStatusNotStarted(){
+    public void competitionInSetup(){
+        competition.setSetupComplete(false);
+
+        assertEquals(CompetitionResource.Status.COMPETITION_SETUP, competition.getCompetitionStatus());
+    }
+    @Test
+    public void competitionStatusReadyToOpen(){
     	competition.setStartDate(future);
         
-        assertEquals(CompetitionResource.Status.NOT_STARTED, competition.getCompetitionStatus());
+        assertEquals(CompetitionResource.Status.READY_TO_OPEN, competition.getCompetitionStatus());
     }
 
     @Test

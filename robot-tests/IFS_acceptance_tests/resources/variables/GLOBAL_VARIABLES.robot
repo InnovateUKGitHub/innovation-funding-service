@@ -94,9 +94,16 @@ ${unsuccessful_login_message}    Your sign in was unsuccessful because of the fo
 ${test_title}      test title
 ${unique_email_number}    1
 ${smoke_test}    0
+${submit_test_email}    ${test_mailbox_one}+submittest@gmail.com
+${application_name}    Submit test application
 
 # Assessor variables
 ${Assessment_overview_9}    ${server}/assessment/9
 ${Assessment_overview_11}    ${server}/assessment/11
 ${Application_question_url}    ${server}/assessment/9/question/47
 ${Finance_summar_9_url}    ${server}/assessment/9/finances
+
+${Invitation_to_assess_existing}    ${server}/assessment/invite/competition/bcbf56004fddd137ea29d4f8434d33f62e7a7552a3a084197c7dfebce774c136c10bb26e1c6c989e?accept=accepted
+${Invitation_to_assess_nonexisting}    ${server}/assessment/invite/competition/2abe401d357fc486da56d2d34dc48d81948521b372baff98876665f442ee50a1474a41f5a0964720
+${Assessor_Dashboard}    ${server}/assessment/assessor/dashboard
+

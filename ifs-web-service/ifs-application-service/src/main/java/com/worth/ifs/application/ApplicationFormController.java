@@ -368,9 +368,19 @@ public class ApplicationFormController extends AbstractApplicationController {
             errors.addAll(handleMarkSectionRequest(application, competition, sectionId, request, response, processRole, errors));
         }
 
+        if (errors.hasErrors()) {
+            errors.setErrors(sortValidationMessages(errors));
+        }
         cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
 
         return errors;
+    }
+
+    private List<Error> sortValidationMessages(ValidationMessages errors) {
+        List<Error> sortedErrors = errors.getErrors().stream().filter(error ->
+                error.getErrorKey().equals("application.validation.MarkAsCompleteFailed")).collect(Collectors.toList());
+        sortedErrors.addAll(errors.getErrors());
+        return sortedErrors.parallelStream().distinct().collect(Collectors.toList());
     }
 
     private void logSaveApplicationDetails(Map<String, String[]> params) {

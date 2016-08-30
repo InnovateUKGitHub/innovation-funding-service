@@ -1,6 +1,8 @@
+
 package com.worth.ifs.competition.service;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.competition.resource.CompetitionCountResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSearchResult;
@@ -17,6 +19,7 @@ import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCo
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  *
@@ -157,5 +160,23 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
         CompetitionSearchResult responses = service.searchCompetitions(searchQuery, page, size).getSuccessObject();
         assertNotNull(responses);
         assertEquals(returnedResponse, responses);
+    }
+
+    @Test
+    public void test_markAsSetup() {
+        long competitionId = 1L;
+        setupPostWithRestResultExpectations(competitionsRestURL + "/" + competitionId + "/mark-as-setup", Void.class, null, null, HttpStatus.OK);
+
+        RestResult<Void> result = service.markAsSetup(competitionId);
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void test_returnToSetup() {
+        long competitionId = 1L;
+        setupPostWithRestResultExpectations(competitionsRestURL + "/" + competitionId + "/return-to-setup", Void.class, null, null, HttpStatus.OK);
+
+        RestResult<Void> result = service.returnToSetup(competitionId);
+        assertTrue(result.isSuccess());
     }
 }

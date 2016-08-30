@@ -1,7 +1,9 @@
 package com.worth.ifs.competitionsetup.service.sectionupdaters;
 
+import com.worth.ifs.application.service.CategoryService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.application.service.MilestoneService;
+import com.worth.ifs.category.resource.CategoryResource;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
@@ -19,7 +21,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 
 /**
  * Competition setup section saver for the initial details section.
@@ -28,6 +34,7 @@ import java.util.*;
 public class InitialDetailsSectionSaver implements CompetitionSetupSectionSaver {
 
 	private static Log LOG = LogFactory.getLog(InitialDetailsSectionSaver.class);
+    private static String OPENINGDATE_FIELDNAME = "openingDate";
 
 	@Autowired
 	private CompetitionService competitionService;
@@ -40,6 +47,9 @@ public class InitialDetailsSectionSaver implements CompetitionSetupSectionSaver 
 
 	@Autowired
 	private CompetitionSetupMilestoneService competitionSetupMilestoneService;
+
+	@Autowired
+	private CategoryService categoryService;
 
 	@Override
 	public CompetitionSetupSection sectionToSave() {
@@ -60,16 +70,32 @@ public class InitialDetailsSectionSaver implements CompetitionSetupSectionSaver 
 			LocalDateTime startDate = LocalDateTime.of(initialDetailsForm.getOpeningDateYear(),
 					initialDetailsForm.getOpeningDateMonth(), initialDetailsForm.getOpeningDateDay(), 0, 0);
 			competition.setStartDate(startDate);
-            saveOpeningDateAsMilestone(startDate, competition.getId());
+
+            List<Error> errors = saveOpeningDateAsMilestone(startDate, competition.getId());
+            if(!errors.isEmpty()) {
+                return errors;
+            }
+
 		} catch (Exception e) {
 			LOG.error(e.getMessage());
-			competition.setStartDate(null);
+
+            return asList(Error.fieldError(OPENINGDATE_FIELDNAME, null, "Unable to save opening date"));
 		}
+
 		competition.setCompetitionType(initialDetailsForm.getCompetitionTypeId());
 		competition.setLeadTechnologist(initialDetailsForm.getLeadTechnologistUserId());
 
-		competition.setInnovationArea(initialDetailsForm.getInnovationAreaCategoryId());
 		competition.setInnovationSector(initialDetailsForm.getInnovationSectorCategoryId());
+
+		List<CategoryResource> children = categoryService.getCategoryByParentId(competition.getInnovationSector());
+		List<CategoryResource> matchingChild =
+				children.stream().filter(child -> child.getId().equals(initialDetailsForm.getInnovationAreaCategoryId())).collect(Collectors.toList());
+		if (matchingChild.isEmpty()) {
+			return asList(Error.fieldError("innovationAreaCategoryId",
+					initialDetailsForm.getInnovationAreaCategoryId(),
+					"Please choose one of the following sub categories of the innovation sector: " + children.stream().map(child -> child.getName()).collect(Collectors.joining(", "))));
+		}
+		competition.setInnovationArea(initialDetailsForm.getInnovationAreaCategoryId());
 
 		competitionService.update(competition);
 
@@ -77,10 +103,23 @@ public class InitialDetailsSectionSaver implements CompetitionSetupSectionSaver 
             competitionService.initApplicationFormByCompetitionType(competition.getId(), initialDetailsForm.getCompetitionTypeId());
         }
 
-        return new ArrayList<>();
+        return Collections.emptyList();
 	}
 
-	private void saveOpeningDateAsMilestone(LocalDateTime openingDate, Long competitionId) {
+	private List<Error> validateOpeningDate(LocalDateTime openingDate) {
+        if (openingDate.isBefore(LocalDateTime.now())) {
+            return asList(Error.fieldError(OPENINGDATE_FIELDNAME, openingDate.toString(), "Please enter a future date"));
+        }
+
+        return Collections.emptyList();
+    }
+
+	private List<Error> saveOpeningDateAsMilestone(LocalDateTime openingDate, Long competitionId) {
+        List<Error> errors = validateOpeningDate(openingDate);
+        if(!errors.isEmpty()) {
+            return errors;
+        }
+
 	    MilestoneEntry milestoneEntry = new MilestoneEntry();
         milestoneEntry.setMilestoneType(MilestoneType.OPEN_DATE);
 		milestoneEntry.setDay(openingDate.getDayOfMonth());
@@ -96,7 +135,7 @@ public class InitialDetailsSectionSaver implements CompetitionSetupSectionSaver 
 		LinkedMap<String, MilestoneEntry> milestoneEntryMap = new LinkedMap<>();
 		milestoneEntryMap.put(MilestoneType.OPEN_DATE.name(), milestoneEntry);
 
-		competitionSetupMilestoneService.updateMilestonesForCompetition(milestones, milestoneEntryMap, competitionId);
+		return competitionSetupMilestoneService.updateMilestonesForCompetition(milestones, milestoneEntryMap, competitionId);
 	}
 
 	@Override

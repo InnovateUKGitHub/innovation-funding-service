@@ -317,6 +317,41 @@ include::{snippets}/project/generate-spend-profile/http-response.adoc[]
 ==== Curl Example
 include::{snippets}/project/generate-spend-profile/curl-request.adoc[]
 
+=== Is Partner Documents Submit Allowed
+==== Success
+===== Request
+include::{snippets}/project/is-other-documents-submit-allowed/http-request.adoc[]
+include::{snippets}/project/is-other-documents-submit-allowed/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/is-other-documents-submit-allowed/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/is-other-documents-submit-allowed/curl-request.adoc[]
+
+=== Is Partner Documents Submit Not Allowed When Not All Uploaded
+==== Failure
+===== Request
+include::{snippets}/project/is-other-documents-submit-not-allowed-when-documents-not-fully-uploaded/http-request.adoc[]
+include::{snippets}/project/is-other-documents-submit-not-allowed-when-documents-not-fully-uploaded/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/is-other-documents-submit-not-allowed-when-documents-not-fully-uploaded/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/is-other-documents-submit-not-allowed-when-documents-not-fully-uploaded/curl-request.adoc[]
+
+=== Save Documents Submitted DateTime
+
+===== Request
+include::{snippets}/project/set-partner-documents-submitted-date/http-request.adoc[]
+include::{snippets}/project/set-partner-documents-submitted-date/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/set-partner-documents-submitted-date/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/set-partner-documents-submitted-date/curl-request.adoc[]
 
 === Get Spend Profile
 ==== Success
