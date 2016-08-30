@@ -106,7 +106,7 @@ public class LoginControllerTest extends BaseControllerMockMVCTest<LoginControll
     public void testResetPasswordPost() throws Exception {
 
         String hash = UUID.randomUUID().toString();
-        String password = "Passw0rd";
+        String password = "Passw0rd12";
         when(userService.checkPasswordResetHash(eq(hash))).thenReturn(RestResult.restSuccess());
         when(userService.resetPassword(eq(hash), eq(password))).thenReturn(RestResult.restSuccess());
 
@@ -143,7 +143,7 @@ public class LoginControllerTest extends BaseControllerMockMVCTest<LoginControll
     public void testResetPasswordPostShibErrors() throws Exception {
 
         String hash = UUID.randomUUID().toString();
-        String password = "Passw0rd";
+        String password = "Passw0rd123";
         when(userService.checkPasswordResetHash(eq(hash))).thenReturn(RestResult.restSuccess());
         List<Error> errors = new ArrayList<>();
         errors.add(new Error("INVALID_PASSWORD", HttpStatus.CONFLICT));
