@@ -14,17 +14,20 @@ Resource          ../../../resources/keywords/User_actions.robot
 Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
 
+*** Variables ***
+${Invitation_to_assess_existing}     ${server}/assessment/invite/competition/bcbf56004fddd137ea29d4f8434d33f62e7a7552a3a084197c7dfebce774c136c10bb26e1c6c989e?accept=accepted
+
 *** Test Cases ***
 Existing assessor - Accept invitation
     [Documentation]    INFUND-4649
     [Tags]
-    Given the user navigates to the page    ${Invitation_to_assess_existing}
+    When the user navigates to the page    ${Invitation_to_assess_existing}
     Then the user should see the text in the page    Invitation to assess 'Juggling Craziness'
     And the user should see the text in the page    You are invited to act as an assessor for the competition 'Juggling Craziness'.
-    #    And the user clicks the button/link    jQuery=.button:contains("Accept")
+    #And the user clicks the button/link    jQuery=.button:contains("Accept")
     # TODO when INFUND-304 is ready to test
     #And guest user log-in    worth.email.test+assessor1@gmail.com    Passw0rd123
-    #Then the user should be redirected to the correct page    ${Assessor_Dashboard}    #The variable needs to be declared
+    #Then the user should be redirected to the correct page
     [Teardown]
 
 Existing assessor - Reject invitation
@@ -34,5 +37,4 @@ Existing assessor - Reject invitation
     Then the user should see the text in the page    Invitation to assess '(different)'
     And the user clicks the button/link    jQuery=.button:contains("Reject")
     And guest user log-in    worth.email.test+assessor1@gmail.com    Passw0rd123
-    Then the user should not see the text in the page
     [Teardown]

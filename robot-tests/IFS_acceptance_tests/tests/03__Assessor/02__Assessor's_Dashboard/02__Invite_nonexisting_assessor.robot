@@ -14,6 +14,9 @@ Resource          ../../../resources/keywords/User_actions.robot
 Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
 
+*** Variables ***
+${Invitation_to_assess_nonexisting}    ${server}/assessment/invite/competition/2abe401d357fc486da56d2d34dc48d81948521b372baff98876665f442ee50a1474a41f5a0964720
+
 *** Test Cases ***
 New Assessor - Accept invitation
     [Documentation]    INFUND-4649
@@ -40,7 +43,7 @@ Create Assessor account
     Then the user should be redirected to the correct page    ${Assessor_Dashboard}
 
 New Assessor - Reject invitation
-    [Documentation]    INFUND-4636
+    [Documentation]    INFUND-4631
     [Tags]    Pending
     Given the user navigates to the page    ${Invitation_to_assess_nonexisting}
     Then the user should see the text in the page    Invitation to assess '(different name)'
