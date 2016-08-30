@@ -75,9 +75,9 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
         List<Error> getFinanceRowItemErrors = flattenLists(simpleMap(invalidItems, validationMessages ->
                 simpleMap(validationMessages.getErrors(), e -> {
                     if(StringUtils.hasText(e.getErrorKey())){
-                        return fieldError("formInput[cost-" + validationMessages.getObjectId() + "-" + e.getFieldName() + "]", e.getFieldRejectedValue(), e.getErrorMessage());
+                        return fieldError("formInput[cost-" + validationMessages.getObjectId() + "-" + e.getFieldName() + "]", e.getFieldRejectedValue(), e.getErrorKey(), e.getArguments());
                     }else{
-                        return fieldError("formInput[cost-" + validationMessages.getObjectId() + "]", e.getFieldRejectedValue(), e.getErrorMessage());
+                        return fieldError("formInput[cost-" + validationMessages.getObjectId() + "]", e.getFieldRejectedValue(), e.getErrorKey(), e.getArguments());
                     }
                 })
         ));
