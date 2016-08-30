@@ -10,6 +10,8 @@ import com.worth.ifs.invite.domain.ParticipantStatus;
 import com.worth.ifs.invite.domain.RejectionReason;
 import com.worth.ifs.invite.resource.CompetitionInviteResource;
 import com.worth.ifs.invite.resource.RejectionReasonResource;
+import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -17,12 +19,16 @@ import org.mockito.InjectMocks;
 
 import static com.worth.ifs.assessment.builder.CompetitionInviteBuilder.newCompetitionInvite;
 import static com.worth.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.invite.builder.RejectionReasonBuilder.newRejectionReason;
 import static com.worth.ifs.invite.constant.InviteStatus.CREATED;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static com.worth.ifs.user.builder.UserBuilder.newUser;
+import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.*;
@@ -75,7 +81,7 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
         ServiceResult<CompetitionInviteResource> inviteServiceResult = competitionInviteService.getInvite("inviteHashNotExists");
 
         assertTrue(inviteServiceResult.isFailure());
-        assertEquals(GENERAL_NOT_FOUND.getErrorKey(), inviteServiceResult.getFailure().getErrors().get(0).getErrorKey());
+        assertTrue(inviteServiceResult.getFailure().is(notFoundError(CompetitionInvite.class, "inviteHashNotExists")));
 
         InOrder inOrder = inOrder(competitionInviteRepositoryMock, competitionInviteMapperMock);
         inOrder.verify(competitionInviteRepositoryMock, calls(1)).getByHash("inviteHashNotExists");
@@ -98,7 +104,6 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
         inOrder.verifyNoMoreInteractions();
     }
 
-
     @Test
     public void openInvite_hashNotExists() throws Exception {
         when(competitionInviteRepositoryMock.getByHash(anyString())).thenReturn(null);
@@ -106,8 +111,7 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
         ServiceResult<CompetitionInviteResource> inviteServiceResult = competitionInviteService.openInvite("inviteHashNotExists");
 
         assertTrue(inviteServiceResult.isFailure());
-        assertEquals(GENERAL_NOT_FOUND.getErrorKey(), inviteServiceResult.getFailure().getErrors().get(0).getErrorKey());
-
+        assertTrue(inviteServiceResult.getFailure().is(notFoundError(CompetitionInvite.class, "inviteHashNotExists")));
 
         InOrder inOrder = inOrder(competitionInviteRepositoryMock, competitionInviteMapperMock);
         inOrder.verify(competitionInviteRepositoryMock, calls(1)).getByHash("inviteHashNotExists");
@@ -139,7 +143,7 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
         ServiceResult<Void> serviceResult = competitionInviteService.acceptInvite("inviteHashNotExists");
 
         assertTrue(serviceResult.isFailure());
-        assertEquals(GENERAL_NOT_FOUND.getErrorKey(), serviceResult.getFailure().getErrors().get(0).getErrorKey());
+        assertTrue(serviceResult.getFailure().is(notFoundError(CompetitionParticipant.class, "inviteHashNotExists")));
 
         InOrder inOrder = inOrder(competitionParticipantRepositoryMock);
         inOrder.verify(competitionParticipantRepositoryMock, calls(1)).getByInviteHash("inviteHashNotExists");
@@ -191,7 +195,6 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
 
         assertEquals(ParticipantStatus.PENDING, competitionParticipant.getStatus());
 
-
         // reject the invite
         RejectionReasonResource rejectionReasonResource = RejectionReasonResourceBuilder
                 .newRejectionReasonResource()
@@ -222,7 +225,6 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
         competitionInviteService.openInvite("inviteHash");
 
         assertEquals(ParticipantStatus.PENDING, competitionParticipant.getStatus());
-
 
         RejectionReasonResource rejectionReasonResource = RejectionReasonResourceBuilder
                 .newRejectionReasonResource()
@@ -256,7 +258,7 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
         ServiceResult<Void> serviceResult = competitionInviteService.rejectInvite("inviteHashNotExists", rejectionReasonResource, "too busy");
 
         assertTrue(serviceResult.isFailure());
-        assertEquals(GENERAL_NOT_FOUND.getErrorKey(), serviceResult.getFailure().getErrors().get(0).getErrorKey());
+        assertTrue(serviceResult.getFailure().is(notFoundError(CompetitionParticipant.class, "inviteHashNotExists")));
 
         InOrder inOrder = inOrder(competitionParticipantRepositoryMock);
         inOrder.verify(competitionParticipantRepositoryMock, calls(1)).getByInviteHash("inviteHashNotExists");
@@ -360,7 +362,7 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
         ServiceResult<Void> serviceResult = competitionInviteService.rejectInvite("inviteHash", rejectionReasonResource, "too busy");
 
         assertTrue(serviceResult.isFailure());
-        assertEquals(GENERAL_NOT_FOUND.getErrorKey(), serviceResult.getFailure().getErrors().get(0).getErrorKey());
+        assertTrue(serviceResult.getFailure().is(notFoundError(RejectionReason.class, 2L)));
 
         assertEquals(ParticipantStatus.PENDING, competitionParticipant.getStatus());
 
@@ -391,6 +393,75 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
         inOrder.verify(rejectionReasonRepositoryMock, calls(1)).findOne(1L);
         inOrder.verify(competitionParticipantRepositoryMock, calls(1)).getByInviteHash("inviteHash");
 
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void checkExistingUser_hashNotExists() throws Exception {
+        when(competitionInviteRepositoryMock.getByHash(isA(String.class))).thenReturn(null);
+
+        ServiceResult<Boolean> result = competitionInviteService.checkExistingUser("hash");
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(notFoundError(CompetitionInvite.class, "hash")));
+
+        InOrder inOrder = inOrder(competitionInviteRepositoryMock, userServiceMock);
+        inOrder.verify(competitionInviteRepositoryMock).getByHash("hash");
+        inOrder.verify(userServiceMock, never()).findByEmail(isA(String.class));
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void checkExistingUser_userExistsOnInvite() throws Exception {
+        User user = newUser().build();
+
+        CompetitionInvite competitionInvite = newCompetitionInvite()
+                .withUser(user)
+                .withEmail("test@test.com")
+                .build();
+
+        when(competitionInviteRepositoryMock.getByHash("hash")).thenReturn(competitionInvite);
+
+        assertTrue(competitionInviteService.checkExistingUser("hash").getSuccessObjectOrThrowException());
+
+        InOrder inOrder = inOrder(competitionInviteRepositoryMock, userServiceMock);
+        inOrder.verify(competitionInviteRepositoryMock).getByHash("hash");
+        inOrder.verify(userServiceMock, never()).findByEmail(isA(String.class));
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void checkExistingUser_userExistsForEmail() throws Exception {
+        UserResource user = newUserResource().build();
+
+        CompetitionInvite competitionInvite = newCompetitionInvite()
+                .withEmail("test@test.com")
+                .build();
+
+        when(competitionInviteRepositoryMock.getByHash("hash")).thenReturn(competitionInvite);
+        when(userServiceMock.findByEmail("test@test.com")).thenReturn(serviceSuccess(user));
+
+        assertTrue(competitionInviteService.checkExistingUser("hash").getSuccessObjectOrThrowException());
+
+        InOrder inOrder = inOrder(competitionInviteRepositoryMock, userServiceMock);
+        inOrder.verify(competitionInviteRepositoryMock).getByHash("hash");
+        inOrder.verify(userServiceMock).findByEmail("test@test.com");
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void checkExistingUser_userDoesNotExist() throws Exception {
+        CompetitionInvite competitionInvite = newCompetitionInvite()
+                .withEmail("test@test.com")
+                .build();
+
+        when(competitionInviteRepositoryMock.getByHash("hash")).thenReturn(competitionInvite);
+        when(userServiceMock.findByEmail("test@test.com")).thenReturn(serviceFailure(notFoundError(UserResource.class, "hash")));
+
+        assertFalse(competitionInviteService.checkExistingUser("hash").getSuccessObjectOrThrowException());
+
+        InOrder inOrder = inOrder(competitionInviteRepositoryMock, userServiceMock);
+        inOrder.verify(competitionInviteRepositoryMock).getByHash("hash");
+        inOrder.verify(userServiceMock).findByEmail("test@test.com");
         inOrder.verifyNoMoreInteractions();
     }
 }

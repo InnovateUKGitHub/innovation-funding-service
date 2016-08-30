@@ -16,4 +16,6 @@ public interface CompetitionInviteRestService {
     RestResult<Void> acceptInvite(String inviteHash);
 
     RestResult<Void> rejectInvite(String inviteHash, CompetitionRejectionResource rejectionReason);
+
+    RestResult<Boolean> checkExistingUser(String inviteHash);
 }

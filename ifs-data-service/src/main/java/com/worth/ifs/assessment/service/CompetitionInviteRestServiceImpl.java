@@ -28,11 +28,16 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
 
     @Override
     public RestResult<Void> acceptInvite(String inviteHash) {
-        return postWithRestResultAnonymous(format("%s/%s/%s", competitionInviteRestUrl, "/acceptInvite", inviteHash), Void.class);
+        return postWithRestResult(format("%s/%s/%s", competitionInviteRestUrl, "/acceptInvite", inviteHash), Void.class);
     }
 
     @Override
     public RestResult<Void> rejectInvite(String inviteHash, CompetitionRejectionResource rejectionReason) {
         return postWithRestResultAnonymous(format("%s/%s/%s", competitionInviteRestUrl, "/rejectInvite", inviteHash), rejectionReason, Void.class);
+    }
+
+    @Override
+    public RestResult<Boolean> checkExistingUser(String inviteHash) {
+        return getWithRestResultAnonymous(format("%s/%s/%s", competitionInviteRestUrl, "/checkExistingUser", inviteHash), Boolean.class);
     }
 }

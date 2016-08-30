@@ -24,10 +24,12 @@ import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.invite.builder.RejectionReasonResourceBuilder.newRejectionReasonResource;
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
@@ -62,13 +64,48 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
     }
 
     @Test
+    public void acceptInvite_loggedIn() throws Exception {
+        mockMvc.perform(post(restUrl + "{inviteHash}/accept", "hash"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/invite-accept/accept"));
+
+        verifyZeroInteractions(competitionInviteRestService);
+    }
+
+    @Test
+    public void acceptInvite_notLoggedInAndExistingUser() throws Exception {
+        setLoggedInUser(null);
+
+        when(competitionInviteRestService.checkExistingUser("hash")).thenReturn(restSuccess(TRUE));
+
+        mockMvc.perform(post(restUrl + "{inviteHash}/accept", "hash"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("assessor-competition-accept-user-exists-but-not-logged-in"));
+
+        verify(competitionInviteRestService).checkExistingUser("hash");
+    }
+
+    @Test
+    public void acceptInvite_notLoggedInAndNotExistingUser() throws Exception {
+        setLoggedInUser(null);
+
+        when(competitionInviteRestService.checkExistingUser("hash")).thenReturn(restSuccess(FALSE));
+
+        mockMvc.perform(post(restUrl + "{inviteHash}/accept", "hash"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/registration/register"));
+
+        verify(competitionInviteRestService).checkExistingUser("hash");
+    }
+
+    @Test
     public void openInvite() throws Exception {
         CompetitionInviteResource inviteResource = newCompetitionInviteResource().withCompetitionName("my competition").build();
 
         CompetitionInviteViewModel expectedViewModel = new CompetitionInviteViewModel("hash", "my competition");
 
         when(competitionInviteRestService.openInvite("hash")).thenReturn(restSuccess(inviteResource));
-        mockMvc.perform(get(restUrl + "hash"))
+        mockMvc.perform(get(restUrl + "{inviteHash}", "hash"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("assessor-competition-invite"))
                 .andExpect(model().attribute("model", expectedViewModel));
@@ -79,7 +116,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
     @Test
     public void openInvite_hashNotExists() throws Exception {
         when(competitionInviteRestService.openInvite("notExistHash")).thenReturn(restFailure(notFoundError(CompetitionInviteResource.class, "notExistHash")));
-        mockMvc.perform(get(restUrl + "notExistHash"))
+        mockMvc.perform(get(restUrl + "{inviteHash}", "notExistHash"))
                 .andExpect(model().attributeDoesNotExist("model"))
                 .andExpect(status().isNotFound());
 
@@ -94,7 +131,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
 
         RejectCompetitionForm expectedForm = new RejectCompetitionForm();
 
-        MvcResult result = mockMvc.perform(get(restUrl + "hash/reject/confirm"))
+        MvcResult result = mockMvc.perform(get(restUrl + "{inviteHash}/reject/confirm", "hash"))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("form", expectedForm))
                 .andExpect(model().attribute("rejectionReasons", rejectionReasons))
@@ -113,7 +150,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
     @Test
     public void rejectInviteConfirm_hashNotExists() throws Exception {
         when(competitionInviteRestService.getInvite("notExistHash")).thenReturn(restFailure(notFoundError(CompetitionInviteResource.class, "notExistHash")));
-        mockMvc.perform(get(restUrl + "notExistHash/reject/confirm"))
+        mockMvc.perform(get(restUrl + "{inviteHash}/reject/confirm", "notExistHash"))
                 .andExpect(status().isNotFound());
 
         verify(competitionInviteRestService).getInvite("notExistHash");

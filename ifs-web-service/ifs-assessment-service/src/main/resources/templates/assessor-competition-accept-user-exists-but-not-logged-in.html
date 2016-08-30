@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Join an application'" th:remove="tag"/>
+</head>
+<body th:with="context='applicant'" class="create-application-eligibility">
+
+<div th:include="fragments/layout :: body-start" th:remove="tag"/>
+<div th:include="fragments/layout :: global-header" th:remove="tag"/>
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag"/>
+
+    <div class="hgroup">
+        <h1 class="heading-xlarge no-margin-bottom">Assess competition</h1>
+        <p>You have been invited to assess a competition</p>
+    </div>
+
+    <div class="grid-row">
+        <section class="column-half">
+            <div>
+                <h1 class="heading-large">We've found an existing user account with the invited email address</h1>
+                <p>Please sign in with your existing account.</p>
+                <p><a th:href="@{/registration/accept-invite-user-exist-show-project}">Click here to sign in</a></p>
+            </div>
+        </section>
+        <section class="column-half">
+        </section>
+    </div>
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag"/>
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag"/>
+<div th:include="fragments/layout :: body-end" th:remove="tag"/>
+</body>
+</html>

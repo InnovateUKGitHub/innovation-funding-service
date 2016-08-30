@@ -49,7 +49,7 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
 
     @Test
     public void acceptInvite() {
-        setupPostWithRestResultAnonymousExpectations(format("%s/%s/%s", restUrl, "/acceptInvite", "hash"), Void.class, null, null, OK);
+        setupPostWithRestResultExpectations(format("%s/%s/%s", restUrl, "/acceptInvite", "hash"), OK);
         RestResult<Void> restResult = service.acceptInvite("hash");
         assertTrue(restResult.isSuccess());
     }
@@ -63,5 +63,11 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
 
         RestResult<Void> restResult = service.rejectInvite("hash", rejectionResource);
         assertTrue(restResult.isSuccess());
+    }
+
+    @Test
+    public void checkExistingUser() {
+        setupGetWithRestResultAnonymousExpectations(format("%s/%s/%s", restUrl, "/checkExistingUser", "hash"), Boolean.class, Boolean.TRUE);
+        assertTrue(service.checkExistingUser("hash").getSuccessObject());
     }
 }

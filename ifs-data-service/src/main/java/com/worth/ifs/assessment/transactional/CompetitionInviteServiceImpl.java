@@ -10,7 +10,9 @@ import com.worth.ifs.invite.repository.CompetitionParticipantRepository;
 import com.worth.ifs.invite.repository.RejectionReasonRepository;
 import com.worth.ifs.invite.resource.CompetitionInviteResource;
 import com.worth.ifs.invite.resource.RejectionReasonResource;
+import com.worth.ifs.user.transactional.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
@@ -19,6 +21,7 @@ import static com.worth.ifs.invite.constant.InviteStatus.OPENED;
 import static com.worth.ifs.invite.domain.ParticipantStatus.ACCEPTED;
 import static com.worth.ifs.invite.domain.ParticipantStatus.REJECTED;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
+import static java.lang.Boolean.TRUE;
 
 /**
  * Service for managing {@link com.worth.ifs.invite.domain.CompetitionInvite}s.
@@ -37,6 +40,9 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     @Autowired
     private CompetitionInviteMapper mapper;
+
+    @Autowired
+    private UserService userService;
 
     @Override
     public ServiceResult<CompetitionInviteResource> getInvite(String inviteHash) {
@@ -60,6 +66,16 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
         return getRejectionReason(rejectionReason)
                 .andOnSuccess(reason -> getParticipantByInviteHash(inviteHash)
                         .andOnSuccess(invite -> reject(invite, reason, rejectionComment))).andOnSuccessReturnVoid();
+    }
+
+    @Override
+    public ServiceResult<Boolean> checkExistingUser(@P("inviteHash") String inviteHash) {
+        return getByHash(inviteHash).andOnSuccessReturn(invite -> {
+            if (invite.getUser() != null) {
+                return TRUE;
+            }
+            return userService.findByEmail(invite.getEmail()).getOptionalSuccessObject().isPresent();
+        });
     }
 
     private ServiceResult<CompetitionInvite> getByHash(String inviteHash) {

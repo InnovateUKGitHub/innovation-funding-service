@@ -29,11 +29,16 @@ public class CompetitionInviteController {
 
     @RequestMapping(value = "/acceptInvite/{inviteHash}", method = RequestMethod.POST)
     public RestResult<Void> acceptInvite(@PathVariable String inviteHash) {
-        return competitionInviteService.acceptInvite(inviteHash).toGetResponse();
+        return competitionInviteService.acceptInvite(inviteHash).toPostResponse();
     }
 
     @RequestMapping(value = "/rejectInvite/{inviteHash}", method = RequestMethod.POST)
     public RestResult<Void> rejectInvite(@PathVariable String inviteHash, @RequestBody CompetitionRejectionResource rejection) {
-        return competitionInviteService.rejectInvite(inviteHash, rejection.getRejectionReasonResource(), rejection.getRejectionComment()).toGetResponse();
+        return competitionInviteService.rejectInvite(inviteHash, rejection.getRejectionReasonResource(), rejection.getRejectionComment()).toPostResponse();
+    }
+
+    @RequestMapping(value = "/checkExistingUser/{inviteHash}", method = RequestMethod.GET)
+    public RestResult<Boolean> checkExistingUser(@PathVariable String inviteHash) {
+        return competitionInviteService.checkExistingUser(inviteHash).toGetResponse();
     }
 }

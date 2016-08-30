@@ -94,6 +94,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
     public void acceptInvite_alreadyAccepted() throws Exception {
         acceptFailure(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_ALREADY_ACCEPTED_INVITE);
     }
+
     @Test
     public void acceptInvite_alreadyRejected() throws Exception {
         acceptFailure(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_ALREADY_REJECTED_INVITE);
@@ -154,6 +155,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
     public void rejectInvite_alreadyAccepted() throws Exception {
         rejectFailure(COMPETITION_PARTICIPANT_CANNOT_REJECT_ALREADY_ACCEPTED_INVITE);
     }
+
     @Test
     public void rejectInvite_alreadyRejected() throws Exception {
         rejectFailure(COMPETITION_PARTICIPANT_CANNOT_REJECT_ALREADY_REJECTED_INVITE);

@@ -10,6 +10,7 @@ import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.invite.resource.CompetitionRejectionResource;
 import com.worth.ifs.invite.resource.RejectionReasonResource;
 import com.worth.ifs.invite.service.RejectionReasonRestService;
+import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -54,9 +55,19 @@ public class CompetitionInviteController extends BaseController {
     }
 
     @RequestMapping(value = "competition/{inviteHash}/accept", method = RequestMethod.POST)
-    public String acceptInvite(@PathVariable("inviteHash") String inviteHash) {
-        return inviteRestService.acceptInvite(inviteHash)
-                .andOnSuccessReturn(() -> "").getSuccessObject();
+    public String acceptInvite(@PathVariable("inviteHash") String inviteHash, @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+        boolean userIsLoggedIn = loggedInUser != null;
+        if (userIsLoggedIn) {
+            return "redirect:/invite-accept/accept";
+        } else {
+            return inviteRestService.checkExistingUser(inviteHash).andOnSuccessReturn(userExists -> {
+                if (userExists) {
+                    return "assessor-competition-accept-user-exists-but-not-logged-in";
+                } else {
+                    return "redirect:/registration/register";
+                }
+            }).getSuccessObject();
+        }
     }
 
     @RequestMapping(value = "competition/{inviteHash}/reject", method = RequestMethod.POST)
