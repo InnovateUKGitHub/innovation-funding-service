@@ -19,14 +19,16 @@ public class ProjectSpendProfileViewModel {
     private Long durationInMonths;
     private SpendProfileSummaryModel summary;
     private SpendProfileTableResource table;
+    private boolean markedAsComplete;
 
-    public ProjectSpendProfileViewModel(ProjectResource project, SpendProfileTableResource table, SpendProfileSummaryModel summary) {
+    public ProjectSpendProfileViewModel(ProjectResource project, SpendProfileTableResource table, SpendProfileSummaryModel summary, boolean markedAsComplete) {
         this.projectId = project.getId();
         this.projectName = project.getName();
         this.targetProjectStartDate = project.getTargetStartDate();
         this.durationInMonths = project.getDurationInMonths();
         this.summary = summary;
         this.table = table;
+        this.markedAsComplete = markedAsComplete;
     }
 
     public Long getProjectId() {
@@ -77,6 +79,14 @@ public class ProjectSpendProfileViewModel {
         this.table = table;
     }
 
+    public boolean isMarkedAsComplete() {
+        return markedAsComplete;
+    }
+
+    public void setMarkedAsComplete(boolean markedAsComplete) {
+        this.markedAsComplete = markedAsComplete;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -86,6 +96,7 @@ public class ProjectSpendProfileViewModel {
         ProjectSpendProfileViewModel that = (ProjectSpendProfileViewModel) o;
 
         return new EqualsBuilder()
+                .append(markedAsComplete, that.markedAsComplete)
                 .append(projectId, that.projectId)
                 .append(projectName, that.projectName)
                 .append(targetProjectStartDate, that.targetProjectStartDate)
@@ -104,6 +115,7 @@ public class ProjectSpendProfileViewModel {
                 .append(durationInMonths)
                 .append(summary)
                 .append(table)
+                .append(markedAsComplete)
                 .toHashCode();
     }
 
@@ -116,6 +128,7 @@ public class ProjectSpendProfileViewModel {
                 .append("durationInMonths", durationInMonths)
                 .append("summary", summary)
                 .append("table", table)
+                .append("markedAsComplete", markedAsComplete)
                 .toString();
     }
 }

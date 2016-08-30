@@ -281,7 +281,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
             List<Cost> eligibleCosts = generateEligibleCosts(summaryPerCategory, costCategoryType);
             List<Cost> spendProfileCosts = generateSpendProfileFigures(summaryPerCategory, project, costCategoryType);
 
-            SpendProfile spendProfile = new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileCosts);
+            SpendProfile spendProfile = new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileCosts, false);
             spendProfileRepository.save(spendProfile);
         });
     }

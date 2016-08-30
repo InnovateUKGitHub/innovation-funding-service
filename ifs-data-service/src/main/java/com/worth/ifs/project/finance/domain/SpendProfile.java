@@ -37,16 +37,19 @@ public class SpendProfile {
     @JoinColumn(name = "spend_profile_figures_cost_group_id")
     private CostGroup spendProfileFigures;
 
+    private boolean markedAsComplete;
+
     SpendProfile() {
         // for ORM use
     }
 
-    public SpendProfile(Organisation organisation, Project project, CostCategoryType costCategoryType, List<Cost> eligibleCosts, List<Cost> spendProfileFigures) {
+    public SpendProfile(Organisation organisation, Project project, CostCategoryType costCategoryType, List<Cost> eligibleCosts, List<Cost> spendProfileFigures, boolean markedAsComplete) {
         this.organisation = organisation;
         this.project = project;
         this.costCategoryType = costCategoryType;
         this.eligibleCosts = new CostGroup(ELIGIBLE_COSTS_DESCRIPTION, eligibleCosts);
         this.spendProfileFigures = new CostGroup(SPEND_PROFILE_DESCRIPTION, spendProfileFigures);
+        this.markedAsComplete = markedAsComplete;
     }
 
     public Long getId() {
@@ -71,5 +74,9 @@ public class SpendProfile {
 
     public CostGroup getSpendProfileFigures() {
         return spendProfileFigures;
+    }
+
+    public boolean isMarkedAsComplete() {
+        return markedAsComplete;
     }
 }

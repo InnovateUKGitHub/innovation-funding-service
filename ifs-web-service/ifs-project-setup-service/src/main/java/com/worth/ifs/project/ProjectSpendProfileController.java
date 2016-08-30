@@ -138,7 +138,7 @@ public class ProjectSpendProfileController {
         SpendProfileTableResource table = projectFinanceService.getSpendProfileTable(projectId, organisationId);
         List<SpendProfileSummaryYearModel> years = createSpendProfileSummaryYears(projectResource, table);
         SpendProfileSummaryModel summary = new SpendProfileSummaryModel(years);
-        return new ProjectSpendProfileViewModel(projectResource, table, summary);
+        return new ProjectSpendProfileViewModel(projectResource, table, summary, false);
     }
 
     private List<SpendProfileSummaryYearModel> createSpendProfileSummaryYears(ProjectResource project, SpendProfileTableResource table){
