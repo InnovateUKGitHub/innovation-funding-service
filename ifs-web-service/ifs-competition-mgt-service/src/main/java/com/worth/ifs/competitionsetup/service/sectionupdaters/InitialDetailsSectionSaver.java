@@ -64,8 +64,6 @@ public class InitialDetailsSectionSaver implements CompetitionSetupSectionSaver 
 		
 		InitialDetailsForm initialDetailsForm = (InitialDetailsForm) competitionSetupForm;
 
-		Boolean isDiffCompType = competition.getCompetitionType() != initialDetailsForm.getCompetitionTypeId();
-
 		competition.setName(initialDetailsForm.getTitle());
 		competition.setExecutive(initialDetailsForm.getExecutiveUserId());
 
@@ -101,10 +99,7 @@ public class InitialDetailsSectionSaver implements CompetitionSetupSectionSaver 
 		competition.setInnovationArea(initialDetailsForm.getInnovationAreaCategoryId());
 
 		competitionService.update(competition);
-
-        if(isDiffCompType) {
-            competitionService.initApplicationFormByCompetitionType(competition.getId(), initialDetailsForm.getCompetitionTypeId());
-        }
+        competitionService.initApplicationFormByCompetitionType(competition.getId(), initialDetailsForm.getCompetitionTypeId());
 
         return Collections.emptyList();
 	}
