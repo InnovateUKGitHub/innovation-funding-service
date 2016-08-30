@@ -306,16 +306,14 @@
 
                     <div class="alignright">
                         <input type="hidden" name="coFunderCount" id="co-funder-count" th:value="${competitionSetupForm.coFundersCount}" />
-                        <button class="buttonlink" id="add-cofunder">+Add co-funder</button>
+                        <button class="buttonlink" name="add-cofunder" id="add-cofunder">+Add co-funder</button>
                     </div>
                 </div>
             </div>
 
             <hr />
 
-
             <fieldset>
-
                 <legend class="heading-medium">Reporting fields</legend>
 
                 <div th:class="${#fields.hasErrors('pafNumber')}? 'form-group error':'form-group'">
@@ -375,10 +373,8 @@
                            th:field="${competitionSetupForm.competitionCode}"
                            required="required"
                            data-required-errormessage="Please generate a competition code"/>
-                    <button class="button button-secondary" th:if="${#strings.isEmpty(competitionSetupForm.competitionCode)}" type="button" id="generate-code" th:value="${competition.id}">Generate code</button>
+                    <button class="button button-secondary" th:if="${#strings.isEmpty(competitionSetupForm.competitionCode)}" type="submit" name="generate-code" id="generate-code" th:value="${competition.id}">Generate code</button>
                 </div>
-
-
             </fieldset>
 
             <button class="button">Done</button>
