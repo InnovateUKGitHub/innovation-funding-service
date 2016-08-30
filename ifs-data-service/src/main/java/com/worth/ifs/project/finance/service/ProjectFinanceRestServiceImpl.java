@@ -31,4 +31,10 @@ public class ProjectFinanceRestServiceImpl extends BaseRestService implements Pr
         String url = projectFinanceRestURL + "/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile";
         return getWithRestResult(url, SpendProfileResource.class);
     }
+
+    @Override
+    public RestResult<Void> saveSpendProfile(Long projectId, Long organisationId, SpendProfileTableResource table) {
+
+        return postWithRestResult(projectFinanceRestURL + "/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile", table, Void.class);
+    }
 }

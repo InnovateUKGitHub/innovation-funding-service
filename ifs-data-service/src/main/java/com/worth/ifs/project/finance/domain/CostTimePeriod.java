@@ -14,12 +14,6 @@ import static com.worth.ifs.util.MapFunctions.asMap;
 @Entity
 public class CostTimePeriod {
 
-    public enum TimeUnit {
-        DAY,
-        MONTH,
-        YEAR
-    }
-
     private static Map<TimeUnit, ChronoUnit> TIME_UNIT_TO_CHRONO_UNIT = asMap(
             TimeUnit.DAY, ChronoUnit.DAYS,
             TimeUnit.MONTH, ChronoUnit.MONTHS,
@@ -45,7 +39,7 @@ public class CostTimePeriod {
     @Enumerated(EnumType.STRING)
     private TimeUnit durationUnit;
 
-    CostTimePeriod() {
+    public CostTimePeriod() {
         // for ORM use
     }
 

@@ -1,5 +1,6 @@
 package com.worth.ifs.project.finance.transactional;
 
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.LocalDateResource;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.project.domain.Project;
@@ -14,10 +15,12 @@ import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.Organisation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,8 +30,9 @@ import java.util.stream.IntStream;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.processAnyFailuresOrSucceed;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.project.finance.domain.CostTimePeriod.TimeUnit.MONTH;
+import static com.worth.ifs.project.finance.domain.TimeUnit.MONTH;
 import static com.worth.ifs.util.CollectionFunctions.*;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static java.math.BigDecimal.ROUND_HALF_UP;
@@ -56,6 +60,10 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     @Autowired
     private SpendProfileCostCategorySummaryStrategy spendProfileCostCategorySummaryStrategy;
 
+    private static final String SPEND_PROFILE_TOTAL_FOR_ALL_MONTHS_INCORRECT_ERROR_KEY = "PROJECT_SETUP_SPEND_PROFILE_TOTAL_FOR_ALL_MONTHS_DOES_NOT_MATCH_ELIGIBLE_TOTAL_FOR_SPECIFIED_CATEGORY";
+
+    private static final String SPEND_PROFILE_INCORRECT_COST_ERROR_KEY = "PROJECT_SETUP_SPEND_PROFILE_INCORRECT_COST_FOR_SPECIFIED_CATEGORY_AND_MONTH";
+
     @Override
     public ServiceResult<Void> generateSpendProfile(Long projectId) {
 
@@ -77,10 +85,10 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
             CostGroup spendProfileFigures = spendProfile.getSpendProfileFigures();
 
             Map<String, BigDecimal> eligibleCostsPerCategory =
-                    simpleToLinkedMap(eligibleCosts.getCosts(), c -> c.getCostCategory().get().getName(), cost -> cost.getValue());
+                    simpleToLinkedMap(eligibleCosts.getCosts(), c -> c.getCostCategory().getName(), cost -> cost.getValue());
 
             Map<CostCategory, List<Cost>> spendProfileCostsPerCategory =
-                    spendProfileFigures.getCosts().stream().collect(groupingBy(c -> c.getCostCategory().get(), LinkedHashMap::new, toList()));
+                    spendProfileFigures.getCosts().stream().collect(groupingBy(c -> c.getCostCategory(), LinkedHashMap::new, toList()));
 
             Map<String, List<Cost>> spendFiguresPerCategory =
                     simpleLinkedMapKey(spendProfileCostsPerCategory, costCategory -> costCategory.getName());
@@ -112,12 +120,127 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         });
     }
 
+    @Override
+    public ServiceResult<Void> saveSpendProfile(ProjectOrganisationCompositeId projectOrganisationCompositeId, SpendProfileTableResource table) {
+
+        return validateSpendProfileCosts(table)
+                .andOnSuccess(() -> saveSpendProfileData(projectOrganisationCompositeId, table)) // We have to save the data even if the totals don't match, so we do that first
+                .andOnSuccess(() -> validateSpendProfileTotals(table));
+    }
+
+    private ServiceResult<Void> validateSpendProfileCosts(SpendProfileTableResource table) {
+
+        List<Error> incorrectCosts = checkCostsForAllCategories(table);
+
+        if (incorrectCosts.isEmpty()) {
+            return serviceSuccess();
+        } else {
+            return serviceFailure(incorrectCosts);
+        }
+    }
+
+    private List<Error> checkCostsForAllCategories(SpendProfileTableResource table) {
+
+        Map<String, List<BigDecimal>> monthlyCostsPerCategoryMap = table.getMonthlyCostsPerCategoryMap();
+
+        List<Error> incorrectCosts = new ArrayList<>();
+
+        for (Map.Entry<String, List<BigDecimal>> entry : monthlyCostsPerCategoryMap.entrySet()) {
+            String category = entry.getKey();
+            List<BigDecimal> monthlyCosts = entry.getValue();
+
+            int index = 0;
+            for (BigDecimal cost : monthlyCosts) {
+                isCostValid(cost, category, index, incorrectCosts);
+                index++;
+            }
+
+        }
+
+        return incorrectCosts;
+    }
+
+    private void isCostValid(BigDecimal cost, String category, int index, List<Error> incorrectCosts) {
+
+        checkFractionalCost(cost, category, index, incorrectCosts);
+
+        checkCostLessThanZero(cost, category, index, incorrectCosts);
+
+        checkCostGreaterThanOrEqualToMillion(cost, category, index, incorrectCosts);
+    }
+
+    private void checkFractionalCost(BigDecimal cost, String category, int index, List<Error> incorrectCosts) {
+
+        if (cost.scale() > 0) {
+            String errorMessage = String.format("Cost cannot contain fractional part. Category: %s, Month#: %d", category, index + 1);
+            incorrectCosts.add(new Error(SPEND_PROFILE_INCORRECT_COST_ERROR_KEY, errorMessage, HttpStatus.BAD_REQUEST));
+        }
+    }
+
+    private void checkCostLessThanZero(BigDecimal cost, String category, int index, List<Error> incorrectCosts) {
+
+        if (-1 == cost.compareTo(BigDecimal.ZERO)) { // Indicates that the cost is less than zero
+            String errorMessage = String.format("Cost cannot be less than zero. Category: %s, Month#: %d", category, index + 1);
+            incorrectCosts.add(new Error(SPEND_PROFILE_INCORRECT_COST_ERROR_KEY, errorMessage, HttpStatus.BAD_REQUEST));
+        }
+    }
+
+    private void checkCostGreaterThanOrEqualToMillion(BigDecimal cost, String category, int index, List<Error> incorrectCosts) {
+
+        if (-1 != cost.compareTo(new BigDecimal("1000000"))) { // Indicates that the cost million or more
+            String errorMessage = String.format("Cost cannot be million or more. Category: %s, Month#: %d", category, index + 1);
+            incorrectCosts.add(new Error(SPEND_PROFILE_INCORRECT_COST_ERROR_KEY, errorMessage, HttpStatus.BAD_REQUEST));
+        }
+    }
+
+    private ServiceResult<Void> validateSpendProfileTotals(SpendProfileTableResource table) {
+
+        List<Error> categoriesWithIncorrectTotal = checkTotalForMonths(table);
+
+        if (categoriesWithIncorrectTotal.isEmpty()) {
+            return serviceSuccess();
+        } else {
+            return serviceFailure(categoriesWithIncorrectTotal);
+        }
+    }
+
+    private List<Error> checkTotalForMonths(SpendProfileTableResource table) {
+
+        Map<String, List<BigDecimal>> monthlyCostsPerCategoryMap = table.getMonthlyCostsPerCategoryMap();
+        Map<String, BigDecimal> eligibleCostPerCategoryMap = table.getEligibleCostPerCategoryMap();
+
+        List<Error> categoriesWithIncorrectTotal = new ArrayList<>();
+
+        for (Map.Entry<String, List<BigDecimal>> entry : monthlyCostsPerCategoryMap.entrySet()) {
+            String category = entry.getKey();
+            List<BigDecimal> monthlyCosts = entry.getValue();
+
+            BigDecimal actualTotalCost = monthlyCosts.stream().reduce(new BigDecimal("0"), (d1, d2) -> d1.add(d2));
+            BigDecimal expectedTotalCost = eligibleCostPerCategoryMap.get(category);
+
+            if (!actualTotalCost.equals(expectedTotalCost)) {
+                String readableErrorMessage = String.format("Spend Profile: The total for all months does not match the eligible total for category: %s", category);
+
+                categoriesWithIncorrectTotal.add(new Error(SPEND_PROFILE_TOTAL_FOR_ALL_MONTHS_INCORRECT_ERROR_KEY, readableErrorMessage, HttpStatus.BAD_REQUEST));
+            }
+        }
+
+        return categoriesWithIncorrectTotal;
+    }
+
+    private ServiceResult<Void> saveSpendProfileData(ProjectOrganisationCompositeId projectOrganisationCompositeId, SpendProfileTableResource table) {
+
+        // Need to check how to convert the table to SpendProfileResource and save it.
+        // The SpendProfileResource currently only has an id
+        return serviceSuccess();
+    }
+
     private List<BigDecimal> orderCostsByMonths(List<Cost> costs, List<LocalDate> months, LocalDate startDate) {
         return simpleMap(months, month -> findCostForMonth(costs, month, startDate));
     }
 
     private BigDecimal findCostForMonth(List<Cost> costs, LocalDate month, LocalDate startDate) {
-        Optional<Cost> matching = simpleFindFirst(costs, cost -> cost.getCostTimePeriod().get().getStartDate(startDate).equals(month));
+        Optional<Cost> matching = simpleFindFirst(costs, cost -> cost.getCostTimePeriod().getStartDate(startDate).equals(month));
         return matching.map(Cost::getValue).orElse(BigDecimal.ZERO);
     }
 
