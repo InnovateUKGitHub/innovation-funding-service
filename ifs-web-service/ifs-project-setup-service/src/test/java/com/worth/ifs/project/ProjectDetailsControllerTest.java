@@ -290,6 +290,31 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         verify(projectService).updateFinanceContact(projectId, organisationId, invitedUserId);
     }
 
+
+//    @Test
+//    public void testUpdateFinanceContact() throws Exception {
+//
+//        List<ProjectUserResource> availableUsers = newProjectUserResource().
+//                withUser(loggedInUser.getId(), 789L).
+//                withOrganisation(8L).
+//                withRoleName(PARTNER).
+//                build(2);
+//
+//        when(projectService.getProjectUsersForProject(123L)).thenReturn(availableUsers);
+//        when(projectService.updateFinanceContact(123L, 8L, 789L)).thenReturn(serviceSuccess());
+//
+//        mockMvc.perform(post("/project/{id}/details/finance-contact", 123L).
+//                contentType(MediaType.APPLICATION_FORM_URLENCODED).
+//                param("organisation", "8").
+//                param("financeContact", "789")).
+//                andExpect(status().is3xxRedirection()).
+//                andExpect(view().name("redirect:/project/123/details")).
+//                andReturn();
+//
+//        verify(projectService).updateFinanceContact(123L, 8L, 789L);
+//    }
+
+
     @Test
     public void testAddressTypeValidation() throws Exception {
         ApplicationResource applicationResource = newApplicationResource().build();
@@ -404,3 +429,4 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         andExpect(redirectedUrl("/project/1/details"));
     }
  }
+
