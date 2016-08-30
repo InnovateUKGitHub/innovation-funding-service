@@ -39,7 +39,7 @@ The user can see the address with score
     [Documentation]    INFUND-3763
     [Tags]
     Then the user should see the text in the page    Address
-    And the user should see the element    css = tr:nth-child(4) .yes
+    And the user should see the element    css = tr:nth-child(4) .no
 
 The user has the options to edit the details and to approve the bank details
     [Documentation]    INFUND-3763

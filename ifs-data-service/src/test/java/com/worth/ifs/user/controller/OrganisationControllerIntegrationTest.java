@@ -151,4 +151,22 @@ public class OrganisationControllerIntegrationTest extends BaseControllerIntegra
         assertEquals("postcode", address.getPostcode());
         assertEquals("county", address.getCounty());
     }
+
+    @Rollback
+    @Test
+    public void testUpdateNameAndRegistration() throws Exception {
+
+        loginSystemRegistrationUser();
+
+        OrganisationResource organisationResource = createOrganisation();
+
+        controller.updateNameAndRegistration(organisationResource.getId(), "Vitruvius Stonework Limited", "60674010");
+
+        flushAndClearSession();
+
+        OrganisationResource updatedOrganisation = controller.findById(organisationResource.getId()).getSuccessObject();
+
+        assertEquals("Vitruvius Stonework Limited", updatedOrganisation.getName());
+        assertEquals("60674010", updatedOrganisation.getCompanyHouseNumber());
+    }
 }

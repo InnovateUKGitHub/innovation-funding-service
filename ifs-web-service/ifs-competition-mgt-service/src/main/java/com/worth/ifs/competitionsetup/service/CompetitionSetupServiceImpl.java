@@ -19,7 +19,6 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-
 @Service
 public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 
@@ -55,7 +54,6 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 			CompetitionSetupSection section) {
 		
 		populateGeneralModelAttributes(model, competitionResource, section);
-		
 		CompetitionSetupSectionModelPopulator populator = modelPopulators.get(section);
 		
 		if(populator != null) {
@@ -75,7 +73,19 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 		
 		return populator.populateForm(competitionResource);
 	}
-	
+
+	@Override
+	public List<Error> autoSaveCompetitionSetupSection(CompetitionResource competitionResource, CompetitionSetupSection section, String fieldName, String value) {
+
+		CompetitionSetupSectionSaver saver = sectionSavers.get(section);
+		if(saver == null) {
+			LOG.error("unable to save section " + section);
+			throw new IllegalArgumentException();
+		}
+
+		return saver.autoSaveSectionField(competitionResource, fieldName, value);
+	}
+
 	@Override
 	public List<Error> saveCompetitionSetupSection(CompetitionSetupForm competitionSetupForm,
 			CompetitionResource competitionResource, CompetitionSetupSection section) {
@@ -129,19 +139,15 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 		competitionService.returnToSetup(competitionId);
 	}
 
-
 	private List<CompetitionSetupSection> getRequiredSectionsForReadyToOpen() {
 		List<CompetitionSetupSection> requiredSections = new ArrayList<>();
 		requiredSections.add(CompetitionSetupSection.INITIAL_DETAILS);
 		requiredSections.add(CompetitionSetupSection.ADDITIONAL_INFO);
 		requiredSections.add(CompetitionSetupSection.ELIGIBILITY);
-		/* TODO Need to enable these when INFUND-4468 is worked on.
 		requiredSections.add(CompetitionSetupSection.MILESTONES);
 		requiredSections.add(CompetitionSetupSection.APPLICATION_FORM);
-		*/
 		return requiredSections;
 	}
-
 
 	private void populateGeneralModelAttributes(Model model, CompetitionResource competitionResource, CompetitionSetupSection section) {
 		List<CompetitionSetupSection> completedSections = competitionService

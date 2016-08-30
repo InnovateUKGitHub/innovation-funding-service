@@ -9,7 +9,9 @@ import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
+import com.worth.ifs.user.resource.RoleResource;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.resource.UserRoleType;
 import org.junit.Test;
 
 import java.util.List;
@@ -22,6 +24,7 @@ import static com.worth.ifs.project.builder.ProjectUserBuilder.newProjectUser;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
+import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
@@ -275,6 +278,51 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
     }
 
     @Test
+    public void testCompAdminCanViewOtherDocumentsDetails() {
+
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+
+        setUpUserAsCompAdmin(project, user);
+
+        assertTrue(rules.competitionAdminCanViewOtherDocumentsDetails(project, user));
+    }
+
+    @Test
+    public void testNonCompAdminCannotViewOtherDocumentsDetails() {
+
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+
+        setUpUserNotAsCompAdmin(project, user);
+
+        assertFalse(rules.competitionAdminCanViewOtherDocumentsDetails(project, user));
+    }
+
+    @Test
+    public void testProjectFinanceUserCanViewOtherDocumentsDetails() {
+
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+
+        setUpUserAsProjectFinanceUser(project, user);
+
+        assertFalse(rules.competitionAdminCanViewOtherDocumentsDetails(project, user));
+    }
+
+    @Test
+    public void testNonProjectFinanceUserCannotViewOtherDocumentsDetails() {
+
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+
+        setUpUserNotAsProjectFinanceUser(project, user);
+
+        assertFalse(rules.competitionAdminCanViewOtherDocumentsDetails(project, user));
+    }
+
+
+    @Test
     public void testPartnersCanDownloadOtherDocuments() {
 
         ProjectResource project = newProjectResource().build();
@@ -344,6 +392,26 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
 
     private void setupUserNotAsPartner(ProjectResource project, UserResource user) {
         setupPartnerExpectations(project, user, false);
+    }
+
+    private void setUpUserAsCompAdmin(ProjectResource project, UserResource user) {
+        List<RoleResource> compAdminRoleResource = newRoleResource().withType(UserRoleType.COMP_ADMIN).build(1);
+        user.setRoles(compAdminRoleResource);
+    }
+
+    private void setUpUserNotAsCompAdmin(ProjectResource project, UserResource user) {
+        List<RoleResource> compAdminRoleResource = emptyList();
+        user.setRoles(compAdminRoleResource);
+    }
+
+    private void setUpUserAsProjectFinanceUser(ProjectResource project, UserResource user) {
+        List<RoleResource> projectFinanaceUser = newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build(1);
+        user.setRoles(projectFinanaceUser);
+    }
+
+    private void setUpUserNotAsProjectFinanceUser(ProjectResource project, UserResource user) {
+        List<RoleResource> projectFinanaceUser = emptyList();
+        user.setRoles(projectFinanaceUser);
     }
 
     private void setupPartnerExpectations(ProjectResource project, UserResource user, boolean userIsPartner) {
