@@ -22,21 +22,21 @@ public class LabourCost implements FinanceRowItem {
     private String name;
 
     @Length(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
-    @NotBlank(groups = Default.class)
+    @NotBlank(groups = Default.class, message = NOT_BLANK_MESSAGE)
     private String role;
 
-    @NotNull(groups = Default.class)
-    @DecimalMin(value = "1", groups = Default.class)
-    @Digits(integer = MAX_DIGITS, fraction = MAX_FRACTION, groups = Default.class)
+    @NotNull(groups = Default.class, message = NOT_BLANK_MESSAGE)
+    @DecimalMin(value = "1", groups = Default.class, message = VALUE_MUST_BE_HIGHER_MESSAGE)
+    @Digits(integer = MAX_DIGITS, fraction = MAX_FRACTION, groups = Default.class, message = MAX_DIGITS_MESSAGE)
     private BigDecimal grossAnnualSalary;
 
     @NotNull
     @Min.List({
-            @Min(value=1, groups = Default.class),
-            @Min(value=1, groups = LabourCost.YearlyWorkingDays.class)
+            @Min(value=1, groups = Default.class, message = VALUE_MUST_BE_HIGHER_MESSAGE),
+            @Min(value=1, groups = LabourCost.YearlyWorkingDays.class, message = VALUE_MUST_BE_HIGHER_MESSAGE)
     })
-    @Max(value=365, groups = LabourCost.YearlyWorkingDays.class)
-    @Digits(integer = MAX_DIGITS_INT, fraction = MAX_FRACTION)
+    @Max(value=365, groups = LabourCost.YearlyWorkingDays.class, message = VALUE_MUST_BE_LOWER_MESSAGE)
+    @Digits(integer = MAX_DIGITS_INT, fraction = MAX_FRACTION, message = MAX_DIGITS_MESSAGE)
     private Integer labourDays;
     private BigDecimal rate; // calculated field, no validation
     private String description;

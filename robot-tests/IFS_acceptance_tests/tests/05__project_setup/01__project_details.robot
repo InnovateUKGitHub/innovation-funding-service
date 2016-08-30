@@ -9,6 +9,8 @@ Documentation     INFUND-2612 As a partner I want to have a overview of where I 
 ...               INFUND-2620 As a partner I want to provide my organisation's finance contact details so that the correct person is assigned to the role
 ...
 ...               INFUND-3382 As a partner I want to be able to view our project details after they have been submitted so that I can use them for reference
+...
+...               INFUND-2621 As a contributor I want to be able to review the current Project Setup status of all partners in my project so I can get an indication of the overall status of the consortium
 Suite Setup       Run Keywords    delete the emails from both test mailboxes
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -25,7 +27,7 @@ ${project_details_submitted_message}    The project details have been submitted 
 
 *** Test Cases ***
 Non-lead partner can see the project setup page
-    [Documentation]    INFUND-2612
+    [Documentation]    INFUND-2612, INFUND-2621
     [Tags]    HappyPath
     [Setup]    log in as user    jessica.doe@ludlow.co.uk    Passw0rd
     When the user navigates to the page    ${project_in_setup_page}
@@ -37,10 +39,20 @@ Non-lead partner can see the project setup page
     And the user should see the text in the page    Project details
     And the user should see the text in the page    Monitoring Officer
     And the user should see the text in the page    Bank details
+    And the user should see the text in the page    Finance checks
+    And the user should see the text in the page    Spend profile
+    And the user should see the text in the page    Other documents
+    And the user should see the text in the page    Grant offer letter
+    And the user should see the text in the page    What's the status of each of my partners?
+    When the user clicks the button/link            link=What's the status of each of my partners?
+    Then the user navigates to the page             ${project_in_setup_page}/team-status
+    And the user should see the text in the page    Project team status
+    And the user should see the element             jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(1)
 
 Non-lead partner can click the Dashboard link
     [Documentation]    INFUND-4426
     [Tags]
+    [Setup]  the user navigates to the page    ${project_in_setup_page}
     When the user clicks the button/link    link=Dashboard
     Then the user should not see an error in the page
     And the user should see the text in the page    Projects in setup
@@ -49,6 +61,7 @@ Non-lead partner can click the Dashboard link
 Non-lead partner can see the application overview
     [Documentation]    INFUND-2612
     [Tags]    HappyPath
+    [Setup]  the user navigates to the page    ${project_in_setup_page}
     And the user should see the text in the page    Other documents
     When the user clicks the button/link    link=View application and feedback
     Then the user should see the text in the page    Congratulations, your application has been successful
@@ -57,7 +70,7 @@ Non-lead partner can see the application overview
     [Teardown]    logout as user
 
 Lead partner can see the project setup page
-    [Documentation]    INFUND-2612
+    [Documentation]    INFUND-2612, INFUND-2621
     [Tags]    HappyPath
     [Setup]    log in as user    &{lead_applicant_credentials}
     When the user navigates to the page    ${project_in_setup_page}
@@ -70,10 +83,17 @@ Lead partner can see the project setup page
     And the user should see the text in the page    Monitoring Officer
     And the user should see the text in the page    Bank details
     And the user should see the text in the page    Other documents
+    And the user should see the text in the page    Grant offer letter
+    And the user should see the text in the page    What's the status of each of my partners?
+    When the user clicks the button/link            link=What's the status of each of my partners?
+    Then the user navigates to the page             ${project_in_setup_page}/team-status
+    And the user should see the text in the page    Project team status
+    And the user should see the element             jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(1)
 
 Lead partner can click the Dashboard link
     [Documentation]    INFUND-4426
     [Tags]
+    [Setup]  the user navigates to the page    ${project_in_setup_page}
     When the user clicks the button/link    link=Dashboard
     Then the user should not see an error in the page
     And the user should see the text in the page    Projects in setup
@@ -82,6 +102,7 @@ Lead partner can click the Dashboard link
 Lead partner can see the application overview
     [Documentation]    INFUND-2612
     [Tags]    HappyPath
+    Given the user navigates to the page    ${project_in_setup_page}
     When the user clicks the button/link    link=View application and feedback
     Then the user should see the text in the page    Congratulations, your application has been successful
     And the user should see the text in the page    Application questions
@@ -213,18 +234,24 @@ Non-lead partner cannot change start date, project manager or project address
     [Teardown]    Logout as user
 
 Project details submission flow
-    [Documentation]    INFUND-3381
+    [Documentation]    INFUND-3381, INFUND-2621
     [Tags]    HappyPath
     [Setup]    guest user log-in    steve.smith@empire.com    Passw0rd
     Given the user navigates to the page    ${SUCCESSFUL_PROJECT_PAGE_DETAILS}
     When all the fields are completed
-    And the applicant clicks the submit button and the clicks cancel in the submit modal
+    And the applicant clicks the submit button and then clicks cancel in the submit modal
     And the user should not see the text in the page    The project details have been submitted to Innovate UK
     Then the applicant clicks the submit button in the modal
     And the user should see the text in the page    The project details have been submitted to Innovate UK
     Then the user navigates to the page    ${project_in_setup_page}
     And the user should see the element    jQuery=ul li.complete:nth-child(2)
     And the user should see the element    jQuery=ul li.require-action:nth-child(4)
+    And the user should see the element    jQuery=ul li.require-action:nth-child(7)
+    When the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user should see the element    id=table-project-status
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(1)
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(2)
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(3)
 
 Project details read only after submission
     [Documentation]    INFUND-3381
@@ -239,19 +266,25 @@ Project details read only after submission
     And The user should not see the element    link=Cheeseco
 
 All partners can view submitted project details
-    [Documentation]    INFUND-3382
+    [Documentation]    INFUND-3382, INFUND-2621
     [Setup]    the user logs out if they are logged in
     When guest user log-in    jessica.doe@ludlow.co.uk    Passw0rd
     And the user navigates to the page    ${SUCCESSFUL_PROJECT_PAGE_DETAILS}
     Then the user should not see the element    link=Ludlow
     And all the fields are completed
     And the user should see the text in the page    ${project_details_submitted_message}
+    Then the user navigates to the page    ${project_in_setup_page}
+    When the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(1)
     Then the user logs out if they are logged in
     When guest user log-in    steve.smith@empire.com    Passw0rd
     And the user navigates to the page    ${SUCCESSFUL_PROJECT_PAGE_DETAILS}
     Then the user should not see the element    link=Vitruvius Stonework Limited
     And all the fields are completed
     And the user should see the text in the page    ${project_details_submitted_message}
+    When the user navigates to the page    ${project_in_setup_page}
+    Then the user clicks the button/link    link=What's the status of each of my partners?
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(1)
 
 Non-lead partner cannot change any project details
     [Documentation]    INFUND-2619
@@ -283,12 +316,12 @@ the user should see a validation error
     Then the user should see an error    ${ERROR1}
 
 the matching status checkbox is updated
-    [Arguments]    ${table_id}    ${COLUMN}    ${STATUS}
+    [Arguments]    ${table_id}    ${ROW}    ${STATUS}
     the user should see the element    ${table_id}
-    the user should see the element    jQuery=#${table_id} tr:nth-of-type(${COLUMN}) .${STATUS}
+    the user should see the element    jQuery=#${table_id} tr:nth-of-type(${ROW}) .${STATUS}
 
 the duration should be visible
-    Element Should Contain    xpath=//*[@id="content"]/form/fieldset/div/p[5]/strong    3 months
+    Element Should Contain    xpath=//*[@id="content"]/form/fieldset/div/p[5]/strong    36 months
 
 the user shouldn't be able to edit the day field as all projects start on the first of the month
     the user should see the element    css=.day [readonly]
@@ -306,7 +339,7 @@ the user should see the dummy data
 the submit button should be disabled
     Element Should Be Disabled    jQuery=.button:contains("Submit project details")
 
-the applicant clicks the submit button and the clicks cancel in the submit modal
+the applicant clicks the submit button and then clicks cancel in the submit modal
     Wait Until Element Is Enabled    jQuery=.button:contains("Submit project details")
     the user clicks the button/link    jQuery=.button:contains("Submit project details")
     the user clicks the button/link    jquery=button:contains("Cancel")

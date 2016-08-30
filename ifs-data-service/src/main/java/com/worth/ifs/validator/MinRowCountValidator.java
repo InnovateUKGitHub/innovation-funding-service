@@ -11,6 +11,8 @@ import org.springframework.validation.Validator;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.worth.ifs.commons.rest.ValidationMessages.reject;
+
 /**
  * This class validates the FormInputResponse, it checks if the maximum word count has been exceeded.
  */
@@ -41,15 +43,15 @@ public class MinRowCountValidator implements Validator {
                 case OTHER_FUNDING:
                     if(((OtherFunding)response.get(0)).getOtherPublicFunding().equals("Yes")) {
                         if(response.get(0).getMinRows() == 1){
-                            errors.reject("validation.finance.min.row", new Integer[]{response.get(0).getMinRows()}, "You should provide at least " + response.get(0).getMinRows() + " source of other funding");
+                            reject(errors, "validation.finance.min.row.other.funding.single");
                         }else{
-                            errors.reject("validation.finance.min.row", new Integer[]{response.get(0).getMinRows()}, "You should provide at least " + response.get(0).getMinRows() + " source(s) of funding");
+                            reject(errors, "validation.finance.min.row.other.funding.multiple", response.get(0).getMinRows());
                         }
 
                     }
                     break;
                 default:
-                    errors.reject("validation.finance.min.row", new Integer[]{response.get(0).getMinRows()}, "You should provide at least" + response.get(0).getMinRows() + " row(s) of input");
+                    reject(errors, "validation.finance.min.row", response.get(0).getMinRows());
                     break;
             }
         }
