@@ -118,7 +118,11 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
-        SpendProfileResource spendProfileResource = SpendProfileResourceBuilder.newSpendProfileResource().build();
+        SpendProfileResource spendProfileResource = SpendProfileResourceBuilder.newSpendProfileResource()
+                .withOrganisation(1L)
+                .withProject(2L)
+                .withCostCategoryType(3L)
+                .build();
 
         when(projectFinanceServiceMock.getSpendProfile(projectOrganisationCompositeId)).thenReturn(serviceSuccess(spendProfileResource));
 

@@ -41,6 +41,7 @@ import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
 import com.worth.ifs.project.finance.resource.CostCategoryGroupResource;
 import com.worth.ifs.project.finance.resource.CostCategoryResource;
+import com.worth.ifs.project.finance.resource.CostCategoryTypeResource;
 import com.worth.ifs.project.finance.resource.CostGroupResource;
 import com.worth.ifs.project.finance.resource.CostResource;
 import com.worth.ifs.project.finance.resource.CostTimePeriodResource;
@@ -107,6 +108,7 @@ public class POJOTest {
             CostGroupResource.class,
             CostResource.class,
             CostTimePeriodResource.class,
+            CostCategoryTypeResource.class,
             SpendProfileResource.class,
             SpendProfileTableResource.class,
             CompetitionCoFunderResource.class,

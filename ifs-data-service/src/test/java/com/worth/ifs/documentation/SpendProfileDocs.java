@@ -14,5 +14,11 @@ public class SpendProfileDocs {
 
     public static final FieldDescriptor[] spendProfileResourceFields = {
             fieldWithPath("id").description("Id of the Spend Profile Resource"),
+            fieldWithPath("organisation").description("Organisation Id of the Spend Profile"),
+            fieldWithPath("project").description("Project Id of the Spend Profile"),
+            fieldWithPath("costCategoryType").description("Cost Category Type Id of the Spend Profile"),
+            fieldWithPath("eligibleCosts").description("Eligible costs for each category of the Spend Profile"),
+            fieldWithPath("spendProfileFigures").description("Spend Profile Figures for each month, for each category of the Spend Profile"),
+
     };
 }
