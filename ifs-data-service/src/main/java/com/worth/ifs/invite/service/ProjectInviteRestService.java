@@ -16,3 +16,5 @@ public interface ProjectInviteRestService {
     RestResult<List<InviteProjectResource>> getInvitesByProject (Long projectId);
 
 }
+
+

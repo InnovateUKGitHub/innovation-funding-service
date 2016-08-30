@@ -249,9 +249,9 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<InviteProjectResource>  getInvitesByProject (Long projectId)
+    public ServiceResult<List<InviteProjectResource>>  getInvitesByProject (Long projectId)
     {
-        return projectInviteRestService.getInvitesByProject (projectId).getSuccessObjectOrThrowException();
+        return projectInviteRestService.getInvitesByProject (projectId).toServiceResult();
     }
 
 }
