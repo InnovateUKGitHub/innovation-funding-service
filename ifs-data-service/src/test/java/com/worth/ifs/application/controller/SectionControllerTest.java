@@ -22,6 +22,7 @@ import java.util.Set;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.application.builder.SectionBuilder.newSection;
 import static com.worth.ifs.application.builder.SectionResourceBuilder.newSectionResource;
+import static com.worth.ifs.commons.rest.ValidationMessages.reject;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static java.util.stream.Collectors.toList;
@@ -153,7 +154,7 @@ public class SectionControllerTest extends BaseControllerMockMVCTest<SectionCont
 
         ArrayList<ValidationMessages> validationMessages = new ArrayList<>();
         bindingResult = new BeanPropertyBindingResult(section, "costItem");
-        bindingResult.reject("MinimumRows", "this section should contains at least 1 row");
+        reject(bindingResult, "validation.finance.min.row");
         ValidationMessages messages = new ValidationMessages(1L, bindingResult);
         validationMessages.add(messages);
         when(sectionService.markSectionAsComplete(section.getId(), applicationId, processRoleId)).thenReturn(serviceSuccess(validationMessages));
@@ -161,7 +162,7 @@ public class SectionControllerTest extends BaseControllerMockMVCTest<SectionCont
 
         mockMvc.perform(RestDocumentationRequestBuilders.get("/section/markAsComplete/{sectionId}/{applicationId}/{processRoleId}", section.getId(), applicationId, processRoleId))
                 .andExpect(status().isOk())
-                .andExpect(content().string("[{\"objectName\":\"costItem\",\"objectId\":1,\"errors\":[{\"errorKey\":\"this section should contains at least 1 row\",\"fieldName\":null,\"fieldRejectedValue\":null,\"arguments\":[],\"errorMessage\":null}]}]"))
+                .andExpect(content().string("[{\"objectName\":\"costItem\",\"objectId\":1,\"errors\":[{\"errorKey\":\"validation.finance.min.row\",\"fieldName\":null,\"fieldRejectedValue\":null,\"arguments\":[],\"errorMessage\":null}]}]"))
                 .andDo(
                         document(
                             "section/mark-as-complete-invalid",

@@ -26,7 +26,7 @@ public class AcademicValidator implements Validator {
         AcademicCost response = (AcademicCost) target;
 
         if("tsb_reference".equals(response.getName()) && StringUtils.isBlank(response.getItem())){
-            reject(errors, "This field cannot be left blank");
+            reject(errors, "validation.field.must.not.be.blank");
         }
     }
 }
