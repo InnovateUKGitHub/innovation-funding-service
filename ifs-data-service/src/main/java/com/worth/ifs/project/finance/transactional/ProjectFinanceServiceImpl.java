@@ -32,7 +32,7 @@ import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.processAnyFailuresOrSucceed;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.project.finance.domain.CostTimePeriod.TimeUnit.MONTH;
+import static com.worth.ifs.project.finance.domain.TimeUnit.MONTH;
 import static com.worth.ifs.util.CollectionFunctions.*;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static java.math.BigDecimal.ROUND_HALF_UP;
@@ -85,10 +85,10 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
             CostGroup spendProfileFigures = spendProfile.getSpendProfileFigures();
 
             Map<String, BigDecimal> eligibleCostsPerCategory =
-                    simpleToLinkedMap(eligibleCosts.getCosts(), c -> c.getCostCategory().get().getName(), cost -> cost.getValue());
+                    simpleToLinkedMap(eligibleCosts.getCosts(), c -> c.getCostCategory().getName(), cost -> cost.getValue());
 
             Map<CostCategory, List<Cost>> spendProfileCostsPerCategory =
-                    spendProfileFigures.getCosts().stream().collect(groupingBy(c -> c.getCostCategory().get(), LinkedHashMap::new, toList()));
+                    spendProfileFigures.getCosts().stream().collect(groupingBy(c -> c.getCostCategory(), LinkedHashMap::new, toList()));
 
             Map<String, List<Cost>> spendFiguresPerCategory =
                     simpleLinkedMapKey(spendProfileCostsPerCategory, costCategory -> costCategory.getName());
@@ -240,7 +240,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     }
 
     private BigDecimal findCostForMonth(List<Cost> costs, LocalDate month, LocalDate startDate) {
-        Optional<Cost> matching = simpleFindFirst(costs, cost -> cost.getCostTimePeriod().get().getStartDate(startDate).equals(month));
+        Optional<Cost> matching = simpleFindFirst(costs, cost -> cost.getCostTimePeriod().getStartDate(startDate).equals(month));
         return matching.map(Cost::getValue).orElse(BigDecimal.ZERO);
     }
 

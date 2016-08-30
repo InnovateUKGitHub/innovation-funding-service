@@ -11,7 +11,6 @@ import org.mockito.Mock;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 
 import static com.worth.ifs.LambdaMatcher.createLambdaMatcher;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -19,7 +18,7 @@ import static com.worth.ifs.finance.resource.cost.FinanceRowType.LABOUR;
 import static com.worth.ifs.finance.resource.cost.FinanceRowType.MATERIALS;
 import static com.worth.ifs.project.builder.ProjectBuilder.newProject;
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
-import static com.worth.ifs.project.finance.domain.CostTimePeriod.TimeUnit.MONTH;
+import static com.worth.ifs.project.finance.domain.TimeUnit.MONTH;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
 import static java.util.Arrays.asList;
@@ -142,29 +141,27 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
     private boolean costsMatch(Cost expectedCost, Cost actualCost) {
         try {
-            Optional<CostGroup> expectedCostGroup = expectedCost.getCostGroup();
-            Optional<CostGroup> actualCostGroup = actualCost.getCostGroup();
-            assertEquals(expectedCostGroup.isPresent(), actualCostGroup.isPresent());
+            CostGroup expectedCostGroup = expectedCost.getCostGroup();
+            CostGroup actualCostGroup = actualCost.getCostGroup();
+            assertEquals(expectedCostGroup != null, actualCostGroup != null);
 
-            expectedCostGroup.ifPresent(expected -> {
-                CostGroup actual = actualCostGroup.get();
-                assertEquals(expected.getDescription(), actual.getDescription());
-            });
+            if (expectedCostGroup != null) {
+                assertEquals(expectedCostGroup.getDescription(), actualCostGroup.getDescription());
+            }
 
             assertEquals(expectedCost.getValue(), actualCost.getValue());
             assertEquals(expectedCost.getCostCategory(), actualCost.getCostCategory());
 
-            Optional<CostTimePeriod> expectedTimePeriod = expectedCost.getCostTimePeriod();
-            Optional<CostTimePeriod> actualTimePeriod = actualCost.getCostTimePeriod();
-            assertEquals(expectedTimePeriod.isPresent(), actualTimePeriod.isPresent());
+            CostTimePeriod expectedTimePeriod = expectedCost.getCostTimePeriod();
+            CostTimePeriod actualTimePeriod = actualCost.getCostTimePeriod();
+            assertEquals(expectedTimePeriod != null, actualTimePeriod != null);
 
-            expectedTimePeriod.ifPresent(expected -> {
-                CostTimePeriod actual = actualTimePeriod.get();
-                assertEquals(expected.getOffsetAmount(), actual.getOffsetAmount());
-                assertEquals(expected.getOffsetUnit(), actual.getOffsetUnit());
-                assertEquals(expected.getDurationAmount(), actual.getDurationAmount());
-                assertEquals(expected.getDurationUnit(), actual.getDurationUnit());
-            });
+            if (expectedTimePeriod != null) {
+                assertEquals(expectedTimePeriod.getOffsetAmount(), actualTimePeriod.getOffsetAmount());
+                assertEquals(expectedTimePeriod.getOffsetUnit(), actualTimePeriod.getOffsetUnit());
+                assertEquals(expectedTimePeriod.getDurationAmount(), actualTimePeriod.getDurationAmount());
+                assertEquals(expectedTimePeriod.getDurationUnit(), actualTimePeriod.getDurationUnit());
+            }
 
             return true;
         } catch (AssertionError e) {

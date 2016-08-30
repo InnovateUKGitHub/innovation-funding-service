@@ -5,7 +5,7 @@ import org.junit.Test;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import static com.worth.ifs.project.finance.domain.CostTimePeriod.TimeUnit.*;
+import static com.worth.ifs.project.finance.domain.TimeUnit.*;
 import static org.junit.Assert.assertEquals;
 
 public class CostTimePeriodTest {
@@ -14,9 +14,9 @@ public class CostTimePeriodTest {
     public void testCostTimePeriodStartAndEndDates() {
 
         int offsetAmount = 2;
-        CostTimePeriod.TimeUnit offsetUnit = DAY;
+        TimeUnit offsetUnit = DAY;
         int durationAmount = 4;
-        CostTimePeriod.TimeUnit durationUnit = YEAR;
+        TimeUnit durationUnit = YEAR;
 
         CostTimePeriod period = new CostTimePeriod(new Cost(), offsetAmount, offsetUnit, durationAmount, durationUnit);
 
@@ -31,9 +31,9 @@ public class CostTimePeriodTest {
     public void testCostTimePeriodEndDatesAtEndOfMonth() {
 
         int offsetAmount = 0;
-        CostTimePeriod.TimeUnit offsetUnit = DAY;
+        TimeUnit offsetUnit = DAY;
         int durationAmount = 1;
-        CostTimePeriod.TimeUnit durationUnit = MONTH;
+        TimeUnit durationUnit = MONTH;
 
         CostTimePeriod period = new CostTimePeriod(new Cost(), offsetAmount, offsetUnit, durationAmount, durationUnit);
 
@@ -50,9 +50,9 @@ public class CostTimePeriodTest {
     public void testCostTimePeriodStartAndEndDateTimes() {
 
         int offsetAmount = 2;
-        CostTimePeriod.TimeUnit offsetUnit = DAY;
+        TimeUnit offsetUnit = DAY;
         int durationAmount = 4;
-        CostTimePeriod.TimeUnit durationUnit = YEAR;
+        TimeUnit durationUnit = YEAR;
 
         CostTimePeriod period = new CostTimePeriod(new Cost(), offsetAmount, offsetUnit, durationAmount, durationUnit);
 
@@ -67,9 +67,9 @@ public class CostTimePeriodTest {
     public void testCostTimePeriodEndDateTimesAtEndOfMonth() {
 
         int offsetAmount = 0;
-        CostTimePeriod.TimeUnit offsetUnit = DAY;
+        TimeUnit offsetUnit = DAY;
         int durationAmount = 1;
-        CostTimePeriod.TimeUnit durationUnit = MONTH;
+        TimeUnit durationUnit = MONTH;
 
         CostTimePeriod period = new CostTimePeriod(new Cost(), offsetAmount, offsetUnit, durationAmount, durationUnit);
 
