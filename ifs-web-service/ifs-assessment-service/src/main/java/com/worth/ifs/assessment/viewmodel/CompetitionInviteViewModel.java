@@ -8,32 +8,52 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 public class CompetitionInviteViewModel {
 
+    private String competitionInviteHash;
     private String competitionName;
 
-    public CompetitionInviteViewModel(String competitionName) {
+    public CompetitionInviteViewModel(String competitionInviteHash, String competitionName) {
+        this.competitionInviteHash = competitionInviteHash;
         this.competitionName = competitionName;
+    }
+
+    public String getCompetitionInviteHash() {
+        return competitionInviteHash;
+    }
+
+    public void setCompetitionInviteHash(String competitionInviteHash) {
+        this.competitionInviteHash = competitionInviteHash;
     }
 
     public String getCompetitionName() {
         return competitionName;
     }
 
+    public void setCompetitionName(String competitionName) {
+        this.competitionName = competitionName;
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
+        if (this == o) {
+            return true;
+        }
 
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-        CompetitionInviteViewModel viewModel = (CompetitionInviteViewModel) o;
+        CompetitionInviteViewModel that = (CompetitionInviteViewModel) o;
 
         return new EqualsBuilder()
-                .append(competitionName, viewModel.competitionName)
+                .append(competitionInviteHash, that.competitionInviteHash)
+                .append(competitionName, that.competitionName)
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
+                .append(competitionInviteHash)
                 .append(competitionName)
                 .toHashCode();
     }

@@ -1,10 +1,10 @@
 package com.worth.ifs.assessment.security;
 
 import com.worth.ifs.BaseServiceSecurityTest;
-import com.worth.ifs.assessment.resource.CompetitionRejectionReasonResource;
 import com.worth.ifs.assessment.transactional.CompetitionInviteService;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.invite.resource.CompetitionInviteResource;
+import com.worth.ifs.invite.resource.RejectionReasonResource;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.springframework.security.access.method.P;
@@ -29,6 +29,9 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
     public static class TestCompetitionInviteService implements CompetitionInviteService {
 
         @Override
+        public ServiceResult<CompetitionInviteResource> getInvite(@P("inviteHash") String inviteHash) { return null; }
+
+        @Override
         public ServiceResult<CompetitionInviteResource> openInvite(@P("inviteHash") String inviteHash) {
             return null;
         }
@@ -39,8 +42,6 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
         }
 
         @Override
-        public ServiceResult<Void> rejectInvite(@P("inviteHash") String inviteHash, CompetitionRejectionReasonResource rejectionReason){
-            return null;
-        }
+        public ServiceResult<Void> rejectInvite(@P("inviteHash") String inviteHash, RejectionReasonResource rejectionReason, String rejectionComment) { return null; }
     }
 }

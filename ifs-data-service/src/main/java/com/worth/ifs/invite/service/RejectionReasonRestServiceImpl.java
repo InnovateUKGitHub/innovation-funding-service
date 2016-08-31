@@ -26,6 +26,6 @@ public class RejectionReasonRestServiceImpl extends BaseRestService implements R
 
     @Override
     public RestResult<List<RejectionReasonResource>> findAllActive() {
-        return getWithRestResult(format("%s/findAllActive", rejectionReasonRestUrl), rejectionReasonResourceListType());
+        return getWithRestResultAnonymous(format("%s/findAllActive", rejectionReasonRestUrl), rejectionReasonResourceListType());
     }
 }

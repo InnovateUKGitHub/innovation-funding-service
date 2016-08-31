@@ -2,12 +2,14 @@ package com.worth.ifs.invite.domain;
 
 
 import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.invite.constant.InviteStatus;
 import com.worth.ifs.user.domain.User;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
 
+import static com.worth.ifs.invite.constant.InviteStatus.OPENED;
 import static com.worth.ifs.invite.domain.ParticipantStatus.ACCEPTED;
 import static com.worth.ifs.invite.domain.ParticipantStatus.REJECTED;
 
@@ -49,19 +51,14 @@ public class CompetitionParticipant extends Participant<Competition, Competition
         this.competition = null;
     }
 
-    public CompetitionParticipant(Competition competition, User user) {
-        this(competition, user, null);
-        if (user == null) throw new NullPointerException("user cannot be null");
-    }
-
     public CompetitionParticipant(Competition competition, CompetitionInvite invite) {
         this(competition, null, invite);
-        if (invite == null) throw new NullPointerException("invite cannot be null");
     }
 
     public CompetitionParticipant(Competition competition, User user, CompetitionInvite invite) {
         super();
         if (competition == null) throw new NullPointerException("competition cannot be null");
+        if (invite == null) throw new NullPointerException("invite cannot be null");
 
         this.competition = competition;
         this.user = user;
@@ -103,6 +100,9 @@ public class CompetitionParticipant extends Participant<Competition, Competition
     }
 
     public CompetitionParticipant accept() {
+        if (getInvite().getStatus() != OPENED)
+            throw new IllegalStateException("Cannot accept a CompetitionParticipant that hasn't been opened");
+
         if (getStatus() == REJECTED)
             throw new IllegalStateException("Cannot accept a CompetitionParticipant that has been rejected");
         if (getStatus() == ACCEPTED)
@@ -116,6 +116,9 @@ public class CompetitionParticipant extends Participant<Competition, Competition
     public CompetitionParticipant reject(RejectionReason rejectionReason, String comment) {
         if (rejectionReason == null) throw new NullPointerException("reason cannot be null");
         if (comment == null) throw new NullPointerException("comment cannot be null");
+
+        if (getInvite().getStatus() != OPENED)
+            throw new IllegalStateException("Cannot accept a CompetitionParticipant that hasn't been opened");
 
         if (getStatus() == ACCEPTED)
             throw new IllegalStateException("Cannot reject a CompetitionParticipant that has been accepted");

@@ -3,9 +3,11 @@ package com.worth.ifs.assessment.controller;
 import com.worth.ifs.BaseControllerIntegrationTest;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.repository.CompetitionRepository;
+import com.worth.ifs.invite.domain.CompetitionInvite;
 import com.worth.ifs.invite.domain.CompetitionParticipant;
 import com.worth.ifs.invite.mapper.CompetitionParticipantRoleMapper;
 import com.worth.ifs.invite.mapper.ParticipantStatusMapper;
+import com.worth.ifs.invite.repository.CompetitionInviteRepository;
 import com.worth.ifs.invite.repository.CompetitionParticipantRepository;
 import com.worth.ifs.invite.resource.CompetitionParticipantResource;
 import com.worth.ifs.invite.resource.CompetitionParticipantRoleResource;
@@ -36,6 +38,9 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
     CompetitionRepository competitionRepository;
 
     @Autowired
+    CompetitionInviteRepository competitionInviteRepository;
+
+    @Autowired
     private CompetitionParticipantRoleMapper competitionParticipantRoleMapper;
 
     @Autowired
@@ -47,11 +52,14 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
         swapOutForUser(getPaulPlum());
 
         Competition competition = competitionRepository.findOne(1L);
+        CompetitionInvite invite = new CompetitionInvite("name", "tom@poly.io", "hash", competition);
+        competitionInviteRepository.save(invite);
+
         User user = newUser()
                 .withid(3L)
                 .withFirstName("Professor")
                 .build();
-        competitionParticipantRepository.save( new CompetitionParticipant(competition, user) );
+        competitionParticipantRepository.save( new CompetitionParticipant(competition, user, invite) );
         flushAndClearSession();
     }
 

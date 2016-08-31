@@ -11,17 +11,28 @@ import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<CompetitionInviteController> {
-
     @Mock
     private CompetitionInviteService competitionInviteService;
 
     @Override
     protected CompetitionInviteController supplyControllerUnderTest() {
         return new CompetitionInviteController();
+    }
+
+    @Test
+    public void getInvite() throws Exception {
+        CompetitionInviteResource resource = new CompetitionInviteResource();
+
+        when(competitionInviteService.getInvite("hash")).thenReturn(serviceSuccess(resource));
+        mockMvc.perform(get("/competitioninvite/getInvite/{inviteHash}", "hash").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(competitionInviteService, times(1)).getInvite("hash");
     }
 
     @Test

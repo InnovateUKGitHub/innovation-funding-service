@@ -27,7 +27,7 @@ public class RejectionReasonRestServiceImplTest extends BaseRestServiceUnitTest<
         List<RejectionReasonResource> expected = newRejectionReasonResource()
                 .build(2);
 
-        setupGetWithRestResultExpectations(format("%s/findAllActive", rejectionReasonRestUrl), rejectionReasonResourceListType(), expected, OK);
+        setupGetWithRestResultAnonymousExpectations(format("%s/findAllActive", rejectionReasonRestUrl), rejectionReasonResourceListType(), expected, OK);
         List<RejectionReasonResource> response = service.findAllActive().getSuccessObject();
         assertSame(expected, response);
     }
