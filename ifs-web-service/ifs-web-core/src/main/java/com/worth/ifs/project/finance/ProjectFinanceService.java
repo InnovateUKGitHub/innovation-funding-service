@@ -18,4 +18,6 @@ public interface ProjectFinanceService {
     SpendProfileTableResource getSpendProfileTable(Long projectId, Long organisationId);
 
     ServiceResult<Void> saveSpendProfile(Long projectId, Long organisationId, SpendProfileTableResource table);
+
+    ServiceResult<Void> markSpendProfileComplete(Long projectId, Long organisationId, SpendProfileTableResource table);
 }

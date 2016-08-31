@@ -112,6 +112,11 @@ public class ProjectFinanceServiceSecurityTest extends BaseServiceSecurityTest<P
         public ServiceResult<Void> saveSpendProfile(ProjectOrganisationCompositeId projectOrganisationCompositeId, SpendProfileTableResource table) {
             return null;
         }
+
+        @Override
+        public ServiceResult<Void> markSpendProfileComplete(ProjectOrganisationCompositeId projectOrganisationCompositeId, SpendProfileTableResource table) {
+            return null;
+        }
     }
 }
 

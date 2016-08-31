@@ -90,7 +90,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
                 new Cost("67").withCategory(type1Cat2).withTimePeriod(2, MONTH, 1, MONTH));
 
         SpendProfile expectedOrganisation1Profile = new SpendProfile(organisation1, project, matchingCostCategoryType1,
-                expectedOrganisation1EligibleCosts, expectedOrganisation1SpendProfileFigures);
+                expectedOrganisation1EligibleCosts, expectedOrganisation1SpendProfileFigures, false);
 
         List<Cost> expectedOrganisation2EligibleCosts = singletonList(
                 new Cost("301").withCategory(type2Cat1));
@@ -101,7 +101,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
                 new Cost("100").withCategory(type2Cat1).withTimePeriod(2, MONTH, 1, MONTH));
 
         SpendProfile expectedOrganisation2Profile = new SpendProfile(organisation2, project, matchingCostCategoryType2,
-                expectedOrganisation2EligibleCosts, expectedOrganisation2SpendProfileFigures);
+                expectedOrganisation2EligibleCosts, expectedOrganisation2SpendProfileFigures, false);
 
         when(spendProfileRepositoryMock.save(spendProfileExpectations(expectedOrganisation1Profile))).thenReturn(null);
         when(spendProfileRepositoryMock.save(spendProfileExpectations(expectedOrganisation2Profile))).thenReturn(null);

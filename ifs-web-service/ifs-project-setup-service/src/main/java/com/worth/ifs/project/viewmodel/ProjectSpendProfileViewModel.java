@@ -14,19 +14,23 @@ import java.time.LocalDate;
 public class ProjectSpendProfileViewModel {
 
     private Long projectId;
+    private Long organisationId;
     private String projectName;
     private LocalDate targetProjectStartDate;
     private Long durationInMonths;
     private SpendProfileSummaryModel summary;
     private SpendProfileTableResource table;
+    private boolean markedAsComplete;
 
-    public ProjectSpendProfileViewModel(ProjectResource project, SpendProfileTableResource table, SpendProfileSummaryModel summary) {
+    public ProjectSpendProfileViewModel(ProjectResource project, Long organisationId, SpendProfileTableResource table, SpendProfileSummaryModel summary, boolean markedAsComplete) {
         this.projectId = project.getId();
+        this.organisationId = organisationId;
         this.projectName = project.getName();
         this.targetProjectStartDate = project.getTargetStartDate();
         this.durationInMonths = project.getDurationInMonths();
         this.summary = summary;
         this.table = table;
+        this.markedAsComplete = markedAsComplete;
     }
 
     public Long getProjectId() {
@@ -77,6 +81,22 @@ public class ProjectSpendProfileViewModel {
         this.table = table;
     }
 
+    public boolean isMarkedAsComplete() {
+        return markedAsComplete;
+    }
+
+    public void setMarkedAsComplete(boolean markedAsComplete) {
+        this.markedAsComplete = markedAsComplete;
+    }
+
+    public Long getOrganisationId() {
+        return organisationId;
+    }
+
+    public void setOrganisationId(Long organisationId) {
+        this.organisationId = organisationId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -86,7 +106,9 @@ public class ProjectSpendProfileViewModel {
         ProjectSpendProfileViewModel that = (ProjectSpendProfileViewModel) o;
 
         return new EqualsBuilder()
+                .append(markedAsComplete, that.markedAsComplete)
                 .append(projectId, that.projectId)
+                .append(organisationId, that.organisationId)
                 .append(projectName, that.projectName)
                 .append(targetProjectStartDate, that.targetProjectStartDate)
                 .append(durationInMonths, that.durationInMonths)
@@ -99,11 +121,13 @@ public class ProjectSpendProfileViewModel {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(projectId)
+                .append(organisationId)
                 .append(projectName)
                 .append(targetProjectStartDate)
                 .append(durationInMonths)
                 .append(summary)
                 .append(table)
+                .append(markedAsComplete)
                 .toHashCode();
     }
 
@@ -111,11 +135,13 @@ public class ProjectSpendProfileViewModel {
     public String toString() {
         return new ToStringBuilder(this)
                 .append("projectId", projectId)
+                .append("organisationId", organisationId)
                 .append("projectName", projectName)
                 .append("targetProjectStartDate", targetProjectStartDate)
                 .append("durationInMonths", durationInMonths)
                 .append("summary", summary)
                 .append("table", table)
+                .append("markedAsComplete", markedAsComplete)
                 .toString();
     }
 }

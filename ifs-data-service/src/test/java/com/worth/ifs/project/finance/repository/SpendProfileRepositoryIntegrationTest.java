@@ -64,7 +64,7 @@ public class SpendProfileRepositoryIntegrationTest extends BaseRepositoryIntegra
         List<Cost> eligibleCosts = asList(new Cost("1.20"), new Cost("3.40"));
         List<Cost> spendProfileFigures = asList(new Cost("5.60"), new Cost("7.80"));
 
-        SpendProfile saved = repository.save(new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileFigures));
+        SpendProfile saved = repository.save(new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileFigures, false));
 
         // clear the Hibernate cache
         flushAndClearSession();
@@ -110,7 +110,7 @@ public class SpendProfileRepositoryIntegrationTest extends BaseRepositoryIntegra
                 new Cost("5.60").withCategory(labourCostCategory).withTimePeriod(0, DAY, 1, MONTH),
                 new Cost("7.80").withCategory(materialsCostCategory).withTimePeriod(0, DAY, 1, MONTH));
 
-        SpendProfile saved = repository.save(new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileFigures));
+        SpendProfile saved = repository.save(new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileFigures, false));
 
         // clear the Hibernate cache
         flushAndClearSession();
@@ -175,7 +175,7 @@ public class SpendProfileRepositoryIntegrationTest extends BaseRepositoryIntegra
         List<Cost> eligibleCosts = singletonList(new Cost("1.20").withCategory(labourCostCategory));
         List<Cost> spendProfileFigures = singletonList(new Cost("5.60").withCategory(labourCostCategory).withTimePeriod(0, DAY, 1, MONTH));
 
-        SpendProfile saved = repository.save(new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileFigures));
+        SpendProfile saved = repository.save(new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileFigures, false));
 
         // clear the Hibernate cache
         flushAndClearSession();
@@ -242,7 +242,7 @@ public class SpendProfileRepositoryIntegrationTest extends BaseRepositoryIntegra
         List<Cost> eligibleCosts = asList(new Cost("1.20"), new Cost("3.40"));
         List<Cost> spendProfileFigures = asList(new Cost("5.60"), new Cost("7.80"));
 
-        SpendProfile saved = repository.save(new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileFigures));
+        SpendProfile saved = repository.save(new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileFigures, false));
 
         // clear the Hibernate cache
         flushAndClearSession();

@@ -70,7 +70,7 @@ public class ProjectSpendProfileController {
         form.setTable(viewModel.getTable());
         model.addAttribute(FORM_ATTR_NAME, form);
 
-        return "project/spend-profile/edit";
+        return "project/spend-profile";
     }
 
     @RequestMapping(value = "/edit", method = POST)
@@ -81,7 +81,7 @@ public class ProjectSpendProfileController {
                                    @SuppressWarnings("unused") BindingResult bindingResult,
                                    @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        return editOrMarkAsCompleteSpendProfile(model, bindingResult, form, projectId, organisationId, false, "project/spend-profile/edit");
+        return editOrMarkAsCompleteSpendProfile(model, bindingResult, form, projectId, organisationId, false, "project/spend-profile");
     }
 
     @RequestMapping(value = "/confirm", method = POST)
@@ -92,7 +92,7 @@ public class ProjectSpendProfileController {
                                    @SuppressWarnings("unused") BindingResult bindingResult,
                                    @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        return editOrMarkAsCompleteSpendProfile(model, bindingResult, form, projectId, organisationId, true, "project/spend-profile/confirm");
+        return editOrMarkAsCompleteSpendProfile(model, bindingResult, form, projectId, organisationId, true, "project/spend-profile");
     }
 
     private String editOrMarkAsCompleteSpendProfile(Model model,
@@ -111,7 +111,7 @@ public class ProjectSpendProfileController {
             return "project/spend-profile/edit";
         }
 
-        ServiceResult<Void> result = projectFinanceService.saveSpendProfile(projectId, organisationId, form.getTable());
+        ServiceResult<Void> result = isMarkAsComplete ? projectFinanceService.markSpendProfileComplete(projectId, organisationId, form.getTable()) : projectFinanceService.saveSpendProfile(projectId, organisationId, form.getTable());
         if (result.isFailure()) {
 
             // If this model attribute is set, it means there are some categories where the totals don't match
@@ -138,7 +138,7 @@ public class ProjectSpendProfileController {
         SpendProfileTableResource table = projectFinanceService.getSpendProfileTable(projectId, organisationId);
         List<SpendProfileSummaryYearModel> years = createSpendProfileSummaryYears(projectResource, table);
         SpendProfileSummaryModel summary = new SpendProfileSummaryModel(years);
-        return new ProjectSpendProfileViewModel(projectResource, table, summary);
+        return new ProjectSpendProfileViewModel(projectResource, organisationId, table, summary, false);
     }
 
     private List<SpendProfileSummaryYearModel> createSpendProfileSummaryYears(ProjectResource project, SpendProfileTableResource table){

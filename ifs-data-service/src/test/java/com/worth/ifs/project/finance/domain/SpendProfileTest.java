@@ -30,7 +30,7 @@ public class SpendProfileTest {
         Organisation organisation = newOrganisation().withName("My Org").build();
         Project project = newProject().with(name("My Proj")).build();
 
-        SpendProfile spendProfile = new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileCosts);
+        SpendProfile spendProfile = new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileCosts, false);
 
         assertEquals(organisation, spendProfile.getOrganisation());
         assertEquals(project, spendProfile.getProject());

@@ -19,6 +19,6 @@ public class SpendProfileDocs {
             fieldWithPath("costCategoryType").description("Cost Category Type Id of the Spend Profile"),
             fieldWithPath("eligibleCosts").description("Eligible costs for each category of the Spend Profile"),
             fieldWithPath("spendProfileFigures").description("Spend Profile Figures for each month, for each category of the Spend Profile"),
-
+            fieldWithPath("markedAsComplete").description("Whether spend profile has been marked as complete or not")
     };
 }
