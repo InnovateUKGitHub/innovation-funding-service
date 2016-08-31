@@ -7,6 +7,8 @@ import com.worth.ifs.competitionsetup.model.Funder;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.springframework.stereotype.Service;
 
+import static org.codehaus.groovy.runtime.InvokerHelper.asList;
+
 /**
  * Form populator for the additional info competition setup section.
  */
@@ -36,6 +38,12 @@ public class AdditionalInfoFormPopulator implements CompetitionSetupFormPopulato
 			funder.setCoFunder(funderResource.getCoFunder());
 			competitionSetupForm.getFunders().add(funder);
 		});
+
+        if(competitionResource.getFunders().isEmpty()) {
+            Funder funder = new Funder();
+            funder.setCoFunder(false);
+            competitionSetupForm.setFunders(asList(funder));
+        }
 
 		return competitionSetupForm;
 	}

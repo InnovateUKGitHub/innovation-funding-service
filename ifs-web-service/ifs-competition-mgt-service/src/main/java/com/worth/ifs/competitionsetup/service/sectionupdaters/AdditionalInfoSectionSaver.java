@@ -2,7 +2,7 @@ package com.worth.ifs.competitionsetup.service.sectionupdaters;
 
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.commons.error.Error;
-import com.worth.ifs.competition.resource.CompetitionCoFunderResource;
+import com.worth.ifs.competition.resource.CompetitionFunderResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competitionsetup.form.AdditionalInfoForm;
@@ -37,17 +37,16 @@ public class AdditionalInfoSectionSaver implements CompetitionSetupSectionSaver 
 		AdditionalInfoForm additionalInfoForm = (AdditionalInfoForm) competitionSetupForm;
 		competition.setActivityCode(additionalInfoForm.getActivityCode());
 		competition.setInnovateBudget(additionalInfoForm.getInnovateBudget());
-		competition.setFunder(additionalInfoForm.getFunder());
-		competition.setFunderBudget(additionalInfoForm.getFunderBudget());
 		competition.setBudgetCode(additionalInfoForm.getBudgetCode());
 		competition.setPafCode(additionalInfoForm.getPafNumber());
 		additionalInfoForm.setCompetitionCode(competition.getCode());
-		competition.setCoFunders(new ArrayList<>());
-		additionalInfoForm.getFunders().forEach(coFunderForm -> {
-			CompetitionCoFunderResource competitionCoFunderResource = new CompetitionCoFunderResource();
-			competitionCoFunderResource.setCoFunder(coFunderForm.getFunder());
-			competitionCoFunderResource.setCoFunderBudget(coFunderForm.getFunderBudget());
-			competition.getCoFunders().add(competitionCoFunderResource);
+		competition.setFunders(new ArrayList());
+		additionalInfoForm.getFunders().forEach(funder -> {
+            CompetitionFunderResource competitionFunderResource = new CompetitionFunderResource();
+            competitionFunderResource.setFunder(funder.getFunder());
+            competitionFunderResource.setFunderBudget(funder.getFunderBudget());
+            competitionFunderResource.setCoFunder(funder.getCoFunder());
+			competition.getFunders().add(competitionFunderResource);
 		});
         competitionService.update(competition);
 		return Collections.emptyList();

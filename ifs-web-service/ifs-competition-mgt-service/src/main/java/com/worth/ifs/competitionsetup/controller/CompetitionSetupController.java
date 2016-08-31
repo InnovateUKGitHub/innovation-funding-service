@@ -195,13 +195,15 @@ public class CompetitionSetupController {
         if (request.getParameterMap().containsKey("generate-code")) {
             CompetitionResource competition = competitionService.getById(competitionId);
             if (competition.getStartDate() != null) {
-                competitionService.generateCompetitionCode(competitionId, competition.getStartDate());
-                return "redirect:/competition/setup/" + competitionId + "/section/additional";
+                String generatedCode = competitionService.generateCompetitionCode(competitionId, competition.getStartDate());
+                competitionSetupForm.setCompetitionCode(generatedCode);
             }
         } else if (request.getParameterMap().containsKey("add-cofunder")) {
             List<Funder> funders = competitionSetupForm.getFunders();
-            coFunders.add(new Funder());
-            competitionSetupForm.setFunders(coFunders);
+            Funder newFunder = new Funder();
+            newFunder.setCoFunder(true);
+            funders.add(newFunder);
+            competitionSetupForm.setFunders(funders);
         }
 
         return genericCompetitionSetupSection(competitionSetupForm, bindingResult, competitionId, CompetitionSetupSection.ADDITIONAL_INFO, model);

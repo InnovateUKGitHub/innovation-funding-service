@@ -91,7 +91,7 @@ public class AdditionalInfoForm extends CompetitionSetupForm {
         this.funders = funders;
     }
 
-    public int getCoFundersCount() {
+    public int getFundersCount() {
         return funders.size();
     }
 
