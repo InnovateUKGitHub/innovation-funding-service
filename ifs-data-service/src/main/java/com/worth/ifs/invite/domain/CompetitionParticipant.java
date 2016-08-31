@@ -2,7 +2,6 @@ package com.worth.ifs.invite.domain;
 
 
 import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.invite.constant.InviteStatus;
 import com.worth.ifs.user.domain.User;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
