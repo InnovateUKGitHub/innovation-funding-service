@@ -14,6 +14,7 @@ import java.time.LocalDate;
 public class ProjectSpendProfileViewModel {
 
     private Long projectId;
+    private Long organisationId;
     private String projectName;
     private LocalDate targetProjectStartDate;
     private Long durationInMonths;
@@ -21,8 +22,9 @@ public class ProjectSpendProfileViewModel {
     private SpendProfileTableResource table;
     private boolean markedAsComplete;
 
-    public ProjectSpendProfileViewModel(ProjectResource project, SpendProfileTableResource table, SpendProfileSummaryModel summary, boolean markedAsComplete) {
+    public ProjectSpendProfileViewModel(ProjectResource project, Long organisationId, SpendProfileTableResource table, SpendProfileSummaryModel summary, boolean markedAsComplete) {
         this.projectId = project.getId();
+        this.organisationId = organisationId;
         this.projectName = project.getName();
         this.targetProjectStartDate = project.getTargetStartDate();
         this.durationInMonths = project.getDurationInMonths();
@@ -87,6 +89,14 @@ public class ProjectSpendProfileViewModel {
         this.markedAsComplete = markedAsComplete;
     }
 
+    public Long getOrganisationId() {
+        return organisationId;
+    }
+
+    public void setOrganisationId(Long organisationId) {
+        this.organisationId = organisationId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -98,6 +108,7 @@ public class ProjectSpendProfileViewModel {
         return new EqualsBuilder()
                 .append(markedAsComplete, that.markedAsComplete)
                 .append(projectId, that.projectId)
+                .append(organisationId, that.organisationId)
                 .append(projectName, that.projectName)
                 .append(targetProjectStartDate, that.targetProjectStartDate)
                 .append(durationInMonths, that.durationInMonths)
@@ -110,6 +121,7 @@ public class ProjectSpendProfileViewModel {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(projectId)
+                .append(organisationId)
                 .append(projectName)
                 .append(targetProjectStartDate)
                 .append(durationInMonths)
@@ -123,6 +135,7 @@ public class ProjectSpendProfileViewModel {
     public String toString() {
         return new ToStringBuilder(this)
                 .append("projectId", projectId)
+                .append("organisationId", organisationId)
                 .append("projectName", projectName)
                 .append("targetProjectStartDate", targetProjectStartDate)
                 .append("durationInMonths", durationInMonths)
