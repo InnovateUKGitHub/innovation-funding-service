@@ -26,6 +26,7 @@ import java.util.function.Supplier;
 
 import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
+import static java.lang.String.format;
 
 /**
  * Controller to manage Invites to a Competition.
@@ -55,14 +56,16 @@ public class CompetitionInviteController extends BaseController {
     }
 
     @RequestMapping(value = "competition/{inviteHash}/accept", method = RequestMethod.POST)
-    public String acceptInvite(@PathVariable("inviteHash") String inviteHash, @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+    public String acceptInvite(@PathVariable("inviteHash") String inviteHash,
+                               @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                               Model model) {
         boolean userIsLoggedIn = loggedInUser != null;
         if (userIsLoggedIn) {
-            return "redirect:/invite-accept/accept";
+            return format("redirect:/invite-accept/competition/%s/accept",inviteHash);
         } else {
             return inviteRestService.checkExistingUser(inviteHash).andOnSuccessReturn(userExists -> {
                 if (userExists) {
-                    return "assessor-competition-accept-user-exists-but-not-logged-in";
+                    return doViewAcceptUserExistsButNotLoggedIn(model, inviteHash);
                 } else {
                     return "redirect:/registration/register";
                 }
@@ -98,6 +101,11 @@ public class CompetitionInviteController extends BaseController {
     @ModelAttribute("rejectionReasons")
     public List<RejectionReasonResource> populateRejectionReasons() {
         return rejectionReasonRestService.findAllActive().getSuccessObjectOrThrowException();
+    }
+
+    private String doViewAcceptUserExistsButNotLoggedIn(Model model, String inviteHash) {
+        model.addAttribute("model", competitionInviteModelPopulator.populateModel(inviteHash));
+        return "assessor-competition-accept-user-exists-but-not-logged-in";
     }
 
     private String doViewRejectInvitationConfirm(Model model, String inviteHash) {

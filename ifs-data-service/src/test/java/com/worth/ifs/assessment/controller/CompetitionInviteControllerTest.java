@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.assessment.transactional.CompetitionInviteService;
 import com.worth.ifs.commons.error.CommonFailureKeys;
+import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.rest.RestErrorResponse;
 import com.worth.ifs.invite.builder.RejectionReasonResourceBuilder;
 import com.worth.ifs.invite.domain.CompetitionInvite;
 import com.worth.ifs.invite.domain.CompetitionParticipant;
@@ -13,18 +15,22 @@ import com.worth.ifs.invite.resource.RejectionReasonResource;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MvcResult;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.util.JsonMappingUtil.fromJson;
+import static java.util.Arrays.asList;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<CompetitionInviteController> {
-
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     @Mock
@@ -66,7 +72,6 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
         verify(competitionInviteService, times(1)).openInvite("hash");
     }
 
-
     @Test
     public void acceptInvite() throws Exception {
         when(competitionInviteService.acceptInvite("hash")).thenReturn(serviceSuccess());
@@ -74,6 +79,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
                 .andExpect(status().isOk());
         verify(competitionInviteService, times(1)).acceptInvite("hash");
     }
+
 
     @Test
     public void acceptInvite_hashNotExists() throws Exception {
@@ -159,6 +165,45 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
     @Test
     public void rejectInvite_alreadyRejected() throws Exception {
         rejectFailure(COMPETITION_PARTICIPANT_CANNOT_REJECT_ALREADY_REJECTED_INVITE);
+    }
+
+    @Test
+    public void checkExistingUser() throws Exception {
+        when(competitionInviteService.checkExistingUser("hash")).thenReturn(serviceSuccess(Boolean.TRUE));
+
+        mockMvc.perform(
+                get("/competitioninvite/checkExistingUser/{inviteHash}", "hash"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("true"));
+
+        verify(competitionInviteService).checkExistingUser("hash");
+    }
+
+    @Test
+    public void checkExistingUser_userNotExists() throws Exception {
+        when(competitionInviteService.checkExistingUser("hash")).thenReturn(serviceSuccess(Boolean.FALSE));
+
+        mockMvc.perform(
+                get("/competitioninvite/checkExistingUser/{inviteHash}", "hash"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("false"));
+
+        verify(competitionInviteService).checkExistingUser("hash");
+    }
+
+    @Test
+    public void checkExistingUser_hashNotExists() throws Exception {
+        when(competitionInviteService.checkExistingUser("hashNotExists")).thenReturn(serviceFailure(notFoundError(CompetitionInvite.class, "hashNotExists")));
+
+        MvcResult result = mockMvc.perform(
+                get("/competitioninvite/checkExistingUser/{inviteHash}", "hashNotExists"))
+                .andExpect(status().isNotFound())
+                .andReturn();
+
+        RestErrorResponse response = fromJson(result.getResponse().getContentAsString(), RestErrorResponse.class);
+        assertTrue(response.is(new Error(GENERAL_NOT_FOUND.getErrorKey(), "CompetitionInvite not found", asList("CompetitionInvite", "hashNotExists"), null)));
+
+        verify(competitionInviteService).checkExistingUser("hashNotExists");
     }
 
     private void rejectFailure(CommonFailureKeys key) throws Exception {

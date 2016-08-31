@@ -3,6 +3,7 @@ package com.worth.ifs.commons.rest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.commons.error.CommonFailureKeys;
 import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.error.ErrorTemplate;
 import com.worth.ifs.commons.error.exception.*;
 import com.worth.ifs.commons.service.*;
 import com.worth.ifs.util.Either;
@@ -256,6 +257,10 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
 
     public static RestResult<Void> restFailure(HttpStatus statusCode) {
         return restFailure(null, statusCode);
+    }
+
+    public static <T> RestResult<T> restFailure(ErrorTemplate errorTemplate) {
+        return restFailure(singletonList(new Error(errorTemplate)));
     }
 
     public static <T> RestResult<T> restFailure(Error error) {
