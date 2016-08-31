@@ -12,17 +12,17 @@ public class Question {
     private String number;
     private String shortTitle;
 
-    @NotBlank
+    @NotBlank(message = "This field cannot be left blank")
     private String title;
     private String subTitle;
 
-    @NotBlank
+    @NotBlank(message = "This field cannot be left blank")
     private String guidanceTitle;
 
-    @NotBlank
+    @NotBlank(message = "This field cannot be left blank")
     private String guidance;
 
-    @Min(1)
+    @Min(value = 1, message = "This field should be 1 or higher")
     private Integer maxWords;
     private Boolean appendix;
     private Boolean scored;
