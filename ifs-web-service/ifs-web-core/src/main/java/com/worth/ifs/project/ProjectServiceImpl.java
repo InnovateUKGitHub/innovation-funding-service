@@ -239,7 +239,6 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public ServiceResult<Void> saveProjectInvite (InviteProjectResource inviteProjectResource)
     {
-        System.out.println("IN The projectInvite service = " + inviteProjectResource.getProject());
         return projectInviteRestService.saveProjectInvite (inviteProjectResource).toServiceResult();
     }
 

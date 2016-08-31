@@ -69,8 +69,6 @@ public class InviteProjectServiceImpl extends BaseTransactionalService implement
     @Override
     public ServiceResult<Void> saveProjectInvite(@P("inviteProjectResource") InviteProjectResource inviteProjectResource) {
 
-        System.out.println("IN The dataservice transactional service call = " + inviteProjectResource.getProject());
-
         if (inviteProjectResourceIsValid(inviteProjectResource)) {
             ProjectInvite projectInvite = inviteMapper.mapToDomain(inviteProjectResource);
             Errors errors = new BeanPropertyBindingResult(projectInvite, projectInvite.getClass().getName());
