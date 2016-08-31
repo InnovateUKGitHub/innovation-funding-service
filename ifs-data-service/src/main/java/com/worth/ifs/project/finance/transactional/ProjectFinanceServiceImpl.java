@@ -218,6 +218,8 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         SpendProfile spendProfile = spendProfileRepository.findOneByProjectIdAndOrganisationId(
                 projectOrganisationCompositeId.getProjectId(), projectOrganisationCompositeId.getOrganisationId());
 
+        spendProfile.setMarkedAsComplete(markAsComplete);
+
         updateSpendProfileCosts(spendProfile, table);
 
         spendProfileRepository.save(spendProfile);

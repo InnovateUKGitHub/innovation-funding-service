@@ -39,4 +39,9 @@ public class ProjectFinanceServiceImpl implements ProjectFinanceService {
         return projectFinanceRestService.saveSpendProfile(projectId, organisationId, table).toServiceResult();
 
     }
+
+    @Override
+    public ServiceResult<Void> markSpendProfileComplete(Long projectId, Long organisationId, SpendProfileTableResource table) {
+        return projectFinanceRestService.markSpendProfileComplete(projectId, organisationId, table).toServiceResult();
+    }
 }

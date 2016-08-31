@@ -111,7 +111,7 @@ public class ProjectSpendProfileController {
             return "project/spend-profile/edit";
         }
 
-        ServiceResult<Void> result = projectFinanceService.saveSpendProfile(projectId, organisationId, form.getTable());
+        ServiceResult<Void> result = isMarkAsComplete ? projectFinanceService.markSpendProfileComplete(projectId, organisationId, form.getTable()) : projectFinanceService.saveSpendProfile(projectId, organisationId, form.getTable());
         if (result.isFailure()) {
 
             // If this model attribute is set, it means there are some categories where the totals don't match

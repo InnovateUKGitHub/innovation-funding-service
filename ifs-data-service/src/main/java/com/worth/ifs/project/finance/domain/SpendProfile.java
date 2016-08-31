@@ -79,4 +79,8 @@ public class SpendProfile {
     public boolean isMarkedAsComplete() {
         return markedAsComplete;
     }
+
+    public void setMarkedAsComplete(boolean markedAsComplete) {
+        this.markedAsComplete = markedAsComplete;
+    }
 }
