@@ -11,6 +11,7 @@ import com.worth.ifs.invite.resource.RejectionReasonResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -67,7 +68,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
     public void acceptInvite_loggedIn() throws Exception {
         mockMvc.perform(post(restUrl + "{inviteHash}/accept", "hash"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/invite-accept/accept"));
+                .andExpect(redirectedUrl("/invite-accept/competition/hash/accept"));
 
         verifyZeroInteractions(competitionInviteRestService);
     }
@@ -76,13 +77,22 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
     public void acceptInvite_notLoggedInAndExistingUser() throws Exception {
         setLoggedInUser(null);
 
+        CompetitionInviteResource inviteResource = newCompetitionInviteResource().withCompetitionName("my competition").build();
+
+        CompetitionInviteViewModel expectedViewModel = new CompetitionInviteViewModel("hash", "my competition");
+
         when(competitionInviteRestService.checkExistingUser("hash")).thenReturn(restSuccess(TRUE));
+        when(competitionInviteRestService.openInvite("hash")).thenReturn(restSuccess(inviteResource));
 
         mockMvc.perform(post(restUrl + "{inviteHash}/accept", "hash"))
                 .andExpect(status().isOk())
+                .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(view().name("assessor-competition-accept-user-exists-but-not-logged-in"));
 
-        verify(competitionInviteRestService).checkExistingUser("hash");
+        InOrder inOrder = inOrder(competitionInviteRestService);
+        inOrder.verify(competitionInviteRestService).checkExistingUser("hash");
+        inOrder.verify(competitionInviteRestService).openInvite("hash");
+        inOrder.verifyNoMoreInteractions();
     }
 
     @Test
