@@ -174,12 +174,12 @@ public class ProjectDetailsController extends AddressLookupBaseController {
     }
 
     @RequestMapping(value = "/{projectId}/details/invite-finance-contact", method = POST)
-    public String inviteFinanceContact(Model model,
-                                       @PathVariable("projectId") final Long projectId,
+    public String inviteFinanceContact(Model model, @PathVariable("projectId") final Long projectId,
                                        @Valid @ModelAttribute(INVITE_FORM_ATTR_NAME) InviteeForm form,
                                        @RequestParam(value="organisation") Long organisation,
                                        @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
-                                       @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+                                       @ModelAttribute("loggedInUser") UserResource loggedInUser
+                                       ) {
 
         FinanceContactForm financeForm = new FinanceContactForm();
 
@@ -190,13 +190,14 @@ public class ProjectDetailsController extends AddressLookupBaseController {
             InviteProjectResource invite = createProjectInviteResourceForNewContact (projectId, form.getName(), form.getEmail(), organisation);
 
             ServiceResult<Void> saveResult = projectService.saveProjectInvite(invite);
-
             ServiceResult<Void> inviteResult = projectService.inviteFinanceContact(projectId, invite);
 
             return validationHandler.addAnyErrors(saveResult, toField("financeContact")).
                     addAnyErrors(inviteResult, toField("financeContact")).
                     failNowOrSucceedWith(failureView, () -> redirectToProjectDetails(projectId));
+
         });
+
     }
 
     @RequestMapping(value = "/{projectId}/details/project-manager", method = RequestMethod.GET)
