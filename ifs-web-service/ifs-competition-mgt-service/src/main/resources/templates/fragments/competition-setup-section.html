@@ -360,7 +360,8 @@
                     <input readonly="readonly"
                            th:class="${#fields.hasErrors('competitionCode') ? 'form-control field-error width-large' : 'form-control width-large'}"
                            type="text"
-                           th:field="${competitionSetupForm.competitionCode}"
+                           name="competitionCode"
+                           th:value="${competitionSetupForm.competitionCode}"
                            required="required"
                            data-required-errormessage="Please generate a competition code"
                            data-autosave-disabled="data-autosave-disabled" />

@@ -11,7 +11,7 @@ import java.util.List;
  * For more info:
  * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
  */
-public interface CompetitionCoFunderRepository extends CrudRepository<CompetitionFunder, Long> {
+public interface CompetitionFunderRepository extends CrudRepository<CompetitionFunder, Long> {
 
     List<CompetitionFunder> findByCompetitionId(Long competitionId);
 

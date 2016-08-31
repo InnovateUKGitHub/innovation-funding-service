@@ -1,10 +1,12 @@
 package com.worth.ifs.competition.builder;
 
 import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.competition.resource.*;
+import com.worth.ifs.competition.resource.CollaborationLevel;
+import com.worth.ifs.competition.resource.CompetitionFunderResource;
+import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionResource.Status;
+import com.worth.ifs.competition.resource.LeadApplicantType;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -145,16 +147,8 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withArray((innovateBudget, object) -> setField("innovateBudget", innovateBudget, object), innovateBudgets);
     }
 
-    public CompetitionResourceBuilder withFunder(String... fundersMultiple) {
-        return withArray((funder, object) -> setField("funder", funder, object), fundersMultiple);
-    }
-
-    public CompetitionResourceBuilder withFunderBudget(BigDecimal... funderBudgets) {
-        return withArray((funderBudget, object) -> setField("funderBudget", funderBudget, object), funderBudgets);
-    }
-
-    public CompetitionResourceBuilder withCoFunders(List<CompetitionFunderResource> coFundersList) {
-        return withList(coFundersList, (coFunders, section) -> section.setFunders(coFundersList));
+    public CompetitionResourceBuilder withFunders(List<CompetitionFunderResource> fundersList) {
+        return withList(fundersList, (funders, section) -> section.setFunders(fundersList));
     }
 
     public CompetitionResourceBuilder withMilestones(List<Long> milestonesList) {

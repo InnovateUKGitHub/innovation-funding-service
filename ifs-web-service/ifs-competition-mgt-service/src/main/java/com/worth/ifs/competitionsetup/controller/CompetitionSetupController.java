@@ -196,7 +196,7 @@ public class CompetitionSetupController {
             CompetitionResource competition = competitionService.getById(competitionId);
             if (competition.getStartDate() != null) {
                 String generatedCode = competitionService.generateCompetitionCode(competitionId, competition.getStartDate());
-                competitionSetupForm.setCompetitionCode(generatedCode);
+                competitionSetupForm.setCompetitionCode(generatedCode.substring(1, generatedCode.length() - 1));
             }
         } else if (request.getParameterMap().containsKey("add-cofunder")) {
             List<Funder> funders = competitionSetupForm.getFunders();
