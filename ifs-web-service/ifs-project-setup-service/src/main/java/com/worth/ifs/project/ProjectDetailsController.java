@@ -187,9 +187,12 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
+            System.out.println("ProjectID param = " + projectId);
             InviteProjectResource invite = createProjectInviteResourceForNewContact (projectId, form.getName(), form.getEmail(), organisation);
 
+            System.out.println("invite project Id member (before save) = " + invite.getProject());
             ServiceResult<Void> saveResult = projectService.saveProjectInvite(invite);
+            System.out.println("invite project Id member (after save) = " + invite.getProject());
 
             ServiceResult<Void> inviteResult = projectService.inviteFinanceContact(projectId, invite);
 

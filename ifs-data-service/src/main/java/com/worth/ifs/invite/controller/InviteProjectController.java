@@ -39,6 +39,8 @@ public class InviteProjectController {
 
     @RequestMapping(value = PROJECT_INVITE_SAVE, method = RequestMethod.POST)
     public RestResult<Void> saveProjectInvites(@RequestBody @Valid InviteProjectResource inviteProjectResource) {
+        System.out.println("IN The dataservice rest controller call = " + inviteProjectResource.getProject());
+
         return inviteProjectService.saveProjectInvite(inviteProjectResource).toPutResponse();
     }
 
