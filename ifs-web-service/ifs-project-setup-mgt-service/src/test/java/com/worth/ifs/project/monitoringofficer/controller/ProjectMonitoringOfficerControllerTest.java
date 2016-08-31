@@ -17,9 +17,11 @@ import com.worth.ifs.project.resource.ProjectUserResource;
 import org.junit.Test;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -302,12 +304,17 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
         assertEquals("", form.getPhoneNumber());
 
         BindingResult bindingResult = form.getBindingResult();
-        assertEquals(5, bindingResult.getFieldErrorCount());
+        assertEquals(6, bindingResult.getFieldErrorCount());
         assertEquals("NotEmpty", bindingResult.getFieldError("firstName").getCode());
         assertEquals("NotEmpty", bindingResult.getFieldError("lastName").getCode());
         assertEquals("Email", bindingResult.getFieldError("emailAddress").getCode());
-        assertTrue(asList("NotEmpty", "Size").contains(bindingResult.getFieldErrors("phoneNumber").get(0).getCode()));
-        assertTrue(asList("NotEmpty", "Size").contains(bindingResult.getFieldErrors("phoneNumber").get(1).getCode()));
+
+        List<FieldError> phoneNumberErrors = new ArrayList<>(bindingResult.getFieldErrors("phoneNumber"));
+        phoneNumberErrors.sort((o1, o2) -> o1.getCode().compareTo(o2.getCode()));
+
+        assertEquals("NotEmpty", phoneNumberErrors.get(0).getCode());
+        assertEquals("Pattern", phoneNumberErrors.get(1).getCode());
+        assertEquals("Size", phoneNumberErrors.get(2).getCode());
     }
 
     @Test
@@ -442,11 +449,16 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
 
         BindingResult bindingResult = form.getBindingResult();
 
-        assertEquals(4, bindingResult.getFieldErrorCount());
+        assertEquals(5, bindingResult.getFieldErrorCount());
         assertEquals("NotEmpty", bindingResult.getFieldError("firstName").getCode());
         assertEquals("NotEmpty", bindingResult.getFieldError("lastName").getCode());
         assertEquals("Email", bindingResult.getFieldError("emailAddress").getCode());
-        assertEquals("Size", bindingResult.getFieldError("phoneNumber").getCode());
+
+        List<FieldError> phoneNumberErrors = new ArrayList<>(bindingResult.getFieldErrors("phoneNumber"));
+        phoneNumberErrors.sort((o1, o2) -> o1.getCode().compareTo(o2.getCode()));
+
+        assertEquals("Pattern", phoneNumberErrors.get(0).getCode());
+        assertEquals("Size", phoneNumberErrors.get(1).getCode());
     }
 
     private void assertMonitoringOfficerFormPrepopulatedFromExistingMonitoringOfficer(Map<String, Object> modelMap) {
