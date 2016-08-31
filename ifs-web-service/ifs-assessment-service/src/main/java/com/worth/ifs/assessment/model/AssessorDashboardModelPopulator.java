@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 public class AssessorDashboardModelPopulator {
 
     @Autowired
-    CompetitionParticipantRestService competitionParticipantRestService;
+    private CompetitionParticipantRestService competitionParticipantRestService;
 
     @Autowired
     private CompetitionService competitionService;
