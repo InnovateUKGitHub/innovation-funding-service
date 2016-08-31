@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -72,9 +73,7 @@ public class AdditionalInfoSectionSaver implements CompetitionSetupSectionSaver 
 	}
 
 	private List<Error> updateCompetitionResourceWithAutoSave(List<Error> errors, CompetitionResource competitionResource, String fieldName, String value) throws ParseException {
-	    Boolean notFound = false;
-
-		switch (fieldName) {
+	    switch (fieldName) {
 		    case "pafNumber":
 				competitionResource.setPafCode(value);
 				break;
@@ -88,26 +87,41 @@ public class AdditionalInfoSectionSaver implements CompetitionSetupSectionSaver 
 				competitionResource.setCode(value);
 				break;
 			default:
-				notFound = true;
+                errors = tryUpdateFunders(competitionResource, fieldName, value);
 		}
-
-		if(notFound) {
-            errors = asList(new Error("Field not found", HttpStatus.BAD_REQUEST));
-        } else {
-            errors = tryUpdateCofunders(competitionResource, fieldName, value);
-        }
 
         return errors;
 	}
 
-    private List<Error> tryUpdateCofunders(CompetitionResource competitionResource, String fieldName, String value) {
-        if(fieldName.endsWith("coFunder")) {
+	private Integer getFunderIndex(String fieldName) throws ParseException {
+	    return Integer.parseInt(fieldName.substring(fieldName.indexOf("[") + 1, fieldName.indexOf("]")));
+    }
 
-        } else if(fieldName.endsWith("coFunderBudget")) {
+    private List<Error> tryUpdateFunders(CompetitionResource competitionResource, String fieldName, String value) {
+        Integer index;
+        CompetitionFunderResource funder;
 
-        } else {
-           return asList(new Error("Field not found", HttpStatus.BAD_REQUEST));
+        try {
+            index = getFunderIndex(fieldName);
+            if(index < competitionResource.getFunders().size()) {
+                funder = competitionResource.getFunders().get(index);
+            } else {
+                funder = new CompetitionFunderResource();
+                funder.setCoFunder(true);
+            }
+
+            if(fieldName.endsWith("funder")) {
+                funder.setFunder(value);
+            } else if(fieldName.endsWith("funderBudget")) {
+                funder.setFunderBudget(new BigDecimal(value));
+            } else {
+               return asList(new Error("Field not found", HttpStatus.BAD_REQUEST));
+            }
+        } catch (ParseException e) {
+            return asList(new Error("Field not found", HttpStatus.BAD_REQUEST));
         }
+
+        competitionResource.getFunders().set(index, funder);
 
         return Collections.emptyList();
     }

@@ -1,10 +1,13 @@
 package com.worth.ifs.competitionsetup.service.formpopulator;
 
+import com.worth.ifs.application.service.CompetitionService;
+import com.worth.ifs.competition.resource.CompetitionFunderResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competitionsetup.form.AdditionalInfoForm;
-import com.worth.ifs.competitionsetup.model.Funder;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
+import com.worth.ifs.competitionsetup.model.Funder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import static org.codehaus.groovy.runtime.InvokerHelper.asList;
@@ -14,6 +17,9 @@ import static org.codehaus.groovy.runtime.InvokerHelper.asList;
  */
 @Service
 public class AdditionalInfoFormPopulator implements CompetitionSetupFormPopulator {
+
+    @Autowired
+    CompetitionService competitionService;
 
 	@Override
 	public CompetitionSetupSection sectionToFill() {
@@ -43,9 +49,19 @@ public class AdditionalInfoFormPopulator implements CompetitionSetupFormPopulato
             Funder funder = new Funder();
             funder.setCoFunder(false);
             competitionSetupForm.setFunders(asList(funder));
+
+            initFirstFunder(competitionResource);
         }
 
-		return competitionSetupForm;
+        return competitionSetupForm;
 	}
+
+    public void initFirstFunder(CompetitionResource competitionResource) {
+        CompetitionFunderResource competitionFunderResource = new CompetitionFunderResource();
+        competitionFunderResource.setCoFunder(false);
+	    competitionResource.setFunders(asList(competitionFunderResource));
+
+        competitionService.update(competitionResource);
+    }
 
 }
