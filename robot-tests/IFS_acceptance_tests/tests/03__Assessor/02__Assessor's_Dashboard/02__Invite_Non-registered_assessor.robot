@@ -13,33 +13,24 @@ Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
 
 *** Variables ***
-${Invitation_existing_assessor1}    ${server}/assessment/invite/competition/bcbf56004fddd137ea29d4f8434d33f62e7a7552a3a084197c7dfebce774c136c10bb26e1c6c989e?accept=accepted
 ${Invitation_nonexisting_assessor2}    ${server}/assessment/invite/competition/2abe401d357fc486da56d2d34dc48d81948521b372baff98876665f442ee50a1474a41f5a0964720 #invitation for assessor:worth.email.test+assessor2@gmail.com
+${Invitation_nonexisting_assessor3}    ${server}/assessment/invite/competition/1e05f43963cef21ec6bd5ccd6240100d35fb69fa16feacb9d4b77952bf42193842c8e73e6b07f932 #invitation for assessor:worth.email.test+assessor3@gmail.com
 
 *** Test Cases ***
-Existing assessor: Reject invitation
+Non-registered assessor: Accept invitation
+    [Documentation]    INFUND-228
+    Given the user navigates to the page    ${Invitation_nonexisting_assessor2}
+    Then the user should see the text in the page    Invitation to assess 'Juggling Craziness'
+    And the user should see the text in the page    You are invited to act as an assessor for the competition 'Juggling Craziness'.
+    # And the user clicks the button/link    jQuery=.button:contains("Accept")
+    # TODO when INFUND-304 is ready to test
+
+Non-registered assessor: Reject invitation
     [Documentation]    INFUND-4631
     [Tags]
-    Given the user navigates to the page    ${Invitation_existing_assessor1}
+    Given the user navigates to the page    ${Invitation_nonexisting_assessor3}
     Then the user should see the text in the page    Invitation to assess 'Juggling Craziness'
     # TODO add more steps when the Reject flow will be ready
     #And the user clicks the button/link    jQuery=.button:contains("Reject")
-    [Teardown]
 
-Existing assessor: Accept invitation
-    [Documentation]    INFUND-228
-    [Tags]
-    When the user navigates to the page    ${Invitation_existing_assessor1}
-    Then the user should see the text in the page    Invitation to assess 'Juggling Craziness'
-    And the user should see the text in the page    You are invited to act as an assessor for the competition 'Juggling Craziness'.
-    #And the user clicks the button/link    jQuery=.button:contains("Accept")
-    # TODO when INFUND-304 is ready to test
-    [Teardown]
-
-Existing assessor shouldn't be able to accept other assessor's invitation
-    [Documentation]    INFUND-228
-    [Tags]    Pending
-    # Pending 304 to be ready for test
-    Given the user navigates to the page    ${Invitation_nonexisting_assessor2}
-    when the user clicks the button/link    jQuery=button:contains(Accept)
-    # TODO when INFUND-304 is ready to test
+*** Keywords ***
