@@ -38,7 +38,7 @@
     </p>
 
     <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}" class="form-serialize-js section-overview">
-      <div th:include="fragments/application :: application-summary" th:remove="tag"/>
+      <div th:include="fragments/application :: application-summary (competitionIsOpen = ${currentCompetition.isOpen()})" th:remove="tag"/>
     </form>
 
     <div th:if="${!currentCompetition.isOpen() and !currentApplication.hasBeenSubmitted()}">

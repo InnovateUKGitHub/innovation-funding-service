@@ -111,7 +111,7 @@ public class ProjectSpendProfileController {
             return "project/spend-profile/edit";
         }
 
-        ServiceResult<Void> result = projectFinanceService.saveSpendProfile(projectId, organisationId, form.getTable());
+        ServiceResult<Void> result = isMarkAsComplete ? projectFinanceService.markSpendProfileComplete(projectId, organisationId, form.getTable()) : projectFinanceService.saveSpendProfile(projectId, organisationId, form.getTable());
         if (result.isFailure()) {
 
             // If this model attribute is set, it means there are some categories where the totals don't match
@@ -138,7 +138,7 @@ public class ProjectSpendProfileController {
         SpendProfileTableResource table = projectFinanceService.getSpendProfileTable(projectId, organisationId);
         List<SpendProfileSummaryYearModel> years = createSpendProfileSummaryYears(projectResource, table);
         SpendProfileSummaryModel summary = new SpendProfileSummaryModel(years);
-        return new ProjectSpendProfileViewModel(projectResource, table, summary, false);
+        return new ProjectSpendProfileViewModel(projectResource, organisationId, table, summary, false);
     }
 
     private List<SpendProfileSummaryYearModel> createSpendProfileSummaryYears(ProjectResource project, SpendProfileTableResource table){

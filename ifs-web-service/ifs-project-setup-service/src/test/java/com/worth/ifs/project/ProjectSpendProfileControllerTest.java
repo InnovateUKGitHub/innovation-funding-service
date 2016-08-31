@@ -112,7 +112,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         SpendProfileSummaryModel summary = new SpendProfileSummaryModel(years);
 
         // Assert that the view model is populated with the correct values
-        ProjectSpendProfileViewModel expectedViewModel = new ProjectSpendProfileViewModel(projectResource, expectedTable, summary, false);
+        ProjectSpendProfileViewModel expectedViewModel = new ProjectSpendProfileViewModel(projectResource, organisationId, expectedTable, summary, false);
 
         mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile", projectResource.getId(), organisationId))
                 .andExpect(status().isOk())
