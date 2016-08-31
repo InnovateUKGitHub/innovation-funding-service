@@ -5,21 +5,21 @@ import com.worth.ifs.commons.error.ErrorConverter;
 import com.worth.ifs.commons.error.ErrorHolder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.springframework.context.MessageSource;
-import org.springframework.context.NoSuchMessageException;
+import org.springframework.context.MessageSourceResolvable;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
 
 import java.io.Serializable;
 import java.util.*;
-import java.util.function.Function;
 
 import static com.worth.ifs.commons.error.Error.fieldError;
+import static com.worth.ifs.commons.error.Error.globalError;
 import static com.worth.ifs.commons.error.ErrorConverterFactory.asGlobalErrors;
 import static com.worth.ifs.commons.error.ErrorConverterFactory.fieldErrorsToFieldErrors;
 import static com.worth.ifs.util.CollectionFunctions.*;
 import static java.util.Arrays.asList;
-import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
+import static java.util.Collections.emptyList;
 
 /**
  * Resource object to return validation messages on rest calls.
@@ -34,19 +34,16 @@ public class ValidationMessages implements ErrorHolder, Serializable {
 
     }
 
-    public ValidationMessages(MessageSource messageSource, Long objectId, BindingResult bindingResult) {
-
-        populateFromBindingResult(objectId, bindingResult, e -> {
-            try {
-                return messageSource.getMessage(e, Locale.UK);
-            } catch (NoSuchMessageException ex) {
-                return e.getDefaultMessage();
-            }
-        });
+    public ValidationMessages(Long objectId) {
+        this.objectId = objectId;
     }
 
-    private ValidationMessages(BindingResult bindingResult) {
-        populateFromBindingResult(null, bindingResult, ObjectError::getDefaultMessage);
+    public ValidationMessages(BindingResult bindingResult) {
+        populateFromBindingResult(null, bindingResult);
+    }
+
+    public ValidationMessages(Long objectId, BindingResult bindingResult) {
+        populateFromBindingResult(objectId, bindingResult);
     }
 
     public ValidationMessages(Error... errors) {
@@ -145,6 +142,10 @@ public class ValidationMessages implements ErrorHolder, Serializable {
         return new ValidationMessages();
     }
 
+    public static ValidationMessages noErrors(Long objectId) {
+        return new ValidationMessages(objectId);
+    }
+
     public static ValidationMessages fromBindingResult(BindingResult bindingResult) {
         return new ValidationMessages(bindingResult);
     }
@@ -155,19 +156,88 @@ public class ValidationMessages implements ErrorHolder, Serializable {
         return combined;
     }
 
-    private void populateFromBindingResult(Long objectId, BindingResult bindingResult, Function<ObjectError, String> messageResolver) {
+    private void populateFromBindingResult(Long objectId, BindingResult bindingResult) {
 
-        errors.addAll(simpleMap(bindingResult.getFieldErrors(), e -> {
-            String errorMessage = messageResolver.apply(e);
-            return fieldError(e.getField(), e.getRejectedValue(), errorMessage);
-        }));
+        List<Error> fieldErrors = simpleMap(bindingResult.getFieldErrors(), e -> fieldError(e.getField(), e.getRejectedValue(),
+                getErrorKeyFromBindingError(e), getArgumentsFromBindingError(e)));
 
-        errors.addAll(simpleMap(bindingResult.getGlobalErrors(), e ->
-            new Error("", e.getDefaultMessage(), NOT_ACCEPTABLE)
-        ));
+        List<Error> globalErrors = simpleMap(bindingResult.getGlobalErrors(), e -> globalError(getErrorKeyFromBindingError(e),
+                getArgumentsFromBindingError(e)));
+
+        errors.addAll(combineLists(fieldErrors, globalErrors));
 
         objectName = bindingResult.getObjectName();
         this.objectId = objectId;
+    }
+
+    // The Binding Errors in the API contain error keys which can be looked up in the web layer (or used in another client
+    // of this API) to produce plain english messages, but it is not the responsibility of the API to produce plain
+    // english messages.  Therefore, the "defaultMessage" value in these errors is actually the key that is needed by
+    // the web layer to produce the appropriate messages e.g. "validation.standard.email.length.max".
+    //
+    // The format we receive these in at this point is "{validation.standard.email.length.max}", so we need to ensure
+    // that the curly brackets are stripped off before returning to the web layer
+    private String getErrorKeyFromBindingError(ObjectError e) {
+
+        String messageKey = e.getDefaultMessage();
+
+        if (messageKey == null) {
+            return null;
+        }
+
+        if (messageKey.startsWith("{") && messageKey.endsWith("}")) {
+            return messageKey.substring(1, messageKey.length() - 1);
+        }
+
+        return messageKey;
+    }
+
+    //
+    // The arguments provided by the Binding Errors here include as their first argument a version of all the error message
+    // information itself stored as a MessageSourceResolvable.  We don't want to be sending this across to the web layer
+    // as it's useless information.  We also can't really filter it out entirely because the resource bundle entries in the
+    // web layer expect the useful arguments from a Binding Error to be in a particular position in order to work (for instance,
+    //
+    // "validation.standard.lastname.length.min=Your last name should have at least {2} characters"
+    //
+    // expects the actual useful argument to be in array index 2, and this is a resource bundle argument that potentially
+    // could be got from either the data layer or the web layer, so it's best that we retain the original order of arguments
+    // in the data layer to make these resource bundle entries reusable.  Therefore, we're best off just replacing the
+    // MessageSourceResolvable argument with a blank entry.
+    //
+    private List<Object> getArgumentsFromBindingError(ObjectError e) {
+        Object[] originalArguments = e.getArguments();
+
+        if (originalArguments == null || originalArguments.length == 0) {
+            return emptyList();
+        }
+
+        return simpleMap(asList(originalArguments), arg -> validMessageArgument(arg) ? arg : "");
+    }
+
+    private boolean validMessageArgument(Object arg) {
+
+        if (arg == null) {
+            return true;
+        }
+
+        if (arg instanceof MessageSourceResolvable) {
+            return false;
+        }
+
+        if (arg.getClass().isArray() && ((Object[]) arg).length == 0) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public static void rejectValue(Errors errors, String fieldName, String errorKey, Object... arguments) {
+        errors.rejectValue(fieldName, errorKey, arguments, errorKey);
+    }
+
+    public static void reject(Errors errors, String errorKey, Object... arguments) {
+        errors.reject(errorKey, arguments, errorKey);
     }
 
     @Override

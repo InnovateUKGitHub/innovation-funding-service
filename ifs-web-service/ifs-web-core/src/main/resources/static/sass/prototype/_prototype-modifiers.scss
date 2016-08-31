@@ -262,6 +262,24 @@ ul.underline{
 	}
 }
 
+
+/*--- Inline Nav ---*/
+
+ul.inline-nav{
+	li a{
+		text-decoration: none;
+		color: $black;
+	}
+	li{
+		&.not-selected{
+			background: $grey-3;
+			margin-right: 2px;
+			margin-left: 2px;
+		}
+	}
+}
+
+
 		
 /*--- Controlling visibility of hidden panels for js and non-js ---*/
 

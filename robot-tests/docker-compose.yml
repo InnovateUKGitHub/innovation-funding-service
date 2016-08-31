@@ -21,8 +21,9 @@ services:
     depends_on:
       - hub
     environment:
-     - HUB_PORT_4444_TCP_ADDR=hub
-      -HUB_PORT_4444_TCP_PORT=4444
+      - HUB_PORT_4444_TCP_ADDR=hub
+      - HUB_PORT_4444_TCP_PORT=4444
+      - DBUS_SESSION_BUS_ADDRESS=/dev/null
     networks:
       - selenium-network
       - ifs_front-tier
