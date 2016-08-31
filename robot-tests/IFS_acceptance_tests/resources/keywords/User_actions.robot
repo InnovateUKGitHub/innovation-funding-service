@@ -269,6 +269,7 @@ the guest user enters the log in credentials
 
 The user should see the element
     [Arguments]    ${ELEMENT}
+    focus    ${ELEMENT}
     Wait Until Element Is Visible    ${ELEMENT}
 
 The user should not see the element
