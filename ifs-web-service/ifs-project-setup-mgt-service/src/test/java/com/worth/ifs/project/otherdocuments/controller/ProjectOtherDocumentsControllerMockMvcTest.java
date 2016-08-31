@@ -3,7 +3,7 @@ package com.worth.ifs.project.otherdocuments.controller;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import com.worth.ifs.file.resource.FileEntryResource;
-import com.worth.ifs.project.otherdocuments.viewmodel.ProjectOtherDocumentsViewModel;
+import com.worth.ifs.project.otherdocuments.viewmodel.ProjectPartnerDocumentsViewModel;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.user.resource.OrganisationResource;
@@ -48,7 +48,7 @@ public class ProjectOtherDocumentsControllerMockMvcTest extends BaseControllerMo
     }
 
 
-    private void assertProjectDetailsPrepopulatedOk(ProjectOtherDocumentsViewModel model) {
+    private void assertProjectDetailsPrepopulatedOk(ProjectPartnerDocumentsViewModel model) {
 
         assertEquals(Long.valueOf(123), model.getProjectId());
         assertEquals("Project 1", model.getProjectName());
@@ -73,7 +73,7 @@ public class ProjectOtherDocumentsControllerMockMvcTest extends BaseControllerMo
                 andReturn();
 
         Map<String, Object> modelMap = result.getModelAndView().getModel();
-        ProjectOtherDocumentsViewModel model = (ProjectOtherDocumentsViewModel) result.getModelAndView().getModel().get("model");
+        ProjectPartnerDocumentsViewModel model = (ProjectPartnerDocumentsViewModel) result.getModelAndView().getModel().get("model");
 
         assertProjectDetailsPrepopulatedOk(model);
 
@@ -97,7 +97,7 @@ public class ProjectOtherDocumentsControllerMockMvcTest extends BaseControllerMo
                 andReturn();
 
         Map<String, Object> modelMap = result.getModelAndView().getModel();
-        ProjectOtherDocumentsViewModel model = (ProjectOtherDocumentsViewModel) result.getModelAndView().getModel().get("model");
+        ProjectPartnerDocumentsViewModel model = (ProjectPartnerDocumentsViewModel) result.getModelAndView().getModel().get("model");
 
         // assert the project details are correct
         assertProjectDetailsPrepopulatedOk(model);

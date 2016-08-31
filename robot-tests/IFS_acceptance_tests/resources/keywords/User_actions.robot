@@ -22,6 +22,16 @@ The user navigates to the page
     # Wait Until Page Contains Element    link=Contact Us
     # Page Should Contain Link    href=${SERVER}/info/contact
 
+
+The user navigates to the assessor page
+    [Arguments]    ${TARGET_URL}
+    Go To    ${TARGET_URL}
+    Run Keyword And Ignore Error    Confirm Action
+    # Error checking
+    Page Should Not Contain    Error
+    Page Should Not Contain    something went wrong
+
+
 The user navigates to the page without the usual headers
     [Arguments]    ${TARGET_URL}
     Go To    ${TARGET_URL}
@@ -228,6 +238,10 @@ The user should see the text in the page
     Page Should Not Contain    Page or resource not found
     Page Should Not Contain    You do not have the necessary permissions for your request
     Page Should Not Contain    something went wrong
+
+The user should see no permissions message
+    wait until page contains    You do not have the necessary permissions for your request
+    Page Should Contain    You do not have the necessary permissions for your request
 
 The user should not see the text in the page
     [Arguments]    ${NOT_VISIBLE_TEXT}

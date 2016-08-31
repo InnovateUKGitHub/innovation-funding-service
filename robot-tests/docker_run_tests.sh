@@ -112,7 +112,13 @@ function startPybot() {
       else
         local includeHappyPath=''
     fi
-    pybot --outputdir target/${targetDir} --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:$postcodeLookupImplemented -v UPLOAD_FOLDER:$uploadFileDir -v DOWNLOAD_FOLDER:download_files -v BROWSER=chrome -v unsuccessful_login_message:'Your login was unsuccessful because of the following issue(s)' -v REMOTE_URL:'http://ifs-local-dev:4444/wd/hub' $includeHappyPath --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal --exclude Email --name IFS ${1}/* &
+    if [ "$emails" ]
+      then
+        local excludeEmails=''
+      else
+        local excludeEmails='--exclude Email'
+    fi
+    pybot --outputdir target/${targetDir} --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:${postcodeLookupImplemented} -v UPLOAD_FOLDER:${uploadFileDir} -v DOWNLOAD_FOLDER:download_files -v BROWSER=chrome -v unsuccessful_login_message:'Your login was unsuccessful because of the following issue(s)' -v REMOTE_URL:'http://ifs-local-dev:4444/wd/hub' ${includeHappyPath} --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal ${excludeEmails} --name ${targetDir} ${1}/* &
 }
 
 function runTests() {
@@ -177,9 +183,12 @@ unset opt
 unset quickTest
 unset testScrub
 unset parallel
+unset emails
+
+emails=0
 
 testDirectory='IFS_acceptance_tests/tests'
-while getopts ":p :h :q :t :d:" opt ; do
+while getopts ":p :h :q :t :d: :e" opt ; do
     case $opt in
         p)
          parallel=1
@@ -196,6 +205,9 @@ while getopts ":p :h :q :t :d:" opt ; do
         d)
          testDirectory="$OPTARG"
          parallel=0
+        ;;
+        e)
+         emails=1
         ;;
         \?)
          coloredEcho "Invalid option: -$OPTARG" red >&2

@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 
+import static com.worth.ifs.commons.rest.ValidationMessages.rejectValue;
+
 /**
  * This class validates the FormInputResponse, it checks if there is a value present.
  */
@@ -22,7 +24,7 @@ public class NotEmptyValidator extends BaseValidator {
 
         if (StringUtils.isEmpty(response.getValue()) || "".equals(response.getValue().trim())) {
             LOG.debug("NotEmpty validation message for: " + response.getId());
-            errors.rejectValue("value", "response.emptyResponse", "Please enter some text");
+            rejectValue(errors, "value", "validation.field.please.enter.some.text");
         }
     }
 }

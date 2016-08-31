@@ -11,7 +11,7 @@ import static com.worth.ifs.commons.rest.RestResult.restFailure;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -30,7 +30,7 @@ public class CompetitionInviteAcceptControllerTest extends BaseControllerMockMVC
     public void acceptInvite() throws Exception {
         when(competitionInviteRestService.acceptInvite("hash")).thenReturn(restSuccess());
 
-        mockMvc.perform(post(restUrl + "competition/{inviteHash}/accept", "hash"))
+        mockMvc.perform(get(restUrl + "competition/{inviteHash}/accept", "hash"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/assessor/dashboard"));
 
@@ -41,7 +41,7 @@ public class CompetitionInviteAcceptControllerTest extends BaseControllerMockMVC
     public void acceptInvite_hashNotExists() throws Exception {
         when(competitionInviteRestService.acceptInvite("notExistHash")).thenReturn(restFailure(GENERAL_NOT_FOUND));
 
-        mockMvc.perform(post(restUrl + "competition/{inviteHash}/accept", "notExistHash"))
+        mockMvc.perform(get(restUrl + "competition/{inviteHash}/accept", "notExistHash"))
                 .andExpect(status().isNotFound());
 
         verify(competitionInviteRestService).acceptInvite("notExistHash");

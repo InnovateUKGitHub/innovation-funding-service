@@ -12,6 +12,8 @@ Documentation     INFUND-901: As a lead applicant I want to invite application c
 ...
 ...
 ...               INFUND-1463: As a user with an invitation to collaborate on an application but not registered with IFS I want to be able to confirm my organisation so that I only have to create my account to work on the application
+...
+...               INFUND-3742: The overview with contributors is not matching with actual invites
 Suite Setup       log in and create new application for collaboration if there is not one already
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Collaboration    Appllicant
@@ -24,7 +26,6 @@ Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
 
 *** Variables ***
 ${application_name}    Invite robot test application
-
 
 *** Test Cases ***
 Application team page
@@ -69,11 +70,14 @@ Pending users visible in the assign list but not clickable
 
 Pending partners visible in Application team page
     [Documentation]    INFUND-929
+    ...
+    ...    INFUND-3742
     [Tags]    HappyPath
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Invite robot test application
     When the user clicks the button/link    link=View team members and add collaborators
     Then the status of the invited people should be correct in the application team page
+    The Lead organisation should show only one time
 
 Pending partners visible in the Manage contributors page
     [Documentation]    INFUND-928
@@ -262,13 +266,15 @@ the user navigates to the next question
     The user clicks the button/link    css=.next .pagination-label
     Run Keyword And Ignore Error    confirm action
 
-
 the user is on the invites and collaborators page
-    ${status}=      run keyword and ignore error           the user should see the element    jQuery=.button:contains("Invite new contributors")
-    run keyword if      ${status}!=('PASS', None)        log into smoke test application
+    ${status}=    run keyword and ignore error    the user should see the element    jQuery=.button:contains("Invite new contributors")
+    run keyword if    ${status}!=('PASS', None)    log into smoke test application
 
 log into smoke test application
     logout as user
-    guest user log-in     ${test_mailbox_one}+${unique_email_number}@gmail.com    Passw0rd123
+    guest user log-in    ${test_mailbox_one}+${unique_email_number}@gmail.com    Passw0rd123
     the user clicks the button/link    link=IFS smoke test
     the user clicks the button/link    link=View team members and add collaborators
+
+The Lead organisation should show only one time
+    Xpath Should Match X Times    //div/h2    2
