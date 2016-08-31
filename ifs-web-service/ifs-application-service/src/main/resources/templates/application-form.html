@@ -25,7 +25,9 @@
                     Invalid input provided
                 </h1>
                 <ul class="error-summary-list">
-                    <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+                    <th:block th:each="err : ${#fields.errors('*')}" th:with="markAsCompleteError=#{application.validation.MarkAsCompleteFailed}">
+                        <li th:classappend="${err.equals(markAsCompleteError)} ? 'list-header' : ''" th:text="${err}"></li>
+                    </th:block>
                 </ul>
             </div>
 

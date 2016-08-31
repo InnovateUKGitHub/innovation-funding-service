@@ -774,7 +774,7 @@ public class ApplicationFormController extends AbstractApplicationController {
 
             errors = storeFieldResult.getErrors();
             fieldId = storeFieldResult.getFieldId();
-            
+
             if (!errors.isEmpty()) {
                 return this.createJsonObjectNode(false, errors, fieldId);
             } else {
@@ -826,7 +826,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                         .stream()
                         .peek(e -> LOG.debug(String.format("Compare: %s => %s ", fieldName.toLowerCase(), e.getFieldName().toLowerCase())))
                         .filter(e -> fieldNameParts[1].toLowerCase().contains(e.getFieldName().toLowerCase())) // filter out the messages that are related to other fields.
-                        .map(e -> e.getErrorMessage())
+                        .map(e -> lookupErrorMessageResourceBundleEntry(e))
                         .collect(Collectors.toList());
                 return new StoreFieldResult(validationMessages.getObjectId(), errors);
             }
@@ -835,6 +835,10 @@ public class ApplicationFormController extends AbstractApplicationController {
             ValidationMessages saveErrors = formInputResponseService.save(userId, applicationId, formInputId, value, false);
             return new StoreFieldResult(simpleMap(saveErrors.getErrors(), Error::getErrorMessage));
         }
+    }
+
+    private String lookupErrorMessageResourceBundleEntry(Error e) {
+        return messageSource.getMessage(e.getErrorKey(), e.getArguments().toArray(), Locale.UK);
     }
 
     private ObjectNode createJsonObjectNode(boolean success, List<String> errors, Long fieldId) {
@@ -869,7 +873,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         } else if (fieldName.startsWith("application.durationInMonths")) {
             Long durationInMonth = Long.valueOf(value);
             if (durationInMonth < 1L || durationInMonth > 36L) {
-                errors.add("Please enter a valid duration between 1 and 36 months");
+                errors.add("Your project should last between 1 and 36 months");
                 application.setDurationInMonths(durationInMonth);
             } else {
                 application.setDurationInMonths(durationInMonth);

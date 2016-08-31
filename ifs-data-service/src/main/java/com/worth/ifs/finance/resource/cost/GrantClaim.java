@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 public class GrantClaim implements FinanceRowItem {
     private Long id;
 
-    @Digits(integer = MAX_DIGITS, fraction = 0)
+    @Digits(integer = MAX_DIGITS, fraction = 0, message = MAX_DIGITS_MESSAGE)
     private Integer grantClaimPercentage;
 
     private String name;

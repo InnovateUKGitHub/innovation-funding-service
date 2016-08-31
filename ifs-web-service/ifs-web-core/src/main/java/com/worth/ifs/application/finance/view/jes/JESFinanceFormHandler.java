@@ -14,12 +14,10 @@ import com.worth.ifs.exception.UnableToReadUploadedFile;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.cost.FinanceRowItem;
-import com.worth.ifs.util.MessageUtil;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,7 +25,10 @@ import org.springframework.web.multipart.support.StandardMultipartHttpServletReq
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Map;
 
 import static com.worth.ifs.commons.error.Error.fieldError;
 import static com.worth.ifs.commons.rest.ValidationMessages.noErrors;
@@ -46,9 +47,6 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
 
     @Autowired
     private QuestionService questionService;
-
-    @Autowired
-    protected MessageSource messageSource;
 
     private static final String REMOVE_FINANCE_DOCUMENT = "remove_finance_document";
 
@@ -201,10 +199,8 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
 
                     if (result.isFailure()) {
 
-                        List<Error> errors = simpleMap(result.getFailure().getErrors(), e -> {
-                            String lookedUpMessage = MessageUtil.getFromMessageBundle(messageSource, e.getErrorKey(), "Unknown error on file upload", request.getLocale());
-                            return fieldError("formInput[jes-upload]", e.getFieldRejectedValue(), lookedUpMessage);
-                        });
+                        List<Error> errors = simpleMap(result.getFailure().getErrors(),
+                                e -> fieldError("formInput[jes-upload]", e.getFieldRejectedValue(), e.getErrorKey(), e.getArguments()));
 
                         return new ValidationMessages(errors);
                     }
