@@ -4,8 +4,8 @@ import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
 import com.worth.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.project.ProjectService;
-import com.worth.ifs.project.otherdocuments.form.ProjectOtherDocumentsForm;
-import com.worth.ifs.project.otherdocuments.viewmodel.ProjectOtherDocumentsViewModel;
+import com.worth.ifs.project.otherdocuments.form.ProjectPartnerDocumentsForm;
+import com.worth.ifs.project.otherdocuments.viewmodel.ProjectPartnerDocumentsViewModel;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.user.resource.OrganisationResource;
@@ -41,13 +41,14 @@ public class ProjectOtherDocumentsController {
     private ProjectService projectService;
 
     @RequestMapping(method = GET)
-    public String viewOtherDocumentsPage(Model model, @PathVariable("projectId") Long projectId,
+    public String viewOtherDocumentsPage(Model model, @ModelAttribute(FORM_ATTR) ProjectPartnerDocumentsForm form,
+                                         @PathVariable("projectId") Long projectId,
                                          @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-        return doViewOtherDocumentsPage(model, null, projectId, loggedInUser);
+        return doViewOtherDocumentsPage(model, form, projectId, loggedInUser);
     }
 
     @RequestMapping(method = POST)
-    public String acceptOrRejectOtherDocuments(Model model, @ModelAttribute(FORM_ATTR) ProjectOtherDocumentsForm form,
+    public String acceptOrRejectOtherDocuments(Model model, @ModelAttribute(FORM_ATTR) ProjectPartnerDocumentsForm form,
                                                @PathVariable("projectId") Long projectId,
                                                @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
@@ -78,14 +79,14 @@ public class ProjectOtherDocumentsController {
         return returnFileIfFoundOrThrowNotFoundException(projectId, content, fileDetails);
     }
 
-    private String doViewOtherDocumentsPage(Model model, ProjectOtherDocumentsForm form, Long projectId, UserResource loggedInUser) {
+    private String doViewOtherDocumentsPage(Model model, ProjectPartnerDocumentsForm form, Long projectId, UserResource loggedInUser) {
 
-        ProjectOtherDocumentsViewModel viewModel = getOtherDocumentsViewModel(form, projectId, loggedInUser);
+        ProjectPartnerDocumentsViewModel viewModel = getOtherDocumentsViewModel(form, projectId, loggedInUser);
         model.addAttribute("model", viewModel);
         return "project/other-documents";
     }
 
-    private ProjectOtherDocumentsViewModel getOtherDocumentsViewModel(ProjectOtherDocumentsForm form, Long projectId, UserResource loggedInUser) {
+    private ProjectPartnerDocumentsViewModel getOtherDocumentsViewModel(ProjectPartnerDocumentsForm form, Long projectId, UserResource loggedInUser) {
 
         ProjectResource project = projectService.getById(projectId);
         Optional<FileEntryResource> collaborationAgreement = projectService.getCollaborationAgreementFileDetails(projectId);
@@ -103,7 +104,7 @@ public class ProjectOtherDocumentsController {
                 .filter(s -> s != leadPartnerOrganisationName)
                 .collect(Collectors.toList());
 
-        return new ProjectOtherDocumentsViewModel(projectId, project.getName(), leadPartnerOrganisationName,
+        return new ProjectPartnerDocumentsViewModel(projectId, project.getName(), leadPartnerOrganisationName,
                 projectManagerName, projectManagerTelephone, projectManagerEmail,
                 collaborationAgreement.map(FileDetailsViewModel::new).orElse(null),
                 exploitationPlan.map(FileDetailsViewModel::new).orElse(null),

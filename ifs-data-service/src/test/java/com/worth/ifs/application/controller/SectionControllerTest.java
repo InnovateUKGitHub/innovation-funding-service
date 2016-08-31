@@ -10,7 +10,6 @@ import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.competition.domain.Competition;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.validation.BeanPropertyBindingResult;
@@ -23,11 +22,11 @@ import java.util.Set;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.application.builder.SectionBuilder.newSection;
 import static com.worth.ifs.application.builder.SectionResourceBuilder.newSectionResource;
+import static com.worth.ifs.commons.rest.ValidationMessages.reject;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
@@ -154,17 +153,16 @@ public class SectionControllerTest extends BaseControllerMockMVCTest<SectionCont
         Long applicationId = 1L;
 
         ArrayList<ValidationMessages> validationMessages = new ArrayList<>();
-        MessageSource messageSource = mock(MessageSource.class);
         bindingResult = new BeanPropertyBindingResult(section, "costItem");
-        bindingResult.reject("MinimumRows", "this section should contains at least 1 row");
-        ValidationMessages messages = new ValidationMessages(messageSource, 1L, bindingResult);
+        reject(bindingResult, "validation.finance.min.row");
+        ValidationMessages messages = new ValidationMessages(1L, bindingResult);
         validationMessages.add(messages);
         when(sectionService.markSectionAsComplete(section.getId(), applicationId, processRoleId)).thenReturn(serviceSuccess(validationMessages));
 
 
         mockMvc.perform(RestDocumentationRequestBuilders.get("/section/markAsComplete/{sectionId}/{applicationId}/{processRoleId}", section.getId(), applicationId, processRoleId))
                 .andExpect(status().isOk())
-                .andExpect(content().string("[{\"objectName\":\"costItem\",\"objectId\":1,\"errors\":[{\"errorKey\":\"\",\"fieldName\":null,\"fieldRejectedValue\":null,\"arguments\":[],\"errorMessage\":\"this section should contains at least 1 row\"}]}]"))
+                .andExpect(content().string("[{\"objectName\":\"costItem\",\"objectId\":1,\"errors\":[{\"errorKey\":\"validation.finance.min.row\",\"fieldName\":null,\"fieldRejectedValue\":null,\"arguments\":[],\"errorMessage\":null}]}]"))
                 .andDo(
                         document(
                             "section/mark-as-complete-invalid",
