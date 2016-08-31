@@ -99,7 +99,7 @@ public class AssessorFormInputResponseControllerTest extends BaseControllerMockM
                 .withValue(value)
                 .build();
 
-        Error sizeError = fieldError("value", value, "Size");
+        Error sizeError = fieldError("value", value, "validation.assessorforminputresponse.value.length.max", "", "0", "5000");
 
         mockMvc.perform(put("/assessorFormInputResponse")
                 .contentType(APPLICATION_JSON)
