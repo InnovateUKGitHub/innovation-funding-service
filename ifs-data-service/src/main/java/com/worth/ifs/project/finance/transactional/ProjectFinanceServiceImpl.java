@@ -21,11 +21,13 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
@@ -193,6 +195,46 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         }
     }
 
+    private ServiceResult<Void> saveSpendProfileData(ProjectOrganisationCompositeId projectOrganisationCompositeId, SpendProfileTableResource table) {
+
+        SpendProfile spendProfile = spendProfileRepository.findOneByProjectIdAndOrganisationId(
+                projectOrganisationCompositeId.getProjectId(), projectOrganisationCompositeId.getOrganisationId());
+
+        updateSpendProfileCosts(spendProfile, table);
+
+        spendProfileRepository.save(spendProfile);
+
+        return serviceSuccess();
+    }
+
+    private void updateSpendProfileCosts(SpendProfile spendProfile, SpendProfileTableResource table) {
+
+        Map<String, List<BigDecimal>> monthlyCostsPerCategoryMap = table.getMonthlyCostsPerCategoryMap();
+
+        for (Map.Entry<String, List<BigDecimal>> entry : monthlyCostsPerCategoryMap.entrySet()) {
+
+            String category = entry.getKey();
+            List<BigDecimal> monthlyCosts = entry.getValue();
+
+            updateSpendProfileCostsForCategory(category, monthlyCosts, spendProfile);
+
+        }
+    }
+
+    private void updateSpendProfileCostsForCategory(String category, List<BigDecimal> monthlyCosts, SpendProfile spendProfile) {
+
+        List<Cost> filteredAndSortedCostsToUpdate = spendProfile.getSpendProfileFigures().getCosts().stream()
+                .filter(cost -> cost.getCostCategory().getName().equalsIgnoreCase(category))
+                .sorted(Comparator.comparing(cost -> cost.getCostTimePeriod().getOffsetAmount()))
+                .collect(Collectors.toList());
+
+        int index = 0;
+        for (Cost costToUpdate : filteredAndSortedCostsToUpdate) {
+            costToUpdate.setValue(monthlyCosts.get(index));
+            index++;
+        }
+    }
+
     private ServiceResult<Void> validateSpendProfileTotals(SpendProfileTableResource table) {
 
         List<Error> categoriesWithIncorrectTotal = checkTotalForMonths(table);
@@ -215,7 +257,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
             String category = entry.getKey();
             List<BigDecimal> monthlyCosts = entry.getValue();
 
-            BigDecimal actualTotalCost = monthlyCosts.stream().reduce(new BigDecimal("0"), (d1, d2) -> d1.add(d2));
+            BigDecimal actualTotalCost = monthlyCosts.stream().reduce(BigDecimal.ZERO, (d1, d2) -> d1.add(d2));
             BigDecimal expectedTotalCost = eligibleCostPerCategoryMap.get(category);
 
             if (!actualTotalCost.equals(expectedTotalCost)) {
@@ -226,13 +268,6 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         }
 
         return categoriesWithIncorrectTotal;
-    }
-
-    private ServiceResult<Void> saveSpendProfileData(ProjectOrganisationCompositeId projectOrganisationCompositeId, SpendProfileTableResource table) {
-
-        // Need to check how to convert the table to SpendProfileResource and save it.
-        // The SpendProfileResource currently only has an id
-        return serviceSuccess();
     }
 
     private List<BigDecimal> orderCostsByMonths(List<Cost> costs, List<LocalDate> months, LocalDate startDate) {
