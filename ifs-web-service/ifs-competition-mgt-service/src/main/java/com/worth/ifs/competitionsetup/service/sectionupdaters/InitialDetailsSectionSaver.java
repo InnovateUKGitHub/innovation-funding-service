@@ -17,10 +17,13 @@ import com.worth.ifs.competitionsetup.service.CompetitionSetupService;
 import org.apache.commons.collections4.map.LinkedMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.el.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,7 +37,7 @@ import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 public class InitialDetailsSectionSaver implements CompetitionSetupSectionSaver {
 
 	private static Log LOG = LogFactory.getLog(InitialDetailsSectionSaver.class);
-    private static String OPENINGDATE_FIELDNAME = "openingDate";
+    public final static String OPENINGDATE_FIELDNAME = "openingDate";
 
 	@Autowired
 	private CompetitionService competitionService;
@@ -60,8 +63,6 @@ public class InitialDetailsSectionSaver implements CompetitionSetupSectionSaver 
 	public List<Error> saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
 		
 		InitialDetailsForm initialDetailsForm = (InitialDetailsForm) competitionSetupForm;
-
-		Boolean isDiffCompType = competition.getCompetitionType() != initialDetailsForm.getCompetitionTypeId();
 
 		competition.setName(initialDetailsForm.getTitle());
 		competition.setExecutive(initialDetailsForm.getExecutiveUserId());
@@ -98,13 +99,75 @@ public class InitialDetailsSectionSaver implements CompetitionSetupSectionSaver 
 		competition.setInnovationArea(initialDetailsForm.getInnovationAreaCategoryId());
 
 		competitionService.update(competition);
-
-        if(isDiffCompType) {
-            competitionService.initApplicationFormByCompetitionType(competition.getId(), initialDetailsForm.getCompetitionTypeId());
-        }
+        competitionService.initApplicationFormByCompetitionType(competition.getId(), initialDetailsForm.getCompetitionTypeId());
 
         return Collections.emptyList();
 	}
+
+	@Override
+	public List<Error> autoSaveSectionField(CompetitionResource competitionResource, String fieldName, String value) {
+		List<Error> errors = new ArrayList<>();
+
+	    try {
+            errors = updateCompetitionResourceWithAutoSave(errors, competitionResource, fieldName, value);
+        } catch (ParseException e) {
+            errors.add(new Error(e.getMessage(), HttpStatus.BAD_REQUEST));
+        }
+
+        if(!errors.isEmpty()) {
+            return errors;
+        }
+
+        competitionService.update(competitionResource);
+
+		return Collections.emptyList();
+	}
+
+	private List<Error> updateCompetitionResourceWithAutoSave(List<Error> errors, CompetitionResource competitionResource, String fieldName, String value) throws ParseException {
+        switch (fieldName) {
+            case "title":
+                competitionResource.setName(value);
+                break;
+            case "competitionTypeId":
+                competitionResource.setCompetitionType(Long.parseLong(value));
+                break;
+            case "innovationSectorCategoryId":
+                competitionResource.setInnovationSector(Long.parseLong(value));
+                break;
+            case "innovationAreaCategoryId":
+                competitionResource.setInnovationArea(Long.parseLong(value));
+                break;
+            case "leadTechnologistUserId":
+                competitionResource.setLeadTechnologist(Long.parseLong(value));
+                break;
+            case "executiveUserId":
+                competitionResource.setExecutive(Long.parseLong(value));
+                break;
+            case "openingDate":
+                try {
+                    String[] dateParts = value.split("-");
+                    LocalDateTime startDate = LocalDateTime.of(
+                            Integer.parseInt(dateParts[2]),
+                            Integer.parseInt(dateParts[1]),
+                            Integer.parseInt(dateParts[0]),
+                            0, 0, 0);
+                    competitionResource.setStartDate(startDate);
+
+                    errors.addAll(saveOpeningDateAsMilestone(startDate, competitionResource.getId()));
+                    if(!errors.isEmpty()) {
+                        return errors;
+                    }
+                } catch (Exception e) {
+                    LOG.error(e.getMessage());
+                    return asList(Error.fieldError(OPENINGDATE_FIELDNAME, null, "Unable to save opening date"));
+                }
+                break;
+            default:
+                return asList(new Error("Field not found", HttpStatus.BAD_REQUEST));
+        }
+
+        return errors;
+    }
 
 	private List<Error> validateOpeningDate(LocalDateTime openingDate) {
         if (openingDate.isBefore(LocalDateTime.now())) {

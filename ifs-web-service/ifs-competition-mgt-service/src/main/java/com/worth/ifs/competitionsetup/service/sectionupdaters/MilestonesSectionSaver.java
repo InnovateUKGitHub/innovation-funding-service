@@ -50,6 +50,11 @@ public class MilestonesSectionSaver implements CompetitionSetupSectionSaver {
         return Collections.emptyList();
     }
 
+    @Override
+    public List<Error> autoSaveSectionField(CompetitionResource competitionResource, String fieldName, String value) {
+        return Collections.emptyList();
+    }
+
     private List<Error> returnErrorsFoundOnSave(LinkedMap<String, MilestoneEntry> milestoneEntries, Long competitionId){
         List<MilestoneResource> milestones = milestoneService.getAllDatesByCompetitionId(competitionId);
 
