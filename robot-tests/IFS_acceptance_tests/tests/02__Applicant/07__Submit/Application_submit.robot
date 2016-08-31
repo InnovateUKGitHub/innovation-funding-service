@@ -16,6 +16,7 @@ Documentation     -INFUND-172: As a lead applicant and I am on the application s
 ...
 ...
 ...               INFUND-1786 As a lead applicant I would like view the submitting an application terms and conditions page so that I know what I am agreeing to
+Suite Setup       new account complete all but one
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Applicant    Submit
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
@@ -26,13 +27,13 @@ Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
 
 *** Variables ***
-${submit_application_name}    Robot submit test application
+
 
 
 *** Test Cases ***
 Set up an application to submit
     [Documentation]    INFUND-205
-    [Tags]    HappyPath    Email
+    [Tags]    HappyPath    Email     Pending
     new account complete all but one
     # please note that this test case has been moved out of suite setup as it isn't required for smoke testing, but should still run for HappyPath and full test runs
 
@@ -47,7 +48,7 @@ Submit button disabled when finance section is incomplete
     [Documentation]    INFUND-927
     [Tags]    Email    HappyPath
     Given the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link=Robot submit test application
+    And the user clicks the button/link    link=${application_name}
     Given the user clicks the button/link    link=Your finances
     When the user clicks the button/link    jQuery=button:contains("Edit")
     And the user clicks the button/link    link= Application Overview
@@ -65,8 +66,9 @@ Submit flow (complete application)
     ...    INFUND-4010
     [Tags]    HappyPath    Email    SmokeTest
     [Setup]    Delete the emails from both test mailboxes
+    Given guest user log-in    ${submit_test_email}    Passw0rd123
     Given the user navigates to the page    ${SERVER}
-    And the user clicks the button/link    link=${submit_application_name}
+    And the user clicks the button/link    link=${application_name}
     When the user clicks the button/link    link=Review & submit
     And the user should be redirected to the correct page    summary
     Then the applicant accepts the terms and conditions
@@ -79,15 +81,15 @@ Submit flow (complete application)
 
 The applicant should get a confirmation email
     [Documentation]    INFUND-1887
-    [Tags]    Email    HappyPath
+    [Tags]    Email    HappyPath    SmokeTest
     Then the user should get a confirmation email
 
 Submitted application is read only
     [Documentation]    INFUND-1938
-    [Tags]    Email
+    [Tags]    Email    SmokeTest
     Given the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link=Robot submit test application
-    When the user clicks the button/link    Link=View application
+    And the user clicks the button/link    link=${application_name}
+    When the user clicks the button/link    link=View application
     And the user is on the page    summary
     Then the user can check that the sections are read only
 
@@ -96,7 +98,7 @@ Status of the submitted application
     [Tags]    Email
     When the user navigates to the page    ${DASHBOARD_URL}
     Then the user should see the text in the page    Application submitted
-    And the user clicks the button/link    Link=Robot submit test application
+    And the user clicks the button/link    Link=${application_name}
     And the user should see the element    Link=View application
     And the user should see the element    Link=Print Application
     When the user clicks the button/link    Link=Print Application
@@ -118,7 +120,7 @@ the applicant clicks the submit button and the clicks cancel in the submit modal
 
 The user can check that the sections are read only
     the user navigates to the page    ${dashboard_url}
-    the user clicks the button/link    link=Robot submit test application
+    the user clicks the button/link    link=${application_name}
     the user clicks the button/link    link=View application
     the user clicks the button/link    css=.section-overview section:nth-of-type(1) .collapsible:nth-of-type(4)
     the user should not see the element    jQuery=button:contains("Edit")
@@ -147,7 +149,7 @@ the applicant accepts the terms and conditions
 
 The user marks the finances as complete
     Given the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link=Robot submit test application
+    And the user clicks the button/link    link=${application_name}
     Given the user clicks the button/link    link=Your finances
     When the user clicks the button/link    jQuery=button:contains("Mark all as complete")
 

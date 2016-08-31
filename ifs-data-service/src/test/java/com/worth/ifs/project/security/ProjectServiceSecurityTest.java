@@ -7,11 +7,11 @@ import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.FileAndContents;
-import com.worth.ifs.invite.builder.InviteResourceBuilder;
 import com.worth.ifs.invite.builder.ProjectInviteResourceBuilder;
-import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.invite.resource.InviteProjectResource;
-import com.worth.ifs.project.resource.*;
+import com.worth.ifs.project.resource.MonitoringOfficerResource;
+import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.RoleResource;
@@ -39,9 +39,7 @@ import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectRes
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static com.worth.ifs.user.resource.UserRoleType.APPLICANT;
-import static com.worth.ifs.user.resource.UserRoleType.COMP_ADMIN;
-import static com.worth.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
+import static com.worth.ifs.user.resource.UserRoleType.*;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.EnumSet.complementOf;
@@ -300,6 +298,8 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         assertAccessDenied(() -> service.getCollaborationAgreementFileEntryDetails(123L), () -> {
             verify(projectPermissionRules).partnersCanViewOtherDocumentsDetails(project, getLoggedInUser());
+            verify(projectPermissionRules).competitionAdminCanViewOtherDocumentsDetails(project, getLoggedInUser());
+            verify(projectPermissionRules).projectFinanceUserCanViewOtherDocumentsDetails(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
         });
     }
@@ -352,6 +352,8 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
 
         assertAccessDenied(() -> service.getExploitationPlanFileEntryDetails(123L), () -> {
+            verify(projectPermissionRules).competitionAdminCanViewOtherDocumentsDetails(project, getLoggedInUser());
+            verify(projectPermissionRules).projectFinanceUserCanViewOtherDocumentsDetails(project, getLoggedInUser());
             verify(projectPermissionRules).partnersCanViewOtherDocumentsDetails(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
         });

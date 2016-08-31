@@ -2,7 +2,7 @@
 Documentation     INFUND-3763 As a project finance team member I want to receive feedback from Experian regarding a partners' bank account details
 Suite Setup       Log in as user    project.finance1@innovateuk.test    Passw0rd
 Suite Teardown    the user closes the browser
-Force Tags        Experian
+Force Tags        Experian    Project Setup
 Resource          ../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../resources/variables/User_credentials.robot
@@ -14,7 +14,6 @@ Resource          ../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
 *** Variables ***
 
 *** Test Cases ***
-
 The user can see the company name with score
     [Documentation]    INFUND-3763
     [Tags]
@@ -40,7 +39,7 @@ The user can see the address with score
     [Documentation]    INFUND-3763
     [Tags]
     Then the user should see the text in the page    Address
-    And the user should see the element    css = tr:nth-child(4) .yes
+    And the user should see the element    css = tr:nth-child(4) .no
 
 The user has the options to edit the details and to approve the bank details
     [Documentation]    INFUND-3763
@@ -52,10 +51,9 @@ The user has the options to edit the details and to approve the bank details
 Other internal users cannot access this page
     [Documentation]    INFUND-3763
     [Tags]
-    [Setup]    guest user log-in  john.doe@innovateuk.test    Passw0rd
-    the user navigates to the page and gets a custom error message  ${server}/project-setup-management/project/1/organisation/31/review-bank-details    You do not have the necessary permissions for your request
+    [Setup]    guest user log-in    john.doe@innovateuk.test    Passw0rd
+    the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/1/organisation/31/review-bank-details    You do not have the necessary permissions for your request
     [Teardown]    logout as user
-
 
 Project partners cannot access this page
     [Documentation]    INFUND-3763

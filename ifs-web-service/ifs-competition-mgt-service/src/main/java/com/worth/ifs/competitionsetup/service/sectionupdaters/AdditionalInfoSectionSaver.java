@@ -1,6 +1,7 @@
 package com.worth.ifs.competitionsetup.service.sectionupdaters;
 
 import com.worth.ifs.application.service.CompetitionService;
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.competition.resource.CompetitionCoFunderResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
@@ -10,9 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-
-import com.worth.ifs.commons.error.Error;
 
 /**
  * Competition setup section saver for the additional info section.
@@ -46,7 +46,12 @@ public class AdditionalInfoSectionSaver implements CompetitionSetupSectionSaver 
 			competition.getCoFunders().add(competitionCoFunderResource);
 		});
         competitionService.update(competition);
-		return new ArrayList<>();
+		return Collections.emptyList();
+	}
+
+	@Override
+	public List<Error> autoSaveSectionField(CompetitionResource competitionResource, String fieldName, String value) {
+		return Collections.emptyList();
 	}
 
 	@Override

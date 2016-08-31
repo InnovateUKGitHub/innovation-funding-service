@@ -14,10 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
 
 @Service
 public class CompetitionSetupServiceImpl implements CompetitionSetupService {
@@ -54,7 +54,6 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 			CompetitionSetupSection section) {
 		
 		populateGeneralModelAttributes(model, competitionResource, section);
-		
 		CompetitionSetupSectionModelPopulator populator = modelPopulators.get(section);
 		
 		if(populator != null) {
@@ -74,7 +73,19 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 		
 		return populator.populateForm(competitionResource);
 	}
-	
+
+	@Override
+	public List<Error> autoSaveCompetitionSetupSection(CompetitionResource competitionResource, CompetitionSetupSection section, String fieldName, String value) {
+
+		CompetitionSetupSectionSaver saver = sectionSavers.get(section);
+		if(saver == null) {
+			LOG.error("unable to save section " + section);
+			throw new IllegalArgumentException();
+		}
+
+		return saver.autoSaveSectionField(competitionResource, fieldName, value);
+	}
+
 	@Override
 	public List<Error> saveCompetitionSetupSection(CompetitionSetupForm competitionSetupForm,
 			CompetitionResource competitionResource, CompetitionSetupSection section) {
@@ -96,7 +107,8 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 
 	@Override
 	public boolean isCompetitionReadyToOpen(CompetitionResource competitionResource) {
-		if (competitionResource.getCompetitionStatus() == CompetitionResource.Status.READY_TO_OPEN) {
+		if (competitionResource.getCompetitionStatus() != CompetitionResource.Status.COMPETITION_SETUP
+				&& competitionResource.getStartDate().isAfter(LocalDateTime.now())) {
 			return false;
 		}
 		Optional<CompetitionSetupSection> notDoneSection = getRequiredSectionsForReadyToOpen().stream().filter(section ->
@@ -114,8 +126,7 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 		}
 
 		if (isCompetitionReadyToOpen(competitionResource)) {
-			competitionResource.setCompetitionStatus(CompetitionResource.Status.READY_TO_OPEN);
-			competitionService.update(competitionResource);
+			competitionService.markAsSetup(competitionId);
 		} else {
 			LOG.error("Requesting to set a competition (id:" + competitionId + ") as Read to Open, But the competition is not ready to open yet. " +
 					"Please check all the madatory sections are done");
@@ -125,24 +136,18 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 
 	@Override
 	public void setCompetitionAsCompetitionSetup(Long competitionId) {
-		CompetitionResource competitionResource = competitionService.getById(competitionId);
-		competitionResource.setCompetitionStatus(CompetitionResource.Status.COMPETITION_SETUP);
-		competitionService.update(competitionResource);
+		competitionService.returnToSetup(competitionId);
 	}
-
 
 	private List<CompetitionSetupSection> getRequiredSectionsForReadyToOpen() {
 		List<CompetitionSetupSection> requiredSections = new ArrayList<>();
 		requiredSections.add(CompetitionSetupSection.INITIAL_DETAILS);
 		requiredSections.add(CompetitionSetupSection.ADDITIONAL_INFO);
 		requiredSections.add(CompetitionSetupSection.ELIGIBILITY);
-		/* TODO Need to enable these when INFUND-4468 is worked on.
 		requiredSections.add(CompetitionSetupSection.MILESTONES);
 		requiredSections.add(CompetitionSetupSection.APPLICATION_FORM);
-		*/
 		return requiredSections;
 	}
-
 
 	private void populateGeneralModelAttributes(Model model, CompetitionResource competitionResource, CompetitionSetupSection section) {
 		List<CompetitionSetupSection> completedSections = competitionService

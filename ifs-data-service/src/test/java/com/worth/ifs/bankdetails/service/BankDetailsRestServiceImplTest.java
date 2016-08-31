@@ -14,7 +14,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
 
 public class BankDetailsRestServiceImplTest extends BaseRestServiceUnitTest<BankDetailsRestServiceImpl> {
-    final String projectRestURL = "/project";
+    private final String projectRestURL = "/project";
     @Override
     protected BankDetailsRestServiceImpl registerRestServiceUnderTest() {
         BankDetailsRestServiceImpl bankDetailsRestService = new BankDetailsRestServiceImpl();
@@ -58,6 +58,15 @@ public class BankDetailsRestServiceImplTest extends BaseRestServiceUnitTest<Bank
         BankDetailsResource bankDetailsResource = newBankDetailsResource().build();
         setupPostWithRestResultExpectations(projectRestURL + "/" + projectId + "/bank-details", bankDetailsResource, OK);
         RestResult result = service.updateBankDetails(projectId, bankDetailsResource);
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void testSubmitBankDetails(){
+        Long projectId = 123L;
+        BankDetailsResource bankDetailsResource = newBankDetailsResource().build();
+        setupPutWithRestResultExpectations(projectRestURL + "/" + projectId + "/bank-details", bankDetailsResource, OK);
+        RestResult result = service.submitBankDetails(projectId, bankDetailsResource);
         assertTrue(result.isSuccess());
     }
 }

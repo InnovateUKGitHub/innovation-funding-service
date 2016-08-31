@@ -62,7 +62,7 @@ public class BankDetailsController extends AddressLookupBaseController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public String updateBankDetails(Model model,
+    public String submitBankDetails(Model model,
                                     @Valid @ModelAttribute(FORM_ATTR_NAME) BankDetailsForm form,
                                     @SuppressWarnings("unused") BindingResult bindingResult,
                                     ValidationHandler validationHandler,
@@ -77,7 +77,7 @@ public class BankDetailsController extends AddressLookupBaseController {
         OrganisationAddressResource organisationAddressResource = getOrganisationAddressResourceOrNull(form, organisationResource, BANK_DETAILS);
 
         BankDetailsResource bankDetailsResource = buildBankDetailsResource(projectId, organisationResource, organisationAddressResource, form);
-        ServiceResult<Void> updateResult = bankDetailsRestService.updateBankDetails(projectId, bankDetailsResource).toServiceResult();
+        ServiceResult<Void> updateResult = bankDetailsRestService.submitBankDetails(projectId, bankDetailsResource).toServiceResult();
 
         if (updateResult.isFailure()) {
             validationHandler.addAnyErrors(updateResult, asGlobalErrors());

@@ -13,34 +13,34 @@ import java.math.BigDecimal;
 public class CapitalUsage implements FinanceRowItem {
     Long id;
     String name;
-    @NotNull
-    @Min(1)
-    @Digits(integer = MAX_DIGITS_INT, fraction = MAX_FRACTION)
+    @NotNull(message = NOT_BLANK_MESSAGE)
+    @Min(value = 1, message = VALUE_MUST_BE_HIGHER_MESSAGE)
+    @Digits(integer = MAX_DIGITS_INT, fraction = MAX_FRACTION, message = MAX_DIGITS_MESSAGE)
     Integer deprecation;
 
-    @NotBlank
-    @NotNull
+    @NotBlank(message = NOT_BLANK_MESSAGE)
+    @NotNull(message = NOT_BLANK_MESSAGE)
     @Length(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
     String description;
 
-    @NotBlank
-    @NotNull
+    @NotBlank(message = NOT_BLANK_MESSAGE)
+    @NotNull(message = NOT_BLANK_MESSAGE)
     @Length(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
     String existing;
 
-    @NotNull
-    @DecimalMin(value = "1")
-    @Digits(integer = MAX_DIGITS, fraction = MAX_FRACTION)
+    @NotNull(message = NOT_BLANK_MESSAGE)
+    @DecimalMin(value = "1", message = VALUE_MUST_BE_HIGHER_MESSAGE)
+    @Digits(integer = MAX_DIGITS, fraction = MAX_FRACTION, message = MAX_DIGITS_MESSAGE)
     BigDecimal npv;
 
-    @DecimalMin(value = "0")
-    @Digits(integer = MAX_DIGITS, fraction = MAX_FRACTION)
+    @DecimalMin(value = "0", message = VALUE_MUST_BE_HIGHER_MESSAGE)
+    @Digits(integer = MAX_DIGITS, fraction = MAX_FRACTION, message = MAX_DIGITS_MESSAGE)
     BigDecimal residualValue;
 
-    @NotNull
-    @Min(0)
-    @Max(100)
-    @Digits(integer = MAX_DIGITS_INT, fraction = MAX_FRACTION)
+    @NotNull(message = NOT_BLANK_MESSAGE)
+    @Min(value = 0, message = VALUE_MUST_BE_HIGHER_MESSAGE)
+    @Max(value = 100, message = VALUE_MUST_BE_LOWER_MESSAGE)
+    @Digits(integer = MAX_DIGITS_INT, fraction = MAX_FRACTION, message = MAX_DIGITS_MESSAGE)
     Integer utilisation;
 
     public CapitalUsage() {
@@ -97,7 +97,7 @@ public class CapitalUsage implements FinanceRowItem {
 
         return npv.subtract(residualValue)
                 .multiply(new BigDecimal(utilisation)
-                .divide(new BigDecimal(100), 2, BigDecimal.ROUND_HALF_EVEN));
+                        .divide(new BigDecimal(100), 2, BigDecimal.ROUND_HALF_EVEN));
     }
 
     @Override
