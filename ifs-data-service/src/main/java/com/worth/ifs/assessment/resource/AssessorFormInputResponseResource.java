@@ -18,7 +18,7 @@ public class AssessorFormInputResponseResource {
     private Long assessment;
     private Long question;
     private Long formInput;
-    @Size (max = 5000)
+    @Size(max = 5000, message = "{validation.assessorforminputresponse.value.length.max}")
     private String value;
     private Integer formInputMaxWordCount;
     private LocalDateTime updatedDate;
