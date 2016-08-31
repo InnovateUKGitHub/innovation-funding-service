@@ -18,7 +18,7 @@ public class CompetitionInviteAcceptController extends BaseController {
     @Autowired
     private CompetitionInviteRestService inviteRestService;
 
-    @RequestMapping(value = "competition/{inviteHash}/accept", method = RequestMethod.POST)
+    @RequestMapping(value = "competition/{inviteHash}/accept", method = RequestMethod.GET)
     public String acceptInvite(@PathVariable("inviteHash") String inviteHash) {
         inviteRestService.acceptInvite(inviteHash).getSuccessObjectOrThrowException();
         return "redirect:/assessor/dashboard";
