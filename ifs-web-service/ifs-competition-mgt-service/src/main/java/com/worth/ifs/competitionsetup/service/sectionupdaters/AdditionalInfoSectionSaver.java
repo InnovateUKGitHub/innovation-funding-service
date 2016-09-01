@@ -103,12 +103,11 @@ public class AdditionalInfoSectionSaver implements CompetitionSetupSectionSaver 
 
         try {
             index = getFunderIndex(fieldName);
-            if(index < competitionResource.getFunders().size()) {
-                funder = competitionResource.getFunders().get(index);
-            } else {
-                funder = new CompetitionFunderResource();
-                funder.setCoFunder(true);
+            if(index >= competitionResource.getFunders().size()) {
+                addNotSavedFunders(competitionResource, index);
             }
+
+            funder = competitionResource.getFunders().get(index);
 
             if(fieldName.endsWith("funder")) {
                 funder.setFunder(value);
@@ -125,6 +124,17 @@ public class AdditionalInfoSectionSaver implements CompetitionSetupSectionSaver 
 
         return Collections.emptyList();
     }
+
+    private void addNotSavedFunders(CompetitionResource competitionResource, Integer index) {
+        Integer currentIndexNotUsed = competitionResource.getFunders().size();
+
+        for(Integer i = currentIndexNotUsed; i <= index; i++) {
+            CompetitionFunderResource competitionFunderResource = new CompetitionFunderResource();
+            competitionFunderResource.setCoFunder(true);
+            competitionResource.getFunders().add(i, competitionFunderResource);
+        }
+    }
+
 
     @Override
 	public boolean supportsForm(Class<? extends CompetitionSetupForm> clazz) {
