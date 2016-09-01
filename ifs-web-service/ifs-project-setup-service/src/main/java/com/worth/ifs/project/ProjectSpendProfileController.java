@@ -103,12 +103,14 @@ public class ProjectSpendProfileController {
                                                     boolean isMarkAsComplete,
                                                     String successView) {
 
+        buildSpendProfileViewModel(model, projectId, organisationId);
+
         //BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(form.getTable(), "");
         ValidationHandler validationHandler = ValidationHandler.newBindingResultHandler(bindingResult);
         new SpendProfileCostValidator().validate(form.getTable(), bindingResult);
 
         if (validationHandler.hasErrors()) {
-            return "project/spend-profile/edit";
+            return "project/spend-profile";
         }
 
         ServiceResult<Void> result = isMarkAsComplete ? projectFinanceService.markSpendProfileComplete(projectId, organisationId, form.getTable()) : projectFinanceService.saveSpendProfile(projectId, organisationId, form.getTable());
@@ -118,7 +120,7 @@ public class ProjectSpendProfileController {
             model.addAttribute("errorCategories", result.getFailure().getErrors());
 
             if (isMarkAsComplete) {
-                return "project/spend-profile/edit";
+                return "project/spend-profile";
             }
         }
 
