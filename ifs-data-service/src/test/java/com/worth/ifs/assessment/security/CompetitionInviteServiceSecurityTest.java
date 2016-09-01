@@ -43,5 +43,10 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
 
         @Override
         public ServiceResult<Void> rejectInvite(@P("inviteHash") String inviteHash, RejectionReasonResource rejectionReason, String rejectionComment) { return null; }
+
+        @Override
+        public ServiceResult<Boolean> checkExistingUser(@P("inviteHash") String inviteHash) {
+            return null;
+        }
     }
 }

@@ -152,7 +152,7 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
 
     @Test
     public void acceptInvite_notOpened() {
-        assertEquals(CREATED, competitionParticipant.getInvite().get().getStatus());
+        assertEquals(CREATED, competitionParticipant.getInvite().getStatus());
         assertEquals(ParticipantStatus.PENDING, competitionParticipant.getStatus());
 
         ServiceResult<Void> serviceResult = competitionInviteService.acceptInvite("inviteHash");
@@ -267,7 +267,7 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
 
     @Test
     public void rejectInvite_notOpened() {
-        assertEquals(CREATED, competitionParticipant.getInvite().get().getStatus());
+        assertEquals(CREATED, competitionParticipant.getInvite().getStatus());
         assertEquals(ParticipantStatus.PENDING, competitionParticipant.getStatus());
 
         RejectionReasonResource rejectionReasonResource = RejectionReasonResourceBuilder
