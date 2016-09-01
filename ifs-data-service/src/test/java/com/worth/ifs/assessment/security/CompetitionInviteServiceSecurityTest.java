@@ -9,6 +9,8 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.springframework.security.access.method.P;
 
+import java.util.Optional;
+
 @Ignore("TODO")
 public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTest<CompetitionInviteService> {
 
@@ -42,7 +44,7 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
         }
 
         @Override
-        public ServiceResult<Void> rejectInvite(@P("inviteHash") String inviteHash, RejectionReasonResource rejectionReason, String rejectionComment) { return null; }
+        public ServiceResult<Void> rejectInvite(@P("inviteHash") String inviteHash, RejectionReasonResource rejectionReason, Optional<String> rejectionComment) { return null; }
 
         @Override
         public ServiceResult<Boolean> checkExistingUser(@P("inviteHash") String inviteHash) {

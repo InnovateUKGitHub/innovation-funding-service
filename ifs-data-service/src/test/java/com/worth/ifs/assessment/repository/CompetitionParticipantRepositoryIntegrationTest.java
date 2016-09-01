@@ -12,6 +12,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Optional;
+
 import java.util.List;
 
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
@@ -128,7 +130,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
                 .withStatus(OPENED).build();
 
         RejectionReason reason = rejectionReasonRepository.findAll().get(0);
-        CompetitionParticipant savedParticipant = repository.save( (new CompetitionParticipant(competition, invite)).reject(reason, "too busy") );
+        CompetitionParticipant savedParticipant = repository.save( (new CompetitionParticipant(competition, invite)).reject(reason, Optional.of("too busy")) );
 
         flushAndClearSession();
 

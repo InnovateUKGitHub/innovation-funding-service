@@ -7,6 +7,7 @@ import com.worth.ifs.assessment.model.RejectCompetitionModelPopulator;
 import com.worth.ifs.assessment.viewmodel.CompetitionInviteViewModel;
 import com.worth.ifs.assessment.viewmodel.RejectCompetitionViewModel;
 import com.worth.ifs.invite.resource.CompetitionInviteResource;
+import com.worth.ifs.invite.resource.CompetitionRejectionResource;
 import com.worth.ifs.invite.resource.RejectionReasonResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,11 +16,13 @@ import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.List;
 
+import static com.worth.ifs.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
@@ -37,7 +40,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
 public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<CompetitionInviteController> {
-
     @Spy
     @InjectMocks
     private CompetitionInviteModelPopulator competitionInviteModelPopulator;
@@ -131,6 +133,99 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
                 .andExpect(status().isNotFound());
 
         verify(competitionInviteRestService).openInvite("notExistHash");
+    }
+
+    @Test
+    public void rejectInvite() throws Exception {
+        CompetitionRejectionResource competitionRejectionResource = new CompetitionRejectionResource(newRejectionReasonResource()
+                .with(id(1L))
+                .build(), "comment");
+
+        when(competitionInviteRestService.rejectInvite("hash", competitionRejectionResource)).thenReturn(restSuccess());
+
+        mockMvc.perform(post(restUrl + "{inviteHash}/reject", "hash")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("rejectReason", "1")
+                .param("rejectComment", "comment"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/invite/competition/hash/reject/thank-you"));
+
+        verify(competitionInviteRestService).rejectInvite("hash", competitionRejectionResource);
+        verifyNoMoreInteractions(competitionInviteRestService);
+    }
+
+    @Test
+    public void rejectInvite_noReason() throws Exception {
+        CompetitionInviteResource inviteResource = newCompetitionInviteResource().withCompetitionName("my competition").build();
+
+        when(competitionInviteRestService.getInvite("hash")).thenReturn(restSuccess(inviteResource));
+
+        RejectCompetitionForm expectedForm = new RejectCompetitionForm();
+        expectedForm.setRejectComment("comment");
+
+        MvcResult result = mockMvc.perform(post(restUrl + "{inviteHash}/reject", "hash")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("rejectComment", "comment"))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("form", expectedForm))
+                .andExpect(model().attribute("rejectionReasons", rejectionReasons))
+                .andExpect(model().attributeExists("model"))
+                .andExpect(view().name("assessor-competition-reject-confirm")).andReturn();
+
+        RejectCompetitionViewModel model = (RejectCompetitionViewModel) result.getModelAndView().getModel().get("model");
+
+        assertEquals("hash", model.getCompetitionInviteHash());
+        assertEquals("my competition", model.getCompetitionName());
+
+        verify(competitionInviteRestService).getInvite("hash");
+        verifyNoMoreInteractions(competitionInviteRestService);
+    }
+
+    @Test
+    public void rejectInvite_noReasonComment() throws Exception {
+        CompetitionRejectionResource competitionRejectionResource = new CompetitionRejectionResource(newRejectionReasonResource()
+                .with(id(1L))
+                .build(), null);
+
+        when(competitionInviteRestService.rejectInvite("hash", competitionRejectionResource)).thenReturn(restSuccess());
+
+        mockMvc.perform(post(restUrl + "{inviteHash}/reject", "hash")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("rejectReason", "1"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/invite/competition/hash/reject/thank-you"));
+
+        verify(competitionInviteRestService).rejectInvite("hash", competitionRejectionResource);
+        verifyNoMoreInteractions(competitionInviteRestService);
+    }
+
+    @Test
+    public void rejectInvite_hashNotExists() throws Exception {
+        CompetitionRejectionResource competitionRejectionResource = new CompetitionRejectionResource(newRejectionReasonResource()
+                .with(id(1L))
+                .build(), "comment");
+
+        when(competitionInviteRestService.rejectInvite("notExistHash", competitionRejectionResource)).thenReturn(restFailure(notFoundError(CompetitionInviteResource.class, "notExistHash")));
+        when(competitionInviteRestService.getInvite("notExistHash")).thenReturn(restFailure(notFoundError(CompetitionInviteResource.class, "notExistHash")));
+
+        mockMvc.perform(post(restUrl + "{inviteHash}/reject", "notExistHash")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("rejectReason", "1")
+                .param("rejectComment", "comment"))
+                .andExpect(status().isNotFound());
+
+        InOrder inOrder = inOrder(competitionInviteRestService);
+        inOrder.verify(competitionInviteRestService).rejectInvite("notExistHash", competitionRejectionResource);
+        inOrder.verify(competitionInviteRestService).getInvite("notExistHash");
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void rejectThankYou() throws Exception {
+        mockMvc.perform(get(restUrl + "{inviteHash}/reject/thank-you", "hash"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("assessor-competition-reject"))
+                .andReturn();
     }
 
     @Test

@@ -15,7 +15,7 @@ import java.util.List;
  */
 public interface CompetitionParticipantRepository extends CrudRepository<CompetitionParticipant, Long> {
 
-    CompetitionParticipant getByInviteHash(@Param("hash") String hash);
+    CompetitionParticipant getByInviteHash( String hash);
 
     List<CompetitionParticipant> getByUserIdAndRoleAndStatus(@Param("userId") Long userId, @Param("role") CompetitionParticipantRole role, @Param("status") ParticipantStatus status);
 }

@@ -18,6 +18,8 @@ import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 
+import java.util.Optional;
+
 import static com.worth.ifs.assessment.builder.CompetitionInviteBuilder.newCompetitionInvite;
 import static com.worth.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
@@ -201,7 +203,7 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
                 .withId(1L)
                 .build();
 
-        ServiceResult<Void> serviceResult = competitionInviteService.rejectInvite("inviteHash", rejectionReasonResource, "too busy");
+        ServiceResult<Void> serviceResult = competitionInviteService.rejectInvite("inviteHash", rejectionReasonResource, Optional.of("too busy"));
         assertTrue(serviceResult.isSuccess());
         assertEquals(ParticipantStatus.REJECTED, competitionParticipant.getStatus());
 
@@ -231,7 +233,7 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
                 .withId(1L)
                 .build();
 
-        ServiceResult<Void> serviceResult = competitionInviteService.rejectInvite("inviteHash", rejectionReasonResource, "too busy");
+        ServiceResult<Void> serviceResult = competitionInviteService.rejectInvite("inviteHash", rejectionReasonResource, Optional.of("too busy"));
 
         assertTrue(serviceResult.isSuccess());
         assertEquals(ParticipantStatus.REJECTED, competitionParticipant.getStatus());
@@ -255,7 +257,7 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
                 .withId(1L)
                 .build();
 
-        ServiceResult<Void> serviceResult = competitionInviteService.rejectInvite("inviteHashNotExists", rejectionReasonResource, "too busy");
+        ServiceResult<Void> serviceResult = competitionInviteService.rejectInvite("inviteHashNotExists", rejectionReasonResource, Optional.of("too busy"));
 
         assertTrue(serviceResult.isFailure());
         assertTrue(serviceResult.getFailure().is(notFoundError(CompetitionParticipant.class, "inviteHashNotExists")));
@@ -275,7 +277,7 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
                 .withId(1L)
                 .build();
 
-        ServiceResult<Void> serviceResult = competitionInviteService.rejectInvite("inviteHash", rejectionReasonResource, "too busy");
+        ServiceResult<Void> serviceResult = competitionInviteService.rejectInvite("inviteHash", rejectionReasonResource, Optional.of("too busy"));
 
         assertTrue(serviceResult.isFailure());
         assertTrue(serviceResult.getFailure().is(new Error(COMPETITION_PARTICIPANT_CANNOT_REJECT_UNOPENED_INVITE, "my competition")));
@@ -303,7 +305,7 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
                 .withId(1L)
                 .build();
 
-        serviceResult = competitionInviteService.rejectInvite("inviteHash", rejectionReasonResource, "too busy");
+        serviceResult = competitionInviteService.rejectInvite("inviteHash", rejectionReasonResource, Optional.of("too busy"));
 
         assertTrue(serviceResult.isFailure());
         assertTrue(serviceResult.getFailure().is(new Error(COMPETITION_PARTICIPANT_CANNOT_REJECT_ALREADY_ACCEPTED_INVITE, "my competition")));
@@ -327,13 +329,13 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
                 .newRejectionReasonResource()
                 .withId(1L)
                 .build();
-        ServiceResult<Void> serviceResult = competitionInviteService.rejectInvite("inviteHash", rejectionReasonResource, "too busy");
+        ServiceResult<Void> serviceResult = competitionInviteService.rejectInvite("inviteHash", rejectionReasonResource, Optional.of("too busy"));
         assertTrue(serviceResult.isSuccess());
         assertEquals(ParticipantStatus.REJECTED, competitionParticipant.getStatus());
 
         // reject again
 
-        serviceResult = competitionInviteService.rejectInvite("inviteHash", rejectionReasonResource, "still too busy");
+        serviceResult = competitionInviteService.rejectInvite("inviteHash", rejectionReasonResource, Optional.of("still too busy"));
 
         assertTrue(serviceResult.isFailure());
         assertTrue(serviceResult.getFailure().is(new Error(COMPETITION_PARTICIPANT_CANNOT_REJECT_ALREADY_REJECTED_INVITE, "my competition")));
@@ -359,7 +361,7 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
                 .withId(2L)
                 .build();
 
-        ServiceResult<Void> serviceResult = competitionInviteService.rejectInvite("inviteHash", rejectionReasonResource, "too busy");
+        ServiceResult<Void> serviceResult = competitionInviteService.rejectInvite("inviteHash", rejectionReasonResource, Optional.of("too busy"));
 
         assertTrue(serviceResult.isFailure());
         assertTrue(serviceResult.getFailure().is(notFoundError(RejectionReason.class, 2L)));
@@ -384,14 +386,18 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
                 .withId(1L)
                 .build();
 
-        ServiceResult<Void> serviceResult = competitionInviteService.rejectInvite("inviteHash", rejectionReasonResource, "");
+        ServiceResult<Void> serviceResult = competitionInviteService.rejectInvite("inviteHash", rejectionReasonResource, Optional.of(""));
 
-        assertTrue(serviceResult.isFailure());
-        assertTrue(serviceResult.getFailure().is(COMPETITION_PARTICIPANT_CANNOT_REJECT_WITHOUT_A_REASON_COMMENT));
+
+        assertTrue(serviceResult.isSuccess());
+
+        assertEquals(ParticipantStatus.REJECTED, competitionParticipant.getStatus());
+        assertEquals("", competitionParticipant.getRejectionReasonComment());
 
         InOrder inOrder = inOrder(competitionParticipantRepositoryMock, rejectionReasonRepositoryMock);
         inOrder.verify(rejectionReasonRepositoryMock, calls(1)).findOne(1L);
         inOrder.verify(competitionParticipantRepositoryMock, calls(1)).getByInviteHash("inviteHash");
+        inOrder.verify(competitionParticipantRepositoryMock, calls(1)).save(competitionParticipant);
 
         inOrder.verifyNoMoreInteractions();
     }

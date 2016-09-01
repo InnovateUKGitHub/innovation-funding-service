@@ -3,7 +3,7 @@ package com.worth.ifs.assessment.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.assessment.transactional.CompetitionInviteService;
-import com.worth.ifs.commons.error.CommonFailureKeys;
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestErrorResponse;
 import com.worth.ifs.invite.builder.RejectionReasonResourceBuilder;
 import com.worth.ifs.invite.domain.CompetitionInvite;
@@ -15,7 +15,8 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
-import com.worth.ifs.commons.error.Error;
+
+import java.util.Optional;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
@@ -23,6 +24,7 @@ import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.JsonMappingUtil.fromJson;
 import static com.worth.ifs.util.JsonMappingUtil.toJson;
+import static java.util.Optional.empty;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -134,14 +136,32 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
                 .build();
         CompetitionRejectionResource rejectionResource = new CompetitionRejectionResource(rejectionReasonResource, "too busy");
 
-        when(competitionInviteService.rejectInvite("hash", rejectionReasonResource, "too busy")).thenReturn(serviceSuccess());
+        when(competitionInviteService.rejectInvite("hash", rejectionReasonResource, Optional.of("too busy"))).thenReturn(serviceSuccess());
         mockMvc.perform(
                 post("/competitioninvite/rejectInvite/{inviteHash}", "hash")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(rejectionResource))
         ).andExpect(status().isOk());
 
-        verify(competitionInviteService, times(1)).rejectInvite("hash", rejectionReasonResource, "too busy");
+        verify(competitionInviteService, times(1)).rejectInvite("hash", rejectionReasonResource, Optional.of("too busy"));
+    }
+
+    @Test
+    public void rejectInvite_noReasonComment() throws Exception {
+        RejectionReasonResource rejectionReasonResource = RejectionReasonResourceBuilder
+                .newRejectionReasonResource()
+                .withId(1L)
+                .build();
+        CompetitionRejectionResource rejectionResource = new CompetitionRejectionResource(rejectionReasonResource, null);
+
+        when(competitionInviteService.rejectInvite("hash", rejectionReasonResource, empty())).thenReturn(serviceSuccess());
+        mockMvc.perform(
+                post("/competitioninvite/rejectInvite/{inviteHash}", "hash")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(rejectionResource))
+        ).andExpect(status().isOk());
+
+        verify(competitionInviteService, times(1)).rejectInvite("hash", rejectionReasonResource, empty());
     }
 
     @Test
@@ -152,7 +172,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
                 .build();
         CompetitionRejectionResource rejectionResource = new CompetitionRejectionResource(rejectionReasonResource, "too busy");
 
-        when(competitionInviteService.rejectInvite("hashNotExists", rejectionReasonResource, "too busy")).thenReturn(serviceFailure(notFoundError(CompetitionParticipant.class, "hashNotExists")));
+        when(competitionInviteService.rejectInvite("hashNotExists", rejectionReasonResource, Optional.of("too busy"))).thenReturn(serviceFailure(notFoundError(CompetitionParticipant.class, "hashNotExists")));
 
         MvcResult result = mockMvc.perform(
                 post("/competitioninvite/rejectInvite/{inviteHash}", "hashNotExists")
@@ -164,7 +184,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
         RestErrorResponse response = fromJson(result.getResponse().getContentAsString(), RestErrorResponse.class);
         assertEqualsUpNoIncludingStatusCode(response, notFoundError(CompetitionParticipant.class, "hashNotExists"));
 
-        verify(competitionInviteService, times(1)).rejectInvite("hashNotExists", rejectionReasonResource, "too busy");
+        verify(competitionInviteService, times(1)).rejectInvite("hashNotExists", rejectionReasonResource, Optional.of("too busy"));
     }
 
     @Test
@@ -228,7 +248,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
                 .build();
         CompetitionRejectionResource rejectionResource = new CompetitionRejectionResource(rejectionReasonResource, "too busy");
 
-        when(competitionInviteService.rejectInvite("hash", rejectionReasonResource, "too busy")).thenReturn(serviceFailure(expectedError));
+        when(competitionInviteService.rejectInvite("hash", rejectionReasonResource, Optional.of("too busy"))).thenReturn(serviceFailure(expectedError));
         mockMvc.perform(
                 post("/competitioninvite/rejectInvite/{inviteHash}", "hash")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -236,6 +256,6 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(toJson(new RestErrorResponse(expectedError))));
 
-        verify(competitionInviteService, times(1)).rejectInvite("hash", rejectionReasonResource, "too busy");
+        verify(competitionInviteService, times(1)).rejectInvite("hash", rejectionReasonResource, Optional.of("too busy"));
     }
 }

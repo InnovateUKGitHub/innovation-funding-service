@@ -7,6 +7,9 @@ import com.worth.ifs.invite.builder.RejectionReasonBuilder;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Optional;
+
+import static java.util.Optional.empty;
 import static org.junit.Assert.*;
 
 public class CompetitionParticipantTest {
@@ -49,7 +52,7 @@ public class CompetitionParticipantTest {
     public void accept_alreadyRejected() throws Exception {
         CompetitionParticipant competitionParticipant = new CompetitionParticipant(competition, invite);
         invite.open();
-        competitionParticipant.reject(rejectionReason, "too busy");
+        competitionParticipant.reject(rejectionReason, Optional.of("too busy"));
         competitionParticipant.accept();
     }
 
@@ -57,7 +60,7 @@ public class CompetitionParticipantTest {
     public void reject() throws Exception {
         CompetitionParticipant competitionParticipant = new CompetitionParticipant(competition, invite);
         invite.open();
-        competitionParticipant.reject(rejectionReason, "too busy");
+        competitionParticipant.reject(rejectionReason, Optional.of("too busy"));
         assertEquals(ParticipantStatus.REJECTED, competitionParticipant.getStatus());
         assertEquals(rejectionReason, competitionParticipant.getRejectionReason());
         assertEquals("too busy", competitionParticipant.getRejectionReasonComment());
@@ -66,7 +69,7 @@ public class CompetitionParticipantTest {
     @Test(expected = IllegalStateException.class)
     public void reject_unopened() throws Exception {
         CompetitionParticipant competitionParticipant = new CompetitionParticipant(competition, invite);
-        competitionParticipant.reject(rejectionReason, "too busy");
+        competitionParticipant.reject(rejectionReason, Optional.of("too busy"));
     }
 
     @Test(expected = IllegalStateException.class)
@@ -74,22 +77,22 @@ public class CompetitionParticipantTest {
         CompetitionParticipant competitionParticipant = new CompetitionParticipant(competition, invite);
         invite.open();
         competitionParticipant.accept();
-        competitionParticipant.reject(rejectionReason, "too busy");
+        competitionParticipant.reject(rejectionReason, Optional.of("too busy"));
     }
 
     @Test(expected = IllegalStateException.class)
     public void reject_alreadyRejected() throws Exception {
         CompetitionParticipant competitionParticipant = new CompetitionParticipant(competition, invite);
         invite.open();
-        competitionParticipant.reject(rejectionReason, "too busy");
-        competitionParticipant.reject(rejectionReason, "too busy");
+        competitionParticipant.reject(rejectionReason, Optional.of("too busy"));
+        competitionParticipant.reject(rejectionReason, Optional.of("too busy"));
     }
 
     @Test(expected = NullPointerException.class)
     public void reject_nullReason() throws Exception {
         CompetitionParticipant competitionParticipant = new CompetitionParticipant(competition, invite);
         invite.open();
-        competitionParticipant.reject(null, "too busy");
+        competitionParticipant.reject(null, Optional.of("too busy"));
     }
 
     @Test(expected = NullPointerException.class)
@@ -99,10 +102,23 @@ public class CompetitionParticipantTest {
         competitionParticipant.reject(rejectionReason, null);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void reject_emptyComment() throws Exception {
         CompetitionParticipant competitionParticipant = new CompetitionParticipant(competition, invite);
         invite.open();
-        competitionParticipant.reject(rejectionReason, "");
+        competitionParticipant.reject(rejectionReason, Optional.of(""));
+        assertEquals(ParticipantStatus.REJECTED, competitionParticipant.getStatus());
+        assertEquals(rejectionReason, competitionParticipant.getRejectionReason());
+        assertEquals("", competitionParticipant.getRejectionReasonComment());
+    }
+
+    @Test
+    public void reject_noComment() throws Exception {
+        CompetitionParticipant competitionParticipant = new CompetitionParticipant(competition, invite);
+        invite.open();
+        competitionParticipant.reject(rejectionReason, empty());
+        assertEquals(ParticipantStatus.REJECTED, competitionParticipant.getStatus());
+        assertEquals(rejectionReason, competitionParticipant.getRejectionReason());
+        assertNull(competitionParticipant.getRejectionReasonComment());
     }
 }

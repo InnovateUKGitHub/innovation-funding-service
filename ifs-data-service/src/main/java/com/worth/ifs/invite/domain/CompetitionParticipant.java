@@ -8,6 +8,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
 
+import java.util.Optional;
+
 import static com.worth.ifs.invite.constant.InviteStatus.OPENED;
 import static com.worth.ifs.invite.domain.ParticipantStatus.ACCEPTED;
 import static com.worth.ifs.invite.domain.ParticipantStatus.REJECTED;
@@ -112,10 +114,9 @@ public class CompetitionParticipant extends Participant<Competition, Competition
         return this;
     }
 
-    public CompetitionParticipant reject(RejectionReason rejectionReason, String rejectionComment) {
+    public CompetitionParticipant reject(RejectionReason rejectionReason, Optional<String> rejectionComment) {
         if (rejectionReason == null) throw new NullPointerException("rejectionReason cannot be null");
         if (rejectionComment == null) throw new NullPointerException("rejectionComment cannot be null");
-        if (rejectionComment.isEmpty()) throw new IllegalArgumentException("rejectionComment cannot be empty");
 
         if (getInvite().getStatus() != OPENED)
             throw new IllegalStateException("Cannot accept a CompetitionParticipant that hasn't been opened");
@@ -126,7 +127,7 @@ public class CompetitionParticipant extends Participant<Competition, Competition
             throw new IllegalStateException("CompetitionParticipant has already been rejected");
 
         this.rejectionReason = rejectionReason;
-        this.rejectionReasonComment = rejectionComment;
+        this.rejectionReasonComment = rejectionComment.orElse(null);
         setStatus(REJECTED);
 
         return this;
