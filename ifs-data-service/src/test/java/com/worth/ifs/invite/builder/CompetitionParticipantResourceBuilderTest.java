@@ -51,21 +51,21 @@ public class CompetitionParticipantResourceBuilderTest {
         Long[] expectedUserIds = {3L, 4L};
         Long[] expectedCompetitionIds = {5L, 6L};
         Long[] expectedInviteIds = {1L, 2L};
-        RejectionReasonResource[] expectedRejectionReasons = { new RejectionReasonResource("conflict", true, 1),
-                                                    new RejectionReasonResource("holiday", true, 1)};
+        RejectionReasonResource[] expectedRejectionReasons = {new RejectionReasonResource("conflict", true, 1),
+                new RejectionReasonResource("holiday", true, 1)};
         String[] expectedRejectionReasonComments = {"Reason 1", "Reason 2"};
-        CompetitionParticipantRoleResource[] expectedRoles = { CompetitionParticipantRoleResource.ASSESSOR, CompetitionParticipantRoleResource.ASSESSOR};
-        ParticipantStatusResource[] expectedStatuses = { ParticipantStatusResource.ACCEPTED, ParticipantStatusResource.ACCEPTED };
+        CompetitionParticipantRoleResource[] expectedRoles = {CompetitionParticipantRoleResource.ASSESSOR, CompetitionParticipantRoleResource.ASSESSOR};
+        ParticipantStatusResource[] expectedStatuses = {ParticipantStatusResource.ACCEPTED, ParticipantStatusResource.ACCEPTED};
 
         List<CompetitionParticipantResource> competitionParticipants = newCompetitionParticipantResource()
-                .withIds(expectedIds)
-                .withUsers(expectedUserIds)
-                .withCompetitions(expectedCompetitionIds)
-                .withInvites(expectedInviteIds)
-                .withRejectionReasons(expectedRejectionReasons)
-                .withRejectionReasonComments(expectedRejectionReasonComments)
-                .withCompetitionParticipantRoles(expectedRoles)
-                .withStatuses(expectedStatuses)
+                .withId(expectedIds)
+                .withUser(expectedUserIds)
+                .withCompetition(expectedCompetitionIds)
+                .withInvite(expectedInviteIds)
+                .withRejectionReason(expectedRejectionReasons)
+                .withRejectionReasonComment(expectedRejectionReasonComments)
+                .withCompetitionParticipantRole(expectedRoles)
+                .withStatus(expectedStatuses)
                 .build(2);
 
         CompetitionParticipantResource first = competitionParticipants.get(0);

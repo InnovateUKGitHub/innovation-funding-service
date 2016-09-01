@@ -13,8 +13,7 @@ import static com.worth.ifs.BaseBuilderAmendFunctions.setField;
 import static com.worth.ifs.BaseBuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
 
-
-public class CompetitionParticipantResourceBuilder  extends BaseBuilder<CompetitionParticipantResource, CompetitionParticipantResourceBuilder> {
+public class CompetitionParticipantResourceBuilder extends BaseBuilder<CompetitionParticipantResource, CompetitionParticipantResourceBuilder> {
 
     private CompetitionParticipantResourceBuilder(List<BiConsumer<Integer, CompetitionParticipantResource>> multiActions) {
         super(multiActions);
@@ -34,67 +33,35 @@ public class CompetitionParticipantResourceBuilder  extends BaseBuilder<Competit
         return new CompetitionParticipantResourceBuilder(actions);
     }
 
-    public CompetitionParticipantResourceBuilder withId(Long id) {
-        return with((CompetitionParticipantResource) -> CompetitionParticipantResource.setId(id));
-    }
-
-    public CompetitionParticipantResourceBuilder withUser(Long id) {
-        return with((CompetitionParticipantResource) -> CompetitionParticipantResource.setUserId(id));
-    }
-
-    public CompetitionParticipantResourceBuilder withCompetition(Long id) {
-        return with((CompetitionParticipantResource) -> CompetitionParticipantResource.setCompetitionId(id));
-    }
-
-    public CompetitionParticipantResourceBuilder withInvite(Long id) {
-        return with((CompetitionParticipantResource) -> CompetitionParticipantResource.setInviteId(id));
-    }
-
-    public CompetitionParticipantResourceBuilder withRejectionReason(RejectionReasonResource rejectionReason) {
-        return with((CompetitionParticipantResource) -> CompetitionParticipantResource.setRejectionReason(rejectionReason));
-    }
-
-    public CompetitionParticipantResourceBuilder withRejectionReasonComment(String rejectionReasonComment) {
-        return with((CompetitionParticipantResource) -> CompetitionParticipantResource.setRejectionReasonComment(rejectionReasonComment));
-    }
-
-    public CompetitionParticipantResourceBuilder withCompetitionParticipantRole(CompetitionParticipantRoleResource role) {
-        return with((CompetitionParticipantResource) -> CompetitionParticipantResource.setRole(role));
-    }
-
-    public CompetitionParticipantResourceBuilder withStatus(ParticipantStatusResource status) {
-        return with((CompetitionParticipantResource) -> CompetitionParticipantResource.setStatus(status));
-    }
-
-    public CompetitionParticipantResourceBuilder withIds(Long... ids) {
+    public CompetitionParticipantResourceBuilder withId(Long... ids) {
         return withArray((id, competitionParticipantResource) -> setField("id", id, competitionParticipantResource), ids);
     }
 
-    public CompetitionParticipantResourceBuilder withUsers(Long... users) {
+    public CompetitionParticipantResourceBuilder withUser(Long... users) {
         return withArray((user, competitionParticipantResource) -> setField("userId", user, competitionParticipantResource), users);
     }
 
-    public CompetitionParticipantResourceBuilder withCompetitions(Long... competitions) {
+    public CompetitionParticipantResourceBuilder withCompetition(Long... competitions) {
         return withArray((competition, competitionParticipantResource) -> setField("competitionId", competition, competitionParticipantResource), competitions);
     }
 
-    public CompetitionParticipantResourceBuilder withInvites(Long... invites) {
+    public CompetitionParticipantResourceBuilder withInvite(Long... invites) {
         return withArray((invite, competitionParticipantResource) -> setField("inviteId", invite, competitionParticipantResource), invites);
     }
 
-    public CompetitionParticipantResourceBuilder withRejectionReasons(RejectionReasonResource... rejectionReasons) {
+    public CompetitionParticipantResourceBuilder withRejectionReason(RejectionReasonResource... rejectionReasons) {
         return withArray((reason, competitionParticipantResource) -> setField("rejectionReason", reason, competitionParticipantResource), rejectionReasons);
     }
 
-    public CompetitionParticipantResourceBuilder withRejectionReasonComments(String... rejectionReasonComments) {
+    public CompetitionParticipantResourceBuilder withRejectionReasonComment(String... rejectionReasonComments) {
         return withArray((reasonComment, competitionParticipantResource) -> setField("rejectionReasonComment", reasonComment, competitionParticipantResource), rejectionReasonComments);
     }
 
-    public CompetitionParticipantResourceBuilder withCompetitionParticipantRoles(CompetitionParticipantRoleResource... roles) {
+    public CompetitionParticipantResourceBuilder withCompetitionParticipantRole(CompetitionParticipantRoleResource... roles) {
         return withArray((role, competitionParticipantResource) -> setField("role", role, competitionParticipantResource), roles);
     }
 
-    public CompetitionParticipantResourceBuilder withStatuses(final ParticipantStatusResource... statuses) {
+    public CompetitionParticipantResourceBuilder withStatus(ParticipantStatusResource... statuses) {
         return withArray((status, inviteResource) -> setField("status", status, inviteResource), statuses);
     }
 
