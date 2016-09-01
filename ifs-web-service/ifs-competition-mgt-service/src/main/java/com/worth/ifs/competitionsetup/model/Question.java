@@ -12,14 +12,14 @@ public class Question {
     private String number;
     private String shortTitle;
 
-    @NotBlank
+    @NotBlank(message = "{validation.field.must.not.be.blank}")
     private String title;
     private String subTitle;
 
-    @NotBlank
+    @NotBlank(message = "{validation.field.must.not.be.blank}")
     private String guidanceTitle;
 
-    @NotBlank
+    @NotBlank(message = "{validation.field.must.not.be.blank}")
     private String guidance;
 
     @Min(1)

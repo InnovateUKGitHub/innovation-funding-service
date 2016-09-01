@@ -329,7 +329,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         BindingResult bindingResult = form.getBindingResult();
         assertEquals(1, bindingResult.getGlobalErrorCount());
         assertEquals(0, bindingResult.getFieldErrorCount());
-        assertEquals("Only assessments which are Open can be rejected.", bindingResult.getGlobalError().getDefaultMessage());
+        assertEquals(ASSESSMENT_REJECTION_FAILED.name(), bindingResult.getGlobalError().getCode());
 
         InOrder inOrder = Mockito.inOrder(assessmentService, applicationService);
         inOrder.verify(assessmentService, calls(1)).getById(assessmentId);

@@ -79,9 +79,9 @@ Duration field client side
     [Setup]    Run keywords    the user enters text to a text field    id=application_details-title    Robot test application
     ...    AND    the applicant inserts a valid date
     When the user enters text to a text field    id=application_details-duration    0
-    Then the user should see an error    Please enter a valid duration between 1 and 36 months
+    Then the user should see an error    Your project should last between 1 and 36 months
     When the user enters text to a text field    id=application_details-duration    -1
-    Then the user should see an error    Please enter a valid duration between 1 and 36 months
+    Then the user should see an error    Your project should last between 1 and 36 months
     When the user enters text to a text field    id=application_details-duration    ${EMPTY}
     Then the user should see an error    Please enter a valid value
     And the user enters text to a text field    id=application_details-duration    15
