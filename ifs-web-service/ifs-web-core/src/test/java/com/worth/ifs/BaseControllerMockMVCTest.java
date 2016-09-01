@@ -7,6 +7,7 @@ import com.worth.ifs.controller.CustomFormBindingControllerAdvice;
 import com.worth.ifs.controller.ValidationHandlerMethodArgumentResolver;
 import com.worth.ifs.exception.ErrorControllerAdvice;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
+import com.worth.ifs.invite.formatter.RejectionReasonFormatter;
 import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -14,6 +15,7 @@ import org.junit.Before;
 import org.mockito.InjectMocks;
 import org.springframework.context.MessageSource;
 import org.springframework.core.env.Environment;
+import org.springframework.format.support.FormattingConversionService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -58,8 +60,12 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
         CookieLocaleResolver localeResolver = new CookieLocaleResolver();
         localeResolver.setCookieDomain("domain");
 
+        FormattingConversionService formattingConversionService = new FormattingConversionService();
+        formattingConversionService.addFormatter(new RejectionReasonFormatter());
+
         MockMvc mockMvc = MockMvcBuilders
                 .standaloneSetup(controller)
+                .setConversionService(formattingConversionService)
                 .setControllerAdvice(
                         new ErrorControllerAdvice(),
                         new CustomFormBindingControllerAdvice(),
