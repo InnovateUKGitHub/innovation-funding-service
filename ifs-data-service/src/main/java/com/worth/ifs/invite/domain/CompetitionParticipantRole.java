@@ -8,7 +8,7 @@ import java.util.Map;
 import static com.worth.ifs.commons.util.enums.Identifiable.toIdMap;
 
 /**
- * The exact kind of {@link CompetitionParticipant}.
+ * The role of a {@link CompetitionParticipant}.
  */
 public enum CompetitionParticipantRole implements ParticipantRole<Competition>, Identifiable {
     ASSESSOR(1);

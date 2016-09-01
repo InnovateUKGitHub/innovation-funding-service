@@ -15,8 +15,9 @@ IFS.competition_management.setup = (function(){
           IFS.competition_management.setup.handleStateAid();
         });
         jQuery("body.competition-management.competition-setup").on('change','[name="innovationSectorCategoryId"]',function(){
-          IFS.competition_management.setup.handleInnovationSector();
+          IFS.competition_management.setup.handleInnovationSector(false);
         });
+        IFS.competition_management.setup.innovationSectorOnPageLoad();
 
         jQuery("form#milestones").on('change','input[data-date]',function(){
           IFS.competition_management.setup.milestonesExtraValidation();
@@ -48,10 +49,12 @@ IFS.competition_management.setup = (function(){
                 }
               }
             });
+            return false;
         });
     },
-    handleInnovationSector : function(){
+    handleInnovationSector : function(pageLoad){
           var sector = jQuery('[name="innovationSectorCategoryId"]').val();
+          var innovationCategorySelected = jQuery('[name="innovationAreaCategoryId"]').val();
           if(typeof(sector) !=='undefined'){
             var url = window.location.protocol + "//" + window.location.host+'/management/competition/setup/getInnovationArea/'+sector;
             jQuery.ajaxProtected({
@@ -61,13 +64,31 @@ IFS.competition_management.setup = (function(){
                   var innovationCategory = jQuery('[name="innovationAreaCategoryId"]');
                   innovationCategory.children().remove();
                   jQuery.each(data,function(){
-                      innovationCategory.append('<option value="'+this.id+'">'+this.name+'</option>');
+                      if(this.id == innovationCategorySelected) {
+                        innovationCategory.append('<option selected="selected" value="'+this.id+'">'+this.name+'</option>');
+                      } else {
+                        innovationCategory.append('<option value="'+this.id+'">'+this.name+'</option>');
+                      }
                   });
-                  innovationCategory.trigger('change');
+                  if(!pageLoad) {
+                    innovationCategory.trigger('change');
+                  }
               }
           });
           }
-
+    },
+    innovationSectorOnPageLoad : function() {
+        var sectorInput = jQuery('[name="innovationSectorCategoryId"]');
+        var sector = sectorInput.val();
+        if (sectorInput.length) {
+            if (!sector) {
+                var innovationCategory = jQuery('[name="innovationAreaCategoryId"]');
+                innovationCategory.children().remove();
+                innovationCategory.append('<option value="innovation sector" disabled="disabled" selected="selected">Please select an innovation sector first &hellip;</option>');
+            } else {
+                IFS.competition_management.setup.handleInnovationSector(true);
+            }
+        }
     },
     handleStateAid : function(){
        var stateAid =  jQuery('#competitionTypeId').find('[value="'+jQuery('#competitionTypeId').val()+'"]').attr('data-stateaid');

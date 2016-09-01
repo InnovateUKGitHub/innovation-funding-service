@@ -10,6 +10,7 @@ import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.invite.resource.CompetitionRejectionResource;
 import com.worth.ifs.invite.resource.RejectionReasonResource;
 import com.worth.ifs.invite.service.RejectionReasonRestService;
+import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,6 +26,7 @@ import java.util.function.Supplier;
 
 import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
+import static java.lang.String.format;
 
 /**
  * Controller to manage Invites to a Competition.
@@ -54,9 +56,21 @@ public class CompetitionInviteController extends BaseController {
     }
 
     @RequestMapping(value = "competition/{inviteHash}/accept", method = RequestMethod.POST)
-    public String acceptInvite(@PathVariable("inviteHash") String inviteHash) {
-        return inviteRestService.acceptInvite(inviteHash)
-                .andOnSuccessReturn(() -> "").getSuccessObject();
+    public String acceptInvite(@PathVariable("inviteHash") String inviteHash,
+                               @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                               Model model) {
+        boolean userIsLoggedIn = loggedInUser != null;
+        if (userIsLoggedIn) {
+            return format("redirect:/invite-accept/competition/%s/accept",inviteHash);
+        } else {
+            return inviteRestService.checkExistingUser(inviteHash).andOnSuccessReturn(userExists -> {
+                if (userExists) {
+                    return doViewAcceptUserExistsButNotLoggedIn(model, inviteHash);
+                } else {
+                    return "redirect:/registration/register";
+                }
+            }).getSuccessObject();
+        }
     }
 
     @RequestMapping(value = "competition/{inviteHash}/reject", method = RequestMethod.POST)
@@ -87,6 +101,11 @@ public class CompetitionInviteController extends BaseController {
     @ModelAttribute("rejectionReasons")
     public List<RejectionReasonResource> populateRejectionReasons() {
         return rejectionReasonRestService.findAllActive().getSuccessObjectOrThrowException();
+    }
+
+    private String doViewAcceptUserExistsButNotLoggedIn(Model model, String inviteHash) {
+        model.addAttribute("model", competitionInviteModelPopulator.populateModel(inviteHash));
+        return "assessor-competition-accept-user-exists-but-not-logged-in";
     }
 
     private String doViewRejectInvitationConfirm(Model model, String inviteHash) {

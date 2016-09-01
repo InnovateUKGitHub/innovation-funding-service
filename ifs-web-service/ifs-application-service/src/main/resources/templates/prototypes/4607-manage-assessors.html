@@ -13,290 +13,23 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competitions dashboard'}, ${'#'})" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Opportunity overview'}, ${'#'})" th:remove="tag" />
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
-	
-
-	<div class="grid-row">
-		<div class="column-two-thirds">
-			
-			<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title(${'Innovate UK, Technology inspired, (4891061)'}, ${'Manage assessors'})" th:remove="tag" />
-
-			<p>Choose a tab to find people, invite them to assess this competition and assign assessors to one or more applications.</p>
-		</div>
-		<div class="column-third aligncentre">
-			<h2 class="heading-medium no-margin">
-				Panel status
-			</h2>
-			<ul>
-				<li>
-					<h3 class="heading-large no-margin">1</h3>
-					<p>invited</p>
-				</li>
-				<li>
-					<h3 class="heading-large no-margin">1</h3>
-					<p>accepted</p>
-				</li>
-				<li>
-					<h3 class="heading-large no-margin">1</h3>
-					<p>declined</p>
-				</li>
-			</ul>
-		</div>
-	</div>
+	<div th:include="prototypes/fragments/manage-assessors :: prototype-assessor-intro" th:remove="tag" />
 
 	<ul class="inline-nav">
-		<li th:class="${(param.tab == null or param.tab[0] == 'find' ? 'selected' : 'not-selected' )}"><a th:href="@{'?tab=find'}">Find</a></li>
-		<li th:class="${(param.tab != null and param.tab[0] == 'invite' ? 'selected' : 'not-selected' )}"><a th:href="@{'?tab=invite'}">Invite</a></li>
-		<li th:class="${(param.tab != null and param.tab[0] == 'assign' ? 'selected' : 'not-selected' )}"><a th:href="@{'?tab=assign'}">Assign</a></li>
+		<li th:class="${(param.tab == null or param.tab[0] == 'find' ? 'selected' : 'not-selected' )}"><a th:href="@{'?tab=find'}"><strong>Find</strong></a></li>
+		<li th:class="${(param.tab != null and param.tab[0] == 'invite' ? 'selected' : 'not-selected' )}"><a th:href="@{'?tab=invite'}"><strong>Invite</strong></a></li>
+		<li th:class="${(param.tab != null and param.tab[0] == 'assign' ? 'selected' : 'not-selected' )}"><a th:href="@{'?tab=assign'}"><strong>Assign</strong></a></li>
 	</ul>
 
-	<form th:action="${#httpServletRequest.requestURI}">
 	
-	<th:block th:if="${param.tab == null or param.tab[0] == 'find'}"> 
-
-		<div class="tabular-list" id="assessors-find">
-		
-			<h2 class="heading-small">Find people on the system that you would like to invite to be an assessor.</h2>
-
-			<p>Find people to add to your assessor invite list for this competition. Alternatively, you can use the dropdown filters to narrow your results.</p>
-		
-
-			<div class="search-filters">
-				<div class="grid-row">
-					<div class="column-half">
-						
-						<label for="filterInnovationArea">Research area</label>
-
-						<select name="filterInnovationArea" id="filterInnovationArea" class="form-control">
-
-							<option th:if="${param.filterInnovationArea != null}" th:remove="tag">
-	                            <option th:text="${param.filterInnovationArea[0]}" selected="selected">TEST</option>
-	                        </option>
-
-	                        <option th:if="${param.filterInnovationArea == null}" th:remove="tag">
-	                            <option selected="selected">---</option>
-	                        </option>
-
-							<div th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-options" th:remove="tag" />
-						</select>
-					</div>
-					<div class="column-half">
-						<label for="filterType">Type</label>
-
-						<select name="filterType" id="filterType" class="form-control">
-							<option th:if="${param.filterType != null}" th:remove="tag">
-	                            <option th:text="${param.filterType[0]}" selected="selected">TEST</option>
-	                        </option>
-
-	                        <option th:if="${param.filterType == null}" th:remove="tag">
-	                            <option selected="selected">---</option>
-	                        </option>
-
-	                        <option value="Academic">Academic</option>
-	                        <option value="Industry">Industry</option>
-						</select>
-					</div>
-				</div>
-
-				<div class="grid-row extra-margin">
-					<div class="column-half">
-						<label class="form-label" for="filterSearch">Search</label>
-	                     <input type="text" class="form-control" id="filterSearch" name="filterSearch" />
-					</div>
-
-					<div class="column-half">
-						
-						<div class="grid-row">
-							<div class="column-half">
-								<div class="extra-margin-top">
-									<a th:href="${#httpServletRequest.requestURI}">Clear all filters</a>
-								</div>
-							</div>
-							<div class="column-half alignright">
-								<button class="button">Filter</button>
-							</div>
-						</div>
-						
-					</div>
-				</div>
-
-			</div>
-
-			<ul class="tabular-list__row-header hide-mobile">
-				<li id="assessor-name" class="width-quarter">Name</li>
-				<li id="assessor-type" class="width-quarter">Type</li>
-				<li id="assessor-area" class="width-half">Innovation area</li> 
-			</ul>
-			
-			<div th:include="prototypes/fragments/manage-assessors :: prototype-assesor-row-find" th:with="row=1,name=${'John Barnes'},type=Industry,doi=Yes,area=${'Electronics, sensors &#38; photonics, Materials'}" th:remove="tag" />
-
-			<div th:include="prototypes/fragments/manage-assessors :: prototype-assesor-row-find" th:with="row=2,name=${'Oliver Romero'},type=Academic,doi=Yes,area=${'Healthcare, Regenerative medicine, Stratified medicine'}" th:remove="tag" />
-
-			<div th:include="prototypes/fragments/manage-assessors :: prototype-assesor-row-find" th:with="row=3,name=${'Jeffrey Carlson'},type=Academic,doi=Yes,area=${'Healthcare, Analytical science'}" th:remove="tag" />
-
-		</div>
-
-	</th:block>
-
-	<th:block th:if="${param.tab != null and param.tab[0] == 'invite'}">
-		<div class="tabular-list" id="assessors-invite">
-
-			<h2 class="heading-small">Invite people to become an assessor for this competition</h2>
-			<p>You can invite people on your list either individually or as a group.</p>
-
-			<details class="extra-margin-bottom">
-				<summary><span class="summary">Add non-registered assessor to list</span></summary>
-				<div class="panel-indent">
-					<form>
-						<fieldset>
-							<legend>Enter the new assessor's details below to add them to your invite list</legend>
-						</fieldset>
-						<div class="form-group extra-margin">
-							<label class="form-label" for="name">Name</label>
-							<input class="form-control" id="name" type="text" />
-						</div>
-						<div class="form-group">
-							<label class="form-label" for="email">Email</label>
-							<input class="form-control" id="email" type="text" />
-						</div>
-						<button class="button">Add new assessor to list</button>
-					</form>
-				</div>
-			</details>
-
-			<ul class="tabular-list__row-header">
-				<li class="width-third">		
-					<label for="inviteFilter">Filter by
-					<select class="form-control" id="inviteFilter" name="inviteFilter">           
-						<option value="">All</option>
-						<option value="">To be invited</option>
-						<option value="">Invite accepted</option>
-						<option value="">Invite sent</option>
-						<option value="">Invite declined</option>
-					</select>
-					</label>
-				</li>
-				<li class="width-third">
-					<label for="includeAll">
-				        <input id="includeAll" value="Irish" type="checkbox" />
-				        Include all for group invite
-				    </label>
-				</li>
-				<li class="width-third alignright"><a href="#" class="button button-secondary disabled">Invite group</a></li>
-			</ul>
-
-			<div th:include="prototypes/fragments/manage-assessors :: prototype-assesor-row-invite" th:with="row=1,name=${'Dave Smith'},org=${'Cardiff University'},position=${'Professor of Health Technology'}" th:remove="tag" />
-
-			<div th:include="prototypes/fragments/manage-assessors :: prototype-assesor-row-invite" th:with="row=2,name=${'Martin Trollope'},org=${'Cardiff University'},position=${'Reader, Healthcare outcome measurement'},status=${'Invite declined'},msg=${'Invite declined as person is too busy'}" th:remove="tag" />
-
-			<div th:include="prototypes/fragments/manage-assessors :: prototype-assesor-row-invite" th:with="row=3,name=${'Chantel Secrete'},org=${'University College London'},position=${'Reader, Technology Interventions'},status=${'Invite sent 12/02/2016'}" th:remove="tag" />
-
-		</div>
-	</th:block>
-
-	<th:block th:if="${param.tab != null and param.tab[0] == 'assign'}">
-		
-		<div class="grid-row">
-			<div class="column-half">
-				<label for="view">Change view
-					
-					<select class="form-control extra-margin-right" id="view" name="view">
-
-						<th:block th:if="${param.view != null and param.view[0] == 'assessor'}">
-							<option value="assessor">Assessor</option>
-						</th:block>
-
-						<option value="application">Application</option>
-						<option value="assessor">Assessor</option>
-
-					</select>
-
-					<button class="button button-secondary hidden">Update view</button>
-				</label>
-			</div>
-			<div class="column-half alignright">
-				
-				<input type="hidden" name="tab" value="assign" />
-
-				<a href="#" class="button button-secondary">Notify assessor(s)</a>
-			</div>
-		</div>
-
-		<hr />
-
-	</th:block>
-
-	<th:block th:if="${param.tab != null and param.tab[0] == 'assign' and param.view == null or param.view != null and param.view[0] == 'application'}">
-		<div class="tabular-list" id="assessors-assign-application">
-				
-			<ul class="tabular-list__row-header">
-				<li class="width-half">		
-					<label for="assignApplicationShow">Show
-						<select class="form-control" id="assignApplicationShow" name="assignApplicationShow">           
-							<option value="">All</option>
-							<option value="">To be invited</option>
-							<option value="">Invite accepted</option>
-							<option value="">Invite sent</option>
-							<option value="">Invite declined</option>
-						</select>
-					</label>
-				</li>
-				<li id="assign-lead-org" class="width-quarter hide-mobile">
-					Lead organisation
-				</li>
-				<li id="assign-assessors" class="width-quarter hide-mobile">
-					Assigned assessors
-				</li>
-			</ul>
-
-			<div th:include="prototypes/fragments/manage-assessors :: prototype-assesor-row-assign-application" th:with="row=1,application=${'The potential for glucose based contact lens monitoring in the management of type 2 diabetes'},number=${'10001000000'},org=${'Wessex University'},status=${'Unassigned'},assessors=0,button=${'Assign'}" th:remove="tag" />
-
-			<div th:include="prototypes/fragments/manage-assessors :: prototype-assesor-row-assign-application" th:with="row=2,application=${'Mobility problems and the potential for internet enabled zimmer frame'},number=${'10001000001'},org=${'Plymouth University'},status=${'In progress'},assessors=1,button=${'Assign'}" th:remove="tag" />
+	<div th:include="prototypes/fragments/manage-assessors :: prototype-assessor-main-content" th:remove="tag" />
 
 
-
-		</div>
-
-	</th:block>
-
-	<th:block th:if="${param.tab != null and param.tab[0] == 'assign' and param.view != null and param.view[0] == 'assessor'}">
-
-		<div class="tabular-list" id="assessors-assign-assessor">
-
-			<ul class="tabular-list__row-header">
-				<li class="width-half">		
-					<label for="assignAssessorShow">Show
-					<select class="form-control" id="assignAssessorShow" name="assignAssessorShow">           
-						<option value="">All</option>
-						<option value="">To be invited</option>
-						<option value="">Invite accepted</option>
-						<option value="">Invite sent</option>
-						<option value="">Invite declined</option>
-					</select>
-					</label>
-				</li>
-				<li id="assign-assessors" class="width-quarter hide-mobile">
-					Assigned applications
-				</li>
-			</ul>
-
-			<div th:include="prototypes/fragments/manage-assessors :: prototype-assesor-row-assign-assessor" th:with="row=1,name=${'Dave Smith'},org=${'Cardiff University'},position=${'Professor of Health Technology'},applications=1" th:remove="tag" />
-
-			<div th:include="prototypes/fragments/manage-assessors :: prototype-assesor-row-assign-assessor" th:with="row=2,name=${'Christopher Soames'},org=${'Public Health England'},position=${'Senior Adviser on technology deployment'},applications=1" th:remove="tag" />
-
-		</div>
-
-	</th:block>
-		
-	</form>
-
-
-
-	
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
@@ -312,6 +45,56 @@
         $('#view').on('change', function() {
             this.form.submit();
         });
+
+        /*$('#inviteFilter').on('change', function() {
+            this.form.submit();
+        });*/
+
+		jQuery('#includeAll').on('click',function(e){ 
+			//e.preventDefault();
+
+			if ( jQuery(this).is(':checked')) {
+				jQuery('#invite-group').removeClass('disabled');
+				jQuery('#invite-group').removeClass('button-secondary');
+				jQuery('.include-in-group').attr('checked', 'checked');
+
+				jQuery('.invite-individual').addClass('disabled');
+				jQuery('.invite-individual').addClass('button-secondary');
+
+			}
+
+			else if ( jQuery(this).not(':checked')) {
+				jQuery('.invite-individual').removeClass('disabled');
+				jQuery('.invite-individual').removeClass('button-secondary');
+
+				jQuery('#invite-group').addClass('disabled');
+				jQuery('#invite-group').addClass('button-secondary');
+				jQuery('.include-in-group').Attr('checked', '');
+
+				
+			}
+			
+		});
+
+
+		jQuery('.add-to-invite').on('click',function(e){ 
+			e.preventDefault();
+
+			if(jQuery(this).hasClass('added')){
+
+				jQuery(this).removeClass('added');
+				jQuery(this).text('+ Add to invite list');
+
+
+			}else{
+
+				jQuery(this).addClass('added');
+				jQuery(this).text('- Remove from invite list');
+
+			}
+
+		});
+
     });
 	// ]]>
 </script>

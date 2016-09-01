@@ -8,7 +8,9 @@
         This will create a new Competition - you will be able to specify more details as you proceed
     </div>
 
-    <form th:action="@{(${editable} ? '' : 'initial/edit')}" method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
+    <form th:action="@{(${editable} ? '' : 'initial/edit')}"
+          data-autosave="compSetup" th:attr="data-competition=${competition.id}" data-section="initial"
+          method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
 
         <fieldset th:if="${editable}" id="section-1-edit">
 
@@ -26,11 +28,8 @@
                        th:field="${competitionSetupForm.title}"
                        required="required"
                        data-required-errormessage="Please enter a title" />
+                <span class="autosave-info" />
             </div>
-
-
-
-
 
             <div th:class="${#fields.hasErrors('competitionTypeId')}? 'form-group error':'form-group'">
                 <label class="form-label" for="competitionTypeId">
@@ -43,6 +42,7 @@
                     <option value="" disabled="disabled" th:selected="${competitionSetupForm.competitionTypeId == null}">Please select &hellip;</option>
                     <option th:each="(competitionType : ${competitionTypes})" th:attr="data-stateaid=${competitionType.stateAid}" th:text="${competitionType.name}"  th:value="${competitionType.id}" th:selected="${competitionSetupForm.competitionTypeId == competitionType.id}">Competition Type</option>
                 </select>
+                <span class="autosave-info" />
             </div>
 
 
@@ -58,6 +58,7 @@
                     <option value="" disabled="disabled" th:selected="${competitionSetupForm.innovationSectorCategoryId == null}">Please select &hellip;</option>
                     <option th:each="(innovationSector : ${innovationSectors})" th:text="${innovationSector.name}" th:value="${innovationSector.id}" th:selected="${competitionSetupForm.innovationSectorCategoryId == innovationSector.id}">Innovation Sector</option>
                 </select>
+                <span class="autosave-info" />
             </div>
 
             <div th:class="${#fields.hasErrors('innovationAreaCategoryId')}? 'form-group error':'form-group'">
@@ -68,10 +69,10 @@
                     </span>
                 </label>
                 <select class="form-control width-x-large" name="innovationAreaCategoryId" id="innovationAreaCategoryId" required="required" data-required-errormessage="Please select an innovation area">
-                    <option th:if="${competitionSetupForm.innovationSectorCategoryId == null}" value="innovation sector" disabled="disabled" selected="selected">Please select an innovation sector first &hellip;</option>
-                    <option th:unless="${competitionSetupForm.innovationSectorCategoryId == null}" value="" disabled="disabled" th:selected="${competitionSetupForm.innovationAreaCategoryId == null}">Please select &hellip;</option>
-                    <option th:unless="${competitionSetupForm.innovationSectorCategoryId == null}" th:each="(innovationArea : ${innovationAreas})" th:text="${innovationArea.name}" th:value="${innovationArea.id}" th:selected="${competitionSetupForm.innovationAreaCategoryId == innovationArea.id}">Innovation Area</option>
+                    <option th:if="${competitionSetupForm.innovationAreaCategoryId == null}" value="" disabled="disabled" th:selected="${competitionSetupForm.innovationAreaCategoryId == null}">Please select &hellip;</option>
+                    <option th:each="(innovationArea : ${innovationAreas})" th:text="${innovationArea.name}" th:value="${innovationArea.id}" th:selected="${competitionSetupForm.innovationAreaCategoryId == innovationArea.id}">Innovation Area</option>
                 </select>
+                <span class="autosave-info" />
             </div>
 
 
@@ -85,6 +86,7 @@
                       </span>
                   </legend>
                   <div class="date-group" data-future-date="">
+                      <input type="hidden" name="openingDate" />
                       <div class="day">
                           <label class="form-label" for="competitionSetupForm.openingDateDay">
                               <div>Day</div>
@@ -120,6 +122,7 @@
                                  data-required-errormessage="Please enter an opening year"
                                  th:field="${competitionSetupForm.openingDateYear}" />
                       </div>
+                      <span class="autosave-info" />
                   </div>
                 </div>
             </fieldset>
@@ -135,6 +138,7 @@
                     <option value="" th:selected="${competitionSetupForm.leadTechnologistUserId == null}" disabled="disabled">Please select &hellip;</option>
                     <option th:each="(competitionLeadTechUser : ${competitionLeadTechUsers})" th:text="${competitionLeadTechUser.name}" th:value="${competitionLeadTechUser.id}" th:selected="${competitionSetupForm.leadTechnologistUserId == competitionLeadTechUser.id}">Lead technologist</option>
                 </select>
+                <span class="autosave-info" />
             </div>
 
             <div th:class="${#fields.hasErrors('executiveUserId')}? 'form-group error':'form-group'">
@@ -148,6 +152,7 @@
                     <option value="" disabled="disabled" th:selected="${competitionSetupForm.executiveUserId == null}">Please select &hellip;</option>
                     <option th:each="(competitionExecutiveUser : ${competitionExecutiveUsers})" th:text="${competitionExecutiveUser.name}" th:value="${competitionExecutiveUser.id}" th:selected="${competitionSetupForm.executiveUserId == competitionExecutiveUser.id}">User</option>
                 </select>
+                <span class="autosave-info" />
             </div>
 
 
@@ -301,16 +306,14 @@
 
                     <div class="alignright">
                         <input type="hidden" name="coFunderCount" id="co-funder-count" th:value="${competitionSetupForm.coFundersCount}" />
-                        <button class="buttonlink" id="add-cofunder">+Add co-funder</button>
+                        <button class="buttonlink" name="add-cofunder" id="add-cofunder">+Add co-funder</button>
                     </div>
                 </div>
             </div>
 
             <hr />
 
-
             <fieldset>
-
                 <legend class="heading-medium">Reporting fields</legend>
 
                 <div th:class="${#fields.hasErrors('pafNumber')}? 'form-group error':'form-group'">
@@ -354,7 +357,7 @@
                     th:field="${competitionSetupForm.activityCode}"
                     maxlength="255"
                     data-maxlength-errormessage="Activity code has a maximum length of 255 characters"
-                           data-required-errormessage="Please enter a activity code" />
+                           data-required-errormessage="Please enter an activity code" />
                 </div>
 
                 <div th:class="${#fields.hasErrors('competitionCode')}? 'form-group error':'form-group'">
@@ -370,10 +373,8 @@
                            th:field="${competitionSetupForm.competitionCode}"
                            required="required"
                            data-required-errormessage="Please generate a competition code"/>
-                    <button class="button button-secondary" th:if="${#strings.isEmpty(competitionSetupForm.competitionCode)}" type="button" id="generate-code" th:value="${competition.id}">Generate code</button>
+                    <button class="button button-secondary" th:if="${#strings.isEmpty(competitionSetupForm.competitionCode)}" type="submit" name="generate-code" id="generate-code" th:value="${competition.id}">Generate code</button>
                 </div>
-
-
             </fieldset>
 
             <button class="button">Done</button>
@@ -693,6 +694,7 @@
                                 max="31"
                                 required="required"
                                 class="form-control width-small"
+                                data-date-in-table=""
                                 th:attr="aria-labelledby=${'milestone-' + milestoneEntry.key}"
                                 th:value="${milestoneEntry.value.day}"
                                 th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].day'"
@@ -705,6 +707,7 @@
                                 max="12"
                                 required="required"
                                 class="form-control width-small"
+                                data-date-in-table=""
                                 th:attr="aria-labelledby=${'milestone-' + milestoneEntry.key}"
                                 th:value="${milestoneEntry.value.month}"
                                 th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].month'" />
@@ -715,6 +718,7 @@
                                  th:attr="aria-labelledby=${'milestone-' + milestoneEntry.key}"
                                  required="required"
                                  class="form-control width-small"
+                                 data-date-in-table=""
                                  th:value="${milestoneEntry.value.year}"
                                  th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].year'"/>
                       </td>

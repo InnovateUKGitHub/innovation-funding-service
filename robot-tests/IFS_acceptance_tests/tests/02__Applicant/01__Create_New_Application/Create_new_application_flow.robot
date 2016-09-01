@@ -58,7 +58,7 @@ Non registered users CH route (email step)
     Given the user opens the mailbox and verifies the email from
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     When the user clicks the button/link    jQuery=.button:contains("Sign in")
-    And the guest user inserts user email & password    ${test_mailbox_one}+1@gmail.com    Passw0rd123
+    And the guest user inserts user email & password    ${test_mailbox_one}+${unique_email_number}@gmail.com    Passw0rd123
     And the guest user clicks the log-in button
     Then the user should see the text in the page    Your dashboard
     And the user clicks the button/link    link=${OPEN_COMPETITION_LINK}
@@ -121,7 +121,7 @@ Verify the name of the new application
     ...    INFUND-1163
     [Tags]    HappyPath    Email    SmokeTest
     [Setup]    The guest user opens the browser
-    When guest user log-in    ${test_mailbox_one}+1@gmail.com    Passw0rd123
+    When guest user log-in    ${test_mailbox_one}+${unique_email_number}@gmail.com    Passw0rd123
     And the user edits the competition title
     Then the user should see the text in the page    ${test_title}
     And the progress indicator should show 0

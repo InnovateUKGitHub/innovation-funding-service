@@ -398,7 +398,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
     }
 
     @Test
-    public void updateBanksDetail() throws Exception {
+    public void submitBanksDetail() throws Exception {
         Long projectId = 1L;
         Long organisationId = 1L;
         OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource().build();
@@ -409,10 +409,10 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                 .withOrganiationAddress(organisationAddressResource)
                 .build();
 
-        when(bankDetailsServiceMock.updateBankDetails(bankDetailsResource)).thenReturn(serviceSuccess());
+        when(bankDetailsServiceMock.submitBankDetails(bankDetailsResource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(
-                post("/project/{projectId}/bank-details", projectId).
+                put("/project/{projectId}/bank-details", projectId).
                         contentType(APPLICATION_JSON).
                         content(toJson(bankDetailsResource)))
                 .andExpect(status().isOk())
@@ -437,12 +437,12 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                 .withOrganiationAddress(organisationAddressResource)
                 .build();
 
-        Error invalidSortCodeError = fieldError("sortCode", "123", "Pattern");
-        Error invalidAccountNumberError = fieldError("accountNumber", "1234567", "Pattern");
+        Error invalidSortCodeError = fieldError("sortCode", "123", "validation.standard.sortcode.format", "", "", "\\d{6}");
+        Error invalidAccountNumberError = fieldError("accountNumber", "1234567", "validation.standard.accountnumber.format", "", "", "\\d{8}");
 
         RestErrorResponse expectedErrors = new RestErrorResponse(asList(invalidSortCodeError, invalidAccountNumberError));
 
-        when(bankDetailsServiceMock.updateBankDetails(bankDetailsResource)).thenReturn(serviceSuccess());
+        when(bankDetailsServiceMock.submitBankDetails(bankDetailsResource)).thenReturn(serviceSuccess());
         mockMvc.perform(
                 post("/project/{projectId}/bank-details", projectId).
                         contentType(APPLICATION_JSON).

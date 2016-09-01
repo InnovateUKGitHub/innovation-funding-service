@@ -15,21 +15,21 @@ import java.math.BigDecimal;
 public class Materials implements FinanceRowItem {
     private Long id;
 
-    @NotNull
-    @NotBlank
+    @NotNull(message = NOT_BLANK_MESSAGE)
+    @NotBlank(message = NOT_BLANK_MESSAGE)
     @Length(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
     private String item;
 
     private String name;
 
-    @NotNull
-    @DecimalMin(value = "1")
-    @Digits(integer = MAX_DIGITS, fraction = MAX_FRACTION)
+    @NotNull(message = NOT_BLANK_MESSAGE)
+    @DecimalMin(value = "1", message = VALUE_MUST_BE_HIGHER_MESSAGE)
+    @Digits(integer = MAX_DIGITS, fraction = MAX_FRACTION, message = MAX_DIGITS_MESSAGE)
     private BigDecimal cost;
 
-    @NotNull
-    @Min(1)
-    @Digits(integer = MAX_DIGITS_INT, fraction = 0)
+    @NotNull(message = NOT_BLANK_MESSAGE)
+    @Min(value = 1, message = VALUE_MUST_BE_HIGHER_MESSAGE)
+    @Digits(integer = MAX_DIGITS_INT, fraction = 0, message = MAX_DIGITS_MESSAGE)
     private Integer quantity;
 
     private BigDecimal total = BigDecimal.ZERO; // calculated, no validation

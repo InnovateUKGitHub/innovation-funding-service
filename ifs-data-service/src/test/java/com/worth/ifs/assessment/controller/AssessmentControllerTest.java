@@ -16,7 +16,6 @@ import static com.worth.ifs.commons.error.CommonFailureKeys.ASSESSMENT_REJECTION
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.JsonMappingUtil.fromJson;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -77,8 +76,8 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
                 .andExpect(status().isBadRequest())
                 .andReturn();
 
-        RestErrorResponse response = fromJson(result.getResponse().getContentAsString(), RestErrorResponse.class);
-        assertTrue(response.is(new Error(ASSESSMENT_RECOMMENDATION_FAILED.getErrorKey(), ASSESSMENT_RECOMMENDATION_FAILED.getErrorMessage(), null)));
+        RestErrorResponse restErrorResponse = fromJson(result.getResponse().getContentAsString(), RestErrorResponse.class);
+        assertEqualsUpNoIncludingStatusCode(restErrorResponse, new Error(ASSESSMENT_RECOMMENDATION_FAILED));
 
         verify(assessmentServiceMock, only()).recommend(assessmentId, processOutcome);
     }
@@ -111,8 +110,8 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
                 .andExpect(status().isBadRequest())
                 .andReturn();
 
-        RestErrorResponse response = fromJson(result.getResponse().getContentAsString(), RestErrorResponse.class);
-        assertTrue(response.is(new Error(ASSESSMENT_REJECTION_FAILED.getErrorKey(), ASSESSMENT_REJECTION_FAILED.getErrorMessage(), null)));
+        RestErrorResponse restErrorResponse = fromJson(result.getResponse().getContentAsString(), RestErrorResponse.class);
+        assertEqualsUpNoIncludingStatusCode(restErrorResponse, new Error(ASSESSMENT_REJECTION_FAILED));
 
         verify(assessmentServiceMock, only()).rejectInvitation(assessmentId, processOutcome);
     }

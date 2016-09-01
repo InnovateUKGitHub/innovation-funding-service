@@ -112,9 +112,10 @@ public class CompetitionParticipant extends Participant<Competition, Competition
         return this;
     }
 
-    public CompetitionParticipant reject(RejectionReason rejectionReason, String comment) {
-        if (rejectionReason == null) throw new NullPointerException("reason cannot be null");
-        if (comment == null) throw new NullPointerException("comment cannot be null");
+    public CompetitionParticipant reject(RejectionReason rejectionReason, String rejectionComment) {
+        if (rejectionReason == null) throw new NullPointerException("rejectionReason cannot be null");
+        if (rejectionComment == null) throw new NullPointerException("rejectionComment cannot be null");
+        if (rejectionComment.isEmpty()) throw new IllegalArgumentException("rejectionComment cannot be empty");
 
         if (getInvite().getStatus() != OPENED)
             throw new IllegalStateException("Cannot accept a CompetitionParticipant that hasn't been opened");
@@ -125,7 +126,7 @@ public class CompetitionParticipant extends Participant<Competition, Competition
             throw new IllegalStateException("CompetitionParticipant has already been rejected");
 
         this.rejectionReason = rejectionReason;
-        this.rejectionReasonComment = comment;
+        this.rejectionReasonComment = rejectionComment;
         setStatus(REJECTED);
 
         return this;

@@ -1,4 +1,4 @@
-package com.worth.ifs.project.controller;
+  package com.worth.ifs.project.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
@@ -12,11 +12,9 @@ import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.FileAndContents;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder;
-import com.worth.ifs.project.builder.SpendProfileResourceBuilder;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
-import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -313,11 +311,11 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
                 .withPhoneNumber("hello")
                 .build();
 
-        Error firstNameError = fieldError("firstName", "", "NotEmpty");
-        Error lastNameError = fieldError("lastName", "", "NotEmpty");
-        Error emailError = fieldError("email", "abc", "Email");
-        Error phoneNumberError = fieldError("phoneNumber", "hello", "Pattern");
-        Error phoneNumberLengthError = fieldError("phoneNumber", "hello", "Size");
+        Error firstNameError = fieldError("firstName", "", "validation.standard.firstname.required", "");
+        Error lastNameError = fieldError("lastName", "", "validation.standard.lastname.required", "");
+        Error emailError = fieldError("email", "abc", "validation.standard.email.format", "", "", "^[^{}|]*$");
+        Error phoneNumberError = fieldError("phoneNumber", "hello", "validation.standard.phonenumber.format", "", "", "([0-9\\ +-])+");
+        Error phoneNumberLengthError = fieldError("phoneNumber", "hello", "validation.standard.phonenumber.length.min", "", "2147483647", "8");
 
         MvcResult result = mockMvc.perform(put("/project/{projectId}/monitoring-officer", projectId)
                 .contentType(APPLICATION_JSON)
@@ -330,11 +328,72 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
         asList(firstNameError, lastNameError, emailError, phoneNumberError, phoneNumberLengthError).forEach(e -> {
             String fieldName = e.getFieldName();
             String errorKey = e.getErrorKey();
-            List<Error> matchingErrors = simpleFilter(response.getErrors(), error -> fieldName.equals(error.getFieldName()) && errorKey.equals(error.getErrorKey()));
+            List<Error> matchingErrors = simpleFilter(response.getErrors(), error ->
+                    fieldName.equals(error.getFieldName()) && errorKey.equals(error.getErrorKey()) &&
+                    e.getArguments().containsAll(error.getArguments()));
             assertEquals(1, matchingErrors.size());
         });
 
         verify(projectServiceMock, never()).saveMonitoringOfficer(projectId, monitoringOfficerResource);
+    }
+
+    @Test
+    public void submitBanksDetailsSuccessfully() throws Exception {
+        Long projectId = 1L;
+        Long organisationId = 1L;
+        OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource().build();
+        BankDetailsResource bankDetailsResource = newBankDetailsResource()
+                .withProject(projectId).withSortCode("123456")
+                .withAccountNumber("12345678")
+                .withOrganisation(organisationId)
+                .withOrganiationAddress(organisationAddressResource)
+                .build();
+
+        when(bankDetailsServiceMock.submitBankDetails(bankDetailsResource)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(put("/project/{projectId}/bank-details", projectId).contentType(APPLICATION_JSON).content(toJson(bankDetailsResource))).andExpect(status().isOk()).andReturn();
+    }
+
+    @Test
+    public void submitBankDetailsWithInvalidAccountDetailsReturnsError() throws Exception {
+        Long projectId = 1L;
+        Long organisationId = 1L;
+        OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource().build();
+        BankDetailsResource bankDetailsResource = newBankDetailsResource()
+                .withProject(projectId).withSortCode("123")
+                .withAccountNumber("1234567")
+                .withOrganisation(organisationId)
+                .withOrganiationAddress(organisationAddressResource)
+                .build();
+
+        when(bankDetailsServiceMock.submitBankDetails(bankDetailsResource)).thenReturn(serviceSuccess());
+
+        Error invalidSortCodeError = fieldError("sortCode", "123", "validation.standard.sortcode.format", "", "", "\\d{6}");
+        Error sortCodeNotProvided = fieldError("sortCode", null, "validation.standard.sortcode.required", "");
+        Error invalidAccountNumberError = fieldError("accountNumber", "1234567", "validation.standard.accountnumber.format", "", "", "\\d{8}");
+        Error accountNumberNotProvided = fieldError("accountNumber", null, "validation.standard.accountnumber.required", "");
+        Error organisationAddressNotProvided = fieldError("organisationAddress", null, "validation.bankdetailsresource.organisationaddress.required", "");
+        Error organisationIdNotProvided = fieldError("organisation", null, "validation.bankdetailsresource.organisation.required", "");
+        Error projectIdNotProvided = fieldError("project", null, "validation.bankdetailsresource.project.required", "");
+
+        RestErrorResponse expectedErrors = new RestErrorResponse(asList(invalidSortCodeError, invalidAccountNumberError));
+
+        mockMvc.perform(put("/project/{projectId}/bank-details", projectId)
+                .contentType(APPLICATION_JSON)
+                .content(toJson(bankDetailsResource)))
+                .andExpect(status().isNotAcceptable())
+                .andExpect(content().json(toJson(expectedErrors)))
+                .andReturn();
+
+        bankDetailsResource = newBankDetailsResource().build();
+
+        expectedErrors = new RestErrorResponse(asList(sortCodeNotProvided, accountNumberNotProvided, organisationAddressNotProvided, organisationIdNotProvided, projectIdNotProvided));
+
+        mockMvc.perform(put("/project/{projectId}/bank-details", projectId)
+                .contentType(APPLICATION_JSON)
+                .content(toJson(bankDetailsResource)))
+                .andExpect(status().isNotAcceptable())
+                .andExpect(content().json(toJson(expectedErrors)));
     }
 
     @Test
@@ -355,7 +414,7 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
     }
 
     @Test
-    public void updateBanksDetailsWithInvalidAccountDetailsReturnsError() throws Exception {
+    public void updateBankDetailsWithInvalidAccountDetailsReturnsError() throws Exception {
         Long projectId = 1L;
         Long organisationId = 1L;
         OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource().build();
@@ -368,13 +427,13 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
 
         when(bankDetailsServiceMock.updateBankDetails(bankDetailsResource)).thenReturn(serviceSuccess());
 
-        Error invalidSortCodeError = fieldError("sortCode", "123", "Pattern");
-        Error sortCodeNotProvided = fieldError("sortCode", null, "NotBlank");
-        Error invalidAccountNumberError = fieldError("accountNumber", "1234567", "Pattern");
-        Error accountNumberNotProvided = fieldError("accountNumber", null, "NotBlank");
-        Error organisationAddressNotProvided = fieldError("organisationAddress", null, "NotNull");
-        Error organisationIdNotProvided = fieldError("organisation", null, "NotNull");
-        Error projectIdNotProvided = fieldError("project", null, "NotNull");
+        Error invalidSortCodeError = fieldError("sortCode", "123", "validation.standard.sortcode.format", "", "", "\\d{6}");
+        Error sortCodeNotProvided = fieldError("sortCode", null, "validation.standard.sortcode.required", "");
+        Error invalidAccountNumberError = fieldError("accountNumber", "1234567", "validation.standard.accountnumber.format", "", "", "\\d{8}");
+        Error accountNumberNotProvided = fieldError("accountNumber", null, "validation.standard.accountnumber.required", "");
+        Error organisationAddressNotProvided = fieldError("organisationAddress", null, "validation.bankdetailsresource.organisationaddress.required", "");
+        Error organisationIdNotProvided = fieldError("organisation", null, "validation.bankdetailsresource.organisation.required", "");
+        Error projectIdNotProvided = fieldError("project", null, "validation.bankdetailsresource.project.required", "");
 
         RestErrorResponse expectedErrors = new RestErrorResponse(asList(invalidSortCodeError, invalidAccountNumberError));
 

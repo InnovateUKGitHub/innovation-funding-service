@@ -2,7 +2,10 @@ package com.worth.ifs.assessment.service;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.invite.builder.RejectionReasonResourceBuilder;
 import com.worth.ifs.invite.resource.CompetitionInviteResource;
+import com.worth.ifs.invite.resource.CompetitionRejectionResource;
+import com.worth.ifs.invite.resource.RejectionReasonResource;
 import org.junit.Test;
 
 import static com.worth.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
@@ -42,5 +45,29 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
         setupPostWithRestResultAnonymousExpectations(format("%s/%s/%s", restUrl, "/openInvite", "hashNotExists"), CompetitionInviteResource.class, null, null, NOT_FOUND);
         RestResult<CompetitionInviteResource> restResult = service.openInvite("hashNotExists");
         assertTrue(restResult.isFailure());
+    }
+
+    @Test
+    public void acceptInvite() {
+        setupPostWithRestResultExpectations(format("%s/%s/%s", restUrl, "/acceptInvite", "hash"), OK);
+        RestResult<Void> restResult = service.acceptInvite("hash");
+        assertTrue(restResult.isSuccess());
+    }
+
+    @Test
+    public void rejectInvite() {
+        RejectionReasonResource rejectionReasonResource = RejectionReasonResourceBuilder.newRejectionReasonResource().withId(1L).build();
+        CompetitionRejectionResource rejectionResource = new CompetitionRejectionResource(rejectionReasonResource, "too busy");
+
+        setupPostWithRestResultAnonymousExpectations(format("%s/%s/%s", restUrl, "/rejectInvite", "hash"), Void.class, rejectionResource, null, OK);
+
+        RestResult<Void> restResult = service.rejectInvite("hash", rejectionResource);
+        assertTrue(restResult.isSuccess());
+    }
+
+    @Test
+    public void checkExistingUser() {
+        setupGetWithRestResultAnonymousExpectations(format("%s/%s/%s", restUrl, "/checkExistingUser", "hash"), Boolean.class, Boolean.TRUE);
+        assertTrue(service.checkExistingUser("hash").getSuccessObject());
     }
 }

@@ -179,6 +179,12 @@ public abstract class BaseRestServiceUnitTest<ServiceType extends BaseRestServic
         return response;
     }
 
+    protected ResponseEntity<Void> setupPostWithRestResultExpectations(String nonBaseUrl, HttpStatus responseCode) {
+        ResponseEntity<Void> response = new ResponseEntity<>(responseCode);
+        when(mockRestTemplate.exchange(dataServicesUrl + nonBaseUrl, POST, httpEntityForRestCall(), Void.class)).thenReturn(response);
+        return response;
+    }
+
     protected <T> void setupPostWithRestResultVerifications(String nonBaseUrl, Class<T> responseType, Object requestBody) {
         verify(mockRestTemplate).exchange(dataServicesUrl + nonBaseUrl, POST, httpEntityForRestCall(requestBody), responseType);
     }

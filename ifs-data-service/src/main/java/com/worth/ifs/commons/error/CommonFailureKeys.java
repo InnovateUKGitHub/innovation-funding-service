@@ -92,6 +92,7 @@ public enum CommonFailureKeys implements ErrorTemplate {
      */
     BANK_DETAILS_CANNOT_BE_SUBMITTED_BEFORE_PROJECT_DETAILS("Project details must be submitted before bank details", BAD_REQUEST),
     BANK_DETAILS_CAN_ONLY_BE_SUBMITTED_ONCE("Bank details can only be submitted once", BAD_REQUEST),
+    BANK_DETAILS_CANNOT_BE_UPDATED_BEFORE_BEING_SUBMITTED("Bank details can only be updated once project partner has submitted them for their organisation", BAD_REQUEST),
     BANK_DETAILS_DONT_EXIST_FOR_GIVEN_PROJECT_AND_ORGANISATION("Bank details don't exist on project {0} for organisation {1}", NOT_FOUND),
     EXPERIAN_VALIDATION_FAILED("Bank details cannot be validated", BAD_REQUEST),
     EXPERIAN_VALIDATION_FAILED_WITH_INCORRECT_ACC_NO("Account number is incorrect, please check and try again", BAD_REQUEST),
@@ -119,14 +120,23 @@ public enum CommonFailureKeys implements ErrorTemplate {
     /**
      * Competition Participant
      */
-    COMPETITION_PARTICIPANT_CANNOT_ACCEPT_UNOPENED_INVITE("Cannot accept a CompetitionParticipant where their Invite has not been opened", BAD_REQUEST),
-    COMPETITION_PARTICIPANT_CANNOT_REJECT_UNOPENED_INVITE("Cannot reject a CompetitionParticipant where their Invite has not been opened", BAD_REQUEST)
+    COMPETITION_PARTICIPANT_CANNOT_ACCEPT_UNOPENED_INVITE(BAD_REQUEST),
+    COMPETITION_PARTICIPANT_CANNOT_REJECT_UNOPENED_INVITE(BAD_REQUEST),
+    COMPETITION_PARTICIPANT_CANNOT_ACCEPT_ALREADY_ACCEPTED_INVITE(BAD_REQUEST),
+    COMPETITION_PARTICIPANT_CANNOT_REJECT_ALREADY_ACCEPTED_INVITE(BAD_REQUEST),
+    COMPETITION_PARTICIPANT_CANNOT_ACCEPT_ALREADY_REJECTED_INVITE(BAD_REQUEST),
+    COMPETITION_PARTICIPANT_CANNOT_REJECT_ALREADY_REJECTED_INVITE(BAD_REQUEST),
+    COMPETITION_PARTICIPANT_CANNOT_REJECT_WITHOUT_A_REASON_COMMENT(BAD_REQUEST)
     ;
 
     private ErrorTemplate errorTemplate;
 
     CommonFailureKeys(String errorMessage, HttpStatus category) {
         this.errorTemplate = new ErrorTemplateImpl(name(), errorMessage, category);
+    }
+
+    CommonFailureKeys(HttpStatus category) {
+        this.errorTemplate = new ErrorTemplateImpl(name(), null, category);
     }
 
     @Override

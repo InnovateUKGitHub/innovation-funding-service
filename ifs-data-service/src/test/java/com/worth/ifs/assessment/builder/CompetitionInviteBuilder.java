@@ -2,9 +2,11 @@ package com.worth.ifs.assessment.builder;
 
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.Builder;
+import com.worth.ifs.BuilderAmendFunctions;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.invite.constant.InviteStatus;
 import com.worth.ifs.invite.domain.CompetitionInvite;
+import com.worth.ifs.user.domain.User;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -58,6 +60,10 @@ public class CompetitionInviteBuilder extends BaseBuilder<CompetitionInvite, Com
 
     public CompetitionInviteBuilder withStatus(InviteStatus... statuses) {
         return withArray((status, invite) -> setField("status", status, invite), statuses);
+    }
+
+    public CompetitionInviteBuilder withUser(User... users) {
+        return withArray(BuilderAmendFunctions::setUser, users);
     }
 
     public CompetitionInviteBuilder withHash(String... hashes) {
