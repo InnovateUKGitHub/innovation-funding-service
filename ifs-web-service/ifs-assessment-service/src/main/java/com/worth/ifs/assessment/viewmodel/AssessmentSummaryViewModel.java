@@ -117,11 +117,7 @@ public class AssessmentSummaryViewModel {
     }
 
     public Integer getWordsRemaining(Integer maxWordCount, String response) {
-        if (response.equals("null")) {
-            return maxWordCount;
-        } else {
-            return maxWordCount - getResponseWords(response);
-        }
+        return response.equals("null") ? maxWordCount : maxWordCount - getResponseWords(response);
     }
 
     private int getResponseWords(String responseValue) {

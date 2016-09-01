@@ -144,23 +144,19 @@ public class AssessmentFeedbackViewModel {
             return null;
         }
 
-        if (hasError) {
-            AssessorFormInputResponseResource formResponse = new AssessorFormInputResponseResource();
-            formResponse.setValue(content);
-            response = Optional.of(formResponse);
-        }
-
-        return maxWordCount - getResponseWords(response);
+        return hasError ? maxWordCount - getWordCount(content) : maxWordCount - getResponseWords(response);
     }
 
     private int getResponseWords(Optional<AssessorFormInputResponseResource> response) {
         Optional<String> responseValue = response.flatMap(responseResource -> ofNullable(responseResource.getValue()));
-        return responseValue.map(value -> {
-            // clean any HTML markup from the value
-            Document doc = Jsoup.parse(value);
-            String cleaned = doc.text();
+        return responseValue.map(value -> getWordCount(value)).orElse(0);
+    }
 
-            return cleaned.split("\\s+").length;
-        }).orElse(0);
+    private int getWordCount(String value) {
+        // clean any HTML markup from the value
+        Document doc = Jsoup.parse(value);
+        String cleaned = doc.text();
+
+        return cleaned.split("\\s+").length;
     }
 }
