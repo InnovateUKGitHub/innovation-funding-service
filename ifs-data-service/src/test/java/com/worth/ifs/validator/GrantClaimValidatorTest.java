@@ -15,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 
 import static com.worth.ifs.validator.ValidatorTestUtil.getBindingResult;
 import static org.junit.Assert.*;
@@ -115,7 +116,7 @@ public class GrantClaimValidatorTest {
         
         validator.validate(claim, bindingResult);
         
-        verifyError("Min", "This field should be 0% or higher");
+        verifyError("validation.field.percentage.max.value.or.higher", 0);
     }
     
     @Test
@@ -134,8 +135,8 @@ public class GrantClaimValidatorTest {
         claim.setGrantClaimPercentage(101);
         
         validator.validate(claim, bindingResult);
-        
-        verifyError("Max", "This field should be 100% or lower");
+
+        verifyError("validation.field.percentage.max.value.or.lower", 100);
     }
     
     @Test
@@ -144,8 +145,8 @@ public class GrantClaimValidatorTest {
         claim.setGrantClaimPercentage(61);
         
         validator.validate(claim, bindingResult);
-        
-        verifyError("Max", "This field should be 60% or lower");
+
+        verifyError("validation.field.percentage.max.value.or.lower", 60);
     }
     
     @Test
@@ -154,8 +155,8 @@ public class GrantClaimValidatorTest {
         claim.setGrantClaimPercentage(61);
         
         validator.validate(claim, bindingResult);
-        
-        verifyError("Max", "This field should be 60% or lower");
+
+        verifyError("validation.field.percentage.max.value.or.lower", 60);
     }
     
     @Test
@@ -174,8 +175,8 @@ public class GrantClaimValidatorTest {
         claim.setGrantClaimPercentage(-1);
         
         validator.validate(claim, bindingResult);
-        
-        verifyError("Min", "This field should be 0% or higher");
+
+        verifyError("validation.field.percentage.max.value.or.higher", 0);
     }
     
     @Test
@@ -184,8 +185,8 @@ public class GrantClaimValidatorTest {
         claim.setGrantClaimPercentage(-1);
         
         validator.validate(claim, bindingResult);
-        
-        verifyError("Min", "This field should be 0% or higher");
+
+        verifyError("validation.field.percentage.max.value.or.higher", 0);
     }
     
     @Test
@@ -252,15 +253,14 @@ public class GrantClaimValidatorTest {
     	assertFalse(bindingResult.hasErrors());
     }
     
-    private void verifyError(String errorCode) {
-    	verifyError(errorCode, null);
-	}
-    
-    private void verifyError(String errorCode, String defaultErrorMessage) {
+    private void verifyError(String errorCode, Object... expectedArguments) {
     	assertTrue(bindingResult.hasErrors());
     	assertEquals(1, bindingResult.getAllErrors().size());
-        assertEquals(errorCode, bindingResult.getAllErrors().get(0).getCode());
-        assertEquals(defaultErrorMessage, bindingResult.getAllErrors().get(0).getDefaultMessage());
+        ObjectError actualError = bindingResult.getAllErrors().get(0);
+
+        assertEquals(errorCode, actualError.getCode());
+        assertEquals(errorCode, actualError.getDefaultMessage());
+        assertArrayEquals(expectedArguments, actualError.getArguments());
 	}
     
     private void setUpOrgType(OrganisationTypeEnum orgType, OrganisationSize organisationSize) {
