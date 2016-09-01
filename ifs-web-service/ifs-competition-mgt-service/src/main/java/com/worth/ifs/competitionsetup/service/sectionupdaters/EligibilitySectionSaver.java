@@ -119,5 +119,4 @@ public class EligibilitySectionSaver extends AbstractSectionSaver implements Com
 			competitionResource.getResearchCategories().add(value);
 		}
 	}
-
 }
