@@ -10,11 +10,13 @@ import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
 
 /**
- * Generic {@link Converter} for {@link Identifiable} enums.
+ * Generic JPA {@link Converter} for {@link Identifiable} enums.
  *
  * Subclasses must:
+ * <ul>
  *   <li>Have the @{@link Converter} annotation</li>
  *   <li>Provide a public default constructor</li>
+ * </ul>
  */
 public abstract class IdentifiableEnumConverter<T extends Enum<T> & Identifiable> implements AttributeConverter<T, Long> {
 
