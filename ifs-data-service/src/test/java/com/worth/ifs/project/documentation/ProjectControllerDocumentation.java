@@ -437,8 +437,8 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                 .withOrganiationAddress(organisationAddressResource)
                 .build();
 
-        Error invalidSortCodeError = fieldError("sortCode", "123", "Pattern");
-        Error invalidAccountNumberError = fieldError("accountNumber", "1234567", "Pattern");
+        Error invalidSortCodeError = fieldError("sortCode", "123", "validation.standard.sortcode.format", "", "", "\\d{6}");
+        Error invalidAccountNumberError = fieldError("accountNumber", "1234567", "validation.standard.accountnumber.format", "", "", "\\d{8}");
 
         RestErrorResponse expectedErrors = new RestErrorResponse(asList(invalidSortCodeError, invalidAccountNumberError));
 

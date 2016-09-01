@@ -24,6 +24,10 @@
 
 .extra-margin-top{
 	margin-top: 30px;
+	
+	&.medium{
+		margin-top: 10px;
+	}
 }
 
 .extra-margin-right{
@@ -42,6 +46,17 @@
 	.question.extra-margin{
 		margin-top: 30px;
 	}
+}
+
+/*--- Dark headers ---*/
+
+.dark-view{
+	background: $secondary-text-colour;
+	color: white;
+}
+
+h2.dark-view{
+	padding: 0.5em;
 }
 
 /*--- Inline lists ---*/
@@ -76,7 +91,6 @@
 .assign-team{
 	display: none;
 }
-
 
 /*---  ---*/
 .total-cost{
@@ -261,6 +275,24 @@ ul.underline{
 		}
 	}
 }
+
+
+/*--- Inline Nav ---*/
+
+ul.inline-nav{
+	li a{
+		text-decoration: none;
+		color: $black;
+	}
+	li{
+		&.not-selected{
+			background: $grey-3;
+			margin-right: 2px;
+			margin-left: 2px;
+		}
+	}
+}
+
 
 		
 /*--- Controlling visibility of hidden panels for js and non-js ---*/
