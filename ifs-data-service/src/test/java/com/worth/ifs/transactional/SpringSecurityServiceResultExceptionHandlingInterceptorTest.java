@@ -26,6 +26,6 @@ public class SpringSecurityServiceResultExceptionHandlingInterceptorTest extends
 
         ServiceResult<String> result = testService.accessDeniedMethod();
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(forbiddenError("This action is not permitted.")));
+        assertTrue(result.getFailure().is(forbiddenError()));
     }
 }

@@ -27,7 +27,7 @@ public final class ParsingFunctions {
         try {
             return serviceSuccess(Long.parseLong(string));
         } catch (NumberFormatException e) {
-            return serviceFailure(internalServerErrorError("Unable to parse as Long - " + string));
+            return serviceFailure(internalServerErrorError());
         }
     }
 }

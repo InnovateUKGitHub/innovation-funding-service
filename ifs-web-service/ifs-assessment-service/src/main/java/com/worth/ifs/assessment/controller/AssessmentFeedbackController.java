@@ -160,7 +160,7 @@ public class AssessmentFeedbackController {
         node.put("success", success ? "true" : "false");
         if (!success) {
             ArrayNode errorsNode = mapper.createArrayNode();
-            errors.stream().map(u -> u.getErrorMessage()).collect(Collectors.toList()).forEach(errorsNode::add);
+            errors.stream().map(Error::getErrorKey).collect(Collectors.toList()).forEach(errorsNode::add);
             node.set("validation_errors", errorsNode);
         }
         return node;

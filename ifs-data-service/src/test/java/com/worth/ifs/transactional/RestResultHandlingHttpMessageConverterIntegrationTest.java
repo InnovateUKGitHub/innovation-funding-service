@@ -92,7 +92,7 @@ public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseW
 
             assertEquals(FORBIDDEN, e.getStatusCode());
             RestErrorResponse restErrorResponse = new ObjectMapper().readValue(e.getResponseBodyAsString(), RestErrorResponse.class);
-            Error expectedError = new Error(GENERAL_FORBIDDEN, "This action is not permitted.", null);
+            Error expectedError = new Error(GENERAL_FORBIDDEN.name(), null);
             RestErrorResponse expectedResponse = new RestErrorResponse(expectedError);
             assertEquals(expectedResponse, restErrorResponse);
         }

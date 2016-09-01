@@ -267,7 +267,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
 
         verify(assessorFormInputResponseService, only()).updateFormInputResponse(ASSESSMENT_ID, formInputId, value);
         String content = result.getResponse().getContentAsString();
-        String jsonExpectedContent = "{\"success\":\"false\",\"validation_errors\":[\"The form word limit has been exceeded\"]}";
+        String jsonExpectedContent = "{\"success\":\"false\",\"validation_errors\":[\"FORM_WORD_LIMIT_EXCEEDED\"]}";
         Assert.assertEquals(jsonExpectedContent, content);
     }
 

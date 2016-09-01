@@ -237,7 +237,7 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
         // now run the method under test
         RestResult<Optional<FileEntryResource>> result = service.getCollaborationAgreementFileDetails(123L);
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(new Error(NOT_ACCEPTABLE, "Unexpected status code " + NOT_ACCEPTABLE, NOT_ACCEPTABLE)));
+        assertTrue(result.getFailure().is(new Error(NOT_ACCEPTABLE, NOT_ACCEPTABLE)));
     }
 
     @Test
@@ -277,7 +277,7 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
         // now run the method under test
         RestResult<Optional<ByteArrayResource>> result = service.getCollaborationAgreementFile(123L);
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(new Error(NOT_ACCEPTABLE, "Unexpected status code " + NOT_ACCEPTABLE, NOT_ACCEPTABLE)));
+        assertTrue(result.getFailure().is(new Error(NOT_ACCEPTABLE, NOT_ACCEPTABLE)));
     }
 
     @Test
@@ -349,7 +349,7 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
         // now run the method under test
         RestResult<Optional<FileEntryResource>> result = service.getExploitationPlanFileDetails(123L);
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(new Error(NOT_ACCEPTABLE, "Unexpected status code " + NOT_ACCEPTABLE, NOT_ACCEPTABLE)));
+        assertTrue(result.getFailure().is(new Error(NOT_ACCEPTABLE, NOT_ACCEPTABLE)));
     }
 
     @Test
@@ -389,7 +389,7 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
         // now run the method under test
         RestResult<Optional<ByteArrayResource>> result = service.getExploitationPlanFile(123L);
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(new Error(NOT_ACCEPTABLE, "Unexpected status code " + NOT_ACCEPTABLE, NOT_ACCEPTABLE)));
+        assertTrue(result.getFailure().is(new Error(NOT_ACCEPTABLE, NOT_ACCEPTABLE)));
     }
 
     @Test

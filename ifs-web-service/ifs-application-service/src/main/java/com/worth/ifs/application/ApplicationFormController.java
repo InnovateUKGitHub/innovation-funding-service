@@ -71,6 +71,7 @@ import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.HttpUtils.requestParameterPresent;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static org.springframework.util.StringUtils.hasText;
 
 /**
  * This controller will handle all requests that are related to the application form.
@@ -419,12 +420,11 @@ public class ApplicationFormController extends AbstractApplicationController {
         applicationMessages.forEach(validationMessage ->
             validationMessage.getErrors().stream()
                 .filter(Objects::nonNull)
-                .filter(e -> StringUtils.hasText(e.getErrorMessage()))
+                .filter(e -> hasText(e.getErrorKey()))
                 .forEach(e -> {
-                            e.toString();
                             if (validationMessage.getObjectName().equals("target")) {
-                                if (StringUtils.hasText(e.getErrorKey())) {
-                                    toFieldErrors.addError(fieldError("formInput[application." + validationMessage.getObjectId() + "-" + e.getFieldName() + "]", e.getFieldRejectedValue(), e.getErrorMessage()));
+                                if (hasText(e.getErrorKey())) {
+                                    toFieldErrors.addError(fieldError("formInput[application." + validationMessage.getObjectId() + "-" + e.getFieldName() + "]", e.getFieldRejectedValue(), e.getErrorKey()));
                                     if (e.getErrorKey().equals("durationInMonths")) {
                                         application.setDurationInMonths(null);
                                     }
@@ -461,16 +461,16 @@ public class ApplicationFormController extends AbstractApplicationController {
         financeErrorsMark.forEach(validationMessage ->
             validationMessage.getErrors().stream()
                 .filter(Objects::nonNull)
-                .filter(e -> StringUtils.hasText(e.getErrorMessage()))
+                .filter(e -> hasText(e.getErrorKey()))
                 .forEach(e -> {
                     if (validationMessage.getObjectName().equals("costItem")) {
-                        if (StringUtils.hasText(e.getErrorKey())) {
-                            toFieldErrors.addError(fieldError("formInput[cost-" + validationMessage.getObjectId() + "-" + e.getFieldName() + "]", e.getFieldRejectedValue(), e.getErrorMessage()));
+                        if (hasText(e.getErrorKey())) {
+                            toFieldErrors.addError(fieldError("formInput[cost-" + validationMessage.getObjectId() + "-" + e.getFieldName() + "]", e.getFieldRejectedValue(), e.getErrorKey()));
                         } else {
-                            toFieldErrors.addError(fieldError("formInput[cost-" + validationMessage.getObjectId() + "]", e.getFieldRejectedValue(), e.getErrorMessage()));
+                            toFieldErrors.addError(fieldError("formInput[cost-" + validationMessage.getObjectId() + "]", e.getFieldRejectedValue(), e.getErrorKey()));
                         }
                     } else {
-                        toFieldErrors.addError(fieldError("formInput[" + validationMessage.getObjectId() + "]", e.getFieldRejectedValue(), e.getErrorMessage()));
+                        toFieldErrors.addError(fieldError("formInput[" + validationMessage.getObjectId() + "]", e.getFieldRejectedValue(), (String) e.getErrorKey()));
                     }
                 })
         );
@@ -541,7 +541,7 @@ public class ApplicationFormController extends AbstractApplicationController {
             }
 
             if (errorsSoFar.hasFieldErrors(questionId + "")) {
-                markAsCompleteErrors.add(new ValidationMessages(fieldError(questionId + "", "", "Please enter valid data before marking a question as complete.")));
+                markAsCompleteErrors.add(new ValidationMessages(fieldError(questionId + "", "", "mark.as.complete.invalid.data.exists")));
             }
 
             return markAsCompleteErrors;
@@ -833,7 +833,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         } else {
             Long formInputId = Long.valueOf(inputIdentifier);
             ValidationMessages saveErrors = formInputResponseService.save(userId, applicationId, formInputId, value, false);
-            return new StoreFieldResult(simpleMap(saveErrors.getErrors(), Error::getErrorMessage));
+            return new StoreFieldResult(simpleMap(saveErrors.getErrors(), Error::getErrorKey));
         }
     }
 

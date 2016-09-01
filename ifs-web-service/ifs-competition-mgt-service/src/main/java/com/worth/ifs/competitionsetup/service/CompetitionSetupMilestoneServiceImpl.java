@@ -71,7 +71,7 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
 
             if(day == null || month == null || year == null || !isMilestoneDateValid(day, month, year)) {
                 if(errors.isEmpty()) {
-                    errors.add(new Error("error.milestone.invalid", "Please enter the valid date(s)", HttpStatus.BAD_REQUEST));
+                    errors.add(new Error("error.milestone.invalid", HttpStatus.BAD_REQUEST));
                 }
             }
         });

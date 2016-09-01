@@ -42,7 +42,7 @@ public class ServiceFailureExceptionHandlingAdvice {
 
             if (result == null) {
                 LOG.warn("Null ServiceResult being returned from method.  Converting to ServiceFailure");
-                return serviceFailure(internalServerErrorError("Null ServiceResult returned from method"));
+                return serviceFailure(internalServerErrorError());
             } else {
                 return result;
             }
@@ -58,7 +58,7 @@ public class ServiceFailureExceptionHandlingAdvice {
         LOG.debug("Failure encountered during processing of a ServiceResult-returning Service method - rolling back any transactions");
         if(result!=null) {
             result.getFailure().getErrors().stream().forEach(error ->
-                LOG.debug("    " + error.getErrorKey() + ": " + error.getErrorMessage())
+                LOG.debug("    " + error.getErrorKey())
             );
         }
 

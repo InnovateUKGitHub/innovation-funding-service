@@ -69,7 +69,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
 
         when(assessmentServiceMock.recommend(assessmentId, processOutcome)).thenReturn(serviceFailure(ASSESSMENT_RECOMMENDATION_FAILED));
 
-        Error recommendationFailedError = new Error(ASSESSMENT_RECOMMENDATION_FAILED.getErrorKey(), ASSESSMENT_RECOMMENDATION_FAILED.getErrorMessage(), null);
+        Error recommendationFailedError = new Error(ASSESSMENT_RECOMMENDATION_FAILED.getErrorKey(), null);
 
         mockMvc.perform(put("/assessment/{id}/recommend", assessmentId)
                 .contentType(APPLICATION_JSON)
@@ -103,7 +103,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
 
         when(assessmentServiceMock.rejectInvitation(assessmentId, processOutcome)).thenReturn(serviceFailure(ASSESSMENT_REJECTION_FAILED));
 
-        Error rejectionFailedError = new Error(ASSESSMENT_REJECTION_FAILED.getErrorKey(), ASSESSMENT_REJECTION_FAILED.getErrorMessage(), null);
+        Error rejectionFailedError = new Error(ASSESSMENT_REJECTION_FAILED.getErrorKey(), null);
 
         mockMvc.perform(put("/assessment/{id}/rejectInvitation", assessmentId)
                 .contentType(APPLICATION_JSON)

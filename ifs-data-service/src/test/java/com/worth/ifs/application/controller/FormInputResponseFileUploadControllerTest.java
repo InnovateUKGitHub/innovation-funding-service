@@ -165,19 +165,19 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
 
     @Test
     public void testCreateFileButFormInputNotFound() throws Exception {
-        assertCreateFileButEntityNotFound(FormInput.class, "formInputNotFound", "FormInput not found");
+        assertCreateFileButEntityNotFound(FormInput.class, "formInputNotFound");
     }
 
 
     @Test
     public void testCreateFileButApplicationNotFound() throws Exception {
-        assertCreateFileButEntityNotFound(Application.class, "applicationNotFound", "Application not found");
+        assertCreateFileButEntityNotFound(Application.class, "applicationNotFound");
     }
 
 
     @Test
     public void testCreateFileButProcessRoleNotFound() throws Exception {
-        assertCreateFileButEntityNotFound(ProcessRole.class, "processRoleNotFound", "ProcessRole not found");
+        assertCreateFileButEntityNotFound(ProcessRole.class, "processRoleNotFound");
     }
 
     @Test
@@ -199,7 +199,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andDo(document("forminputresponsefileupload/file_fileUpload_payloadTooLarge")).
                 andReturn();
 
-        assertResponseErrorMessageEqual("File upload was too large.  Max filesize in bytes is 5000", payloadTooLargeError(5000), response);
+        assertResponseErrorKeyEqual(PAYLOAD_TOO_LARGE.name(), payloadTooLargeError(5000), response);
     }
 
     @Test
@@ -220,7 +220,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andDo(document("forminputresponsefileupload/file_fileUpload_missingContentLength")).
                 andReturn();
 
-        assertResponseErrorMessageEqual("Please supply a valid Content-Length HTTP header.  Maximum 5000", lengthRequiredError(5000), response);
+        assertResponseErrorKeyEqual(LENGTH_REQUIRED.name(), lengthRequiredError(5000), response);
     }
 
     @Test
@@ -242,7 +242,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andDo(document("forminputresponsefileupload/file_fileUpload_unsupportedContentType")).
                 andReturn();
 
-        assertResponseErrorMessageEqual("Please supply a valid Content-Type HTTP header.  Valid types are application/pdf, application/json", unsupportedMediaTypeByNameError(asList("application/pdf", "application/json")), response);
+        assertResponseErrorKeyEqual(UNSUPPORTED_MEDIA_TYPE.name(), unsupportedMediaTypeByNameError(asList("application/pdf", "application/json")), response);
     }
 
     @Test
@@ -263,27 +263,27 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andDo(document("forminputresponsefileupload/file_fileUpload_missingContentType")).
                 andReturn();
 
-        assertResponseErrorMessageEqual("Please supply a valid Content-Type HTTP header.  Valid types are application/pdf, application/json", unsupportedMediaTypeByNameError(asList("application/pdf", "application/json")), response);
+        assertResponseErrorKeyEqual(UNSUPPORTED_MEDIA_TYPE.name(), unsupportedMediaTypeByNameError(asList("application/pdf", "application/json")), response);
     }
 
     @Test
     public void testCreateFileButContentLengthHeaderMisreported() throws Exception {
-        assertCreateFileButErrorOccurs(new Error(FILES_INCORRECTLY_REPORTED_FILESIZE), "incorrectlyReportedContentLength", BAD_REQUEST, "The actual file size didn't match the reported file size");
+        assertCreateFileButErrorOccurs(new Error(FILES_INCORRECTLY_REPORTED_FILESIZE), "incorrectlyReportedContentLength", BAD_REQUEST);
     }
 
     @Test
     public void testCreateFileButContentTypeHeaderMisreported() throws Exception {
-        assertCreateFileButErrorOccurs(new Error(FILES_INCORRECTLY_REPORTED_MEDIA_TYPE), "incorrectlyReportedContentType", UNSUPPORTED_MEDIA_TYPE, "The actual file media type didn't match the reported media type");
+        assertCreateFileButErrorOccurs(new Error(FILES_INCORRECTLY_REPORTED_MEDIA_TYPE), "incorrectlyReportedContentType", UNSUPPORTED_MEDIA_TYPE);
     }
 
     @Test
     public void testCreateFileButDuplicateFileEncountered() throws Exception {
-        assertCreateFileButErrorOccurs(new Error(FILES_DUPLICATE_FILE_CREATED), "duplicateFile", CONFLICT, "A matching file already exists");
+        assertCreateFileButErrorOccurs(new Error(FILES_DUPLICATE_FILE_CREATED), "duplicateFile", CONFLICT);
     }
 
     @Test
     public void testCreateFileButFormInputResponseAlreadyHasFileLinked() throws Exception {
-        assertCreateFileButErrorOccurs(new Error(FILES_FILE_ALREADY_LINKED_TO_FORM_INPUT_RESPONSE), "fileAlreadyLinked", CONFLICT, "A file is already linked to this Form Input Response");
+        assertCreateFileButErrorOccurs(new Error(FILES_FILE_ALREADY_LINKED_TO_FORM_INPUT_RESPONSE), "fileAlreadyLinked", CONFLICT);
     }
 
     @Test
@@ -337,7 +337,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
     @Test
     public void testUpdateFileButApplicationServiceCallFails() throws Exception {
 
-        ServiceResult<Void> failureResponse = serviceFailure(internalServerErrorError("Error updating file"));
+        ServiceResult<Void> failureResponse = serviceFailure(internalServerErrorError());
 
         FileHeaderAttributes fileAttributesAfterValidation = new FileHeaderAttributes(MediaType.valueOf("application/pdf"), 1000L, "original.pdf");
         when(fileValidatorMock.validateFileHeaders("application/pdf", "1000", "original.pdf")).thenReturn(serviceSuccess(fileAttributesAfterValidation));
@@ -357,24 +357,24 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andDo(document("forminputresponsefileupload/file_fileUpdate_internalServerError")).
                 andReturn();
 
-        assertResponseErrorMessageEqual("Error updating file", internalServerErrorError("Error updating file"), response);
+        assertResponseErrorKeyEqual(GENERAL_UNEXPECTED_ERROR.name(), internalServerErrorError(), response);
     }
 
     @Test
     public void testUpdateFileButFormInputNotFound() throws Exception {
-        assertUpdateFileButEntityNotFound(FormInput.class, "formInputNotFound", "FormInput not found");
+        assertUpdateFileButEntityNotFound(FormInput.class, "formInputNotFound");
     }
 
 
     @Test
     public void testUpdateFileButApplicationNotFound() throws Exception {
-        assertUpdateFileButEntityNotFound(Application.class, "applicationNotFound", "Application not found");
+        assertUpdateFileButEntityNotFound(Application.class, "applicationNotFound");
     }
 
 
     @Test
     public void testUpdateFileButProcessRoleNotFound() throws Exception {
-        assertUpdateFileButEntityNotFound(ProcessRole.class, "processRoleNotFound", "ProcessRole not found");
+        assertUpdateFileButEntityNotFound(ProcessRole.class, "processRoleNotFound");
     }
 
     @Test
@@ -396,7 +396,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andDo(document("forminputresponsefileupload/file_fileUpdate_payloadTooLarge")).
                 andReturn();
 
-        assertResponseErrorMessageEqual("File upload was too large.  Max filesize in bytes is 5000", payloadTooLargeError(5000), response);
+        assertResponseErrorKeyEqual(PAYLOAD_TOO_LARGE.name(), payloadTooLargeError(5000), response);
     }
 
     @Test
@@ -417,7 +417,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andDo(document("forminputresponsefileupload/file_fileUpdate_missingContentLength")).
                 andReturn();
 
-        assertResponseErrorMessageEqual("Please supply a valid Content-Length HTTP header.  Maximum 5000", lengthRequiredError(5000), response);
+        assertResponseErrorKeyEqual(LENGTH_REQUIRED.name(), lengthRequiredError(5000), response);
     }
 
     @Test
@@ -439,7 +439,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andDo(document("forminputresponsefileupload/file_fileUpdate_unsupportedContentType")).
                 andReturn();
 
-        assertResponseErrorMessageEqual("Please supply a valid Content-Type HTTP header.  Valid types are application/pdf, application/json", unsupportedMediaTypeByNameError(asList("application/pdf", "application/json")), response);
+        assertResponseErrorKeyEqual(UNSUPPORTED_MEDIA_TYPE.name(), unsupportedMediaTypeByNameError(asList("application/pdf", "application/json")), response);
     }
 
     @Test
@@ -460,27 +460,27 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andDo(document("forminputresponsefileupload/file_fileUpdate_missingContentType")).
                 andReturn();
 
-        assertResponseErrorMessageEqual("Please supply a valid Content-Type HTTP header.  Valid types are application/pdf, application/json", unsupportedMediaTypeByNameError(asList("application/pdf", "application/json")), response);
+        assertResponseErrorKeyEqual(UNSUPPORTED_MEDIA_TYPE.name(), unsupportedMediaTypeByNameError(asList("application/pdf", "application/json")), response);
     }
 
     @Test
     public void testUpdateFileButContentLengthHeaderMisreported() throws Exception {
-        assertUpdateFileButErrorOccurs(new Error(FILES_INCORRECTLY_REPORTED_FILESIZE), "incorrectlyReportedContentLength", BAD_REQUEST, "The actual file size didn't match the reported file size");
+        assertUpdateFileButErrorOccurs(new Error(FILES_INCORRECTLY_REPORTED_FILESIZE), "incorrectlyReportedContentLength", BAD_REQUEST);
     }
 
     @Test
     public void testUpdateFileButContentTypeHeaderMisreported() throws Exception {
-        assertUpdateFileButErrorOccurs(new Error(FILES_INCORRECTLY_REPORTED_MEDIA_TYPE), "incorrectlyReportedContentType", UNSUPPORTED_MEDIA_TYPE, "The actual file media type didn't match the reported media type");
+        assertUpdateFileButErrorOccurs(new Error(FILES_INCORRECTLY_REPORTED_MEDIA_TYPE), "incorrectlyReportedContentType", UNSUPPORTED_MEDIA_TYPE);
     }
 
     @Test
     public void testUpdateFileButFormInputResponseNotFound() throws Exception {
-        assertUpdateFileButErrorOccurs(new Error(GENERAL_NOT_FOUND), "formInputResponseNotFound", NOT_FOUND, "Unable to find entity");
+        assertUpdateFileButErrorOccurs(new Error(GENERAL_NOT_FOUND), "formInputResponseNotFound", NOT_FOUND);
     }
 
     @Test
     public void testUpdateFileButFileNotFoundToUpdate() throws Exception {
-        assertUpdateFileButErrorOccurs(new Error(GENERAL_NOT_FOUND), "noFileFoundToUpdate", NOT_FOUND, "Unable to find entity");
+        assertUpdateFileButErrorOccurs(new Error(GENERAL_NOT_FOUND), "noFileFoundToUpdate", NOT_FOUND);
     }
 
 
@@ -519,7 +519,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
     @Test
     public void testDeleteFileButApplicationServiceCallFails() throws Exception {
 
-        ServiceResult<FormInputResponse> failureResponse = serviceFailure(internalServerErrorError("Error deleting file"));
+        ServiceResult<FormInputResponse> failureResponse = serviceFailure(internalServerErrorError());
 
         when(applicationServiceMock.deleteFormInputResponseFileUpload(isA(FormInputResponseFileEntryId.class))).thenReturn(failureResponse);
 
@@ -533,33 +533,33 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andDo(document("forminputresponsefileupload/file_fileDelete_internalServerError")).
                 andReturn();
 
-        assertResponseErrorMessageEqual("Error deleting file", internalServerErrorError("Error deleting file"), response);
+        assertResponseErrorKeyEqual(GENERAL_UNEXPECTED_ERROR.name(), internalServerErrorError(), response);
     }
 
     @Test
     public void testDeleteFileButFormInputNotFound() throws Exception {
-        assertDeleteFileButEntityNotFound(FormInput.class, "formInputNotFound", "FormInput not found");
+        assertDeleteFileButEntityNotFound(FormInput.class, "formInputNotFound");
     }
 
     @Test
     public void testDeleteFileButFormInputResponseNotFound() throws Exception {
-        assertDeleteFileButEntityNotFound(FormInputResponse.class, "formInputResponseNotFound", "FormInputResponse not found");
+        assertDeleteFileButEntityNotFound(FormInputResponse.class, "formInputResponseNotFound");
     }
 
     @Test
     public void testDeleteFileButApplicationNotFound() throws Exception {
-        assertDeleteFileButEntityNotFound(Application.class, "applicationNotFound", "Application not found");
+        assertDeleteFileButEntityNotFound(Application.class, "applicationNotFound");
     }
 
 
     @Test
     public void testDeleteFileButProcessRoleNotFound() throws Exception {
-        assertDeleteFileButEntityNotFound(ProcessRole.class, "processRoleNotFound", "ProcessRole not found");
+        assertDeleteFileButEntityNotFound(ProcessRole.class, "processRoleNotFound");
     }
 
     @Test
     public void testDeleteFileButFileNotFoundToDelete() throws Exception {
-        assertDeleteFileButEntityNotFound(File.class, "noFileFoundToDelete", "File not found");
+        assertDeleteFileButEntityNotFound(File.class, "noFileFoundToDelete");
     }
 
     @Test
@@ -601,7 +601,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
     @Test
     public void testGetFileDetailsButApplicationServiceCallFails() throws Exception {
 
-        when(applicationServiceMock.getFormInputResponseFileUpload(isA(FormInputResponseFileEntryId.class))).thenReturn(serviceFailure(internalServerErrorError("Error retrieving file")));
+        when(applicationServiceMock.getFormInputResponseFileUpload(isA(FormInputResponseFileEntryId.class))).thenReturn(serviceFailure(internalServerErrorError()));
 
         MvcResult response = mockMvc.
                 perform(
@@ -613,32 +613,32 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andDo(document("forminputresponsefileupload/file_fileEntry_internalServerError")).
                 andReturn();
 
-        assertResponseErrorMessageEqual("Error retrieving file", internalServerErrorError("Error retrieving file"), response);
+        assertResponseErrorKeyEqual(GENERAL_UNEXPECTED_ERROR.name(), internalServerErrorError(), response);
     }
 
     @Test
     public void testGetFileDetailsButFileNotFound() throws Exception {
-        assertGetFileDetailsButEntityNotFound(File.class, "fileNotFound", "File not found");
+        assertGetFileDetailsButEntityNotFound(File.class, "fileNotFound");
     }
 
     @Test
     public void testGetFileDetailsButFormInputNotFound() throws Exception {
-        assertGetFileDetailsButEntityNotFound(FormInput.class, "formInputNotFound", "FormInput not found");
+        assertGetFileDetailsButEntityNotFound(FormInput.class, "formInputNotFound");
     }
 
     @Test
     public void testGetFileDetailsButApplicationNotFound() throws Exception {
-        assertGetFileDetailsButEntityNotFound(Application.class, "applicationNotFound", "Application not found");
+        assertGetFileDetailsButEntityNotFound(Application.class, "applicationNotFound");
     }
 
     @Test
     public void testGetFileDetailsButProcessRoleNotFound() throws Exception {
-        assertGetFileDetailsButEntityNotFound(ProcessRole.class, "processRoleNotFound", "ProcessRole not found");
+        assertGetFileDetailsButEntityNotFound(ProcessRole.class, "processRoleNotFound");
     }
 
     @Test
     public void testGetFileDetailsButformInputResponseNotFound() throws Exception {
-        assertGetFileDetailsButEntityNotFound(FormInputResponse.class, "formInputResponseNotFound", "FormInputResponse not found");
+        assertGetFileDetailsButEntityNotFound(FormInputResponse.class, "formInputResponseNotFound");
     }
 
     @Test
@@ -678,7 +678,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
     @Test
     public void testGetFileContentsButApplicationServiceCallFails() throws Exception {
 
-        when(applicationServiceMock.getFormInputResponseFileUpload(isA(FormInputResponseFileEntryId.class))).thenReturn(serviceFailure(internalServerErrorError("Error retrieving file")));
+        when(applicationServiceMock.getFormInputResponseFileUpload(isA(FormInputResponseFileEntryId.class))).thenReturn(serviceFailure(internalServerErrorError()));
 
         MvcResult response = mockMvc.
                 perform(
@@ -690,7 +690,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andDo(document("forminputresponsefileupload/file_fileDownload_internalServerError")).
                 andReturn();
 
-        assertResponseErrorMessageEqual("Error retrieving file", internalServerErrorError("Error retrieving file"), response);
+        assertResponseErrorKeyEqual(GENERAL_UNEXPECTED_ERROR.name(), internalServerErrorError(), response);
     }
 
     @Test
@@ -707,32 +707,32 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andExpect(status().isInternalServerError()).
                 andReturn();
 
-        assertResponseErrorMessageEqual("Error retrieving file", internalServerErrorError("Error retrieving file"), response);
+        assertResponseErrorKeyEqual(GENERAL_UNEXPECTED_ERROR.name(), internalServerErrorError(), response);
     }
 
     @Test
     public void testGetFileContentsButFileNotFound() throws Exception {
-        assertGetFileButEntityNotFound(File.class, "fileNotFound", "File not found");
+        assertGetFileButEntityNotFound(File.class, "fileNotFound");
     }
 
     @Test
     public void testGetFileContentsButFormInputNotFound() throws Exception {
-        assertGetFileButEntityNotFound(FormInput.class, "formInputNotFound", "FormInput not found");
+        assertGetFileButEntityNotFound(FormInput.class, "formInputNotFound");
     }
 
     @Test
     public void testGetFileContentsButApplicationNotFound() throws Exception {
-        assertGetFileButEntityNotFound(Application.class, "applicationNotFound", "Application not found");
+        assertGetFileButEntityNotFound(Application.class, "applicationNotFound");
     }
 
     @Test
     public void testGetFileContentsButProcessRoleNotFound() throws Exception {
-        assertGetFileButEntityNotFound(ProcessRole.class, "processRoleNotFound", "ProcessRole not found");
+        assertGetFileButEntityNotFound(ProcessRole.class, "processRoleNotFound");
     }
 
     @Test
     public void testGetFileContentsButformInputResponseNotFound() throws Exception {
-        assertGetFileButEntityNotFound(FormInputResponse.class, "formInputResponseNotFound", "FormInputResponse not found");
+        assertGetFileButEntityNotFound(FormInputResponse.class, "formInputResponseNotFound");
     }
 
     @Test
@@ -778,7 +778,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
         assertEquals(formInputFileEntryResource, returnedFileEntryDetails);
     }
 
-    private void assertGetFileButEntityNotFound(Class<?> entityTypeNotFound, String documentationSuffix, String expectedMessage) throws Exception {
+    private void assertGetFileButEntityNotFound(Class<?> entityTypeNotFound, String documentationSuffix) throws Exception {
 
         when(applicationServiceMock.getFormInputResponseFileUpload(isA(FormInputResponseFileEntryId.class))).thenReturn(serviceFailure(notFoundError(entityTypeNotFound)));
 
@@ -792,10 +792,10 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andDo(document("forminputresponsefileupload/file_fileDownload_" + documentationSuffix)).
                 andReturn();
 
-        assertResponseErrorMessageEqual(expectedMessage, notFoundError(entityTypeNotFound), response);
+        assertResponseErrorKeyEqual(GENERAL_NOT_FOUND.name(), notFoundError(entityTypeNotFound), response);
     }
 
-    private void assertGetFileDetailsButEntityNotFound(Class<?> entityTypeNotFound, String documentationSuffix, String expectedMessage) throws Exception {
+    private void assertGetFileDetailsButEntityNotFound(Class<?> entityTypeNotFound, String documentationSuffix) throws Exception {
         when(applicationServiceMock.getFormInputResponseFileUpload(isA(FormInputResponseFileEntryId.class))).thenReturn(serviceFailure(notFoundError(entityTypeNotFound)));
 
         MvcResult response = mockMvc.
@@ -808,14 +808,14 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andDo(document("forminputresponsefileupload/file_fileEntry_" + documentationSuffix)).
                 andReturn();
 
-        assertResponseErrorMessageEqual(expectedMessage, notFoundError(entityTypeNotFound), response);
+        assertResponseErrorKeyEqual(GENERAL_NOT_FOUND.name(), notFoundError(entityTypeNotFound), response);
     }
 
-    private void assertCreateFileButEntityNotFound(Class<?> entityTypeNotFound, String documentationSuffix, String expectedMessage) throws Exception {
-        assertCreateFileButErrorOccurs(notFoundError(entityTypeNotFound), documentationSuffix, NOT_FOUND, expectedMessage);
+    private void assertCreateFileButEntityNotFound(Class<?> entityTypeNotFound, String documentationSuffix) throws Exception {
+        assertCreateFileButErrorOccurs(notFoundError(entityTypeNotFound), documentationSuffix, NOT_FOUND);
     }
 
-    private void assertCreateFileButErrorOccurs(Error errorToReturn, String documentationSuffix, HttpStatus expectedStatus, String expectedMessage) throws Exception {
+    private void assertCreateFileButErrorOccurs(Error errorToReturn, String documentationSuffix, HttpStatus expectedStatus) throws Exception {
 
         ServiceResult<FormInputResponseFileEntryResource> failureResponse = serviceFailure(errorToReturn);
 
@@ -836,19 +836,19 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andReturn();
 
         assertEquals(expectedStatus.value(), response.getResponse().getStatus());
-        assertResponseErrorMessageEqual(expectedMessage, errorToReturn, response);
+        assertResponseErrorKeyEqual(errorToReturn.getErrorKey(), errorToReturn, response);
     }
 
-    private void assertUpdateFileButEntityNotFound(Class<?> entityTypeNotFound, String documentationSuffix, String expectedMessage) throws Exception {
-        assertUpdateFileButErrorOccurs(notFoundError(entityTypeNotFound), documentationSuffix, NOT_FOUND, expectedMessage);
+    private void assertUpdateFileButEntityNotFound(Class<?> entityTypeNotFound, String documentationSuffix) throws Exception {
+        assertUpdateFileButErrorOccurs(notFoundError(entityTypeNotFound), documentationSuffix, NOT_FOUND);
     }
 
 
-    private void assertDeleteFileButEntityNotFound(Class<?> entityTypeNotFound, String documentationSuffix, String expectedMessage) throws Exception {
-        assertDeleteFileButErrorOccurs(notFoundError(entityTypeNotFound), documentationSuffix, NOT_FOUND, expectedMessage);
+    private void assertDeleteFileButEntityNotFound(Class<?> entityTypeNotFound, String documentationSuffix) throws Exception {
+        assertDeleteFileButErrorOccurs(notFoundError(entityTypeNotFound), documentationSuffix, NOT_FOUND, GENERAL_NOT_FOUND.name());
     }
 
-    private void assertUpdateFileButErrorOccurs(Error errorToReturn, String documentationSuffix, HttpStatus expectedStatus, String expectedMessage) throws Exception {
+    private void assertUpdateFileButErrorOccurs(Error errorToReturn, String documentationSuffix, HttpStatus expectedStatus) throws Exception {
 
         ServiceResult<Void> failureResponse = serviceFailure(errorToReturn);
 
@@ -869,7 +869,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andReturn();
 
         assertEquals(expectedStatus.value(), response.getResponse().getStatus());
-        assertResponseErrorMessageEqual(expectedMessage, errorToReturn, response);
+        assertResponseErrorKeyEqual(errorToReturn.getErrorKey(), errorToReturn, response);
     }
 
     private <T> Supplier<T> isSupplierMatcher() {
@@ -892,7 +892,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andReturn();
 
         assertEquals(expectedStatus.value(), response.getResponse().getStatus());
-        assertResponseErrorMessageEqual(expectedMessage, errorToReturn, response);
+        assertResponseErrorKeyEqual(expectedMessage, errorToReturn, response);
     }
 
     private FormInputResponseFileEntryId fileEntryExpectations() {

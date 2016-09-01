@@ -69,7 +69,7 @@ public class CompanyHouseApiServiceImpl implements CompanyHouseApiService {
 
         return ofNullable(restGet("company/" + id, JsonNode.class)).
             map(jsonNode -> serviceSuccess(companyProfileMapper(jsonNode))).
-            orElse(serviceFailure(internalServerErrorError("No response from Companies House")));
+            orElse(serviceFailure(internalServerErrorError()));
     }
 
     protected <T> T restGet(String path, Class<T> c) {
@@ -137,7 +137,7 @@ public class CompanyHouseApiServiceImpl implements CompanyHouseApiService {
             return serviceSuccess(UriUtils.decode(encodedSearchText, "UTF-8"));
         } catch (UnsupportedEncodingException e) {
             LOG.error("Unable to decode search string " + encodedSearchText, e);
-            return serviceFailure(internalServerErrorError("Unable to decode search string"));
+            return serviceFailure(internalServerErrorError());
         }
     }
 

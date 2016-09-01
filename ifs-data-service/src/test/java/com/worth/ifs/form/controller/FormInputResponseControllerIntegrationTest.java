@@ -66,7 +66,7 @@ public class FormInputResponseControllerIntegrationTest extends BaseControllerIn
 
         RestResult<ValidationMessages> result = controller.saveQuestionResponse(jsonObj);
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(forbiddenError("This action is not permitted.")));
+        assertTrue(result.getFailure().is(forbiddenError()));
         setLoggedInUser(getSteveSmith());
         List<FormInputResponseResource> responses = controller.findResponsesByApplication(applicationId).getSuccessObject();
         Optional<FormInputResponseResource> response = responses.stream().filter(r -> r.getFormInput().equals(formInputId)).findFirst();

@@ -80,16 +80,16 @@ public class FormInputResponseControllerTest extends BaseControllerMockMVCTest<F
 
     @Test
     public void testGetByFormInputIdAndApplicationIdButFormInputNotFound() throws Exception {
-        assertGetByFormInputIdAndApplicationIdButErrorOccurs(new Error(GENERAL_NOT_FOUND), "formInputIdNotFound", NOT_FOUND, "Unable to find entity");
+        assertGetByFormInputIdAndApplicationIdButErrorOccurs(new Error(GENERAL_NOT_FOUND), "formInputIdNotFound", NOT_FOUND, GENERAL_NOT_FOUND.name());
     }
 
 
     @Test
     public void testGetByFormInputIdAndApplicationIdButApplicationNotFound() throws Exception {
-        assertGetByFormInputIdAndApplicationIdButErrorOccurs(new Error(GENERAL_NOT_FOUND), "applicationNotFound", NOT_FOUND, "Unable to find entity");
+        assertGetByFormInputIdAndApplicationIdButErrorOccurs(new Error(GENERAL_NOT_FOUND), "applicationNotFound", NOT_FOUND, GENERAL_NOT_FOUND.name());
     }
 
-    private void assertGetByFormInputIdAndApplicationIdButErrorOccurs(Error errorToReturn, String documentationSuffix, HttpStatus expectedStatus, String expectedMessage) throws Exception {
+    private void assertGetByFormInputIdAndApplicationIdButErrorOccurs(Error errorToReturn, String documentationSuffix, HttpStatus expectedStatus, String expectedErrorKey) throws Exception {
         ServiceResult<List<FormInputResponseResource>> failureResponse = serviceFailure(errorToReturn);
 
         when(formInputServiceMock.findResponsesByFormInputIdAndApplicationId(anyLong(), anyLong())).thenReturn(failureResponse);
@@ -101,6 +101,6 @@ public class FormInputResponseControllerTest extends BaseControllerMockMVCTest<F
                 andReturn();
 
         assertEquals(expectedStatus.value(), response.getResponse().getStatus());
-        assertResponseErrorMessageEqual(expectedMessage, errorToReturn, response);
+        assertResponseErrorKeyEqual(expectedErrorKey, errorToReturn, response);
     }
 }

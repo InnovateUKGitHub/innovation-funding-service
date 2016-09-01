@@ -151,13 +151,13 @@ public class EntityLookupCallbacks {
 
     public static <T> ServiceResult<T> getOnlyElementOrFail(Collection<T> list) {
         if (list == null || list.size() != 1) {
-            return serviceFailure(internalServerErrorError("Found multiple entries in list but expected only 1 - " + list));
+            return serviceFailure(internalServerErrorError());
         }
         return serviceSuccess(list.iterator().next());
     }
     public static <T> ServiceResult<T> getOptionalElementOrFail(Optional<T> item) {
         if (!item.isPresent()) {
-            return serviceFailure(internalServerErrorError("Optional element not present - " + item));
+            return serviceFailure(internalServerErrorError());
         }
         return serviceSuccess(item.get());
     }

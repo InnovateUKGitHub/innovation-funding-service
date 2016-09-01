@@ -164,7 +164,7 @@ public class AssessorFeedbackServiceImpl extends BaseTransactionalService implem
             return processAnyFailuresOrSucceed(fundedEmailSendResult, unfundedEmailSendResult);
 
         } else {
-            return serviceFailure(internalServerErrorError("Unable to determine all Notification targets for funding decision emails"));
+            return serviceFailure(internalServerErrorError());
         }
     }
 

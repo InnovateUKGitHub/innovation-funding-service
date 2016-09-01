@@ -236,11 +236,14 @@ Other costs client side
     When the user enters text to a text field    css=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    -1
     And the user enters text to a text field    css=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) textarea    ${EMPTY}
     Then the user gets the expected validation errors    This field cannot be left blank    This field should be 1 or higher
+    Capture Page Screenshot
 
 Save with validation errors
     [Documentation]    INFUND-844
     [Tags]
+    Capture Page Screenshot
     When the user reloads the page with validation errors
+    Capture Page Screenshot
     Then the field with the wrong input should be saved
 
 Other costs server side
@@ -282,6 +285,7 @@ user selects the admin costs
 
 the field with the wrong input should be saved
     ${input_value} =    Get Value    css=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
+    Capture Page Screenshot
     Should Be Equal As Strings    ${input_value}    -1
 
 the user reloads the page with validation errors

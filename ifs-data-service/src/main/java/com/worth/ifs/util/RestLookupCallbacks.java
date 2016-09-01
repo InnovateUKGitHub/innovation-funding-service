@@ -154,13 +154,13 @@ public class RestLookupCallbacks {
 
     public static <T> RestResult<T> getOnlyElementOrFail(Collection<T> list) {
         if (list == null || list.size() != 1) {
-            return restFailure(internalServerErrorError("Found multiple entries in list but expected only 1 - " + list));
+            return restFailure(internalServerErrorError());
         }
         return restSuccess(list.iterator().next());
     }
     public static <T> RestResult<T> getOptionalElementOrFail(Optional<T> item) {
         if (!item.isPresent()) {
-            return restFailure(internalServerErrorError("Optional element not present - " + item));
+            return restFailure(internalServerErrorError());
         }
         return restSuccess(item.get());
     }

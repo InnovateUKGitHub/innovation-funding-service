@@ -59,7 +59,7 @@ public class FileControllerUtils {
         } catch (Exception e) {
 
             LOG.error("Error retrieving file", e);
-            return new ResponseEntity<>(new RestErrorResponse(internalServerErrorError("Error retrieving file")), INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new RestErrorResponse(internalServerErrorError()), INTERNAL_SERVER_ERROR);
         }
     }
 
