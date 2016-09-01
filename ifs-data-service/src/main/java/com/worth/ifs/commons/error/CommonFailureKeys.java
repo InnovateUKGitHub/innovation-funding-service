@@ -110,18 +110,32 @@ public enum CommonFailureKeys implements ErrorTemplate {
     ASSESSMENT_REJECTION_FAILED("Only assessments which are Open can be rejected.", BAD_REQUEST),
     ASSESSMENT_RECOMMENDATION_FAILED("Only assessments which are Open can be recommended.", BAD_REQUEST),
 
-    /*
+    /**
      * Forms
      */
     FORM_WORD_LIMIT_EXCEEDED("The form word limit has been exceeded",BAD_REQUEST),
     SUMMARY_FEEDBACK_WORD_LIMIT_EXCEEDED("The form word limit has been exceeded",BAD_REQUEST),
-    SUMMARY_COMMENT_WORD_LIMIT_EXCEEDED("The form word limit has been exceeded",BAD_REQUEST)
+    SUMMARY_COMMENT_WORD_LIMIT_EXCEEDED("The form word limit has been exceeded",BAD_REQUEST),
+
+    /**
+     * Competition Participant
+     */
+    COMPETITION_PARTICIPANT_CANNOT_ACCEPT_UNOPENED_INVITE(BAD_REQUEST),
+    COMPETITION_PARTICIPANT_CANNOT_REJECT_UNOPENED_INVITE(BAD_REQUEST),
+    COMPETITION_PARTICIPANT_CANNOT_ACCEPT_ALREADY_ACCEPTED_INVITE(BAD_REQUEST),
+    COMPETITION_PARTICIPANT_CANNOT_REJECT_ALREADY_ACCEPTED_INVITE(BAD_REQUEST),
+    COMPETITION_PARTICIPANT_CANNOT_ACCEPT_ALREADY_REJECTED_INVITE(BAD_REQUEST),
+    COMPETITION_PARTICIPANT_CANNOT_REJECT_ALREADY_REJECTED_INVITE(BAD_REQUEST)
     ;
 
     private ErrorTemplate errorTemplate;
 
     CommonFailureKeys(String errorMessage, HttpStatus category) {
         this.errorTemplate = new ErrorTemplateImpl(name(), errorMessage, category);
+    }
+
+    CommonFailureKeys(HttpStatus category) {
+        this.errorTemplate = new ErrorTemplateImpl(name(), null, category);
     }
 
     @Override
