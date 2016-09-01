@@ -97,8 +97,8 @@ public class CompetitionParticipant extends Participant<Competition, Competition
         return rejectionReason;
     }
 
-    public String getRejectionReasonComment() {
-        return rejectionReasonComment;
+    public Optional<String> getRejectionReasonComment() {
+        return Optional.ofNullable(rejectionReasonComment);
     }
 
     public CompetitionParticipant accept() {
@@ -115,10 +115,9 @@ public class CompetitionParticipant extends Participant<Competition, Competition
         return this;
     }
 
-    public CompetitionParticipant reject(RejectionReason rejectionReason, String rejectionComment) {
+    public CompetitionParticipant reject(RejectionReason rejectionReason, Optional<String> rejectionComment) {
         if (rejectionReason == null) throw new NullPointerException("rejectionReason cannot be null");
         if (rejectionComment == null) throw new NullPointerException("rejectionComment cannot be null");
-        if (rejectionComment.isEmpty()) throw new IllegalArgumentException("rejectionComment cannot be empty");
 
         if (getInvite().get().getStatus() != OPENED)
             throw new IllegalStateException("Cannot accept a CompetitionParticipant that hasn't been opened");
@@ -129,7 +128,7 @@ public class CompetitionParticipant extends Participant<Competition, Competition
             throw new IllegalStateException("CompetitionParticipant has already been rejected");
 
         this.rejectionReason = rejectionReason;
-        this.rejectionReasonComment = rejectionComment;
+        this.rejectionReasonComment = rejectionComment.orElse(null);
         setStatus(REJECTED);
 
         return this;

@@ -7,6 +7,8 @@ import com.worth.ifs.invite.resource.CompetitionRejectionResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 /**
  * Controller for managing Invites to Competitions.
  */
@@ -34,7 +36,7 @@ public class CompetitionInviteController {
 
     @RequestMapping(value = "/rejectInvite/{inviteHash}", method = RequestMethod.POST)
     public RestResult<Void> rejectInvite(@PathVariable String inviteHash, @RequestBody CompetitionRejectionResource rejection) {
-        return competitionInviteService.rejectInvite(inviteHash, rejection.getRejectionReasonResource(), rejection.getRejectionComment()).toPostResponse();
+        return competitionInviteService.rejectInvite(inviteHash, rejection.getRejectionReasonResource(), Optional.ofNullable(rejection.getRejectionComment())).toPostResponse();
     }
 
     @RequestMapping(value = "/checkExistingUser/{inviteHash}", method = RequestMethod.GET)

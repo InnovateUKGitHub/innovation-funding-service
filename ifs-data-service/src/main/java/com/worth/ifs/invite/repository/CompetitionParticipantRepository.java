@@ -12,5 +12,5 @@ import org.springframework.data.repository.query.Param;
  */
 public interface CompetitionParticipantRepository extends CrudRepository<CompetitionParticipant, Long> {
 
-    CompetitionParticipant getByInviteHash(@Param("hash") String hash);
+    CompetitionParticipant getByInviteHash( String hash);
 }

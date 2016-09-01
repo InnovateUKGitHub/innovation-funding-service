@@ -290,6 +290,30 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
     }
 
     @Test
+    public void rejectInvite_noReasonComment() throws Exception {
+        competitionParticipantRepository.save(newCompetitionParticipant()
+                .with(id(null))
+                .withStatus(PENDING)
+                .withRole(ASSESSOR)
+                .withCompetition(competition)
+                .withInvite(newCompetitionInvite()
+                        .with(id(null))
+                        .withName("name")
+                        .withEmail("no-user-exists@for-this.address")
+                        .withUser((User) null)
+                        .withHash("hash")
+                        .withCompetition(competition)
+                        .build())
+                .build());
+        controller.openInvite("hash");
+
+        CompetitionRejectionResource competitionRejectionResource =
+                new CompetitionRejectionResource(newRejectionReasonResource().withId(1L).build(), null);
+        RestResult<Void> serviceResult = controller.rejectInvite("hash", competitionRejectionResource);
+        assertTrue(serviceResult.isSuccess());
+    }
+
+    @Test
     public void rejectInvite_accepted() throws Exception {
         competitionParticipantRepository.save(newCompetitionParticipant()
                 .with(id(null))

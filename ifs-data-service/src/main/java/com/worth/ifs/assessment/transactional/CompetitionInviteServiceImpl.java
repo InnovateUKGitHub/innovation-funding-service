@@ -16,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.invite.constant.InviteStatus.OPENED;
@@ -63,7 +65,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     }
 
     @Override
-    public ServiceResult<Void> rejectInvite(String inviteHash, RejectionReasonResource rejectionReason, String rejectionComment) {
+    public ServiceResult<Void> rejectInvite(String inviteHash, RejectionReasonResource rejectionReason, Optional<String> rejectionComment) {
         return getRejectionReason(rejectionReason)
                 .andOnSuccess(reason -> getParticipantByInviteHash(inviteHash)
                         .andOnSuccess(invite -> reject(invite, reason, rejectionComment))).andOnSuccessReturnVoid();
@@ -104,15 +106,13 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
         }
     }
 
-    private ServiceResult<CompetitionParticipant> reject(CompetitionParticipant participant, RejectionReason rejectionReason, String rejectionComment) {
+    private ServiceResult<CompetitionParticipant> reject(CompetitionParticipant participant, RejectionReason rejectionReason, Optional<String> rejectionComment) {
         if (participant.getInvite().get().getStatus() != OPENED) {
             return ServiceResult.serviceFailure(new Error(COMPETITION_PARTICIPANT_CANNOT_REJECT_UNOPENED_INVITE, getInviteCompetitionName(participant)));
         } else if (participant.getStatus() == ACCEPTED) {
             return ServiceResult.serviceFailure(new Error(COMPETITION_PARTICIPANT_CANNOT_REJECT_ALREADY_ACCEPTED_INVITE, getInviteCompetitionName(participant)));
         } else if (participant.getStatus() == REJECTED) {
             return ServiceResult.serviceFailure(new Error(COMPETITION_PARTICIPANT_CANNOT_REJECT_ALREADY_REJECTED_INVITE, getInviteCompetitionName(participant)));
-        } else if (rejectionComment.isEmpty()) {
-            return ServiceResult.serviceFailure(COMPETITION_PARTICIPANT_CANNOT_REJECT_WITHOUT_A_REASON_COMMENT);
         } else {
             return ServiceResult.serviceSuccess(competitionParticipantRepository.save(participant.reject(rejectionReason, rejectionComment)));
         }
