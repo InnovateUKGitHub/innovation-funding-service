@@ -112,12 +112,12 @@ Other Funding
     [Documentation]    INFUND-438, INFUND-2257, INFUND-3196
     [Tags]
     Given the user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains(No) input
-    Then the user should not see the element    jQuery=button:contains('Add another source of funding')
+    Then the user should not see the element    jQuery=button:contains(Add another source of funding)
     And the applicant selects 'Yes' and fills two rows
     Then the total of the other funding should be correct
     And the applicant can leave the 'Your finances' page but the details are still saved
     And the user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains(No) input
-    Then the user should not see the element    jQuery=button:contains('Add another source of funding')
+    Then the user should not see the element    jQuery=button:contains(Add another source of funding)
     And the applicant cannot see the 'other funding' details
     Then the user reloads the page
     Given the user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains(Yes) input
@@ -138,9 +138,9 @@ the Applicant fills in the Labour costs for two rows
     Input Text    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input    120000
     Input Text    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(4) input    100
     mouse out    css=input
-    Focus    jQuery=button:contains('Add another role')
-    the user clicks the button/link    jQuery=button:contains('Add another role')
-    the user should see the element    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(4) input
+    Focus    jQuery=button:contains(Add another role)
+    the user clicks the button/link    jQuery=button:contains(Add another role)
+    Wait Until Element Is Visible    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(4) input
     Input Text    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(2) input    120000
     Input Text    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(4) input    100
     Input Text    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(1) input    test
@@ -161,9 +161,9 @@ the Applicant fills the Materials fields
     Input Text    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    10
     Input Text    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    100
     input text    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    test
-    Focus    jQuery=button:contains('Add another materials cost')
-    the user clicks the button/link    jQuery=button:contains('Add another materials cost')
-    the user should see the element    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input
+    Focus    jQuery=button:contains(Add another materials cost)
+    the user clicks the button/link    jQuery=button:contains(Add another materials cost)
+    Wait Until Element Is Visible    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input
     Input Text    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    10
     Input Text    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(3) input    100
     Input Text    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(1) input    test
@@ -178,9 +178,9 @@ the applicant edits the Subcontracting costs section
     input text    css=.form-row:nth-child(1) [name^="subcontracting-country-"]    test2
     input text    css=.form-row:nth-child(1) [name^="subcontracting-role"]    test3
     Mouse Out    css=input
-    focus    jQuery=button:contains('Add another subcontractor')
-    the user clicks the button/link    jQuery=button:contains('Add another subcontractor')
-    the user should see the element    css=#collapsible-4 .form-row:nth-child(2)
+    focus    jQuery=button:contains(Add another subcontractor)
+    the user clicks the button/link    jQuery=button:contains(Add another subcontractor)
+    wait until element is visible    css=#collapsible-4 .form-row:nth-child(2)
     input text    css=.form-row:nth-child(2) [name^="subcontracting-name"]    test1
     input text    css=.form-row:nth-child(2) [name^="subcontracting-country-"]    test2
     input text    css=.form-row:nth-child(2) [name^="subcontracting-role"]    test3
@@ -199,9 +199,9 @@ the applicant fills the 'capital usage' field
     input text    css=.form-row:nth-child(1) [name^="capital_usage-description"]    Test
     the user clicks the button/link    jQuery=.form-row:nth-child(1) label:contains(Existing) input
     sleep    200ms
-    focus    jQuery=button:contains('Add another asset')
-    the user clicks the button/link    jQuery=button:contains('Add another asset')
-    the user should see the element    css=.form-row:nth-child(2) .form-finances-capital-usage-npv
+    focus    jQuery=button:contains(Add another asset)
+    the user clicks the button/link    jQuery=button:contains(Add another asset)
+    wait until element is visible    css=.form-row:nth-child(2) .form-finances-capital-usage-npv
     Input Text    css=.form-row:nth-child(2) .form-finances-capital-usage-npv    1000
     input text    css=.form-row:nth-child(2) .form-finances-capital-usage-residual-value    900
     input text    css=.form-row:nth-child(2) .form-finances-capital-usage-utilisation    100
@@ -219,9 +219,9 @@ the Applicant fills the Travel fields
     Input Text    css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    test
     Mouse Out    css=input
     #sleep    1s
-    focus    jQuery=button:contains('Add another travel cost')
-    the user clicks the button/link    jQuery=button:contains('Add another travel cost')
-    the user should see the element    css=#travel-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input
+    focus    jQuery=button:contains(Add another travel cost)
+    the user clicks the button/link    jQuery=button:contains(Add another travel cost)
+    wait until element is visible    css=#travel-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input
     Input Text    css=#travel-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    10
     Input Text    css=#travel-costs-table tbody tr:nth-of-type(2) td:nth-of-type(3) input    100
     Input Text    css=#travel-costs-table tbody tr:nth-of-type(2) td:nth-of-type(1) input    test
@@ -230,12 +230,12 @@ the Applicant fills the Travel fields
 
 the applicant adds one row for the other costs
     the user clicks the button/link    jQuery=button:contains("Other Costs")
-    #the user clicks the button/link    jQuery=button:contains('Add another cost')
+    #the user clicks the button/link    jQuery=button:contains(Add another cost)
     the user should see the element    css=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
     Input Text    css=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    100
     Input Text    css=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) textarea    test
-    the user clicks the button/link    jQuery=button:contains('Add another cost')
-    the user should see the element    css=#other-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input
+    the user clicks the button/link    jQuery=button:contains(Add another cost)
+    wait until element is visible    css=#other-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input
     Input Text    css=#other-costs-table tbody tr:nth-of-type(2) td:nth-of-type(1) textarea    test
     Input Text    css=#other-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    100
     Mouse Out    css=#other-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input
@@ -268,9 +268,9 @@ The applicant selects 'Yes' and fills two rows
     Input Text    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    ${OTHER_FUNDING_DATE}
     Input Text    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    ${OTHER_FUNDING_AMOUNT}
     Input Text    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    ${OTHER_FUNDING_SOURCE}
-    Focus    jQuery=button:contains('Add another source of funding')
-    the user clicks the button/link    jQuery=button:contains('Add another source of funding')
-    the user should see the element    css=#other-funding-table tbody tr:nth-of-type(2) td:nth-of-type(2) input
+    Focus    jQuery=button:contains(Add another source of funding)
+    the user clicks the button/link    jQuery=button:contains(Add another source of funding)
+    wait until element is visible    css=#other-funding-table tbody tr:nth-of-type(2) td:nth-of-type(2) input
     the user clicks the button/link    css=#other-funding-table tbody tr:nth-of-type(2) td:nth-of-type(1) input
     Input Text    css=#other-funding-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    ${OTHER_FUNDING_DATE}
     Input Text    css=#other-funding-table tbody tr:nth-of-type(2) td:nth-of-type(3) input    ${OTHER_FUNDING_AMOUNT}
