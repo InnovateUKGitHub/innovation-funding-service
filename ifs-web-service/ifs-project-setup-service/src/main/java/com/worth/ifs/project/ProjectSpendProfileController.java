@@ -70,6 +70,10 @@ public class ProjectSpendProfileController {
         form.setTable(viewModel.getTable());
         model.addAttribute(FORM_ATTR_NAME, form);
 
+        if(viewModel.getTable().getMarkedAsComplete()) {
+            markSpendProfileInComplete(model, projectId, organisationId, "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile");
+        }
+
         return "project/spend-profile";
     }
 
@@ -94,16 +98,31 @@ public class ProjectSpendProfileController {
     }
 
     private String markSpendProfileComplete(Model model,
+                                            Long projectId,
+                                            Long organisationId,
+                                            String successView) {
+        return markSpendProfile(model, projectId, organisationId, true, successView);
+    }
+
+    private String markSpendProfileInComplete(Model model,
+                                              Long projectId,
+                                              Long organisationId,
+                                              String successView) {
+        return markSpendProfile(model, projectId, organisationId, false, successView);
+    }
+
+    private String markSpendProfile(Model model,
                                     Long projectId,
                                     Long organisationId,
+                                    Boolean complete,
                                     String successView) {
-        buildSpendProfileViewModel(model, projectId, organisationId);
-
-        ServiceResult<Void> result = projectFinanceService.markSpendProfileComplete(projectId, organisationId);
+        ServiceResult<Void> result = projectFinanceService.markSpendProfile(projectId, organisationId, complete);
         if (result.isFailure()) {
             // If this model attribute is set, it means there are some categories where the totals don't match
             model.addAttribute("errorCategories", result.getFailure().getErrors());
         }
+
+        buildSpendProfileViewModel(model, projectId, organisationId);
 
         return successView;
     }

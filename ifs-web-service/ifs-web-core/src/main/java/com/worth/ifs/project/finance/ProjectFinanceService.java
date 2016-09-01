@@ -19,5 +19,5 @@ public interface ProjectFinanceService {
 
     ServiceResult<Void> saveSpendProfile(Long projectId, Long organisationId, SpendProfileTableResource table);
 
-    ServiceResult<Void> markSpendProfileComplete(Long projectId, Long organisationId);
+    ServiceResult<Void> markSpendProfile(Long projectId, Long organisationId, Boolean complete);
 }
