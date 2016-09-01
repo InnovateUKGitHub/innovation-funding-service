@@ -358,9 +358,9 @@ dl.standard-definition-list{
             font-weight: bold;
             padding-bottom: 0.5em;
 
-            &:first-child{
+            /*&:first-child{
                 padding-left: 0;
-            }
+            }*/
         }
 
     }
@@ -372,9 +372,9 @@ dl.standard-definition-list{
         > li{
             @extend %tabular-cell;
 
-            &:first-child{
+            /*&:first-child{
                 padding-left: 0;
-            }
+            }*/
         }
     }
 
@@ -386,9 +386,9 @@ dl.standard-definition-list{
         > li{
             @extend %tabular-cell;
 
-            &:first-child{
+            /*&:first-child{
                 padding-left: 0;
-            }
+            }*/
         }
 
     }
@@ -429,6 +429,10 @@ dl.standard-definition-list{
                 border: none;
             }
 
+        }
+
+        &__row > li{
+            padding-left: 0;
         }
 
     }

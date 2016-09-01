@@ -22,7 +22,7 @@ public class AssessorFormInputResponseControllerIntegrationTest extends BaseCont
     }
 
     @Test
-    public void testGetAllAssessorFormInputResponses() throws Exception {
+    public void getAllAssessorFormInputResponses() throws Exception {
         Long assessmentId = 1L;
 
         RestResult<List<AssessorFormInputResponseResource>> found = controller.getAllAssessorFormInputResponses(assessmentId);
@@ -33,7 +33,7 @@ public class AssessorFormInputResponseControllerIntegrationTest extends BaseCont
     }
 
     @Test
-    public void testGetAllAssessorFormInputResponsesByAssessmentAndQuestion() throws Exception {
+    public void getAllAssessorFormInputResponsesByAssessmentAndQuestion() throws Exception {
         Long assessmentId = 1L;
         Long questionId = 1L;
 
@@ -47,7 +47,7 @@ public class AssessorFormInputResponseControllerIntegrationTest extends BaseCont
     }
 
     @Test
-    public void update() throws Exception {
+    public void updateFormInputResponse() throws Exception {
         Long assessmentId = 1L;
         Long questionId = 1L;
         Long formInputId = 169L;

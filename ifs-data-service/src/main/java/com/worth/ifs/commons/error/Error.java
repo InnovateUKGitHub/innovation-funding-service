@@ -138,6 +138,13 @@ public class Error implements Serializable {
         return new Error(errorKey, messageOrCode, NOT_ACCEPTABLE);
     }
 
+    /**
+     * A convenience method to create a global (non-field) error
+     */
+    public static Error globalError(String errorKey, List<Object> arguments) {
+        return new Error(errorKey, null, arguments, NOT_ACCEPTABLE);
+    }
+
     public String getFieldName() {
         return fieldName;
     }

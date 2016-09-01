@@ -6,6 +6,8 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 
+import static com.worth.ifs.commons.rest.ValidationMessages.rejectValue;
+
 /**
  * This class validates the FormInputResponse, it checks if there is a emailaddress present.
  *
@@ -26,7 +28,7 @@ public class EmailValidator extends BaseValidator {
 
         org.hibernate.validator.internal.constraintvalidators.hv.EmailValidator externalEmailValidator = new org.hibernate.validator.internal.constraintvalidators.hv.EmailValidator();
         if (!externalEmailValidator.isValid(responseValue, null)) {
-            errors.rejectValue("value", "response.invalidEmail", "Please enter a valid emailaddress");
+            rejectValue(errors, "value", "validation.standard.email.format");
         }
     }
 }

@@ -5,7 +5,7 @@ import com.worth.ifs.controller.BaseBindingResultTarget;
 /**
  * Form backing the Other Documents page
  */
-public class ProjectOtherDocumentsForm extends BaseBindingResultTarget {
+public class ProjectPartnerDocumentsForm extends BaseBindingResultTarget {
 
     private boolean rejected;
     private boolean approved;

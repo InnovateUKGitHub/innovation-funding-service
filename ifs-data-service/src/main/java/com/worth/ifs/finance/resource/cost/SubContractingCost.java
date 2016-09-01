@@ -13,20 +13,20 @@ import java.math.BigDecimal;
 public class SubContractingCost implements FinanceRowItem {
     private Long id;
 
-    @NotNull
-    @DecimalMin(value = "1")
+    @NotNull(message = NOT_BLANK_MESSAGE)
+    @DecimalMin(value = "1", message = VALUE_MUST_BE_HIGHER_MESSAGE)
     @Digits(integer = MAX_DIGITS, fraction = MAX_FRACTION)
     private BigDecimal cost;
 
-    @NotBlank
+    @NotBlank(message = NOT_BLANK_MESSAGE)
     @Length(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
     private String country;
 
-    @NotBlank
+    @NotBlank(message = NOT_BLANK_MESSAGE)
     @Length(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
     private String name;
 
-    @NotBlank
+    @NotBlank(message = NOT_BLANK_MESSAGE)
     @Length(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
     private String role;
 
