@@ -2,13 +2,14 @@ package com.worth.ifs.assessment.controller.dashboard;
 
 import com.worth.ifs.assessment.model.AssessorDashboardModelPopulator;
 import com.worth.ifs.commons.security.UserAuthenticationService;
+import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * This controller will handle all requests that are related to the assessor dashboard.
@@ -24,11 +25,9 @@ public class AssessorDashboardController {
     private UserAuthenticationService userAuthenticationService;
 
     @RequestMapping(value = "/dashboard", method = RequestMethod.GET)
-    public String dashboard(Model model,
-                            HttpServletRequest request) {
+    public String dashboard(Model model, @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        Long userId = userAuthenticationService.getAuthenticatedUser(request).getId();
-        model.addAttribute("model", assessorDashboardModelPopulator.populateModel(userId));
+        model.addAttribute("model", assessorDashboardModelPopulator.populateModel(loggedInUser.getId()));
         return "assessor-dashboard";
     }
 }

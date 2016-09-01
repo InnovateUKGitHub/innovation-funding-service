@@ -46,7 +46,7 @@ public class AssessorDashboardModelPopulator {
                             1,
                             2,
                             competition.getAssessmentEndDate().toLocalDate(),
-                            competition.getDaysLeft(),
+                            competition.getAssessmentDaysLeft(),
                             competition.getAssessmentDaysLeftPercentage());
                 }).collect(Collectors.toList());
     }

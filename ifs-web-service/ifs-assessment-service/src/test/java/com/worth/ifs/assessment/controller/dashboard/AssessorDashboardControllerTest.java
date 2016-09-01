@@ -53,12 +53,8 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
     @Before
     public void setUp() {
         super.setUp();
-
-        this.setupCompetition();
-        this.setupApplicationWithRoles();
-        this.setupApplicationResponses();
         UserResource user = newUserResource().withId(3L).withFirstName("test").withLastName("name").build();;
-        loginUser(user);
+        setLoggedInUser(user);
     }
 
     @Test
@@ -67,7 +63,6 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         CompetitionResource competition = newCompetitionResource()
                 .withId(2L)
                 .withName("Juggling Craziness")
-                .withEndDate(LocalDateTime.now().plusDays(4))
                 .withAssessmentStartDate(LocalDateTime.now().minusDays(2))
                 .withAssessmentEndDate(LocalDateTime.now().plusDays(4))
                 .build();
@@ -92,11 +87,13 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         AssessorDashboardViewModel model = (AssessorDashboardViewModel) result.getModelAndView().getModel().get("model");
 
         List<AssessorDashboardActiveCompetitionViewModel> expectedActiveCompetitions = asList(
-                new AssessorDashboardActiveCompetitionViewModel(2L, "Juggling Craziness", 1, 2, competition.getAssessmentEndDate().toLocalDate(), competition.getDaysLeft(), competition.getAssessmentDaysLeftPercentage())
+                new AssessorDashboardActiveCompetitionViewModel(2L, "Juggling Craziness", 1, 2,
+                        competition.getAssessmentEndDate().toLocalDate(),
+                        competition.getAssessmentDaysLeft(),
+                        competition.getAssessmentDaysLeftPercentage())
         );
 
         assertEquals(expectedActiveCompetitions, model.getActiveCompetitions());
         assertTrue(model.getUpcomingCompetitions().isEmpty());
     }
-
 }
