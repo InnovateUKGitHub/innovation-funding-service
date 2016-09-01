@@ -37,7 +37,7 @@ import static org.springframework.http.HttpStatus.*;
 public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
 
 	private static final Log LOG = LogFactory.getLog(RestResult.class);
-	
+
     private HttpStatus successfulStatusCode;
 
     public RestResult(RestResult<T> original) {
@@ -154,6 +154,18 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
 
         if(restFailure.has(BANK_DETAILS_DONT_EXIST_FOR_GIVEN_PROJECT_AND_ORGANISATION)){
             throw new ObjectNotFoundException(error.getErrorMessage(), error.getArguments());
+        }
+
+        if (restFailure.has(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_UNOPENED_INVITE)) {
+            throw new UnableToAcceptInviteException(error.getErrorKey(), error.getArguments());
+        }
+
+        if (restFailure.has(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_ALREADY_ACCEPTED_INVITE)) {
+            throw new UnableToAcceptInviteException(error.getErrorKey(), error.getArguments());
+        }
+
+        if (restFailure.has(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_ALREADY_REJECTED_INVITE)) {
+            throw new UnableToAcceptInviteException(error.getErrorKey(), error.getArguments());
         }
 
         throw new RuntimeException();

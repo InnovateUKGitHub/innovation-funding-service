@@ -1,6 +1,7 @@
 package com.worth.ifs.assessment.transactional;
 
 import com.worth.ifs.BaseUnitTestMocksTest;
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.invite.builder.RejectionReasonResourceBuilder;
@@ -158,7 +159,7 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
         ServiceResult<Void> serviceResult = competitionInviteService.acceptInvite("inviteHash");
 
         assertTrue(serviceResult.isFailure());
-        assertTrue(serviceResult.getFailure().is(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_UNOPENED_INVITE));
+        assertTrue(serviceResult.getFailure().is(new Error(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_UNOPENED_INVITE, "my competition")));
 
         InOrder inOrder = inOrder(competitionParticipantRepositoryMock);
         inOrder.verify(competitionParticipantRepositoryMock, calls(1)).getByInviteHash("inviteHash");
@@ -180,7 +181,7 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
         serviceResult = competitionInviteService.acceptInvite("inviteHash");
 
         assertTrue(serviceResult.isFailure());
-        assertTrue(serviceResult.getFailure().is(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_ALREADY_ACCEPTED_INVITE));
+        assertTrue(serviceResult.getFailure().is(new Error(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_ALREADY_ACCEPTED_INVITE, "my competition")));
 
         InOrder inOrder = inOrder(competitionParticipantRepositoryMock);
         inOrder.verify(competitionParticipantRepositoryMock, calls(1)).getByInviteHash("inviteHash");
@@ -209,7 +210,7 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
         serviceResult = competitionInviteService.acceptInvite("inviteHash");
 
         assertTrue(serviceResult.isFailure());
-        assertTrue(serviceResult.getFailure().is(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_ALREADY_REJECTED_INVITE));
+        assertTrue(serviceResult.getFailure().is(new Error(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_ALREADY_REJECTED_INVITE, "my competition")));
 
         InOrder inOrder = inOrder(competitionParticipantRepositoryMock, rejectionReasonRepositoryMock);
         inOrder.verify(competitionParticipantRepositoryMock, calls(1)).getByInviteHash("inviteHash");
@@ -278,7 +279,7 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
         ServiceResult<Void> serviceResult = competitionInviteService.rejectInvite("inviteHash", rejectionReasonResource, "too busy");
 
         assertTrue(serviceResult.isFailure());
-        assertTrue(serviceResult.getFailure().is(COMPETITION_PARTICIPANT_CANNOT_REJECT_UNOPENED_INVITE));
+        assertTrue(serviceResult.getFailure().is(new Error(COMPETITION_PARTICIPANT_CANNOT_REJECT_UNOPENED_INVITE, "my competition")));
 
         InOrder inOrder = inOrder(rejectionReasonRepositoryMock, competitionParticipantRepositoryMock);
         inOrder.verify(rejectionReasonRepositoryMock, calls(1)).findOne(1L);
@@ -306,7 +307,7 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
         serviceResult = competitionInviteService.rejectInvite("inviteHash", rejectionReasonResource, "too busy");
 
         assertTrue(serviceResult.isFailure());
-        assertTrue(serviceResult.getFailure().is(COMPETITION_PARTICIPANT_CANNOT_REJECT_ALREADY_ACCEPTED_INVITE));
+        assertTrue(serviceResult.getFailure().is(new Error(COMPETITION_PARTICIPANT_CANNOT_REJECT_ALREADY_ACCEPTED_INVITE, "my competition")));
 
         InOrder inOrder = inOrder(competitionParticipantRepositoryMock, rejectionReasonRepositoryMock);
         inOrder.verify(competitionParticipantRepositoryMock, calls(1)).getByInviteHash("inviteHash");
@@ -336,7 +337,7 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
         serviceResult = competitionInviteService.rejectInvite("inviteHash", rejectionReasonResource, "still too busy");
 
         assertTrue(serviceResult.isFailure());
-        assertTrue(serviceResult.getFailure().is(COMPETITION_PARTICIPANT_CANNOT_REJECT_ALREADY_REJECTED_INVITE));
+        assertTrue(serviceResult.getFailure().is(new Error(COMPETITION_PARTICIPANT_CANNOT_REJECT_ALREADY_REJECTED_INVITE, "my competition")));
 
         InOrder inOrder = inOrder(competitionParticipantRepositoryMock, rejectionReasonRepositoryMock);
 
