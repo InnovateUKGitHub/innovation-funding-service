@@ -2,15 +2,14 @@ package com.worth.ifs.assessment.service;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.invite.resource.CompetitionParticipantResource;
-import com.worth.ifs.invite.resource.CompetitionParticipantRoleResource;
-import com.worth.ifs.invite.resource.ParticipantStatusResource;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.competitionParticipantResourceListType;
 import static com.worth.ifs.invite.builder.CompetitionParticipantResourceBuilder.newCompetitionParticipantResource;
+import static com.worth.ifs.invite.resource.CompetitionParticipantRoleResource.ASSESSOR;
+import static com.worth.ifs.invite.resource.ParticipantStatusResource.ACCEPTED;
 import static java.lang.String.format;
 import static org.junit.Assert.assertEquals;
 import static org.springframework.http.HttpStatus.OK;
@@ -27,16 +26,15 @@ public class CompetitionParticipantRestImplTest extends BaseRestServiceUnitTest<
 
     @Test
     public void getParticipants() {
-        CompetitionParticipantResource competitionParticipantResource = newCompetitionParticipantResource()
-                .withUser(1L)
-                .withCompetitionParticipantRole(CompetitionParticipantRoleResource.ASSESSOR)
-                .withStatus(ParticipantStatusResource.ACCEPTED)
-                .build();
-        List<CompetitionParticipantResource> expected = new ArrayList<>();
-        expected.add(competitionParticipantResource);
+        List<CompetitionParticipantResource> expected = newCompetitionParticipantResource()
+                .withUser(1L, 1L)
+                .withCompetitionParticipantRole(ASSESSOR, ASSESSOR)
+                .withStatus(ACCEPTED, ACCEPTED)
+                .withCompetition(2L, 3L)
+                .build(2);
 
-        setupGetWithRestResultExpectations(format("%s/user/%s/role/%s/status/%s", restUrl, 1L, CompetitionParticipantRoleResource.ASSESSOR, ParticipantStatusResource.ACCEPTED), competitionParticipantResourceListType(), expected, OK);
-        List<CompetitionParticipantResource> actual = service.getParticipants(1L, CompetitionParticipantRoleResource.ASSESSOR , ParticipantStatusResource.ACCEPTED ).getSuccessObject();
+        setupGetWithRestResultExpectations(format("%s/user/%s/role/%s/status/%s", restUrl, 1L, ASSESSOR, ACCEPTED), competitionParticipantResourceListType(), expected, OK);
+        List<CompetitionParticipantResource> actual = service.getParticipants(1L, ASSESSOR, ACCEPTED).getSuccessObject();
         assertEquals(expected, actual);
     }
 }
