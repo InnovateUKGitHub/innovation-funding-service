@@ -59,18 +59,20 @@ import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.worth.ifs.application.resource.SectionType.FINANCE;
 import static com.worth.ifs.commons.error.Error.fieldError;
 import static com.worth.ifs.commons.error.ErrorConverterFactory.toField;
 import static com.worth.ifs.commons.rest.ValidationMessages.*;
+import static com.worth.ifs.controller.ErrorLookupHelper.lookupErrorMessageResourceBundleEntries;
+import static com.worth.ifs.controller.ErrorLookupHelper.lookupErrorMessageResourceBundleEntry;
 import static com.worth.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.HttpUtils.requestParameterPresent;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
 import static org.springframework.util.StringUtils.hasText;
 
 /**
@@ -379,9 +381,9 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     private List<Error> sortValidationMessages(ValidationMessages errors) {
         List<Error> sortedErrors = errors.getErrors().stream().filter(error ->
-                error.getErrorKey().equals("application.validation.MarkAsCompleteFailed")).collect(Collectors.toList());
+                error.getErrorKey().equals("application.validation.MarkAsCompleteFailed")).collect(toList());
         sortedErrors.addAll(errors.getErrors());
-        return sortedErrors.parallelStream().distinct().collect(Collectors.toList());
+        return sortedErrors.parallelStream().distinct().collect(toList());
     }
 
     private void logSaveApplicationDetails(Map<String, String[]> params) {
@@ -791,7 +793,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         List<Object> args = new ArrayList<>();
         args.add(ex.getErrorMessage());
         if(e.getClass().equals(IntegerNumberFormatException.class) || e.getClass().equals(BigDecimalNumberFormatException.class)){
-            errors.add(messageSource.getMessage(e.getMessage(), args.toArray(), Locale.UK));
+            errors.add(lookupErrorMessageResourceBundleEntry(messageSource, e.getMessage(), args));
         }else{
             LOG.error("Got a exception on autosave : "+ e.getMessage());
             LOG.debug("Autosave exception: ", e);
@@ -826,19 +828,20 @@ public class ApplicationFormController extends AbstractApplicationController {
                         .stream()
                         .peek(e -> LOG.debug(String.format("Compare: %s => %s ", fieldName.toLowerCase(), e.getFieldName().toLowerCase())))
                         .filter(e -> fieldNameParts[1].toLowerCase().contains(e.getFieldName().toLowerCase())) // filter out the messages that are related to other fields.
-                        .map(e -> lookupErrorMessageResourceBundleEntry(e))
-                        .collect(Collectors.toList());
+                        .map(this::lookupErrorMessage)
+                        .collect(toList());
                 return new StoreFieldResult(validationMessages.getObjectId(), errors);
             }
         } else {
             Long formInputId = Long.valueOf(inputIdentifier);
             ValidationMessages saveErrors = formInputResponseService.save(userId, applicationId, formInputId, value, false);
-            return new StoreFieldResult(simpleMap(saveErrors.getErrors(), Error::getErrorKey));
+            List<String> lookedUpErrorMessages = lookupErrorMessageResourceBundleEntries(messageSource, saveErrors);
+            return new StoreFieldResult(lookedUpErrorMessages);
         }
     }
 
-    private String lookupErrorMessageResourceBundleEntry(Error e) {
-        return messageSource.getMessage(e.getErrorKey(), e.getArguments().toArray(), Locale.UK);
+    private String lookupErrorMessage(Error e) {
+        return lookupErrorMessageResourceBundleEntry(messageSource, e);
     }
 
     private ObjectNode createJsonObjectNode(boolean success, List<String> errors, Long fieldId) {
