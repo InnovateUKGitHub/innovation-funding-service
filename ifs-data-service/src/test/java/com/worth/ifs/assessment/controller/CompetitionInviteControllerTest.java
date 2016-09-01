@@ -20,6 +20,7 @@ import java.util.Optional;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
+import static com.worth.ifs.commons.error.Error.fieldError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.JsonMappingUtil.fromJson;
@@ -144,6 +145,20 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
         ).andExpect(status().isOk());
 
         verify(competitionInviteService, times(1)).rejectInvite("hash", rejectionReasonResource, Optional.of("too busy"));
+    }
+
+    @Test
+    public void rejectInvite_noReason() throws Exception {
+        CompetitionRejectionResource rejectionResource = new CompetitionRejectionResource(null, "comment");
+
+        Error rejectReasonError = fieldError("rejectReason", null, "validation.competitionrejectionresource.rejectReason.required", "");
+
+        mockMvc.perform(
+                post("/competitioninvite/rejectInvite/{inviteHash}", "hash")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(rejectionResource)))
+                .andExpect(status().isNotAcceptable())
+                .andExpect(content().json(toJson(new RestErrorResponse(rejectReasonError))));
     }
 
     @Test
