@@ -17,5 +17,5 @@ public interface CompetitionParticipantRepository extends CrudRepository<Competi
 
     CompetitionParticipant getByInviteHash( String hash);
 
-    List<CompetitionParticipant> getByUserIdAndRoleAndStatus(Long userId, @Param("role") CompetitionParticipantRole role, @Param("status") ParticipantStatus status);
+    List<CompetitionParticipant> getByUserIdAndRoleAndStatus(Long userId, CompetitionParticipantRole role, ParticipantStatus status);
 }

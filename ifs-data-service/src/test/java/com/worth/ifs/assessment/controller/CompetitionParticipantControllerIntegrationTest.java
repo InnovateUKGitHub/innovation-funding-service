@@ -3,8 +3,6 @@ package com.worth.ifs.assessment.controller;
 import com.worth.ifs.BaseControllerIntegrationTest;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.repository.CompetitionRepository;
-import com.worth.ifs.invite.domain.CompetitionInvite;
-import com.worth.ifs.invite.domain.CompetitionParticipant;
 import com.worth.ifs.invite.mapper.CompetitionParticipantRoleMapper;
 import com.worth.ifs.invite.mapper.ParticipantStatusMapper;
 import com.worth.ifs.invite.repository.CompetitionInviteRepository;
@@ -19,9 +17,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
+import static com.worth.ifs.assessment.builder.CompetitionInviteBuilder.newCompetitionInvite;
+import static com.worth.ifs.assessment.builder.CompetitionParticipantBuilder.newCompetitionParticipant;
+import static com.worth.ifs.invite.constant.InviteStatus.CREATED;
+import static com.worth.ifs.invite.domain.CompetitionParticipantRole.ASSESSOR;
+import static com.worth.ifs.invite.domain.ParticipantStatus.PENDING;
 import static com.worth.ifs.security.SecuritySetter.swapOutForUser;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.assertEquals;
+import static com.worth.ifs.BuilderAmendFunctions.id;
+
 
 public class CompetitionParticipantControllerIntegrationTest extends BaseControllerIntegrationTest<CompetitionParticipantController> {
 
@@ -52,14 +57,26 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
         swapOutForUser(getPaulPlum());
 
         Competition competition = competitionRepository.findOne(1L);
-        CompetitionInvite invite = new CompetitionInvite("name", "tom@poly.io", "hash", competition);
-        competitionInviteRepository.save(invite);
+        competitionParticipantRepository.save( newCompetitionParticipant()
+                .with(id(null))
+                .withCompetition(competition)
+                .withUser(newUser()
+                        .withid(3L)
+                        .withFirstName("Professor")
+                )
+                .withInvite(newCompetitionInvite()
+                        .with(id(null))
+                        .withName("name")
+                        .withEmail("tom@poly.io")
+                        .withHash("hash")
+                        .withCompetition(competition)
+                        .withStatus(CREATED)
+                )
+                .withStatus(PENDING)
+                .withRole(ASSESSOR)
+                .build()
+        );
 
-        User user = newUser()
-                .withid(3L)
-                .withFirstName("Professor")
-                .build();
-        competitionParticipantRepository.save( new CompetitionParticipant(competition, user, invite) );
         flushAndClearSession();
     }
 
