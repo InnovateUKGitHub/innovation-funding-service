@@ -1,4 +1,4 @@
-<!-- =================== Comp setup section - Initial Details (1) ============================== -->
+\<!-- =================== Comp setup section - Initial Details (1) ============================== -->
 
 <div th:fragment="comp-setup-navigation(sections, allCompletedSections, currentSection, competition, readyToOpen)">
     <div th:class="${(param.section != null ? 'visuallyhidden' : '')}">
@@ -9,9 +9,8 @@
                     <a th:if="${isInitialComplete} or ${section.toString() == 'INITIAL_DETAILS'}"
                        th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${competition.id},sectionPath=${section.path})}"
                        th:text="${section.name}">Section Name</a>
-                    <a th:unless="${isInitialComplete} or ${section.toString() == 'INITIAL_DETAILS'}"
-                       disabled="disabled"
-                       th:text="${section.name}">Section Name</a>
+                    <th:block th:unless="${isInitialComplete} or ${section.toString() == 'INITIAL_DETAILS'}"
+                       th:text="${section.name}">Section Name</th:block>
                 </h3>
             </li>
         </ul>
