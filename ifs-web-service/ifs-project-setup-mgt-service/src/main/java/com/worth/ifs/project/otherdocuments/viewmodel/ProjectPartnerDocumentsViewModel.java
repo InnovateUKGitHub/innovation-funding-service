@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * View model backing the Other Documents page
  */
-public class ProjectOtherDocumentsViewModel implements BasicProjectDetailsViewModel {
+public class ProjectPartnerDocumentsViewModel implements BasicProjectDetailsViewModel {
 
     private Long projectId;
     private String projectName;
@@ -26,10 +26,10 @@ public class ProjectOtherDocumentsViewModel implements BasicProjectDetailsViewMo
     private boolean approved;
     private boolean rejected;
 
-    public ProjectOtherDocumentsViewModel(Long projectId, String projectName, String leadPartnerOrganisationName, String projectManagerName,
-                                          String projectManagerTelephone, String projectManagerEmail, FileDetailsViewModel collaborationAgreementFileDetails,
-                                          FileDetailsViewModel exploitationPlanFileDetails, List<String> partnerOrganisationNames, boolean approved,
-                                          boolean rejected, String rejectionReason
+    public ProjectPartnerDocumentsViewModel(Long projectId, String projectName, String leadPartnerOrganisationName, String projectManagerName,
+                                            String projectManagerTelephone, String projectManagerEmail, FileDetailsViewModel collaborationAgreementFileDetails,
+                                            FileDetailsViewModel exploitationPlanFileDetails, List<String> partnerOrganisationNames, boolean approved,
+                                            boolean rejected, String rejectionReason
                                           ) {
         this.projectId = projectId;
         this.projectName = projectName;
@@ -75,7 +75,7 @@ public class ProjectOtherDocumentsViewModel implements BasicProjectDetailsViewMo
 
     public String getProjectManagerEmail() { return projectManagerEmail;}
 
-    public boolean isShowRejectionMessages() {
+    public boolean isShowRejectionMessage() {
         return rejectionReason != null;
     }
 
@@ -83,8 +83,12 @@ public class ProjectOtherDocumentsViewModel implements BasicProjectDetailsViewMo
         return rejected;
     }
 
-    public String getRejectionReasons() {
+    public String getRejectionReason() {
         return rejectionReason;
+    }
+
+    public void setRejectionReason(String rejectionReason) {
+        this.rejectionReason = rejectionReason;
     }
 
     public boolean isApproved() {

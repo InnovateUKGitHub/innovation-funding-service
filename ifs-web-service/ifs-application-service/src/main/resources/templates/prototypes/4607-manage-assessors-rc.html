@@ -18,7 +18,7 @@
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
-	<div th:include="prototypes/fragments/manage-assessors :: prototype-assessor-intro" th:remove="tag" />
+	<div th:include="prototypes/fragments/manage-assessors :: prototype-assessor-intro" th:with="site=rc" th:remove="tag" />
 
 	<ul class="inline-nav">
 		<li th:class="${(param.tab == null or param.tab[0] == 'find' ? 'selected' : 'not-selected' )}"><a th:href="@{'?tab=find'}"><strong>Find</strong></a></li>
@@ -27,7 +27,7 @@
 	</ul>
 
 	
-	<div th:include="prototypes/fragments/manage-assessors :: prototype-assessor-main-content" th:remove="tag" />
+	<div th:include="prototypes/fragments/manage-assessors :: prototype-assessor-main-content" th:with="site=rc" th:remove="tag" />
 
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->

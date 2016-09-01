@@ -12,6 +12,8 @@ import com.worth.ifs.user.domain.OrganisationType;
 import com.worth.ifs.user.resource.OrganisationSize;
 import com.worth.ifs.user.resource.OrganisationTypeEnum;
 
+import static com.worth.ifs.commons.rest.ValidationMessages.rejectValue;
+
 /**
  * This class validates the GrantClaim.
  */
@@ -40,7 +42,7 @@ public class GrantClaimValidator implements Validator {
             OrganisationSize size = cost.getApplicationFinance().getOrganisationSize();
 
         	if(size == null) {
-                errors.rejectValue("grantClaimPercentage", "validation.finance.select.organisation.size");
+                rejectValue(errors, "grantClaimPercentage", "validation.finance.select.organisation.size");
                 return;
             }
         	
@@ -50,11 +52,11 @@ public class GrantClaimValidator implements Validator {
         }
         
     	if(response.getGrantClaimPercentage() == null) {
-            errors.rejectValue("grantClaimPercentage", "org.hibernate.validator.constraints.NotBlank.message");
+            rejectValue(errors, "grantClaimPercentage", "org.hibernate.validator.constraints.NotBlank.message");
         } else if(response.getGrantClaimPercentage() > max){
-            errors.rejectValue("grantClaimPercentage", "Max", String.format("This field should be %s%% or lower", max));
+            rejectValue(errors, "grantClaimPercentage", "validation.field.percentage.max.value.or.lower", max);
         } else if(response.getGrantClaimPercentage().intValue() < 0){
-            errors.rejectValue("grantClaimPercentage", "Min", String.format("This field should be %s%% or higher", 0));
+            rejectValue(errors, "grantClaimPercentage", "validation.field.percentage.max.value.or.higher", 0);
         }
     }
     

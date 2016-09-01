@@ -2,12 +2,14 @@ package com.worth.ifs.competitionsetup.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.CharMatcher;
 import com.worth.ifs.application.service.CategoryService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.category.resource.CategoryResource;
 import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionResource.Status;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
@@ -15,6 +17,7 @@ import com.worth.ifs.competitionsetup.form.*;
 import com.worth.ifs.competitionsetup.model.Question;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupService;
+import com.worth.ifs.profiling.ProfileExecution;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +32,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -42,7 +46,9 @@ import java.util.Optional;
 public class CompetitionSetupController {
 
     private static final Log LOG = LogFactory.getLog(CompetitionSetupController.class);
-    private static final String BINDING_RESULT_COMPETITION_SETUP_FORM = "org.springframework.validation.BindingResult.applicationFormForm";
+
+    @Autowired
+    private UserAuthenticationService userAuthenticationService;
 
     @Autowired
     private CompetitionService competitionService;
@@ -88,7 +94,6 @@ public class CompetitionSetupController {
     	}
 
         competitionService.setSetupSectionMarkedAsIncomplete(competitionId, section);
-
         competitionSetupService.setCompetitionAsCompetitionSetup(competitionId);
 
         return "redirect:/competition/setup/" + competitionId + "/section/" + section.getPath();
@@ -102,7 +107,10 @@ public class CompetitionSetupController {
     	CompetitionSetupSection section = CompetitionSetupSection.APPLICATION_FORM;
         CompetitionResource competition = competitionService.getById(competitionId);
 
-        //TODO do competition check
+        if(isSendToDashboard(competition)) {
+            LOG.error("Competition is not found in setup state");
+            return "redirect:/dashboard";
+        }
 
         competitionSetupService.populateCompetitionSectionModelAttributes(model, competition, section);
         ApplicationFormForm competitionSetupForm = (ApplicationFormForm) competitionSetupService.getSectionFormData(competition, section);
@@ -146,6 +154,38 @@ public class CompetitionSetupController {
         return "competition/setup";
     }
 
+    /**
+     * This method is for supporting ajax saving from the application form.
+     */
+    @ProfileExecution
+    @RequestMapping(value = "/{competitionId}/section/{sectionPath}/saveFormElement", method = RequestMethod.POST)
+    @ResponseBody
+    public JsonNode saveFormElement(@RequestParam("fieldName") String fieldName,
+                                    @RequestParam("value") String value,
+                                    @PathVariable("competitionId") Long competitionId,
+                                    @PathVariable("sectionPath") String sectionPath,
+                                    HttpServletRequest request) {
+
+        CompetitionResource competitionResource = competitionService.getById(competitionId);
+        CompetitionSetupSection section = CompetitionSetupSection.fromPath(sectionPath);
+
+        List<String> errors = new ArrayList<>();
+        try {
+            errors = toStringList(competitionSetupService.autoSaveCompetitionSetupSection(competitionResource, section, fieldName, value));
+
+            return this.createJsonObjectNode(errors.isEmpty(), errors);
+        } catch (Exception e) {
+            errors.add(e.getMessage());
+            return this.createJsonObjectNode(false, errors);
+        }
+    }
+
+    private List<String> toStringList(List<Error> errors) {
+        List<String> returnList = new ArrayList<>();
+        errors.forEach(error -> returnList.add(error.getErrorMessage()));
+        return returnList;
+    }
+
     @RequestMapping(value = "/{competitionId}/section/initial", method = RequestMethod.POST)
     public String submitInitialSectionDetails(@Valid @ModelAttribute("competitionSetupForm") InitialDetailsForm competitionSetupForm,
                                               BindingResult bindingResult,
@@ -159,7 +199,19 @@ public class CompetitionSetupController {
     public String submitAdditionalSectionDetails(@Valid @ModelAttribute("competitionSetupForm") AdditionalInfoForm competitionSetupForm,
                                               BindingResult bindingResult,
                                               @PathVariable("competitionId") Long competitionId,
-                                              Model model) {
+                                              Model model, HttpServletRequest request) {
+
+        if (request.getParameterMap().containsKey("generate-code")) {
+            CompetitionResource competition = competitionService.getById(competitionId);
+            if (competition.getStartDate() != null) {
+                competitionService.generateCompetitionCode(competitionId, competition.getStartDate());
+                return "redirect:/competition/setup/" + competitionId + "/section/additional";
+            }
+        } else if (request.getParameterMap().containsKey("add-cofunder")) {
+            List<CoFunderForm> coFunders = competitionSetupForm.getCoFunders();
+            coFunders.add(new CoFunderForm());
+            competitionSetupForm.setCoFunders(coFunders);
+        }
 
         return genericCompetitionSetupSection(competitionSetupForm, bindingResult, competitionId, CompetitionSetupSection.ADDITIONAL_INFO, model);
     }
@@ -173,6 +225,7 @@ public class CompetitionSetupController {
     	if("yes".equals(competitionSetupForm.getMultipleStream()) && StringUtils.isEmpty(competitionSetupForm.getStreamName())){
     		bindingResult.addError(new FieldError("competitionSetupForm", "streamName", "A stream name is required"));
     	}
+
         return genericCompetitionSetupSection(competitionSetupForm, bindingResult, competitionId, CompetitionSetupSection.ELIGIBILITY, model);
     }
 
@@ -199,7 +252,6 @@ public class CompetitionSetupController {
                                               BindingResult bindingResult,
                                               @PathVariable("competitionId") Long competitionId,
                                               Model model) {
-
 
         return genericCompetitionSetupSection(competitionSetupForm, bindingResult, competitionId, CompetitionSetupSection.APPLICATION_FORM, model);
     }
@@ -251,13 +303,13 @@ public class CompetitionSetupController {
     @ResponseBody
     public JsonNode generateCompetitionCode(@PathVariable("competitionId") Long competitionId, HttpServletRequest request) {
 
-      CompetitionResource competition = competitionService.getById(competitionId);
-      if (competition.getStartDate() != null) {
-        return this.createJsonObjectNode(true, competitionService.generateCompetitionCode(competitionId, competition.getStartDate()));
-      }
-      else {
-        return this.createJsonObjectNode(false, "Please set a start date for your competition before generating the competition code, you can do this in the Initial Details section");
-      }
+        CompetitionResource competition = competitionService.getById(competitionId);
+        if (competition.getStartDate() != null) {
+            return this.createJsonObjectNode(true, competitionService.generateCompetitionCode(competitionId, competition.getStartDate()));
+        }
+        else {
+            return this.createJsonObjectNode(false, "Please set a start date for your competition before generating the competition code, you can do this in the Initial Details section");
+        }
     }
 
 
@@ -314,6 +366,21 @@ public class CompetitionSetupController {
         ObjectNode node = mapper.createObjectNode();
         node.put("success", success ? "true" : "false");
         node.put("message", CharMatcher.is('\"').trimFrom(message));
+
+        return node;
+    }
+
+    private ObjectNode createJsonObjectNode(boolean success, List<String> errors) {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode node = mapper.createObjectNode();
+        node.put("success", success ? "true" : "false");
+
+        if (!success) {
+            ArrayNode errorsNode = mapper.createArrayNode();
+            errors.stream().forEach(errorsNode::add);
+            node.set("validation_errors", errorsNode);
+        }
+
         return node;
     }
 
@@ -327,7 +394,5 @@ public class CompetitionSetupController {
                 LOG.error("Question(" + questionId + ") not found");
             }
         }
-
     }
-
 }

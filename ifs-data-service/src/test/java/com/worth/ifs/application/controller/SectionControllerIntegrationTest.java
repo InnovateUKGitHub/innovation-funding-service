@@ -132,8 +132,8 @@ public class SectionControllerIntegrationTest extends BaseControllerIntegrationT
         assertThat(messages.getErrors(),
                 contains(
                         allOf(
-                                hasProperty("errorKey", is("")),
-                                hasProperty("errorMessage", is("You should provide at least 1 source of other funding"))
+                                hasProperty("errorKey", is("validation.finance.min.row.other.funding.single")),
+                                hasProperty("errorMessage", isEmptyOrNullString())
                         )
                 )
         );
