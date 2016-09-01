@@ -399,11 +399,13 @@ Application questions: All the sections should be visible
     And the user should see the text in the page    8. Project team
     And the user should see the text in the page    9. Funding
     And the user should see the text in the page    10. Adding value
+    [Teardown]    The user clicks the button/link    jQuery=li:nth-child(5) .button:contains(Edit)
 
 Application questions: server side validations
     [Documentation]    INFUND-3000
-    [Tags]    HappyPath
-    Given The user clicks the button/link    jQuery=li:nth-child(5) .button:contains(Edit)
+    [Tags]    HappyPath    Pending
+    # pending INFUND-4769
+    #Given The user clicks the button/link    jQuery=li:nth-child(5) .button:contains(Edit)
     And The user should see the element    jQuery=.button[value="Save and close"]
     When the user leaves all the question field empty
     And The user clicks the button/link    jQuery=.button[value="Save and close"]
