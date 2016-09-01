@@ -5,6 +5,8 @@ import org.springframework.stereotype.Component;
 
 /**
  * Provides the permissions around CRUD operations for {@link com.worth.ifs.invite.domain.CompetitionInvite} resources.
+ *
+ * TODO: https://devops.innovateuk.org/issue-tracking/browse/INFUND-4794
  */
 @Component
 @PermissionRules

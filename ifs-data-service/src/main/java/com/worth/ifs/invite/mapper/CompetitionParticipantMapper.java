@@ -30,30 +30,9 @@ public abstract class CompetitionParticipantMapper extends BaseMapper<Competitio
             @Mapping(source = "process.id", target = "competitionId"),
             @Mapping(source = "user.id", target = "userId"),
             @Mapping(source = "invite.id", target = "inviteId"),
-            @Mapping(source = "rejectionReason", target = "rejectionReason"),
-            @Mapping(source = "role", target = "role"),
-            @Mapping(source = "status", target = "status"),
     })
     @Override
     public abstract CompetitionParticipantResource mapToResource(CompetitionParticipant domain);
-
-//
-//    public CompetitionParticipantRoleResource mapToResource(CompetitionParticipant domain) {
-//
-//        CompetitionParticipantResource resource = new CompetitionParticipantResource();
-//        if (domain.getProcess() != null) {
-//            resource.setCompetitionId(domain.getProcess().getId());
-//        }
-//        if (domain.getUser() != null) {
-//            resource.setUserId(domain.getUser().getId());
-//        }
-//        if (domain.getInvite() != null) {
-//            resource.setInviteId(domain.getInvite().getId());
-//        }
-//        if (domain.getRejectionReason() != null) {
-//            resource.setRejectionReason();
-//        }
-//    }
 
     public Long mapCompetitionParticipantToId(CompetitionParticipant object) {
         if (object == null) {
