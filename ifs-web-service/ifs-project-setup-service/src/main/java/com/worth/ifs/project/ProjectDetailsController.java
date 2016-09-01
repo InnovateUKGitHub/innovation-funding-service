@@ -190,7 +190,11 @@ public class ProjectDetailsController extends AddressLookupBaseController {
             InviteProjectResource invite = createProjectInviteResourceForNewContact (projectId, form.getName(), form.getEmail(), organisation);
 
             ServiceResult<Void> saveResult = projectService.saveProjectInvite(invite);
-            ServiceResult<Void> inviteResult = projectService.inviteFinanceContact(projectId, invite);
+
+            InviteProjectResource savedInvite = projectService.getInvitesByProject(projectId).getSuccessObjectOrThrowException().stream()
+                    .filter(i -> i.getEmail().equals(invite.getEmail())).findFirst().get();
+
+            ServiceResult<Void> inviteResult = projectService.inviteFinanceContact(projectId, savedInvite);
 
             return validationHandler.addAnyErrors(saveResult, toField("financeContact")).
                     addAnyErrors(inviteResult, toField("financeContact")).
@@ -559,7 +563,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                 .collect(toList());
         List<FinanceContactModel> invitedUsers = projectService.getInvitesByProject(projectId).getSuccessObjectOrThrowException().stream()
                 .filter(invite -> form.getOrganisation().equals(invite.getOrganisation()))
-                .map(invite -> new FinanceContactModel(PENDING, invite.getName(), projectId))
+                .map(invite -> new FinanceContactModel(PENDING, invite.getName() + " (Pending)", projectId))
                 .collect(toList());
 
         CompetitionResource competitionResource = competitionService.getById(applicationResource.getCompetition());

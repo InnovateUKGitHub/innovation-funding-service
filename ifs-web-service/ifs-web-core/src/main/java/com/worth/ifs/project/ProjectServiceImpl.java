@@ -237,20 +237,17 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ServiceResult<Void> saveProjectInvite (InviteProjectResource inviteProjectResource)
-    {
+    public ServiceResult<Void> saveProjectInvite (InviteProjectResource inviteProjectResource) {
         return projectInviteRestService.saveProjectInvite (inviteProjectResource).toServiceResult();
     }
 
     @Override
-    public ServiceResult<Void> inviteFinanceContact (Long projectId, InviteProjectResource inviteProjectResource)
-    {
+    public ServiceResult<Void> inviteFinanceContact (Long projectId, InviteProjectResource inviteProjectResource) {
         return projectRestService.inviteFinanceContact (projectId, inviteProjectResource).toServiceResult();
     }
 
     @Override
-    public ServiceResult<List<InviteProjectResource>>  getInvitesByProject (Long projectId)
-    {
+    public ServiceResult<List<InviteProjectResource>>  getInvitesByProject (Long projectId) {
         return projectInviteRestService.getInvitesByProject (projectId).toServiceResult();
     }
 

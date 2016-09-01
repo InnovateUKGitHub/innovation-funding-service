@@ -40,7 +40,7 @@ public class InviteProjectController {
     @RequestMapping(value = PROJECT_INVITE_SAVE, method = RequestMethod.POST)
     public RestResult<Void> saveProjectInvites(@RequestBody @Valid InviteProjectResource inviteProjectResource) {
 
-        return inviteProjectService.saveProjectInvite(inviteProjectResource).toPutResponse();
+        return inviteProjectService.saveProjectInvite(inviteProjectResource).toPostResponse();
     }
 
     @RequestMapping(value = GET_INVITE_BY_HASH + "{hash}", method = RequestMethod.GET)

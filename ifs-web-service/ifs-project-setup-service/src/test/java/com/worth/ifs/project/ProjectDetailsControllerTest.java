@@ -53,6 +53,7 @@ import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newAp
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static com.worth.ifs.invite.builder.ProjectInviteResourceBuilder.newInviteProjectResource;
 import static com.worth.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
 import static com.worth.ifs.project.AddressLookupBaseController.FORM_ATTR_NAME;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
@@ -307,10 +308,9 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         verify(projectService).updateFinanceContact(projectId, organisationId, invitedUserId);
     }
 
-/*
     @Test
     public void testInviteFinanceContact() throws Exception {
-        //long competitionId = 1L;
+        long competitionId = 1L;
         long applicationId = 1L;
         long projectId = 1L;
         long organisationId = 1L;
@@ -322,6 +322,10 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
         ProjectResource projectResource = newProjectResource().withId(projectId).withApplication(applicationId).build();
         OrganisationResource leadOrganisation = newOrganisationResource().withName("Lead Organisation").build();
+        UserResource financeContactUserResource = newUserResource().withId(invitedUserId).withFirstName("First").withLastName("Last").withEmail("test@test.com").build();
+        CompetitionResource competitionResource = newCompetitionResource().withId(competitionId).build();
+        ApplicationResource applicationResource = newApplicationResource().withId(applicationId).withCompetition(competitionId).build();
+
 
         List<ProjectUserResource> availableUsers = newProjectUserResource().
                 withUser(loggedInUser.getId(), loggedInUserId).
@@ -329,13 +333,10 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 withRoleName(PARTNER).
                 build(2);
 
-        InviteProjectResource invite = new InviteProjectResource();
+        InviteProjectResource invite = newInviteProjectResource().withId(1L).withProject(projectId).withName(invitedUserName).withEmail(invitedUserEmail)
+                .withOrganisation(organisationId).withLeadOrganisation(leadOrganisation.getName()).build();
 
-        invite.setProject(projectId);
-        invite.setName(invitedUserName);
-        invite.setEmail (invitedUserEmail);
-        invite.setOrganisation(organisationId);
-        invite.setInviteOrganisation(organisationId);
+        invite.setUser(2L);
         invite.setApplicationId(projectResource.getApplication());
         invite.setLeadOrganisation(leadOrganisation.getName());
 
@@ -343,6 +344,9 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         when(projectService.getLeadOrganisation(projectId)).thenReturn(leadOrganisation);
         when(projectService.saveProjectInvite( invite)).thenReturn(serviceSuccess());
         when(projectService.inviteFinanceContact(projectId, invite)).thenReturn(serviceSuccess());
+        when(projectService.updateFinanceContact(projectId, organisationId, invitedUserId)).thenReturn(serviceSuccess());
+        when(userService.findById(invitedUserId)).thenReturn(financeContactUserResource);
+        when(projectService.getProjectUsersForProject(projectId)).thenReturn(availableUsers);
 
         InviteStatus testStatus = InviteStatus.CREATED;
 
@@ -356,22 +360,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 andExpect(status().is3xxRedirection()).
                 andExpect(view().name("redirect:/project/" + projectId  + "/details")).
                 andReturn();
-
-        //UserResource financeContactUserResource = newUserResource().withId(invitedUserId).withFirstName("First").withLastName("Last").withEmail("test@test.com").build();
-        //CompetitionResource competitionResource = newCompetitionResource().withId(competitionId).build();
-        //ApplicationResource applicationResource = newApplicationResource().withId(applicationId).withCompetition(competitionId).build();
-        //when(projectService.getProjectUsersForProject(projectId)).thenReturn(availableUsers);
-        //when(projectService.updateFinanceContact(projectId, organisationId, invitedUserId)).thenReturn(serviceSuccess());
-        //when(userService.findById(invitedUserId)).thenReturn(financeContactUserResource);
-        //when(applicationService.getById(applicationId)).thenReturn(applicationResource);
-        //when(competitionService.getById(applicationResource.getCompetition())).thenReturn(competitionResource);
-        //when(userService.getOrganisationProcessRoles(applicationResource, organisationId)).thenReturn(emptyList());
-
-
-
     }
-*/
-
 
     @Test
     public void testAddressTypeValidation() throws Exception {
