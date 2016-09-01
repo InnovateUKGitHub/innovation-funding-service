@@ -19,11 +19,11 @@ public class Overhead implements FinanceRowItem {
     private OverheadRateType rateType;
 
     @Min.List({
-        @Min(value = 0, groups = Default.class),
-        @Min(value = 1, groups = RateNotZero.class)
+        @Min(value = 0, groups = Default.class, message = VALUE_MUST_BE_HIGHER_MESSAGE),
+        @Min(value = 1, groups = RateNotZero.class, message = VALUE_MUST_BE_HIGHER_MESSAGE)
     })
-    @Max(value = 100, groups = RateNotZero.class)
-    @Digits(integer = MAX_DIGITS_INT, fraction = 0)
+    @Max(value = 100, groups = RateNotZero.class, message = VALUE_MUST_BE_LOWER_MESSAGE)
+    @Digits(integer = MAX_DIGITS_INT, fraction = 0, message = MAX_DIGITS_MESSAGE)
     private Integer rate;
     private String name;
 

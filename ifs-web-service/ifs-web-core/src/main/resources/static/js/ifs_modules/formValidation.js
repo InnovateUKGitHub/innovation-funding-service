@@ -523,7 +523,7 @@ IFS.core.formValidation = (function(){
               jQuery('.error-summary-list li:contains('+message+')').remove();
             }
 
-            if(jQuery('.error-summary-list li').length === 0){
+            if(jQuery('.error-summary-list li:not(.list-header)').length === 0){
               jQuery('.error-summary').attr('aria-hidden',true);
             }
             jQuery(window).trigger('updateWysiwygPosition');

@@ -29,7 +29,7 @@ public class AssessorFormInputResponseController {
         return assessorFormInputResponseService.getAllAssessorFormInputResponsesByAssessmentAndQuestion(assessmentId, questionId).toGetResponse();
     }
 
-    @RequestMapping(value = "", method = RequestMethod.PUT)
+    @RequestMapping(method = RequestMethod.PUT)
     public RestResult<Void> updateFormInputResponse(@Valid @RequestBody AssessorFormInputResponseResource response) {
         return assessorFormInputResponseService.updateFormInputResponse(response).toPutResponse();
     }

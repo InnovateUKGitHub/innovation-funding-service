@@ -11,13 +11,13 @@ import java.math.BigDecimal;
 public class OtherCost implements FinanceRowItem {
     private Long id;
 
-    @NotBlank
+    @NotBlank(message = NOT_BLANK_MESSAGE)
     @Length(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
     private String description;
 
-    @NotNull
-    @DecimalMin(value = "1")
-    @Digits(integer = MAX_DIGITS, fraction = MAX_FRACTION)
+    @NotNull(message = NOT_BLANK_MESSAGE)
+    @DecimalMin(value = "1", message = VALUE_MUST_BE_HIGHER_MESSAGE)
+    @Digits(integer = MAX_DIGITS, fraction = MAX_FRACTION, message = MAX_DIGITS_MESSAGE)
     private BigDecimal cost;
 
     private String name;

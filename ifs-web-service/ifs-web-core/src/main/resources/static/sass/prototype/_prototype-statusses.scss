@@ -133,3 +133,26 @@ span.no{
 	@extend %icon-cross;
 	padding-left: 28px;
 }
+
+
+/*----- Assessor status ----*/
+
+.assessor-status{
+	@extend .cf;
+}
+
+@include media-down(mobile) {
+	
+	.assessor-status{
+
+		margin-bottom: 20px;
+
+		li{
+			width: 33%;
+			display: block;
+			float: left;
+		}
+
+	}
+
+}
