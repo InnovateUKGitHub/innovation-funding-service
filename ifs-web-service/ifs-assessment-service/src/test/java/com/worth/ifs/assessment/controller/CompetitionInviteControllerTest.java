@@ -155,6 +155,51 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
     }
 
     @Test
+    public void rejectInvite_noReason() throws Exception {
+        CompetitionInviteResource inviteResource = newCompetitionInviteResource().withCompetitionName("my competition").build();
+
+        when(competitionInviteRestService.getInvite("hash")).thenReturn(restSuccess(inviteResource));
+
+        RejectCompetitionForm expectedForm = new RejectCompetitionForm();
+        expectedForm.setRejectComment("comment");
+
+        MvcResult result = mockMvc.perform(post(restUrl + "{inviteHash}/reject", "hash")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("rejectComment", "comment"))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("form", expectedForm))
+                .andExpect(model().attribute("rejectionReasons", rejectionReasons))
+                .andExpect(model().attributeExists("model"))
+                .andExpect(view().name("assessor-competition-reject-confirm")).andReturn();
+
+        RejectCompetitionViewModel model = (RejectCompetitionViewModel) result.getModelAndView().getModel().get("model");
+
+        assertEquals("hash", model.getCompetitionInviteHash());
+        assertEquals("my competition", model.getCompetitionName());
+
+        verify(competitionInviteRestService).getInvite("hash");
+        verifyNoMoreInteractions(competitionInviteRestService);
+    }
+
+    @Test
+    public void rejectInvite_noReasonComment() throws Exception {
+        CompetitionRejectionResource competitionRejectionResource = new CompetitionRejectionResource(newRejectionReasonResource()
+                .with(id(1L))
+                .build(), null);
+
+        when(competitionInviteRestService.rejectInvite("hash", competitionRejectionResource)).thenReturn(restSuccess());
+
+        mockMvc.perform(post(restUrl + "{inviteHash}/reject", "hash")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("rejectReason", "1"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/invite/competition/hash/reject/thank-you"));
+
+        verify(competitionInviteRestService).rejectInvite("hash", competitionRejectionResource);
+        verifyNoMoreInteractions(competitionInviteRestService);
+    }
+
+    @Test
     public void rejectInvite_hashNotExists() throws Exception {
         CompetitionRejectionResource competitionRejectionResource = new CompetitionRejectionResource(newRejectionReasonResource()
                 .with(id(1L))

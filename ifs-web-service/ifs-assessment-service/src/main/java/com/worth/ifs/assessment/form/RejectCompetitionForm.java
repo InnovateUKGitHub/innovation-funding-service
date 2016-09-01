@@ -5,11 +5,14 @@ import com.worth.ifs.invite.resource.RejectionReasonResource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * Form field model for the competition rejection content
  */
 public class RejectCompetitionForm extends BaseBindingResultTarget {
 
+    @NotNull(message = "{validation.rejectcompetitionform.rejectReason.required}")
     private RejectionReasonResource rejectReason;
     private String rejectComment;
 

@@ -7,6 +7,7 @@ import com.worth.ifs.invite.resource.CompetitionRejectionResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Optional;
 
 /**
@@ -35,8 +36,8 @@ public class CompetitionInviteController {
     }
 
     @RequestMapping(value = "/rejectInvite/{inviteHash}", method = RequestMethod.POST)
-    public RestResult<Void> rejectInvite(@PathVariable String inviteHash, @RequestBody CompetitionRejectionResource rejection) {
-        return competitionInviteService.rejectInvite(inviteHash, rejection.getRejectionReasonResource(), Optional.ofNullable(rejection.getRejectionComment())).toPostResponse();
+    public RestResult<Void> rejectInvite(@PathVariable String inviteHash, @Valid @RequestBody CompetitionRejectionResource rejection) {
+        return competitionInviteService.rejectInvite(inviteHash, rejection.getRejectReason(), Optional.ofNullable(rejection.getRejectComment())).toPostResponse();
     }
 
     @RequestMapping(value = "/checkExistingUser/{inviteHash}", method = RequestMethod.GET)
