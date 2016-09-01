@@ -239,7 +239,7 @@ the user enters the funding level
     When the user enters text to a text field    id=cost-financegrantclaim    20
     focus    jQuery=.button:contains("Mark all as complete")
 
-Given the applicant changes the name of the application
+the applicant changes the name of the application
     Given the user clicks the button/link    link= Connected digital additive manufacturing
     And the user clicks the button/link    link= Application details
     And the user enters text to a text field    id=application_details-title    Assign test
