@@ -20,9 +20,9 @@ public class ProjectSpendProfileViewModel {
     private Long durationInMonths;
     private SpendProfileSummaryModel summary;
     private SpendProfileTableResource table;
-    private boolean markedAsComplete;
+    private Boolean markedAsComplete;
 
-    public ProjectSpendProfileViewModel(ProjectResource project, Long organisationId, SpendProfileTableResource table, SpendProfileSummaryModel summary, boolean markedAsComplete) {
+    public ProjectSpendProfileViewModel(ProjectResource project, Long organisationId, SpendProfileTableResource table, SpendProfileSummaryModel summary, Boolean markedAsComplete) {
         this.projectId = project.getId();
         this.organisationId = organisationId;
         this.projectName = project.getName();
@@ -81,11 +81,11 @@ public class ProjectSpendProfileViewModel {
         this.table = table;
     }
 
-    public boolean isMarkedAsComplete() {
+    public Boolean isMarkedAsComplete() {
         return markedAsComplete;
     }
 
-    public void setMarkedAsComplete(boolean markedAsComplete) {
+    public void setMarkedAsComplete(Boolean markedAsComplete) {
         this.markedAsComplete = markedAsComplete;
     }
 

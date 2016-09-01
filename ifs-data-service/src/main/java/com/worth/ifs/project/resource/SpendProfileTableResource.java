@@ -10,6 +10,8 @@ import java.util.Map;
 
 public class SpendProfileTableResource {
 
+    private Boolean markedAsComplete;
+
     /*
      * Dynamically holds the months for the duration of the project
      */
@@ -45,6 +47,14 @@ public class SpendProfileTableResource {
         this.eligibleCostPerCategoryMap = eligibleCostPerCategoryMap;
     }
 
+    public Boolean getMarkedAsComplete() {
+        return markedAsComplete;
+    }
+
+    public void setMarkedAsComplete(Boolean markedAsComplete) {
+        this.markedAsComplete = markedAsComplete;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -54,15 +64,20 @@ public class SpendProfileTableResource {
         SpendProfileTableResource that = (SpendProfileTableResource) o;
 
         return new EqualsBuilder()
+                .append(markedAsComplete, that.markedAsComplete)
                 .append(months, that.months)
                 .append(monthlyCostsPerCategoryMap, that.monthlyCostsPerCategoryMap)
+                .append(eligibleCostPerCategoryMap, that.eligibleCostPerCategoryMap)
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
+                .append(markedAsComplete)
                 .append(months)
+                .append(monthlyCostsPerCategoryMap)
+                .append(eligibleCostPerCategoryMap)
                 .toHashCode();
     }
 }

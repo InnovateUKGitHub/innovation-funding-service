@@ -111,6 +111,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
             table.setMonths(monthResources);
             table.setEligibleCostPerCategoryMap(eligibleCostsPerCategory);
             table.setMonthlyCostsPerCategoryMap(spendFiguresPerCategoryOrderedByMonth);
+            table.setMarkedAsComplete(spendProfile.isMarkedAsComplete());
             return serviceSuccess(table);
         });
     }
