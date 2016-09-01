@@ -44,10 +44,11 @@ public class CompetitionTypeControllerDocumentation extends BaseControllerMockMV
                 .andExpect(status().isOk())
                 .andDo(this.document.snippets(
                     responseFields(
-                            fieldWithPath("[].id").description("id of the competition typen"),
+                            fieldWithPath("[].id").description("id of the competition type"),
                             fieldWithPath("[].name").description("name of the competition type"),
                             fieldWithPath("[].competitions").description("competition ids that have this type"),
-                            fieldWithPath("[].stateAid").description("the competition id")
+                            fieldWithPath("[].stateAid").description("the competition id"),
+                            fieldWithPath("[].active").description("indicates if the competition type is active")
                     )
                 ));
     }
