@@ -209,9 +209,9 @@ Funding information server-side validations
 Funding information client-side validations
     [Documentation]    INFUND-2985
     [Tags]    HappyPath
-    When the user enters text to a text field    id=funder    FunderName
+    When the user enters text to a text field    id=funders0.funder    FunderName
     Then the user should not see the error any more    Please enter a funder name
-    And the user enters text to a text field    id=funderBudget    20000
+    And the user enters text to a text field    id=0-funderBudget    20000
     Then the user should not see the error any more    Please enter a budget
     When the user enters text to a text field    id=pafNumber    2016
     Then the user should not see the error any more    Please enter a PAF number
@@ -227,9 +227,9 @@ Funding informations calculations
     [Tags]    HappyPath
     When the user clicks the button/link    jQuery=Button:contains("+Add co-funder")
     and the user should see the element    jQuery=Button:contains("+Add co-funder")
-    Then the user should see the element    css=#co-funder-row-0
-    And the user enters text to a text field    id=0-funder    FunderName2
-    And the user enters text to a text field    id=0-funderBudget    1000
+    Then the user should see the element    css=#co-funder-row-1
+    And the user enters text to a text field    id=1-funder    FunderName2
+    And the user enters text to a text field    id=1-funderBudget    1000
     Then the total should be correct    £ 21,000
 
 Funding Information can be saved
