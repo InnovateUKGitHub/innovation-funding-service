@@ -2,6 +2,7 @@ package com.worth.ifs.assessment.controller;
 
 
 import com.worth.ifs.BaseControllerIntegrationTest;
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.repository.CompetitionRepository;
@@ -26,7 +27,6 @@ import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.invite.builder.RejectionReasonResourceBuilder.newRejectionReasonResource;
 import static com.worth.ifs.invite.domain.CompetitionParticipantRole.ASSESSOR;
 import static com.worth.ifs.invite.domain.ParticipantStatus.PENDING;
-import static com.worth.ifs.security.SecuritySetter.swapOutForUser;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.*;
 
@@ -234,7 +234,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
 
         RestResult<Void> serviceResult = controller.acceptInvite("hash");
         assertTrue(serviceResult.isFailure());
-        assertTrue(serviceResult.getFailure().is(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_UNOPENED_INVITE));
+        assertTrue(serviceResult.getFailure().is(new Error(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_UNOPENED_INVITE, "Connected digital additive manufacturing")));
     }
 
     @Test
@@ -262,7 +262,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
         RestResult<Void> acceptResult = controller.acceptInvite("hash");
 
         assertTrue(acceptResult.isFailure());
-        assertTrue(acceptResult.getFailure().is(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_ALREADY_REJECTED_INVITE));
+        assertTrue(acceptResult.getFailure().is(new Error(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_ALREADY_REJECTED_INVITE, "Connected digital additive manufacturing")));
     }
 
     @Test
@@ -315,7 +315,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
         RestResult<Void> rejectResult = controller.rejectInvite("hash", competitionRejectionResource);
 
         assertTrue(rejectResult.isFailure());
-        assertTrue(rejectResult.getFailure().is(COMPETITION_PARTICIPANT_CANNOT_REJECT_ALREADY_ACCEPTED_INVITE));
+        assertTrue(rejectResult.getFailure().is(new Error(COMPETITION_PARTICIPANT_CANNOT_REJECT_ALREADY_ACCEPTED_INVITE, "Connected digital additive manufacturing")));
     }
 
     @Test
@@ -340,7 +340,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
         RestResult<Void> serviceResult = controller.rejectInvite("hash", competitionRejectionResource);
 
         assertTrue(serviceResult.isFailure());
-        assertTrue(serviceResult.getFailure().is(COMPETITION_PARTICIPANT_CANNOT_REJECT_UNOPENED_INVITE));
+        assertTrue(serviceResult.getFailure().is(new Error(COMPETITION_PARTICIPANT_CANNOT_REJECT_UNOPENED_INVITE, "Connected digital additive manufacturing")));
     }
 
     @Test

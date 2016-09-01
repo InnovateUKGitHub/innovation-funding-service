@@ -15,12 +15,14 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
+import com.worth.ifs.commons.error.Error;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.JsonMappingUtil.fromJson;
+import static com.worth.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -100,25 +102,26 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
 
     @Test
     public void acceptInvite_notOpened() throws Exception {
-        acceptFailure(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_UNOPENED_INVITE);
+        acceptFailure(new Error(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_UNOPENED_INVITE, "Connected digital additive manufacturing"));
     }
 
     @Test
     public void acceptInvite_alreadyAccepted() throws Exception {
-        acceptFailure(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_ALREADY_ACCEPTED_INVITE);
+        acceptFailure(new Error(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_ALREADY_ACCEPTED_INVITE, "Connected digital additive manufacturing"));
     }
 
     @Test
     public void acceptInvite_alreadyRejected() throws Exception {
-        acceptFailure(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_ALREADY_REJECTED_INVITE);
+        acceptFailure(new Error(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_ALREADY_REJECTED_INVITE, "Connected digital additive manufacturing"));
     }
 
-    private void acceptFailure(CommonFailureKeys key) throws Exception {
-        when(competitionInviteService.acceptInvite("hash")).thenReturn(serviceFailure(key));
+    private void acceptFailure(Error expectedError) throws Exception {
+        when(competitionInviteService.acceptInvite("hash")).thenReturn(serviceFailure(expectedError));
 
         mockMvc.perform(post("/competitioninvite/acceptInvite/{inviteHash}", "hash")
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json(toJson(new RestErrorResponse(expectedError))));
 
         verify(competitionInviteService, times(1)).acceptInvite("hash");
     }
@@ -166,17 +169,17 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
 
     @Test
     public void rejectInvite_notOpened() throws Exception {
-        rejectFailure(COMPETITION_PARTICIPANT_CANNOT_REJECT_UNOPENED_INVITE);
+        rejectFailure(new Error(COMPETITION_PARTICIPANT_CANNOT_REJECT_UNOPENED_INVITE, "Connected digital additive manufacturing"));
     }
 
     @Test
     public void rejectInvite_alreadyAccepted() throws Exception {
-        rejectFailure(COMPETITION_PARTICIPANT_CANNOT_REJECT_ALREADY_ACCEPTED_INVITE);
+        rejectFailure(new Error(COMPETITION_PARTICIPANT_CANNOT_REJECT_ALREADY_ACCEPTED_INVITE, "Connected digital additive manufacturing"));
     }
 
     @Test
     public void rejectInvite_alreadyRejected() throws Exception {
-        rejectFailure(COMPETITION_PARTICIPANT_CANNOT_REJECT_ALREADY_REJECTED_INVITE);
+        rejectFailure(new Error(COMPETITION_PARTICIPANT_CANNOT_REJECT_ALREADY_REJECTED_INVITE, "Connected digital additive manufacturing"));
     }
 
     @Test
@@ -218,19 +221,20 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
         verify(competitionInviteService).checkExistingUser("hashNotExists");
     }
 
-    private void rejectFailure(CommonFailureKeys key) throws Exception {
+    private void rejectFailure(Error expectedError) throws Exception {
         RejectionReasonResource rejectionReasonResource = RejectionReasonResourceBuilder
                 .newRejectionReasonResource()
                 .withId(1L)
                 .build();
         CompetitionRejectionResource rejectionResource = new CompetitionRejectionResource(rejectionReasonResource, "too busy");
 
-        when(competitionInviteService.rejectInvite("hash", rejectionReasonResource, "too busy")).thenReturn(serviceFailure(key));
+        when(competitionInviteService.rejectInvite("hash", rejectionReasonResource, "too busy")).thenReturn(serviceFailure(expectedError));
         mockMvc.perform(
                 post("/competitioninvite/rejectInvite/{inviteHash}", "hash")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(rejectionResource))
-        ).andExpect(status().isBadRequest());
+                        .content(objectMapper.writeValueAsString(rejectionResource)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json(toJson(new RestErrorResponse(expectedError))));
 
         verify(competitionInviteService, times(1)).rejectInvite("hash", rejectionReasonResource, "too busy");
     }
