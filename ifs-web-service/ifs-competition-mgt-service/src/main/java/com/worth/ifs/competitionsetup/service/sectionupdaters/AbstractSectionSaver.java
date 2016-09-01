@@ -34,8 +34,6 @@ public abstract class AbstractSectionSaver {
         return Collections.emptyList();
     }
 
-
     protected  abstract List<Error> updateCompetitionResourceWithAutoSave(List<Error> errors, CompetitionResource competitionResource, String fieldName, String value) throws ParseException;
-
 
 }

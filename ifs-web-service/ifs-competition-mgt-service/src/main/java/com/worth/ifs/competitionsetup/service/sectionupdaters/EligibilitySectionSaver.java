@@ -111,8 +111,6 @@ public class EligibilitySectionSaver extends AbstractSectionSaver implements Com
 		return errors;
 	}
 
-
-
 	private void processResearchCategoryForAutoSave(String inputValue, CompetitionResource competitionResource) throws ParseException {
 		Long value = Long.parseLong(inputValue);
 		if (competitionResource.getResearchCategories().contains(value)) {
@@ -120,7 +118,6 @@ public class EligibilitySectionSaver extends AbstractSectionSaver implements Com
 		} else {
 			competitionResource.getResearchCategories().add(value);
 		}
-
 	}
 
 }
