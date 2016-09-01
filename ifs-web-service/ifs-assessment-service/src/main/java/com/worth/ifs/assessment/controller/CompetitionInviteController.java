@@ -85,9 +85,8 @@ public class CompetitionInviteController extends BaseController {
 
             RestResult<Void> updateResult = inviteRestService.rejectInvite(inviteHash, new CompetitionRejectionResource(form.getRejectReason(), form.getRejectComment()));
 
-            // TODO should the succeed be a redirect, e.g. GET competition/reject/thank-you instead?
             return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors()).
-                    failNowOrSucceedWith(failureView, () -> "assessor-competition-reject");
+                    failNowOrSucceedWith(failureView, () -> format("redirect:/invite/competition/%s/reject/thank-you", inviteHash));
         });
     }
 
@@ -96,6 +95,11 @@ public class CompetitionInviteController extends BaseController {
                                       @ModelAttribute("form") RejectCompetitionForm form,
                                       @PathVariable("inviteHash") String inviteHash) {
         return doViewRejectInvitationConfirm(model, inviteHash);
+    }
+
+    @RequestMapping(value = "competition/{inviteHash}/reject/thank-you", method = RequestMethod.GET)
+    public String rejectThankYou(@PathVariable("inviteHash") String inviteHash) {
+        return "assessor-competition-reject";
     }
 
     @ModelAttribute("rejectionReasons")
