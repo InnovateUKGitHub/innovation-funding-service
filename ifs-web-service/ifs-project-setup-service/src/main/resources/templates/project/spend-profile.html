@@ -55,18 +55,18 @@
             <tbody>
               <tr th:each="row : ${model.table.getMonthlyCostsPerCategoryMap()}">
                   <th scope="row" class="fix-left" th:text="${row.key}" />
-                  <td th:each="cost : ${row.value}" th:text="${cost}"/>
+                  <td th:each="cost : ${row.value}" th:text="${#numbers.formatInteger(cost,1,'NONE')}"/>
                   <td th:text="${model.table.eligibleCostPerCategoryMap.get(row.key)}"/>
               </tr>
             </tbody>
           </table>
           <!--/* editable spend-profile table */-->
           <!--/* todo: organisationId needs to be dynamic, but is now not available in the view */-->
-          <form method="post" th:if="${form}" th:action="@{/project/{projectId}/partner-organisation/31/spend-profile/edit(projectId=${model.projectId})" >
+          <form method="post" th:if="${form}" th:action="@{/project/{projectId}/partner-organisation/31/spend-profile/edit(projectId=${model.projectId})}" >
             <table>
               <colgroup >
                   <col />
-                  <th:block th:each="month : ${form.table.getMonths()}">
+                  <th:block th:each="month : ${model.table.getMonths()}">
                     <col th:class="${#temporals.month(month.localDate) == 3 ? 'year':''}" />
                   </th:block>
                   <col class="total" />
@@ -74,7 +74,7 @@
               <thead>
                 <tr>
                     <th scope="row" class="fix-left" id="month">Month</th>
-                    <th:block th:each="month, stats : ${form.table.getMonths()}">
+                    <th:block th:each="month,stats : ${model.table.getMonths()}">
                       <th scope="col" th:text="${#temporals.format(month.localDate, 'MMM yyyy')}" th:id="${'month'+stats.index}" />
                     </th:block>
                     <th scope="col" id="total">Total</th>
@@ -85,16 +85,20 @@
                     <th scope="row" class="fix-left" th:text="${row.key}" th:id="${#strings.replace(row.key,' ','-')}"/>
                     <td th:each="cost, status : ${row.value}">
                       <input class="form-control"
-                             th:field="*{form.table.monthlyCostsPerCategoryMap[__${row.key}__][__${status.index}__]}"
-                             th:id="${#strings.replace(row.key,' ','-')+'-'+status.index}" />
+                             th:attr="aria-labelledby=${#strings.replace(row.key,' ','-')+' month'+status.index}"
+                             th:name="${'table.monthlyCostsPerCategoryMap['+row.key+']['+status.index+']'}"
+                             th:id="${'row-'+#strings.replace(row.key,' ','-')+'-'+status.index}"
+                             th:value="${#numbers.formatInteger(cost,1,'NONE')}"
+                             type="number" />
                     </td>
-                    <td th:text="${model.table.eligibleCostPerCategoryMap.get(row.key)}"/>
+                    <td th:text="${#numbers.formatInteger(model.table.eligibleCostPerCategoryMap.get(row.key),1,'NONE')}"
+                        data-calculation-operations="+"
+                        th:attr="data-calculation-fields=${'[id*=row-'+#strings.replace(row.key,' ','-')+']'}" />
                 </tr>
               </tbody>
             </table>
-            <button>test</button>
+            <button class="button ">Save</button>
           </form>
-
       </div>
       <div class="flex-table-after"></div>
     </div>

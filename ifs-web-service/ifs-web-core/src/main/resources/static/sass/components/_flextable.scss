@@ -4,7 +4,10 @@
   margin: 0 auto;
   position: relative;
 }
-
+.spend-profile-table input {
+  text-align:right;
+  min-width:4em;
+}
 .spend-profile-table th[scope="col"],
 .spend-profile-table td{
   text-align:right;
