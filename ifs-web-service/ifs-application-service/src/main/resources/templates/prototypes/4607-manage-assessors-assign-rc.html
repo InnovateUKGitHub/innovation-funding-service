@@ -18,7 +18,7 @@
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
-	<div th:include="prototypes/fragments/manage-assessors :: prototype-assessor-assign" th:remove="tag" />
+	<div th:include="prototypes/fragments/manage-assessors :: prototype-assessor-assign" th:with="site=rc" th:remove="tag" />
 
 	
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
