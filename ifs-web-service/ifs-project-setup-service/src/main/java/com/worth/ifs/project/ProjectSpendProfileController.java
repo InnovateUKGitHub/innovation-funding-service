@@ -81,40 +81,44 @@ public class ProjectSpendProfileController {
                                    @SuppressWarnings("unused") BindingResult bindingResult,
                                    @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        return editOrMarkAsCompleteSpendProfile(model, bindingResult, form, projectId, organisationId, false, "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile");
+        return editSpendProfile(model, bindingResult, form, projectId, organisationId, "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile");
     }
 
-    @RequestMapping(value = "/confirm", method = POST)
+    @RequestMapping(value = "/complete", method = POST)
     public String markAsCompleteSpendProfile(Model model,
                                    @PathVariable("projectId") final Long projectId,
                                    @PathVariable("organisationId") final Long organisationId,
-                                   @ModelAttribute(FORM_ATTR_NAME) SpendProfileForm form,
-                                   @SuppressWarnings("unused") BindingResult bindingResult,
                                    @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        return editOrMarkAsCompleteSpendProfile(model, bindingResult, form, projectId, organisationId, true, "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile");
+        return markSpendProfileComplete(model, projectId, organisationId, "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile");
     }
 
-    private String editOrMarkAsCompleteSpendProfile(Model model,
-                                                    BindingResult bindingResult,
-                                                    SpendProfileForm form,
-                                                    Long projectId,
-                                                    Long organisationId,
-                                                    boolean isMarkAsComplete,
-                                                    String successView) {
+    private String markSpendProfileComplete(Model model,
+                                    Long projectId,
+                                    Long organisationId,
+                                    String successView) {
+        buildSpendProfileViewModel(model, projectId, organisationId);
 
+        ServiceResult<Void> result = projectFinanceService.markSpendProfileComplete(projectId, organisationId);
+        if (result.isFailure()) {
+            // If this model attribute is set, it means there are some categories where the totals don't match
+            model.addAttribute("errorCategories", result.getFailure().getErrors());
+        }
+
+        return successView;
+    }
+
+    private String editSpendProfile(Model model, BindingResult bindingResult, SpendProfileForm form, Long projectId, Long organisationId, String successView) {
         buildSpendProfileViewModel(model, projectId, organisationId);
         ValidationHandler validationHandler = ValidationHandler.newBindingResultHandler(bindingResult);
         new SpendProfileCostValidator().validate(form.getTable(), bindingResult);
 
         if (validationHandler.hasErrors()) {
-            // TODO: build failure view
             return "project/spend-profile";
         }
 
-        ServiceResult<Void> result = isMarkAsComplete ? projectFinanceService.markSpendProfileComplete(projectId, organisationId, form.getTable()) : projectFinanceService.saveSpendProfile(projectId, organisationId, form.getTable());
+        ServiceResult<Void> result = projectFinanceService.saveSpendProfile(projectId, organisationId, form.getTable());
         if (result.isFailure()) {
-
             // If this model attribute is set, it means there are some categories where the totals don't match
             model.addAttribute("errorCategories", result.getFailure().getErrors());
         }

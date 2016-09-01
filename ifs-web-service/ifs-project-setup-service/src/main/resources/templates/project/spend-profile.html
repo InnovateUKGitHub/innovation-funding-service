@@ -88,7 +88,9 @@
         <p class="extra-margin">If required, you can edit this spend profile. It will not be possible to submit the spend profile to Innovate UK until the section is marked as complete.</p>
         <a class="button button-secondary" th:href="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/edit(projectId=${model.projectId},organisationId=${model.organisationId})}">Edit spend profile</a>
         <p class="extra-margin">When you are satisfied with the spend profile, mark the section as complete. This will allow you to submit the spend profile for the project to Innovate UK. You can still return to edit this page before you choose to submit.</p>
-        <a class="button" th:href="@{/complete}">Mark as complete</a>
+          <form method="post" th:action="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/complete(projectId=${model.projectId},organisationId=${model.organisationId})}" >
+                <button class="button" name="mark-as-complete">Mark as complete</button>
+          </form>
       </div>
     </th:block>
     <!--/*

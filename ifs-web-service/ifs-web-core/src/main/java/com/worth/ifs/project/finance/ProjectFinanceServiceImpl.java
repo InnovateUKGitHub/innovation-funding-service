@@ -41,7 +41,7 @@ public class ProjectFinanceServiceImpl implements ProjectFinanceService {
     }
 
     @Override
-    public ServiceResult<Void> markSpendProfileComplete(Long projectId, Long organisationId, SpendProfileTableResource table) {
-        return projectFinanceRestService.markSpendProfileComplete(projectId, organisationId, table).toServiceResult();
+    public ServiceResult<Void> markSpendProfileComplete(Long projectId, Long organisationId) {
+        return projectFinanceRestService.markSpendProfileComplete(projectId, organisationId).toServiceResult();
     }
 }
