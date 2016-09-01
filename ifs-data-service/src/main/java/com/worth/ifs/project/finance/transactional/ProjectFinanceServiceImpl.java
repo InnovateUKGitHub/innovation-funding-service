@@ -145,8 +145,8 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     @Override
     public ServiceResult<Void> markSpendProfileComplete(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
         SpendProfileTableResource table = getSpendProfileTable(projectOrganisationCompositeId).getSuccessObject();
-        return validateSpendProfileCosts(table)
-                .andOnSuccess(() -> validateSpendProfileTotals(table))
+        //validateSpendProfileCosts(table).andOnSuccess
+        return validateSpendProfileTotals(table)
                 .andOnSuccess(() -> saveSpendProfileData(projectOrganisationCompositeId, table, true));
     }
 
