@@ -81,7 +81,7 @@ public class ProjectSpendProfileController {
                                    @SuppressWarnings("unused") BindingResult bindingResult,
                                    @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        return editOrMarkAsCompleteSpendProfile(model, bindingResult, form, projectId, organisationId, false, "project/spend-profile");
+        return editOrMarkAsCompleteSpendProfile(model, bindingResult, form, projectId, organisationId, false, "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile");
     }
 
     @RequestMapping(value = "/confirm", method = POST)
@@ -92,7 +92,7 @@ public class ProjectSpendProfileController {
                                    @SuppressWarnings("unused") BindingResult bindingResult,
                                    @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        return editOrMarkAsCompleteSpendProfile(model, bindingResult, form, projectId, organisationId, true, "project/spend-profile");
+        return editOrMarkAsCompleteSpendProfile(model, bindingResult, form, projectId, organisationId, true, "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile");
     }
 
     private String editOrMarkAsCompleteSpendProfile(Model model,
@@ -104,12 +104,11 @@ public class ProjectSpendProfileController {
                                                     String successView) {
 
         buildSpendProfileViewModel(model, projectId, organisationId);
-
-        //BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(form.getTable(), "");
         ValidationHandler validationHandler = ValidationHandler.newBindingResultHandler(bindingResult);
         new SpendProfileCostValidator().validate(form.getTable(), bindingResult);
 
         if (validationHandler.hasErrors()) {
+            // TODO: build failure view
             return "project/spend-profile";
         }
 
@@ -118,10 +117,6 @@ public class ProjectSpendProfileController {
 
             // If this model attribute is set, it means there are some categories where the totals don't match
             model.addAttribute("errorCategories", result.getFailure().getErrors());
-
-            if (isMarkAsComplete) {
-                return "project/spend-profile";
-            }
         }
 
         return successView;
