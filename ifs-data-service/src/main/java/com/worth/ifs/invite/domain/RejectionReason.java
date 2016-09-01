@@ -25,7 +25,8 @@ public class RejectionReason implements Comparable<RejectionReason> {
     @NotNull
     private int priority;
 
-    public RejectionReason() {
+    RejectionReason() {
+        // no-arg constructor
     }
 
     public RejectionReason(String reason, boolean active, int priority) {

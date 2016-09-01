@@ -43,7 +43,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
     private CompetitionInviteRepository competitionInviteRepository;
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
     private CompetitionParticipantRepository competitionParticipantRepository;
