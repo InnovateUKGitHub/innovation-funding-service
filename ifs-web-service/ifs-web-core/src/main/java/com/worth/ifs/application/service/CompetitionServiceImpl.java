@@ -121,8 +121,7 @@ public class CompetitionServiceImpl implements CompetitionService {
 
     @Override
     public String generateCompetitionCode(Long competitionId, LocalDateTime openingDate) {
-        String competitionCode = competitionsRestService.generateCompetitionCode(competitionId, openingDate).getSuccessObjectOrThrowException();
-        return competitionCode;
+        return competitionsRestService.generateCompetitionCode(competitionId, openingDate).getSuccessObjectOrThrowException();
     }
 
     @Override
