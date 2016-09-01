@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.invite.constant.InviteStatus.OPENED;
@@ -89,13 +90,12 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
         return competitionInviteRepository.save(invite.open());
     }
 
-
     private ServiceResult<CompetitionParticipant> getParticipantByInviteHash(String inviteHash) {
         return find(competitionParticipantRepository.getByInviteHash(inviteHash), notFoundError(CompetitionParticipant.class, inviteHash));
     }
 
     private ServiceResult<CompetitionParticipant> accept(CompetitionParticipant participant) {
-        if (participant.getInvite().get().getStatus() != OPENED) {
+        if (participant.getInvite().getStatus() != OPENED) {
             return ServiceResult.serviceFailure(new Error(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_UNOPENED_INVITE, getInviteCompetitionName(participant)));
         } else if (participant.getStatus() == ACCEPTED) {
             return ServiceResult.serviceFailure(new Error(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_ALREADY_ACCEPTED_INVITE, getInviteCompetitionName(participant)));
@@ -107,7 +107,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     }
 
     private ServiceResult<CompetitionParticipant> reject(CompetitionParticipant participant, RejectionReason rejectionReason, Optional<String> rejectionComment) {
-        if (participant.getInvite().get().getStatus() != OPENED) {
+        if (participant.getInvite().getStatus() != OPENED) {
             return ServiceResult.serviceFailure(new Error(COMPETITION_PARTICIPANT_CANNOT_REJECT_UNOPENED_INVITE, getInviteCompetitionName(participant)));
         } else if (participant.getStatus() == ACCEPTED) {
             return ServiceResult.serviceFailure(new Error(COMPETITION_PARTICIPANT_CANNOT_REJECT_ALREADY_ACCEPTED_INVITE, getInviteCompetitionName(participant)));
@@ -123,6 +123,6 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     }
 
     private String getInviteCompetitionName(CompetitionParticipant participant) {
-        return participant.getInvite().get().getTarget().getName();
+        return participant.getInvite().getTarget().getName();
     }
 }

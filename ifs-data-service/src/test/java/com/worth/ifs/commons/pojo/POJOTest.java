@@ -2,6 +2,7 @@ package com.worth.ifs.commons.pojo;
 
 import com.openpojo.reflection.PojoClass;
 import com.openpojo.reflection.PojoClassFilter;
+import com.openpojo.reflection.filters.FilterEnum;
 import com.openpojo.reflection.impl.PojoClassFactory;
 import com.openpojo.validation.Validator;
 import com.openpojo.validation.ValidatorBuilder;
@@ -39,11 +40,7 @@ import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.invite.resource.RejectionReasonResource;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
 import com.worth.ifs.project.domain.Project;
-import com.worth.ifs.project.resource.MonitoringOfficerResource;
-import com.worth.ifs.project.resource.ProjectResource;
-import com.worth.ifs.project.resource.ProjectUserResource;
-import com.worth.ifs.project.resource.SpendProfileResource;
-import com.worth.ifs.project.resource.SpendProfileTableResource;
+import com.worth.ifs.project.resource.*;
 import com.worth.ifs.token.domain.Token;
 import com.worth.ifs.token.resource.TokenResource;
 import com.worth.ifs.user.domain.OrganisationType;
@@ -58,7 +55,7 @@ import java.util.List;
 
 public class POJOTest {
     // Configured for expectation, so we know when a class gets added or removed.
-    private static final int EXPECTED_RESOURCES = 36;
+    private static final int EXPECTED_RESOURCES = 39;
 
     // The package to test
     private static final String POJO_PACKAGE = "com.worth.ifs";
@@ -134,7 +131,7 @@ public class POJOTest {
 
     @Test
     public void testPojoStructureAndBehavior() {
-        validator.validateRecursively(POJO_PACKAGE, new FilterPackages(classesToTest));
+        validator.validateRecursively(POJO_PACKAGE, new FilterPackages(classesToTest), new FilterEnum());
     }
 
     private static class FilterPackages implements  PojoClassFilter {

@@ -63,7 +63,7 @@ public class CompetitionParticipantTest {
         competitionParticipant.reject(rejectionReason, Optional.of("too busy"));
         assertEquals(ParticipantStatus.REJECTED, competitionParticipant.getStatus());
         assertEquals(rejectionReason, competitionParticipant.getRejectionReason());
-        assertEquals("too busy", competitionParticipant.getRejectionReasonComment().get());
+        assertEquals("too busy", competitionParticipant.getRejectionReasonComment());
     }
 
     @Test(expected = IllegalStateException.class)
@@ -109,7 +109,7 @@ public class CompetitionParticipantTest {
         competitionParticipant.reject(rejectionReason, Optional.of(""));
         assertEquals(ParticipantStatus.REJECTED, competitionParticipant.getStatus());
         assertEquals(rejectionReason, competitionParticipant.getRejectionReason());
-        assertEquals("", competitionParticipant.getRejectionReasonComment().get());
+        assertEquals("", competitionParticipant.getRejectionReasonComment());
     }
 
     @Test
@@ -119,6 +119,6 @@ public class CompetitionParticipantTest {
         competitionParticipant.reject(rejectionReason, empty());
         assertEquals(ParticipantStatus.REJECTED, competitionParticipant.getStatus());
         assertEquals(rejectionReason, competitionParticipant.getRejectionReason());
-        assertFalse(competitionParticipant.getRejectionReasonComment().isPresent());
+        assertNull(competitionParticipant.getRejectionReasonComment());
     }
 }

@@ -46,6 +46,9 @@ import com.worth.ifs.finance.repository.FinanceRowRepository;
 import com.worth.ifs.form.repository.FormInputRepository;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
 import com.worth.ifs.form.transactional.FormInputService;
+import com.worth.ifs.invite.mapper.CompetitionParticipantMapper;
+import com.worth.ifs.invite.mapper.CompetitionParticipantRoleMapper;
+import com.worth.ifs.invite.mapper.ParticipantStatusMapper;
 import com.worth.ifs.invite.mapper.RejectionReasonMapper;
 import com.worth.ifs.invite.repository.*;
 import com.worth.ifs.invite.transactional.InviteProjectService;
@@ -55,13 +58,13 @@ import com.worth.ifs.notifications.service.NotificationService;
 import com.worth.ifs.organisation.repository.OrganisationAddressRepository;
 import com.worth.ifs.organisation.transactional.OrganisationService;
 import com.worth.ifs.project.finance.repository.SpendProfileRepository;
+import com.worth.ifs.project.finance.transactional.ProjectFinanceService;
 import com.worth.ifs.project.mapper.MonitoringOfficerMapper;
 import com.worth.ifs.project.mapper.ProjectMapper;
 import com.worth.ifs.project.mapper.ProjectUserMapper;
 import com.worth.ifs.project.repository.MonitoringOfficerRepository;
 import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.project.repository.ProjectUserRepository;
-import com.worth.ifs.project.finance.transactional.ProjectFinanceService;
 import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.sil.experian.service.SilExperianEndpoint;
 import com.worth.ifs.token.repository.TokenRepository;
@@ -199,6 +202,15 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected CompetitionInviteMapper competitionInviteMapperMock;
+
+    @Mock
+    protected CompetitionParticipantMapper competitionParticipantMapperMock;
+
+    @Mock
+    protected CompetitionParticipantRoleMapper competitionParticipantRoleMapperMock;
+
+    @Mock
+    protected ParticipantStatusMapper participantStatusMapperMock;
 
     @Mock
     protected InviteProjectRepository inviteProjectRepositoryMock;

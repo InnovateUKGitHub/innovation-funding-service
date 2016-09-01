@@ -53,7 +53,6 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
 
         when(competitionInviteRepositoryMock.getByHash("inviteHash")).thenReturn(competitionInvite);
 
-
         when(competitionInviteRepositoryMock.save(same(competitionInvite))).thenReturn(competitionInvite);
         when(competitionInviteMapperMock.mapToResource(same(competitionInvite))).thenReturn(expected);
 
@@ -155,7 +154,7 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
 
     @Test
     public void acceptInvite_notOpened() {
-        assertEquals(CREATED, competitionParticipant.getInvite().get().getStatus());
+        assertEquals(CREATED, competitionParticipant.getInvite().getStatus());
         assertEquals(ParticipantStatus.PENDING, competitionParticipant.getStatus());
 
         ServiceResult<Void> serviceResult = competitionInviteService.acceptInvite("inviteHash");
@@ -238,7 +237,7 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
 
         assertTrue(serviceResult.isSuccess());
         assertEquals(ParticipantStatus.REJECTED, competitionParticipant.getStatus());
-        assertEquals("too busy", competitionParticipant.getRejectionReasonComment().get());
+        assertEquals("too busy", competitionParticipant.getRejectionReasonComment());
 
         InOrder inOrder = inOrder(competitionParticipantRepositoryMock, rejectionReasonRepositoryMock);
         inOrder.verify(rejectionReasonRepositoryMock, calls(1)).findOne(1L);
@@ -270,7 +269,7 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
 
     @Test
     public void rejectInvite_notOpened() {
-        assertEquals(CREATED, competitionParticipant.getInvite().get().getStatus());
+        assertEquals(CREATED, competitionParticipant.getInvite().getStatus());
         assertEquals(ParticipantStatus.PENDING, competitionParticipant.getStatus());
 
         RejectionReasonResource rejectionReasonResource = RejectionReasonResourceBuilder
@@ -393,7 +392,7 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
         assertTrue(serviceResult.isSuccess());
 
         assertEquals(ParticipantStatus.REJECTED, competitionParticipant.getStatus());
-        assertEquals("", competitionParticipant.getRejectionReasonComment().get());
+        assertEquals("", competitionParticipant.getRejectionReasonComment());
 
         InOrder inOrder = inOrder(competitionParticipantRepositoryMock, rejectionReasonRepositoryMock);
         inOrder.verify(rejectionReasonRepositoryMock, calls(1)).findOne(1L);

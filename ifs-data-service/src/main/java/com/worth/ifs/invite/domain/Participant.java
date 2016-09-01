@@ -4,8 +4,8 @@ import com.worth.ifs.user.domain.User;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import javax.persistence.*;
-import java.util.Optional;
+import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
 
 /**
  * A Participant in a {@link ProcessActivity}.
@@ -28,7 +28,7 @@ public abstract class Participant<P extends ProcessActivity, I extends Invite<P,
 
     public abstract P getProcess();
 
-    public abstract Optional<I> getInvite();
+    public abstract I getInvite();
 
     public abstract R getRole();
 

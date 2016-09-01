@@ -4,18 +4,21 @@ import com.worth.ifs.BaseRepositoryIntegrationTest;
 import com.worth.ifs.assessment.builder.CompetitionInviteBuilder;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.repository.CompetitionRepository;
-import com.worth.ifs.invite.constant.InviteStatus;
 import com.worth.ifs.invite.domain.*;
 import com.worth.ifs.invite.repository.CompetitionParticipantRepository;
 import com.worth.ifs.invite.repository.RejectionReasonRepository;
+import com.worth.ifs.user.domain.User;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Optional;
 
+import java.util.List;
+
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.invite.constant.InviteStatus.OPENED;
+import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -67,11 +70,11 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         assertEquals(CompetitionParticipantRole.ASSESSOR, retrievedParticipant.getRole());
         assertEquals(ParticipantStatus.PENDING, retrievedParticipant.getStatus());
 
-        CompetitionInvite retrievedInvite = retrievedParticipant.getInvite().get();
+        CompetitionInvite retrievedInvite = retrievedParticipant.getInvite();
         assertEquals("name1", retrievedInvite.getName());
         assertEquals("tom1@poly.io", retrievedInvite.getEmail());
         assertEquals("hash", retrievedInvite.getHash());
-        assertEquals(savedParticipant.getInvite().get().getId(), retrievedInvite.getId());
+        assertEquals(savedParticipant.getInvite().getId(), retrievedInvite.getId());
 
         Competition retrievedCompetition = retrievedParticipant.getProcess();
         assertEquals(competition.getName(), retrievedCompetition.getName());
@@ -137,5 +140,31 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
         assertNotNull(retrievedParticipant);
         assertEquals(savedParticipant, retrievedParticipant);
+    }
+
+    @Test
+    public void getByUserRoleStatus() {
+        CompetitionInvite invite = new CompetitionInvite("name1", "tom1@poly.io", "hash", competition);
+        User user = newUser()
+                .withid(3L)
+                .withFirstName("Professor")
+                .build();
+        CompetitionParticipant savedParticipant = repository.save( new CompetitionParticipant(competition, user, invite));
+        flushAndClearSession();
+
+        List<CompetitionParticipant> retrievedParticipants = repository.getByUserIdAndRoleAndStatus(user.getId(),CompetitionParticipantRole.ASSESSOR, ParticipantStatus.PENDING );
+
+        assertNotNull(retrievedParticipants);
+        assertEquals(1,retrievedParticipants.size());
+        assertEquals(savedParticipant, retrievedParticipants.get(0));
+
+        assertEquals(CompetitionParticipantRole.ASSESSOR, retrievedParticipants.get(0).getRole());
+        assertEquals(ParticipantStatus.PENDING, retrievedParticipants.get(0).getStatus());
+
+        Competition retrievedCompetition = retrievedParticipants.get(0).getProcess();
+        assertEquals(competition.getName(), retrievedCompetition.getName());
+
+        User retrievedUser = retrievedParticipants.get(0).getUser();
+        assertEquals(user.getFirstName(),retrievedUser.getFirstName());
     }
 }

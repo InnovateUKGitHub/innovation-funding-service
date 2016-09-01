@@ -2,7 +2,6 @@ package com.worth.ifs.invite.domain;
 
 
 import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.invite.constant.InviteStatus;
 import com.worth.ifs.user.domain.User;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -48,7 +47,7 @@ public class CompetitionParticipant extends Participant<Competition, Competition
     @Column(name = "competition_role_id")
     private CompetitionParticipantRole role;
 
-    CompetitionParticipant() {
+    public CompetitionParticipant() {
         // no-arg constructor
         this.competition = null;
     }
@@ -79,8 +78,8 @@ public class CompetitionParticipant extends Participant<Competition, Competition
     }
 
     @Override
-    public Optional<CompetitionInvite> getInvite() {
-        return Optional.ofNullable(invite);
+    public CompetitionInvite getInvite() {
+        return invite;
     }
 
     @Override
@@ -97,12 +96,12 @@ public class CompetitionParticipant extends Participant<Competition, Competition
         return rejectionReason;
     }
 
-    public Optional<String> getRejectionReasonComment() {
-        return Optional.ofNullable(rejectionReasonComment);
+    public String getRejectionReasonComment() {
+        return rejectionReasonComment;
     }
 
     public CompetitionParticipant accept() {
-        if (getInvite().get().getStatus() != OPENED)
+        if (getInvite().getStatus() != OPENED)
             throw new IllegalStateException("Cannot accept a CompetitionParticipant that hasn't been opened");
 
         if (getStatus() == REJECTED)
@@ -119,7 +118,7 @@ public class CompetitionParticipant extends Participant<Competition, Competition
         if (rejectionReason == null) throw new NullPointerException("rejectionReason cannot be null");
         if (rejectionComment == null) throw new NullPointerException("rejectionComment cannot be null");
 
-        if (getInvite().get().getStatus() != OPENED)
+        if (getInvite().getStatus() != OPENED)
             throw new IllegalStateException("Cannot accept a CompetitionParticipant that hasn't been opened");
 
         if (getStatus() == ACCEPTED)
