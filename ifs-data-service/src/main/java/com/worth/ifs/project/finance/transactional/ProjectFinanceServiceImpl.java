@@ -31,7 +31,6 @@ import static com.worth.ifs.project.finance.domain.CostTimePeriod.TimeUnit.MONTH
 import static com.worth.ifs.util.CollectionFunctions.*;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static java.math.BigDecimal.ROUND_HALF_UP;
-import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -72,17 +71,22 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         return find(spendProfile(projectOrganisationCompositeId.getProjectId(), projectOrganisationCompositeId.getOrganisationId()),
                 project(projectOrganisationCompositeId.getProjectId())).andOnSuccess((spendProfile, project) -> {
 
+            List<CostCategory> costCategories = spendProfile.getCostCategoryType().getCostCategories();
+
             CostGroup eligibleCosts = spendProfile.getEligibleCosts();
             CostGroup spendProfileFigures = spendProfile.getSpendProfileFigures();
 
             Map<String, BigDecimal> eligibleCostsPerCategory =
-                    simpleToMap(eligibleCosts.getCosts(), c -> c.getCostCategory().get().getName(), Cost::getValue);
+                    simpleToLinkedMap(
+                            costCategories,
+                            CostCategory::getName,
+                            category -> findSingleMatchingCostByCategory(eligibleCosts, category).getValue());
 
-            Map<CostCategory, List<Cost>> spendProfileCostsPerCategory =
-                    spendProfileFigures.getCosts().stream().collect(groupingBy(c -> c.getCostCategory().get()));
-
-            Map<String, List<Cost>> spendFiguresPerCategory =
-                    simpleMapKey(spendProfileCostsPerCategory, CostCategory::getName);
+            Map<String, List<Cost>> spendProfileCostsPerCategory =
+                    simpleToLinkedMap(
+                            costCategories,
+                            CostCategory::getName,
+                            category -> findMultipleMatchingCostsByCategory(spendProfileFigures, category));
 
             LocalDate startDate = spendProfile.getProject().getTargetStartDate();
             int durationInMonths = spendProfile.getProject().getDurationInMonths().intValue();
@@ -91,7 +95,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
             List<LocalDateResource> monthResources = simpleMap(months, LocalDateResource::new);
 
             Map<String, List<BigDecimal>> spendFiguresPerCategoryOrderedByMonth =
-                    simpleMapValue(spendFiguresPerCategory, costs -> orderCostsByMonths(costs, months, project.getTargetStartDate()));
+                    simpleLinkedMapValue(spendProfileCostsPerCategory, costs -> orderCostsByMonths(costs, months, project.getTargetStartDate()));
 
             SpendProfileTableResource table = new SpendProfileTableResource();
             table.setMonths(monthResources);
@@ -99,6 +103,14 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
             table.setMonthlyCostsPerCategoryMap(spendFiguresPerCategoryOrderedByMonth);
             return serviceSuccess(table);
         });
+    }
+
+    private List<Cost> findMultipleMatchingCostsByCategory(CostGroup spendProfileFigures, CostCategory category) {
+        return simpleFilter(spendProfileFigures.getCosts(), f -> f.getCostCategory().get().equals(category));
+    }
+
+    private Cost findSingleMatchingCostByCategory(CostGroup eligibleCosts, CostCategory category) {
+        return simpleFindFirst(eligibleCosts.getCosts(), f -> f.getCostCategory().get().equals(category)).get();
     }
 
     @Override

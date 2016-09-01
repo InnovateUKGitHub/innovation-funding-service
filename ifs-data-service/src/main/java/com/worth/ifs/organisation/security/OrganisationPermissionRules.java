@@ -92,6 +92,11 @@ public class OrganisationPermissionRules {
         return isSystemRegistrationUser(user);
     }
 
+    @PermissionRule(value = "UPDATE", description = "A project finance user can update any Organisation")
+    public boolean projectFinanceUserCanUpdateAnyOrganisation(OrganisationResource organisation, UserResource user) {
+        return isProjectFinanceUser(user);
+    }
+
     private boolean isMemberOfOrganisation(OrganisationResource organisation, UserResource user) {
         return organisation.getUsers() != null && organisation.getUsers().contains(user.getId());
     }

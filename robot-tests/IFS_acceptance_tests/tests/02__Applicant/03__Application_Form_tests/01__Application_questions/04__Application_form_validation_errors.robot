@@ -79,9 +79,9 @@ Duration field client side
     [Setup]    Run keywords    the user enters text to a text field    id=application_details-title    Robot test application
     ...    AND    the applicant inserts a valid date
     When the user enters text to a text field    id=application_details-duration    0
-    Then the user should see an error    Please enter a valid duration between 1 and 36 months
+    Then the user should see an error    Your project should last between 1 and 36 months
     When the user enters text to a text field    id=application_details-duration    -1
-    Then the user should see an error    Please enter a valid duration between 1 and 36 months
+    Then the user should see an error    Your project should last between 1 and 36 months
     When the user enters text to a text field    id=application_details-duration    ${EMPTY}
     Then the user should see an error    Please enter a valid value
     And the user enters text to a text field    id=application_details-duration    15
@@ -102,12 +102,11 @@ Application details server side
     And the user should see an error    Please enter a future date
     And the user should see an error    Your project should last between 1 and 36 months
     And the user should see the element    css=.error-summary-list
-    [Teardown]    And the user enters text to a text field    id=application_details-title    Robot test application
+    [Teardown]    the user enters text to a text field    id=application_details-title    Robot test application
 
 Empty text area
     [Documentation]    INFUND-43
-    [Tags]    Pending
-    # Pending INFUND-4462
+    [Tags]
     Given the user clicks the button/link    css=.pagination-part-title
     When the applicant clears the text area of the "Project Summary"
     When the user clicks the button/link    jQuery=Button:contains("Mark as complete")
@@ -146,7 +145,7 @@ the applicant clears the text area of the "Project Summary"
     Clear Element Text    css=#form-input-11 .editor
     Press Key    css=#form-input-11 .editor    \\8
     Focus    css=.app-submit-btn
-    Click Element    css=.fa-bold
+    #Click Element    css=.fa-bold
     Sleep    300ms
 
 Applicant goes to the application details page of the Robot application

@@ -26,8 +26,8 @@ Log in create a new invite application invite academic collaborators and accept 
     ...    AND    the user closes the browser
 
 new account complete all but one
-    create new account for submitting
-    create new submit application
+    Run keyword if    ${smoke_test}!=1    create new account for submitting
+    Run keyword if    ${smoke_test}!=1    create new submit application
     the user marks every section but one as complete
 
 create new account for submitting
@@ -46,9 +46,12 @@ create new account for submitting
     And the user fills the create account form    Temur    Ketsbaia
     When the user opens the mailbox and verifies the email from
     And the user clicks the button/link    jQuery=.button:contains("Sign in")
-    Then Guest user log-in    ${test_mailbox_one}+submit@gmail.com    Passw0rd123
+
 
 the user marks every section but one as complete
+    Guest user log-in    ${submit_test_email}    Passw0rd123
+    the user navigates to the page    ${server}
+    the user clicks the button/link    link=${application_name}
     the user clicks the button/link    link=Project summary
     the user marks the section as complete    11
     the user marks the section as complete    12
@@ -96,7 +99,7 @@ create new submit application
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     And the user clicks the button/link    jQuery=.button:contains("Begin application")
     And the user clicks the button/link    link=Application details
-    And the user enters text to a text field    id=application_details-title    Robot submit test application
+    And the user enters text to a text field    id=application_details-title    ${application_name}
     And the user clicks the button/link    jQuery=button:contains("Save and return")
 
 Create new invite application with the same user

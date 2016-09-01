@@ -5,6 +5,7 @@ import com.worth.ifs.application.service.CategoryService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.category.resource.CategoryResource;
 import com.worth.ifs.category.resource.CategoryType;
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionResource.Status;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
@@ -21,7 +22,6 @@ import com.worth.ifs.user.builder.UserResourceBuilder;
 import com.worth.ifs.user.resource.UserRoleType;
 import com.worth.ifs.user.service.UserService;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -33,8 +33,10 @@ import org.springframework.ui.Model;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Collections;
 
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static com.worth.ifs.competitionsetup.service.sectionupdaters.InitialDetailsSectionSaver.OPENINGDATE_FIELDNAME;
 import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.Matchers.eq;
@@ -167,6 +169,56 @@ public class CompetitionSetupControllerTest {
     }
 
     @Test
+    public void submitAutoSave() throws Exception {
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(Status.COMPETITION_SETUP).build();
+
+        String fieldName = "title";
+        String value = "New Title";
+
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+        when(competitionSetupService.autoSaveCompetitionSetupSection(
+                isA(CompetitionResource.class),
+                eq(CompetitionSetupSection.INITIAL_DETAILS),
+                eq(fieldName),
+                eq(value))
+        ).thenReturn(Collections.emptyList());
+
+        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/initial/saveFormElement")
+                .param("fieldName", fieldName)
+                .param("value", value))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("success", is("true")));
+
+        verify(competitionSetupService).autoSaveCompetitionSetupSection(isA(CompetitionResource.class), eq(CompetitionSetupSection.INITIAL_DETAILS), eq(fieldName), eq(value));
+    }
+
+
+    @Test
+    public void submitAutoSaveValidationErrors() throws Exception {
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(Status.COMPETITION_SETUP).build();
+
+        String fieldName = "openingDate";
+        String value = "20-02-2002";
+
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+        when(competitionSetupService.autoSaveCompetitionSetupSection(
+                isA(CompetitionResource.class),
+                eq(CompetitionSetupSection.INITIAL_DETAILS),
+                eq(fieldName),
+                eq(value))
+        ).thenReturn(asList(Error.fieldError(OPENINGDATE_FIELDNAME, value, "Please enter a future date")));
+
+        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/initial/saveFormElement")
+                .param("fieldName", fieldName)
+                .param("value", value))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("success", is("false")))
+                .andExpect(jsonPath("validation_errors[0]", is("Please enter a future date")));
+
+        verify(competitionSetupService).autoSaveCompetitionSetupSection(isA(CompetitionResource.class), eq(CompetitionSetupSection.INITIAL_DETAILS), eq(fieldName), eq(value));
+    }
+
+    @Test
     public void generateCompetitionCode() throws Exception {
         LocalDateTime time = LocalDateTime.of(2016, 12, 1, 0, 0);
         CompetitionResource competition = newCompetitionResource().withCompetitionStatus(Status.COMPETITION_SETUP).withName("Test competition").withCompetitionCode("Code").withCompetitionType(2L).build();
@@ -177,7 +229,6 @@ public class CompetitionSetupControllerTest {
         mockMvc.perform(get(URL_PREFIX + "/" + COMPETITION_ID + "/generateCompetitionCode?day=01&month=12&year=2016"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("message", is("1612-1")));
-                //.andExpect(content().string(is("1612-1")));
     }
 
 
@@ -244,7 +295,8 @@ public class CompetitionSetupControllerTest {
         				.param("researchCategoryId", "1", "2", "3")
         				.param("singleOrCollaborative", "collaborative")
         				.param("leadApplicantType", "business")
-        				.param("researchParticipationAmountId", "1"))
+        				.param("researchParticipationAmountId", "1")
+                        .param("resubmission", "yes"))
                         .andExpect(status().is3xxRedirection())
                         .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/eligibility"));
 
@@ -339,7 +391,7 @@ public class CompetitionSetupControllerTest {
                 .withCompetitionCode("c123")
                 .withPafCode("p123")
                 .withBudgetCode("b123")
-                .withCompetitionStatus(Status.COMPETITION_SETUP_FINISHED)
+                .withCompetitionStatus(Status.OPEN)
                 .withCoFunders(CompetitionCoFundersFixture.getTestCoFunders())
                 .withId(COMPETITION_ID).build();
 
@@ -355,7 +407,7 @@ public class CompetitionSetupControllerTest {
     @Test
     public void testSetCompetitionAsReadyToOpen()  throws Exception {
         CompetitionResource competition = newCompetitionResource()
-                .withCompetitionStatus(Status.COMPETITION_SETUP_FINISHED)
+                .withCompetitionStatus(Status.READY_TO_OPEN)
                 .withId(COMPETITION_ID).build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);

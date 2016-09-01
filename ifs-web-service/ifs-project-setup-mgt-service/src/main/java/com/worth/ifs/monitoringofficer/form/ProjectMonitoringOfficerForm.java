@@ -6,6 +6,7 @@ import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.Optional;
 
@@ -30,6 +31,7 @@ public class ProjectMonitoringOfficerForm extends BaseBindingResultTarget {
             @Size(min=8, message="{validation.standard.phonenumber.length.min}"),
             @Size(max=20, message="{validation.standard.phonenumber.length.max}")
     })
+    @Pattern(regexp = "([0-9\\ +-])+",  message= "{validation.standard.phonenumber.format}")
     private String phoneNumber;
 
     // for spring form binding

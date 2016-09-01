@@ -4,14 +4,12 @@ import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.AddressTypeResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.address.service.AddressRestService;
+import com.worth.ifs.bankdetails.form.ProjectDetailsAddressForm;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.form.AddressForm;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
-import com.worth.ifs.bankdetails.form.ProjectDetailsAddressForm;
 import com.worth.ifs.user.resource.OrganisationResource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -27,9 +25,6 @@ public class AddressLookupBaseController {
     static final String MANUAL_ADDRESS = "manual-address";
     static final String SEARCH_ADDRESS = "search-address";
     static final String SELECT_ADDRESS = "select-address";
-
-    @Autowired
-    private MessageSource messageSource;
 
     @Autowired
     private AddressRestService addressRestService;
@@ -98,8 +93,6 @@ public class AddressLookupBaseController {
     }
 
     FieldError createPostcodeSearchFieldError() {
-        return new FieldError("form",
-                "addressForm.postcodeInput",
-                messageSource.getMessage("EMPTY_POSTCODE_SEARCH", null, "Please enter a UK postcode" ,LocaleContextHolder.getLocale()));
+        return new FieldError("form", "addressForm.postcodeInput", "", true, new String[] {"EMPTY_POSTCODE_SEARCH"}, new Object[] {}, null);
     }
 }
