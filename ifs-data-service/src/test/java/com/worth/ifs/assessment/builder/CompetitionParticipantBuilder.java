@@ -36,7 +36,6 @@ public class CompetitionParticipantBuilder extends BaseBuilder<CompetitionPartic
         return new CompetitionParticipantBuilder(actions);
     }
 
-
     @Override
     protected CompetitionParticipant createInitial() {
         try {

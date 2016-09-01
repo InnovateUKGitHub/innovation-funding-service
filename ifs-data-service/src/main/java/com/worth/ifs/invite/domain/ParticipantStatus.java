@@ -6,11 +6,14 @@ import com.worth.ifs.commons.util.enums.Identifiable;
  * The status of a {@link Participant}.
  *
  * Legal transitions are:
+ *
+ * <blockquote><pre>
  *  () -> PENDING
  *  PENDING -> ACCEPTED
  *  PENDING -> REJECTED
+ * </pre></blockquote>
  *
- *  @see Participant#setStatus(ParticipantStatus)
+ * @see Participant#setStatus(ParticipantStatus)
  */
 public enum ParticipantStatus implements Identifiable {
     PENDING(1),

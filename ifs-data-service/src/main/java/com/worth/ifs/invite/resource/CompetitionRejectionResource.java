@@ -1,7 +1,7 @@
 package com.worth.ifs.invite.resource;
 
 /**
- * TODO Class comment
+ * DTO for rejecting invites to Competitions.
  */
 public class CompetitionRejectionResource {
 
