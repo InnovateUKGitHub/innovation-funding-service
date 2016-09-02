@@ -5,7 +5,10 @@ import com.worth.ifs.commons.error.CommonFailureKeys;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.error.ErrorTemplate;
 import com.worth.ifs.commons.error.exception.*;
-import com.worth.ifs.commons.service.*;
+import com.worth.ifs.commons.service.BaseEitherBackedResult;
+import com.worth.ifs.commons.service.ExceptionThrowingFunction;
+import com.worth.ifs.commons.service.FailingOrSucceedingResult;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.util.Either;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -18,7 +21,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -304,7 +306,7 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
 
     public static <T> RestResult<T> fromException(HttpStatusCodeException e) {
         return fromJson(e.getResponseBodyAsString(), RestErrorResponse.class).mapLeftOrRight(
-                failure -> RestResult.<T>restFailure(internalServerErrorError()),
+                failure -> RestResult.<T>restFailure(GENERAL_REST_RESULT_UNABLE_TO_PROCESS_REST_ERROR_RESPONSE),
                 success -> RestResult.<T>restFailure(success.getErrors(), e.getStatusCode())
         );
     }
@@ -314,7 +316,7 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
         if (allExpectedSuccessStatusCodes.contains(response.getStatusCode())) {
             return RestResult.<T>restSuccess(response.getBody(), response.getStatusCode());
         } else {
-            return RestResult.<T>restFailure(new com.worth.ifs.commons.error.Error(response.getStatusCode(), response.getStatusCode()));
+            return RestResult.<T>restFailure(new com.worth.ifs.commons.error.Error(GENERAL_REST_RESULT_UNEXPECTED_STATUS_CODE, response.getStatusCode()));
         }
     }
 

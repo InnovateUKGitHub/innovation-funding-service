@@ -36,8 +36,8 @@ import static com.worth.ifs.application.transactional.ApplicationSummaryServiceI
 import static com.worth.ifs.application.transactional.ApplicationSummaryServiceImpl.SUBMITTED_STATUS_IDS;
 import static com.worth.ifs.application.transactional.AssessorFeedbackServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED;
 import static com.worth.ifs.application.transactional.AssessorFeedbackServiceImpl.Notifications.APPLICATION_NOT_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED;
-import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_DETERMINE_NOTIFICATION_TARGETS;
 import static com.worth.ifs.commons.service.ServiceResult.*;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
@@ -164,7 +164,7 @@ public class AssessorFeedbackServiceImpl extends BaseTransactionalService implem
             return processAnyFailuresOrSucceed(fundedEmailSendResult, unfundedEmailSendResult);
 
         } else {
-            return serviceFailure(internalServerErrorError());
+            return serviceFailure(NOTIFICATIONS_UNABLE_TO_DETERMINE_NOTIFICATION_TARGETS);
         }
     }
 

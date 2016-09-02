@@ -134,13 +134,17 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
 
     private void assertErrorKeyEqual(String expectedErrorKey, Error expectedError, RestErrorResponse restErrorResponse) {
         assertEquals(expectedErrorKey, restErrorResponse.getErrors().get(0).getErrorKey());
-        assertEqualsUpNoIncludingStatusCode(restErrorResponse, expectedError);
+        assertEqualsUpNoIncludingStatusCode(expectedErrorKey, restErrorResponse, expectedError);
     }
 
     protected void assertEqualsUpNoIncludingStatusCode(final RestErrorResponse restErrorResponse, final Error expectedError){
+        assertEqualsUpNoIncludingStatusCode(restErrorResponse.getErrors().get(0).getErrorKey(), restErrorResponse, expectedError);
+    }
+
+    protected void assertEqualsUpNoIncludingStatusCode(String expectedErrorKey, final RestErrorResponse restErrorResponse, final Error expectedError){
         assertTrue(restErrorResponse.getErrors().size() == 1);
         assertEquals(restErrorResponse.getErrors().get(0).getArguments() , expectedError.getArguments());
-        assertEquals(restErrorResponse.getErrors().get(0).getErrorKey() , expectedError.getErrorKey());
+        assertEquals(expectedErrorKey , expectedError.getErrorKey());
     }
 
     /**

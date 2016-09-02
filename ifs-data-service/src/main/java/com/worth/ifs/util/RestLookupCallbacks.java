@@ -12,7 +12,8 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
+import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_OPTIONAL_ENTRY_EXPECTED;
+import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_SINGLE_ENTRY_EXPECTED;
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static java.util.Optional.ofNullable;
@@ -154,13 +155,13 @@ public class RestLookupCallbacks {
 
     public static <T> RestResult<T> getOnlyElementOrFail(Collection<T> list) {
         if (list == null || list.size() != 1) {
-            return restFailure(internalServerErrorError());
+            return restFailure(new Error(GENERAL_SINGLE_ENTRY_EXPECTED, list != null ? list.size() : null));
         }
         return restSuccess(list.iterator().next());
     }
     public static <T> RestResult<T> getOptionalElementOrFail(Optional<T> item) {
         if (!item.isPresent()) {
-            return restFailure(internalServerErrorError());
+            return restFailure(GENERAL_OPTIONAL_ENTRY_EXPECTED);
         }
         return restSuccess(item.get());
     }

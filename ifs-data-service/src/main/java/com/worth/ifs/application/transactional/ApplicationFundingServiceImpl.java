@@ -37,7 +37,6 @@ import static com.worth.ifs.application.resource.FundingDecision.FUNDED;
 import static com.worth.ifs.application.resource.FundingDecision.UNFUNDED;
 import static com.worth.ifs.application.transactional.ApplicationFundingServiceImpl.Notifications.APPLICATION_FUNDED;
 import static com.worth.ifs.application.transactional.ApplicationFundingServiceImpl.Notifications.APPLICATION_NOT_FUNDED;
-import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.service.ServiceResult.*;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
@@ -145,7 +144,7 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
 
             return processAnyFailuresOrSucceed(asList(fundedEmailSendResult, unfundedEmailSendResult));
         } else {
-            return serviceFailure(internalServerErrorError());
+            return serviceFailure(NOTIFICATIONS_UNABLE_TO_DETERMINE_NOTIFICATION_TARGETS);
         }
 	}
 

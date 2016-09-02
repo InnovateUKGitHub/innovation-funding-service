@@ -707,7 +707,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andExpect(status().isInternalServerError()).
                 andReturn();
 
-        assertResponseErrorKeyEqual(GENERAL_UNEXPECTED_ERROR.name(), internalServerErrorError(), response);
+        assertResponseErrorKeyEqual(FILES_EXCEPTION_WHILE_RETRIEVING_FILE.name(), new Error(FILES_EXCEPTION_WHILE_RETRIEVING_FILE), response);
     }
 
     @Test

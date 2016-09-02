@@ -20,7 +20,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
+import static com.worth.ifs.commons.error.CommonFailureKeys.COMPANIES_HOUSE_NO_RESPONSE;
+import static com.worth.ifs.commons.error.CommonFailureKeys.COMPANIES_HOUSE_UNABLE_TO_DECODE_SEARCH_STRING;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static java.util.Optional.ofNullable;
@@ -69,7 +70,7 @@ public class CompanyHouseApiServiceImpl implements CompanyHouseApiService {
 
         return ofNullable(restGet("company/" + id, JsonNode.class)).
             map(jsonNode -> serviceSuccess(companyProfileMapper(jsonNode))).
-            orElse(serviceFailure(internalServerErrorError()));
+            orElse(serviceFailure(COMPANIES_HOUSE_NO_RESPONSE));
     }
 
     protected <T> T restGet(String path, Class<T> c) {
@@ -137,7 +138,7 @@ public class CompanyHouseApiServiceImpl implements CompanyHouseApiService {
             return serviceSuccess(UriUtils.decode(encodedSearchText, "UTF-8"));
         } catch (UnsupportedEncodingException e) {
             LOG.error("Unable to decode search string " + encodedSearchText, e);
-            return serviceFailure(internalServerErrorError());
+            return serviceFailure(COMPANIES_HOUSE_UNABLE_TO_DECODE_SEARCH_STRING);
         }
     }
 

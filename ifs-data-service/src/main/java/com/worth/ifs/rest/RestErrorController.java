@@ -17,6 +17,7 @@ import static com.worth.ifs.commons.error.CommonErrors.forbiddenError;
 import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
 import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_UNEXPECTED_ERROR;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.springframework.http.HttpStatus.*;
 
 /**
@@ -52,7 +53,9 @@ public class RestErrorController extends AbstractErrorController implements org.
                 RestErrorResponse restErrorResponse = new RestErrorResponse(forbiddenError());
                 return new ResponseEntity<>(restErrorResponse, restErrorResponse.getStatusCode());
             } else {
-                RestErrorResponse restErrorResponse = new RestErrorResponse(new Error(GENERAL_UNEXPECTED_ERROR, HttpStatus.valueOf(status)));
+                String message = (String) errorAttributes.get("message");
+                String finalMessage = !isBlank(message) ? message : GENERAL_UNEXPECTED_ERROR.name();
+                RestErrorResponse restErrorResponse = new RestErrorResponse(new Error(finalMessage, HttpStatus.valueOf(status)));
                 return new ResponseEntity<>(restErrorResponse, restErrorResponse.getStatusCode());
             }
         }
