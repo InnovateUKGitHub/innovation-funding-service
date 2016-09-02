@@ -140,6 +140,7 @@ the Applicant fills in the Labour costs for two rows
     mouse out    css=input
     Focus    jQuery=button:contains('Add another role')
     the user clicks the button/link    jQuery=button:contains('Add another role')
+    get selenium implicit wait
     the user should see the element    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(4) input
     Input Text    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(2) input    120000
     Input Text    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(4) input    100
