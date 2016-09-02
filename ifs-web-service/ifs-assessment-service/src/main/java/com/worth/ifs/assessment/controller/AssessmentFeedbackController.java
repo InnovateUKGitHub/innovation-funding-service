@@ -31,7 +31,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static com.worth.ifs.commons.error.CommonFailureKeys.FORM_WORD_LIMIT_EXCEEDED;
+import static com.worth.ifs.commons.error.CommonFailureKeys.ASSESSMENT_FORM_INPUT_RESPONSE_WORD_LIMIT_EXCEEDED;
 import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.mappingErrorKeyToField;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static com.worth.ifs.util.CollectionFunctions.simpleToMap;
@@ -41,7 +41,7 @@ import static java.util.stream.Collectors.toMap;
 @Controller
 @RequestMapping("/{assessmentId}")
 public class AssessmentFeedbackController {
-    
+
     private static final String FORM_ATTR_NAME = "form";
 
     @Autowired
@@ -115,7 +115,7 @@ public class AssessmentFeedbackController {
             formInputResponses.stream().forEach(responsePair -> {
                 // TODO INFUND-4105 optimise this to save multiple responses at a time
                 ServiceResult<Void> updateResult = assessorFormInputResponseService.updateFormInputResponse(assessmentId, responsePair.getLeft(), responsePair.getRight());
-                validationHandler.addAnyErrors(updateResult,mappingErrorKeyToField(FORM_WORD_LIMIT_EXCEEDED, "formInput[" + String.valueOf(responsePair.getLeft()) + "]"));
+                validationHandler.addAnyErrors(updateResult, mappingErrorKeyToField(ASSESSMENT_FORM_INPUT_RESPONSE_WORD_LIMIT_EXCEEDED, "formInput[" + String.valueOf(responsePair.getLeft()) + "]"));
             });
 
             return validationHandler.

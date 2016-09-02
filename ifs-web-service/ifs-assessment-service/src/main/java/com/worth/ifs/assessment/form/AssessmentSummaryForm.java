@@ -16,12 +16,12 @@ import java.util.List;
  */
 public class AssessmentSummaryForm implements BindingResultTarget {
 
-    @NotNull(message = "Please indicate your decision")
+    @NotNull(message = "{validation.assessmentsummaryform.fundingConfirmation.required}")
     private Boolean fundingConfirmation;
-    @NotEmpty(message = "Please enter your feedback")
-    @Size (max = 5000, message = "Content can not exceed {max} characters")
+    @NotEmpty(message = "{validation.assessmentsummaryform.feedback.required}")
+    @Size(max = 5000, message = "{validation.field.too.many.characters}")
     private String feedback;
-    @Size (max = 5000, message = "Content can not exceed {max} characters")
+    @Size(max = 5000, message = "{validation.field.too.many.characters}")
     private String comment;
     private BindingResult bindingResult;
     private List<ObjectError> objectErrors;

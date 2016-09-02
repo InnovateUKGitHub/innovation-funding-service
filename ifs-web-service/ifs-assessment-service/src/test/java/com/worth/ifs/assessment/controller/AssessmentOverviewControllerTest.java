@@ -59,6 +59,7 @@ import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisa
 import static java.lang.String.format;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -264,6 +265,8 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("form", expectedForm))
                 .andExpect(model().attributeExists("model"))
+                .andExpect(model().hasErrors())
+                .andExpect(model().attributeHasFieldErrors("form"))
                 .andExpect(view().name("assessment/reject-invitation-confirm"))
                 .andReturn();
 
@@ -277,7 +280,8 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         BindingResult bindingResult = form.getBindingResult();
         assertEquals(0, bindingResult.getGlobalErrorCount());
         assertEquals(1, bindingResult.getFieldErrorCount());
-        assertEquals("NotEmpty", bindingResult.getFieldError("rejectReason").getCode());
+        assertTrue(bindingResult.hasFieldErrors("rejectReason"));
+        assertEquals("Please enter a reason", bindingResult.getFieldError("rejectReason").getDefaultMessage());
 
         InOrder inOrder = Mockito.inOrder(assessmentService, applicationService);
         inOrder.verify(assessmentService, calls(1)).getById(assessmentId);
@@ -316,6 +320,8 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("form", expectedForm))
                 .andExpect(model().attributeExists("model"))
+                .andExpect(model().hasErrors())
+                .andExpect(model().attributeHasFieldErrors("form"))
                 .andExpect(view().name("assessment/reject-invitation-confirm"))
                 .andReturn();
 
@@ -329,7 +335,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         BindingResult bindingResult = form.getBindingResult();
         assertEquals(1, bindingResult.getGlobalErrorCount());
         assertEquals(0, bindingResult.getFieldErrorCount());
-        assertEquals("Only assessments which are Open can be rejected.", bindingResult.getGlobalError().getDefaultMessage());
+        assertEquals(ASSESSMENT_REJECTION_FAILED.name(), bindingResult.getGlobalError().getCode());
 
         InOrder inOrder = Mockito.inOrder(assessmentService, applicationService);
         inOrder.verify(assessmentService, calls(1)).getById(assessmentId);

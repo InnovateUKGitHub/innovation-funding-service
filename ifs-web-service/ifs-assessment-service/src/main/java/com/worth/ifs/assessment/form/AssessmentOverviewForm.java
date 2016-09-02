@@ -11,7 +11,7 @@ import org.hibernate.validator.constraints.NotEmpty;
  */
 public class AssessmentOverviewForm extends BaseBindingResultTarget {
 
-    @NotEmpty(message = "Please enter a reason")
+    @NotEmpty(message = "{validation.assessmentoverviewform.rejectReason.required}")
     private String rejectReason;
     private String rejectComment;
 

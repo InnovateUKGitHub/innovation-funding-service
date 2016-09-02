@@ -18,13 +18,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import static com.worth.ifs.commons.error.CommonFailureKeys.SUMMARY_COMMENT_WORD_LIMIT_EXCEEDED;
-import static com.worth.ifs.commons.error.CommonFailureKeys.SUMMARY_FEEDBACK_WORD_LIMIT_EXCEEDED;
+import static com.worth.ifs.commons.error.CommonFailureKeys.ASSESSMENT_SUMMARY_COMMENT_WORD_LIMIT_EXCEEDED;
+import static com.worth.ifs.commons.error.CommonFailureKeys.ASSESSMENT_SUMMARY_FEEDBACK_WORD_LIMIT_EXCEEDED;
 import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.mappingErrorKeyToField;
 
 @Controller
@@ -43,7 +42,6 @@ public class AssessmentSummaryController {
 
     @RequestMapping(value = "/{assessmentId}/summary", method = RequestMethod.GET)
     public String getSummary(Model model,
-                             HttpServletResponse response,
                              @ModelAttribute(FORM_ATTR_NAME) AssessmentSummaryForm form,
                              BindingResult bindingResult,
                              @PathVariable("assessmentId") Long assessmentId) {
@@ -56,20 +54,19 @@ public class AssessmentSummaryController {
 
     @RequestMapping(value = "/{assessmentId}/summary", method = RequestMethod.POST)
     public String save(Model model,
-                       HttpServletResponse response,
                        @Valid @ModelAttribute(FORM_ATTR_NAME) AssessmentSummaryForm form,
-                       @SuppressWarnings("unused") BindingResult bindingResult,
+                       BindingResult bindingResult,
                        ValidationHandler validationHandler,
                        @PathVariable("assessmentId") Long assessmentId) {
 
-        Supplier<String> failureView = () -> getSummary(model, response, form, bindingResult, assessmentId);
+        Supplier<String> failureView = () -> getSummary(model, form, bindingResult, assessmentId);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             ServiceResult<Void> updateResult = assessmentService.recommend(assessmentId, form.getFundingConfirmation(), form.getFeedback(), form.getComment());
             return validationHandler.addAnyErrors(updateResult,
-                    mappingErrorKeyToField(SUMMARY_FEEDBACK_WORD_LIMIT_EXCEEDED, "feedback"),
-                    mappingErrorKeyToField(SUMMARY_COMMENT_WORD_LIMIT_EXCEEDED, "comment"))
-            .failNowOrSucceedWith(failureView, () -> redirectToCompetitionOfAssessment(assessmentId));
+                    mappingErrorKeyToField(ASSESSMENT_SUMMARY_FEEDBACK_WORD_LIMIT_EXCEEDED, "feedback"),
+                    mappingErrorKeyToField(ASSESSMENT_SUMMARY_COMMENT_WORD_LIMIT_EXCEEDED, "comment")
+            ).failNowOrSucceedWith(failureView, () -> redirectToCompetitionOfAssessment(assessmentId));
         });
     }
 

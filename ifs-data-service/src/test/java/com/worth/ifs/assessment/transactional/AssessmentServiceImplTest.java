@@ -6,6 +6,7 @@ import com.worth.ifs.assessment.resource.AssessmentOutcomes;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.resource.AssessmentStates;
 import com.worth.ifs.assessment.workflow.AssessmentWorkflowEventHandler;
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
@@ -112,7 +113,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
         ServiceResult<Void> result = assessmentService.recommend(assessmentId, processOutcomeResource);
         assertTrue(result.isFailure());
-        assertEquals(SUMMARY_FEEDBACK_WORD_LIMIT_EXCEEDED.getErrorKey(),result.getErrors().get(0).getErrorKey());
+        assertTrue(result.getFailure().is(new Error(ASSESSMENT_SUMMARY_FEEDBACK_WORD_LIMIT_EXCEEDED, 100)));
     }
 
     @Test
@@ -143,7 +144,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         ServiceResult<Void> result = assessmentService.recommend(assessmentId, processOutcomeResource);
 
         assertTrue(result.isFailure());
-        assertEquals(SUMMARY_COMMENT_WORD_LIMIT_EXCEEDED.getErrorKey(),result.getErrors().get(0).getErrorKey());
+        assertTrue(result.getFailure().is(new Error(ASSESSMENT_SUMMARY_COMMENT_WORD_LIMIT_EXCEEDED, 100)));
     }
 
     @Test
