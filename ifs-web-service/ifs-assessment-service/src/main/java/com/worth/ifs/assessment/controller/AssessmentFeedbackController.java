@@ -33,9 +33,11 @@ import java.util.stream.Collectors;
 
 import static com.worth.ifs.commons.error.CommonFailureKeys.ASSESSMENT_FORM_INPUT_RESPONSE_WORD_LIMIT_EXCEEDED;
 import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.mappingErrorKeyToField;
+import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static com.worth.ifs.util.CollectionFunctions.simpleToMap;
 import static com.worth.ifs.util.MapFunctions.toListOfPairs;
+import static java.lang.String.format;
 import static java.util.stream.Collectors.toMap;
 
 @Controller
@@ -114,8 +116,9 @@ public class AssessmentFeedbackController {
             List<Pair<Long, String>> formInputResponses = getFormInputResponses(form, formInputs);
             formInputResponses.stream().forEach(responsePair -> {
                 // TODO INFUND-4105 optimise this to save multiple responses at a time
+                String formInputField = format("formInput[%s]", responsePair.getLeft());
                 ServiceResult<Void> updateResult = assessorFormInputResponseService.updateFormInputResponse(assessmentId, responsePair.getLeft(), responsePair.getRight());
-                validationHandler.addAnyErrors(updateResult, mappingErrorKeyToField(ASSESSMENT_FORM_INPUT_RESPONSE_WORD_LIMIT_EXCEEDED, "formInput[" + String.valueOf(responsePair.getLeft()) + "]"));
+                validationHandler.addAnyErrors(updateResult, toField(formInputField), mappingErrorKeyToField(ASSESSMENT_FORM_INPUT_RESPONSE_WORD_LIMIT_EXCEEDED, formInputField));
             });
 
             return validationHandler.

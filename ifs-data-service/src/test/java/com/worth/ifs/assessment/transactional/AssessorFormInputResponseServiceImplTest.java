@@ -25,6 +25,7 @@ import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.form.builder.FormInputBuilder.newFormInput;
 import static com.worth.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static java.time.LocalDateTime.now;
+import static java.util.Collections.nCopies;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.*;
@@ -241,7 +242,7 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
     public void testUpdateFormInputResponse_exceedsWordLimit() throws Exception {
         Long assessmentId = 1L;
         Long formInputId = 2L;
-        String value = "This is the feedback text";
+        String value = String.join(", ", nCopies(101, "response"));
 
         AssessorFormInputResponseResource assessorFormInputResponseResource = newAssessorFormInputResponseResource()
                 .withAssessment(assessmentId)
@@ -250,13 +251,13 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
                 .build();
         FormInputResource formInput = newFormInputResource()
                 .withId(formInputId)
-                .withWordCount(3)
+                .withWordCount(100)
                 .build();
         when(formInputServiceMock.findFormInput(formInputId)).thenReturn(serviceSuccess(formInput));
 
         ServiceResult<Void> result = assessorFormInputResponseService.updateFormInputResponse(assessorFormInputResponseResource);
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(new Error(ASSESSMENT_FORM_INPUT_RESPONSE_WORD_LIMIT_EXCEEDED, 3)));
+        assertTrue(result.getFailure().is(new Error(ASSESSMENT_FORM_INPUT_RESPONSE_WORD_LIMIT_EXCEEDED, 100)));
     }
 
     @Test

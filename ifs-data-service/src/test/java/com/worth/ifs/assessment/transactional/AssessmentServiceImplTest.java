@@ -24,6 +24,7 @@ import static com.worth.ifs.assessment.builder.ProcessOutcomeBuilder.newProcessO
 import static com.worth.ifs.assessment.builder.ProcessOutcomeResourceBuilder.newProcessOutcomeResource;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
+import static java.util.Collections.nCopies;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.*;
@@ -120,9 +121,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
     public void recommend_CommentExceedsWordLimit() throws Exception {
         Long assessmentId = 1L;
         Long processRoleId = 2L;
-        String[] commentArray = new String[120];
-        Arrays.fill(commentArray, "comment ");
-        String comment = Arrays.toString(commentArray);
+        String comment = String.join(", ", nCopies(101, "response"));
 
         ProcessRole processRole = newProcessRole().withId(processRoleId).build();
         Assessment assessment = newAssessment()
@@ -134,7 +133,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         ProcessOutcome processOutcome = newProcessOutcome().build();
 
         ProcessOutcomeResource processOutcomeResource = newProcessOutcomeResource()
-                .withComment(comment.substring(1, comment.length()-1).replaceAll(",", ""))
+                .withComment(comment)
                 .withOutcomeType(AssessmentOutcomes.RECOMMEND.getType())
                 .build();
 
