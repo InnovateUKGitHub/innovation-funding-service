@@ -20,7 +20,6 @@ import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.form.resource.FormInputTypeResource;
 import org.apache.commons.lang3.tuple.Pair;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,6 +34,7 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -251,12 +251,10 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
     public void testUpdateFormInputResponseValidation() throws Exception {
         String value = "This is the feedback";
         Long formInputId = 1L;
-        AssessorFormInputResponseResource assessorFormInputResponse = newAssessorFormInputResponseResource()
-                .withAssessment(ASSESSMENT_ID)
-                .withFormInput(formInputId)
-                .withValue(value)
-                .build();
+
         when(assessorFormInputResponseService.updateFormInputResponse(ASSESSMENT_ID, formInputId, value)).thenReturn(serviceFailure(FORM_WORD_LIMIT_EXCEEDED));
+
+        when(messageSource.getMessage(FORM_WORD_LIMIT_EXCEEDED.name(), new Object[] {}, Locale.UK)).thenReturn("Word limit exceeded");
 
         MvcResult result = mockMvc.perform(post("/{assessmentId}/formInput/{formInputId}", ASSESSMENT_ID, formInputId)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -267,8 +265,8 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
 
         verify(assessorFormInputResponseService, only()).updateFormInputResponse(ASSESSMENT_ID, formInputId, value);
         String content = result.getResponse().getContentAsString();
-        String jsonExpectedContent = "{\"success\":\"false\",\"validation_errors\":[\"FORM_WORD_LIMIT_EXCEEDED\"]}";
-        Assert.assertEquals(jsonExpectedContent, content);
+        String jsonExpectedContent = "{\"success\":\"false\",\"validation_errors\":[\"Word limit exceeded\"]}";
+        assertEquals(jsonExpectedContent, content);
     }
 
     @Test
