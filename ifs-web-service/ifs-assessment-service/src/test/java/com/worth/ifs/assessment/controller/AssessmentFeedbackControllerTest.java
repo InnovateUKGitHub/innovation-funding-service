@@ -21,7 +21,6 @@ import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.form.resource.FormInputTypeResource;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
@@ -36,6 +35,7 @@ import org.springframework.validation.BindingResult;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -249,12 +249,13 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
     }
 
     @Test
-    @Ignore
     public void testUpdateFormInputResponseValidation() throws Exception {
         String value = "This is the feedback";
         Long formInputId = 1L;
 
         when(assessorFormInputResponseService.updateFormInputResponse(ASSESSMENT_ID, formInputId, value)).thenReturn(serviceFailure(new Error(ASSESSMENT_FORM_INPUT_RESPONSE_WORD_LIMIT_EXCEEDED, 100)));
+
+        when(messageSource.getMessage(ASSESSMENT_FORM_INPUT_RESPONSE_WORD_LIMIT_EXCEEDED.name(), new Object[]{"100"}, Locale.UK)).thenReturn("Value must be less than 100 words.");
 
         MvcResult result = mockMvc.perform(post("/{assessmentId}/formInput/{formInputId}", ASSESSMENT_ID, formInputId)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)

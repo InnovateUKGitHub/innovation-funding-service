@@ -126,22 +126,25 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
         return contentObject(new RestErrorResponse(error));
     }
 
-    protected void assertResponseErrorMessageEqual(String expectedMessage, Error expectedError, MvcResult mvcResult) throws IOException {
+    protected void assertResponseErrorKeyEqual(String expectedKey, Error expectedError, MvcResult mvcResult) throws IOException {
         String content = mvcResult.getResponse().getContentAsString();
         RestErrorResponse restErrorResponse = new ObjectMapper().readValue(content, RestErrorResponse.class);
-        assertErrorMessageEqual(expectedMessage, expectedError, restErrorResponse);
+        assertErrorKeyEqual(expectedKey, expectedError, restErrorResponse);
     }
 
-    private void assertErrorMessageEqual(String expectedMessage, Error expectedError, RestErrorResponse restErrorResponse) {
-        assertEquals(expectedMessage, restErrorResponse.getErrors().get(0).getErrorMessage());
-        assertEqualsUpNoIncludingStatusCode(restErrorResponse, expectedError);
+    private void assertErrorKeyEqual(String expectedErrorKey, Error expectedError, RestErrorResponse restErrorResponse) {
+        assertEquals(expectedErrorKey, restErrorResponse.getErrors().get(0).getErrorKey());
+        assertEqualsUpNoIncludingStatusCode(expectedErrorKey, restErrorResponse, expectedError);
     }
 
     protected void assertEqualsUpNoIncludingStatusCode(final RestErrorResponse restErrorResponse, final Error expectedError){
+        assertEqualsUpNoIncludingStatusCode(restErrorResponse.getErrors().get(0).getErrorKey(), restErrorResponse, expectedError);
+    }
+
+    protected void assertEqualsUpNoIncludingStatusCode(String expectedErrorKey, final RestErrorResponse restErrorResponse, final Error expectedError){
         assertTrue(restErrorResponse.getErrors().size() == 1);
-        assertEquals(restErrorResponse.getErrors().get(0).getErrorMessage(), expectedError.getErrorMessage());
         assertEquals(restErrorResponse.getErrors().get(0).getArguments() , expectedError.getArguments());
-        assertEquals(restErrorResponse.getErrors().get(0).getErrorKey() , expectedError.getErrorKey());
+        assertEquals(expectedErrorKey , expectedError.getErrorKey());
     }
 
     /**

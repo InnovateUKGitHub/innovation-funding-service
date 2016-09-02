@@ -13,7 +13,6 @@ import com.worth.ifs.assessment.service.AssessorFormInputResponseService;
 import com.worth.ifs.assessment.viewmodel.AssessmentFeedbackApplicationDetailsViewModel;
 import com.worth.ifs.assessment.viewmodel.AssessmentFeedbackViewModel;
 import com.worth.ifs.assessment.viewmodel.AssessmentNavigationViewModel;
-import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.form.resource.FormInputResource;
@@ -21,6 +20,7 @@ import com.worth.ifs.form.service.FormInputService;
 import com.worth.ifs.model.OrganisationDetailsModelPopulator;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -29,10 +29,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import static com.worth.ifs.commons.error.CommonFailureKeys.ASSESSMENT_FORM_INPUT_RESPONSE_WORD_LIMIT_EXCEEDED;
 import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.mappingErrorKeyToField;
+import static com.worth.ifs.controller.ErrorLookupHelper.lookupErrorMessageResourceBundleEntries;
 import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static com.worth.ifs.util.CollectionFunctions.simpleToMap;
@@ -64,6 +64,9 @@ public class AssessmentFeedbackController {
     @Autowired
     private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
 
+    @Autowired
+    private MessageSource messageSource;
+
     @RequestMapping(value = "/question/{questionId}", method = RequestMethod.GET)
     public String getQuestion(Model model,
                               @PathVariable("assessmentId") Long assessmentId,
@@ -86,7 +89,8 @@ public class AssessmentFeedbackController {
             @RequestParam("value") String value) {
 
         ServiceResult<Void> result = assessorFormInputResponseService.updateFormInputResponse(assessmentId, formInputId, value);
-        return createJsonObjectNode(result.isSuccess(), result.getErrors());
+        List<String> lookupUpMessages = lookupErrorMessageResourceBundleEntries(messageSource, result);
+        return createJsonObjectNode(result.isSuccess(), lookupUpMessages);
     }
 
     @RequestMapping(value = "/question/{questionId}", method = RequestMethod.POST)
@@ -168,13 +172,13 @@ public class AssessmentFeedbackController {
         return simpleFilter(responses, responsePair -> formInputResourceMap.containsKey(responsePair.getLeft()));
     }
 
-    private ObjectNode createJsonObjectNode(boolean success, List<Error> errors) {
+    private ObjectNode createJsonObjectNode(boolean success, List<String> errors) {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode node = mapper.createObjectNode();
         node.put("success", success ? "true" : "false");
         if (!success) {
             ArrayNode errorsNode = mapper.createArrayNode();
-            errors.stream().map(u -> u.getErrorMessage()).collect(Collectors.toList()).forEach(errorsNode::add);
+            errors.forEach(errorsNode::add);
             node.set("validation_errors", errorsNode);
         }
         return node;

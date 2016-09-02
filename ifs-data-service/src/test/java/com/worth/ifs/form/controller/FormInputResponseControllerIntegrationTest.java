@@ -14,7 +14,7 @@ import org.springframework.test.annotation.Rollback;
 import java.util.List;
 import java.util.Optional;
 
-import static com.worth.ifs.commons.error.CommonErrors.forbiddenError;
+import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION;
 import static com.worth.ifs.commons.error.Error.fieldError;
 import static com.worth.ifs.security.SecuritySetter.addBasicSecurityUser;
 import static org.hamcrest.Matchers.*;
@@ -66,7 +66,7 @@ public class FormInputResponseControllerIntegrationTest extends BaseControllerIn
 
         RestResult<ValidationMessages> result = controller.saveQuestionResponse(jsonObj);
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(forbiddenError("This action is not permitted.")));
+        assertTrue(result.getFailure().is(GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION));
         setLoggedInUser(getSteveSmith());
         List<FormInputResponseResource> responses = controller.findResponsesByApplication(applicationId).getSuccessObject();
         Optional<FormInputResponseResource> response = responses.stream().filter(r -> r.getFormInput().equals(formInputId)).findFirst();
