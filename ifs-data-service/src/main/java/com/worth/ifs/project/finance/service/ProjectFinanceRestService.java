@@ -1,6 +1,7 @@
 package com.worth.ifs.project.finance.service;
 
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.project.resource.SpendProfileTableResource;
 
@@ -15,7 +16,7 @@ public interface ProjectFinanceRestService {
 
     RestResult<SpendProfileResource> getSpendProfile(Long projectId, Long organisationId);
 
-    RestResult<Void> saveSpendProfile(Long projectId, Long organisationId, SpendProfileTableResource table);
+    RestResult<ValidationMessages> saveSpendProfile(Long projectId, Long organisationId, SpendProfileTableResource table);
 
     RestResult<Void> markSpendProfile(Long projectId, Long organisationId, Boolean complete);
 }

@@ -1,6 +1,7 @@
 package com.worth.ifs.project;
 
 import com.worth.ifs.commons.rest.LocalDateResource;
+import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.project.finance.ProjectFinanceService;
@@ -84,9 +85,10 @@ public class ProjectSpendProfileController {
                                    @PathVariable("organisationId") final Long organisationId,
                                    @ModelAttribute(FORM_ATTR_NAME) SpendProfileForm form,
                                    @SuppressWarnings("unused") BindingResult bindingResult,
+                                   ValidationHandler validationHandler,
                                    @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        return editSpendProfile(model, bindingResult, form, projectId, organisationId, "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile", "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile/edit");
+        return editSpendProfile(model, validationHandler, bindingResult, form, projectId, organisationId, "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile", "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile/edit");
     }
 
     @RequestMapping(value = "/complete", method = POST)
@@ -125,10 +127,10 @@ public class ProjectSpendProfileController {
         return successView;
     }
 
-    private String editSpendProfile(Model model, BindingResult bindingResult, SpendProfileForm userSubmittedForm, Long projectId, Long organisationId, String successView, String falureView) {
-        ValidationHandler validationHandler = ValidationHandler.newBindingResultHandler(bindingResult);
+    private String editSpendProfile(Model model, ValidationHandler validationHandler, BindingResult bindingResult, SpendProfileForm userSubmittedForm, Long projectId, Long organisationId, String successView, String falureView) {
+        ValidationHandler customValidationHandler = ValidationHandler.newBindingResultHandler(bindingResult);
         new SpendProfileCostValidator().validate(userSubmittedForm.getTable(), bindingResult);
-        if (validationHandler.hasErrors()) {
+        if (customValidationHandler.hasErrors()) {
             return falureView;
         }
 
@@ -136,10 +138,12 @@ public class ProjectSpendProfileController {
         SpendProfileTableResource spendProfileTableResource = projectFinanceService.getSpendProfileTable(projectId, organisationId);
         spendProfileTableResource.setMonthlyCostsPerCategoryMap(userSubmittedForm.getTable().getMonthlyCostsPerCategoryMap()); // update existing resource with user entered fields
 
-        ServiceResult<Void> result = projectFinanceService.saveSpendProfile(projectId, organisationId, spendProfileTableResource);
-        if (result.isFailure()) { // even if total is > eligible, we save and return to read only view
+        ServiceResult<ValidationMessages> result = projectFinanceService.saveSpendProfile(projectId, organisationId, spendProfileTableResource);
+        if (result.isSuccess()) { // even if total is > eligible, we save and return to read only view
             // If this model attribute is set, it means there are some categories where the totals don't match
-            model.addAttribute("errorCategories", result.getFailure().getErrors());
+            model.addAttribute("errorCategories", result.getSuccessObject().getErrors());
+        } else {
+            validationHandler.addAnyErrors(result);
         }
 
         buildSpendProfileViewModel(projectResource, organisationId, spendProfileTableResource);

@@ -102,7 +102,7 @@ public class ProjectFinanceControllerTest extends BaseControllerMockMVCTest<Proj
         mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile", projectId, organisationId)
                 .contentType(APPLICATION_JSON)
                 .content(toJson(table)))
-                .andExpect(status().isOk());
+                .andExpect(status().isAccepted());
     }
 
     @Test

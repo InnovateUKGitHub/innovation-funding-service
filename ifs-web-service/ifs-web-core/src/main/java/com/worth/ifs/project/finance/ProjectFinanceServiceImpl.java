@@ -1,5 +1,6 @@
 package com.worth.ifs.project.finance;
 
+import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.project.finance.service.ProjectFinanceRestService;
 import com.worth.ifs.project.resource.SpendProfileResource;
@@ -34,7 +35,7 @@ public class ProjectFinanceServiceImpl implements ProjectFinanceService {
     }
 
     @Override
-    public ServiceResult<Void> saveSpendProfile(Long projectId, Long organisationId, SpendProfileTableResource table) {
+    public ServiceResult<ValidationMessages> saveSpendProfile(Long projectId, Long organisationId, SpendProfileTableResource table) {
 
         return projectFinanceRestService.saveSpendProfile(projectId, organisationId, table).toServiceResult();
 
