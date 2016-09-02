@@ -8,6 +8,7 @@ import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.bankdetails.form.ProjectDetailsAddressForm;
 import com.worth.ifs.bankdetails.resource.BankDetailsResource;
 import com.worth.ifs.bankdetails.service.BankDetailsRestService;
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
@@ -45,6 +46,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static com.jayway.jsonpath.Filter.filter;
+import static com.sun.javafx.fxml.expression.Expression.not;
 import static com.worth.ifs.address.resource.OrganisationAddressType.OPERATING;
 import static com.worth.ifs.address.resource.OrganisationAddressType.PROJECT;
 import static com.worth.ifs.address.resource.OrganisationAddressType.REGISTERED;
@@ -53,8 +56,10 @@ import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.toFiel
 import static com.worth.ifs.project.consortiumoverview.viewmodel.ConsortiumPartnerStatus.*;
 import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
 import static com.worth.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
+import static javafx.scene.input.KeyCode.V;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 import com.worth.ifs.project.form.InviteeForm;
 import com.worth.ifs.project.viewmodel.FinanceContactModel;
@@ -185,6 +190,14 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
         Supplier<String> failureView = () -> doViewFinanceContact(model, projectId, organisation, loggedInUser, financeForm, form, false);
 
+        if (!ValidateEmailIsUnique(form.getEmail()))
+        {
+            InviteeForm inviteeForm = new InviteeForm();
+            inviteeForm.setEmailExistsError(form.getEmail());
+
+            return doViewFinanceContact(model, projectId, organisation, loggedInUser, financeForm, inviteeForm, true);
+        }
+
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
             InviteProjectResource invite = createProjectInviteResourceForNewContact (projectId, form.getName(), form.getEmail(), organisation);
@@ -196,13 +209,20 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
             ServiceResult<Void> inviteResult = projectService.inviteFinanceContact(projectId, savedInvite);
 
-            return validationHandler.addAnyErrors(saveResult, toField("financeContact")).
-                    addAnyErrors(inviteResult, toField("financeContact")).
+            return validationHandler.addAnyErrors(inviteResult, toField("financeContact")).
+                    addAnyErrors(saveResult, toField("financeContact")).
                     failNowOrSucceedWith(failureView, () -> redirectToProjectDetails(projectId));
 
         });
 
     }
+
+    private boolean ValidateEmailIsUnique (String email)
+    {
+        RestResult<UserResource> existingUserSearch = userService.findUserByEmail(email);
+        return NOT_FOUND.equals(existingUserSearch.getStatusCode());
+    }
+
 
     @RequestMapping(value = "/{projectId}/details/project-manager", method = RequestMethod.GET)
     public String viewProjectManager(Model model, @PathVariable("projectId") final Long projectId,

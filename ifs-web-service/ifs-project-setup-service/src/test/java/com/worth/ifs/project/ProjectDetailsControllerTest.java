@@ -10,6 +10,7 @@ import com.worth.ifs.commons.validation.ValidationConstants;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.finance.service.ApplicationFinanceRestService;
+import com.worth.ifs.invite.builder.ProjectInviteResourceBuilder;
 import com.worth.ifs.invite.constant.InviteStatus;
 import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
@@ -38,9 +39,12 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.error.Error;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -50,6 +54,9 @@ import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressRes
 import static com.worth.ifs.address.builder.AddressTypeResourceBuilder.newAddressTypeResource;
 import static com.worth.ifs.address.resource.OrganisationAddressType.*;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
+import static com.worth.ifs.commons.rest.RestResult.restFailure;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
@@ -63,6 +70,7 @@ import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static javafx.scene.input.KeyCode.R;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.verify;
@@ -70,7 +78,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<ProjectDetailsController> {
@@ -311,13 +319,13 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     @Test
     public void testInviteFinanceContact() throws Exception {
         long competitionId = 1L;
-        long applicationId = 1L;
-        long projectId = 1L;
-        long organisationId = 1L;
+        long applicationId = 16L;
+        long projectId = 4L;
+        long organisationId = 21L;
         long loggedInUserId= 1L;
         long invitedUserId = 2L;
 
-        String invitedUserName = "First Last";
+        String invitedUserName = "test";
         String invitedUserEmail = "test@test.com";
 
         ProjectResource projectResource = newProjectResource().withId(projectId).withApplication(applicationId).build();
@@ -326,27 +334,51 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         CompetitionResource competitionResource = newCompetitionResource().withId(competitionId).build();
         ApplicationResource applicationResource = newApplicationResource().withId(applicationId).withCompetition(competitionId).build();
 
-
         List<ProjectUserResource> availableUsers = newProjectUserResource().
                 withUser(loggedInUser.getId(), loggedInUserId).
                 withOrganisation(organisationId).
                 withRoleName(PARTNER).
                 build(2);
 
-        InviteProjectResource invite = newInviteProjectResource().withId(1L).withProject(projectId).withName(invitedUserName).withEmail(invitedUserEmail)
-                .withOrganisation(organisationId).withLeadOrganisation(leadOrganisation.getName()).build();
+        InviteProjectResource invite = newInviteProjectResource().withId(1L)
+                .withProject(projectId).withName(invitedUserName)
+                .withEmail(invitedUserEmail)
+                .withOrganisation(organisationId)
+                .withLeadOrganisation(leadOrganisation.getName()).build();
 
+        invite.setInviteOrganisation(organisationId);
         invite.setUser(2L);
         invite.setApplicationId(projectResource.getApplication());
-        invite.setLeadOrganisation(leadOrganisation.getName());
+        invite.setApplicationId(applicationId);
+        invite.setHash("123456789");
 
+        List<InviteProjectResource> existingInvites = newInviteProjectResource().withId(2L)
+                .withProject(projectId).withName("exist test")
+                .withEmail("existing@test.com")
+                .withOrganisation(organisationId)
+                .withLeadOrganisation(leadOrganisation.getName()).build(2);
+
+
+//      //    Delete when confirmed as unnecessary / wrong approach
+//
+// List<Object> arguments = new ArrayList<Object>();
+//        arguments.add(financeContactUserResource);
+//        arguments.add(invitedUserEmail);
+//        Error e = new Error(GENERAL_NOT_FOUND, "User not found", arguments, null);
+//        List<Error> errors = new ArrayList<Error>();
+//        errors.add(e);
+        //when(userService.findUserByEmail(invitedUserEmail)).thenReturn(restSuccess(financeContactUserResource, NOT_FOUND));
+        //when(userService.findUserByEmail(invitedUserEmail)).thenReturn(restFailure(errors , NOT_FOUND));
+
+        when(userService.findUserByEmail(invitedUserEmail)).thenReturn(restFailure(notFoundError(UserResource.class, invitedUserEmail)));
         when(projectService.getById(projectId)).thenReturn(projectResource);
         when(projectService.getLeadOrganisation(projectId)).thenReturn(leadOrganisation);
-        when(projectService.saveProjectInvite( invite)).thenReturn(serviceSuccess());
+        when(projectService.saveProjectInvite(invite)).thenReturn(serviceSuccess());
         when(projectService.inviteFinanceContact(projectId, invite)).thenReturn(serviceSuccess());
         when(projectService.updateFinanceContact(projectId, organisationId, invitedUserId)).thenReturn(serviceSuccess());
         when(userService.findById(invitedUserId)).thenReturn(financeContactUserResource);
         when(projectService.getProjectUsersForProject(projectId)).thenReturn(availableUsers);
+        when(projectService.getInvitesByProject(projectId)).thenReturn()
 
         InviteStatus testStatus = InviteStatus.CREATED;
 

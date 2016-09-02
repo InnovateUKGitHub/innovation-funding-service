@@ -19,6 +19,8 @@ public class InviteeForm implements Serializable {
     private String email;
     private InviteStatus inviteStatus;
 
+    private String emailExistsError;
+
     public InviteeForm(Long userId, String name, String email) {
         this.userId = userId;
         this.name = name;
@@ -61,5 +63,11 @@ public class InviteeForm implements Serializable {
     public InviteStatus getInviteStatus() {
         return inviteStatus;
     }
+
+    public String getEmailExistsError ()  {
+        return emailExistsError;
+    }
+
+    public void setEmailExistsError (String emailExistsError)  { this.emailExistsError = emailExistsError; }
 }
 
