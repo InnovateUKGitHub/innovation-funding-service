@@ -49,6 +49,11 @@ public class ThymeleafUtilTest {
     }
 
     @Test
+    public void wordsRemaining_greaterThanMaxWordCount() throws Exception {
+        assertEquals(-15, thymeleafUtil.wordsRemaining(100, join(" ", nCopies(115, "content"))));
+    }
+
+    @Test
     public void wordsRemaining_valueWithHtml() throws Exception {
         assertEquals(85, thymeleafUtil.wordsRemaining(100, "<td><p style=\"font-variant: small-caps\">This value is made up of fifteen words even though it is wrapped within HTML.</p></td>"));
     }
