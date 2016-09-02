@@ -1,14 +1,14 @@
 package com.worth.ifs.competitionsetup.service.formpopulator;
 
-import org.springframework.stereotype.Service;
-
+import com.worth.ifs.competition.form.enumerable.ResearchParticipationAmount;
 import com.worth.ifs.competition.resource.CollaborationLevel;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.LeadApplicantType;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.form.EligibilityForm;
-import com.worth.ifs.competition.form.enumerable.ResearchParticipationAmount;
+import com.worth.ifs.competitionsetup.utils.CompetitionUtils;
+import org.springframework.stereotype.Service;
 
 /**
  * Form populator for the eligibility competition setup section.
@@ -36,7 +36,7 @@ public class EligibilityFormPopulator implements CompetitionSetupFormPopulator {
 			competitionSetupForm.setStreamName(competitionResource.getStreamName());
 		}
 
-		competitionSetupForm.setMultipleStream(booleanToText(competitionResource.isMultiStream()));
+		competitionSetupForm.setMultipleStream(CompetitionUtils.booleanToText(competitionResource.isMultiStream()));
 
 		CollaborationLevel level = competitionResource.getCollaborationLevel();
 		if(level != null) {
@@ -48,13 +48,10 @@ public class EligibilityFormPopulator implements CompetitionSetupFormPopulator {
 			competitionSetupForm.setLeadApplicantType(type.getCode());
 		}
 
-        competitionSetupForm.setResubmission(booleanToText(competitionResource.isResubmission()));
+        competitionSetupForm.setResubmission(CompetitionUtils.booleanToText(competitionResource.isResubmission()));
 
 		return competitionSetupForm;
 	}
 
-    private String booleanToText(Boolean value) {
-        return value ? "yes" : "no";
-    }
 
 }
