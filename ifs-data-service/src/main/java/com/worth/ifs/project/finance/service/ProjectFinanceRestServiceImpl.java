@@ -39,7 +39,7 @@ public class ProjectFinanceRestServiceImpl extends BaseRestService implements Pr
     }
 
     @Override
-    public RestResult<Void> markSpendProfileComplete(Long projectId, Long organisationId, SpendProfileTableResource table) {
-        return postWithRestResult(projectFinanceRestURL + "/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile/complete", table, Void.class);
+    public RestResult<Void> markSpendProfile(Long projectId, Long organisationId, Boolean complete) {
+        return postWithRestResult(projectFinanceRestURL + "/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile/complete/" + complete, Void.class);
     }
 }
