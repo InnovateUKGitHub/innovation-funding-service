@@ -74,10 +74,13 @@ the user adds three material rows
     Input Text    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    01
     Focus    jQuery=button:contains('Add another materials cost')
     the user clicks the button/link    jQuery=button:contains('Add another materials cost')
+    Sleep    500ms
     the user should see the element    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input
     Input Text    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    01
     Focus    jQuery=button:contains('Add another materials cost')
+    Sleep    500ms
     the user clicks the button/link    jQuery=button:contains('Add another materials cost')
+    Sleep    500ms
     the user should see the element    css=#material-costs-table tbody tr:nth-of-type(3) td:nth-of-type(2) input
     Input Text    css=#material-costs-table tbody tr:nth-of-type(3) td:nth-of-type(2) input    01
     Mouse Out    css=#material-costs-table tbody tr:nth-of-type(3) td:nth-of-type(2) input
