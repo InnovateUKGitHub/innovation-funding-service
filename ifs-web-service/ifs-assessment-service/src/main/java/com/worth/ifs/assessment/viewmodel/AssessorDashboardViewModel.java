@@ -7,22 +7,12 @@ import java.util.List;
  */
 public class AssessorDashboardViewModel {
 
-    private List<AssessorDashboardUpcomingCompetitionViewModel> invitations;
     private List<AssessorDashboardActiveCompetitionViewModel> activeCompetitions;
     private List<AssessorDashboardUpcomingCompetitionViewModel> upcomingCompetitions;
 
-    public AssessorDashboardViewModel(List<AssessorDashboardUpcomingCompetitionViewModel> invitations, List<AssessorDashboardActiveCompetitionViewModel> activeCompetitions, List<AssessorDashboardUpcomingCompetitionViewModel> upcomingCompetitions) {
-        this.invitations = invitations;
+    public AssessorDashboardViewModel(List<AssessorDashboardActiveCompetitionViewModel> activeCompetitions, List<AssessorDashboardUpcomingCompetitionViewModel> upcomingCompetitions) {
         this.activeCompetitions = activeCompetitions;
         this.upcomingCompetitions = upcomingCompetitions;
-    }
-
-    public List<AssessorDashboardUpcomingCompetitionViewModel> getInvitations() {
-        return invitations;
-    }
-
-    public void setInvitations(List<AssessorDashboardUpcomingCompetitionViewModel> invitations) {
-        this.invitations = invitations;
     }
 
     public List<AssessorDashboardActiveCompetitionViewModel> getActiveCompetitions() {
