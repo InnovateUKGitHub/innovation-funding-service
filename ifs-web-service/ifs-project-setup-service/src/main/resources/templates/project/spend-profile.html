@@ -16,6 +16,12 @@
             <div th:include="fragments/elements :: project-title (projectId=${model.projectId}, projectName=${model.projectName})" th:remove="tag" />
             <h1 class="heading-xlarge">Spend Profile</h1>
         </div>
+        <th:block th:if ="${model.markedAsComplete}">
+            <div class="marked-complete-alert extra-margin-bottom">
+                <p>Your Spend Profile is currently marked as complete, you can decide to make edits to this, or when your partners
+                    have submitted their spend profiles submit them to Innovate UK</p>
+            </div>
+        </th:block>
         <p>Your project costs have been reviewed and confirmed by Innovate UK.
            We now require a <strong>spend profile</strong> from you so that we can plan allocation of the grant funding to your project.
            This spend profile should be developed collaboratively with your project partners.
@@ -31,106 +37,153 @@
         </dl>
     </div>
 
-    <div class="spend-profile-table">
-      <div class="flex-table-before"></div>
-      <div class="flex-table-wrap">
-          <!--/* read spend-profile table */-->
-          <table th:unless="${form}">
-            <colgroup >
-                <col />
-                <th:block th:each="month : ${model.table.getMonths()}">
-                  <col th:class="${#temporals.month(month.localDate) == 3 ? 'year':''}" />
-                </th:block>
-                <col class="total" />
-            </colgroup>
-            <thead>
-              <tr>
-                  <th scope="row" class="fix-left">Month</th>
-                  <th:block th:each="month : ${model.table.getMonths()}">
-                    <th scope="col" th:text="${#temporals.format(month.localDate, 'MMM yyyy')}"  />
-                  </th:block>
-                  <th scope="col">Total</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr th:each="row : ${model.table.getMonthlyCostsPerCategoryMap()}">
-                  <th scope="row" class="fix-left" th:text="${row.key}" />
-                  <td th:each="cost : ${row.value}" th:text="${cost}"/>
-                  <td th:text="${model.table.eligibleCostPerCategoryMap.get(row.key)}"/>
-              </tr>
-            </tbody>
-          </table>
-          <!--/* editable spend-profile table */-->
-          <!--/* todo: organisationId needs to be dynamic, but is now not available in the view */-->
-          <form method="post" th:if="${form}" th:action="@{/project/{projectId}/partner-organisation/31/spend-profile/edit(projectId=${model.projectId})" >
+    <!--/*
+    =================================
+    read only spend-profile table
+    =================================
+    */-->
+    <th:block th:unless="${form}">
+      <div class="spend-profile-table">
+        <div class="flex-table-before"></div>
+        <div class="flex-table-wrap">
             <table>
               <colgroup >
                   <col />
-                  <th:block th:each="month : ${form.table.getMonths()}">
+                  <th:block th:each="month : ${model.table.getMonths()}">
                     <col th:class="${#temporals.month(month.localDate) == 3 ? 'year':''}" />
                   </th:block>
                   <col class="total" />
               </colgroup>
               <thead>
                 <tr>
-                    <th scope="row" class="fix-left" id="month">Month</th>
-                    <th:block th:each="month, stats : ${form.table.getMonths()}">
-                      <th scope="col" th:text="${#temporals.format(month.localDate, 'MMM yyyy')}" th:id="${'month'+stats.index}" />
+                    <th scope="row" class="fix-left">Month</th>
+                    <th:block th:each="month : ${model.table.getMonths()}">
+                      <th scope="col" th:text="${#temporals.format(month.localDate, 'MMM yyyy')}"  />
                     </th:block>
-                    <th scope="col" id="total">Total</th>
+                    <th scope="col">Total</th>
                 </tr>
               </thead>
               <tbody>
-                <tr th:each="row : ${form.table.getMonthlyCostsPerCategoryMap()}">
-                    <th scope="row" class="fix-left" th:text="${row.key}" th:id="${#strings.replace(row.key,' ','-')}"/>
-                    <td th:each="cost, status : ${row.value}">
-                      <input class="form-control"
-                             th:field="*{form.table.monthlyCostsPerCategoryMap[__${row.key}__][__${status.index}__]}"
-                             th:id="${#strings.replace(row.key,' ','-')+'-'+status.index}" />
-                    </td>
-                    <td th:text="${model.table.eligibleCostPerCategoryMap.get(row.key)}"/>
+                <tr th:each="row : ${model.table.getMonthlyCostsPerCategoryMap()}">
+                    <th scope="row" class="fix-left" th:text="${row.key}" />
+                    <td th:each="cost : ${row.value}" th:text="${#numbers.formatInteger(cost,1,'NONE')}"/>
+                    <td th:text="${'&pound; '+#numbers.formatInteger(model.table.eligibleCostPerCategoryMap.get(row.key),1,'NONE')}"/>
                 </tr>
               </tbody>
             </table>
-            <button>test</button>
-          </form>
-
+        </div>
+        <div class="flex-table-after"></div>
       </div>
-      <div class="flex-table-after"></div>
-    </div>
+      <div class="grid-container">
+        <h2 class="heading-medium">Project costs for financial year</h2>
+        <p>The spend profile that you submit will be used as the base for your project spend over the following financial years.</p>
+        <table class="extra-margin-bottom" style="width: 50%;">
+            <thead>
+            <tr>
+                <th scope="col" style="width: 50%">Financial year</th>
+                <th scope="col" style="width: 50%">Project spend</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${model.summary.years}">
+                <td th:text="${item.year + ' - ' + (item.year + 1)}"></td>
+                <td th:text="${'£' + #numbers.formatInteger(item.amount,1,'COMMA')}" />
+            </tr>
+            </tbody>
+        </table>
+          <p class="extra-margin">If required, you can edit this spend profile. It will not be possible to submit the spend profile to Innovate UK until the section is marked as complete.</p>
+          <a class="button button-secondary" th:href="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/edit(projectId=${model.projectId},organisationId=${model.organisationId})}">Edit spend profile</a>
+          <th:block th:unless ="${model.markedAsComplete}">
+              <p class="extra-margin">When you are satisfied with the spend profile, mark the section as complete. This will allow you to submit the spend profile for the project to Innovate UK. You can still return to edit this page before you choose to submit.</p>
+              <form method="post" th:action="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/complete(projectId=${model.projectId},organisationId=${model.organisationId})}" >
+                  <button class="button" name="mark-as-complete">Mark as complete</button>
+              </form>
+          </th:block>
+      </div>
+    </th:block>
+    <!--/*
+    =================================
+    editable spend-profile table
+    =================================
+    */-->
+    <th:block th:if="${form}">
+      <form method="post" th:action="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/edit(projectId=${model.projectId},organisationId=${model.organisationId})}" >
+        <div class="spend-profile-table">
+          <div class="flex-table-before"></div>
+          <div class="flex-table-wrap">
+              <table>
+                <colgroup >
+                    <col />
+                    <th:block th:each="month : ${model.table.getMonths()}">
+                      <col th:class="${#temporals.month(month.localDate) == 3 ? 'year':''}" />
+                    </th:block>
+                    <col class="total" />
+                </colgroup>
+                <thead>
+                  <tr>
+                      <th scope="row" class="fix-left" id="month">Month</th>
+                      <th:block th:each="month,stats : ${model.table.getMonths()}">
+                        <th scope="col" th:text="${#temporals.format(month.localDate, 'MMM yyyy')}" th:id="${'month'+stats.index}" />
+                      </th:block>
+                      <th scope="col" id="total">Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr th:each="row : ${form.table.getMonthlyCostsPerCategoryMap()}">
+                      <th scope="row" class="fix-left" th:text="${row.key}" th:id="${#strings.replace(#strings.replace(row.key,' ','-'),'&amp;','')}"/>
+                      <td th:each="cost, status : ${row.value}">
+                        <input class="form-control"
+                               th:classappend="${#strings.toLowerCase(#temporals.format(model.table.months[status.index].localDate,'MMM-yyyy'))}"
+                               th:attr="aria-labelledby=${#strings.replace(#strings.replace(row.key,' ','-'),'&amp;','')+' month'+status.index}"
+                               th:name="${'table.monthlyCostsPerCategoryMap['+row.key+']['+status.index+']'}"
+                               th:id="${'row-'+#strings.replace(#strings.replace(row.key,' ','-'),'&amp;','')+'-'+status.index}"
+                               th:value="${#numbers.formatInteger(cost,1,'NONE')}"
+                               type="number" />
+                      </td>
+                      <td th:text="${'&pound; '+#numbers.formatInteger(model.table.eligibleCostPerCategoryMap.get(row.key),1,'NONE')}"
+                          data-calculation-operations="+"
+                          th:attr="data-calculation-fields=${'[id*=row-'+#strings.replace(#strings.replace(row.key,' ','-'),'&amp;','')+']'}" />
+                  </tr>
+                </tbody>
+              </table>
+          </div>
+          <div class="flex-table-after"></div>
+        </div>
+        <div class="grid-container">
+          <h2 class="heading-medium">Project costs for financial year</h2>
+          <p>The spend profile that you submit will be used as the base for your project spend over the following financial years.</p>
+          <table class="extra-margin-bottom" style="width: 50%;">
+              <thead>
+              <tr>
+                  <th scope="col" style="width: 50%">Financial year</th>
+                  <th scope="col" style="width: 50%">Project spend</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr th:each="item : ${model.summary.years}">
+                  <td th:text="${item.year + ' - ' + (item.year + 1)}"></td>
+                  <td th:text="${'£' + #numbers.formatInteger(item.amount,1,'COMMA')}"
+                      data-calculation-operations="+"
+                      th:attr="data-calculation-fields=${'.apr-'+item.year+',
+                                                          .may-'+item.year+',
+                                                          .jun-'+item.year+',
+                                                          .jul-'+item.year+',
+                                                          .aug-'+item.year+',
+                                                          .sep-'+item.year+',
+                                                          .oct-'+item.year+',
+                                                          .nov-'+item.year+',
+                                                          .dec-'+item.year+',
+                                                          .jan-'+(item.year+1)+',
+                                                          .feb-'+(item.year+1)+',
+                                                          .mar-'+(item.year+1)}"></td>
+              </tr>
+              </tbody>
+          </table>
+          <button class="button button-secondary extra-margin">Save and return to spend profile overview</button>
+        </div>
+      </form>
+    </th:block>
 
-    <div class="grid-container">
-      <h2 class="heading-medium">Project costs for financial year</h2>
-      <p>The spend profile that you submit will be used as the base for your project spend over the following financial years.</p>
-
-      <dl class="standard-definition-list extra-margin">
-          <dt>Project start date</dt>
-          <dd>
-      <th:block th:include="fragments/elements :: ordinal-day (date=${model.targetProjectStartDate})" />
-      <th:block th:text="${#temporals.format(model.targetProjectStartDate, 'MMMM yyyy')}" />
-          </dd>
-          <dt>Duration</dt>
-          <dd><th:block th:text="${model.durationInMonths}" /> Months</dd>
-      </dl>
-      <p>The spend profile that you submit will be used as the base for your project spend over the following financial years</p>
-      <table class="extra-margin-bottom" style="width: 50%;">
-          <thead>
-          <tr>
-              <th scope="col" style="width: 50%">Financial year</th>
-              <th scope="col" style="width: 50%">Project spend</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr th:each="item : ${model.summary.years}">
-              <td th:text="${item.year + ' - ' + (item.year + 1)}"></td>
-              <td th:text="${'£' + item.amount}"></td>
-          </tr>
-          </tbody>
-      </table>
-      <p>If required, you can edit this spend profile. It will not be possible to submit the spend profile to Innovate UK until the section is marked as complete.</p>
-
-      <p>When you are satisfied with the spend profile, mark the section as complete. This will allow you to submit the spend profile for the project to Innovate UK. You can still return to edit this page before you choose to submit.</p>
-    </div>
 </main>
 
 <div th:include="fragments/layout :: footer" th:remove="tag" />

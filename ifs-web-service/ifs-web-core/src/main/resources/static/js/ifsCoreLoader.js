@@ -42,5 +42,10 @@ IFS.core.loadOrder = {
       IFS.core.unsavedChanges.init();
       IFS.core.finance.init();
     }
+  },
+  'spend-profile' : {
+    init : function(){
+      IFS.core.finance.init();
+    }
   }
 };

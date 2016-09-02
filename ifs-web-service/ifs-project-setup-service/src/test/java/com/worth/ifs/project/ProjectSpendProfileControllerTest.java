@@ -81,6 +81,8 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         SpendProfileTableResource expectedTable = new SpendProfileTableResource();
 
+        expectedTable.setMarkedAsComplete(false);
+
         expectedTable.setMonths(asList(
                 new LocalDateResource(2018, 3, 1),
                 new LocalDateResource(2018, 4, 1),

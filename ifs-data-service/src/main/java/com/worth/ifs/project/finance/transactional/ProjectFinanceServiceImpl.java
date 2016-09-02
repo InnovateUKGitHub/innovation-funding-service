@@ -111,6 +111,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
             table.setMonths(monthResources);
             table.setEligibleCostPerCategoryMap(eligibleCostsPerCategory);
             table.setMonthlyCostsPerCategoryMap(spendFiguresPerCategoryOrderedByMonth);
+            table.setMarkedAsComplete(spendProfile.isMarkedAsComplete());
             return serviceSuccess(table);
         });
     }
@@ -142,10 +143,11 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     }
 
     @Override
-    public ServiceResult<Void> markSpendProfileComplete(ProjectOrganisationCompositeId projectOrganisationCompositeId, SpendProfileTableResource table) {
-        return validateSpendProfileCosts(table)
-                .andOnSuccess(() -> validateSpendProfileTotals(table))
-                .andOnSuccess(() -> saveSpendProfileData(projectOrganisationCompositeId, table, true));
+    public ServiceResult<Void> markSpendProfile(ProjectOrganisationCompositeId projectOrganisationCompositeId, Boolean complete) {
+        SpendProfileTableResource table = getSpendProfileTable(projectOrganisationCompositeId).getSuccessObject();
+        //validateSpendProfileCosts(table).andOnSuccess
+        return validateSpendProfileTotals(table)
+                .andOnSuccess(() -> saveSpendProfileData(projectOrganisationCompositeId, table, complete));
     }
 
     private ServiceResult<Void> validateSpendProfileCosts(SpendProfileTableResource table) {

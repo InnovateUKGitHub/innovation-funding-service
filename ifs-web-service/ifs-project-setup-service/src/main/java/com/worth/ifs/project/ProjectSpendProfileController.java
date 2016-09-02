@@ -70,6 +70,10 @@ public class ProjectSpendProfileController {
         form.setTable(viewModel.getTable());
         model.addAttribute(FORM_ATTR_NAME, form);
 
+        if(viewModel.getTable().getMarkedAsComplete()) {
+            markSpendProfileInComplete(model, projectId, organisationId, "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile");
+        }
+
         return "project/spend-profile";
     }
 
@@ -81,45 +85,61 @@ public class ProjectSpendProfileController {
                                    @SuppressWarnings("unused") BindingResult bindingResult,
                                    @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        return editOrMarkAsCompleteSpendProfile(model, bindingResult, form, projectId, organisationId, false, "project/spend-profile");
+        return editSpendProfile(model, bindingResult, form, projectId, organisationId, "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile");
     }
 
-    @RequestMapping(value = "/confirm", method = POST)
+    @RequestMapping(value = "/complete", method = POST)
     public String markAsCompleteSpendProfile(Model model,
                                    @PathVariable("projectId") final Long projectId,
                                    @PathVariable("organisationId") final Long organisationId,
-                                   @ModelAttribute(FORM_ATTR_NAME) SpendProfileForm form,
-                                   @SuppressWarnings("unused") BindingResult bindingResult,
                                    @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        return editOrMarkAsCompleteSpendProfile(model, bindingResult, form, projectId, organisationId, true, "project/spend-profile");
+        return markSpendProfileComplete(model, projectId, organisationId, "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile");
     }
 
-    private String editOrMarkAsCompleteSpendProfile(Model model,
-                                                    BindingResult bindingResult,
-                                                    SpendProfileForm form,
-                                                    Long projectId,
-                                                    Long organisationId,
-                                                    boolean isMarkAsComplete,
-                                                    String successView) {
+    private String markSpendProfileComplete(Model model,
+                                            Long projectId,
+                                            Long organisationId,
+                                            String successView) {
+        return markSpendProfile(model, projectId, organisationId, true, successView);
+    }
 
-        //BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(form.getTable(), "");
+    private String markSpendProfileInComplete(Model model,
+                                              Long projectId,
+                                              Long organisationId,
+                                              String successView) {
+        return markSpendProfile(model, projectId, organisationId, false, successView);
+    }
+
+    private String markSpendProfile(Model model,
+                                    Long projectId,
+                                    Long organisationId,
+                                    Boolean complete,
+                                    String successView) {
+        ServiceResult<Void> result = projectFinanceService.markSpendProfile(projectId, organisationId, complete);
+        if (result.isFailure()) {
+            // If this model attribute is set, it means there are some categories where the totals don't match
+            model.addAttribute("errorCategories", result.getFailure().getErrors());
+        }
+
+        buildSpendProfileViewModel(model, projectId, organisationId);
+
+        return successView;
+    }
+
+    private String editSpendProfile(Model model, BindingResult bindingResult, SpendProfileForm form, Long projectId, Long organisationId, String successView) {
+        buildSpendProfileViewModel(model, projectId, organisationId);
         ValidationHandler validationHandler = ValidationHandler.newBindingResultHandler(bindingResult);
         new SpendProfileCostValidator().validate(form.getTable(), bindingResult);
 
         if (validationHandler.hasErrors()) {
-            return "project/spend-profile/edit";
+            return "project/spend-profile";
         }
 
-        ServiceResult<Void> result = isMarkAsComplete ? projectFinanceService.markSpendProfileComplete(projectId, organisationId, form.getTable()) : projectFinanceService.saveSpendProfile(projectId, organisationId, form.getTable());
+        ServiceResult<Void> result = projectFinanceService.saveSpendProfile(projectId, organisationId, form.getTable());
         if (result.isFailure()) {
-
             // If this model attribute is set, it means there are some categories where the totals don't match
             model.addAttribute("errorCategories", result.getFailure().getErrors());
-
-            if (isMarkAsComplete) {
-                return "project/spend-profile/edit";
-            }
         }
 
         return successView;
@@ -138,7 +158,7 @@ public class ProjectSpendProfileController {
         SpendProfileTableResource table = projectFinanceService.getSpendProfileTable(projectId, organisationId);
         List<SpendProfileSummaryYearModel> years = createSpendProfileSummaryYears(projectResource, table);
         SpendProfileSummaryModel summary = new SpendProfileSummaryModel(years);
-        return new ProjectSpendProfileViewModel(projectResource, organisationId, table, summary, false);
+        return new ProjectSpendProfileViewModel(projectResource, organisationId, table, summary, table.getMarkedAsComplete());
     }
 
     private List<SpendProfileSummaryYearModel> createSpendProfileSummaryYears(ProjectResource project, SpendProfileTableResource table){

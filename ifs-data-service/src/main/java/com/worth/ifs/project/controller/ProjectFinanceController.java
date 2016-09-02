@@ -54,11 +54,11 @@ public class ProjectFinanceController {
         return projectFinanceService.saveSpendProfile(projectOrganisationCompositeId, table).toPostResponse();
     }
 
-    @RequestMapping(value = "/{projectId}/partner-organisation/{organisationId}/spend-profile/complete", method = POST)
+    @RequestMapping(value = "/{projectId}/partner-organisation/{organisationId}/spend-profile/complete/{complete}", method = POST)
     public RestResult<Void> markSpendProfileCompete(@PathVariable("projectId") final Long projectId,
-                                             @PathVariable("organisationId") final Long organisationId,
-                                             @RequestBody SpendProfileTableResource table) {
+                                                    @PathVariable("organisationId") final Long organisationId,
+                                                    @PathVariable("complete") final Boolean complete) {
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        return projectFinanceService.markSpendProfileComplete(projectOrganisationCompositeId, table).toPostResponse();
+        return projectFinanceService.markSpendProfile(projectOrganisationCompositeId, complete).toPostResponse();
     }
 }
