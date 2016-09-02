@@ -86,7 +86,7 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
             throw new ObjectNotFoundException(error.getErrorKey(), error.getArguments());
         }
 
-        if(restFailure.has(GENERAL_FORBIDDEN)){
+        if(restFailure.has(GENERAL_FORBIDDEN) || restFailure.has(GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION)){
             throw new ForbiddenActionException(error.getErrorKey(), error.getArguments());
         }
 
