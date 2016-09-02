@@ -1,0 +1,21 @@
+package com.worth.ifs.assessment.transactional;
+
+import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.invite.resource.CompetitionParticipantResource;
+import com.worth.ifs.invite.resource.CompetitionParticipantRoleResource;
+import com.worth.ifs.invite.resource.ParticipantStatusResource;
+import com.worth.ifs.security.NotSecured;
+import org.springframework.security.access.method.P;
+
+import java.util.List;
+
+/**
+ * Service for managing {@link com.worth.ifs.invite.domain.CompetitionParticipant}s.
+ */
+public interface CompetitionParticipantService {
+
+    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
+    ServiceResult<List<CompetitionParticipantResource>> getCompetitionParticipants(@P("user") Long userId,
+                                                                                   @P("role") CompetitionParticipantRoleResource roleResource,
+                                                                                   @P("status") ParticipantStatusResource statusResource);
+}
