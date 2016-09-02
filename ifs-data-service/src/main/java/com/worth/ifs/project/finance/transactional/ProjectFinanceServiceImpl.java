@@ -2,6 +2,7 @@ package com.worth.ifs.project.finance.transactional;
 
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.LocalDateResource;
+import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.finance.domain.*;
@@ -30,6 +31,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.rest.ValidationMessages.noErrors;
 import static com.worth.ifs.commons.service.ServiceResult.processAnyFailuresOrSucceed;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -135,7 +137,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     }
 
     @Override
-    public ServiceResult<Void> saveSpendProfile(ProjectOrganisationCompositeId projectOrganisationCompositeId, SpendProfileTableResource table) {
+    public ServiceResult<ValidationMessages> saveSpendProfile(ProjectOrganisationCompositeId projectOrganisationCompositeId, SpendProfileTableResource table) {
 
         return validateSpendProfileCosts(table)
                 .andOnSuccess(() -> saveSpendProfileData(projectOrganisationCompositeId, table, false)) // We have to save the data even if the totals don't match, so we do that first
@@ -145,7 +147,6 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     @Override
     public ServiceResult<Void> markSpendProfile(ProjectOrganisationCompositeId projectOrganisationCompositeId, Boolean complete) {
         SpendProfileTableResource table = getSpendProfileTable(projectOrganisationCompositeId).getSuccessObject();
-        //validateSpendProfileCosts(table).andOnSuccess
         return validateSpendProfileTotals(table)
                 .andOnSuccess(() -> saveSpendProfileData(projectOrganisationCompositeId, table, complete));
     }
@@ -257,14 +258,14 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         }
     }
 
-    private ServiceResult<Void> validateSpendProfileTotals(SpendProfileTableResource table) {
+    private ServiceResult<ValidationMessages> validateSpendProfileTotals(SpendProfileTableResource table) {
 
         List<Error> categoriesWithIncorrectTotal = checkTotalForMonths(table);
 
         if (categoriesWithIncorrectTotal.isEmpty()) {
-            return serviceSuccess();
+            return serviceSuccess(noErrors());
         } else {
-            return serviceFailure(categoriesWithIncorrectTotal);
+            return serviceSuccess(new ValidationMessages(categoriesWithIncorrectTotal));
         }
     }
 

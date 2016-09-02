@@ -1,5 +1,6 @@
 package com.worth.ifs.project.finance.transactional;
 
+import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
 import com.worth.ifs.project.resource.ProjectResource;
@@ -24,7 +25,7 @@ public interface ProjectFinanceService {
     ServiceResult<SpendProfileResource> getSpendProfile(ProjectOrganisationCompositeId projectOrganisationCompositeId);
 
     @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'EDIT_SPEND_PROFILE')")
-    ServiceResult<Void> saveSpendProfile(ProjectOrganisationCompositeId projectOrganisationCompositeId, SpendProfileTableResource table);
+    ServiceResult<ValidationMessages> saveSpendProfile(ProjectOrganisationCompositeId projectOrganisationCompositeId, SpendProfileTableResource table);
 
     @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'MARK_SPEND_PROFILE_COMPLETE')")
     ServiceResult<Void> markSpendProfile(ProjectOrganisationCompositeId projectOrganisationCompositeId, Boolean complete);
