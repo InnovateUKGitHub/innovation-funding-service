@@ -1,5 +1,6 @@
 package com.worth.ifs.file.controller;
 
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestErrorResponse;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -19,7 +20,7 @@ import java.io.InputStream;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
-import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
+import static com.worth.ifs.commons.error.CommonFailureKeys.FILES_EXCEPTION_WHILE_RETRIEVING_FILE;
 import static org.hibernate.jpa.internal.QueryImpl.LOG;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.OK;
@@ -59,7 +60,7 @@ public class FileControllerUtils {
         } catch (Exception e) {
 
             LOG.error("Error retrieving file", e);
-            return new ResponseEntity<>(new RestErrorResponse(internalServerErrorError("Error retrieving file")), INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new RestErrorResponse(new Error(FILES_EXCEPTION_WHILE_RETRIEVING_FILE)), INTERNAL_SERVER_ERROR);
         }
     }
 

@@ -39,6 +39,12 @@
             </div>
         </div>
 
+        <div th:if="${param.user != null and param.user[0] == 'nonLead' and param.status != null and param.status[0] == 'SubmittedByLead'}" th:unless="${param.task != null and param.task[0] == 'reviewPartner'}" th:remove="tag">
+            <div class="success-alert extra-margin-bottom">
+                <p><strong>Your spend profile has been submitted to Innovate UK by the lead partner.</strong></p>
+            </div>
+        </div>
+
         <p th:unless="${param.task != null and param.task[0] == 'reviewProject' or param.task != null and param.task[0] == 'reviewPartner'}">Your project costs have been reviewed and confirmed by Innovate UK. We now require a <strong>spend profile</strong> from you so that we can plan allocation of the grant funding to your project. This spend profile should be developed collaboratively with your project partners.</p>
 
         <dl class="standard-definition-list">
