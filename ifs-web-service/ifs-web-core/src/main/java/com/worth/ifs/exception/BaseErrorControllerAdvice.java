@@ -43,8 +43,9 @@ public abstract class BaseErrorControllerAdvice {
 
     protected ModelAndView createExceptionModelAndView(Exception e, String titleKey, String messageForUserKey, String pageName, HttpServletRequest req, List<Object> arguments, HttpStatus status){
 
+        Object[] argumentsArray = arguments == null ? new Object[0] : arguments.toArray();
         String errorTitle = MessageUtil.getFromMessageBundle(messageSource, titleKey, "Unknown Error...", req.getLocale());
-        String messageForUser = MessageUtil.getFromMessageBundle(messageSource, messageForUserKey, "Unknown Error...", req.getLocale());
+        String messageForUser = MessageUtil.getFromMessageBundle(messageSource, messageForUserKey, "Unknown Error...", argumentsArray, req.getLocale());
 
         ModelAndView mav = new ModelAndView();
         mav.addObject("exception", e);
