@@ -115,15 +115,23 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         SpendProfileSummaryModel summary = new SpendProfileSummaryModel(years);
 
-        // Build the categoryToActualTotal map based on the input
+        // Build the expectedCategoryToActualTotal map based on the input
         Map<String, BigDecimal> expectedCategoryToActualTotal = new LinkedHashMap<>();
         expectedCategoryToActualTotal.put("Labour", new BigDecimal("100"));
         expectedCategoryToActualTotal.put("Materials", new BigDecimal("180"));
         expectedCategoryToActualTotal.put("Other costs", new BigDecimal("55"));
 
+        // Expected total for each month based on the input
+        List<BigDecimal> expectedTotalForEachMonth = asList(new BigDecimal("150"), new BigDecimal("85"), new BigDecimal("100"));
+
+        // Assert that the total of totals is correct for Actual Costs and Eligible Costs based on the input
+        BigDecimal expectedTotalOfAllActualTotals = new BigDecimal("335");
+        BigDecimal expectedTotalOfAllEligibleTotals = new BigDecimal("305");
+
         // Assert that the view model is populated with the correct values
         ProjectSpendProfileViewModel expectedViewModel = new ProjectSpendProfileViewModel(projectResource, organisationId, expectedTable,
-                summary, false, expectedCategoryToActualTotal);
+                summary, false, expectedCategoryToActualTotal, expectedTotalForEachMonth,
+                expectedTotalOfAllActualTotals, expectedTotalOfAllEligibleTotals);
 
         mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile", projectResource.getId(), organisationId))
                 .andExpect(status().isOk())

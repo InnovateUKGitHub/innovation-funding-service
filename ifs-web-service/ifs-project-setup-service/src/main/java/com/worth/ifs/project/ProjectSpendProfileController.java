@@ -28,7 +28,9 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -156,9 +158,16 @@ public class ProjectSpendProfileController {
     private ProjectSpendProfileViewModel buildSpendProfileViewModel(final ProjectResource projectResource, final Long organisationId, final SpendProfileTableResource spendProfileTableResource) {
         List<SpendProfileSummaryYearModel> years = createSpendProfileSummaryYears(projectResource, spendProfileTableResource);
         SpendProfileSummaryModel summary = new SpendProfileSummaryModel(years);
+
         Map<String, BigDecimal> categoryToActualTotal = buildSpendProfileActualTotalsForAllCategories(spendProfileTableResource);
+        List<BigDecimal> totalForEachMonth = buildTotalForEachMonth(spendProfileTableResource);
+
+        BigDecimal totalOfAllActualTotals = buildTotalOfTotals(categoryToActualTotal);
+        BigDecimal totalOfAllEligibleTotals = buildTotalOfTotals(spendProfileTableResource.getEligibleCostPerCategoryMap());
+
         return new ProjectSpendProfileViewModel(projectResource, organisationId, spendProfileTableResource, summary,
-                spendProfileTableResource.getMarkedAsComplete(), categoryToActualTotal);
+                spendProfileTableResource.getMarkedAsComplete(), categoryToActualTotal, totalForEachMonth,
+                totalOfAllActualTotals, totalOfAllEligibleTotals);
     }
 
     private ProjectSpendProfileViewModel buildSpendProfileViewModel(Long projectId, Long organisationId) {
@@ -171,6 +180,33 @@ public class ProjectSpendProfileController {
 
         return CollectionFunctions.simpleLinkedMapValue(table.getMonthlyCostsPerCategoryMap(),
                 (List<BigDecimal> monthlyCosts) -> monthlyCosts.stream().reduce(BigDecimal.ZERO, (d1, d2) -> d1.add(d2)));
+    }
+
+    private List<BigDecimal> buildTotalForEachMonth(SpendProfileTableResource table) {
+
+        Map<String, List<BigDecimal>> monthlyCostsPerCategoryMap = table.getMonthlyCostsPerCategoryMap();
+
+        List<BigDecimal> totalForEachMonth = Stream.generate(() -> BigDecimal.ZERO).limit(table.getMonths().size()).collect(Collectors.toList());
+
+        for (int index = 0; index < totalForEachMonth.size(); index++) {
+
+            BigDecimal totalForThisMonth = totalForEachMonth.get(index);
+
+            for (Map.Entry<String, List<BigDecimal>> entry : monthlyCostsPerCategoryMap.entrySet()) {
+
+                BigDecimal costForThisMonthForCategory = entry.getValue().get(index);
+                totalForThisMonth = totalForThisMonth.add(costForThisMonthForCategory);
+            }
+
+            totalForEachMonth.set(index, totalForThisMonth);
+        }
+
+        return totalForEachMonth;
+    }
+
+    private BigDecimal buildTotalOfTotals(Map<String, BigDecimal> input) {
+
+        return input.values().stream().reduce(BigDecimal.ZERO, (d1, d2) -> d1.add(d2));
     }
 
     private List<SpendProfileSummaryYearModel> createSpendProfileSummaryYears(ProjectResource project, SpendProfileTableResource table){
