@@ -8,7 +8,6 @@ import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.bankdetails.form.ProjectDetailsAddressForm;
 import com.worth.ifs.bankdetails.resource.BankDetailsResource;
 import com.worth.ifs.bankdetails.service.BankDetailsRestService;
-import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
@@ -22,14 +21,12 @@ import com.worth.ifs.project.consortiumoverview.viewmodel.LeadPartnerModel;
 import com.worth.ifs.project.consortiumoverview.viewmodel.ProjectConsortiumStatusViewModel;
 import com.worth.ifs.project.consortiumoverview.viewmodel.RegularPartnerModel;
 import com.worth.ifs.project.form.FinanceContactForm;
+import com.worth.ifs.project.form.InviteeForm;
 import com.worth.ifs.project.form.ProjectManagerForm;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
-import com.worth.ifs.project.viewmodel.ProjectDetailsAddressViewModel;
-import com.worth.ifs.project.viewmodel.ProjectDetailsStartDateForm;
-import com.worth.ifs.project.viewmodel.ProjectDetailsStartDateViewModel;
-import com.worth.ifs.project.viewmodel.ProjectDetailsViewModel;
+import com.worth.ifs.project.viewmodel.*;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.OrganisationRestService;
@@ -38,6 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
@@ -46,41 +44,19 @@ import java.util.concurrent.ExecutionException;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static com.jayway.jsonpath.Filter.filter;
-import static com.sun.javafx.fxml.expression.Expression.not;
-import static com.worth.ifs.address.resource.OrganisationAddressType.OPERATING;
-import static com.worth.ifs.address.resource.OrganisationAddressType.PROJECT;
-import static com.worth.ifs.address.resource.OrganisationAddressType.REGISTERED;
+import static com.worth.ifs.address.resource.OrganisationAddressType.*;
 import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
 import static com.worth.ifs.project.consortiumoverview.viewmodel.ConsortiumPartnerStatus.*;
-import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
-import static com.worth.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
-import static javafx.scene.input.KeyCode.V;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
-
-import com.worth.ifs.project.form.InviteeForm;
-import com.worth.ifs.project.viewmodel.FinanceContactModel;
-
-import com.worth.ifs.project.viewmodel.SelectFinanceContactViewModel;
-
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-
-
 import static com.worth.ifs.project.viewmodel.FinanceContactStatus.EXISTING;
 import static com.worth.ifs.project.viewmodel.FinanceContactStatus.PENDING;
-
-import static com.worth.ifs.util.CollectionFunctions.getOnlyElement;
-import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
-import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
+import static com.worth.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
+import static com.worth.ifs.util.CollectionFunctions.*;
 import static java.util.stream.Collectors.toList;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 /**
  * This controller will handle all requests that are related to project details.
  */
@@ -190,7 +166,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
         Supplier<String> failureView = () -> doViewFinanceContact(model, projectId, organisation, loggedInUser, financeForm, form, false);
 
-        if (!ValidateEmailIsUnique(form.getEmail()))
+        if (!validateEmailIsUnique(form.getEmail()))
         {
             InviteeForm inviteeForm = new InviteeForm();
             inviteeForm.setEmailExistsError(form.getEmail());
@@ -217,8 +193,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
     }
 
-    private boolean ValidateEmailIsUnique (String email)
-    {
+    private boolean validateEmailIsUnique(String email) {
         RestResult<UserResource> existingUserSearch = userService.findUserByEmail(email);
         return NOT_FOUND.equals(existingUserSearch.getStatusCode());
     }

@@ -6,16 +6,10 @@ import com.worth.ifs.address.resource.AddressTypeResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.bankdetails.form.ProjectDetailsAddressForm;
-import com.worth.ifs.commons.validation.ValidationConstants;
 import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.controller.ValidationHandler;
-import com.worth.ifs.finance.service.ApplicationFinanceRestService;
-import com.worth.ifs.invite.builder.ProjectInviteResourceBuilder;
 import com.worth.ifs.invite.constant.InviteStatus;
 import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
-import com.worth.ifs.project.form.FinanceContactForm;
-import com.worth.ifs.project.form.InviteeForm;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.project.viewmodel.ProjectDetailsAddressViewModel;
@@ -25,26 +19,14 @@ import com.worth.ifs.project.viewmodel.ProjectDetailsViewModel;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
-import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotEmpty;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.commons.error.Error;
 
-import javax.validation.Valid;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -55,7 +37,6 @@ import static com.worth.ifs.address.builder.AddressTypeResourceBuilder.newAddres
 import static com.worth.ifs.address.resource.OrganisationAddressType.*;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
-import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -70,7 +51,6 @@ import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
-import static javafx.scene.input.KeyCode.R;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.verify;
@@ -78,7 +58,6 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<ProjectDetailsController> {
@@ -340,21 +319,21 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 withRoleName(PARTNER).
                 build(2);
 
-        InviteProjectResource invite = newInviteProjectResource().withId(1L)
+        InviteProjectResource createdInvite = newInviteProjectResource().withId(1L)
                 .withProject(projectId).withName(invitedUserName)
                 .withEmail(invitedUserEmail)
                 .withOrganisation(organisationId)
                 .withLeadOrganisation(leadOrganisation.getName()).build();
 
-        invite.setInviteOrganisation(organisationId);
-        invite.setUser(2L);
-        invite.setApplicationId(projectResource.getApplication());
-        invite.setApplicationId(applicationId);
-        invite.setHash("123456789");
+        createdInvite.setInviteOrganisation(organisationId);
+        createdInvite.setUser(2L);
+        createdInvite.setApplicationId(projectResource.getApplication());
+        createdInvite.setApplicationId(applicationId);
+        createdInvite.setHash("123456789");
 
         List<InviteProjectResource> existingInvites = newInviteProjectResource().withId(2L)
-                .withProject(projectId).withName("exist test")
-                .withEmail("existing@test.com")
+                .withProject(projectId).withNames("exist test", invitedUserName)
+                .withEmails("existing@test.com", invitedUserEmail)
                 .withOrganisation(organisationId)
                 .withLeadOrganisation(leadOrganisation.getName()).build(2);
 
@@ -373,22 +352,23 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         when(userService.findUserByEmail(invitedUserEmail)).thenReturn(restFailure(notFoundError(UserResource.class, invitedUserEmail)));
         when(projectService.getById(projectId)).thenReturn(projectResource);
         when(projectService.getLeadOrganisation(projectId)).thenReturn(leadOrganisation);
-        when(projectService.saveProjectInvite(invite)).thenReturn(serviceSuccess());
-        when(projectService.inviteFinanceContact(projectId, invite)).thenReturn(serviceSuccess());
+        when(projectService.saveProjectInvite(createdInvite)).thenReturn(serviceSuccess());
+        when(projectService.inviteFinanceContact(projectId, createdInvite)).thenReturn(serviceSuccess());
         when(projectService.updateFinanceContact(projectId, organisationId, invitedUserId)).thenReturn(serviceSuccess());
         when(userService.findById(invitedUserId)).thenReturn(financeContactUserResource);
         when(projectService.getProjectUsersForProject(projectId)).thenReturn(availableUsers);
-        when(projectService.getInvitesByProject(projectId)).thenReturn()
+        when(projectService.getInvitesByProject(projectId)).thenReturn(serviceSuccess(existingInvites));
+        when(projectService.inviteFinanceContact(projectId, existingInvites.get(1))).thenReturn(serviceSuccess());
 
         InviteStatus testStatus = InviteStatus.CREATED;
 
         mockMvc.perform(post("/project/{id}/details/invite-finance-contact", projectId).
                 contentType(MediaType.APPLICATION_FORM_URLENCODED).
-                param("userId", "1").
-                param("name", "Miss McTest").
-                param("email", "mctest@testdomain.com").
+                param("userId", invitedUserId + "").
+                param("name", invitedUserName).
+                param("email", invitedUserEmail).
                 param("inviteStatus", testStatus.toString()).
-                param("organisation", "1")).
+                param("organisation", organisationId + "")).
                 andExpect(status().is3xxRedirection()).
                 andExpect(view().name("redirect:/project/" + projectId  + "/details")).
                 andReturn();
