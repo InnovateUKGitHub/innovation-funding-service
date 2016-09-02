@@ -22,7 +22,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,7 +34,7 @@ import static org.codehaus.groovy.runtime.InvokerHelper.asList;
  * Competition setup section saver for the initial details section.
  */
 @Service
-public class InitialDetailsSectionSaver implements CompetitionSetupSectionSaver {
+public class InitialDetailsSectionSaver extends AbstractSectionSaver implements CompetitionSetupSectionSaver {
 
 	private static Log LOG = LogFactory.getLog(InitialDetailsSectionSaver.class);
     public final static String OPENINGDATE_FIELDNAME = "openingDate";
@@ -105,24 +104,11 @@ public class InitialDetailsSectionSaver implements CompetitionSetupSectionSaver 
 
 	@Override
 	public List<Error> autoSaveSectionField(CompetitionResource competitionResource, String fieldName, String value) {
-		List<Error> errors = new ArrayList<>();
-
-	    try {
-            errors = updateCompetitionResourceWithAutoSave(errors, competitionResource, fieldName, value);
-        } catch (ParseException e) {
-            errors.add(new Error(e.getMessage(), HttpStatus.BAD_REQUEST));
-        }
-
-        if(!errors.isEmpty()) {
-            return errors;
-        }
-
-        competitionService.update(competitionResource);
-
-		return Collections.emptyList();
+		return performAutoSaveField(competitionResource, fieldName, value);
 	}
 
-	private List<Error> updateCompetitionResourceWithAutoSave(List<Error> errors, CompetitionResource competitionResource, String fieldName, String value) throws ParseException {
+    @Override
+	protected List<Error> updateCompetitionResourceWithAutoSave(List<Error> errors, CompetitionResource competitionResource, String fieldName, String value) throws ParseException {
         switch (fieldName) {
             case "title":
                 competitionResource.setName(value);
