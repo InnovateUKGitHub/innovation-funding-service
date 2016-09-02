@@ -16,4 +16,5 @@ public interface CompetitionSetupSectionSaver {
 	List<Error> saveSection(CompetitionResource competitionResource, CompetitionSetupForm competitionSetupForm);
 
     List<Error> autoSaveSectionField(CompetitionResource competitionResource, String fieldName, String value);
+
 }

@@ -16,32 +16,6 @@
             </div>
 
             <div class="my-applications">
-                <div class="invite-to-assess" th:unless="${#lists.isEmpty(model.invitations)}">
-                    <h2 class="heading-medium">Invitations to assess (<span th:text="${#lists.size(model.invitations)}" />)</h2>
-                    <ul class="boxed-list">
-                        <li th:each="invitations : ${model.invitations}">
-                            <div class="grid-row">
-                                <div class="column-assessment-details">
-                                    <h3 class="heading-medium">
-                                    <a href="#" th:text="${invitations.displayLabel}"/>
-                                    </h3>
-                                    <p>Please respond to this request for you to assess on this new competition.</p>
-                                </div>
-                                <div class="column-assessment-status navigation-right">
-                                    <div class="application-status invite">
-                                        <p class="subtitle no-margin">Assessment period:</p>
-                                        <p class="heading-small no-margin">
-                                            <span th:text="|${#temporals.day(invitations.assessmentStartDate)} ${#temporals.monthName(invitations.assessmentStartDate)}|" th:remove="tag" />
-                                            to
-                                            <span th:text="|${#temporals.day(invitations.assessmentEndDate)} ${#temporals.monthName(invitations.assessmentEndDate)}|" th:remove="tag" />
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-
                 <div th:unless="${#lists.isEmpty(model.activeCompetitions)}" th:remove="tag">
                     <h2 class="heading-medium">Competitions for assessment (<span th:text="${#lists.size(model.activeCompetitions)}" />)</h2>
                     <ul class="boxed-list">

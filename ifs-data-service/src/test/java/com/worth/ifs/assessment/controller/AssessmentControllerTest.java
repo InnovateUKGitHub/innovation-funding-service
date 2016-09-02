@@ -7,6 +7,7 @@ import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestErrorResponse;
 import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
 import org.junit.Test;
+import org.springframework.test.web.servlet.MvcResult;
 
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static com.worth.ifs.assessment.builder.ProcessOutcomeResourceBuilder.newProcessOutcomeResource;
@@ -14,7 +15,7 @@ import static com.worth.ifs.commons.error.CommonFailureKeys.ASSESSMENT_RECOMMEND
 import static com.worth.ifs.commons.error.CommonFailureKeys.ASSESSMENT_REJECTION_FAILED;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.util.JsonMappingUtil.toJson;
+import static com.worth.ifs.util.JsonMappingUtil.fromJson;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -69,14 +70,14 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
 
         when(assessmentServiceMock.recommend(assessmentId, processOutcome)).thenReturn(serviceFailure(ASSESSMENT_RECOMMENDATION_FAILED));
 
-        Error recommendationFailedError = new Error(ASSESSMENT_RECOMMENDATION_FAILED.getErrorKey(), ASSESSMENT_RECOMMENDATION_FAILED.getErrorMessage(), null);
-
-        mockMvc.perform(put("/assessment/{id}/recommend", assessmentId)
+        MvcResult result = mockMvc.perform(put("/assessment/{id}/recommend", assessmentId)
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(processOutcome)))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().json(toJson(new RestErrorResponse(recommendationFailedError))))
                 .andReturn();
+
+        RestErrorResponse restErrorResponse = fromJson(result.getResponse().getContentAsString(), RestErrorResponse.class);
+        assertEqualsUpNoIncludingStatusCode(restErrorResponse, new Error(ASSESSMENT_RECOMMENDATION_FAILED));
 
         verify(assessmentServiceMock, only()).recommend(assessmentId, processOutcome);
     }
@@ -103,14 +104,14 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
 
         when(assessmentServiceMock.rejectInvitation(assessmentId, processOutcome)).thenReturn(serviceFailure(ASSESSMENT_REJECTION_FAILED));
 
-        Error rejectionFailedError = new Error(ASSESSMENT_REJECTION_FAILED.getErrorKey(), ASSESSMENT_REJECTION_FAILED.getErrorMessage(), null);
-
-        mockMvc.perform(put("/assessment/{id}/rejectInvitation", assessmentId)
+        MvcResult result = mockMvc.perform(put("/assessment/{id}/rejectInvitation", assessmentId)
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(processOutcome)))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().json(toJson(new RestErrorResponse(rejectionFailedError))))
                 .andReturn();
+
+        RestErrorResponse restErrorResponse = fromJson(result.getResponse().getContentAsString(), RestErrorResponse.class);
+        assertEqualsUpNoIncludingStatusCode(restErrorResponse, new Error(ASSESSMENT_REJECTION_FAILED));
 
         verify(assessmentServiceMock, only()).rejectInvitation(assessmentId, processOutcome);
     }

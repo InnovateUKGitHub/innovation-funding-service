@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition dashboard'}, ${'/prototypes/4151-admin-competition-dash'})" th:remove="tag" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+	
+	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Project details'}, ${'Bank details'})" th:remove="tag" />
+
+	<!-- <div th:include="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:with="page='project-setup', status='closed'" th:remove="tag" /> -->
+	
+	<hr />
+
+	<div class="success-alert extra-margin-bottom" th:unless="${param.status == null or param.status[0] != 'accepted'}">
+		<h2 class="heading-small no-margin-top">The bank details provided have been approved.</h2>
+	</div>
+
+	<th:block th:if="${param.status != null and param.status[0] == 'noCompHouse' or param.type != null and param.type[0] == 'noCompHouse'}">
+		<div class="panel-indent">
+			<h2 class="heading-medium no-margin-top">Business not registered on Companies House</h2>
+
+			<dl class="standard-definition-list">
+				<dt>Stated business type:</dt>
+				<dd>Limited Liability Partnership</dd>
+			</dl>
+		</div>
+	</th:block>
+
+	<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
+	<p>This overview details whether each member of the project team has submitted their bank details and whether additional review is needed before to approve the bank accounts.</p>
+
+
+	<h2 class="heading-medium">Partner progress</h2>
+
+	<div class="table-overflow">
+		<table>
+			<thead>
+				<tr>
+					<th scope="col" style="width: 50%">Partner</th>
+					<th scope="col" style="width: 50%">Progress</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>
+						<a th:href="${(param.status != null and param.status[0] == 'accepted' ? '/prototypes/2650-review-bank-details?status=accepted' : '/prototypes/2650-review-bank-details?status=error')}">Aptrans Ltd (Lead)</a>
+					</td>
+					<td th:unless="${param.status != null and param.status[0] == 'accepted'}">
+						<span class="action">Review required</span>
+					</td>
+					<td th:unless="${param.status == null or param.status[0] != 'accepted'}">
+						<span class="yes">Complete</span>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<a href="#">Biotech Corp</a>
+					</td>
+					<td>
+						<span class="yes">Complete</span>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						University of Cardiff
+					</td>
+					<td th:unless="${param.status != null and param.status[0] == 'accepted'}">
+						Not yet submitted
+					</td>
+					<td th:unless="${param.status == null or param.status[0] != 'accepted'}">
+						<span class="yes">Complete</span>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<p class="extra-margin">When all bank detail have been approved this section of project setup will be marked as complete.</p>
+
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<script src="/js/ifs_prototype/jquery.waypoints.min.js" type="text/javascript"></script>
+<script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
+<script type="text/javascript">
+	// <![CDATA[
+	jQuery(document).ready(function(){
+
+		function $_GET(param) {
+	        var vars = {};
+	        window.location.href.replace( location.hash, '' ).replace( 
+	            /[?&]+([^=&]+)=?([^&]*)?/gi, // regexp
+	            function( m, key, value ) { // callback
+	                vars[key] = value !== undefined ? value : '';
+	            }
+	        );
+
+	        if ( param ) {
+	            return vars[param] ? vars[param] : null;    
+	        }
+	        return vars;
+	    }
+
+
+		if (localStorage.getItem('moDetails') != null){
+
+			jQuery('#first-name').val(localStorage.getItem('moFirstName'));
+			jQuery('#last-name').val(localStorage.getItem('moLastName'));
+			jQuery('#email').val(localStorage.getItem('moEmail'));
+			jQuery('#phone-number').val(localStorage.getItem('moPhoneNumber'));
+
+		}else if ($_GET('status') == 'edit' && localStorage.getItem('moDetails') == null ){
+
+			jQuery('#first-name').val('David');
+			jQuery('#last-name').val('Jones');
+			jQuery('#email').val('djones@companya.co.uk');
+			jQuery('#phone-number').val('01234 456879');
+		}
+
+	});
+	// ]]>
+</script>
+</body>
+</html>
