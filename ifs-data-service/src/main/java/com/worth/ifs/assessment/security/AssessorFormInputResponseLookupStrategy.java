@@ -1,5 +1,6 @@
 package com.worth.ifs.assessment.security;
 
+import com.worth.ifs.assessment.domain.AssessorFormInputResponse;
 import com.worth.ifs.assessment.mapper.AssessorFormInputResponseMapper;
 import com.worth.ifs.assessment.repository.AssessorFormInputResponseRepository;
 import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
@@ -26,4 +27,8 @@ public class AssessorFormInputResponseLookupStrategy {
         return assessorFormInputResponseMapper.mapToResource(assessorFormInputResponseRepository.findOne(id));
     }
 
+    @PermissionEntityLookupStrategy
+    public AssessorFormInputResponse getAssessorFormInputResponse(final Long id){
+        return assessorFormInputResponseRepository.findOne(id);
+    }
 }
