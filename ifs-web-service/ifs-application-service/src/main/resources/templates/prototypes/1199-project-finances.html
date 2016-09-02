@@ -49,6 +49,28 @@
 			</tr>
 		</tbody>
 	</table>
+
+	
+	<th:block th:if="${param.status != null and param.status[0] == 'warning'}">
+
+		<div class="eligibility extra-margin-top">
+
+			<dl class="list-eligibility">
+				<dt>Maximum research participation</dt>
+				<dd>30%</dd>
+				<dt>Current research participation</dt>
+				<dd>32%</dd>
+			</dl>
+			
+			<div class="warning-alert">
+		        <h2 class="heading-small no-margin">Maximum research participation exceeded</h2>
+		        <p>Follow process to confirm project is still eligible for funding.</p>
+		    </div>
+
+		</div>
+
+	</th:block>
+
 	
 	<h2 class="heading-medium">Progress</h2>
 
