@@ -18,7 +18,6 @@ import com.worth.ifs.file.service.BasicFileAndContents;
 import com.worth.ifs.file.service.FileAndContents;
 import com.worth.ifs.file.transactional.FileService;
 import com.worth.ifs.invite.domain.ProjectParticipantRole;
-import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.notifications.resource.ExternalUserNotificationTarget;
 import com.worth.ifs.notifications.resource.Notification;
