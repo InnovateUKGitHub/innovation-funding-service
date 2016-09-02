@@ -319,35 +319,23 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 withRoleName(PARTNER).
                 build(2);
 
-        InviteProjectResource createdInvite = newInviteProjectResource().withId(1L)
+        InviteProjectResource createdInvite = newInviteProjectResource().withId(null)
                 .withProject(projectId).withName(invitedUserName)
                 .withEmail(invitedUserEmail)
                 .withOrganisation(organisationId)
                 .withLeadOrganisation(leadOrganisation.getName()).build();
 
         createdInvite.setInviteOrganisation(organisationId);
-        createdInvite.setUser(2L);
+//        createdInvite.setUser(2L);
         createdInvite.setApplicationId(projectResource.getApplication());
         createdInvite.setApplicationId(applicationId);
-        createdInvite.setHash("123456789");
+//        createdInvite.setHash("123456789");
 
         List<InviteProjectResource> existingInvites = newInviteProjectResource().withId(2L)
                 .withProject(projectId).withNames("exist test", invitedUserName)
                 .withEmails("existing@test.com", invitedUserEmail)
                 .withOrganisation(organisationId)
                 .withLeadOrganisation(leadOrganisation.getName()).build(2);
-
-
-//      //    Delete when confirmed as unnecessary / wrong approach
-//
-// List<Object> arguments = new ArrayList<Object>();
-//        arguments.add(financeContactUserResource);
-//        arguments.add(invitedUserEmail);
-//        Error e = new Error(GENERAL_NOT_FOUND, "User not found", arguments, null);
-//        List<Error> errors = new ArrayList<Error>();
-//        errors.add(e);
-        //when(userService.findUserByEmail(invitedUserEmail)).thenReturn(restSuccess(financeContactUserResource, NOT_FOUND));
-        //when(userService.findUserByEmail(invitedUserEmail)).thenReturn(restFailure(errors , NOT_FOUND));
 
         when(userService.findUserByEmail(invitedUserEmail)).thenReturn(restFailure(notFoundError(UserResource.class, invitedUserEmail)));
         when(projectService.getById(projectId)).thenReturn(projectResource);
