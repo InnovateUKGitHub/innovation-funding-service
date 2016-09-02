@@ -162,4 +162,11 @@ public abstract class CommonErrorControllerAdvice extends BaseErrorControllerAdv
         LOG.debug("ErrorController registrationTokenExpired", e);
         return createExceptionModelAndView(e, "error.title.registration.token.expired", "error.message.registration.token.expired", "registration-token-expired", req, e.getArguments(), HttpStatus.FORBIDDEN);
     }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST) // 400
+    @ExceptionHandler(value = UnableToAcceptInviteException.class)
+    public ModelAndView unableToAcceptInviteException(HttpServletRequest req, UnableToAcceptInviteException e) {
+        LOG.debug("ErrorController unableToAcceptInviteException", e);
+        return createExceptionModelAndViewWithTitleAndMessage(e, "error.title.invite.accept.failure", e.getMessage(), req, e.getArguments(), HttpStatus.BAD_REQUEST);
+    }
 }
