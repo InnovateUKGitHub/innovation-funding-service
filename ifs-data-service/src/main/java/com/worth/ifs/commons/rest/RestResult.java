@@ -3,6 +3,7 @@ package com.worth.ifs.commons.rest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.commons.error.CommonFailureKeys;
 import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.error.ErrorTemplate;
 import com.worth.ifs.commons.error.exception.*;
 import com.worth.ifs.commons.service.*;
 import com.worth.ifs.util.Either;
@@ -36,7 +37,7 @@ import static org.springframework.http.HttpStatus.*;
 public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
 
 	private static final Log LOG = LogFactory.getLog(RestResult.class);
-	
+
     private HttpStatus successfulStatusCode;
 
     public RestResult(RestResult<T> original) {
@@ -155,6 +156,18 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
             throw new ObjectNotFoundException(error.getErrorKey(), error.getArguments());
         }
 
+        if (restFailure.has(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_UNOPENED_INVITE)) {
+            throw new UnableToAcceptInviteException(error.getErrorKey(), error.getArguments());
+        }
+
+        if (restFailure.has(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_ALREADY_ACCEPTED_INVITE)) {
+            throw new UnableToAcceptInviteException(error.getErrorKey(), error.getArguments());
+        }
+
+        if (restFailure.has(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_ALREADY_REJECTED_INVITE)) {
+            throw new UnableToAcceptInviteException(error.getErrorKey(), error.getArguments());
+        }
+
         throw new RuntimeException();
     }
 
@@ -256,6 +269,10 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
 
     public static RestResult<Void> restFailure(HttpStatus statusCode) {
         return restFailure(null, statusCode);
+    }
+
+    public static <T> RestResult<T> restFailure(ErrorTemplate errorTemplate) {
+        return restFailure(singletonList(new Error(errorTemplate)));
     }
 
     public static <T> RestResult<T> restFailure(Error error) {

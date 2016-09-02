@@ -34,6 +34,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -140,6 +141,15 @@ public class CompetitionSetupController {
 
         competitionSetupService.populateCompetitionSectionModelAttributes(model, competition, section);
         model.addAttribute("competitionSetupForm", competitionSetupService.getSectionFormData(competition, section));
+
+        if(model.containsAttribute("isInitialComplete")) {
+            Map<String, Object> modelMap = model.asMap();
+
+            if(!(Boolean) modelMap.get("isInitialComplete") && !section.equals(CompetitionSetupSection.INITIAL_DETAILS)) {
+                LOG.error("User should first fill fill the initial details");
+                return "redirect:/dashboard";
+            }
+        }
 
         return "competition/setup";
     }

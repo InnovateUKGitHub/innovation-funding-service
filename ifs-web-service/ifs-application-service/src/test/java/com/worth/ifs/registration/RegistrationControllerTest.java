@@ -306,6 +306,35 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "retypedPassword"));
     }
 
+
+    @Test
+    public void tooWeakPasswordSizeShouldReturnError() throws Exception {
+        OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
+        when(organisationService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(organisation);
+
+        String testEmailAddress = "tester@tester.com";
+        when(userService.findUserByEmailForAnonymousUserFlow(anyString())).thenReturn(restFailure(notFoundError(UserResource.class, testEmailAddress)));
+
+        Error error = Error.fieldError("password", "INVALID_PASSWORD", BAD_REQUEST.getReasonPhrase());
+        when(userService.createLeadApplicantForOrganisationWithCompetitionId(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong(), anyLong())).thenReturn(restFailure(error));
+
+        mockMvc.perform(post("/registration/register")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .cookie(organisationCookie)
+                .param("email", testEmailAddress)
+                .param("title", "Mr")
+                .param("firstName", "Adam")
+                .param("lastName", "Taylor")
+                .param("phoneNumber", "012345678")
+                .param("termsAndConditions", "1")
+                .param("password", "Password123")
+                .param("retypedPassword", "Password123")
+        )
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(view().name("registration-register"))
+                .andExpect(model().attributeHasFieldErrors("registrationForm", "password"));
+    }
+
     @Test
     public void unmatchedPasswordAndRetypePasswordShouldReturnError() throws Exception {
         OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();

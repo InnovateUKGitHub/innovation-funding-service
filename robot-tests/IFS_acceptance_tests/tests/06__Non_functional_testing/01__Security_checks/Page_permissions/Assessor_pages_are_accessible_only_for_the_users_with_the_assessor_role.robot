@@ -44,17 +44,18 @@ Guest user can't access the review summary page
     Then the user should be redirected to the correct page    ${LOGGED_OUT_URL_FRAGMENT}
     [Teardown]    the user closes the browser
 
-Applicant can't access the assessor's dashboard page
-    [Documentation]    INFUND-1683
-    [Tags]    Pending
-    [Setup]    guest user log-in    &{collaborator2_credentials}
-    # pending INFUND-4746
-    Then the user navigates to the page and gets a custom error message    ${ASSESSOR_DASHBOARD}    You do not have the necessary permissions for your request
-
 Applicant can't access the assessment overview page
     [Documentation]    INFUND-1683
     [Tags]
+    [Setup]    guest user log-in    &{collaborator2_credentials}
     Then the user navigates to the page and gets a custom error message    ${ASSESSOR_REVIEW_SUMMARY}    ${403_error_message}
+
+Applicant can't access the assessor's dashboard page
+    [Documentation]    INFUND-1683
+    [Tags]    Pending
+    [Setup]
+    # pending INFUND-4746
+    Then the user navigates to the page and gets a custom error message    ${ASSESSOR_DASHBOARD}    You do not have the necessary permissions for your request
 
 Applicant can't access the assessor's review application page
     [Documentation]    INFUND-1683

@@ -294,7 +294,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
                 .param(scoreResponse.getLeft(), scoreResponse.getRight())
                 .param(feedbackResponse.getLeft(), feedbackResponse.getRight()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/" + ASSESSMENT_ID))
+                .andExpect(redirectedUrl(format("/%s",ASSESSMENT_ID)))
                 .andReturn();
 
         InOrder inOrder = inOrder(assessorFormInputResponseService);

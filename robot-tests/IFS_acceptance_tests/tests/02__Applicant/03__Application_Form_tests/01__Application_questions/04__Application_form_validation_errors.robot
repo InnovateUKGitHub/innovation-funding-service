@@ -102,7 +102,7 @@ Application details server side
     And the user should see an error    Please enter a future date
     And the user should see an error    Your project should last between 1 and 36 months
     And the user should see the element    css=.error-summary-list
-    [Teardown]    And the user enters text to a text field    id=application_details-title    Robot test application
+    [Teardown]    the user enters text to a text field    id=application_details-title    Robot test application
 
 Empty text area
     [Documentation]    INFUND-43
