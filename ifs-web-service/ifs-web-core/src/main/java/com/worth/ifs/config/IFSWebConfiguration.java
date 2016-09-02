@@ -4,10 +4,12 @@ import com.worth.ifs.controller.ValidationHandlerMethodArgumentResolver;
 import com.worth.ifs.interceptors.AlertMessageHandlerInterceptor;
 import com.worth.ifs.interceptors.GoogleAnalyticsHandlerInterceptor;
 import com.worth.ifs.interceptors.MenuLinksHandlerInterceptor;
+import com.worth.ifs.invite.formatter.RejectionReasonFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.LocaleResolver;
@@ -70,6 +72,11 @@ public class IFSWebConfiguration extends WebMvcConfigurerAdapter {
         argumentResolvers.add(new ValidationHandlerMethodArgumentResolver());
     }
 
+    @Override
+    public void addFormatters(FormatterRegistry registry) {
+        super.addFormatters(registry);
+        registry.addFormatter(new RejectionReasonFormatter());
+    }
 
     /**
      * Resources are cached in every environment other than when running locally during development.
