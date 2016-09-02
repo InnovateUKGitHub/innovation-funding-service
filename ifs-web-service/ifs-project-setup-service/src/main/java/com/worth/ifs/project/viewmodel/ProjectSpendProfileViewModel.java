@@ -8,6 +8,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -24,9 +25,14 @@ public class ProjectSpendProfileViewModel {
     private SpendProfileTableResource table;
     private Boolean markedAsComplete;
     private Map<String, BigDecimal> categoryToActualTotal;
+    private List<BigDecimal> totalForEachMonth;
+    private BigDecimal totalOfAllActualTotals;
+    private BigDecimal totalOfAllEligibleTotals;
 
     public ProjectSpendProfileViewModel(ProjectResource project, Long organisationId, SpendProfileTableResource table,
-                                        SpendProfileSummaryModel summary, Boolean markedAsComplete, Map<String, BigDecimal> categoryToActualTotal) {
+                                        SpendProfileSummaryModel summary, Boolean markedAsComplete,
+                                        Map<String, BigDecimal> categoryToActualTotal, List<BigDecimal> totalForEachMonth,
+                                        BigDecimal totalOfAllActualTotals, BigDecimal totalOfAllEligibleTotals) {
         this.projectId = project.getId();
         this.organisationId = organisationId;
         this.projectName = project.getName();
@@ -36,6 +42,9 @@ public class ProjectSpendProfileViewModel {
         this.table = table;
         this.markedAsComplete = markedAsComplete;
         this.categoryToActualTotal = categoryToActualTotal;
+        this.totalForEachMonth = totalForEachMonth;
+        this.totalOfAllActualTotals = totalOfAllActualTotals;
+        this.totalOfAllEligibleTotals = totalOfAllEligibleTotals;
     }
 
     public Long getProjectId() {
@@ -106,6 +115,18 @@ public class ProjectSpendProfileViewModel {
         return categoryToActualTotal;
     }
 
+    public List<BigDecimal> getTotalForEachMonth() {
+        return totalForEachMonth;
+    }
+
+    public BigDecimal getTotalOfAllActualTotals() {
+        return totalOfAllActualTotals;
+    }
+
+    public BigDecimal getTotalOfAllEligibleTotals() {
+        return totalOfAllEligibleTotals;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -124,6 +145,9 @@ public class ProjectSpendProfileViewModel {
                 .append(summary, that.summary)
                 .append(table, that.table)
                 .append(categoryToActualTotal, that.categoryToActualTotal)
+                .append(totalForEachMonth, that.totalForEachMonth)
+                .append(totalOfAllActualTotals, that.totalOfAllActualTotals)
+                .append(totalOfAllEligibleTotals, that.totalOfAllEligibleTotals)
                 .isEquals();
     }
 
@@ -152,6 +176,10 @@ public class ProjectSpendProfileViewModel {
                 .append("summary", summary)
                 .append("table", table)
                 .append("markedAsComplete", markedAsComplete)
+                .append("categoryToActualTotal", categoryToActualTotal)
+                .append("totalForEachMonth", totalForEachMonth)
+                .append("totalOfAllActualTotals", totalOfAllActualTotals)
+                .append("totalOfAllEligibleTotals", totalOfAllEligibleTotals)
                 .toString();
     }
 }
