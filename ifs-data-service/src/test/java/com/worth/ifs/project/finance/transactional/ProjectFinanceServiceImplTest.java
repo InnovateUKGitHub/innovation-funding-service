@@ -1,6 +1,7 @@
 package com.worth.ifs.project.finance.transactional;
 
 import com.worth.ifs.BaseServiceUnitTest;
+import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.project.domain.Project;
@@ -142,7 +143,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
                 "Materials", asList(new BigDecimal("70"), new BigDecimal("50.10"), new BigDecimal("60")),
                 "Other costs", asList(new BigDecimal("50"), new BigDecimal("5"), new BigDecimal("10.31"))));
 
-        ServiceResult<Void> result = service.saveSpendProfile(projectOrganisationCompositeId, table);
+        ServiceResult<ValidationMessages> result = service.saveSpendProfile(projectOrganisationCompositeId, table);
 
         assertTrue(result.isFailure());
 
@@ -178,7 +179,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
                 "Materials", asList(new BigDecimal("70"), new BigDecimal("-2"), new BigDecimal("60")),
                 "Other costs", asList(new BigDecimal("50"), new BigDecimal("1"), new BigDecimal("-33"))));
 
-        ServiceResult<Void> result = service.saveSpendProfile(projectOrganisationCompositeId, table);
+        ServiceResult<ValidationMessages> result = service.saveSpendProfile(projectOrganisationCompositeId, table);
 
         assertTrue(result.isFailure());
 
@@ -214,7 +215,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
                 "Materials", asList(new BigDecimal("999999"), new BigDecimal("1000001"), new BigDecimal("60")),
                 "Other costs", asList(new BigDecimal("50"), new BigDecimal("2000000"), new BigDecimal("10"))));
 
-        ServiceResult<Void> result = service.saveSpendProfile(projectOrganisationCompositeId, table);
+        ServiceResult<ValidationMessages> result = service.saveSpendProfile(projectOrganisationCompositeId, table);
 
         assertTrue(result.isFailure());
 
@@ -250,7 +251,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
                 "Materials", asList(new BigDecimal("70"), new BigDecimal("-30"), new BigDecimal("60")),
                 "Other costs", asList(new BigDecimal("50"), new BigDecimal("5"), new BigDecimal("1000001"))));
 
-        ServiceResult<Void> result = service.saveSpendProfile(projectOrganisationCompositeId, table);
+        ServiceResult<ValidationMessages> result = service.saveSpendProfile(projectOrganisationCompositeId, table);
 
         assertTrue(result.isFailure());
 
@@ -309,7 +310,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         assertCostForCategoryForGivenMonth(spendProfileInDB, "Other costs", 1, BigDecimal.ONE);
         assertCostForCategoryForGivenMonth(spendProfileInDB, "Other costs", 2, BigDecimal.ONE);
 
-        ServiceResult<Void> result = service.saveSpendProfile(projectOrganisationCompositeId, table);
+        ServiceResult<ValidationMessages> result = service.saveSpendProfile(projectOrganisationCompositeId, table);
 
         assertTrue(result.isSuccess());
 
@@ -355,11 +356,13 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(spendProfileInDB);
 
-        ServiceResult<Void> result = service.saveSpendProfile(projectOrganisationCompositeId, table);
+        ServiceResult<ValidationMessages> result = service.saveSpendProfile(projectOrganisationCompositeId, table);
 
-        assertTrue(result.isFailure());
+        assertTrue(result.isSuccess());
 
-        List<Error> errors = result.getFailure().getErrors();
+        assertTrue(result.getSuccessObject().hasErrors());
+
+        List<Error> errors = result.getSuccessObject().getErrors();
 
         assertTrue(errors.size() == 2);
 
@@ -400,7 +403,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(spendProfileInDB);
 
-        ServiceResult<Void> result = service.saveSpendProfile(projectOrganisationCompositeId, table);
+        ServiceResult<ValidationMessages> result = service.saveSpendProfile(projectOrganisationCompositeId, table);
 
         assertTrue(result.isSuccess());
     }

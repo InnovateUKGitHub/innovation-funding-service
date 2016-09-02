@@ -2,6 +2,7 @@ package com.worth.ifs.project.finance.controller;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.commons.rest.LocalDateResource;
+import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.project.builder.SpendProfileResourceBuilder;
 import com.worth.ifs.project.controller.ProjectFinanceController;
 import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
@@ -96,7 +97,7 @@ public class ProjectFinanceControllerTest extends BaseControllerMockMVCTest<Proj
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
-        when(projectFinanceServiceMock.saveSpendProfile(projectOrganisationCompositeId, table)).thenReturn(serviceSuccess());
+        when(projectFinanceServiceMock.saveSpendProfile(projectOrganisationCompositeId, table)).thenReturn(serviceSuccess(new ValidationMessages()));
 
         mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile", projectId, organisationId)
                 .contentType(APPLICATION_JSON)
