@@ -6,7 +6,9 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Map;
 
 /**
  * View model to back the Spend Profile page. Also wraps SpendProfileSummaryModel for summary table below spend profile.
@@ -21,8 +23,10 @@ public class ProjectSpendProfileViewModel {
     private SpendProfileSummaryModel summary;
     private SpendProfileTableResource table;
     private Boolean markedAsComplete;
+    private Map<String, BigDecimal> categoryToActualTotal;
 
-    public ProjectSpendProfileViewModel(ProjectResource project, Long organisationId, SpendProfileTableResource table, SpendProfileSummaryModel summary, Boolean markedAsComplete) {
+    public ProjectSpendProfileViewModel(ProjectResource project, Long organisationId, SpendProfileTableResource table,
+                                        SpendProfileSummaryModel summary, Boolean markedAsComplete, Map<String, BigDecimal> categoryToActualTotal) {
         this.projectId = project.getId();
         this.organisationId = organisationId;
         this.projectName = project.getName();
@@ -31,6 +35,7 @@ public class ProjectSpendProfileViewModel {
         this.summary = summary;
         this.table = table;
         this.markedAsComplete = markedAsComplete;
+        this.categoryToActualTotal = categoryToActualTotal;
     }
 
     public Long getProjectId() {
@@ -97,6 +102,10 @@ public class ProjectSpendProfileViewModel {
         this.organisationId = organisationId;
     }
 
+    public Map<String, BigDecimal> getCategoryToActualTotal() {
+        return categoryToActualTotal;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -114,6 +123,7 @@ public class ProjectSpendProfileViewModel {
                 .append(durationInMonths, that.durationInMonths)
                 .append(summary, that.summary)
                 .append(table, that.table)
+                .append(categoryToActualTotal, that.categoryToActualTotal)
                 .isEquals();
     }
 

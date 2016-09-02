@@ -13,7 +13,9 @@ import org.junit.Test;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.IntStream;
 
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
@@ -113,8 +115,15 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         SpendProfileSummaryModel summary = new SpendProfileSummaryModel(years);
 
+        // Build the categoryToActualTotal map based on the input
+        Map<String, BigDecimal> expectedCategoryToActualTotal = new LinkedHashMap<>();
+        expectedCategoryToActualTotal.put("Labour", new BigDecimal("100"));
+        expectedCategoryToActualTotal.put("Materials", new BigDecimal("180"));
+        expectedCategoryToActualTotal.put("Other costs", new BigDecimal("55"));
+
         // Assert that the view model is populated with the correct values
-        ProjectSpendProfileViewModel expectedViewModel = new ProjectSpendProfileViewModel(projectResource, organisationId, expectedTable, summary, false);
+        ProjectSpendProfileViewModel expectedViewModel = new ProjectSpendProfileViewModel(projectResource, organisationId, expectedTable,
+                summary, false, expectedCategoryToActualTotal);
 
         mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile", projectResource.getId(), organisationId))
                 .andExpect(status().isOk())
