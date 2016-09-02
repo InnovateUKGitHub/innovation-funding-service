@@ -88,9 +88,9 @@
                             </label>
 
                             <div class="textarea-wrapped word-count">
-                                <textarea th:errorclass="field-error" th:field="*{feedback}" th:text="*{feedback}" id="form-textarea-feedback" data-max_words="100"></textarea>
+                                <textarea th:errorclass="field-error" th:field="*{feedback}" id="form-textarea-feedback" data-max_words="100"></textarea>
                                 <div class="textarea-footer">
-                                    <div th:include="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${model.getWordsRemaining(100,'__*{feedback}__')})" th:remove="tag" />
+                                    <div th:include="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, '__*{feedback}__')})" th:remove="tag" />
                                 </div>
                             </div>
                         </div>
@@ -106,10 +106,10 @@
                             </label>
 
                             <div class="textarea-wrapped word-count">
-                                <textarea th:errorclass="field-error" th:field="*{comment}" th:text="*{comment}" id="form-textarea-comments" data-max_words="100"></textarea>
+                                <textarea th:errorclass="field-error" th:field="*{comment}" id="form-textarea-comments" data-max_words="100"></textarea>
 
                                 <div class="textarea-footer">
-                                    <div th:include="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${model.getWordsRemaining(100,'__*{comment}__')})" th:remove="tag" />
+                                    <div th:include="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, '__*{comment}__')})" th:remove="tag" />
                                 </div>
                             </div>
                         </div>

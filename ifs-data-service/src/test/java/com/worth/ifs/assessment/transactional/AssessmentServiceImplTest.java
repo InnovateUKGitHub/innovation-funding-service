@@ -121,7 +121,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
     public void recommend_CommentExceedsWordLimit() throws Exception {
         Long assessmentId = 1L;
         Long processRoleId = 2L;
-        String comment = String.join(", ", nCopies(101, "response"));
+        String comment = String.join(" ", nCopies(101, "response"));
 
         ProcessRole processRole = newProcessRole().withId(processRoleId).build();
         Assessment assessment = newAssessment()

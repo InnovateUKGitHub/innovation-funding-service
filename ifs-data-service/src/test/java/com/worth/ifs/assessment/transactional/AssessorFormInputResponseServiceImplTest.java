@@ -242,7 +242,7 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
     public void testUpdateFormInputResponse_exceedsWordLimit() throws Exception {
         Long assessmentId = 1L;
         Long formInputId = 2L;
-        String value = String.join(", ", nCopies(101, "response"));
+        String value = String.join(" ", nCopies(101, "response"));
 
         AssessorFormInputResponseResource assessorFormInputResponseResource = newAssessorFormInputResponseResource()
                 .withAssessment(assessmentId)

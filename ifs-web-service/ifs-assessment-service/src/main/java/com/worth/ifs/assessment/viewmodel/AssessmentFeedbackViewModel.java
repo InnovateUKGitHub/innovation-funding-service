@@ -1,20 +1,13 @@
 package com.worth.ifs.assessment.viewmodel;
 
 import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import com.worth.ifs.form.resource.FormInputResource;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
-import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
 import static java.lang.String.format;
-import static java.util.Optional.ofNullable;
 import static org.apache.commons.lang3.StringUtils.lowerCase;
 
 /**
@@ -33,17 +26,16 @@ public class AssessmentFeedbackViewModel {
     private Integer maximumScore;
     private String applicantResponse;
     private List<FormInputResource> assessmentFormInputs;
-    private Map<Long, AssessorFormInputResponseResource> assessorResponses;
     private boolean scoreFormInputExists;
     private boolean scopeFormInputExists;
     private boolean appendixExists;
     private FileDetailsViewModel appendixDetails;
 
-    public AssessmentFeedbackViewModel(long daysLeft, long daysLeftPercentage, CompetitionResource competition, ApplicationResource application, Long questionId, String questionNumber, String questionShortName, String questionName, Integer maximumScore, String applicantResponse, List<FormInputResource> assessmentFormInputs, Map<Long, AssessorFormInputResponseResource> assessorResponses, boolean scoreFormInputExists, boolean scopeFormInputExists) {
-        this(daysLeft, daysLeftPercentage, competition, application, questionId, questionNumber, questionShortName, questionName, maximumScore, applicantResponse, assessmentFormInputs, assessorResponses, scoreFormInputExists, scopeFormInputExists, false, null);
+    public AssessmentFeedbackViewModel(long daysLeft, long daysLeftPercentage, CompetitionResource competition, ApplicationResource application, Long questionId, String questionNumber, String questionShortName, String questionName, Integer maximumScore, String applicantResponse, List<FormInputResource> assessmentFormInputs, boolean scoreFormInputExists, boolean scopeFormInputExists) {
+        this(daysLeft, daysLeftPercentage, competition, application, questionId, questionNumber, questionShortName, questionName, maximumScore, applicantResponse, assessmentFormInputs, scoreFormInputExists, scopeFormInputExists, false, null);
     }
 
-    public AssessmentFeedbackViewModel(long daysLeft, long daysLeftPercentage, CompetitionResource competition, ApplicationResource application, Long questionId, String questionNumber, String questionShortName, String questionName, Integer maximumScore, String applicantResponse, List<FormInputResource> assessmentFormInputs, Map<Long, AssessorFormInputResponseResource> assessorResponses, boolean scoreFormInputExists, boolean scopeFormInputExists, boolean appendixExists, FileDetailsViewModel appendixDetails) {
+    public AssessmentFeedbackViewModel(long daysLeft, long daysLeftPercentage, CompetitionResource competition, ApplicationResource application, Long questionId, String questionNumber, String questionShortName, String questionName, Integer maximumScore, String applicantResponse, List<FormInputResource> assessmentFormInputs, boolean scoreFormInputExists, boolean scopeFormInputExists, boolean appendixExists, FileDetailsViewModel appendixDetails) {
         this.daysLeft = daysLeft;
         this.daysLeftPercentage = daysLeftPercentage;
         this.competition = competition;
@@ -55,7 +47,6 @@ public class AssessmentFeedbackViewModel {
         this.maximumScore = maximumScore;
         this.applicantResponse = applicantResponse;
         this.assessmentFormInputs = assessmentFormInputs;
-        this.assessorResponses = assessorResponses;
         this.scoreFormInputExists = scoreFormInputExists;
         this.scopeFormInputExists = scopeFormInputExists;
         this.appendixExists = appendixExists;
@@ -106,10 +97,6 @@ public class AssessmentFeedbackViewModel {
         return assessmentFormInputs;
     }
 
-    public Map<Long, AssessorFormInputResponseResource> getAssessorResponses() {
-        return assessorResponses;
-    }
-
     public boolean isScoreFormInputExists() {
         return scoreFormInputExists;
     }
@@ -128,35 +115,5 @@ public class AssessmentFeedbackViewModel {
 
     public String getAppendixFileDescription() {
         return format("View %s appendix", lowerCase(getQuestionShortName()));
-    }
-
-    public Integer getWordsRemaining(Long formInputId, Boolean hasError, String content) {
-        Optional<FormInputResource> formInput = simpleFindFirst(assessmentFormInputs, assessmentFormInput -> formInputId.equals(assessmentFormInput.getId()));
-        Optional<AssessorFormInputResponseResource> response = ofNullable(assessorResponses.get(formInputId));
-
-        if (!(formInput.isPresent() && response.isPresent())) {
-            return null;
-        }
-
-        Integer maxWordCount = formInput.get().getWordCount();
-        // Peeking into com.worth.ifs.form.resource.FormInputResource.getWordCount() reveals it will returning 0 rather than null if the word count has not been set, but handling this case anyway.
-        if (maxWordCount == null) {
-            return null;
-        }
-
-        return hasError ? maxWordCount - getWordCount(content) : maxWordCount - getResponseWords(response);
-    }
-
-    private int getResponseWords(Optional<AssessorFormInputResponseResource> response) {
-        Optional<String> responseValue = response.flatMap(responseResource -> ofNullable(responseResource.getValue()));
-        return responseValue.map(value -> getWordCount(value)).orElse(0);
-    }
-
-    private int getWordCount(String value) {
-        // clean any HTML markup from the value
-        Document doc = Jsoup.parse(value);
-        String cleaned = doc.text();
-
-        return cleaned.split("\\s+").length;
     }
 }

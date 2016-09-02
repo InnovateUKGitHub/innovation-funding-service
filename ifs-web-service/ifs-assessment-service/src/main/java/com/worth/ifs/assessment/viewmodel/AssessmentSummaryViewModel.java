@@ -2,8 +2,6 @@ package com.worth.ifs.assessment.viewmodel;
 
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 
 import java.util.List;
 
@@ -114,16 +112,5 @@ public class AssessmentSummaryViewModel {
 
     public void setTotalScorePercentage(int totalScorePercentage) {
         this.totalScorePercentage = totalScorePercentage;
-    }
-
-    public Integer getWordsRemaining(Integer maxWordCount, String response) {
-        return response.equals("null") ? maxWordCount : maxWordCount - getResponseWords(response);
-    }
-
-    private int getResponseWords(String responseValue) {
-        // clean any HTML markup from the value
-        Document doc = Jsoup.parse(responseValue);
-        String cleaned = doc.text();
-        return cleaned.split("\\s+").length;
     }
 }

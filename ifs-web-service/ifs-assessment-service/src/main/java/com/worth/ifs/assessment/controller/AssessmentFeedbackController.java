@@ -66,8 +66,6 @@ public class AssessmentFeedbackController {
 
     @RequestMapping(value = "/question/{questionId}", method = RequestMethod.GET)
     public String getQuestion(Model model,
-                              @ModelAttribute(FORM_ATTR_NAME) Form form,
-                              BindingResult bindingResult,
                               @PathVariable("assessmentId") Long assessmentId,
                               @PathVariable("questionId") Long questionId) {
 
@@ -75,17 +73,8 @@ public class AssessmentFeedbackController {
             return getApplicationDetails(model, assessmentId, questionId);
         }
 
-        AssessmentFeedbackViewModel viewModel = assessmentFeedbackModelPopulator.populateModel(assessmentId, questionId);
-        if (!bindingResult.hasErrors()) {
-            Map<Long, AssessorFormInputResponseResource> mappedResponses = viewModel.getAssessorResponses();
-            mappedResponses.forEach((k, v) ->
-                    form.addFormInput(k.toString(), v.getValue())
-            );
-        }
-        model.addAttribute("model", viewModel);
-        model.addAttribute("navigation", assessmentFeedbackNavigationModelPopulator.populateModel(assessmentId, questionId));
-
-        return "assessment/application-question";
+        Form form = populateQuestionForm(assessmentId, questionId);
+        return doViewQuestion(model, form, assessmentId, questionId);
     }
 
     @RequestMapping(value = "/formInput/{formInputId}", method = RequestMethod.POST)
@@ -109,7 +98,7 @@ public class AssessmentFeedbackController {
             @PathVariable("assessmentId") Long assessmentId,
             @PathVariable("questionId") Long questionId) {
 
-        Supplier<String> failureView = () -> getQuestion(model, form, bindingResult, assessmentId, questionId);
+        Supplier<String> failureView = () -> doViewQuestion(model, form, assessmentId, questionId);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             List<FormInputResource> formInputs = formInputService.findAssessmentInputsByQuestion(questionId);
@@ -124,6 +113,26 @@ public class AssessmentFeedbackController {
             return validationHandler.
                     failNowOrSucceedWith(failureView, () -> redirectToAssessmentOverview(assessmentId));
         });
+    }
+
+    private List<AssessorFormInputResponseResource> getAssessorResponses(Long assessmentId, Long questionId) {
+        return assessorFormInputResponseService.getAllAssessorFormInputResponsesByAssessmentAndQuestion(assessmentId, questionId);
+    }
+
+    private Form populateQuestionForm(Long assessmentId, Long questionId) {
+        Form form = new Form();
+        List<AssessorFormInputResponseResource> assessorResponses = getAssessorResponses(assessmentId, questionId);
+        Map<Long, AssessorFormInputResponseResource> mappedResponses = simpleToMap(assessorResponses, AssessorFormInputResponseResource::getFormInput);
+        mappedResponses.forEach((k, v) -> form.addFormInput(k.toString(), v.getValue()));
+        return form;
+    }
+
+    private String doViewQuestion(Model model, Form form, Long assessmentId, Long questionId) {
+        AssessmentFeedbackViewModel viewModel = assessmentFeedbackModelPopulator.populateModel(assessmentId, questionId);
+        model.addAttribute("form", form);
+        model.addAttribute("model", viewModel);
+        model.addAttribute("navigation", assessmentFeedbackNavigationModelPopulator.populateModel(assessmentId, questionId));
+        return "assessment/application-question";
     }
 
     private String redirectToAssessmentOverview(Long assessmentId) {
