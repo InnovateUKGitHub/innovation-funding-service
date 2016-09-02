@@ -81,7 +81,7 @@
             <tbody>
             <tr th:each="item : ${model.summary.years}">
                 <td th:text="${item.year + ' - ' + (item.year + 1)}"></td>
-                <td th:text="${'£' + item.amount}"></td>
+                <td th:text="${'£' + #numbers.formatInteger(item.amount,1,'COMMA')}" />
             </tr>
             </tbody>
         </table>
@@ -123,6 +123,7 @@
                       <th scope="row" class="fix-left" th:text="${row.key}" th:id="${#strings.replace(#strings.replace(row.key,' ','-'),'&amp;','')}"/>
                       <td th:each="cost, status : ${row.value}">
                         <input class="form-control"
+                               th:classappend="${#strings.toLowerCase(#temporals.format(model.table.months[status.index].localDate,'MMM-yyyy'))}"
                                th:attr="aria-labelledby=${#strings.replace(#strings.replace(row.key,' ','-'),'&amp;','')+' month'+status.index}"
                                th:name="${'table.monthlyCostsPerCategoryMap['+row.key+']['+status.index+']'}"
                                th:id="${'row-'+#strings.replace(#strings.replace(row.key,' ','-'),'&amp;','')+'-'+status.index}"
@@ -151,7 +152,20 @@
               <tbody>
               <tr th:each="item : ${model.summary.years}">
                   <td th:text="${item.year + ' - ' + (item.year + 1)}"></td>
-                  <td th:text="${'£' + item.amount}"></td>
+                  <td th:text="${'£' + #numbers.formatInteger(item.amount,1,'COMMA')}"
+                      data-calculation-operations="+"
+                      th:attr="data-calculation-fields=${'.apr-'+item.year+',
+                                                          .may-'+item.year+',
+                                                          .jun-'+item.year+',
+                                                          .jul-'+item.year+',
+                                                          .aug-'+item.year+',
+                                                          .sep-'+item.year+',
+                                                          .oct-'+item.year+',
+                                                          .nov-'+item.year+',
+                                                          .dec-'+item.year+',
+                                                          .jan-'+(item.year+1)+',
+                                                          .feb-'+(item.year+1)+',
+                                                          .mar-'+(item.year+1)}"></td>
               </tr>
               </tbody>
           </table>
