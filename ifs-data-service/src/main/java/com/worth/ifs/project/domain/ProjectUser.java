@@ -9,7 +9,6 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
-import java.util.Optional;
 
 /**
  * ProjectUser defines a User's role on a Project and in relation to a particular Organisation.
@@ -60,9 +59,7 @@ public class ProjectUser extends Participant<Project, ProjectInvite, ProjectPart
     }
 
     @Override
-    public Optional<ProjectInvite> getInvite() {
-        return Optional.ofNullable(invite);
-    }
+    public ProjectInvite getInvite() { return invite; }
 
     @Override
     public ProjectParticipantRole getRole() {

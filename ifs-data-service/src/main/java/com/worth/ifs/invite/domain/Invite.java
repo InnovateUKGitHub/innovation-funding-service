@@ -2,6 +2,8 @@ package com.worth.ifs.invite.domain;
 
 import com.worth.ifs.invite.constant.InviteStatus;
 import com.worth.ifs.user.domain.User;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.DiscriminatorOptions;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
@@ -130,6 +132,7 @@ public abstract class Invite<T extends ProcessActivity, I extends Invite<T,I>> {
         return hash;
     }
 
+    // TODO rename to getProcess() and delete the setter
     public abstract T getTarget(); // the thing we're being invited to
 
     public abstract void setTarget(T target);
@@ -142,5 +145,35 @@ public abstract class Invite<T extends ProcessActivity, I extends Invite<T,I>> {
     public I open () {
         setStatus(InviteStatus.OPENED);
         return (I) this; // for object chaining
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Invite<?, ?> invite = (Invite<?, ?>) o;
+
+        return new EqualsBuilder()
+                .append(id, invite.id)
+                .append(name, invite.name)
+                .append(email, invite.email)
+                .append(user, invite.user)
+                .append(hash, invite.hash)
+                .append(status, invite.status)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(id)
+                .append(name)
+                .append(email)
+                .append(user)
+                .append(hash)
+                .append(status)
+                .toHashCode();
     }
 }
