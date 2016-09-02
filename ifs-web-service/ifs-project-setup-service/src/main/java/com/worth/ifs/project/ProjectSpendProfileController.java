@@ -52,7 +52,7 @@ public class ProjectSpendProfileController {
                                    @PathVariable("organisationId") final Long organisationId,
                                    @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        buildSpendProfileViewModel(model, projectId, organisationId);
+        model.addAttribute("model", buildSpendProfileViewModel(projectId, organisationId));
 
         return "project/spend-profile";
     }
@@ -62,17 +62,18 @@ public class ProjectSpendProfileController {
                                    @PathVariable("projectId") final Long projectId,
                                    @PathVariable("organisationId") final Long organisationId,
                                    @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-
-
-        ProjectSpendProfileViewModel viewModel = buildSpendProfileViewModel(model, projectId, organisationId);
+        ProjectResource projectResource = projectService.getById(projectId);
+        SpendProfileTableResource spendProfileTableResource = projectFinanceService.getSpendProfileTable(projectId, organisationId);
 
         SpendProfileForm form = new SpendProfileForm();
-        form.setTable(viewModel.getTable());
+        form.setTable(spendProfileTableResource);
         model.addAttribute(FORM_ATTR_NAME, form);
 
-        if(viewModel.getTable().getMarkedAsComplete()) {
+        if(spendProfileTableResource.getMarkedAsComplete()) {
             markSpendProfileInComplete(model, projectId, organisationId, "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile");
         }
+
+        model.addAttribute("model", buildSpendProfileViewModel(projectResource, organisationId, spendProfileTableResource));
 
         return "project/spend-profile";
     }
@@ -85,7 +86,7 @@ public class ProjectSpendProfileController {
                                    @SuppressWarnings("unused") BindingResult bindingResult,
                                    @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        return editSpendProfile(model, bindingResult, form, projectId, organisationId, "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile");
+        return editSpendProfile(model, bindingResult, form, projectId, organisationId, "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile", "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile/edit");
     }
 
     @RequestMapping(value = "/complete", method = POST)
@@ -121,44 +122,41 @@ public class ProjectSpendProfileController {
             // If this model attribute is set, it means there are some categories where the totals don't match
             model.addAttribute("errorCategories", result.getFailure().getErrors());
         }
-
-        buildSpendProfileViewModel(model, projectId, organisationId);
-
         return successView;
     }
 
-    private String editSpendProfile(Model model, BindingResult bindingResult, SpendProfileForm form, Long projectId, Long organisationId, String successView) {
-        buildSpendProfileViewModel(model, projectId, organisationId);
+    private String editSpendProfile(Model model, BindingResult bindingResult, SpendProfileForm userSubmittedForm, Long projectId, Long organisationId, String successView, String falureView) {
         ValidationHandler validationHandler = ValidationHandler.newBindingResultHandler(bindingResult);
-        new SpendProfileCostValidator().validate(form.getTable(), bindingResult);
-
+        new SpendProfileCostValidator().validate(userSubmittedForm.getTable(), bindingResult);
         if (validationHandler.hasErrors()) {
-            return "project/spend-profile";
+            return falureView;
         }
 
-        ServiceResult<Void> result = projectFinanceService.saveSpendProfile(projectId, organisationId, form.getTable());
-        if (result.isFailure()) {
+        ProjectResource projectResource = projectService.getById(projectId);
+        SpendProfileTableResource spendProfileTableResource = projectFinanceService.getSpendProfileTable(projectId, organisationId);
+        spendProfileTableResource.setMonthlyCostsPerCategoryMap(userSubmittedForm.getTable().getMonthlyCostsPerCategoryMap()); // update existing resource with user entered fields
+
+        ServiceResult<Void> result = projectFinanceService.saveSpendProfile(projectId, organisationId, spendProfileTableResource);
+        if (result.isFailure()) { // even if total is > eligible, we save and return to read only view
             // If this model attribute is set, it means there are some categories where the totals don't match
             model.addAttribute("errorCategories", result.getFailure().getErrors());
         }
 
+        buildSpendProfileViewModel(projectResource, organisationId, spendProfileTableResource);
+
         return successView;
     }
 
-    private ProjectSpendProfileViewModel buildSpendProfileViewModel(Model model, Long projectId, Long organisationId) {
-
-        ProjectSpendProfileViewModel viewModel = populateSpendProfileViewModel(projectId, organisationId);
-        model.addAttribute("model", viewModel);
-
-        return viewModel;
+    private ProjectSpendProfileViewModel buildSpendProfileViewModel(final ProjectResource projectResource, final Long organisationId, final SpendProfileTableResource spendProfileTableResource) {
+        List<SpendProfileSummaryYearModel> years = createSpendProfileSummaryYears(projectResource, spendProfileTableResource);
+        SpendProfileSummaryModel summary = new SpendProfileSummaryModel(years);
+        return new ProjectSpendProfileViewModel(projectResource, organisationId, spendProfileTableResource, summary, spendProfileTableResource.getMarkedAsComplete());
     }
 
-    private ProjectSpendProfileViewModel populateSpendProfileViewModel(final Long projectId, final Long organisationId) {
+    private ProjectSpendProfileViewModel buildSpendProfileViewModel(Long projectId, Long organisationId) {
         ProjectResource projectResource = projectService.getById(projectId);
-        SpendProfileTableResource table = projectFinanceService.getSpendProfileTable(projectId, organisationId);
-        List<SpendProfileSummaryYearModel> years = createSpendProfileSummaryYears(projectResource, table);
-        SpendProfileSummaryModel summary = new SpendProfileSummaryModel(years);
-        return new ProjectSpendProfileViewModel(projectResource, organisationId, table, summary, table.getMarkedAsComplete());
+        SpendProfileTableResource spendProfileTableResource = projectFinanceService.getSpendProfileTable(projectId, organisationId);
+        return buildSpendProfileViewModel(projectResource, organisationId, spendProfileTableResource);
     }
 
     private List<SpendProfileSummaryYearModel> createSpendProfileSummaryYears(ProjectResource project, SpendProfileTableResource table){
