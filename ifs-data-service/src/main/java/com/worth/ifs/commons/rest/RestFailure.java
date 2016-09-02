@@ -44,10 +44,6 @@ public class RestFailure implements ErrorHolder {
         return new RestFailure(errors);
     }
 
-    public static RestFailure error(String key, String message, HttpStatus statusCode) {
-        return new RestFailure(singletonList(new Error(key, message, statusCode)));
-    }
-
     public boolean is(Error... expectedErrors) {
         List<Error> expectedErrorsList = asList(expectedErrors);
         return this.errors.size() == expectedErrorsList.size() && errors.containsAll(expectedErrorsList);

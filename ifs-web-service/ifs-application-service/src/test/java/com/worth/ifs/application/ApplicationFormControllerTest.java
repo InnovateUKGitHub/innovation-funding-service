@@ -307,7 +307,7 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
     public void testApplicationFormSubmitNotAllowedMarkAsComplete() throws Exception {
         // Question should not be marked as complete, since the input is not valid.
 
-        when(formInputResponseService.save(anyLong(), anyLong(), anyLong(), eq(""), eq(false))).thenReturn(new ValidationMessages(globalError("Please enter some text", "Please enter some text")));
+        when(formInputResponseService.save(anyLong(), anyLong(), anyLong(), eq(""), eq(false))).thenReturn(new ValidationMessages(globalError("please.enter.some.text")));
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
         mockMvc.perform(

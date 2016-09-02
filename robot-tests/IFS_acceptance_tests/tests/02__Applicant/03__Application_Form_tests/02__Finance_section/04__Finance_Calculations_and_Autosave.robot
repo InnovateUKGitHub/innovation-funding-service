@@ -29,7 +29,7 @@ Labour
     ...    INFUND-736
     ...
     ...    INFUND-1256
-    [Tags]    HappyPath
+    [Tags]
     When the Applicant fills in the Labour costs for two rows
     Then Totals should be correct    css=#section-total-9    £ 104,348    css=[data-mirror="#section-total-9"]    £ 104,348
     And the user clicks the button/link    name=remove_cost
@@ -243,7 +243,7 @@ the applicant adds one row for the other costs
 
 the user reloads the page
     Reload page
-    sleep    800ms
+    sleep    500ms
 
 the total of the other funding should be correct
     Textfield Value Should Be    id=other-funding-total    £ 20,000

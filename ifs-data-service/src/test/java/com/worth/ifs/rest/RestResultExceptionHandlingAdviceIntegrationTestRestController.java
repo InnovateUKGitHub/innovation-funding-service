@@ -21,7 +21,7 @@ public class RestResultExceptionHandlingAdviceIntegrationTestRestController {
 
     @RequestMapping("/failure-test")
     public RestResult<String> failingMethod() {
-        return restFailure(internalServerErrorError("Failure"));
+        return restFailure(internalServerErrorError());
     }
 
     @RequestMapping("/null-test")

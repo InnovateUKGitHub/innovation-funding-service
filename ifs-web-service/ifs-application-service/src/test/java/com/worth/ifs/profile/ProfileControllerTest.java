@@ -16,7 +16,6 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
-import java.util.Collections;
 
 import static com.worth.ifs.BaseControllerMockMVCTest.setupMockMvc;
 import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
@@ -28,6 +27,7 @@ import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static java.util.Collections.singletonList;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -56,7 +56,7 @@ public class ProfileControllerTest extends BaseUnitTest {
                 .withLastName("lastname")
                 .withPhoneNumber("1234567890")
                 .withEmail("email@provider.com")
-                .withOrganisations(Collections.singletonList(6L))
+                .withOrganisations(singletonList(6L))
                 .build();
         when(userAuthenticationService.getAuthenticatedUser(isA(HttpServletRequest.class))).thenReturn(user);
     }
@@ -236,7 +236,7 @@ public class ProfileControllerTest extends BaseUnitTest {
     @Test
     public void userServiceResponseErrorsAreAddedTheModel() throws Exception {
 
-        Error error = new Error("errorname", "errordescription", BAD_REQUEST);
+        Error error = new Error("objectName", singletonList("fieldName"), BAD_REQUEST);
         when(userService.updateDetails(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getTitle(), user.getPhoneNumber())).thenReturn(restFailure(error));
 
         mockMvc.perform(post("/profile/edit")
