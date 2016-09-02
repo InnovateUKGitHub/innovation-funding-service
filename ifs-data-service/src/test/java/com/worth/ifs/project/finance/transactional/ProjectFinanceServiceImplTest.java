@@ -2,14 +2,22 @@ package com.worth.ifs.project.finance.transactional;
 
 import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.finance.domain.*;
+import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
 import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.project.resource.SpendProfileTableResource;
 import com.worth.ifs.user.domain.Organisation;
+import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.springframework.http.HttpStatus;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static com.worth.ifs.LambdaMatcher.createLambdaMatcher;
@@ -21,6 +29,7 @@ import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjec
 import static com.worth.ifs.project.finance.domain.TimeUnit.MONTH;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
+import static com.worth.ifs.util.MapFunctions.asMap;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
@@ -34,6 +43,10 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
     @Mock
     private SpendProfileCostCategorySummaryStrategy spendProfileCostCategorySummaryStrategy;
+
+    private static final String SPEND_PROFILE_INCORRECT_COST_ERROR_KEY = "PROJECT_SETUP_SPEND_PROFILE_INCORRECT_COST_FOR_SPECIFIED_CATEGORY_AND_MONTH";
+
+    private static final String SPEND_PROFILE_TOTAL_FOR_ALL_MONTHS_INCORRECT_ERROR_KEY = "PROJECT_SETUP_SPEND_PROFILE_TOTAL_FOR_ALL_MONTHS_DOES_NOT_MATCH_ELIGIBLE_TOTAL_FOR_SPECIFIED_CATEGORY";
 
     @Test
     public void testGenerateSpendProfile() {
@@ -112,6 +125,327 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         verify(spendProfileRepositoryMock).save(spendProfileExpectations(expectedOrganisation1Profile));
         verify(spendProfileRepositoryMock).save(spendProfileExpectations(expectedOrganisation2Profile));
         verifyNoMoreInteractions(spendProfileRepositoryMock);
+    }
+
+    @Test
+    public void saveSpendProfileWhenCostsAreFractional() {
+
+        Long projectId = 1L;
+        Long organisationId = 1L;
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        SpendProfileTableResource table = new SpendProfileTableResource();
+
+        table.setMonthlyCostsPerCategoryMap(asMap(
+                "Labour", asList(new BigDecimal("30.44"), new BigDecimal("30"), new BigDecimal("40")),
+                "Materials", asList(new BigDecimal("70"), new BigDecimal("50.10"), new BigDecimal("60")),
+                "Other costs", asList(new BigDecimal("50"), new BigDecimal("5"), new BigDecimal("10.31"))));
+
+        ServiceResult<Void> result = service.saveSpendProfile(projectOrganisationCompositeId, table);
+
+        assertTrue(result.isFailure());
+
+        List<Error> errors = result.getFailure().getErrors();
+
+        assertTrue(errors.size() == 3);
+
+        // Assert that the error messages are for correct categories and correct month(s) based on the input
+        assertTrue(errors.contains(
+                new Error(SPEND_PROFILE_INCORRECT_COST_ERROR_KEY,
+                        "Cost cannot contain fractional part. Category: Labour, Month#: 1", HttpStatus.BAD_REQUEST)));
+        assertTrue(errors.contains(
+                new Error(SPEND_PROFILE_INCORRECT_COST_ERROR_KEY,
+                        "Cost cannot contain fractional part. Category: Materials, Month#: 2", HttpStatus.BAD_REQUEST)));
+        assertTrue(errors.contains(
+                new Error(SPEND_PROFILE_INCORRECT_COST_ERROR_KEY,
+                        "Cost cannot contain fractional part. Category: Other costs, Month#: 3", HttpStatus.BAD_REQUEST)));
+
+    }
+
+    @Test
+    public void saveSpendProfileWhenCostsAreLessThanZero() {
+
+        Long projectId = 1L;
+        Long organisationId = 1L;
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        SpendProfileTableResource table = new SpendProfileTableResource();
+
+        table.setMonthlyCostsPerCategoryMap(asMap(
+                "Labour", asList(new BigDecimal("0"), new BigDecimal("00"), new BigDecimal("-1")),
+                "Materials", asList(new BigDecimal("70"), new BigDecimal("-2"), new BigDecimal("60")),
+                "Other costs", asList(new BigDecimal("50"), new BigDecimal("1"), new BigDecimal("-33"))));
+
+        ServiceResult<Void> result = service.saveSpendProfile(projectOrganisationCompositeId, table);
+
+        assertTrue(result.isFailure());
+
+        List<Error> errors = result.getFailure().getErrors();
+
+        assertTrue(errors.size() == 3);
+
+        // Assert that the error messages are for correct categories and correct month(s) based on the input
+        assertTrue(errors.contains(
+                new Error(SPEND_PROFILE_INCORRECT_COST_ERROR_KEY,
+                        "Cost cannot be less than zero. Category: Labour, Month#: 3", HttpStatus.BAD_REQUEST)));
+        assertTrue(errors.contains(
+                new Error(SPEND_PROFILE_INCORRECT_COST_ERROR_KEY,
+                        "Cost cannot be less than zero. Category: Materials, Month#: 2", HttpStatus.BAD_REQUEST)));
+        assertTrue(errors.contains(
+                new Error(SPEND_PROFILE_INCORRECT_COST_ERROR_KEY,
+                        "Cost cannot be less than zero. Category: Other costs, Month#: 3", HttpStatus.BAD_REQUEST)));
+
+    }
+
+    @Test
+    public void saveSpendProfileWhenCostsAreGreaterThanOrEqualToMillion() {
+
+        Long projectId = 1L;
+        Long organisationId = 1L;
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        SpendProfileTableResource table = new SpendProfileTableResource();
+
+        table.setMonthlyCostsPerCategoryMap(asMap(
+                "Labour", asList(new BigDecimal("1000000"), new BigDecimal("30"), new BigDecimal("40")),
+                "Materials", asList(new BigDecimal("999999"), new BigDecimal("1000001"), new BigDecimal("60")),
+                "Other costs", asList(new BigDecimal("50"), new BigDecimal("2000000"), new BigDecimal("10"))));
+
+        ServiceResult<Void> result = service.saveSpendProfile(projectOrganisationCompositeId, table);
+
+        assertTrue(result.isFailure());
+
+        List<Error> errors = result.getFailure().getErrors();
+
+        assertTrue(errors.size() == 3);
+
+        // Assert that the error messages are for correct categories and correct month(s) based on the input
+        assertTrue(errors.contains(
+                new Error(SPEND_PROFILE_INCORRECT_COST_ERROR_KEY,
+                        "Cost cannot be million or more. Category: Labour, Month#: 1", HttpStatus.BAD_REQUEST)));
+        assertTrue(errors.contains(
+                new Error(SPEND_PROFILE_INCORRECT_COST_ERROR_KEY,
+                        "Cost cannot be million or more. Category: Materials, Month#: 2", HttpStatus.BAD_REQUEST)));
+        assertTrue(errors.contains(
+                new Error(SPEND_PROFILE_INCORRECT_COST_ERROR_KEY,
+                        "Cost cannot be million or more. Category: Other costs, Month#: 2", HttpStatus.BAD_REQUEST)));
+
+    }
+
+    @Test
+    public void saveSpendProfileWhenCostsAreFractionalLessThanZeroOrGreaterThanMillion() {
+
+        Long projectId = 1L;
+        Long organisationId = 1L;
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        SpendProfileTableResource table = new SpendProfileTableResource();
+
+        table.setMonthlyCostsPerCategoryMap(asMap(
+                "Labour", asList(new BigDecimal("30.12"), new BigDecimal("30"), new BigDecimal("40")),
+                "Materials", asList(new BigDecimal("70"), new BigDecimal("-30"), new BigDecimal("60")),
+                "Other costs", asList(new BigDecimal("50"), new BigDecimal("5"), new BigDecimal("1000001"))));
+
+        ServiceResult<Void> result = service.saveSpendProfile(projectOrganisationCompositeId, table);
+
+        assertTrue(result.isFailure());
+
+        List<Error> errors = result.getFailure().getErrors();
+
+        assertTrue(errors.size() == 3);
+
+        // Assert that the error messages are for correct categories and correct month(s) based on the input
+        assertTrue(errors.contains(
+                new Error(SPEND_PROFILE_INCORRECT_COST_ERROR_KEY,
+                        "Cost cannot contain fractional part. Category: Labour, Month#: 1", HttpStatus.BAD_REQUEST)));
+        assertTrue(errors.contains(
+                new Error(SPEND_PROFILE_INCORRECT_COST_ERROR_KEY,
+                        "Cost cannot be less than zero. Category: Materials, Month#: 2", HttpStatus.BAD_REQUEST)));
+        assertTrue(errors.contains(
+                new Error(SPEND_PROFILE_INCORRECT_COST_ERROR_KEY,
+                        "Cost cannot be million or more. Category: Other costs, Month#: 3", HttpStatus.BAD_REQUEST)));
+
+    }
+
+    @Test
+    public void saveSpendProfileEnsureSpendProfileDomainIsCorrectlyUpdated() {
+
+        Long projectId = 1L;
+        Long organisationId = 1L;
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        SpendProfileTableResource table = new SpendProfileTableResource();
+
+        table.setEligibleCostPerCategoryMap(asMap(
+                "Labour", new BigDecimal("100"),
+                "Materials", new BigDecimal("180"),
+                "Other costs", new BigDecimal("55")));
+
+        table.setMonthlyCostsPerCategoryMap(asMap(
+                "Labour", asList(new BigDecimal("30"), new BigDecimal("30"), new BigDecimal("40")),
+                "Materials", asList(new BigDecimal("70"), new BigDecimal("50"), new BigDecimal("60")),
+                "Other costs", asList(new BigDecimal("50"), new BigDecimal("5"), new BigDecimal("0"))));
+
+
+        List<Cost> spendProfileFigures = buildCostsForCategories(Arrays.asList("Labour", "Materials", "Other costs"), 3);
+
+        SpendProfile spendProfileInDB = new SpendProfile(null, null, null, Collections.emptyList(), spendProfileFigures, false);
+
+        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(spendProfileInDB);
+
+        // Before the call (ie before the SpendProfile is updated), ensure that the values are set to 1
+        assertCostForCategoryForGivenMonth(spendProfileInDB, "Labour", 0, BigDecimal.ONE);
+        assertCostForCategoryForGivenMonth(spendProfileInDB, "Labour", 1, BigDecimal.ONE);
+        assertCostForCategoryForGivenMonth(spendProfileInDB, "Labour", 2, BigDecimal.ONE);
+        assertCostForCategoryForGivenMonth(spendProfileInDB, "Materials", 0, BigDecimal.ONE);
+        assertCostForCategoryForGivenMonth(spendProfileInDB, "Materials", 1, BigDecimal.ONE);
+        assertCostForCategoryForGivenMonth(spendProfileInDB, "Materials", 2, BigDecimal.ONE);
+        assertCostForCategoryForGivenMonth(spendProfileInDB, "Other costs", 0, BigDecimal.ONE);
+        assertCostForCategoryForGivenMonth(spendProfileInDB, "Other costs", 1, BigDecimal.ONE);
+        assertCostForCategoryForGivenMonth(spendProfileInDB, "Other costs", 2, BigDecimal.ONE);
+
+        ServiceResult<Void> result = service.saveSpendProfile(projectOrganisationCompositeId, table);
+
+        assertTrue(result.isSuccess());
+
+        // Assert that the SpendProfile domain is correctly updated
+        assertCostForCategoryForGivenMonth(spendProfileInDB, "Labour", 0, new BigDecimal("30"));
+        assertCostForCategoryForGivenMonth(spendProfileInDB, "Labour", 1, new BigDecimal("30"));
+        assertCostForCategoryForGivenMonth(spendProfileInDB, "Labour", 2, new BigDecimal("40"));
+        assertCostForCategoryForGivenMonth(spendProfileInDB, "Materials", 0, new BigDecimal("70"));
+        assertCostForCategoryForGivenMonth(spendProfileInDB, "Materials", 1, new BigDecimal("50"));
+        assertCostForCategoryForGivenMonth(spendProfileInDB, "Materials", 2, new BigDecimal("60"));
+        assertCostForCategoryForGivenMonth(spendProfileInDB, "Other costs", 0, new BigDecimal("50"));
+        assertCostForCategoryForGivenMonth(spendProfileInDB, "Other costs", 1, new BigDecimal("5"));
+        assertCostForCategoryForGivenMonth(spendProfileInDB, "Other costs", 2, new BigDecimal("0"));
+
+        verify(spendProfileRepositoryMock).save(spendProfileInDB);
+
+    }
+
+    @Test
+    public void saveSpendProfileWhenSpendProfileTotalsDoNotMatchEligibleCosts() {
+
+        Long projectId = 1L;
+        Long organisationId = 1L;
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        SpendProfileTableResource table = new SpendProfileTableResource();
+
+        table.setEligibleCostPerCategoryMap(asMap(
+                "Labour", new BigDecimal("110"),
+                "Materials", new BigDecimal("190"),
+                "Other costs", new BigDecimal("55")));
+
+        table.setMonthlyCostsPerCategoryMap(asMap(
+                "Labour", asList(new BigDecimal("30"), new BigDecimal("30"), new BigDecimal("40")),
+                "Materials", asList(new BigDecimal("70"), new BigDecimal("50"), new BigDecimal("60")),
+                "Other costs", asList(new BigDecimal("50"), new BigDecimal("5"), new BigDecimal("0"))));
+
+
+        List<Cost> spendProfileFigures = buildCostsForCategories(Arrays.asList("Labour", "Materials", "Other costs"), 3);
+
+        SpendProfile spendProfileInDB = new SpendProfile(null, null, null, Collections.emptyList(), spendProfileFigures, false);
+
+        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(spendProfileInDB);
+
+        ServiceResult<Void> result = service.saveSpendProfile(projectOrganisationCompositeId, table);
+
+        assertTrue(result.isFailure());
+
+        List<Error> errors = result.getFailure().getErrors();
+
+        assertTrue(errors.size() == 2);
+
+        // Assert the error messages for incorrect totals
+        assertTrue(errors.contains(
+                new Error(SPEND_PROFILE_TOTAL_FOR_ALL_MONTHS_INCORRECT_ERROR_KEY,
+                        "Spend Profile: The total for all months does not match the eligible total for category: Labour", HttpStatus.BAD_REQUEST)));
+        assertTrue(errors.contains(
+                new Error(SPEND_PROFILE_TOTAL_FOR_ALL_MONTHS_INCORRECT_ERROR_KEY,
+                        "Spend Profile: The total for all months does not match the eligible total for category: Materials", HttpStatus.BAD_REQUEST)));
+
+    }
+
+    @Test
+    public void saveSpendProfileSuccess() {
+
+        Long projectId = 1L;
+        Long organisationId = 1L;
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        SpendProfileTableResource table = new SpendProfileTableResource();
+
+        table.setEligibleCostPerCategoryMap(asMap(
+                "Labour", new BigDecimal("100"),
+                "Materials", new BigDecimal("180"),
+                "Other costs", new BigDecimal("55")));
+
+        table.setMonthlyCostsPerCategoryMap(asMap(
+                "Labour", asList(new BigDecimal("30"), new BigDecimal("30"), new BigDecimal("40")),
+                "Materials", asList(new BigDecimal("70"), new BigDecimal("50"), new BigDecimal("60")),
+                "Other costs", asList(new BigDecimal("50"), new BigDecimal("5"), new BigDecimal("0"))));
+
+
+        List<Cost> spendProfileFigures = buildCostsForCategories(Arrays.asList("Labour", "Materials", "Other costs"), 3);
+
+        SpendProfile spendProfileInDB = new SpendProfile(null, null, null, Collections.emptyList(), spendProfileFigures, false);
+
+        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(spendProfileInDB);
+
+        ServiceResult<Void> result = service.saveSpendProfile(projectOrganisationCompositeId, table);
+
+        assertTrue(result.isSuccess());
+    }
+
+
+    private void assertCostForCategoryForGivenMonth(SpendProfile spendProfileInDB, String category, Integer whichMonth, BigDecimal expectedValue) {
+
+        boolean thisCostShouldExist = spendProfileInDB.getSpendProfileFigures().getCosts().stream()
+                .anyMatch(cost -> cost.getCostCategory().getName().equalsIgnoreCase(category)
+                        && cost.getCostTimePeriod().getOffsetAmount().equals(whichMonth)
+                        && cost.getValue().equals(expectedValue));
+        Assert.assertTrue(thisCostShouldExist);
+    }
+
+    private List<Cost> buildCostsForCategories(List<String> categories, int totalMonths) {
+
+        List<Cost> costForAllCategories = new ArrayList<>();
+
+        categories.stream().forEach(category -> {
+
+            // Intentionally insert in the reverse order of months to ensure that the sorting functionality actually works
+            for (int index = totalMonths - 1; index >= 0; index--) {
+                costForAllCategories.add(createCost(category, index, BigDecimal.ONE));
+            }
+        });
+
+        return costForAllCategories;
+
+    }
+
+    private Cost createCost(String category, Integer offsetAmount, BigDecimal value) {
+
+        CostCategory costCategory = new CostCategory();
+        costCategory.setName(category);
+
+        //CostTimePeriod(Integer offsetAmount, TimeUnit offsetUnit, Integer durationAmount, TimeUnit durationUnit)
+        CostTimePeriod costTimePeriod = new CostTimePeriod(offsetAmount, TimeUnit.MONTH, 1, TimeUnit.MONTH);
+
+        Cost cost = new Cost();
+        cost.setCostCategory(costCategory);
+        cost.setCostTimePeriod(costTimePeriod);
+        cost.setValue(value);
+
+        return cost;
+
     }
 
     private SpendProfile spendProfileExpectations(SpendProfile expectedSpendProfile) {

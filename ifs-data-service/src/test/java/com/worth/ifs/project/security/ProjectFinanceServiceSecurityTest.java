@@ -86,6 +86,42 @@ public class ProjectFinanceServiceSecurityTest extends BaseServiceSecurityTest<P
                 });
     }
 
+    @Test
+    public void testSaveSpendProfile() {
+
+        Long projectId = 1L;
+        Long organisationId = 1L;
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        SpendProfileTableResource table = new SpendProfileTableResource();
+
+        assertAccessDenied(() -> service.saveSpendProfile(projectOrganisationCompositeId, table),
+                () -> {
+
+                    verify(projectFinancePermissionRules).partnersCanEditTheirOwnSpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
+                    verifyNoMoreInteractions(projectFinancePermissionRules);
+                });
+    }
+
+    @Test
+    public void testMarkSpendProfileComplete() {
+
+        Long projectId = 1L;
+        Long organisationId = 1L;
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        SpendProfileTableResource table = new SpendProfileTableResource();
+
+        assertAccessDenied(() -> service.markSpendProfileComplete(projectOrganisationCompositeId, table),
+                () -> {
+
+                    verify(projectFinancePermissionRules).partnersCanMarkSpendProfileAsComplete(projectOrganisationCompositeId, getLoggedInUser());
+                    verifyNoMoreInteractions(projectFinancePermissionRules);
+                });
+    }
+
     @Override
     protected Class<TestProjectFinanceService> getServiceClass() {
         return TestProjectFinanceService.class;
