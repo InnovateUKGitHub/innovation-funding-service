@@ -66,6 +66,10 @@ public class CompetitionInviteBuilder extends BaseBuilder<CompetitionInvite, Com
         return withArray(BuilderAmendFunctions::setUser, users);
     }
 
+    public CompetitionInviteBuilder withUser(Builder<User, ?> users) {
+        return withUser(users.build());
+    }
+
     public CompetitionInviteBuilder withHash(String... hashes) {
         return withArray((hash, invite) -> setField("hash", hash, invite), hashes);
     }

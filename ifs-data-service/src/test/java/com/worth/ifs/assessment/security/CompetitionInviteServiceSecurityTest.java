@@ -4,18 +4,30 @@ import com.worth.ifs.BaseServiceSecurityTest;
 import com.worth.ifs.assessment.transactional.CompetitionInviteService;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.invite.resource.CompetitionInviteResource;
+import com.worth.ifs.invite.resource.CompetitionParticipantResource;
 import com.worth.ifs.invite.resource.RejectionReasonResource;
+import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
-import org.junit.Ignore;
+import org.junit.Test;
 import org.springframework.security.access.method.P;
 
 import java.util.Optional;
 
-@Ignore("TODO")
+import static com.worth.ifs.invite.builder.CompetitionParticipantResourceBuilder.newCompetitionParticipantResource;
+import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
+import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static com.worth.ifs.user.resource.UserRoleType.ASSESSOR;
+import static java.util.Collections.singletonList;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.*;
+
 public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTest<CompetitionInviteService> {
 
     private CompetitionInvitePermissionRules competitionInvitePermissionRules;
     private CompetitionInviteLookupStrategy competitionInviteLookupStrategy;
+
+    private CompetitionParticipantPermissionRules competitionParticipantPermissionRules;
+    private CompetitionParticipantLookupStrategy competitionParticipantLookupStrategy;
 
     @Override
     protected Class<? extends CompetitionInviteService> getServiceClass() {
@@ -26,6 +38,103 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
     public void setUp() throws Exception {
         competitionInvitePermissionRules = getMockPermissionRulesBean(CompetitionInvitePermissionRules.class);
         competitionInviteLookupStrategy = getMockPermissionEntityLookupStrategiesBean(CompetitionInviteLookupStrategy.class);
+        competitionParticipantPermissionRules = getMockPermissionRulesBean(CompetitionParticipantPermissionRules.class);
+        competitionParticipantLookupStrategy = getMockPermissionEntityLookupStrategiesBean(CompetitionParticipantLookupStrategy.class);
+    }
+
+    @Test
+    public void acceptInvite() {
+        UserResource assessorUserResource = newUserResource()
+                .withRolesGlobal(singletonList(
+                        newRoleResource()
+                                .withType(ASSESSOR)
+                                .build()
+                        )
+                ).build();
+        CompetitionParticipantResource competitionParticipantResource = newCompetitionParticipantResource().build();
+
+        when(competitionParticipantLookupStrategy.getCompetitionParticipantResource("hash"))
+                .thenReturn(competitionParticipantResource);
+        when(competitionParticipantPermissionRules.userCanAcceptCompetitionInvite(competitionParticipantResource, assessorUserResource))
+                .thenReturn(true);
+
+        setLoggedInUser(assessorUserResource);
+
+        service.acceptInvite("hash");
+
+        verify(competitionParticipantLookupStrategy, only()).getCompetitionParticipantResource("hash");
+        verify(competitionParticipantPermissionRules, only()).userCanAcceptCompetitionInvite(competitionParticipantResource, assessorUserResource);
+    }
+
+    @Test
+    public void acceptInvite_assessorOnly() {
+        when(competitionParticipantLookupStrategy.getCompetitionParticipantResource(any()))
+                .thenReturn(newCompetitionParticipantResource().build());
+        when(competitionParticipantPermissionRules.userCanAcceptCompetitionInvite(any(), any()))
+                .thenReturn(true);
+
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> service.acceptInvite("hash"), ASSESSOR);
+    }
+
+    @Test
+    public void acceptInvite_notLoggedIn() {
+        setLoggedInUser(null);
+        assertAccessDenied(
+                () -> service.acceptInvite("hash"),
+                () -> {
+                    verifyZeroInteractions(competitionParticipantLookupStrategy);
+                    verifyZeroInteractions(competitionParticipantPermissionRules);
+                }
+        );
+    }
+
+    @Test
+    public void acceptInvite_notSameUser() {
+        UserResource assessorUserResource = newUserResource()
+                .withRolesGlobal(singletonList(
+                        newRoleResource()
+                                .withType(ASSESSOR)
+                                .build()
+                        )
+                ).build();
+        CompetitionParticipantResource competitionParticipantResource = newCompetitionParticipantResource().build();
+        when(competitionParticipantLookupStrategy.getCompetitionParticipantResource("hash"))
+                .thenReturn(competitionParticipantResource);
+        when(competitionParticipantPermissionRules.userCanAcceptCompetitionInvite(competitionParticipantResource, assessorUserResource))
+                .thenReturn(false);
+
+        setLoggedInUser(assessorUserResource);
+
+        assertAccessDenied(
+                () -> service.acceptInvite("hash"),
+                () -> {
+                    verify(competitionParticipantLookupStrategy, only()).getCompetitionParticipantResource("hash");
+                    verify(competitionParticipantPermissionRules, only()).userCanAcceptCompetitionInvite(competitionParticipantResource, assessorUserResource);
+                }
+        );
+    }
+
+    @Test
+    public void acceptInvite_hashNotExists() {
+        UserResource assessorUserResource = newUserResource()
+                .withRolesGlobal(singletonList(
+                        newRoleResource()
+                                .withType(ASSESSOR)
+                                .build()
+                        )
+                ).build();
+
+        when(competitionParticipantLookupStrategy.getCompetitionParticipantResource("hash not exists")).thenReturn(null);
+
+        setLoggedInUser(assessorUserResource);
+
+        assertAccessDenied(
+                () -> service.acceptInvite("hash not exists"),
+                () -> {
+                    verify(competitionParticipantLookupStrategy, only()).getCompetitionParticipantResource("hash not exists");
+                    verifyZeroInteractions(competitionParticipantPermissionRules);
+                }
+        );
     }
 
     public static class TestCompetitionInviteService implements CompetitionInviteService {

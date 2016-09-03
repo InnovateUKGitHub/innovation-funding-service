@@ -122,7 +122,7 @@ public enum CommonFailureKeys implements ErrorTemplate {
     ASSESSMENT_REJECTION_FAILED(BAD_REQUEST),
     ASSESSMENT_RECOMMENDATION_FAILED(BAD_REQUEST),
 
-    /*
+    /**
      * Forms
      */
     FORM_WORD_LIMIT_EXCEEDED(BAD_REQUEST),

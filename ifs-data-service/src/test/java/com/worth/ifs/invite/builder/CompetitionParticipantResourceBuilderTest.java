@@ -1,13 +1,12 @@
 package com.worth.ifs.invite.builder;
 
-import com.worth.ifs.invite.resource.CompetitionParticipantResource;
-import com.worth.ifs.invite.resource.CompetitionParticipantRoleResource;
-import com.worth.ifs.invite.resource.ParticipantStatusResource;
-import com.worth.ifs.invite.resource.RejectionReasonResource;
+import com.worth.ifs.BaseBuilderAmendFunctions;
+import com.worth.ifs.invite.resource.*;
 import org.junit.Test;
 
 import java.util.List;
 
+import static com.worth.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
 import static com.worth.ifs.invite.builder.CompetitionParticipantResourceBuilder.newCompetitionParticipantResource;
 import static org.junit.Assert.assertEquals;
 
@@ -28,7 +27,7 @@ public class CompetitionParticipantResourceBuilderTest {
                 .withId(expectedId)
                 .withUser(expectedUserId)
                 .withCompetition(expectedCompetitionId)
-                .withInvite(expectedInviteId)
+                .withInvite(newCompetitionInviteResource().with(BaseBuilderAmendFunctions.id(expectedInviteId)).build())
                 .withRejectionReason(expectedRejectionReason)
                 .withRejectionReasonComment(expectedRejectionReasonComment)
                 .withCompetitionParticipantRole(expectedRole)
@@ -38,7 +37,7 @@ public class CompetitionParticipantResourceBuilderTest {
         assertEquals(expectedId, competitionParticipant.getId());
         assertEquals(expectedUserId, competitionParticipant.getUserId());
         assertEquals(expectedCompetitionId, competitionParticipant.getCompetitionId());
-        assertEquals(expectedInviteId, competitionParticipant.getInviteId());
+        assertEquals(expectedInviteId, competitionParticipant.getInvite().getId());
         assertEquals(expectedRejectionReason, competitionParticipant.getRejectionReason());
         assertEquals(expectedRejectionReasonComment, competitionParticipant.getRejectionReasonComment());
         assertEquals(expectedRole, competitionParticipant.getRole());
@@ -57,11 +56,14 @@ public class CompetitionParticipantResourceBuilderTest {
         CompetitionParticipantRoleResource[] expectedRoles = {CompetitionParticipantRoleResource.ASSESSOR, CompetitionParticipantRoleResource.ASSESSOR};
         ParticipantStatusResource[] expectedStatuses = {ParticipantStatusResource.ACCEPTED, ParticipantStatusResource.ACCEPTED};
 
+
+        CompetitionInviteResource[] inviteResources = newCompetitionInviteResource().withIds(expectedInviteIds).build(2).toArray(new CompetitionInviteResource[0]);
+
         List<CompetitionParticipantResource> competitionParticipants = newCompetitionParticipantResource()
                 .withId(expectedIds)
                 .withUser(expectedUserIds)
                 .withCompetition(expectedCompetitionIds)
-                .withInvite(expectedInviteIds)
+                .withInvite(inviteResources)
                 .withRejectionReason(expectedRejectionReasons)
                 .withRejectionReasonComment(expectedRejectionReasonComments)
                 .withCompetitionParticipantRole(expectedRoles)
@@ -72,7 +74,7 @@ public class CompetitionParticipantResourceBuilderTest {
         assertEquals(expectedIds[0], first.getId());
         assertEquals(expectedUserIds[0], first.getUserId());
         assertEquals(expectedCompetitionIds[0], first.getCompetitionId());
-        assertEquals(expectedInviteIds[0], first.getInviteId());
+        assertEquals(expectedInviteIds[0], first.getInvite().getId());
         assertEquals(expectedRejectionReasons[0], first.getRejectionReason());
         assertEquals(expectedRejectionReasonComments[0], first.getRejectionReasonComment());
         assertEquals(expectedRoles[0], first.getRole());
@@ -82,7 +84,7 @@ public class CompetitionParticipantResourceBuilderTest {
         assertEquals(expectedIds[1], second.getId());
         assertEquals(expectedUserIds[1], second.getUserId());
         assertEquals(expectedCompetitionIds[1], second.getCompetitionId());
-        assertEquals(expectedInviteIds[1], second.getInviteId());
+        assertEquals(expectedInviteIds[1], second.getInvite().getId());
         assertEquals(expectedRejectionReasons[1], second.getRejectionReason());
         assertEquals(expectedRejectionReasonComments[1], second.getRejectionReasonComment());
         assertEquals(expectedRoles[1], second.getRole());
