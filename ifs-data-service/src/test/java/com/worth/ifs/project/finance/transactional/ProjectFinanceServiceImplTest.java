@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.worth.ifs.LambdaMatcher.createLambdaMatcher;
+import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.finance.resource.cost.FinanceRowType.LABOUR;
 import static com.worth.ifs.finance.resource.cost.FinanceRowType.MATERIALS;
@@ -44,10 +45,6 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
     @Mock
     private SpendProfileCostCategorySummaryStrategy spendProfileCostCategorySummaryStrategy;
-
-    private static final String SPEND_PROFILE_INCORRECT_COST_ERROR_KEY = "PROJECT_SETUP_SPEND_PROFILE_INCORRECT_COST_FOR_SPECIFIED_CATEGORY_AND_MONTH";
-
-    private static final String SPEND_PROFILE_TOTAL_FOR_ALL_MONTHS_INCORRECT_ERROR_KEY = "PROJECT_SETUP_SPEND_PROFILE_TOTAL_FOR_ALL_MONTHS_DOES_NOT_MATCH_ELIGIBLE_TOTAL_FOR_SPECIFIED_CATEGORY";
 
     @Test
     public void testGenerateSpendProfile() {
@@ -153,14 +150,11 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         // Assert that the error messages are for correct categories and correct month(s) based on the input
         assertTrue(errors.contains(
-                new Error(SPEND_PROFILE_INCORRECT_COST_ERROR_KEY,
-                        "Cost cannot contain fractional part. Category: Labour, Month#: 1", HttpStatus.BAD_REQUEST)));
+                new Error(SPEND_PROFILE_CONTAINS_FRACTIONS_IN_COST_FOR_SPECIFIED_CATEGORY_AND_MONTH, asList("Labour", 1), HttpStatus.BAD_REQUEST)));
         assertTrue(errors.contains(
-                new Error(SPEND_PROFILE_INCORRECT_COST_ERROR_KEY,
-                        "Cost cannot contain fractional part. Category: Materials, Month#: 2", HttpStatus.BAD_REQUEST)));
+                new Error(SPEND_PROFILE_CONTAINS_FRACTIONS_IN_COST_FOR_SPECIFIED_CATEGORY_AND_MONTH, asList("Labour", 1), HttpStatus.BAD_REQUEST)));
         assertTrue(errors.contains(
-                new Error(SPEND_PROFILE_INCORRECT_COST_ERROR_KEY,
-                        "Cost cannot contain fractional part. Category: Other costs, Month#: 3", HttpStatus.BAD_REQUEST)));
+                new Error(SPEND_PROFILE_CONTAINS_FRACTIONS_IN_COST_FOR_SPECIFIED_CATEGORY_AND_MONTH, asList("Labour", 1), HttpStatus.BAD_REQUEST)));
 
     }
 
@@ -189,14 +183,11 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         // Assert that the error messages are for correct categories and correct month(s) based on the input
         assertTrue(errors.contains(
-                new Error(SPEND_PROFILE_INCORRECT_COST_ERROR_KEY,
-                        "Cost cannot be less than zero. Category: Labour, Month#: 3", HttpStatus.BAD_REQUEST)));
+                new Error(SPEND_PROFILE_COST_LESS_THAN_ZERO_FOR_SPECIFIED_CATEGORY_AND_MONTH, asList("Labour", 3), HttpStatus.BAD_REQUEST)));
         assertTrue(errors.contains(
-                new Error(SPEND_PROFILE_INCORRECT_COST_ERROR_KEY,
-                        "Cost cannot be less than zero. Category: Materials, Month#: 2", HttpStatus.BAD_REQUEST)));
+                new Error(SPEND_PROFILE_COST_LESS_THAN_ZERO_FOR_SPECIFIED_CATEGORY_AND_MONTH, asList("Materials", 2), HttpStatus.BAD_REQUEST)));
         assertTrue(errors.contains(
-                new Error(SPEND_PROFILE_INCORRECT_COST_ERROR_KEY,
-                        "Cost cannot be less than zero. Category: Other costs, Month#: 3", HttpStatus.BAD_REQUEST)));
+                new Error(SPEND_PROFILE_COST_LESS_THAN_ZERO_FOR_SPECIFIED_CATEGORY_AND_MONTH, asList("Other costs", 3), HttpStatus.BAD_REQUEST)));
 
     }
 
@@ -225,14 +216,11 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         // Assert that the error messages are for correct categories and correct month(s) based on the input
         assertTrue(errors.contains(
-                new Error(SPEND_PROFILE_INCORRECT_COST_ERROR_KEY,
-                        "Cost cannot be million or more. Category: Labour, Month#: 1", HttpStatus.BAD_REQUEST)));
+                new Error(SPEND_PROFILE_COST_MORE_THAN_MILLION_FOR_SPECIFIED_CATEGORY_AND_MONTH, asList("Labour", 1), HttpStatus.BAD_REQUEST)));
         assertTrue(errors.contains(
-                new Error(SPEND_PROFILE_INCORRECT_COST_ERROR_KEY,
-                        "Cost cannot be million or more. Category: Materials, Month#: 2", HttpStatus.BAD_REQUEST)));
+                new Error(SPEND_PROFILE_COST_MORE_THAN_MILLION_FOR_SPECIFIED_CATEGORY_AND_MONTH, asList("Materials", 2), HttpStatus.BAD_REQUEST)));
         assertTrue(errors.contains(
-                new Error(SPEND_PROFILE_INCORRECT_COST_ERROR_KEY,
-                        "Cost cannot be million or more. Category: Other costs, Month#: 2", HttpStatus.BAD_REQUEST)));
+                new Error(SPEND_PROFILE_COST_MORE_THAN_MILLION_FOR_SPECIFIED_CATEGORY_AND_MONTH, asList("Other costs", 2), HttpStatus.BAD_REQUEST)));
 
     }
 
@@ -261,14 +249,11 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         // Assert that the error messages are for correct categories and correct month(s) based on the input
         assertTrue(errors.contains(
-                new Error(SPEND_PROFILE_INCORRECT_COST_ERROR_KEY,
-                        "Cost cannot contain fractional part. Category: Labour, Month#: 1", HttpStatus.BAD_REQUEST)));
+                new Error(SPEND_PROFILE_CONTAINS_FRACTIONS_IN_COST_FOR_SPECIFIED_CATEGORY_AND_MONTH, asList("Labour", 1), HttpStatus.BAD_REQUEST)));
         assertTrue(errors.contains(
-                new Error(SPEND_PROFILE_INCORRECT_COST_ERROR_KEY,
-                        "Cost cannot be less than zero. Category: Materials, Month#: 2", HttpStatus.BAD_REQUEST)));
+                new Error(SPEND_PROFILE_COST_LESS_THAN_ZERO_FOR_SPECIFIED_CATEGORY_AND_MONTH, asList("Materials", 2), HttpStatus.BAD_REQUEST)));
         assertTrue(errors.contains(
-                new Error(SPEND_PROFILE_INCORRECT_COST_ERROR_KEY,
-                        "Cost cannot be million or more. Category: Other costs, Month#: 3", HttpStatus.BAD_REQUEST)));
+                new Error(SPEND_PROFILE_COST_MORE_THAN_MILLION_FOR_SPECIFIED_CATEGORY_AND_MONTH, asList("Other costs", 3), HttpStatus.BAD_REQUEST)));
 
     }
 
@@ -368,11 +353,9 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         // Assert the error messages for incorrect totals
         assertTrue(errors.contains(
-                new Error(SPEND_PROFILE_TOTAL_FOR_ALL_MONTHS_INCORRECT_ERROR_KEY,
-                        "Spend Profile: The total for all months does not match the eligible total for category: Labour", HttpStatus.BAD_REQUEST)));
+                new Error(SPEND_PROFILE_TOTAL_FOR_ALL_MONTHS_DOES_NOT_MATCH_ELIGIBLE_TOTAL_FOR_SPECIFIED_CATEGORY, singletonList("Labour"), HttpStatus.BAD_REQUEST)));
         assertTrue(errors.contains(
-                new Error(SPEND_PROFILE_TOTAL_FOR_ALL_MONTHS_INCORRECT_ERROR_KEY,
-                        "Spend Profile: The total for all months does not match the eligible total for category: Materials", HttpStatus.BAD_REQUEST)));
+                new Error(SPEND_PROFILE_TOTAL_FOR_ALL_MONTHS_DOES_NOT_MATCH_ELIGIBLE_TOTAL_FOR_SPECIFIED_CATEGORY, singletonList("Materials"), HttpStatus.BAD_REQUEST)));
 
     }
 

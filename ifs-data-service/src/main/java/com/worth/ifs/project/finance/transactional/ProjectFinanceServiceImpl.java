@@ -21,24 +21,21 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.rest.ValidationMessages.noErrors;
-import static com.worth.ifs.commons.service.ServiceResult.processAnyFailuresOrSucceed;
-import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
-import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.commons.service.ServiceResult.*;
 import static com.worth.ifs.project.finance.domain.TimeUnit.MONTH;
 import static com.worth.ifs.util.CollectionFunctions.*;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
+import static freemarker.template.utility.Collections12.singletonList;
 import static java.math.BigDecimal.ROUND_HALF_UP;
+import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -61,10 +58,6 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
     @Autowired
     private SpendProfileCostCategorySummaryStrategy spendProfileCostCategorySummaryStrategy;
-
-    private static final String SPEND_PROFILE_TOTAL_FOR_ALL_MONTHS_INCORRECT_ERROR_KEY = "PROJECT_SETUP_SPEND_PROFILE_TOTAL_FOR_ALL_MONTHS_DOES_NOT_MATCH_ELIGIBLE_TOTAL_FOR_SPECIFIED_CATEGORY";
-
-    private static final String SPEND_PROFILE_INCORRECT_COST_ERROR_KEY = "PROJECT_SETUP_SPEND_PROFILE_INCORRECT_COST_FOR_SPECIFIED_CATEGORY_AND_MONTH";
 
     @Override
     public ServiceResult<Void> generateSpendProfile(Long projectId) {
@@ -195,24 +188,21 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     private void checkFractionalCost(BigDecimal cost, String category, int index, List<Error> incorrectCosts) {
 
         if (cost.scale() > 0) {
-            String errorMessage = String.format("Cost cannot contain fractional part. Category: %s, Month#: %d", category, index + 1);
-            incorrectCosts.add(new Error(SPEND_PROFILE_INCORRECT_COST_ERROR_KEY, errorMessage, HttpStatus.BAD_REQUEST));
+            incorrectCosts.add(new Error(SPEND_PROFILE_CONTAINS_FRACTIONS_IN_COST_FOR_SPECIFIED_CATEGORY_AND_MONTH, asList(category, index + 1), HttpStatus.BAD_REQUEST));
         }
     }
 
     private void checkCostLessThanZero(BigDecimal cost, String category, int index, List<Error> incorrectCosts) {
 
         if (-1 == cost.compareTo(BigDecimal.ZERO)) { // Indicates that the cost is less than zero
-            String errorMessage = String.format("Cost cannot be less than zero. Category: %s, Month#: %d", category, index + 1);
-            incorrectCosts.add(new Error(SPEND_PROFILE_INCORRECT_COST_ERROR_KEY, errorMessage, HttpStatus.BAD_REQUEST));
+            incorrectCosts.add(new Error(SPEND_PROFILE_COST_LESS_THAN_ZERO_FOR_SPECIFIED_CATEGORY_AND_MONTH, asList(category, index + 1), HttpStatus.BAD_REQUEST));
         }
     }
 
     private void checkCostGreaterThanOrEqualToMillion(BigDecimal cost, String category, int index, List<Error> incorrectCosts) {
 
         if (-1 != cost.compareTo(new BigDecimal("1000000"))) { // Indicates that the cost million or more
-            String errorMessage = String.format("Cost cannot be million or more. Category: %s, Month#: %d", category, index + 1);
-            incorrectCosts.add(new Error(SPEND_PROFILE_INCORRECT_COST_ERROR_KEY, errorMessage, HttpStatus.BAD_REQUEST));
+            incorrectCosts.add(new Error(SPEND_PROFILE_COST_MORE_THAN_MILLION_FOR_SPECIFIED_CATEGORY_AND_MONTH, asList(category, index + 1), HttpStatus.BAD_REQUEST));
         }
     }
 
@@ -284,9 +274,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
             BigDecimal expectedTotalCost = eligibleCostPerCategoryMap.get(category);
 
             if (!actualTotalCost.equals(expectedTotalCost)) {
-                String readableErrorMessage = String.format("Spend Profile: The total for all months does not match the eligible total for category: %s", category);
-
-                categoriesWithIncorrectTotal.add(new Error(SPEND_PROFILE_TOTAL_FOR_ALL_MONTHS_INCORRECT_ERROR_KEY, readableErrorMessage, HttpStatus.BAD_REQUEST));
+                categoriesWithIncorrectTotal.add(new Error(SPEND_PROFILE_TOTAL_FOR_ALL_MONTHS_DOES_NOT_MATCH_ELIGIBLE_TOTAL_FOR_SPECIFIED_CATEGORY, singletonList(category), HttpStatus.BAD_REQUEST));
             }
         }
 
