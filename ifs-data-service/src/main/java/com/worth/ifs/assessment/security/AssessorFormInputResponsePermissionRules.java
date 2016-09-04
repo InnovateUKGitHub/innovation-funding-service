@@ -18,16 +18,16 @@ import static com.worth.ifs.security.SecurityRuleUtil.isCompAdmin;
 public class AssessorFormInputResponsePermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "READ", description = "Only Assessors can read Assessor Form Input Responses")
-    public boolean userCanReadAssessorFormInputResponse(final AssessorFormInputResponseResource response, final UserResource user) {
+    public boolean userCanReadAssessorFormInputResponse(AssessorFormInputResponseResource response, UserResource user) {
         return isCompAdmin(user) || isAssessorForFormInputResponse(response, user);
     }
 
     @PermissionRule(value = "UPDATE", description = "Only Assessors can update Assessor Form Input Responses")
-    public boolean userCanUpdateAssessorFormInputResponse(final AssessorFormInputResponseResource assessment, final UserResource user) {
+    public boolean userCanUpdateAssessorFormInputResponse(AssessorFormInputResponseResource assessment, UserResource user) {
         return isAssessorForFormInputResponse(assessment, user);
     }
 
-    private boolean isAssessorForFormInputResponse(final AssessorFormInputResponseResource response, final UserResource user) {
+    private boolean isAssessorForFormInputResponse(AssessorFormInputResponseResource response, UserResource user) {
         Assessment assessment = assessmentRepository.findOneByProcessRoleId(response.getAssessment());
         Long assessmentUser = processRoleRepository.findOne(assessment.getId()).getUser().getId();
         return user.getId().equals(assessmentUser);

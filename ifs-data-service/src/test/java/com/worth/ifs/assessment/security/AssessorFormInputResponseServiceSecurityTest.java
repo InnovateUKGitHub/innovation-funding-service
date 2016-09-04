@@ -1,6 +1,7 @@
 package com.worth.ifs.assessment.security;
 
 import com.worth.ifs.BaseServiceSecurityTest;
+import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
 import com.worth.ifs.assessment.transactional.AssessorFormInputResponseService;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -10,8 +11,8 @@ import org.junit.Test;
 
 import java.util.List;
 
+import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static com.worth.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
-import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -20,6 +21,8 @@ public class AssessorFormInputResponseServiceSecurityTest extends BaseServiceSec
 
     private AssessorFormInputResponsePermissionRules assessorFormInputResponsePermissionRules;
     private AssessorFormInputResponseLookupStrategy assessorFormInputResponseLookupStrategy;
+    private AssessmentLookupStrategy assessmentLookupStrategy;
+    private AssessmentPermissionRules assessmentPermissionRules;
 
     @Override
     protected Class<? extends AssessorFormInputResponseService> getServiceClass() {
@@ -30,31 +33,31 @@ public class AssessorFormInputResponseServiceSecurityTest extends BaseServiceSec
     public void setUp() throws Exception {
         assessorFormInputResponsePermissionRules = getMockPermissionRulesBean(AssessorFormInputResponsePermissionRules.class);
         assessorFormInputResponseLookupStrategy = getMockPermissionEntityLookupStrategiesBean(AssessorFormInputResponseLookupStrategy.class);
+        assessmentLookupStrategy = getMockPermissionEntityLookupStrategiesBean(AssessmentLookupStrategy.class);
+        assessmentPermissionRules = getMockPermissionRulesBean(AssessmentPermissionRules.class);
     }
 
     @Test
     public void findByAssessmentId() {
         Long assessmentId = 1L;
-        Long assessorFormInputResponseId = 2L;
+        when(assessmentLookupStrategy.getAssessmentResource(assessmentId)).thenReturn(newAssessmentResource().withId(assessmentId).build());
 
-        when(assessorFormInputResponseLookupStrategy.getAssessorFormInputResponseResource(assessorFormInputResponseId))
-                .thenReturn(newAssessorFormInputResponseResource().withId(assessorFormInputResponseId).withAssessment(assessmentId).build());
         assertAccessDenied(
                 () -> service.getAllAssessorFormInputResponses(assessmentId),
-                () -> verify(assessorFormInputResponsePermissionRules).userCanReadAssessorFormInputResponse(isA(AssessorFormInputResponseResource.class), isA(UserResource.class))
+                () -> verify(assessmentPermissionRules).userCanReadAssessment(isA(AssessmentResource.class), isA(UserResource.class))
         );
     }
 
     @Test
     public void findByAssessmentAndQuestion() {
         Long assessmentId = 1L;
-        Long assessorFormInputResponseId = 2L;
         Long questionId = 3L;
 
-        when(assessorFormInputResponseLookupStrategy.getAssessorFormInputResponseResource(assessorFormInputResponseId)).thenReturn(newAssessorFormInputResponseResource().withId(assessorFormInputResponseId).build());
+        when(assessmentLookupStrategy.getAssessmentResource(assessmentId)).thenReturn(newAssessmentResource().withId(assessmentId).build());
+
         assertAccessDenied(
                 () -> service.getAllAssessorFormInputResponsesByAssessmentAndQuestion(assessmentId, questionId),
-                () -> verify(assessorFormInputResponsePermissionRules).userCanReadAssessorFormInputResponse(isA(AssessorFormInputResponseResource.class), isA(UserResource.class))
+                () -> verify(assessmentPermissionRules).userCanReadAssessment(isA(AssessmentResource.class), isA(UserResource.class))
         );
     }
 
@@ -73,7 +76,7 @@ public class AssessorFormInputResponseServiceSecurityTest extends BaseServiceSec
     public static class TestAssessorFormInputResponseService implements AssessorFormInputResponseService {
         @Override
         public ServiceResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponses(Long assessmentId) {
-            return serviceSuccess(newAssessorFormInputResponseResource().withId(2L).withAssessment(1L).build(1));
+           return null;
         }
 
         @Override
