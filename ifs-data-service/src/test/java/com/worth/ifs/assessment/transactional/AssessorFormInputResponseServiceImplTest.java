@@ -3,7 +3,6 @@ package com.worth.ifs.assessment.transactional;
 import com.worth.ifs.BaseUnitTestMocksTest;
 import com.worth.ifs.assessment.domain.AssessorFormInputResponse;
 import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
-import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.form.resource.FormInputResource;
 import org.junit.Before;
@@ -21,6 +20,7 @@ import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static com.worth.ifs.assessment.builder.AssessorFormInputResponseBuilder.newAssessorFormInputResponse;
 import static com.worth.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
 import static com.worth.ifs.commons.error.CommonFailureKeys.ASSESSMENT_FORM_INPUT_RESPONSE_WORD_LIMIT_EXCEEDED;
+import static com.worth.ifs.commons.error.Error.fieldError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.form.builder.FormInputBuilder.newFormInput;
 import static com.worth.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
@@ -257,7 +257,7 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
 
         ServiceResult<Void> result = assessorFormInputResponseService.updateFormInputResponse(assessorFormInputResponseResource);
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(new Error(ASSESSMENT_FORM_INPUT_RESPONSE_WORD_LIMIT_EXCEEDED, 100)));
+        assertTrue(result.getFailure().is(fieldError("value", value, ASSESSMENT_FORM_INPUT_RESPONSE_WORD_LIMIT_EXCEEDED.getErrorKey(), 100)));
     }
 
     @Test

@@ -22,9 +22,8 @@ import javax.validation.Valid;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import static com.worth.ifs.commons.error.CommonFailureKeys.ASSESSMENT_SUMMARY_COMMENT_WORD_LIMIT_EXCEEDED;
-import static com.worth.ifs.commons.error.CommonFailureKeys.ASSESSMENT_SUMMARY_FEEDBACK_WORD_LIMIT_EXCEEDED;
-import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.mappingErrorKeyToField;
+import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
+import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 
 @Controller
 public class AssessmentSummaryController {
@@ -63,10 +62,8 @@ public class AssessmentSummaryController {
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             ServiceResult<Void> updateResult = assessmentService.recommend(assessmentId, form.getFundingConfirmation(), form.getFeedback(), form.getComment());
-            return validationHandler.addAnyErrors(updateResult,
-                    mappingErrorKeyToField(ASSESSMENT_SUMMARY_FEEDBACK_WORD_LIMIT_EXCEEDED, "feedback"),
-                    mappingErrorKeyToField(ASSESSMENT_SUMMARY_COMMENT_WORD_LIMIT_EXCEEDED, "comment")
-            ).failNowOrSucceedWith(failureView, () -> redirectToCompetitionOfAssessment(assessmentId));
+            return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors())
+                    .failNowOrSucceedWith(failureView, () -> redirectToCompetitionOfAssessment(assessmentId));
         });
     }
 

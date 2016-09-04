@@ -112,7 +112,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
     }
 
     @Test
-    public void testGetQuestion() throws Exception {
+    public void getQuestion() throws Exception {
         Long expectedPreviousQuestionId = 10L;
         Long expectedNextQuestionId = 21L;
         Long sectionId = 2L;
@@ -169,7 +169,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
     }
 
     @Test
-    public void testNextQuestionIsNotNavigable() throws Exception {
+    public void nextQuestionIsNotNavigable() throws Exception {
         Long expectedPreviousQuestionId = 10L;
         Long expectedNextQuestionId = 21L;
         Long sectionId = 71L;
@@ -194,7 +194,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
     }
 
     @Test
-    public void testGetQuestion_applicationDetailsQuestion() throws Exception {
+    public void getQuestion_applicationDetailsQuestion() throws Exception {
         Long expectedNextQuestionId = 10L;
         Long sectionId = 2L;
         CompetitionResource expectedCompetition = competitionResource;
@@ -233,7 +233,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
     }
 
     @Test
-    public void testUpdateFormInputResponse() throws Exception {
+    public void updateFormInputResponse() throws Exception {
         String value = "Feedback";
         Long formInputId = 1L;
         when(assessorFormInputResponseService.updateFormInputResponse(ASSESSMENT_ID, formInputId, value)).thenReturn(serviceSuccess());
@@ -249,11 +249,33 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
     }
 
     @Test
-    public void testUpdateFormInputResponseValidation() throws Exception {
+    public void updateFormInputResponse_exceedsCharacterSizeLimit() throws Exception {
         String value = "This is the feedback";
         Long formInputId = 1L;
 
-        when(assessorFormInputResponseService.updateFormInputResponse(ASSESSMENT_ID, formInputId, value)).thenReturn(serviceFailure(new Error(ASSESSMENT_FORM_INPUT_RESPONSE_WORD_LIMIT_EXCEEDED, 100)));
+        when(assessorFormInputResponseService.updateFormInputResponse(ASSESSMENT_ID, formInputId, value)).thenReturn(serviceFailure(fieldError("value", "Feedback", "validation.field.too.many.characters", "", "5000", "0")));
+
+        when(messageSource.getMessage("validation.field.too.many.characters", new Object[]{"", "5000", "0"}, Locale.UK)).thenReturn("This field cannot contain more than 5000 characters");
+
+        MvcResult result = mockMvc.perform(post("/{assessmentId}/formInput/{formInputId}", ASSESSMENT_ID, formInputId)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("value", value))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("success", is("false")))
+                .andReturn();
+
+        verify(assessorFormInputResponseService, only()).updateFormInputResponse(ASSESSMENT_ID, formInputId, value);
+        String content = result.getResponse().getContentAsString();
+        String jsonExpectedContent = "{\"success\":\"false\",\"validation_errors\":[\"This field cannot contain more than 5000 characters\"]}";
+        assertEquals(jsonExpectedContent, content);
+    }
+
+    @Test
+    public void updateFormInputResponse_exceedWordLimit() throws Exception {
+        String value = "This is the feedback";
+        Long formInputId = 1L;
+
+        when(assessorFormInputResponseService.updateFormInputResponse(ASSESSMENT_ID, formInputId, value)).thenReturn(serviceFailure(fieldError("value", "Feedback", ASSESSMENT_FORM_INPUT_RESPONSE_WORD_LIMIT_EXCEEDED.getErrorKey(), 100)));
 
         when(messageSource.getMessage(ASSESSMENT_FORM_INPUT_RESPONSE_WORD_LIMIT_EXCEEDED.name(), new Object[]{"100"}, Locale.UK)).thenReturn("Value must be less than 100 words.");
 
@@ -271,7 +293,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
     }
 
     @Test
-    public void testSave() throws Exception {
+    public void save() throws Exception {
         List<FormInputResource> formInputs = this.setupAssessmentFormInputs(QUESTION_ID, FORM_INPUT_TYPES.get("assessor_score"), FORM_INPUT_TYPES.get("textarea"));
 
         Long formInputIdScore = formInputs.get(0).getId();
@@ -307,7 +329,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         String formInputFeedbackField = format("formInput[%s]", formInputIdFeedback);
 
         when(assessorFormInputResponseService.updateFormInputResponse(ASSESSMENT_ID, formInputIdScore, "10")).thenReturn(serviceSuccess());
-        when(assessorFormInputResponseService.updateFormInputResponse(ASSESSMENT_ID, formInputIdFeedback, "Feedback")).thenReturn(serviceFailure(fieldError("value", "Feedback", "validation.field.too.many.characters", "0", "5000")));
+        when(assessorFormInputResponseService.updateFormInputResponse(ASSESSMENT_ID, formInputIdFeedback, "Feedback")).thenReturn(serviceFailure(fieldError("value", "Feedback", "validation.field.too.many.characters", "", "5000", "0")));
 
         // For re-display of question view following the invalid data entry
         List<FormInputResource> applicationFormInputs = this.setupApplicationFormInputs(QUESTION_ID, FORM_INPUT_TYPES.get("textarea"));
@@ -330,21 +352,20 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
 
         Form form = (Form) result.getModelAndView().getModel().get("form");
 
-        // TODO
-        //assertEquals("10", form.getFormInput(formInputScoreField));
-        //assertEquals("Feedback", form.getFormInput(formInputFeedbackField));
+        assertEquals("10", form.getFormInput(formInputIdScore.toString()));
+        assertEquals("Feedback", form.getFormInput(formInputIdFeedback.toString()));
 
         BindingResult bindingResult = form.getBindingResult();
         assertEquals(0, bindingResult.getGlobalErrorCount());
         assertEquals(1, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors(formInputFeedbackField));
         assertEquals("validation.field.too.many.characters", bindingResult.getFieldError(formInputFeedbackField).getCode());
-        assertEquals("0", bindingResult.getFieldError(formInputFeedbackField).getArguments()[0]);
         assertEquals("5000", bindingResult.getFieldError(formInputFeedbackField).getArguments()[1]);
+        assertEquals("0", bindingResult.getFieldError(formInputFeedbackField).getArguments()[2]);
     }
 
     @Test
-    public void testSave_exceedWordLimit() throws Exception {
+    public void save_exceedWordLimit() throws Exception {
         Long expectedNextQuestionId = 21L;
         Long sectionId = 71L;
         List<FormInputResource> formInputs = this.setupAssessmentFormInputs(QUESTION_ID, FORM_INPUT_TYPES.get("assessor_score"), FORM_INPUT_TYPES.get("textarea"));
@@ -355,7 +376,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         String formInputFeedbackField = format("formInput[%s]", formInputIdFeedback);
 
         when(assessorFormInputResponseService.updateFormInputResponse(ASSESSMENT_ID, formInputIdScore, "10")).thenReturn(serviceSuccess());
-        when(assessorFormInputResponseService.updateFormInputResponse(ASSESSMENT_ID, formInputIdFeedback, "Feedback")).thenReturn(serviceFailure(new Error(ASSESSMENT_FORM_INPUT_RESPONSE_WORD_LIMIT_EXCEEDED, 100)));
+        when(assessorFormInputResponseService.updateFormInputResponse(ASSESSMENT_ID, formInputIdFeedback, "Feedback")).thenReturn(serviceFailure(fieldError("value", "Feedback", ASSESSMENT_FORM_INPUT_RESPONSE_WORD_LIMIT_EXCEEDED.getErrorKey(), 100)));
 
         // For re-display of question view following the invalid data entry
         List<FormInputResource> applicationFormInputs = this.setupApplicationFormInputs(QUESTION_ID, FORM_INPUT_TYPES.get("textarea"));
@@ -378,9 +399,8 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
 
         Form form = (Form) result.getModelAndView().getModel().get("form");
 
-        // TODO
-        //assertEquals("10", form.getFormInput(formInputScoreField));
-        //assertEquals("Feedback", form.getFormInput(formInputFeedbackField));
+        assertEquals("10", form.getFormInput(formInputIdScore.toString()));
+        assertEquals("Feedback", form.getFormInput(formInputIdFeedback.toString()));
 
         BindingResult bindingResult = form.getBindingResult();
         assertEquals(0, bindingResult.getGlobalErrorCount());

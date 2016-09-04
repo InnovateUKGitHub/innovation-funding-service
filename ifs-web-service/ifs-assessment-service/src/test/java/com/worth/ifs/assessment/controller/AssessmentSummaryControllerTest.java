@@ -10,7 +10,6 @@ import com.worth.ifs.assessment.service.AssessmentService;
 import com.worth.ifs.assessment.service.AssessorFormInputResponseService;
 import com.worth.ifs.assessment.viewmodel.AssessmentSummaryQuestionViewModel;
 import com.worth.ifs.assessment.viewmodel.AssessmentSummaryViewModel;
-import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
@@ -35,8 +34,7 @@ import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAsse
 import static com.worth.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
 import static com.worth.ifs.assessment.builder.ProcessOutcomeResourceBuilder.newProcessOutcomeResource;
 import static com.worth.ifs.assessment.resource.AssessorFormInputType.*;
-import static com.worth.ifs.commons.error.CommonFailureKeys.ASSESSMENT_SUMMARY_COMMENT_WORD_LIMIT_EXCEEDED;
-import static com.worth.ifs.commons.error.CommonFailureKeys.ASSESSMENT_SUMMARY_FEEDBACK_WORD_LIMIT_EXCEEDED;
+import static com.worth.ifs.commons.error.Error.fieldError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
@@ -370,8 +368,8 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
     @Test
     public void save_exceedsCharacterSizeLimit() throws Exception {
         Boolean fundingConfirmation = TRUE;
-        String feedback = RandomStringUtils.random(5001);
-        String comment = RandomStringUtils.random(5001);
+        String feedback = RandomStringUtils.random(256);
+        String comment = RandomStringUtils.random(256);
 
         MvcResult result = mockMvc.perform(post("/{assessmentId}/summary", assessmentId)
                 .contentType(APPLICATION_FORM_URLENCODED)
@@ -400,25 +398,24 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
         assertTrue(bindingResult.hasFieldErrors("feedback"));
         assertTrue(bindingResult.hasFieldErrors("comment"));
         assertEquals("This field cannot contain more than {1} characters", bindingResult.getFieldError("feedback").getDefaultMessage());
-        assertEquals(5000, bindingResult.getFieldError("feedback").getArguments()[1]);
+        assertEquals(255, bindingResult.getFieldError("feedback").getArguments()[1]);
         assertEquals("This field cannot contain more than {1} characters", bindingResult.getFieldError("comment").getDefaultMessage());
-        assertEquals(5000, bindingResult.getFieldError("comment").getArguments()[1]);
+        assertEquals(255, bindingResult.getFieldError("comment").getArguments()[1]);
 
         verify(assessmentService).getById(assessmentId);
         verifyNoMoreInteractions(assessmentService);
     }
 
     @Test
-    public void save_exceedWordLimit() throws Exception {
+    public void save_exceedsWordLimit() throws Exception {
         Boolean fundingConfirmation = TRUE;
         String feedback = "feedback";
         String comment = "comment";
 
         when(assessmentService.recommend(assessmentId, fundingConfirmation, feedback, comment))
                 .thenReturn(serviceFailure(asList(
-                        new Error(ASSESSMENT_SUMMARY_FEEDBACK_WORD_LIMIT_EXCEEDED, 100),
-                        new Error(ASSESSMENT_SUMMARY_COMMENT_WORD_LIMIT_EXCEEDED, 100)
-                        ))
+                        fieldError("feedback", feedback, "validation.field.max.word.count", 100),
+                        fieldError("comment", comment, "validation.field.max.word.count", 100)))
                 );
 
         MvcResult result = mockMvc.perform(post("/{assessmentId}/summary", assessmentId)
@@ -447,9 +444,9 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
         assertEquals(2, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("feedback"));
         assertTrue(bindingResult.hasFieldErrors("comment"));
-        assertEquals(ASSESSMENT_SUMMARY_FEEDBACK_WORD_LIMIT_EXCEEDED.name(), bindingResult.getFieldError("feedback").getCode());
+        assertEquals("validation.field.max.word.count", bindingResult.getFieldError("feedback").getCode());
         assertEquals("100", bindingResult.getFieldError("feedback").getArguments()[0]);
-        assertEquals(ASSESSMENT_SUMMARY_COMMENT_WORD_LIMIT_EXCEEDED.name(), bindingResult.getFieldError("comment").getCode());
+        assertEquals("validation.field.max.word.count", bindingResult.getFieldError("comment").getCode());
         assertEquals("100", bindingResult.getFieldError("comment").getArguments()[0]);
 
         verify(assessmentService).getById(assessmentId);

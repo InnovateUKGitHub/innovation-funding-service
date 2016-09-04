@@ -17,6 +17,7 @@ import java.util.List;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.ASSESSMENT_FORM_INPUT_RESPONSE_WORD_LIMIT_EXCEEDED;
+import static com.worth.ifs.commons.error.Error.fieldError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
@@ -86,7 +87,7 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
             String cleaned = Jsoup.parse(value).text();
 
             if (cleaned.split("\\s+").length > formInputResource.getWordCount()) {
-                return serviceFailure(new Error(ASSESSMENT_FORM_INPUT_RESPONSE_WORD_LIMIT_EXCEEDED, wordLimit));
+                return serviceFailure(fieldError("value", value, ASSESSMENT_FORM_INPUT_RESPONSE_WORD_LIMIT_EXCEEDED.getErrorKey(), wordLimit));
             }
         }
         return serviceSuccess();

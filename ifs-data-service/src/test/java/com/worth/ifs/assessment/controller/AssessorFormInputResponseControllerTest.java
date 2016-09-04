@@ -98,7 +98,7 @@ public class AssessorFormInputResponseControllerTest extends BaseControllerMockM
                 .withValue(value)
                 .build();
 
-        Error sizeError = fieldError("value", value, "validation.assessorforminputresponse.value.length.max", "", "0", "5000");
+        Error sizeError = fieldError("value", value, "validation.field.too.many.characters", "", "5000", "0");
 
         mockMvc.perform(put("/assessorFormInputResponse")
                 .contentType(APPLICATION_JSON)
@@ -114,13 +114,13 @@ public class AssessorFormInputResponseControllerTest extends BaseControllerMockM
     public void updateFormInputResponse_exceedsWordLimit() throws Exception {
         AssessorFormInputResponseResource response = newAssessorFormInputResponseResource().build();
 
-        when(assessorFormInputResponseServiceMock.updateFormInputResponse(response)).thenReturn(serviceFailure(new Error(ASSESSMENT_FORM_INPUT_RESPONSE_WORD_LIMIT_EXCEEDED, 100)));
+        when(assessorFormInputResponseServiceMock.updateFormInputResponse(response)).thenReturn(serviceFailure(fieldError("value", "response", ASSESSMENT_FORM_INPUT_RESPONSE_WORD_LIMIT_EXCEEDED.getErrorKey(), 100)));
 
         mockMvc.perform(put("/assessorFormInputResponse")
                 .contentType(APPLICATION_JSON)
                 .content(toJson(response)))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().json(toJson(new RestErrorResponse(new Error(ASSESSMENT_FORM_INPUT_RESPONSE_WORD_LIMIT_EXCEEDED, 100)))))
+                .andExpect(status().isNotAcceptable())
+                .andExpect(content().json(toJson(new RestErrorResponse(fieldError("value", "response", ASSESSMENT_FORM_INPUT_RESPONSE_WORD_LIMIT_EXCEEDED.getErrorKey(), 100)))))
                 .andReturn();
 
         verify(assessorFormInputResponseServiceMock).updateFormInputResponse(response);
