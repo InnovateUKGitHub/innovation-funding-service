@@ -29,7 +29,7 @@ Labour
     ...    INFUND-736
     ...
     ...    INFUND-1256
-    [Tags]    HappyPath
+    [Tags]
     When the Applicant fills in the Labour costs for two rows
     Then Totals should be correct    css=#section-total-9    £ 104,348    css=[data-mirror="#section-total-9"]    £ 104,348
     And the user clicks the button/link    name=remove_cost
@@ -140,6 +140,7 @@ the Applicant fills in the Labour costs for two rows
     mouse out    css=input
     Focus    jQuery=button:contains('Add another role')
     the user clicks the button/link    jQuery=button:contains('Add another role')
+    get selenium implicit wait
     the user should see the element    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(4) input
     Input Text    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(2) input    120000
     Input Text    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(4) input    100
@@ -243,7 +244,7 @@ the applicant adds one row for the other costs
 
 the user reloads the page
     Reload page
-    sleep    800ms
+    sleep    500ms
 
 the total of the other funding should be correct
     Textfield Value Should Be    id=other-funding-total    £ 20,000

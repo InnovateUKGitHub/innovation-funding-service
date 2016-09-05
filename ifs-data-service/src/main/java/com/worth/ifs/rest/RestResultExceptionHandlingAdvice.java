@@ -8,7 +8,6 @@ import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
 
 import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
-import static com.worth.ifs.commons.rest.CommonRestFailures.internalServerErrorRestFailure;
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
 
 /**
@@ -33,7 +32,7 @@ public class RestResultExceptionHandlingAdvice {
                 return result;
             } else {
                 LOG.warn("Null RestResult returned from method " + joinPoint.getTarget() + " - converting to default 500 RestResult");
-                return internalServerErrorRestFailure();
+                return restFailure(internalServerErrorError());
             }
         } catch (Exception e) {
             LOG.warn("Exception caught while processing RestResult-returning method.  Converting to default 500 RestResult", e);

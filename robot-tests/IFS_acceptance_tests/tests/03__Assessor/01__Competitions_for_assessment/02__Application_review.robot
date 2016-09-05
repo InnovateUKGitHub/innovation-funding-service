@@ -354,6 +354,8 @@ the user adds score and feedback for every question
     the user clicks the button/link    css=.next
     the user selects the option from the drop-down menu    10    id=assessor-question-score
     the user enters text to a text field    css=#form-input-225 .editor    Testing Attire feedback text
+    wait until page contains    Saving
+    Sleep    500ms
 
 The assessor navigates to the summary page
     Given the user navigates to the page    ${Assessment_overview_9}

@@ -16,7 +16,6 @@ import com.worth.ifs.invite.repository.ApplicationInviteRepository;
 import com.worth.ifs.invite.repository.InviteOrganisationRepository;
 import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
-import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.resource.InviteResultsResource;
 import com.worth.ifs.notifications.resource.*;
 import com.worth.ifs.notifications.service.NotificationService;
@@ -34,7 +33,6 @@ import org.apache.commons.logging.LogFactory;
 import org.hibernate.validator.HibernateValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BeanPropertyBindingResult;
@@ -47,6 +45,7 @@ import java.util.stream.Collectors;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.worth.ifs.commons.error.CommonErrors.*;
+import static com.worth.ifs.commons.error.Error.globalError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
@@ -54,6 +53,7 @@ import static com.worth.ifs.user.resource.UserRoleType.COLLABORATOR;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static java.util.Collections.singletonList;
+import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
 
 @Service
 public class InviteServiceImpl extends BaseTransactionalService implements InviteService {
@@ -108,7 +108,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
         if (errors.hasErrors()) {
             errors.getFieldErrors().stream().peek(e -> LOG.debug(String.format("Field error: %s ", e.getField())));
-            ServiceResult<Void> inviteResult = serviceFailure(internalServerErrorError("Validation errors"));
+            ServiceResult<Void> inviteResult = serviceFailure(internalServerErrorError());
 
             inviteResult.handleSuccessOrFailure(
                     failure -> handleInviteError(invite, failure),
@@ -259,7 +259,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
                 return serviceSuccess();
             }
             LOG.error(String.format("Invited emailaddress not the same as the users emailaddress %s => %s ", user.getEmail(), invite.getEmail()));
-            Error e = new Error("Invited emailaddress not the same as the users emailaddress", HttpStatus.NOT_ACCEPTABLE);
+            Error e = new Error("Invited emailaddress not the same as the users emailaddress", NOT_ACCEPTABLE);
             return serviceFailure(e);
         });
     }
@@ -409,8 +409,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
 
     private List<Error> validateUniqueEmails(List<ApplicationInviteResource> inviteResources) {
-        List<Error> errors = new ArrayList();
-        String errorMessage = "Invited emailaddress is already invited in this application";
+        List<Error> errors = new ArrayList<>();
 
         Iterables.concat(findDuplicatesInResourceList(inviteResources),
                 inviteResources
@@ -418,7 +417,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
                         .filter(inviteResource -> validateUniqueEmail(inviteResource).equals(false))
                         .collect(Collectors.toList())
         )
-                .forEach(inviteResource -> errors.add(new Error(inviteResource.getEmail(), errorMessage, HttpStatus.NOT_ACCEPTABLE)));
+                .forEach(inviteResource -> errors.add(globalError("email.already.in.invite", singletonList(inviteResource.getEmail()))));
 
         return errors;
     }

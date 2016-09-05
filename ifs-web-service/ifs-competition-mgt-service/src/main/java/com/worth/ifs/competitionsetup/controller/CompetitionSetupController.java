@@ -10,12 +10,14 @@ import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.category.resource.CategoryResource;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.security.UserAuthenticationService;
+import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionResource.Status;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competitionsetup.form.*;
 import com.worth.ifs.competitionsetup.model.Question;
 import com.worth.ifs.competitionsetup.model.Funder;
+import com.worth.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupService;
 import com.worth.ifs.profiling.ProfileExecution;
@@ -35,6 +37,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -61,6 +64,9 @@ public class CompetitionSetupController {
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private CompetitionSetupMilestoneService competitionSetupMilestoneService;
 
     public static final String READY_TO_OPEN_KEY = "readyToOpen";
 
@@ -142,6 +148,15 @@ public class CompetitionSetupController {
         competitionSetupService.populateCompetitionSectionModelAttributes(model, competition, section);
         model.addAttribute("competitionSetupForm", competitionSetupService.getSectionFormData(competition, section));
 
+        if(model.containsAttribute("isInitialComplete")) {
+            Map<String, Object> modelMap = model.asMap();
+
+            if(!(Boolean) modelMap.get("isInitialComplete") && !section.equals(CompetitionSetupSection.INITIAL_DETAILS)) {
+                LOG.error("User should first fill fill the initial details");
+                return "redirect:/dashboard";
+            }
+        }
+
         return "competition/setup";
     }
 
@@ -173,7 +188,7 @@ public class CompetitionSetupController {
 
     private List<String> toStringList(List<Error> errors) {
         List<String> returnList = new ArrayList<>();
-        errors.forEach(error -> returnList.add(error.getErrorMessage()));
+        errors.forEach(error -> returnList.add(error.getErrorKey()));
         return returnList;
     }
 
@@ -227,7 +242,9 @@ public class CompetitionSetupController {
                                               BindingResult bindingResult,
                                               @PathVariable("competitionId") Long competitionId,
                                               Model model) {
-
+        if (bindingResult.hasErrors()) {
+            competitionSetupMilestoneService.sortMilestones(competitionSetupForm);
+        }
         return genericCompetitionSetupSection(competitionSetupForm, bindingResult, competitionId, CompetitionSetupSection.MILESTONES, model);
     }
 
@@ -332,10 +349,9 @@ public class CompetitionSetupController {
         if(saveSectionResult != null && !saveSectionResult.isEmpty()) {
             saveSectionResult.forEach(e -> {
                 if(e.getFieldName() != null) {
-                    bindingResult.rejectValue(e.getFieldName(), e.getErrorKey(), e.getErrorMessage());
+                    bindingResult.rejectValue(e.getFieldName(), e.getErrorKey());
                 } else {
-                    ObjectError error = new ObjectError("currentSection",
-                            e.getErrorMessage());
+                    ObjectError error = new ObjectError("currentSection", new String[] {e.getErrorKey()}, null, null);
                     bindingResult.addError(error);
                 }
             });
@@ -344,7 +360,6 @@ public class CompetitionSetupController {
         if(bindingResult.hasErrors()) {
            return false;
         }
-
         return true;
     }
 
