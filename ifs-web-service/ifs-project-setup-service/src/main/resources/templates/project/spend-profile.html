@@ -100,6 +100,8 @@
               </form>
           </th:block>
       </div>
+
+
     </th:block>
     <!--/*
     =================================
@@ -107,6 +109,19 @@
     =================================
     */-->
     <th:block th:if="${form}">
+
+      <div class="grid-container">
+        <div class="error-summary" aria-hidden="true">
+           <h2 class="heading-medium error-summary-heading">
+               Unable to save spend profile
+           </h2>
+           Please review
+           <ul class="error-summary-list">
+               <li th:each="err : ${#fields.allErrors()}" th:text="${err}"></li>
+           </ul>
+       </div>
+     </div>
+
       <form method="post" th:action="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/edit(projectId=${model.projectId},organisationId=${model.organisationId})}" >
         <div class="spend-profile-table">
           <div class="flex-table-before"></div>
@@ -129,7 +144,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr th:each="row : ${form.table.getMonthlyCostsPerCategoryMap()}">
+                  <tr th:each="row : ${form.table.getMonthlyCostsPerCategoryMap()}" class="form-group-row">
                       <th scope="row" class="fix-left" th:text="${row.key}" th:id="${#strings.replace(#strings.replace(row.key,' ','-'),'&amp;','')}"/>
                       <td th:each="cost, status : ${row.value}">
                         <input class="form-control"
@@ -140,7 +155,7 @@
                                th:value="${#numbers.formatInteger(cost,1,'NONE')}"
                                type="number" />
                       </td>
-                      <td th:text="${'&pound; '+#numbers.formatInteger(model.table.eligibleCostPerCategoryMap.get(row.key),1,'NONE')}"
+                      <td th:text="${'&pound; '+#numbers.formatInteger(model.table.eligibleCostPerCategoryMap.get(row.key),1,'COMMA')}"
                           data-calculation-operations="+"
                           th:attr="data-calculation-fields=${'[id*=row-'+#strings.replace(#strings.replace(row.key,' ','-'),'&amp;','')+']'}" />
                   </tr>
@@ -182,6 +197,8 @@
           <button class="button button-secondary extra-margin">Save and return to spend profile overview</button>
         </div>
       </form>
+
+
     </th:block>
 
 </main>

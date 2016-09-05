@@ -681,14 +681,14 @@
                 </thead>
                 <tbody>
                   <tr th:each="(milestoneEntry : ${competitionSetupForm.milestoneEntries})"
-                      class="date-group"
+                      class="date-group form-group-row"
                       data-future-date=""
                       th:attr="data-date-invalid-errormessage=${milestoneEntry.value.milestoneType.milestoneDescription + ': please enter a valid date'},
                                data-date-future-errormessage=${milestoneEntry.value.milestoneType.milestoneDescription  + ': please enter a future date that is after the previous milestone'}">
 
-                      <td class="labelledby" th:id="${'milestone-' + milestoneEntry.key}">
+                      <th scope="row" th:id="${'milestone-' + milestoneEntry.key}">
                         <span th:text="${milestoneEntry.value.milestoneType.milestoneDescription}" />
-                      </td>
+                      </th>
                       <input type="hidden"
                              required="required"
                              th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].milestoneType'"
