@@ -15,7 +15,15 @@ IFS.competition_management.setup = (function(){
           IFS.competition_management.setup.handleStateAid();
         });
         jQuery("body.competition-management.competition-setup").on('change','[name="innovationSectorCategoryId"]',function(){
-          IFS.competition_management.setup.handleInnovationSector(false);
+           function waitUntilSaved() {
+             var waitUntilSavedTimer = setInterval(function() {
+               if(jQuery('[name="innovationSectorCategoryId"]').closest(".form-group").find('.autosave-info').html() == "Saved!") {
+                 IFS.competition_management.setup.handleInnovationSector(false);
+                 clearInterval(waitUntilSavedTimer);
+               }
+             }, 100);
+           }
+           waitUntilSaved();
         });
         IFS.competition_management.setup.innovationSectorOnPageLoad();
 
