@@ -104,11 +104,11 @@
 							</div>
 
 							<div th:if="${param.stage == null or param.stage[0] &lt; '2'}"  th:remove="tag">
-								<td class="status action"><a href="/prototypes/2650-review-bank-details" title="Review bank details"><span class="visuallyhidden">Action</span></a></td>
+								<td class="status action"><a href="/prototypes/4547-review-all-bank-details" title="Review bank details"><span class="visuallyhidden">Action</span></a></td>
 							</div>
 
 							<div th:if="${param.stage != null and param.stage[0] >= '2'}" th:remove="tag">
-								<td class="status ok"><a href="/prototypes/2650-review-bank-details?status=accepted" title="View bank details"><span class="visuallyhidden">OK</span></a></td>
+								<td class="status ok"><a href="/prototypes/4547-review-all-bank-details?status=accepted" title="View bank details"><span class="visuallyhidden">OK</span></a></td>
 							</div>
 
 							<td class="status action"><a href="/prototypes/1199-project-finances" title="Finance checks"><span class="visuallyhidden">Action</span></a></td>

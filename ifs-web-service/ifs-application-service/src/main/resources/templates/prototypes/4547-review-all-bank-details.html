@@ -19,117 +19,78 @@
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 	
-	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Project setup'}, ${'Project details'})" th:remove="tag" />
+	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Project details'}, ${'Bank details'})" th:remove="tag" />
 
 	<!-- <div th:include="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:with="page='project-setup', status='closed'" th:remove="tag" /> -->
 	
 	<hr />
 
-	
+	<div class="success-alert extra-margin-bottom" th:unless="${param.status == null or param.status[0] != 'accepted'}">
+		<h2 class="heading-small no-margin-top">The bank details provided have been approved.</h2>
+	</div>
 
-		<div class="success-alert" th:unless="${param.status != null and param.status[0] == 'incomplete'}">
-			<h2 class="heading-small no-margin-top">The project details have been submitted to Innovate UK.</h2>
+	<th:block th:if="${param.status != null and param.status[0] == 'noCompHouse' or param.type != null and param.type[0] == 'noCompHouse'}">
+		<div class="panel-indent">
+			<h2 class="heading-medium no-margin-top">Business not registered on Companies House</h2>
+
+			<dl class="standard-definition-list">
+				<dt>Stated business type:</dt>
+				<dd>Limited Liability Partnership</dd>
+			</dl>
 		</div>
-		
-		<h2 class="heading-medium">Project details</h2>
+	</th:block>
 
-		<p>These project details were supplied by the lead partner on behalf of the project.</p>
+	<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
+	<p>This overview details whether each member of the project team has submitted their bank details and whether additional review is needed before to approve the bank accounts.</p>
 
-		<table>
-			<thead>
-				<tr>
-					<th scope="col" style="width: 50%">Question</th>
-					<th scope="col" style="width: 50%">Answer</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td>
-						Target start date
-					</td>
-					<td id="start-date" th:text="${(param.status != null and param.status[0] == 'incomplete') ? 'Not yet completed' : '01/06/2016'}">
-						START DATE
-					</td>
-				</tr>
-				<tr>
-					<td>					
-						Project address
-					</td>
-					<td id="project-address" th:text="${(param.status != null and param.status[0] == 'incomplete') ? 'Not yet completed' : '13 Queens Square, Bristol, BS3 1RF'}">
-						ADDRESS
-					</td>
-				</tr>
-				<tr>
-					<td>
-						Project manager
-					</td>
-					<td id="project-manager" th:text="${(param.status != null and param.status[0] == 'incomplete') ? 'Not yet completed' : 'Steve Dafit'}">
-						NAME
-					</td>
-				</tr>
-				
-			</tbody>
-		</table>
 
-		<h2 class="heading-medium">Partner finance contacts</h2>
-		<p>Each of the partners is responsible for submitting their own finance contact.</p>
+	<h2 class="heading-medium">Partner progress</h2>
 
+	<div class="table-overflow">
 		<table>
 			<thead>
 				<tr>
 					<th scope="col" style="width: 50%">Partner</th>
-					<th scope="col" style="width: 50%">Finance contact</th>
-					<!-- <th scope="col" style="width: 20%">Turnover</th>
-					<th scope="col" style="width: 20%">Staff headcount</th> -->
+					<th scope="col" style="width: 50%">Progress</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr>
 					<td>
-						Aptrans Ltd (Lead)
+						<a th:href="${(param.status != null and param.status[0] == 'accepted' ? '/prototypes/2650-review-bank-details?status=accepted' : '/prototypes/2650-review-bank-details?status=error')}">Aptrans Ltd (Lead)</a>
 					</td>
-					<td>
-						<span id="finance-contact" th:text="${(param.status != null and param.status[0] == 'incomplete') ? 'Not yet completed' : 'John Smith'}">NAME</span>
+					<td th:unless="${param.status != null and param.status[0] == 'accepted'}">
+						<span class="action">Review required</span>
 					</td>
-					<!-- <td>
-						<span id="finance-turnover">&pound;1,023,092</span>
+					<td th:unless="${param.status == null or param.status[0] != 'accepted'}">
+						<span class="yes">Complete</span>
 					</td>
-					<td>
-						<span id="finance-headcount">84</span> 
-					</td>-->
 				</tr>
 				<tr>
 					<td>
-						Biotech Corp
+						<a href="#">Biotech Corp</a>
 					</td>
 					<td>
-						<span id="finance-partner-contact">Ann Jones</span>
+						<span class="yes">Complete</span>
 					</td>
-					<!-- <td>
-						<span id="finance-partner-turnover">&pound;756,137</span>
-					</td>
-					<td>
-						<span id="finance-partner-headcount">29</span>
-					</td> -->
 				</tr>
 				<tr>
 					<td>
 						University of Cardiff
 					</td>
-					<td>
-						Paula Moore
+					<td th:unless="${param.status != null and param.status[0] == 'accepted'}">
+						Not yet submitted
 					</td>
-					<!-- <td>
-						<span id="finance-partner2-turnover">&pound;2,023,092</span>
+					<td th:unless="${param.status == null or param.status[0] != 'accepted'}">
+						<span class="yes">Complete</span>
 					</td>
-					<td>
-						<span id="finance-partner2-headcount">76</span>
-					</td> -->
 				</tr>
 			</tbody>
 		</table>
-		
-	
+	</div>
+
+	<p class="extra-margin">When all bank detail have been approved this section of project setup will be marked as complete.</p>
+
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 

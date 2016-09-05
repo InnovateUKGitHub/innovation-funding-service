@@ -37,7 +37,7 @@ public class ApplicationStartDateValidatorTest {
 
 		validator.validate(request, errors);
 
-		verify(errors).reject("application.startDate", "Please enter a future date");
+		verify(errors).reject("application.startDate", "validation.project.start.date.not.in.future");
 	}
 
 	@Test
@@ -47,7 +47,7 @@ public class ApplicationStartDateValidatorTest {
 
 		validator.validate(request, errors);
 
-		verify(errors).reject("application.startDate", "Please enter a valid date");
+		verify(errors).reject("application.startDate", "validation.project.start.date.is.valid.date");
 	}
 
 	@Test
@@ -57,7 +57,7 @@ public class ApplicationStartDateValidatorTest {
 
 		validator.validate(request, errors);
 
-		verify(errors).reject("application.startDate", "Please enter a valid date");
+		verify(errors).reject("application.startDate", "validation.project.start.date.is.valid.date");
 	}
 
 	@Test
@@ -87,7 +87,7 @@ public class ApplicationStartDateValidatorTest {
 
 		validator.validate(request, errors);
 
-		verify(errors).reject("application.startDate", "Please enter a valid date");
+		verify(errors).reject("application.startDate", "validation.project.start.date.is.valid.date");
 	}
 
 	@Test

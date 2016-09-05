@@ -30,14 +30,14 @@ public class RestResultExceptionHandlingAdviceIntegrationTest extends BaseIntegr
     public void testFailureMethodReturnsFailureNormally() {
         RestResult<String> result = applicableController.failingMethod();
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(internalServerErrorError("Failure")));
+        assertTrue(result.getFailure().is(internalServerErrorError()));
     }
 
     @Test
     public void testNullReturningMethodReturnsDefaultFailure() {
         RestResult<String> result = applicableController.nullReturningMethod();
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(internalServerErrorError("An unexpected error occurred")));
+        assertTrue(result.getFailure().is(internalServerErrorError()));
     }
 
     @Test

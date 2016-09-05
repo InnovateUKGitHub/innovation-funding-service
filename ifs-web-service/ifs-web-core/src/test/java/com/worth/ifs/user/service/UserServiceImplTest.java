@@ -1,10 +1,7 @@
 package com.worth.ifs.user.service;
 
 import com.worth.ifs.BaseServiceUnitTest;
-import com.worth.ifs.application.finance.model.UserRole;
-import com.worth.ifs.application.service.CategoryServiceImpl;
 import com.worth.ifs.commons.error.exception.GeneralUnexpectedErrorException;
-import com.worth.ifs.user.resource.RoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.resource.UserRoleType;
 import org.junit.Before;
@@ -43,7 +40,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         super.setUp();
 
         when(userRestService.resendEmailVerificationNotification(eq(EMAIL_THAT_EXISTS_FOR_USER))).thenReturn(restSuccess());
-        when(userRestService.resendEmailVerificationNotification(eq(EMAIL_THAT_EXISTS_FOR_USER_BUT_CAUSES_OTHER_ERROR))).thenReturn(restFailure(internalServerErrorError("Other error occurred")));
+        when(userRestService.resendEmailVerificationNotification(eq(EMAIL_THAT_EXISTS_FOR_USER_BUT_CAUSES_OTHER_ERROR))).thenReturn(restFailure(internalServerErrorError()));
         when(userRestService.resendEmailVerificationNotification(not(or(eq(EMAIL_THAT_EXISTS_FOR_USER), eq(EMAIL_THAT_EXISTS_FOR_USER_BUT_CAUSES_OTHER_ERROR))))).thenReturn(restFailure(notFoundError(UserResource.class)));
     }
 

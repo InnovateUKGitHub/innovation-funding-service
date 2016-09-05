@@ -48,14 +48,14 @@ public class ApplicationFundingDecisionControllerTest extends BaseControllerMock
         Map<Long, FundingDecision> decision = MapFunctions.asMap(1L, FundingDecision.FUNDED, 2L, FundingDecision.UNFUNDED);
 
         when(applicationFundingServiceMock.makeFundingDecision(competitionId, decision)).thenReturn(serviceSuccess());
-        when(applicationFundingServiceMock.notifyLeadApplicantsOfFundingDecisions(competitionId, decision)).thenReturn(serviceFailure(internalServerErrorError("Unable to send notifications")));
+        when(applicationFundingServiceMock.notifyLeadApplicantsOfFundingDecisions(competitionId, decision)).thenReturn(serviceFailure(internalServerErrorError()));
         when(projectServiceMock.createProjectsFromFundingDecisions(decision)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/applicationfunding/1/submit")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(decision)))
                 .andExpect(status().isInternalServerError())
-                .andExpect(content().json(toJson(new RestErrorResponse(internalServerErrorError("Unable to send notifications")))));
+                .andExpect(content().json(toJson(new RestErrorResponse(internalServerErrorError()))));
     }
     
     @Test
