@@ -443,7 +443,8 @@
         <h1 class="heading-xlarge no-margin">Eligibility</h1>
     </div>
 
-    <form th:action="@{(${editable} ? '' : 'eligibility/edit')}" method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
+    <form th:action="@{(${editable} ? '' : 'eligibility/edit')}" method="post" th:object="${competitionSetupForm}" novalidate="novalidate"
+          th:attr="data-competition=${competition.id}" data-autosave="compSetup" data-section="eligibility">
 
         <fieldset th:if="${editable}" id="section-3-edit">
 
@@ -466,6 +467,7 @@
 	                    <input id="comp-stream-no" value="no" type="radio" th:field="*{multipleStream}" required="required" data-required-errormessage="Please select a stream option"></input>
 	                No
 	                </label>
+                    <span class="autosave-info" />
                 </fieldset>
             </div>
 
@@ -487,7 +489,7 @@
                            required="required"
                            data-required-errormessage="A stream name is required"
                            data-maxlength-errormessage="Stream name has a maximum length of 255 characters" />
-
+                    <span class="autosave-info" />
                 </fieldset>
             </div>
 
@@ -505,6 +507,7 @@
                         <input th:id="${'single-or-collaborative-' + collaborationLevel.code}" name="singleOrCollaborative" th:value="${collaborationLevel.code}" type="radio" th:checked="${competitionSetupForm.singleOrCollaborative == collaborationLevel.code}" required="required" data-required-errormessage="Please select a collaboration level"></input>
                         <span th:text="${collaborationLevel.name}" th:remove="tag" />
                     </label>
+                    <span class="autosave-info" />
                 </fieldset>
             </div>
 
@@ -523,6 +526,7 @@
 		                <input th:value="${researchCategory.id}" type="checkbox" name="researchCategoryId" th:id="${'research-categories-' + researchCategory.id}" th:checked="${competitionSetupForm.includesResearchCategory(researchCategory.id)}" required="required" data-required-errormessage="Please select at least one research category" />
 		                <span th:text="${researchCategory.name}" th:remove="tag" />
 		            </label>
+                    <span class="autosave-info" />
 		        </fieldset>
 		    </div>
 
@@ -542,6 +546,7 @@
 					    <input th:id="${'lead-applicant-type-' + leadApplicantType.code}" name="leadApplicantType" th:value="${leadApplicantType.code}" type="radio" th:checked="${competitionSetupForm.leadApplicantType == leadApplicantType.code}" required="required" data-required-errormessage="Please select a lead applicant type" />
 					    <span th:text="${leadApplicantType.name}" th:remove="tag" />
 					 </label>
+                   <span class="autosave-info" />
 				</fieldset>
             </div>
 
@@ -557,6 +562,7 @@
 	                <select class="form-control width-large" name="researchParticipationAmountId" id="researchParticipation" required="required" data-required-errormessage="Please select a research participation percentage" >
 	                    <option th:each="researchParticipationAmount : ${researchParticipationAmounts}" th:text="${researchParticipationAmount.name}" th:value="${researchParticipationAmount.id}" th:selected="${competitionSetupForm.researchParticipationAmountId == researchParticipationAmount.id}">Research participation</option>
 	                </select>
+                    <span class="autosave-info" />
                 </fieldset>
             </div>
 
@@ -577,6 +583,7 @@
                         <input id="comp-resubmissions-no" value="no" type="radio" th:field="*{resubmission}" required="required" data-required-errormessage="Please select a resubmissions option"></input>
                         No
                     </label>
+                    <span class="autosave-info" />
                 </fieldset>
             </div>
 
@@ -691,7 +698,7 @@
                           <input type="number"
                                 placeholder="DD"
                                 min="1"
-                                max="31"
+                                max="31" maxlength="2"
                                 required="required"
                                 class="form-control width-small"
                                 data-date-in-table=""
@@ -704,7 +711,7 @@
                           <input type="number"
                                 placeholder="MM"
                                 min="1"
-                                max="12"
+                                max="12" maxlength="2"
                                 required="required"
                                 class="form-control width-small"
                                 data-date-in-table=""
@@ -717,6 +724,7 @@
                                  placeholder="YYYY"
                                  th:attr="aria-labelledby=${'milestone-' + milestoneEntry.key}"
                                  required="required"
+                                 maxlength="4"
                                  class="form-control width-small"
                                  data-date-in-table=""
                                  th:value="${milestoneEntry.value.year}"

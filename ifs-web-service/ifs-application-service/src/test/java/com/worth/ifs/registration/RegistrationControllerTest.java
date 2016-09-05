@@ -506,7 +506,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 .withId(1L)
                 .build();
 
-        Error error = new Error("errorname", "errordescription", BAD_REQUEST);
+        Error error = new Error("errorname", BAD_REQUEST);
 
         when(organisationService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(organisation);
         when(userService.createLeadApplicantForOrganisationWithCompetitionId(userResource.getFirstName(),

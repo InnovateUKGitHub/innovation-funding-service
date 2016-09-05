@@ -88,7 +88,9 @@
 
 		</fieldset> -->
 
-		<button class="button button-large extra-margin" id="finance-cta">Save</button>
+		<p>If you add a new team member this section will remain in a pending state until they have accepted. Upon accepting and creating their account the team member will automatically be submitted as your Finance contact.</p>
+
+		<button class="button button-large extra-margin" id="finance-cta">Submit</button>
 
 	</form>
 
@@ -157,7 +159,7 @@
 			jQuery("#finances-name-invite").attr('checked', 'checked');
 			jQuery('#finance-contact-table').hide();
 			jQuery('#invited-finance-contact').show();
-			jQuery('#finance-cta').text('Send invitation');
+			jQuery('#finance-cta').text('Submit and send invitation');
 			jQuery('#finance-cta').show();
 			jQuery('#add-finance-contact').text('Change team member');
 
@@ -167,9 +169,9 @@
 			if(jQuery(this).is(':checked')){
 
 				if(jQuery(this).attr('id') != 'finances-name-invite'){
-					jQuery('#finance-cta').text('Save');
+					jQuery('#finance-cta').text('Submit');
 				}else{
-					jQuery('#finance-cta').text('Send invitation');
+					jQuery('#finance-cta').text('Submit and send invitation');
 				}
 
 				if(jQuery(this).attr('id') != 'add-finance-contact'){

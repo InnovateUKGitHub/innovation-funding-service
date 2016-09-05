@@ -50,7 +50,7 @@ public class AssessorFormInputResponseBuilder extends BaseBuilder<AssessorFormIn
     }
 
     public AssessorFormInputResponseBuilder withValue(String... values) {
-        return withArray((value, assessorFormInputResponse) -> setField("value", value, assessorFormInputResponse), values);
+        return withArray(BuilderAmendFunctions::setValue, values);
     }
 
     public AssessorFormInputResponseBuilder withUpdatedDate(LocalDateTime... updatedDates) {

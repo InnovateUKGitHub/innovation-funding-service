@@ -18,6 +18,7 @@ import java.util.Optional;
 
 import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static com.worth.ifs.address.resource.OrganisationAddressType.REGISTERED;
+import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_REST_RESULT_UNEXPECTED_STATUS_CODE;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.projectResourceListType;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.projectUserResourceList;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
@@ -237,7 +238,7 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
         // now run the method under test
         RestResult<Optional<FileEntryResource>> result = service.getCollaborationAgreementFileDetails(123L);
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(new Error(NOT_ACCEPTABLE, "Unexpected status code " + NOT_ACCEPTABLE, NOT_ACCEPTABLE)));
+        assertTrue(result.getFailure().is(new Error(GENERAL_REST_RESULT_UNEXPECTED_STATUS_CODE, NOT_ACCEPTABLE)));
     }
 
     @Test
@@ -277,7 +278,7 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
         // now run the method under test
         RestResult<Optional<ByteArrayResource>> result = service.getCollaborationAgreementFile(123L);
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(new Error(NOT_ACCEPTABLE, "Unexpected status code " + NOT_ACCEPTABLE, NOT_ACCEPTABLE)));
+        assertTrue(result.getFailure().is(new Error(GENERAL_REST_RESULT_UNEXPECTED_STATUS_CODE, NOT_ACCEPTABLE)));
     }
 
     @Test
@@ -349,7 +350,7 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
         // now run the method under test
         RestResult<Optional<FileEntryResource>> result = service.getExploitationPlanFileDetails(123L);
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(new Error(NOT_ACCEPTABLE, "Unexpected status code " + NOT_ACCEPTABLE, NOT_ACCEPTABLE)));
+        assertTrue(result.getFailure().is(new Error(GENERAL_REST_RESULT_UNEXPECTED_STATUS_CODE, NOT_ACCEPTABLE)));
     }
 
     @Test
@@ -389,7 +390,7 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
         // now run the method under test
         RestResult<Optional<ByteArrayResource>> result = service.getExploitationPlanFile(123L);
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(new Error(NOT_ACCEPTABLE, "Unexpected status code " + NOT_ACCEPTABLE, NOT_ACCEPTABLE)));
+        assertTrue(result.getFailure().is(new Error(GENERAL_REST_RESULT_UNEXPECTED_STATUS_CODE, NOT_ACCEPTABLE)));
     }
 
     @Test

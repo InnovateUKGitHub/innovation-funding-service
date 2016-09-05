@@ -34,11 +34,13 @@ import java.util.stream.Collectors;
 import static com.worth.ifs.address.resource.OrganisationAddressType.BANK_DETAILS;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
+import static com.worth.ifs.commons.error.Error.globalError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static java.lang.Short.parseShort;
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 
 @Service
 public class BankDetailsServiceImpl implements BankDetailsService{
@@ -244,11 +246,11 @@ public class BankDetailsServiceImpl implements BankDetailsService{
         return conditons.stream().filter(condition -> condition.getSeverity().equals("error")).
                 map(condition -> {
                     if (condition.getCode().equals(EXPERIAN_INVALID_ACC_NO_ERROR_ID)) {
-                        return Error.globalError(EXPERIAN_VALIDATION_FAILED_WITH_INCORRECT_ACC_NO.getErrorKey(), "Account number is incorrect, please check and try again");
+                        return globalError(EXPERIAN_VALIDATION_FAILED_WITH_INCORRECT_ACC_NO);
                     } else if (condition.getCode().equals(EXPERIAN_MODULUS_CHECK_FAILURE_ID)) {
-                        return Error.globalError(EXPERIAN_VALIDATION_FAILED_WITH_INCORRECT_BANK_DETAILS.getErrorKey(), "Bank account details are incorrect, please check and try again");
+                        return globalError(EXPERIAN_VALIDATION_FAILED_WITH_INCORRECT_BANK_DETAILS);
                     }
-                    return Error.globalError(EXPERIAN_VALIDATION_FAILED.getErrorKey(), condition.getDescription());
+                    return globalError(EXPERIAN_VALIDATION_FAILED, singletonList(condition.getDescription()));
                 }).
                 collect(Collectors.toList());
     }
