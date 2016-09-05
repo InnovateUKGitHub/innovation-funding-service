@@ -1,13 +1,14 @@
 package com.worth.ifs.file.transactional;
 
-import com.worth.ifs.commons.error.CommonErrors;
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import org.springframework.http.MediaType;
 
 import java.util.List;
 
-import static com.worth.ifs.commons.error.CommonErrors.badRequestError;
 import static com.worth.ifs.commons.error.CommonErrors.payloadTooLargeError;
+import static com.worth.ifs.commons.error.CommonErrors.unsupportedMediaTypeError;
+import static com.worth.ifs.commons.error.CommonFailureKeys.FILES_NO_NAME_PROVIDED;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
@@ -40,7 +41,7 @@ public class FilesizeAndTypeFileValidator implements FileHttpHeadersValidator {
     }
 
     private ServiceResult<String> validFilename(String filename) {
-        return checkParameterIsPresent(filename, "Please supply an original filename as a \"filename\" HTTP Request Parameter");
+        return checkParameterIsPresent(filename, new Error(FILES_NO_NAME_PROVIDED));
     }
 
     private ServiceResult<Long> validContentLengthHeader(String contentLengthHeader) {
@@ -63,19 +64,19 @@ public class FilesizeAndTypeFileValidator implements FileHttpHeadersValidator {
     private ServiceResult<MediaType> validContentTypeHeader(String contentTypeHeader) {
 
         if (isBlank(contentTypeHeader)) {
-            return serviceFailure(CommonErrors.unsupportedMediaTypeError(validMediaTypes));
+            return serviceFailure(unsupportedMediaTypeError(validMediaTypes));
         }
 
         MediaType mediaType = MediaType.valueOf(contentTypeHeader);
 
-        if (mediaType == null || !validMediaTypes.contains(mediaType)) {
-            return serviceFailure(CommonErrors.unsupportedMediaTypeError(validMediaTypes));
+        if (!validMediaTypes.contains(mediaType)) {
+            return serviceFailure(unsupportedMediaTypeError(validMediaTypes));
         }
 
         return serviceSuccess(mediaType);
     }
 
-    private ServiceResult<String> checkParameterIsPresent(String parameterValue, String failureMessage) {
-        return !isBlank(parameterValue) ?  serviceSuccess(parameterValue) : serviceFailure(badRequestError(failureMessage));
+    private ServiceResult<String> checkParameterIsPresent(String parameterValue, Error error) {
+        return !isBlank(parameterValue) ?  serviceSuccess(parameterValue) : serviceFailure(error);
     }
 }

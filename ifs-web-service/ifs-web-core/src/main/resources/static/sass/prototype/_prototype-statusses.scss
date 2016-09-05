@@ -134,6 +134,11 @@ span.no{
 	padding-left: 28px;
 }
 
+span.action{
+	@extend  %icon-assigned-to-me;
+	padding-left: 28px;
+}
+
 
 /*----- Assessor status ----*/
 

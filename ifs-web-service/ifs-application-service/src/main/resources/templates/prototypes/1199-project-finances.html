@@ -15,7 +15,7 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Technology inspired'}, ${(param.status != null and param.status[0] == 'accepted' ? '/prototypes/1627-admin-view-project-status-grid?status=setup&#38;stage=2' : '/prototypes/1627-admin-view-project-status-grid?status=setup')})" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition dashboard'}, ${'/prototypes/4151-admin-competition-dash'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 	
@@ -49,6 +49,28 @@
 			</tr>
 		</tbody>
 	</table>
+
+	
+	<th:block th:if="${param.status != null and param.status[0] == 'warning'}">
+
+		<div class="eligibility extra-margin-top">
+
+			<dl class="list-eligibility">
+				<dt>Maximum research participation</dt>
+				<dd>30%</dd>
+				<dt>Current research participation</dt>
+				<dd>32%</dd>
+			</dl>
+			
+			<div class="warning-alert">
+		        <h2 class="heading-small no-margin">Maximum research participation exceeded</h2>
+		        <p>Follow process to confirm project is still eligible for funding.</p>
+		    </div>
+
+		</div>
+
+	</th:block>
+
 	
 	<h2 class="heading-medium">Progress</h2>
 

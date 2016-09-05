@@ -8,8 +8,8 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.stereotype.Component;
 
-import static com.worth.ifs.commons.error.CommonErrors.forbiddenError;
-import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
+import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION;
+import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_SPRING_SECURITY_OTHER_EXCEPTION_THROWN;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 
 /**
@@ -27,10 +27,10 @@ public class SpringSecurityServiceResultExceptionHandlingInterceptor implements 
             return invocation.proceed();
         } catch (AccessDeniedException | AuthenticationCredentialsNotFoundException e) {
             LOG.warn(e.getClass().getSimpleName() + " caught while processing ServiceResult-returning method.  Converting to a ServiceFailure", e);
-            return serviceFailure(forbiddenError("This action is not permitted."));
+            return serviceFailure(GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION);
         } catch (Exception e) {
             LOG.error(e.getClass().getSimpleName() + " caught while processing ServiceResult-returning method.  Converting to a 500 ServiceFailure", e);
-            return serviceFailure(internalServerErrorError());
+            return serviceFailure(GENERAL_SPRING_SECURITY_OTHER_EXCEPTION_THROWN);
         }
     }
 }

@@ -17,7 +17,9 @@ import com.worth.ifs.finance.resource.FinanceRowMetaFieldResource;
 import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
+import com.worth.ifs.invite.resource.CompetitionParticipantResource;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
+import com.worth.ifs.invite.resource.RejectionReasonResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.user.resource.OrganisationResource;
@@ -146,10 +148,20 @@ public final class ParameterizedTypeReferences {
         };
     }
 
+    public static ParameterizedTypeReference<List<RejectionReasonResource>> rejectionReasonResourceListType() {
+        return new ParameterizedTypeReference<List<RejectionReasonResource>>() {
+        };
+    }
+
     public static ParameterizedTypeReference<List<ValidationMessages>> validationMessagesListType() {
         return new ParameterizedTypeReference<List<ValidationMessages>>() {};
     }
+
     public static ParameterizedTypeReference<List<MilestoneResource>> milestoneResourceListType() {
         return new ParameterizedTypeReference<List<MilestoneResource>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<CompetitionParticipantResource>> competitionParticipantResourceListType() {
+        return new ParameterizedTypeReference<List<CompetitionParticipantResource>>() {};
     }
 }

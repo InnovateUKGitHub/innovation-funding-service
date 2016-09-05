@@ -16,9 +16,8 @@
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
     
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Technology inspired'}, ${(param.status != null and param.status[0] == 'accepted' ? '/prototypes/1627-admin-view-project-status-grid?status=setup&#38;stage=5' : '/prototypes/1627-admin-view-project-status-grid?status=setup&#38;stage=3')})" th:unless="${param.status != null and param.status[0] == 'reject'}" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition dashboard'}, ${'/prototypes/4151-admin-competition-dash'})"  th:remove="tag" />
 
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Technology inspired'}, ${'/prototypes/1627-admin-view-project-status-grid?status=setup&#38;stage=5&#38;reject=docs'})" th:if="${param.status != null and param.status[0] == 'reject'}" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 	
@@ -36,10 +35,7 @@
 
 	<th:block th:if="${param.status != null and param.status[0] == 'reject'}">
 		<div class="warning-alert">
-			<h3 class="heading-small">These documents have been returned to the project team, the following reason was given;</h3>
-			<ul class="list-bullet">
-				<li>the collaboration agreement only has 2 signatures when there are 3 partners</li>
-			</ul>
+			<h3 class="heading-small no-margin-top">These documents after review have been rejected and returned to the project team.</h3>
 		</div>
 	</th:block>
 
@@ -103,25 +99,16 @@
 
 			<h2 class="heading-medium no-margin">Reject documents</h2>
 
-			<p>If these documents are rejected, the project manager will be informed along with the reason for rejection. They will then need to provide new versions of the documents before the project can begin.</p>
+			<p>If these documents are rejected, the project manager will be informed. Please contact the project manager detailing the reason for not approving the documents before rejecting.</p>
 
-			<form >
+			<hr />
 
-				<div class="form-group">
-	                <label for="rejection-observations" class="form-label">Please provide a reason for rejection.</label>
-	                <textarea id="rejection-observations" name="observations" class="form-control"></textarea>
-	            </div>
+        	<div class="alignright-button">
+				
+				<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a> 
 
-				<hr />
-
-	        	<div class="alignright-button">
-					
-					<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a> 
-
-	        		<a href="/prototypes/2682-moderate-docs?status=reject" class="button button-warning">Reject documents</a>
-	        	</div>
-
-	        </form>
+        		<a href="/prototypes/2682-moderate-docs?status=reject" class="button button-warning">Reject documents</a>
+        	</div>
 
         </div>
     </div>
