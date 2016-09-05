@@ -18,10 +18,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.Optional;
 import java.util.function.Supplier;
+
+import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
+import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 
 @Controller
 public class AssessmentSummaryController {
@@ -39,30 +41,29 @@ public class AssessmentSummaryController {
 
     @RequestMapping(value = "/{assessmentId}/summary", method = RequestMethod.GET)
     public String getSummary(Model model,
-                             HttpServletResponse response,
                              @ModelAttribute(FORM_ATTR_NAME) AssessmentSummaryForm form,
-                             BindingResult bindingResult, @PathVariable("assessmentId") Long assessmentId) {
-        populateFormWithExistingValues(form, assessmentId);
+                             BindingResult bindingResult,
+                             @PathVariable("assessmentId") Long assessmentId) {
+        if (!bindingResult.hasErrors()) {
+            populateFormWithExistingValues(form, assessmentId);
+        }
         model.addAttribute("model", assessmentSummaryModelPopulator.populateModel(assessmentId));
         return "assessment/application-summary";
     }
 
     @RequestMapping(value = "/{assessmentId}/summary", method = RequestMethod.POST)
     public String save(Model model,
-                       HttpServletResponse response,
                        @Valid @ModelAttribute(FORM_ATTR_NAME) AssessmentSummaryForm form,
                        BindingResult bindingResult,
                        ValidationHandler validationHandler,
                        @PathVariable("assessmentId") Long assessmentId) {
 
-        Supplier<String> failureView = () -> getSummary(model, response, form, bindingResult, assessmentId);
+        Supplier<String> failureView = () -> getSummary(model, form, bindingResult, assessmentId);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             ServiceResult<Void> updateResult = assessmentService.recommend(assessmentId, form.getFundingConfirmation(), form.getFeedback(), form.getComment());
-            validationHandler.addAnyErrors(updateResult);
-
-            return validationHandler.
-                    failNowOrSucceedWith(failureView, () -> redirectToCompetitionOfAssessment(assessmentId));
+            return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors())
+                    .failNowOrSucceedWith(failureView, () -> redirectToCompetitionOfAssessment(assessmentId));
         });
     }
 
