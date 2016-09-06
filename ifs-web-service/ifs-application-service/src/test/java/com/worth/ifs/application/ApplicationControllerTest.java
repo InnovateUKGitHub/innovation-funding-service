@@ -295,11 +295,9 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         ApplicationResource app = applications.get(0);
 
         when(env.acceptsProfiles("debug")).thenReturn(true);
-        when(messageSource.getMessage(ObjectNotFoundException.class.getName(), null, Locale.ENGLISH)).thenReturn(
-                testMessageSource().getMessage(ObjectNotFoundException.class.getName(), null, Locale.ENGLISH));
+        when(messageSource.getMessage(ObjectNotFoundException.class.getName(), null, Locale.ENGLISH)).thenReturn("Not found");
         when(applicationService.getById(app.getId())).thenReturn(app);
-        when(applicationService.getById(1234l)).thenThrow(new ObjectNotFoundException(testMessageSource().getMessage
-                (ObjectNotFoundException.class.getName(), null, Locale.ENGLISH), Arrays.asList(1234l)));
+        when(applicationService.getById(1234l)).thenThrow(new ObjectNotFoundException("1234 not found", Collections.singletonList(1234L)));
 
         List<Object> arguments = new ArrayList<>();
         arguments.add("Application");
@@ -310,8 +308,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 .andExpect(view().name("404"))
                 .andExpect(model().attribute("url", "http://localhost/application/1234"))
                 .andExpect(model().attribute("exception", new InstanceOf(ObjectNotFoundException.class)))
-                .andExpect(model().attribute("message",
-                        testMessageSource().getMessage(ObjectNotFoundException.class.getName(), arguments.toArray(), Locale.ENGLISH)))
+                .andExpect(model().attribute("message","1234 not found"))
                 .andExpect(model().attributeExists("stacktrace"));
     }
 

@@ -47,8 +47,8 @@ public class ValidationHandlerTest {
     public void testAddingErrorsToValidationHandlerAsFieldErrorsUpdatesTheOverallErrorCount() {
 
         BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(new TestForm(), "targetName");
-        bindingResult.addError(new ObjectError("form", "A global error message"));
-        bindingResult.rejectValue("formField", "Code1", "A field error 1");
+        bindingResult.addError(new ObjectError("form", new String[] {"A global error message"}, null, null));
+        bindingResult.rejectValue("formField", "A field error 1");
 
         ValidationHandler validationHandler = ValidationHandler.newBindingResultHandler(bindingResult);
 
@@ -58,12 +58,10 @@ public class ValidationHandlerTest {
 
         assertTrue(validationHandler.hasErrors());
         assertEquals(4, validationHandler.getAllErrors().size());
-        assertEquals("A global error message", validationHandler.getAllErrors().get(0).getDefaultMessage());
-        assertEquals("A field error 1", validationHandler.getAllErrors().get(1).getDefaultMessage());
-        // TODO INFUND-4774
-        //assertEquals("The Project Start Date must start in the future", validationHandler.getAllErrors().get(2).getDefaultMessage());
-        // TODO INFUND-4774
-        //assertEquals("Project details must be submitted before bank details", validationHandler.getAllErrors().get(3).getDefaultMessage());
+        assertEquals("A global error message", validationHandler.getAllErrors().get(0).getCode());
+        assertEquals("A field error 1", validationHandler.getAllErrors().get(1).getCode());
+        assertEquals(PROJECT_SETUP_DATE_MUST_BE_IN_THE_FUTURE.name(), validationHandler.getAllErrors().get(2).getCode());
+        assertEquals(BANK_DETAILS_CANNOT_BE_SUBMITTED_BEFORE_PROJECT_DETAILS.name(), validationHandler.getAllErrors().get(3).getCode());
         assertEquals("formField", ((FieldError) validationHandler.getAllErrors().get(1)).getField());
         assertEquals("formField", ((FieldError) validationHandler.getAllErrors().get(2)).getField());
         assertEquals("formField", ((FieldError) validationHandler.getAllErrors().get(3)).getField());
@@ -73,8 +71,8 @@ public class ValidationHandlerTest {
     public void testAddingErrorsToValidationHandlerAsGlobalErrorsUpdatesTheOverallErrorCount() {
 
         BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(new TestForm(), "targetName");
-        bindingResult.addError(new ObjectError("form", "A global error message"));
-        bindingResult.rejectValue("formField", "Code1", "A field error 1");
+        bindingResult.addError(new ObjectError("form", new String[] {"A global error message"}, null, null));
+        bindingResult.rejectValue("formField", "A field error 1");
 
         ValidationHandler validationHandler = ValidationHandler.newBindingResultHandler(bindingResult);
         validationHandler.addAnyErrors(serviceFailure(asList(
@@ -83,10 +81,10 @@ public class ValidationHandlerTest {
 
         assertTrue(validationHandler.hasErrors());
         assertEquals(4, validationHandler.getAllErrors().size());
-        assertEquals("A global error message", validationHandler.getAllErrors().get(0).getDefaultMessage());
-        assertEquals("A field error 1", validationHandler.getAllErrors().get(1).getDefaultMessage());
-        assertEquals("The Project Start Date must start in the future", validationHandler.getAllErrors().get(2).getDefaultMessage());
-        assertEquals("Project details must be submitted before bank details", validationHandler.getAllErrors().get(3).getDefaultMessage());
+        assertEquals("A global error message", validationHandler.getAllErrors().get(0).getCode());
+        assertEquals("A field error 1", validationHandler.getAllErrors().get(1).getCode());
+        assertEquals(PROJECT_SETUP_DATE_MUST_BE_IN_THE_FUTURE.name(), validationHandler.getAllErrors().get(2).getCode());
+        assertEquals(BANK_DETAILS_CANNOT_BE_SUBMITTED_BEFORE_PROJECT_DETAILS.name(), validationHandler.getAllErrors().get(3).getCode());
         assertFalse(validationHandler.getAllErrors().get(0) instanceof FieldError);
         assertTrue(validationHandler.getAllErrors().get(1) instanceof FieldError);
         assertFalse(validationHandler.getAllErrors().get(2) instanceof FieldError);
@@ -97,8 +95,8 @@ public class ValidationHandlerTest {
     public void testAddingErrorsToValidationHandlerAsFieldErrorsForSpecificFields() {
 
         BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(new TestForm(), "targetName");
-        bindingResult.addError(new ObjectError("form", "A global error message"));
-        bindingResult.rejectValue("formField", "Code1", "A field error 1");
+        bindingResult.addError(new ObjectError("form", new String[] {"A global error message"}, null, null));
+        bindingResult.rejectValue("formField", "A field error 1");
 
         ValidationHandler validationHandler = ValidationHandler.newBindingResultHandler(bindingResult);
 
@@ -110,12 +108,10 @@ public class ValidationHandlerTest {
 
         assertTrue(validationHandler.hasErrors());
         assertEquals(4, validationHandler.getAllErrors().size());
-        assertEquals("A global error message", validationHandler.getAllErrors().get(0).getDefaultMessage());
-        assertEquals("A field error 1", validationHandler.getAllErrors().get(1).getDefaultMessage());
-        // TODO INFUND-4774
-        // assertEquals("The Project Start Date must start in the future", validationHandler.getAllErrors().get(1).getDefaultMessage());
-        // TODO INFUND-4774
-        // assertEquals("Project details must be submitted before bank details", validationHandler.getAllErrors().get(3).getDefaultMessage());
+        assertEquals("A global error message", validationHandler.getAllErrors().get(0).getCode());
+        assertEquals("A field error 1", validationHandler.getAllErrors().get(1).getCode());
+        assertEquals(PROJECT_SETUP_DATE_MUST_BE_IN_THE_FUTURE.name(), validationHandler.getAllErrors().get(2).getCode());
+        assertEquals(BANK_DETAILS_CANNOT_BE_SUBMITTED_BEFORE_PROJECT_DETAILS.name(), validationHandler.getAllErrors().get(3).getCode());
         assertEquals("formField", ((FieldError) validationHandler.getAllErrors().get(1)).getField());
         assertEquals("formField2", ((FieldError) validationHandler.getAllErrors().get(2)).getField());
         assertEquals("formField", ((FieldError) validationHandler.getAllErrors().get(3)).getField());

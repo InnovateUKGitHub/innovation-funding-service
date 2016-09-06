@@ -106,7 +106,7 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
 
     @Override
     protected <R> BaseEitherBackedResult<R, ServiceFailure> createFailure(FailingOrSucceedingResult<R, ServiceFailure> failure) {
-        return failure != null ? serviceFailure(failure.getFailure()) : serviceFailure(internalServerErrorError("Unexpected error"));
+        return failure != null ? serviceFailure(failure.getFailure()) : serviceFailure(internalServerErrorError());
     }
 
     /**

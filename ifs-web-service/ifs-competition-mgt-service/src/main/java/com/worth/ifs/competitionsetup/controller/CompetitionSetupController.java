@@ -187,7 +187,7 @@ public class CompetitionSetupController {
 
     private List<String> toStringList(List<Error> errors) {
         List<String> returnList = new ArrayList<>();
-        errors.forEach(error -> returnList.add(error.getErrorMessage()));
+        errors.forEach(error -> returnList.add(error.getErrorKey()));
         return returnList;
     }
 
@@ -346,10 +346,9 @@ public class CompetitionSetupController {
         if(saveSectionResult != null && !saveSectionResult.isEmpty()) {
             saveSectionResult.forEach(e -> {
                 if(e.getFieldName() != null) {
-                    bindingResult.rejectValue(e.getFieldName(), e.getErrorKey(), e.getErrorMessage());
+                    bindingResult.rejectValue(e.getFieldName(), e.getErrorKey());
                 } else {
-                    ObjectError error = new ObjectError("currentSection",
-                            e.getErrorMessage());
+                    ObjectError error = new ObjectError("currentSection", new String[] {e.getErrorKey()}, null, null);
                     bindingResult.addError(error);
                 }
             });
