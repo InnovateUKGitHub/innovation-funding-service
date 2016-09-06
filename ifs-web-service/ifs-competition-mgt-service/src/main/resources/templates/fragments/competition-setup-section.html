@@ -56,7 +56,7 @@
 
                 <select class="form-control width-x-large" id="innovationSectorCategoryId" name="innovationSectorCategoryId" required="required"
                         data-required-errormessage="Please select an innovation sector"
-                        data-autosave-disabled="data-autosave-disabled">
+                        data-autosave-disabled="">
                     <option value="" disabled="disabled" th:selected="${competitionSetupForm.innovationSectorCategoryId == null}">Please select &hellip;</option>
                     <option th:each="(innovationSector : ${innovationSectors})" th:text="${innovationSector.name}" th:value="${innovationSector.id}" th:selected="${competitionSetupForm.innovationSectorCategoryId == innovationSector.id}">Innovation Sector</option>
                 </select>
