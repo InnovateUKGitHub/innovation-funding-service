@@ -67,22 +67,12 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
     }
 
     @Test
-    public void acceptInvite_assessorOnly() {
-        when(competitionParticipantLookupStrategy.getCompetitionParticipantResource(any()))
-                .thenReturn(newCompetitionParticipantResource().build());
-        when(competitionParticipantPermissionRules.userCanAcceptCompetitionInvite(any(), any()))
-                .thenReturn(true);
-
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> service.acceptInvite("hash"), ASSESSOR);
-    }
-
-    @Test
     public void acceptInvite_notLoggedIn() {
         setLoggedInUser(null);
         assertAccessDenied(
                 () -> service.acceptInvite("hash"),
                 () -> {
-                    verifyZeroInteractions(competitionParticipantLookupStrategy);
+                    verify(competitionParticipantLookupStrategy, only()).getCompetitionParticipantResource("hash");
                     verifyZeroInteractions(competitionParticipantPermissionRules);
                 }
         );

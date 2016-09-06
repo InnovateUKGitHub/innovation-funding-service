@@ -1,6 +1,5 @@
 package com.worth.ifs.invite.builder;
 
-import com.worth.ifs.BaseBuilderAmendFunctions;
 import com.worth.ifs.invite.resource.*;
 import org.junit.Test;
 
@@ -9,6 +8,7 @@ import java.util.List;
 import static com.worth.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
 import static com.worth.ifs.invite.builder.CompetitionParticipantResourceBuilder.newCompetitionParticipantResource;
 import static org.junit.Assert.assertEquals;
+import static com.worth.ifs.BaseBuilderAmendFunctions.id;
 
 public class CompetitionParticipantResourceBuilderTest {
 
@@ -27,7 +27,7 @@ public class CompetitionParticipantResourceBuilderTest {
                 .withId(expectedId)
                 .withUser(expectedUserId)
                 .withCompetition(expectedCompetitionId)
-                .withInvite(newCompetitionInviteResource().with(BaseBuilderAmendFunctions.id(expectedInviteId)).build())
+                .withInvite(newCompetitionInviteResource().with(id(expectedInviteId)).build())
                 .withRejectionReason(expectedRejectionReason)
                 .withRejectionReasonComment(expectedRejectionReasonComment)
                 .withCompetitionParticipantRole(expectedRole)
@@ -56,14 +56,11 @@ public class CompetitionParticipantResourceBuilderTest {
         CompetitionParticipantRoleResource[] expectedRoles = {CompetitionParticipantRoleResource.ASSESSOR, CompetitionParticipantRoleResource.ASSESSOR};
         ParticipantStatusResource[] expectedStatuses = {ParticipantStatusResource.ACCEPTED, ParticipantStatusResource.ACCEPTED};
 
-
-        CompetitionInviteResource[] inviteResources = newCompetitionInviteResource().withIds(expectedInviteIds).build(2).toArray(new CompetitionInviteResource[0]);
-
         List<CompetitionParticipantResource> competitionParticipants = newCompetitionParticipantResource()
                 .withId(expectedIds)
                 .withUser(expectedUserIds)
                 .withCompetition(expectedCompetitionIds)
-                .withInvite(inviteResources)
+                .withInvite(newCompetitionInviteResource().withIds(expectedInviteIds).buildArray(2, CompetitionInviteResource.class))
                 .withRejectionReason(expectedRejectionReasons)
                 .withRejectionReasonComment(expectedRejectionReasonComments)
                 .withCompetitionParticipantRole(expectedRoles)

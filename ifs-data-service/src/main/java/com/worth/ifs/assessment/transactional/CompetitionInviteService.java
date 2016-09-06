@@ -28,7 +28,7 @@ public interface CompetitionInviteService {
     ServiceResult<CompetitionInviteResource> openInvite(@P("inviteHash") String inviteHash);
 
 
-    @PreAuthorize("hasAuthority('assessor') && hasPermission(#inviteHash, 'com.worth.ifs.invite.resource.CompetitionParticipantResource', 'ACCEPT')")
+    @PreAuthorize("hasPermission(#inviteHash, 'com.worth.ifs.invite.resource.CompetitionParticipantResource', 'ACCEPT')")
     @SecuredBySpring(value = "ACCEPT_INVITE_ON_HASH",
             description = "An Assessor can acceot a given hash provided that they are the same user as the CompetitionParticipant",
             additionalComments = "The hash should be unguessable so the only way to successfully call this method would be to have been given the hash in the first place")
