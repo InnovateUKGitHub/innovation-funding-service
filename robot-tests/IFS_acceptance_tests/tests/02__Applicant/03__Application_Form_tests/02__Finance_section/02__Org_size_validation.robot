@@ -66,12 +66,12 @@ The applicant enters organisation size details
     [Arguments]    ${org_size_option}    ${funding_level}
     the applicant enters the organisation size    ${org_size_option}
     the applicant enters the funding level    ${funding_level}
-    Focus    jQuery=button:contains("Save and return to application overview")
+    the user moves focus to the element    jQuery=button:contains("Save and return to application overview")
     The user clicks the button/link    jQuery=button:contains("Save and return to application overview")
 
 The 'your finances' section can be successfully saved
     [Arguments]    ${org_size_option}    ${funding_level}
-    Focus    link=Your finances
+    the user moves focus to the element    link=Your finances
     The user clicks the button/link    link=Your finances
     the applicant can see the correct organisation size has been selected    ${org_size_option}
     the applicant can see the correct funding level has been saved    ${funding_level}
@@ -87,11 +87,11 @@ The applicant enters the organisation size
 
 The applicant enters the funding level
     [Arguments]    ${funding_level}
-    Input Text    id=cost-financegrantclaim    ${funding_level}
+    the user enters text to a text field    id=cost-financegrantclaim    ${funding_level}
 
 The applicant can see the correct organisation size has been selected
     [Arguments]    ${org_size_option}
-    Radio Button Should Be Set To    financePosition-organisationSize    ${org_size_option}
+    the user sees that the radio button is selected    financePosition-organisationSize    ${org_size_option}
 
 The applicant can see the correct funding level has been saved
     [Arguments]    ${funding_level}
