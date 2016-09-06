@@ -12,7 +12,6 @@ import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -141,6 +140,6 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
     }
 
     private List<SpendProfileSummaryYearModel> createSpendProfileSummaryYears() {
-        return Collections.singletonList(new SpendProfileSummaryYearModel(2018, "335"));
+        return asList(new SpendProfileSummaryYearModel(2017, "150"), new SpendProfileSummaryYearModel(2018, "185"));
     }
 }
