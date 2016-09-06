@@ -6,10 +6,8 @@ import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.application.service.QuestionService;
 import com.worth.ifs.assessment.resource.AssessmentResource;
-import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
 import com.worth.ifs.assessment.resource.AssessorFormInputType;
 import com.worth.ifs.assessment.service.AssessmentService;
-import com.worth.ifs.assessment.service.AssessorFormInputResponseService;
 import com.worth.ifs.assessment.viewmodel.AssessmentFeedbackViewModel;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
@@ -55,9 +53,6 @@ public class AssessmentFeedbackModelPopulator {
     @Autowired
     private FormInputResponseService formInputResponseService;
 
-    @Autowired
-    private AssessorFormInputResponseService assessorFormInputResponseService;
-
     public AssessmentFeedbackViewModel populateModel(Long assessmentId, Long questionId) {
         AssessmentResource assessment = getAssessment(assessmentId);
         ApplicationResource application = getApplication(assessment.getApplication());
@@ -69,7 +64,6 @@ public class AssessmentFeedbackModelPopulator {
         FormInputResponseResource applicantResponse = applicantResponses.get(applicationFormInput.getId());
         String applicantResponseValue = applicantResponse != null ? applicantResponse.getValue() : null;
         List<FormInputResource> assessmentFormInputs = getAssessmentFormInputs(questionId);
-        Map<Long, AssessorFormInputResponseResource> assessorResponses = getAssessorResponses(assessmentId, questionId);
         boolean appendixFormInputExists = hasFormInputWithType(applicationFormInputs, "fileupload");
         boolean scoreFormInputExists = hasFormInputWithType(assessmentFormInputs, SCORE);
         boolean scopeFormInputExists = hasFormInputWithType(assessmentFormInputs, APPLICATION_IN_SCOPE);
@@ -80,11 +74,11 @@ public class AssessmentFeedbackModelPopulator {
             boolean applicantAppendixResponseExists = applicantAppendixResponse != null;
             if (applicantAppendixResponseExists) {
                 FileDetailsViewModel appendixDetails = new FileDetailsViewModel(applicantAppendixResponse.getFilename(), applicantAppendixResponse.getFilesizeBytes());
-                return new AssessmentFeedbackViewModel(competition.getAssessmentDaysLeft(), competition.getAssessmentDaysLeftPercentage(), competition, application, question.getId(), question.getQuestionNumber(), question.getShortName(), question.getName(), question.getAssessorMaximumScore(), applicantResponseValue, assessmentFormInputs, assessorResponses, scoreFormInputExists, scopeFormInputExists, true, appendixDetails);
+                return new AssessmentFeedbackViewModel(competition.getAssessmentDaysLeft(), competition.getAssessmentDaysLeftPercentage(), competition, application, question.getId(), question.getQuestionNumber(), question.getShortName(), question.getName(), question.getAssessorMaximumScore(), applicantResponseValue, assessmentFormInputs, scoreFormInputExists, scopeFormInputExists, true, appendixDetails);
             }
         }
 
-        return new AssessmentFeedbackViewModel(competition.getAssessmentDaysLeft(), competition.getAssessmentDaysLeftPercentage(), competition, application, question.getId(), question.getQuestionNumber(), question.getShortName(), question.getName(), question.getAssessorMaximumScore(), applicantResponseValue, assessmentFormInputs, assessorResponses, scoreFormInputExists, scopeFormInputExists);
+        return new AssessmentFeedbackViewModel(competition.getAssessmentDaysLeft(), competition.getAssessmentDaysLeftPercentage(), competition, application, question.getId(), question.getQuestionNumber(), question.getShortName(), question.getName(), question.getAssessorMaximumScore(), applicantResponseValue, assessmentFormInputs, scoreFormInputExists, scopeFormInputExists);
     }
 
     private AssessmentResource getAssessment(Long assessmentId) {
@@ -120,11 +114,6 @@ public class AssessmentFeedbackModelPopulator {
                 flattenLists(applicantResponses.getSuccessObjectOrThrowException()),
                 FormInputResponseResource::getFormInput
         );
-    }
-
-    private Map<Long, AssessorFormInputResponseResource> getAssessorResponses(Long assessmentId, Long questionId) {
-        return simpleToMap(assessorFormInputResponseService.getAllAssessorFormInputResponsesByAssessmentAndQuestion(assessmentId, questionId),
-                AssessorFormInputResponseResource::getFormInput);
     }
 
     private boolean hasFormInputWithType(List<FormInputResource> formInputs, AssessorFormInputType type) {
