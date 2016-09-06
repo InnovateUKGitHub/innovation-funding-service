@@ -20,7 +20,7 @@ public class WordCountValidator extends BaseValidator {
         LOG.debug("do WordCount validation ");
         FormInputResponse response = (FormInputResponse) target;
 
-        Integer maxWordCount = response.getFormInput().getWordCount();
+        int maxWordCount = response.getFormInput().getWordCount();
 
         if (response.getWordCount() > maxWordCount) {
             LOG.debug("NotEmpty validation message for: " + response.getId());
