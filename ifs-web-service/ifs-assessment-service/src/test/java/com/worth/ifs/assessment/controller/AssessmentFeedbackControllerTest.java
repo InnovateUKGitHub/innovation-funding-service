@@ -15,7 +15,6 @@ import com.worth.ifs.assessment.service.AssessorFormInputResponseService;
 import com.worth.ifs.assessment.viewmodel.AssessmentFeedbackApplicationDetailsViewModel;
 import com.worth.ifs.assessment.viewmodel.AssessmentFeedbackViewModel;
 import com.worth.ifs.assessment.viewmodel.AssessmentNavigationViewModel;
-import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
@@ -44,7 +43,6 @@ import static com.worth.ifs.BaseBuilderAmendFunctions.idBasedValues;
 import static com.worth.ifs.application.builder.SectionResourceBuilder.newSectionResource;
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static com.worth.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
-import static com.worth.ifs.commons.error.CommonFailureKeys.ASSESSMENT_FORM_INPUT_RESPONSE_WORD_LIMIT_EXCEEDED;
 import static com.worth.ifs.commons.error.Error.fieldError;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
@@ -275,9 +273,9 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         String value = "This is the feedback";
         Long formInputId = 1L;
 
-        when(assessorFormInputResponseService.updateFormInputResponse(ASSESSMENT_ID, formInputId, value)).thenReturn(serviceFailure(fieldError("value", "Feedback", ASSESSMENT_FORM_INPUT_RESPONSE_WORD_LIMIT_EXCEEDED.getErrorKey(), 100)));
+        when(assessorFormInputResponseService.updateFormInputResponse(ASSESSMENT_ID, formInputId, value)).thenReturn(serviceFailure(fieldError("value", "Feedback", "validation.field.max.word.count", 100)));
 
-        when(messageSource.getMessage(ASSESSMENT_FORM_INPUT_RESPONSE_WORD_LIMIT_EXCEEDED.name(), new Object[]{"100"}, Locale.UK)).thenReturn("Value must be less than 100 words.");
+        when(messageSource.getMessage("validation.field.max.word.count", new Object[]{"100"}, Locale.UK)).thenReturn("Maximum word count exceeded. Please reduce your word count to 100.");
 
         MvcResult result = mockMvc.perform(post("/{assessmentId}/formInput/{formInputId}", ASSESSMENT_ID, formInputId)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -288,7 +286,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
 
         verify(assessorFormInputResponseService, only()).updateFormInputResponse(ASSESSMENT_ID, formInputId, value);
         String content = result.getResponse().getContentAsString();
-        String jsonExpectedContent = "{\"success\":\"false\",\"validation_errors\":[\"Value must be less than 100 words.\"]}";
+        String jsonExpectedContent = "{\"success\":\"false\",\"validation_errors\":[\"Maximum word count exceeded. Please reduce your word count to 100.\"]}";
         assertEquals(jsonExpectedContent, content);
     }
 
@@ -376,7 +374,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         String formInputFeedbackField = format("formInput[%s]", formInputIdFeedback);
 
         when(assessorFormInputResponseService.updateFormInputResponse(ASSESSMENT_ID, formInputIdScore, "10")).thenReturn(serviceSuccess());
-        when(assessorFormInputResponseService.updateFormInputResponse(ASSESSMENT_ID, formInputIdFeedback, "Feedback")).thenReturn(serviceFailure(fieldError("value", "Feedback", ASSESSMENT_FORM_INPUT_RESPONSE_WORD_LIMIT_EXCEEDED.getErrorKey(), 100)));
+        when(assessorFormInputResponseService.updateFormInputResponse(ASSESSMENT_ID, formInputIdFeedback, "Feedback")).thenReturn(serviceFailure(fieldError("value", "Feedback", "validation.field.max.word.count", 100)));
 
         // For re-display of question view following the invalid data entry
         List<FormInputResource> applicationFormInputs = this.setupApplicationFormInputs(QUESTION_ID, FORM_INPUT_TYPES.get("textarea"));
@@ -406,7 +404,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         assertEquals(0, bindingResult.getGlobalErrorCount());
         assertEquals(1, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors(formInputFeedbackField));
-        assertEquals(ASSESSMENT_FORM_INPUT_RESPONSE_WORD_LIMIT_EXCEEDED.getErrorKey(), bindingResult.getFieldError(formInputFeedbackField).getCode());
+        assertEquals("validation.field.max.word.count", bindingResult.getFieldError(formInputFeedbackField).getCode());
         assertEquals("100", bindingResult.getFieldError(formInputFeedbackField).getArguments()[0]);
     }
 
