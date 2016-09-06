@@ -50,6 +50,10 @@ public class CompetitionInviteBuilder extends BaseBuilder<CompetitionInvite, Com
         return new CompetitionInvite();
     }
 
+    public CompetitionInviteBuilder withId(Long... ids) {
+        return withArray(BuilderAmendFunctions::setId, ids);
+    }
+
     public CompetitionInviteBuilder withName(String... names) {
         return withArray((name, invite) -> setField("name", name, invite), names);
     }
