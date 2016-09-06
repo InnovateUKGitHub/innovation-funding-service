@@ -73,7 +73,7 @@ First Assessor shouldn't be able to see second assessor's assessments
     [Tags]
     [Setup]    guest user log-in    paul.plum@gmail.com    Passw0rd
     When the user navigates to the assessor page    ${Assessment_overview_11}
-    Then The user should see no permissions message
+    Then The user should see permissions error message
     [Teardown]    the user closes the browser
 
 Second assessor shouldn't be able to see first assessor's assessments
@@ -81,12 +81,12 @@ Second assessor shouldn't be able to see first assessor's assessments
     [Tags]
     [Setup]    guest user log-in    felix.wilson@gmail.com    Passw0rd
     When the user navigates to the assessor page    ${Assessment_overview_9}
-    Then The user should see no permissions message
+    Then The user should see permissions error message
 
 Second assessor shouldn't be able to access first assessor's application questions
     [Documentation]    INFUND-4569
     [Tags]
     When the user navigates to the assessor page    ${Application_question_url}
-    Then The user should see no permissions message
+    Then The user should see permissions error message
 
 *** Keywords ***
