@@ -12,17 +12,17 @@ public class Question {
     private String number;
     private String shortTitle;
 
-    @NotBlank(message = "{validation.field.must.not.be.blank}")
+    @NotBlank
     private String title;
     private String subTitle;
 
-    @NotBlank(message = "{validation.field.must.not.be.blank}")
+    @NotBlank
     private String guidanceTitle;
 
-    @NotBlank(message = "{validation.field.must.not.be.blank}")
+    @NotBlank
     private String guidance;
 
-    @Min(value = 1, message = "This field should be 1 or higher")
+    @Min(value = 1)
     private Integer maxWords;
     private Boolean appendix;
     private Boolean scored;
