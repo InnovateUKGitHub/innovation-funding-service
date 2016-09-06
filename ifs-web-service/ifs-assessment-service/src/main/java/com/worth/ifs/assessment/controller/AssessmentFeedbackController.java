@@ -30,8 +30,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import static com.worth.ifs.commons.error.CommonFailureKeys.ASSESSMENT_FORM_INPUT_RESPONSE_WORD_LIMIT_EXCEEDED;
-import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.mappingErrorKeyToField;
 import static com.worth.ifs.controller.ErrorLookupHelper.lookupErrorMessageResourceBundleEntries;
 import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
@@ -112,7 +110,7 @@ public class AssessmentFeedbackController {
                 // TODO INFUND-4105 optimise this to save multiple responses at a time
                 String formInputField = format("formInput[%s]", responsePair.getLeft());
                 ServiceResult<Void> updateResult = assessorFormInputResponseService.updateFormInputResponse(assessmentId, responsePair.getLeft(), responsePair.getRight());
-                validationHandler.addAnyErrors(updateResult, toField(formInputField), mappingErrorKeyToField(ASSESSMENT_FORM_INPUT_RESPONSE_WORD_LIMIT_EXCEEDED, formInputField));
+                validationHandler.addAnyErrors(updateResult, toField(formInputField));
             });
 
             return validationHandler.
