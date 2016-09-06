@@ -87,6 +87,22 @@ public class ProjectSetupSectionsPartnerAccessorTest extends BaseUnitTest {
         );
     }
 
+    @Test
+    public void testCheckAccessToMonitoringOfficerSectionHappyPath() {
+
+        when(projectSetupProgressCheckerMock.isProjectDetailsSectionComplete(project, user, organisation)).thenReturn(true);
+
+        accessor.checkAccessToMonitoringOfficerSection(project, user, organisation);
+
+        verifyInteractions(mock -> mock.isProjectDetailsSectionComplete(project, user, organisation));
+    }
+
+    @Test(expected = ForbiddenActionException.class)
+    public void testCheckAccessToMonitoringOfficerSectionButProjectDetailsSectionIncomplete() {
+        when(projectSetupProgressCheckerMock.isProjectDetailsSectionComplete(project, user, organisation)).thenReturn(false);
+        accessor.checkAccessToMonitoringOfficerSection(project, user, organisation);
+    }
+
     @SafeVarargs
     private final void verifyInteractions(Consumer<ProjectSetupProgressChecker>... verifiers) {
         asList(verifiers).forEach(verifier -> verifier.accept(verify(projectSetupProgressCheckerMock)));

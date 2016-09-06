@@ -23,7 +23,7 @@ class ProjectSetupProgressChecker {
     }
 
 
-    public boolean isProjectDetailsComplete(ProjectResource project, UserResource user, OrganisationResource organisation) {
+    public boolean isProjectDetailsSectionComplete(ProjectResource project, UserResource user, OrganisationResource organisation) {
 
         // TODO DW - implement
         return true;

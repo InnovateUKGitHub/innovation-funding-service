@@ -36,7 +36,7 @@ public class ProjectSetupSectionPartnerAccessor {
 
     public void checkAccessToMonitoringOfficerSection(ProjectResource project, UserResource user, OrganisationResource organisation) {
 
-        if (projectSetupProgressChecker.isProjectDetailsComplete(project, user, organisation)) {
+        if (projectSetupProgressChecker.isProjectDetailsSectionComplete(project, user, organisation)) {
             return;
         }
 
