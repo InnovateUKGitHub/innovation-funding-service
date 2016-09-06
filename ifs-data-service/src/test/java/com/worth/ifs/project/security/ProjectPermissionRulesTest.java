@@ -330,7 +330,7 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
 
         setupUserAsPartner(project, user);
 
-        assertTrue(rules.partnersCanDownloadOtherDocuments(project, user));
+        assertTrue(rules.partnersCanViewOtherDocumentsDetails(project, user));
     }
 
     @Test
@@ -341,7 +341,7 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
 
         setupUserNotAsPartner(project, user);
 
-        assertFalse(rules.partnersCanDownloadOtherDocuments(project, user));
+        assertFalse(rules.partnersCanViewOtherDocumentsDetails(project, user));
     }
 
     @Test
@@ -405,8 +405,8 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
     }
 
     private void setUpUserAsProjectFinanceUser(ProjectResource project, UserResource user) {
-        List<RoleResource> projectFinanaceUser = newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build(1);
-        user.setRoles(projectFinanaceUser);
+        List<RoleResource> projectFinanceUser = newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build(1);
+        user.setRoles(projectFinanceUser);
     }
 
     private void setUpUserNotAsProjectFinanceUser(ProjectResource project, UserResource user) {

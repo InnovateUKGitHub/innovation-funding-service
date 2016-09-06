@@ -312,7 +312,9 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
 
         assertAccessDenied(() -> service.getCollaborationAgreementFileContents(123L), () -> {
-            verify(projectPermissionRules).partnersCanDownloadOtherDocuments(project, getLoggedInUser());
+            verify(projectPermissionRules).competitionAdminCanViewOtherDocumentsDetails(project, getLoggedInUser());
+            verify(projectPermissionRules).projectFinanceUserCanViewOtherDocumentsDetails(project, getLoggedInUser());
+            verify(projectPermissionRules).partnersCanViewOtherDocumentsDetails(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
         });
     }
@@ -367,7 +369,9 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
 
         assertAccessDenied(() -> service.getExploitationPlanFileContents(123L), () -> {
-            verify(projectPermissionRules).partnersCanDownloadOtherDocuments(project, getLoggedInUser());
+            verify(projectPermissionRules).competitionAdminCanViewOtherDocumentsDetails(project, getLoggedInUser());
+            verify(projectPermissionRules).projectFinanceUserCanViewOtherDocumentsDetails(project, getLoggedInUser());
+            verify(projectPermissionRules).partnersCanViewOtherDocumentsDetails(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
         });
     }
