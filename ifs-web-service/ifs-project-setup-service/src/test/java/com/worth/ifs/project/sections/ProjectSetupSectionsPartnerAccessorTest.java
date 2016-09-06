@@ -103,6 +103,59 @@ public class ProjectSetupSectionsPartnerAccessorTest extends BaseUnitTest {
         accessor.checkAccessToMonitoringOfficerSection(project, user, organisation);
     }
 
+    @Test
+    public void testCheckAccessToBankDetailsSectionHappyPath() {
+
+        when(projectSetupProgressCheckerMock.isFinanceContactSubmitted(project, user, organisation)).thenReturn(true);
+
+        accessor.checkAccessToBankDetailsSection(project, user, organisation);
+
+        verifyInteractions(mock -> mock.isFinanceContactSubmitted(project, user, organisation));
+    }
+
+    @Test(expected = ForbiddenActionException.class)
+    public void testCheckAccessToBankDetailsSectionButFinanceContactNotYetSubmitted() {
+
+        when(projectSetupProgressCheckerMock.isFinanceContactSubmitted(project, user, organisation)).thenReturn(false);
+
+        accessor.checkAccessToBankDetailsSection(project, user, organisation);
+
+        verifyInteractions(mock -> mock.isFinanceContactSubmitted(project, user, organisation));
+    }
+
+    @Test
+    public void testCheckAccessToFinanceChecksSectionHappyPathWhenBankDetailsApproved() {
+
+        when(projectSetupProgressCheckerMock.isBankDetailsApproved(project, user, organisation)).thenReturn(true);
+
+        accessor.checkAccessToFinanceChecksSection(project, user, organisation);
+
+        verifyInteractions(mock -> mock.isBankDetailsApproved(project, user, organisation));
+    }
+
+    @Test
+    public void testCheckAccessToFinanceChecksSectionHappyPathWhenBankDetailsQueried() {
+
+        when(projectSetupProgressCheckerMock.isBankDetailsApproved(project, user, organisation)).thenReturn(false);
+        when(projectSetupProgressCheckerMock.isBankDetailsQueried(project, user, organisation)).thenReturn(true);
+
+        accessor.checkAccessToFinanceChecksSection(project, user, organisation);
+
+        verifyInteractions(
+                mock -> mock.isBankDetailsApproved(project, user, organisation),
+                mock -> mock.isBankDetailsQueried(project, user, organisation)
+        );
+    }
+
+    @Test(expected = ForbiddenActionException.class)
+    public void testCheckAccessToFinanceChecksSectionButBankDetailsNotApprovedOrQueried() {
+
+        when(projectSetupProgressCheckerMock.isBankDetailsApproved(project, user, organisation)).thenReturn(false);
+        when(projectSetupProgressCheckerMock.isBankDetailsQueried(project, user, organisation)).thenReturn(false);
+
+        accessor.checkAccessToFinanceChecksSection(project, user, organisation);
+    }
+
     @SafeVarargs
     private final void verifyInteractions(Consumer<ProjectSetupProgressChecker>... verifiers) {
         asList(verifiers).forEach(verifier -> verifier.accept(verify(projectSetupProgressCheckerMock)));

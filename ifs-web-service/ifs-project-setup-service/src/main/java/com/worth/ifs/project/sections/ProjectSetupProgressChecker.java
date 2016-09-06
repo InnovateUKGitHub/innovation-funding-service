@@ -28,4 +28,22 @@ class ProjectSetupProgressChecker {
         // TODO DW - implement
         return true;
     }
+
+    public boolean isFinanceContactSubmitted(ProjectResource project, UserResource user, OrganisationResource organisation) {
+
+        // TODO DW - implement
+        return true;
+    }
+
+    public boolean isBankDetailsApproved(ProjectResource project, UserResource user, OrganisationResource organisation) {
+
+        // TODO DW - implement
+        return true;
+    }
+
+    public boolean isBankDetailsQueried(ProjectResource project, UserResource user, OrganisationResource organisation) {
+
+        // TODO DW - implement
+        return true;
+    }
 }

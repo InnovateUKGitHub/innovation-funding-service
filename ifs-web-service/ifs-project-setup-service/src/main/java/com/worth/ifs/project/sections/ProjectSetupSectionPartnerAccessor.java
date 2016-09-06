@@ -45,11 +45,31 @@ public class ProjectSetupSectionPartnerAccessor {
 
     public void checkAccessToBankDetailsSection(ProjectResource project, UserResource user, OrganisationResource organisation) {
 
-        // TODO DW - discuss with Robin
-        throwForbiddenException("Unable to access Monitoring Officer section until Companies House details are complete for Organisation");
+        if (projectSetupProgressChecker.isFinanceContactSubmitted(project, user, organisation)) {
+            return;
+        }
+
+
+        throwForbiddenException("Unable to access Bank Details section until this Partner Organisation has submitted its Finance Contact");
+    }
+
+
+    public void checkAccessToFinanceChecksSection(ProjectResource project, UserResource user, OrganisationResource organisation) {
+
+        if (projectSetupProgressChecker.isBankDetailsApproved(project, user, organisation)) {
+            return;
+        }
+
+        if (projectSetupProgressChecker.isBankDetailsQueried(project, user, organisation)) {
+            return;
+        }
+
+        throwForbiddenException("Unable to access Finance Checks section until this Partner Organisation has had its " +
+                "Bank Details approved or queried");
     }
 
     public void throwForbiddenException(String message) {
         throw new ForbiddenActionException(message);
     }
+
 }
