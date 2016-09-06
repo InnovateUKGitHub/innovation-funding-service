@@ -46,4 +46,10 @@ class ProjectSetupProgressChecker {
         // TODO DW - implement
         return true;
     }
+
+    public boolean isSpendProfileGenerated(ProjectResource project, UserResource user, OrganisationResource organisation) {
+
+        // TODO DW - implement
+        return true;
+    }
 }

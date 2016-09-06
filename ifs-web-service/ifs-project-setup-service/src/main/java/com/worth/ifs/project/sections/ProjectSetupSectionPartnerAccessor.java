@@ -68,6 +68,17 @@ public class ProjectSetupSectionPartnerAccessor {
                 "Bank Details approved or queried");
     }
 
+
+    public void checkAccessToSpendProfileSection(ProjectResource project, UserResource user, OrganisationResource organisation) {
+
+        if (projectSetupProgressChecker.isSpendProfileGenerated(project, user, organisation)) {
+            return;
+        }
+
+        throwForbiddenException("Unable to access Spend Profile section until this Partner Organisation has had its " +
+                "Spend Profile generated");
+    }
+
     public void throwForbiddenException(String message) {
         throw new ForbiddenActionException(message);
     }

@@ -156,6 +156,23 @@ public class ProjectSetupSectionsPartnerAccessorTest extends BaseUnitTest {
         accessor.checkAccessToFinanceChecksSection(project, user, organisation);
     }
 
+    @Test
+    public void testCheckAccessToSpendProfileSectionHappyPath() {
+
+        when(projectSetupProgressCheckerMock.isSpendProfileGenerated(project, user, organisation)).thenReturn(true);
+
+        accessor.checkAccessToSpendProfileSection(project, user, organisation);
+
+        verifyInteractions(mock -> mock.isSpendProfileGenerated(project, user, organisation));
+    }
+
+    @Test(expected = ForbiddenActionException.class)
+    public void testCheckAccessToSpendProfileSectionButSpendProfileNotYetGenerated() {
+
+        when(projectSetupProgressCheckerMock.isSpendProfileGenerated(project, user, organisation)).thenReturn(false);
+        accessor.checkAccessToFinanceChecksSection(project, user, organisation);
+    }
+
     @SafeVarargs
     private final void verifyInteractions(Consumer<ProjectSetupProgressChecker>... verifiers) {
         asList(verifiers).forEach(verifier -> verifier.accept(verify(projectSetupProgressCheckerMock)));
