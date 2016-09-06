@@ -12,12 +12,11 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Collections;
-
 import static com.worth.ifs.assessment.builder.ProcessOutcomeResourceBuilder.newProcessOutcomeResource;
 import static com.worth.ifs.commons.error.CommonErrors.forbiddenError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION;
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -43,7 +42,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         assertEquals(Long.valueOf(20L), assessmentResource.getProcessRole());
         assertEquals(Long.valueOf(3L), assessmentResource.getApplication());
         assertEquals(Long.valueOf(1L), assessmentResource.getCompetition());
-        assertEquals(Collections.singletonList(2L), assessmentResource.getProcessOutcomes());
+        assertEquals(singletonList(2L), assessmentResource.getProcessOutcomes());
     }
 
     @Test
