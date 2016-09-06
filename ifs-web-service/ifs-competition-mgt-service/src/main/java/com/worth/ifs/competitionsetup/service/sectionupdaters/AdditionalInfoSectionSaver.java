@@ -23,7 +23,7 @@ import static org.codehaus.groovy.runtime.InvokerHelper.asList;
  * Competition setup section saver for the additional info section.
  */
 @Service
-public class AdditionalInfoSectionSaver implements CompetitionSetupSectionSaver {
+public class AdditionalInfoSectionSaver extends AbstractSectionSaver implements CompetitionSetupSectionSaver {
 
     @Autowired
     private CompetitionService competitionService;
@@ -55,26 +55,13 @@ public class AdditionalInfoSectionSaver implements CompetitionSetupSectionSaver 
 
 	@Override
 	public List<Error> autoSaveSectionField(CompetitionResource competitionResource, String fieldName, String value) {
-		List<Error> errors = new ArrayList<>();
-
-		try {
-			errors = updateCompetitionResourceWithAutoSave(errors, competitionResource, fieldName, value);
-		} catch (ParseException e) {
-			errors.add(new Error(e.getMessage(), HttpStatus.BAD_REQUEST));
-		}
-
-		if(!errors.isEmpty()) {
-			return errors;
-		}
-
-		competitionService.update(competitionResource);
-
-		return Collections.emptyList();
+        return performAutoSaveField(competitionResource, fieldName, value);
 	}
 
-	private List<Error> updateCompetitionResourceWithAutoSave(List<Error> errors, CompetitionResource competitionResource, String fieldName, String value) throws ParseException {
-	    switch (fieldName) {
-		    case "pafNumber":
+	@Override
+	protected List<Error> updateCompetitionResourceWithAutoSave(List<Error> errors, CompetitionResource competitionResource, String fieldName, String value) throws ParseException {
+		switch (fieldName) {
+			case "pafNumber":
 				competitionResource.setPafCode(value);
 				break;
 			case "budgetCode":
@@ -87,10 +74,10 @@ public class AdditionalInfoSectionSaver implements CompetitionSetupSectionSaver 
 				competitionResource.setCode(value);
 				break;
 			default:
-                errors = tryUpdateFunders(competitionResource, fieldName, value);
+				errors = tryUpdateFunders(competitionResource, fieldName, value);
 		}
 
-        return errors;
+		return errors;
 	}
 
 	private Integer getFunderIndex(String fieldName) throws ParseException {
