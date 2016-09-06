@@ -349,7 +349,7 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
                 return messages.getSuccessObject();
             } else {
                 messages.getSuccessObject().getErrors().stream()
-                        .peek(e -> LOG.debug(String.format("Got cost item Field error: %s  / %s", e.getErrorKey(), e.getErrorMessage())));
+                        .peek(e -> LOG.debug(String.format("Got cost item Field error: %s", e.getErrorKey())));
                 return messages.getSuccessObject();
             }
         }

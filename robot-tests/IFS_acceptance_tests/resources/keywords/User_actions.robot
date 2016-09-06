@@ -22,7 +22,6 @@ The user navigates to the page
     # Wait Until Page Contains Element    link=Contact Us
     # Page Should Contain Link    href=${SERVER}/info/contact
 
-
 The user navigates to the assessor page
     [Arguments]    ${TARGET_URL}
     Go To    ${TARGET_URL}
@@ -30,7 +29,6 @@ The user navigates to the assessor page
     # Error checking
     Page Should Not Contain    Error
     Page Should Not Contain    something went wrong
-
 
 The user navigates to the page without the usual headers
     [Arguments]    ${TARGET_URL}
@@ -239,7 +237,7 @@ The user should see the text in the page
     Page Should Not Contain    You do not have the necessary permissions for your request
     Page Should Not Contain    something went wrong
 
-The user should see no permissions message
+The user should see permissions error message
     wait until page contains    You do not have the necessary permissions for your request
     Page Should Contain    You do not have the necessary permissions for your request
 
@@ -572,7 +570,6 @@ invite a new academic
     the user enters text to a text field    name=organisations[1].invites[0].personName    Academic User
     the user enters text to a text field    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(2) input    ${EMAIL_INVITED}
     the user clicks the button/link    jQuery=.button:contains("Save Changes")
-
 
 Open mailbox and confirm received email
     [Arguments]    ${USER}    ${PASSWORD}    ${PATTERN}

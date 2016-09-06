@@ -60,10 +60,10 @@ public class ServiceResultTest {
     @Test
     public void testProcessAnyFailuresOrSucceed() {
 
-        List<ServiceResult<Void>> resultsWithErrors = asList(serviceFailure(badRequestError("Error 1")), serviceSuccess(), serviceFailure(asList(internalServerErrorError("Error 2"), badRequestError("Error 3"))));
+        List<ServiceResult<Void>> resultsWithErrors = asList(serviceFailure(badRequestError("Error 1")), serviceSuccess(), serviceFailure(asList(internalServerErrorError(), badRequestError("Error 3"))));
         ServiceResult<String> result = processAnyFailuresOrSucceed(resultsWithErrors, serviceSuccess("Should not see this success"));
 
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(badRequestError("Error 1"), internalServerErrorError("Error 2"), badRequestError("Error 3")));
+        assertTrue(result.getFailure().is(badRequestError("Error 1"), internalServerErrorError(), badRequestError("Error 3")));
     }
 }

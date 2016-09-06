@@ -13,7 +13,6 @@ import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.form.InitialDetailsForm;
 import com.worth.ifs.competitionsetup.model.MilestoneEntry;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
-import com.worth.ifs.competitionsetup.service.CompetitionSetupService;
 import org.apache.commons.collections4.map.LinkedMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -23,27 +22,25 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.worth.ifs.commons.error.Error.fieldError;
+import static java.util.Collections.singletonList;
 import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 
 /**
  * Competition setup section saver for the initial details section.
  */
 @Service
-public class InitialDetailsSectionSaver implements CompetitionSetupSectionSaver {
+public class InitialDetailsSectionSaver extends AbstractSectionSaver implements CompetitionSetupSectionSaver {
 
 	private static Log LOG = LogFactory.getLog(InitialDetailsSectionSaver.class);
     public final static String OPENINGDATE_FIELDNAME = "openingDate";
 
 	@Autowired
 	private CompetitionService competitionService;
-
-	@Autowired
-	private CompetitionSetupService competitionSetupService;
 
     @Autowired
     private MilestoneService milestoneService;
@@ -80,7 +77,7 @@ public class InitialDetailsSectionSaver implements CompetitionSetupSectionSaver 
 		} catch (Exception e) {
 			LOG.error(e.getMessage());
 
-            return asList(Error.fieldError(OPENINGDATE_FIELDNAME, null, "Unable to save opening date"));
+            return asList(fieldError(OPENINGDATE_FIELDNAME, null, "competition.setup.opening.date.not.able.to.save"));
 		}
 
 		competition.setCompetitionType(initialDetailsForm.getCompetitionTypeId());
@@ -92,9 +89,10 @@ public class InitialDetailsSectionSaver implements CompetitionSetupSectionSaver 
 		List<CategoryResource> matchingChild =
 				children.stream().filter(child -> child.getId().equals(initialDetailsForm.getInnovationAreaCategoryId())).collect(Collectors.toList());
 		if (matchingChild.isEmpty()) {
-			return asList(Error.fieldError("innovationAreaCategoryId",
+			return asList(fieldError("innovationAreaCategoryId",
 					initialDetailsForm.getInnovationAreaCategoryId(),
-					"Please choose one of the following sub categories of the innovation sector: " + children.stream().map(child -> child.getName()).collect(Collectors.joining(", "))));
+					"competition.setup.innovation.area.must.be.selected",
+                    singletonList(children.stream().map(child -> child.getName()).collect(Collectors.joining(", ")))));
 		}
 		competition.setInnovationArea(initialDetailsForm.getInnovationAreaCategoryId());
 
@@ -106,24 +104,11 @@ public class InitialDetailsSectionSaver implements CompetitionSetupSectionSaver 
 
 	@Override
 	public List<Error> autoSaveSectionField(CompetitionResource competitionResource, String fieldName, String value) {
-		List<Error> errors = new ArrayList<>();
-
-	    try {
-            errors = updateCompetitionResourceWithAutoSave(errors, competitionResource, fieldName, value);
-        } catch (ParseException e) {
-            errors.add(new Error(e.getMessage(), HttpStatus.BAD_REQUEST));
-        }
-
-        if(!errors.isEmpty()) {
-            return errors;
-        }
-
-        competitionService.update(competitionResource);
-
-		return Collections.emptyList();
+		return performAutoSaveField(competitionResource, fieldName, value);
 	}
 
-	private List<Error> updateCompetitionResourceWithAutoSave(List<Error> errors, CompetitionResource competitionResource, String fieldName, String value) throws ParseException {
+    @Override
+	protected List<Error> updateCompetitionResourceWithAutoSave(List<Error> errors, CompetitionResource competitionResource, String fieldName, String value) throws ParseException {
         switch (fieldName) {
             case "title":
                 competitionResource.setName(value);
@@ -159,7 +144,7 @@ public class InitialDetailsSectionSaver implements CompetitionSetupSectionSaver 
                     }
                 } catch (Exception e) {
                     LOG.error(e.getMessage());
-                    return asList(Error.fieldError(OPENINGDATE_FIELDNAME, null, "Unable to save opening date"));
+                    return asList(fieldError(OPENINGDATE_FIELDNAME, null, "competition.setup.opening.date.not.able.to.save"));
                 }
                 break;
             default:
@@ -171,7 +156,7 @@ public class InitialDetailsSectionSaver implements CompetitionSetupSectionSaver 
 
 	private List<Error> validateOpeningDate(LocalDateTime openingDate) {
         if (openingDate.isBefore(LocalDateTime.now())) {
-            return asList(Error.fieldError(OPENINGDATE_FIELDNAME, openingDate.toString(), "Please enter a future date"));
+            return asList(fieldError(OPENINGDATE_FIELDNAME, openingDate.toString(), "competition.setup.opening.date.not.in.future"));
         }
 
         return Collections.emptyList();
