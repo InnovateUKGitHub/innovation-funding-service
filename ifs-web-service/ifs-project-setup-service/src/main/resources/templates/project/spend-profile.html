@@ -16,6 +16,17 @@
             <div th:include="fragments/elements :: project-title (projectId=${model.projectId}, projectName=${model.projectName})" th:remove="tag" />
             <h1 class="heading-xlarge">Spend Profile</h1>
         </div>
+
+        <div class="error-summary" aria-hidden="true">
+           <h2 class="heading-medium error-summary-heading">
+               Unable to save spend profile
+           </h2>
+           Please review
+           <ul class="error-summary-list">
+               <li th:each="err : ${#fields.allErrors()}" th:text="${err}"></li>
+           </ul>
+       </div>
+
         <th:block th:if ="${model.markedAsComplete}">
             <div class="marked-complete-alert extra-margin-bottom">
                 <p>Your Spend Profile is currently marked as complete, you can decide to make edits to this, or when your partners
@@ -35,6 +46,9 @@
           <dt>Duration</dt>
           <dd><th:block th:text="${model.durationInMonths}" /> Months</dd>
         </dl>
+
+        <h2 class="heading-medium">Aptrans Ltd - Spend profile</h2>
+        <p>Your project costs have been profiled equally across the time periods. Please edit to reflect your planned expenditure across the life of your project. Please note that costs cannot be moved across cost categories.</p>
     </div>
 
     <!--/*
@@ -60,16 +74,30 @@
                     <th:block th:each="month : ${model.table.getMonths()}">
                       <th scope="col" th:text="${#temporals.format(month.localDate, 'MMM yyyy')}"  />
                     </th:block>
-                    <th scope="col">Total</th>
+                    <th scope="col" class="fix-right">Total</th>
+                    <th scope="col" class="fix-right" >Eligible project cost</th>
                 </tr>
               </thead>
               <tbody>
                 <tr th:each="row : ${model.table.getMonthlyCostsPerCategoryMap()}">
                     <th scope="row" class="fix-left" th:text="${row.key}" />
-                    <td th:each="cost : ${row.value}" th:text="${#numbers.formatInteger(cost,1,'NONE')}"/>
-                    <td th:text="${'&pound; '+#numbers.formatInteger(model.table.eligibleCostPerCategoryMap.get(row.key),1,'NONE')}"/>
+                    <td th:each="cost : ${row.value}" th:text="${#numbers.formatInteger(cost,1,'COMMA')}"/>
+                    <td class="fix-right" th:text="${'&pound; '+#numbers.formatInteger(model.categoryToActualTotal.get(row.key),1,'COMMA')}" />
+                    <td class="fix-right" th:text="${'&pound; '+#numbers.formatInteger(model.table.eligibleCostPerCategoryMap.get(row.key),1,'COMMA')}" />
                 </tr>
               </tbody>
+              <tfoot>
+                <tr>
+                    <th scope="row" class="fix-left">Total</th>
+                    <th:block  th:each="monthTotal,status : ${model.totalForEachMonth}">
+                      <td th:text="${'&pound; '+#numbers.formatInteger(monthTotal,1,'COMMA')}"
+                          th:attr="data-calculation-fields=${'input[class*='+#strings.toLowerCase(#temporals.format(model.table.months[status.index].localDate,'MMM-yyyy'))+']'}"
+                          data-calculation-operations="+" />
+                    </th:block>
+                    <td class="fix-right" th:text="${'&pound; '+#numbers.formatInteger(model.totalOfAllActualTotals,1,'COMMA')}" data-calculation-operations="+" data-calculation-fields="td[class*=row-total-]" />
+                    <td class="fix-right" th:text="${'&pound; '+#numbers.formatInteger(model.totalOfAllEligibleTotals,1,'COMMA')}" />
+                </tr>
+              </tfoot>
             </table>
         </div>
         <div class="flex-table-after"></div>
@@ -103,6 +131,7 @@
 
 
     </th:block>
+
     <!--/*
     =================================
     editable spend-profile table
@@ -110,19 +139,8 @@
     */-->
     <th:block th:if="${form}">
 
-      <div class="grid-container">
-        <div class="error-summary" aria-hidden="true">
-           <h2 class="heading-medium error-summary-heading">
-               Unable to save spend profile
-           </h2>
-           Please review
-           <ul class="error-summary-list">
-               <li th:each="err : ${#fields.allErrors()}" th:text="${err}"></li>
-           </ul>
-       </div>
-     </div>
 
-      <form method="post" th:action="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/edit(projectId=${model.projectId},organisationId=${model.organisationId})}" >
+      <form method="post" autocomplete="off" th:action="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/edit(projectId=${model.projectId},organisationId=${model.organisationId})}" >
         <div class="spend-profile-table">
           <div class="flex-table-before"></div>
           <div class="flex-table-wrap">
@@ -140,7 +158,8 @@
                       <th:block th:each="month,stats : ${model.table.getMonths()}">
                         <th scope="col" th:text="${#temporals.format(month.localDate, 'MMM yyyy')}" th:id="${'month'+stats.index}" />
                       </th:block>
-                      <th scope="col" id="total">Total</th>
+                      <th scope="col" class="fix-right">Total</th>
+                      <th scope="col" class="fix-right" >Eligible project cost</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -155,11 +174,35 @@
                                th:value="${#numbers.formatInteger(cost,1,'NONE')}"
                                type="number" />
                       </td>
-                      <td th:text="${'&pound; '+#numbers.formatInteger(model.table.eligibleCostPerCategoryMap.get(row.key),1,'COMMA')}"
-                          data-calculation-operations="+"
-                          th:attr="data-calculation-fields=${'[id*=row-'+#strings.replace(#strings.replace(row.key,' ','-'),'&amp;','')+']'}" />
+                      <td class="fix-right">
+                          <input th:value="${'&pound; '+#numbers.formatInteger(model.categoryToActualTotal.get(row.key),1,'COMMA')}"
+                                  data-calculation-operations="+"
+                                  readonly="readonly"
+                                  th:classappend="${'row-total-'+#strings.replace(#strings.replace(row.key,' ','-'),'&amp;','')}"
+                                  th:attr="data-calculation-fields=${'[id*=row-'+#strings.replace(#strings.replace(row.key,' ','-'),'&amp;','')+']'},data-calculation-rawvalue=${#numbers.formatInteger(model.categoryToActualTotal.get(row.key),1,'NONE')}" />
+                      </td>
+                      <td class="fix-right">
+                          <input th:value="${'&pound; '+#numbers.formatInteger(model.table.eligibleCostPerCategoryMap.get(row.key),1,'COMMA')}"
+                                th:attr="data-calculation-rawvalue=${#numbers.formatInteger(model.table.eligibleCostPerCategoryMap.get(row.key),1,'NONE')}"
+                                readonly="readonly" />
+                      </td>
                   </tr>
                 </tbody>
+                <tfoot>
+                  <tr>
+                      <th scope="row" class="fix-left">Total</th>
+                      <th:block  th:each="monthTotal,status : ${model.totalForEachMonth}">
+                        <td th:text="${'&pound; '+#numbers.formatInteger(monthTotal,1,'COMMA')}"
+                            th:attr="data-calculation-fields=${'input[class*='+#strings.toLowerCase(#temporals.format(model.table.months[status.index].localDate,'MMM-yyyy'))+']'}"
+                            data-calculation-operations="+" />
+                      </th:block>
+                      <td class="fix-right"
+                               th:text="${'&pound; '+#numbers.formatInteger(model.totalOfAllActualTotals,1,'COMMA')}"
+                               data-calculation-operations="+"
+                               data-calculation-fields="td[class*=row-total-]" />
+                      <td class="fix-right" th:text="${'&pound; '+#numbers.formatInteger(model.totalOfAllEligibleTotals,1,'COMMA')}" />
+                  </tr>
+                </tfoot>
               </table>
           </div>
           <div class="flex-table-after"></div>
