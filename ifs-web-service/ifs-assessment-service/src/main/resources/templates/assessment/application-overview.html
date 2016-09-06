@@ -68,12 +68,12 @@
 
             <div th:unless="${#lists.isEmpty(appendices)}" th:remove="tag">
                 <h2 class="heading-medium">Appendices</h2>
-                <div th:each="appendix : ${appendices}" th:remove="tag">
-                    <div class="form-group download">
-                        <h3 class="heading-small no-margin" th:text="|${appendix.title}:|">View project management appendix:</h3>
+                <ul th:each="appendix : ${appendices}">
+                    <li class="form-group download">
+                        <div class="heading-small no-margin" th:text="|${appendix.title}:|">View project management appendix:</div>
                         <a th:href="${appendix.getDownloadURL()}" th:text="${appendix.name + '(' + appendix.getHumanReadableFileSize() + ')'}">Project-plan.pdf (161.96 KB)</a>
-                    </div>
-                </div>
+                    </li>
+                </ul>
             </div>
 
             <div class="alignright-button extra-margin">
