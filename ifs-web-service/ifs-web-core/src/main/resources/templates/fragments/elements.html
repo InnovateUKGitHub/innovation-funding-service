@@ -101,7 +101,7 @@
     <div class="pie-container" th:if="${daysLeft != null}">
         <div class="pie small" th:text="${daysPercentage}+'%'"></div>
         <div class="pie-overlay">
-            <span th:text=" (${daysLeft} &lt; 0 ? '0' : ${daysLeft}) ">18</span>
+            <span class="day" th:text=" (${daysLeft} &lt; 0 ? '0' : ${daysLeft}) ">18</span>
             <span class="visuallyhidden">Days left</span>
         </div>
     </div>
@@ -110,7 +110,7 @@
     <div class="pie-container">
         <div class="pie" th:text="${daysPercentage}+'%'">10%</div>
         <div class="pie-overlay">
-            <span th:text=" (${daysLeft} &lt; 0 ? '0' : ${daysLeft}) ">18</span>
+            <span class="day" th:text=" (${daysLeft} &lt; 0 ? '0' : ${daysLeft}) ">18</span>
             <span>Days left</span>
         </div>
     </div>

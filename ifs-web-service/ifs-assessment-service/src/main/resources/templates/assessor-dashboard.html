@@ -11,13 +11,13 @@
         <main id="content">
             <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
 
-            <div class="hgroup">
-                <h1 class="heading-large">Assessor Dashboard</h1>
+            <div class="page-title">
+                <h1 class="heading-xlarge">Assessor Dashboard</h1>
             </div>
 
             <div class="my-applications">
                 <div th:unless="${#lists.isEmpty(model.activeCompetitions)}" th:remove="tag">
-                    <h2 class="heading-medium">Competitions for assessment (<span th:text="${#lists.size(model.activeCompetitions)}" />)</h2>
+                    <h2 class="heading-large">Competitions for assessment (<span th:text="${#lists.size(model.activeCompetitions)}" />)</h2>
                     <ul class="boxed-list">
                         <li th:each="activeCompetition : ${model.activeCompetitions}">
                             <div class="grid-row">
