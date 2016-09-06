@@ -10,9 +10,6 @@ Documentation     INFUND-3780: As an Assessor I want the system to autosave my w
 ...               INFUND-3394 Acceptance Test: Assessor should be able to view the full application and finance summaries for assessment
 ...
 ...               INFUND-3859: As an Assessor I want to see how many words I can enter as feedback so that I know how much I can write.
-...
-...
-...               INFUND-550 As an assessor I want the ‘Assessment summary’ page to show me complete and incomplete sections, so that I can easily judge how much of the application is left to do
 Suite Setup       guest user log-in    paul.plum@gmail.com    Passw0rd
 Suite Teardown    the user closes the browser
 Force Tags        Assessor
@@ -23,22 +20,6 @@ Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
 
 *** Test Cases ***
-Assessment summary shows questions as incomplete
-    [Documentation]    INFUND-550
-    The assessor navigates to the summary page
-    Then the collapsible button should contain    jQuery=button:contains(1. How many)    Incomplete
-    And the collapsible button should contain    jQuery=button:contains(2. Mediums)    Incomplete
-    And the collapsible button should contain    jQuery=button:contains(3. Preference)    Incomplete
-    And the collapsible button should contain    jQuery=button:contains(4. Attire)    Incomplete
-    And the collapsible button should contain    jQuery=button:contains(Scope)    Incomplete
-
-Assessment summary shows the questions without score
-    [Documentation]    INFUND-550
-    Then the collapsible button should contain    jQuery=button:contains(1. How many)    N/A
-    And the collapsible button should contain    jQuery=button:contains(2. Mediums)    N/A
-    And the collapsible button should contain    jQuery=button:contains(3. Preference)    N/A
-    And the collapsible button should contain    jQuery=button:contains(4. Attire)    N/A
-
 Navigation using next button
     [Documentation]    INFUND-4264
     [Tags]
@@ -170,22 +151,23 @@ Assessors should see word count when edit feedbackform
     When the user clicks the button/link    link=4. Attire
     Then I should see word count underneath feedback form    Words remaining: 0
 
-Validation messaage when more than 100 words entered
+Validation message when more than 100 words entered
     [Documentation]    INFUND-3859
     Given I am on the assessor assessment overview page
     When I open one of the application questions    link=4. Attire
     And I enter feedback of words    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco test test
-    Then I should see validation message above the feedback form text field    The form word limit has been exceeded
+    Then I should see validation message above the feedback form text field    Maximum word count exceeded. Please reduce your word count to 100.
 
 No error message when feedback words reduced to 100 or less
     [Documentation]    INFUND-3859
     Given I am on the assessor assessment overview page
     And I open one of the application questions    link=4. Attire
     And I enter feedback of words    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco test test
-    And I should see validation message above the feedback form text field    The form word limit has been exceeded
+    And I should see validation message above the feedback form text field    Maximum word count exceeded. Please reduce your word count to 100.
     And Clear Element Text    css=#form-input-225 .editor
     And I enter feedback of words    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco
-    Then The user should not see the text in the page    The form word limit has been exceeded
+    # Omitting the word count figure from the end of the next line so it fails if the word count error message is present regardless of the actual word limit
+    Then The user should not see the text in the page    Maximum word count exceeded. Please reduce your word count to
 
 Question 1: Autosave
     [Documentation]    INFUND-3780
@@ -231,51 +213,6 @@ Validation check in the Reject application modal
     Then the user selects the option from the drop-down menu    ${empty}    id=rejectReason    # Note that using this empty option will actually select the 'Select a reason' option at the top of the dropdown menu
     And the user should see an error    This field cannot be left blank
     Then the user enters text to a text field    id=rejectComment    Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc, quis gravida magna mi a libero. Fusce vulputate eleifend sapien. Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. Cras ultricies mi eu turpis hendrerit fringilla. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; In ac dui quis mi consectetuer lacinia. Nam pretium turpis et arcu. Duis arcu tortor, suscipit eget, imperdiet nec, imperdiet iaculis, ipsum. Sed aliquam ultrices mauris. Integer ante arcu, accumsan a, consectetuer eget, posuere ut, mauris. Praesent adipiscing. Phasellus ullamcorper ipsum rutrum nunc. Nunc nonummy metus. Vestibulum volutpat pretium libero. Cras id dui. Aenean ut
-
-Assessment summary shows questions as complete
-    [Documentation]    INFUND-550
-    Given the user adds score and feedback for every question
-    When The assessor navigates to the summary page
-    Then the collapsible button should contain    jQuery=button:contains(1. How many)    Complete
-    And the collapsible button should contain    jQuery=button:contains(2. Mediums)    Complete
-    And the collapsible button should contain    jQuery=button:contains(3. Preference)    Complete
-    And the collapsible button should contain    jQuery=button:contains(4. Attire)    Complete
-    And the collapsible button should contain    jQuery=button:contains(Scope)    Complete
-
-Assessment summary shows questions scores
-    [Documentation]    INFUND-550
-    Then The user should see the text in the page    Total: 50/50
-    And The user should see the text in the page    100%
-    And the table should show the correct scores
-    And the collapsible button should contain    jQuery=button:contains(1. How many)    Score: 20/20
-    And the collapsible button should contain    jQuery=button:contains(2. Mediums)    Score: 10/10
-    And the collapsible button should contain    jQuery=button:contains(3. Preference)    Score: 10/10
-    And the collapsible button should contain    jQuery=button:contains(4. Attire)    Score: 10/10
-
-Assessment summary shows feedback in each section
-    [Documentation]    INFUND-550
-    When The user clicks the button/link    jQuery=button:contains(1. How many)
-    Then The user should see the text in the page    Testing how many feedback text
-    When The user clicks the button/link    jQuery=button:contains(2. Mediums)
-    Then The user should see the text in the page    Testing Mediums feedback text
-    When The user clicks the button/link    jQuery=button:contains(3. Preference)
-    Then The user should see the text in the page    Testing Preferences feedback text
-    When The user clicks the button/link    jQuery=button:contains(4. Attire)
-    Then The user should see the text in the page    Testing Attire feedback text
-    When The user clicks the button/link    jQuery=button:contains(Scope)
-    Then The user should see the text in the page    Testing scope feedback text
-
-Assessor should be able to re-edit before submit
-    [Documentation]    INFUND-3400
-    When The user clicks the button/link    jQuery=#collapsible-1 a:contains(Return to this question)
-    and The user should see the text in the page    This is the applicant response from Test One for How Many
-    When the user selects the option from the drop-down menu    8    id=assessor-question-score
-    And the user enters text to a text field    css=#form-input-195 .editor    This is a new feedback entry.
-    And the user clicks the button/link    jQuery=a:contains(Back to assessment overview)
-    And The assessor navigates to the summary page
-    When The user clicks the button/link    jQuery=button:contains(1. How many)
-    Then the user should see the text in the page    This is a new feedback entry.
-    And the user should see the text in the page    8
 
 *** Keywords ***
 the user clicks next and goes to the page
@@ -328,6 +265,7 @@ the project cost breakdown total should be correct
     Element Should Contain    css=.form-group.project-cost-breakdown tr:nth-child(2) td:nth-child(8)    £0
     Element Should Contain    css=.form-group.project-cost-breakdown tr:nth-child(2) td:nth-child(9)    £0
 
+
 the collapsible button should contain
     [Arguments]    ${BUTTON}    ${TEXT}
     Element Should Contain    ${BUTTON}    ${TEXT}
@@ -354,14 +292,12 @@ the user adds score and feedback for every question
     the user clicks the button/link    css=.next
     the user selects the option from the drop-down menu    10    id=assessor-question-score
     the user enters text to a text field    css=#form-input-225 .editor    Testing Attire feedback text
+    wait until page contains    Saving
+    Sleep    500ms
 
 The assessor navigates to the summary page
     Given the user navigates to the page    ${Assessment_overview_9}
     When The user clicks the button/link    jQuery=.button:contains(Review assessment)
     And The user should see the text in the page    Assessment summary
 
-the table should show the correct scores
-    Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(1)    20
-    Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(2)    10
-    Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(3)    10
-    Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(4)    10
+

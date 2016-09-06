@@ -15,7 +15,7 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Technology inspired'}, ${'/prototypes/1627-admin-view-project-status-grid?status=setup'})" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition dashboard'}, ${'/prototypes/4151-admin-competition-dash'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 	
@@ -27,7 +27,7 @@
 
 	
 
-		<div class="success-alert">
+		<div class="success-alert" th:unless="${param.status != null and param.status[0] == 'incomplete'}">
 			<h2 class="heading-small no-margin-top">The project details have been submitted to Innovate UK.</h2>
 		</div>
 		
@@ -47,24 +47,24 @@
 					<td>
 						Target start date
 					</td>
-					<td id="start-date">
-						01/06/2016
+					<td id="start-date" th:text="${(param.status != null and param.status[0] == 'incomplete') ? 'Not yet completed' : '01/06/2016'}">
+						START DATE
 					</td>
 				</tr>
 				<tr>
 					<td>					
 						Project address
 					</td>
-					<td id="project-address">
-						13 Queens Square, Bristol, BS3 1RF
+					<td id="project-address" th:text="${(param.status != null and param.status[0] == 'incomplete') ? 'Not yet completed' : '13 Queens Square, Bristol, BS3 1RF'}">
+						ADDRESS
 					</td>
 				</tr>
 				<tr>
 					<td>
 						Project manager
 					</td>
-					<td id="project-manager">
-						Steve Dafit
+					<td id="project-manager" th:text="${(param.status != null and param.status[0] == 'incomplete') ? 'Not yet completed' : 'Steve Dafit'}">
+						NAME
 					</td>
 				</tr>
 				
@@ -72,6 +72,7 @@
 		</table>
 
 		<h2 class="heading-medium">Partner finance contacts</h2>
+		<p>Each of the partners is responsible for submitting their own finance contact.</p>
 
 		<table>
 			<thead>
@@ -88,7 +89,7 @@
 						Aptrans Ltd (Lead)
 					</td>
 					<td>
-						<span id="finance-contact">John Smith</span>
+						<span id="finance-contact" th:text="${(param.status != null and param.status[0] == 'incomplete') ? 'Not yet completed' : 'John Smith'}">NAME</span>
 					</td>
 					<!-- <td>
 						<span id="finance-turnover">&pound;1,023,092</span>

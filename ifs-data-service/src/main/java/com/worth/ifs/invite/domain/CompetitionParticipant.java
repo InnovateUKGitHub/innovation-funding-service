@@ -3,11 +3,14 @@ package com.worth.ifs.invite.domain;
 
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.user.domain.User;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
 
 import java.util.Optional;
 
+import static com.worth.ifs.invite.constant.InviteStatus.OPENED;
 import static com.worth.ifs.invite.domain.ParticipantStatus.ACCEPTED;
 import static com.worth.ifs.invite.domain.ParticipantStatus.REJECTED;
 
@@ -23,26 +26,50 @@ public class CompetitionParticipant extends Participant<Competition, Competition
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "competition", insertable = false, updatable = false)
+    @JoinColumn(name = "competition_id", referencedColumnName = "id")
     private Competition competition;
 
     @ManyToOne
-    @JoinColumn(name = "user", insertable = false, updatable = false)
+    @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToOne
-    @JoinColumn(name = "invite")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "invite_id")
     private CompetitionInvite invite;
 
     @ManyToOne
-    @JoinColumn(name = "rejection_reason_id", insertable = false, updatable = false)
-    private CompetitionParticipantRejectionReason rejectionReason;
+    @JoinColumn(name = "rejection_reason_id")
+    private RejectionReason rejectionReason;
 
     @Column(name = "rejection_comment")
     private String rejectionReasonComment;
 
-    CompetitionParticipant() {
+    @Column(name = "competition_role_id")
+    private CompetitionParticipantRole role;
+
+    public CompetitionParticipant() {
         // no-arg constructor
+        this.competition = null;
+    }
+
+    public CompetitionParticipant(Competition competition, CompetitionInvite invite) {
+        this(competition, null, invite);
+    }
+
+    public CompetitionParticipant(Competition competition, User user, CompetitionInvite invite) {
+        super();
+        if (competition == null) throw new NullPointerException("competition cannot be null");
+        if (invite == null) throw new NullPointerException("invite cannot be null");
+
+        this.competition = competition;
+        this.user = user;
+        this.invite = invite;
+        this.role = CompetitionParticipantRole.ASSESSOR;
+    }
+
+    @Override
+    public Long getId() {
+        return id;
     }
 
     @Override
@@ -51,13 +78,13 @@ public class CompetitionParticipant extends Participant<Competition, Competition
     }
 
     @Override
-    public Optional<CompetitionInvite> getInvite() {
-        return Optional.ofNullable(invite);
+    public CompetitionInvite getInvite() {
+        return invite;
     }
 
     @Override
     public CompetitionParticipantRole getRole() {
-        return CompetitionParticipantRole.ASSESSOR;
+        return role;
     }
 
     @Override
@@ -65,26 +92,7 @@ public class CompetitionParticipant extends Participant<Competition, Competition
         return user;
     }
 
-    public CompetitionParticipant(Competition competition, User user) {
-        this(competition, user, null);
-        if (user == null) throw new NullPointerException("user cannot be null");
-    }
-
-    public CompetitionParticipant(Competition competition, CompetitionInvite invite) {
-        this(competition, null, invite);
-        if (invite == null) throw new NullPointerException("invite cannot be null");
-    }
-
-    public CompetitionParticipant(Competition competition, User user, CompetitionInvite invite) {
-        super();
-        if (competition == null) throw new NullPointerException("competition cannot be null");
-
-        this.competition = competition;
-        this.user = user;
-        this.invite = invite;
-    }
-
-    public CompetitionParticipantRejectionReason getRejectionReason() {
+    public RejectionReason getRejectionReason() {
         return rejectionReason;
     }
 
@@ -92,18 +100,26 @@ public class CompetitionParticipant extends Participant<Competition, Competition
         return rejectionReasonComment;
     }
 
-    public void accept() {
+    public CompetitionParticipant accept() {
+        if (getInvite().getStatus() != OPENED)
+            throw new IllegalStateException("Cannot accept a CompetitionParticipant that hasn't been opened");
+
         if (getStatus() == REJECTED)
             throw new IllegalStateException("Cannot accept a CompetitionParticipant that has been rejected");
         if (getStatus() == ACCEPTED)
             throw new IllegalStateException("CompetitionParticipant has already been accepted");
 
         setStatus(ACCEPTED);
+
+        return this;
     }
 
-    public void reject(CompetitionParticipantRejectionReason rejectionReason, String comment) {
-        if (rejectionReason == null) throw new NullPointerException("reason cannot be null");
-        if (comment == null) throw new NullPointerException("comment cannot be null");
+    public CompetitionParticipant reject(RejectionReason rejectionReason, Optional<String> rejectionComment) {
+        if (rejectionReason == null) throw new NullPointerException("rejectionReason cannot be null");
+        if (rejectionComment == null) throw new NullPointerException("rejectionComment cannot be null");
+
+        if (getInvite().getStatus() != OPENED)
+            throw new IllegalStateException("Cannot accept a CompetitionParticipant that hasn't been opened");
 
         if (getStatus() == ACCEPTED)
             throw new IllegalStateException("Cannot reject a CompetitionParticipant that has been accepted");
@@ -111,7 +127,43 @@ public class CompetitionParticipant extends Participant<Competition, Competition
             throw new IllegalStateException("CompetitionParticipant has already been rejected");
 
         this.rejectionReason = rejectionReason;
-        this.rejectionReasonComment = comment;
+        this.rejectionReasonComment = rejectionComment.orElse(null);
         setStatus(REJECTED);
+
+        return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CompetitionParticipant that = (CompetitionParticipant) o;
+
+        return new EqualsBuilder()
+                .appendSuper(super.equals(o))
+                .append(id, that.id)
+                .append(competition.getId(), that.competition.getId())
+                .append(user, that.user)
+                .append(invite, that.invite)
+                .append(rejectionReason, that.rejectionReason)
+                .append(rejectionReasonComment, that.rejectionReasonComment)
+                .append(role, that.role)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .appendSuper(super.hashCode())
+                .append(id)
+                .append(competition.getId())
+                .append(user)
+                .append(invite)
+                .append(rejectionReason)
+                .append(rejectionReasonComment)
+                .append(role)
+                .toHashCode();
     }
 }

@@ -58,17 +58,6 @@ New competition shows in Preparation section with the default name
     And The user clicks the button/link    id=section-3
     Then the competition should show in the correct section    css=section:nth-child(4) li:nth-child(2)    No competition title defined    #this keyword checks if the new application shows in the second line of the "In preparation" competitions
 
-Competition code validation
-    [Documentation]    INFUND-2985
-    ...
-    ...    INFUND-3182
-    ...
-    ...    IFUND-3888
-    [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
-    Given the user clicks the button/link    link=Funding Information
-    When the user clicks the button/link    jQuery=.button:contains("Generate code")
-    Then the user should see an error    Please set a start date for your competition before generating the competition code, you can do this in the Initial Details section
-
 Initial details server-side validations
     [Documentation]    INFUND-2982
     ...
@@ -94,7 +83,8 @@ Initial details correct state aid status
     ...    INFUND-2983
     ...
     ...    INFUND-3888
-    [Tags]
+    [Tags]    Pending
+    #This ticket marked as pending because atm there is only one competition type. We should recheck this in sprint15
     When the user selects the option from the drop-down menu    SBRI    id=competitionTypeId
     Then the user should see the element    css=.no
     When the user selects the option from the drop-down menu    Special    id=competitionTypeId
@@ -132,6 +122,7 @@ Initial details client-side validations
 Initial details: Autosave
     [Documentation]    INFUND-3001
     [Tags]    Pending
+    #pendingI NFUND-4764
     When the user clicks the button/link    link=Competition set up
     and the user clicks the button/link    link=Initial Details
     Then the user should see the correct values in the initial details form

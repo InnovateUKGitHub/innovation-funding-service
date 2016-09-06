@@ -1,17 +1,13 @@
 package com.worth.ifs.competition.transactional;
 
-import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.when;
-
-import java.time.LocalDateTime;
-import java.util.List;
-
 import com.worth.ifs.BaseServiceUnitTest;
+import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.competition.domain.Milestone;
+import com.worth.ifs.competition.mapper.MilestoneMapper;
+import com.worth.ifs.competition.repository.CompetitionRepository;
+import com.worth.ifs.competition.repository.MilestoneRepository;
+import com.worth.ifs.competition.resource.MilestoneResource;
 import com.worth.ifs.competition.resource.MilestoneType;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,13 +16,14 @@ import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.competition.domain.Milestone;
-import com.worth.ifs.competition.mapper.MilestoneMapper;
-import com.worth.ifs.competition.repository.CompetitionRepository;
-import com.worth.ifs.competition.repository.MilestoneRepository;
-import com.worth.ifs.competition.resource.MilestoneResource;
+import java.time.LocalDateTime;
+import java.util.List;
+
+import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static java.util.Arrays.asList;
+import static org.junit.Assert.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
 
 public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServiceImpl>{
 	@InjectMocks
@@ -85,7 +82,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
 		
 		assertFalse(result.isSuccess());
 		assertEquals(1, result.getFailure().getErrors().size());
-		assertEquals("Milestones must be in date order", result.getFailure().getErrors().get(0).getErrorMessage());
+		assertEquals("error.milestone.nonsequential", result.getFailure().getErrors().get(0).getErrorKey());
 		assertEquals(0, competition.getMilestones().size());
 	}
 	
@@ -103,7 +100,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
 		
 		assertFalse(result.isSuccess());
 		assertEquals(1, result.getFailure().getErrors().size());
-		assertEquals("Milestones must have dates specified", result.getFailure().getErrors().get(0).getErrorMessage());		
+		assertEquals("error.milestone.nulldate", result.getFailure().getErrors().get(0).getErrorKey());
 		assertEquals(0, competition.getMilestones().size());
 	}
 	
@@ -121,7 +118,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
 		
 		assertFalse(result.isSuccess());
 		assertEquals(1, result.getFailure().getErrors().size());
-		assertEquals("Milestones cannot be in the past", result.getFailure().getErrors().get(0).getErrorMessage());
+		assertEquals("error.milestone.pastdate", result.getFailure().getErrors().get(0).getErrorKey());
 		assertEquals(0, competition.getMilestones().size());
 	}
 	
@@ -141,7 +138,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
 		
 		assertFalse(result.isSuccess());
 		assertEquals(1, result.getFailure().getErrors().size());
-		assertEquals("Milestones must have dates specified", result.getFailure().getErrors().get(0).getErrorMessage());		
+		assertEquals("error.milestone.nulldate", result.getFailure().getErrors().get(0).getErrorKey());
 		assertEquals(0, competition.getMilestones().size());
 	}
 

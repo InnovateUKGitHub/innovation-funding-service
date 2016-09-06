@@ -70,15 +70,15 @@ the Applicant should see all the "Your Finance" Sections
 
 the user adds three material rows
     the user clicks the button/link    jQuery=button:contains("Materials")
-    the user should see the element    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
+    wait until element is visible    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
     Input Text    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    01
-    Focus    jQuery=button:contains('Add another materials cost')
-    the user clicks the button/link    jQuery=button:contains('Add another materials cost')
-    the user should see the element    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input
+    Focus    jQuery=button:contains(Add another materials cost)
+    the user clicks the button/link    jQuery=button:contains(Add another materials cost)
+    wait until element is visible    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input
     Input Text    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    01
-    Focus    jQuery=button:contains('Add another materials cost')
-    the user clicks the button/link    jQuery=button:contains('Add another materials cost')
-    the user should see the element    css=#material-costs-table tbody tr:nth-of-type(3) td:nth-of-type(2) input
+    Focus    jQuery=button:contains(Add another materials cost)
+    the user clicks the button/link    jQuery=button:contains(Add another materials cost)
+    wait until element is visible    css=#material-costs-table tbody tr:nth-of-type(3) td:nth-of-type(2) input
     Input Text    css=#material-costs-table tbody tr:nth-of-type(3) td:nth-of-type(2) input    01
     Mouse Out    css=#material-costs-table tbody tr:nth-of-type(3) td:nth-of-type(2) input
     Focus    link=Please refer to our guide to project costs for further information.

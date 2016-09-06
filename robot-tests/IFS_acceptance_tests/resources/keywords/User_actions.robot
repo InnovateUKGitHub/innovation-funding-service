@@ -237,7 +237,7 @@ The user should see the text in the page
     Page Should Not Contain    You do not have the necessary permissions for your request
     Page Should Not Contain    something went wrong
 
-The user should see no permissions message
+The user should see permissions error message
     wait until page contains    You do not have the necessary permissions for your request
     Page Should Contain    You do not have the necessary permissions for your request
 
@@ -267,7 +267,6 @@ the guest user enters the log in credentials
 
 The user should see the element
     [Arguments]    ${ELEMENT}
-    focus    ${ELEMENT}
     Wait Until Element Is Visible    ${ELEMENT}
 
 The user should not see the element
