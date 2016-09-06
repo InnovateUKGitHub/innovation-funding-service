@@ -39,51 +39,57 @@
 }
 
 .sub-header {
-	// background: $grey-4;
-	clear: both;
-	padding: 5px 0px;
-	// margin: 0 -15px;
-	position: relative;
-	line-height:40px;
-	overflow: hidden;
-	font-size: 16px;
+    // background: $grey-4;
+    clear: both;
+    font-size: 16px;
+    line-height:40px;
+    // margin: 0 -15px;
+    overflow: hidden;
+    padding: 5px 0px;
+    position: relative;
 
-  a{
+    nav {
+        display: inline;
+    }
 
-		border-bottom: 1px solid $black;
-	  @include inline-block;
-	  line-height: 1.25;
-	    position: relative;
-	    text-decoration: none;
-	    vertical-align: middle;
-		 color: $black;
-		margin-top: $gutter-half;
-	  margin-bottom: $gutter-half;
-	}
-	.deadline {
-		float:right;
-		line-height:1;
-		font-weight:300;
-		color: $red;
-		margin: 7px 0;
-		@include media-down(mobile){
-			font-size:14px;
-			.pie.small {
-				width:30px;
-				height:30px;
-			}
-			.pie.small + .pie-overlay {
-				width:26px;
-				height: 26px;
-			}
-			.pie.small + .pie-overlay > div {
-				font-size: 12px;
-	     	line-height: 29px;
-			}
-		}
-	}
+    a {
+        @include inline-block;
+        border-bottom: 1px solid $black;
+        color: $black;
+        line-height: 1.25;
+        margin-bottom: $gutter-half;
+        margin-top: $gutter-half;
+        position: relative;
+        text-decoration: none;
+        vertical-align: middle;
+    }
 
+    .deadline {
+        color: $red;
+        float:right;
+        font-weight:300;
+        line-height:1;
+        margin: 7px 0;
 
+        @include media-down(mobile) {
+            font-size:14px;
+
+            .pie.small {
+                height:30px;
+                width:30px;
+            }
+
+            .pie.small + .pie-overlay {
+                height: 26px;
+                width:26px;
+            }
+
+            .pie.small + .pie-overlay > div {
+                font-size: 12px;
+                line-height: 29px;
+            }
+        }
+    }
 }
 
 details {
