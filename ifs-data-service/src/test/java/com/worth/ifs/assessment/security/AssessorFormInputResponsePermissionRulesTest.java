@@ -42,7 +42,7 @@ public class AssessorFormInputResponsePermissionRulesTest extends BasePermission
         response = newAssessorFormInputResponseResource().withAssessment(assessment.getId()).build();
 
         when(processRoleRepositoryMock.findOne(processRoleId)).thenReturn(processRole);
-        when(assessmentRepositoryMock.findOneByProcessRoleId(response.getAssessment())).thenReturn(assessment);
+        when(assessmentRepositoryMock.findOne(response.getAssessment())).thenReturn(assessment);
     }
 
     @Override
