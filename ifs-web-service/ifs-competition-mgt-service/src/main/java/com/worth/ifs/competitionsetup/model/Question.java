@@ -22,7 +22,7 @@ public class Question {
     @NotBlank
     private String guidance;
 
-    @Min(value = 1)
+    @Min(1)
     private Integer maxWords;
     private Boolean appendix;
     private Boolean scored;
