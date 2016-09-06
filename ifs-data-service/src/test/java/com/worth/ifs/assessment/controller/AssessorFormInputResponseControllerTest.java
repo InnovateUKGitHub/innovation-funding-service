@@ -10,7 +10,6 @@ import org.junit.Test;
 import java.util.List;
 
 import static com.worth.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
-import static com.worth.ifs.commons.error.CommonFailureKeys.ASSESSMENT_FORM_INPUT_RESPONSE_WORD_LIMIT_EXCEEDED;
 import static com.worth.ifs.commons.error.Error.fieldError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -114,13 +113,13 @@ public class AssessorFormInputResponseControllerTest extends BaseControllerMockM
     public void updateFormInputResponse_exceedsWordLimit() throws Exception {
         AssessorFormInputResponseResource response = newAssessorFormInputResponseResource().build();
 
-        when(assessorFormInputResponseServiceMock.updateFormInputResponse(response)).thenReturn(serviceFailure(fieldError("value", "response", ASSESSMENT_FORM_INPUT_RESPONSE_WORD_LIMIT_EXCEEDED.getErrorKey(), 100)));
+        when(assessorFormInputResponseServiceMock.updateFormInputResponse(response)).thenReturn(serviceFailure(fieldError("value", "response", "validation.field.max.word.count", 100)));
 
         mockMvc.perform(put("/assessorFormInputResponse")
                 .contentType(APPLICATION_JSON)
                 .content(toJson(response)))
                 .andExpect(status().isNotAcceptable())
-                .andExpect(content().json(toJson(new RestErrorResponse(fieldError("value", "response", ASSESSMENT_FORM_INPUT_RESPONSE_WORD_LIMIT_EXCEEDED.getErrorKey(), 100)))))
+                .andExpect(content().json(toJson(new RestErrorResponse(fieldError("value", "response", "validation.field.max.word.count", 100)))))
                 .andReturn();
 
         verify(assessorFormInputResponseServiceMock).updateFormInputResponse(response);

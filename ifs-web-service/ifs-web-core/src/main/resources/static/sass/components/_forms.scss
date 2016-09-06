@@ -119,6 +119,10 @@ select.form-control + button.button {
 
 table td{
 
+    &.bold {
+        font-weight: 700;
+    }
+
     &.numeric{
         text-align: right;
 
