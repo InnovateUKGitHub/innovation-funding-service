@@ -38,6 +38,8 @@ public abstract class BasePermissionRulesTest<T> extends BaseUnitTestMocksTest {
         return getRoleResource(COMP_ADMIN);
     }
 
+    protected RoleResource assessorRole() { return getRoleResource(ASSESSOR); }
+
     protected UserResource compAdminUser() {
         return getUserWithRole(COMP_ADMIN);
     }

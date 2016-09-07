@@ -11,7 +11,7 @@ public class ResetPasswordForm {
     @Size(min = 10, max = 30, message = "{validation.standard.password.length.range}")
     private String password;
 
-    @NotEmpty(message = "validation.standard.retypedPassword.required")
+    @NotEmpty(message = "{validation.standard.password.required}")
     @Size(min = 10, max = 30, message = "{validation.standard.password.length.range}")
     private String retypedPassword;
 

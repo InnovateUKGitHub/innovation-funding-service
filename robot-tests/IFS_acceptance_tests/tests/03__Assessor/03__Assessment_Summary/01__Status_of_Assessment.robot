@@ -4,7 +4,7 @@ Documentation     INFUND-550: As an assessor I want the ‘Assessment summary’
 ...               INFUND-1485: As an Assessor I want to be able to provide my final feedback for the application so that I can tell Innovate UK whether or not I recommend the application for funding.
 Suite Setup       guest user log-in    felix.wilson@gmail.com    Passw0rd
 Suite Teardown    the user closes the browser
-Force Tags        Assessor    Pending
+Force Tags        Assessor
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
