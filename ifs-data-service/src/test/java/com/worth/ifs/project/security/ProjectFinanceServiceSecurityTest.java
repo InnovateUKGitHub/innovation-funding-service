@@ -1,7 +1,6 @@
 package com.worth.ifs.project.security;
 
 import com.worth.ifs.BaseServiceSecurityTest;
-import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.project.finance.transactional.ProjectFinanceService;
 import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
@@ -144,7 +143,7 @@ public class ProjectFinanceServiceSecurityTest extends BaseServiceSecurityTest<P
         }
 
         @Override
-        public ServiceResult<ValidationMessages> saveSpendProfile(ProjectOrganisationCompositeId projectOrganisationCompositeId, SpendProfileTableResource table) {
+        public ServiceResult<Void> saveSpendProfile(ProjectOrganisationCompositeId projectOrganisationCompositeId, SpendProfileTableResource table) {
             return null;
         }
 

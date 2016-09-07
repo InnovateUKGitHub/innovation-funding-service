@@ -1,14 +1,11 @@
 package com.worth.ifs.project.controller;
 
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.commons.rest.ValidationMessages;
-import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.project.finance.transactional.ProjectFinanceService;
 import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
 import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.project.resource.SpendProfileTableResource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,18 +46,12 @@ public class ProjectFinanceController {
     }
 
     @RequestMapping(value = "/{projectId}/partner-organisation/{organisationId}/spend-profile", method = POST)
-    public RestResult<ValidationMessages> saveSpendProfile(@PathVariable("projectId") final Long projectId,
+    public RestResult<Void> saveSpendProfile(@PathVariable("projectId") final Long projectId,
                                                            @PathVariable("organisationId") final Long organisationId,
                                                            @RequestBody SpendProfileTableResource table) {
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        ServiceResult<ValidationMessages> result = projectFinanceService.saveSpendProfile(projectOrganisationCompositeId, table);
-        if(result.isSuccess()) {
-            return RestResult.restSuccess(result.getSuccessObject(), HttpStatus.ACCEPTED);
-        } else {
-            return RestResult.restFailure(result.getErrors());
-        }
-
+        return projectFinanceService.saveSpendProfile(projectOrganisationCompositeId, table).toPostResponse();
     }
 
     @RequestMapping(value = "/{projectId}/partner-organisation/{organisationId}/spend-profile/complete/{complete}", method = POST)

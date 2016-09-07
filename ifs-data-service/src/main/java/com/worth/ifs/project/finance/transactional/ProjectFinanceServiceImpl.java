@@ -28,7 +28,6 @@ import java.util.stream.IntStream;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
-import static com.worth.ifs.commons.rest.ValidationMessages.noErrors;
 import static com.worth.ifs.commons.service.ServiceResult.*;
 import static com.worth.ifs.project.finance.domain.TimeUnit.MONTH;
 import static com.worth.ifs.util.CollectionFunctions.*;
@@ -107,6 +106,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
             table.setEligibleCostPerCategoryMap(eligibleCostsPerCategory);
             table.setMonthlyCostsPerCategoryMap(spendFiguresPerCategoryOrderedByMonth);
             table.setMarkedAsComplete(spendProfile.isMarkedAsComplete());
+            checkTotalForMonthsAndAddToTable(table);
             return serviceSuccess(table);
         });
     }
@@ -130,18 +130,19 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     }
 
     @Override
-    public ServiceResult<ValidationMessages> saveSpendProfile(ProjectOrganisationCompositeId projectOrganisationCompositeId, SpendProfileTableResource table) {
-
+    public ServiceResult<Void> saveSpendProfile(ProjectOrganisationCompositeId projectOrganisationCompositeId, SpendProfileTableResource table) {
         return validateSpendProfileCosts(table)
-                .andOnSuccess(() -> saveSpendProfileData(projectOrganisationCompositeId, table, false)) // We have to save the data even if the totals don't match, so we do that first
-                .andOnSuccess(() -> validateSpendProfileTotals(table));
+                .andOnSuccess(() -> saveSpendProfileData(projectOrganisationCompositeId, table, false)); // We have to save the data even if the totals don't match, so we do that first
     }
 
     @Override
     public ServiceResult<Void> markSpendProfile(ProjectOrganisationCompositeId projectOrganisationCompositeId, Boolean complete) {
         SpendProfileTableResource table = getSpendProfileTable(projectOrganisationCompositeId).getSuccessObject();
-        return validateSpendProfileTotals(table)
-                .andOnSuccess(() -> saveSpendProfileData(projectOrganisationCompositeId, table, complete));
+        if(complete && table.getValidationMessages().hasErrors()){ // validate before marking as complete
+            return serviceFailure(SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE);
+        } else {
+            return saveSpendProfileData(projectOrganisationCompositeId, table, complete);
+        }
     }
 
     private ServiceResult<Void> validateSpendProfileCosts(SpendProfileTableResource table) {
@@ -248,18 +249,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         }
     }
 
-    private ServiceResult<ValidationMessages> validateSpendProfileTotals(SpendProfileTableResource table) {
-
-        List<Error> categoriesWithIncorrectTotal = checkTotalForMonths(table);
-
-        if (categoriesWithIncorrectTotal.isEmpty()) {
-            return serviceSuccess(noErrors());
-        } else {
-            return serviceSuccess(new ValidationMessages(categoriesWithIncorrectTotal));
-        }
-    }
-
-    private List<Error> checkTotalForMonths(SpendProfileTableResource table) {
+    private void checkTotalForMonthsAndAddToTable(SpendProfileTableResource table) {
 
         Map<String, List<BigDecimal>> monthlyCostsPerCategoryMap = table.getMonthlyCostsPerCategoryMap();
         Map<String, BigDecimal> eligibleCostPerCategoryMap = table.getEligibleCostPerCategoryMap();
@@ -278,7 +268,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
             }
         }
 
-        return categoriesWithIncorrectTotal;
+        table.setValidationMessages(new ValidationMessages(categoriesWithIncorrectTotal));
     }
 
     private List<BigDecimal> orderCostsByMonths(List<Cost> costs, List<LocalDate> months, LocalDate startDate) {

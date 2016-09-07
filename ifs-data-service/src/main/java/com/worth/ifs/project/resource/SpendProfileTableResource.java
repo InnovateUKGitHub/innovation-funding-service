@@ -1,6 +1,7 @@
 package com.worth.ifs.project.resource;
 
 import com.worth.ifs.commons.rest.LocalDateResource;
+import com.worth.ifs.commons.rest.ValidationMessages;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -22,6 +23,8 @@ public class SpendProfileTableResource {
      */
     private Map<String, List<BigDecimal>> monthlyCostsPerCategoryMap;
     private Map<String, BigDecimal> eligibleCostPerCategoryMap;
+
+    private ValidationMessages validationMessages;
 
     public List<LocalDateResource> getMonths() {
         return months;
@@ -55,6 +58,15 @@ public class SpendProfileTableResource {
         this.markedAsComplete = markedAsComplete;
     }
 
+
+    public ValidationMessages getValidationMessages() {
+        return validationMessages;
+    }
+
+    public void setValidationMessages(ValidationMessages validationMessages) {
+        this.validationMessages = validationMessages;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -68,6 +80,7 @@ public class SpendProfileTableResource {
                 .append(months, that.months)
                 .append(monthlyCostsPerCategoryMap, that.monthlyCostsPerCategoryMap)
                 .append(eligibleCostPerCategoryMap, that.eligibleCostPerCategoryMap)
+                .append(validationMessages, that.validationMessages)
                 .isEquals();
     }
 
@@ -78,6 +91,7 @@ public class SpendProfileTableResource {
                 .append(months)
                 .append(monthlyCostsPerCategoryMap)
                 .append(eligibleCostPerCategoryMap)
+                .append(validationMessages)
                 .toHashCode();
     }
 }
