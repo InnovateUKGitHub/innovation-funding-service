@@ -8,7 +8,11 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 public class CompetitionInviteResource extends InviteResource {
 
+    private Long id;
+
     private String competitionName;
+
+    private String email;
 
     public String getCompetitionName() {
         return competitionName;
@@ -16,6 +20,22 @@ public class CompetitionInviteResource extends InviteResource {
 
     public void setCompetitionName(String competitionName) {
         this.competitionName = competitionName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     @Override
@@ -27,14 +47,18 @@ public class CompetitionInviteResource extends InviteResource {
         CompetitionInviteResource that = (CompetitionInviteResource) o;
 
         return new EqualsBuilder()
+                .append(id, that.id)
                 .append(competitionName, that.competitionName)
+                .append(email, that.email)
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
+                .append(id)
                 .append(competitionName)
+                .append(email)
                 .toHashCode();
     }
 }

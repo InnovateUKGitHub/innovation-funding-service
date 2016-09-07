@@ -1,10 +1,8 @@
 package com.worth.ifs.invite.builder;
 
 import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.invite.resource.CompetitionParticipantResource;
-import com.worth.ifs.invite.resource.CompetitionParticipantRoleResource;
-import com.worth.ifs.invite.resource.ParticipantStatusResource;
-import com.worth.ifs.invite.resource.RejectionReasonResource;
+import com.worth.ifs.Builder;
+import com.worth.ifs.invite.resource.*;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -45,8 +43,12 @@ public class CompetitionParticipantResourceBuilder extends BaseBuilder<Competiti
         return withArray((competition, competitionParticipantResource) -> setField("competitionId", competition, competitionParticipantResource), competitions);
     }
 
-    public CompetitionParticipantResourceBuilder withInvite(Long... invites) {
-        return withArray((invite, competitionParticipantResource) -> setField("inviteId", invite, competitionParticipantResource), invites);
+    public CompetitionParticipantResourceBuilder withInvite(CompetitionInviteResource... invites) {
+        return withArray((invite, competitionParticipantResource) -> setField("invite", invite, competitionParticipantResource), invites);
+    }
+
+    public CompetitionParticipantResourceBuilder withInvite(Builder<CompetitionInviteResource, ?> invite) {
+        return withInvite(invite.build());
     }
 
     public CompetitionParticipantResourceBuilder withRejectionReason(RejectionReasonResource... rejectionReasons) {
