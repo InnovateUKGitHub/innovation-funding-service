@@ -67,10 +67,11 @@ SVG based pie charts, won't show without javascript or svg
 		top:2px;
 		left:2px;
 	}
-	+ .pie-overlay > div {
-		margin-top:0;
-		line-height: 36px;
-		font-size: 13px;
+	+ .pie-overlay > span {
+        font-size: 13px;
+        font-weight: 700;
+        line-height: 36px;
+        margin-top:0;
 	}
 }
 
@@ -114,7 +115,8 @@ SVG based pie charts, won't show without javascript or svg
 	text-align: center;
 	line-height: 1;
 	font-size:15px;
-	> div {
+	> .day {
+        display: block;
 		margin-top:10px;
 		font-weight: bold;
 		margin-top:24px;

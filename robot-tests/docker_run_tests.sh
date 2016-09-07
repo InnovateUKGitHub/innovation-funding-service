@@ -108,11 +108,11 @@ function startPybot() {
     targetDir=`basename ${1}`
     if [ "$happyPath" ]
       then
-        local includeHappyPath='--include happyPath'
+        local includeHappyPath='--include HappyPath'
       else
         local includeHappyPath=''
     fi
-    if [ "$emails" ]
+    if [ $emails -eq 1 ]
       then
         local excludeEmails=''
       else
@@ -134,7 +134,6 @@ function runTests() {
     else
       startPybot ${testDirectory}
     fi
-
 
     for job in `jobs -p`
     do
@@ -188,7 +187,7 @@ unset emails
 emails=0
 
 testDirectory='IFS_acceptance_tests/tests'
-while getopts ":p :h :q :t :d: :e" opt ; do
+while getopts ":p :h :q :t :e" opt ; do
     case $opt in
         p)
          parallel=1
@@ -202,10 +201,6 @@ while getopts ":p :h :q :t :d: :e" opt ; do
         t)
          testScrub=1
         ;;
-        d)
-         testDirectory="$OPTARG"
-         parallel=0
-        ;;
         e)
          emails=1
         ;;
@@ -215,9 +210,6 @@ while getopts ":p :h :q :t :d: :e" opt ; do
         ;;
         :)
          case $OPTARG in
-            d)
-             coloredEcho "Option -$OPTARG requires the location of the robottest files relative to $scriptDir." red >&2
-            ;;
             *)
              coloredEcho "Option -$OPTARG requires an argument." red >&2
             ;;
@@ -233,8 +225,8 @@ startSeleniumGrid
 if [ "$quickTest" ]
 then
     echo "using quickTest:   TRUE" >&2
-    resetDB
-    addTestFiles
+    #resetDB
+    #addTestFiles
     runTests
 elif [ "$testScrub" ]
 then
