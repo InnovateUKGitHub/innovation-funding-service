@@ -71,7 +71,8 @@ IFS.competition_management.setup = (function(){
                       }
                   });
                   if(!pageLoad) {
-                    innovationCategory.trigger('change');
+                    IFS.core.autoSave.fieldChanged('[name="innovationSectorCategoryId"]');
+                    IFS.core.autoSave.fieldChanged('[name="innovationAreaCategoryId"]');
                   }
               }
           });

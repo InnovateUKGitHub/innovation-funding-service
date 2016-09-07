@@ -29,7 +29,7 @@ Labour
     ...    INFUND-736
     ...
     ...    INFUND-1256
-    [Tags]    HappyPath
+    [Tags]
     When the Applicant fills in the Labour costs for two rows
     Then Totals should be correct    css=#section-total-9    £ 104,348    css=[data-mirror="#section-total-9"]    £ 104,348
     And the user clicks the button/link    name=remove_cost
@@ -132,120 +132,105 @@ Funding level
 the Applicant fills in the Labour costs for two rows
     the user clicks the button/link    jQuery=button:contains("Labour")
     the user should see the element    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input
-    Clear Element Text    css=[name^="labour-labourDaysYearly"]
-    Input Text    css=[name^="labour-labourDaysYearly"]    230
-    Input Text    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input    test
-    Input Text    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input    120000
-    Input Text    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(4) input    100
-    mouse out    css=input
-    Focus    jQuery=button:contains(Add another role)
-    the user clicks the button/link    jQuery=button:contains(Add another role)
-    Wait Until Element Is Visible    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(4) input
-    Input Text    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(2) input    120000
-    Input Text    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(4) input    100
-    Input Text    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(1) input    test
-    Mouse Out    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(1) input
-    Mouse Out    css=input
-    focus    css=.app-submit-btn
+    the user clears the text from the element    css=[name^="labour-labourDaysYearly"]
+    the user enters text to a text field    css=[name^="labour-labourDaysYearly"]    230
+    the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input    test
+    the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input    120000
+    the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(4) input    100
+    the user moves focus to the element    jQuery=button:contains('Add another role')
+    the user clicks the button/link    jQuery=button:contains('Add another role')
+    the user should see the element    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(4) input
+    the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(2) input    120000
+    the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(4) input    100
+    the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(1) input    test
+    the user moves focus to the element    css=.app-submit-btn
 
 the applicant edits the working days field
     the user should see the element    css=[name^="labour-labourDaysYearly"]
-    Clear Element Text    css=[name^="labour-labourDaysYearly"]
-    Input Text    css=[name^="labour-labourDaysYearly"]    250
-    Focus    css=.app-submit-btn
+    the user clears the text from the element    css=[name^="labour-labourDaysYearly"]
+    the user enters text to a text field    css=[name^="labour-labourDaysYearly"]    250
+    the user moves focus to the element    css=.app-submit-btn
     Sleep    200ms
 
 the Applicant fills the Materials fields
     the user clicks the button/link    jQuery=button:contains("Materials")
     the user should see the element    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
-    Input Text    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    10
-    Input Text    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    100
-    input text    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    test
-    Focus    jQuery=button:contains(Add another materials cost)
+    the user enters text to a text field    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    10
+    the user enters text to a text field    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    100
+    the user enters text to a text field    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    test
+    the user moves focus to the element    jQuery=button:contains(Add another materials cost)
     the user clicks the button/link    jQuery=button:contains(Add another materials cost)
-    Wait Until Element Is Visible    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input
-    Input Text    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    10
-    Input Text    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(3) input    100
-    Input Text    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(1) input    test
-    mouse out    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(1) input
-    focus    css=.app-submit-btn
+    the user should see the element    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input
+    the user enters text to a text field    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    10
+    the user enters text to a text field    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(3) input    100
+    the user enters text to a text field    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(1) input    test
+    the user moves focus to the element    css=.app-submit-btn
 
 the applicant edits the Subcontracting costs section
     the user clicks the button/link    jQuery=button:contains("Subcontracting costs")
     the user should see the text in the page    Subcontractor name
-    Input Text    css=#collapsible-4 .form-row:nth-child(1) input[id$=subcontractingCost]    100
-    input text    css=.form-row:nth-child(1) [name^="subcontracting-name"]    test1
-    input text    css=.form-row:nth-child(1) [name^="subcontracting-country-"]    test2
-    input text    css=.form-row:nth-child(1) [name^="subcontracting-role"]    test3
-    Mouse Out    css=input
-    focus    jQuery=button:contains(Add another subcontractor)
+    the user enters text to a text field    css=#collapsible-4 .form-row:nth-child(1) input[id$=subcontractingCost]    100
+    the user enters text to a text field    css=.form-row:nth-child(1) [name^="subcontracting-name"]    test1
+    the user enters text to a text field    css=.form-row:nth-child(1) [name^="subcontracting-country-"]    test2
+    the user moves focus to the element    jQuery=button:contains(Add another subcontractor)
     the user clicks the button/link    jQuery=button:contains(Add another subcontractor)
-    wait until element is visible    css=#collapsible-4 .form-row:nth-child(2)
-    input text    css=.form-row:nth-child(2) [name^="subcontracting-name"]    test1
-    input text    css=.form-row:nth-child(2) [name^="subcontracting-country-"]    test2
-    input text    css=.form-row:nth-child(2) [name^="subcontracting-role"]    test3
-    Input Text    css=#collapsible-4 .form-row:nth-child(2) input[id$=subcontractingCost]    100
-    input text    css=#collapsible-4 .form-row:nth-child(1) input[id$=name]    test
-    mouse out    css=#collapsible-4 .form-row:nth-child(1) input[id$=name]
-    focus    css=.app-submit-btn
+    the user should see the element    css=#collapsible-4 .form-row:nth-child(2)
+    the user enters text to a text field    css=.form-row:nth-child(2) [name^="subcontracting-name"]    test1
+    the user enters text to a text field    css=.form-row:nth-child(2) [name^="subcontracting-country-"]    test2
+    the user enters text to a text field    css=.form-row:nth-child(2) [name^="subcontracting-role"]    test3
+    the user enters text to a text field    css=#collapsible-4 .form-row:nth-child(2) input[id$=subcontractingCost]    100
+    the user enters text to a text field    css=#collapsible-4 .form-row:nth-child(1) input[id$=name]    test
+    the user moves focus to the element    css=.app-submit-btn
 
 the applicant fills the 'capital usage' field
     the user clicks the button/link    jQuery=button:contains("Capital usage")
-    Input Text    css=.form-row:nth-child(1) .form-finances-capital-usage-npv    1000
-    Input Text    css=.form-row:nth-child(1) .form-finances-capital-usage-npv    1000
-    input text    css=.form-row:nth-child(1) .form-finances-capital-usage-residual-value    900
-    input text    css=.form-finances-capital-usage-utilisation    100
-    input text    css=.form-finances-capital-usage-depreciation    11
-    input text    css=.form-row:nth-child(1) [name^="capital_usage-description"]    Test
+    the user enters text to a text field    css=.form-row:nth-child(1) .form-finances-capital-usage-npv    1000
+    the user enters text to a text field    css=.form-row:nth-child(1) .form-finances-capital-usage-npv    1000
+    the user enters text to a text field    css=.form-row:nth-child(1) .form-finances-capital-usage-residual-value    900
+    the user enters text to a text field    css=.form-finances-capital-usage-utilisation    100
+    the user enters text to a text field    css=.form-finances-capital-usage-depreciation    11
+    the user enters text to a text field    css=.form-row:nth-child(1) [name^="capital_usage-description"]    Test
     the user clicks the button/link    jQuery=.form-row:nth-child(1) label:contains(Existing) input
     sleep    200ms
-    focus    jQuery=button:contains(Add another asset)
+    the user moves focus to the element    jQuery=button:contains(Add another asset)
     the user clicks the button/link    jQuery=button:contains(Add another asset)
-    wait until element is visible    css=.form-row:nth-child(2) .form-finances-capital-usage-npv
-    Input Text    css=.form-row:nth-child(2) .form-finances-capital-usage-npv    1000
-    input text    css=.form-row:nth-child(2) .form-finances-capital-usage-residual-value    900
-    input text    css=.form-row:nth-child(2) .form-finances-capital-usage-utilisation    100
-    Input Text    css=.form-row:nth-child(2) .form-finances-capital-usage-depreciation    10
-    input text    css=.form-row:nth-child(2) [name^="capital_usage-description"]    Test
+    the user should see the element    css=.form-row:nth-child(2) .form-finances-capital-usage-npv
+    the user enters text to a text field    css=.form-row:nth-child(2) .form-finances-capital-usage-npv    1000
+    the user enters text to a text field    css=.form-row:nth-child(2) .form-finances-capital-usage-residual-value    900
+    the user enters text to a text field    css=.form-row:nth-child(2) .form-finances-capital-usage-utilisation    100
+    the user enters text to a text field    css=.form-row:nth-child(2) .form-finances-capital-usage-depreciation    10
+    the user enters text to a text field    css=.form-row:nth-child(2) [name^="capital_usage-description"]    Test
     the user clicks the button/link    jQuery=.form-row:nth-child(2) label:contains(Existing) input
-    mouse out    css=.form-row:nth-child(2) [name^="capital_usage-description"]
-    focus    css=.app-submit-btn
+    the user moves focus to the element    css=.app-submit-btn
 
 the Applicant fills the Travel fields
     the user clicks the button/link    jQuery=button:contains("Travel and subsistence")
     the user should see the element    css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
-    Input Text    css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    10
-    Input Text    css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    100
-    Input Text    css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    test
-    Mouse Out    css=input
-    #sleep    1s
-    focus    jQuery=button:contains(Add another travel cost)
+    the user enters text to a text field    css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    10
+    the user enters text to a text field    css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    100
+    the user enters text to a text field    css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    test
+    the user moves focus to the element    jQuery=button:contains(Add another travel cost)
     the user clicks the button/link    jQuery=button:contains(Add another travel cost)
-    wait until element is visible    css=#travel-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input
-    Input Text    css=#travel-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    10
-    Input Text    css=#travel-costs-table tbody tr:nth-of-type(2) td:nth-of-type(3) input    100
-    Input Text    css=#travel-costs-table tbody tr:nth-of-type(2) td:nth-of-type(1) input    test
-    mouse out    css=#travel-costs-table tbody tr:nth-of-type(2) td:nth-of-type(1) input
-    focus    css=.app-submit-btn
+    the user should see the element    css=#travel-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input
+    the user enters text to a text field    css=#travel-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    10
+    the user enters text to a text field    css=#travel-costs-table tbody tr:nth-of-type(2) td:nth-of-type(3) input    100
+    the user enters text to a text field    css=#travel-costs-table tbody tr:nth-of-type(2) td:nth-of-type(1) input    test
+    the user moves focus to the element    css=.app-submit-btn
 
 the applicant adds one row for the other costs
     the user clicks the button/link    jQuery=button:contains("Other Costs")
     #the user clicks the button/link    jQuery=button:contains(Add another cost)
     the user should see the element    css=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
-    Input Text    css=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    100
-    Input Text    css=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) textarea    test
+    the user enters text to a text field    css=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    100
+    the user enters text to a text field    css=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) textarea    test
     the user clicks the button/link    jQuery=button:contains(Add another cost)
-    wait until element is visible    css=#other-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input
-    Input Text    css=#other-costs-table tbody tr:nth-of-type(2) td:nth-of-type(1) textarea    test
-    Input Text    css=#other-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    100
-    Mouse Out    css=#other-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input
-    focus    css=.app-submit-btn
-
-the user reloads the page
-    Reload page
-    sleep    800ms
+    the user should see the element    css=#other-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input
+    the user enters text to a text field    css=#other-costs-table tbody tr:nth-of-type(2) td:nth-of-type(1) textarea    test
+    the user enters text to a text field    css=#other-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    100
+    the user moves focus to the element    css=.app-submit-btn
 
 the total of the other funding should be correct
+    the user should see the element    id=other-funding-total
     Textfield Value Should Be    id=other-funding-total    £ 20,000
 
 The applicant cannot see the 'other funding' details
@@ -265,49 +250,53 @@ The applicant selects 'Yes' and fills two rows
     Run Keyword And Ignore Error    Click element    jQuery=#other-funding-table button:contains("Remove")
     the user should see the element    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
     the user should see the element    id=other-funding-table
-    Input Text    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    ${OTHER_FUNDING_DATE}
-    Input Text    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    ${OTHER_FUNDING_AMOUNT}
-    Input Text    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    ${OTHER_FUNDING_SOURCE}
-    Focus    jQuery=button:contains(Add another source of funding)
+    the user enters text to a text field    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    ${OTHER_FUNDING_DATE}
+    the user enters text to a text field    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    ${OTHER_FUNDING_AMOUNT}
+    the user enters text to a text field    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    ${OTHER_FUNDING_SOURCE}
+    the user moves focus to the element    jQuery=button:contains(Add another source of funding)
     the user clicks the button/link    jQuery=button:contains(Add another source of funding)
-    wait until element is visible    css=#other-funding-table tbody tr:nth-of-type(2) td:nth-of-type(2) input
+    the user should see the element    css=#other-funding-table tbody tr:nth-of-type(2) td:nth-of-type(2) input
     the user clicks the button/link    css=#other-funding-table tbody tr:nth-of-type(2) td:nth-of-type(1) input
-    Input Text    css=#other-funding-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    ${OTHER_FUNDING_DATE}
-    Input Text    css=#other-funding-table tbody tr:nth-of-type(2) td:nth-of-type(3) input    ${OTHER_FUNDING_AMOUNT}
+    the user enters text to a text field    css=#other-funding-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    ${OTHER_FUNDING_DATE}
+    the user enters text to a text field    css=#other-funding-table tbody tr:nth-of-type(2) td:nth-of-type(3) input    ${OTHER_FUNDING_AMOUNT}
     the user should see the element    css=#other-funding-table tbody tr:nth-of-type(2) td:nth-of-type(1) input
-    Input Text    css=#other-funding-table tbody tr:nth-of-type(2) td:nth-of-type(1) input    ${OTHER_FUNDING_SOURCE}
-    focus    css=.app-submit-btn
+    the user enters text to a text field    css=#other-funding-table tbody tr:nth-of-type(2) td:nth-of-type(1) input    ${OTHER_FUNDING_SOURCE}
+    the user moves focus to the element    css=.app-submit-btn
 
 Totals should be correct
     [Arguments]    ${TOTAL_FIELD}    ${FIELD_VALUE}    ${TOTAL_COLLAPSIBLE}    ${COLLAPSIBLE_VALUE}
+    the user should see the element    ${total_field}
+    the user should see the element    ${total_collapsible}
     Textfield Value Should Be    ${TOTAL_FIELD}    ${FIELD_VALUE}
     Element Should Contain    ${TOTAL_COLLAPSIBLE}    ${COLLAPSIBLE_VALUE}
 
 User selects the admin costs
     [Arguments]    ${RADIO_BUTTON}    ${SELECTION}
-    click element    xpath=//input[@type='radio' and starts-with(@name, '${RADIO_BUTTON}') and (@value='${SELECTION}' or @id='${SELECTION}')]
-    focus    css=.app-submit-btn
+    the user clicks the button/link    xpath=//input[@type='radio' and starts-with(@name, '${RADIO_BUTTON}') and (@value='${SELECTION}' or @id='${SELECTION}')]
+    the user moves focus to the element    css=.app-submit-btn
 
 Admin costs total should be correct
     [Arguments]    ${ADMIN_TOTAL}    ${ADMIN_VALUE}
-    focus    css=.app-submit-btn
+    the user moves focus to the element    css=.app-submit-btn
     the user should see the element    ${ADMIN_TOTAL}
     Textfield Value Should Be    ${ADMIN_TOTAL}    ${ADMIN_VALUE}
     Element Should Contain    jQuery=button:contains("Administration support costs")    ${ADMIN_VALUE}
 
 the grant value should be correct in the finance summary page
     The user navigates to the next page
+    the user should see the element    css=.finance-summary tr:nth-of-type(1) td:nth-of-type(2)
     Element Should Contain    css=.finance-summary tr:nth-of-type(1) td:nth-of-type(2)    25
 
 auto-save should work for the "Grant" field
-    Clear Element Text    id=cost-financegrantclaim
-    focus    jQuery= button:contains('complete')
+    the user clears the text from the element    id=cost-financegrantclaim
+    the user moves focus to the element    jQuery= button:contains('complete')
     Sleep    500ms
-    Input Text    id=cost-financegrantclaim    25
-    focus    jQuery= button:contains('complete')
+    the user enters text to a text field    id=cost-financegrantclaim    25
+    the user moves focus to the element    jQuery= button:contains('complete')
     Sleep    300ms
-    Reload Page
-    focus    jQuery= button:contains('complete')
+    the user reloads the page
+    the user moves focus to the element    jQuery= button:contains('complete')
+    the user should see the element   id=cost-financegrantclaim
     ${input_value} =    Get Value    id=cost-financegrantclaim
     Should Be Equal As Strings    ${input_value}    25
 
@@ -317,4 +306,4 @@ The user navigates to the next page
 
 The row should be removed
     [Arguments]    ${ROW}
-    Wait Until Element Is Not Visible    ${ROW}
+    the user should not see the element    ${ROW}

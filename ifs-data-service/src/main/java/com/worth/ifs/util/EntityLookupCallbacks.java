@@ -10,7 +10,8 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.function.*;
 
-import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
+import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_OPTIONAL_ENTRY_EXPECTED;
+import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_SINGLE_ENTRY_EXPECTED;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static java.util.Optional.ofNullable;
@@ -151,13 +152,14 @@ public class EntityLookupCallbacks {
 
     public static <T> ServiceResult<T> getOnlyElementOrFail(Collection<T> list) {
         if (list == null || list.size() != 1) {
-            return serviceFailure(internalServerErrorError("Found multiple entries in list but expected only 1 - " + list));
+            return serviceFailure(new Error(GENERAL_SINGLE_ENTRY_EXPECTED, list != null ? list.size() : null));
         }
         return serviceSuccess(list.iterator().next());
     }
+
     public static <T> ServiceResult<T> getOptionalElementOrFail(Optional<T> item) {
         if (!item.isPresent()) {
-            return serviceFailure(internalServerErrorError("Optional element not present - " + item));
+            return serviceFailure(GENERAL_OPTIONAL_ENTRY_EXPECTED);
         }
         return serviceSuccess(item.get());
     }

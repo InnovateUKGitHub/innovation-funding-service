@@ -156,17 +156,18 @@ Validation message when more than 100 words entered
     Given I am on the assessor assessment overview page
     When I open one of the application questions    link=4. Attire
     And I enter feedback of words    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco test test
-    Then I should see validation message above the feedback form text field    The form word limit has been exceeded
+    Then I should see validation message above the feedback form text field    Maximum word count exceeded. Please reduce your word count to 100.
 
 No error message when feedback words reduced to 100 or less
     [Documentation]    INFUND-3859
     Given I am on the assessor assessment overview page
     And I open one of the application questions    link=4. Attire
     And I enter feedback of words    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco test test
-    And I should see validation message above the feedback form text field    The form word limit has been exceeded
+    And I should see validation message above the feedback form text field    Maximum word count exceeded. Please reduce your word count to 100.
     And Clear Element Text    css=#form-input-225 .editor
     And I enter feedback of words    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco
-    Then The user should not see the text in the page    The form word limit has been exceeded
+    # Omitting the word count figure from the end of the next line so it fails if the word count error message is present regardless of the actual word limit
+    Then The user should not see the text in the page    Maximum word count exceeded. Please reduce your word count to
 
 Question 1: Autosave
     [Documentation]    INFUND-3780
@@ -263,5 +264,40 @@ the project cost breakdown total should be correct
     Element Should Contain    css=.form-group.project-cost-breakdown tr:nth-child(2) td:nth-child(7)    £0
     Element Should Contain    css=.form-group.project-cost-breakdown tr:nth-child(2) td:nth-child(8)    £0
     Element Should Contain    css=.form-group.project-cost-breakdown tr:nth-child(2) td:nth-child(9)    £0
+
+
+the collapsible button should contain
+    [Arguments]    ${BUTTON}    ${TEXT}
+    Element Should Contain    ${BUTTON}    ${TEXT}
+
+the user adds score and feedback for every question
+    Given the user navigates to the page    ${Assessment_overview_9}
+    And the user clicks the button/link    link=Scope
+    When the user selects the option from the drop-down menu    Technical feasibility studies    id=research-category
+    And the user clicks the button/link    jQuery=label:contains(Yes)
+    And The user enters text to a text field    css=#form-input-193 .editor    Testing scope feedback text
+    wait until page contains    Saving
+    the user clicks the button/link    css=.next
+    the user selects the option from the drop-down menu    20    id=assessor-question-score
+    the user enters text to a text field    css=#form-input-195 .editor    Testing how many feedback text
+    wait until page contains    Saving
+    the user clicks the button/link    css=.next
+    the user selects the option from the drop-down menu    10    id=assessor-question-score
+    the user enters text to a text field    css=#form-input-219 .editor    Testing Mediums feedback text
+    wait until page contains    Saving
+    the user clicks the button/link    css=.next
+    the user selects the option from the drop-down menu    10    id=assessor-question-score
+    the user enters text to a text field    css=#form-input-222 .editor    Testing Preferences feedback text
+    wait until page contains    Saving
+    the user clicks the button/link    css=.next
+    the user selects the option from the drop-down menu    10    id=assessor-question-score
+    the user enters text to a text field    css=#form-input-225 .editor    Testing Attire feedback text
+    wait until page contains    Saving
+    Sleep    500ms
+
+The assessor navigates to the summary page
+    Given the user navigates to the page    ${Assessment_overview_9}
+    When The user clicks the button/link    jQuery=.button:contains(Review assessment)
+    And The user should see the text in the page    Assessment summary
 
 

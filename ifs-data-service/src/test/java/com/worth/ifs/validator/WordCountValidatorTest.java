@@ -1,89 +1,80 @@
 package com.worth.ifs.validator;
 
-import static com.worth.ifs.form.builder.FormInputBuilder.newFormInput;
-import static com.worth.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
-import static com.worth.ifs.validator.ValidatorTestUtil.getBindingResult;
-import static org.junit.Assert.assertTrue;
-
+import com.worth.ifs.form.domain.FormInput;
+import com.worth.ifs.form.domain.FormInputResponse;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
 
-import com.worth.ifs.form.domain.FormInput;
-import com.worth.ifs.form.domain.FormInputResponse;
+import static com.worth.ifs.form.builder.FormInputBuilder.newFormInput;
+import static com.worth.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
+import static com.worth.ifs.validator.ValidatorTestUtil.getBindingResult;
+import static java.util.Collections.nCopies;
+import static org.junit.Assert.*;
 
 public class WordCountValidatorTest {
-	
-	private Validator validator;
-	
-	private FormInputResponse formInputResponse;
-	private BindingResult bindingResult;
-	
-	@Before
-	public void setUp() {
+
+    private Validator validator;
+
+    private FormInputResponse formInputResponse;
+    private BindingResult bindingResult;
+
+    @Before
+    public void setUp() {
         validator = new WordCountValidator();
-        
+
         FormInput formInput = newFormInput().withWordCount(500).build();
         formInputResponse = newFormInputResponse().withFormInputs(formInput).build();
         bindingResult = getBindingResult(formInputResponse);
     }
 
     @Test
-    public void testInvalid500() {
-
-        String testValue1 = "";
-        for(int i=0; i<500; i++) {
-            testValue1+=" word";
-        }
-
-        formInputResponse.setValue(testValue1);
+    public void testValid_lessThanLimit() {
+        String testValue = String.join(" ", nCopies(499, "word"));
+        formInputResponse.setValue(testValue);
         validator.validate(formInputResponse, bindingResult);
-        assertTrue(bindingResult.hasErrors());
-    }
-    
-    @Test
-    public void testInvalid5000() {
-        String testValue2 = "";
-        for(int i=0; i<=5000; i++) {
-            testValue2+=" word";
-        }
-
-        formInputResponse.setValue(testValue2);
-        validator.validate(formInputResponse, bindingResult);
-        assertTrue(bindingResult.hasErrors());
+        assertFalse(bindingResult.hasErrors());
     }
 
     @Test
-    public void testValidEmpty() {
+    public void testValid_equalsLimit() {
+        String testValue = String.join(" ", nCopies(500, "word"));
+        formInputResponse.setValue(testValue);
+        validator.validate(formInputResponse, bindingResult);
+        assertFalse(bindingResult.hasErrors());
+    }
+
+    @Test
+    public void testInvalid_exceedsLimit() {
+        String testValue = String.join(" ", nCopies(501, "word"));
+        formInputResponse.setValue(testValue);
+        validator.validate(formInputResponse, bindingResult);
+        assertTrue(bindingResult.hasErrors());
+        assertEquals(1, bindingResult.getErrorCount());
+        assertTrue(bindingResult.hasFieldErrors("value"));
+        assertEquals("validation.field.max.word.count", bindingResult.getFieldError("value").getCode());
+        assertEquals(500, bindingResult.getFieldError("value").getArguments()[0]);
+    }
+
+    @Test
+    public void testValid_null() {
+        formInputResponse.setValue(null);
+        validator.validate(formInputResponse, bindingResult);
+        assertFalse(bindingResult.hasErrors());
+    }
+
+    @Test
+    public void testValid_empty() {
         formInputResponse.setValue("");
         validator.validate(formInputResponse, bindingResult);
-        assertTrue(!bindingResult.hasErrors());
+        assertFalse(bindingResult.hasErrors());
     }
-    
+
     @Test
-    public void testValidWhitespace() {
+    public void testValid_whitespace() {
         formInputResponse.setValue(" ");
         validator.validate(formInputResponse, bindingResult);
-        assertTrue(!bindingResult.hasErrors());
-    }
-    
-    @Test
-    public void testValidWords() {
-        formInputResponse.setValue(" word word word");
-        validator.validate(formInputResponse, bindingResult);
-        assertTrue(!bindingResult.hasErrors());
-    }
-    
-    @Test
-    public void testValidManyWords() {
-        String testValue1 = "";
-        for(int i=0; i<499; i++) {
-            testValue1+=" word";
-        }
-
-        formInputResponse.setValue(testValue1);
-        validator.validate(formInputResponse, bindingResult);
-        assertTrue(!bindingResult.hasErrors());
+        assertFalse(bindingResult.hasErrors());
     }
 }

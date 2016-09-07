@@ -123,6 +123,7 @@ the user unselects the checkbox
 
 the user selects the radio button
     [Arguments]    ${RADIO_BUTTON}    ${RADIO_BUTTON_OPTION}
+    the user should see the element    ${RADIO_BUTTON}
     Select Radio Button    ${RADIO_BUTTON}    ${RADIO_BUTTON_OPTION}
     # Error checking
     Page Should Not Contain    Error
@@ -135,6 +136,7 @@ the user selects the radio button
 
 the user sees that the radio button is selected
     [Arguments]    ${RADIO_BUTTON}    ${SELECTION}
+    wait until element is visible    ${RADIO_BUTTON}
     Radio Button Should Be Set To    ${RADIO_BUTTON}    ${SELECTION}
     # Error checking
     Page Should Not Contain    Error
@@ -158,6 +160,37 @@ the user selects the option from the drop-down menu
     # Header checking (INFUND-1892)
     Element Should Be Visible    id=global-header
     Page Should Contain    BETA
+
+the user moves focus to the element
+    [Arguments]    ${element}
+    # Error checking
+    Page Should Not Contain    Error
+    Page Should Not Contain    something went wrong
+    Page Should Not Contain    Page or resource not found
+    Page Should Not Contain    You do not have the necessary permissions for your request
+    # Header checking (INFUND-1892)
+    Element Should Be Visible    id=global-header
+    Page Should Contain    BETA
+
+    wait until element is visible    ${element}
+    focus    ${element}
+
+the user moves the mouse away from the element
+    [Arguments]    ${element}
+    # Error checking
+    Page Should Not Contain    Error
+    Page Should Not Contain    something went wrong
+    Page Should Not Contain    Page or resource not found
+    Page Should Not Contain    You do not have the necessary permissions for your request
+    # Header checking (INFUND-1892)
+    Element Should Be Visible    id=global-header
+    Page Should Contain    BETA
+
+    wait until element is visible    ${element}
+    mouse out    ${element}
+
+
+
 
 the user should see the dropdown option selected
     [Arguments]    ${option}    ${drop-down}
@@ -222,6 +255,19 @@ The user enters text to a text field
     input text    ${TEXT_FIELD}    ${TEXT_INPUT}
     Mouse Out    ${TEXT_FIELD}
 
+the user clears the text from the element
+    [Arguments]    ${element}
+    wait until element is visible    ${element}
+    clear element text    ${element}
+
+    Page Should Not Contain    Error
+    Page Should Not Contain    something went wrong
+    Page Should Not Contain    Page or resource not found
+    Page Should Not Contain    You do not have the necessary permissions for your request
+    # Header checking    (INFUND-1892)
+    Element Should Be Visible    id=global-header
+    Page Should Contain    BETA
+
 The user clicks the button/link
     [Arguments]    ${BUTTON}
     wait until element is visible    ${BUTTON}
@@ -240,6 +286,7 @@ The user should see the text in the page
 The user should see permissions error message
     wait until page contains    You do not have the necessary permissions for your request
     Page Should Contain    You do not have the necessary permissions for your request
+
 
 The user should not see the text in the page
     [Arguments]    ${NOT_VISIBLE_TEXT}
@@ -267,7 +314,6 @@ the guest user enters the log in credentials
 
 The user should see the element
     [Arguments]    ${ELEMENT}
-    focus    ${ELEMENT}
     Wait Until Element Is Visible    ${ELEMENT}
 
 The user should not see the element
