@@ -1,7 +1,6 @@
 package com.worth.ifs.project;
 
 import com.worth.ifs.commons.rest.LocalDateResource;
-import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.project.finance.ProjectFinanceService;
@@ -20,11 +19,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -32,6 +34,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import static com.worth.ifs.commons.error.CommonFailureKeys.SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -56,51 +59,65 @@ public class ProjectSpendProfileController {
                                    @PathVariable("projectId") final Long projectId,
                                    @PathVariable("organisationId") final Long organisationId,
                                    @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-
         model.addAttribute("model", buildSpendProfileViewModel(projectId, organisationId));
-
         return "project/spend-profile";
     }
 
     @RequestMapping(value = "/edit", method = GET)
     public String editSpendProfile(Model model,
+                                   HttpServletRequest request,
+                                   @ModelAttribute(FORM_ATTR_NAME) SpendProfileForm form,
+                                   @SuppressWarnings("unused") BindingResult bindingResult,
+                                   ValidationHandler validationHandler,
                                    @PathVariable("projectId") final Long projectId,
                                    @PathVariable("organisationId") final Long organisationId,
                                    @ModelAttribute("loggedInUser") UserResource loggedInUser) {
         ProjectResource projectResource = projectService.getById(projectId);
         SpendProfileTableResource spendProfileTableResource = projectFinanceService.getSpendProfileTable(projectId, organisationId);
-
-        SpendProfileForm form = new SpendProfileForm();
         form.setTable(spendProfileTableResource);
-        model.addAttribute(FORM_ATTR_NAME, form);
 
         if(spendProfileTableResource.getMarkedAsComplete()) {
             markSpendProfileInComplete(model, projectId, organisationId, "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile");
         }
-
         model.addAttribute("model", buildSpendProfileViewModel(projectResource, organisationId, spendProfileTableResource));
 
         return "project/spend-profile";
     }
 
     @RequestMapping(value = "/edit", method = POST)
-    public String saveSpendProfile(Model model,
-                                   @PathVariable("projectId") final Long projectId,
-                                   @PathVariable("organisationId") final Long organisationId,
-                                   @ModelAttribute(FORM_ATTR_NAME) SpendProfileForm form,
+    public String saveSpendProfile(@ModelAttribute(FORM_ATTR_NAME) SpendProfileForm form,
                                    @SuppressWarnings("unused") BindingResult bindingResult,
                                    ValidationHandler validationHandler,
+                                   @PathVariable("projectId") final Long projectId,
+                                   @PathVariable("organisationId") final Long organisationId,
                                    @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        return editSpendProfile(model, validationHandler, bindingResult, form, projectId, organisationId, "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile", "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile/edit");
+        String failureView = "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile/edit";
+        String successView = "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile";
+
+        ValidationHandler customValidationHandler = ValidationHandler.newBindingResultHandler(bindingResult);
+        new SpendProfileCostValidator().validate(form.getTable(), bindingResult);
+        if (customValidationHandler.hasErrors()) {
+            return failureView;
+        }
+
+        SpendProfileTableResource spendProfileTableResource = projectFinanceService.getSpendProfileTable(projectId, organisationId);
+        spendProfileTableResource.setMonthlyCostsPerCategoryMap(form.getTable().getMonthlyCostsPerCategoryMap()); // update existing resource with user entered fields
+
+        ServiceResult<Void> result = projectFinanceService.saveSpendProfile(projectId, organisationId, spendProfileTableResource);
+        if(result.isFailure()){
+            validationHandler.addAnyErrors(result);
+            return failureView;
+        }
+
+        return successView;
     }
 
     @RequestMapping(value = "/complete", method = POST)
     public String markAsCompleteSpendProfile(Model model,
-                                   @PathVariable("projectId") final Long projectId,
-                                   @PathVariable("organisationId") final Long organisationId,
-                                   @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-
+                                             @PathVariable("projectId") final Long projectId,
+                                             @PathVariable("organisationId") final Long organisationId,
+                                             @ModelAttribute("loggedInUser") UserResource loggedInUser) {
         return markSpendProfileComplete(model, projectId, organisationId, "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile");
     }
 
@@ -124,35 +141,14 @@ public class ProjectSpendProfileController {
                                     Boolean complete,
                                     String successView) {
         ServiceResult<Void> result = projectFinanceService.markSpendProfile(projectId, organisationId, complete);
-        if (result.isFailure()) {
-            // If this model attribute is set, it means there are some categories where the totals don't match
-            model.addAttribute("errorCategories", result.getFailure().getErrors());
-        }
-        return successView;
-    }
-
-    private String editSpendProfile(Model model, ValidationHandler validationHandler, BindingResult bindingResult, SpendProfileForm userSubmittedForm, Long projectId, Long organisationId, String successView, String falureView) {
-        ValidationHandler customValidationHandler = ValidationHandler.newBindingResultHandler(bindingResult);
-        new SpendProfileCostValidator().validate(userSubmittedForm.getTable(), bindingResult);
-        if (customValidationHandler.hasErrors()) {
-            return falureView;
-        }
-
-        ProjectResource projectResource = projectService.getById(projectId);
-        SpendProfileTableResource spendProfileTableResource = projectFinanceService.getSpendProfileTable(projectId, organisationId);
-        spendProfileTableResource.setMonthlyCostsPerCategoryMap(userSubmittedForm.getTable().getMonthlyCostsPerCategoryMap()); // update existing resource with user entered fields
-
-        ServiceResult<ValidationMessages> result = projectFinanceService.saveSpendProfile(projectId, organisationId, spendProfileTableResource);
-        if (result.isSuccess()) { // even if total is > eligible, we save and return to read only view
-            // If this model attribute is set, it means there are some categories where the totals don't match
-            model.addAttribute("errorCategories", result.getSuccessObject().getErrors());
+        if(result.isFailure()){
+            ProjectSpendProfileViewModel spendProfileViewModel = buildSpendProfileViewModel(projectId, organisationId);
+            spendProfileViewModel.setObjectErrors(Collections.singletonList(new ObjectError(SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE.getErrorKey(), "Cannot mark as complete, because totals more than eligible")));
+            model.addAttribute("model", buildSpendProfileViewModel(projectId, organisationId));
+            return "project/spend-profile";
         } else {
-            validationHandler.addAnyErrors(result);
+            return successView;
         }
-
-        buildSpendProfileViewModel(projectResource, organisationId, spendProfileTableResource);
-
-        return successView;
     }
 
     private ProjectSpendProfileViewModel buildSpendProfileViewModel(final ProjectResource projectResource, final Long organisationId, final SpendProfileTableResource spendProfileTableResource) {

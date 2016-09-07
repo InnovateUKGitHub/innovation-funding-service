@@ -28,12 +28,11 @@ import java.util.stream.IntStream;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
-import static com.worth.ifs.commons.rest.ValidationMessages.noErrors;
+import static com.worth.ifs.commons.error.Error.fieldError;
 import static com.worth.ifs.commons.service.ServiceResult.*;
 import static com.worth.ifs.project.finance.domain.TimeUnit.MONTH;
 import static com.worth.ifs.util.CollectionFunctions.*;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
-import static freemarker.template.utility.Collections12.singletonList;
 import static java.math.BigDecimal.ROUND_HALF_UP;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
@@ -107,6 +106,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
             table.setEligibleCostPerCategoryMap(eligibleCostsPerCategory);
             table.setMonthlyCostsPerCategoryMap(spendFiguresPerCategoryOrderedByMonth);
             table.setMarkedAsComplete(spendProfile.isMarkedAsComplete());
+            checkTotalForMonthsAndAddToTable(table);
             return serviceSuccess(table);
         });
     }
@@ -130,18 +130,19 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     }
 
     @Override
-    public ServiceResult<ValidationMessages> saveSpendProfile(ProjectOrganisationCompositeId projectOrganisationCompositeId, SpendProfileTableResource table) {
-
+    public ServiceResult<Void> saveSpendProfile(ProjectOrganisationCompositeId projectOrganisationCompositeId, SpendProfileTableResource table) {
         return validateSpendProfileCosts(table)
-                .andOnSuccess(() -> saveSpendProfileData(projectOrganisationCompositeId, table, false)) // We have to save the data even if the totals don't match, so we do that first
-                .andOnSuccess(() -> validateSpendProfileTotals(table));
+                .andOnSuccess(() -> saveSpendProfileData(projectOrganisationCompositeId, table, false)); // We have to save the data even if the totals don't match, so we do that first
     }
 
     @Override
     public ServiceResult<Void> markSpendProfile(ProjectOrganisationCompositeId projectOrganisationCompositeId, Boolean complete) {
         SpendProfileTableResource table = getSpendProfileTable(projectOrganisationCompositeId).getSuccessObject();
-        return validateSpendProfileTotals(table)
-                .andOnSuccess(() -> saveSpendProfileData(projectOrganisationCompositeId, table, complete));
+        if(complete && table.getValidationMessages().hasErrors()){ // validate before marking as complete
+            return serviceFailure(SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE);
+        } else {
+            return saveSpendProfileData(projectOrganisationCompositeId, table, complete);
+        }
     }
 
     private ServiceResult<Void> validateSpendProfileCosts(SpendProfileTableResource table) {
@@ -248,18 +249,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         }
     }
 
-    private ServiceResult<ValidationMessages> validateSpendProfileTotals(SpendProfileTableResource table) {
-
-        List<Error> categoriesWithIncorrectTotal = checkTotalForMonths(table);
-
-        if (categoriesWithIncorrectTotal.isEmpty()) {
-            return serviceSuccess(noErrors());
-        } else {
-            return serviceSuccess(new ValidationMessages(categoriesWithIncorrectTotal));
-        }
-    }
-
-    private List<Error> checkTotalForMonths(SpendProfileTableResource table) {
+    private void checkTotalForMonthsAndAddToTable(SpendProfileTableResource table) {
 
         Map<String, List<BigDecimal>> monthlyCostsPerCategoryMap = table.getMonthlyCostsPerCategoryMap();
         Map<String, BigDecimal> eligibleCostPerCategoryMap = table.getEligibleCostPerCategoryMap();
@@ -273,12 +263,14 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
             BigDecimal actualTotalCost = monthlyCosts.stream().reduce(BigDecimal.ZERO, (d1, d2) -> d1.add(d2));
             BigDecimal expectedTotalCost = eligibleCostPerCategoryMap.get(category);
 
-            if (!actualTotalCost.equals(expectedTotalCost)) {
-                categoriesWithIncorrectTotal.add(new Error(SPEND_PROFILE_TOTAL_FOR_ALL_MONTHS_DOES_NOT_MATCH_ELIGIBLE_TOTAL_FOR_SPECIFIED_CATEGORY, singletonList(category), HttpStatus.BAD_REQUEST));
+            if (actualTotalCost.compareTo(expectedTotalCost) == 1) {
+                categoriesWithIncorrectTotal.add(fieldError(category, actualTotalCost, SPEND_PROFILE_TOTAL_FOR_ALL_MONTHS_DOES_NOT_MATCH_ELIGIBLE_TOTAL_FOR_SPECIFIED_CATEGORY.getErrorKey()));
             }
         }
 
-        return categoriesWithIncorrectTotal;
+        ValidationMessages validationMessages = new ValidationMessages(categoriesWithIncorrectTotal);
+        validationMessages.setObjectName("SPEND_PROFILE");
+        table.setValidationMessages(validationMessages);
     }
 
     private List<BigDecimal> orderCostsByMonths(List<Cost> costs, List<LocalDate> months, LocalDate startDate) {
@@ -300,12 +292,9 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
     private ServiceResult<Void> generateSpendProfileForPartnerOrganisations(Project project, List<Long> organisationIds) {
 
-        List<ServiceResult<Void>> generationResults = simpleMap(organisationIds, organisationId -> {
-
-            return spendProfileCostCategorySummaryStrategy.getCostCategorySummaries(project.getId(), organisationId).
-                    andOnSuccess(summaryPerCategory ->
-                            generateSpendProfileForOrganisation(project.getId(), organisationId, summaryPerCategory));
-        });
+        List<ServiceResult<Void>> generationResults = simpleMap(organisationIds, organisationId -> spendProfileCostCategorySummaryStrategy.getCostCategorySummaries(project.getId(), organisationId).
+                andOnSuccess(summaryPerCategory ->
+                        generateSpendProfileForOrganisation(project.getId(), organisationId, summaryPerCategory)));
 
         return processAnyFailuresOrSucceed(generationResults);
     }
