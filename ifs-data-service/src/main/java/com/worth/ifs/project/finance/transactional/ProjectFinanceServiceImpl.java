@@ -28,11 +28,11 @@ import java.util.stream.IntStream;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
+import static com.worth.ifs.commons.error.Error.fieldError;
 import static com.worth.ifs.commons.service.ServiceResult.*;
 import static com.worth.ifs.project.finance.domain.TimeUnit.MONTH;
 import static com.worth.ifs.util.CollectionFunctions.*;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
-import static freemarker.template.utility.Collections12.singletonList;
 import static java.math.BigDecimal.ROUND_HALF_UP;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
@@ -264,11 +264,13 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
             BigDecimal expectedTotalCost = eligibleCostPerCategoryMap.get(category);
 
             if (!actualTotalCost.equals(expectedTotalCost)) {
-                categoriesWithIncorrectTotal.add(new Error(SPEND_PROFILE_TOTAL_FOR_ALL_MONTHS_DOES_NOT_MATCH_ELIGIBLE_TOTAL_FOR_SPECIFIED_CATEGORY, singletonList(category), HttpStatus.BAD_REQUEST));
+                categoriesWithIncorrectTotal.add(fieldError(category, actualTotalCost, SPEND_PROFILE_TOTAL_FOR_ALL_MONTHS_DOES_NOT_MATCH_ELIGIBLE_TOTAL_FOR_SPECIFIED_CATEGORY.getErrorKey()));
             }
         }
 
-        table.setValidationMessages(new ValidationMessages(categoriesWithIncorrectTotal));
+        ValidationMessages validationMessages = new ValidationMessages(categoriesWithIncorrectTotal);
+        validationMessages.setObjectName("SPEND_PROFILE");
+        table.setValidationMessages(validationMessages);
     }
 
     private List<BigDecimal> orderCostsByMonths(List<Cost> costs, List<LocalDate> months, LocalDate startDate) {
@@ -290,12 +292,9 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
     private ServiceResult<Void> generateSpendProfileForPartnerOrganisations(Project project, List<Long> organisationIds) {
 
-        List<ServiceResult<Void>> generationResults = simpleMap(organisationIds, organisationId -> {
-
-            return spendProfileCostCategorySummaryStrategy.getCostCategorySummaries(project.getId(), organisationId).
-                    andOnSuccess(summaryPerCategory ->
-                            generateSpendProfileForOrganisation(project.getId(), organisationId, summaryPerCategory));
-        });
+        List<ServiceResult<Void>> generationResults = simpleMap(organisationIds, organisationId -> spendProfileCostCategorySummaryStrategy.getCostCategorySummaries(project.getId(), organisationId).
+                andOnSuccess(summaryPerCategory ->
+                        generateSpendProfileForOrganisation(project.getId(), organisationId, summaryPerCategory)));
 
         return processAnyFailuresOrSucceed(generationResults);
     }
