@@ -239,7 +239,7 @@ Funding Information can be saved
 Funding Information can be edited
     [Documentation]    INFUND-3002
     When the user clicks the button/link    jQuery=.button:contains("Edit")
-    And the user enters text to a text field    id=funder    testFunder
+    And the user enters text to a text field    id=funders0.funder    testFunder
     When the user clicks the button/link    jQuery=.button:contains("Done")
     Then the user should see the text in the page    testFunder
 
