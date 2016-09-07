@@ -21,7 +21,8 @@ import org.mapstruct.Mappings;
         CompetitionInviteMapper.class,
         RejectionReasonMapper.class,
         CompetitionParticipantRoleMapper.class,
-        ParticipantStatusMapper.class
+        ParticipantStatusMapper.class,
+        CompetitionInviteMapper.class
     }
 )
 public abstract class CompetitionParticipantMapper extends BaseMapper<CompetitionParticipant, CompetitionParticipantResource, Long> {
@@ -29,7 +30,6 @@ public abstract class CompetitionParticipantMapper extends BaseMapper<Competitio
     @Mappings({
             @Mapping(source = "process.id", target = "competitionId"),
             @Mapping(source = "user.id", target = "userId"),
-            @Mapping(source = "invite.id", target = "inviteId"),
     })
     @Override
     public abstract CompetitionParticipantResource mapToResource(CompetitionParticipant domain);
