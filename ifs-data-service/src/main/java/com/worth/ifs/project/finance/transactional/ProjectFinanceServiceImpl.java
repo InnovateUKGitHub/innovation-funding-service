@@ -263,7 +263,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
             BigDecimal actualTotalCost = monthlyCosts.stream().reduce(BigDecimal.ZERO, (d1, d2) -> d1.add(d2));
             BigDecimal expectedTotalCost = eligibleCostPerCategoryMap.get(category);
 
-            if (!actualTotalCost.equals(expectedTotalCost)) {
+            if (actualTotalCost.compareTo(expectedTotalCost) == 1) {
                 categoriesWithIncorrectTotal.add(fieldError(category, actualTotalCost, SPEND_PROFILE_TOTAL_FOR_ALL_MONTHS_DOES_NOT_MATCH_ELIGIBLE_TOTAL_FOR_SPECIFIED_CATEGORY.getErrorKey()));
             }
         }
