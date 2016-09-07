@@ -186,7 +186,7 @@ Non-lead partner cannot view either document once removed
 
 PM can upload both documents
     [Documentation]    INFUND-3011
-    [Tags]
+    [Tags]    HappyPath
     [Setup]    guest user log-in    worth.email.test+projectlead@gmail.com    Passw0rd
     Given the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Other documents
@@ -205,7 +205,7 @@ Status in the dashboard remains pending after uploads
 Mandatory document submission
     [Documentation]    INFUND-3011
     [Setup]    guest user log-in    worth.email.test+projectlead@gmail.com    Passw0rd
-    [Tags]
+    [Tags]    HappyPath
     # This ticket assumes that Project_details suite has set as PM the 'test twenty'
     Given the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Other documents
@@ -219,15 +219,11 @@ Mandatory document submission
     Then the user should be redirected to the correct page    ${project_in_setup_page}
     And the user should see the element    jQuery=ul li.complete:nth-child(7)
 
-PM cannot remove the documents after submitting
-    [Documentation]    INFUND-3012
-    When the user clicks the button/link    link=Other documents
-    Then the user should not see the text in the page    Remove
-    And the user should not see the element    name=removeCollaborationAgreementClicked
-    And the user should not see the element    name=removeExploitationPlanClicked
 
 PM can still view both documents after submitting
     [Documentation]    INFUND-3012
+    [Tags]    HappyPath
+    Given the user clicks the button/link    link=Other documents
     When the user should see the text in the page    ${valid_pdf}
     And the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
@@ -235,6 +231,13 @@ PM can still view both documents after submitting
     Then the user clicks the button/link    link=${valid_pdf}
     And the user should not see an error in the page
     And the user goes back to the previous page
+
+
+PM cannot remove the documents after submitting
+    [Documentation]    INFUND-3012
+    Then the user should not see the text in the page    Remove
+    And the user should not see the element    name=removeCollaborationAgreementClicked
+    And the user should not see the element    name=removeExploitationPlanClicked
     [Teardown]    logout as user
 
 Lead partner cannot remove the documents after submission by PM
