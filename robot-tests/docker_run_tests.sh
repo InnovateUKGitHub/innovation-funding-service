@@ -106,26 +106,30 @@ function stopSeleniumGrid() {
 function startPybot() {
     echo "********** starting pybot for ${1} **************"
     targetDir=`basename ${1}`
-    if [ "$happyPath" ]
+    if [[ "$happyPath" ]]
       then
         local includeHappyPath='--include HappyPath'
       else
         local includeHappyPath=''
     fi
-    if [ $emails -eq 1 ]
+    if [[ $emails -eq 1 ]]
       then
         local excludeEmails=''
       else
         local excludeEmails='--exclude Email'
     fi
-    pybot --outputdir target/${targetDir} --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:${postcodeLookupImplemented} -v UPLOAD_FOLDER:${uploadFileDir} -v DOWNLOAD_FOLDER:download_files -v BROWSER=chrome -v REMOTE_URL:'http://ifs-local-dev:4444/wd/hub' ${includeHappyPath} --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal ${excludeEmails} --name ${targetDir} ${1}/* &
+    if [[ $rerunFailed -eq 1 ]]; then
+    	pybot --outputdir target/${targetDir} --rerunfailed target/${targetDir}/output.xml --output rerun.xml --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:${postcodeLookupImplemented} -v UPLOAD_FOLDER:${uploadFileDir} -v DOWNLOAD_FOLDER:download_files -v BROWSER=chrome -v REMOTE_URL:'http://ifs-local-dev:4444/wd/hub' ${includeHappyPath} --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal ${excludeEmails} --name ${targetDir} ${1}/* &
+    else
+    	pybot --outputdir target/${targetDir} --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:${postcodeLookupImplemented} -v UPLOAD_FOLDER:${uploadFileDir} -v DOWNLOAD_FOLDER:download_files -v BROWSER=chrome -v REMOTE_URL:'http://ifs-local-dev:4444/wd/hub' ${includeHappyPath} --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal ${excludeEmails} --name ${targetDir} ${1}/* &
+    fi
 }
 
 function runTests() {
     echo "**********RUN THE WEB TESTS**********"
     cd ${scriptDir}
 
-    if [ "$parallel" ]
+    if [[ "$parallel" ]]
     then
       for D in `find ${testDirectory}/* -maxdepth 0 -type d`
       do
@@ -140,7 +144,7 @@ function runTests() {
         wait $job
     done
 
-    if [ "$parallel" ]
+    if [[ "$parallel" ]]
     then
       results=`find target/* -regex ".*/output\.xml"`
       rebot -d target ${results}
@@ -185,9 +189,10 @@ unset parallel
 unset emails
 
 emails=0
+rerunFailed=0
 
 testDirectory='IFS_acceptance_tests/tests'
-while getopts ":p :h :q :t :e" opt ; do
+while getopts ":p :h :q :t :e :r" opt ; do
     case $opt in
         p)
          parallel=1
@@ -204,6 +209,9 @@ while getopts ":p :h :q :t :e" opt ; do
         e)
          emails=1
         ;;
+        r)
+		  rerunFailed=1
+		;;
         \?)
          coloredEcho "Invalid option: -$OPTARG" red >&2
          exit 1
@@ -222,13 +230,13 @@ done
 startSeleniumGrid
 
 
-if [ "$quickTest" ]
+if [[ "$quickTest" ]]
 then
     echo "using quickTest:   TRUE" >&2
     #resetDB
     #addTestFiles
     runTests
-elif [ "$testScrub" ]
+elif [[ "$testScrub" ]]
 then
     echo "using testScrub mode: this will do all the dirty work but omit the tests" >&2
     startServers
