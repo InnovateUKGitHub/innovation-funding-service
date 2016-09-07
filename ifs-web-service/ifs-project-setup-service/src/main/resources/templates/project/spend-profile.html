@@ -196,11 +196,15 @@
                             th:attr="data-calculation-fields=${'input[class*='+#strings.toLowerCase(#temporals.format(model.table.months[status.index].localDate,'MMM-yyyy'))+']'}"
                             data-calculation-operations="+" />
                       </th:block>
-                      <td class="fix-right"
-                               th:text="${'&pound; '+#numbers.formatInteger(model.totalOfAllActualTotals,1,'COMMA')}"
+                      <td class="fix-right">
+                        <input th:value="${'&pound; '+#numbers.formatInteger(model.totalOfAllActualTotals,1,'COMMA')}"
+                               readonly="readonly"
                                data-calculation-operations="+"
-                               data-calculation-fields="td[class*=row-total-]" />
-                      <td class="fix-right" th:text="${'&pound; '+#numbers.formatInteger(model.totalOfAllEligibleTotals,1,'COMMA')}" />
+                               data-calculation-fields="input[class*=row-total-]" />
+                      </td>
+                      <td class="fix-right">
+                         <input readonly="readonly" th:value="${'&pound; '+#numbers.formatInteger(model.totalOfAllEligibleTotals,1,'COMMA')}" />
+                      </td>
                   </tr>
                 </tfoot>
               </table>
