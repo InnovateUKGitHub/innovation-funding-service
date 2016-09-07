@@ -489,7 +489,7 @@ IFS.core.formValidation = (function(){
         },
         setInvalid : function(field,message){
             var formGroup = field.closest('.form-group,tr.form-group-row');
-            var name = field.prop('name');
+            var name = IFS.core.formValidation.getIdentifier(field);
 
             if(formGroup.length){
                 if(s.html5validationMode){ field[0].setCustomValidity(message);}
@@ -513,7 +513,7 @@ IFS.core.formValidation = (function(){
         },
         setValid : function(field,message){
             var formGroup = field.closest('.form-group.error,tr.form-group-row.error');
-            var name = field.prop('name');
+            var name = IFS.core.formValidation.getIdentifier(field);
 
             if(formGroup.length){
               formGroup.find('[data-errorfield="'+name+'"]:contains("'+message+'")').remove();
@@ -535,6 +535,16 @@ IFS.core.formValidation = (function(){
               jQuery('.error-summary').attr('aria-hidden','true');
             }
             jQuery(window).trigger('updateWysiwygPosition');
+        },
+        getIdentifier : function(el){
+            if(el.prop('id').length){
+              return el.prop('id');
+            }
+            else if(el.prop('name').length) {
+              return  el.prop('name');
+            }
+
+            return false;
         },
         checkHTML5validationMode : function(){
             var testField =jQuery('input');

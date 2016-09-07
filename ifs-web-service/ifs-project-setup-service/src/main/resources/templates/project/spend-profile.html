@@ -132,13 +132,14 @@
 
     </th:block>
 
+
+
     <!--/*
     =================================
     editable spend-profile table
     =================================
     */-->
     <th:block th:if="${form}">
-
 
       <form method="post" autocomplete="off" th:action="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/edit(projectId=${model.projectId},organisationId=${model.organisationId})}" >
         <div class="spend-profile-table">
@@ -178,7 +179,7 @@
                           <input th:value="${'&pound; '+#numbers.formatInteger(model.categoryToActualTotal.get(row.key),1,'COMMA')}"
                                   data-calculation-operations="+"
                                   readonly="readonly"
-                                  th:classappend="${'row-total-'+#strings.replace(#strings.replace(row.key,' ','-'),'&amp;','')}"
+                                  th:id="${'row-total-'+#strings.replace(#strings.replace(row.key,' ','-'),'&amp;','')}"
                                   th:attr="data-calculation-fields=${'[id*=row-'+#strings.replace(#strings.replace(row.key,' ','-'),'&amp;','')+']'},data-calculation-rawvalue=${#numbers.formatInteger(model.categoryToActualTotal.get(row.key),1,'NONE')}" />
                       </td>
                       <td class="fix-right">
@@ -189,7 +190,7 @@
                   </tr>
                 </tbody>
                 <tfoot>
-                  <tr>
+                  <tr class="form-group-row">
                       <th scope="row" class="fix-left">Total</th>
                       <th:block  th:each="monthTotal,status : ${model.totalForEachMonth}">
                         <td th:text="${'&pound; '+#numbers.formatInteger(monthTotal,1,'COMMA')}"
@@ -200,10 +201,12 @@
                         <input th:value="${'&pound; '+#numbers.formatInteger(model.totalOfAllActualTotals,1,'COMMA')}"
                                readonly="readonly"
                                data-calculation-operations="+"
-                               data-calculation-fields="input[class*=row-total-]" />
+                               id="spend-profile-total-total"
+                               data-calculation-fields="input[id*=row-total-]" />
                       </td>
                       <td class="fix-right">
-                         <input readonly="readonly" th:value="${'&pound; '+#numbers.formatInteger(model.totalOfAllEligibleTotals,1,'COMMA')}" />
+                         <input readonly="readonly" th:value="${'&pound; '+#numbers.formatInteger(model.totalOfAllEligibleTotals,1,'COMMA')}"
+                                 th:attr="data-calculation-rawvalue=${#numbers.formatInteger(model.totalOfAllEligibleTotals,1,'NONE')}"/>
                       </td>
                   </tr>
                 </tfoot>
@@ -224,7 +227,7 @@
               <tbody>
               <tr th:each="item : ${model.summary.years}">
                   <td th:text="${item.year + ' - ' + (item.year + 1)}"></td>
-                  <td th:text="${'£' + #numbers.formatInteger(item.amount,1,'COMMA')}"
+                  <td th:text="${'£ '+#numbers.formatInteger(item.amount,1,'COMMA')}"
                       data-calculation-operations="+"
                       th:attr="data-calculation-fields=${'.apr-'+item.year+',
                                                           .may-'+item.year+',

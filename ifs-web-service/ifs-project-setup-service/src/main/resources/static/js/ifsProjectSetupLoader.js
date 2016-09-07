@@ -1,4 +1,4 @@
-/* jshint strict: false, undef: true, unused: true  */
+/* jshint strict: false, undef: true, unused: true */
 
 
 //Dom based routing
@@ -17,30 +17,12 @@
 //Please think before adding javascript, this project should work without any of this scripts.
 
 if(typeof(IFS) == 'undefined'){ var IFS = {};} // jshint ignore:line
-IFS.core = {};
-IFS.core.loadOrder = {
-  common : {
+IFS.projectSetup = {};
+IFS.projectSetup.loadOrder = {
+  'spend-profile' : {
     init : function(){
-      IFS.core.collapsible.init();
-      IFS.core.conditionalForms.init();
-      IFS.core.editor.init();
-      IFS.core.autoSave.init();
-      IFS.core.formValidation.init();
-      IFS.core.wordCount.init();
-    },
-    finalize : function(){
-      IFS.core.modal.init();
-      IFS.core.upload.init();
-      IFS.core.autoSubmitForm.init();
-      IFS.core.pieChart.init();
-      IFS.core.unsavedChanges.init();
-    }
-  },
-  'app-form' : {
-    init : function(){
-      IFS.core.mirrorElements.init();
-      IFS.core.unsavedChanges.init();
-      IFS.core.finance.init();
+        IFS.core.finance.init();
+        IFS.projectSetup.spendProfile.init();
     }
   }
 };

@@ -22,13 +22,19 @@
     max-width:100%;
 }
 
-
-.spend-profile-table .fix-right.fix-right {
+.spend-profile-table .form-group-row.error .fix-right,
+.spend-profile-table .fix-right {
   background: $grey-3;
   font-weight:bold;
   + .fix-right {
     background: $grey-4;
         white-space: normal;
+  }
+  &.cell-error {
+    @extend td.cell-error;
+    input {
+      color:#fff;
+    }
   }
 }
 
