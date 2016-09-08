@@ -23,41 +23,36 @@ public class ProjectSetupSectionPartnerAccessor {
 
     public void checkAccessToProjectDetailsSection(ProjectResource project, UserResource user, OrganisationResource organisation) {
 
-        if (!projectSetupProgressChecker.isBusinessOrganisationType(project, user, organisation)) {
-            return;
-        }
-
-        if (projectSetupProgressChecker.isCompaniesHouseDetailsComplete(project, user, organisation)) {
-            return;
-        }
-
-        throwForbiddenException("Unable to access Project Details section until Companies House details are complete for Organisation");
+        checkCompaniesHouseSectionIsUnnecessaryOrComplete(project, user, organisation,
+                "Unable to access Project Details section until Companies House details are complete for Organisation");
     }
 
     public void checkAccessToMonitoringOfficerSection(ProjectResource project, UserResource user, OrganisationResource organisation) {
 
-        if (projectSetupProgressChecker.isProjectDetailsSectionComplete(project, user, organisation)) {
-            return;
-        }
+        checkCompaniesHouseSectionIsUnnecessaryOrComplete(project, user, organisation,
+                "Unable to access Monitoring Officer section until Companies House details are complete for Organisation");
 
-        throwForbiddenException("Unable to access Monitoring Officer section until Companies House details are complete for Organisation");
+        if (!projectSetupProgressChecker.isProjectDetailsSectionComplete(project, user, organisation)) {
+            throwForbiddenException("Unable to access Monitoring Officer section until Project Details are submitted");
+        }
     }
 
     public void checkAccessToBankDetailsSection(ProjectResource project, UserResource user, OrganisationResource organisation) {
 
-        if (projectSetupProgressChecker.isCompaniesHouseDetailsComplete(project, user, organisation) &&
-           (projectSetupProgressChecker.isBusinessOrganisationType(project, user, organisation) ||
-                   projectSetupProgressChecker.isFinanceContactSubmitted(project, user, organisation))) {
+        checkCompaniesHouseSectionIsUnnecessaryOrComplete(project, user, organisation,
+                "Unable to access Bank Details section until Companies House information is complete");
 
-            return;
+        if (!projectSetupProgressChecker.isFinanceContactSubmitted(project, user, organisation)) {
+
+            throwForbiddenException("Unable to access Bank Details section until this Partner Organisation has submitted " +
+                    "its Finance Contact");
         }
-
-        throwForbiddenException("Unable to access Bank Details section until this Partner Organisation has submitted " +
-                "its Finance Contact and its Companies House information is entered or not required");
     }
 
-
     public void checkAccessToFinanceChecksSection(ProjectResource project, UserResource user, OrganisationResource organisation) {
+
+        checkCompaniesHouseSectionIsUnnecessaryOrComplete(project, user, organisation,
+                "Unable to access Bank Details section until Companies House information is complete");
 
         if (!projectSetupProgressChecker.isProjectDetailsSectionComplete(project, user, organisation)) {
             throwForbiddenException("Unable to access Finance Checks section until the Project Details section is complete");
@@ -86,8 +81,20 @@ public class ProjectSetupSectionPartnerAccessor {
                 "Spend Profile generated");
     }
 
-    public void throwForbiddenException(String message) {
+    private void throwForbiddenException(String message) {
         throw new ForbiddenActionException(message);
     }
 
+    private void checkCompaniesHouseSectionIsUnnecessaryOrComplete(ProjectResource project, UserResource user, OrganisationResource organisation, String failureMessage) {
+
+        if (!projectSetupProgressChecker.isBusinessOrganisationType(project, user, organisation)) {
+            return;
+        }
+
+        if (projectSetupProgressChecker.isCompaniesHouseDetailsComplete(project, user, organisation)) {
+            return;
+        }
+
+        throwForbiddenException(failureMessage);
+    }
 }

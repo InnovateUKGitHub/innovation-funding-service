@@ -90,11 +90,17 @@ public class ProjectSetupSectionsPartnerAccessorTest extends BaseUnitTest {
     @Test
     public void testCheckAccessToMonitoringOfficerSectionHappyPath() {
 
+        when(projectSetupProgressCheckerMock.isBusinessOrganisationType(project, user, organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isCompaniesHouseDetailsComplete(project, user, organisation)).thenReturn(true);
         when(projectSetupProgressCheckerMock.isProjectDetailsSectionComplete(project, user, organisation)).thenReturn(true);
 
         accessor.checkAccessToMonitoringOfficerSection(project, user, organisation);
 
-        verifyInteractions(mock -> mock.isProjectDetailsSectionComplete(project, user, organisation));
+        verifyInteractions(
+                mock -> mock.isBusinessOrganisationType(project, user, organisation),
+                mock -> mock.isCompaniesHouseDetailsComplete(project, user, organisation),
+                mock -> mock.isProjectDetailsSectionComplete(project, user, organisation)
+        );
     }
 
     @Test(expected = ForbiddenActionException.class)
@@ -106,42 +112,62 @@ public class ProjectSetupSectionsPartnerAccessorTest extends BaseUnitTest {
     @Test
     public void testCheckAccessToBankDetailsSectionHappyPath() {
 
+        when(projectSetupProgressCheckerMock.isBusinessOrganisationType(project, user, organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isCompaniesHouseDetailsComplete(project, user, organisation)).thenReturn(true);
         when(projectSetupProgressCheckerMock.isFinanceContactSubmitted(project, user, organisation)).thenReturn(true);
 
         accessor.checkAccessToBankDetailsSection(project, user, organisation);
 
-        verifyInteractions(mock -> mock.isFinanceContactSubmitted(project, user, organisation));
+        verifyInteractions(
+                mock -> mock.isBusinessOrganisationType(project, user, organisation),
+                mock -> mock.isCompaniesHouseDetailsComplete(project, user, organisation),
+                mock -> mock.isFinanceContactSubmitted(project, user, organisation)
+        );
     }
 
     @Test(expected = ForbiddenActionException.class)
     public void testCheckAccessToBankDetailsSectionButFinanceContactNotYetSubmitted() {
 
+        when(projectSetupProgressCheckerMock.isBusinessOrganisationType(project, user, organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isCompaniesHouseDetailsComplete(project, user, organisation)).thenReturn(true);
         when(projectSetupProgressCheckerMock.isFinanceContactSubmitted(project, user, organisation)).thenReturn(false);
 
         accessor.checkAccessToBankDetailsSection(project, user, organisation);
-
-        verifyInteractions(mock -> mock.isFinanceContactSubmitted(project, user, organisation));
     }
 
     @Test
     public void testCheckAccessToFinanceChecksSectionHappyPathWhenBankDetailsApproved() {
 
+        when(projectSetupProgressCheckerMock.isBusinessOrganisationType(project, user, organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isCompaniesHouseDetailsComplete(project, user, organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isProjectDetailsSectionComplete(project, user, organisation)).thenReturn(true);
         when(projectSetupProgressCheckerMock.isBankDetailsApproved(project, user, organisation)).thenReturn(true);
 
         accessor.checkAccessToFinanceChecksSection(project, user, organisation);
 
-        verifyInteractions(mock -> mock.isBankDetailsApproved(project, user, organisation));
+        verifyInteractions(
+                mock -> mock.isBusinessOrganisationType(project, user, organisation),
+                mock -> mock.isCompaniesHouseDetailsComplete(project, user, organisation),
+                mock -> mock.isProjectDetailsSectionComplete(project, user, organisation),
+                mock -> mock.isBankDetailsApproved(project, user, organisation)
+        );
     }
 
     @Test
     public void testCheckAccessToFinanceChecksSectionHappyPathWhenBankDetailsQueried() {
 
+        when(projectSetupProgressCheckerMock.isBusinessOrganisationType(project, user, organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isCompaniesHouseDetailsComplete(project, user, organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isProjectDetailsSectionComplete(project, user, organisation)).thenReturn(true);
         when(projectSetupProgressCheckerMock.isBankDetailsApproved(project, user, organisation)).thenReturn(false);
         when(projectSetupProgressCheckerMock.isBankDetailsQueried(project, user, organisation)).thenReturn(true);
 
         accessor.checkAccessToFinanceChecksSection(project, user, organisation);
 
         verifyInteractions(
+                mock -> mock.isBusinessOrganisationType(project, user, organisation),
+                mock -> mock.isCompaniesHouseDetailsComplete(project, user, organisation),
+                mock -> mock.isProjectDetailsSectionComplete(project, user, organisation),
                 mock -> mock.isBankDetailsApproved(project, user, organisation),
                 mock -> mock.isBankDetailsQueried(project, user, organisation)
         );
@@ -150,6 +176,9 @@ public class ProjectSetupSectionsPartnerAccessorTest extends BaseUnitTest {
     @Test(expected = ForbiddenActionException.class)
     public void testCheckAccessToFinanceChecksSectionButBankDetailsNotApprovedOrQueried() {
 
+        when(projectSetupProgressCheckerMock.isBusinessOrganisationType(project, user, organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isCompaniesHouseDetailsComplete(project, user, organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isProjectDetailsSectionComplete(project, user, organisation)).thenReturn(true);
         when(projectSetupProgressCheckerMock.isBankDetailsApproved(project, user, organisation)).thenReturn(false);
         when(projectSetupProgressCheckerMock.isBankDetailsQueried(project, user, organisation)).thenReturn(false);
 
