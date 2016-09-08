@@ -105,7 +105,11 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
                 appendix.setQuestion(questionResource.getId());
                 appendix.setCompetition(formInputResource.getCompetition());
                 appendix.setScope(FormInputScope.APPLICATION);
-                appendix.setPriority(formInputResource.getPriority() + 1);
+                if(formInputResource.getPriority() != null) {
+                    appendix.setPriority(formInputResource.getPriority() + 1);
+                } else {
+                    appendix.setPriority(0);
+                }
                 appendix.setWordCount(null);
 
                 formInputService.save(appendix);

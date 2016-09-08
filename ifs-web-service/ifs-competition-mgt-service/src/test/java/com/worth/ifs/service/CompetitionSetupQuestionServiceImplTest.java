@@ -16,6 +16,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import static com.worth.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
 import static java.util.Arrays.asList;
 import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CompetitionSetupQuestionServiceImplTest {
@@ -53,5 +54,36 @@ public class CompetitionSetupQuestionServiceImplTest {
 		verify(formInputService).save(any(FormInputResource.class));
 		verify(questionService).save(any(QuestionResource.class));
 	}
+
+
+	@Test
+	public void testGetQuestion() {
+        Long questionId = 1234L;
+
+        FormInputResource formInput = new FormInputResource();
+        formInput.setFormInputType(2L);
+        formInput.setGuidanceQuestion("Guidance");
+        formInput.setGuidanceAnswer("Answer");
+        formInput.setWordCount(500);
+
+        when(questionService.getById(questionId)).thenReturn(
+                newQuestionResource()
+                        .withId(questionId)
+                        .withName("Title")
+                        .withDescription("ShortTitle")
+                        .build());
+		when(formInputService.findApplicationInputsByQuestion(questionId)).thenReturn(asList(formInput));
+		when(formInputService.findAssessmentInputsByQuestion(questionId)).thenReturn(asList());
+
+		Question questionResult = service.getQuestion(questionId);
+
+		assertEquals(questionId, questionResult.getId());
+        assertEquals("Title", questionResult.getTitle());
+        assertEquals("ShortTitle", questionResult.getSubTitle());
+        assertEquals("Guidance", questionResult.getGuidanceTitle());
+        assertEquals("Answer", questionResult.getGuidance());
+        assertEquals(Integer.valueOf(500), questionResult.getMaxWords());
+	}
+
 
 }

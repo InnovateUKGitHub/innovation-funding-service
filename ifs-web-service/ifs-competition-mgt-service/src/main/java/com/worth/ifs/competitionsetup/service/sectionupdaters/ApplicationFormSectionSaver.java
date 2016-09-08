@@ -45,9 +45,12 @@ public class ApplicationFormSectionSaver implements CompetitionSetupSectionSaver
                 return makeErrorList();
             }
 
-            updateQuestionWithValueByFieldname(question, fieldName, value);
-            competitionSetupQuestionService.updateQuestion(question);
+            List<Error> errors = updateQuestionWithValueByFieldname(question, fieldName, value);
+            if(!errors.isEmpty()) {
+                return errors;
+            }
 
+            competitionSetupQuestionService.updateQuestion(question);
         } else {
             return makeErrorList();
         }
@@ -55,7 +58,7 @@ public class ApplicationFormSectionSaver implements CompetitionSetupSectionSaver
         return Collections.emptyList();
 	}
 
-	private Question updateQuestionWithValueByFieldname(Question question, String fieldName, String value) {
+	private List<Error> updateQuestionWithValueByFieldname(Question question, String fieldName, String value) {
         switch (fieldName) {
             case "questionToUpdate.title" :
                 question.setTitle(value);
@@ -77,9 +80,11 @@ public class ApplicationFormSectionSaver implements CompetitionSetupSectionSaver
             case "questionToUpdate.appendix" :
                 question.setAppendix(stringValueToBoolean(value));
                 break;
+            default:
+                return makeErrorList();
         }
 
-        return question;
+        return Collections.emptyList();
     }
 
 	private List<Error> makeErrorList() {
