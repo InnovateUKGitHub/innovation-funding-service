@@ -28,7 +28,6 @@ public abstract class CompetitionInviteMapper extends BaseMapper<CompetitionInvi
     @Mappings({
             @Mapping(target="id", ignore=true),
             @Mapping(target="name", ignore=true),
-            @Mapping(target="email", ignore=true),
             @Mapping(target="hash", ignore=true),
             @Mapping(target="user", ignore=true),
             @Mapping(target="target", ignore=true)
