@@ -188,11 +188,21 @@ public class ProjectSetupSectionsPartnerAccessorTest extends BaseUnitTest {
     @Test
     public void testCheckAccessToSpendProfileSectionHappyPath() {
 
+        when(projectSetupProgressCheckerMock.isBusinessOrganisationType(project, user, organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isCompaniesHouseDetailsComplete(project, user, organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isProjectDetailsSectionComplete(project, user, organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isBankDetailsApproved(project, user, organisation)).thenReturn(true);
         when(projectSetupProgressCheckerMock.isSpendProfileGenerated(project, user, organisation)).thenReturn(true);
 
         accessor.checkAccessToSpendProfileSection(project, user, organisation);
 
-        verifyInteractions(mock -> mock.isSpendProfileGenerated(project, user, organisation));
+        verifyInteractions(
+                mock -> mock.isBusinessOrganisationType(project, user, organisation),
+                mock -> mock.isCompaniesHouseDetailsComplete(project, user, organisation),
+                mock -> mock.isProjectDetailsSectionComplete(project, user, organisation),
+                mock -> mock.isBankDetailsApproved(project, user, organisation),
+                mock -> mock.isSpendProfileGenerated(project, user, organisation)
+        );
     }
 
     @Test(expected = ForbiddenActionException.class)

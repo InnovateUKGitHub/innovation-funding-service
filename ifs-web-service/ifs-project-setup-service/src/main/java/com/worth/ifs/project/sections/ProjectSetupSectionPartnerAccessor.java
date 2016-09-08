@@ -58,27 +58,39 @@ public class ProjectSetupSectionPartnerAccessor {
             throwForbiddenException("Unable to access Finance Checks section until the Project Details section is complete");
         }
 
-        if (projectSetupProgressChecker.isBankDetailsApproved(project, user, organisation)) {
-            return;
-        }
+        if (!isBankDetailsApprovedOrQueried(project, user, organisation)) {
 
-        if (projectSetupProgressChecker.isBankDetailsQueried(project, user, organisation)) {
-            return;
+            throwForbiddenException("Unable to access Finance Checks section until this Partner Organisation has had its " +
+                    "Bank Details approved or queried");
         }
-
-        throwForbiddenException("Unable to access Finance Checks section until this Partner Organisation has had its " +
-                "Bank Details approved or queried");
     }
-
 
     public void checkAccessToSpendProfileSection(ProjectResource project, UserResource user, OrganisationResource organisation) {
 
-        if (projectSetupProgressChecker.isSpendProfileGenerated(project, user, organisation)) {
-            return;
+        checkCompaniesHouseSectionIsUnnecessaryOrComplete(project, user, organisation,
+                "Unable to access Spend Profile section until Companies House information is complete");
+
+        if (!projectSetupProgressChecker.isProjectDetailsSectionComplete(project, user, organisation)) {
+
+            throwForbiddenException("Unable to access Spend Profile section until the Project Details section is complete");
         }
 
-        throwForbiddenException("Unable to access Spend Profile section until this Partner Organisation has had its " +
-                "Spend Profile generated");
+        if (!isBankDetailsApprovedOrQueried(project, user, organisation)) {
+
+            throwForbiddenException("Unable to access Spend Profile section until this Organisation's Bank Details have been " +
+                    "approved or queried");
+        }
+
+        if (!projectSetupProgressChecker.isSpendProfileGenerated(project, user, organisation)) {
+
+            throwForbiddenException("Unable to access Spend Profile section until this Partner Organisation has had its " +
+                    "Spend Profile generated");
+        }
+    }
+
+    private boolean isBankDetailsApprovedOrQueried(ProjectResource project, UserResource user, OrganisationResource organisation) {
+        return projectSetupProgressChecker.isBankDetailsApproved(project, user, organisation) ||
+                projectSetupProgressChecker.isBankDetailsQueried(project, user, organisation);
     }
 
     private void throwForbiddenException(String message) {
