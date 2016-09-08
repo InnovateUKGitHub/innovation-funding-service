@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * This this the base class for Controller integration tests.  Subclasses will have access to a Controller and be able
  * to test it against a full stack of real REST services, transactional Services and Repositories.
- *
+ * <p>
  * Created by dwatson on 02/10/15.
  */
 @Rollback
@@ -49,6 +49,10 @@ public abstract class BaseControllerIntegrationTest<ControllerType> extends Base
         return getByEmail("paul.plum@gmail.com");
     }
 
+    protected UserResource getFelixWilson() {
+        return getByEmail("felix.wilson@gmail.com");
+    }
+
     protected UserResource getAnonUser() {
         return SecurityRuleUtil.getAnonymous();
     }
@@ -81,4 +85,7 @@ public abstract class BaseControllerIntegrationTest<ControllerType> extends Base
         setLoggedInUser(getPaulPlum());
     }
 
+    protected void loginFelixWilson() {
+        setLoggedInUser(getFelixWilson());
+    }
 }
