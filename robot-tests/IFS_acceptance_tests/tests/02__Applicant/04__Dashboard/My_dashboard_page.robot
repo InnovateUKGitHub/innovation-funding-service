@@ -14,7 +14,8 @@ ${DAYS_LEFT}      ${EMPTY}
 *** Test Cases ***
 The Days left to submit are visible in dashboard page
     [Documentation]    INFUND-37 As an applicant and I am on the application overview, I can view the status of this application, so I know what actions I need to take
-    [Tags]    Applicant    HappyPath
+    [Tags]    Applicant    HappyPath    Pending
+    # Pending due to INFUND-4909
     Given the user navigates to the page    ${DASHBOARD_URL}
     Then the user should see the days left to submit
     And the days left to submit should be correct

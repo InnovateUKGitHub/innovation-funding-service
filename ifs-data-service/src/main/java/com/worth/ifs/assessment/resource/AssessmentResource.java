@@ -1,5 +1,8 @@
 package com.worth.ifs.assessment.resource;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.List;
@@ -12,7 +15,7 @@ public class AssessmentResource {
     private LocalDate startDate;
     private LocalDate endDate;
     private List<Long> processOutcomes;
-    Long processRole;
+    private Long processRole;
     private Boolean submitted;
     private Boolean started;
     private Long application;
@@ -112,5 +115,51 @@ public class AssessmentResource {
 
     public void setCompetition(Long competition) {
         this.competition = competition;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        AssessmentResource that = (AssessmentResource) o;
+
+        return new EqualsBuilder()
+                .append(id, that.id)
+                .append(event, that.event)
+                .append(status, that.status)
+                .append(lastModified, that.lastModified)
+                .append(startDate, that.startDate)
+                .append(endDate, that.endDate)
+                .append(processOutcomes, that.processOutcomes)
+                .append(processRole, that.processRole)
+                .append(submitted, that.submitted)
+                .append(started, that.started)
+                .append(application, that.application)
+                .append(competition, that.competition)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(id)
+                .append(event)
+                .append(status)
+                .append(lastModified)
+                .append(startDate)
+                .append(endDate)
+                .append(processOutcomes)
+                .append(processRole)
+                .append(submitted)
+                .append(started)
+                .append(application)
+                .append(competition)
+                .toHashCode();
     }
 }
