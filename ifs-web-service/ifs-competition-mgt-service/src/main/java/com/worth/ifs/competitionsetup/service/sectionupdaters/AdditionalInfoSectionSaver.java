@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Competition setup section saver for the additional info section.
@@ -50,7 +51,7 @@ public class AdditionalInfoSectionSaver implements CompetitionSetupSectionSaver 
 	}
 
 	@Override
-	public List<Error> autoSaveSectionField(CompetitionResource competitionResource, String fieldName, String value) {
+	public List<Error> autoSaveSectionField(CompetitionResource competitionResource, String fieldName, String value, Optional<Long> objectId) {
 		return Collections.emptyList();
 	}
 

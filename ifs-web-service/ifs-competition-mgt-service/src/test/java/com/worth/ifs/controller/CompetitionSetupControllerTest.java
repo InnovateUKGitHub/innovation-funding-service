@@ -34,6 +34,7 @@ import org.springframework.ui.Model;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.Optional;
 
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static com.worth.ifs.competitionsetup.service.sectionupdaters.InitialDetailsSectionSaver.OPENINGDATE_FIELDNAME;
@@ -174,22 +175,25 @@ public class CompetitionSetupControllerTest {
 
         String fieldName = "title";
         String value = "New Title";
+        Long objectId = 2L;
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
         when(competitionSetupService.autoSaveCompetitionSetupSection(
                 isA(CompetitionResource.class),
                 eq(CompetitionSetupSection.INITIAL_DETAILS),
                 eq(fieldName),
-                eq(value))
+                eq(value),
+                eq(Optional.of(objectId)))
         ).thenReturn(Collections.emptyList());
 
         mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/initial/saveFormElement")
                 .param("fieldName", fieldName)
-                .param("value", value))
+                .param("value", value)
+                .param("objectId", String.valueOf(objectId)))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(jsonPath("success", is("true")));
 
-        verify(competitionSetupService).autoSaveCompetitionSetupSection(isA(CompetitionResource.class), eq(CompetitionSetupSection.INITIAL_DETAILS), eq(fieldName), eq(value));
+        verify(competitionSetupService).autoSaveCompetitionSetupSection(isA(CompetitionResource.class), eq(CompetitionSetupSection.INITIAL_DETAILS), eq(fieldName), eq(value), eq(Optional.of(objectId)));
     }
 
 
@@ -199,23 +203,26 @@ public class CompetitionSetupControllerTest {
 
         String fieldName = "openingDate";
         String value = "20-02-2002";
+        Long objectId = 2L;
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
         when(competitionSetupService.autoSaveCompetitionSetupSection(
                 isA(CompetitionResource.class),
                 eq(CompetitionSetupSection.INITIAL_DETAILS),
                 eq(fieldName),
-                eq(value))
+                eq(value),
+                eq(Optional.of(objectId)))
         ).thenReturn(asList(Error.fieldError(OPENINGDATE_FIELDNAME, value, "Please enter a future date")));
 
         mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/initial/saveFormElement")
                 .param("fieldName", fieldName)
-                .param("value", value))
+                .param("value", value)
+                .param("objectId", String.valueOf(objectId)))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(jsonPath("success", is("false")))
                 .andExpect(jsonPath("validation_errors[0]", is("Please enter a future date")));
 
-        verify(competitionSetupService).autoSaveCompetitionSetupSection(isA(CompetitionResource.class), eq(CompetitionSetupSection.INITIAL_DETAILS), eq(fieldName), eq(value));
+        verify(competitionSetupService).autoSaveCompetitionSetupSection(isA(CompetitionResource.class), eq(CompetitionSetupSection.INITIAL_DETAILS), eq(fieldName), eq(value), eq(Optional.of(objectId)));
     }
 
     @Test
