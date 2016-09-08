@@ -51,11 +51,6 @@ public class AssessorFormInputResponsePermissionRulesTest extends BasePermission
     }
 
     @Test
-    public void compAdminCanReadAssessorFormInputResponse() {
-        assertTrue("a compadmin should be able to read a Response", rules.userCanReadAssessorFormInputResponse(response, compAdminUser()));
-    }
-
-    @Test
     public void ownerCanReadAssessorFormInputResponse() {
         assertTrue("the owner of a Response should be able to read that Response", rules.userCanReadAssessorFormInputResponse(response, assessorUser));
     }
@@ -71,12 +66,7 @@ public class AssessorFormInputResponsePermissionRulesTest extends BasePermission
     }
 
     @Test
-    public void compAdminsCanNotUpdateAssessorFormInputResponse() {
-        assertFalse("competition admins should not able to update Responses", rules.userCanUpdateAssessorFormInputResponse(response, compAdminUser()));
-    }
-
-    @Test
-    public void OtherUsersCanNotUpdateAssessorFormInputResponse() {
+    public void otherUsersCanNotUpdateAssessorFormInputResponse() {
         assertFalse("other users should not able to update Responses", rules.userCanUpdateAssessorFormInputResponse(response, applicantUser));
     }
 }

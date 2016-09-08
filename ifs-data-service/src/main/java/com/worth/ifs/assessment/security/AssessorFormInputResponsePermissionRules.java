@@ -8,8 +8,6 @@ import com.worth.ifs.security.PermissionRules;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
-import static com.worth.ifs.security.SecurityRuleUtil.isCompAdmin;
-
 /**
  * Provides the permissions around CRUD operations for {@link com.worth.ifs.assessment.domain.AssessorFormInputResponse} resources.
  */
@@ -17,9 +15,9 @@ import static com.worth.ifs.security.SecurityRuleUtil.isCompAdmin;
 @PermissionRules
 public class AssessorFormInputResponsePermissionRules extends BasePermissionRules {
 
-    @PermissionRule(value = "READ", description = "Administrators and Assessors can read Assessor Form Input Responses")
+    @PermissionRule(value = "READ", description = "Only Assessors can read Assessor Form Input Responses")
     public boolean userCanReadAssessorFormInputResponse(AssessorFormInputResponseResource response, UserResource user) {
-        return isCompAdmin(user) || isAssessorForFormInputResponse(response, user);
+        return isAssessorForFormInputResponse(response, user);
     }
 
     @PermissionRule(value = "UPDATE", description = "Only Assessors can update Assessor Form Input Responses")
