@@ -117,6 +117,14 @@ Scope: Word count
     When the user enters text to a text field    css=#form-input-193 .editor    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco ullamco
     Then the user should see the text in the page    Words remaining: 0
 
+Scope: on click guidance section should expand and collapse
+    [Documentation]    INFUND-4142
+    [Tags]
+    When the user clicks the button/link    css=#form-input-193 details summary
+    Then the user should see the element    css=#details-content-0 p:nth-child(1)
+    When the user clicks the button/link    css=#form-input-193 details summary
+    Then The user should not see the element    css=#details-content-0 p:nth-child(1)
+
 Scope: Status in the overview
     [Documentation]    INFUND-1483
     [Tags]
