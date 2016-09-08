@@ -45,16 +45,23 @@ public class ProjectSetupSectionPartnerAccessor {
 
     public void checkAccessToBankDetailsSection(ProjectResource project, UserResource user, OrganisationResource organisation) {
 
-        if (projectSetupProgressChecker.isFinanceContactSubmitted(project, user, organisation)) {
+        if (projectSetupProgressChecker.isCompaniesHouseDetailsComplete(project, user, organisation) &&
+           (projectSetupProgressChecker.isBusinessOrganisationType(project, user, organisation) ||
+                   projectSetupProgressChecker.isFinanceContactSubmitted(project, user, organisation))) {
+
             return;
         }
 
-
-        throwForbiddenException("Unable to access Bank Details section until this Partner Organisation has submitted its Finance Contact");
+        throwForbiddenException("Unable to access Bank Details section until this Partner Organisation has submitted " +
+                "its Finance Contact and its Companies House information is entered or not required");
     }
 
 
     public void checkAccessToFinanceChecksSection(ProjectResource project, UserResource user, OrganisationResource organisation) {
+
+        if (!projectSetupProgressChecker.isProjectDetailsSectionComplete(project, user, organisation)) {
+            throwForbiddenException("Unable to access Finance Checks section until the Project Details section is complete");
+        }
 
         if (projectSetupProgressChecker.isBankDetailsApproved(project, user, organisation)) {
             return;
