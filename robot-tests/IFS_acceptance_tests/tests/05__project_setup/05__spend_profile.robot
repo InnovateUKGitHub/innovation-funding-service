@@ -20,11 +20,9 @@ Resource          ../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
 
 *** Test Cases ***
 
-
-
 Lead partner can view spend profile page
     [Documentation]    INFUND-3970
-    [Tags]
+    [Tags]    HappyPath
     [Setup]    Log in as user    steve.smith@empire.com    Passw0rd
     Given the user clicks the button/link    link=00000001: best riffs
     When the user clicks the button/link     link=Spend profile
@@ -41,7 +39,7 @@ Lead partner can see correct project start date and duration
 
 Calculations in the spend profile table
     [Documentation]    INFUND-3764
-    [Tags]
+    [Tags]    HappyPath
     Given the user should see the element    jQuery=div.spend-profile-table
     Then element should contain    css=div.spend-profile-table tr:nth-child(1) td:nth-child(38)    104354.00    #Labour
     Then element should contain    css=div.spend-profile-table tr:nth-child(2) td:nth-child(38)    0.00         #Overheads
