@@ -3,6 +3,7 @@ package com.worth.ifs.project.finance.transactional;
 import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.project.builder.ProjectBuilder;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.finance.domain.*;
 import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
@@ -15,10 +16,12 @@ import org.mockito.Mock;
 import org.springframework.http.HttpStatus;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import static com.worth.ifs.LambdaMatcher.createLambdaMatcher;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
@@ -313,85 +316,157 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
     }
 
+
     @Test
-    public void saveSpendProfileWhenSpendProfileTotalsDoNotMatchEligibleCosts() {
+    public void markSpendProfileWhenActualTotalsGreaterThanEligibleCosts() {
 
         Long projectId = 1L;
         Long organisationId = 1L;
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
-        SpendProfileTableResource table = new SpendProfileTableResource();
+        Project projectInDB = ProjectBuilder.newProject()
+                .withDuration(3L)
+                .withTargetStartDate(LocalDate.of(2018, 3, 1))
+                .build();
 
-        table.setEligibleCostPerCategoryMap(asMap(
-                "Labour", new BigDecimal("110"),
-                "Materials", new BigDecimal("190"),
-                "Other costs", new BigDecimal("55")));
+        SpendProfile spendProfileInDB = createSpendProfile(projectInDB,
+                // eligible costs
+                asMap(
+                        "Labour", new BigDecimal("100"),
+                        "Materials", new BigDecimal("180"),
+                        "Other costs", new BigDecimal("55")),
 
-        table.setMonthlyCostsPerCategoryMap(asMap(
-                "Labour", asList(new BigDecimal("30"), new BigDecimal("30"), new BigDecimal("40")),
-                "Materials", asList(new BigDecimal("70"), new BigDecimal("50"), new BigDecimal("60")),
-                "Other costs", asList(new BigDecimal("50"), new BigDecimal("5"), new BigDecimal("0"))));
+                // Spend Profile costs
+                asMap(
+                        "Labour", asList(new BigDecimal("30"), new BigDecimal("30"), new BigDecimal("50")),
+                        "Materials", asList(new BigDecimal("70"), new BigDecimal("50"), new BigDecimal("60")),
+                        "Other costs", asList(new BigDecimal("50"), new BigDecimal("5"), new BigDecimal("0")))
+        );
 
-
-        List<Cost> spendProfileFigures = buildCostsForCategories(Arrays.asList("Labour", "Materials", "Other costs"), 3);
-
-        SpendProfile spendProfileInDB = new SpendProfile(null, null, null, Collections.emptyList(), spendProfileFigures, false);
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
 
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(spendProfileInDB);
 
-        ServiceResult<Void> result = service.saveSpendProfile(projectOrganisationCompositeId, table);
+        ServiceResult<Void> result = service.markSpendProfile(projectOrganisationCompositeId, true);
 
-        assertTrue(result.isSuccess());
-
-        /* Refactor these tests
-        assertTrue(result.getSuccessObject().hasErrors());
-
-        List<Error> errors = result.getSuccessObject().getErrors();
-
-        assertTrue(errors.size() == 2);
-
-        // Assert the error messages for incorrect totals
-        assertTrue(errors.contains(
-                new Error(SPEND_PROFILE_TOTAL_FOR_ALL_MONTHS_DOES_NOT_MATCH_ELIGIBLE_TOTAL_FOR_SPECIFIED_CATEGORY, singletonList("Labour"), HttpStatus.BAD_REQUEST)));
-        assertTrue(errors.contains(
-                new Error(SPEND_PROFILE_TOTAL_FOR_ALL_MONTHS_DOES_NOT_MATCH_ELIGIBLE_TOTAL_FOR_SPECIFIED_CATEGORY, singletonList("Materials"), HttpStatus.BAD_REQUEST)));
-                */
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE));
 
     }
 
     @Test
-    public void saveSpendProfileSuccess() {
+    public void markSpendProfileSuccessWhenActualTotalsAreLessThanEligibleCosts() {
 
         Long projectId = 1L;
         Long organisationId = 1L;
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
-        SpendProfileTableResource table = new SpendProfileTableResource();
+        Project projectInDB = ProjectBuilder.newProject()
+                .withDuration(3L)
+                .withTargetStartDate(LocalDate.of(2018, 3, 1))
+                .build();
 
-        table.setEligibleCostPerCategoryMap(asMap(
+        SpendProfile spendProfileInDB = createSpendProfile(projectInDB,
+                // eligible costs
+                asMap(
                 "Labour", new BigDecimal("100"),
                 "Materials", new BigDecimal("180"),
-                "Other costs", new BigDecimal("55")));
+                "Other costs", new BigDecimal("55")),
 
-        table.setMonthlyCostsPerCategoryMap(asMap(
-                "Labour", asList(new BigDecimal("30"), new BigDecimal("30"), new BigDecimal("40")),
-                "Materials", asList(new BigDecimal("70"), new BigDecimal("50"), new BigDecimal("60")),
-                "Other costs", asList(new BigDecimal("50"), new BigDecimal("5"), new BigDecimal("0"))));
+                // Spend Profile costs
+                asMap(
+                        "Labour", asList(new BigDecimal("30"), new BigDecimal("30"), new BigDecimal("40")),
+                        "Materials", asList(new BigDecimal("70"), new BigDecimal("10"), new BigDecimal("60")),
+                        "Other costs", asList(new BigDecimal("50"), new BigDecimal("5"), new BigDecimal("0")))
+                );
 
-
-        List<Cost> spendProfileFigures = buildCostsForCategories(Arrays.asList("Labour", "Materials", "Other costs"), 3);
-
-        SpendProfile spendProfileInDB = new SpendProfile(null, null, null, Collections.emptyList(), spendProfileFigures, false);
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
 
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(spendProfileInDB);
 
-        ServiceResult<Void> result = service.saveSpendProfile(projectOrganisationCompositeId, table);
+        ServiceResult<Void> result = service.markSpendProfile(projectOrganisationCompositeId, true);
 
         assertTrue(result.isSuccess());
+
     }
 
+    private SpendProfile createSpendProfile(Project projectInDB, Map<String, BigDecimal> eligibleCostsMap, Map<String, List<BigDecimal>> spendProfileCostsMap) {
+
+        CostCategoryType costCategoryType = createCostCategoryType();
+
+        List<Cost> eligibleCosts = buildEligibleCostsForCategories(eligibleCostsMap, costCategoryType.getCostCategoryGroup());
+
+        List<Cost> spendProfileFigures = buildCostsForCategoriesWithGivenValues(spendProfileCostsMap, 3, costCategoryType.getCostCategoryGroup());
+
+        SpendProfile spendProfileInDB = new SpendProfile(null, projectInDB, costCategoryType, eligibleCosts, spendProfileFigures, true);
+
+        return spendProfileInDB;
+
+    }
+
+    private CostCategoryType createCostCategoryType() {
+
+        CostCategoryGroup costCategoryGroup = createCostCategoryGroup();
+
+        CostCategoryType costCategoryType = new CostCategoryType("Cost Category Type for Categories Labour, Materials, Other costs", costCategoryGroup);
+
+        return costCategoryType;
+
+    }
+
+    private CostCategoryGroup createCostCategoryGroup() {
+
+        List<CostCategory> costCategories = createCostCategories(Arrays.asList("Labour", "Materials", "Other costs"));
+
+        CostCategoryGroup costCategoryGroup = new CostCategoryGroup("Cost Category Group for Categories Labour, Materials, Other costs", costCategories);
+
+        return costCategoryGroup;
+    }
+
+    private List<CostCategory> createCostCategories(List<String> categories) {
+
+        List<CostCategory> costCategories = new ArrayList<>();
+
+        categories.stream().forEach(category -> {
+            CostCategory costCategory = new CostCategory();
+            costCategory.setName(category);
+
+            costCategories.add(costCategory);
+
+        });
+
+        return costCategories;
+    }
+
+    private List<Cost> buildEligibleCostsForCategories(Map<String, BigDecimal> categoryCost, CostCategoryGroup costCategoryGroup) {
+
+        List<Cost> eligibleCostForAllCategories = new ArrayList<>();
+
+        categoryCost.forEach((category, value) -> {
+
+            eligibleCostForAllCategories.add(createEligibleCost(category, value, costCategoryGroup));
+
+        });
+
+        return eligibleCostForAllCategories;
+
+    }
+
+    private Cost createEligibleCost(String category, BigDecimal value, CostCategoryGroup costCategoryGroup) {
+
+        CostCategory costCategory = new CostCategory();
+        costCategory.setName(category);
+        costCategory.setCostCategoryGroup(costCategoryGroup);
+
+        Cost cost = new Cost();
+        cost.setCostCategory(costCategory);
+        cost.setValue(value);
+
+        return cost;
+
+    }
 
     private void assertCostForCategoryForGivenMonth(SpendProfile spendProfileInDB, String category, Integer whichMonth, BigDecimal expectedValue) {
 
@@ -410,7 +485,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
             // Intentionally insert in the reverse order of months to ensure that the sorting functionality actually works
             for (int index = totalMonths - 1; index >= 0; index--) {
-                costForAllCategories.add(createCost(category, index, BigDecimal.ONE));
+                costForAllCategories.add(createCost(category, index, BigDecimal.ONE, null));
             }
         });
 
@@ -418,10 +493,26 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
     }
 
-    private Cost createCost(String category, Integer offsetAmount, BigDecimal value) {
+    private List<Cost> buildCostsForCategoriesWithGivenValues(Map<String, List<BigDecimal>> categoryCosts, int totalMonths, CostCategoryGroup costCategoryGroup) {
+
+        List<Cost> costForAllCategories = new ArrayList<>();
+
+        categoryCosts.forEach((category, costs) -> {
+
+            for (int index = 0; index < totalMonths; index++){
+                costForAllCategories.add(createCost(category, index, costs.get(index), costCategoryGroup));
+            }
+        });
+
+        return costForAllCategories;
+
+    }
+
+    private Cost createCost(String category, Integer offsetAmount, BigDecimal value, CostCategoryGroup costCategoryGroup) {
 
         CostCategory costCategory = new CostCategory();
         costCategory.setName(category);
+        costCategory.setCostCategoryGroup(costCategoryGroup);
 
         //CostTimePeriod(Integer offsetAmount, TimeUnit offsetUnit, Integer durationAmount, TimeUnit durationUnit)
         CostTimePeriod costTimePeriod = new CostTimePeriod(offsetAmount, TimeUnit.MONTH, 1, TimeUnit.MONTH);
