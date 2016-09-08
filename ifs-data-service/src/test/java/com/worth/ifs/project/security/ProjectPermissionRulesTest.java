@@ -330,7 +330,7 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
 
         setupUserAsPartner(project, user);
 
-        assertTrue(rules.partnersCanViewOtherDocumentsDetails(project, user));
+        assertTrue(rules.partnersCanDownloadOtherDocuments(project, user));
     }
 
     @Test
@@ -341,7 +341,7 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
 
         setupUserNotAsPartner(project, user);
 
-        assertFalse(rules.partnersCanViewOtherDocumentsDetails(project, user));
+        assertFalse(rules.partnersCanDownloadOtherDocuments(project, user));
     }
 
     @Test
