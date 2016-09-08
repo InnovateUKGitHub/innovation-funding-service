@@ -209,6 +209,7 @@ Mandatory document submission
     # This ticket assumes that Project_details suite has set as PM the 'test twenty'
     Given the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Other documents
+    And the user reloads the page
     When the user clicks the button/link    jQuery=.button:contains("Submit partner documents")
     And the user clicks the button/link    jQuery=.button:contains("Cancel")
     Then the user should see the element    name=removeExploitationPlanClicked    # testing here that the section has not become read-only

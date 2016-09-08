@@ -38,7 +38,7 @@ Bank details server side validations
 
 Bank details client side validations
     [Documentation]    INFUND-3010
-    [Tags]
+    [Tags]    HappyPath
     When the user enters text to a text field    name=accountNumber    1234567
     And the user moves focus away from the element    name=accountNumber
     Then the user should not see the text in the page    Please enter an account number
@@ -63,7 +63,7 @@ Bank account postcode lookup
     When the user selects the radio button    addressType    ADD_NEW
     And the user enters text to a text field    name=addressForm.postcodeInput    ${EMPTY}
     And the user clicks the button/link    jQuery=.button:contains("Find UK address")
-    Then the user should see the element    css=.form-label .error-message
+    Then the user should see the element    css=.error
     When the user enters text to a text field    name=addressForm.postcodeInput    BS14NT/
     And the user clicks the button/link    jQuery=.button:contains("Find UK address")
     Then the user should see the element    name=addressForm.selectedPostcodeIndex
