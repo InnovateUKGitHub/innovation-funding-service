@@ -190,12 +190,12 @@ the user marks finances as complete
     the user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains(No) input
     the user selects the radio button    financePosition-organisationSize    LARGE
     the user enters text to a text field    id=cost-financegrantclaim    20
-    Focus    jQuery=button:contains("Mark all as complete")
+    the user moves focus to the element    jQuery=button:contains("Mark all as complete")
     the user clicks the button/link    jQuery=button:contains("Mark all as complete")
     Sleep    1s
 
 the user marks the finances as complete
-    Focus    jQuery=button:contains("Mark all as complete")
+    the user moves focus to the element    jQuery=button:contains("Mark all as complete")
     the user clicks the button/link    jQuery=button:contains("Mark all as complete")
     Sleep    1s
 
