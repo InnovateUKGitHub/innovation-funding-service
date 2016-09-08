@@ -255,6 +255,12 @@ The user enters text to a text field
     input text    ${TEXT_FIELD}    ${TEXT_INPUT}
     Mouse Out    ${TEXT_FIELD}
 
+the user sees the text in the element
+    [Arguments]    ${element}    ${text}
+    wait until element is visible    ${element}
+    Wait Until Keyword Succeeds    10    500ms    element should contain    ${element}    ${text}
+
+
 the user clears the text from the element
     [Arguments]    ${element}
     wait until element is visible    ${element}
