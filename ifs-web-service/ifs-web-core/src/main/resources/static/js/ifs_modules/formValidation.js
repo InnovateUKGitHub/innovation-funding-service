@@ -496,7 +496,7 @@ IFS.core.formValidation = (function(){
                 formGroup.addClass('error');
 
                 //if the message isn't in this formgroup yet we will add it, a form-group can have multiple errors.
-                var errorEl = formGroup.find('[data-errorfield="'+name+'"]:contains("'+message+'")');
+                var errorEl = formGroup.find('[data-errorfield="'+name+'"]:contains("'+message+'"),.error-message:not([data-errorfield]):contains("'+message+'")');
                 if(errorEl.length === 0){
                     field.addClass('field-error');
                     var html = '<span data-errorfield="'+name+'" class="error-message">'+message+'</span>';
@@ -513,13 +513,17 @@ IFS.core.formValidation = (function(){
         },
         setValid : function(field,message){
             var formGroup = field.closest('.form-group.error,tr.form-group-row.error');
+            var errorSummary = jQuery('.error-summary-list');
             var name = IFS.core.formValidation.getIdentifier(field);
 
             if(formGroup.length){
+              //client side remove in form group
               formGroup.find('[data-errorfield="'+name+'"]:contains("'+message+'")').remove();
+              //server side remove in form group
+              formGroup.find('.error-message:not([data-errorfield]):contains("'+message+'")').first().remove();
 
               //if this was the last error we remove the error styling
-              if(formGroup.find('[data-errorfield]').length === 0){
+              if(formGroup.find('[data-errorfield],.error-message:not([data-errorfield])').length === 0){
                  formGroup.removeClass('error');
               }
               if(formGroup.find('[data-errorfield="'+name+'"]').length === 0) {
@@ -527,10 +531,13 @@ IFS.core.formValidation = (function(){
                 if(s.html5validationMode){ field[0].setCustomValidity('');}
               }
             }
-            if(jQuery('.error-summary-list [data-errorfield="'+name+'"]:contains('+message+')').length){
-              jQuery('.error-summary-list [data-errorfield="'+name+'"]:contains('+message+')').remove();
-            }
 
+            if(errorSummary.length){
+              //remove clientside in summary
+              errorSummary.find('[data-errorfield="'+name+'"]:contains('+message+')').remove();
+              //remove server side in summary
+              errorSummary.find('li:not([data-errorfield]):contains("'+message+'")').first().remove();
+            }
             if(jQuery('.error-summary-list li:not(.list-header)').length === 0){
               jQuery('.error-summary').attr('aria-hidden','true');
             }

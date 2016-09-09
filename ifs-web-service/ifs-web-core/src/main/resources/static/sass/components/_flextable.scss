@@ -22,6 +22,7 @@
     max-width:100%;
 }
 
+//todo: clean up specifity
 .spend-profile-table .form-group-row.error .fix-right,
 .spend-profile-table .fix-right {
   background: $grey-3;
@@ -54,13 +55,17 @@
   font-weight: bold;
   width:100%;
 }
+.spend-profile-table th[scope="row"] {
+  padding:20px 0;
+  font-weight: bold;
+}
 
 @media screen and (min-width: 800px) {
   .spend-profile-table td,
   .spend-profile-table th,{
     box-sizing: border-box;
     height: 60px;
-    padding: 0.6em 1em;
+    padding: 0.6em;
   }
 
   .spend-profile-table th[scope="row"] {
@@ -70,6 +75,7 @@
     @include box-sizing(border-box);
     border-right: 1px solid #bfc1c3;
     background-color: #fff;
+
     +td,
     +th {
       padding-left:210px;
