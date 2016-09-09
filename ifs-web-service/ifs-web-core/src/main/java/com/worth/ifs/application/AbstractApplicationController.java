@@ -41,6 +41,7 @@ import com.worth.ifs.invite.constant.InviteStatus;
 import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.service.InviteRestService;
+import com.worth.ifs.model.OrganisationDetailsModelPopulator;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
@@ -53,6 +54,8 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 
@@ -129,6 +132,10 @@ public abstract class AbstractApplicationController extends BaseController {
 
     @Autowired
     protected FinanceHandler financeHandler;
+
+    @Autowired
+    protected OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
+
 
     protected Long extractAssigneeProcessRoleIdFromAssignSubmit(HttpServletRequest request) {
         Long assigneeId = null;
@@ -583,5 +590,30 @@ public abstract class AbstractApplicationController extends BaseController {
             model.addAttribute("nextUrl", nextUrl);
             model.addAttribute("nextText", nextText);
         }
+    }
+
+    protected String print(final Long applicationId,
+                        Model model, HttpServletRequest request) {
+        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
+        ApplicationResource application = applicationService.getById(applicationId);
+        CompetitionResource competition = competitionService.getById(application.getCompetition());
+
+        List<FormInputResponseResource> responses = formInputResponseService.getByApplication(applicationId);
+        model.addAttribute("responses", formInputResponseService.mapFormInputResponsesToFormInput(responses));
+        model.addAttribute("currentApplication", application);
+        model.addAttribute("currentCompetition", competition);
+
+        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
+        Optional<OrganisationResource> userOrganisation = getUserOrganisation(user.getId(), userApplicationRoles);
+        model.addAttribute("userOrganisation", userOrganisation.orElse(null));
+
+        organisationDetailsModelPopulator.populateModel(model, application.getId(), userApplicationRoles);
+        addQuestionsDetails(model, application, null);
+        addUserDetails(model, application, user.getId());
+        addApplicationInputs(application, model);
+        addMappedSectionsDetails(model, application, competition, Optional.empty(), userOrganisation);
+        financeOverviewModelManager.addFinanceDetails(model, competition.getId(), applicationId);
+
+        return "/application/print";
     }
 }

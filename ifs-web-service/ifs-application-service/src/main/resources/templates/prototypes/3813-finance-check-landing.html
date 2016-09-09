@@ -14,7 +14,7 @@
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
 	
-	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Project setup status'}, ${(param.status != null and param.status[0] == 'approved' ? '/prototypes/1588-project-status?stage=level5' : '/prototypes/1588-project-status?stage=level2')})" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Project setup status'}, ${(param.status != null and param.status[0] == 'approved' ? '/prototypes/1588-project-status?stage=level5' : '/prototypes/1588-project-status?stage=level3')})" th:remove="tag" />
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->
