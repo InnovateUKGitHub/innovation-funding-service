@@ -269,7 +269,8 @@
                 </div>
             </div>
 
-            <div  th:each="(coFunder, iteration : ${competitionSetupForm.coFunders})" class="grid-row" id="co-funder-row-2">
+
+            <div th:each="(coFunder, iteration : ${competitionSetupForm.coFunders})" class="grid-row cofunder-row" th:id="'co-funder-row-'+${iteration.index}">
                 <div class="column-half">
                     <div th:class="${#fields.hasErrors('coFunders[__${iteration.index}__].coFunder')}? 'form-group error':'form-group'">
                         <label class="form-label" th:for="coFunders[__${iteration.index}__].coFunder">
@@ -291,9 +292,12 @@
                             </th:block>
                         </label>
                         <input required="required" type="number" min="0"  th:class="${#fields.hasErrors('coFunders[__${iteration.index}__].coFunderBudget') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
-                                th:id="${iteration.index}+'-funderBudget'"
+                               th:id="${iteration.index}+'-funderBudget'"
                                th:field="${competitionSetupForm.coFunders[__${iteration.index}__].coFunderBudget}" value=""
                                data-required-errormessage="Please enter a budget" />
+
+                        <button class="buttonlink alignright remove-cofunder" name="remove-cofunder" th:value="${iteration.index}"
+                                th:id="'remove-cofunder-' + ${iteration.index}">Remove</button>
                     </div>
                 </div>
             </div>

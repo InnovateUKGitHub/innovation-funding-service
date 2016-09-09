@@ -38,6 +38,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 
 /**
@@ -201,22 +203,30 @@ public class CompetitionSetupController {
     }
 
     @RequestMapping(value = "/{competitionId}/section/additional", method = RequestMethod.POST)
-    public String submitAdditionalSectionDetails(@Valid @ModelAttribute("competitionSetupForm") AdditionalInfoForm competitionSetupForm,
+    public String submitAdditionalSectionDetails(@ModelAttribute("competitionSetupForm") AdditionalInfoForm competitionSetupForm,
                                               BindingResult bindingResult,
                                               @PathVariable("competitionId") Long competitionId,
                                               Model model, HttpServletRequest request) {
-
         if (request.getParameterMap().containsKey("generate-code")) {
             CompetitionResource competition = competitionService.getById(competitionId);
             if (competition.getStartDate() != null) {
-                competitionService.generateCompetitionCode(competitionId, competition.getStartDate());
-                return "redirect:/competition/setup/" + competitionId + "/section/additional";
+                String competitionCode = competitionService.generateCompetitionCode(competitionId, competition.getStartDate());
+                competitionSetupForm.setCompetitionCode(competitionCode);
+                competitionSetupForm.setMarkAsCompleteAction(false);
             }
         } else if (request.getParameterMap().containsKey("add-cofunder")) {
             List<CoFunderForm> coFunders = competitionSetupForm.getCoFunders();
             coFunders.add(new CoFunderForm());
             competitionSetupForm.setCoFunders(coFunders);
+            competitionSetupForm.setMarkAsCompleteAction(false);
+        } else if (request.getParameterMap().containsKey("remove-cofunder")) {
+            int removeCoFunderIndex = Integer.valueOf(request.getParameterMap().get("remove-cofunder")[0]);
+            competitionSetupForm.getCoFunders().remove(removeCoFunderIndex);
+            competitionSetupForm.setMarkAsCompleteAction(false);
         }
+
+        //Validate after competition code generated and co funders added/removed.
+        validator.validate(competitionSetupForm, bindingResult);
 
         return genericCompetitionSetupSection(competitionSetupForm, bindingResult, competitionId, CompetitionSetupSection.ADDITIONAL_INFO, model);
     }
