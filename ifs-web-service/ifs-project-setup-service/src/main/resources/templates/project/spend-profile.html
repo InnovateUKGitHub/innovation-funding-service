@@ -7,7 +7,7 @@
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
 <div th:include="fragments/layout :: global-header" th:remove="tag" />
 
-<main>
+<main id="content" class="no-grid">
     <div class="grid-container">
         <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
         <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{projectId}(projectId=${model.projectId})}"  th:remove="tag"></div>
