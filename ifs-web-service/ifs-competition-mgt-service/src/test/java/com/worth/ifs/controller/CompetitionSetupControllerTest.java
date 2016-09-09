@@ -1,4 +1,5 @@
 
+
 package com.worth.ifs.controller;
 
 import com.worth.ifs.application.service.CategoryService;
@@ -30,6 +31,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -73,6 +76,10 @@ public class CompetitionSetupControllerTest {
 
     @Mock
     private CompetitionSetupQuestionService competitionSetupQuestionService;
+
+    @Mock
+    private Validator validator;
+
 
     private MockMvc mockMvc;
 
@@ -378,6 +385,8 @@ public class CompetitionSetupControllerTest {
 
         verify(competitionSetupService, atLeastOnce()).saveCompetitionSetupSection(any(AdditionalInfoForm.class),
                 any(CompetitionResource.class), any(CompetitionSetupSection.class));
+
+        verify(validator).validate(any(AdditionalInfoForm.class), any(BindingResult.class));
     }
 
 
