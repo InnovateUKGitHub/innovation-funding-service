@@ -38,6 +38,12 @@ public class MilestoneServiceImpl implements MilestoneService{
     }
 
     @Override
+    public List<Error> updateMilestone(MilestoneResource milestone, Long competitionId) {
+        //todo
+        return null;
+    }
+
+    @Override
     public MilestoneResource create(MilestoneType type, Long competitionId)
     {
         return milestoneRestService.create(type, competitionId).getSuccessObjectOrThrowException();

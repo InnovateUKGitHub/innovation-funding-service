@@ -10,19 +10,29 @@ import com.worth.ifs.competitionsetup.form.MilestonesForm;
 import com.worth.ifs.competitionsetup.model.MilestoneEntry;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
 import org.apache.commons.collections4.map.LinkedMap;
+import org.apache.el.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.worth.ifs.commons.error.Error.fieldError;
+import static org.codehaus.groovy.runtime.InvokerHelper.asList;
+
 /**
  * Competition setup section saver for the milestones section.
  */
 @Service
-public class MilestonesSectionSaver implements CompetitionSetupSectionSaver {
+public class MilestonesSectionSaver extends AbstractSectionSaver implements CompetitionSetupSectionSaver {
+
+    private static Log LOG = LogFactory.getLog(MilestonesSectionSaver.class);
 
     @Autowired
     private MilestoneService milestoneService;
@@ -52,7 +62,8 @@ public class MilestonesSectionSaver implements CompetitionSetupSectionSaver {
 
     @Override
     public List<Error> autoSaveSectionField(CompetitionResource competitionResource, String fieldName, String value) {
-        return Collections.emptyList();
+        int i = 0;
+        return performAutoSaveField(competitionResource, fieldName, value);
     }
 
     private List<Error> returnErrorsFoundOnSave(LinkedMap<String, MilestoneEntry> milestoneEntries, Long competitionId){
@@ -69,4 +80,36 @@ public class MilestonesSectionSaver implements CompetitionSetupSectionSaver {
 
     @Override
     public boolean supportsForm(Class<? extends CompetitionSetupForm> clazz) { return MilestonesForm.class.equals(clazz); }
+
+    @Override
+    protected List<Error> updateCompetitionResourceWithAutoSave(List<Error> errors, CompetitionResource competitionResource, String fieldName, String value) throws ParseException {
+        switch (fieldName) {
+            case "milestoneEntries[BRIEFING_EVENT].milestoneType":
+                MilestoneResource milestone = new MilestoneResource();
+
+            //return competitionSetupMilestoneService.updateMilestoneForCompetition(parseDate(value));
+                //return null;
+            break;
+                //find matching milestone
+                //build case matching
+            default:
+                return asList(new Error("Field not found", HttpStatus.BAD_REQUEST));
+        }
+        return errors;
+    }
+
+    private LocalDateTime parseDate(String value){
+        try {
+            String[] dateParts = value.split("-");
+            return LocalDateTime.of(
+                    Integer.parseInt(dateParts[2]),
+                    Integer.parseInt(dateParts[1]),
+                    Integer.parseInt(dateParts[0]),
+                    0, 0, 0);
+        } catch (Exception e) {
+            LOG.error(e.getMessage());
+            //return asList(fieldError
+            return null;
+        }
+    }
 }

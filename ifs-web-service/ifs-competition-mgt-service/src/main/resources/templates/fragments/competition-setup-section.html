@@ -654,7 +654,9 @@
         Here you can define the Competiton milestones. Submission date will generate other dates. You will be able to edit those, but it will override the dates calculated if you do.
     </div>
 
-    <form th:action="@{(${editable} ? '' : 'milestones/edit')}" id="milestones" method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
+    <form th:action="@{(${editable} ? '' : 'milestones/edit')}"
+          data-autosave="compSetup" th:attr="data-competition=${competition.id}" data-section="milestones"
+          method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
 
         <div class="error-summary" th:attr="aria-hidden=${!#fields.hasAnyErrors()}">
            <h2 class="heading-medium error-summary-heading">
@@ -731,6 +733,9 @@
                                  data-date-in-table=""
                                  th:value="${milestoneEntry.value.year}"
                                  th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].year'"/>
+                      </td>
+                      <td>
+                          <span class="autosave-info" />
                       </td>
                   </tr>
                 </tbody>

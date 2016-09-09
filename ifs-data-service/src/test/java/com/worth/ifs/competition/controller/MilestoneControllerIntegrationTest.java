@@ -106,7 +106,7 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
         milestone.setType(MilestoneType.OPEN_DATE);
         milestone.setDate(LocalDateTime.now());
 
-        controller.saveMilestone(milestones, COMPETITION_ID_VALID);
+        controller.saveMilestones(milestones, COMPETITION_ID_VALID);
     }
 
     @Rollback
@@ -124,7 +124,7 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
             milestone.setDate(milestoneDate.plusDays(1));
         });
 
-        controller.saveMilestone(milestones, COMPETITION_ID_UPDATE);
+        controller.saveMilestones(milestones, COMPETITION_ID_UPDATE);
     }
 
 

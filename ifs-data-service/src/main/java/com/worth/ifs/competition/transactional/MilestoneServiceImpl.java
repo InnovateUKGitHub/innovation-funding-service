@@ -47,6 +47,11 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
     }
 
     @Override
+    public ServiceResult<MilestoneResource> getMilestoneByTypeAndCompetitionId(MilestoneType type, Long id) {
+        return serviceSuccess ((MilestoneResource) milestoneMapper.mapToResource(milestoneRepository.findByTypeAndCompetitionId(type, id)));
+    }
+
+    @Override
     public ServiceResult<Void> update(Long id, List<MilestoneResource> milestones) {
         
     	Competition competition = competitionRepository.findById(id);
@@ -60,6 +65,16 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
             return serviceSuccess();
         }
         return serviceFailure(messages.getErrors());
+    }
+
+    @Override
+    public ServiceResult<Void> updateMilestone(Long id, MilestoneResource milestone){
+        Competition competition = competitionRepository.findById(id);
+        Milestone milestoneEntity = milestoneMapper.mapToDomain(milestone);
+       // milestoneEntity = milestoneRepository.save(milestone);
+        //@TODO JH validation on single milestone
+      //  return serviceSuccess(milestoneMapper.mapToResource(milestoneRepository.save(milestoneEntity)));
+        return serviceSuccess();
     }
 
     @Override

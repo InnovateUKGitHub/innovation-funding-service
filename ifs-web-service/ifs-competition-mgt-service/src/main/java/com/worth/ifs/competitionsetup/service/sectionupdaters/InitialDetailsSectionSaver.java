@@ -190,5 +190,4 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
 	public boolean supportsForm(Class<? extends CompetitionSetupForm> clazz) {
 		return InitialDetailsForm.class.equals(clazz);
 	}
-
 }
