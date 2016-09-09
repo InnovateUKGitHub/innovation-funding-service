@@ -25,6 +25,8 @@ import static org.mockito.Mockito.*;
 
 public class CompetitionParticipantServiceSecurityTest extends BaseServiceSecurityTest<CompetitionParticipantService> {
 
+    private static final int ARRAY_SIZE_FOR_POST_FILTER_TESTS = 3;
+
     private CompetitionParticipantPermissionRules competitionParticipantPermissionRules;
     private CompetitionParticipantLookupStrategy competitionParticipantLookupStrategy;
 
@@ -54,14 +56,14 @@ public class CompetitionParticipantServiceSecurityTest extends BaseServiceSecuri
 
         assertTrue(service.getCompetitionParticipants(7L, CompetitionParticipantRoleResource.ASSESSOR, ParticipantStatusResource.ACCEPTED).getSuccessObject().isEmpty());
 
-        verify(competitionParticipantPermissionRules, times(3)).userCanViewTheirOwnCompetitionParticipation(any(CompetitionParticipantResource.class), eq(assessorUserResource));
+        verify(competitionParticipantPermissionRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).userCanViewTheirOwnCompetitionParticipation(any(CompetitionParticipantResource.class), eq(assessorUserResource));
     }
 
     public static class TestCompetitionParticipantService implements CompetitionParticipantService {
 
         @Override
         public ServiceResult<List<CompetitionParticipantResource>> getCompetitionParticipants(@P("user") Long userId, @P("role") CompetitionParticipantRoleResource role, @P("status") ParticipantStatusResource status) {
-            return serviceSuccess( newCompetitionParticipantResource().build(3) );
+            return serviceSuccess( newCompetitionParticipantResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS) );
         }
     }
 }
