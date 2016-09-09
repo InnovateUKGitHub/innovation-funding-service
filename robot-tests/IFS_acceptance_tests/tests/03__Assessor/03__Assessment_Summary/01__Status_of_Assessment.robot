@@ -97,9 +97,10 @@ Assessor must Provide feedback when "No" is selected for funding suitability
     Given The user navigates to the assessor page    ${Assessment_summary_complete_9}
     When The user clicks the button/link    jQuery=.button:contains(Save assessment)
     Then The user should see an error    Please indicate your decision
-    When the assessor selects the radio button "Yes"
-    And The user clicks the button/link    jQuery=.button:contains(Save assessment)
-    Then The user should see an error    Please enter your feedback
+    #TODO the following lines should be uncommented after INFUND-4996 is fixed
+   # When the assessor selects the radio button "Yes"
+   # And The user clicks the button/link    jQuery=.button:contains(Save assessment)
+   # Then The user should not see the text in the page    Please enter your feedback
     When the assessor selects the radio button "No"
     And The user clicks the button/link    jQuery=.button:contains(Save assessment)
     Then The user should see an error    Please enter your feedback
