@@ -252,6 +252,15 @@ public class ApplicationController extends AbstractApplicationController {
         return getFileResponseEntity(resource, fileDetails);
     }
 
+    /**
+     * Printable version of the application
+     */
+    @RequestMapping(value="/{applicationId}/print")
+    public String printApplication(@PathVariable("applicationId") Long applicationId,
+                                             Model model, HttpServletRequest request) {
+        return print(applicationId, model, request);
+    }
+
     private String doAssignQuestionAndReturnSectionFragment(Model model,
                                                             Long applicationId,
                                                             Optional<Long> sectionId,

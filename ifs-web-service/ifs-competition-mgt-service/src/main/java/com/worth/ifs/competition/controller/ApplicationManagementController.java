@@ -231,6 +231,16 @@ public class ApplicationManagementController extends AbstractApplicationControll
         return getFileResponseEntity(resource, fileDetails.getFileEntryResource());
     }
 
+
+    /**
+     * Printable version of the application
+     */
+    @RequestMapping(value="/{applicationId}/print")
+    public String printManagementApplication(@PathVariable("applicationId") Long applicationId,
+                                             Model model, HttpServletRequest request) {
+        return print(applicationId, model, request);
+    }
+
     private void addAppendices(Long applicationId, List<FormInputResponseResource> responses, Model model) {
         final List<AppendixResource> appendices = responses.stream().filter(fir -> fir.getFileEntry() != null).
                 map(fir -> {

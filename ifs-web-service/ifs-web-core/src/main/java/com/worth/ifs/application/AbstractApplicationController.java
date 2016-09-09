@@ -592,11 +592,7 @@ public abstract class AbstractApplicationController extends BaseController {
         }
     }
 
-    /**
-     * Printable version of the application
-     */
-    @RequestMapping(value="/{applicationId}/print")
-    public String print(@PathVariable("applicationId") final Long applicationId,
+    protected String print(final Long applicationId,
                         Model model, HttpServletRequest request) {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationResource application = applicationService.getById(applicationId);
