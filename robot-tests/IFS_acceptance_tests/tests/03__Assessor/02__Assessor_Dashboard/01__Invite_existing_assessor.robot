@@ -58,9 +58,11 @@ Existing assessor shouldn't be able to accept other assessor's invitation
 
 Existing assessor shouldn't be able to reject other assessor's invitation
     [Documentation]    INFUND-4631
-    [Tags]
+    [Tags]    Pending
     Given the user navigates to the page    ${Invitation_nonexisting_assessor2}
-    when the user clicks the button/link    jQuery=button:contains("Reject")
+    when the user clicks the button/link    css=form a
+    And the assessor fills in all fields
+    And the user clicks the button/link    jQuery=button:contains("Reject")
     Then The user should see permissions error message
 
 *** Keywords ***
