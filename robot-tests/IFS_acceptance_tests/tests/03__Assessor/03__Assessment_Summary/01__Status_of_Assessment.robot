@@ -97,6 +97,9 @@ Assessor must Provide feedback when "No" is selected for funding suitability
     Given The user navigates to the assessor page    ${Assessment_summary_complete_9}
     When The user clicks the button/link    jQuery=.button:contains(Save assessment)
     Then The user should see an error    Please indicate your decision
+    When the assessor selects the radio button "Yes"
+    And The user clicks the button/link    jQuery=.button:contains(Save assessment)
+    Then The user should see an error    Please enter your feedback
     When the assessor selects the radio button "No"
     And The user clicks the button/link    jQuery=.button:contains(Save assessment)
     Then The user should see an error    Please enter your feedback
@@ -195,6 +198,9 @@ the scores under each question should be correct
     Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(2)    10
     Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(3)    10
     Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(4)    10
+
+When the assessor selects the radio button "Yes"
+    Click Element    xpath=//input[@type='radio' and @name='fundingConfirmation' and (@value='Yes' or @id='fundingConfirmation1')]
 
 the assessor selects the radio button "No"
     Click Element    xpath=//input[@type='radio' and @name='fundingConfirmation' and (@value='No' or @id='fundingConfirmation2')]
