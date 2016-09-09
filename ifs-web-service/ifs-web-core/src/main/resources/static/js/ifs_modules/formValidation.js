@@ -544,13 +544,16 @@ IFS.core.formValidation = (function(){
             jQuery(window).trigger('updateWysiwygPosition');
         },
         getIdentifier : function(el){
+            if(el.is('[data-date]')){
+              el =  el.closest('.date-group').find('input[type="hidden"]');
+            }
+
             if(el.prop('id').length){
               return el.prop('id');
             }
             else if(el.prop('name').length) {
               return  el.prop('name');
             }
-
             return false;
         },
         checkHTML5validationMode : function(){
