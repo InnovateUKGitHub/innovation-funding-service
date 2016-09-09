@@ -15,11 +15,6 @@ import org.springframework.stereotype.Component;
 @PermissionRules
 public class AssessorFormInputResponsePermissionRules extends BasePermissionRules {
 
-    @PermissionRule(value = "READ", description = "Only Assessors can read Assessor Form Input Responses")
-    public boolean userCanReadAssessorFormInputResponse(AssessorFormInputResponseResource response, UserResource user) {
-        return isAssessorForFormInputResponse(response, user);
-    }
-
     @PermissionRule(value = "UPDATE", description = "Only Assessors can update Assessor Form Input Responses")
     public boolean userCanUpdateAssessorFormInputResponse(AssessorFormInputResponseResource response, UserResource user) {
         return isAssessorForFormInputResponse(response, user);

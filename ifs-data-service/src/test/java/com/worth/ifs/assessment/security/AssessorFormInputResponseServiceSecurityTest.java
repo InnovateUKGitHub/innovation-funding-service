@@ -38,10 +38,10 @@ public class AssessorFormInputResponseServiceSecurityTest extends BaseServiceSec
     }
 
     @Test
-    public void findByAssessmentId() {
+    public void getAllAssessorFormInputResponses() {
         Long assessmentId = 1L;
 
-        when(assessmentLookupStrategy.getAssessmentResource(assessmentId)).thenReturn(newAssessmentResource().withId(assessmentId).build());
+        when(assessmentLookupStrategy.getAssessmentResource(assessmentId)).thenReturn(newAssessmentResource().build());
         assertAccessDenied(
                 () -> service.getAllAssessorFormInputResponses(assessmentId),
                 () -> verify(assessmentPermissionRules).userCanReadAssessment(isA(AssessmentResource.class), isA(UserResource.class))
@@ -49,11 +49,11 @@ public class AssessorFormInputResponseServiceSecurityTest extends BaseServiceSec
     }
 
     @Test
-    public void findByAssessmentAndQuestion() {
+    public void getAllAssessorFormInputResponsesByAssessmentAndQuestion() {
         Long assessmentId = 1L;
         Long questionId = 3L;
 
-        when(assessmentLookupStrategy.getAssessmentResource(assessmentId)).thenReturn(newAssessmentResource().withId(assessmentId).build());
+        when(assessmentLookupStrategy.getAssessmentResource(assessmentId)).thenReturn(newAssessmentResource().build());
         assertAccessDenied(
                 () -> service.getAllAssessorFormInputResponsesByAssessmentAndQuestion(assessmentId, questionId),
                 () -> verify(assessmentPermissionRules).userCanReadAssessment(isA(AssessmentResource.class), isA(UserResource.class))

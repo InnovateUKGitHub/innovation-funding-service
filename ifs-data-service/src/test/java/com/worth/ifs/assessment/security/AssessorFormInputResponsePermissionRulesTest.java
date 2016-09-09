@@ -51,16 +51,6 @@ public class AssessorFormInputResponsePermissionRulesTest extends BasePermission
     }
 
     @Test
-    public void ownerCanReadAssessorFormInputResponse() {
-        assertTrue("the owner of a Response should be able to read that Response", rules.userCanReadAssessorFormInputResponse(response, assessorUser));
-    }
-
-    @Test
-    public void otherUsersCanNotReadAssessorFormInputResponse() {
-        assertFalse("other users should not be able to read any Responses", rules.userCanReadAssessorFormInputResponse(response, applicantUser));
-    }
-
-    @Test
     public void ownersCanUpdateAssessorFormInputResponses() {
         assertTrue("the owner of a Response should able to update that Response", rules.userCanUpdateAssessorFormInputResponse(response, assessorUser));
     }
