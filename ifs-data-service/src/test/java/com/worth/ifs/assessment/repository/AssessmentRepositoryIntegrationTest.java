@@ -42,54 +42,79 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
         assessorFormInputResponseRepository.deleteAll();
         repository.deleteAll();
 
-        final ProcessOutcome processOutcome1 = processOutcomeRepository.save(newProcessOutcome()
+        ProcessOutcome processOutcome1 = processOutcomeRepository.save(newProcessOutcome()
                 .build());
 
-        final ProcessOutcome processOutcome2 = processOutcomeRepository.save(newProcessOutcome()
+        ProcessOutcome processOutcome2 = processOutcomeRepository.save(newProcessOutcome()
                 .build());
 
-        final ProcessRole processRole1 = processRoleRepository.save(newProcessRole()
+        ProcessRole processRole1 = processRoleRepository.save(newProcessRole()
                 .build());
 
-        final ProcessRole processRole2 = processRoleRepository.save(newProcessRole()
+        ProcessRole processRole2 = processRoleRepository.save(newProcessRole()
                 .build());
 
-        final List<Assessment> assessments = newAssessment()
+        List<Assessment> assessments = newAssessment()
                 .withProcessOutcome(asList(processOutcome1), asList(processOutcome2))
                 .withProcessRole(processRole1, processRole2)
                 .build(2);
 
-        final Set<Assessment> saved = assessments.stream().map(assessment -> repository.save(assessment)).collect(Collectors.toSet());
+        Set<Assessment> saved = assessments.stream().map(assessment -> repository.save(assessment)).collect(Collectors.toSet());
 
-        final Set<Assessment> found = repository.findAll();
+        Set<Assessment> found = repository.findAll();
         assertEquals(2, found.size());
         assertEquals(saved, found);
     }
 
-
     @Test
     @Rollback
     public void testFindOneByProcessRoleId() throws Exception {
-        final ProcessOutcome processOutcome1 = processOutcomeRepository.save(newProcessOutcome()
+        ProcessOutcome processOutcome1 = processOutcomeRepository.save(newProcessOutcome()
                 .build());
 
-        final ProcessOutcome processOutcome2 = processOutcomeRepository.save(newProcessOutcome()
+        ProcessOutcome processOutcome2 = processOutcomeRepository.save(newProcessOutcome()
                 .build());
 
-        final ProcessRole processRole1 = processRoleRepository.save(newProcessRole()
+        ProcessRole processRole1 = processRoleRepository.save(newProcessRole()
                 .build());
 
-        final ProcessRole processRole2 = processRoleRepository.save(newProcessRole()
+        ProcessRole processRole2 = processRoleRepository.save(newProcessRole()
                 .build());
 
-        final List<Assessment> assessments = newAssessment()
+        List<Assessment> assessments = newAssessment()
                 .withProcessOutcome(asList(processOutcome1), asList(processOutcome2))
                 .withProcessRole(processRole1, processRole2)
                 .build(2);
 
-        final List<Assessment> saved = assessments.stream().map(assessment -> repository.save(assessment)).collect(Collectors.toList());
+        List<Assessment> saved = assessments.stream().map(assessment -> repository.save(assessment)).collect(Collectors.toList());
 
-        final Assessment found = repository.findOneByProcessRoleId(processRole1.getId());
+        Assessment found = repository.findOneByProcessRoleId(processRole1.getId());
         assertEquals(saved.get(0), found);
+    }
+
+    @Test
+    @Rollback
+    public void testFindByProcessRoles() throws Exception {
+        ProcessOutcome processOutcome1 = processOutcomeRepository.save(newProcessOutcome()
+                .build());
+
+        ProcessOutcome processOutcome2 = processOutcomeRepository.save(newProcessOutcome()
+                .build());
+
+        ProcessRole processRole1 = processRoleRepository.save(newProcessRole()
+                .build());
+
+        ProcessRole processRole2 = processRoleRepository.save(newProcessRole()
+                .build());
+
+        List<Assessment> assessments = newAssessment()
+                .withProcessOutcome(asList(processOutcome1), asList(processOutcome2))
+                .withProcessRole(processRole1, processRole2)
+                .build(2);
+
+        List<Assessment> saved = assessments.stream().map(assessment -> repository.save(assessment)).collect(Collectors.toList());
+
+        List<Assessment> found = repository.findByProcessRoleIn(asList(processRole1, processRole2));
+        assertEquals(saved, found);
     }
 }

@@ -7,8 +7,11 @@ import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.List;
+
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static com.worth.ifs.assessment.builder.ProcessOutcomeResourceBuilder.newProcessOutcomeResource;
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.assessmentResourceResourceListType;
 import static java.lang.String.format;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
@@ -32,33 +35,43 @@ public class AssessmentRestServiceImplTest extends BaseRestServiceUnitTest<Asses
 
     @Test
     public void getById() throws Exception {
-        final AssessmentResource expected = newAssessmentResource()
-                .build();
+        AssessmentResource expected = newAssessmentResource().build();
 
-        final Long assessmentId = 1L;
+        Long assessmentId = 1L;
 
         setupGetWithRestResultExpectations(format("%s/%s", assessmentRestURL, assessmentId), AssessmentResource.class, expected, OK);
-        final AssessmentResource response = service.getById(assessmentId).getSuccessObject();
+        AssessmentResource response = service.getById(assessmentId).getSuccessObject();
+        assertSame(expected, response);
+    }
+
+    @Test
+    public void getByUserId() throws Exception {
+        List<AssessmentResource> expected = newAssessmentResource().build(2);
+
+        Long userId = 1L;
+
+        setupGetWithRestResultExpectations(format("%s/user/%s", assessmentRestURL, userId), assessmentResourceResourceListType(), expected, OK);
+        List<AssessmentResource> response = service.getByUserId(userId).getSuccessObject();
         assertSame(expected, response);
     }
 
     @Test
     public void recommend() throws Exception {
-        final Long assessmentId = 1L;
+        Long assessmentId = 1L;
 
         ProcessOutcomeResource processOutcome = newProcessOutcomeResource().build();
         setupPutWithRestResultExpectations(format("%s/%s/recommend", assessmentRestURL, assessmentId), processOutcome, OK);
-        final RestResult<Void> response = service.recommend(assessmentId, processOutcome);
+        RestResult<Void> response = service.recommend(assessmentId, processOutcome);
         assertTrue(response.isSuccess());
     }
 
     @Test
     public void rejectInvitation() throws Exception {
-        final Long assessmentId = 1L;
+        Long assessmentId = 1L;
 
         ProcessOutcomeResource processOutcome = newProcessOutcomeResource().build();
         setupPutWithRestResultExpectations(format("%s/%s/rejectInvitation", assessmentRestURL, assessmentId), processOutcome, OK);
-        final RestResult<Void> response = service.rejectInvitation(assessmentId, processOutcome);
+        RestResult<Void> response = service.rejectInvitation(assessmentId, processOutcome);
         assertTrue(response.isSuccess());
     }
 }

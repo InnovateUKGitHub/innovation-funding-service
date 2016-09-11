@@ -8,6 +8,8 @@ import com.worth.ifs.commons.rest.RestErrorResponse;
 import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
 import org.junit.Test;
 
+import java.util.List;
+
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static com.worth.ifs.assessment.builder.ProcessOutcomeResourceBuilder.newProcessOutcomeResource;
 import static com.worth.ifs.commons.error.CommonFailureKeys.ASSESSMENT_RECOMMENDATION_FAILED;
@@ -45,6 +47,22 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
                 .andExpect(content().string(objectMapper.writeValueAsString(expected)));
 
         verify(assessmentServiceMock, only()).findById(assessmentId);
+    }
+
+    @Test
+    public void findByUserId() throws Exception {
+        List<AssessmentResource> expected = newAssessmentResource()
+                .build(2);
+
+        Long userId = 1L;
+
+        when(assessmentServiceMock.findByUserId(userId)).thenReturn(serviceSuccess(expected));
+
+        mockMvc.perform(get("/assessment/user/{userId}", userId))
+                .andExpect(status().isOk())
+                .andExpect(content().string(objectMapper.writeValueAsString(expected)));
+
+        verify(assessmentServiceMock, only()).findByUserId(userId);
     }
 
     @Test

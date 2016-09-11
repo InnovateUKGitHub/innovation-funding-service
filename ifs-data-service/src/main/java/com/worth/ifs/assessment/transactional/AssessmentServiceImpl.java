@@ -9,6 +9,8 @@ import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.transactional.BaseTransactionalService;
+import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.workflow.mapper.ProcessOutcomeMapper;
 import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
 import org.jsoup.Jsoup;
@@ -17,6 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BeanPropertyBindingResult;
 
+import java.util.List;
+
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.ASSESSMENT_RECOMMENDATION_FAILED;
 import static com.worth.ifs.commons.error.CommonFailureKeys.ASSESSMENT_REJECTION_FAILED;
@@ -24,6 +28,7 @@ import static com.worth.ifs.commons.error.ErrorConverterFactory.toField;
 import static com.worth.ifs.commons.rest.ValidationMessages.rejectValue;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
@@ -39,6 +44,9 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     private AssessmentRepository assessmentRepository;
 
     @Autowired
+    private ProcessRoleRepository processRoleRepository;
+
+    @Autowired
     private AssessmentMapper assessmentMapper;
 
     @Autowired
@@ -50,6 +58,12 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     @Override
     public ServiceResult<AssessmentResource> findById(Long id) {
         return find(assessmentRepository.findOne(id), notFoundError(Assessment.class, id)).andOnSuccessReturn(assessmentMapper::mapToResource);
+    }
+
+    @Override
+    public ServiceResult<List<AssessmentResource>> findByUserId(Long userId) {
+        List<ProcessRole> processRoles = processRoleRepository.findByUserId(userId);
+        return serviceSuccess(simpleMap(assessmentRepository.findByProcessRoleIn(processRoles), assessmentMapper::mapToResource));
     }
 
     @Override

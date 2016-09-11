@@ -12,6 +12,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
+
 import static com.worth.ifs.assessment.builder.ProcessOutcomeResourceBuilder.newProcessOutcomeResource;
 import static com.worth.ifs.commons.error.CommonErrors.forbiddenError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
@@ -43,6 +45,17 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         assertEquals(Long.valueOf(3L), assessmentResource.getApplication());
         assertEquals(Long.valueOf(1L), assessmentResource.getCompetition());
         assertEquals(singletonList(2L), assessmentResource.getProcessOutcomes());
+    }
+
+    @Test
+    public void findByUserId() throws Exception {
+        Long userId = 3L;
+
+        loginPaulPlum();
+        RestResult<List<AssessmentResource>> result = controller.findByUserId(userId);
+        assertTrue(result.isSuccess());
+        List<AssessmentResource> assessmentResources = result.getSuccessObjectOrThrowException();
+        assertEquals(4, assessmentResources.size());
     }
 
     @Test

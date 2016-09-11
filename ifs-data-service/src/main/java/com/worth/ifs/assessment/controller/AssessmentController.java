@@ -3,13 +3,14 @@ package com.worth.ifs.assessment.controller;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.transactional.AssessmentService;
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.workflow.domain.ProcessOutcome;
 import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
@@ -27,6 +28,11 @@ public class AssessmentController {
     @RequestMapping(value= "/{id}", method = GET)
     public RestResult<AssessmentResource> findById(@PathVariable("id") final Long id) {
         return assessmentService.findById(id).toGetResponse();
+    }
+
+    @RequestMapping(value= "/user/{userId}", method = GET)
+    public RestResult<List<AssessmentResource>> findByUserId(@PathVariable("userId") final Long userId) {
+        return assessmentService.findByUserId(userId).toGetResponse();
     }
 
     @RequestMapping(value= "/{id}/recommend", method = PUT)
