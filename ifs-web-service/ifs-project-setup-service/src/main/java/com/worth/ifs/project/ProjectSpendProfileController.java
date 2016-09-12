@@ -149,7 +149,6 @@ public class ProjectSpendProfileController {
         if(result.isFailure()){
             ProjectSpendProfileViewModel spendProfileViewModel = buildSpendProfileViewModel(projectId, organisationId);
             spendProfileViewModel.setObjectErrors(Collections.singletonList(new ObjectError(SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE.getErrorKey(), "Cannot mark as complete, because totals more than eligible")));
-            //model.addAttribute("model", buildSpendProfileViewModel(projectId, organisationId));
             model.addAttribute("model", spendProfileViewModel);
             return "project/spend-profile";
         } else {
