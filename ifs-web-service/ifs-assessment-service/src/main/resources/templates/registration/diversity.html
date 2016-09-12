@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+    <head>
+        <div th:include="fragments/layout :: head" th:with="pageTitle='Diversity'" th:remove="tag"></div>
+    </head>
+
+    <body th:with="context='assessment'">
+        <div th:include="fragments/layout :: body-start" th:remove="tag"></div>
+        <div th:include="fragments/layout :: global-header" th:remove="tag"></div>
+
+        <main id="content">
+            <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
+            <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl='javascript:history.back()',currentApplication=${currentApplication}" th:remove="tag"/>
+
+            <div class="hgroup">
+                <h1 class="heading-xlarge">Diversity</h1>
+            </div>
+
+            <form>
+                <fieldset class="inline">
+                    <legend class="visuallyhidden">Gender</legend>
+                    <div class="form-group">
+                        <label class="block-label" for="gender-female">
+                            <input id="gender-female" type="radio" name="gender-group" value="Female">
+                            Female
+                        </label>
+                        <label class="block-label" for="gender-male">
+                            <input id="gender-male" type="radio" name="gender-group" value="Male">
+                            Male
+                        </label>
+                        <label class="block-label" for="gender-no-answer">
+                            <input id="gender-no-answer" type="radio" name="gender-group" value="Prefer not to say">
+                            Prefer not to say
+                        </label>
+                    </div>
+                </fieldset>
+            </form>
+
+            <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>
+        </main>
+
+        <div th:include="fragments/layout :: footer" th:remove="tag"></div>
+        <div th:include="fragments/layout :: body-end" th:remove="tag"></div>
+    </body>
+</html>
