@@ -25,12 +25,21 @@ public class CompetitionParticipantPermissionRules extends BasePermissionRules {
                 isSameUser(competitionParticipant, user);
     }
 
-    private boolean isAssessor(UserResource user) {
+    @PermissionRule(value = "READ", description = "only the same user can read their competition participation")
+    public boolean userCanViewTheirOwnCompetitionParticipation(CompetitionParticipantResource competitionParticipant, UserResource user) {
+        return isAssessor(user) && isSameParticipant(competitionParticipant, user);
+    }
+
+    private static boolean isSameParticipant(CompetitionParticipantResource competitionParticipant, UserResource user) {
+        return user.getId() == competitionParticipant.getUserId();
+    }
+
+    private static boolean isAssessor(UserResource user) {
         return user.hasRole(UserRoleType.ASSESSOR);
     }
 
     private static boolean isSameUser(CompetitionParticipantResource competitionParticipant, UserResource user) {
-        if (user.getId() == competitionParticipant.getUserId()) {
+        if (isSameParticipant(competitionParticipant, user)) {
             return true;
         }
         else if (   competitionParticipant.getUserId() == null &&

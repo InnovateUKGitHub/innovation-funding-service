@@ -19,7 +19,8 @@
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Finance contact'})" th:remove="tag" />
 	
-	<form action="/prototypes/1575-project-details">
+	<!--<form action="/prototypes/1575-project-details">-->
+	<form action="#">
 
 		<fieldset>
 
@@ -37,8 +38,8 @@
 				<li>review the spend profile of your project costs</li>
 			</ul>
 
-		
-			<div class="form-group extra-margin">			
+
+			<div class="form-group extra-margin">
 				<label for="finances-name-1" class="block-label">
 					<input id="finances-name-1" type="radio" name="finances-name-group" value="John Smith" checked="checked" />
 					John Smith
@@ -61,9 +62,9 @@
 				</label>
 
 				<input type="hidden" name="user" th:value="${param.user[0]}" th:unless="${param.user == null}" />
-				
+
 			</div>
-			
+
 		</fieldset>
 
 		<div th:include="prototypes/fragments/project-setup :: prototype-add-users('finance-contact')" th:remove="tag" />
@@ -88,9 +89,34 @@
 
 		</fieldset> -->
 
-		<p>If you add a new team member this section will remain in a pending state until they have accepted. Upon accepting and creating their account the team member will automatically be submitted as your Finance contact.</p>
+		<p>If you add a new team member, this section will show as pending until they have accepted. Once the team member has accepted and created their account, they will automatically be submitted as your finance contact.</p>
 
-		<button class="button button-large extra-margin" id="finance-cta">Submit</button>
+		<!--<button class="button button-large extra-margin">Submit</button>-->
+
+		<div class="extra-margin">
+			<a href="#" class="button button-large" data-js-modal="modal-submit" id="finance-cta">Submit</a>
+		</div>
+
+		<div class="modal-submit" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+			<button class="js-close close" aria-label="Close Popup">X</button>
+			<div>
+
+				<h2 class="heading-medium no-margin">Submit finance contact</h2>
+
+				<div id="message">[message]</div>
+
+				<hr />
+
+				<div class="alignright-button">
+
+					<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
+					<a href="/prototypes/1575-project-details" class="button">Submit finance contact</a>
+					<!--<button class="button">Submit finance contact</button>-->
+s
+				</div>
+
+			</div>
+		</div>
 
 	</form>
 
@@ -109,7 +135,7 @@
 
 		function $_GET(param) {
 	        var vars = {};
-	        window.location.href.replace( location.hash, '' ).replace( 
+	        window.location.href.replace( location.hash, '' ).replace(
 	            /[?&]+([^=&]+)=?([^&]*)?/gi, // regexp
 	            function( m, key, value ) { // callback
 	                vars[key] = value !== undefined ? value : '';
@@ -117,7 +143,7 @@
 	        );
 
 	        if ( param ) {
-	            return vars[param] ? vars[param] : null;    
+	            return vars[param] ? vars[param] : null;
 	        }
 	        return vars;
 	    }
@@ -141,7 +167,7 @@
 	    }*/
 
 
-		jQuery('#add-finance-contact').on('click',function(e){ 
+		jQuery('#add-finance-contact').on('click',function(e){
 
 			if(jQuery(this).is(':checked')){
 				jQuery('#finance-contact-table').show();
@@ -150,7 +176,7 @@
 			}
 		});
 
-		jQuery('#invite-finance-contact').on('click',function(e){ 
+		jQuery('#invite-finance-contact').on('click',function(e){
 			e.preventDefault();
 
 			var financeContact = jQuery('#name-finance-contact1').val();
@@ -162,27 +188,36 @@
 			jQuery('#finance-cta').text('Submit and send invitation');
 			jQuery('#finance-cta').show();
 			jQuery('#add-finance-contact').text('Change team member');
+			jQuery('#message').html('<p>As you are adding ' + financeContact + ' as a new team member they must create their account before they become your finance contact.<p>' +
+					'<p>You will still be able to change your selection until they create their account.</p>');
+
 
 		});
 
-		jQuery('input').on('click',function(e){ 
-			if(jQuery(this).is(':checked')){
+		jQuery('#message').html('<p>This will make ' + jQuery('input:radio[name="finances-name-group"]:checked').val() + ' your finance contact for the project.</p>');
 
-				if(jQuery(this).attr('id') != 'finances-name-invite'){
+		jQuery('input:radio[name="finances-name-group"]').on('change',function(e){
+			if(jQuery(this).is(':checked')){
+				var id = jQuery(this).attr('id');
+
+				if(id === 'finances-name-1' || id === 'finances-name-2'){
+					jQuery('#message').html('<p>This will make ' + jQuery('input:radio[name="finances-name-group"]:checked').val() + ' your finance contact for the project.</p>');
 					jQuery('#finance-cta').text('Submit');
-				}else{
+				}else {
+					jQuery('#message').html('<p>As you are adding ' + jQuery('input:radio[name="finances-name-group"]:checked').val() + ' as a new team member they must create their account before they become your finance contact.<p>' +
+							'<p>You will still be able to change your selection until they create their account.</p>');
+
 					jQuery('#finance-cta').text('Submit and send invitation');
 				}
 
 				if(jQuery(this).attr('id') != 'add-finance-contact'){
+
 					jQuery('#finance-contact-table').hide();
 				}
-				
+
 				jQuery('#finance-cta').show();
 			}
 		});
-
-
 
 		
 

@@ -1,5 +1,6 @@
 package com.worth.ifs.security;
 
+import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.invite.domain.ProjectParticipantRole;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
@@ -43,6 +44,9 @@ public abstract class BasePermissionRules {
 
     @Autowired
     protected UserRepository userRepository;
+
+    @Autowired
+    protected AssessmentRepository assessmentRepository;
 
     protected boolean isMemberOfProjectTeam(long applicationId, UserResource user) {
         return isLeadApplicant(applicationId, user) || isCollaborator(applicationId, user);

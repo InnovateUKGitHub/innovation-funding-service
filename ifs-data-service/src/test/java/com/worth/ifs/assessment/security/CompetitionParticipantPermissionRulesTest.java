@@ -20,7 +20,7 @@ public class CompetitionParticipantPermissionRulesTest extends BasePermissionRul
     }
 
     @Test
-    public void isSameUser() {
+    public void userCanAcceptCompetitionInvite() {
         CompetitionParticipantResource competitionParticipantResource = newCompetitionParticipantResource()
                 .withUser(1L)
                 .build();
@@ -33,7 +33,7 @@ public class CompetitionParticipantPermissionRulesTest extends BasePermissionRul
     }
 
     @Test
-    public void isSameUser_differentParticipantUser() {
+    public void userCanAcceptCompetitionInvite_differentParticipantUser() {
         CompetitionParticipantResource competitionParticipantResource = newCompetitionParticipantResource()
                 .withUser(1L)
                 .build();
@@ -46,7 +46,7 @@ public class CompetitionParticipantPermissionRulesTest extends BasePermissionRul
     }
 
     @Test
-    public void isSameUser_noParticipantUserAndSameEmail() {
+    public void userCanAcceptCompetitionInvite_noParticipantUserAndSameEmail() {
         CompetitionParticipantResource competitionParticipantResource = newCompetitionParticipantResource()
                 .withInvite(newCompetitionInviteResource().withEmail("tom@poly.io"))
                 .build();
@@ -59,7 +59,7 @@ public class CompetitionParticipantPermissionRulesTest extends BasePermissionRul
     }
 
     @Test
-    public void isSameUser_noParticipantUserAndDifferentEmail() {
+    public void userCanAcceptCompetitionInvite_noParticipantUserAndDifferentEmail() {
         CompetitionParticipantResource competitionParticipantResource = newCompetitionParticipantResource()
                 .withInvite(newCompetitionInviteResource().withEmail("tom@poly.io"))
                 .build();
@@ -69,5 +69,43 @@ public class CompetitionParticipantPermissionRulesTest extends BasePermissionRul
                 .build();
 
         assertFalse(rules.userCanAcceptCompetitionInvite(competitionParticipantResource, userResource));
+    }
+
+    @Test
+    public void userCanViewTheirOwnCompetitionParticipation() {
+        CompetitionParticipantResource competitionParticipantResource = newCompetitionParticipantResource()
+                .withUser(7L)
+                .build();
+        UserResource userResource = newUserResource()
+                .withId(7L)
+                .withRolesGlobal(singletonList(assessorRole()))
+                .build();
+
+        assertTrue(rules.userCanViewTheirOwnCompetitionParticipation(competitionParticipantResource, userResource));
+    }
+
+    @Test
+    public void userCanViewTheirOwnCompetitionParticipation_differentUser() {
+        CompetitionParticipantResource competitionParticipantResource = newCompetitionParticipantResource()
+                .withUser(7L)
+                .build();
+        UserResource userResource = newUserResource()
+                .withId(11L)
+                .withRolesGlobal(singletonList(assessorRole()))
+                .build();
+
+        assertFalse(rules.userCanViewTheirOwnCompetitionParticipation(competitionParticipantResource, userResource));
+    }
+
+    @Test
+    public void userCanViewTheirOwnCompetitionParticipation_notAssessor() {
+        CompetitionParticipantResource competitionParticipantResource = newCompetitionParticipantResource()
+                .withUser(7L)
+                .build();
+        UserResource userResource = newUserResource()
+                .withId(7L)
+                .build();
+
+        assertFalse(rules.userCanViewTheirOwnCompetitionParticipation(competitionParticipantResource, userResource));
     }
 }
