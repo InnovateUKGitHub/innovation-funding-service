@@ -30,14 +30,11 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
-
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-
-
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static com.worth.ifs.competitionsetup.service.sectionupdaters.InitialDetailsSectionSaver.OPENINGDATE_FIELDNAME;
 import static org.codehaus.groovy.runtime.InvokerHelper.asList;
@@ -49,7 +46,6 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
 
 /**
  * Class for testing public functions of {@link CompetitionSetupController}
@@ -192,7 +188,6 @@ public class CompetitionSetupControllerTest {
         verify(competitionSetupService).autoSaveCompetitionSetupSection(isA(CompetitionResource.class), eq(CompetitionSetupSection.INITIAL_DETAILS), eq(fieldName), eq(value), eq(Optional.of(objectId)));
     }
 
-
     @Test
     public void submitAutoSaveValidationErrors() throws Exception {
         CompetitionResource competition = newCompetitionResource().withCompetitionStatus(Status.COMPETITION_SETUP).build();
@@ -233,7 +228,6 @@ public class CompetitionSetupControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("message", is("1612-1")));
     }
-
 
     @Test
     public void submitSectionInitialDetailsWithErrors() throws Exception {
@@ -302,7 +296,6 @@ public class CompetitionSetupControllerTest {
                         .param("resubmission", "yes"))
                         .andExpect(status().is3xxRedirection())
                         .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/eligibility"));
-
 
         verify(competitionSetupService).saveCompetitionSetupSection(isA(CompetitionSetupForm.class), eq(competition), eq(CompetitionSetupSection.ELIGIBILITY));
     }
@@ -381,7 +374,6 @@ public class CompetitionSetupControllerTest {
         verify(competitionSetupService, atLeastOnce()).saveCompetitionSetupSection(any(AdditionalInfoForm.class),
                 any(CompetitionResource.class), any(CompetitionSetupSection.class));
     }
-
 
     @Test
     public void testSendToDashboard() throws Exception {
