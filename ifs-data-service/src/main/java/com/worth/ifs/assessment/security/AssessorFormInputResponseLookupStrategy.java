@@ -25,5 +25,4 @@ public class AssessorFormInputResponseLookupStrategy {
     public AssessorFormInputResponseResource getAssessorFormInputResponseResource(Long id) {
         return assessorFormInputResponseMapper.mapToResource(assessorFormInputResponseRepository.findOne(id));
     }
-
 }

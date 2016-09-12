@@ -89,10 +89,25 @@ public class ProjectPermissionRules extends BasePermissionRules {
 
     @PermissionRule(
             value = "DOWNLOAD_OTHER_DOCUMENTS",
-            description = "Partners can download Other Documents (Collaboration Agreement, Exploitation Plan) that their lead partners have uploaded")
+            description = "Partners can download Other Documents (Collaboration Agreement, Exploitation Plan)")
     public boolean partnersCanDownloadOtherDocuments(ProjectResource project, UserResource user) {
         return isPartner(project.getId(), user.getId());
     }
+
+    @PermissionRule(
+            value = "DOWNLOAD_OTHER_DOCUMENTS",
+            description = "Competition Admin can download Other Documents (Collaboration Agreement, Exploitation Plan)")
+    public boolean competitionAdminCanDownloadOtherDocuments(ProjectResource project, UserResource user) {
+        return isCompAdmin(user);
+    }
+
+    @PermissionRule(
+            value = "DOWNLOAD_OTHER_DOCUMENTS",
+            description = "Project finance users can download Other Documents (Collaboration Agreement, Exploitation Plan)")
+    public boolean projectFinanceUserCanDownloadOtherDocuments(ProjectResource project, UserResource user) {
+        return isProjectFinanceUser(user);
+    }
+
 
     @PermissionRule(
             value = "VIEW_OTHER_DOCUMENTS_DETAILS",
