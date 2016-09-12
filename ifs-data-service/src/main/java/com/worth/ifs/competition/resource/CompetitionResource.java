@@ -6,7 +6,6 @@ import com.worth.ifs.application.resource.ApplicationResource;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -24,7 +23,7 @@ public class CompetitionResource {
     private List<Long> questions = new ArrayList<>();
     private List<Long> sections = new ArrayList<>();
     private List<Long> milestones = new ArrayList<>();
-    private List<CompetitionCoFunderResource> coFunders = new ArrayList<>();
+    private List<CompetitionFunderResource> funders = new ArrayList<>();
 
     private String name;
     private String description;
@@ -65,8 +64,6 @@ public class CompetitionResource {
 
     private String activityCode;
     private String innovateBudget;
-    private String funder;
-    private BigDecimal funderBudget;
 
     public CompetitionResource() {
         // no-arg constructor
@@ -459,27 +456,11 @@ public class CompetitionResource {
         this.innovateBudget = innovateBudget;
     }
 
-    public String getFunder() {
-        return funder;
+    public List<CompetitionFunderResource> getFunders() {
+        return funders;
     }
 
-    public void setFunder(String funder) {
-        this.funder = funder;
-    }
-
-    public BigDecimal getFunderBudget() {
-        return funderBudget;
-    }
-
-    public void setFunderBudget(BigDecimal funderBudget) {
-        this.funderBudget = funderBudget;
-    }
-
-    public List<CompetitionCoFunderResource> getCoFunders() {
-        return coFunders;
-    }
-
-    public void setCoFunders(List<CompetitionCoFunderResource> coFunders) {
-        this.coFunders = coFunders;
+    public void setFunders(List<CompetitionFunderResource> funders) {
+        this.funders = funders;
     }
 }
