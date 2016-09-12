@@ -74,9 +74,10 @@ public class AdditionalInfoSectionSaver extends AbstractSectionSaver implements 
 				competitionResource.setCode(value);
 				break;
 			case "removeFunder":
-				try {
-					competitionResource.getFunders().remove((int) Integer.valueOf(value));
-				} catch (IndexOutOfBoundsException e) {
+				int index = Integer.valueOf(value);
+				if (index > 0 && competitionResource.getFunders().size() > index) {
+					competitionResource.getFunders().remove(index);
+				} else {
 					return asList(new Error("Field not found", HttpStatus.BAD_REQUEST));
 				}
 				break;
