@@ -216,20 +216,20 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         competition.setInnovationArea(areaId);
 
         //With one co-funder
-        competition.setCoFunders(CompetitionCoFundersFixture.getNewTestCoFundersResouces(1, competition.getId()));
+        competition.setFunders(CompetitionCoFundersFixture.getNewTestCoFundersResouces(1, competition.getId()));
         RestResult<CompetitionResource> saveResult = controller.saveCompetition(competition, competition.getId());
         assertTrue("Assert save is success", saveResult.isSuccess());
         getAllCompetitions(3);
         CompetitionResource savedCompetition = saveResult.getSuccessObject();
-        assertEquals(1, savedCompetition.getCoFunders().size());
+        assertEquals(1, savedCompetition.getFunders().size());
 
         // Now re-insert with 2 co-funders
-        competition.setCoFunders(CompetitionCoFundersFixture.getNewTestCoFundersResouces(2, competition.getId()));
+        competition.setFunders(CompetitionCoFundersFixture.getNewTestCoFundersResouces(2, competition.getId()));
         saveResult = controller.saveCompetition(competition, competition.getId());
         assertTrue("Assert save is success", saveResult.isSuccess());
         savedCompetition = saveResult.getSuccessObject();
         // we should expect in total two co-funders.
-        assertEquals(2, savedCompetition.getCoFunders().size());
+        assertEquals(2, savedCompetition.getFunders().size());
     }
 
     @Rollback
