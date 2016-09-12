@@ -77,27 +77,35 @@ public class CompetitionTest {
         competition.setBudgetCode(budgetCode);
         competition.setActivityCode(activityCode);
         competition.setInnovateBudget(innovateBudget);
-        competition.setFunder(funder);
-        competition.setFunderBudget(funderBudget);
-
-        competition.setCoFunders(getTestCoFunders(competition));
+        competition.setFunders(getTestFunders(competition));
     }
 
 
-    private List<CompetitionCoFunder> getTestCoFunders(Competition competition) {
-        List<CompetitionCoFunder> returnList = new ArrayList<>();
-        CompetitionCoFunder coFunder1 = new CompetitionCoFunder();
+    private List<CompetitionFunder> getTestFunders(Competition competition) {
+        List<CompetitionFunder> returnList = new ArrayList<>();
+        CompetitionFunder Funder1 = new CompetitionFunder();
+        Funder1.setId(1L);
+        Funder1.setCompetition(competition);
+        Funder1.setFunder("Funder1");
+        Funder1.setFunderBudget(new BigDecimal(1));
+        Funder1.setCoFunder(false);
+        returnList.add(Funder1);
+
+
+        CompetitionFunder coFunder1 = new CompetitionFunder();
         coFunder1.setId(1L);
         coFunder1.setCompetition(competition);
-        coFunder1.setCoFunder("CoFunder1");
-        coFunder1.setCoFunderBudget(new BigDecimal(1));
+        coFunder1.setFunder("CoFunder1");
+        coFunder1.setFunderBudget(new BigDecimal(1));
+        coFunder1.setCoFunder(true);
         returnList.add(coFunder1);
 
-        CompetitionCoFunder coFunder2 = new CompetitionCoFunder();
+        CompetitionFunder coFunder2 = new CompetitionFunder();
         coFunder2.setId(2L);
         coFunder2.setCompetition(competition);
-        coFunder2.setCoFunder("CoFunder2");
-        coFunder2.setCoFunderBudget(new BigDecimal(2));
+        coFunder2.setFunder("CoFunder2");
+        coFunder2.setFunderBudget(new BigDecimal(2));
+        coFunder1.setCoFunder(true);
         returnList.add(coFunder2);
 
         return returnList;
@@ -115,9 +123,7 @@ public class CompetitionTest {
         assertEquals(competition.getBudgetCode(), budgetCode);
         assertEquals(competition.getActivityCode(), activityCode);
         assertEquals(competition.getInnovateBudget(), innovateBudget);
-        assertEquals(competition.getFunder(), funder);
-        assertEquals(competition.getFunderBudget(), funderBudget);
-        assertEquals(competition.getCoFunders().size(), getTestCoFunders(competition).size());
+        assertEquals(competition.getFunders().size(), getTestFunders(competition).size());
     }
 
     @Test

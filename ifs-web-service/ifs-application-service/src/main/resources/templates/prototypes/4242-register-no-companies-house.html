@@ -83,7 +83,7 @@
 					
 					<h2 class="heading-medium no-margin">Update business type</h2>
 
-					<p>Making this change will inform Innovate UK of your selection as a <strong><span id="bus-type">[business type]</span></strong></p>
+					<p>Making this change will inform Innovate UK of your selection as <span id="bus-type-article">[article]</span> <strong><span id="bus-type">[business type]</span></strong></p>
 
 					<hr />
 		            
@@ -117,7 +117,13 @@
 	jQuery("input[name='bus-group']").on('click',function(e){ 
 		if ( jQuery(this).is(':checked') ) {
 
-			jQuery('#bus-type').text(jQuery(this).val())
+			jQuery('#bus-type').text(jQuery(this).val());
+
+			if(jQuery(this).val() === 'Unlimited Company' || jQuery(this).val() === 'Unincorporated (including Trusts)') {
+				jQuery('#bus-type-article').text('an');
+			} else {
+				jQuery('#bus-type-article').text('a');
+			}
 
 		}
 	});
