@@ -5,12 +5,10 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 
 /**
- * Created by skistapur on 18/07/2016.
- *
  * Entity model to store the Competition Co-Funders.
  */
 @Entity
-public class CompetitionCoFunder {
+public class CompetitionFunder {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -20,11 +18,9 @@ public class CompetitionCoFunder {
     @JoinColumn(name="competition_id", referencedColumnName="id")
     private Competition competition;
 
-    @Column(name = "co_funder")
-    private String coFunder;
-
-    @Column(name = "co_funder_budget")
-    private BigDecimal coFunderBudget;
+    private String funder;
+    private BigDecimal funderBudget;
+    private Boolean coFunder;
 
     public Long getId() {
         return id;
@@ -42,29 +38,38 @@ public class CompetitionCoFunder {
         this.competition = competition;
     }
 
-    public String getCoFunder() {
+    public String getFunder() {
+        return funder;
+    }
+
+    public void setFunder(String funder) {
+        this.funder = funder;
+    }
+
+    public BigDecimal getFunderBudget() {
+        return funderBudget;
+    }
+
+    public void setFunderBudget(BigDecimal funderBudget) {
+        this.funderBudget = funderBudget;
+    }
+
+    public Boolean getCoFunder() {
         return coFunder;
     }
 
-    public void setCoFunder(String coFunder) {
+    public void setCoFunder(Boolean coFunder) {
         this.coFunder = coFunder;
-    }
-
-    public BigDecimal getCoFunderBudget() {
-        return coFunderBudget;
-    }
-
-    public void setCoFunderBudget(BigDecimal coFunderBudget) {
-        this.coFunderBudget = coFunderBudget;
     }
 
     @Override
     public String toString() {
-        return "CompetitionCoFunder{" +
+        return "CompetitionFunder{" +
                 "id=" + id +
                 ", competition=" + competition +
-                ", coFunder='" + coFunder + '\'' +
-                ", coFunderBudget=" + coFunderBudget +
+                ", funder='" + funder + '\'' +
+                ", funderBudget=" + funderBudget +
+                ", coFunder =" + coFunder +
                 '}';
     }
 }

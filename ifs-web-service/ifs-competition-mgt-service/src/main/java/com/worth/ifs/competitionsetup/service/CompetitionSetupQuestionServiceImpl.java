@@ -28,6 +28,33 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
     private final Long fileUploadId = 4L;
     private final Long assessorScoreId = 23L;
 
+
+    @Override
+    public Question getQuestion(final Long questionId) {
+        QuestionResource questionResource = questionService.getById(questionId);
+
+        Question question = new Question();
+        List<FormInputResource> formInputResources = formInputService.findApplicationInputsByQuestion(questionId);
+        List<FormInputResource> formInputAssessmentResources = formInputService.findAssessmentInputsByQuestion(questionId);
+
+        question.setId(questionResource.getId());
+        question.setTitle(questionResource.getName());
+        question.setSubTitle(questionResource.getDescription());
+
+        Optional<FormInputResource> result = formInputResources.stream().filter(formInput -> !formInput.getFormInputType().equals(4L)).findFirst();
+        if(result.isPresent()) {
+            FormInputResource formInputResource = result.get();
+            question.setGuidanceTitle(formInputResource.getGuidanceQuestion());
+            question.setGuidance(formInputResource.getGuidanceAnswer());
+            question.setMaxWords(formInputResource.getWordCount());
+        }
+
+        question.setAppendix(hasAppendix(formInputResources));
+        question.setScored(hasAssessorScore(formInputAssessmentResources));
+
+        return question;
+    }
+
     @Override
 	public void updateQuestion(Question question) {
 		QuestionResource questionResource = questionService.getById(question.getId());
@@ -78,7 +105,11 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
                 appendix.setQuestion(questionResource.getId());
                 appendix.setCompetition(formInputResource.getCompetition());
                 appendix.setScope(FormInputScope.APPLICATION);
-                appendix.setPriority(formInputResource.getPriority() + 1);
+                if(formInputResource.getPriority() != null) {
+                    appendix.setPriority(formInputResource.getPriority() + 1);
+                } else {
+                    appendix.setPriority(0);
+                }
                 appendix.setWordCount(null);
 
                 formInputService.save(appendix);

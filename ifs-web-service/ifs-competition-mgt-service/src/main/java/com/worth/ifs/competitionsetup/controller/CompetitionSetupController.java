@@ -15,6 +15,7 @@ import com.worth.ifs.competition.resource.CompetitionResource.Status;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competitionsetup.form.*;
 import com.worth.ifs.competitionsetup.model.Question;
+import com.worth.ifs.competitionsetup.model.Funder;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupService;
@@ -171,6 +172,7 @@ public class CompetitionSetupController {
     @ResponseBody
     public JsonNode saveFormElement(@RequestParam("fieldName") String fieldName,
                                     @RequestParam("value") String value,
+                                    @RequestParam(name = "objectId", required = false) Long objectId,
                                     @PathVariable("competitionId") Long competitionId,
                                     @PathVariable("sectionPath") String sectionPath,
                                     HttpServletRequest request) {
@@ -180,7 +182,7 @@ public class CompetitionSetupController {
 
         List<String> errors = new ArrayList<>();
         try {
-            errors = toStringList(competitionSetupService.autoSaveCompetitionSetupSection(competitionResource, section, fieldName, value));
+            errors = toStringList(competitionSetupService.autoSaveCompetitionSetupSection(competitionResource, section, fieldName, value, Optional.ofNullable(objectId)));
 
             return this.createJsonObjectNode(errors.isEmpty(), errors);
         } catch (Exception e) {
@@ -214,13 +216,15 @@ public class CompetitionSetupController {
         if (request.getParameterMap().containsKey("generate-code")) {
             CompetitionResource competition = competitionService.getById(competitionId);
             if (competition.getStartDate() != null) {
-                competitionService.generateCompetitionCode(competitionId, competition.getStartDate());
-                return "redirect:/competition/setup/" + competitionId + "/section/additional";
+                String generatedCode = competitionService.generateCompetitionCode(competitionId, competition.getStartDate());
+                competitionSetupForm.setCompetitionCode(generatedCode.substring(1, generatedCode.length() - 1));
             }
         } else if (request.getParameterMap().containsKey("add-cofunder")) {
-            List<CoFunderForm> coFunders = competitionSetupForm.getCoFunders();
-            coFunders.add(new CoFunderForm());
-            competitionSetupForm.setCoFunders(coFunders);
+            List<Funder> funders = competitionSetupForm.getFunders();
+            Funder newFunder = new Funder();
+            newFunder.setCoFunder(true);
+            funders.add(newFunder);
+            competitionSetupForm.setFunders(funders);
         }
 
         return genericCompetitionSetupSection(competitionSetupForm, bindingResult, competitionId, CompetitionSetupSection.ADDITIONAL_INFO, model);
