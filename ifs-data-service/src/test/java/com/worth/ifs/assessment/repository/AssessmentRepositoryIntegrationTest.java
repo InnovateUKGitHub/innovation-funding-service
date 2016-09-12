@@ -1,6 +1,8 @@
 package com.worth.ifs.assessment.repository;
 
 import com.worth.ifs.BaseRepositoryIntegrationTest;
+import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
@@ -31,6 +33,9 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
     private AssessorFormInputResponseRepository assessorFormInputResponseRepository;
 
     @Autowired
+    private ApplicationRepository applicationRepository;
+
+    @Autowired
     @Override
     protected void setRepository(final AssessmentRepository repository) {
         this.repository = repository;
@@ -54,9 +59,12 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
         final ProcessRole processRole2 = processRoleRepository.save(newProcessRole()
                 .build());
 
+        final Application application = applicationRepository.findOne(1L);
+
         final List<Assessment> assessments = newAssessment()
+                .withApplication(application)
                 .withProcessOutcome(asList(processOutcome1), asList(processOutcome2))
-                .withProcessRole(processRole1, processRole2)
+                .withParticipant(processRole1, processRole2)
                 .build(2);
 
         final Set<Assessment> saved = assessments.stream().map(assessment -> repository.save(assessment)).collect(Collectors.toSet());
@@ -82,14 +90,17 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
         final ProcessRole processRole2 = processRoleRepository.save(newProcessRole()
                 .build());
 
+        final Application application = applicationRepository.findOne(1L);
+
         final List<Assessment> assessments = newAssessment()
+                .withApplication(application)
                 .withProcessOutcome(asList(processOutcome1), asList(processOutcome2))
-                .withProcessRole(processRole1, processRole2)
+                .withParticipant(processRole1, processRole2)
                 .build(2);
 
         final List<Assessment> saved = assessments.stream().map(assessment -> repository.save(assessment)).collect(Collectors.toList());
 
-        final Assessment found = repository.findOneByProcessRoleId(processRole1.getId());
+        final Assessment found = repository.findOneByParticipantId(processRole1.getId());
         assertEquals(saved.get(0), found);
     }
 }

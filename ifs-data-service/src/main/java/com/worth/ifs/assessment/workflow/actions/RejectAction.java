@@ -33,7 +33,7 @@ public class RejectAction implements Action<String, String> {
         ProcessOutcome processOutcome = (ProcessOutcome) context.getMessageHeader("processOutcome");
         Long processRoleId = (Long) context.getMessageHeader("processRoleId");
 
-        Assessment assessment = assessmentRepository.findOneByProcessRoleId(processRoleId);
+        Assessment assessment = assessmentRepository.findOneByParticipantId(processRoleId);
         if (assessment != null) {
 
             processOutcome.setProcess(assessment);

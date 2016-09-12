@@ -40,7 +40,7 @@ public class AssessmentResourceBuilderTest {
                 .withStartDate(expectedStartDate)
                 .withEndDate(expectedEndDate)
                 .withProcessOutcome(expectedProcessOutcomes)
-                .withProcessRole(expectedProcessRole)
+                .withParticipant(expectedProcessRole)
                 .withSubmitted(expectedSubmitted)
                 .withStarted(expectedStarted)
                 .withApplication(expectedApplication)
@@ -54,7 +54,7 @@ public class AssessmentResourceBuilderTest {
         assertEquals(expectedStartDate, assessment.getStartDate());
         assertEquals(expectedEndDate, assessment.getEndDate());
         assertEquals(expectedProcessOutcomes, assessment.getProcessOutcomes());
-        assertEquals(expectedProcessRole, assessment.getProcessRole());
+        assertEquals(expectedProcessRole, assessment.getParticipant());
         assertEquals(expectedSubmitted, assessment.getSubmitted());
         assertEquals(expectedStarted, assessment.getStarted());
         assertEquals(expectedApplication, assessment.getApplication());
@@ -86,7 +86,7 @@ public class AssessmentResourceBuilderTest {
                 .withStartDate(expectedStartDates)
                 .withEndDate(expectedEndDates)
                 .withProcessOutcome(expectedProcessOutcomes1, expectedProcessOutcomes2)
-                .withProcessRole(expectedProcessRoles)
+                .withParticipant(expectedProcessRoles)
                 .withSubmitted(expectedSubmittedValues)
                 .withStarted(expectedStartedValues)
                 .withApplication(expectedApplications)
@@ -101,7 +101,7 @@ public class AssessmentResourceBuilderTest {
         assertEquals(expectedStartDates[0], first.getStartDate());
         assertEquals(expectedEndDates[0], first.getEndDate());
         assertEquals(expectedProcessOutcomes1, first.getProcessOutcomes());
-        assertEquals(expectedProcessRoles[0], first.getProcessRole());
+        assertEquals(expectedProcessRoles[0], first.getParticipant());
         assertEquals(expectedSubmittedValues[0], first.getSubmitted());
         assertEquals(expectedStartedValues[0], first.getStarted());
         assertEquals(expectedApplications[0], first.getApplication());
@@ -115,7 +115,7 @@ public class AssessmentResourceBuilderTest {
         assertEquals(expectedStartDates[1], second.getStartDate());
         assertEquals(expectedEndDates[1], second.getEndDate());
         assertEquals(expectedProcessOutcomes2, second.getProcessOutcomes());
-        assertEquals(expectedProcessRoles[1], second.getProcessRole());
+        assertEquals(expectedProcessRoles[1], second.getParticipant());
         assertEquals(expectedSubmittedValues[1], second.getSubmitted());
         assertEquals(expectedStartedValues[1], second.getStarted());
         assertEquals(expectedApplications[1], second.getApplication());

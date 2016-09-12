@@ -29,7 +29,7 @@ public class RecommendAction implements Action<String, String> {
     public void execute(StateContext<String, String> context) {
         ProcessOutcome updatedProcessOutcome = (ProcessOutcome) context.getMessageHeader("processOutcome");
         Long processRoleId = (Long) context.getMessageHeader("processRoleId");
-        Assessment assessment = assessmentRepository.findOneByProcessRoleId(processRoleId);
+        Assessment assessment = assessmentRepository.findOneByParticipantId(processRoleId);
 
         if(assessment!=null) {
             Optional<ProcessOutcome> processOutcome = assessment.getProcessOutcomes()

@@ -1,5 +1,6 @@
 package com.worth.ifs.assessment.mapper;
 
+import com.worth.ifs.application.mapper.ApplicationMapper;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.commons.mapper.BaseMapper;
@@ -17,7 +18,8 @@ import org.mapstruct.Mappings;
         config = GlobalMapperConfig.class,
         uses = {
                 ProcessOutcomeMapper.class,
-                ProcessRoleMapper.class
+                ProcessRoleMapper.class,
+                ApplicationMapper.class
         }
 )
 public abstract class AssessmentMapper extends BaseMapper<Assessment, AssessmentResource, Long> {
@@ -26,8 +28,8 @@ public abstract class AssessmentMapper extends BaseMapper<Assessment, Assessment
             @Mapping(source = "processStatus", target = "status"),
             @Mapping(source = "processEvent", target = "event"),
             @Mapping(source = "version", target = "lastModified"),
-            @Mapping(source = "processRole.application.id", target = "application"),
-            @Mapping(source = "processRole.application.competition.id", target = "competition"),
+            @Mapping(source = "participant.application.id", target = "application"),
+            @Mapping(source = "participant.application.competition.id", target = "competition"),
     })
     @Override
     public abstract AssessmentResource mapToResource(Assessment domain);

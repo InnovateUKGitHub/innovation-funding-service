@@ -1,12 +1,10 @@
 package com.worth.ifs.workflow.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.worth.ifs.user.domain.ProcessRole;
-import org.hibernate.annotations.*;
+import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.*;
-import javax.persistence.Entity;
 import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.List;
@@ -18,7 +16,7 @@ import java.util.List;
 @Entity
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "process_type", discriminatorType = DiscriminatorType.STRING)
-public abstract class Process {
+public abstract class Process<ParticipantType, TargetType> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -37,15 +35,7 @@ public abstract class Process {
     @Cascade(CascadeType.ALL)
     protected List<ProcessOutcome> processOutcomes;
 
-    @ManyToOne
-    @JoinColumn(name="processRole", referencedColumnName = "id")
-    ProcessRole processRole;
-
     public Process() {
-    }
-
-    public Process(ProcessRole processRole) {
-        this.processRole = processRole;
     }
 
     public Process(String event, String status) {
@@ -116,11 +106,11 @@ public abstract class Process {
         return lastModified;
     }
 
-    public void setProcessRole(ProcessRole processRole) {
-        this.processRole = processRole;
-    }
+    public abstract void setParticipant(ParticipantType participant);
 
-    public ProcessRole getProcessRole() {
-        return processRole;
-    }
+    public abstract ParticipantType getParticipant();
+
+    public abstract void setTarget(TargetType target);
+
+    public abstract TargetType getTarget();
 }

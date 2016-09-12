@@ -1,6 +1,7 @@
 package com.worth.ifs.assessment.builder;
 
 import com.worth.ifs.BaseBuilder;
+import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
@@ -64,7 +65,11 @@ public class AssessmentBuilder extends BaseBuilder<Assessment, AssessmentBuilder
         return withArray((processOutcome, object) -> setField("processOutcomes", processOutcome, object), processOutcomes);
     }
 
-    public AssessmentBuilder withProcessRole(ProcessRole... processRoles) {
-        return withArray((processRole, object) -> setField("processRole", processRole, object), processRoles);
+    public AssessmentBuilder withParticipant(ProcessRole... processRoles) {
+        return withArray((processRole, object) -> setField("participant", processRole, object), processRoles);
+    }
+
+    public AssessmentBuilder withApplication(Application... application) {
+        return withArray((app, object) -> setField("target", app, object), application);
     }
 }

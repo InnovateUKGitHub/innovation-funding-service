@@ -25,7 +25,7 @@ public class AssessmentPermissionRules extends BasePermissionRules {
     }
 
     private boolean isAssessorForAssessment(final AssessmentResource assessment, final UserResource user) {
-        Long assessmentUser = processRoleRepository.findOne(assessment.getProcessRole()).getUser().getId();
+        Long assessmentUser = processRoleRepository.findOne(assessment.getParticipant()).getUser().getId();
         return user.getId().equals(assessmentUser);
     }
 }

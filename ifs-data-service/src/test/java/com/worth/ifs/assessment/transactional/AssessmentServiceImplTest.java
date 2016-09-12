@@ -64,7 +64,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         Assessment assessment = newAssessment()
                 .withId(assessmentId)
                 .withProcessStatus(AssessmentStates.OPEN)
-                .withProcessRole(processRole)
+                .withParticipant(processRole)
                 .build();
 
         ProcessOutcome processOutcome = newProcessOutcome().build();
@@ -98,7 +98,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         Assessment assessment = newAssessment()
                 .withId(assessmentId)
                 .withProcessStatus(AssessmentStates.OPEN)
-                .withProcessRole(processRole)
+                .withParticipant(processRole)
                 .build();
 
         ProcessOutcome processOutcome = newProcessOutcome().build();
@@ -126,7 +126,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         Assessment assessment = newAssessment()
                 .withId(assessmentId)
                 .withProcessStatus(AssessmentStates.OPEN)
-                .withProcessRole(processRole)
+                .withParticipant(processRole)
                 .build();
 
         ProcessOutcome processOutcome = newProcessOutcome().build();
@@ -159,7 +159,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         Assessment assessment = newAssessment()
                 .withId(assessmentId)
                 .withProcessStatus(AssessmentStates.OPEN)
-                .withProcessRole(processRole)
+                .withParticipant(processRole)
                 .build();
 
         ProcessOutcome processOutcome = newProcessOutcome().build();
@@ -191,7 +191,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         Assessment assessment = newAssessment()
                 .withId(assessmentId)
                 .withProcessStatus(AssessmentStates.OPEN)
-                .withProcessRole(processRole)
+                .withParticipant(processRole)
                 .build();
 
         ProcessOutcome processOutcome = newProcessOutcome().build();

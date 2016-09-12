@@ -6,7 +6,6 @@ import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
 import com.worth.ifs.workflow.resource.ProcessEvent;
 import com.worth.ifs.workflow.resource.ProcessStates;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDate;
@@ -40,7 +39,7 @@ public class AssessmentBuilderTest {
                 .withStartDate(expectedStartDate)
                 .withEndDate(expectedEndDate)
                 .withProcessOutcome(expectedProcessOutcomes)
-                .withProcessRole(expectedProcessRole)
+                .withParticipant(expectedProcessRole)
                 .build();
 
         assertEquals(expectedId, assessment.getId());
@@ -50,7 +49,7 @@ public class AssessmentBuilderTest {
         assertEquals(expectedStartDate, assessment.getStartDate());
         assertEquals(expectedEndDate, assessment.getEndDate());
         assertEquals(expectedProcessOutcomes, assessment.getProcessOutcomes());
-        assertEquals(expectedProcessRole, assessment.getProcessRole());
+        assertEquals(expectedProcessRole, assessment.getParticipant());
     }
 
     @Test
@@ -73,7 +72,7 @@ public class AssessmentBuilderTest {
                 .withStartDate(expectedStartDates)
                 .withEndDate(expectedEndDates)
                 .withProcessOutcome(expectedProcessOutcomes1, expectedProcessOutcomes2)
-                .withProcessRole(expectedProcessRoles)
+                .withParticipant(expectedProcessRoles)
                 .build(2);
 
         final Assessment first = assessments.get(0);
@@ -84,7 +83,7 @@ public class AssessmentBuilderTest {
         assertEquals(expectedStartDates[0], first.getStartDate());
         assertEquals(expectedEndDates[0], first.getEndDate());
         assertEquals(expectedProcessOutcomes1, first.getProcessOutcomes());
-        assertEquals(expectedProcessRoles[0], first.getProcessRole());
+        assertEquals(expectedProcessRoles[0], first.getParticipant());
 
         final Assessment second = assessments.get(1);
         assertEquals(expectedIds[1], second.getId());
@@ -94,7 +93,7 @@ public class AssessmentBuilderTest {
         assertEquals(expectedStartDates[1], second.getStartDate());
         assertEquals(expectedEndDates[1], second.getEndDate());
         assertEquals(expectedProcessOutcomes2, second.getProcessOutcomes());
-        assertEquals(expectedProcessRoles[1], second.getProcessRole());
+        assertEquals(expectedProcessRoles[1], second.getParticipant());
     }
 
 }
