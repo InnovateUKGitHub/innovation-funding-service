@@ -10,7 +10,6 @@ import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.category.resource.CategoryResource;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.security.UserAuthenticationService;
-import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionResource.Status;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
@@ -30,7 +29,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
-import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -69,9 +67,6 @@ public class CompetitionSetupController {
     private CompetitionSetupMilestoneService competitionSetupMilestoneService;
 
     public static final String READY_TO_OPEN_KEY = "readyToOpen";
-
-    @Autowired
-    private Validator validator;
 
     @RequestMapping(value = "/{competitionId}", method = RequestMethod.GET)
     public String initCompetitionSetupSection(Model model, @PathVariable("competitionId") Long competitionId) {
@@ -168,6 +163,7 @@ public class CompetitionSetupController {
     @ResponseBody
     public JsonNode saveFormElement(@RequestParam("fieldName") String fieldName,
                                     @RequestParam("value") String value,
+                                    @RequestParam(name = "objectId", required = false) Long objectId,
                                     @PathVariable("competitionId") Long competitionId,
                                     @PathVariable("sectionPath") String sectionPath,
                                     HttpServletRequest request) {
@@ -177,7 +173,7 @@ public class CompetitionSetupController {
 
         List<String> errors = new ArrayList<>();
         try {
-            errors = toStringList(competitionSetupService.autoSaveCompetitionSetupSection(competitionResource, section, fieldName, value));
+            errors = toStringList(competitionSetupService.autoSaveCompetitionSetupSection(competitionResource, section, fieldName, value, Optional.ofNullable(objectId)));
 
             return this.createJsonObjectNode(errors.isEmpty(), errors);
         } catch (Exception e) {
