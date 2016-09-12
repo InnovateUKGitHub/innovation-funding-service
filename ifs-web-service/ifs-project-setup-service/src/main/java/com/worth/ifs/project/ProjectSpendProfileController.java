@@ -16,6 +16,7 @@ import com.worth.ifs.project.viewmodel.SpendProfileSummaryYearModel;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.util.CollectionFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -53,6 +54,10 @@ public class ProjectSpendProfileController {
 
     @Autowired
     private ProjectFinanceService projectFinanceService;
+
+    @Autowired
+    @Qualifier("spendProfileCostValidator")
+    private SpendProfileCostValidator spendProfileCostValidator;
 
     @RequestMapping(method = GET)
     public String viewSpendProfile(Model model,
@@ -96,7 +101,7 @@ public class ProjectSpendProfileController {
         String successView = "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile";
 
         ValidationHandler customValidationHandler = ValidationHandler.newBindingResultHandler(bindingResult);
-        new SpendProfileCostValidator().validate(form.getTable(), bindingResult);
+        spendProfileCostValidator.validate(form.getTable(), bindingResult);
         if (customValidationHandler.hasErrors()) {
             return failureView;
         }
@@ -144,7 +149,8 @@ public class ProjectSpendProfileController {
         if(result.isFailure()){
             ProjectSpendProfileViewModel spendProfileViewModel = buildSpendProfileViewModel(projectId, organisationId);
             spendProfileViewModel.setObjectErrors(Collections.singletonList(new ObjectError(SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE.getErrorKey(), "Cannot mark as complete, because totals more than eligible")));
-            model.addAttribute("model", buildSpendProfileViewModel(projectId, organisationId));
+            //model.addAttribute("model", buildSpendProfileViewModel(projectId, organisationId));
+            model.addAttribute("model", spendProfileViewModel);
             return "project/spend-profile";
         } else {
             return successView;

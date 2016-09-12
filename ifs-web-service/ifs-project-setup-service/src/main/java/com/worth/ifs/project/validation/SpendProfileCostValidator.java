@@ -1,6 +1,7 @@
 package com.worth.ifs.project.validation;
 
 import com.worth.ifs.project.resource.SpendProfileTableResource;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
@@ -12,6 +13,7 @@ import java.util.Map;
  * This is responsible for validating the Spend Profile Monthly Costs.
  * It ensures that the cost is not fractional, is greater than or equal to zero, and is less than a million
  */
+@Component
 public class SpendProfileCostValidator implements Validator {
 
     @Override

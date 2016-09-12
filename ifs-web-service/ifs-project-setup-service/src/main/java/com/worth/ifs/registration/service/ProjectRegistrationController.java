@@ -10,6 +10,7 @@ import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.OrganisationRestService;
 import com.worth.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -32,6 +33,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 public class ProjectRegistrationController {
 
     @Autowired
+    @Qualifier("mvcValidator")
     Validator validator;
 
     @Autowired
