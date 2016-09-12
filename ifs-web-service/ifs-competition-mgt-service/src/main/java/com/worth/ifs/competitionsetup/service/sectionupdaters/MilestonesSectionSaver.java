@@ -13,10 +13,9 @@ import org.apache.commons.collections4.map.LinkedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 /**
  * Competition setup section saver for the milestones section.
@@ -51,7 +50,7 @@ public class MilestonesSectionSaver implements CompetitionSetupSectionSaver {
     }
 
     @Override
-    public List<Error> autoSaveSectionField(CompetitionResource competitionResource, String fieldName, String value) {
+    public List<Error> autoSaveSectionField(CompetitionResource competitionResource, String fieldName, String value, Optional<Long> objectId) {
         return Collections.emptyList();
     }
 
