@@ -33,7 +33,7 @@ public class AssessmentWorkflowEventHandler {
                 .withPayload(AssessmentOutcomes.ACCEPT.getType())
                 .setHeader("assessment", assessment)
                 .setHeader("processRoleId", processRoleId)
-                .build(), assessment.getProcessStatus());
+                .build(), assessment.getActivityState().getState().name());
     }
 
     public boolean rejectInvitation(Long processRoleId, Assessment assessment, ProcessOutcome processOutcome) {
@@ -41,7 +41,7 @@ public class AssessmentWorkflowEventHandler {
                 .withPayload(AssessmentOutcomes.REJECT.getType())
                 .setHeader("processRoleId", processRoleId)
                 .setHeader("processOutcome", processOutcome)
-                .build(), assessment.getProcessStatus());
+                .build(), assessment.getActivityState().getState().name());
     }
 
     public boolean recommend(Long processRoleId, Assessment assessment, ProcessOutcome processOutcome) {
@@ -50,14 +50,14 @@ public class AssessmentWorkflowEventHandler {
                 .setHeader("assessment", assessment)
                 .setHeader("processRoleId", processRoleId)
                 .setHeader("processOutcome", processOutcome)
-                .build(), assessment.getProcessStatus());
+                .build(), assessment.getActivityState().getState().name());
     }
 
     public boolean submit(Assessment assessment) {
         return stateHandler.handleEventWithState(MessageBuilder
                 .withPayload(AssessmentOutcomes.SUBMIT.getType())
                 .setHeader("assessment", assessment)
-                .build(), assessment.getProcessStatus());
+                .build(), assessment.getActivityState().getState().name());
     }
 
     private class LocalStateChangeListener implements PersistStateChangeListener {

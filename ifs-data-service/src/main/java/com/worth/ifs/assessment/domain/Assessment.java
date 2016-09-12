@@ -11,6 +11,9 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import static com.worth.ifs.workflow.domain.State.READY_TO_SUBMIT;
+import static com.worth.ifs.workflow.domain.State.SUBMITTED;
+
 @Entity
 public class Assessment extends Process<ProcessRole, Application> {
 
@@ -31,16 +34,16 @@ public class Assessment extends Process<ProcessRole, Application> {
     }
 
     public Boolean isStarted() {
-        if(getProcessStatus()!=null) {
-            return getProcessStatus().equals(AssessmentStates.ASSESSED.getState());
+        if(getActivityState()!=null) {
+            return isInState(READY_TO_SUBMIT);
         } else {
             return Boolean.FALSE;
         }
     }
 
     public Boolean isSubmitted() {
-        if(getProcessStatus()!=null) {
-            return getProcessStatus().equals(AssessmentStates.SUBMITTED.getState());
+        if(getActivityState()!=null) {
+            return isInState(SUBMITTED);
         } else {
             return Boolean.FALSE;
         }
@@ -78,5 +81,9 @@ public class Assessment extends Process<ProcessRole, Application> {
     @Override
     public void setTarget(Application target) {
         this.target = target;
+    }
+
+    public AssessmentStates getAssessmentState() {
+        return AssessmentStates.fromState(getActivityState().getState());
     }
 }

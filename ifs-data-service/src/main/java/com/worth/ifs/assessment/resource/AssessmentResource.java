@@ -1,5 +1,6 @@
 package com.worth.ifs.assessment.resource;
 
+import com.worth.ifs.workflow.resource.ActivityStateResource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -10,7 +11,7 @@ import java.util.List;
 public class AssessmentResource {
     private Long id;
     private String event;
-    private String status;
+    private ActivityStateResource activityState;
     private Calendar lastModified;
     private LocalDate startDate;
     private LocalDate endDate;
@@ -37,12 +38,12 @@ public class AssessmentResource {
         this.event = event;
     }
 
-    public String getStatus() {
-        return status;
+    public ActivityStateResource getActivityState() {
+        return activityState;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setActivityState(ActivityStateResource activityState) {
+        this.activityState = activityState;
     }
 
     public Calendar getLastModified() {
@@ -132,7 +133,7 @@ public class AssessmentResource {
         return new EqualsBuilder()
                 .append(id, that.id)
                 .append(event, that.event)
-                .append(status, that.status)
+                .append(activityState, that.activityState)
                 .append(lastModified, that.lastModified)
                 .append(startDate, that.startDate)
                 .append(endDate, that.endDate)
@@ -150,7 +151,7 @@ public class AssessmentResource {
         return new HashCodeBuilder(17, 37)
                 .append(id)
                 .append(event)
-                .append(status)
+                .append(activityState)
                 .append(lastModified)
                 .append(startDate)
                 .append(endDate)

@@ -1,11 +1,11 @@
 package com.worth.ifs.assessment.workflow.actions;
 
 import com.worth.ifs.assessment.domain.Assessment;
-import com.worth.ifs.assessment.repository.AssessmentRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.statemachine.StateContext;
-import org.springframework.statemachine.action.Action;
+import com.worth.ifs.workflow.domain.ActivityState;
+import com.worth.ifs.workflow.domain.ProcessOutcome;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 /**
  * The AcceptAction is used by the assessor. It handles the accepting event
@@ -13,19 +13,11 @@ import org.springframework.stereotype.Component;
  * For more info see {@link com.worth.ifs.assessment.workflow.AssessorWorkflowConfig}
  */
 @Component
-public class AcceptAction implements Action<String, String> {
-
-    @Autowired
-    AssessmentRepository assessmentRepository;
+public class AcceptAction  extends BaseAssessmentAction {
 
     @Override
-    public void execute(StateContext<String, String> context) {
-        Long processRoleId = (Long) context.getMessageHeader("processRoleId");
-        Assessment assessment = assessmentRepository.findOneByParticipantId(processRoleId);
-
-        if(assessment !=null) {
-            assessment.setProcessStatus(context.getTransition().getTarget().getId());
-            assessmentRepository.save(assessment);
-        }
+    protected void doExecute(Assessment assessment, ActivityState newState, Optional<ProcessOutcome> updatedProcessOutcome) {
+        assessment.setActivityState(newState);
+        assessmentRepository.save(assessment);
     }
 }

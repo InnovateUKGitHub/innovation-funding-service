@@ -1,23 +1,22 @@
 package com.worth.ifs.assessment.resource;
 
+import com.worth.ifs.workflow.domain.State;
 import com.worth.ifs.workflow.resource.ProcessStates;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 public enum AssessmentStates implements ProcessStates {
     // All types of status
-    PENDING("pending", 1),
-    REJECTED("rejected", 2),
-    OPEN("open", 3),
-    ASSESSED("assessed", 4),
-    SUBMITTED("submitted", 5);
+    PENDING(State.PENDING),
+    REJECTED(State.REJECTED),
+    OPEN(State.OPEN),
+    ASSESSED(State.READY_TO_SUBMIT),
+    SUBMITTED(State.SUBMITTED);
 
     //the status string value
-    private final String state;
-    private final int ordinal;
+    private State state;
 
     private static final Map<String, AssessmentStates> assessmentStatesMap;
 
@@ -29,28 +28,30 @@ public enum AssessmentStates implements ProcessStates {
         }
     }
 
-    //creates the enum with the choosen type.
-    AssessmentStates(String value, int ordinal) {
-        this.state = value;
-        this.ordinal = ordinal;
+    // creates the enum with the chosen type.
+    AssessmentStates(State state) {
+        this.state = state;
     }
 
     @Override
     public String getState() {
-        return state;
+        return state.name();
     }
 
-    public int getOrdinal() { return ordinal; }
-
     public static Set<String> getStates() {
-        Set<String> states = new HashSet<>();
-        for(AssessmentStates assessmentState : values()) {
-            states.add(assessmentState.getState());
-        }
-        return states;
+        return assessmentStatesMap.keySet();
     }
 
     public static AssessmentStates getByState(String state) {
        return  assessmentStatesMap.get(state);
+    }
+
+    public static AssessmentStates fromState(State state) {
+        for (AssessmentStates assessmentState : values()) {
+            if (assessmentState.state.equals(state)) {
+                return assessmentState;
+            }
+        }
+        return null;
     }
 }

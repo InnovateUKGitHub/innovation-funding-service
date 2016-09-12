@@ -20,8 +20,10 @@ public abstract class Process<ParticipantType, TargetType> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    protected String event;
-    protected String status;
+    private String event;
+
+    @ManyToOne
+    private ActivityState activityState;
 
     @Version
     @Temporal(TemporalType.TIMESTAMP)
@@ -38,13 +40,13 @@ public abstract class Process<ParticipantType, TargetType> {
     public Process() {
     }
 
-    public Process(String event, String status) {
+    public Process(String event, ActivityState activityState) {
         this.event = event;
-        this.status = status;
+        this.activityState = activityState;
     }
 
-    public Process(String event, String status, LocalDate startDate, LocalDate endDate) {
-        this(event, status);
+    public Process(String event, ActivityState activityState, LocalDate startDate, LocalDate endDate) {
+        this(event, activityState);
         this.startDate = startDate;
         this.endDate = endDate;
     }
@@ -81,12 +83,12 @@ public abstract class Process<ParticipantType, TargetType> {
         return id;
     }
 
-    public String getProcessStatus()  {
-        return status;
+    public ActivityState getActivityState()  {
+        return activityState;
     }
 
-    public void setProcessStatus(String status) {
-        this.status = status;
+    public void setActivityState(ActivityState status) {
+        this.activityState = status;
     }
 
     public String getProcessEvent() {
@@ -113,4 +115,8 @@ public abstract class Process<ParticipantType, TargetType> {
     public abstract void setTarget(TargetType target);
 
     public abstract TargetType getTarget();
+
+    public boolean isInState(State state) {
+        return state.equals(activityState.getState());
+    }
 }

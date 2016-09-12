@@ -1,7 +1,7 @@
 package com.worth.ifs.assessment.workflow.guards;
 
 import com.worth.ifs.assessment.domain.Assessment;
-import com.worth.ifs.assessment.resource.AssessmentStates;
+import com.worth.ifs.workflow.domain.State;
 import org.springframework.statemachine.StateContext;
 import org.springframework.statemachine.guard.Guard;
 
@@ -17,6 +17,6 @@ public class SubmitGuard implements Guard<String, String> {
         if(assessment ==null)
             return false;
 
-        return assessment.isStarted() && !assessment.getProcessStatus().equals(AssessmentStates.SUBMITTED);
+        return assessment.isStarted() && !assessment.isInState(State.SUBMITTED);
     }
 }
