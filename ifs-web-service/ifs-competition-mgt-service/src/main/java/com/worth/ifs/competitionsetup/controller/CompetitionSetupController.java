@@ -16,6 +16,7 @@ import com.worth.ifs.competition.resource.CompetitionResource.Status;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competitionsetup.form.*;
 import com.worth.ifs.competitionsetup.model.Question;
+import com.worth.ifs.competitionsetup.model.Funder;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupService;
@@ -217,14 +218,14 @@ public class CompetitionSetupController {
                 competitionSetupForm.setCompetitionCode(competitionCode);
                 competitionSetupForm.setMarkAsCompleteAction(false);
             }
-        } else if (request.getParameterMap().containsKey("add-cofunder")) {
-            List<CoFunderForm> coFunders = competitionSetupForm.getCoFunders();
-            coFunders.add(new CoFunderForm());
-            competitionSetupForm.setCoFunders(coFunders);
+        } else if (request.getParameterMap().containsKey("add-funder")) {
+            List<Funder> funders = competitionSetupForm.getFunders();
+            funders.add(new Funder());
+            competitionSetupForm.setFunders(funders);
             competitionSetupForm.setMarkAsCompleteAction(false);
-        } else if (request.getParameterMap().containsKey("remove-cofunder")) {
+        } else if (request.getParameterMap().containsKey("remove-funder")) {
             int removeCoFunderIndex = Integer.valueOf(request.getParameterMap().get("remove-cofunder")[0]);
-            competitionSetupForm.getCoFunders().remove(removeCoFunderIndex);
+            competitionSetupForm.getFunders().remove(removeCoFunderIndex);
             competitionSetupForm.setMarkAsCompleteAction(false);
         }
 
