@@ -10,7 +10,6 @@ import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.category.resource.CategoryResource;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.security.UserAuthenticationService;
-import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionResource.Status;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
@@ -67,8 +66,10 @@ public class CompetitionSetupController {
     @Autowired
     private CompetitionSetupMilestoneService competitionSetupMilestoneService;
 
-    public static final String READY_TO_OPEN_KEY = "readyToOpen";
+    private static final String READY_TO_OPEN_KEY = "readyToOpen";
 
+    private static final String RESTRICT_INITIAL_DETAILS_EDIT = "RESTRICT_INITIAL_DETAILS_EDIT";
+    
     @Autowired
     private Validator validator;
 
@@ -90,7 +91,8 @@ public class CompetitionSetupController {
     }
 
     @RequestMapping(value = "/{competitionId}/section/{sectionPath}/edit", method = RequestMethod.POST)
-    public String setSectionAsIncomplete(@PathVariable("competitionId") Long competitionId, @PathVariable("sectionPath") String sectionPath) {
+    public String setSectionAsIncomplete(@PathVariable("competitionId") Long competitionId,
+                                         @PathVariable("sectionPath") String sectionPath) {
 
     	CompetitionSetupSection section = CompetitionSetupSection.fromPath(sectionPath);
     	if(section == null) {
@@ -151,10 +153,12 @@ public class CompetitionSetupController {
             Map<String, Object> modelMap = model.asMap();
 
             if(!(Boolean) modelMap.get("isInitialComplete") && !section.equals(CompetitionSetupSection.INITIAL_DETAILS)) {
-                LOG.error("User should first fill fill the initial details");
+                LOG.error("User should first fill the initial details");
                 return "redirect:/dashboard";
             }
         }
+
+        checkInitialDetailsRestriction(section, competition, model);
 
         return "competition/setup";
     }
@@ -196,7 +200,8 @@ public class CompetitionSetupController {
                                               BindingResult bindingResult,
                                               @PathVariable("competitionId") Long competitionId,
                                               Model model) {
-
+        CompetitionResource competitionResource = competitionService.getById(competitionId);
+        checkInitialDetailsRestriction(CompetitionSetupSection.INITIAL_DETAILS, competitionResource, model);
         return genericCompetitionSetupSection(competitionSetupForm, bindingResult, competitionId, CompetitionSetupSection.INITIAL_DETAILS, model);
     }
 
@@ -354,10 +359,7 @@ public class CompetitionSetupController {
             });
         }
 
-        if(bindingResult.hasErrors()) {
-           return false;
-        }
-        return true;
+        return !bindingResult.hasErrors();
     }
 
     private boolean isSendToDashboard(CompetitionResource competition) {
@@ -398,6 +400,15 @@ public class CompetitionSetupController {
             } else {
                 LOG.error("Question(" + questionId + ") not found");
             }
+        }
+    }
+
+    private void checkInitialDetailsRestriction(CompetitionSetupSection section,
+                                                CompetitionResource competitionResource,
+                                                Model model) {
+        if (section == CompetitionSetupSection.INITIAL_DETAILS &&
+                competitionResource.getSectionSetupStatus().containsKey(section)) {
+            model.addAttribute(RESTRICT_INITIAL_DETAILS_EDIT, Boolean.TRUE);
         }
     }
 }

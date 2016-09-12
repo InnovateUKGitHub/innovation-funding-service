@@ -34,11 +34,14 @@ import org.springframework.ui.Model;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static com.worth.ifs.competitionsetup.service.sectionupdaters.InitialDetailsSectionSaver.OPENINGDATE_FIELDNAME;
 import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
@@ -53,7 +56,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(MockitoJUnitRunner.class)
 public class CompetitionSetupControllerTest {
 
-    private static final Long COMPETITION_ID = Long.valueOf(12L);
+    private static final Long COMPETITION_ID = Long.valueOf(12);
     private static final String URL_PREFIX = "/competition/setup";
 
     @InjectMocks
@@ -84,13 +87,11 @@ public class CompetitionSetupControllerTest {
 
         when(userService.findUserByType(UserRoleType.COMP_TECHNOLOGIST)).thenReturn(asList(UserResourceBuilder.newUserResource().withFirstName("Comp").withLastName("Technologist").build()));
 
-
         CategoryResource c1 = new CategoryResource();
         c1.setType(CategoryType.INNOVATION_SECTOR);
         c1.setName("A Innovation Sector");
         c1.setId(1L);
         when(categoryService.getCategoryByType(CategoryType.INNOVATION_SECTOR)).thenReturn(asList(c1));
-
 
         CategoryResource c2 = new CategoryResource();
         c2.setType(CategoryType.INNOVATION_AREA);
@@ -105,8 +106,6 @@ public class CompetitionSetupControllerTest {
         ct1.setStateAid(true);
         ct1.setCompetitions(asList(COMPETITION_ID));
         when(competitionService.getAllCompetitionTypes()).thenReturn(asList(ct1));
-
-
     }
     
     @Test
@@ -122,7 +121,6 @@ public class CompetitionSetupControllerTest {
 
     @Test
     public void editCompetitionSetupSectionInitial() throws Exception{
-
         InitialDetailsForm competitionSetupInitialDetailsForm = new InitialDetailsForm();
         competitionSetupInitialDetailsForm.setTitle("Test competition");
         competitionSetupInitialDetailsForm.setCompetitionTypeId(2L);
@@ -143,7 +141,6 @@ public class CompetitionSetupControllerTest {
 
     @Test
     public void setSectionAsIncomplete() throws Exception {
-
         mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/initial/edit"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/initial"));
@@ -151,7 +148,6 @@ public class CompetitionSetupControllerTest {
 
     @Test
     public void getInnovationAreas() throws Exception {
-
         Long innovationSectorId = 1L;
         CategoryResource category = new CategoryResource();
         category.setType(CategoryType.INNOVATION_AREA);
@@ -402,10 +398,8 @@ public class CompetitionSetupControllerTest {
                 .andExpect(view().name("redirect:/dashboard"));
     }
 
-
-
     @Test
-    public void testSetCompetitionAsReadyToOpen()  throws Exception {
+    public void testSetCompetitionAsReadyToOpen() throws Exception {
         CompetitionResource competition = newCompetitionResource()
                 .withCompetitionStatus(Status.READY_TO_OPEN)
                 .withId(COMPETITION_ID).build();
@@ -417,4 +411,34 @@ public class CompetitionSetupControllerTest {
                 .andExpect(view().name("redirect:/competition/setup/"+COMPETITION_ID));
     }
 
+    @Test
+    public void testInitialDetailsRestriction() throws Exception {
+        CompetitionResource competition = newCompetitionResource()
+                .withCompetitionStatus(Status.COMPETITION_SETUP)
+                .withId(COMPETITION_ID).build();
+        Map<CompetitionSetupSection, Boolean> sectionSetupStatus = new HashMap<>();
+        sectionSetupStatus.put(CompetitionSetupSection.INITIAL_DETAILS, Boolean.TRUE);
+        competition.setSectionSetupStatus(sectionSetupStatus);
+
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+
+        mockMvc.perform(get(URL_PREFIX + "/" + COMPETITION_ID + "/section/initial"))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(view().name("competition/setup"))
+                .andExpect(model().attribute("RESTRICT_INITIAL_DETAILS_EDIT", Boolean.TRUE));
+    }
+
+    @Test
+    public void testInitialDetailsNoRestriction() throws Exception {
+        CompetitionResource competition = newCompetitionResource()
+                .withCompetitionStatus(Status.COMPETITION_SETUP)
+                .withId(COMPETITION_ID).build();
+
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+
+        mockMvc.perform(get(URL_PREFIX + "/" + COMPETITION_ID + "/section/initial"))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(view().name("competition/setup"))
+                .andExpect(model().attribute("RESTRICT_INITIAL_DETAILS_EDIT", nullValue()));
+    }
 }
