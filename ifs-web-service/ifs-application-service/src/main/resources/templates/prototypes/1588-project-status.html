@@ -66,21 +66,21 @@
 			</span>
 		</li>
 
-		<li th:class="${(param.stage == null or param.stage[0] == 'level1' ? '' : 'require-action')}" th:unless="${param.stage != null and param.stage[0] == 'level3' or param.stage != null and param.stage[0] == 'level4' or param.stage != null and param.stage[0] == 'level5'}">
+		<li th:class="${(param.stage == null or param.stage[0] == 'level1' ? '' : 'require-action')}" th:unless="${param.stage != null and param.stage[0] == 'level3' or param.stage != null and param.stage[0] == 'level4' or param.stage != null and param.stage[0] == 'level5' or param.stage != null and param.stage[0] == 'level6' or param.stage != null and param.stage[0] == 'level7'}">
 			<span>
 				<h2 class="heading-medium"><a href="/prototypes/1578-bank-details">Bank details</a></h2>
 				<p>We need bank details for each consortium member so that we can pay the grant.</p>
 			</span>
 		</li>
 
-		<li th:if="${param.stage != null and param.stage[0] == 'level3' or param.stage != null and param.stage[0] == 'level4' or param.stage != null and param.stage[0] == 'level5'}" class="complete" >
+		<li th:if="${param.stage != null and param.stage[0] == 'level3' or param.stage != null and param.stage[0] == 'level4' or param.stage != null and param.stage[0] == 'level5' or param.stage != null and param.stage[0] == 'level6' or param.stage != null and param.stage[0] == 'level7'}" class="complete" >
 			<span>
 				<h2 class="heading-medium"><a href="/prototypes/1578-bank-details-submitted">Bank details</a></h2>
 				<p>We need bank details for each consortium member so that we can pay the grant.</p>
 			</span>
 		</li>
 
-		<li th:class="${(param.stage == null or param.stage[0] == 'level1' ? '' : 'waiting')}" th:unless="${param.stage != null and param.stage[0] == 'level5' or param.stage != null and param.stage[0] == 'level2'}">
+		<li th:class="${(param.stage == null or param.stage[0] == 'level1' ? '' : 'waiting')}" th:unless="${param.stage != null and param.stage[0] == 'level5' or param.stage != null and param.stage[0] == 'level2' or param.stage != null and param.stage[0] == 'level6' or param.stage != null and param.stage[0] == 'level7'}">
 			<span>
 				<h2 class="heading-medium"><a href="/prototypes/3813-finance-check-landing">Finance checks</a></h2>
 				<p>We will review all project costs and contact you if we have any queries.</p>
@@ -94,28 +94,28 @@
 			</span>
 		</li>
 
-		<li th:if="${param.stage != null and param.stage[0] == 'level5'}" class="complete" >
+		<li th:if="${param.stage != null and param.stage[0] == 'level5' or param.stage != null and param.stage[0] == 'level6' or param.stage != null and param.stage[0] == 'level7'}" class="complete" >
 			<span>
 				<h2 class="heading-medium"><a href="/prototypes/3813-finance-check-landing?status=approved">Finance checks</a></h2>
 				<p>We will review all project costs and contact you if we have any queries.</p>
 			</span>
 		</li>
 
-		<li th:class="${(param.stage != null and param.stage[0] == 'level3' ? 'require-action' : '')}" th:unless="${param.stage != null and param.stage[0] == 'level4' or param.stage != null and param.stage[0] == 'level5'}">
+		<li th:class="${(param.stage != null and param.stage[0] == 'level3' ? 'require-action' : '')}" th:unless="${param.stage != null and param.stage[0] == 'level4' or param.stage != null and param.stage[0] == 'level5' or param.stage != null and param.stage[0] == 'level6' or param.stage != null and param.stage[0] == 'level7'}">
 			<span>
 				<h2 class="heading-medium"><a th:href="${param.user != null and param.user[0] == 'nonLead' ? '/prototypes/3100-spend?user=nonLead' : '/prototypes/2472-spend-lead-overview'}">Spend profile</a></h2>
 				<p>Once we have approved your financial information, we will produce a spend profile.</p>
 			</span>
 		</li>
 		
-		<li th:if="${param.stage != null and param.stage[0] == 'level4' or param.stage != null and param.stage[0] == 'level5'}" class="complete" >
+		<li th:if="${param.stage != null and param.stage[0] == 'level4' or param.stage != null and param.stage[0] == 'level5' or param.stage != null and param.stage[0] == 'level6' or param.stage != null and param.stage[0] == 'level7'}" class="complete" >
 			<span>
 				<h2 class="heading-medium"><a href="/prototypes/2472-spend-lead-overview?status=Submitted">Spend profile</a></h2>
 				<p>Once we have approved your financial information, we will produce a spend profile.</p>
 			</span>
 		</li>
 
-		<li th:class="${(param.stage == null or param.stage[0] == 'level1' ? '' : 'require-action')}" th:unless="${param.stage != null and param.stage[0] == 'level5'}">
+		<li th:class="${(param.stage == null or param.stage[0] == 'level1' ? '' : 'require-action')}" th:unless="${param.stage != null and param.stage[0] == 'level5' or param.stage != null and param.stage[0] == 'level6' or param.stage != null and param.stage[0] == 'level7'}">
 
 			<span>
 				
@@ -141,7 +141,7 @@
 			</span>
 		</li>
 		
-		<li th:if="${param.stage != null and param.stage[0] == 'level5'}" class="complete" >
+		<li th:if="${param.stage != null and param.stage[0] == 'level5' or param.stage != null and param.stage[0] == 'level6' or param.stage != null and param.stage[0] == 'level7'}" class="complete" >
 			<span>
 				
 				<div th:unless="${param.user != null}" th:remove="tag">
@@ -166,13 +166,19 @@
 			</span>
 		</li>
 
-		<li>
+		<li th:class="${(param.stage == null or param.stage[0] == 'level1' or param.stage[0] == 'level2' or param.stage[0] == 'level3' or param.stage[0] == 'level4' or param.stage[0] == 'level5' ? '' : 'require-action')}" th:unless="${param.stage != null and param.stage[0] == 'level7'}">
 			<span>
 				<h2 class="heading-medium">Grant offer letter</h2>
 				<p>When you have completed all of these tasks, we will send you a grant offer letter. Returning a signed copy of this letter marks the start of your project.</p>
 			</span>
 		</li>
 
+		<li th:if="${param.stage != null and param.stage[0] == 'level7'}" class="complete">
+			<span>
+				<h2 class="heading-medium">Grant offer letter</h2>
+				<p>When you have completed all of these tasks, we will send you a grant offer letter. Returning a signed copy of this letter marks the start of your project.</p>
+			</span>
+		</li>
 	</ul>
 
 	<ul class="application-progress-list extra-margin" th:if="${param.status != null and param.status[0] == 'noCompHouse'}">
