@@ -39,7 +39,7 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
                 .withUser(newUser().with(id(userId)).build())
                 .build();
 
-        assessment = newAssessmentResource().withParticipant(processRole.getId()).build();
+        assessment = newAssessmentResource().withProcessRole(processRole.getId()).build();
 
         when(processRoleRepositoryMock.findOne(processRoleId)).thenReturn(processRole);
     }

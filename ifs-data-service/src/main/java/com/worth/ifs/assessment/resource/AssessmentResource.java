@@ -15,11 +15,10 @@ public class AssessmentResource {
     private LocalDate startDate;
     private LocalDate endDate;
     private List<Long> processOutcomes;
-    private Long participant;
+    private Long processRole;
     private Boolean submitted;
     private Boolean started;
     private Long application;
-    private Long target;
     private Long competition;
 
     public Long getId() {
@@ -78,12 +77,12 @@ public class AssessmentResource {
         this.processOutcomes = processOutcomes;
     }
 
-    public Long getParticipant() {
-        return participant;
+    public Long getProcessRole() {
+        return processRole;
     }
 
-    public void setParticipant(Long participant) {
-        this.participant = participant;
+    public void setProcessRole(Long processRole) {
+        this.processRole = processRole;
     }
 
     public Boolean getSubmitted() {
@@ -108,14 +107,6 @@ public class AssessmentResource {
 
     public void setApplication(Long application) {
         this.application = application;
-    }
-
-    public Long getTarget() {
-        return target;
-    }
-
-    public void setTarget(Long target) {
-        this.target = target;
     }
 
     public Long getCompetition() {
@@ -146,7 +137,7 @@ public class AssessmentResource {
                 .append(startDate, that.startDate)
                 .append(endDate, that.endDate)
                 .append(processOutcomes, that.processOutcomes)
-                .append(participant, that.participant)
+                .append(processRole, that.processRole)
                 .append(submitted, that.submitted)
                 .append(started, that.started)
                 .append(application, that.application)
@@ -164,7 +155,7 @@ public class AssessmentResource {
                 .append(startDate)
                 .append(endDate)
                 .append(processOutcomes)
-                .append(participant)
+                .append(processRole)
                 .append(submitted)
                 .append(started)
                 .append(application)

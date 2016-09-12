@@ -39,7 +39,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         loginFelixWilson();
         AssessmentResource assessmentResource = controller.findById(assessmentId).getSuccessObject();
         assertEquals(assessmentId, assessmentResource.getId());
-        assertEquals(Long.valueOf(20L), assessmentResource.getParticipant());
+        assertEquals(Long.valueOf(20L), assessmentResource.getProcessRole());
         assertEquals(Long.valueOf(3L), assessmentResource.getApplication());
         assertEquals(Long.valueOf(1L), assessmentResource.getCompetition());
         assertEquals(singletonList(2L), assessmentResource.getProcessOutcomes());
@@ -73,7 +73,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         loginPaulPlum();
         AssessmentResource assessmentResource = controller.findById(assessmentId).getSuccessObject();
         assertEquals(AssessmentStates.OPEN.getState(), assessmentResource.getStatus());
-        assertEquals(processRole, assessmentResource.getParticipant());
+        assertEquals(processRole, assessmentResource.getProcessRole());
 
         ProcessOutcomeResource processOutcome = newProcessOutcomeResource()
                 .withOutcomeType(AssessmentOutcomes.RECOMMEND.getType())
@@ -94,7 +94,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         loginPaulPlum();
         AssessmentResource assessmentResource = controller.findById(assessmentId).getSuccessObject();
         assertEquals(AssessmentStates.OPEN.getState(), assessmentResource.getStatus());
-        assertEquals(processRole, assessmentResource.getParticipant());
+        assertEquals(processRole, assessmentResource.getProcessRole());
 
         ProcessOutcomeResource processOutcome = newProcessOutcomeResource()
                 .withOutcomeType(AssessmentOutcomes.RECOMMEND.getType())
@@ -117,7 +117,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         loginPaulPlum();
         AssessmentResource assessmentResource = controller.findById(assessmentId).getSuccessObject();
         assertEquals(AssessmentStates.OPEN.getState(), assessmentResource.getStatus());
-        assertEquals(processRole, assessmentResource.getParticipant());
+        assertEquals(processRole, assessmentResource.getProcessRole());
 
         ProcessOutcomeResource processOutcome = newProcessOutcomeResource()
                 .withOutcomeType(AssessmentOutcomes.REJECT.getType())
@@ -137,7 +137,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         loginPaulPlum();
         AssessmentResource assessmentResource = controller.findById(assessmentId).getSuccessObject();
         assertEquals(AssessmentStates.OPEN.getState(), assessmentResource.getStatus());
-        assertEquals(processRole, assessmentResource.getParticipant());
+        assertEquals(processRole, assessmentResource.getProcessRole());
 
         ProcessOutcomeResource processOutcome = newProcessOutcomeResource()
                 .withOutcomeType(AssessmentOutcomes.REJECT.getType())

@@ -21,11 +21,10 @@ public class AssessmentDocs {
             fieldWithPath("startDate").description("start date of the assessment"),
             fieldWithPath("endDate").description("end date of the assessment"),
             fieldWithPath("processOutcomes").description("outcomes of the assessment process"),
-            fieldWithPath("participant").description("process role of the assigned assessor"),
+            fieldWithPath("processRole").description("process role of the assigned assessor"),
             fieldWithPath("submitted").description("the assessment is submitted"),
             fieldWithPath("started").description("the assessment is started"),
             fieldWithPath("application").description("the id of the application being assessed"),
-            fieldWithPath("target").description("the id of the application being assessed"),
             fieldWithPath("competition").description("the competition id of the application being assessed"),
     };
 
@@ -39,6 +38,6 @@ public class AssessmentDocs {
             .withStarted(true)
             .withSubmitted(false)
             .withLastModifiedDate(GregorianCalendar.getInstance())
-            .withParticipant(1L)
+            .withProcessRole(1L)
             .withApplication(2L);
 }

@@ -62,8 +62,8 @@ public class AssessmentResourceBuilder extends BaseBuilder<AssessmentResource, A
         return withArray((processOutcome, object) -> setField("processOutcomes", processOutcome, object), processOutcomes);
     }
 
-    public AssessmentResourceBuilder withParticipant(Long... participantIds) {
-        return withArray((processRole, object) -> setField("participant", processRole, object), participantIds);
+    public AssessmentResourceBuilder withProcessRole(Long... processRoles) {
+        return withArray((processRole, object) -> setField("processRole", processRole, object), processRoles);
     }
 
     public AssessmentResourceBuilder withSubmitted(Boolean... submittedValues) {
