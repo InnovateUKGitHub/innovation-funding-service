@@ -10,7 +10,6 @@ import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.category.resource.CategoryResource;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.security.UserAuthenticationService;
-import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionResource.Status;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
@@ -73,10 +72,10 @@ public class CompetitionSetupController {
     @Autowired
     private CompetitionSetupMilestoneService competitionSetupMilestoneService;
 
-    public static final String READY_TO_OPEN_KEY = "readyToOpen";
-
     @Autowired
     private Validator validator;
+
+    public static final String READY_TO_OPEN_KEY = "readyToOpen";
 
     @RequestMapping(value = "/{competitionId}", method = RequestMethod.GET)
     public String initCompetitionSetupSection(Model model, @PathVariable(COMPETITION_ID_KEY) Long competitionId) {
@@ -173,6 +172,7 @@ public class CompetitionSetupController {
     @ResponseBody
     public JsonNode saveFormElement(@RequestParam("fieldName") String fieldName,
                                     @RequestParam("value") String value,
+                                    @RequestParam(name = "objectId", required = false) Long objectId,
                                     @PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                     @PathVariable(SECTION_PATH_KEY) String sectionPath,
                                     HttpServletRequest request) {
@@ -182,7 +182,7 @@ public class CompetitionSetupController {
 
         List<String> errors = new ArrayList<>();
         try {
-            errors = toStringList(competitionSetupService.autoSaveCompetitionSetupSection(competitionResource, section, fieldName, value));
+            errors = toStringList(competitionSetupService.autoSaveCompetitionSetupSection(competitionResource, section, fieldName, value, Optional.ofNullable(objectId)));
 
             return this.createJsonObjectNode(errors.isEmpty(), errors);
         } catch (Exception e) {

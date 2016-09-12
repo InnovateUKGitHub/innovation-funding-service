@@ -75,7 +75,8 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 	}
 
 	@Override
-	public List<Error> autoSaveCompetitionSetupSection(CompetitionResource competitionResource, CompetitionSetupSection section, String fieldName, String value) {
+	public List<Error> autoSaveCompetitionSetupSection(CompetitionResource competitionResource, CompetitionSetupSection section,
+                                                       String fieldName, String value, Optional<Long> objectId) {
 
 		CompetitionSetupSectionSaver saver = sectionSavers.get(section);
 		if(saver == null) {
@@ -83,7 +84,7 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 			throw new IllegalArgumentException();
 		}
 
-		return saver.autoSaveSectionField(competitionResource, fieldName, value);
+        return saver.autoSaveSectionField(competitionResource, fieldName, value, objectId);
 	}
 
 	@Override
