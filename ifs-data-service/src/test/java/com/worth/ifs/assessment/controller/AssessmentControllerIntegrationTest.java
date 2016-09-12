@@ -1,6 +1,7 @@
 package com.worth.ifs.assessment.controller;
 
 import com.worth.ifs.BaseControllerIntegrationTest;
+import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.resource.AssessmentOutcomes;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.resource.AssessmentStates;
@@ -11,10 +12,11 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.List;
-import java.util.Optional;
-
 import static com.worth.ifs.assessment.builder.ProcessOutcomeResourceBuilder.newProcessOutcomeResource;
+import static com.worth.ifs.commons.error.CommonErrors.forbiddenError;
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION;
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -31,19 +33,36 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
     }
 
     @Test
-    public void findById() {
-        Long assessmentId = 1L;
-        Long processRole = 7L;
+    public void findById() throws Exception {
+        Long assessmentId = 5L;
 
-        loginCompAdmin();
+        loginFelixWilson();
         AssessmentResource assessmentResource = controller.findById(assessmentId).getSuccessObject();
-        assertEquals("recommend", assessmentResource.getEvent());
-        assertEquals(processRole, assessmentResource.getProcessRole());
+        assertEquals(assessmentId, assessmentResource.getId());
+        assertEquals(Long.valueOf(20L), assessmentResource.getProcessRole());
+        assertEquals(Long.valueOf(3L), assessmentResource.getApplication());
+        assertEquals(Long.valueOf(1L), assessmentResource.getCompetition());
+        assertEquals(singletonList(2L), assessmentResource.getProcessOutcomes());
+    }
 
-        List<Long> processOutcomes = assessmentResource.getProcessOutcomes();
-        Optional<Long> processOutcome = processOutcomes.stream().filter(pr -> pr.equals(assessmentId)).findAny();
-        assertTrue(processOutcome.isPresent());
-        assertEquals(assessmentId, processOutcome.get());
+    @Test
+    public void findById_notFound() throws Exception {
+        Long assessmentId = 999L;
+
+        loginPaulPlum();
+        RestResult<AssessmentResource> result = controller.findById(assessmentId);
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(notFoundError(Assessment.class, 999L)));
+    }
+
+    @Test
+    public void findById_notTheAssessmentOwner() throws Exception {
+        Long assessmentId = 5L;
+
+        loginSteveSmith();
+        RestResult<AssessmentResource> result = controller.findById(assessmentId);
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(forbiddenError(GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION)));
     }
 
     @Test

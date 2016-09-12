@@ -18,12 +18,19 @@ Resource          ../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
 *** Variables ***
 
 *** Test Cases ***
+
+Bank details page
+    [Documentation]    INFUND-3010
+    [Tags]    HappyPath
+    Given guest user log-in  steve.smith@empire.com    Passw0rd
+    When the user clicks the button/link    link=00000001: best riffs
+    And the user clicks the button/link    link=Bank details
+    Then the user should see the element    jQuery=.button:contains("Submit bank account details")
+    And the user should see the text in the page    Bank account
+
 Bank details server side validations
     [Documentation]    INFUND-3010
     [Tags]
-    Given guest user log-in    steve.smith@empire.com    Passw0rd
-    And the user clicks the button/link    link=00000001: best riffs
-    And the user clicks the button/link    link=Bank details
     When the user clicks the button/link    jQuery=.button:contains("Submit bank account details")
     Then the user should see an error    Please enter an account number
     And the user should see an error    Please enter a sort code
@@ -31,7 +38,7 @@ Bank details server side validations
 
 Bank details client side validations
     [Documentation]    INFUND-3010
-    [Tags]
+    [Tags]    HappyPath
     When the user enters text to a text field    name=accountNumber    1234567
     And the user moves focus away from the element    name=accountNumber
     Then the user should not see the text in the page    Please enter an account number
@@ -52,11 +59,11 @@ Bank details client side validations
 
 Bank account postcode lookup
     [Documentation]    INFUND-3282
-    [Tags]
+    [Tags]    HappyPath
     When the user selects the radio button    addressType    ADD_NEW
-    When the user enters text to a text field    name=addressForm.postcodeInput    ${EMPTY}
+    And the user enters text to a text field    name=addressForm.postcodeInput    ${EMPTY}
     And the user clicks the button/link    jQuery=.button:contains("Find UK address")
-    Then the user should see the element    css=.form-label .error-message
+    Then the user should see the element    css=.error
     When the user enters text to a text field    name=addressForm.postcodeInput    BS14NT/
     And the user clicks the button/link    jQuery=.button:contains("Find UK address")
     Then the user should see the element    name=addressForm.selectedPostcodeIndex
@@ -76,7 +83,7 @@ Bank details experian validations
 
 Bank details submission
     [Documentation]    INFUND-3010, INFUND-2621
-    [Tags]    Experian
+    [Tags]    Experian    HappyPath
     # Please note that the bank details for these Experian tests are dummy data specfically chosen to elicit certain responses from the stub.
     When the user enters text to a text field    name=accountNumber    51406795
     And the user enters text to a text field    name=sortCode    404745
@@ -97,7 +104,7 @@ Bank details submission
 
 Bank details for non-lead partner
     [Documentation]    INFUND-3010, INFUND-2621
-    [Tags]    Experian
+    [Tags]    Experian    HappyPath
     # Please note that the bank details for these Experian tests are dummy data specfically chosen to elicit certain responses from the stub.
     Given guest user log-in    pete.tom@egg.com    Passw0rd
     And the user clicks the button/link    link=00000001: best riffs

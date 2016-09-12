@@ -18,7 +18,7 @@ Resource          ../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
 *** Test Cases ***
 The user can see the company name with score
     [Documentation]    INFUND-3763
-    [Tags]
+    [Tags]    HappyPath
     When the user navigates to the page    ${server}/project-setup-management/project/1/organisation/31/review-bank-details    # note that this user does not have a dashboard yet, so we need to browse to this page directly for now
     Then the user should see the text in the page    Vitruvius Stonework Limited
     And the user should see the element    css = tr:nth-child(1) .yes
@@ -43,9 +43,16 @@ The user can see the address with score
     Then the user should see the text in the page    Address
     And the user should see the element    css = tr:nth-child(4) .no
 
+The user has the options to edit the details and to approve the bank details
+    [Documentation]    INFUND-3763
+    [Tags]
+    Then the user should see the element    link=Change bank account details
+    And the user should see the element    jQuery=.button:contains("Approve bank account details")
+
+
 The user can change bank account details
     [Documentation]    INFUND-4054
-    [Tags]
+    [Tags]    HappyPath
     Given the user clicks the button/link        link=Change bank account details
     Then the user navigates to the page          ${server}/project-setup-management/project/1/organisation/31/review-bank-details/change
     And the text box should be editable          id=company-name
@@ -63,21 +70,15 @@ The user cancels bank details changes
 
 The user updates bank account details
     [Documentation]    INFUND-4054
-    [Tags]
+    [Tags]    HappyPath
     When the user enters text to a text field     id=street    Montrose House 2
     And the user clicks the button/link           jQuery=.column-half.alignright .button:contains("Update bank account details")
     And the user clicks the button/link           jQuery=.modal-partner-change-bank-details .button:contains("Update bank account details")   #Due to popup
     Then the user navigates to the page           ${server}/project-setup-management/project/1/organisation/31/review-bank-details
     When the user clicks the button/link          link=Change bank account details
     Then the user should see the text in field    id=street    Montrose House 2
-
-The user has the options to edit the details and to approve the bank details
-    [Documentation]    INFUND-3763
-    [Tags]
-    Given the user navigates to the page    ${server}/project-setup-management/project/1/organisation/31/review-bank-details
-    Then the user should see the element    link=Change bank account details
-    And the user should see the element    jQuery=.button:contains("Approve bank account details")
     [Teardown]    logout as user
+
 
 Other internal users cannot access this page
     [Documentation]    INFUND-3763
