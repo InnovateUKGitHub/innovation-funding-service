@@ -26,11 +26,13 @@ import static com.worth.ifs.documentation.SpendProfileDocs.spendProfileResourceF
 import static com.worth.ifs.documentation.SpendProfileDocs.spendProfileTableFields;
 import static java.util.Arrays.asList;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
@@ -160,6 +162,57 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
                 ));
     }
 
+    @Test
+    public void saveSpendProfile() throws Exception {
+
+        Long projectId = 1L;
+        Long organisationId = 1L;
+
+        SpendProfileTableResource table = new SpendProfileTableResource();
+        table.setMarkedAsComplete(false);
+        table.setEligibleCostPerCategoryMap(buildEligibleCostPerCategoryMap());
+        table.setMonthlyCostsPerCategoryMap(buildSpendProfileCostsPerCategoryMap());
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        when(projectFinanceServiceMock.saveSpendProfile(projectOrganisationCompositeId, table)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile", projectId, organisationId)
+                .contentType(APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(table)))
+                .andExpect(status().isOk())
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project for which the Spend Profile data is being saved"),
+                                parameterWithName("organisationId").description("Organisation Id for which the Spend Profile data is being saved")
+                        ),
+                        requestFields(spendProfileTableFields)
+                ));
+    }
+
+
+    @Test
+    public void markSpendProfileComplete() throws Exception {
+
+        Long projectId = 1L;
+        Long organisationId = 1L;
+        Boolean complete = true;
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        when(projectFinanceServiceMock.markSpendProfile(projectOrganisationCompositeId, complete)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/complete/{complete}", projectId, organisationId, complete)
+        )
+                .andExpect(status().isOk())
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project for which the Spend Profile data is being marked as complete"),
+                                parameterWithName("organisationId").description("Organisation Id for which the Spend Profile data is being marked as complete"),
+                                parameterWithName("complete").description("Flag to indicate if the Spend Profile can be marked as complete or not")
+                        )
+                ));
+    }
 
     private Map<String, BigDecimal> buildEligibleCostPerCategoryMap() {
 

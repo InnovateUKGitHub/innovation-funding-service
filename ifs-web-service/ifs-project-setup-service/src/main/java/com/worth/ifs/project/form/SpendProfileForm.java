@@ -2,6 +2,8 @@ package com.worth.ifs.project.form;
 
 import com.worth.ifs.controller.BaseBindingResultTarget;
 import com.worth.ifs.project.resource.SpendProfileTableResource;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class SpendProfileForm  extends BaseBindingResultTarget {
 
@@ -20,4 +22,23 @@ public class SpendProfileForm  extends BaseBindingResultTarget {
         this.table = table;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        SpendProfileForm that = (SpendProfileForm) o;
+
+        return new EqualsBuilder()
+                .append(table, that.table)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(table)
+                .toHashCode();
+    }
 }
