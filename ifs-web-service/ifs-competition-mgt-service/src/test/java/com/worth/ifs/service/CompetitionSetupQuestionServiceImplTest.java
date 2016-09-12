@@ -55,7 +55,6 @@ public class CompetitionSetupQuestionServiceImplTest {
 		verify(questionService).save(any(QuestionResource.class));
 	}
 
-
 	@Test
 	public void testGetQuestion() {
         Long questionId = 1234L;
@@ -84,6 +83,4 @@ public class CompetitionSetupQuestionServiceImplTest {
         assertEquals("Answer", questionResult.getGuidance());
         assertEquals(Integer.valueOf(500), questionResult.getMaxWords());
 	}
-
-
 }
