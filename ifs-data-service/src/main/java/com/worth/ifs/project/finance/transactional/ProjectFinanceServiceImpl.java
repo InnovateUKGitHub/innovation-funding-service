@@ -141,7 +141,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         if(complete && table.getValidationMessages().hasErrors()){ // validate before marking as complete
             return serviceFailure(SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE);
         } else {
-            return serviceSuccess();
+            return saveSpendProfileData(projectOrganisationCompositeId, table, complete);
         }
     }
 
