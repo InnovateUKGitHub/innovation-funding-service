@@ -218,7 +218,7 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
 
     @Test
     public void testGetQuestionsByAssessmentId() throws Exception {
-        loginCompAdmin();
+        loginFelixWilson();
         Long assessmentId = 7L;
 
         List<QuestionResource> questions = questionService.getQuestionsByAssessmentId(assessmentId).getSuccessObject();
