@@ -52,6 +52,14 @@ public class ProjectOtherDocumentsController {
         return doViewOtherDocumentsPage(projectId, model, loggedInUser, form);
     }
 
+    @RequestMapping(value = "/confirm", method = GET)
+    public String viewConfirmDocumentsPage(@PathVariable("projectId") Long projectId, Model model,
+                                         @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+
+        return doViewConfirmDocumentsPage(projectId, model, loggedInUser);
+    }
+
+
     @RequestMapping(value = "/submit", method = RequestMethod.POST)
     public String submitPatnerDocuments(Model model, @PathVariable("projectId") final Long projectId) {
         projectService.setPartnerDocumentsSubmitted(projectId).getSuccessObjectOrThrowException();
@@ -149,6 +157,15 @@ public class ProjectOtherDocumentsController {
         model.addAttribute("currentUser", loggedInUser);
 
         return "project/other-documents";
+    }
+
+    private String doViewConfirmDocumentsPage(Long projectId, Model model, UserResource loggedInUser) {
+        ProjectOtherDocumentsViewModel viewModel = getOtherDocumentsViewModel(projectId, loggedInUser);
+
+        model.addAttribute("model", viewModel);
+        model.addAttribute("currentUser", loggedInUser);
+
+        return "project/other-documents-confirm";
     }
 
     private String performActionOrBindErrorsToField(Long projectId, ValidationHandler validationHandler, Model model, UserResource loggedInUser, String fieldName, ProjectOtherDocumentsForm form, Supplier<FailingOrSucceedingResult<?, ?>> actionFn) {
