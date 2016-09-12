@@ -7,6 +7,8 @@ import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competitionsetup.form.AdditionalInfoForm;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.el.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,6 +26,8 @@ import static org.codehaus.groovy.runtime.InvokerHelper.asList;
  */
 @Service
 public class AdditionalInfoSectionSaver extends AbstractSectionSaver implements CompetitionSetupSectionSaver {
+
+    private static final Log LOG = LogFactory.getLog(AdditionalInfoSectionSaver.class);
 
     @Autowired
     private CompetitionService competitionService;
@@ -49,7 +53,12 @@ public class AdditionalInfoSectionSaver extends AbstractSectionSaver implements 
             competitionFunderResource.setCoFunder(funder.getCoFunder());
 			competition.getFunders().add(competitionFunderResource);
 		});
-        competitionService.update(competition);
+        try {
+            competitionService.update(competition);
+        } catch (Exception e) {
+            LOG.error(e.getMessage());
+            return asList(new Error("Competition object could not be saved", HttpStatus.BAD_REQUEST));
+        }
 		return Collections.emptyList();
 	}
 
