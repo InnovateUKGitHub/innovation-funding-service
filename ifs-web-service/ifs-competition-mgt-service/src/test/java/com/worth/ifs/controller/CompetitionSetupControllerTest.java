@@ -17,7 +17,7 @@ import com.worth.ifs.competitionsetup.form.InitialDetailsForm;
 import com.worth.ifs.competitionsetup.model.Question;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupService;
-import com.worth.ifs.fixtures.CompetitionCoFundersFixture;
+import com.worth.ifs.fixtures.CompetitionFundersFixture;
 import com.worth.ifs.user.builder.UserResourceBuilder;
 import com.worth.ifs.user.resource.UserRoleType;
 import com.worth.ifs.user.service.UserService;
@@ -31,7 +31,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collections;
 
@@ -355,13 +354,11 @@ public class CompetitionSetupControllerTest {
         CompetitionResource competition = newCompetitionResource()
                 .withActivityCode("Activity Code")
                 .withInnovateBudget("Innovate Budget")
-                .withFunder("Funder")
-                .withFunderBudget(new BigDecimal(1234))
                 .withCompetitionCode("c123")
                 .withPafCode("p123")
                 .withBudgetCode("b123")
                 .withCompetitionStatus(Status.COMPETITION_SETUP)
-                .withCoFunders(CompetitionCoFundersFixture.getTestCoFunders())
+                .withFunders(CompetitionFundersFixture.getTestCoFunders())
                 .withId(8L).build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
@@ -370,8 +367,9 @@ public class CompetitionSetupControllerTest {
                 .param("activityCode", "a123")
                 .param("pafNumber", "p123")
                 .param("competitionCode", "c123")
-                .param("funder", "funder")
-                .param("funderBudget", "1")
+                .param("funders[0].funder", "asdf")
+                .param("funders[0].funderBudget", "93129")
+                .param("funders[0].coFunder", "false")
                 .param("budgetCode", "b123"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/additional"));
@@ -386,13 +384,11 @@ public class CompetitionSetupControllerTest {
         CompetitionResource competition = newCompetitionResource()
                 .withActivityCode("Activity Code")
                 .withInnovateBudget("Innovate Budget")
-                .withFunder("Funder")
-                .withFunderBudget(new BigDecimal(1234))
                 .withCompetitionCode("c123")
                 .withPafCode("p123")
                 .withBudgetCode("b123")
                 .withCompetitionStatus(Status.OPEN)
-                .withCoFunders(CompetitionCoFundersFixture.getTestCoFunders())
+                .withFunders(CompetitionFundersFixture.getTestCoFunders())
                 .withId(COMPETITION_ID).build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
