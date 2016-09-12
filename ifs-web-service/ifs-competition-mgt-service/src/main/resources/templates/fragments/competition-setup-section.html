@@ -297,6 +297,7 @@
                     <p class="heading-small no-margin">Total: <span data-calculation-operations="+" data-calculation-fields="input[id*=funderBudget]" th:text="${competitionSetupForm.totalFunding == 0 ? '' : '&pound;' + #numbers.formatDecimal(competitionSetupForm.totalFunding, 0, 'COMMA', 0, 'POINT')}">£0</span></p>
 
                     <div class="alignright">
+                        <input type="hidden" name="removeFunder" />
                         <input type="hidden" name="funderCount" id="co-funder-count" th:value="${competitionSetupForm.fundersCount}" />
                         <button class="buttonlink" name="add-cofunder" id="add-cofunder">+Add co-funder</button>
                     </div>

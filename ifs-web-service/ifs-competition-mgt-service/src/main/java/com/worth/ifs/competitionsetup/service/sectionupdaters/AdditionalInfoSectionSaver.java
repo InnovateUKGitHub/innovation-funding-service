@@ -73,6 +73,13 @@ public class AdditionalInfoSectionSaver extends AbstractSectionSaver implements 
 			case "competitionCode":
 				competitionResource.setCode(value);
 				break;
+			case "removeFunder":
+				try {
+					competitionResource.getFunders().remove((int) Integer.valueOf(value));
+				} catch (IndexOutOfBoundsException e) {
+					return asList(new Error("Field not found", HttpStatus.BAD_REQUEST));
+				}
+				break;
 			default:
 				errors = tryUpdateFunders(competitionResource, fieldName, value);
 		}
@@ -100,7 +107,7 @@ public class AdditionalInfoSectionSaver extends AbstractSectionSaver implements 
                 funder.setFunder(value);
             } else if(fieldName.endsWith("funderBudget")) {
                 funder.setFunderBudget(new BigDecimal(value));
-            } else {
+			} else {
                return asList(new Error("Field not found", HttpStatus.BAD_REQUEST));
             }
         } catch (ParseException e) {
