@@ -97,19 +97,13 @@ Assessor must Provide feedback when "No" is selected for funding suitability
     Given The user navigates to the assessor page    ${Assessment_summary_complete_9}
     When The user clicks the button/link    jQuery=.button:contains(Save assessment)
     Then The user should see an error    Please indicate your decision
-    #TODO the following lines should be uncommented after INFUND-4996 is fixed
-   # When the assessor selects the radio button "Yes"
-   # And The user clicks the button/link    jQuery=.button:contains(Save assessment)
-   # Then The user should not see the text in the page    Please enter your feedback
     When the assessor selects the radio button "No"
     And The user clicks the button/link    jQuery=.button:contains(Save assessment)
     Then The user should see an error    Please enter your feedback
     And The user enters text to a text field    id=form-textarea-feedback    Testing the feedback word count
-    Then the word count should be correct    Words remaining: 95
     And The user clicks the button/link    jQuery=.button:contains(Save assessment)
     Then The user should not see the text in the page    Please enter your feedback
     And The user enters text to a text field    id=form-textarea-comments    Testing the feedback inputs for optional feedback textarea.
-    Then the word count should be correct    Words remaining: 92
 
 Word count check: Your feedback
     [Documentation]    INFUND-1485
@@ -209,4 +203,3 @@ the assessor selects the radio button "No"
 the word count should be correct
     [Arguments]    ${wordCount}
     the user should see the text in the page    ${wordCount}
-
