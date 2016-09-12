@@ -18,9 +18,6 @@
         </div>
 
 
-
-
-
         <div class="error-summary" aria-hidden="true">
            <h2 class="heading-medium error-summary-heading">
                Unable to save spend profile
@@ -31,8 +28,19 @@
            </ul>
        </div>
 
-        <th:block th:if ="${model.markedAsComplete}">
-            <div class="marked-complete-alert extra-margin-bottom">
+      <div class="error-summary"  th:if="${form == null}" th:unless="${#lists.isEmpty(model.table.validationMessages.errors)}">
+        <h2 class="heading-medium error-summary-heading">
+          Your spend profile has total costs higher than eligible project costs, this cannot be submitted with higher total costs.
+        </h2>
+        Please review
+        <ul class="error-summary-list">
+            <li th:each="err : ${model.table.validationMessages.errors}" th:text="${err.fieldName}"></li>
+        </ul>
+      </div>
+
+
+        <th:block th:if ="${model.markedAsComplete and form == null}">
+            <div class="success-alert extra-margin-bottom">
                 <p>Your Spend Profile is currently marked as complete, you can decide to make edits to this, or when your partners
                     have submitted their spend profiles submit them to Innovate UK</p>
             </div>
@@ -179,24 +187,23 @@
               </tr>
               </tbody>
           </table>
-
-          <th:block th:if="${readonly}">
-            <p class="extra-margin">If required, you can edit this spend profile. It will not be possible to submit the spend profile to Innovate UK until the section is marked as complete.</p>
-            <a class="button button-secondary" th:href="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/edit(projectId=${model.projectId},organisationId=${model.organisationId})}">Edit spend profile</a>
-            <th:block th:unless ="${model.markedAsComplete}">
-                <p class="extra-margin">When you are satisfied with the spend profile, mark the section as complete. This will allow you to submit the spend profile for the project to Innovate UK. You can still return to edit this page before you choose to submit.</p>
-                <form method="post" th:action="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/complete(projectId=${model.projectId},organisationId=${model.organisationId})}" >
-                    <button class="button" name="mark-as-complete">Mark as complete</button>
-                </form>
-            </th:block>
-          </th:block>
-
-          <th:block th:unless="${readonly}">
-            <button class="button button-secondary extra-margin">Save and return to spend profile overview</button>
-          </th:block>
-
+          <button th:unless="${readonly}"  class="button button-secondary extra-margin">Save and return to spend profile overview</button>
         </div>
       </form>
+
+
+      <div class="grid-container" th:if="${readonly}">
+        <p class="extra-margin">If required, you can edit this spend profile. It will not be possible to submit the spend profile to Innovate UK until the section is marked as complete.</p>
+        <a class="button button-secondary" th:href="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/edit(projectId=${model.projectId},organisationId=${model.organisationId})}">Edit spend profile</a>
+
+        <th:block th:unless="${model.markedAsComplete}">
+            <p class="extra-margin">When you are satisfied with the spend profile, mark the section as complete. This will allow you to submit the spend profile for the project to Innovate UK. You can still return to edit this page before you choose to submit.</p>
+            <form method="post" th:action="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/complete(projectId=${model.projectId},organisationId=${model.organisationId})}" >
+                <button class="button" name="mark-as-complete" th:disabled="${#lists.size(model.table.validationMessages.errors) > 0}">Mark as complete</button>
+            </form>
+        </th:block>
+      </div>
+
     </th:block>
 </main>
 
