@@ -59,6 +59,7 @@ Existing assessor shouldn't be able to accept other assessor's invitation
 Existing assessor shouldn't be able to reject other assessor's invitation
     [Documentation]    INFUND-4631
     [Tags]    Pending
+    # Pending INFUND-5003
     Given the user navigates to the page    ${Invitation_nonexisting_assessor2}
     when the user clicks the button/link    css=form a
     And the assessor fills in all fields
