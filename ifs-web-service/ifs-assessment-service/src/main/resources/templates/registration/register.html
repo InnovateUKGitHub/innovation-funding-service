@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Registration In'" th:remove="tag"></div>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Create assessor account'" th:remove="tag"></div>
 </head>
 <body th:with="context='applicant'" class="sign-in">
 
@@ -11,7 +11,137 @@
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
     <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl='javascript:history.back()',currentApplication=${currentApplication}" th:remove="tag"/>
-    <h1 class="heading-large">Create your account</h1>
+
+    <div class="hgroup">
+        <h1 class="heading-xlarge">Create assessor account</h1>
+    </div>
+
+    <form>
+        <h2 class="heading-medium">Your details</h2>
+        <div class="form-group">
+            <label class="form-label" for="title">
+                <span class="form-label-bold">Title</span>
+            </label>
+            <select class="form-control width-medium" id="title" name="title">
+                <option value="">Mr</option>
+                <option value="">Miss</option>
+                <option value="">Mrs</option>
+                <option value="">Ms</option>
+                <option value="">Dr</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label" for="first-name">
+                <span class="form-label-bold">First name</span>
+            </label>
+            <input class="form-control" type="text" />
+        </div>
+
+        <div class="form-group">
+            <label class="form-label" for="last-name">
+                <span class="form-label-bold">Last name</span>
+            </label>
+            <input class="form-control" type="text" />
+        </div>
+
+        <div id="manual-company-input" class="extra-margin">
+            <div class="form-group">
+                <label class="form-label">
+                    <span class="form-label-bold">Postcode</span>
+                </label>
+                <input class="form-control" type="text" />
+                <button class="button" type="submit">Find UK address</button>
+            </div>
+
+            <div class="form-group" id="select-address-block">
+                <label class="form-label">
+                    <span class="form-label-bold">Select your address</span>
+                </label>
+                <select class="form-control">
+                    <option value="">SN1 2BD, 1, Station Road, Swindon </option>
+                </select>
+                <button class="button" type="submit">Use selected address</button>
+            </div>
+            <button class="buttonlink" type="submit">Enter address manually</button>
+
+            <fieldset id="address-details" class="extra-margin">
+                <legend class="visuallyhidden">Address details</legend>
+                <div class="form-group">
+                    <label class="form-label">
+                        <span class="form-label-bold">Street</span>
+                    </label>
+                    <input class="form-control" type="text" />
+                </div>
+                <div class="form-group">
+                    <label class="form-label visuallyhidden">
+                        <span class="form-label-bold">Street line 2</span>
+                    </label>
+                    <input class="form-control" type="text" />
+                </div>
+                <div class="form-group">
+                    <label class="form-label visuallyhidden">
+                        <span class="form-label-bold">Street line 3</span>
+                    </label>
+                    <input class="form-control" type="text" />
+                </div>
+                <div class="form-group">
+                    <label class="form-label">
+                        <span class="form-label-bold">Town</span>
+                    </label>
+                    <input class="form-control" type="text" />
+                </div>
+                <div class="form-group">
+                    <label class="form-label">
+                        <span class="form-label-bold">County</span>
+                    </label>
+                    <input class="form-control" type="text" />
+                </div>
+                <div class="form-group">
+                    <label class="form-label">
+                        <span class="form-label-bold">Postcode</span>
+                    </label>
+                    <input class="form-control" type="text" />
+                </div>
+            </fieldset>
+        </div>
+
+        <div class="form-group extra-margin">
+            <label class="form-label" for="phone-number">
+                <span class="form-label-bold">Phone number</span>
+                <span class="form-hint">We may use this to contact you about the application</span>
+            </label>
+            <input class="form-control" type="text" />
+        </div>
+
+        <div class="form-group">
+            <h3 class="heading-small">Email</h3>
+            <p class="form-hint">You will need this to sign into your account, the provided email is:<br /><strong>jsmith@assessor.co.uk</strong></p>
+        </div>
+        <div class="form-group">
+            <h3 class="heading-small">Password</h3>
+            <label class="form-label">
+                <span class="visuallyhidden">Password</span>
+                <span class="form-hint">
+                    Your password is case-sensitive and needs to:<br />
+                    <ul class="list-bullet">
+                        <li>be between 10 and 30 characters long</li>
+                        <li>contain at least 1 capital letter</li>
+                        <li>contain at least 1 number</li>
+                    </ul>
+                </span>
+            </label>
+            <input class="form-control" type="password" />
+        </div>
+        <div class="form-group">
+            <label class="form-label">
+                <span class="form-label-bold">Re-type password</span>
+            </label>
+            <input class="form-control" type="password" />
+        </div>
+
+        <button class="button button-large extra-margin" name="create-account" type="submit">Continue</button>
+    </form>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>
 </main>
