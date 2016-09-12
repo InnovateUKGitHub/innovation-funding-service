@@ -87,7 +87,7 @@ public class AdditionalInfoSectionSaver extends AbstractSectionSaver implements 
 				if (index > 0 && competitionResource.getFunders().size() > index) {
 					competitionResource.getFunders().remove(index);
 				} else {
-					return asList(new Error("Field not found", HttpStatus.BAD_REQUEST));
+					return asList(new Error("Funder could not be removed", HttpStatus.BAD_REQUEST));
 				}
 				break;
 			default:
