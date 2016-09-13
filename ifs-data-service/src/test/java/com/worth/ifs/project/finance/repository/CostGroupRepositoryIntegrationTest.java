@@ -59,7 +59,7 @@ public class CostGroupRepositoryIntegrationTest extends BaseRepositoryIntegratio
         );
 
         assertEquals(expectedCosts, simpleMap(retrieved.getCosts(), Cost::getValue));
-        retrieved.getCosts().forEach(c -> assertEquals(retrieved, c.getCostGroup().get()));
+        retrieved.getCosts().forEach(c -> assertEquals(retrieved, c.getCostGroup()));
 
         // now individually retrieve the costs and assert that they are as expected when retrieved individually as well
         retrieved.getCosts().forEach(c -> {
@@ -109,7 +109,7 @@ public class CostGroupRepositoryIntegrationTest extends BaseRepositoryIntegratio
         );
 
         assertEquals(expectedCosts, simpleMap(retrievedAgain.getCosts(), Cost::getValue));
-        retrievedAgain.getCosts().forEach(c -> assertEquals(retrievedAgain, c.getCostGroup().get()));
+        retrievedAgain.getCosts().forEach(c -> assertEquals(retrievedAgain, c.getCostGroup()));
     }
 
     @Test

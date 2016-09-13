@@ -248,7 +248,10 @@ col.border {
 	padding:20px;
 }
 
-
+td.cell-error {
+	background: $red;
+	color: #fff;
+}
 
 span.yes{
 	@extend %icon-tick;
