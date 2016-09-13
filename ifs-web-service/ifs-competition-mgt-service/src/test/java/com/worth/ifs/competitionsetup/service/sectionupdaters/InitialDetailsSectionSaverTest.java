@@ -97,7 +97,7 @@ public class InitialDetailsSectionSaverTest {
         CompetitionResource competition = newCompetitionResource().build();
         competition.setMilestones(asList(10L));
 
-        List<Error> errors = service.autoSaveSectionField(competition, "openingDate", "20-10-2020");
+        List<Error> errors = service.autoSaveSectionField(competition, "openingDate", "20-10-2020", null);
 
         assertTrue(errors.isEmpty());
         verify(competitionService).update(competition);
@@ -110,7 +110,7 @@ public class InitialDetailsSectionSaverTest {
         CompetitionResource competition = newCompetitionResource().build();
         competition.setMilestones(asList(10L));
 
-        List<Error> errors = service.autoSaveSectionField(competition, "openingDate", "20-10-2000");
+        List<Error> errors = service.autoSaveSectionField(competition, "openingDate", "20-10-2000", null);
 
         assertTrue(!errors.isEmpty());
         verify(competitionService, never()).update(competition);
@@ -120,7 +120,7 @@ public class InitialDetailsSectionSaverTest {
     public void testAutoSaveCompetitionSetupSectionUnknown() {
         CompetitionResource competition = newCompetitionResource().build();
 
-        List<Error> errors = service.autoSaveSectionField(competition, "notExisting", "Strange!@#1Value");
+        List<Error> errors = service.autoSaveSectionField(competition, "notExisting", "Strange!@#1Value", null);
 
         assertTrue(!errors.isEmpty());
         verify(competitionService, never()).update(competition);
