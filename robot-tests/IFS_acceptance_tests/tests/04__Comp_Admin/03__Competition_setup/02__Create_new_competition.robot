@@ -216,8 +216,8 @@ Funding information client-side validations
 Funding informations calculations
     [Documentation]    INFUND-2985
     [Tags]    HappyPath
-    When the user clicks the button/link    jQuery=Button:contains("+Add funder")
-    and the user should see the element    jQuery=Button:contains("+Add funder")
+    When the user clicks the button/link    jQuery=Button:contains("+Add co-funder")
+    and the user should see the element    jQuery=Button:contains("+Add co-funder")
     Then the user should see the element    jQuery=Button:contains("Remove")
     And the user enters text to a text field    id=1-funder    FunderName2
     And the user enters text to a text field    id=1-funderBudget    1000
