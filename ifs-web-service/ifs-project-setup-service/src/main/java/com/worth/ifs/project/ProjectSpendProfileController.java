@@ -2,7 +2,6 @@ package com.worth.ifs.project;
 
 import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.commons.rest.LocalDateResource;
-import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.project.finance.ProjectFinanceService;
@@ -22,13 +21,16 @@ import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.util.CollectionFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.function.Supplier;
@@ -36,6 +38,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import static com.worth.ifs.commons.error.CommonFailureKeys.SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE;
 import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
 import static com.worth.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
 import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
@@ -62,12 +65,15 @@ public class ProjectSpendProfileController {
     @Autowired
     private ProjectFinanceService projectFinanceService;
 
+    @Autowired
+    @Qualifier("spendProfileCostValidator")
+    private SpendProfileCostValidator spendProfileCostValidator;
+
     @RequestMapping(method = GET)
     public String viewSpendProfile(Model model,
                                    @PathVariable("projectId") final Long projectId,
                                    @PathVariable("organisationId") final Long organisationId,
                                    @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-
 
         if (userHasProjectManagerRole(loggedInUser, projectId)) {
             model.addAttribute("model", populateSpendProfileProjectManagerViewModel(projectId));
@@ -87,47 +93,55 @@ public class ProjectSpendProfileController {
         return "project/spend-profile";
     }
 
-
     @RequestMapping(value = "/edit", method = GET)
     public String editSpendProfile(Model model,
+                                   HttpServletRequest request,
+                                   @ModelAttribute(FORM_ATTR_NAME) SpendProfileForm form,
+                                   @SuppressWarnings("unused") BindingResult bindingResult,
+                                   ValidationHandler validationHandler,
                                    @PathVariable("projectId") final Long projectId,
                                    @PathVariable("organisationId") final Long organisationId,
                                    @ModelAttribute("loggedInUser") UserResource loggedInUser) {
         ProjectResource projectResource = projectService.getById(projectId);
         SpendProfileTableResource spendProfileTableResource = projectFinanceService.getSpendProfileTable(projectId, organisationId);
-
-        SpendProfileForm form = new SpendProfileForm();
         form.setTable(spendProfileTableResource);
-        model.addAttribute(FORM_ATTR_NAME, form);
 
         if(spendProfileTableResource.getMarkedAsComplete()) {
             markSpendProfileInComplete(model, projectId, organisationId, "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile");
         }
-
         model.addAttribute("model", buildSpendProfileViewModel(projectResource, organisationId, spendProfileTableResource));
 
         return "project/spend-profile";
     }
-
     @RequestMapping(value = "/edit", method = POST)
-    public String saveSpendProfile(Model model,
-                                   @PathVariable("projectId") final Long projectId,
-                                   @PathVariable("organisationId") final Long organisationId,
-                                   @ModelAttribute(FORM_ATTR_NAME) SpendProfileForm form,
+    public String saveSpendProfile(@ModelAttribute(FORM_ATTR_NAME) SpendProfileForm form,
                                    @SuppressWarnings("unused") BindingResult bindingResult,
                                    ValidationHandler validationHandler,
-                                   @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-
-        return editSpendProfile(model, validationHandler, bindingResult, form, projectId, organisationId, "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile", "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile/edit");
-    }
-
-    @RequestMapping(value = "/complete", method = POST)
-    public String markAsCompleteSpendProfile(Model model,
                                    @PathVariable("projectId") final Long projectId,
                                    @PathVariable("organisationId") final Long organisationId,
                                    @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-        return markSpendProfileComplete(model, projectId, organisationId, "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile");
+
+        String failureView = "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile/edit";
+        String successView = "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile";
+
+        ValidationHandler customValidationHandler = ValidationHandler.newBindingResultHandler(bindingResult);
+        spendProfileCostValidator.validate(form.getTable(), bindingResult);
+        if (customValidationHandler.hasErrors()) {
+            return failureView;
+        }
+
+        SpendProfileTableResource spendProfileTableResource = projectFinanceService.getSpendProfileTable(projectId, organisationId);
+        spendProfileTableResource.setMonthlyCostsPerCategoryMap(form.getTable().getMonthlyCostsPerCategoryMap()); // update existing resource with user entered fields
+
+        ServiceResult<Void> result = projectFinanceService.saveSpendProfile(projectId, organisationId, spendProfileTableResource);
+        if(result.isFailure()){
+            validationHandler.addAnyErrors(result);
+            return failureView;
+        }
+
+        return successView;
     }
+
 
     private List<OrganisationResource> getPartnerOrganisations(final List<ProjectUserResource> projectRoles) {
 
@@ -148,10 +162,19 @@ public class ProjectSpendProfileController {
         HashMap<String, Boolean> partnerProgressMap = new HashMap<>();
         partnerOrganisations.stream().forEach(organisation -> {
             Optional<SpendProfileResource> spendProfile = projectFinanceService.getSpendProfile(projectId, organisation.getId());
-            partnerProgressMap.put(organisation.getName(),spendProfile.get().isMarkedAsComplete() != null ? spendProfile.get().isMarkedAsComplete() : false);
+            partnerProgressMap.put(organisation.getName(),spendProfile.get().isMarkedAsComplete());
         });
         return partnerProgressMap;
     }
+
+    @RequestMapping(value = "/complete", method = POST)
+    public String markAsCompleteSpendProfile(Model model,
+                                             @PathVariable("projectId") final Long projectId,
+                                             @PathVariable("organisationId") final Long organisationId,
+                                             @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+        return markSpendProfileComplete(model, projectId, organisationId, "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile");
+    }
+
     private String markSpendProfileComplete(Model model,
                                             Long projectId,
                                             Long organisationId,
@@ -172,35 +195,14 @@ public class ProjectSpendProfileController {
                                     Boolean complete,
                                     String successView) {
         ServiceResult<Void> result = projectFinanceService.markSpendProfile(projectId, organisationId, complete);
-        if (result.isFailure()) {
-            // If this model attribute is set, it means there are some categories where the totals don't match
-            model.addAttribute("errorCategories", result.getFailure().getErrors());
-        }
-        return successView;
-    }
-
-    private String editSpendProfile(Model model, ValidationHandler validationHandler, BindingResult bindingResult, SpendProfileForm userSubmittedForm, Long projectId, Long organisationId, String successView, String falureView) {
-        ValidationHandler customValidationHandler = ValidationHandler.newBindingResultHandler(bindingResult);
-        new SpendProfileCostValidator().validate(userSubmittedForm.getTable(), bindingResult);
-        if (customValidationHandler.hasErrors()) {
-            return falureView;
-        }
-
-        ProjectResource projectResource = projectService.getById(projectId);
-        SpendProfileTableResource spendProfileTableResource = projectFinanceService.getSpendProfileTable(projectId, organisationId);
-        spendProfileTableResource.setMonthlyCostsPerCategoryMap(userSubmittedForm.getTable().getMonthlyCostsPerCategoryMap()); // update existing resource with user entered fields
-
-        ServiceResult<ValidationMessages> result = projectFinanceService.saveSpendProfile(projectId, organisationId, spendProfileTableResource);
-        if (result.isSuccess()) { // even if total is > eligible, we save and return to read only view
-            // If this model attribute is set, it means there are some categories where the totals don't match
-            model.addAttribute("errorCategories", result.getSuccessObject().getErrors());
+        if(result.isFailure()){
+            ProjectSpendProfileViewModel spendProfileViewModel = buildSpendProfileViewModel(projectId, organisationId);
+            spendProfileViewModel.setObjectErrors(Collections.singletonList(new ObjectError(SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE.getErrorKey(), "Cannot mark as complete, because totals more than eligible")));
+            model.addAttribute("model", spendProfileViewModel);
+            return "project/spend-profile";
         } else {
-            validationHandler.addAnyErrors(result);
+            return successView;
         }
-
-        buildSpendProfileViewModel(projectResource, organisationId, spendProfileTableResource);
-
-        return successView;
     }
 
     private ProjectSpendProfileViewModel buildSpendProfileViewModel(final ProjectResource projectResource, final Long organisationId, final SpendProfileTableResource spendProfileTableResource) {
@@ -222,16 +224,6 @@ public class ProjectSpendProfileController {
         ProjectResource projectResource = projectService.getById(projectId);
         SpendProfileTableResource spendProfileTableResource = projectFinanceService.getSpendProfileTable(projectId, organisationId);
         return buildSpendProfileViewModel(projectResource, organisationId, spendProfileTableResource);
-    }
-
-    private boolean userHasProjectManagerRole(UserResource user, Long projectId) {
-        Optional<ProjectUserResource> existingProjectManager = getProjectManager(projectId);
-        return existingProjectManager.isPresent() && existingProjectManager.get().getUser().equals(user.getId());
-    }
-
-    private Optional<ProjectUserResource> getProjectManager(Long projectId) {
-        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
-        return simpleFindFirst(projectUsers, pu -> PROJECT_MANAGER.getName().equals(pu.getRoleName()));
     }
 
     private Map<String, BigDecimal> buildSpendProfileActualTotalsForAllCategories(SpendProfileTableResource table) {
@@ -308,4 +300,13 @@ public class ProjectSpendProfileController {
                 partnerOrganisations);
     }
 
+    private boolean userHasProjectManagerRole(UserResource user, Long projectId) {
+        Optional<ProjectUserResource> existingProjectManager = getProjectManager(projectId);
+        return existingProjectManager.isPresent() && existingProjectManager.get().getUser().equals(user.getId());
+    }
+
+    private Optional<ProjectUserResource> getProjectManager(Long projectId) {
+        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
+        return simpleFindFirst(projectUsers, pu -> PROJECT_MANAGER.getName().equals(pu.getRoleName()));
+    }
 }

@@ -7,7 +7,7 @@ import java.util.Date;
 * */
 public class FinancialYearDate {
 
-    private static final int FIRST_FISCAL_MONTH = Calendar.MARCH;
+    private static final int FIRST_FISCAL_MONTH = Calendar.APRIL;
 
     private Calendar calendarDate;
 

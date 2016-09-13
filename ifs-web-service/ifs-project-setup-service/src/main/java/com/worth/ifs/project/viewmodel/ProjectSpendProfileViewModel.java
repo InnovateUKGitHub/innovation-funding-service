@@ -5,6 +5,7 @@ import com.worth.ifs.project.resource.SpendProfileTableResource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.springframework.validation.ObjectError;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -15,7 +16,7 @@ import java.util.Map;
  * View model to back the Spend Profile page. Also wraps SpendProfileSummaryModel for summary table below spend profile.
  */
 public class ProjectSpendProfileViewModel {
-
+    private List<ObjectError> objectErrors;
     private Long projectId;
     private Long organisationId;
     private String projectName;
@@ -127,33 +128,63 @@ public class ProjectSpendProfileViewModel {
         return totalOfAllEligibleTotals;
     }
 
+    public List<ObjectError> getObjectErrors() {
+        return objectErrors;
+    }
+
+    public void setObjectErrors(List<ObjectError> objectErrors) {
+        this.objectErrors = objectErrors;
+    }
+
+    public Boolean getMarkedAsComplete() {
+        return markedAsComplete;
+    }
+
+    public void setCategoryToActualTotal(Map<String, BigDecimal> categoryToActualTotal) {
+        this.categoryToActualTotal = categoryToActualTotal;
+    }
+
+    public void setTotalForEachMonth(List<BigDecimal> totalForEachMonth) {
+        this.totalForEachMonth = totalForEachMonth;
+    }
+
+    public void setTotalOfAllActualTotals(BigDecimal totalOfAllActualTotals) {
+        this.totalOfAllActualTotals = totalOfAllActualTotals;
+    }
+
+    public void setTotalOfAllEligibleTotals(BigDecimal totalOfAllEligibleTotals) {
+        this.totalOfAllEligibleTotals = totalOfAllEligibleTotals;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        ProjectSpendProfileViewModel that = (ProjectSpendProfileViewModel) o;
+        ProjectSpendProfileViewModel viewModel = (ProjectSpendProfileViewModel) o;
 
         return new EqualsBuilder()
-                .append(markedAsComplete, that.markedAsComplete)
-                .append(projectId, that.projectId)
-                .append(organisationId, that.organisationId)
-                .append(projectName, that.projectName)
-                .append(targetProjectStartDate, that.targetProjectStartDate)
-                .append(durationInMonths, that.durationInMonths)
-                .append(summary, that.summary)
-                .append(table, that.table)
-                .append(categoryToActualTotal, that.categoryToActualTotal)
-                .append(totalForEachMonth, that.totalForEachMonth)
-                .append(totalOfAllActualTotals, that.totalOfAllActualTotals)
-                .append(totalOfAllEligibleTotals, that.totalOfAllEligibleTotals)
+                .append(objectErrors, viewModel.objectErrors)
+                .append(projectId, viewModel.projectId)
+                .append(organisationId, viewModel.organisationId)
+                .append(projectName, viewModel.projectName)
+                .append(targetProjectStartDate, viewModel.targetProjectStartDate)
+                .append(durationInMonths, viewModel.durationInMonths)
+                .append(summary, viewModel.summary)
+                .append(table, viewModel.table)
+                .append(markedAsComplete, viewModel.markedAsComplete)
+                .append(categoryToActualTotal, viewModel.categoryToActualTotal)
+                .append(totalForEachMonth, viewModel.totalForEachMonth)
+                .append(totalOfAllActualTotals, viewModel.totalOfAllActualTotals)
+                .append(totalOfAllEligibleTotals, viewModel.totalOfAllEligibleTotals)
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
+                .append(objectErrors)
                 .append(projectId)
                 .append(organisationId)
                 .append(projectName)
@@ -162,12 +193,17 @@ public class ProjectSpendProfileViewModel {
                 .append(summary)
                 .append(table)
                 .append(markedAsComplete)
+                .append(categoryToActualTotal)
+                .append(totalForEachMonth)
+                .append(totalOfAllActualTotals)
+                .append(totalOfAllEligibleTotals)
                 .toHashCode();
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
+                .append("objectErrors", objectErrors)
                 .append("projectId", projectId)
                 .append("organisationId", organisationId)
                 .append("projectName", projectName)

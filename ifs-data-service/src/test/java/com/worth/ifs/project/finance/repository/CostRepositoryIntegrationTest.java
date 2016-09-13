@@ -8,8 +8,8 @@ import org.springframework.test.annotation.Rollback;
 
 import java.math.BigDecimal;
 
-import static com.worth.ifs.project.finance.domain.CostTimePeriod.TimeUnit.DAY;
-import static com.worth.ifs.project.finance.domain.CostTimePeriod.TimeUnit.YEAR;
+import static com.worth.ifs.project.finance.domain.TimeUnit.DAY;
+import static com.worth.ifs.project.finance.domain.TimeUnit.YEAR;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.*;
 
@@ -44,10 +44,10 @@ public class CostRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
         assertEquals(new BigDecimal("12.60"), retrieved.getValue());
 
         // assert that there are no temporal parts to this cost
-        assertFalse(retrieved.getCostTimePeriod().isPresent());
+        assertNull(retrieved.getCostTimePeriod());
 
         // assert that there are no categorization parts to this cost
-        assertFalse(retrieved.getCostCategory().isPresent());
+        assertNull(retrieved.getCostCategory());
     }
 
     @Test
@@ -83,9 +83,9 @@ public class CostRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
         assertEquals(new BigDecimal("12.60"), retrieved.getValue());
 
         // ensure the temporal aspect is as expected
-        assertTrue(retrieved.getCostTimePeriod().isPresent());
+        assertNotNull(retrieved.getCostTimePeriod());
 
-        CostTimePeriod period = retrieved.getCostTimePeriod().get();
+        CostTimePeriod period = retrieved.getCostTimePeriod();
 
         assertEquals(Integer.valueOf(2), period.getOffsetAmount());
         assertEquals(DAY, period.getOffsetUnit());
@@ -115,7 +115,7 @@ public class CostRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
         assertEquals(new BigDecimal("12.60"), retrieved.getValue());
 
         // ensure the categorization aspect is as expected
-        assertTrue(retrieved.getCostCategory().isPresent());
-        assertEquals(costCategory.getId(), retrieved.getCostCategory().get().getId());
+        assertNotNull(retrieved.getCostCategory());
+        assertEquals(costCategory.getId(), retrieved.getCostCategory().getId());
     }
 }
