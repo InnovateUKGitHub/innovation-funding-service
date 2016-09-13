@@ -421,7 +421,7 @@ public class CompetitionSetupControllerTest {
         mockMvc.perform(get(URL_PREFIX + "/" + COMPETITION_ID + "/section/initial"))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("competition/setup"))
-                .andExpect(model().attribute("RESTRICT_INITIAL_DETAILS_EDIT", Boolean.TRUE));
+                .andExpect(model().attribute("restrictInitialDetailsEdit", Boolean.TRUE));
     }
 
     @Test
@@ -435,6 +435,6 @@ public class CompetitionSetupControllerTest {
         mockMvc.perform(get(URL_PREFIX + "/" + COMPETITION_ID + "/section/initial"))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("competition/setup"))
-                .andExpect(model().attribute("RESTRICT_INITIAL_DETAILS_EDIT", nullValue()));
+                .andExpect(model().attribute("restrictInitialDetailsEdit", nullValue()));
     }
 }

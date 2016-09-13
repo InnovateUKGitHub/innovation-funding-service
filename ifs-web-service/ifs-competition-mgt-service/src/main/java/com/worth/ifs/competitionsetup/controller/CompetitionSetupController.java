@@ -67,10 +67,7 @@ public class CompetitionSetupController {
 
     private static final String READY_TO_OPEN_KEY = "readyToOpen";
 
-    private static final String RESTRICT_INITIAL_DETAILS_EDIT = "RESTRICT_INITIAL_DETAILS_EDIT";
-    
-    @Autowired
-    private Validator validator;
+    private static final String RESTRICT_INITIAL_DETAILS_EDIT = "restrictInitialDetailsEdit";
 
     @RequestMapping(value = "/{competitionId}", method = RequestMethod.GET)
     public String initCompetitionSetupSection(Model model, @PathVariable("competitionId") Long competitionId) {
@@ -157,7 +154,7 @@ public class CompetitionSetupController {
             }
         }
 
-        checkInitialDetailsRestriction(section, competition, model);
+        checkRestrictionOfInitialDetails(section, competition, model);
 
         return "competition/setup";
     }
@@ -201,7 +198,7 @@ public class CompetitionSetupController {
                                               @PathVariable("competitionId") Long competitionId,
                                               Model model) {
         CompetitionResource competitionResource = competitionService.getById(competitionId);
-        checkInitialDetailsRestriction(CompetitionSetupSection.INITIAL_DETAILS, competitionResource, model);
+        checkRestrictionOfInitialDetails(CompetitionSetupSection.INITIAL_DETAILS, competitionResource, model);
         return genericCompetitionSetupSection(competitionSetupForm, bindingResult, competitionId, CompetitionSetupSection.INITIAL_DETAILS, model);
     }
 
@@ -404,7 +401,7 @@ public class CompetitionSetupController {
         }
     }
 
-    private void checkInitialDetailsRestriction(CompetitionSetupSection section,
+    private void checkRestrictionOfInitialDetails(CompetitionSetupSection section,
                                                 CompetitionResource competitionResource,
                                                 Model model) {
         if (section == CompetitionSetupSection.INITIAL_DETAILS &&

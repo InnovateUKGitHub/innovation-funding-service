@@ -37,11 +37,11 @@
                           <span class="error-message"  th:each="err : ${#fields.errors('competitionTypeId')}" th:text="${err}" />
                     </span>
                 </label>
-                <select class="form-control width-x-large" th:disabled="${!#strings.isEmpty(RESTRICT_INITIAL_DETAILS_EDIT)}" name="competitionTypeId" id="competitionTypeId" required="required" data-required-errormessage="Please select a competition type">
+                <select class="form-control width-x-large" th:disabled="${!#strings.isEmpty(restrictInitialDetailsEdit)}" name="competitionTypeId" id="competitionTypeId" required="required" data-required-errormessage="Please select a competition type">
                     <option value="" disabled="disabled" th:selected="${competitionSetupForm.competitionTypeId == null}">Please select &hellip;</option>
                     <option th:each="(competitionType : ${competitionTypes})" th:if="${competitionType.active}" th:attr="data-stateaid=${competitionType.stateAid}" th:text="${competitionType.name}"  th:value="${competitionType.id}" th:selected="${competitionSetupForm.competitionTypeId == competitionType.id}">Competition Type</option>
                 </select>
-                <input th:if="${!#strings.isEmpty(RESTRICT_INITIAL_DETAILS_EDIT)}" type="hidden" th:field="${competitionSetupForm.competitionTypeId}" />
+                <input th:if="${!#strings.isEmpty(restrictInitialDetailsEdit)}" type="hidden" th:field="${competitionSetupForm.competitionTypeId}" />
                 <span class="autosave-info" />
             </div>
 
@@ -98,9 +98,9 @@
                                  placeholder="DD"
                                  required="required"
                                  data-required-errormessage="Please enter an opening day"
-                                 th:disabled="${!#strings.isEmpty(RESTRICT_INITIAL_DETAILS_EDIT)}"
+                                 th:disabled="${!#strings.isEmpty(restrictInitialDetailsEdit)}"
                                  th:field="${competitionSetupForm.openingDateDay}" />
-                          <input th:if="${!#strings.isEmpty(RESTRICT_INITIAL_DETAILS_EDIT)}" type="hidden" th:field="${competitionSetupForm.openingDateDay}" />
+                          <input th:if="${!#strings.isEmpty(restrictInitialDetailsEdit)}" type="hidden" th:field="${competitionSetupForm.openingDateDay}" />
                       </div>
 
                       <div class="month">
@@ -114,7 +114,7 @@
                                  data-required-errormessage="Please enter an opening month"
                                  th:disabled="${!#strings.isEmpty(competitionSetupForm.openingDateMonth)}"
                                  th:field="${competitionSetupForm.openingDateMonth}" />
-                          <input th:if="${!#strings.isEmpty(RESTRICT_INITIAL_DETAILS_EDIT)}" type="hidden" th:field="${competitionSetupForm.openingDateMonth}" />
+                          <input th:if="${!#strings.isEmpty(restrictInitialDetailsEdit)}" type="hidden" th:field="${competitionSetupForm.openingDateMonth}" />
                       </div>
 
                       <div class="year">
@@ -126,7 +126,7 @@
                                  placeholder="YYYY"
                                  required="required"
                                  data-required-errormessage="Please enter an opening year"
-                                 th:disabled="${!#strings.isEmpty(RESTRICT_INITIAL_DETAILS_EDIT)}"
+                                 th:disabled="${!#strings.isEmpty(restrictInitialDetailsEdit)}"
                                  th:field="${competitionSetupForm.openingDateYear}" />
                           <input th:if="${!#strings.isEmpty(RESTRICT_INITIAL_DETAILS_EDIT)}" type="hidden" th:field="${competitionSetupForm.openingDateYear}" />
                       </div>
