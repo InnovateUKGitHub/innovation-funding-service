@@ -59,12 +59,13 @@ IFS.core.autoSave = (function(){
               var applicationId = jQuery("#application_id").val();
               var saveType = form.attr('data-autosave');
               var jsonObj;
-
+              var fieldInfo;
+              var dateField;
               switch(saveType){
                   case 'application':
-                        var dateField = field.is('[data-date]');
+                        dateField = field.is('[data-date]');
                         if(dateField){
-                          var fieldInfo = field.closest('.date-group').find('input[type="hidden"]');
+                          fieldInfo = field.closest('.date-group').find('input[type="hidden"]');
                           jsonObj = {
                             applicationId: applicationId,
                             value: field.attr('data-date'),
@@ -88,15 +89,18 @@ IFS.core.autoSave = (function(){
                         };
                         break;
                   case 'compSetup':
-                        var dateField = field.is('[data-date]');
+                        dateField = field.is('[data-date]');
+                        var objectId = form.attr('data-objectid');
                         if(dateField){
-                          var fieldInfo = field.closest('.date-group').find('input[type="hidden"]');
+                          fieldInfo = field.closest('.date-group').find('input[type="hidden"]');
                           jsonObj = {
+                            objectId: objectId,
                             value: field.attr('data-date'),
                             fieldName: fieldInfo.prop('name')
                           };
                         } else {
                           jsonObj = {
+                            objectId: objectId,
                             fieldName: field.prop('name'),
                             value: field.val()
                           };
@@ -115,17 +119,19 @@ IFS.core.autoSave = (function(){
         getUrl : function(field, form){
             var saveType = form.attr('data-autosave');
             var url;
+            var competitionId;
+
             switch(saveType){
                 case 'application':
                   var applicationId = jQuery("#application_id").val();
                   url ='/application/'+applicationId+'/form/saveFormElement';
                   break;
                 case 'fundingDecision':
-                  var competitionId = field.attr('data-competition');
+                  competitionId = field.attr('data-competition');
                   url = '/management/funding/' + competitionId;
                   break;
                 case 'compSetup':
-                  var competitionId = form.attr('data-competition');
+                  competitionId = form.attr('data-competition');
                   var section = form.attr('data-section');
                   url = '/management/competition/setup/' + competitionId + '/section/' + section + '/saveFormElement';
                   break;

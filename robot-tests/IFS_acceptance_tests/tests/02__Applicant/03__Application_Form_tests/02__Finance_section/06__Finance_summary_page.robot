@@ -118,32 +118,33 @@ Alert should not show If research participation is below the maximum level
 
 *** Keywords ***
 the finance Project cost breakdown calculations should be correct
-    Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(1) td:nth-of-type(3)    £0
-    Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(4) td:nth-of-type(1)    £129,000
-    Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(1) td:nth-of-type(1)    £60,000
-    Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(1)    £60,000
-    Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(1)    £9,000
+    the user sees the text in the element    css=.project-cost-breakdown tr:nth-of-type(1) td:nth-of-type(3)    £0
+    the user sees the text in the element    css=.project-cost-breakdown tr:nth-of-type(4) td:nth-of-type(1)    £129,000
+    the user sees the text in the element    css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(1)    £60,000
+    the user sees the text in the element    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(1)    £9,000
+
 
 the finance summary calculations should be correct
-    Element Should Contain    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(1)    £129,000
-    Element Should Contain    css=.finance-summary tr:nth-of-type(1) td:nth-of-type(2)    50%
-    Element Should Contain    css=.finance-summary tr:nth-of-type(2) td:nth-of-type(2)    70%
-    Element Should Contain    css=.finance-summary tr:nth-of-type(3) td:nth-of-type(2)    100%
-    Element Should Contain    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(3)    £61,000
-    Element Should Contain    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(4)    £20,000
-    Element Should Contain    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(5)    £48,000
+    the user sees the text in the element    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(1)    £129,000
+    the user sees the text in the element    css=.finance-summary tr:nth-of-type(1) td:nth-of-type(2)    50%
+    the user sees the text in the element    css=.finance-summary tr:nth-of-type(2) td:nth-of-type(2)    70%
+    the user sees the text in the element    css=.finance-summary tr:nth-of-type(3) td:nth-of-type(2)    100%
+    the user sees the text in the element    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(3)    £61,000
+    the user sees the text in the element    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(4)    £20,000
+    the user sees the text in the element    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(5)    £48,000
+
 
 the applicant enters a bigger funding amount
     [Documentation]    Check if the Contribution to project and the Funding sought remain £0 and not minus
     the user navigates to the page    ${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SECTION}
-    Input Text    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    80000
-    Input Text    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    test2
+    the user enters text to a text field    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    80000
+    the user enters text to a text field    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    test2
     Execute Javascript    jQuery('form').attr('data-test','true');
 
 the contribution to project and funding sought should be 0 and not a negative number
     the user navigates to the page    ${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SUMMARY}
-    Element Should Contain    css=.finance-summary tr:nth-of-type(2) td:nth-of-type(3)    £0
-    Element Should Contain    css=.finance-summary tr:nth-of-type(2) td:nth-of-type(5)    £0
+    the user sees the text in the element    css=.finance-summary tr:nth-of-type(2) td:nth-of-type(3)    £0
+    the user sees the text in the element    css=.finance-summary tr:nth-of-type(2) td:nth-of-type(5)    £0
 
 Green check should be visible
     Page Should Contain Image    css=.finance-summary tr:nth-of-type(1) img[src*="/images/field/tick-icon"]
@@ -160,8 +161,7 @@ Lead enters a valid research participation value
     the user should see the element    name=add_cost
     the user clicks the button/link    jQuery=button:contains('Add another role')
     the user should see the element    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input
-    Input Text    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input    1200000000
-    Input Text    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(4) input    1000
-    Input Text    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input    Test
-    mouse out    css=input
+    the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input    1200000000
+    the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(4) input    1000
+    the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input    Test
     sleep    500ms

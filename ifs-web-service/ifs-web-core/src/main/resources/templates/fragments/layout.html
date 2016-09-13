@@ -166,17 +166,18 @@
         </div>
       </div>
     </header>
-
+    
+    <div class="grid-container phase-banner">
+      <p>
+        <strong class="phase-tag">BETA</strong>
+        <span>This is a new service – your <a href="mailto:IFSfeedback@innovateuk.gov.uk">feedback</a> will help us to improve it.</span>
+      </p>
+    </div>
 </div>
 <!-- ===========================Place: <main> content-start =========================== -->
 
 <div th:fragment="main-content-start">
-  <div class="phase-banner">
-  <p>
-    <strong class="phase-tag">BETA</strong>
-    <span>This is a new service – your <a href="mailto:IFSfeedback@innovateuk.gov.uk">feedback</a> will help us to improve it.</span>
-  </p>
-</div>
+
 </div>
 
 <!-- ===========================Place: <main> content-end =========================== -->
@@ -211,20 +212,22 @@
     </footer>
 </div>
 
+
 <!-- =========================== Element : subheader =========================== -->
-
-
 <div th:fragment="header-sub">
     <div class="sub-header">
-       <a th:if="${linkTitle != null and linkUrl != null}"
-          th:class="${linkClass != null ? linkClass : ''}"
-          th:href="${linkUrl}"
-          th:text="${linkTitle}" />
+        <nav>
+            <a th:if="${linkTitle != null and linkUrl != null}"
+               th:class="${linkClass != null ? linkClass : ''}"
+               th:href="${linkUrl}"
+               th:text="${linkTitle}" />
+        </nav>
         <div class="deadline" th:if="${currentCompetition != null}">Days left to submit&nbsp;&nbsp;
-          <div th:include="fragments/elements :: pie-small" th:with="daysPercentage=${currentCompetition.getStartDateToEndDatePercentage()},daysLeft=${currentCompetition.getDaysLeft()}" th:remove="tag" />
+            <div th:include="fragments/elements :: pie-small" th:with="daysPercentage=${currentCompetition.getStartDateToEndDatePercentage()},daysLeft=${currentCompetition.getDaysLeft()}" th:remove="tag" />
         </div>
     </div>
 </div>
+
 
 <div th:fragment="header-sub-generic">
     <div class="sub-header">
@@ -234,5 +237,6 @@
         <strong th:text="${title}" />
     </div>
 </div>
+
 
 </html>

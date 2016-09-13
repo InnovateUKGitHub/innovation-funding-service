@@ -11,7 +11,7 @@ public class CompetitionParticipantResource {
     private Long id;
     private Long competitionId;
     private Long userId;
-    private Long inviteId;
+    private CompetitionInviteResource invite;
     private RejectionReasonResource rejectionReason;
     private String rejectionReasonComment;
     private CompetitionParticipantRoleResource role;
@@ -41,12 +41,12 @@ public class CompetitionParticipantResource {
         this.userId = userId;
     }
 
-    public Long getInviteId() {
-        return inviteId;
+    public CompetitionInviteResource getInvite() {
+        return invite;
     }
 
-    public void setInviteId(Long inviteId) {
-        this.inviteId = inviteId;
+    public void setInvite(CompetitionInviteResource invite) {
+        this.invite = invite;
     }
 
     public RejectionReasonResource getRejectionReason() {
@@ -93,7 +93,7 @@ public class CompetitionParticipantResource {
                 .append(id, that.id)
                 .append(competitionId, that.competitionId)
                 .append(userId, that.userId)
-                .append(inviteId, that.inviteId)
+                .append(invite, that.invite)
                 .append(rejectionReason, that.rejectionReason)
                 .append(rejectionReasonComment, that.rejectionReasonComment)
                 .append(role, that.role)
@@ -107,7 +107,7 @@ public class CompetitionParticipantResource {
                 .append(id)
                 .append(competitionId)
                 .append(userId)
-                .append(inviteId)
+                .append(invite)
                 .append(rejectionReason)
                 .append(rejectionReasonComment)
                 .append(role)

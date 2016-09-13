@@ -164,12 +164,7 @@ public class ProfileController {
 
     private void addEnvelopeErrorsToBindingResultErrors(List<Error> errors, BindingResult bindingResult) {
         errors.forEach(
-                error -> bindingResult.addError(
-                        new ObjectError(
-                                error.getErrorKey(),
-                                error.getErrorMessage()
-                        )
-                )
+            error -> bindingResult.addError(new ObjectError(error.getErrorKey(), new String[] {error.getErrorKey()}, null, null))
         );
     }
 }

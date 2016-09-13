@@ -13,7 +13,6 @@ import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.form.InitialDetailsForm;
 import com.worth.ifs.competitionsetup.model.MilestoneEntry;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
-import com.worth.ifs.competitionsetup.service.CompetitionSetupService;
 import org.apache.commons.collections4.map.LinkedMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -25,8 +24,11 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static com.worth.ifs.commons.error.Error.fieldError;
+import static java.util.Collections.singletonList;
 import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 
 /**
@@ -40,9 +42,6 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
 
 	@Autowired
 	private CompetitionService competitionService;
-
-	@Autowired
-	private CompetitionSetupService competitionSetupService;
 
     @Autowired
     private MilestoneService milestoneService;
@@ -79,7 +78,7 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
 		} catch (Exception e) {
 			LOG.error(e.getMessage());
 
-            return asList(Error.fieldError(OPENINGDATE_FIELDNAME, null, "Unable to save opening date"));
+            return asList(fieldError(OPENINGDATE_FIELDNAME, null, "competition.setup.opening.date.not.able.to.save"));
 		}
 
 		competition.setCompetitionType(initialDetailsForm.getCompetitionTypeId());
@@ -91,9 +90,10 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
 		List<CategoryResource> matchingChild =
 				children.stream().filter(child -> child.getId().equals(initialDetailsForm.getInnovationAreaCategoryId())).collect(Collectors.toList());
 		if (matchingChild.isEmpty()) {
-			return asList(Error.fieldError("innovationAreaCategoryId",
+			return asList(fieldError("innovationAreaCategoryId",
 					initialDetailsForm.getInnovationAreaCategoryId(),
-					"Please choose one of the following sub categories of the innovation sector: " + children.stream().map(child -> child.getName()).collect(Collectors.joining(", "))));
+					"competition.setup.innovation.area.must.be.selected",
+                    singletonList(children.stream().map(child -> child.getName()).collect(Collectors.joining(", ")))));
 		}
 		competition.setInnovationArea(initialDetailsForm.getInnovationAreaCategoryId());
 
@@ -104,7 +104,7 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
 	}
 
 	@Override
-	public List<Error> autoSaveSectionField(CompetitionResource competitionResource, String fieldName, String value) {
+	public List<Error> autoSaveSectionField(CompetitionResource competitionResource, String fieldName, String value, Optional<Long> objectId) {
 		return performAutoSaveField(competitionResource, fieldName, value);
 	}
 
@@ -145,7 +145,7 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
                     }
                 } catch (Exception e) {
                     LOG.error(e.getMessage());
-                    return asList(Error.fieldError(OPENINGDATE_FIELDNAME, null, "Unable to save opening date"));
+                    return asList(fieldError(OPENINGDATE_FIELDNAME, null, "competition.setup.opening.date.not.able.to.save"));
                 }
                 break;
             default:
@@ -157,7 +157,7 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
 
 	private List<Error> validateOpeningDate(LocalDateTime openingDate) {
         if (openingDate.isBefore(LocalDateTime.now())) {
-            return asList(Error.fieldError(OPENINGDATE_FIELDNAME, openingDate.toString(), "Please enter a future date"));
+            return asList(fieldError(OPENINGDATE_FIELDNAME, openingDate.toString(), "competition.setup.opening.date.not.in.future"));
         }
 
         return Collections.emptyList();

@@ -71,7 +71,8 @@ IFS.competition_management.setup = (function(){
                       }
                   });
                   if(!pageLoad) {
-                    innovationCategory.trigger('change');
+                    IFS.core.autoSave.fieldChanged('[name="innovationSectorCategoryId"]');
+                    IFS.core.autoSave.fieldChanged('[name="innovationAreaCategoryId"]');
                   }
               }
           });
@@ -103,8 +104,8 @@ IFS.competition_management.setup = (function(){
     handleAddCoFunder: function() {
       jQuery(document).on('click','#add-cofunder',function() {
           var count = parseInt(jQuery('#co-funder-count').val(),10);
-          jQuery('<div class="grid-row" id="co-funder-row-'+ count +'"><div class="column-half"><div class="form-group"><input type="text" maxlength="255" data-maxlength-errormessage="Co-funders has a maximum length of 255 characters" class="form-control width-x-large" id="' + count +'-funder" name="coFunders['+ count +'].coFunder" value=""></div> </div>' +
-              '<div class="column-half"><div class="form-group"><input type="number" min="0" class="form-control width-x-large" id="' + count +'-funderBudget" name="coFunders['+ count +'].coFunderBudget" value=""></div> </div></div>')
+          jQuery('<div class="grid-row" id="co-funder-row-'+ count +'"><div class="column-half"><div class="form-group"><input type="text" maxlength="255" data-maxlength-errormessage="Funders has a maximum length of 255 characters" class="form-control width-x-large" id="' + count +'-funder" name="funders['+ count +'].funder" value=""><span class="autosave-info" /></div> </div>' +
+              '<div class="column-half"><div class="form-group"><input type="number" min="0" class="form-control width-x-large" id="' + count +'-funderBudget" name="funders['+ count +'].funderBudget" value=""><span class="autosave-info" /></div> <input required="required" type="hidden" id="' + count +'-coFunder" name="funders['+ count +'].coFunder" value="true"></div></div>')
               .insertBefore('#dynamic-row-pointer');
 
           jQuery('#co-funder-count').val(count + 1);

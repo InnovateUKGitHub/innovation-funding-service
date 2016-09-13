@@ -145,7 +145,7 @@ public class AssessorFeedbackControllerTest extends BaseControllerMockMVCTest<As
     @Test
     public void testSubmitAssessorFeedbackButSubmissionFailsSoNoEmailsSent() throws Exception {
 
-        when(assessorFeedbackServiceMock.submitAssessorFeedback(123L)).thenReturn(serviceFailure(internalServerErrorError("Urgh!")));
+        when(assessorFeedbackServiceMock.submitAssessorFeedback(123L)).thenReturn(serviceFailure(internalServerErrorError()));
 
         mockMvc.
                 perform(
@@ -153,7 +153,7 @@ public class AssessorFeedbackControllerTest extends BaseControllerMockMVCTest<As
                                 header("IFS_AUTH_TOKEN", "123abc")
                 ).
                 andExpect(status().isInternalServerError()).
-                andExpect(content().json(toJson(new RestErrorResponse(internalServerErrorError("Urgh!")))));
+                andExpect(content().json(toJson(new RestErrorResponse(internalServerErrorError()))));
 
         verify(assessorFeedbackServiceMock).submitAssessorFeedback(123L);
         verify(assessorFeedbackServiceMock, never()).notifyLeadApplicantsOfAssessorFeedback(123L);
