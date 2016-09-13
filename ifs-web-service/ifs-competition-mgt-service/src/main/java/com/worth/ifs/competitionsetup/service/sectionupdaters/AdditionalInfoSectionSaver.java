@@ -54,12 +54,9 @@ public class AdditionalInfoSectionSaver extends AbstractSectionSaver implements 
             competitionFunderResource.setCoFunder(funder.getCoFunder());
 			competition.getFunders().add(competitionFunderResource);
 		});
-        try {
-            competitionService.update(competition);
-        } catch (Exception e) {
-            LOG.error(e.getMessage());
-            return asList(new Error("Competition object could not be saved", HttpStatus.BAD_REQUEST));
-        }
+
+		competitionService.update(competition);
+
 		return Collections.emptyList();
 	}
 
