@@ -1,4 +1,4 @@
-package com.worth.ifs.assessment.workflow;
+package com.worth.ifs.workflow;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

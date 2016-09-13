@@ -9,6 +9,7 @@ import com.worth.ifs.assessment.workflow.actions.SubmitAction;
 import com.worth.ifs.assessment.workflow.guards.AssessmentGuard;
 import com.worth.ifs.assessment.workflow.guards.ProcessOutcomeGuard;
 import com.worth.ifs.assessment.workflow.guards.SubmitGuard;
+import com.worth.ifs.workflow.WorkflowStateMachineListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.statemachine.config.EnableStateMachine;
