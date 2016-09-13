@@ -125,7 +125,7 @@ public interface ProjectService {
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'DELETE_OTHER_DOCUMENTS')")
     ServiceResult<Void> deleteExploitationPlanFile(Long projectId);
 
-    @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'DOWNLOAD_OTHER_DOCUMENTS')")
+    @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'VIEW_OTHER_DOCUMENTS_DETAILS')")
     List<ServiceResult<FileAndContents>>  retrieveUploadedDocuments(Long projectId);
 
     @PreAuthorize("hasAuthority('system_registrar')")

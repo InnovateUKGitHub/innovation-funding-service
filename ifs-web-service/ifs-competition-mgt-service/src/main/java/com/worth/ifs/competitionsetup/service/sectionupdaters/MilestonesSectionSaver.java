@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 
 import static com.worth.ifs.commons.error.Error.fieldError;
 import static org.codehaus.groovy.runtime.InvokerHelper.asList;
+import java.util.Optional;
 
 /**
  * Competition setup section saver for the milestones section.
@@ -61,7 +62,7 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
     }
 
     @Override
-    public List<Error> autoSaveSectionField(CompetitionResource competitionResource, String fieldName, String value) {
+    public List<Error> autoSaveSectionField(CompetitionResource competitionResource, String fieldName, String value), Optional<Long> objectId) {
         int i = 0;
         return performAutoSaveField(competitionResource, fieldName, value);
     }

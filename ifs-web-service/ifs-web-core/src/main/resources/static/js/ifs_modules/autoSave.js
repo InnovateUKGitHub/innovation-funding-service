@@ -61,7 +61,6 @@ IFS.core.autoSave = (function(){
               var jsonObj;
               var fieldInfo;
               var dateField;
-
               switch(saveType){
                   case 'application':
                         dateField = field.is('[data-date]');
@@ -91,14 +90,17 @@ IFS.core.autoSave = (function(){
                         break;
                   case 'compSetup':
                         dateField = field.is('[data-date]');
+                        var objectId = form.attr('data-objectid');
                         if(dateField){
                           fieldInfo = field.closest('.date-group').find('input[type="hidden"]');
                           jsonObj = {
+                            objectId: objectId,
                             value: field.attr('data-date'),
                             fieldName: fieldInfo.prop('name')
                           };
                         } else {
                           jsonObj = {
+                            objectId: objectId,
                             fieldName: field.prop('name'),
                             value: field.val()
                           };
