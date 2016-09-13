@@ -6,10 +6,7 @@ import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
-import com.worth.ifs.project.resource.MonitoringOfficerResource;
-import com.worth.ifs.project.resource.ProjectResource;
-import com.worth.ifs.project.resource.ProjectUserResource;
-import com.worth.ifs.project.resource.SpendProfileResource;
+import com.worth.ifs.project.resource.*;
 import com.worth.ifs.project.service.ProjectRestService;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.service.OrganisationRestService;
@@ -223,6 +220,10 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public boolean isUserPartner(Long projectId, Long userId) {
         return !simpleFilter(getPartners(projectId), projectUser -> projectUser.getUser().equals(userId)).isEmpty();
+    }
+
+    public ProjectTeamStatusResource getProjectTeamStatus(Long projectId){
+        return projectRestService.getProjectTeamStatus(projectId).getSuccessObjectOrThrowException();
     }
 
     private List<ProjectUserResource> getProjectUsersWithPartnerRole(Long projectId) {

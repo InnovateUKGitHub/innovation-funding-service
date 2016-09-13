@@ -5,10 +5,7 @@ import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.file.resource.FileEntryResource;
-import com.worth.ifs.project.resource.MonitoringOfficerResource;
-import com.worth.ifs.project.resource.ProjectResource;
-import com.worth.ifs.project.resource.ProjectUserResource;
-import com.worth.ifs.project.resource.SpendProfileResource;
+import com.worth.ifs.project.resource.*;
 import com.worth.ifs.user.resource.OrganisationResource;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
@@ -150,5 +147,9 @@ public class ProjectRestServiceImpl extends BaseRestService implements ProjectRe
     @Override
     public RestResult<Void> addPartner(Long projectId, Long userId, Long organisationId) {
         return postWithRestResultAnonymous(projectRestURL + "/" + projectId + "/partners?userId=" + userId + "&organisationId=" + organisationId, Void.class);
+    }
+
+    public RestResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId){
+        return getWithRestResult(projectRestURL + "/" + projectId + "/team-status", ProjectTeamStatusResource.class);
     }
 }

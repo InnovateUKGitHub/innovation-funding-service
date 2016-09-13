@@ -1,9 +1,5 @@
 package com.worth.ifs.project;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.bankdetails.resource.BankDetailsResource;
 import com.worth.ifs.project.consortiumoverview.viewmodel.ConsortiumPartnerStatus;
@@ -12,31 +8,30 @@ import com.worth.ifs.project.consortiumoverview.viewmodel.ProjectConsortiumStatu
 import com.worth.ifs.project.consortiumoverview.viewmodel.RegularPartnerModel;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.project.resource.ProjectTeamStatusResource;
 import com.worth.ifs.user.resource.OrganisationResource;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
 import static com.worth.ifs.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
-import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
-import static com.worth.ifs.project.consortiumoverview.viewmodel.ConsortiumPartnerStatus.ACTION_REQUIRED;
-import static com.worth.ifs.project.consortiumoverview.viewmodel.ConsortiumPartnerStatus.COMPLETE;
-import static com.worth.ifs.project.consortiumoverview.viewmodel.ConsortiumPartnerStatus.NOT_STARTED;
-import static com.worth.ifs.project.consortiumoverview.viewmodel.ConsortiumPartnerStatus.PENDING;
+import static com.worth.ifs.project.consortiumoverview.viewmodel.ConsortiumPartnerStatus.*;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
-import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ProjectDetailsControllerConsortiumOverviewTest extends BaseControllerMockMVCTest<ProjectDetailsController> {
+public class ProjectTeamStatusControllerTest extends BaseControllerMockMVCTest<ProjectTeamStatusController> {
 
     @Before
     public void setUp() {
@@ -47,8 +42,8 @@ public class ProjectDetailsControllerConsortiumOverviewTest extends BaseControll
     }
 
     @Override
-    protected ProjectDetailsController supplyControllerUnderTest() {
-        return new ProjectDetailsController();
+    protected ProjectTeamStatusController supplyControllerUnderTest() {
+        return new ProjectTeamStatusController();
     }
 
     @Test
@@ -65,14 +60,11 @@ public class ProjectDetailsControllerConsortiumOverviewTest extends BaseControll
 
         List<RegularPartnerModel> otherPartners = simpleMap(otherOrganisations, partner -> createPartnerModel(project, partner, bankDetails));
 
-        when(projectService.getById(projectId)).thenReturn(project);
-        when(projectService.getLeadOrganisation(projectId)).thenReturn(leadOrganisation);
-        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(otherOrganisations);
-        when(projectService.getMonitoringOfficerForProject(projectId)).thenReturn(monitoringOfficer);
-        when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(anyLong(), anyLong())).thenReturn(restSuccess(bankDetails));
+        ProjectTeamStatusResource expectedTeamStatus = new ProjectTeamStatusResource();
 
+        when(projectService.getProjectTeamStatus(projectId)).thenReturn(expectedTeamStatus);
 
-        ProjectConsortiumStatusViewModel expected = new ProjectConsortiumStatusViewModel(projectId, leadPartnerModel, otherPartners);
+        ProjectConsortiumStatusViewModel expected = new ProjectConsortiumStatusViewModel(projectId, expectedTeamStatus);
 
         mockMvc.perform(get("/project/{id}/team-status", projectId))
             .andExpect(view().name("project/consortium-status"))

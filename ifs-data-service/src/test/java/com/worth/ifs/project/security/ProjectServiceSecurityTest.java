@@ -11,6 +11,7 @@ import com.worth.ifs.invite.builder.ProjectInviteResourceBuilder;
 import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.project.resource.ProjectTeamStatusResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.user.resource.OrganisationResource;
@@ -595,6 +596,11 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         @Override
         public ServiceResult<Void> addPartner(Long projectId, Long userId, Long organisationId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId) {
             return null;
         }
     }
