@@ -6,7 +6,6 @@ import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.commons.mapper.BaseMapper;
 import com.worth.ifs.commons.mapper.GlobalMapperConfig;
 import com.worth.ifs.user.mapper.ProcessRoleMapper;
-import com.worth.ifs.workflow.mapper.ActivityStateMapper;
 import com.worth.ifs.workflow.mapper.ProcessOutcomeMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -20,8 +19,7 @@ import org.mapstruct.Mappings;
         uses = {
                 ProcessOutcomeMapper.class,
                 ProcessRoleMapper.class,
-                ApplicationMapper.class,
-                ActivityStateMapper.class
+                ApplicationMapper.class
         }
 )
 public abstract class AssessmentMapper extends BaseMapper<Assessment, AssessmentResource, Long> {
@@ -32,6 +30,7 @@ public abstract class AssessmentMapper extends BaseMapper<Assessment, Assessment
             @Mapping(source = "participant.id", target = "processRole"),
             @Mapping(source = "target.id", target = "application"),
             @Mapping(source = "target.competition.id", target = "competition"),
+            @Mapping(source = "activityState", target = "assessmentState"),
     })
     @Override
     public abstract AssessmentResource mapToResource(Assessment domain);
@@ -39,7 +38,8 @@ public abstract class AssessmentMapper extends BaseMapper<Assessment, Assessment
     @Mappings({
             @Mapping(target = "processEvent", source = "event"),
             @Mapping(target = "participant", source = "processRole"),
-            @Mapping(target = "target", source = "application")
+            @Mapping(target = "target", source = "application"),
+            @Mapping(target = "activityState", source = "assessmentState", ignore = true)
     })
     @Override
     public abstract Assessment mapToDomain(AssessmentResource resource);

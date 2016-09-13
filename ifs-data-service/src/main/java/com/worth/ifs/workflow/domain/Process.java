@@ -1,7 +1,7 @@
 package com.worth.ifs.workflow.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.worth.ifs.workflow.resource.State;
+import com.worth.ifs.workflow.resource.ProcessStates;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
@@ -17,14 +17,14 @@ import java.util.List;
 @Entity
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "process_type", discriminatorType = DiscriminatorType.STRING)
-public abstract class Process<ParticipantType, TargetType> {
+public abstract class Process<ParticipantType, TargetType, StatesType extends ProcessStates> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String event;
 
     @ManyToOne
-    private ActivityState activityState;
+    protected ActivityState activityState;
 
     @Version
     @Temporal(TemporalType.TIMESTAMP)
@@ -84,10 +84,6 @@ public abstract class Process<ParticipantType, TargetType> {
         return id;
     }
 
-    public ActivityState getActivityState()  {
-        return activityState;
-    }
-
     public void setActivityState(ActivityState status) {
         this.activityState = status;
     }
@@ -117,7 +113,9 @@ public abstract class Process<ParticipantType, TargetType> {
 
     public abstract TargetType getTarget();
 
-    public boolean isInState(State state) {
-        return state.equals(activityState.getState());
+    public boolean isInState(StatesType state) {
+        return state.getBackingState().equals(activityState.getState());
     }
+
+    public abstract StatesType getActivityState();
 }

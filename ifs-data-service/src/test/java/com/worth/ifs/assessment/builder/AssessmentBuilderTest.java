@@ -17,7 +17,7 @@ import java.util.List;
 import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static com.worth.ifs.assessment.builder.ProcessOutcomeBuilder.newProcessOutcome;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
-import static com.worth.ifs.workflow.resource.ActivityType.APPLICATION_ASSESSMENT;
+import static com.worth.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
 import static org.junit.Assert.assertEquals;
 
 public class AssessmentBuilderTest {
@@ -46,7 +46,7 @@ public class AssessmentBuilderTest {
 
         assertEquals(expectedId, assessment.getId());
         assertEquals(expectedEvent.name(), assessment.getProcessEvent());
-        assertEquals(expectedStatus, assessment.getAssessmentState());
+        assertEquals(expectedStatus, assessment.getActivityState());
         assertEquals(expectedLastModifiedDate, assessment.getLastModified());
         assertEquals(expectedStartDate, assessment.getStartDate());
         assertEquals(expectedEndDate, assessment.getEndDate());
@@ -82,7 +82,7 @@ public class AssessmentBuilderTest {
         final Assessment first = assessments.get(0);
         assertEquals(expectedIds[0], first.getId());
         assertEquals(expectedEvents[0].name(), first.getProcessEvent());
-        assertEquals(expectedStatuss[0], first.getAssessmentState());
+        assertEquals(expectedStatuss[0], first.getActivityState());
         assertEquals(expectedLastModifiedDates[0], first.getLastModified());
         assertEquals(expectedStartDates[0], first.getStartDate());
         assertEquals(expectedEndDates[0], first.getEndDate());
@@ -92,7 +92,7 @@ public class AssessmentBuilderTest {
         final Assessment second = assessments.get(1);
         assertEquals(expectedIds[1], second.getId());
         assertEquals(expectedEvents[1].name(), second.getProcessEvent());
-        assertEquals(expectedStatuss[1], second.getAssessmentState());
+        assertEquals(expectedStatuss[1], second.getActivityState());
         assertEquals(expectedLastModifiedDates[1], second.getLastModified());
         assertEquals(expectedStartDates[1], second.getStartDate());
         assertEquals(expectedEndDates[1], second.getEndDate());

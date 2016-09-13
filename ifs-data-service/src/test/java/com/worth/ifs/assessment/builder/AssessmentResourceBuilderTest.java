@@ -2,7 +2,6 @@ package com.worth.ifs.assessment.builder;
 
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.resource.AssessmentStates;
-import com.worth.ifs.workflow.resource.ActivityStateResource;
 import com.worth.ifs.workflow.resource.ProcessEvent;
 import com.worth.ifs.workflow.resource.ProcessStates;
 import org.junit.Test;
@@ -16,7 +15,6 @@ import static com.google.common.primitives.Longs.asList;
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static com.worth.ifs.assessment.resource.AssessmentStates.ASSESSED;
 import static com.worth.ifs.assessment.resource.AssessmentStates.OPEN;
-import static com.worth.ifs.workflow.resource.ActivityType.APPLICATION_ASSESSMENT;
 import static org.junit.Assert.assertEquals;
 
 public class AssessmentResourceBuilderTest {
@@ -39,7 +37,7 @@ public class AssessmentResourceBuilderTest {
         final AssessmentResource assessment = newAssessmentResource()
                 .withId(expectedId)
                 .withProcessEvent(expectedEvent)
-                .withActivityState(new ActivityStateResource(APPLICATION_ASSESSMENT, OPEN.getBackingState()))
+                .withActivityState(OPEN)
                 .withLastModifiedDate(expectedLastModifiedDate)
                 .withStartDate(expectedStartDate)
                 .withEndDate(expectedEndDate)
@@ -85,9 +83,7 @@ public class AssessmentResourceBuilderTest {
         final List<AssessmentResource> assessments = newAssessmentResource()
                 .withId(expectedIds)
                 .withProcessEvent(expectedEvents)
-                .withActivityState(
-                        new ActivityStateResource(APPLICATION_ASSESSMENT, OPEN.getBackingState()),
-                        new ActivityStateResource(APPLICATION_ASSESSMENT, ASSESSED.getBackingState()))
+                .withActivityState(OPEN, ASSESSED)
                 .withLastModifiedDate(expectedLastModifiedDates)
                 .withStartDate(expectedStartDates)
                 .withEndDate(expectedEndDates)

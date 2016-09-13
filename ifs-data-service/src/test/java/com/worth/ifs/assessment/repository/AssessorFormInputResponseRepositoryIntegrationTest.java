@@ -25,7 +25,7 @@ import static com.worth.ifs.assessment.builder.AssessorFormInputResponseBuilder.
 import static com.worth.ifs.form.builder.FormInputBuilder.newFormInput;
 import static com.worth.ifs.form.resource.FormInputScope.ASSESSMENT;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
-import static com.worth.ifs.workflow.resource.ActivityType.APPLICATION_ASSESSMENT;
+import static com.worth.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.assertEquals;

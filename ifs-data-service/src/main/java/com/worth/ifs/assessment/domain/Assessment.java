@@ -11,11 +11,11 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import static com.worth.ifs.workflow.resource.State.READY_TO_SUBMIT;
-import static com.worth.ifs.workflow.resource.State.SUBMITTED;
+import static com.worth.ifs.assessment.resource.AssessmentStates.ASSESSED;
+import static com.worth.ifs.assessment.resource.AssessmentStates.SUBMITTED;
 
 @Entity
-public class Assessment extends Process<ProcessRole, Application> {
+public class Assessment extends Process<ProcessRole, Application, AssessmentStates> {
 
     @ManyToOne
     @JoinColumn(name="participant_id", referencedColumnName = "id")
@@ -35,7 +35,7 @@ public class Assessment extends Process<ProcessRole, Application> {
 
     public Boolean isStarted() {
         if(getActivityState()!=null) {
-            return isInState(READY_TO_SUBMIT);
+            return isInState(ASSESSED);
         } else {
             return Boolean.FALSE;
         }
@@ -83,7 +83,7 @@ public class Assessment extends Process<ProcessRole, Application> {
         this.target = target;
     }
 
-    public AssessmentStates getAssessmentState() {
-        return AssessmentStates.fromState(getActivityState().getState());
+    public AssessmentStates getActivityState() {
+        return AssessmentStates.fromState(activityState.getState());
     }
 }

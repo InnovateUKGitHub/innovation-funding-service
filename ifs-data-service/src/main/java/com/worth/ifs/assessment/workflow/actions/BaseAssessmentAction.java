@@ -13,7 +13,7 @@ import org.springframework.statemachine.action.Action;
 
 import java.util.Optional;
 
-import static com.worth.ifs.workflow.resource.ActivityType.APPLICATION_ASSESSMENT;
+import static com.worth.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
 
 /**
  * A base class for Assessment-related workflow Actions

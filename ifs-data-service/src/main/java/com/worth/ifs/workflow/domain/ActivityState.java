@@ -1,6 +1,5 @@
 package com.worth.ifs.workflow.domain;
 
-import com.worth.ifs.workflow.resource.ActivityType;
 import com.worth.ifs.workflow.resource.State;
 
 import javax.persistence.*;

@@ -24,7 +24,7 @@ import static com.worth.ifs.commons.error.CommonFailureKeys.ASSESSMENT_RECOMMEND
 import static com.worth.ifs.commons.error.CommonFailureKeys.ASSESSMENT_REJECTION_FAILED;
 import static com.worth.ifs.commons.error.Error.fieldError;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
-import static com.worth.ifs.workflow.resource.ActivityType.APPLICATION_ASSESSMENT;
+import static com.worth.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
 import static java.util.Collections.nCopies;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;

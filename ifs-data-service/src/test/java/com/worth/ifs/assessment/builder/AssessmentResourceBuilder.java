@@ -3,7 +3,6 @@ package com.worth.ifs.assessment.builder;
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.resource.AssessmentStates;
-import com.worth.ifs.workflow.resource.ActivityStateResource;
 import com.worth.ifs.workflow.resource.ProcessEvent;
 
 import java.time.LocalDate;
@@ -13,7 +12,6 @@ import java.util.function.BiConsumer;
 
 import static com.worth.ifs.BuilderAmendFunctions.setField;
 import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
-import static com.worth.ifs.workflow.resource.ActivityType.APPLICATION_ASSESSMENT;
 import static java.util.Collections.emptyList;
 
 public class AssessmentResourceBuilder extends BaseBuilder<AssessmentResource, AssessmentResourceBuilder> {
@@ -80,11 +78,7 @@ public class AssessmentResourceBuilder extends BaseBuilder<AssessmentResource, A
         return withArray((competition, object) -> setField("competition", competition, object), competitions);
     }
 
-    public AssessmentResourceBuilder withActivityState(ActivityStateResource... activityState) {
-        return withArray((state, object) -> object.setActivityState(state), activityState);
-    }
-
     public AssessmentResourceBuilder withActivityState(AssessmentStates... states) {
-        return withArray((state, object) -> object.setActivityState(new ActivityStateResource(APPLICATION_ASSESSMENT, state.getBackingState())), states);
+        return withArray((state, object) -> object.setAssessmentState(state), states);
     }
 }

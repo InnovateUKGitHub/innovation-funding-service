@@ -1,7 +1,7 @@
 package com.worth.ifs.workflow.repository;
 
 import com.worth.ifs.workflow.domain.ActivityState;
-import com.worth.ifs.workflow.resource.ActivityType;
+import com.worth.ifs.workflow.domain.ActivityType;
 import com.worth.ifs.workflow.resource.State;
 import org.springframework.data.repository.PagingAndSortingRepository;
 

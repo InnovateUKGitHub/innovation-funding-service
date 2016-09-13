@@ -1,7 +1,5 @@
 package com.worth.ifs.assessment.resource;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.worth.ifs.workflow.resource.ActivityStateResource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -12,8 +10,7 @@ import java.util.List;
 public class AssessmentResource {
     private Long id;
     private String event;
-    // TODO DW - INFUND-4902 - can we just transfer the AssessmentStates instead of this resource?
-    private ActivityStateResource activityState;
+    private AssessmentStates assessmentState;
     private Calendar lastModified;
     private LocalDate startDate;
     private LocalDate endDate;
@@ -40,12 +37,12 @@ public class AssessmentResource {
         this.event = event;
     }
 
-    public ActivityStateResource getActivityState() {
-        return activityState;
+    public AssessmentStates getAssessmentState() {
+        return assessmentState;
     }
 
-    public void setActivityState(ActivityStateResource activityState) {
-        this.activityState = activityState;
+    public void setAssessmentState(AssessmentStates assessmentState) {
+        this.assessmentState = assessmentState;
     }
 
     public Calendar getLastModified() {
@@ -120,14 +117,6 @@ public class AssessmentResource {
         this.competition = competition;
     }
 
-    @JsonIgnore
-    public AssessmentStates getAssessmentState() {
-        if (getActivityState() == null) {
-            return null;
-        }
-        return AssessmentStates.fromState(getActivityState().getState());
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -143,7 +132,7 @@ public class AssessmentResource {
         return new EqualsBuilder()
                 .append(id, that.id)
                 .append(event, that.event)
-                .append(activityState, that.activityState)
+                .append(assessmentState, that.assessmentState)
                 .append(lastModified, that.lastModified)
                 .append(startDate, that.startDate)
                 .append(endDate, that.endDate)
@@ -161,7 +150,7 @@ public class AssessmentResource {
         return new HashCodeBuilder(17, 37)
                 .append(id)
                 .append(event)
-                .append(activityState)
+                .append(assessmentState)
                 .append(lastModified)
                 .append(startDate)
                 .append(endDate)

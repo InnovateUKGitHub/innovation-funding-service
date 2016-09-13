@@ -21,7 +21,7 @@ import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static com.worth.ifs.assessment.builder.ProcessOutcomeBuilder.newProcessOutcome;
 import static com.worth.ifs.assessment.resource.AssessmentStates.OPEN;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
-import static com.worth.ifs.workflow.resource.ActivityType.APPLICATION_ASSESSMENT;
+import static com.worth.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 
