@@ -112,7 +112,6 @@
 					<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
 					<a href="/prototypes/1575-project-details" class="button">Submit finance contact</a>
 					<!--<button class="button">Submit finance contact</button>-->
-s
 				</div>
 
 			</div>
@@ -171,8 +170,10 @@ s
 
 			if(jQuery(this).is(':checked')){
 				jQuery('#finance-contact-table').show();
+				jQuery('#finance-cta').hide();
 			}else{
 				jQuery('#finance-contact-table').hide();
+				jQuery('#finance-cta').show();
 			}
 		});
 
@@ -188,7 +189,7 @@ s
 			jQuery('#finance-cta').text('Submit and send invitation');
 			jQuery('#finance-cta').show();
 			jQuery('#add-finance-contact').text('Change team member');
-			jQuery('#message').html('<p>As you are adding ' + financeContact + ' as a new team member they must create their account before they become your finance contact.<p>' +
+			jQuery('#message').html('<p>Your new team member must create their account before they become your finance contact.<p>' +
 					'<p>You will still be able to change your selection until they create their account.</p>');
 
 
@@ -204,7 +205,7 @@ s
 					jQuery('#message').html('<p>This will make ' + jQuery('input:radio[name="finances-name-group"]:checked').val() + ' your finance contact for the project.</p>');
 					jQuery('#finance-cta').text('Submit');
 				}else {
-					jQuery('#message').html('<p>As you are adding ' + jQuery('input:radio[name="finances-name-group"]:checked').val() + ' as a new team member they must create their account before they become your finance contact.<p>' +
+					jQuery('#message').html('<p>Your new team member must create their account before they become your finance contact.<p>' +
 							'<p>You will still be able to change your selection until they create their account.</p>');
 
 					jQuery('#finance-cta').text('Submit and send invitation');
