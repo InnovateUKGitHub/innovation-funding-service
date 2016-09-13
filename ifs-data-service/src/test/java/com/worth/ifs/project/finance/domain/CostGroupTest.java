@@ -17,7 +17,7 @@ public class CostGroupTest {
         assertEquals(asList(cost1, cost2), costGroup.getCosts());
 
         // check that the hibernate back-links have been set to link the Costs to their owning CostGroup
-        assertEquals(costGroup, cost1.getCostGroup().get());
-        assertEquals(costGroup, cost2.getCostGroup().get());
+        assertEquals(costGroup, cost1.getCostGroup());
+        assertEquals(costGroup, cost2.getCostGroup());
     }
 }
