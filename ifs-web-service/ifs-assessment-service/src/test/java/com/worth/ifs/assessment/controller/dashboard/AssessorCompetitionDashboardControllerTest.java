@@ -7,6 +7,7 @@ import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.service.AssessmentService;
 import com.worth.ifs.assessment.viewmodel.AssessorCompetitionDashboardApplicationViewModel;
 import com.worth.ifs.assessment.viewmodel.AssessorCompetitionDashboardViewModel;
+import com.worth.ifs.competition.resource.CompetitionFunderResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
@@ -58,11 +59,15 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
         Long competitionId = 1L;
         Long userId = 1L;
 
+        CompetitionFunderResource funder = new CompetitionFunderResource();
+        funder.setFunder("Innovate UK");
+        funder.setCompetitionId(competitionId);
+
         CompetitionResource competition = newCompetitionResource()
                 .withId(2L)
                 .withName("Juggling Craziness")
                 .withDescription("Juggling Craziness (CRD3359)")
-                .withFunder("Innovate UK")
+                .withFunders(asList(funder))
                 .withAssessmentStartDate(LocalDateTime.now().minusDays(2))
                 .withAssessmentEndDate(LocalDateTime.now().plusDays(4))
                 .build();

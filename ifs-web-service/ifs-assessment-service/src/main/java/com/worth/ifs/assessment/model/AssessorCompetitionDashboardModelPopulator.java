@@ -8,6 +8,7 @@ import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.service.AssessmentService;
 import com.worth.ifs.assessment.viewmodel.AssessorCompetitionDashboardApplicationViewModel;
 import com.worth.ifs.assessment.viewmodel.AssessorCompetitionDashboardViewModel;
+import com.worth.ifs.competition.resource.CompetitionFunderResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
@@ -43,7 +44,7 @@ public class AssessorCompetitionDashboardModelPopulator {
 
     public AssessorCompetitionDashboardViewModel populateModel(Long competitionId, Long userId) {
         CompetitionResource competition = competitionService.getById(competitionId);
-        return new AssessorCompetitionDashboardViewModel(competition.getName(), competition.getDescription(), competition.getFunder(),
+        return new AssessorCompetitionDashboardViewModel(competition.getName(), competition.getDescription(), getFunders(competition),
                 getApplications(userId, competitionId));
     }
 
@@ -51,7 +52,7 @@ public class AssessorCompetitionDashboardModelPopulator {
         List<AssessmentResource> assessmentList = assessmentService.getByUser(userId);
 
         return assessmentList.stream()
-                .filter(assessment -> assessment.getCompetition() == competitionId)
+                .filter(assessment -> assessment.getCompetition().equals(competitionId))
                 .map(assessment -> {
                     ApplicationResource application = applicationService.getById(assessment.getApplication());
                     List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
@@ -68,5 +69,13 @@ public class AssessorCompetitionDashboardModelPopulator {
                 .filter(uar -> uar.getRoleName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()))
                 .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisation()).getSuccessObjectOrThrowException())
                 .findFirst();
+    }
+
+    private String getFunders(CompetitionResource competition) {
+        List<CompetitionFunderResource> funders = competition.getFunders();
+
+        return funders.stream()
+                .map(funder -> funder.getFunder())
+                .collect(Collectors.joining(", "));
     }
 }

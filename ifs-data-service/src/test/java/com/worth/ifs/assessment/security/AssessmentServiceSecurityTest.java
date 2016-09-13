@@ -50,7 +50,6 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
         );
     }
 
-
     @Test
     public void findByUserId() {
         long userId = 3L;
