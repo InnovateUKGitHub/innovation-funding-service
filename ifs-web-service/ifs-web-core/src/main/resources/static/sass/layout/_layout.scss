@@ -34,14 +34,9 @@
 	}
 }
 
-.grid-container.phase-banner,
-#content {
+.grid-container.phase-banner{
 	border-top: 10px solid $link-colour;
 }
-.phase-banner + #content {
-	border-top:none;
-}
-
 
 .sub-header {
     // background: $grey-4;
