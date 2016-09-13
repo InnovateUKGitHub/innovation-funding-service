@@ -6,7 +6,10 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 
 /**
  * View model to back the Spend Profile page. Also wraps SpendProfileSummaryModel for summary table below spend profile.
@@ -14,19 +17,34 @@ import java.time.LocalDate;
 public class ProjectSpendProfileViewModel {
 
     private Long projectId;
+    private Long organisationId;
     private String projectName;
     private LocalDate targetProjectStartDate;
     private Long durationInMonths;
     private SpendProfileSummaryModel summary;
     private SpendProfileTableResource table;
+    private Boolean markedAsComplete;
+    private Map<String, BigDecimal> categoryToActualTotal;
+    private List<BigDecimal> totalForEachMonth;
+    private BigDecimal totalOfAllActualTotals;
+    private BigDecimal totalOfAllEligibleTotals;
 
-    public ProjectSpendProfileViewModel(ProjectResource project, SpendProfileTableResource table, SpendProfileSummaryModel summary) {
+    public ProjectSpendProfileViewModel(ProjectResource project, Long organisationId, SpendProfileTableResource table,
+                                        SpendProfileSummaryModel summary, Boolean markedAsComplete,
+                                        Map<String, BigDecimal> categoryToActualTotal, List<BigDecimal> totalForEachMonth,
+                                        BigDecimal totalOfAllActualTotals, BigDecimal totalOfAllEligibleTotals) {
         this.projectId = project.getId();
+        this.organisationId = organisationId;
         this.projectName = project.getName();
         this.targetProjectStartDate = project.getTargetStartDate();
         this.durationInMonths = project.getDurationInMonths();
         this.summary = summary;
         this.table = table;
+        this.markedAsComplete = markedAsComplete;
+        this.categoryToActualTotal = categoryToActualTotal;
+        this.totalForEachMonth = totalForEachMonth;
+        this.totalOfAllActualTotals = totalOfAllActualTotals;
+        this.totalOfAllEligibleTotals = totalOfAllEligibleTotals;
     }
 
     public Long getProjectId() {
@@ -77,6 +95,38 @@ public class ProjectSpendProfileViewModel {
         this.table = table;
     }
 
+    public Boolean isMarkedAsComplete() {
+        return markedAsComplete;
+    }
+
+    public void setMarkedAsComplete(Boolean markedAsComplete) {
+        this.markedAsComplete = markedAsComplete;
+    }
+
+    public Long getOrganisationId() {
+        return organisationId;
+    }
+
+    public void setOrganisationId(Long organisationId) {
+        this.organisationId = organisationId;
+    }
+
+    public Map<String, BigDecimal> getCategoryToActualTotal() {
+        return categoryToActualTotal;
+    }
+
+    public List<BigDecimal> getTotalForEachMonth() {
+        return totalForEachMonth;
+    }
+
+    public BigDecimal getTotalOfAllActualTotals() {
+        return totalOfAllActualTotals;
+    }
+
+    public BigDecimal getTotalOfAllEligibleTotals() {
+        return totalOfAllEligibleTotals;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -86,12 +136,18 @@ public class ProjectSpendProfileViewModel {
         ProjectSpendProfileViewModel that = (ProjectSpendProfileViewModel) o;
 
         return new EqualsBuilder()
+                .append(markedAsComplete, that.markedAsComplete)
                 .append(projectId, that.projectId)
+                .append(organisationId, that.organisationId)
                 .append(projectName, that.projectName)
                 .append(targetProjectStartDate, that.targetProjectStartDate)
                 .append(durationInMonths, that.durationInMonths)
                 .append(summary, that.summary)
                 .append(table, that.table)
+                .append(categoryToActualTotal, that.categoryToActualTotal)
+                .append(totalForEachMonth, that.totalForEachMonth)
+                .append(totalOfAllActualTotals, that.totalOfAllActualTotals)
+                .append(totalOfAllEligibleTotals, that.totalOfAllEligibleTotals)
                 .isEquals();
     }
 
@@ -99,11 +155,13 @@ public class ProjectSpendProfileViewModel {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(projectId)
+                .append(organisationId)
                 .append(projectName)
                 .append(targetProjectStartDate)
                 .append(durationInMonths)
                 .append(summary)
                 .append(table)
+                .append(markedAsComplete)
                 .toHashCode();
     }
 
@@ -111,11 +169,17 @@ public class ProjectSpendProfileViewModel {
     public String toString() {
         return new ToStringBuilder(this)
                 .append("projectId", projectId)
+                .append("organisationId", organisationId)
                 .append("projectName", projectName)
                 .append("targetProjectStartDate", targetProjectStartDate)
                 .append("durationInMonths", durationInMonths)
                 .append("summary", summary)
                 .append("table", table)
+                .append("markedAsComplete", markedAsComplete)
+                .append("categoryToActualTotal", categoryToActualTotal)
+                .append("totalForEachMonth", totalForEachMonth)
+                .append("totalOfAllActualTotals", totalOfAllActualTotals)
+                .append("totalOfAllEligibleTotals", totalOfAllEligibleTotals)
                 .toString();
     }
 }
