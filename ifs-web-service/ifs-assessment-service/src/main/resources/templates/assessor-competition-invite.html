@@ -4,7 +4,7 @@
         <div th:include="fragments/layout :: head" th:with="pageTitle='Invitation to assess'" th:remove="tag" />
     </head>
 
-    <body class="app-dashboard">
+    <body th:with="context='assessment'" class="app-dashboard">
         <div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
         <div th:include="fragments/assessment :: assessor-reject-competition-modal (inviteHash=${model.competitionInviteHash})" th:remove="tag" />
         <div th:include="fragments/layout :: body-start" th:remove="tag" />
