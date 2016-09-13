@@ -128,7 +128,7 @@
                                  data-required-errormessage="Please enter an opening year"
                                  th:disabled="${!#strings.isEmpty(restrictInitialDetailsEdit)}"
                                  th:field="${competitionSetupForm.openingDateYear}" />
-                          <input th:if="${!#strings.isEmpty(RESTRICT_INITIAL_DETAILS_EDIT)}" type="hidden" th:field="${competitionSetupForm.openingDateYear}" />
+                          <input th:if="${!#strings.isEmpty(restrictInitialDetailsEdit)}" type="hidden" th:field="${competitionSetupForm.openingDateYear}" />
                       </div>
                       <span class="autosave-info" />
                   </div>
