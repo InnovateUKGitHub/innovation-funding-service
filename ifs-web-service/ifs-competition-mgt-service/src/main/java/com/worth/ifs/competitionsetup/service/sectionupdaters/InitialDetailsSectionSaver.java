@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.worth.ifs.commons.error.Error.fieldError;
@@ -103,7 +104,7 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
 	}
 
 	@Override
-	public List<Error> autoSaveSectionField(CompetitionResource competitionResource, String fieldName, String value) {
+	public List<Error> autoSaveSectionField(CompetitionResource competitionResource, String fieldName, String value, Optional<Long> objectId) {
 		return performAutoSaveField(competitionResource, fieldName, value);
 	}
 

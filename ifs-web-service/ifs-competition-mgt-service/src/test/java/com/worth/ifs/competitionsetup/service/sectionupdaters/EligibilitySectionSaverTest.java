@@ -71,7 +71,7 @@ public class EligibilitySectionSaverTest {
 		CompetitionResource competition = newCompetitionResource().withResearchCategories(researchCategories).build();
 		competition.setMilestones(asList(10L));
 
-		List<Error> errors = service.autoSaveSectionField(competition, "researchCategoryId", "35");
+		List<Error> errors = service.autoSaveSectionField(competition, "researchCategoryId", "35", null);
 
 		assertTrue(errors.isEmpty());
 		verify(competitionService).update(competition);
@@ -91,7 +91,7 @@ public class EligibilitySectionSaverTest {
 		CompetitionResource competition = newCompetitionResource().withResearchCategories(researchCategories).build();
 		competition.setMilestones(asList(10L));
 
-		List<Error> errors = service.autoSaveSectionField(competition, "researchCategoryId", "35");
+		List<Error> errors = service.autoSaveSectionField(competition, "researchCategoryId", "35", null);
 
 		assertTrue(errors.isEmpty());
 		verify(competitionService).update(competition);
@@ -112,7 +112,7 @@ public class EligibilitySectionSaverTest {
 		competition.setMilestones(asList(10L));
 		competition.setMultiStream(false);
 
-		List<Error> errors = service.autoSaveSectionField(competition, "multipleStream", "yes");
+		List<Error> errors = service.autoSaveSectionField(competition, "multipleStream", "yes", null);
 
 		assertTrue(errors.isEmpty());
 		verify(competitionService).update(competition);
@@ -133,7 +133,7 @@ public class EligibilitySectionSaverTest {
 		competition.setMilestones(asList(10L));
 		competition.setMultiStream(true);
 
-		List<Error> errors = service.autoSaveSectionField(competition, "multipleStream", "no");
+		List<Error> errors = service.autoSaveSectionField(competition, "multipleStream", "no", null);
 
 		assertTrue(errors.isEmpty());
 		verify(competitionService).update(competition);
@@ -155,7 +155,7 @@ public class EligibilitySectionSaverTest {
 		competition.setMultiStream(true);
 		competition.setCollaborationLevel(CollaborationLevel.COLLABORATIVE);
 
-		List<Error> errors = service.autoSaveSectionField(competition, "singleOrCollaborative", "single");
+		List<Error> errors = service.autoSaveSectionField(competition, "singleOrCollaborative", "single", null);
 
 		assertTrue(errors.isEmpty());
 		verify(competitionService).update(competition);
@@ -178,7 +178,7 @@ public class EligibilitySectionSaverTest {
 		competition.setCollaborationLevel(CollaborationLevel.COLLABORATIVE);
 		competition.setMaxResearchRatio(Integer.valueOf(50));
 
-		List<Error> errors = service.autoSaveSectionField(competition, "researchParticipationAmountId", "1");
+		List<Error> errors = service.autoSaveSectionField(competition, "researchParticipationAmountId", "1", null);
 
 		assertTrue(errors.isEmpty());
 		verify(competitionService).update(competition);
