@@ -222,6 +222,7 @@ public class ProjectServiceImpl implements ProjectService {
         return !simpleFilter(getPartners(projectId), projectUser -> projectUser.getUser().equals(userId)).isEmpty();
     }
 
+    @Override
     public ProjectTeamStatusResource getProjectTeamStatus(Long projectId){
         return projectRestService.getProjectTeamStatus(projectId).getSuccessObjectOrThrowException();
     }

@@ -149,6 +149,7 @@ public class ProjectRestServiceImpl extends BaseRestService implements ProjectRe
         return postWithRestResultAnonymous(projectRestURL + "/" + projectId + "/partners?userId=" + userId + "&organisationId=" + organisationId, Void.class);
     }
 
+    @Override
     public RestResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId){
         return getWithRestResult(projectRestURL + "/" + projectId + "/team-status", ProjectTeamStatusResource.class);
     }

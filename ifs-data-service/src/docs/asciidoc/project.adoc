@@ -412,3 +412,16 @@ include::{snippets}/project/mark-spend-profile-complete/http-response.adoc[]
 
 ===== Curl Example
 include::{snippets}/project/mark-spend-profile-complete/curl-request.adoc[]
+
+=== Get Project Team Status
+==== Success
+===== Request
+include::{snippets}/project/get-project-team-status/http-request.adoc[]
+include::{snippets}/project/get-project-team-status/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/get-project-team-status/http-response.adoc[]
+include::{snippets}/project/get-project-team-status/response-fields.adoc[]
+
+===== Curl Example
+include::{snippets}/project/get-project-team-status/curl-request.adoc[]

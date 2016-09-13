@@ -8,9 +8,7 @@ import com.worth.ifs.commons.rest.RestErrorResponse;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder;
 import com.worth.ifs.project.controller.ProjectController;
-import com.worth.ifs.project.resource.MonitoringOfficerResource;
-import com.worth.ifs.project.resource.ProjectResource;
-import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.project.resource.*;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,7 +30,10 @@ import static com.worth.ifs.documentation.BankDetailsDocs.bankDetailsResourceFie
 import static com.worth.ifs.documentation.MonitoringOfficerDocs.monitoringOfficerResourceFields;
 import static com.worth.ifs.documentation.ProjectDocs.projectResourceBuilder;
 import static com.worth.ifs.documentation.ProjectDocs.projectResourceFields;
+import static com.worth.ifs.documentation.ProjectTeamStatusDocs.projectTeamStatusResourceFields;
 import static com.worth.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
+import static com.worth.ifs.project.builder.ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource;
+import static com.worth.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.util.JsonMappingUtil.toJson;
@@ -507,4 +508,23 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                         )));
     }
 
+
+    @Test
+    public void getTeamStatus() throws Exception {
+        ProjectTeamStatusResource projectTeamStatusResource = buildTeamStatus();
+        when(projectServiceMock.getProjectTeamStatus(123L)).thenReturn(serviceSuccess(projectTeamStatusResource));
+        mockMvc.perform(get("/project/{projectId}/team-status", 123L)).
+                andExpect(status().isOk()).
+                andExpect(content().json(toJson(projectTeamStatusResource))).
+                andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project that the Project Users are being requested from")
+                        ),
+                        responseFields(projectTeamStatusResourceFields)));
+    }
+
+    private ProjectTeamStatusResource buildTeamStatus(){
+        List<ProjectPartnerStatusResource> partnerStatuses = newProjectPartnerStatusResource().build(3);
+        return newProjectTeamStatusResource().withPartnerStatuses(partnerStatuses).build();
+    }
 }
