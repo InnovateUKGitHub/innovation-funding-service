@@ -54,6 +54,8 @@ public class ApplicationResource {
     private Long assessorFeedbackFileEntry;
     private CompetitionResource.Status competitionStatus;
     private BigDecimal completion;
+    private Boolean resubmission;
+
 
     public Long getId() {
         return id;
@@ -137,6 +139,14 @@ public class ApplicationResource {
 
     public void setCompetition(Long competition) {
         this.competition = competition;
+    }
+
+    public Boolean getResubmission() {
+        return resubmission;
+    }
+
+    public void setResubmission(Boolean competition) {
+        this.resubmission = resubmission;
     }
 
     @JsonIgnore

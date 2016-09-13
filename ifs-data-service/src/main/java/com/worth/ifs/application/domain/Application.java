@@ -51,6 +51,7 @@ public class Application implements ProcessActivity {
     private String name;
     private LocalDate startDate;
     private LocalDateTime submittedDate;
+    private Boolean resubmission;
     @Min(0)
     private Long durationInMonths; // in months
     @Min(0)
@@ -119,6 +120,14 @@ public class Application implements ProcessActivity {
 
     public String getName() {
         return name;
+    }
+
+    public void setResubmission(Boolean resubmission) {
+        this.resubmission = resubmission;
+    }
+
+    public Boolean getResubmission() {
+        return resubmission;
     }
 
     public void setName(String name) {
