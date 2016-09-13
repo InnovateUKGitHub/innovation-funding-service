@@ -55,8 +55,11 @@ public class ProjectOtherDocumentsController {
     @RequestMapping(value = "/confirm", method = GET)
     public String viewConfirmDocumentsPage(@PathVariable("projectId") Long projectId, Model model,
                                          @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+        ProjectOtherDocumentsViewModel viewModel = getOtherDocumentsViewModel(projectId, loggedInUser);
+        model.addAttribute("model", viewModel);
+        model.addAttribute("currentUser", loggedInUser);
 
-        return doViewConfirmDocumentsPage(projectId, model, loggedInUser);
+        return "project/other-documents-confirm";
     }
 
 
@@ -159,14 +162,7 @@ public class ProjectOtherDocumentsController {
         return "project/other-documents";
     }
 
-    private String doViewConfirmDocumentsPage(Long projectId, Model model, UserResource loggedInUser) {
-        ProjectOtherDocumentsViewModel viewModel = getOtherDocumentsViewModel(projectId, loggedInUser);
 
-        model.addAttribute("model", viewModel);
-        model.addAttribute("currentUser", loggedInUser);
-
-        return "project/other-documents-confirm";
-    }
 
     private String performActionOrBindErrorsToField(Long projectId, ValidationHandler validationHandler, Model model, UserResource loggedInUser, String fieldName, ProjectOtherDocumentsForm form, Supplier<FailingOrSucceedingResult<?, ?>> actionFn) {
 
