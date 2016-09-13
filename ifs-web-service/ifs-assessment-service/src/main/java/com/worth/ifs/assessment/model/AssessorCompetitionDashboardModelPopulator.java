@@ -1,12 +1,24 @@
 package com.worth.ifs.assessment.model;
 
+import com.worth.ifs.application.UserApplicationRole;
+import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.service.ApplicationService;
+import com.worth.ifs.application.service.CompetitionService;
+import com.worth.ifs.assessment.resource.AssessmentResource;
+import com.worth.ifs.assessment.service.AssessmentService;
 import com.worth.ifs.assessment.viewmodel.AssessorCompetitionDashboardApplicationViewModel;
 import com.worth.ifs.assessment.viewmodel.AssessorCompetitionDashboardViewModel;
+import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.user.resource.OrganisationResource;
+import com.worth.ifs.user.resource.ProcessRoleResource;
+import com.worth.ifs.user.service.OrganisationRestService;
+import com.worth.ifs.user.service.ProcessRoleService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-
-import static java.util.Arrays.asList;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Build the model for the Assessor Competition Dashboard view.
@@ -14,33 +26,47 @@ import static java.util.Arrays.asList;
 @Component
 public class AssessorCompetitionDashboardModelPopulator {
 
-    public AssessorCompetitionDashboardViewModel populateModel(Long competitionId) {
-        String competitionTitle = "Juggling Craziness";
-        String competition = "Juggling Craziness (CRD3359)";
-        String fundingBody = "Innovate UK";
+    @Autowired
+    private CompetitionService competitionService;
 
-        return new AssessorCompetitionDashboardViewModel(competitionTitle, competition, fundingBody, getApplications());
+    @Autowired
+    private AssessmentService assessmentService;
+
+    @Autowired
+    private ApplicationService applicationService;
+
+    @Autowired
+    private OrganisationRestService organisationRestService;
+
+    @Autowired
+    private ProcessRoleService processRoleService;
+
+    public AssessorCompetitionDashboardViewModel populateModel(Long competitionId, Long userId) {
+        CompetitionResource competition = competitionService.getById(competitionId);
+        return new AssessorCompetitionDashboardViewModel(competition.getName(), competition.getDescription(), competition.getFunder(),
+                getApplications(userId, competitionId));
     }
 
-    private List<AssessorCompetitionDashboardApplicationViewModel> getApplications() {
-        return asList(getAssessment1(), getAssessment2());
+    private List<AssessorCompetitionDashboardApplicationViewModel> getApplications(Long userId, Long competitionId) {
+        List<AssessmentResource> assessmentList = assessmentService.getByUser(userId);
+
+        return assessmentList.stream()
+                .filter(assessment -> assessment.getCompetition() == competitionId)
+                .map(assessment -> {
+                    ApplicationResource application = applicationService.getById(assessment.getApplication());
+                    List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
+                    Optional<OrganisationResource> leadOrganisation = getApplicationLeadOrganisation(userApplicationRoles);
+                    return new AssessorCompetitionDashboardApplicationViewModel(application.getId(),
+                            assessment.getId(),
+                            application.getApplicationDisplayName(),
+                            leadOrganisation.get().getName());
+                }).collect(Collectors.toList());
     }
 
-    private AssessorCompetitionDashboardApplicationViewModel getAssessment1() {
-        Long applicationId = 8L;
-        Long assessmentId = 9L;
-        String displayLabel = "Juggling is fun";
-        String leadOrganisation = "The Best Juggling Company";
-
-        return new AssessorCompetitionDashboardApplicationViewModel(applicationId, assessmentId, displayLabel, leadOrganisation);
-    }
-
-    private AssessorCompetitionDashboardApplicationViewModel getAssessment2() {
-        Long applicationId = 14L;
-        Long assessmentId = 10L;
-        String displayLabel = "Juggling is word that sounds funny to say";
-        String leadOrganisation = "Mo Juggling Mo Problems Ltd";
-
-        return new AssessorCompetitionDashboardApplicationViewModel(applicationId, assessmentId, displayLabel, leadOrganisation);
+    private Optional<OrganisationResource> getApplicationLeadOrganisation(List<ProcessRoleResource> userApplicationRoles) {
+        return userApplicationRoles.stream()
+                .filter(uar -> uar.getRoleName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()))
+                .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisation()).getSuccessObjectOrThrowException())
+                .findFirst();
     }
 }

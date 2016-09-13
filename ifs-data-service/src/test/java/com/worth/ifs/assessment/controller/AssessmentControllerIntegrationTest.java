@@ -48,17 +48,6 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
     }
 
     @Test
-    public void findByUserId() throws Exception {
-        Long userId = 3L;
-
-        loginPaulPlum();
-        RestResult<List<AssessmentResource>> result = controller.findByUserId(userId);
-        assertTrue(result.isSuccess());
-        List<AssessmentResource> assessmentResources = result.getSuccessObjectOrThrowException();
-        assertEquals(4, assessmentResources.size());
-    }
-
-    @Test
     public void findById_notFound() throws Exception {
         Long assessmentId = 999L;
 
@@ -76,6 +65,17 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         RestResult<AssessmentResource> result = controller.findById(assessmentId);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(forbiddenError(GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION)));
+    }
+
+    @Test
+    public void findByUserId() throws Exception {
+        Long userId = 3L;
+
+        loginPaulPlum();
+        RestResult<List<AssessmentResource>> result = controller.findByUserId(userId);
+        assertTrue(result.isSuccess());
+        List<AssessmentResource> assessmentResources = result.getSuccessObjectOrThrowException();
+        assertEquals(4, assessmentResources.size());
     }
 
     @Test

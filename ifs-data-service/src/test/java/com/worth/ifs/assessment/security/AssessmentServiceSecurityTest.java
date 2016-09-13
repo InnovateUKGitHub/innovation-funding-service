@@ -38,7 +38,6 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
     }
 
     private static Long ID_TO_FIND = 1L;
-    private static Long USER_ID = 2L;
     private static int ARRAY_SIZE_FOR_POST_FILTER_TESTS = 2;
 
     @Test
@@ -51,15 +50,13 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
         );
     }
 
+
     @Test
     public void findByUserId() {
-        AssessmentResource assessmentResource = newAssessmentResource().with(id(ID_TO_FIND)).build();
-        when(assessmentLookupStrategy.getAssessmentResource(ID_TO_FIND)).thenReturn(newAssessmentResource().withId(ID_TO_FIND).build());
+        long userId = 3L;
 
-        assertAccessDenied(
-                () -> service.findByUserId(USER_ID),
-                () -> verify(assessmentPermissionRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).userCanReadAssessment(isA(AssessmentResource.class), isA(UserResource.class))
-        );
+        service.findByUserId(userId);
+        verify(assessmentPermissionRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).userCanReadAssessment(isA(AssessmentResource.class), isA(UserResource.class));
     }
 
     @Test
@@ -92,7 +89,7 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
 
         @Override
         public ServiceResult<List<AssessmentResource>> findByUserId(Long userId) {
-            return serviceSuccess(newAssessmentResource().with(id(ID_TO_FIND)).build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
+            return serviceSuccess(newAssessmentResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
         }
 
         @Override

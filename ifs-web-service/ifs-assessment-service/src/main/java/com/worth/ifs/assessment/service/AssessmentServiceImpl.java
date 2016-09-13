@@ -29,8 +29,7 @@ public class AssessmentServiceImpl implements AssessmentService {
 
     @Override
     public List<AssessmentResource> getByUser(Long userId) {
-        return null;
-        //return assessmentRestService.getById(userId).getSuccessObjectOrThrowException();
+        return assessmentRestService.getByUserId(userId).getSuccessObjectOrThrowException();
     }
 
     @Override

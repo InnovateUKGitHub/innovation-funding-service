@@ -10,6 +10,18 @@ include::{snippets}/assessment/find-by-id/response-fields.adoc[]
 ==== Curl Example
 include::{snippets}/assessment/find-by-id/curl-request.adoc[]
 
+=== Find assessments by UserId ===
+==== Request
+include::{snippets}/assessment/find-by-user-id/http-request.adoc[]
+include::{snippets}/assessment/find-by-user-id/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/assessment/find-by-user-id/http-response.adoc[]
+include::{snippets}/assessment/find-by-user-id/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/assessment/find-by-user-id/curl-request.adoc[]
+
 === Recommend an assessment
 ==== Request
 include::{snippets}/assessment/recommend/http-request.adoc[]
