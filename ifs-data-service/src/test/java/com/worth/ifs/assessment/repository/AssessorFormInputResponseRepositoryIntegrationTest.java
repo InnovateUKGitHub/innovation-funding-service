@@ -7,10 +7,13 @@ import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.domain.AssessorFormInputResponse;
+import com.worth.ifs.assessment.resource.AssessmentStates;
 import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.repository.FormInputRepository;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
+import com.worth.ifs.workflow.domain.ActivityState;
+import com.worth.ifs.workflow.repository.ActivityStateRepository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -22,6 +25,7 @@ import static com.worth.ifs.assessment.builder.AssessorFormInputResponseBuilder.
 import static com.worth.ifs.form.builder.FormInputBuilder.newFormInput;
 import static com.worth.ifs.form.resource.FormInputScope.ASSESSMENT;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static com.worth.ifs.workflow.resource.ActivityType.APPLICATION_ASSESSMENT;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.assertEquals;
@@ -44,6 +48,9 @@ public class AssessorFormInputResponseRepositoryIntegrationTest extends BaseRepo
     private ApplicationRepository applicationRepository;
 
     @Autowired
+    private ActivityStateRepository activityStateRepository;
+
+    @Autowired
     @Override
     protected void setRepository(AssessorFormInputResponseRepository repository) {
         this.repository = repository;
@@ -55,11 +62,13 @@ public class AssessorFormInputResponseRepositoryIntegrationTest extends BaseRepo
 
         ProcessRole processRole = processRoleRepository.findOne(1L);
         Application application = applicationRepository.findOne(1L);
+        ActivityState openState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, AssessmentStates.OPEN.getBackingState());
 
         Assessment assessment = assessmentRepository.save(
                 newAssessment().
                         withParticipant(processRole).
                         withApplication(application).
+                        withActivityState(openState).
                         build());
 
         List<Question> questions = asList(new Question(), new Question()).stream().map(question -> questionRepository.save(question)).collect(toList());
@@ -91,11 +100,13 @@ public class AssessorFormInputResponseRepositoryIntegrationTest extends BaseRepo
 
         ProcessRole processRole = processRoleRepository.findOne(1L);
         Application application = applicationRepository.findOne(1L);
+        ActivityState openState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, AssessmentStates.OPEN.getBackingState());
 
         List<Assessment> assessments =
                 newAssessment().
                         withParticipant(processRole).
                         withApplication(application).
+                        withActivityState(openState).
                         build(2);
 
         List<Assessment> savedAssessments = simpleMap(assessments, assessmentRepository::save);
@@ -135,11 +146,13 @@ public class AssessorFormInputResponseRepositoryIntegrationTest extends BaseRepo
 
         ProcessRole processRole = processRoleRepository.findOne(1L);
         Application application = applicationRepository.findOne(1L);
+        ActivityState openState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, AssessmentStates.OPEN.getBackingState());
 
         Assessment assessment = assessmentRepository.save(
                 newAssessment().
                         withParticipant(processRole).
                         withApplication(application).
+                        withActivityState(openState).
                         build());
         // Save two questions
         List<Question> questions = asList(new Question(), new Question()).stream().map(question -> questionRepository.save(question)).collect(toList());
@@ -176,11 +189,13 @@ public class AssessorFormInputResponseRepositoryIntegrationTest extends BaseRepo
 
         ProcessRole processRole = processRoleRepository.findOne(1L);
         Application application = applicationRepository.findOne(1L);
+        ActivityState openState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, AssessmentStates.OPEN.getBackingState());
 
         List<Assessment> assessments =
                 newAssessment().
                         withParticipant(processRole).
                         withApplication(application).
+                        withActivityState(openState).
                         build(2);
 
         List<Assessment> savedAssessments = simpleMap(assessments, assessmentRepository::save);

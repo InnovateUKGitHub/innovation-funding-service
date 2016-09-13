@@ -1,8 +1,5 @@
 package com.worth.ifs.workflow.resource;
 
-import com.worth.ifs.workflow.domain.ActivityType;
-import com.worth.ifs.workflow.domain.State;
-
 /**
  * Represents an ActivityState for use outside of the entity model
  */

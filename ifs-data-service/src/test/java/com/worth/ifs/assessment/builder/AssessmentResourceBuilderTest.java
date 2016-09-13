@@ -2,6 +2,7 @@ package com.worth.ifs.assessment.builder;
 
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.resource.AssessmentStates;
+import com.worth.ifs.workflow.resource.ActivityStateResource;
 import com.worth.ifs.workflow.resource.ProcessEvent;
 import com.worth.ifs.workflow.resource.ProcessStates;
 import org.junit.Test;
@@ -13,6 +14,9 @@ import java.util.List;
 
 import static com.google.common.primitives.Longs.asList;
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
+import static com.worth.ifs.assessment.resource.AssessmentStates.ASSESSED;
+import static com.worth.ifs.assessment.resource.AssessmentStates.OPEN;
+import static com.worth.ifs.workflow.resource.ActivityType.APPLICATION_ASSESSMENT;
 import static org.junit.Assert.assertEquals;
 
 public class AssessmentResourceBuilderTest {
@@ -21,7 +25,7 @@ public class AssessmentResourceBuilderTest {
     public void buildOne() throws Exception {
         final Long expectedId = 1L;
         final ProcessEvent expectedEvent = ProcessEvent.ASSESSMENT;
-        final ProcessStates expectedStatus = AssessmentStates.OPEN;
+        final ProcessStates expectedStatus = OPEN;
         final Calendar expectedLastModifiedDate = GregorianCalendar.getInstance();
         final LocalDate expectedStartDate = LocalDate.now().minusDays(2);
         final LocalDate expectedEndDate = LocalDate.now().minusDays(1);
@@ -35,7 +39,7 @@ public class AssessmentResourceBuilderTest {
         final AssessmentResource assessment = newAssessmentResource()
                 .withId(expectedId)
                 .withProcessEvent(expectedEvent)
-                .withProcessStatus(expectedStatus)
+                .withActivityState(new ActivityStateResource(APPLICATION_ASSESSMENT, OPEN.getBackingState()))
                 .withLastModifiedDate(expectedLastModifiedDate)
                 .withStartDate(expectedStartDate)
                 .withEndDate(expectedEndDate)
@@ -49,7 +53,7 @@ public class AssessmentResourceBuilderTest {
 
         assertEquals(expectedId, assessment.getId());
         assertEquals(expectedEvent.name(), assessment.getEvent());
-        assertEquals(expectedStatus.getState(), assessment.getStatus());
+        assertEquals(expectedStatus, assessment.getAssessmentState());
         assertEquals(expectedLastModifiedDate, assessment.getLastModified());
         assertEquals(expectedStartDate, assessment.getStartDate());
         assertEquals(expectedEndDate, assessment.getEndDate());
@@ -66,7 +70,7 @@ public class AssessmentResourceBuilderTest {
     public void buildMany() {
         final Long[] expectedIds = { 1L, 2L };
         final ProcessEvent[] expectedEvents = { ProcessEvent.ASSESSMENT, ProcessEvent.ANOTHER_ONE };
-        final ProcessStates[] expectedStatuss = { AssessmentStates.OPEN, AssessmentStates.ASSESSED };
+        final ProcessStates[] expectedStatuss = { OPEN, AssessmentStates.ASSESSED };
         final Calendar[] expectedLastModifiedDates = { GregorianCalendar.getInstance(), GregorianCalendar.getInstance() };
         final LocalDate[] expectedStartDates = { LocalDate.now().minusDays(2), LocalDate.now().minusDays(3) };
         final LocalDate[] expectedEndDates = { LocalDate.now().minusDays(1), LocalDate.now().minusDays(2) };
@@ -81,7 +85,9 @@ public class AssessmentResourceBuilderTest {
         final List<AssessmentResource> assessments = newAssessmentResource()
                 .withId(expectedIds)
                 .withProcessEvent(expectedEvents)
-                .withProcessStatus(expectedStatuss)
+                .withActivityState(
+                        new ActivityStateResource(APPLICATION_ASSESSMENT, OPEN.getBackingState()),
+                        new ActivityStateResource(APPLICATION_ASSESSMENT, ASSESSED.getBackingState()))
                 .withLastModifiedDate(expectedLastModifiedDates)
                 .withStartDate(expectedStartDates)
                 .withEndDate(expectedEndDates)
@@ -96,7 +102,7 @@ public class AssessmentResourceBuilderTest {
         final AssessmentResource first = assessments.get(0);
         assertEquals(expectedIds[0], first.getId());
         assertEquals(expectedEvents[0].name(), first.getEvent());
-        assertEquals(expectedStatuss[0].getState(), first.getStatus());
+        assertEquals(expectedStatuss[0], first.getAssessmentState());
         assertEquals(expectedLastModifiedDates[0], first.getLastModified());
         assertEquals(expectedStartDates[0], first.getStartDate());
         assertEquals(expectedEndDates[0], first.getEndDate());
@@ -110,7 +116,7 @@ public class AssessmentResourceBuilderTest {
         final AssessmentResource second = assessments.get(1);
         assertEquals(expectedIds[1], second.getId());
         assertEquals(expectedEvents[1].name(), second.getEvent());
-        assertEquals(expectedStatuss[1].getState(), second.getStatus());
+        assertEquals(expectedStatuss[1], second.getAssessmentState());
         assertEquals(expectedLastModifiedDates[1], second.getLastModified());
         assertEquals(expectedStartDates[1], second.getStartDate());
         assertEquals(expectedEndDates[1], second.getEndDate());

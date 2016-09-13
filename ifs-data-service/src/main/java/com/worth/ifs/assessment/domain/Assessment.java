@@ -11,8 +11,8 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import static com.worth.ifs.workflow.domain.State.READY_TO_SUBMIT;
-import static com.worth.ifs.workflow.domain.State.SUBMITTED;
+import static com.worth.ifs.workflow.resource.State.READY_TO_SUBMIT;
+import static com.worth.ifs.workflow.resource.State.SUBMITTED;
 
 @Entity
 public class Assessment extends Process<ProcessRole, Application> {

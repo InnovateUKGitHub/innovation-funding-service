@@ -48,6 +48,7 @@ import com.worth.ifs.project.resource.SpendProfileTableResource;
 import com.worth.ifs.token.domain.Token;
 import com.worth.ifs.token.resource.TokenResource;
 import com.worth.ifs.user.domain.OrganisationType;
+import com.worth.ifs.workflow.resource.ActivityStateResource;
 import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
 import org.junit.Assert;
 import org.junit.Before;
@@ -103,7 +104,8 @@ public class POJOTest {
             CompetitionFunderResource.class,
             CompetitionCountResource.class,
             LocalDateResource.class,
-            RejectionReasonResource.class
+            RejectionReasonResource.class,
+            ActivityStateResource.class
     );
 
     @Before

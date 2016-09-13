@@ -6,7 +6,9 @@ import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
+import com.worth.ifs.workflow.domain.ActivityState;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
+import com.worth.ifs.workflow.repository.ActivityStateRepository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
@@ -17,7 +19,9 @@ import java.util.stream.Collectors;
 
 import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static com.worth.ifs.assessment.builder.ProcessOutcomeBuilder.newProcessOutcome;
+import static com.worth.ifs.assessment.resource.AssessmentStates.OPEN;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
+import static com.worth.ifs.workflow.resource.ActivityType.APPLICATION_ASSESSMENT;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 
@@ -34,6 +38,9 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
 
     @Autowired
     private ApplicationRepository applicationRepository;
+
+    @Autowired
+    private ActivityStateRepository activityStateRepository;
 
     @Autowired
     @Override
@@ -61,10 +68,13 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
 
         final Application application = applicationRepository.findOne(1L);
 
+        ActivityState openState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, OPEN.getBackingState());
+
         final List<Assessment> assessments = newAssessment()
                 .withApplication(application)
                 .withProcessOutcome(asList(processOutcome1), asList(processOutcome2))
                 .withParticipant(processRole1, processRole2)
+                .withActivityState(openState)
                 .build(2);
 
         final Set<Assessment> saved = assessments.stream().map(assessment -> repository.save(assessment)).collect(Collectors.toSet());
@@ -92,10 +102,13 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
 
         final Application application = applicationRepository.findOne(1L);
 
+        ActivityState openState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, OPEN.getBackingState());
+
         final List<Assessment> assessments = newAssessment()
                 .withApplication(application)
                 .withProcessOutcome(asList(processOutcome1), asList(processOutcome2))
                 .withParticipant(processRole1, processRole2)
+                .withActivityState(openState)
                 .build(2);
 
         final List<Assessment> saved = assessments.stream().map(assessment -> repository.save(assessment)).collect(Collectors.toList());

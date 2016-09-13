@@ -4,9 +4,9 @@ import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.workflow.domain.ActivityState;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
 import com.worth.ifs.workflow.resource.ProcessEvent;
-import com.worth.ifs.workflow.resource.ProcessStates;
 
 import java.time.LocalDate;
 import java.util.Calendar;
@@ -45,10 +45,6 @@ public class AssessmentBuilder extends BaseBuilder<Assessment, AssessmentBuilder
         return withArray((processEvent, object) -> setField("event", processEvent.name(), object), processEvents);
     }
 
-    public AssessmentBuilder withProcessStatus(ProcessStates... processStatuss) {
-        return withArray((processStatus, object) -> setField("status", processStatus.getState(), object), processStatuss);
-    }
-
     public AssessmentBuilder withLastModifiedDate(Calendar... lastModifiedDates) {
         return withArray((lastModifiedDate, object) -> setField("lastModified", lastModifiedDate, object), lastModifiedDates);
     }
@@ -71,5 +67,9 @@ public class AssessmentBuilder extends BaseBuilder<Assessment, AssessmentBuilder
 
     public AssessmentBuilder withApplication(Application... application) {
         return withArray((app, object) -> setField("target", app, object), application);
+    }
+
+    public AssessmentBuilder withActivityState(ActivityState... activityState) {
+        return withArray((state, object) -> object.setActivityState(state), activityState);
     }
 }

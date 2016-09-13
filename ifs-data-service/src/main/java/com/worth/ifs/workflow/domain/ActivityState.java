@@ -1,5 +1,8 @@
 package com.worth.ifs.workflow.domain;
 
+import com.worth.ifs.workflow.resource.ActivityType;
+import com.worth.ifs.workflow.resource.State;
+
 import javax.persistence.*;
 
 /**
@@ -15,7 +18,16 @@ public class ActivityState {
     @Enumerated(EnumType.STRING)
     private ActivityType activityType;
 
+    @Enumerated(EnumType.STRING)
     private State state;
+
+    ActivityState() {
+    }
+
+    public ActivityState(ActivityType activityType, State state) {
+        this.activityType = activityType;
+        this.state = state;
+    }
 
     public Long getId() {
         return id;

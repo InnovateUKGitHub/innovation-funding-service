@@ -4,10 +4,10 @@ import com.worth.ifs.BaseUnitTestMocksTest;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.resource.AssessmentOutcomes;
 import com.worth.ifs.assessment.resource.AssessmentResource;
-import com.worth.ifs.assessment.resource.AssessmentStates;
 import com.worth.ifs.assessment.workflow.AssessmentWorkflowEventHandler;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.workflow.domain.ActivityState;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
 import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
 import org.junit.Test;
@@ -19,10 +19,12 @@ import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static com.worth.ifs.assessment.builder.ProcessOutcomeBuilder.newProcessOutcome;
 import static com.worth.ifs.assessment.builder.ProcessOutcomeResourceBuilder.newProcessOutcomeResource;
+import static com.worth.ifs.assessment.resource.AssessmentStates.OPEN;
 import static com.worth.ifs.commons.error.CommonFailureKeys.ASSESSMENT_RECOMMENDATION_FAILED;
 import static com.worth.ifs.commons.error.CommonFailureKeys.ASSESSMENT_REJECTION_FAILED;
 import static com.worth.ifs.commons.error.Error.fieldError;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
+import static com.worth.ifs.workflow.resource.ActivityType.APPLICATION_ASSESSMENT;
 import static java.util.Collections.nCopies;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
@@ -63,8 +65,8 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         ProcessRole processRole = newProcessRole().withId(processRoleId).build();
         Assessment assessment = newAssessment()
                 .withId(assessmentId)
-                .withProcessStatus(AssessmentStates.OPEN)
                 .withParticipant(processRole)
+                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, OPEN.getBackingState()))
                 .build();
 
         ProcessOutcome processOutcome = newProcessOutcome().build();
@@ -97,8 +99,8 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         ProcessRole processRole = newProcessRole().withId(processRoleId).build();
         Assessment assessment = newAssessment()
                 .withId(assessmentId)
-                .withProcessStatus(AssessmentStates.OPEN)
                 .withParticipant(processRole)
+                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, OPEN.getBackingState()))
                 .build();
 
         ProcessOutcome processOutcome = newProcessOutcome().build();
@@ -125,8 +127,8 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         ProcessRole processRole = newProcessRole().withId(processRoleId).build();
         Assessment assessment = newAssessment()
                 .withId(assessmentId)
-                .withProcessStatus(AssessmentStates.OPEN)
                 .withParticipant(processRole)
+                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, OPEN.getBackingState()))
                 .build();
 
         ProcessOutcome processOutcome = newProcessOutcome().build();
@@ -158,8 +160,8 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         ProcessRole processRole = newProcessRole().withId(processRoleId).build();
         Assessment assessment = newAssessment()
                 .withId(assessmentId)
-                .withProcessStatus(AssessmentStates.OPEN)
                 .withParticipant(processRole)
+                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, OPEN.getBackingState()))
                 .build();
 
         ProcessOutcome processOutcome = newProcessOutcome().build();
@@ -190,8 +192,8 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         ProcessRole processRole = newProcessRole().withId(processRoleId).build();
         Assessment assessment = newAssessment()
                 .withId(assessmentId)
-                .withProcessStatus(AssessmentStates.OPEN)
                 .withParticipant(processRole)
+                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, OPEN.getBackingState()))
                 .build();
 
         ProcessOutcome processOutcome = newProcessOutcome().build();

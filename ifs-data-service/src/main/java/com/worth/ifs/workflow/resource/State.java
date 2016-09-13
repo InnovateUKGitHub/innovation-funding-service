@@ -1,4 +1,4 @@
-package com.worth.ifs.workflow.domain;
+package com.worth.ifs.workflow.resource;
 
 /**
  * Represents a set of possible states that a given ActivityType can be in

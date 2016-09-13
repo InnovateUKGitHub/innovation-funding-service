@@ -1,4 +1,4 @@
-package com.worth.ifs.workflow.domain;
+package com.worth.ifs.workflow.resource;
 
 /**
  * Represents a type of Activity that a Process is undergoing

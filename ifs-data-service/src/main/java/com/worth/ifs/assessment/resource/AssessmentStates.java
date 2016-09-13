@@ -1,6 +1,6 @@
 package com.worth.ifs.assessment.resource;
 
-import com.worth.ifs.workflow.domain.State;
+import com.worth.ifs.workflow.resource.State;
 import com.worth.ifs.workflow.resource.ProcessStates;
 
 import java.util.HashMap;
@@ -16,7 +16,7 @@ public enum AssessmentStates implements ProcessStates {
     SUBMITTED(State.SUBMITTED);
 
     //the status string value
-    private State state;
+    private State backingState;
 
     private static final Map<String, AssessmentStates> assessmentStatesMap;
 
@@ -24,18 +24,23 @@ public enum AssessmentStates implements ProcessStates {
         assessmentStatesMap = new HashMap<>();
 
         for (AssessmentStates assessmentState : AssessmentStates.values()) {
-            assessmentStatesMap.put(assessmentState.getState(), assessmentState);
+            assessmentStatesMap.put(assessmentState.getStateName(), assessmentState);
         }
     }
 
     // creates the enum with the chosen type.
-    AssessmentStates(State state) {
-        this.state = state;
+    AssessmentStates(State backingState) {
+        this.backingState = backingState;
     }
 
     @Override
-    public String getState() {
-        return state.name();
+    public String getStateName() {
+        return backingState.name();
+    }
+
+    @Override
+    public State getBackingState() {
+        return backingState;
     }
 
     public static Set<String> getStates() {
@@ -48,7 +53,7 @@ public enum AssessmentStates implements ProcessStates {
 
     public static AssessmentStates fromState(State state) {
         for (AssessmentStates assessmentState : values()) {
-            if (assessmentState.state.equals(state)) {
+            if (assessmentState.backingState.equals(state)) {
                 return assessmentState;
             }
         }

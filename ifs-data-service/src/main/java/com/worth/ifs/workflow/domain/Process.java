@@ -1,6 +1,7 @@
 package com.worth.ifs.workflow.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.worth.ifs.workflow.resource.State;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 

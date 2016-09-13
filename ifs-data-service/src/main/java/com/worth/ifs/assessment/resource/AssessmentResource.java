@@ -1,5 +1,6 @@
 package com.worth.ifs.assessment.resource;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.workflow.resource.ActivityStateResource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -11,6 +12,7 @@ import java.util.List;
 public class AssessmentResource {
     private Long id;
     private String event;
+    // TODO DW - INFUND-4902 - can we just transfer the AssessmentStates instead of this resource?
     private ActivityStateResource activityState;
     private Calendar lastModified;
     private LocalDate startDate;
@@ -116,6 +118,14 @@ public class AssessmentResource {
 
     public void setCompetition(Long competition) {
         this.competition = competition;
+    }
+
+    @JsonIgnore
+    public AssessmentStates getAssessmentState() {
+        if (getActivityState() == null) {
+            return null;
+        }
+        return AssessmentStates.fromState(getActivityState().getState());
     }
 
     @Override
