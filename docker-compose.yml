@@ -82,6 +82,8 @@ services:
       - smtp:rw
     expose:
       - 143
+    ports:
+      - "9876:143"
     networks:
       front-tier:
         aliases:
