@@ -249,11 +249,11 @@ public class CompetitionResource {
         this.questions = questions;
     }
 
-    private long getDaysBetween(LocalDateTime dateA, LocalDateTime dateB) {
+    private static long getDaysBetween(LocalDateTime dateA, LocalDateTime dateB) {
         return ChronoUnit.DAYS.between(dateA, dateB);
     }
 
-    private long getDaysLeftPercentage(long daysLeft, long totalDays) {
+    private static long getDaysLeftPercentage(long daysLeft, long totalDays) {
         if (daysLeft <= 0) {
             return 100;
         }
