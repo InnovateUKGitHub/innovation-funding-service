@@ -5,6 +5,8 @@ import com.worth.ifs.address.domain.Address;
 import com.worth.ifs.address.domain.AddressType;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.bankdetails.domain.BankDetails;
+import com.worth.ifs.bankdetails.resource.BankDetailsResource;
 import com.worth.ifs.commons.error.CommonFailureKeys;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -15,18 +17,18 @@ import com.worth.ifs.invite.builder.ProjectInviteResourceBuilder;
 import com.worth.ifs.invite.domain.ProjectParticipantRole;
 import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
+import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.project.builder.MonitoringOfficerBuilder;
 import com.worth.ifs.project.builder.ProjectBuilder;
 import com.worth.ifs.project.domain.MonitoringOfficer;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
+import com.worth.ifs.project.finance.domain.SpendProfile;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.project.resource.ProjectTeamStatusResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
-import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.user.domain.Role;
-import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.domain.*;
 import com.worth.ifs.user.resource.UserRoleType;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Assert;
@@ -50,6 +52,8 @@ import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressRes
 import static com.worth.ifs.address.builder.AddressTypeBuilder.newAddressType;
 import static com.worth.ifs.address.resource.OrganisationAddressType.*;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
+import static com.worth.ifs.bankdetails.builder.BankDetailsBuilder.newBankDetails;
+import static com.worth.ifs.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
 import static com.worth.ifs.commons.error.CommonErrors.badRequestError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
@@ -59,12 +63,15 @@ import static com.worth.ifs.file.domain.builders.FileEntryBuilder.newFileEntry;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.invite.domain.ProjectParticipantRole.*;
 import static com.worth.ifs.organisation.builder.OrganisationAddressBuilder.newOrganisationAddress;
+import static com.worth.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
 import static com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
 import static com.worth.ifs.project.builder.ProjectBuilder.newProject;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static com.worth.ifs.project.builder.ProjectUserBuilder.newProjectUser;
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
+import static com.worth.ifs.project.builder.SpendProfileBuilder.newSpendProfile;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
+import static com.worth.ifs.user.builder.OrganisationTypeBuilder.newOrganisationType;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
@@ -838,7 +845,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         when(projectRepositoryMock.findOne(projectid)).thenReturn(projectInDB);
 
-        when(monitoringOfficerRepository.findOneByProjectId(monitoringOfficerResource.getProject())).thenReturn(monitoringOfficerInDB);
+        when(monitoringOfficerRepositoryMock.findOneByProjectId(monitoringOfficerResource.getProject())).thenReturn(monitoringOfficerInDB);
 
         ServiceResult<Void> result = service.saveMonitoringOfficer(projectid, monitoringOfficerResource);
 
@@ -860,7 +867,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         when(projectRepositoryMock.findOne(projectid)).thenReturn(projectInDB);
 
-        when(monitoringOfficerRepository.findOneByProjectId(monitoringOfficerResource.getProject())).thenReturn(null);
+        when(monitoringOfficerRepositoryMock.findOneByProjectId(monitoringOfficerResource.getProject())).thenReturn(null);
 
         ServiceResult<Void> result = service.saveMonitoringOfficer(projectid, monitoringOfficerResource);
 
@@ -890,7 +897,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 .withPhoneNumber("079237439")
                 .build();
 
-        when(monitoringOfficerRepository.findOneByProjectId(projectid)).thenReturn(monitoringOfficerInDB);
+        when(monitoringOfficerRepositoryMock.findOneByProjectId(projectid)).thenReturn(monitoringOfficerInDB);
 
         ServiceResult<MonitoringOfficerResource> result = service.getMonitoringOfficer(projectid);
 
@@ -1120,6 +1127,47 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         assertTrue(shouldFail.isSuccess());
     }
 
+    @Test
+    public void testGetProjectTeamStatus(){
+        MonitoringOfficer monitoringOfficerInDB = MonitoringOfficerBuilder.newMonitoringOfficer()
+                .withFirstName("def")
+                .withLastName("klm")
+                .withEmail("def.klm@gmail.com")
+                .withPhoneNumber("079237439")
+                .build();
+
+        OrganisationType organisationType = newOrganisationType().build();
+        Organisation organisation = newOrganisation().withOrganisationType(organisationType).build();
+
+        User u = newUser().build();
+
+        Role partnerRole = newRole().withType(PARTNER).build();
+
+        AddressResource addressResource = newAddressResource().build();
+        OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource().withAddress(addressResource).build();
+        OrganisationAddress organisationAddress = newOrganisationAddress().build();
+        BankDetailsResource bankDetailsResource = newBankDetailsResource().withProject(project.getId()).withSortCode("123123").withAccountNumber("12345678").withOrganisation(organisation.getId()).withOrganiationAddress(organisationAddressResource).build();
+        BankDetails bankDetails = newBankDetails().withSortCode(bankDetailsResource.getSortCode()).withAccountNumber(bankDetailsResource.getAccountNumber()).withOrganisation(organisation).withOrganiationAddress(organisationAddress).build();
+        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_PARTNER).withUser(u).withOrganisation(organisation).build(1);
+        Project p = newProject().withProjectUsers(pu).withApplication(application).build();
+
+        SpendProfile spendProfile = newSpendProfile().build();
+
+        when(projectRepositoryMock.findOne(p.getId())).thenReturn(p);
+        when(projectUserRepositoryMock.findByProjectId(p.getId())).thenReturn(pu);
+        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(p.getId(), organisation.getId())).thenReturn(bankDetails);
+        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), organisation.getId())).thenReturn(spendProfile);
+        when(monitoringOfficerRepositoryMock.findOneByProjectId(p.getId())).thenReturn(monitoringOfficerInDB);
+        when(organisationRepositoryMock.findOne(organisation.getId())).thenReturn(organisation);
+
+        ProjectUserResource puResource = newProjectUserResource().withProject(p.getId()).withOrganisation(organisation.getId()).withRole(partnerRole.getId()).withRoleName(PROJECT_PARTNER.getName()).build();
+
+        when(projectUserMapperMock.mapToResource(pu.get(0))).thenReturn(puResource);
+
+        ServiceResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(p.getId());
+
+        assertTrue(result.isSuccess());
+    }
 
     private void assertFilesCannotBeSubmittedIfNotByProjectManager(Consumer<FileEntry> fileSetter1,
                                                                    Consumer<FileEntry> fileSetter2,

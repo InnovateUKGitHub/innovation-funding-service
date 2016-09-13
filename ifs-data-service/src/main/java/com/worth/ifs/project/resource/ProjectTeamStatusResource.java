@@ -8,6 +8,11 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * A wrapping object that encompasses the status for the whole team.
+ * Contains helper methods to only get lead or non-lead partners.  This is useful as lead is usually shown
+ * differently from others in most view templates (e.g. first in list with more details).
+ */
 public class ProjectTeamStatusResource {
     private List<ProjectPartnerStatusResource> partnerStatuses;
 

@@ -8,6 +8,11 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+/**
+ * Used for returning status of each partner (except lead, for which there is a more specific class with constructor)
+ * There is a constructor here which is used by subclass but is package local.
+ */
+
 @JsonTypeInfo(use=JsonTypeInfo.Id.NAME, include=JsonTypeInfo.As.PROPERTY, property="type")
 @JsonSubTypes({
         @JsonSubTypes.Type(value=ProjectLeadStatusResource.class, name="projectLeadStatusResource")
@@ -32,7 +37,7 @@ public class ProjectPartnerStatusResource {
         this(name, organisationType, projectDetailsStatus, bankDetailsStatus, financeChecksStatus, spendProfileStatus, ProjectActivityStates.NOT_REQUIRED, ProjectActivityStates.NOT_REQUIRED, ProjectActivityStates.NOT_REQUIRED);
     }
 
-    public ProjectPartnerStatusResource(String name, OrganisationTypeEnum organisationType, ProjectActivityStates projectDetailsStatus, ProjectActivityStates bankDetailsStatus, ProjectActivityStates financeChecksStatus, ProjectActivityStates spendProfileStatus, ProjectActivityStates monitoringOfficerStatus, ProjectActivityStates otherDocumentsStatus, ProjectActivityStates grantOfferLetterStatus) {
+    ProjectPartnerStatusResource(String name, OrganisationTypeEnum organisationType, ProjectActivityStates projectDetailsStatus, ProjectActivityStates bankDetailsStatus, ProjectActivityStates financeChecksStatus, ProjectActivityStates spendProfileStatus, ProjectActivityStates monitoringOfficerStatus, ProjectActivityStates otherDocumentsStatus, ProjectActivityStates grantOfferLetterStatus) {
         this.name = name;
         this.organisationType = organisationType;
         this.projectDetailsStatus = projectDetailsStatus;

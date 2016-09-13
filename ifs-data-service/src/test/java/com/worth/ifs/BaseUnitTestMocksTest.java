@@ -159,7 +159,7 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected SectionRepository sectionRepositoryMock;
 
     @Mock
-    protected MonitoringOfficerRepository monitoringOfficerRepository;
+    protected MonitoringOfficerRepository monitoringOfficerRepositoryMock;
 
     @Mock
     protected MonitoringOfficerMapper monitoringOfficerMapper;

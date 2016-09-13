@@ -421,9 +421,23 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
 
     }
 
-    private void setUpUserAsProjectManager(ProjectResource projectResource, UserResource user) {
-        Role projectManagerRole = newRole().build();
+    @Test
+    public void testPartnersCanViewTeamStatus(){
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+        setupUserAsPartner(project, user);
+        assertTrue(rules.partnersCanViewTeamStatus(project, user));
+    }
 
+    @Test
+    public void testNonPartnersCannotViewTeamStatus(){
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+        setupUserNotAsPartner(project, user);
+        assertFalse(rules.partnersCanViewTeamStatus(project, user));
+    }
+
+    private void setUpUserAsProjectManager(ProjectResource projectResource, UserResource user) {
         List<ProjectUser> projectManagerUser = newProjectUser().build(1);
 
         when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(projectResource.getId(), user.getId(), ProjectParticipantRole.PROJECT_MANAGER ))
@@ -465,5 +479,4 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
         when(roleRepositoryMock.findOneByName(PARTNER.getName())).thenReturn(partnerRole);
         when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(project.getId(), user.getId(), PROJECT_PARTNER)).thenReturn(userIsPartner ? partnerProjectUser : emptyList());
     }
-
 }
