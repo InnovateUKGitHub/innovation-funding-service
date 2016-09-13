@@ -168,5 +168,10 @@ public class InviteServiceSecurityTest extends BaseServiceSecurityTest<InviteSer
         public ServiceResult<UserResource> getUserByInviteHash(@P("hash") String hash) {
             return null;
         }
+
+        @Override
+        public ServiceResult<Void> removeInvite(Long inviteId) {
+            return null;
+        }
     }
 }

@@ -116,8 +116,8 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
             );
 
             return inviteResult;
-        }else{
-            if(invite.getId()==null){
+        } else {
+            if (invite.getId() == null) {
                 applicationInviteRepository.save(invite);
             }
             invite.generateHash();
@@ -248,7 +248,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     public ServiceResult<Void> acceptInvite(String inviteHash, Long userId) {
         LOG.error(String.format("acceptInvite %s => %s ", inviteHash, userId));
         return find(invite(inviteHash), user(userId)).andOnSuccess((invite, user) -> {
-            if(invite.getEmail().equalsIgnoreCase(user.getEmail())){
+            if (invite.getEmail().equalsIgnoreCase(user.getEmail())) {
                 invite.open();
                 if (invite.getInviteOrganisation().getOrganisation() == null && !user.getOrganisations().isEmpty()) {
                     invite.getInviteOrganisation().setOrganisation(user.getOrganisations().get(0));
@@ -292,6 +292,25 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
                 .andOnSuccess(u -> u.isPresent() ?
                         serviceSuccess(u.get()) :
                         serviceFailure(notFoundError(UserResource.class)));
+    }
+
+    @Override
+    public ServiceResult<Void> removeInvite(Long inviteId) {
+        try {
+            ApplicationInvite invite = applicationInviteRepository.findOne(inviteId);
+            if(invite == null) {
+                return serviceFailure(notFoundError(ApplicationInvite.class));
+            }
+
+            List<ProcessRole> processRole = processRoleRepository.findByUserAndApplicationId(invite.getUser(), invite.getTarget().getId());
+            if(!processRole.isEmpty()) {
+                processRoleRepository.delete(processRole);
+            }
+            applicationInviteRepository.delete(inviteId);
+            return serviceSuccess();
+        } catch (IllegalArgumentException e) {
+            return serviceFailure(notFoundError(ApplicationInvite.class));
+        }
     }
 
     protected Supplier<ServiceResult<ApplicationInvite>> invite(final String hash) {
@@ -342,7 +361,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     private List<ApplicationInvite> assembleInvitesFromInviteOrganisationResource(InviteOrganisationResource inviteOrganisationResource, InviteOrganisation newInviteOrganisation) {
         List<ApplicationInvite> invites = new ArrayList<>();
         inviteOrganisationResource.getInviteResources().forEach(inviteResource ->
-                        invites.add(mapInviteResourceToInvite(inviteResource, newInviteOrganisation))
+                invites.add(mapInviteResourceToInvite(inviteResource, newInviteOrganisation))
         );
 
         return invites;
@@ -423,7 +442,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     }
 
     private Boolean validateUniqueEmail(ApplicationInviteResource inviteResource) {
-        if(inviteResource.getEmail() == null) {
+        if (inviteResource.getEmail() == null) {
             return true;
         }
 

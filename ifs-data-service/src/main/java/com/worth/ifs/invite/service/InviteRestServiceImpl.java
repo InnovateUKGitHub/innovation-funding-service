@@ -59,6 +59,12 @@ public class InviteRestServiceImpl extends BaseRestService implements InviteRest
     }
 
     @Override
+    public RestResult<Void> removeApplicationInvite(Long inviteId) {
+        String url = inviteRestUrl + String.format("/removeInvite/%s", inviteId);
+        return deleteWithRestResult(url);
+    }
+
+    @Override
     public RestResult<Boolean> checkExistingUser(String inviteHash) {
         String url = inviteRestUrl + String.format("/checkExistingUser/%s", inviteHash);
         return getWithRestResultAnonymous(url, Boolean.class);

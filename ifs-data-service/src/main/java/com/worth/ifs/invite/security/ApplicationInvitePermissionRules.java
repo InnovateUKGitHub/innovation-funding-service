@@ -61,6 +61,11 @@ public class ApplicationInvitePermissionRules {
         return isLeadForInvite(invite, user);
     }
 
+    @PermissionRule(value = "DELETE", description = "lead applicant can delete an invite from the application")
+    public boolean leadApplicantDeleteInviteToTheApplication(final ApplicationInvite invite, final UserResource user) {
+        return isLeadForInvite(invite, user);
+    }
+
     private boolean isCollaboratorOnInvite(final ApplicationInvite invite, final UserResource user) {
         final long applicationId = invite.getTarget().getId();
         final InviteOrganisation inviteOrganisation = invite.getInviteOrganisation();
@@ -83,7 +88,6 @@ public class ApplicationInvitePermissionRules {
     }
 
     private boolean isLeadForInvite(final ApplicationInvite invite, final UserResource user) {
-        final long applicationId = invite.getTarget().getId();
         return checkProcessRole(user, invite.getTarget().getId(), UserRoleType.LEADAPPLICANT, processRoleRepository);
     }
 

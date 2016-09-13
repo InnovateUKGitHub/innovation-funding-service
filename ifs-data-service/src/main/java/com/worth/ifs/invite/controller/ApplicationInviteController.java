@@ -41,7 +41,6 @@ public class ApplicationInviteController {
         return inviteService.getInviteOrganisationByHash(hash).toGetResponse();
     }
 
-
     @RequestMapping("/getInvitesByApplicationId/{applicationId}")
     public RestResult<Set<InviteOrganisationResource>> getInvitesByApplication(@PathVariable("applicationId") Long applicationId) {
         return inviteService.getInvitesByApplication(applicationId).toGetResponse();
@@ -55,6 +54,11 @@ public class ApplicationInviteController {
     @RequestMapping(value = "/acceptInvite/{hash}/{userId}", method = RequestMethod.PUT)
     public RestResult<Void> acceptInvite( @PathVariable("hash") String hash, @PathVariable("userId") Long userId) {
         return inviteService.acceptInvite(hash, userId).toPutResponse();
+    }
+
+    @RequestMapping(value = "/removeInvite/{inviteId}", method = RequestMethod.DELETE)
+    public RestResult<Void> removeInvite(@PathVariable("inviteId") Long inviteId) {
+        return inviteService.removeInvite(inviteId).toDeleteResponse();
     }
 
     @RequestMapping(value = "/checkExistingUser/{hash}", method = RequestMethod.GET)
