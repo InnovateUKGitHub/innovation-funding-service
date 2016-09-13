@@ -1,21 +1,21 @@
 package com.worth.ifs.application.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.service.CompetitionsRestService;
+import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.service.UserService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.worth.ifs.application.service.Futures.call;
 import static java.util.stream.Collectors.toMap;
@@ -32,6 +32,9 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     @Autowired
     private CompetitionsRestService competitionsRestService;
+
+    @Autowired
+    private InviteRestService inviteRestService;
 
     @Autowired
     private UserService userService;
@@ -182,6 +185,11 @@ public class ApplicationServiceImpl implements ApplicationService {
         return organisationService.getOrganisationById(leadApplicantProcessRole.getOrganisation());
     }
 
+    @Override
+    public Boolean removeCollaborator(Long inviteId) {
+        inviteRestService.removeApplicationInvite(inviteId);
+        return null;
+    }
 
 
 }

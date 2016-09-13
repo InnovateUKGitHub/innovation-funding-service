@@ -98,6 +98,16 @@ public class ApplicationContributorController{
         return APPLICATION_CONTRIBUTORS_DISPLAY;
     }
 
+    @RequestMapping(value = "/remove/{inviteId}", method = RequestMethod.GET)
+    public String deleteContributor(@PathVariable("applicationId") final Long applicationId,
+                                    @PathVariable("inviteId") final Long inviteId,
+                                    HttpServletRequest request, Model model) {
+
+        applicationService.removeCollaborator(inviteId);
+
+        return "redirect:/application/" + applicationId + "/contributors";
+    }
+
     @RequestMapping(value = "/invite", method = RequestMethod.GET)
     public String inviteContributors(@PathVariable("applicationId") final Long applicationId,
                                      @ModelAttribute ContributorsForm contributorsForm,
