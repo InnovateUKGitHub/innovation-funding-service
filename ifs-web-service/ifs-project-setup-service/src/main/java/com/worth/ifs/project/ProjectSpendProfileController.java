@@ -73,7 +73,6 @@ public class ProjectSpendProfileController {
                                    HttpServletRequest request,
                                    @ModelAttribute(FORM_ATTR_NAME) SpendProfileForm form,
                                    @SuppressWarnings("unused") BindingResult bindingResult,
-                                   ValidationHandler validationHandler,
                                    @PathVariable("projectId") final Long projectId,
                                    @PathVariable("organisationId") final Long organisationId,
                                    @ModelAttribute("loggedInUser") UserResource loggedInUser) {
@@ -110,12 +109,8 @@ public class ProjectSpendProfileController {
         spendProfileTableResource.setMonthlyCostsPerCategoryMap(form.getTable().getMonthlyCostsPerCategoryMap()); // update existing resource with user entered fields
 
         ServiceResult<Void> result = projectFinanceService.saveSpendProfile(projectId, organisationId, spendProfileTableResource);
-        if(result.isFailure()){
-            validationHandler.addAnyErrors(result);
-            return failureView;
-        }
 
-        return successView;
+        return validationHandler.addAnyErrors(result).failNowOrSucceedWith(() -> failureView, () -> successView);
     }
 
     @RequestMapping(value = "/complete", method = POST)
