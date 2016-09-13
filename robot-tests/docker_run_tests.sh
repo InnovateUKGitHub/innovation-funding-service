@@ -192,7 +192,7 @@ emails=0
 rerunFailed=0
 
 testDirectory='IFS_acceptance_tests/tests'
-while getopts ":p :h :q :t :e :r" opt ; do
+while getopts ":p :h :q :t :e :r :d:" opt ; do
     case $opt in
         p)
          parallel=1
@@ -212,12 +212,19 @@ while getopts ":p :h :q :t :e :r" opt ; do
         r)
 		  rerunFailed=1
 		;;
+		d)
+         testDirectory="$OPTARG"
+         parallel=0
+        ;;
         \?)
          coloredEcho "Invalid option: -$OPTARG" red >&2
          exit 1
         ;;
         :)
          case $OPTARG in
+         	d)
+             coloredEcho "Option -$OPTARG requires the location of the robottest files relative to $scriptDir." red >&2
+            ;;
             *)
              coloredEcho "Option -$OPTARG requires an argument." red >&2
             ;;
