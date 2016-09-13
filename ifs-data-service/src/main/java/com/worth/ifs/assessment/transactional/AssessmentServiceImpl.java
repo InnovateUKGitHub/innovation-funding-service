@@ -48,7 +48,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     private AssessmentWorkflowEventHandler assessmentWorkflowEventHandler;
 
     @Override
-    public ServiceResult<AssessmentResource> findById(final Long id) {
+    public ServiceResult<AssessmentResource> findById(Long id) {
         return find(assessmentRepository.findOne(id), notFoundError(Assessment.class, id)).andOnSuccessReturn(assessmentMapper::mapToResource);
     }
 

@@ -345,6 +345,50 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
     }
 
     @Test
+    public void testCompAdminCanDownloadOtherDocuments() {
+
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+
+        setUpUserAsCompAdmin(project, user);
+
+        assertTrue(rules.competitionAdminCanDownloadOtherDocuments(project, user));
+    }
+
+    @Test
+    public void testNonCompAdminCannotDownloadOtherDocuments() {
+
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+
+        setUpUserNotAsCompAdmin(project, user);
+
+        assertFalse(rules.competitionAdminCanDownloadOtherDocuments(project, user));
+    }
+
+    @Test
+    public void testProjectFinanceUserCanDownloadOtherDocuments() {
+
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+
+        setUpUserAsProjectFinanceUser(project, user);
+
+        assertTrue(rules.projectFinanceUserCanDownloadOtherDocuments(project, user));
+    }
+
+    @Test
+    public void testNonProjectFinanceUserCanDownloadOtherDocuments() {
+
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+
+        setUpUserNotAsProjectFinanceUser(project, user);
+
+        assertFalse(rules.projectFinanceUserCanDownloadOtherDocuments(project, user));
+    }
+
+    @Test
     public void testLeadPartnersCanDeleteOtherDocuments() {
 
         ProjectResource project = newProjectResource().build();
@@ -405,8 +449,8 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
     }
 
     private void setUpUserAsProjectFinanceUser(ProjectResource project, UserResource user) {
-        List<RoleResource> projectFinanaceUser = newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build(1);
-        user.setRoles(projectFinanaceUser);
+        List<RoleResource> projectFinanceUser = newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build(1);
+        user.setRoles(projectFinanceUser);
     }
 
     private void setUpUserNotAsProjectFinanceUser(ProjectResource project, UserResource user) {
