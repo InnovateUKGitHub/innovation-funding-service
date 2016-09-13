@@ -30,10 +30,20 @@ public class MilestoneRestServiceMocksTest extends BaseRestServiceUnitTest<Miles
     @Test
     public void test_getAllDatesByCompetitionId() {
         List<MilestoneResource> returnedResponse = new ArrayList<>();
-        returnedResponse.add(getMilestone());
+        returnedResponse.add(getOpenDateMilestone());
 
         setupGetWithRestResultExpectations(milestonesRestURL + "/" + competitionId, milestoneResourceListType(), returnedResponse);
         List<MilestoneResource> response = service.getAllDatesByCompetitionId(competitionId).getSuccessObject();
+        assertNotNull(response);
+        assertEquals(returnedResponse, response);
+    }
+
+    @Test
+    public void test_getDateByTypeAndCompetitionId() {
+        MilestoneResource returnedResponse = getBriefingEventMilestone();
+
+        setupGetWithRestResultExpectations(milestonesRestURL + "/" + competitionId, MilestoneResource.class, returnedResponse);
+        MilestoneResource response = service.getMilestoneByTypeAndCompetitionId(MilestoneType.BRIEFING_EVENT, competitionId).getSuccessObject();
         assertNotNull(response);
         assertEquals(returnedResponse, response);
     }
@@ -52,12 +62,11 @@ public class MilestoneRestServiceMocksTest extends BaseRestServiceUnitTest<Miles
         assertEquals(milestone, response);
     }
 
-
     @Test
     public void test_update() {
 
         List<MilestoneResource> returnedResponse = new ArrayList<>();
-        returnedResponse.add(getMilestone());
+        returnedResponse.add(getOpenDateMilestone());
 
         setupGetWithRestResultExpectations(milestonesRestURL + "/" + competitionId, milestoneResourceListType(), returnedResponse);
         List<MilestoneResource> response = service.getAllDatesByCompetitionId(competitionId).getSuccessObject();
@@ -77,11 +86,20 @@ public class MilestoneRestServiceMocksTest extends BaseRestServiceUnitTest<Miles
       //  service.update(response, competitionId).getSuccessObject();
     }
 
-    private MilestoneResource getMilestone() {
+    private MilestoneResource getOpenDateMilestone() {
         MilestoneResource milestone = newMilestoneResource()
                 .withId(1L)
                 .withName(MilestoneType.OPEN_DATE)
                 .withDate(LocalDateTime.now())
+                .withCompetitionId(competitionId).build();
+        return milestone;
+    }
+
+    private MilestoneResource getBriefingEventMilestone() {
+        MilestoneResource milestone = newMilestoneResource()
+                .withId(1L)
+                .withName(MilestoneType.BRIEFING_EVENT)
+                .withDate(LocalDateTime.of(2026,3,15,9,0))
                 .withCompetitionId(competitionId).build();
         return milestone;
     }

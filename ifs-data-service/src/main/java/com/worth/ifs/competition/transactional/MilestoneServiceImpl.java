@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -48,7 +49,7 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
 
     @Override
     public ServiceResult<MilestoneResource> getMilestoneByTypeAndCompetitionId(MilestoneType type, Long id) {
-        return serviceSuccess ((MilestoneResource) milestoneMapper.mapToResource(milestoneRepository.findByTypeAndCompetitionId(type, id)));
+        return serviceSuccess (milestoneMapper.mapToResource(milestoneRepository.findByTypeAndCompetitionId(type, id)));
     }
 
     @Override
@@ -64,16 +65,21 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
             milestoneEntities.forEach(m -> milestoneRepository.save(m));
             return serviceSuccess();
         }
+
         return serviceFailure(messages.getErrors());
     }
 
     @Override
-    public ServiceResult<Void> updateMilestone(Long id, MilestoneResource milestone){
+    public ServiceResult<Void> updateMilestone(Long id, MilestoneResource milestoneResource){
         Competition competition = competitionRepository.findById(id);
-        Milestone milestoneEntity = milestoneMapper.mapToDomain(milestone);
-       // milestoneEntity = milestoneRepository.save(milestone);
-        //@TODO JH validation on single milestone
-      //  return serviceSuccess(milestoneMapper.mapToResource(milestoneRepository.save(milestoneEntity)));
+
+        List<Milestone> milestones = competition.getMilestones();
+
+        Milestone milestoneEntity = (Milestone) milestones.stream().filter((m) -> m.getId().equals(milestoneResource.getId()));
+//       @TODO JH validation on single milestone
+        Milestone milestone = milestoneMapper.mapToDomain(milestoneResource);
+        milestoneRepository.save(milestone);
+
         return serviceSuccess();
     }
 

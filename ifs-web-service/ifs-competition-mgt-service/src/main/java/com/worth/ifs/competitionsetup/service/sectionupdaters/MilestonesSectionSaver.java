@@ -62,8 +62,7 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
     }
 
     @Override
-    public List<Error> autoSaveSectionField(CompetitionResource competitionResource, String fieldName, String value), Optional<Long> objectId) {
-        int i = 0;
+    public List<Error> autoSaveSectionField(CompetitionResource competitionResource, String fieldName, String value, Optional<Long> ObjectId) {
         return performAutoSaveField(competitionResource, fieldName, value);
     }
 

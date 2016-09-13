@@ -10,6 +10,7 @@ import com.worth.ifs.competition.repository.MilestoneRepository;
 import com.worth.ifs.competition.resource.MilestoneResource;
 import com.worth.ifs.competition.resource.MilestoneType;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -141,6 +142,23 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
 		assertEquals("error.milestone.nulldate", result.getFailure().getErrors().get(0).getErrorKey());
 		assertEquals(0, competition.getMilestones().size());
 	}
+
+	@Test
+	@Ignore
+	//@TODO JH
+    public void updateMilestone() {
+
+	    Competition competition = newCompetition().build();
+        when(competitionRepository.findById(1L)).thenReturn(competition);
+
+        MilestoneResource milestone = milestone(MilestoneType.BRIEFING_EVENT, LocalDateTime.of(2050, 3, 11, 0, 0));
+
+        ServiceResult<Void> result = service.updateMilestone(1L, milestone);
+
+        assertTrue(result.isSuccess());
+        assertEquals(MilestoneType.BRIEFING_EVENT, competition.getMilestones().get(0).getType());
+        assertEquals(LocalDateTime.of(2050, 3, 10, 0, 0), competition.getMilestones().get(0).getDate());
+    }
 
 	private MilestoneResource milestone(MilestoneType type, LocalDateTime date) {
 		MilestoneResource resource = new MilestoneResource();

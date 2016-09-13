@@ -30,11 +30,11 @@ public interface MilestoneService {
 
     @PreAuthorize("hasAuthority('comp_admin')")
     @SecuredBySpring(value="UPDATE", securedType=MilestoneResource.class,
-            description = "Only Comp Admins is able to create the milestone for the given competitions")
-    ServiceResult<MilestoneResource> create(MilestoneType type, Long id);
+            description = "Only Comp Admins is able to save single milestone for the given competitions")
+    ServiceResult<Void> updateMilestone(Long id, MilestoneResource milestone);
 
     @PreAuthorize("hasAuthority('comp_admin')")
     @SecuredBySpring(value="UPDATE", securedType=MilestoneResource.class,
-            description = "Only Comp Admins is able to save single milestone for the given competitions")
-    ServiceResult<Void> updateMilestone(Long id, MilestoneResource milestone);
+            description = "Only Comp Admins is able to create the milestone for the given competitions")
+    ServiceResult<MilestoneResource> create(MilestoneType type, Long id);
 }
