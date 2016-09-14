@@ -64,8 +64,8 @@ Overall scores section
     [Documentation]    INFUND-4648
     Then each question will contain links to respective questions
     And the scores under each question should be correct
-    And Element should contain    css=div:nth-child(6) p.no-margin strong    Total: 50/50
-    And Element should contain    css=div:nth-child(6) p:nth-child(2) strong    100%
+    And Element should contain    css=div:nth-child(5) p.no-margin strong    Total: 50/50
+    And Element should contain    css=div:nth-child(5) p:nth-child(2) strong    100%
 
 Assessment summary shows feedback in each section
     [Documentation]    INFUND-550

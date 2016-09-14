@@ -56,7 +56,7 @@ New competition shows in Preparation section with the default name
     [Documentation]    INFUND-2980
     Given The user clicks the button/link    link=All competitions
     And The user clicks the button/link    id=section-3
-    Then the competition should show in the correct section    css=section:nth-child(4) li:nth-child(2)    No competition title defined    #this keyword checks if the new application shows in the second line of the "In preparation" competitions
+    Then the competition should show in the correct section    css=section:nth-of-type(1) li:nth-child(2)    No competition title defined    #this keyword checks if the new application shows in the second line of the "In preparation" competitions
 
 Initial details server-side validations
     [Documentation]    INFUND-2982
@@ -181,7 +181,7 @@ New application shows in Preparation section with the new name
     [Documentation]    INFUND-2980
     Given The user clicks the button/link    link=All competitions
     And The user clicks the button/link    id=section-3
-    Then the competition should show in the correct section    css=section:nth-child(4) > ul    Test competition    #This keyword checks if the new competition shows in the "In preparation" test
+    Then the competition should show in the correct section    css=section:nth-of-type(1) > ul    Test competition    #This keyword checks if the new competition shows in the "In preparation" test
 
 Funding information server-side validations
     [Documentation]    INFUND-2985
@@ -401,7 +401,7 @@ Application questions: server side validations
     And The user clicks the button/link    jQuery=.button[value="Save and close"]
     Then the validation error above the question should be visible    jQuery=label:contains(Question title)    This field cannot be left blank
     And the validation error above the question should be visible    jQuery=label:contains(Question guidance title)    This field cannot be left blank
-    And the validation error above the question should be visible    jQuery=div:nth-child(4) div:nth-child(4) label:contains(Question guidance)    This field cannot be left blank
+    And the validation error above the question should be visible    jQuery=label:contains(Question guidance)    This field cannot be left blank
 
 Application questions: Client side validations
     [Documentation]    INFUND-3000
@@ -409,7 +409,7 @@ Application questions: Client side validations
     Given the user fills the empty question fields
     Then the validation error above the question should not be visible    jQuery=label:contains(Question title)    This field cannot be left blank
     And the validation error above the question should not be visible    jQuery=label:contains(Question guidance title)    This field cannot be left blank
-    And the validation error above the question should not be visible    jQuery=div:nth-child(4) div:nth-child(4) label:contains(Question guidance)    This field cannot be left blank
+    And the validation error above the question should not be visible    jQuery=label:contains(Question guidance)    This field cannot be left blank
     And the validation error above the question should not be visible    jQuery=label:contains(Max word count)    This field cannot be left blank
     And the validation error above the question should not be visible    jQuery=label:contains(Max word count)    This field cannot be left blank
 
@@ -455,7 +455,7 @@ User should be able to Save the competition as open
     When the user clicks the button/link    jQuery=.button:contains("Save as Ready To Open")
     And the user clicks the button/link    link=All competitions
     And the user clicks the button/link    id=section-3
-    Then the competition should show in the correct section    css=section:nth-child(5) ul    Test competition
+    Then the competition should show in the correct section    css=section:nth-of-type(2) ul    Test competition
     # The above line checks that the section 'Ready to Open' there is a competition named Test competition
 
 *** Keywords ***

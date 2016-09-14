@@ -225,11 +225,11 @@ the user clicks previous and goes to the page
     the user should see the text in the page    ${page_content}
 
 the finance summary total should be correct
-    Element Should Contain    css=#content div:nth-child(5) tr:nth-child(2) td:nth-child(2)    £7,680
-    Element Should Contain    css=#content div:nth-child(5) tr:nth-child(1) td:nth-child(3)    60%
-    Element Should Contain    css=#content div:nth-child(5) tr:nth-child(2) td:nth-child(4)    £4,608
-    Element Should Contain    css=#content div:nth-child(5) tr:nth-child(2) td:nth-child(5)    £0
-    Element Should Contain    css=#content div:nth-child(5) tr:nth-child(2) td:nth-child(6)    £3,072
+    Element Should Contain    css=.form-group.finances-summary tr:nth-child(2) td:nth-child(2)    £7,680
+    Element Should Contain    css=.form-group.finances-summary tr:nth-child(1) td:nth-child(3)    60%
+    Element Should Contain    css=.form-group.finances-summary tr:nth-child(2) td:nth-child(4)    £4,608
+    Element Should Contain    css=.form-group.finances-summary tr:nth-child(2) td:nth-child(5)    £0
+    Element Should Contain    css=.form-group.finances-summary tr:nth-child(2) td:nth-child(6)    £3,072
 
 the project cost breakdown total should be correct
     Element Should Contain    css=.form-group.project-cost-breakdown tr:nth-child(2) td:nth-child(2)    £7,680
