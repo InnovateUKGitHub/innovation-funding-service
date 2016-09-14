@@ -86,7 +86,6 @@ public class InviteRestServiceImpl extends BaseRestService implements InviteRest
         return getWithRestResultAnonymous(inviteRestUrl + "/getInviteOrganisationByHash/" + hash, InviteOrganisationResource.class);
     }
 
-
     @Override
     public RestResult<List<InviteOrganisationResource>> getInvitesByApplication(Long applicationId) {
         String url = inviteRestUrl + "/getInvitesByApplicationId/"+ applicationId;

@@ -40,7 +40,6 @@ public class ApplicationInvitePermissionRules {
         return isCollaboratorOnInvite(invite, user);
     }
 
-
     @PermissionRule(value = "SAVE", description = "lead applicant can save invite to the application")
     public boolean leadApplicantCanSaveInviteToTheApplication(final ApplicationInviteResource invite, final UserResource user) {
         return isLeadForInvite(invite, user);
@@ -61,9 +60,16 @@ public class ApplicationInvitePermissionRules {
         return isLeadForInvite(invite, user);
     }
 
-    @PermissionRule(value = "DELETE", description = "lead applicant can delete an invite from the application")
-    public boolean leadApplicantDeleteInviteToTheApplication(final ApplicationInvite invite, final UserResource user) {
-        return isLeadForInvite(invite, user);
+    @PermissionRule(value = "DELETE", description = "lead applicant can delete an invite from the application and applicant can not delete his own invite from the application")
+    public boolean leadApplicantAndNotDeleteOwnInviteToTheApplication(final ApplicationInviteResource invite, final UserResource user) {
+        return isNotOwnInvite(invite, user) && isLeadForInvite(invite, user);
+    }
+
+    private boolean isNotOwnInvite(final ApplicationInviteResource invite, final UserResource user) {
+        if (invite.getUser() == null) {
+           return true;
+        }
+        return !invite.getUser().equals(user.getId());
     }
 
     private boolean isCollaboratorOnInvite(final ApplicationInvite invite, final UserResource user) {

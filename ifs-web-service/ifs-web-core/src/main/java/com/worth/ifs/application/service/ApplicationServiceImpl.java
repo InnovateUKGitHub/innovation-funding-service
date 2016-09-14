@@ -186,10 +186,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public Boolean removeCollaborator(Long inviteId) {
-        inviteRestService.removeApplicationInvite(inviteId);
-        return null;
+    public void removeCollaborator(Long applicationInviteId) {
+        inviteRestService.removeApplicationInvite(applicationInviteId).getSuccessObjectOrThrowException();
     }
-
-
 }

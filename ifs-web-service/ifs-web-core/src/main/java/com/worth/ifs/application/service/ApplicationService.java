@@ -23,5 +23,5 @@ public interface ApplicationService {
     int getAssignedQuestionsCount(Long applicantId, Long processRoleId);
     RestResult<ApplicationResource> findByProcessRoleId(Long id);
     OrganisationResource getLeadOrganisation(Long applicationId);
-    Boolean removeCollaborator(Long inviteId);
+    void removeCollaborator(Long applicationInviteId);
 }

@@ -57,8 +57,8 @@ public class ApplicationInviteController {
     }
 
     @RequestMapping(value = "/removeInvite/{inviteId}", method = RequestMethod.DELETE)
-    public RestResult<Void> removeInvite(@PathVariable("inviteId") Long inviteId) {
-        return inviteService.removeInvite(inviteId).toDeleteResponse();
+    public RestResult<Void> removeApplicationInvite(@PathVariable("inviteId") Long applicationInviteResourceId) {
+        return inviteService.removeApplicationInvite(applicationInviteResourceId).toDeleteResponse();
     }
 
     @RequestMapping(value = "/checkExistingUser/{hash}", method = RequestMethod.GET)

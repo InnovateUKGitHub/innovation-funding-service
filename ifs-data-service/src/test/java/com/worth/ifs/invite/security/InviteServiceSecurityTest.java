@@ -170,7 +170,7 @@ public class InviteServiceSecurityTest extends BaseServiceSecurityTest<InviteSer
         }
 
         @Override
-        public ServiceResult<Void> removeInvite(Long inviteId) {
+        public ServiceResult<Void> removeApplicationInvite(Long applicationInviteId) {
             return null;
         }
     }

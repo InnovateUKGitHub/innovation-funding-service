@@ -185,13 +185,11 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
     @Override
     public ServiceResult<InviteResultsResource> createApplicationInvites(InviteOrganisationResource inviteOrganisationResource) {
-
         List<Error> errors = validateUniqueEmails(inviteOrganisationResource.getInviteResources());
         if (errors.size() > 0) {
             LOG.warn("Some double email addresses found");
             return serviceFailure(errors);
         }
-
 
         if (!inviteOrganisationResourceIsValid(inviteOrganisationResource)) {
             return serviceFailure(badRequestError("The Invite is not valid"));
@@ -226,18 +224,15 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         } else {
             return serviceSuccess(new HashSet());
         }
-
     }
 
     @Override
     public ServiceResult<InviteResultsResource> saveInvites(List<ApplicationInviteResource> inviteResources) {
-
         List<Error> errors = validateUniqueEmails(inviteResources);
         if (errors.size() > 0) {
             LOG.warn("Some double email addresses found");
             return serviceFailure(errors);
         }
-
 
         List<ApplicationInvite> invites = simpleMap(inviteResources, invite -> mapInviteResourceToInvite(invite, null));
         applicationInviteRepository.save(invites);
@@ -295,18 +290,15 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     }
 
     @Override
-    public ServiceResult<Void> removeInvite(Long inviteId) {
+    public ServiceResult<Void> removeApplicationInvite(Long applicationInviteId) {
         try {
-            ApplicationInvite invite = applicationInviteRepository.findOne(inviteId);
-            if(invite == null) {
-                return serviceFailure(notFoundError(ApplicationInvite.class));
-            }
-
-            List<ProcessRole> processRole = processRoleRepository.findByUserAndApplicationId(invite.getUser(), invite.getTarget().getId());
+            ApplicationInvite applicationInvite = applicationInviteMapper.mapIdToDomain(applicationInviteId);
+            List<ProcessRole> processRole = processRoleRepository.findByUserAndApplication(applicationInvite.getUser(), applicationInvite.getTarget());
             if(!processRole.isEmpty()) {
                 processRoleRepository.delete(processRole);
             }
-            applicationInviteRepository.delete(inviteId);
+            applicationInviteRepository.delete(applicationInvite);
+
             return serviceSuccess();
         } catch (IllegalArgumentException e) {
             return serviceFailure(notFoundError(ApplicationInvite.class));
@@ -418,7 +410,6 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     }
 
     private boolean inviteResourceIsValid(ApplicationInviteResource inviteResource) {
-
         if (StringUtils.isEmpty(inviteResource.getEmail()) || StringUtils.isEmpty(inviteResource.getName()) || inviteResource.getApplication() == null) {
             return false;
         }
