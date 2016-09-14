@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag"/>
-    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css"/>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Spend Profile'" th:remove="tag" />
 </head>
 <body th:class="${(param.view != null and param.view[0] == 'full' ? 'app-overview full-width' : 'app-overview ')}">
 
@@ -89,25 +88,16 @@
         <p class="extra-margin">Please review each partner's spend profile once they are marked as complete. You must
             make sure they fit the timelines of your project plan.</p>
 
-        <a href="/prototypes/3100-spend?task=reviewProject" class="button">Review and submit total project profile
+        <a href="@{/project/{id}/partner-organisation/{organisationId}/spend-profile/review(id=${model.projectId}, organisationId=${partner.id})}" class="button">Review and submit total project profile
             spend</a>
 
     </div>
-
-
-    <!-- END OFHARDCODED PROTOTYPE HTML -->
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag"/>
 </main>
 
 <div th:include="fragments/layout :: footer" th:remove="tag"/>
 <div th:include="fragments/layout :: body-end" th:remove="tag"/>
-<script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
 
-<script type="text/javascript">
-    // <![CDATA[
-
-    // ]]>
-</script>
 </body>
 </html>

@@ -17,22 +17,14 @@ import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.RoleResource;
 import com.worth.ifs.user.resource.UserRoleType;
 import org.junit.Test;
-import org.springframework.test.web.servlet.MvcResult;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.*;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.ObjectError;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.IntStream;
 
 import static com.worth.ifs.commons.error.CommonFailureKeys.SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE;
@@ -255,7 +247,6 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         loggedInUser.setRoles(roleResources);
         when(projectService.getById(projectId)).thenReturn(projectResource);
         when(projectService.getProjectUsersForProject(projectResource.getId())).thenReturn(projectUserResources);
-        when(organisationService.getOrganisationById(projectUserResources.get(0).getOrganisation())).thenReturn(organisationResource);
         when(projectFinanceService.getSpendProfile(projectId, organisationId)).thenReturn(Optional.of(spendProfileResource));
 
         MvcResult result = mockMvc.perform(get("/project/{id}/partner-organisation/{organisationId}/spend-profile", projectId, organisationId))

@@ -7,8 +7,7 @@ import java.util.Map;
 
 /**
  * Module: innovation-funding-service
- * ikenna1
- * 31/08/2016.
+ * View model for project manager Spend profile
  **/
 public class ProjectSpendProfileProjectManagerViewModel {
     private Long projectId;

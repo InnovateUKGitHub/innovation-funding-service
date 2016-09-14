@@ -1,6 +1,5 @@
 package com.worth.ifs.project;
 
-import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.commons.rest.LocalDateResource;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.controller.ValidationHandler;
@@ -33,16 +32,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.*;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static com.worth.ifs.commons.error.CommonFailureKeys.SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE;
-import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
 import static com.worth.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
 import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -58,9 +54,6 @@ public class ProjectSpendProfileController {
 
     @Autowired
     private ProjectService projectService;
-
-    @Autowired
-    private OrganisationService organisationService;
 
     @Autowired
     private ProjectFinanceService projectFinanceService;
@@ -140,22 +133,6 @@ public class ProjectSpendProfileController {
         }
 
         return successView;
-    }
-
-
-    private List<OrganisationResource> getPartnerOrganisations(final List<ProjectUserResource> projectRoles) {
-
-        final Comparator<OrganisationResource> compareById =
-                Comparator.comparingLong(OrganisationResource::getId);
-
-        final Supplier<SortedSet<OrganisationResource>> supplier = () -> new TreeSet<>(compareById);
-
-        SortedSet<OrganisationResource> organisationSet = projectRoles.stream()
-                .filter(uar -> uar.getRoleName().equals(PARTNER.getName()))
-                .map(uar -> organisationService.getOrganisationById(uar.getOrganisation()))
-                .collect(Collectors.toCollection(supplier));
-
-        return new ArrayList<>(organisationSet);
     }
 
     private Map<String, Boolean> getPartnersSpendProfileProgress(Long projectId, List<OrganisationResource> partnerOrganisations) {
@@ -287,10 +264,7 @@ public class ProjectSpendProfileController {
     private ProjectSpendProfileProjectManagerViewModel populateSpendProfileProjectManagerViewModel(Long projectId) {
         ProjectResource projectResource = projectService.getById(projectId);
 
-        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectResource.getId());
-        List<OrganisationResource> partnerOrganisations = getPartnerOrganisations(projectUsers);
-
-        List<String> partnerOrganisationNames = simpleMap(partnerOrganisations, OrganisationResource::getName);
+        List<OrganisationResource> partnerOrganisations = projectService.getPartnerOrganisationsForProject(projectId);
 
         Map<String, Boolean> partnersSpendProfileProgress = getPartnersSpendProfileProgress(projectId, partnerOrganisations);
 
