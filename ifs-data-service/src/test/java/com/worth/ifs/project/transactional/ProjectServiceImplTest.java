@@ -13,6 +13,8 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.FileAndContents;
+import com.worth.ifs.finance.domain.ApplicationFinance;
+import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.invite.builder.ProjectInviteResourceBuilder;
 import com.worth.ifs.invite.domain.ProjectParticipantRole;
 import com.worth.ifs.invite.resource.InviteProjectResource;
@@ -26,9 +28,9 @@ import com.worth.ifs.project.domain.ProjectUser;
 import com.worth.ifs.project.finance.domain.SpendProfile;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
-import com.worth.ifs.project.resource.ProjectTeamStatusResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.user.domain.*;
+import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import com.worth.ifs.user.resource.UserRoleType;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Assert;
@@ -61,6 +63,8 @@ import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.file.domain.builders.FileEntryBuilder.newFileEntry;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
+import static com.worth.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
+import static com.worth.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static com.worth.ifs.invite.domain.ProjectParticipantRole.*;
 import static com.worth.ifs.organisation.builder.OrganisationAddressBuilder.newOrganisationAddress;
 import static com.worth.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
@@ -1136,8 +1140,9 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 .withPhoneNumber("079237439")
                 .build();
 
-        OrganisationType organisationType = newOrganisationType().build();
-        Organisation organisation = newOrganisation().withOrganisationType(organisationType).build();
+        OrganisationType businessOrganisationType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
+
+        List<Organisation> organisation = newOrganisation().withOrganisationType(businessOrganisationType).build(3);
 
         User u = newUser().build();
 
@@ -1146,27 +1151,47 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         AddressResource addressResource = newAddressResource().build();
         OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource().withAddress(addressResource).build();
         OrganisationAddress organisationAddress = newOrganisationAddress().build();
-        BankDetailsResource bankDetailsResource = newBankDetailsResource().withProject(project.getId()).withSortCode("123123").withAccountNumber("12345678").withOrganisation(organisation.getId()).withOrganiationAddress(organisationAddressResource).build();
-        BankDetails bankDetails = newBankDetails().withSortCode(bankDetailsResource.getSortCode()).withAccountNumber(bankDetailsResource.getAccountNumber()).withOrganisation(organisation).withOrganiationAddress(organisationAddress).build();
-        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_PARTNER).withUser(u).withOrganisation(organisation).build(1);
+        List<BankDetailsResource> bankDetailsResource = newBankDetailsResource().withProject(project.getId()).withSortCode("123123").withAccountNumber("12345678").withOrganisation(organisation.get(0).getId(), organisation.get(1).getId(), organisation.get(2).getId()).withOrganiationAddress(organisationAddressResource).build(3);
+        List<BankDetails> bankDetails = newBankDetails().withSortCode(bankDetailsResource.get(0).getSortCode()).withAccountNumber(bankDetailsResource.get(0).getAccountNumber()).withOrganisation(organisation.get(0)).withOrganiationAddress(organisationAddress).build(3);
+        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_PARTNER).withUser(u).withOrganisation(organisation.get(0), organisation.get(1), organisation.get(2)).build(3);
         Project p = newProject().withProjectUsers(pu).withApplication(application).build();
 
         SpendProfile spendProfile = newSpendProfile().build();
 
         when(projectRepositoryMock.findOne(p.getId())).thenReturn(p);
         when(projectUserRepositoryMock.findByProjectId(p.getId())).thenReturn(pu);
-        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(p.getId(), organisation.getId())).thenReturn(bankDetails);
-        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), organisation.getId())).thenReturn(spendProfile);
+        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(p.getId(), organisation.get(0).getId())).thenReturn(bankDetails.get(0));
+        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), organisation.get(0).getId())).thenReturn(spendProfile);
         when(monitoringOfficerRepositoryMock.findOneByProjectId(p.getId())).thenReturn(monitoringOfficerInDB);
-        when(organisationRepositoryMock.findOne(organisation.getId())).thenReturn(organisation);
+        when(organisationRepositoryMock.findOne(organisation.get(0).getId())).thenReturn(organisation.get(0));
+        when(organisationRepositoryMock.findOne(organisation.get(1).getId())).thenReturn(organisation.get(1));
+        when(organisationRepositoryMock.findOne(organisation.get(2).getId())).thenReturn(organisation.get(2));
 
-        ProjectUserResource puResource = newProjectUserResource().withProject(p.getId()).withOrganisation(organisation.getId()).withRole(partnerRole.getId()).withRoleName(PROJECT_PARTNER.getName()).build();
+        List<ApplicationFinance> applicationFinances = newApplicationFinance().build(3);
+        when(applicationFinanceRepositoryMock.findByApplicationIdAndOrganisationId(p.getApplication().getId(), organisation.get(0).getId())).thenReturn(applicationFinances.get(0));
+        when(applicationFinanceRepositoryMock.findByApplicationIdAndOrganisationId(p.getApplication().getId(), organisation.get(1).getId())).thenReturn(applicationFinances.get(1));
+        when(applicationFinanceRepositoryMock.findByApplicationIdAndOrganisationId(p.getApplication().getId(), organisation.get(2).getId())).thenReturn(applicationFinances.get(2));
 
-        when(projectUserMapperMock.mapToResource(pu.get(0))).thenReturn(puResource);
+        ApplicationFinanceResource applicationFinanceResource0 = newApplicationFinanceResource().withOrganisation(organisation.get(0).getId()).build();
+        when(applicationFinanceMapperMock.mapToResource(applicationFinances.get(0))).thenReturn(applicationFinanceResource0);
 
-        ServiceResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(p.getId());
+        ApplicationFinanceResource applicationFinanceResource1 = newApplicationFinanceResource().withOrganisation(organisation.get(1).getId()).build();
+        when(applicationFinanceMapperMock.mapToResource(applicationFinances.get(1))).thenReturn(applicationFinanceResource1);
 
-        assertTrue(result.isSuccess());
+        ApplicationFinanceResource applicationFinanceResource2 = newApplicationFinanceResource().withOrganisation(organisation.get(2).getId()).build();
+        when(applicationFinanceMapperMock.mapToResource(applicationFinances.get(2))).thenReturn(applicationFinanceResource2);
+
+        List<ProjectUserResource> puResource = newProjectUserResource().withProject(p.getId()).withOrganisation(organisation.get(0).getId(), organisation.get(1).getId(), organisation.get(2).getId()).withRole(partnerRole.getId()).withRoleName(PROJECT_PARTNER.getName()).build(3);
+
+        when(projectUserMapperMock.mapToResource(pu.get(0))).thenReturn(puResource.get(0));
+        when(projectUserMapperMock.mapToResource(pu.get(1))).thenReturn(puResource.get(1));
+        when(projectUserMapperMock.mapToResource(pu.get(2))).thenReturn(puResource.get(2));
+
+        when(financeRowRepositoryMock.findByApplicationFinanceId(applicationFinanceResource0.getId())).thenReturn(emptyList());
+        when(financeRowRepositoryMock.findByApplicationFinanceId(applicationFinanceResource1.getId())).thenReturn(emptyList());
+        when(financeRowRepositoryMock.findByApplicationFinanceId(applicationFinanceResource2.getId())).thenReturn(emptyList());
+
+        // TODO: Finish this test.  Seems like checking for application funding requries creation of full object hierarchy for finance rows...
     }
 
     private void assertFilesCannotBeSubmittedIfNotByProjectManager(Consumer<FileEntry> fileSetter1,

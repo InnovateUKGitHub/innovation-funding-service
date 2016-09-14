@@ -33,6 +33,7 @@ import static com.worth.ifs.documentation.ProjectDocs.projectResourceBuilder;
 import static com.worth.ifs.documentation.ProjectDocs.projectResourceFields;
 import static com.worth.ifs.documentation.ProjectTeamStatusDocs.projectTeamStatusResourceFields;
 import static com.worth.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
+import static com.worth.ifs.project.builder.ProjectLeadStatusResourceBuilder.newProjectLeadStatusResource;
 import static com.worth.ifs.project.builder.ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource;
 import static com.worth.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
@@ -525,36 +526,45 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
     }
 
     private ProjectTeamStatusResource buildTeamStatus(){
+        ProjectLeadStatusResource projectLeadStatusResource = newProjectLeadStatusResource().build();
         List<ProjectPartnerStatusResource> partnerStatuses = newProjectPartnerStatusResource().build(3);
 
+        projectLeadStatusResource.setName("Nomensa");
         partnerStatuses.get(0).setName("Acme Corp");
         partnerStatuses.get(1).setName("Hive IT");
         partnerStatuses.get(2).setName("Worth IT Systems");
 
+        projectLeadStatusResource.setSpendProfileStatus(ProjectActivityStates.COMPLETE);
         partnerStatuses.get(0).setSpendProfileStatus(ProjectActivityStates.COMPLETE);
         partnerStatuses.get(1).setSpendProfileStatus(ProjectActivityStates.NOT_STARTED);
         partnerStatuses.get(2).setSpendProfileStatus(ProjectActivityStates.PENDING);
 
+        projectLeadStatusResource.setBankDetailsStatus(ProjectActivityStates.COMPLETE);
         partnerStatuses.get(0).setBankDetailsStatus(ProjectActivityStates.PENDING);
         partnerStatuses.get(1).setBankDetailsStatus(ProjectActivityStates.NOT_REQUIRED);
         partnerStatuses.get(2).setBankDetailsStatus(ProjectActivityStates.NOT_STARTED);
 
+        projectLeadStatusResource.setOtherDocumentsStatus(ProjectActivityStates.COMPLETE);
         partnerStatuses.get(0).setOtherDocumentsStatus(ProjectActivityStates.PENDING);
         partnerStatuses.get(1).setOtherDocumentsStatus(ProjectActivityStates.PENDING);
         partnerStatuses.get(2).setOtherDocumentsStatus(ProjectActivityStates.COMPLETE);
 
+        projectLeadStatusResource.setProjectDetailsStatus(ProjectActivityStates.COMPLETE);
         partnerStatuses.get(0).setProjectDetailsStatus(ProjectActivityStates.COMPLETE);
         partnerStatuses.get(1).setProjectDetailsStatus(ProjectActivityStates.COMPLETE);
         partnerStatuses.get(2).setProjectDetailsStatus(ProjectActivityStates.COMPLETE);
 
+        projectLeadStatusResource.setFinanceChecksStatus(ProjectActivityStates.PENDING);
         partnerStatuses.get(0).setFinanceChecksStatus(ProjectActivityStates.PENDING);
         partnerStatuses.get(1).setFinanceChecksStatus(ProjectActivityStates.PENDING);
         partnerStatuses.get(2).setFinanceChecksStatus(ProjectActivityStates.PENDING);
 
+        projectLeadStatusResource.setMonitoringOfficerStatus(ProjectActivityStates.PENDING);
         partnerStatuses.get(0).setMonitoringOfficerStatus(ProjectActivityStates.COMPLETE);
         partnerStatuses.get(1).setMonitoringOfficerStatus(ProjectActivityStates.PENDING);
         partnerStatuses.get(2).setMonitoringOfficerStatus(ProjectActivityStates.COMPLETE);
 
+        projectLeadStatusResource.setGrantOfferLetterStatus(ProjectActivityStates.PENDING);
         partnerStatuses.get(0).setGrantOfferLetterStatus(ProjectActivityStates.PENDING);
         partnerStatuses.get(1).setGrantOfferLetterStatus(ProjectActivityStates.PENDING);
         partnerStatuses.get(2).setGrantOfferLetterStatus(ProjectActivityStates.PENDING);

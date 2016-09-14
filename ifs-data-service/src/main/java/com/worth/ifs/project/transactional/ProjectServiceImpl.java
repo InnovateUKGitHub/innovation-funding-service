@@ -13,16 +13,21 @@ import com.worth.ifs.bankdetails.domain.BankDetails;
 import com.worth.ifs.bankdetails.repository.BankDetailsRepository;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.file.mapper.FileEntryMapper;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.BasicFileAndContents;
 import com.worth.ifs.file.service.FileAndContents;
 import com.worth.ifs.file.transactional.FileService;
-import com.worth.ifs.finance.handler.ApplicationFinanceHandler;
+import com.worth.ifs.finance.domain.ApplicationFinance;
+import com.worth.ifs.finance.handler.OrganisationFinanceDelegate;
+import com.worth.ifs.finance.handler.OrganisationFinanceHandler;
+import com.worth.ifs.finance.mapper.ApplicationFinanceMapper;
+import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.ApplicationFinanceResourceId;
+import com.worth.ifs.finance.resource.category.FinanceRowCostCategory;
+import com.worth.ifs.finance.resource.cost.FinanceRowType;
 import com.worth.ifs.invite.domain.ProjectParticipantRole;
 import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.notifications.resource.ExternalUserNotificationTarget;
@@ -75,7 +80,7 @@ import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static com.worth.ifs.project.constant.ProjectActivityStates.*;
 import static com.worth.ifs.project.transactional.ProjectServiceImpl.Notifications.INVITE_FINANCE_CONTACT;
 import static com.worth.ifs.project.transactional.ProjectServiceImpl.Notifications.INVITE_PROJECT_MANAGER;
-import static com.worth.ifs.user.resource.OrganisationTypeEnum.RESEARCH;
+import static com.worth.ifs.user.resource.OrganisationTypeEnum.isResearch;
 import static com.worth.ifs.util.CollectionFunctions.*;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static com.worth.ifs.util.EntityLookupCallbacks.getOnlyElementOrFail;
@@ -137,10 +142,16 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     private FileEntryMapper fileEntryMapper;
 
     @Autowired
-    private ApplicationFinanceHandler applicationFinanceHandler;
+    private SpendProfileRepository spendProfileRepository;
 
     @Autowired
-    private SpendProfileRepository spendProfileRepository;
+    private ApplicationFinanceRepository applicationFinanceRepository;
+
+    @Autowired
+    private ApplicationFinanceMapper applicationFinanceMapper;
+
+    @Autowired
+    private OrganisationFinanceDelegate organisationFinanceDelegate;
 
 
     @Value("${ifs.web.baseURL}")
@@ -448,7 +459,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
                         return serviceFailure(badRequestError("project does not contain organisation"));
                     }
                     List<ProjectUser> partners = project.getProjectUsersWithRole(PROJECT_PARTNER);
-                    if (partners.stream().map(ProjectUser::getId).collect(toList()).contains(userId)){
+                    if (partners.stream().map(ProjectUser::getId).collect(toList()).contains(userId)) {
                         return serviceSuccess(); // Already a partner
                     } else {
                         ProjectUser pu = new ProjectUser(user, project, PROJECT_PARTNER, organisation);
@@ -596,7 +607,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     @Override
     public ServiceResult<OrganisationResource> getOrganisationByProjectAndUser(Long projectId, Long userId) {
         ProjectUser projectUser = projectUserRepository.findByProjectIdAndRoleAndUserId(projectId, PROJECT_PARTNER, userId);
-        if(projectUser != null && projectUser.getOrganisation() != null) {
+        if (projectUser != null && projectUser.getOrganisation() != null) {
             return serviceSuccess(organisationMapper.mapToResource(organisationRepository.findOne(projectUser.getOrganisation().getId())));
         } else {
             return serviceFailure(new Error(CANNOT_FIND_ORG_FOR_GIVEN_PROJECT_AND_USER, NOT_FOUND));
@@ -640,12 +651,12 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     }
 
     @Override
-    public ServiceResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId){
+    public ServiceResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId) {
         Project project = projectRepository.findOne(projectId);
         List<Organisation> allPartnerOrganisations = getPartnerOrganisations(projectId);
 
         List<ProjectPartnerStatusResource> projectPartnerStatusResources = new ArrayList<>();
-        for(Organisation partnerOrganisation : allPartnerOrganisations){
+        for (Organisation partnerOrganisation : allPartnerOrganisations) {
             projectPartnerStatusResources.add(getProjectPartnerStatus(project, partnerOrganisation));
         }
 
@@ -655,36 +666,42 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         return serviceSuccess(projectTeamStatusResource);
     }
 
-    private ProjectPartnerStatusResource getProjectPartnerStatus(Project project, Organisation partnerOrganisation){
+    private ProjectPartnerStatusResource getProjectPartnerStatus(Project project, Organisation partnerOrganisation) {
         Organisation leadOrganisation = project.getApplication().getLeadOrganisation();
         Optional<MonitoringOfficer> monitoringOfficer = getExistingMonitoringOfficerForProject(project.getId()).getOptionalSuccessObject();
         Optional<BankDetails> bankDetails = Optional.ofNullable(bankDetailsRepository.findByProjectIdAndOrganisationId(project.getId(), partnerOrganisation.getId()));
-        Optional<SpendProfile> spendProfile = Optional.of(spendProfileRepository.findOneByProjectIdAndOrganisationId(project.getId(), partnerOrganisation.getId()));
+        Optional<SpendProfile> spendProfile = Optional.ofNullable(spendProfileRepository.findOneByProjectIdAndOrganisationId(project.getId(), partnerOrganisation.getId()));
         OrganisationTypeEnum organisationType = OrganisationTypeEnum.getFromId(partnerOrganisation.getOrganisationType().getId());
 
-        ProjectActivityStates bankDetailsStatus = createBankDetailStatus(bankDetails, partnerOrganisation);
-        ProjectActivityStates financeChecksStatus = createFinanceCheckStatus();
+        ProjectActivityStates bankDetailsStatus = createBankDetailStatus(project, bankDetails, partnerOrganisation);
+        ProjectActivityStates financeChecksStatus = createFinanceCheckStatus(bankDetailsStatus);
         ProjectActivityStates leadProjectDetailsSubmitted = createProjectDetailsStatus(project);
         ProjectActivityStates monitoringOfficerStatus = createMonitoringOfficerStatus(monitoringOfficer, leadProjectDetailsSubmitted);
-        ProjectActivityStates spendProfileStatus = createSpendProfileStatus(spendProfile);
+        ProjectActivityStates spendProfileStatus = createSpendProfileStatus(financeChecksStatus, spendProfile);
         ProjectActivityStates otherDocumentsStatus = createOtherDocumentStatus(project);
         ProjectActivityStates grantOfferLetterStatus = createGrantOfferLetterStatus();
 
         ProjectPartnerStatusResource projectPartnerStatusResource;
 
-        if(partnerOrganisation.equals(leadOrganisation)) {
+        if (partnerOrganisation.equals(leadOrganisation)) {
             projectPartnerStatusResource = new ProjectLeadStatusResource(
                     partnerOrganisation.getName(),
                     organisationType,
                     leadProjectDetailsSubmitted,
-                    monitoringOfficerStatus,
                     bankDetailsStatus,
                     financeChecksStatus,
                     spendProfileStatus,
+                    monitoringOfficerStatus,
                     otherDocumentsStatus,
                     grantOfferLetterStatus);
         } else {
-            projectPartnerStatusResource = new ProjectPartnerStatusResource(partnerOrganisation.getName(), organisationType, leadProjectDetailsSubmitted, bankDetailsStatus, financeChecksStatus, spendProfileStatus);
+            projectPartnerStatusResource = new ProjectPartnerStatusResource(
+                    partnerOrganisation.getName(),
+                    organisationType,
+                    leadProjectDetailsSubmitted,
+                    bankDetailsStatus,
+                    financeChecksStatus,
+                    spendProfileStatus);
         }
 
         return projectPartnerStatusResource;
@@ -712,8 +729,8 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         Project project = projectRepository.findOne(projectId);
         Map<String, Object> globalArguments = new HashMap<>();
         globalArguments.put("projectName", project.getName());
-            globalArguments.put("leadOrganisation", inviteResource.getLeadOrganisation());
-            globalArguments.put("inviteOrganisationName", (StringUtils.isEmpty(inviteResource.getInviteOrganisationName())) ? "No org as yet" : inviteResource.getInviteOrganisationName());
+        globalArguments.put("leadOrganisation", inviteResource.getLeadOrganisation());
+        globalArguments.put("inviteOrganisationName", (StringUtils.isEmpty(inviteResource.getInviteOrganisationName())) ? "No org as yet" : inviteResource.getInviteOrganisationName());
         globalArguments.put("inviteUrl", getInviteUrl(webBaseUrl, inviteResource));
         return globalArguments;
     }
@@ -895,51 +912,59 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     }
 
     private ProjectActivityStates createProjectDetailsStatus(Project project) {
-        return project.isProjectDetailsSubmitted() ? COMPLETE: ACTION_REQUIRED;
+        return project.isProjectDetailsSubmitted() ? COMPLETE : ACTION_REQUIRED;
     }
 
     private ProjectActivityStates createMonitoringOfficerStatus(final Optional<MonitoringOfficer> monitoringOfficer, final ProjectActivityStates leadProjectDetailsSubmitted) {
-        if(leadProjectDetailsSubmitted.equals(COMPLETE)){
-            return monitoringOfficer.isPresent()? COMPLETE : PENDING;
-        }else{
+        if (leadProjectDetailsSubmitted.equals(COMPLETE)) {
+            return monitoringOfficer.isPresent() ? COMPLETE : PENDING;
+        } else {
             return NOT_STARTED;
         }
 
     }
 
-    private ProjectActivityStates createBankDetailStatus(final Optional<BankDetails> bankDetails, final Organisation partnerOrganisation) {
-        if(bankDetails.isPresent()){
+    private ProjectActivityStates createBankDetailStatus(final Project project, final Optional<BankDetails> bankDetails, final Organisation partnerOrganisation) {
+        if (bankDetails.isPresent()) {
             return bankDetails.get().isApproved() ? COMPLETE : PENDING;
-        }else{
-            if(!(partnerOrganisation.getOrganisationType().getParentOrganisationType() != null && partnerOrganisation.getOrganisationType().getParentOrganisationType().getId().equals(RESEARCH.getOrganisationTypeId()))){
-                return ACTION_REQUIRED;
-            } else {
+        } else {
+            if (isResearch(partnerOrganisation.getOrganisationType().getId()) || !isApplicationFunded(project, partnerOrganisation)) {
                 return NOT_REQUIRED;
+            } else {
+                return ACTION_REQUIRED;
             }
         }
     }
 
-    private ProjectActivityStates createFinanceCheckStatus() {
-        //TODO update logic when Finance checks are implemented
-        return NOT_STARTED;
+    private ProjectActivityStates createFinanceCheckStatus(final ProjectActivityStates bankDetailsStatus) {
+        if(bankDetailsStatus.equals(COMPLETE) || bankDetailsStatus.equals(PENDING) || bankDetailsStatus.equals(NOT_REQUIRED)){
+            return ACTION_REQUIRED;
+        } else {
+            //TODO update logic when Finance checks are implemented
+            return NOT_STARTED;
+        }
     }
 
-    private ProjectActivityStates createSpendProfileStatus(final Optional<SpendProfile> spendProfile) {
-        if(spendProfile.isPresent()){
-            if(spendProfile.get().isMarkedAsComplete()) {
+    private ProjectActivityStates createSpendProfileStatus(final ProjectActivityStates financeCheckStatus, final Optional<SpendProfile> spendProfile) {
+        if (spendProfile.isPresent()) {
+            if (spendProfile.get().isMarkedAsComplete()) {
                 return COMPLETE;
             } else {
                 return ACTION_REQUIRED;
             }
-        }else{
-            return NOT_STARTED;
+        } else {
+            if(financeCheckStatus.equals(COMPLETE)){
+                return PENDING;
+            } else {
+                return NOT_STARTED;
+            }
         }
     }
 
     private ProjectActivityStates createOtherDocumentStatus(final Project project) {
-        if(project.getCollaborationAgreement()!= null && project.getExploitationPlan()!= null){
+        if (project.getCollaborationAgreement() != null && project.getExploitationPlan() != null) {
             return COMPLETE;
-        }else{
+        } else {
             return ACTION_REQUIRED;
         }
     }
@@ -949,10 +974,29 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         return NOT_STARTED;
     }
 
-    private boolean isApplicationFunded(ProjectResource project, OrganisationResource organisation, CompetitionResource competition){
-        ApplicationFinanceResourceId applicationFinanceResourceId = new ApplicationFinanceResourceId(project.getApplication(), organisation.getId());
-        ApplicationFinanceResource applicationFinanceResource = applicationFinanceHandler.getApplicationOrganisationFinances(applicationFinanceResourceId);
+    private boolean isApplicationFunded(Project project, Organisation organisation) {
+        ApplicationFinanceResourceId applicationFinanceResourceId = new ApplicationFinanceResourceId(project.getApplication().getId(), organisation.getId());
+        ApplicationFinanceResource applicationFinanceResource = getApplicationOrganisationFinances(applicationFinanceResourceId);
         Integer grantClaimPercentage = applicationFinanceResource.getGrantClaimPercentage();
         return grantClaimPercentage > 0;
+    }
+
+    private ApplicationFinanceResource getApplicationOrganisationFinances(ApplicationFinanceResourceId applicationFinanceResourceId) {
+        ApplicationFinance applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(
+                applicationFinanceResourceId.getApplicationId(), applicationFinanceResourceId.getOrganisationId());
+        ApplicationFinanceResource applicationFinanceResource = null;
+
+        if(applicationFinance!=null) {
+            applicationFinanceResource = applicationFinanceMapper.mapToResource(applicationFinance);
+            setFinanceDetails(applicationFinanceResource);
+        }
+        return applicationFinanceResource;
+    }
+
+    private void setFinanceDetails(ApplicationFinanceResource applicationFinanceResource) {
+        Organisation organisation = organisationRepository.findOne(applicationFinanceResource.getOrganisation());
+        OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(organisation.getOrganisationType().getName());
+        Map<FinanceRowType, FinanceRowCostCategory> costs = organisationFinanceHandler.getOrganisationFinances(applicationFinanceResource.getId());
+        applicationFinanceResource.setFinanceOrganisationDetails(costs);
     }
 }
