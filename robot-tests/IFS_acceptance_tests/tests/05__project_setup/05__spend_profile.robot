@@ -41,13 +41,13 @@ Calculations in the spend profile table
     [Documentation]    INFUND-3764
     [Tags]    HappyPath
     Given the user should see the element    jQuery=div.spend-profile-table
-    Then element should contain    css=div.spend-profile-table tr:nth-child(1) td:nth-child(38)    104354.00    #Labour
-    Then element should contain    css=div.spend-profile-table tr:nth-child(2) td:nth-child(38)    0.00         #Overheads
-    Then element should contain    css=div.spend-profile-table tr:nth-child(3) td:nth-child(38)    188025.00    #Materials
-    Then element should contain    css=div.spend-profile-table tr:nth-child(4) td:nth-child(38)    0.00         #Capital usage
-    Then element should contain    css=div.spend-profile-table tr:nth-child(5) td:nth-child(38)    23423.00     #Subcontracting
-    Then element should contain    css=div.spend-profile-table tr:nth-child(6) td:nth-child(38)    7956.00      #Travel & subsistence
-    Then element should contain    css=div.spend-profile-table tr:nth-child(7) td:nth-child(38)    32444.00     #Other costs
+    Then element should contain    css=div.spend-profile-table tr:nth-child(1) td:nth-child(38)    £ 104,354    #Labour
+    Then element should contain    css=div.spend-profile-table tr:nth-child(2) td:nth-child(38)    £ 0          #Overheads
+    Then element should contain    css=div.spend-profile-table tr:nth-child(3) td:nth-child(38)    £ 188,025    #Materials
+    Then element should contain    css=div.spend-profile-table tr:nth-child(4) td:nth-child(38)    £ 0          #Capital usage
+    Then element should contain    css=div.spend-profile-table tr:nth-child(5) td:nth-child(38)    £ 23,423     #Subcontracting
+    Then element should contain    css=div.spend-profile-table tr:nth-child(6) td:nth-child(38)    £ 7,956      #Travel & subsistence
+    Then element should contain    css=div.spend-profile-table tr:nth-child(7) td:nth-child(38)    £ 32,444     #Other costs
     #TODO following keyword doesnt work cause cell value is String and needs to be converted to float (or int)  to be updated
     # ${duration} is No of Months + 1, due to header
 #    And the sum of tds equals the total    div.spend-profile-table   1    37    32444    # Other Costs

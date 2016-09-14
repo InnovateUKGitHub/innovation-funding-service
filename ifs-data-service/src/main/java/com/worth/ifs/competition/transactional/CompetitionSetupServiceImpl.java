@@ -105,6 +105,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     public ServiceResult<CompetitionResource> update(Long id, CompetitionResource competitionResource) {
         Competition competition = competitionMapper.mapToDomain(competitionResource);
         saveCategories(competitionResource);
+        saveFunders(competitionResource);
         competition = competitionRepository.save(competition);
         competitionService.addCategories(competition);
         return serviceSuccess(competitionMapper.mapToResource(competition));
@@ -114,7 +115,6 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
         saveInnovationArea(competitionResource);
         saveInnovationSector(competitionResource);
         saveResearchCategories(competitionResource);
-        saveFunders(competitionResource);
     }
 
     private void saveFunders(CompetitionResource competitionResource) {
