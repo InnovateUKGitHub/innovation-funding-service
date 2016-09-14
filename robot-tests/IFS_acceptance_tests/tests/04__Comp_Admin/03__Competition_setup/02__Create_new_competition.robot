@@ -218,7 +218,7 @@ Funding informations calculations
     [Tags]    HappyPath
     When the user clicks the button/link    jQuery=Button:contains("+Add co-funder")
     and the user should see the element    jQuery=Button:contains("+Add co-funder")
-    Then the user should see the element    css=#co-funder-row-1
+    Then the user should see the element    jQuery=Button:contains("Remove")
     And the user enters text to a text field    id=1-funder    FunderName2
     And the user enters text to a text field    id=1-funderBudget    1000
     Then the total should be correct    £ 21,000
@@ -394,10 +394,8 @@ Application questions: All the sections should be visible
 
 Application questions: server side validations
     [Documentation]    INFUND-3000
-    [Tags]    HappyPath    Pending
-    # pending INFUND-4769
-    #Given The user clicks the button/link    jQuery=li:nth-child(5) .button:contains(Edit)
-    And The user should see the element    jQuery=.button[value="Save and close"]
+    [Tags]    HappyPath
+    Given The user should see the element    jQuery=.button[value="Save and close"]
     When the user leaves all the question field empty
     And The user clicks the button/link    jQuery=.button[value="Save and close"]
     And The user clicks the button/link    jQuery=.button[value="Save and close"]
