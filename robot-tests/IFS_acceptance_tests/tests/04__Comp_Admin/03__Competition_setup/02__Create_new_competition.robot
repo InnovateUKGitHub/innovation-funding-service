@@ -121,8 +121,7 @@ Initial details client-side validations
 
 Initial details: Autosave
     [Documentation]    INFUND-3001
-    [Tags]    Pending
-    #pendingI NFUND-4764
+    [Tags]
     When the user clicks the button/link    link=Competition set up
     and the user clicks the button/link    link=Initial Details
     Then the user should see the correct values in the initial details form
@@ -635,7 +634,7 @@ the user should see the correct values in the initial details form
     Page Should Contain    Health and life sciences
     Page Should Contain    Advanced Therapies
     ${input_value} =    Get Value    id=openingDateDay
-    Should Be Equal As Strings    ${input_value}    01
+    Should Be Equal As Strings    ${input_value}    1
     ${input_value} =    Get Value    Id=openingDateMonth
     Should Be Equal As Strings    ${input_value}    12
     ${input_value} =    Get Value    id=openingDateYear
