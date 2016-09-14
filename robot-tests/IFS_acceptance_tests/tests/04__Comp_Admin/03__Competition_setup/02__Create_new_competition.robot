@@ -218,7 +218,7 @@ Funding informations calculations
     [Tags]    HappyPath
     When the user clicks the button/link    jQuery=Button:contains("+Add co-funder")
     and the user should see the element    jQuery=Button:contains("+Add co-funder")
-    Then the user should see the element    css=#co-funder-row-1
+    Then the user should see the element    jQuery=Button:contains("Remove")
     And the user enters text to a text field    id=1-funder    FunderName2
     And the user enters text to a text field    id=1-funderBudget    1000
     Then the total should be correct    £ 21,000

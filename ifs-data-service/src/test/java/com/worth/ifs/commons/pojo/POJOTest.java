@@ -45,6 +45,12 @@ import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.project.resource.SpendProfileTableResource;
+import com.worth.ifs.project.finance.resource.CostCategoryGroupResource;
+import com.worth.ifs.project.finance.resource.CostCategoryResource;
+import com.worth.ifs.project.finance.resource.CostCategoryTypeResource;
+import com.worth.ifs.project.finance.resource.CostGroupResource;
+import com.worth.ifs.project.finance.resource.CostResource;
+import com.worth.ifs.project.finance.resource.CostTimePeriodResource;
 import com.worth.ifs.token.domain.Token;
 import com.worth.ifs.token.resource.TokenResource;
 import com.worth.ifs.user.domain.OrganisationType;
@@ -98,6 +104,12 @@ public class POJOTest {
             BankDetails.class,
             BankDetailsResource.class,
             MonitoringOfficerResource.class,
+            CostCategoryGroupResource.class,
+            CostCategoryResource.class,
+            CostGroupResource.class,
+            CostResource.class,
+            CostTimePeriodResource.class,
+            CostCategoryTypeResource.class,
             SpendProfileResource.class,
             SpendProfileTableResource.class,
             CompetitionFunderResource.class,
