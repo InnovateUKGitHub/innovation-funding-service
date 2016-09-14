@@ -91,6 +91,9 @@ public interface FinanceRowService {
     @PreAuthorize("hasPermission(#applicationFinanceId, 'com.worth.ifs.finance.resource.ApplicationFinanceResource', 'READ_FILE_ENTRY')")
     ServiceResult<FileAndContents> getFileContents(@P("applicationFinanceId")long applicationFinanceId);
 
+    /**
+     * Not included in REST API classes as only meant to be used within data layer
+     */
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource','READ_ORGANISATION_FUNDING_STATUS')")
     ServiceResult<Boolean> organisationSeeksFunding(Long projectId, Long applicationId, Long organisationId);
 }
