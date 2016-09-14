@@ -274,7 +274,7 @@ public class RegistrationController {
         if(!bindingResult.hasFieldErrors(EMAIL_FIELD_NAME) && StringUtils.hasText(email)) {
             RestResult<UserResource> existingUserSearch = userService.findUserByEmailForAnonymousUserFlow(email);
             if (!HttpStatus.NOT_FOUND.equals(existingUserSearch.getStatusCode())) {
-                bindingResult.addError(new FieldError(EMAIL_FIELD_NAME, EMAIL_FIELD_NAME, email, false, null, null, "Email address is already in use"));
+                bindingResult.rejectValue(EMAIL_FIELD_NAME, "validation.standard.email.exists");
             }
         }
     }
