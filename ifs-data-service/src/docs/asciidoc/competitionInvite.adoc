@@ -1,0 +1,56 @@
+=== Get invite by hash
+==== Request
+include::{snippets}/competitioninvite/get-invite/http-request.adoc[]
+include::{snippets}/competitioninvite/get-invite/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competitioninvite/get-invite/http-response.adoc[]
+include::{snippets}/competitioninvite/get-invite/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/competitioninvite/get-invite/curl-request.adoc[]
+
+=== Open invite by hash
+==== Request
+include::{snippets}/competitioninvite/open-invite/http-request.adoc[]
+include::{snippets}/competitioninvite/open-invite/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competitioninvite/open-invite/http-response.adoc[]
+include::{snippets}/competitioninvite/open-invite/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/competitioninvite/open-invite/curl-request.adoc[]
+
+=== Accept invite by hash
+==== Request
+include::{snippets}/competitioninvite/accept-invite/http-request.adoc[]
+include::{snippets}/competitioninvite/accept-invite/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competitioninvite/accept-invite/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/competitioninvite/accept-invite/curl-request.adoc[]
+
+=== Reject invite by hash and competition rejection
+==== Request
+include::{snippets}/competitioninvite/reject-invite/http-request.adoc[]
+include::{snippets}/competitioninvite/reject-invite/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competitioninvite/reject-invite/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/competitioninvite/reject-invite/curl-request.adoc[]
+
+=== Check if existing user by hash
+==== Request
+include::{snippets}/competitioninvite/check-existing-user/http-request.adoc[]
+include::{snippets}/competitioninvite/check-existing-user/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competitioninvite/check-existing-user/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/competitioninvite/check-existing-user/curl-request.adoc[]
