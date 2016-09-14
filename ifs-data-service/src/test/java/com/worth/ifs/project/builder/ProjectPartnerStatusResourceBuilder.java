@@ -3,6 +3,7 @@ package com.worth.ifs.project.builder;
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.project.constant.ProjectActivityStates;
 import com.worth.ifs.project.resource.ProjectPartnerStatusResource;
+import com.worth.ifs.user.resource.OrganisationTypeEnum;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -55,5 +56,13 @@ public class ProjectPartnerStatusResourceBuilder extends BaseBuilder<ProjectPart
 
     public ProjectPartnerStatusResourceBuilder withSpendProfileStatus(ProjectActivityStates... spendProfileStatuses){
         return withArray((spendProfileStatus, partnerStatus) -> partnerStatus.setSpendProfileStatus(spendProfileStatus), spendProfileStatuses);
+    }
+
+    public ProjectPartnerStatusResourceBuilder withName(String... names){
+        return withArray((name, partnerStatus) -> partnerStatus.setName(name), names);
+    }
+
+    public ProjectPartnerStatusResourceBuilder withOrganisationType(OrganisationTypeEnum... organisationTypes){
+        return withArray((organisationType, partnerStatus) -> partnerStatus.setOrganisationType(organisationType), organisationTypes);
     }
 }

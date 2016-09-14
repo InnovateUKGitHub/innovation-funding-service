@@ -437,6 +437,11 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
             return null;
         }
 
+        @Override
+        public ServiceResult<Boolean> organisationSeeksFunding(Long projectId, Long applicationId, Long organisationId) {
+            return null;
+        }
+
     }
 }
 

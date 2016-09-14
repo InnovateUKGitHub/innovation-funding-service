@@ -11,7 +11,7 @@ public enum  ProjectActivityStates {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
+        return new ToStringBuilder(this.name())
                 .toString();
     }
 }

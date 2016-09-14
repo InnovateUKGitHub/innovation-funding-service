@@ -19,15 +19,7 @@ import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.BasicFileAndContents;
 import com.worth.ifs.file.service.FileAndContents;
 import com.worth.ifs.file.transactional.FileService;
-import com.worth.ifs.finance.domain.ApplicationFinance;
-import com.worth.ifs.finance.handler.OrganisationFinanceDelegate;
-import com.worth.ifs.finance.handler.OrganisationFinanceHandler;
-import com.worth.ifs.finance.mapper.ApplicationFinanceMapper;
-import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
-import com.worth.ifs.finance.resource.ApplicationFinanceResource;
-import com.worth.ifs.finance.resource.ApplicationFinanceResourceId;
-import com.worth.ifs.finance.resource.category.FinanceRowCostCategory;
-import com.worth.ifs.finance.resource.cost.FinanceRowType;
+import com.worth.ifs.finance.transactional.FinanceRowService;
 import com.worth.ifs.invite.domain.ProjectParticipantRole;
 import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.notifications.resource.ExternalUserNotificationTarget;
@@ -145,13 +137,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     private SpendProfileRepository spendProfileRepository;
 
     @Autowired
-    private ApplicationFinanceRepository applicationFinanceRepository;
-
-    @Autowired
-    private ApplicationFinanceMapper applicationFinanceMapper;
-
-    @Autowired
-    private OrganisationFinanceDelegate organisationFinanceDelegate;
+    private FinanceRowService financeRowService;
 
 
     @Value("${ifs.web.baseURL}")
@@ -471,6 +457,18 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
                 });
     }
 
+    /*private Boolean isOrganisationClaimingGrant(Long applicationId, Long organisationId) {
+        ApplicationFinance applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId);
+
+        ApplicationFinanceResource applicationFinanceResource = null;
+        if(applicationFinance!=null) {
+            applicationFinanceResource = applicationFinanceMapper.mapToResource(applicationFinance);
+            setFinanceDetails(applicationFinanceResource);
+        }
+
+        return applicationFinanceResource.getGrantClaimPercentage() != null && applicationFinanceResource.getGrantClaimPercentage() > 0;
+    }*/
+
     private ServiceResult<FileEntry> getCollaborationAgreement(Project project) {
         if (project.getCollaborationAgreement() == null) {
             return serviceFailure(notFoundError(FileEntry.class));
@@ -688,10 +686,10 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
                     partnerOrganisation.getName(),
                     organisationType,
                     leadProjectDetailsSubmitted,
+                    monitoringOfficerStatus,
                     bankDetailsStatus,
                     financeChecksStatus,
                     spendProfileStatus,
-                    monitoringOfficerStatus,
                     otherDocumentsStatus,
                     grantOfferLetterStatus);
         } else {
@@ -699,9 +697,12 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
                     partnerOrganisation.getName(),
                     organisationType,
                     leadProjectDetailsSubmitted,
+                    NOT_REQUIRED,
                     bankDetailsStatus,
                     financeChecksStatus,
-                    spendProfileStatus);
+                    spendProfileStatus,
+                    NOT_REQUIRED,
+                    NOT_REQUIRED);
         }
 
         return projectPartnerStatusResource;
@@ -928,7 +929,8 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         if (bankDetails.isPresent()) {
             return bankDetails.get().isApproved() ? COMPLETE : PENDING;
         } else {
-            if (isResearch(partnerOrganisation.getOrganisationType().getId()) || !isApplicationFunded(project, partnerOrganisation)) {
+            Boolean isSeekingFunding = financeRowService.organisationSeeksFunding(project.getId(), project.getApplication().getId(), partnerOrganisation.getId()).getSuccessObject();
+            if (isResearch(partnerOrganisation.getOrganisationType().getId()) || !isSeekingFunding) {
                 return NOT_REQUIRED;
             } else {
                 return ACTION_REQUIRED;
@@ -972,31 +974,5 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     private ProjectActivityStates createGrantOfferLetterStatus() {
         //TODO update logic when GrantOfferLetter is implemented
         return NOT_STARTED;
-    }
-
-    private boolean isApplicationFunded(Project project, Organisation organisation) {
-        ApplicationFinanceResourceId applicationFinanceResourceId = new ApplicationFinanceResourceId(project.getApplication().getId(), organisation.getId());
-        ApplicationFinanceResource applicationFinanceResource = getApplicationOrganisationFinances(applicationFinanceResourceId);
-        Integer grantClaimPercentage = applicationFinanceResource.getGrantClaimPercentage();
-        return grantClaimPercentage > 0;
-    }
-
-    private ApplicationFinanceResource getApplicationOrganisationFinances(ApplicationFinanceResourceId applicationFinanceResourceId) {
-        ApplicationFinance applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(
-                applicationFinanceResourceId.getApplicationId(), applicationFinanceResourceId.getOrganisationId());
-        ApplicationFinanceResource applicationFinanceResource = null;
-
-        if(applicationFinance!=null) {
-            applicationFinanceResource = applicationFinanceMapper.mapToResource(applicationFinance);
-            setFinanceDetails(applicationFinanceResource);
-        }
-        return applicationFinanceResource;
-    }
-
-    private void setFinanceDetails(ApplicationFinanceResource applicationFinanceResource) {
-        Organisation organisation = organisationRepository.findOne(applicationFinanceResource.getOrganisation());
-        OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(organisation.getOrganisationType().getName());
-        Map<FinanceRowType, FinanceRowCostCategory> costs = organisationFinanceHandler.getOrganisationFinances(applicationFinanceResource.getId());
-        applicationFinanceResource.setFinanceOrganisationDetails(costs);
     }
 }

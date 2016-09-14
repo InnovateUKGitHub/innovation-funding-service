@@ -12,8 +12,17 @@ public class ProjectLeadStatusResource extends ProjectPartnerStatusResource {
     //Required for Json Mapping.
     public ProjectLeadStatusResource() {}
 
-    public ProjectLeadStatusResource(String name, OrganisationTypeEnum organisationType, ProjectActivityStates projectDetailsStatus, ProjectActivityStates bankDetailsStatus, ProjectActivityStates financeChecksStatus, ProjectActivityStates spendProfileStatus, ProjectActivityStates monitoringOfficerStatus, ProjectActivityStates otherDocumentsStatus, ProjectActivityStates grantOfferLetterStatus) {
-        super(name, organisationType, projectDetailsStatus, bankDetailsStatus, financeChecksStatus, spendProfileStatus, monitoringOfficerStatus, otherDocumentsStatus, grantOfferLetterStatus);
+    public ProjectLeadStatusResource(
+            String name,
+            OrganisationTypeEnum organisationType,
+            ProjectActivityStates projectDetailsStatus,
+            ProjectActivityStates monitoringOfficerStatus,
+            ProjectActivityStates bankDetailsStatus,
+            ProjectActivityStates financeChecksStatus,
+            ProjectActivityStates spendProfileStatus,
+            ProjectActivityStates otherDocumentsStatus,
+            ProjectActivityStates grantOfferLetterStatus) {
+        super(name, organisationType, projectDetailsStatus, monitoringOfficerStatus, bankDetailsStatus, financeChecksStatus, spendProfileStatus, otherDocumentsStatus, grantOfferLetterStatus);
     }
 
     @Override

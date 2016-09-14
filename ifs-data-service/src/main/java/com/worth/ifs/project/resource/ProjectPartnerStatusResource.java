@@ -20,6 +20,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 public class ProjectPartnerStatusResource {
     private String name;
     private OrganisationTypeEnum organisationType;
+
     private ProjectActivityStates projectDetailsStatus;
     private ProjectActivityStates bankDetailsStatus;
     private ProjectActivityStates financeChecksStatus;
@@ -33,18 +34,14 @@ public class ProjectPartnerStatusResource {
     //Required for Json Mapping.
     public ProjectPartnerStatusResource() {}
 
-    public ProjectPartnerStatusResource(String name, OrganisationTypeEnum organisationType, ProjectActivityStates projectDetailsStatus, ProjectActivityStates bankDetailsStatus, ProjectActivityStates financeChecksStatus, ProjectActivityStates spendProfileStatus) {
-        this(name, organisationType, projectDetailsStatus, bankDetailsStatus, financeChecksStatus, spendProfileStatus, ProjectActivityStates.NOT_REQUIRED, ProjectActivityStates.NOT_REQUIRED, ProjectActivityStates.NOT_REQUIRED);
-    }
-
-    ProjectPartnerStatusResource(String name, OrganisationTypeEnum organisationType, ProjectActivityStates projectDetailsStatus, ProjectActivityStates bankDetailsStatus, ProjectActivityStates financeChecksStatus, ProjectActivityStates spendProfileStatus, ProjectActivityStates monitoringOfficerStatus, ProjectActivityStates otherDocumentsStatus, ProjectActivityStates grantOfferLetterStatus) {
+    public ProjectPartnerStatusResource(String name, OrganisationTypeEnum organisationType, ProjectActivityStates projectDetailsStatus, ProjectActivityStates monitoringOfficerStatus, ProjectActivityStates bankDetailsStatus, ProjectActivityStates financeChecksStatus, ProjectActivityStates spendProfileStatus, ProjectActivityStates otherDocumentsStatus, ProjectActivityStates grantOfferLetterStatus) {
         this.name = name;
         this.organisationType = organisationType;
         this.projectDetailsStatus = projectDetailsStatus;
+        this.monitoringOfficerStatus = monitoringOfficerStatus;
         this.bankDetailsStatus = bankDetailsStatus;
         this.financeChecksStatus = financeChecksStatus;
         this.spendProfileStatus = spendProfileStatus;
-        this.monitoringOfficerStatus = monitoringOfficerStatus;
         this.otherDocumentsStatus = otherDocumentsStatus;
         this.grantOfferLetterStatus = grantOfferLetterStatus;
     }
