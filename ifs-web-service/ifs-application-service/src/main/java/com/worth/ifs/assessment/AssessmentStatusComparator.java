@@ -9,12 +9,11 @@ import com.worth.ifs.assessment.resource.AssessmentResource;
 public class AssessmentStatusComparator implements java.util.Comparator<AssessmentResource> {
     @Override
     public int compare(AssessmentResource assessment1, AssessmentResource assessment2) {
-        AssessmentStates assessmentStates1 = AssessmentStates.getByState(assessment1.getStatus());
-        AssessmentStates assessmentStates2 = AssessmentStates.getByState(assessment2.getStatus());
+        AssessmentStates assessmentStates1 = assessment1.getAssessmentState();
+        AssessmentStates assessmentStates2 = assessment2.getAssessmentState();
         int result = 0;
         if(assessmentStates1!=null && assessmentStates2!=null) {
-            result = Integer.compare(AssessmentStates.getByState(assessment1.getStatus()).getOrdinal(),
-                    AssessmentStates.getByState(assessment2.getStatus()).getOrdinal());
+            result = Integer.compare(assessmentStates1.ordinal(), assessmentStates2.ordinal());
         }
 
         if(result == 0) {
