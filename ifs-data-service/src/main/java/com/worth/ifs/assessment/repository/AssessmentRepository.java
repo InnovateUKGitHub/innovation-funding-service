@@ -1,7 +1,7 @@
 package com.worth.ifs.assessment.repository;
 
 import com.worth.ifs.assessment.domain.Assessment;
-import org.springframework.data.repository.PagingAndSortingRepository;
+import com.worth.ifs.workflow.repository.ProcessRepository;
 
 import java.util.Set;
 
@@ -11,10 +11,11 @@ import java.util.Set;
  * For more info:
  * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
  */
-public interface AssessmentRepository extends PagingAndSortingRepository<Assessment, Long> {
+public interface AssessmentRepository extends ProcessRepository<Assessment> {
 
     @Override
     Set<Assessment> findAll();
 
+    @Override
     Assessment findOneByParticipantId(Long processRoleId);
 }

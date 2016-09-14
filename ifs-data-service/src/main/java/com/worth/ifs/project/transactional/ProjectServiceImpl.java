@@ -9,6 +9,7 @@ import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.FundingDecision;
+import com.worth.ifs.commons.error.CommonFailureKeys;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.domain.FileEntry;
@@ -133,12 +134,6 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     private FileEntryMapper fileEntryMapper;
 
     @Autowired
-    private ProjectDetailsProcessRepository projectDetailsProcessRepository;
-
-    @Autowired
-    private ActivityStateRepository activityStateRepository;
-
-    @Autowired
     private ProjectDetailsWorkflowEventHandler projectDetailsWorkflowHandler;
 
     @Value("${ifs.web.baseURL}")
@@ -256,7 +251,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
     @Override
     public ServiceResult<Boolean> isSubmitAllowed(Long projectId) {
-        return getProject(projectId).andOnSuccess(project -> serviceSuccess(validateIsReadyForSubmission(project)));
+        return projectDetailsWorkflowHandler.getProject(projectId).andOnSuccess(project -> serviceSuccess(validateIsReadyForSubmission(project)));
     }
 
     @Override
@@ -764,15 +759,16 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         });
     }
 
-    private ServiceResult<List<? extends Process>> createProcessEntriesForNewProject(Project newProject) {
+    private ServiceResult<Void> createProcessEntriesForNewProject(Project newProject) {
 
         ProjectUser originalLeadApplicant = newProject.getProjectUsers().get(0);
         boolean projectDetailsProcessCreated = projectDetailsWorkflowHandler.projectCreated(newProject, originalLeadApplicant.getId());
 
-        ProjectDetailsProcess projectDetailsProcess = new ProjectDetailsProcess(originalLeadApplicant, newProject);
-        projectDetailsProcessRepository.save(projectDetailsProcess);
-
-        return serviceSuccess(singletonList(projectDetailsProcess));
+        if (projectDetailsProcessCreated) {
+            return serviceSuccess();
+        } else {
+            return serviceFailure(new Error(PROJECT_SETUP_UNABLE_TO_CREATE_PROJECT_PROCESSES));
+        }
     }
 
     private ServiceResult<ProjectUser> createPartnerProjectUser(Project project, User user, Organisation organisation) {
@@ -795,42 +791,11 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         return find(projectRepository.findOneByApplicationId(applicationId), notFoundError(Project.class, applicationId));
     }
 
-    private boolean validateIsReadyForSubmission(final Project project) {
-        return !(project.getAddress() == null
-                || !getExistingProjectManager(project).isPresent()
-                || project.getTargetStartDate() == null
-                || allFinanceContactsNotSet(project.getId())
-                || project.getSubmittedDate() != null);
-    }
-
     private boolean validateDocumentsUploaded(final Project project) {
         return project.getExploitationPlan() != null
                 && project.getCollaborationAgreement() != null
                 && getExistingProjectManager(project).isPresent()
                 && project.getDocumentsSubmittedDate() == null;
-    }
-
-    private boolean allFinanceContactsNotSet(Long projectId) {
-        List<ProjectUser> projectUserObjs = getProjectUsersByProjectId(projectId);
-        List<ProjectUserResource> projectUserResources = simpleMap(projectUserObjs, projectUserMapper::mapToResource);
-        List<Organisation> partnerOrganisations = getPartnerOrganisations(projectUserResources);
-        List<ProjectUserResource> financeRoles = simpleFilter(projectUserResources, ProjectUserResource::isFinanceContact);
-        return financeRoles.size() < partnerOrganisations.size();
-    }
-
-    private List<Organisation> getPartnerOrganisations(final List<ProjectUserResource> projectRoles) {
-
-        final Comparator<Organisation> compareById =
-                Comparator.comparingLong(Organisation::getId);
-
-        final Supplier<SortedSet<Organisation>> supplier = () -> new TreeSet<>(compareById);
-
-        SortedSet<Organisation> organisationSet = projectRoles.stream()
-                .filter(uar -> uar.getRoleName().equals(PROJECT_PARTNER.getName()))
-                .map(uar -> organisationRepository.findOne(uar.getOrganisation()))
-                .collect(Collectors.toCollection(supplier));
-
-        return new ArrayList<>(organisationSet);
     }
 
     private ServiceResult<Void> createOrUpdateProjectManagerForProject(Project project, ProjectUser leadPartnerUser) {
@@ -852,7 +817,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     }
 
     private Optional<ProjectUser> getExistingProjectManager(Project project) {
-        List<ProjectUser> projectUsers = getProjectUsersByProjectId(project.getId());
+        List<ProjectUser> projectUsers = project.getProjectUsers();
         List<ProjectUser> projectManagers = simpleFilter(projectUsers, pu -> pu.getRole().isProjectManager());
         return getOnlyElementOrEmpty(projectManagers);
     }

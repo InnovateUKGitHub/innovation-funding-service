@@ -1,7 +1,7 @@
 package com.worth.ifs.project.repository;
 
 import com.worth.ifs.project.domain.ProjectDetailsProcess;
-import org.springframework.data.repository.PagingAndSortingRepository;
+import com.worth.ifs.workflow.repository.ProcessRepository;
 
 
 /**
@@ -9,6 +9,8 @@ import org.springframework.data.repository.PagingAndSortingRepository;
  * For more info:
  * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
  */
-public interface ProjectDetailsProcessRepository extends PagingAndSortingRepository<ProjectDetailsProcess, Long> {
+public interface ProjectDetailsProcessRepository extends ProcessRepository<ProjectDetailsProcess> {
 
+    @Override
+    ProjectDetailsProcess findOneByParticipantId(Long participantId);
 }

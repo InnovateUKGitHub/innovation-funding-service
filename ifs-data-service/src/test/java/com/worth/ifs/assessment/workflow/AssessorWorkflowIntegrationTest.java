@@ -29,15 +29,6 @@ public class AssessorWorkflowIntegrationTest extends BaseIntegrationTest {
     private static final String DESCRIPTION = "description";
 
     @Test
-    public void testStateChangePendingToOpen() throws Exception {
-        Assessment assessment = assessmentRepository.findOneByParticipantId(PENDING_PROCESS_ROLE);
-        assertEquals(AssessmentStates.PENDING,assessment.getActivityState());
-        assessmentWorkflowEventHandler.acceptInvitation(PENDING_PROCESS_ROLE,assessment);
-        Assessment update = assessmentRepository.findOneByParticipantId(PENDING_PROCESS_ROLE);
-        assertEquals(AssessmentStates.OPEN,update.getActivityState());
-    }
-
-    @Test
     public void testStateChangePendingToRejected() throws Exception {
         Assessment assessment = assessmentRepository.findOneByParticipantId(PENDING_PROCESS_ROLE);
         assertEquals(AssessmentStates.PENDING,assessment.getActivityState());
@@ -77,15 +68,6 @@ public class AssessorWorkflowIntegrationTest extends BaseIntegrationTest {
         assertEquals(AssessmentStates.REJECTED,update.getActivityState());
         assertEquals(COMMENT,update.getLastOutcome(AssessmentOutcomes.REJECT).getComment());
         assertEquals(DESCRIPTION,update.getLastOutcome(AssessmentOutcomes.REJECT).getDescription());
-    }
-
-    @Test
-    public void testStateChangeAssessedToSubmitted() throws Exception {
-        Assessment assessment = assessmentRepository.findOneByParticipantId(ASSESSED_PROCESS_ROLE);
-        assertEquals(AssessmentStates.ASSESSED,assessment.getActivityState());
-        assessmentWorkflowEventHandler.submit(assessment);
-        Assessment update = assessmentRepository.findOneByParticipantId(ASSESSED_PROCESS_ROLE);
-        assertEquals(AssessmentStates.SUBMITTED,update.getActivityState());
     }
 
     private ProcessOutcome createProcessOutcome() {

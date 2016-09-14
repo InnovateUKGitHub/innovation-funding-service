@@ -4,30 +4,19 @@ import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectDetailsProcess;
 import com.worth.ifs.project.resource.ProjectDetailsOutcomes;
 import com.worth.ifs.project.resource.ProjectDetailsState;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.messaging.Message;
+import com.worth.ifs.workflow.BaseWorkflowEventHandler;
 import org.springframework.messaging.support.MessageBuilder;
-import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.recipes.persist.PersistStateMachineHandler;
-import org.springframework.statemachine.recipes.persist.PersistStateMachineHandler.PersistStateChangeListener;
-import org.springframework.statemachine.state.State;
-import org.springframework.statemachine.transition.Transition;
 
 /**
  * {@code ProjectDetailsWorkflowEventHandler} is the entry point for triggering the workflow.
  * Based on the Project Detail's current state the next one is tried to transition to by triggering
  * an event.
  */
-public class ProjectDetailsWorkflowEventHandler {
-
-    private static final Log LOG = LogFactory.getLog(ProjectDetailsWorkflowEventHandler.class);
-    private final PersistStateMachineHandler stateHandler;
-    private final PersistStateChangeListener listener = new LocalStateChangeListener();
+public class ProjectDetailsWorkflowEventHandler extends BaseWorkflowEventHandler {
 
     public ProjectDetailsWorkflowEventHandler(PersistStateMachineHandler stateHandler) {
-        this.stateHandler = stateHandler;
-        this.stateHandler.addPersistStateChangeListener(listener);
+        super(stateHandler);
     }
 
     public boolean projectCreated(Project project, Long originalLeadApplicantProjectUserId) {
@@ -51,16 +40,5 @@ public class ProjectDetailsWorkflowEventHandler {
                 .setHeader("projectDetails", projectDetails)
                 .setHeader("projectUserId", projectUserId)
                 .build(), projectDetails.getActivityState().getBackingState().name());
-    }
-
-    private class LocalStateChangeListener implements PersistStateChangeListener {
-
-        @Override
-        public void onPersist(State<String, String> state, Message<String> message,
-                              Transition<String, String> transition, StateMachine<String, String> stateMachine) {
-            if (message != null && message.getHeaders().containsKey("assessment")) {
-                LOG.info("STATE: " + state.getId() + " transition: " + transition + " message: " + message + " transition: " + transition + " stateMachine " + stateMachine.getClass().getName());
-            }
-        }
     }
 }

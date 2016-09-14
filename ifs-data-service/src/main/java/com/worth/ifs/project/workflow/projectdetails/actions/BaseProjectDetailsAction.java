@@ -1,11 +1,9 @@
 package com.worth.ifs.project.workflow.projectdetails.actions;
 
-import com.worth.ifs.assessment.domain.Project;
-import com.worth.ifs.assessment.repository.ProjectRepository;
-import com.worth.ifs.assessment.repository.ProcessOutcomeRepository;
 import com.worth.ifs.project.domain.Project;
+import com.worth.ifs.project.domain.ProjectDetailsProcess;
+import com.worth.ifs.project.domain.ProjectUser;
 import com.worth.ifs.project.repository.ProjectDetailsProcessRepository;
-import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.workflow.domain.ActivityState;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
 import com.worth.ifs.workflow.repository.ActivityStateRepository;
@@ -24,36 +22,38 @@ import static com.worth.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
 abstract class BaseProjectDetailsAction implements Action<String, String> {
 
     @Autowired
-    protected ProjectDetailsProcessRepository projectDetailsProcessRepository;
-
-    @Autowired
-    protected ProcessOutcomeRepository processOutcomeRepository;
-
-    @Autowired
     private ActivityStateRepository activityStateRepository;
+
+    @Autowired
+    private ProjectDetailsProcessRepository projectDetailsProcessRepository;
 
     @Override
     public void execute(StateContext<String, String> context) {
 
-        Project assessment = getProjectFromContext(context);
         ProcessOutcome updatedProcessOutcome = (ProcessOutcome) context.getMessageHeader("processOutcome");
         State newState = State.valueOf(context.getTransition().getTarget().getId());
 
         ActivityState newActivityState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, newState);
-        doExecute(assessment, newActivityState, Optional.ofNullable(updatedProcessOutcome));
+        doExecute(getProjectFromContext(context), getProjectDetailsFromContext(context), getProjectUserFromContext(context),
+                newActivityState, Optional.ofNullable(updatedProcessOutcome));
     }
 
     private Project getProjectFromContext(StateContext<String, String> context) {
-
-        Project assessmentInContext = (Project) context.getMessageHeader("assessment");
-
-        if (assessmentInContext != null) {
-            return assessmentInContext;
-        } else {
-            Long projectUserId = (Long) context.getMessageHeader("projectUserId");
-            return projectDetailsProcessRepository.findOneByParticipantId(projectUserId);
-        }
+        return (Project) context.getMessageHeader("project");
     }
 
-    protected abstract void doExecute(Project assessment, ActivityState newState, Optional<ProcessOutcome> processOutcome);
+    private ProjectDetailsProcess getProjectDetailsFromContext(StateContext<String, String> context) {
+        return (ProjectDetailsProcess) context.getMessageHeader("projectDetails");
+    }
+
+    private ProjectUser getProjectUserFromContext(StateContext<String, String> context) {
+        return (ProjectUser) context.getMessageHeader("projectUser");
+    }
+
+    protected void doExecute(Project project, ProjectDetailsProcess projectDetails, ProjectUser projectUser,
+                                      ActivityState newState, Optional<ProcessOutcome> processOutcome) {
+
+        projectDetails.setActivityState(newState);
+        projectDetailsProcessRepository.save(projectDetails);
+    }
 }

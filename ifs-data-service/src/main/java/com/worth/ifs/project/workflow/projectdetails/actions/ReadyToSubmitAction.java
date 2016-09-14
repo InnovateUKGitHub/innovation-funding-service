@@ -1,21 +1,11 @@
 package com.worth.ifs.project.workflow.projectdetails.actions;
 
-import com.worth.ifs.assessment.domain.Assessment;
-import com.worth.ifs.workflow.domain.ActivityState;
-import com.worth.ifs.workflow.domain.ProcessOutcome;
-
-import java.util.Optional;
-
 /**
- * The {@code SubmitAction} is used by the assessor. It handles the submit event
- * for an application during assessment.
- * For more info see {@link com.worth.ifs.assessment.workflow.AssessorWorkflowConfig}
+ * The {@code {@link ReadyToSubmitAction}} is triggered when all Project Details have been filled in.
+ * At this point the Project Details are ready to be submitted.
+ *
+ * For more info see {@link com.worth.ifs.project.workflow.projectdetails.ProjectDetailsWorkflowEventHandler}
  */
 public class ReadyToSubmitAction extends BaseProjectDetailsAction {
 
-    @Override
-    protected void doExecute(Assessment assessment, ActivityState newState, Optional<ProcessOutcome> updatedProcessOutcome) {
-        assessment.setActivityState(newState);
-        projectRepository.save(assessment);
-    }
 }
