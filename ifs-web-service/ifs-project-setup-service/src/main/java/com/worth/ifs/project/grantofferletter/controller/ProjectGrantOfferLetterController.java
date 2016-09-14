@@ -48,6 +48,8 @@ public class ProjectGrantOfferLetterController {
 
     private ProjectGrantOfferLetterViewModel populateGrantOfferLetterViewModel(Long projectId, UserResource loggedInUser) {
         ProjectResource project = projectService.getById(projectId);
+        boolean leadPartner = projectService.isUserLeadPartner(projectId, loggedInUser.getId());
+
         //TODO: get grant offer letter from project service
         //TODO: get extra contract file from project service
         Optional<FileEntryResource> grantOfferLetter = Optional.of(new FileEntryResource(1L, "grantOfferLetter", "application/pdf", 10000));
@@ -55,10 +57,14 @@ public class ProjectGrantOfferLetterController {
 
         LocalDateTime submittedDate = null;
         boolean offerSigned = false;
+        boolean offerAccepted = false;
+        boolean offerRejected = false;
+
+
         return new ProjectGrantOfferLetterViewModel(projectId, project.getName(),
-                grantOfferLetter.map(FileDetailsViewModel::new).orElse(null),
+                leadPartner, grantOfferLetter.map(FileDetailsViewModel::new).orElse(null),
                 additionalContractFile.map(FileDetailsViewModel::new).orElse(null),
-                offerSigned, submittedDate);
+                offerSigned, submittedDate, offerAccepted, offerRejected);
     }
 
 

@@ -33,6 +33,7 @@ public class ProjectGrantOfferLetterControllerTest extends BaseControllerMockMVC
         List<OrganisationResource> partnerOrganisations = newOrganisationResource().build(3);
 
         when(projectService.getById(projectId)).thenReturn(project);
+        when(projectService.isUserLeadPartner(projectId, userId)).thenReturn(true);
 
         MvcResult result = mockMvc.perform(get("/project/{projectId}/offer", project.getId())).
                 andExpect(status().isOk()).
@@ -45,8 +46,6 @@ public class ProjectGrantOfferLetterControllerTest extends BaseControllerMockMVC
         // test the view model
         assertEquals(project.getId(), model.getProjectId());
         assertEquals(project.getName(), model.getProjectName());
-        assertNull(model.getGrantOfferLetterFile());
-        assertNull(model.getAdditionalContractFile());
         assertFalse(model.isOfferSigned());
         assertNull(model.getSubmitDate());
     }
