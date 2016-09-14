@@ -488,45 +488,73 @@ IFS.core.formValidation = (function(){
             return errorMessage;
         },
         setInvalid : function(field,message){
-            var formGroup = field.closest('.form-group,tr.date-group');
-            if(formGroup){
+            var formGroup = field.closest('.form-group,tr.form-group-row');
+            var name = IFS.core.formValidation.getIdentifier(field);
+
+            if(formGroup.length){
                 if(s.html5validationMode){ field[0].setCustomValidity(message);}
-                field.addClass('field-error');
+                formGroup.addClass('error');
+
                 //if the message isn't in this formgroup yet we will add it, a form-group can have multiple errors.
-                var errorEl = formGroup.find('.error-message:contains("'+message+'")');
+                var errorEl = formGroup.find('[data-errorfield="'+name+'"]:contains("'+message+'"),.error-message:not([data-errorfield]):contains("'+message+'")');
                 if(errorEl.length === 0){
-                    formGroup.addClass('error');
-                    var html = '<span class="error-message">'+message+'</span>';
-                    formGroup.find('legend,label,.labelledby').first().append(html);
+                    field.addClass('field-error');
+                    var html = '<span data-errorfield="'+name+'" class="error-message">'+message+'</span>';
+                    formGroup.find('legend,label,[scope="row"]').first().append(html);
                 }
             }
-            if(jQuery('ul.error-summary-list li:contains('+message+')').length === 0){
-                jQuery('.error-summary-list').append('<li>'+message+'</li>');
+
+            if(jQuery('ul.error-summary-list [data-errorfield="'+name+'"]:contains('+message+')').length === 0){
+                jQuery('.error-summary-list').append('<li data-errorfield="'+name+'">'+message+'</li>');
             }
+
             jQuery('.error-summary').attr('aria-hidden',false);
             jQuery(window).trigger('updateWysiwygPosition');
         },
         setValid : function(field,message){
+            var formGroup = field.closest('.form-group.error,tr.form-group-row.error');
+            var errorSummary = jQuery('.error-summary-list');
+            var name = IFS.core.formValidation.getIdentifier(field);
 
-            var formGroup = field.closest('.form-group.error,tr.date-group.error');
-            if(formGroup){
-              formGroup.find('.error-message:contains("'+message+'")').remove();
+            if(formGroup.length){
+              //client side remove in form group
+              formGroup.find('[data-errorfield="'+name+'"]:contains("'+message+'")').remove();
+              //server side remove in form group
+              formGroup.find('.error-message:not([data-errorfield]):contains("'+message+'")').first().remove();
 
-               //if this was the last error we remove the error styling
-               if(formGroup.find('.error-message').length === 0){
-                   formGroup.removeClass('error');
-                   field.removeClass('field-error');
-                   if(s.html5validationMode){ field[0].setCustomValidity('');}
-               }
+              //if this was the last error we remove the error styling
+              if(formGroup.find('[data-errorfield],.error-message:not([data-errorfield])').length === 0){
+                 formGroup.removeClass('error');
+              }
+              if(formGroup.find('[data-errorfield="'+name+'"]').length === 0) {
+                field.removeClass('field-error');
+                if(s.html5validationMode){ field[0].setCustomValidity('');}
+              }
             }
-            if(jQuery('.error-summary-list li:contains('+message+')').length){
-              jQuery('.error-summary-list li:contains('+message+')').remove();
-            }
 
+            if(errorSummary.length){
+              //remove clientside in summary
+              errorSummary.find('[data-errorfield="'+name+'"]:contains('+message+')').remove();
+              //remove server side in summary
+              errorSummary.find('li:not([data-errorfield]):contains("'+message+'")').first().remove();
+            }
             if(jQuery('.error-summary-list li:not(.list-header)').length === 0){
-              jQuery('.error-summary').attr('aria-hidden',true);
+              jQuery('.error-summary').attr('aria-hidden','true');
             }
             jQuery(window).trigger('updateWysiwygPosition');
+        },
+        getIdentifier : function(el){
+            if(el.is('[data-date]')){
+              el =  el.closest('.date-group').find('input[type="hidden"]');
+            }
+
+            if(el.prop('id').length){
+              return el.prop('id');
+            }
+            else if(el.prop('name').length) {
+              return  el.prop('name');
+            }
+            return false;
         },
         checkHTML5validationMode : function(){
             var testField =jQuery('input');

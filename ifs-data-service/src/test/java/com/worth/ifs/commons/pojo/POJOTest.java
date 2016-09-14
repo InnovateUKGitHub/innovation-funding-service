@@ -40,6 +40,7 @@ import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.invite.resource.RejectionReasonResource;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
 import com.worth.ifs.project.domain.Project;
+import com.worth.ifs.project.finance.resource.*;
 import com.worth.ifs.project.resource.*;
 import com.worth.ifs.token.domain.Token;
 import com.worth.ifs.token.resource.TokenResource;
@@ -94,6 +95,12 @@ public class POJOTest {
             BankDetails.class,
             BankDetailsResource.class,
             MonitoringOfficerResource.class,
+            CostCategoryGroupResource.class,
+            CostCategoryResource.class,
+            CostGroupResource.class,
+            CostResource.class,
+            CostTimePeriodResource.class,
+            CostCategoryTypeResource.class,
             SpendProfileResource.class,
             SpendProfileTableResource.class,
             CompetitionFunderResource.class,

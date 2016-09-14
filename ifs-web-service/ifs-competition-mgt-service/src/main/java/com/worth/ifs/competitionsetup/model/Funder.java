@@ -15,6 +15,7 @@ public class Funder {
     @NotNull(message = "Please enter a budget")
     private BigDecimal funderBudget;
 
+    @NotNull
     private Boolean coFunder;
 
     public String getFunder() {

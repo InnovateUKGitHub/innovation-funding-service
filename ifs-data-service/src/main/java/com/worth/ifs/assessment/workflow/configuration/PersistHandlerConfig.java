@@ -13,7 +13,7 @@ import org.springframework.statemachine.recipes.persist.PersistStateMachineHandl
  * This allows having multiple instances of one state machine, so each individual
  * state can be transferred to the next, depending on its starting position.
  */
-@WithStateMachine
+@WithStateMachine(name = "assessmentStateMachine")
 public class PersistHandlerConfig {
 
     @Autowired

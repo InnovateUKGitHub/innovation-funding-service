@@ -23,7 +23,7 @@ public class CostGroup {
     @Column(nullable = false)
     private String description;
 
-    CostGroup() {
+    public CostGroup() {
         // for ORM use
     }
 
