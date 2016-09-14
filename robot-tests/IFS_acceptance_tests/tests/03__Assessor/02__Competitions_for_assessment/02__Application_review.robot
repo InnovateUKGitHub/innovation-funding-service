@@ -117,6 +117,14 @@ Scope: Word count
     When the user enters text to a text field    css=#form-input-193 .editor    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco ullamco
     Then the user should see the text in the page    Words remaining: 0
 
+Scope: on click guidance section should expand and collapse
+    [Documentation]    INFUND-4142
+    [Tags]
+    When the user clicks the button/link    css=#form-input-193 details summary
+    Then the user should see the element    css=#details-content-0 p:nth-child(1)
+    When the user clicks the button/link    css=#form-input-193 details summary
+    Then The user should not see the element    css=#details-content-0 p:nth-child(1)
+
 Scope: Status in the overview
     [Documentation]    INFUND-1483
     [Tags]
@@ -125,49 +133,17 @@ Scope: Status in the overview
     And the user should see the text in the page    In scope? Yes
     And the user should see the element    css=.column-third > img    #green flag
 
-Assessor should see word count underfeedback form
+Feedback: word count
     [Documentation]    INFUND-3859
     [Tags]
     Given I am on the assessor assessment overview page
-    When I open one of the application questions    link=4. Attire
-    Then I should see word count underneath feedback form    Words remaining: 100
-
-Assessor should see remaining words to enter in feedback form
-    [Documentation]    INFUND-3859
-    [Tags]
-    Given I am on the assessor assessment overview page
-    When I open one of the application questions    link=4. Attire
-    And I enter feedback of words    Test words count to enter only 10 words test test
-    Then I should see word count underneath feedback form    Words remaining: 90
-
-Assessors should see word count when edit feedbackform
-    [Documentation]    INFUND-3859
-    [Tags]    Pending
-    # Pending INFUND-4654
-    Given I am on the assessor assessment overview page
-    And I open one of the application questions    link=4. Attire
-    And I enter feedback of words    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco
-    And the user clicks the button/link    jquery=button:contains("Save and return to assessment overview")
-    When the user clicks the button/link    link=4. Attire
-    Then I should see word count underneath feedback form    Words remaining: 0
-
-Validation message when more than 100 words entered
-    [Documentation]    INFUND-3859
-    Given I am on the assessor assessment overview page
-    When I open one of the application questions    link=4. Attire
-    And I enter feedback of words    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco test test
+    and I open one of the application questions    link=4. Attire
+    And I should see word count underneath feedback form    Words remaining: 100
+    When I enter feedback of words    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco test test
     Then I should see validation message above the feedback form text field    Maximum word count exceeded. Please reduce your word count to 100.
-
-No error message when feedback words reduced to 100 or less
-    [Documentation]    INFUND-3859
-    Given I am on the assessor assessment overview page
-    And I open one of the application questions    link=4. Attire
-    And I enter feedback of words    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco test test
-    And I should see validation message above the feedback form text field    Maximum word count exceeded. Please reduce your word count to 100.
-    And Clear Element Text    css=#form-input-225 .editor
-    And I enter feedback of words    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco
-    # Omitting the word count figure from the end of the next line so it fails if the word count error message is present regardless of the actual word limit
-    Then The user should not see the text in the page    Maximum word count exceeded. Please reduce your word count to
+    When I enter feedback of words    Test words count to enter only 10 words test test
+    Then I should see word count underneath feedback form    Words remaining: 90
+    Then I should see validation message above the feedback form text field    Maximum word count exceeded. Please reduce your word count to 100.
 
 Question 1: Autosave
     [Documentation]    INFUND-3780
@@ -249,11 +225,11 @@ the user clicks previous and goes to the page
     the user should see the text in the page    ${page_content}
 
 the finance summary total should be correct
-    Element Should Contain    css=#content div:nth-child(5) tr:nth-child(2) td:nth-child(2)    £7,680
-    Element Should Contain    css=#content div:nth-child(5) tr:nth-child(1) td:nth-child(3)    60%
-    Element Should Contain    css=#content div:nth-child(5) tr:nth-child(2) td:nth-child(4)    £4,608
-    Element Should Contain    css=#content div:nth-child(5) tr:nth-child(2) td:nth-child(5)    £0
-    Element Should Contain    css=#content div:nth-child(5) tr:nth-child(2) td:nth-child(6)    £3,072
+    Element Should Contain    css=.form-group.finances-summary tr:nth-child(2) td:nth-child(2)    £7,680
+    Element Should Contain    css=.form-group.finances-summary tr:nth-child(1) td:nth-child(3)    60%
+    Element Should Contain    css=.form-group.finances-summary tr:nth-child(2) td:nth-child(4)    £4,608
+    Element Should Contain    css=.form-group.finances-summary tr:nth-child(2) td:nth-child(5)    £0
+    Element Should Contain    css=.form-group.finances-summary tr:nth-child(2) td:nth-child(6)    £3,072
 
 the project cost breakdown total should be correct
     Element Should Contain    css=.form-group.project-cost-breakdown tr:nth-child(2) td:nth-child(2)    £7,680
@@ -264,7 +240,6 @@ the project cost breakdown total should be correct
     Element Should Contain    css=.form-group.project-cost-breakdown tr:nth-child(2) td:nth-child(7)    £0
     Element Should Contain    css=.form-group.project-cost-breakdown tr:nth-child(2) td:nth-child(8)    £0
     Element Should Contain    css=.form-group.project-cost-breakdown tr:nth-child(2) td:nth-child(9)    £0
-
 
 the collapsible button should contain
     [Arguments]    ${BUTTON}    ${TEXT}
@@ -299,5 +274,3 @@ The assessor navigates to the summary page
     Given the user navigates to the page    ${Assessment_overview_9}
     When The user clicks the button/link    jQuery=.button:contains(Review assessment)
     And The user should see the text in the page    Assessment summary
-
-
