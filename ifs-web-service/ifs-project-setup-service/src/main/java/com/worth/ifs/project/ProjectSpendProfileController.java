@@ -47,10 +47,12 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
  * This controller will handle all requests that are related to spend profile.
  */
 @Controller
-@RequestMapping("/project/{projectId}/partner-organisation/{organisationId}/spend-profile")
+@RequestMapping("/" + ProjectSpendProfileController.BASE_DIR + "/{projectId}/partner-organisation/{organisationId}/spend-profile")
 public class ProjectSpendProfileController {
 
     private static final String FORM_ATTR_NAME = "form";
+    public static final String BASE_DIR = "project";
+    public static final String REVIEW_TEMPLATE_NAME = "spend-profile-review";
 
     @Autowired
     private ProjectService projectService;
@@ -64,26 +66,25 @@ public class ProjectSpendProfileController {
 
     @RequestMapping(method = GET)
     public String viewSpendProfile(Model model,
-                                   @PathVariable("projectId") final Long projectId,
+                                   @PathVariable(BASE_DIR + "Id") final Long projectId,
                                    @PathVariable("organisationId") final Long organisationId,
                                    @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
         if (userHasProjectManagerRole(loggedInUser, projectId)) {
-            model.addAttribute("model", populateSpendProfileProjectManagerViewModel(projectId));
-            return "project/spend-profile-review";
+            return reviewSpendProfile(model, projectId);
         }
         model.addAttribute("model", buildSpendProfileViewModel(projectId, organisationId));
-        return "project/spend-profile";
+        return BASE_DIR + "/spend-profile";
     }
 
     @RequestMapping(value = "/review", method = GET)
     public String reviewSpendProfile(Model model,
-                                   @PathVariable("projectId") final Long projectId,
+                                   @PathVariable(BASE_DIR + "Id") final Long projectId,
                                    @PathVariable("organisationId") final Long organisationId,
                                    @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
             model.addAttribute("model", buildSpendProfileViewModel(projectId, organisationId));
-        return "project/spend-profile";
+        return BASE_DIR + "/spend-profile";
     }
 
     @RequestMapping(value = "/edit", method = GET)
@@ -92,7 +93,7 @@ public class ProjectSpendProfileController {
                                    @ModelAttribute(FORM_ATTR_NAME) SpendProfileForm form,
                                    @SuppressWarnings("unused") BindingResult bindingResult,
                                    ValidationHandler validationHandler,
-                                   @PathVariable("projectId") final Long projectId,
+                                   @PathVariable(BASE_DIR + "Id") final Long projectId,
                                    @PathVariable("organisationId") final Long organisationId,
                                    @ModelAttribute("loggedInUser") UserResource loggedInUser) {
         ProjectResource projectResource = projectService.getById(projectId);
@@ -100,22 +101,22 @@ public class ProjectSpendProfileController {
         form.setTable(spendProfileTableResource);
 
         if(spendProfileTableResource.getMarkedAsComplete()) {
-            markSpendProfileInComplete(model, projectId, organisationId, "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile");
+            markSpendProfileInComplete(model, projectId, organisationId, "redirect:/" + BASE_DIR + "/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile");
         }
         model.addAttribute("model", buildSpendProfileViewModel(projectResource, organisationId, spendProfileTableResource));
 
-        return "project/spend-profile";
+        return BASE_DIR + "/spend-profile";
     }
     @RequestMapping(value = "/edit", method = POST)
     public String saveSpendProfile(@ModelAttribute(FORM_ATTR_NAME) SpendProfileForm form,
                                    @SuppressWarnings("unused") BindingResult bindingResult,
                                    ValidationHandler validationHandler,
-                                   @PathVariable("projectId") final Long projectId,
+                                   @PathVariable(BASE_DIR + "Id") final Long projectId,
                                    @PathVariable("organisationId") final Long organisationId,
                                    @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        String failureView = "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile/edit";
-        String successView = "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile";
+        String failureView = "redirect:/" + BASE_DIR + "/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile/edit";
+        String successView = "redirect:/" + BASE_DIR + "/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile";
 
         ValidationHandler customValidationHandler = ValidationHandler.newBindingResultHandler(bindingResult);
         spendProfileCostValidator.validate(form.getTable(), bindingResult);
@@ -135,6 +136,11 @@ public class ProjectSpendProfileController {
         return successView;
     }
 
+    private String reviewSpendProfile(Model model, Long projectId) {
+        model.addAttribute("model", populateSpendProfileProjectManagerViewModel(projectId));
+        return BASE_DIR + "/" + REVIEW_TEMPLATE_NAME;
+    }
+
     private Map<String, Boolean> getPartnersSpendProfileProgress(Long projectId, List<OrganisationResource> partnerOrganisations) {
         HashMap<String, Boolean> partnerProgressMap = new HashMap<>();
         partnerOrganisations.stream().forEach(organisation -> {
@@ -146,10 +152,10 @@ public class ProjectSpendProfileController {
 
     @RequestMapping(value = "/complete", method = POST)
     public String markAsCompleteSpendProfile(Model model,
-                                             @PathVariable("projectId") final Long projectId,
+                                             @PathVariable(BASE_DIR + "Id") final Long projectId,
                                              @PathVariable("organisationId") final Long organisationId,
                                              @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-        return markSpendProfileComplete(model, projectId, organisationId, "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile");
+        return markSpendProfileComplete(model, projectId, organisationId, "redirect:/" + BASE_DIR + "/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile");
     }
 
     private String markSpendProfileComplete(Model model,
@@ -176,7 +182,7 @@ public class ProjectSpendProfileController {
             ProjectSpendProfileViewModel spendProfileViewModel = buildSpendProfileViewModel(projectId, organisationId);
             spendProfileViewModel.setObjectErrors(Collections.singletonList(new ObjectError(SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE.getErrorKey(), "Cannot mark as complete, because totals more than eligible")));
             model.addAttribute("model", spendProfileViewModel);
-            return "project/spend-profile";
+            return BASE_DIR + "/spend-profile";
         } else {
             return successView;
         }
