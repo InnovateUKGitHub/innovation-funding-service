@@ -71,17 +71,16 @@ public class ProjectSpendProfileController {
                                    @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
         if (userHasProjectManagerRole(loggedInUser, projectId)) {
-            return reviewSpendProfile(model, projectId);
+            return viewProjectManagerSpendProfile(model, projectId);
         }
-        model.addAttribute("model", buildSpendProfileViewModel(projectId, organisationId));
-        return BASE_DIR + "/spend-profile";
+        return reviewSpendProfilePage(model, projectId, organisationId, loggedInUser);
     }
 
     @RequestMapping(value = "/review", method = GET)
-    public String reviewSpendProfile(Model model,
-                                   @PathVariable("projectId") final Long projectId,
-                                   @PathVariable("organisationId") final Long organisationId,
-                                   @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+    public String reviewSpendProfilePage(Model model,
+                                                 @PathVariable("projectId") final Long projectId,
+                                                 @PathVariable("organisationId") final Long organisationId,
+                                                 @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
             model.addAttribute("model", buildSpendProfileViewModel(projectId, organisationId));
         return BASE_DIR + "/spend-profile";
@@ -131,7 +130,7 @@ public class ProjectSpendProfileController {
         return validationHandler.addAnyErrors(result).failNowOrSucceedWith(() -> failureView, () -> successView);
     }
 
-    private String reviewSpendProfile(Model model, Long projectId) {
+    private String viewProjectManagerSpendProfile(Model model, Long projectId) {
         model.addAttribute("model", populateSpendProfileProjectManagerViewModel(projectId));
         return BASE_DIR + "/" + REVIEW_TEMPLATE_NAME;
     }
