@@ -1,6 +1,6 @@
-package com.worth.ifs.project.workflow.projectdetails.configuration;
+package com.worth.ifs.assessment.workflow.configuration;
 
-import com.worth.ifs.project.workflow.projectdetails.ProjectDetailsWorkflowEventHandler;
+import com.worth.ifs.assessment.workflow.AssessmentWorkflowEventHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.statemachine.StateMachine;
@@ -8,24 +8,24 @@ import org.springframework.statemachine.annotation.WithStateMachine;
 import org.springframework.statemachine.recipes.persist.PersistStateMachineHandler;
 
 /**
- * The {@link PersistStateMachineHandler} is being used for the Project Details workflow
+ * The {@link PersistStateMachineHandler} is being used for the assessor workflow
  * and is configured here.
  * This allows having multiple instances of one state machine, so each individual
  * state can be transferred to the next, depending on its starting position.
  */
-@WithStateMachine(name = "projectDetailsStateMachine")
-public class PersistHandlerConfig {
+@WithStateMachine(name = "assessmentStateMachine")
+public class AssessmentPersistHandlerConfig {
 
     @Autowired
     private StateMachine<String, String> stateMachine;
 
-    public PersistHandlerConfig() {
+    public AssessmentPersistHandlerConfig() {
     	// no-arg constructor
     }
 
     @Bean
-    public ProjectDetailsWorkflowEventHandler persist() {
-        return new ProjectDetailsWorkflowEventHandler(persistStateMachineHandler());
+    public AssessmentWorkflowEventHandler persist() {
+        return new AssessmentWorkflowEventHandler(persistStateMachineHandler());
     }
 
     @Bean
