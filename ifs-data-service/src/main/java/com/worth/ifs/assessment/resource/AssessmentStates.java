@@ -15,7 +15,6 @@ public enum AssessmentStates implements ProcessStates {
     ASSESSED(State.READY_TO_SUBMIT),
     SUBMITTED(State.SUBMITTED);
 
-    //the status string value
     private State backingState;
 
     private static final Map<String, AssessmentStates> assessmentStatesMap;

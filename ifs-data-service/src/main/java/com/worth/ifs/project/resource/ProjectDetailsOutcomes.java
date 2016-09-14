@@ -4,6 +4,7 @@ import com.worth.ifs.workflow.resource.OutcomeType;
 
 public enum ProjectDetailsOutcomes implements OutcomeType {
 
+    PENDING("pending"),
     READY_TO_SUBMIT("ready-to-submit"),
     SUBMIT("submit");
 

@@ -11,7 +11,7 @@ import java.util.Optional;
  * for an application during assessment.
  * For more info see {@link com.worth.ifs.assessment.workflow.AssessorWorkflowConfig}
  */
-public class ReadyToSubmitAction extends BaseProjectDetailsAction {
+public class ProjectCreatedAction extends BaseProjectDetailsAction {
 
     @Override
     protected void doExecute(Assessment assessment, ActivityState newState, Optional<ProcessOutcome> updatedProcessOutcome) {

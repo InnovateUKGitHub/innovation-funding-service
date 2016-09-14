@@ -16,6 +16,6 @@ public class SubmitAction extends BaseProjectDetailsAction {
     @Override
     protected void doExecute(Assessment assessment, ActivityState newState, Optional<ProcessOutcome> updatedProcessOutcome) {
         assessment.setActivityState(newState);
-        assessmentRepository.save(assessment);
+        projectRepository.save(assessment);
     }
 }

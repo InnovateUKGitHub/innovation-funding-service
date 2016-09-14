@@ -29,21 +29,26 @@ import com.worth.ifs.organisation.mapper.OrganisationMapper;
 import com.worth.ifs.organisation.repository.OrganisationAddressRepository;
 import com.worth.ifs.project.domain.MonitoringOfficer;
 import com.worth.ifs.project.domain.Project;
+import com.worth.ifs.project.domain.ProjectDetailsProcess;
 import com.worth.ifs.project.domain.ProjectUser;
 import com.worth.ifs.project.mapper.MonitoringOfficerMapper;
 import com.worth.ifs.project.mapper.ProjectMapper;
 import com.worth.ifs.project.mapper.ProjectUserMapper;
 import com.worth.ifs.project.repository.MonitoringOfficerRepository;
+import com.worth.ifs.project.repository.ProjectDetailsProcessRepository;
 import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.project.repository.ProjectUserRepository;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.project.workflow.projectdetails.ProjectDetailsWorkflowEventHandler;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.OrganisationResource;
+import com.worth.ifs.workflow.domain.Process;
+import com.worth.ifs.workflow.repository.ActivityStateRepository;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -76,6 +81,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
+import static org.apache.coyote.http11.Constants.a;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
@@ -125,6 +131,15 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
     @Autowired
     private FileEntryMapper fileEntryMapper;
+
+    @Autowired
+    private ProjectDetailsProcessRepository projectDetailsProcessRepository;
+
+    @Autowired
+    private ActivityStateRepository activityStateRepository;
+
+    @Autowired
+    private ProjectDetailsWorkflowEventHandler projectDetailsWorkflowHandler;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -720,23 +735,44 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     }
 
     private ServiceResult<ProjectResource> createProjectFromApplicationId(final Long applicationId) {
+
         return getApplication(applicationId).andOnSuccess(application -> {
+
             Project project = new Project();
             project.setApplication(application);
             project.setDurationInMonths(application.getDurationInMonths());
             project.setName(application.getName());
             project.setTargetStartDate(application.getStartDate());
 
-            List<ProcessRole> collaborativeRoles = simpleFilter(application.getProcessRoles(), ProcessRole::isLeadApplicantOrCollaborator);
-            List<ServiceResult<ProjectUser>> correspondingProjectUsers = simpleMap(collaborativeRoles, role -> createPartnerProjectUser(project, role.getUser(), role.getOrganisation()));
+            ProcessRole leadApplicantRole = simpleFindFirst(application.getProcessRoles(), ProcessRole::isLeadApplicant).get();
+            List<ProcessRole> collaborativeRoles = simpleFilter(application.getProcessRoles(), ProcessRole::isCollaborator);
+            List<ProcessRole> allRoles = combineLists(leadApplicantRole, collaborativeRoles);
+
+            List<ServiceResult<ProjectUser>> correspondingProjectUsers = simpleMap(allRoles,
+                    role -> createPartnerProjectUser(project, role.getUser(), role.getOrganisation()));
+
             ServiceResult<List<ProjectUser>> projectUserCollection = aggregate(correspondingProjectUsers);
 
-            return projectUserCollection.andOnSuccessReturn(projectUsers -> {
+            ServiceResult<Project> saveProjectResult = projectUserCollection.andOnSuccessReturn(projectUsers -> {
                 projectUsers.forEach(project::addProjectUser);
-                Project createdProject = projectRepository.save(project);
-                return projectMapper.mapToResource(createdProject);
+                return projectRepository.save(project);
             });
+
+            return saveProjectResult.
+                    andOnSuccess(newProject -> createProcessEntriesForNewProject(newProject).
+                    andOnSuccessReturn(() -> projectMapper.mapToResource(newProject)));
         });
+    }
+
+    private ServiceResult<List<? extends Process>> createProcessEntriesForNewProject(Project newProject) {
+
+        ProjectUser originalLeadApplicant = newProject.getProjectUsers().get(0);
+        boolean projectDetailsProcessCreated = projectDetailsWorkflowHandler.projectCreated(newProject, originalLeadApplicant.getId());
+
+        ProjectDetailsProcess projectDetailsProcess = new ProjectDetailsProcess(originalLeadApplicant, newProject);
+        projectDetailsProcessRepository.save(projectDetailsProcess);
+
+        return serviceSuccess(singletonList(projectDetailsProcess));
     }
 
     private ServiceResult<ProjectUser> createPartnerProjectUser(Project project, User user, Organisation organisation) {

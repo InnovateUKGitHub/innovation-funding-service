@@ -1,7 +1,9 @@
 package com.worth.ifs.project.workflow.projectdetails;
 
+import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectDetailsProcess;
 import com.worth.ifs.project.resource.ProjectDetailsOutcomes;
+import com.worth.ifs.project.resource.ProjectDetailsState;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.messaging.Message;
@@ -26,6 +28,14 @@ public class ProjectDetailsWorkflowEventHandler {
     public ProjectDetailsWorkflowEventHandler(PersistStateMachineHandler stateHandler) {
         this.stateHandler = stateHandler;
         this.stateHandler.addPersistStateChangeListener(listener);
+    }
+
+    public boolean projectCreated(Project project, Long originalLeadApplicantProjectUserId) {
+        return stateHandler.handleEventWithState(MessageBuilder
+                .withPayload(ProjectDetailsOutcomes.PENDING.getType())
+                .setHeader("project", project)
+                .setHeader("projectUserId", originalLeadApplicantProjectUserId)
+                .build(), ProjectDetailsState.PENDING.name());
     }
 
     public boolean projectDetailsAllSupplied(ProjectDetailsProcess projectDetails) {

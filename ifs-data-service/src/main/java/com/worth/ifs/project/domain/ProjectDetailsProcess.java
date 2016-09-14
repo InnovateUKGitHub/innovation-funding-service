@@ -1,6 +1,7 @@
 package com.worth.ifs.project.domain;
 
 import com.worth.ifs.project.resource.ProjectDetailsState;
+import com.worth.ifs.workflow.domain.ActivityState;
 import com.worth.ifs.workflow.domain.Process;
 
 import javax.persistence.Entity;
@@ -17,6 +18,12 @@ public class ProjectDetailsProcess extends Process<ProjectUser, Project, Project
     @ManyToOne
     @JoinColumn(name="target_id", referencedColumnName = "id")
     private Project target;
+
+    public ProjectDetailsProcess(ProjectUser participant, Project target, ActivityState originalState) {
+        this.participant = participant;
+        this.target = target;
+        this.setActivityState(originalState);
+    }
 
     @Override
     public void setParticipant(ProjectUser participant) {
