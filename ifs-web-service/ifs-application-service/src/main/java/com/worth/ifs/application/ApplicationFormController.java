@@ -352,7 +352,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         }
 
         errors.addAll(validationApplicationStartDate(request));
-        errors.addAll(setApplicationDetails(application, form.getApplication()));
+        setApplicationDetails(application, form.getApplication());
 
         if(userIsLeadApplicant(application, user.getId())) {
             applicationService.save(application);
@@ -723,9 +723,9 @@ public class ApplicationFormController extends AbstractApplicationController {
      * @param application
      * @param updatedApplication
      */
-    private ValidationMessages setApplicationDetails(ApplicationResource application, ApplicationResource updatedApplication) {
+    private void setApplicationDetails(ApplicationResource application, ApplicationResource updatedApplication) {
         if (updatedApplication == null) {
-            return ValidationMessages.noErrors();
+            return;
         }
 
         ValidationMessages errors = new ValidationMessages();
@@ -739,22 +739,12 @@ public class ApplicationFormController extends AbstractApplicationController {
             LOG.debug("setApplicationDetails: resubmission " + updatedApplication.getResubmission());
             application.setResubmission(updatedApplication.getResubmission());
             if (updatedApplication.getResubmission()) {
-                if (updatedApplication.getPreviousApplicationNumber() != null && !updatedApplication.getPreviousApplicationNumber().isEmpty()) {
-                    application.setPreviousApplicationNumber(updatedApplication.getPreviousApplicationNumber());
-                } else {
-                    errors.addError(fieldError("application.previousApplicationNumber", null, "validation.application.previous.application.number.required"));
-                }
-                if (updatedApplication.getPreviousApplicationTitle() != null && !updatedApplication.getPreviousApplicationTitle().isEmpty()) {
-                    application.setPreviousApplicationTitle(updatedApplication.getPreviousApplicationTitle());
-                } else {
-                    errors.addError(fieldError("application.previousApplicationTitle", null, "validation.application.previous.application.title.required"));
-                }
+                application.setPreviousApplicationNumber(updatedApplication.getPreviousApplicationNumber());
+                application.setPreviousApplicationTitle(updatedApplication.getPreviousApplicationTitle());
             } else {
                 application.setPreviousApplicationNumber(null);
                 application.setPreviousApplicationTitle(null);
             }
-        } else {
-            errors.addError(fieldError("application.resubmission", null, "validation.application.must.indicate.resubmission.or.not"));
         }
 
         if (updatedApplication.getStartDate() != null) {
@@ -776,8 +766,6 @@ public class ApplicationFormController extends AbstractApplicationController {
         else {
             application.setDurationInMonths(null);
         }
-
-        return errors;
     }
 
     /**
