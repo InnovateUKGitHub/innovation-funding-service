@@ -2,10 +2,12 @@ package com.worth.ifs.finance.spendprofile.summary.controller;
 
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.CompetitionSummaryResource;
+import com.worth.ifs.application.service.ApplicationFinanceService;
 import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.ApplicationSummaryService;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.controller.ValidationHandler;
+import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.spendprofile.summary.form.ProjectSpendProfileForm;
 import com.worth.ifs.finance.spendprofile.summary.viewmodel.ProjectSpendProfileSummaryViewModel;
 import com.worth.ifs.project.ProjectService;
@@ -49,6 +51,9 @@ public class ProjectSpendProfileSummaryController {
     @Autowired
     private ApplicationSummaryService applicationSummaryService;
 
+    @Autowired
+    private ApplicationFinanceService applicationFinanceService;
+
     @RequestMapping(value = "/summary", method = GET)
     public String viewSpendProfileSummary(@PathVariable Long projectId, Model model) {
         return doViewSpendProfileSummary(projectId, model, new ProjectSpendProfileForm());
@@ -89,6 +94,9 @@ public class ProjectSpendProfileSummaryController {
 
         Optional<SpendProfileResource> anySpendProfile = projectFinanceService.getSpendProfile(projectId, partnerOrganisations.get(0).getId());
 
+        ApplicationFinanceResource applicationFinanceResource =
+                applicationFinanceService.getApplicationOrganisationFinances(application.getId(), partnerOrganisations.get(0).getId()).getSuccessObjectOrThrowException();
+
         List<ProjectSpendProfileSummaryViewModel.SpendProfileOrganisationRow> organisationRows = mapWithIndex(partnerOrganisations, (i, org) ->
 
                 new ProjectSpendProfileSummaryViewModel.SpendProfileOrganisationRow(
@@ -100,13 +108,29 @@ public class ProjectSpendProfileSummaryController {
                     getEnumForIndex(ProjectSpendProfileSummaryViewModel.QueriesRaised.class, i))
         );
 
+
+/*        public ProjectSpendProfileSummaryViewModel(
+                Long projectId, CompetitionSummaryResource competitionSummary,
+                List< ProjectSpendProfileSummaryViewModel.SpendProfileOrganisationRow > partnerOrganisationDetails,
+                LocalDate projectStartDate, int durationInMonths, BigDecimal totalProjectCost, BigDecimal grantAppliedFor,
+                BigDecimal otherPublicSectorFunding, BigDecimal totalPercentageGrant, boolean spendProfilesGenerated)*/
+
+
         return new ProjectSpendProfileSummaryViewModel(
+                projectId, competitionSummary, organisationRows,
+                project.getTargetStartDate(), project.getDurationInMonths().intValue(),
+                applicationFinanceResource.getTotal(), applicationFinanceResource.getTotalFundingSought(),
+                applicationFinanceResource.getTotalOtherFunding(),
+                new BigDecimal(applicationFinanceResource.getGrantClaimPercentage().toString()),
+                anySpendProfile.isPresent());
+
+/*        return new ProjectSpendProfileSummaryViewModel(
                 projectId, competitionSummary, organisationRows,
                 project.getTargetStartDate(), project.getDurationInMonths().intValue(),
                 BigDecimal.valueOf(400000), BigDecimal.valueOf(200000),
                 BigDecimal.valueOf(0),
                 BigDecimal.valueOf(50),
-                anySpendProfile.isPresent());
+                anySpendProfile.isPresent());*/
     }
 
     private <T extends Enum> T getEnumForIndex(Class<T> enums, int index) {
