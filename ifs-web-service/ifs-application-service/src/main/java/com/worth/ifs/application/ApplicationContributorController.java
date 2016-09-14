@@ -92,6 +92,7 @@ public class ApplicationContributorController{
         savedInvites.stream().forEachOrdered(a -> organisationInvites.put(a.getId(), a));
 
         model.addAttribute("authenticatedUser", user);
+        model.addAttribute("userIsLead", user.getId().equals(leadApplicant.getId()));
         model.addAttribute("currentApplication", application);
         model.addAttribute("currentCompetition", competition);
         model.addAttribute("leadApplicant", leadApplicant);

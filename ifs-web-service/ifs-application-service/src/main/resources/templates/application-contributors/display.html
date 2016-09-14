@@ -57,7 +57,10 @@
                 <a th:if="${invite.nameConfirmed == null}" th:href="${'mailto:'+invite.email}" th:text="${invite.name}" />
                 <a th:unless="${invite.nameConfirmed == null}" th:href="${'mailto:'+invite.email}" th:text="${invite.nameConfirmed}" />
                 <small th:if="${invite.status.name() ==  T(com.worth.ifs.invite.constant.InviteStatus).CREATED.name() || invite.status.name() == T(com.worth.ifs.invite.constant.InviteStatus).SENT.name()}">(pending)</small>
-                <form method="post" th:action="@{/application/{appId}/contributors/remove(appId = ${currentApplication.getId()})}" th:object="${removeContributorForm}">
+                <form th:if="${userIsLead}"
+                      method="post"
+                      th:action="@{/application/{appId}/contributors/remove(appId = ${currentApplication.getId()})}"
+                      th:object="${removeContributorForm}">
                     <input type="hidden" th:value="${invite.id}" name="applicationInviteId"/>
                     <button type="submit" class="buttonlink">Remove</button>
                 </form>
