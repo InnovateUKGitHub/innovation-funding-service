@@ -2,8 +2,8 @@ package com.worth.ifs.assessment.builder;
 
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.assessment.resource.AssessmentResource;
+import com.worth.ifs.assessment.resource.AssessmentStates;
 import com.worth.ifs.workflow.resource.ProcessEvent;
-import com.worth.ifs.workflow.resource.ProcessStates;
 
 import java.time.LocalDate;
 import java.util.Calendar;
@@ -42,10 +42,6 @@ public class AssessmentResourceBuilder extends BaseBuilder<AssessmentResource, A
         return withArray((processEvent, object) -> setField("event", processEvent.name(), object), processEvents);
     }
 
-    public AssessmentResourceBuilder withProcessStatus(ProcessStates... processStates) {
-        return withArray((processStatus, object) -> setField("status", processStatus.getState(), object), processStates);
-    }
-
     public AssessmentResourceBuilder withLastModifiedDate(Calendar... lastModifiedDates) {
         return withArray((lastModifiedDate, object) -> setField("lastModified", lastModifiedDate, object), lastModifiedDates);
     }
@@ -80,5 +76,9 @@ public class AssessmentResourceBuilder extends BaseBuilder<AssessmentResource, A
 
     public AssessmentResourceBuilder withCompetition(Long... competitions) {
         return withArray((competition, object) -> setField("competition", competition, object), competitions);
+    }
+
+    public AssessmentResourceBuilder withActivityState(AssessmentStates... states) {
+        return withArray((state, object) -> object.setAssessmentState(state), states);
     }
 }
