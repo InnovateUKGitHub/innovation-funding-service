@@ -74,7 +74,8 @@ the user enters profile details
 
 the user should see the change in the view team members page
     click element    link=My dashboard
-    click element    xpath=//*[@id="content"]/div[2]/section[1]/ul/li[2]/div/div[1]/h3/a
+    # click element    xpath=//*[@id="content"]/div[2]/section[1]/ul/li[2]/div/div[1]/h3/a
+    click element    css=#content section:nth-of-type(2) li:nth-child(2) h3 a
     click element    link=View team members and add collaborators
     Page Should Contain Element    link= Dennis Bergkamp
     Capture Page Screenshot

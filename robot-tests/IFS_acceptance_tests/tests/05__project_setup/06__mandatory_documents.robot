@@ -39,8 +39,8 @@ PM cannot submit when both documents are not uploaded
     When the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Other documents
     #Then the user should see the 2 Upload buttons
-    And the user should see the element    jQuery=#content div:nth-child(9) form div label
-    And the user should see the element    jQuery=#content div:nth-child(10) form div label
+    And the user should see the element    jQuery=label[for="collaborationAgreement"]
+    And the user should see the element    jQuery=label[for="exploitationPlan"]
     Then the user should not see the element    jQuery=.button.enabled:contains("Submit partner documents")
     [Teardown]    Logout as user
 
