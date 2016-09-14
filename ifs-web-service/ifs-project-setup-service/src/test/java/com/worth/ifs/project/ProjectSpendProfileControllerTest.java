@@ -18,6 +18,7 @@ import com.worth.ifs.user.resource.RoleResource;
 import com.worth.ifs.user.resource.UserRoleType;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.ObjectError;
@@ -28,6 +29,7 @@ import java.util.*;
 import java.util.stream.IntStream;
 
 import static com.worth.ifs.commons.error.CommonFailureKeys.SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE;
+import static com.worth.ifs.commons.error.CommonFailureKeys.SPEND_PROFILE_CONTAINS_FRACTIONS_IN_COST_FOR_SPECIFIED_CATEGORY_AND_MONTH;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
@@ -125,7 +127,10 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         when(projectFinanceService.getSpendProfileTable(projectId, organisationId)).thenReturn(table);
 
-        when(projectFinanceService.saveSpendProfile(projectId, organisationId, table)).thenReturn(serviceFailure(new ArrayList<Error>()));
+        List<Error> incorrectCosts = new ArrayList<>();
+        incorrectCosts.add(new Error(SPEND_PROFILE_CONTAINS_FRACTIONS_IN_COST_FOR_SPECIFIED_CATEGORY_AND_MONTH, asList("Labour", 1), HttpStatus.BAD_REQUEST));
+
+        when(projectFinanceService.saveSpendProfile(projectId, organisationId, table)).thenReturn(serviceFailure(incorrectCosts));
 
         mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/edit", projectId, organisationId)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)

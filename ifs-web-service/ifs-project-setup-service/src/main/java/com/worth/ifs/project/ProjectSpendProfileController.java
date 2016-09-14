@@ -92,8 +92,12 @@ public class ProjectSpendProfileController {
                                    HttpServletRequest request,
                                    @ModelAttribute(FORM_ATTR_NAME) SpendProfileForm form,
                                    @SuppressWarnings("unused") BindingResult bindingResult,
+<<<<<<< HEAD
                                    ValidationHandler validationHandler,
                                    @PathVariable(BASE_DIR + "Id") final Long projectId,
+=======
+                                   @PathVariable("projectId") final Long projectId,
+>>>>>>> development
                                    @PathVariable("organisationId") final Long organisationId,
                                    @ModelAttribute("loggedInUser") UserResource loggedInUser) {
         ProjectResource projectResource = projectService.getById(projectId);
@@ -128,12 +132,8 @@ public class ProjectSpendProfileController {
         spendProfileTableResource.setMonthlyCostsPerCategoryMap(form.getTable().getMonthlyCostsPerCategoryMap()); // update existing resource with user entered fields
 
         ServiceResult<Void> result = projectFinanceService.saveSpendProfile(projectId, organisationId, spendProfileTableResource);
-        if(result.isFailure()){
-            validationHandler.addAnyErrors(result);
-            return failureView;
-        }
 
-        return successView;
+        return validationHandler.addAnyErrors(result).failNowOrSucceedWith(() -> failureView, () -> successView);
     }
 
     private String reviewSpendProfile(Model model, Long projectId) {
