@@ -55,16 +55,17 @@ public class ProjectGrantOfferLetterController {
         Optional<FileEntryResource> grantOfferLetter = Optional.of(new FileEntryResource(1L, "grantOfferLetter", "application/pdf", 10000));
         Optional<FileEntryResource> additionalContractFile = Optional.of(new FileEntryResource(1L, "additionalContractFile", "application/pdf", 10000));
 
+        //TODO: To be implenented - INFUND-4848
         LocalDateTime submittedDate = null;
         boolean offerSigned = false;
         boolean offerAccepted = false;
         boolean offerRejected = false;
-
+        boolean submitted = false;
 
         return new ProjectGrantOfferLetterViewModel(projectId, project.getName(),
                 leadPartner, grantOfferLetter.map(FileDetailsViewModel::new).orElse(null),
                 additionalContractFile.map(FileDetailsViewModel::new).orElse(null),
-                offerSigned, submittedDate, offerAccepted, offerRejected);
+                offerSigned, submitted, submittedDate, offerAccepted, offerRejected);
     }
 
 
