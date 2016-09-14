@@ -4,11 +4,14 @@
   margin: 0 auto;
   position: relative;
 }
-
+.spend-profile-table input {
+  text-align:right;
+  min-width:4em;
+}
 .spend-profile-table th[scope="col"],
 .spend-profile-table td{
   text-align:right;
-
+  white-space: nowrap;
 }
 .spend-profile-table .year {
   border-right: 1px solid $border-colour;
@@ -18,32 +21,61 @@
     overflow:auto;
     max-width:100%;
 }
-.spend-profile-table td:last-child,
-.spend-profile-table thead th:last-child {
-  border-left: 1px solid #bfc1c3;
+
+//todo: clean up specifity
+.spend-profile-table .form-group-row.error .fix-right,
+.spend-profile-table .fix-right {
   background: $grey-3;
   font-weight:bold;
+  + .fix-right {
+    background: $grey-4;
+        white-space: normal;
+  }
+  &.cell-error {
+    @extend td.cell-error;
+    input {
+      color:#fff;
+    }
+  }
 }
 
 
+.spend-profile-table tfoot td,
+.spend-profile-table tfoot th {
+  border-top:3px solid #000;
+  border-bottom:none;
+}
+.spend-profile-table tfoot .fix-right,
+.spend-profile-table tfoot .fix-left{
+  margin-top:-2px;
+}
+.spend-profile-table input[readonly]{
+  background: transparent;
+  border-color: transparent;
+  font-weight: bold;
+  width:100%;
+}
+.spend-profile-table th[scope="row"] {
+  padding:20px 0;
+  font-weight: bold;
+}
 
 @media screen and (min-width: 800px) {
   .spend-profile-table td,
   .spend-profile-table th,{
-    white-space:nowrap;
     box-sizing: border-box;
     height: 60px;
-    padding: 0.75em 1em;
+    padding: 0.6em;
   }
 
   .spend-profile-table th[scope="row"] {
     left: 0;
-    padding: 1.3em 1em;
     position: absolute;
     width: 210px;
     @include box-sizing(border-box);
     border-right: 1px solid #bfc1c3;
     background-color: #fff;
+
     +td,
     +th {
       padding-left:210px;
@@ -66,16 +98,19 @@
             flex: 0 0 210px;
           }
           .spend-profile-table .flex-table-after {
-            flex: 0 0 150px;
+            flex: 0 0 300px;
 
           }
-          .spend-profile-table td:last-child,
-          .spend-profile-table thead th:last-child {
-            right: 0;
+          .spend-profile-table .fix-right {
+            right: 150px;
             padding: 1.3em 1em;
             position: absolute;
             width: 150px;
             @include box-sizing(border-box);
+
+            + .fix-right {
+              right:0;
+            }
           }
       }
   }
