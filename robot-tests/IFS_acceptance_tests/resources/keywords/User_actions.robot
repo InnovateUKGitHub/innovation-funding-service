@@ -261,6 +261,12 @@ the user sees the text in the element
     Wait Until Keyword Succeeds    10    500ms    element should contain    ${element}    ${text}
 
 
+the user sees the text in the text field
+    [Arguments]    ${textfield}    ${text}
+    wait until element is visible    ${textfield}
+    wait until keyword succeeds    10    500ms    textfield should contain    ${textfield}    ${text}
+
+
 the user clears the text from the element
     [Arguments]    ${element}
     wait until element is visible    ${element}
