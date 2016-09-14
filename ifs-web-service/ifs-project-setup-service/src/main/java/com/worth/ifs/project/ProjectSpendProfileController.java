@@ -66,7 +66,7 @@ public class ProjectSpendProfileController {
 
     @RequestMapping(method = GET)
     public String viewSpendProfile(Model model,
-                                   @PathVariable(BASE_DIR + "Id") final Long projectId,
+                                   @PathVariable("projectId") final Long projectId,
                                    @PathVariable("organisationId") final Long organisationId,
                                    @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
@@ -79,7 +79,7 @@ public class ProjectSpendProfileController {
 
     @RequestMapping(value = "/review", method = GET)
     public String reviewSpendProfile(Model model,
-                                   @PathVariable(BASE_DIR + "Id") final Long projectId,
+                                   @PathVariable("projectId") final Long projectId,
                                    @PathVariable("organisationId") final Long organisationId,
                                    @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
@@ -110,12 +110,12 @@ public class ProjectSpendProfileController {
     public String saveSpendProfile(@ModelAttribute(FORM_ATTR_NAME) SpendProfileForm form,
                                    @SuppressWarnings("unused") BindingResult bindingResult,
                                    ValidationHandler validationHandler,
-                                   @PathVariable(BASE_DIR + "Id") final Long projectId,
+                                   @PathVariable("projectId") final Long projectId,
                                    @PathVariable("organisationId") final Long organisationId,
                                    @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        String failureView = "redirect:/" + BASE_DIR + "/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile/edit";
-        String successView = "redirect:/" + BASE_DIR + "/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile";
+        String failureView = "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile/edit";
+        String successView = "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile";
 
         ValidationHandler customValidationHandler = ValidationHandler.newBindingResultHandler(bindingResult);
         spendProfileCostValidator.validate(form.getTable(), bindingResult);
@@ -147,10 +147,10 @@ public class ProjectSpendProfileController {
 
     @RequestMapping(value = "/complete", method = POST)
     public String markAsCompleteSpendProfile(Model model,
-                                             @PathVariable(BASE_DIR + "Id") final Long projectId,
+                                             @PathVariable("projectId") final Long projectId,
                                              @PathVariable("organisationId") final Long organisationId,
                                              @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-        return markSpendProfileComplete(model, projectId, organisationId, "redirect:/" + BASE_DIR + "/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile");
+        return markSpendProfileComplete(model, projectId, organisationId, "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile");
     }
 
     private String markSpendProfileComplete(Model model,
