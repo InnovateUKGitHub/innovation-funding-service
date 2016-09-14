@@ -89,7 +89,7 @@
 
 		</fieldset> -->
 
-		<p>If you add a new team member, this section will show as pending until they have accepted. Once the team member has accepted and created their account, they will automatically be submitted as your finance contact.</p>
+		<p>If you add a new team member, this section will remain in a pending until they have accepted. Once the team member has created their account you can assign them the role of finance contact.</p>
 
 		<!--<button class="button button-large extra-margin">Submit</button>-->
 
@@ -103,7 +103,7 @@
 
 				<h2 class="heading-medium no-margin">Submit finance contact</h2>
 
-				<div id="message">[message]</div>
+				<p>This will make <span id="finance-contact">[name]</span> your finance contact for the project.</p>
 
 				<hr />
 
@@ -111,7 +111,23 @@
 
 					<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
 					<a href="/prototypes/1575-project-details" class="button">Submit finance contact</a>
-					<!--<button class="button">Submit finance contact</button>-->
+				</div>
+
+			</div>
+		</div>
+
+		<div class="modal-pending" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+			<button class="js-close close" aria-label="Close Popup">X</button>
+			<div>
+
+				<h2 class="heading-medium no-margin">Contact cannot be assigned</h2>
+
+				<p><span id="pending-finance-contact">[Name]</span> has been invited to create an account. This must be completed before they can be assigned as your finance contact.</p>
+
+				<hr />
+
+				<div class="alignright-button">
+					<button class="button js-close">OK</button>
 				</div>
 
 			</div>
@@ -170,10 +186,8 @@
 
 			if(jQuery(this).is(':checked')){
 				jQuery('#finance-contact-table').show();
-				jQuery('#finance-cta').hide();
 			}else{
 				jQuery('#finance-contact-table').hide();
-				jQuery('#finance-cta').show();
 			}
 		});
 
@@ -182,43 +196,50 @@
 
 			var financeContact = jQuery('#name-finance-contact1').val();
 
-			jQuery('#finance-name').text(financeContact + ' (Pending)')
-			jQuery("#finances-name-invite").attr('checked', 'checked');
+			jQuery('#finance-name').text(financeContact + ' (Pending)');
+//			jQuery('#finances-name-invite').prop('checked', true);
 			jQuery('#finance-contact-table').hide();
 			jQuery('#invited-finance-contact').show();
-			jQuery('#finance-cta').text('Submit and send invitation');
+//			jQuery('#finance-cta').text('Submit and send invitation');
 			jQuery('#finance-cta').show();
 			jQuery('#add-finance-contact').text('Change team member');
-			jQuery('#message').html('<p>Your new team member must create their account before they become your finance contact.<p>' +
-					'<p>You will still be able to change your selection until they create their account.</p>');
-
 
 		});
 
-		jQuery('#message').html('<p>This will make ' + jQuery('input:radio[name="finances-name-group"]:checked').val() + ' your finance contact for the project.</p>');
+		jQuery('#finance-contact').text(jQuery('input:radio[name="finances-name-group"]:checked').val());
 
-		jQuery('input:radio[name="finances-name-group"]').on('change',function(e){
-			if(jQuery(this).is(':checked')){
-				var id = jQuery(this).attr('id');
+		jQuery('#finances-name-1, #finances-name-2').on('click', function() {
+			jQuery('#finance-contact').text(jQuery('input:radio[name="finances-name-group"]:checked').val());
+			jQuery('#finance-cta').attr('data-js-modal', 'modal-submit');
+			jQuery('#finance-contact-table').hide();
 
-				if(id === 'finances-name-1' || id === 'finances-name-2'){
-					jQuery('#message').html('<p>This will make ' + jQuery('input:radio[name="finances-name-group"]:checked').val() + ' your finance contact for the project.</p>');
-					jQuery('#finance-cta').text('Submit');
-				}else {
-					jQuery('#message').html('<p>Your new team member must create their account before they become your finance contact.<p>' +
-							'<p>You will still be able to change your selection until they create their account.</p>');
-
-					jQuery('#finance-cta').text('Submit and send invitation');
-				}
-
-				if(jQuery(this).attr('id') != 'add-finance-contact'){
-
-					jQuery('#finance-contact-table').hide();
-				}
-
-				jQuery('#finance-cta').show();
-			}
 		});
+
+		jQuery('#finances-name-invite').on('click', function() {
+			jQuery('#pending-finance-contact').text(jQuery('#name-finance-contact1').val());
+			jQuery('#finance-cta').attr('data-js-modal', 'modal-pending');
+			jQuery('#finance-contact-table').hide();
+
+		});
+//		jQuery('input:radio[name="finances-name-group"]').on('change',function(e){
+//			if(jQuery(this).is(':checked')){
+//				var id = jQuery(this).attr('id');
+//
+//				if(id === 'finances-name-1' || id === 'finances-name-2'){
+//
+//				}else {
+//					jQuery('#pending-finance-contact').text(jQuery('input:radio[name="finances-name-group"]:checked').val());
+//					jQuery('#finance-cta').data('js-modal', 'modal-pending');
+//				}
+//
+//				if(jQuery(this).attr('id') != 'add-finance-contact'){
+//
+//					jQuery('#finance-contact-table').hide();
+//				}
+//
+//				jQuery('#finance-cta').show();
+//			}
+//		});
 
 		
 
