@@ -64,7 +64,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     @Autowired
     private CompetitionTypeRepository competitionTypeRepository;
     @Autowired
-    private CompetitionCoFunderService competitionCoFunderService;
+    private CompetitionFunderService competitionCoFunderService;
 	@Autowired
     private CompetitionTemplateRepository competitionTemplateRepository;
     @Autowired
@@ -105,6 +105,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     public ServiceResult<CompetitionResource> update(Long id, CompetitionResource competitionResource) {
         Competition competition = competitionMapper.mapToDomain(competitionResource);
         saveCategories(competitionResource);
+        saveFunders(competitionResource);
         competition = competitionRepository.save(competition);
         competitionService.addCategories(competition);
         return serviceSuccess(competitionMapper.mapToResource(competition));
@@ -114,11 +115,10 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
         saveInnovationArea(competitionResource);
         saveInnovationSector(competitionResource);
         saveResearchCategories(competitionResource);
-        saveCoFunders(competitionResource);
     }
 
-    private void saveCoFunders(CompetitionResource competitionResource) {
-        competitionCoFunderService.reinsertCoFunders(competitionResource);
+    private void saveFunders(CompetitionResource competitionResource) {
+        competitionCoFunderService.reinsertFunders(competitionResource);
     }
 
     private void saveInnovationSector(CompetitionResource competitionResource) {

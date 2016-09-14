@@ -387,3 +387,28 @@ include::{snippets}/project/get-spend-profile-table/curl-request.adoc[]
 ==== Failure cases
 ===== Get Spend Profile Table when Spend Profile data is not present in the DB
 include::{snippets}/project/get-spend-profile-table-when-spend-profile-data-not-in-db/http-response.adoc[]
+
+=== Save Spend Profile
+==== Success
+===== Request
+include::{snippets}/project/save-spend-profile/http-request.adoc[]
+include::{snippets}/project/save-spend-profile/path-parameters.adoc[]
+include::{snippets}/project/save-spend-profile/request-fields.adoc[]
+
+===== Response
+include::{snippets}/project/save-spend-profile/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/save-spend-profile/curl-request.adoc[]
+
+=== Mark Spend Profile as complete
+==== Success
+===== Request
+include::{snippets}/project/mark-spend-profile-complete/http-request.adoc[]
+include::{snippets}/project/mark-spend-profile-complete/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/mark-spend-profile-complete/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/mark-spend-profile-complete/curl-request.adoc[]

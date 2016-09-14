@@ -7,7 +7,7 @@ import org.springframework.security.access.method.P;
 /**
  * Service for operations around the usage and processing of Competition Co Funders
  */
-public interface CompetitionCoFunderService {
+public interface CompetitionFunderService {
 
     /**
      * @param competitionResource
@@ -16,6 +16,6 @@ public interface CompetitionCoFunderService {
      * deletion and update at the same time.
      */
     @NotSecured(value = "Not secured here, because this is only added extra information on the competition instance.", mustBeSecuredByOtherServices = true)
-    void reinsertCoFunders(@P("competitionResource") final CompetitionResource competitionResource);
+    void reinsertFunders(@P("competitionResource") final CompetitionResource competitionResource);
 
 }

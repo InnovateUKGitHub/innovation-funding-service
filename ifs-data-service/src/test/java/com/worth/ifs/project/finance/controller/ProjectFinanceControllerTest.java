@@ -17,6 +17,7 @@ import static com.worth.ifs.util.MapFunctions.asMap;
 import static java.util.Arrays.asList;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -83,6 +84,42 @@ public class ProjectFinanceControllerTest extends BaseControllerMockMVCTest<Proj
         mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile", projectId, organisationId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(spendProfileResource)));
+    }
+
+    @Test
+    public void saveSpendProfile() throws Exception {
+
+        Long projectId = 1L;
+        Long organisationId = 1L;
+
+        SpendProfileTableResource table = new SpendProfileTableResource();
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        when(projectFinanceServiceMock.saveSpendProfile(projectOrganisationCompositeId, table)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile", projectId, organisationId)
+                .contentType(APPLICATION_JSON)
+                .content(toJson(table)))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void markSpendProfileCompete() throws Exception {
+
+        Long projectId = 1L;
+        Long organisationId = 1L;
+
+        SpendProfileTableResource table = new SpendProfileTableResource();
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        when(projectFinanceServiceMock.markSpendProfile(projectOrganisationCompositeId, true)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/complete/{complete}", projectId, organisationId, true)
+                .contentType(APPLICATION_JSON)
+                .content(toJson(table)))
+                .andExpect(status().isOk());
     }
 
     @Override

@@ -14,7 +14,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -30,9 +29,6 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Controller
 public class ProjectRegistrationController {
-
-    @Autowired
-    Validator validator;
 
     @Autowired
     private UserService userService;
