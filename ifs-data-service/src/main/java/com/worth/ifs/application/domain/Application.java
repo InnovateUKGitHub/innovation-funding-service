@@ -52,6 +52,8 @@ public class Application implements ProcessActivity {
     private LocalDate startDate;
     private LocalDateTime submittedDate;
     private Boolean resubmission;
+    private String previousApplicationNumber;
+    private String previousApplicationTitle;
     @Min(0)
     private Long durationInMonths; // in months
     @Min(0)
@@ -122,13 +124,24 @@ public class Application implements ProcessActivity {
         return name;
     }
 
-    public void setResubmission(Boolean resubmission) {
-        this.resubmission = resubmission;
-    }
-
     public Boolean getResubmission() {
         return resubmission;
     }
+
+    public void setResubmission(Boolean resubmission) { this.resubmission = resubmission; }
+
+    public String getPreviousApplicationNumber() {
+        return previousApplicationNumber;
+    }
+
+    public void setPreviousApplicationNumber(String previousApplicationNumber) { this.previousApplicationNumber = previousApplicationNumber; }
+
+    public String getPreviousApplicationTitle() {
+        return previousApplicationTitle;
+    }
+
+    public void setPreviousApplicationTitle(String previousApplicationTitle) { this.previousApplicationTitle = previousApplicationTitle; }
+
 
     public void setName(String name) {
         this.name = name;
