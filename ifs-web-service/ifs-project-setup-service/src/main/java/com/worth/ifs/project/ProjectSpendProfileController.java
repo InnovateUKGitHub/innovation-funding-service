@@ -92,12 +92,7 @@ public class ProjectSpendProfileController {
                                    HttpServletRequest request,
                                    @ModelAttribute(FORM_ATTR_NAME) SpendProfileForm form,
                                    @SuppressWarnings("unused") BindingResult bindingResult,
-<<<<<<< HEAD
-                                   ValidationHandler validationHandler,
-                                   @PathVariable(BASE_DIR + "Id") final Long projectId,
-=======
                                    @PathVariable("projectId") final Long projectId,
->>>>>>> development
                                    @PathVariable("organisationId") final Long organisationId,
                                    @ModelAttribute("loggedInUser") UserResource loggedInUser) {
         ProjectResource projectResource = projectService.getById(projectId);
