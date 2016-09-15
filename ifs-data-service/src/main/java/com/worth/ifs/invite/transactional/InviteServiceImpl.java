@@ -3,6 +3,8 @@ package com.worth.ifs.invite.transactional;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.domain.QuestionStatus;
+import com.worth.ifs.application.repository.QuestionStatusRepository;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.BaseEitherBackedResult;
 import com.worth.ifs.commons.service.ServiceFailure;
@@ -39,6 +41,7 @@ import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -77,6 +80,8 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
     @Autowired
     private ApplicationInviteRepository applicationInviteRepository;
+    @Autowired
+    private QuestionStatusRepository questionStatusRepository;
     @Autowired
     private UserRepository userRepository;
 
@@ -293,10 +298,16 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     public ServiceResult<Void> removeApplicationInvite(Long applicationInviteId) {
         try {
             ApplicationInvite applicationInvite = applicationInviteMapper.mapIdToDomain(applicationInviteId);
-            List<ProcessRole> processRole = processRoleRepository.findByUserAndApplication(applicationInvite.getUser(), applicationInvite.getTarget());
-            if(!processRole.isEmpty()) {
-                processRoleRepository.delete(processRole);
+            if(applicationInvite == null) {
+               return serviceFailure(notFoundError(ApplicationInvite.class));
             }
+
+            List<ProcessRole> processRoles = processRoleRepository.findByUserAndApplication(applicationInvite.getUser(), applicationInvite.getTarget());
+
+            setMarkedAsCompleteQuestionStatusesToLeadApplicant(applicationInvite, processRoles);
+            setAssignedQuestionStatusesToLeadApplicant(applicationInvite, processRoles);
+            removeProcessRolesOnApplication(processRoles);
+
             applicationInviteRepository.delete(applicationInvite);
 
             return serviceSuccess();
@@ -473,5 +484,38 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
         return result;
 
+    }
+
+    private void setMarkedAsCompleteQuestionStatusesToLeadApplicant(ApplicationInvite applicationInvite, List<ProcessRole> processRoles) {
+        processRoles.forEach(processRole -> {
+            List<QuestionStatus> questionStatuses = questionStatusRepository.findByApplicationIdAndMarkedAsCompleteById(applicationInvite.getTarget().getId(), processRole.getId());
+            if(!questionStatuses.isEmpty()) {
+                questionStatuses.forEach(questionStatus ->
+                        questionStatus.setMarkedAsCompleteBy(applicationInvite.getTarget().getLeadApplicantProcessRole())
+                );
+                questionStatusRepository.save(questionStatuses);
+            }
+        });
+    }
+
+    private void setAssignedQuestionStatusesToLeadApplicant(ApplicationInvite applicationInvite, List<ProcessRole> processRoles) {
+        processRoles.forEach(processRole -> {
+            List<QuestionStatus> questionStatuses = questionStatusRepository.findByApplicationIdAndAssigneeId(applicationInvite.getTarget().getId(), processRole.getId());
+            if (!questionStatuses.isEmpty()) {
+                questionStatuses.forEach(questionStatus ->
+                        questionStatus.setAssignee(
+                                applicationInvite.getTarget().getLeadApplicantProcessRole(),
+                                applicationInvite.getTarget().getLeadApplicantProcessRole(),
+                                LocalDateTime.now())
+                );
+                questionStatusRepository.save(questionStatuses);
+            }
+        });
+    }
+
+    private void removeProcessRolesOnApplication(List<ProcessRole> processRoles) {
+        if(!processRoles.isEmpty()) {
+            processRoleRepository.delete(processRoles);
+        }
     }
 }
