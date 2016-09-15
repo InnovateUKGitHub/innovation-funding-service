@@ -5,6 +5,7 @@ import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.assessment.resource.AssessmentOutcomes;
 import com.worth.ifs.assessment.resource.AssessmentStates;
+import com.worth.ifs.assessment.workflow.configuration.AssessmentWorkflowEventHandler;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;

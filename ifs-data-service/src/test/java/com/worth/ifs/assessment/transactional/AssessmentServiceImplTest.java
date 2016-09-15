@@ -4,7 +4,7 @@ import com.worth.ifs.BaseUnitTestMocksTest;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.resource.AssessmentOutcomes;
 import com.worth.ifs.assessment.resource.AssessmentResource;
-import com.worth.ifs.assessment.workflow.AssessmentWorkflowEventHandler;
+import com.worth.ifs.assessment.workflow.configuration.AssessmentWorkflowEventHandler;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.workflow.domain.ActivityState;

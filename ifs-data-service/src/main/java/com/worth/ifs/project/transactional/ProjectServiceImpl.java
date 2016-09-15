@@ -9,7 +9,6 @@ import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.FundingDecision;
-import com.worth.ifs.commons.error.CommonFailureKeys;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.domain.FileEntry;
@@ -30,26 +29,22 @@ import com.worth.ifs.organisation.mapper.OrganisationMapper;
 import com.worth.ifs.organisation.repository.OrganisationAddressRepository;
 import com.worth.ifs.project.domain.MonitoringOfficer;
 import com.worth.ifs.project.domain.Project;
-import com.worth.ifs.project.domain.ProjectDetailsProcess;
 import com.worth.ifs.project.domain.ProjectUser;
 import com.worth.ifs.project.mapper.MonitoringOfficerMapper;
 import com.worth.ifs.project.mapper.ProjectMapper;
 import com.worth.ifs.project.mapper.ProjectUserMapper;
 import com.worth.ifs.project.repository.MonitoringOfficerRepository;
-import com.worth.ifs.project.repository.ProjectDetailsProcessRepository;
 import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.project.repository.ProjectUserRepository;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
-import com.worth.ifs.project.workflow.projectdetails.ProjectDetailsWorkflowEventHandler;
+import com.worth.ifs.project.workflow.projectdetails.configuration.ProjectDetailsWorkflowEventHandler;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.OrganisationResource;
-import com.worth.ifs.workflow.domain.Process;
-import com.worth.ifs.workflow.repository.ActivityStateRepository;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -62,16 +57,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import static com.worth.ifs.commons.error.CommonErrors.badRequestError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.service.ServiceResult.*;
-import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
-import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
-import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
-import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
+import static com.worth.ifs.invite.domain.ProjectParticipantRole.*;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static com.worth.ifs.project.transactional.ProjectServiceImpl.Notifications.INVITE_FINANCE_CONTACT;
 import static com.worth.ifs.project.transactional.ProjectServiceImpl.Notifications.INVITE_PROJECT_MANAGER;
@@ -82,7 +73,6 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
-import static org.apache.coyote.http11.Constants.a;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
@@ -240,7 +230,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         return getProject(projectId).
                 andOnSuccess(
                         project -> {
-                            if (validateIsReadyForSubmission(project)) {
+                            if (doIsSubmissionAllowed(projectId)) {
                                 return setSubmittedDate(project, date);
                             } else {
                                 return serviceFailure(new Error(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_SUBMITTED_IF_INCOMPLETE));
@@ -251,7 +241,11 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
     @Override
     public ServiceResult<Boolean> isSubmitAllowed(Long projectId) {
-        return projectDetailsWorkflowHandler.getProject(projectId).andOnSuccess(project -> serviceSuccess(validateIsReadyForSubmission(project)));
+        return serviceSuccess(doIsSubmissionAllowed(projectId));
+    }
+
+    private boolean doIsSubmissionAllowed(Long projectId) {
+        return projectDetailsWorkflowHandler.isSubmissionAllowed(projectId);
     }
 
     @Override

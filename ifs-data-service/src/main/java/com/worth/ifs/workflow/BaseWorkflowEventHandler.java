@@ -1,5 +1,6 @@
 package com.worth.ifs.workflow;
 
+import com.worth.ifs.workflow.repository.ProcessRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.messaging.Message;
@@ -14,19 +15,26 @@ import org.springframework.statemachine.transition.Transition;
  * Based on the Project Detail's current state the next one is tried to transition to by triggering
  * an event.
  */
-public class BaseWorkflowEventHandler {
+public class BaseWorkflowEventHandler<ProcessType> {
 
     private static final Log LOG = LogFactory.getLog(BaseWorkflowEventHandler.class);
-    protected final PersistStateMachineHandler stateHandler;
-    private final PersistStateChangeListener listener = new LocalStateChangeListener();
 
-    public BaseWorkflowEventHandler(PersistStateMachineHandler stateHandler) {
+    protected PersistStateMachineHandler stateHandler;
+    private PersistStateChangeListener listener = new LocalStateChangeListener();
+    private ProcessRepository<ProcessType> processRepository;
+
+    public BaseWorkflowEventHandler(PersistStateMachineHandler stateHandler, ProcessRepository<ProcessType> processRepository) {
         this.stateHandler = stateHandler;
+        this.processRepository = processRepository;
         this.stateHandler.addPersistStateChangeListener(listener);
     }
 
-    public boolean canMoveToState(State state) {
-        return stateHandler.
+    protected ProcessType getProcessByParticipantId(Long participantId) {
+        return processRepository.findOneByParticipantId(participantId);
+    }
+
+    protected ProcessType getProcessByTargetId(Long targetId) {
+        return processRepository.findOneByParticipantId(targetId);
     }
 
     private class LocalStateChangeListener implements PersistStateChangeListener {

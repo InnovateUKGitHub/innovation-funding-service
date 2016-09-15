@@ -4,7 +4,7 @@ import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.mapper.AssessmentMapper;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.assessment.resource.AssessmentResource;
-import com.worth.ifs.assessment.workflow.AssessmentWorkflowEventHandler;
+import com.worth.ifs.assessment.workflow.configuration.AssessmentWorkflowEventHandler;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.ServiceResult;

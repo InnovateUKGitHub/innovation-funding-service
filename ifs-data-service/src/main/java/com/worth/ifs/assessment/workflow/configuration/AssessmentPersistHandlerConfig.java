@@ -1,10 +1,12 @@
 package com.worth.ifs.assessment.workflow.configuration;
 
-import com.worth.ifs.assessment.workflow.AssessmentWorkflowEventHandler;
+import com.worth.ifs.assessment.repository.AssessmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.statemachine.StateMachine;
-import org.springframework.statemachine.annotation.WithStateMachine;
+import org.springframework.statemachine.config.EnableStateMachine;
 import org.springframework.statemachine.recipes.persist.PersistStateMachineHandler;
 
 /**
@@ -13,23 +15,22 @@ import org.springframework.statemachine.recipes.persist.PersistStateMachineHandl
  * This allows having multiple instances of one state machine, so each individual
  * state can be transferred to the next, depending on its starting position.
  */
-@WithStateMachine(name = "assessmentStateMachine")
+@Configuration
 public class AssessmentPersistHandlerConfig {
 
     @Autowired
+    @Qualifier("assessmentStateMachine")
     private StateMachine<String, String> stateMachine;
+
+    @Autowired
+    private AssessmentRepository assessmentRepository;
 
     public AssessmentPersistHandlerConfig() {
     	// no-arg constructor
     }
 
     @Bean
-    public AssessmentWorkflowEventHandler persist() {
-        return new AssessmentWorkflowEventHandler(persistStateMachineHandler());
-    }
-
-    @Bean
-    public PersistStateMachineHandler persistStateMachineHandler() {
-        return new PersistStateMachineHandler(stateMachine);
+    public AssessmentWorkflowEventHandler assessmentWorkflowEventHandler() {
+        return new AssessmentWorkflowEventHandler(new PersistStateMachineHandler(stateMachine), assessmentRepository);
     }
 }

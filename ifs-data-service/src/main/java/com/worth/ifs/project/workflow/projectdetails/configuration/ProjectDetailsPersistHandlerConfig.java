@@ -1,10 +1,11 @@
 package com.worth.ifs.project.workflow.projectdetails.configuration;
 
-import com.worth.ifs.project.workflow.projectdetails.ProjectDetailsWorkflowEventHandler;
+import com.worth.ifs.project.repository.ProjectDetailsProcessRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.statemachine.StateMachine;
-import org.springframework.statemachine.annotation.WithStateMachine;
 import org.springframework.statemachine.recipes.persist.PersistStateMachineHandler;
 
 /**
@@ -13,23 +14,22 @@ import org.springframework.statemachine.recipes.persist.PersistStateMachineHandl
  * This allows having multiple instances of one state machine, so each individual
  * state can be transferred to the next, depending on its starting position.
  */
-@WithStateMachine(name = "projectDetailsStateMachine")
+@Configuration
 public class ProjectDetailsPersistHandlerConfig {
 
     @Autowired
+    @Qualifier("projectDetailsStateMachine")
     private StateMachine<String, String> stateMachine;
+
+    @Autowired
+    private ProjectDetailsProcessRepository projectDetailsProcessRepository;
 
     public ProjectDetailsPersistHandlerConfig() {
     	// no-arg constructor
     }
 
     @Bean
-    public ProjectDetailsWorkflowEventHandler persist() {
-        return new ProjectDetailsWorkflowEventHandler(persistStateMachineHandler());
-    }
-
-    @Bean
-    public PersistStateMachineHandler persistStateMachineHandler() {
-        return new PersistStateMachineHandler(stateMachine);
+    public ProjectDetailsWorkflowEventHandler projectDetailsWorkflowEventHandler() {
+        return new ProjectDetailsWorkflowEventHandler(new PersistStateMachineHandler(stateMachine), projectDetailsProcessRepository);
     }
 }

@@ -3,13 +3,13 @@ package com.worth.ifs.assessment.workflow.actions;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.assessment.repository.ProcessOutcomeRepository;
+import com.worth.ifs.workflow.TestableTransitionWorkflowAction;
 import com.worth.ifs.workflow.domain.ActivityState;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
-import com.worth.ifs.workflow.resource.State;
 import com.worth.ifs.workflow.repository.ActivityStateRepository;
+import com.worth.ifs.workflow.resource.State;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.statemachine.StateContext;
-import org.springframework.statemachine.action.Action;
 
 import java.util.Optional;
 
@@ -18,7 +18,7 @@ import static com.worth.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
 /**
  * A base class for Assessment-related workflow Actions
  */
-abstract class BaseAssessmentAction implements Action<String, String> {
+abstract class BaseAssessmentAction extends TestableTransitionWorkflowAction {
 
     @Autowired
     protected AssessmentRepository assessmentRepository;
@@ -30,7 +30,7 @@ abstract class BaseAssessmentAction implements Action<String, String> {
     private ActivityStateRepository activityStateRepository;
 
     @Override
-    public void execute(StateContext<String, String> context) {
+    public void doExecute(StateContext<String, String> context) {
 
         Assessment assessment = getAssessmentFromContext(context);
         ProcessOutcome updatedProcessOutcome = (ProcessOutcome) context.getMessageHeader("processOutcome");

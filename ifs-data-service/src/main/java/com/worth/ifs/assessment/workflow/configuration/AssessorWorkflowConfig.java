@@ -1,4 +1,4 @@
-package com.worth.ifs.assessment.workflow;
+package com.worth.ifs.assessment.workflow.configuration;
 
 import com.worth.ifs.assessment.resource.AssessmentOutcomes;
 import com.worth.ifs.assessment.resource.AssessmentStates;
@@ -23,7 +23,7 @@ import org.springframework.statemachine.config.builders.StateMachineTransitionCo
  * A persistent configuration is used, so we can apply different states to different assessments.
  */
 @Configuration
-@EnableStateMachine
+@EnableStateMachine(name = "assessmentStateMachine")
 public class AssessorWorkflowConfig extends StateMachineConfigurerAdapter<String, String> {
 
     @Override

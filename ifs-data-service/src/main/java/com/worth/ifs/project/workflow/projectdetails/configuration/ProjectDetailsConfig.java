@@ -1,9 +1,9 @@
-package com.worth.ifs.project.workflow.projectdetails;
+package com.worth.ifs.project.workflow.projectdetails.configuration;
 
 import com.worth.ifs.assessment.resource.AssessmentOutcomes;
 import com.worth.ifs.project.resource.ProjectDetailsState;
-import com.worth.ifs.project.workflow.projectdetails.actions.ReadyToSubmitAction;
-import com.worth.ifs.project.workflow.projectdetails.actions.SubmitAction;
+import com.worth.ifs.project.workflow.projectdetails.actions.ReadyToSubmitProjectDetailsAction;
+import com.worth.ifs.project.workflow.projectdetails.actions.SubmitProjectDetailsAction;
 import com.worth.ifs.project.workflow.projectdetails.guards.ProjectDetailsSuppliedGuard;
 import com.worth.ifs.workflow.WorkflowStateMachineListener;
 import org.springframework.context.annotation.Bean;
@@ -18,7 +18,7 @@ import org.springframework.statemachine.config.builders.StateMachineTransitionCo
  * Describes the workflow for the Project Details section for Project Setup.
  */
 @Configuration
-@EnableStateMachine
+@EnableStateMachine(name = "projectDetailsStateMachine")
 public class ProjectDetailsConfig extends StateMachineConfigurerAdapter<String, String> {
 
     @Override
@@ -39,24 +39,24 @@ public class ProjectDetailsConfig extends StateMachineConfigurerAdapter<String, 
         transitions
                 .withExternal()
                     .source(ProjectDetailsState.PENDING.getStateName()).target(ProjectDetailsState.READY_TO_SUBMIT.getStateName())
-                    .action(readyToSubmitAction())
+                    .action(readyToSubmitProjectDetailsAction())
                     .guard(projectDetailsSuppliedGuard())
                     .and()
                 .withExternal()
                     .source(ProjectDetailsState.READY_TO_SUBMIT.getStateName()).target(ProjectDetailsState.SUBMITTED.getStateName())
                     .event(AssessmentOutcomes.SUBMIT.getType())
-                    .action(submitAction())
+                    .action(submitProjectDetailsAction())
                     .guard(projectDetailsSuppliedGuard());
     }
 
     @Bean
-    public ReadyToSubmitAction readyToSubmitAction() {
-        return new ReadyToSubmitAction();
+    public ReadyToSubmitProjectDetailsAction readyToSubmitProjectDetailsAction() {
+        return new ReadyToSubmitProjectDetailsAction();
     }
 
     @Bean
-    public SubmitAction submitAction() {
-        return new SubmitAction();
+    public SubmitProjectDetailsAction submitProjectDetailsAction() {
+        return new SubmitProjectDetailsAction();
     }
 
     @Bean

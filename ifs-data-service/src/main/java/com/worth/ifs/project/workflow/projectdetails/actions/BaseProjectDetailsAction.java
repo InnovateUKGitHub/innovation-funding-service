@@ -4,13 +4,13 @@ import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectDetailsProcess;
 import com.worth.ifs.project.domain.ProjectUser;
 import com.worth.ifs.project.repository.ProjectDetailsProcessRepository;
+import com.worth.ifs.workflow.TestableTransitionWorkflowAction;
 import com.worth.ifs.workflow.domain.ActivityState;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
 import com.worth.ifs.workflow.repository.ActivityStateRepository;
 import com.worth.ifs.workflow.resource.State;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.statemachine.StateContext;
-import org.springframework.statemachine.action.Action;
 
 import java.util.Optional;
 
@@ -19,7 +19,7 @@ import static com.worth.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
 /**
  * A base class for Project-related workflow Actions
  */
-abstract class BaseProjectDetailsAction implements Action<String, String> {
+abstract class BaseProjectDetailsAction extends TestableTransitionWorkflowAction {
 
     @Autowired
     private ActivityStateRepository activityStateRepository;
@@ -28,7 +28,7 @@ abstract class BaseProjectDetailsAction implements Action<String, String> {
     private ProjectDetailsProcessRepository projectDetailsProcessRepository;
 
     @Override
-    public void execute(StateContext<String, String> context) {
+    public void doExecute(StateContext<String, String> context) {
 
         ProcessOutcome updatedProcessOutcome = (ProcessOutcome) context.getMessageHeader("processOutcome");
         State newState = State.valueOf(context.getTransition().getTarget().getId());
