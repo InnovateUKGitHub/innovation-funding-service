@@ -2293,7 +2293,7 @@ hello world</stringProp>
             <threadCounts>true</threadCounts>
           </value>
         </objProp>
-        <stringProp name="filename"></stringProp>
+        <stringProp name="filename">results_tree.jtl</stringProp>
       </ResultCollector>
       <hashTree/>
       <ResultCollector guiclass="TableVisualizer" testclass="ResultCollector" testname="View Results in Table" enabled="true">
@@ -2327,7 +2327,7 @@ hello world</stringProp>
             <threadCounts>true</threadCounts>
           </value>
         </objProp>
-        <stringProp name="filename"></stringProp>
+        <stringProp name="filename">results_table.jtl</stringProp>
       </ResultCollector>
       <hashTree/>
       <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group" enabled="false">
