@@ -82,7 +82,7 @@ public class ProjectRegistrationController {
                 return populateModelWithErrorsAndReturnErrorView(errors, model);
             }
             if (emailExists(registrationForm.getEmail())) {
-                bindingResult.addError(new FieldError(EMAIL_FIELD_NAME, EMAIL_FIELD_NAME, registrationForm.getEmail(), false, null, null, "Email address is already in use"));
+                ValidationMessages.rejectValue(bindingResult, EMAIL_FIELD_NAME, "validation.standard.email.exists");
                 return restSuccess(REGISTRATION_REGISTER_VIEW);
             }
             RestResult<String> result = createUser(registrationForm, invite.getOrganisation())
