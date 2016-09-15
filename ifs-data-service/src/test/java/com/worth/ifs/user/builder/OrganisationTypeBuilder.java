@@ -2,10 +2,12 @@ package com.worth.ifs.user.builder;
 
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.user.domain.OrganisationType;
+import com.worth.ifs.user.resource.OrganisationTypeEnum;
 
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import static com.worth.ifs.BaseBuilderAmendFunctions.setField;
 import static com.worth.ifs.BuilderAmendFunctions.idBasedNames;
 import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
@@ -33,5 +35,12 @@ public class OrganisationTypeBuilder extends BaseBuilder<OrganisationType, Organ
     @Override
     protected OrganisationType createInitial() {
         return new OrganisationType();
+    }
+
+    public OrganisationTypeBuilder withOrganisationType(OrganisationTypeEnum... organisationTypeEnums) {
+        return withArray((organisationTypeEnum, organisationType) -> {
+            setField("id", organisationTypeEnum.getOrganisationTypeId(), organisationType);
+            setField("name", organisationTypeEnum.name(), organisationType);
+        }, organisationTypeEnums);
     }
 }

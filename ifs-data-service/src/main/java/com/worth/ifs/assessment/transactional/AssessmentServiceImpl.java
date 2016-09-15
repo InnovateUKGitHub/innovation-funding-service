@@ -60,7 +60,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
         }
 
         return find(assessmentRepository.findOne(assessmentId), notFoundError(AssessmentRepository.class, assessmentId)).andOnSuccess(found -> {
-            if (!assessmentWorkflowEventHandler.recommend(found.getProcessRole().getId(), found, processOutcomeMapper.mapToDomain(processOutcome))) {
+            if (!assessmentWorkflowEventHandler.recommend(found.getParticipant().getId(), found, processOutcomeMapper.mapToDomain(processOutcome))) {
                 return serviceFailure(new Error(ASSESSMENT_RECOMMENDATION_FAILED));
             }
             return serviceSuccess();
@@ -70,7 +70,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     @Override
     public ServiceResult<Void> rejectInvitation(Long assessmentId, ProcessOutcomeResource processOutcome) {
         return find(assessmentRepository.findOne(assessmentId), notFoundError(AssessmentRepository.class, assessmentId)).andOnSuccess(found -> {
-            if (!assessmentWorkflowEventHandler.rejectInvitation(found.getProcessRole().getId(), found, processOutcomeMapper.mapToDomain(processOutcome))) {
+            if (!assessmentWorkflowEventHandler.rejectInvitation(found.getParticipant().getId(), found, processOutcomeMapper.mapToDomain(processOutcome))) {
                 return serviceFailure(new Error(ASSESSMENT_REJECTION_FAILED));
             }
             return serviceSuccess();

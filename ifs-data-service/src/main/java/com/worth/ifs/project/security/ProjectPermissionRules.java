@@ -145,4 +145,11 @@ public class ProjectPermissionRules extends BasePermissionRules {
         return isProjectManager(project.getId(), user.getId());
     }
 
+    @PermissionRule(
+            value = "VIEW_TEAM_STATUS",
+            description = "All partners can view team status")
+    public boolean partnersCanViewTeamStatus(ProjectResource project, UserResource user){
+        return isPartner(project.getId(), user.getId());
+    }
+
 }
