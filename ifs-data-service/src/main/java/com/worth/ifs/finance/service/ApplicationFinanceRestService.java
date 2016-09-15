@@ -24,4 +24,5 @@ public interface ApplicationFinanceRestService {
     RestResult<Void> removeFinanceDocument(Long applicationFinanceId);
     RestResult<ByteArrayResource> getFile(Long applicationFinanceId);
     RestResult<FileEntryResource> getFileDetails(Long applicationFinanceId);
+    RestResult<ApplicationFinanceResource> getApplicationOrganisationFinances(final Long applicationId, final Long organisationId);
 }

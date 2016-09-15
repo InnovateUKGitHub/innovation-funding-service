@@ -108,14 +108,6 @@ public class ProjectSpendProfileSummaryController {
                     getEnumForIndex(ProjectSpendProfileSummaryViewModel.QueriesRaised.class, i))
         );
 
-
-/*        public ProjectSpendProfileSummaryViewModel(
-                Long projectId, CompetitionSummaryResource competitionSummary,
-                List< ProjectSpendProfileSummaryViewModel.SpendProfileOrganisationRow > partnerOrganisationDetails,
-                LocalDate projectStartDate, int durationInMonths, BigDecimal totalProjectCost, BigDecimal grantAppliedFor,
-                BigDecimal otherPublicSectorFunding, BigDecimal totalPercentageGrant, boolean spendProfilesGenerated)*/
-
-
         return new ProjectSpendProfileSummaryViewModel(
                 projectId, competitionSummary, organisationRows,
                 project.getTargetStartDate(), project.getDurationInMonths().intValue(),
@@ -123,14 +115,6 @@ public class ProjectSpendProfileSummaryController {
                 applicationFinanceResource.getTotalOtherFunding(),
                 new BigDecimal(applicationFinanceResource.getGrantClaimPercentage().toString()),
                 anySpendProfile.isPresent());
-
-/*        return new ProjectSpendProfileSummaryViewModel(
-                projectId, competitionSummary, organisationRows,
-                project.getTargetStartDate(), project.getDurationInMonths().intValue(),
-                BigDecimal.valueOf(400000), BigDecimal.valueOf(200000),
-                BigDecimal.valueOf(0),
-                BigDecimal.valueOf(50),
-                anySpendProfile.isPresent());*/
     }
 
     private <T extends Enum> T getEnumForIndex(Class<T> enums, int index) {
