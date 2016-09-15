@@ -36,8 +36,8 @@ public class BankDetailsBuilder extends BaseBuilder<BankDetails, BankDetailsBuil
         return withArray((id, bankDetails) -> setField("id", id, bankDetails), ids);
     }
 
-    public BankDetailsBuilder withOrganisation(Organisation organisation) {
-        return with((bankDetails) -> bankDetails.setOrganisation(organisation));
+    public BankDetailsBuilder withOrganisation(Organisation... organisations) {
+        return withArray((organisation, bankDetails) -> setField("organisation", organisation, bankDetails), organisations);
     }
 
     public BankDetailsBuilder withOrganiationAddress(OrganisationAddress organisationAddress) {

@@ -3,6 +3,7 @@ package com.worth.ifs.finance.transactional;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.repository.QuestionRepository;
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.file.mapper.FileEntryMapper;
@@ -30,9 +31,11 @@ import com.worth.ifs.finance.repository.FinanceRowMetaValueRepository;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.ApplicationFinanceResourceId;
 import com.worth.ifs.finance.resource.FinanceRowMetaFieldResource;
+import com.worth.ifs.finance.resource.category.FinanceRowCostCategory;
 import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import com.worth.ifs.finance.resource.cost.FinanceRowType;
 import com.worth.ifs.transactional.BaseTransactionalService;
+import com.worth.ifs.user.domain.Organisation;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -44,12 +47,16 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_TEAM_STATUS_APPLICATION_FINANCE_RECORD_FOR_APPLICATION_ORGANISATION_DOES_NOT_EXIST;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
+import static java.util.Arrays.asList;
 
 @Service
 public class FinanceRowServiceImpl extends BaseTransactionalService implements FinanceRowService {
@@ -297,6 +304,31 @@ public class FinanceRowServiceImpl extends BaseTransactionalService implements F
     public ServiceResult<ApplicationFinanceResource> financeDetails(Long applicationId, Long organisationId) {
         ApplicationFinanceResourceId applicationFinanceResourceId = new ApplicationFinanceResourceId(applicationId, organisationId);
         return getApplicationFinanceForOrganisation(applicationFinanceResourceId);
+    }
+
+    @Override
+    public ServiceResult<Boolean> organisationSeeksFunding(Long projectId, Long applicationId, Long organisationId) {
+        ApplicationFinanceResourceId applicationFinanceResourceId = new ApplicationFinanceResourceId(applicationId, organisationId);
+
+        ApplicationFinance applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(
+                applicationFinanceResourceId.getApplicationId(), applicationFinanceResourceId.getOrganisationId());
+        ApplicationFinanceResource applicationFinanceResource = null;
+
+        //TODO: INFUND-5102 This to me seems like a very messy way of building resource object. You don't only need to map the domain object using the mapper, but then also do a buch of things in setFinanceDetails.  We should find a better way to handle this.
+        if(applicationFinance!=null) {
+            applicationFinanceResource = applicationFinanceMapper.mapToResource(applicationFinance);
+            setFinanceDetails(applicationFinanceResource);
+            return serviceSuccess(applicationFinanceResource.getGrantClaimPercentage() != null && applicationFinanceResource.getGrantClaimPercentage() > 0);
+        } else {
+            return serviceFailure(new Error(PROJECT_TEAM_STATUS_APPLICATION_FINANCE_RECORD_FOR_APPLICATION_ORGANISATION_DOES_NOT_EXIST, asList(applicationId, organisationId)));
+        }
+    }
+
+    private void setFinanceDetails(ApplicationFinanceResource applicationFinanceResource) {
+        Organisation organisation = organisationRepository.findOne(applicationFinanceResource.getOrganisation());
+        OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(organisation.getOrganisationType().getName());
+        Map<FinanceRowType, FinanceRowCostCategory> costs = organisationFinanceHandler.getOrganisationFinances(applicationFinanceResource.getId());
+        applicationFinanceResource.setFinanceOrganisationDetails(costs);
     }
 
     @Override
