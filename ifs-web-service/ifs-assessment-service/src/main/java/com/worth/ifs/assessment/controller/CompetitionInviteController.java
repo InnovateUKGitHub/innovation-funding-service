@@ -11,6 +11,7 @@ import com.worth.ifs.invite.resource.CompetitionRejectionResource;
 import com.worth.ifs.invite.resource.RejectionReasonResource;
 import com.worth.ifs.invite.service.RejectionReasonRestService;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.util.CookieUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.function.Supplier;
@@ -34,6 +36,7 @@ import static java.lang.String.format;
 @Controller
 @RequestMapping("/invite")
 public class CompetitionInviteController extends BaseController {
+    public static final String ASSESSOR_INVITE_HASH = "assessor_invite_hash";
 
     @Autowired
     private CompetitionInviteRestService inviteRestService;
@@ -58,7 +61,8 @@ public class CompetitionInviteController extends BaseController {
     @RequestMapping(value = "competition/{inviteHash}/accept", method = RequestMethod.POST)
     public String acceptInvite(@PathVariable("inviteHash") String inviteHash,
                                @ModelAttribute("loggedInUser") UserResource loggedInUser,
-                               Model model) {
+                               Model model,
+                               HttpServletResponse response) {
         boolean userIsLoggedIn = loggedInUser != null;
         if (userIsLoggedIn) {
             return format("redirect:/invite-accept/competition/%s/accept",inviteHash);
@@ -67,6 +71,7 @@ public class CompetitionInviteController extends BaseController {
                 if (userExists) {
                     return doViewAcceptUserExistsButNotLoggedIn(model, inviteHash);
                 } else {
+                    CookieUtil.saveToCookie(response, ASSESSOR_INVITE_HASH, inviteHash);
                     return "redirect:/registration/register";
                 }
             }).getSuccessObject();
