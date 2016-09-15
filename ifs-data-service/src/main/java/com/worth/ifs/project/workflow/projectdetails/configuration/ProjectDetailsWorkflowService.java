@@ -11,13 +11,13 @@ import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.statemachine.recipes.persist.PersistStateMachineHandler;
 
 /**
- * {@code ProjectDetailsWorkflowEventHandler} is the entry point for triggering the workflow.
+ * {@code ProjectDetailsWorkflowService} is the entry point for triggering the workflow.
  * Based on the Project Detail's current state the next one is tried to transition to by triggering
  * an event.
  */
-public class ProjectDetailsWorkflowEventHandler extends BaseWorkflowEventHandler<ProjectDetailsProcess> {
+public class ProjectDetailsWorkflowService extends BaseWorkflowEventHandler<ProjectDetailsProcess> {
 
-    public ProjectDetailsWorkflowEventHandler(PersistStateMachineHandler stateHandler, ProjectDetailsProcessRepository projectDetailsProcessRepository) {
+    public ProjectDetailsWorkflowService(PersistStateMachineHandler stateHandler, ProjectDetailsProcessRepository projectDetailsProcessRepository) {
         super(stateHandler, projectDetailsProcessRepository);
     }
 

@@ -4,7 +4,7 @@ import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.mapper.AssessmentMapper;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.assessment.resource.AssessmentResource;
-import com.worth.ifs.assessment.workflow.configuration.AssessmentWorkflowEventHandler;
+import com.worth.ifs.assessment.workflow.configuration.AssessmentWorkflowService;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -45,7 +45,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     private ProcessOutcomeMapper processOutcomeMapper;
 
     @Autowired
-    private AssessmentWorkflowEventHandler assessmentWorkflowEventHandler;
+    private AssessmentWorkflowService assessmentWorkflowService;
 
     @Override
     public ServiceResult<AssessmentResource> findById(Long id) {
@@ -60,7 +60,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
         }
 
         return find(assessmentRepository.findOne(assessmentId), notFoundError(AssessmentRepository.class, assessmentId)).andOnSuccess(found -> {
-            if (!assessmentWorkflowEventHandler.recommend(found.getParticipant().getId(), found, processOutcomeMapper.mapToDomain(processOutcome))) {
+            if (!assessmentWorkflowService.recommend(found.getParticipant().getId(), found, processOutcomeMapper.mapToDomain(processOutcome))) {
                 return serviceFailure(new Error(ASSESSMENT_RECOMMENDATION_FAILED));
             }
             return serviceSuccess();
@@ -70,7 +70,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     @Override
     public ServiceResult<Void> rejectInvitation(Long assessmentId, ProcessOutcomeResource processOutcome) {
         return find(assessmentRepository.findOne(assessmentId), notFoundError(AssessmentRepository.class, assessmentId)).andOnSuccess(found -> {
-            if (!assessmentWorkflowEventHandler.rejectInvitation(found.getParticipant().getId(), found, processOutcomeMapper.mapToDomain(processOutcome))) {
+            if (!assessmentWorkflowService.rejectInvitation(found.getParticipant().getId(), found, processOutcomeMapper.mapToDomain(processOutcome))) {
                 return serviceFailure(new Error(ASSESSMENT_REJECTION_FAILED));
             }
             return serviceSuccess();

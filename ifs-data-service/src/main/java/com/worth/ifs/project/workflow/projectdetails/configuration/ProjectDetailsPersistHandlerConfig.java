@@ -29,7 +29,7 @@ public class ProjectDetailsPersistHandlerConfig {
     }
 
     @Bean
-    public ProjectDetailsWorkflowEventHandler projectDetailsWorkflowEventHandler() {
-        return new ProjectDetailsWorkflowEventHandler(new PersistStateMachineHandler(stateMachine), projectDetailsProcessRepository);
+    public ProjectDetailsWorkflowService projectDetailsWorkflowEventHandler() {
+        return new ProjectDetailsWorkflowService(new PersistStateMachineHandler(stateMachine), projectDetailsProcessRepository);
     }
 }

@@ -39,7 +39,7 @@ import com.worth.ifs.project.repository.ProjectUserRepository;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
-import com.worth.ifs.project.workflow.projectdetails.configuration.ProjectDetailsWorkflowEventHandler;
+import com.worth.ifs.project.workflow.projectdetails.configuration.ProjectDetailsWorkflowService;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -126,7 +126,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     private FileEntryMapper fileEntryMapper;
 
     @Autowired
-    private ProjectDetailsWorkflowEventHandler projectDetailsWorkflowHandler;
+    private ProjectDetailsWorkflowService projectDetailsWorkflowHandler;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;

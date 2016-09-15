@@ -19,7 +19,7 @@ import org.springframework.statemachine.config.builders.StateMachineTransitionCo
  */
 @Configuration
 @EnableStateMachine(name = "projectDetailsStateMachine")
-public class ProjectDetailsConfig extends StateMachineConfigurerAdapter<String, String> {
+public class ProjectDetailsWorkflow extends StateMachineConfigurerAdapter<String, String> {
 
     @Override
     public void configure(StateMachineConfigurationConfigurer<String, String> config) throws Exception {

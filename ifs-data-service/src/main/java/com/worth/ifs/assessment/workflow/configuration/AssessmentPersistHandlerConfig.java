@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.statemachine.StateMachine;
-import org.springframework.statemachine.config.EnableStateMachine;
 import org.springframework.statemachine.recipes.persist.PersistStateMachineHandler;
 
 /**
@@ -30,7 +29,7 @@ public class AssessmentPersistHandlerConfig {
     }
 
     @Bean
-    public AssessmentWorkflowEventHandler assessmentWorkflowEventHandler() {
-        return new AssessmentWorkflowEventHandler(new PersistStateMachineHandler(stateMachine), assessmentRepository);
+    public AssessmentWorkflowService assessmentWorkflowEventHandler() {
+        return new AssessmentWorkflowService(new PersistStateMachineHandler(stateMachine), assessmentRepository);
     }
 }

@@ -11,22 +11,20 @@ import org.springframework.statemachine.state.State;
 import org.springframework.statemachine.transition.Transition;
 
 /**
- * {@code ProjectDetailsWorkflowEventHandler} is the entry point for triggering the workflow.
- * Based on the Project Detail's current state the next one is tried to transition to by triggering
- * an event.
+ * A superclass for workflow handlers that expose public "service" methods for pushing Process subclasses through
+ * workflows
  */
 public class BaseWorkflowEventHandler<ProcessType> {
 
     private static final Log LOG = LogFactory.getLog(BaseWorkflowEventHandler.class);
 
     protected PersistStateMachineHandler stateHandler;
-    private PersistStateChangeListener listener = new LocalStateChangeListener();
     private ProcessRepository<ProcessType> processRepository;
 
     public BaseWorkflowEventHandler(PersistStateMachineHandler stateHandler, ProcessRepository<ProcessType> processRepository) {
         this.stateHandler = stateHandler;
         this.processRepository = processRepository;
-        this.stateHandler.addPersistStateChangeListener(listener);
+        this.stateHandler.addPersistStateChangeListener(new LocalStateChangeListener());
     }
 
     protected ProcessType getProcessByParticipantId(Long participantId) {

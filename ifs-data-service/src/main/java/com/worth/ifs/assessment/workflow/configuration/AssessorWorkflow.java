@@ -24,7 +24,7 @@ import org.springframework.statemachine.config.builders.StateMachineTransitionCo
  */
 @Configuration
 @EnableStateMachine(name = "assessmentStateMachine")
-public class AssessorWorkflowConfig extends StateMachineConfigurerAdapter<String, String> {
+public class AssessorWorkflow extends StateMachineConfigurerAdapter<String, String> {
 
     @Override
     public void configure(StateMachineConfigurationConfigurer<String, String> config) throws Exception {
