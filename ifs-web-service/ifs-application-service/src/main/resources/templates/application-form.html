@@ -55,7 +55,8 @@
             <div th:unless="${allReadOnly}" th:remove="tag">
                 <button type="submit" class="button-secondary app-submit-btn" name="submit-section">Save and return to application overview</button>
             </div>
-
+            <div th:include="fragments/elements :: application-agree-to-terms" class="agree-to-terms-container" />
+            <div th:include="fragments/elements :: application-agree-to-state-aid" class="agree-to-terms-container" />
             <div class="alignright-button" th:if="${(currentSection != null) and (currentSection.getName() != null) and (#strings.equals(currentSection.getName(), 'Your finances'))}">
                 <div th:include="question-type/form-elements :: form-mark-all-as-complete-buttons" th:remove="tag"/>
             </div>

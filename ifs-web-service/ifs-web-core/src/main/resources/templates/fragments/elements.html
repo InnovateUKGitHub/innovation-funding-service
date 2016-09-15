@@ -186,6 +186,16 @@
 	</div>
 </div>
 
+<!--  ========================== Element: Agree to application terms =============== -->
+<div th:fragment="application-agree-to-state-aid">
+    <div class="form-block">
+        <label class="block-label" for="agree-state-aid-page">
+            <input id="agree-state-aid-page" name="agreeStateAid" type="checkbox" value="yes"/>
+            Agree to state aid (content TODO)
+        </label>
+    </div>
+</div>
+
 <!-- =========================== Element: Competition status warning ================ -->
 <div th:fragment="competition-status-message (application, competition)">
 		<div class="warning-alert"  th:if="${(application.applicationStatusName == 'created' or application.applicationStatusName == 'open') and competition.competitionStatus.name() != 'OPEN'}">
