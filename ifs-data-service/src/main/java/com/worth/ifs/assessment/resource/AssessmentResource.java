@@ -10,7 +10,7 @@ import java.util.List;
 public class AssessmentResource {
     private Long id;
     private String event;
-    private String status;
+    private AssessmentStates assessmentState;
     private Calendar lastModified;
     private LocalDate startDate;
     private LocalDate endDate;
@@ -37,12 +37,12 @@ public class AssessmentResource {
         this.event = event;
     }
 
-    public String getStatus() {
-        return status;
+    public AssessmentStates getAssessmentState() {
+        return assessmentState;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setAssessmentState(AssessmentStates assessmentState) {
+        this.assessmentState = assessmentState;
     }
 
     public Calendar getLastModified() {
@@ -132,7 +132,7 @@ public class AssessmentResource {
         return new EqualsBuilder()
                 .append(id, that.id)
                 .append(event, that.event)
-                .append(status, that.status)
+                .append(assessmentState, that.assessmentState)
                 .append(lastModified, that.lastModified)
                 .append(startDate, that.startDate)
                 .append(endDate, that.endDate)
@@ -150,7 +150,7 @@ public class AssessmentResource {
         return new HashCodeBuilder(17, 37)
                 .append(id)
                 .append(event)
-                .append(status)
+                .append(assessmentState)
                 .append(lastModified)
                 .append(startDate)
                 .append(endDate)

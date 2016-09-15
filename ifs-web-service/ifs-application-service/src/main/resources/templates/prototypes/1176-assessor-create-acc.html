@@ -75,6 +75,59 @@
                 </div>
             </fieldset>
 
+			<h3 class="heading-small">Your ethnic group</h3>
+			<fieldset class="inline">
+				<legend class="visuallyhidden">Your ethnic group</legend>
+				<div class="form-group">
+					<label class="block-label" for="ethnic-white">
+						<input id="ethnic-white" type="radio" name="ethnic-group" value="White" />
+						White
+					</label>
+					<label class="block-label" for="ethnic-mixed">
+						<input id="ethnic-mixed" type="radio" name="ethnic-group" value="Mixed / multiple ethnic groups" />
+						Mixed / multiple ethnic groups
+					</label>
+					<label class="block-label" for="ethnic-asian">
+						<input id="ethnic-asian" type="radio" name="ethnic-group" value="Asian / Asian British" />
+						Asian / Asian British
+					</label>
+					<label class="block-label" for="ethnic-black">
+						<input id="ethnic-black" type="radio" name="ethnic-group" value="Black / African / Caribbean" />
+						Black / African / Caribbean
+					</label>
+					<label class="block-label" for="ethnic-black-british">
+						<input id="ethnic-black-british" type="radio" name="ethnic-group" value="Black British" />
+						Black British
+					</label>
+					<label class="block-label" for="ethnic-other">
+						<input id="ethnic-other" type="radio" name="ethnic-group" value="Other ethnic group" />
+						Other ethnic group
+					</label>
+					<label class="block-label" for="ethnic-no-answer">
+						<input id="ethnic-no-answer" type="radio" name="ethnic-group" value="Prefer not to say" />
+						Prefer not to say
+					</label>
+				</div>
+			</fieldset>
+
+			<h3 class="heading-small">Do you consider yourself disabled?</h3>
+			<fieldset class="inline">
+				<legend class="visuallyhidden">Do you consider yourself disabled?</legend>
+				<div class="form-group">
+					<label class="block-label" for="disabled-yes">
+						<input id="disabled-yes" type="radio" name="disabled-group" value="Yes" />
+						Yes
+					</label>
+					<label class="block-label" for="disabled-no">
+						<input id="disabled-no" type="radio" name="disabled-group" value="No" />
+						No
+					</label>
+					<label class="block-label" for="disabled-no-answer">
+						<input id="disabled-no-answer" type="radio" name="disabled-group" value="Prefer not to say" />
+						Prefer not to say
+					</label>
+				</div>
+			</fieldset>
 
 			<div class="form-group" th:unless="${param.edit != null}">
 				<label class="form-label" for="postcode-check">
