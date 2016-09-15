@@ -105,6 +105,7 @@ ${Application_question_168}    ${server}/assessment/9/question/168
 ${Application_question_169}    ${server}/assessment/9/question/169
 ${Application_question_170}    ${server}/assessment/9/question/170
 ${Finance_summar_9_url}    ${server}/assessment/9/finances
-${Assessor_Dashboard}    ${server}/assessment/assessor/dashboard
+${Assessor_competition_dashboard}    ${server}/assessment/assessor/dashboard
+${Assessor_application_dashboard}    ${server}/assessment/assessor/dashboard/competition/2
 ${Assessment_overview_11}    ${server}/assessment/11
 ${Assessment_summary_incomplete_12}    ${server}/assessment/12/summary
