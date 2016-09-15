@@ -65,8 +65,8 @@ public class Project implements ProcessActivity {
     private FileEntry grantOfferLetter;
 
     @OneToOne
-    @JoinColumn(name="grantOfferLetterFileEntryId", referencedColumnName = "id")
-    private FileEntry additional;
+    @JoinColumn(name="additionalContractFileEntryId", referencedColumnName = "id")
+    private FileEntry additionalContractFile;
 
     public Project() {}
 
@@ -208,5 +208,21 @@ public class Project implements ProcessActivity {
 
     public void setExploitationPlan(FileEntry exploitationPlan) {
         this.exploitationPlan = exploitationPlan;
+    }
+
+    public FileEntry getGrantOfferLetter() {
+        return grantOfferLetter;
+    }
+
+    public void setGrantOfferLetter(FileEntry grantOfferLetter) {
+        this.grantOfferLetter = grantOfferLetter;
+    }
+
+    public FileEntry getAdditionalContractFile() {
+        return additionalContractFile;
+    }
+
+    public void setAdditionalContractFile(FileEntry additionalContractFile) {
+        this.additionalContractFile = additionalContractFile;
     }
 }
