@@ -3,6 +3,7 @@ package com.worth.ifs.commons.service;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.error.ErrorHolder;
 import com.worth.ifs.commons.error.ErrorTemplate;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.List;
 
@@ -47,5 +48,13 @@ public class ServiceFailure implements ErrorHolder {
 
     public Throwable getCause() {
         return cause;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("errors", errors)
+                .append("cause", cause)
+                .toString();
     }
 }

@@ -92,7 +92,7 @@ public class Either<L, R> {
         checkEitherState();
 
         if (!isLeft()) {
-            throw new NoSuchElementException("Not a left value");
+            throw new NoSuchElementException("Not a left value.  Right value is  " + getRight());
         }
 
         return left;
@@ -102,7 +102,7 @@ public class Either<L, R> {
         checkEitherState();
 
         if (!isRight()) {
-            throw new NoSuchElementException("Not a right value");
+            throw new NoSuchElementException("Not a right value.  Left value is " + getLeft());
         }
 
         return right;
