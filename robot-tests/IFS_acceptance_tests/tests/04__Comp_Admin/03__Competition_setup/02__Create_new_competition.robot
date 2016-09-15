@@ -35,7 +35,7 @@ Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
-Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot    # TODO Known bug INFUND-4681, enforces the Competition Type (in Initial Details) to be Programme else Application Questions lead to 404, please do not change the value!
+Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
 
 *** Test Cases ***
 User can create a new competition
@@ -56,7 +56,7 @@ New competition shows in Preparation section with the default name
     [Documentation]    INFUND-2980
     Given The user clicks the button/link    link=All competitions
     And The user clicks the button/link    id=section-3
-    Then the competition should show in the correct section    css=section:nth-child(4) li:nth-child(2)    No competition title defined    #this keyword checks if the new application shows in the second line of the "In preparation" competitions
+    Then the competition should show in the correct section    css=section:nth-of-type(1) li:nth-child(2)    No competition title defined    #this keyword checks if the new application shows in the second line of the "In preparation" competitions
 
 Initial details server-side validations
     [Documentation]    INFUND-2982
@@ -121,8 +121,7 @@ Initial details client-side validations
 
 Initial details: Autosave
     [Documentation]    INFUND-3001
-    [Tags]    Pending
-    #pendingI NFUND-4764
+    [Tags]
     When the user clicks the button/link    link=Competition set up
     and the user clicks the button/link    link=Initial Details
     Then the user should see the correct values in the initial details form
@@ -181,7 +180,7 @@ New application shows in Preparation section with the new name
     [Documentation]    INFUND-2980
     Given The user clicks the button/link    link=All competitions
     And The user clicks the button/link    id=section-3
-    Then the competition should show in the correct section    css=section:nth-child(4) > ul    Test competition    #This keyword checks if the new competition shows in the "In preparation" test
+    Then the competition should show in the correct section    css=section:nth-of-type(1) > ul    Test competition    #This keyword checks if the new competition shows in the "In preparation" test
 
 Funding information server-side validations
     [Documentation]    INFUND-2985
@@ -218,7 +217,7 @@ Funding informations calculations
     [Tags]    HappyPath
     When the user clicks the button/link    jQuery=Button:contains("+Add co-funder")
     and the user should see the element    jQuery=Button:contains("+Add co-funder")
-    Then the user should see the element    css=#co-funder-row-1
+    Then the user should see the element    jQuery=Button:contains("Remove")
     And the user enters text to a text field    id=1-funder    FunderName2
     And the user enters text to a text field    id=1-funderBudget    1000
     Then the total should be correct    £ 21,000
@@ -394,16 +393,14 @@ Application questions: All the sections should be visible
 
 Application questions: server side validations
     [Documentation]    INFUND-3000
-    [Tags]    HappyPath    Pending
-    # pending INFUND-4769
-    #Given The user clicks the button/link    jQuery=li:nth-child(5) .button:contains(Edit)
-    And The user should see the element    jQuery=.button[value="Save and close"]
+    [Tags]    HappyPath
+    Given The user should see the element    jQuery=.button[value="Save and close"]
     When the user leaves all the question field empty
     And The user clicks the button/link    jQuery=.button[value="Save and close"]
     And The user clicks the button/link    jQuery=.button[value="Save and close"]
     Then the validation error above the question should be visible    jQuery=label:contains(Question title)    This field cannot be left blank
     And the validation error above the question should be visible    jQuery=label:contains(Question guidance title)    This field cannot be left blank
-    And the validation error above the question should be visible    jQuery=div:nth-child(4) div:nth-child(4) label:contains(Question guidance)    This field cannot be left blank
+    And the validation error above the question should be visible    jQuery=label:contains(Question guidance)    This field cannot be left blank
 
 Application questions: Client side validations
     [Documentation]    INFUND-3000
@@ -411,7 +408,7 @@ Application questions: Client side validations
     Given the user fills the empty question fields
     Then the validation error above the question should not be visible    jQuery=label:contains(Question title)    This field cannot be left blank
     And the validation error above the question should not be visible    jQuery=label:contains(Question guidance title)    This field cannot be left blank
-    And the validation error above the question should not be visible    jQuery=div:nth-child(4) div:nth-child(4) label:contains(Question guidance)    This field cannot be left blank
+    And the validation error above the question should not be visible    jQuery=label:contains(Question guidance)    This field cannot be left blank
     And the validation error above the question should not be visible    jQuery=label:contains(Max word count)    This field cannot be left blank
     And the validation error above the question should not be visible    jQuery=label:contains(Max word count)    This field cannot be left blank
 
@@ -457,7 +454,7 @@ User should be able to Save the competition as open
     When the user clicks the button/link    jQuery=.button:contains("Save as Ready To Open")
     And the user clicks the button/link    link=All competitions
     And the user clicks the button/link    id=section-3
-    Then the competition should show in the correct section    css=section:nth-child(5) ul    Test competition
+    Then the competition should show in the correct section    css=section:nth-of-type(2) ul    Test competition
     # The above line checks that the section 'Ready to Open' there is a competition named Test competition
 
 *** Keywords ***
@@ -637,7 +634,7 @@ the user should see the correct values in the initial details form
     Page Should Contain    Health and life sciences
     Page Should Contain    Advanced Therapies
     ${input_value} =    Get Value    id=openingDateDay
-    Should Be Equal As Strings    ${input_value}    01
+    Should Be Equal As Strings    ${input_value}    1
     ${input_value} =    Get Value    Id=openingDateMonth
     Should Be Equal As Strings    ${input_value}    12
     ${input_value} =    Get Value    id=openingDateYear

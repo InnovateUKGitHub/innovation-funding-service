@@ -2,7 +2,6 @@ package com.worth.ifs.project.finance.domain;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.Optional;
 
 import static javax.persistence.CascadeType.ALL;
 
@@ -38,7 +37,7 @@ public class Cost {
     @OrderColumn(name = "priority")
     private CostCategory costCategory;
 
-    Cost() {
+    public Cost() {
         // for ORM use
     }
 
@@ -70,7 +69,7 @@ public class Cost {
         return copy;
     }
 
-    public Cost withTimePeriod(Integer offsetAmount, CostTimePeriod.TimeUnit offsetUnit, Integer durationAmount, CostTimePeriod.TimeUnit durationUnit) {
+    public Cost withTimePeriod(Integer offsetAmount, TimeUnit offsetUnit, Integer durationAmount, TimeUnit durationUnit) {
         Cost copy = new Cost(this);
         copy.setCostTimePeriod(new CostTimePeriod(offsetAmount, offsetUnit, durationAmount, durationUnit));
         return copy;
@@ -92,8 +91,8 @@ public class Cost {
         setValue(new BigDecimal(value));
     }
 
-    public Optional<CostGroup> getCostGroup() {
-        return Optional.ofNullable(costGroup);
+    public CostGroup getCostGroup() {
+        return costGroup;
     }
 
     // for ORM backref setting
@@ -101,8 +100,9 @@ public class Cost {
         this.costGroup = costGroup;
     }
 
-    public Optional<CostTimePeriod> getCostTimePeriod() {
-        return Optional.ofNullable(costTimePeriod);
+    // for the mapper
+    public CostTimePeriod getCostTimePeriod() {
+        return costTimePeriod;
     }
 
     // for ORM backref setting
@@ -111,8 +111,8 @@ public class Cost {
         this.costTimePeriod.setCost(this);
     }
 
-    public Optional<CostCategory> getCostCategory() {
-        return Optional.ofNullable(costCategory);
+    public CostCategory getCostCategory() {
+        return costCategory;
     }
 
     // for ORM backref setting

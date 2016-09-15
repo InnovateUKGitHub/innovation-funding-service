@@ -3,10 +3,10 @@ package com.worth.ifs.assessment.builder;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.resource.AssessmentStates;
 import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.workflow.domain.ActivityState;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
 import com.worth.ifs.workflow.resource.ProcessEvent;
 import com.worth.ifs.workflow.resource.ProcessStates;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDate;
@@ -17,6 +17,7 @@ import java.util.List;
 import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static com.worth.ifs.assessment.builder.ProcessOutcomeBuilder.newProcessOutcome;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
+import static com.worth.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
 import static org.junit.Assert.assertEquals;
 
 public class AssessmentBuilderTest {
@@ -35,22 +36,22 @@ public class AssessmentBuilderTest {
         final Assessment assessment = newAssessment()
                 .withId(expectedId)
                 .withProcessEvent(expectedEvent)
-                .withProcessStatus(expectedStatus)
+                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, AssessmentStates.OPEN.getBackingState()))
                 .withLastModifiedDate(expectedLastModifiedDate)
                 .withStartDate(expectedStartDate)
                 .withEndDate(expectedEndDate)
                 .withProcessOutcome(expectedProcessOutcomes)
-                .withProcessRole(expectedProcessRole)
+                .withParticipant(expectedProcessRole)
                 .build();
 
         assertEquals(expectedId, assessment.getId());
         assertEquals(expectedEvent.name(), assessment.getProcessEvent());
-        assertEquals(expectedStatus.getState(), assessment.getProcessStatus());
+        assertEquals(expectedStatus, assessment.getActivityState());
         assertEquals(expectedLastModifiedDate, assessment.getLastModified());
         assertEquals(expectedStartDate, assessment.getStartDate());
         assertEquals(expectedEndDate, assessment.getEndDate());
         assertEquals(expectedProcessOutcomes, assessment.getProcessOutcomes());
-        assertEquals(expectedProcessRole, assessment.getProcessRole());
+        assertEquals(expectedProcessRole, assessment.getParticipant());
     }
 
     @Test
@@ -68,33 +69,35 @@ public class AssessmentBuilderTest {
         final List<Assessment> assessments = newAssessment()
                 .withId(expectedIds)
                 .withProcessEvent(expectedEvents)
-                .withProcessStatus(expectedStatuss)
+                .withActivityState(
+                        new ActivityState(APPLICATION_ASSESSMENT, AssessmentStates.OPEN.getBackingState()),
+                        new ActivityState(APPLICATION_ASSESSMENT, AssessmentStates.ASSESSED.getBackingState()))
                 .withLastModifiedDate(expectedLastModifiedDates)
                 .withStartDate(expectedStartDates)
                 .withEndDate(expectedEndDates)
                 .withProcessOutcome(expectedProcessOutcomes1, expectedProcessOutcomes2)
-                .withProcessRole(expectedProcessRoles)
+                .withParticipant(expectedProcessRoles)
                 .build(2);
 
         final Assessment first = assessments.get(0);
         assertEquals(expectedIds[0], first.getId());
         assertEquals(expectedEvents[0].name(), first.getProcessEvent());
-        assertEquals(expectedStatuss[0].getState(), first.getProcessStatus());
+        assertEquals(expectedStatuss[0], first.getActivityState());
         assertEquals(expectedLastModifiedDates[0], first.getLastModified());
         assertEquals(expectedStartDates[0], first.getStartDate());
         assertEquals(expectedEndDates[0], first.getEndDate());
         assertEquals(expectedProcessOutcomes1, first.getProcessOutcomes());
-        assertEquals(expectedProcessRoles[0], first.getProcessRole());
+        assertEquals(expectedProcessRoles[0], first.getParticipant());
 
         final Assessment second = assessments.get(1);
         assertEquals(expectedIds[1], second.getId());
         assertEquals(expectedEvents[1].name(), second.getProcessEvent());
-        assertEquals(expectedStatuss[1].getState(), second.getProcessStatus());
+        assertEquals(expectedStatuss[1], second.getActivityState());
         assertEquals(expectedLastModifiedDates[1], second.getLastModified());
         assertEquals(expectedStartDates[1], second.getStartDate());
         assertEquals(expectedEndDates[1], second.getEndDate());
         assertEquals(expectedProcessOutcomes2, second.getProcessOutcomes());
-        assertEquals(expectedProcessRoles[1], second.getProcessRole());
+        assertEquals(expectedProcessRoles[1], second.getParticipant());
     }
 
 }

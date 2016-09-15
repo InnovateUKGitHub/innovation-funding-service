@@ -22,7 +22,7 @@ public class AssessorFormInputResponsePermissionRules extends BasePermissionRule
 
     private boolean isAssessorForFormInputResponse(AssessorFormInputResponseResource response, UserResource user) {
         Assessment assessment = assessmentRepository.findOne(response.getAssessment());
-        Long assessmentUser = processRoleRepository.findOne(assessment.getProcessRole().getId()).getUser().getId();
+        Long assessmentUser = processRoleRepository.findOne(assessment.getParticipant().getId()).getUser().getId();
         return user.getId().equals(assessmentUser);
     }
 }

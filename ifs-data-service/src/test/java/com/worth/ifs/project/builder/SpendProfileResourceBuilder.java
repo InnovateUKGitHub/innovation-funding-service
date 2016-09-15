@@ -1,6 +1,7 @@
 package com.worth.ifs.project.builder;
 
 import com.worth.ifs.BaseBuilder;
+import com.worth.ifs.project.finance.resource.CostGroupResource;
 import com.worth.ifs.project.resource.SpendProfileResource;
 
 import java.util.List;
@@ -29,4 +30,26 @@ public class SpendProfileResourceBuilder extends BaseBuilder<SpendProfileResourc
     protected SpendProfileResource createInitial() {
         return new SpendProfileResource();
     }
+
+
+    public SpendProfileResourceBuilder withOrganisation(Long organisation){
+        return with((spendProfileResource) -> spendProfileResource.setOrganisation(organisation));
+    }
+
+    public SpendProfileResourceBuilder withProject(Long project){
+        return with((spendProfileResource) -> spendProfileResource.setProject(project));
+    }
+
+    public SpendProfileResourceBuilder withCostCategoryType(Long costCategoryType){
+        return with((spendProfileResource) -> spendProfileResource.setCostCategoryType(costCategoryType));
+    }
+
+    public SpendProfileResourceBuilder withEligibleCosts(CostGroupResource eligibleCosts){
+        return with((spendProfileResource) -> spendProfileResource.setEligibleCosts(eligibleCosts));
+    }
+
+    public SpendProfileResourceBuilder withSpendProfileFigures(CostGroupResource spendProfileFigures){
+        return with((spendProfileResource) -> spendProfileResource.setSpendProfileFigures(spendProfileFigures));
+    }
+
 }
