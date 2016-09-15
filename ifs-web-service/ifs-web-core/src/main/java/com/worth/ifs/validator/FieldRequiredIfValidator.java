@@ -17,7 +17,7 @@ public class FieldRequiredIfValidator implements ConstraintValidator<FieldRequir
 
     private FieldRequiredIf fieldRequiredIf;
 
-    private static final Log LOG = LogFactory.getLog(FieldMatchValidator.class);
+    private static final Log LOG = LogFactory.getLog(FieldRequiredIfValidator.class);
 
     @Override
     public void initialize(FieldRequiredIf fieldRequiredIf) {
