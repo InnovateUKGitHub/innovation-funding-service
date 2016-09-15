@@ -60,16 +60,18 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
     }
 
     @Test
-    public void findByUserId() throws Exception {
+    public void findByUserAndCompetition() throws Exception {
         long userId = 1L;
+        long competitionId = 2L;
         List<AssessmentResource> assessmentResources = assessmentResourceBuilder.build(2);
 
-        when(assessmentServiceMock.findByUserId(userId)).thenReturn(serviceSuccess(assessmentResources));
+        when(assessmentServiceMock.findByUserAndCompetition(userId, competitionId)).thenReturn(serviceSuccess(assessmentResources));
 
-        mockMvc.perform(get("/assessment/user/{userId}", userId))
+        mockMvc.perform(get("/assessment/user/{userId}/competition/{competitionId}", userId, competitionId))
                 .andDo(this.document.snippets(
                         pathParameters(
-                                parameterWithName("userId").description("UserId of the user whose assessments are being requested")
+                                parameterWithName("userId").description("Id of the user whose assessments are being requested"),
+                                parameterWithName("competitionId").description("Id of the competition associated with the user's assessments")
                         ),
                         responseFields(
                                 fieldWithPath("[]").description("List of assessments the user is allowed to see")

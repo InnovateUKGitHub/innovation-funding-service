@@ -50,19 +50,20 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
     }
 
     @Test
-    public void findByUserId() throws Exception {
+    public void findByUserAndCompetition() throws Exception {
         List<AssessmentResource> expected = newAssessmentResource()
                 .build(2);
 
         Long userId = 1L;
+        Long competitionId = 2L;
 
-        when(assessmentServiceMock.findByUserId(userId)).thenReturn(serviceSuccess(expected));
+        when(assessmentServiceMock.findByUserAndCompetition(userId, competitionId)).thenReturn(serviceSuccess(expected));
 
-        mockMvc.perform(get("/assessment/user/{userId}", userId))
+        mockMvc.perform(get("/assessment/user/{userId}/competition/{competitionId}", userId, competitionId))
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(expected)));
 
-        verify(assessmentServiceMock, only()).findByUserId(userId);
+        verify(assessmentServiceMock, only()).findByUserAndCompetition(userId, competitionId);
     }
 
     @Test

@@ -49,10 +49,9 @@ public class AssessorCompetitionDashboardModelPopulator {
     }
 
     private List<AssessorCompetitionDashboardApplicationViewModel> getApplications(Long userId, Long competitionId) {
-        List<AssessmentResource> assessmentList = assessmentService.getByUser(userId);
+        List<AssessmentResource> assessmentList = assessmentService.getByUserAndCompetition(userId, competitionId);
 
         return assessmentList.stream()
-                .filter(assessment -> assessment.getCompetition().equals(competitionId))
                 .map(assessment -> {
                     ApplicationResource application = applicationService.getById(assessment.getApplication());
                     List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());

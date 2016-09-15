@@ -18,7 +18,7 @@ public interface AssessmentService {
     ServiceResult<AssessmentResource> findById(Long id);
 
     @PostFilter("hasPermission(filterObject, 'READ')")
-    ServiceResult<List<AssessmentResource>> findByUserId(Long userId);
+    ServiceResult<List<AssessmentResource>> findByUserAndCompetition(Long userId, Long CompetitionId);
 
     @PreAuthorize("hasPermission(#assessmentId, 'com.worth.ifs.assessment.resource.AssessmentResource', 'UPDATE')")
     ServiceResult<Void> recommend(Long assessmentId, ProcessOutcomeResource processOutcome);

@@ -31,8 +31,8 @@ public class AssessmentRestServiceImpl extends BaseRestService implements Assess
     }
 
     @Override
-    public RestResult<List<AssessmentResource>> getByUserId(Long userId) {
-        return getWithRestResult(format("%s/user/%s", assessmentRestURL, userId), assessmentResourceResourceListType());
+    public RestResult<List<AssessmentResource>> getByUserAndCompetition(Long userId, Long competitionId) {
+        return getWithRestResult(format("%s/user/%s/competition/%s", assessmentRestURL, userId, competitionId), assessmentResourceResourceListType());
     }
 
     @Override

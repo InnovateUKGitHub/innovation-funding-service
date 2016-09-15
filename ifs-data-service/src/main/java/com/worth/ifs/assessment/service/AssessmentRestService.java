@@ -11,11 +11,11 @@ import java.util.List;
  */
 public interface AssessmentRestService {
 
-    RestResult<AssessmentResource> getById(final Long id);
+    RestResult<AssessmentResource> getById(Long id);
 
-    RestResult<List<AssessmentResource>> getByUserId(final Long userId);
+    RestResult<List<AssessmentResource>> getByUserAndCompetition(Long userId, Long CompetitionId);
 
-    RestResult<Void> recommend(final Long id, final ProcessOutcomeResource processOutcome);
+    RestResult<Void> recommend(Long id, ProcessOutcomeResource processOutcome);
 
-    RestResult<Void> rejectInvitation(final Long id, final ProcessOutcomeResource processOutcome);
+    RestResult<Void> rejectInvitation(Long id, ProcessOutcomeResource processOutcome);
 }

@@ -26,22 +26,22 @@ public class AssessmentController {
     private AssessmentService assessmentService;
 
     @RequestMapping(value= "/{id}", method = GET)
-    public RestResult<AssessmentResource> findById(@PathVariable("id") final Long id) {
+    public RestResult<AssessmentResource> findById(@PathVariable("id") Long id) {
         return assessmentService.findById(id).toGetResponse();
     }
 
-    @RequestMapping(value= "/user/{userId}", method = GET)
-    public RestResult<List<AssessmentResource>> findByUserId(@PathVariable("userId") final Long userId) {
-        return assessmentService.findByUserId(userId).toGetResponse();
+    @RequestMapping(value= "/user/{userId}/competition/{competitionId}", method = GET)
+    public RestResult<List<AssessmentResource>> findByUserAndCompetition(@PathVariable("userId") Long userId, @PathVariable("competitionId") Long competitionId ) {
+        return assessmentService.findByUserAndCompetition(userId, competitionId).toGetResponse();
     }
 
     @RequestMapping(value= "/{id}/recommend", method = PUT)
-    public RestResult<Void> recommend(@PathVariable("id") final Long id,@RequestBody final ProcessOutcomeResource processOutcome) {
+    public RestResult<Void> recommend(@PathVariable("id") Long id,@RequestBody ProcessOutcomeResource processOutcome) {
         return assessmentService.recommend(id, processOutcome).toPutResponse();
     }
 
     @RequestMapping(value= "/{id}/rejectInvitation", method = PUT)
-    public RestResult<Void> rejectInvitation(@PathVariable("id") final Long id,@RequestBody final ProcessOutcomeResource processOutcome) {
+    public RestResult<Void> rejectInvitation(@PathVariable("id") Long id,@RequestBody ProcessOutcomeResource processOutcome) {
         return assessmentService.rejectInvitation(id, processOutcome).toPutResponse();
     }
 

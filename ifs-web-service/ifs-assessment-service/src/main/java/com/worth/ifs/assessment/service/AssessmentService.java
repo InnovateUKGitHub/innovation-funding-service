@@ -12,7 +12,7 @@ public interface AssessmentService {
 
     AssessmentResource getById(Long id);
 
-    List<AssessmentResource> getByUser(Long userId);
+    List<AssessmentResource> getByUserAndCompetition(Long userId, Long competitionId);
 
     ServiceResult<Void> recommend(Long assessmentId, Boolean fundingConfirmation, String feedback, String comment);
 

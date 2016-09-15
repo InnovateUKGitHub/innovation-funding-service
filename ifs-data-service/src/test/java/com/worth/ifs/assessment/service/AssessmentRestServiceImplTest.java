@@ -45,13 +45,14 @@ public class AssessmentRestServiceImplTest extends BaseRestServiceUnitTest<Asses
     }
 
     @Test
-    public void getByUserId() throws Exception {
+    public void getByUserAndCompetition() throws Exception {
         List<AssessmentResource> expected = newAssessmentResource().build(2);
 
         Long userId = 1L;
+        Long competitionId = 2L;
 
-        setupGetWithRestResultExpectations(format("%s/user/%s", assessmentRestURL, userId), assessmentResourceResourceListType(), expected, OK);
-        List<AssessmentResource> response = service.getByUserId(userId).getSuccessObject();
+        setupGetWithRestResultExpectations(format("%s/user/%s/competition/%s", assessmentRestURL, userId, competitionId), assessmentResourceResourceListType(), expected, OK);
+        List<AssessmentResource> response = service.getByUserAndCompetition(userId, competitionId).getSuccessObject();
         assertSame(expected, response);
     }
 

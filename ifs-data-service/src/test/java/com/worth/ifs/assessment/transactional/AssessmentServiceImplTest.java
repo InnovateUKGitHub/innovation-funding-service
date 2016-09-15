@@ -1,6 +1,7 @@
 package com.worth.ifs.assessment.transactional;
 
 import com.worth.ifs.BaseUnitTestMocksTest;
+import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.resource.AssessmentOutcomes;
 import com.worth.ifs.assessment.resource.AssessmentResource;
@@ -17,6 +18,7 @@ import org.mockito.Mock;
 
 import java.util.List;
 
+import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static com.worth.ifs.assessment.builder.ProcessOutcomeBuilder.newProcessOutcome;
@@ -25,6 +27,7 @@ import static com.worth.ifs.commons.error.CommonFailureKeys.ASSESSMENT_RECOMMEND
 import static com.worth.ifs.commons.error.CommonFailureKeys.ASSESSMENT_REJECTION_FAILED;
 import static com.worth.ifs.commons.error.Error.fieldError;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
+import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static java.util.Collections.nCopies;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.same;
@@ -55,22 +58,33 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void findByUserId() throws Exception {
+    public void findByUserAndCompetition() throws Exception {
         Long userId = 2L;
+        Long competitionId = 1L;
 
-        List<ProcessRole> processRoles = newProcessRole().build(3);
+        List<Application> applications = newApplication().build(2);
+        List<ProcessRole> processRoles = newProcessRole().withUser(newUser().withid(userId).build()).build(2);
         List<Assessment> assessments = newAssessment().build(2);
         List<AssessmentResource> expected = newAssessmentResource().build(2);
 
-        when(processRoleRepositoryMock.findByUserId(userId)).thenReturn(processRoles);
+        when(processRoleRepositoryMock.findByUserIdAndApplicationId(userId, applications.get(0).getId())).thenReturn(processRoles.get(0));
+        when(processRoleRepositoryMock.findByUserIdAndApplicationId(userId, applications.get(1).getId())).thenReturn(processRoles.get(1));
         when(assessmentRepositoryMock.findByProcessRoleIn(processRoles)).thenReturn(assessments);
         when(assessmentMapperMock.mapToResource(same(assessments.get(0)))).thenReturn(expected.get(0));
         when(assessmentMapperMock.mapToResource(same(assessments.get(1)))).thenReturn(expected.get(1));
+        when(applicationRepositoryMock.findByCompetitionId(competitionId)).thenReturn(applications);
 
-        List<AssessmentResource> found = assessmentService.findByUserId(userId).getSuccessObject();
+        List<AssessmentResource> found = assessmentService.findByUserAndCompetition(userId, competitionId).getSuccessObject();
 
         assertEquals(expected, found);
-        verify(assessmentRepositoryMock, only()).findByProcessRoleIn(processRoles);
+        InOrder inOrder = inOrder(applicationRepositoryMock, processRoleRepositoryMock, assessmentRepositoryMock, assessmentMapperMock);
+        inOrder.verify(applicationRepositoryMock, calls(1)).findByCompetitionId(competitionId);
+        inOrder.verify(processRoleRepositoryMock, calls(1)).findByUserIdAndApplicationId(userId, applications.get(0).getId());
+        inOrder.verify(processRoleRepositoryMock, calls(1)).findByUserIdAndApplicationId(userId, applications.get(1).getId());
+        inOrder.verify(assessmentRepositoryMock, calls(1)).findByProcessRoleIn(processRoles);
+        inOrder.verify(assessmentMapperMock, calls(1)).mapToResource(assessments.get(0));
+        inOrder.verify(assessmentMapperMock, calls(1)).mapToResource(assessments.get(1));
+        inOrder.verifyNoMoreInteractions();
     }
 
     @Test

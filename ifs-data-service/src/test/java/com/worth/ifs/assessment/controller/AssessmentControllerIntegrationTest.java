@@ -68,11 +68,12 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
     }
 
     @Test
-    public void findByUserId() throws Exception {
+    public void findByUserAndCompetition() throws Exception {
         Long userId = 3L;
+        Long competitionId = 1L;
 
         loginPaulPlum();
-        RestResult<List<AssessmentResource>> result = controller.findByUserId(userId);
+        RestResult<List<AssessmentResource>> result = controller.findByUserAndCompetition(userId, competitionId);
         assertTrue(result.isSuccess());
         List<AssessmentResource> assessmentResources = result.getSuccessObjectOrThrowException();
         assertEquals(4, assessmentResources.size());

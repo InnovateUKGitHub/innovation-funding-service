@@ -64,7 +64,7 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
         funder.setCompetitionId(competitionId);
 
         CompetitionResource competition = newCompetitionResource()
-                .withId(2L)
+                .withId(competitionId)
                 .withName("Juggling Craziness")
                 .withDescription("Juggling Craziness (CRD3359)")
                 .withFunders(asList(funder))
@@ -89,7 +89,7 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
                 .build(2);
 
         when(competitionService.getById(competitionId)).thenReturn(competition);
-        when(assessmentService.getByUser(userId)).thenReturn(assessments);
+        when(assessmentService.getByUserAndCompetition(userId, competitionId)).thenReturn(assessments);
         when(applicationService.getById(8L)).thenReturn(applications.get(0));
         when(applicationService.getById(14L)).thenReturn(applications.get(1));
         when(processRoleService.findProcessRolesByApplicationId(applications.get(0).getId())).thenReturn(asList(users.get(0)));

@@ -51,10 +51,11 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
     }
 
     @Test
-    public void findByUserId() {
+    public void findByUserAndCompetition() {
         long userId = 3L;
+        long competitionId = 1L;
 
-        service.findByUserId(userId);
+        service.findByUserAndCompetition(userId, competitionId);
         verify(assessmentPermissionRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).userCanReadAssessment(isA(AssessmentResource.class), isA(UserResource.class));
     }
 
@@ -87,7 +88,7 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
         }
 
         @Override
-        public ServiceResult<List<AssessmentResource>> findByUserId(Long userId) {
+        public ServiceResult<List<AssessmentResource>> findByUserAndCompetition(Long userId, Long competitionId) {
             return serviceSuccess(newAssessmentResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
         }
 
