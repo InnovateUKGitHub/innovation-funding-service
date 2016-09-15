@@ -27,6 +27,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...
 ...
 ...               INFUND-3001 As a Competitions team member I want the service to automatically save my edits while I work through Initial Details section in Competition Setup the so that I do not lose my changes
+...
+...               INFUND-4581 As a Competitions team member I want the service to automatically save my edits while I work through Funding Information section in Competition Setup the so that I do not lose my changes
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin    CompSetup
@@ -212,6 +214,12 @@ Funding information client-side validations
     When the user clicks the button/link    jQuery=.button:contains("Generate code")
     Then The user should not see the text in the page    Please generate a competition code
 
+Funding information Autosave
+    [Documentation]    INFUND-4581
+    When the user clicks the button/link    link=Competition set up
+    and the user clicks the button/link    link=Funding Information
+    Then the user should see the correct details in the funding information form
+
 Funding informations calculations
     [Documentation]    INFUND-2985
     [Tags]    HappyPath
@@ -237,6 +245,8 @@ Funding Information can be saved
 
 Funding Information can be edited
     [Documentation]    INFUND-3002
+    [Tags]    Pending
+    #pending INFUND-5111
     When the user clicks the button/link    jQuery=.button:contains("Edit")
     And the user enters text to a text field    id=funders0.funder    testFunder
     When the user clicks the button/link    jQuery=.button:contains("Done")
@@ -641,3 +651,15 @@ the user should see the correct values in the initial details form
     Should Be Equal As Strings    ${input_value}    2017
     Page Should Contain    Competition Technologist One
     page should contain    Competition Executive Two
+
+the user should see the correct details in the funding information form
+    ${input_value} =    Get Value    id=funders0.funder
+    Should Be Equal    ${input_value}    FunderName
+    ${input_value} =    Get Value    id=0-funderBudget
+    Should Be Equal As Strings    ${input_value}    20000.00
+    ${input_value} =    Get Value    id=pafNumber
+    Should Be Equal As Strings    ${input_value}    2016
+    ${input_value} =    Get Value    id=budgetCode
+    Should Be Equal As Strings    ${input_value}    2004
+    ${input_value} =    Get Value    id=activityCode
+    Should Be Equal As Strings    ${input_value}    4242
