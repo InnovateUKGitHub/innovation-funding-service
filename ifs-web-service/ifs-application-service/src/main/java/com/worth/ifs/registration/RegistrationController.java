@@ -5,6 +5,7 @@ import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.exception.InviteAlreadyAcceptedException;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
@@ -274,7 +275,7 @@ public class RegistrationController {
         if(!bindingResult.hasFieldErrors(EMAIL_FIELD_NAME) && StringUtils.hasText(email)) {
             RestResult<UserResource> existingUserSearch = userService.findUserByEmailForAnonymousUserFlow(email);
             if (!HttpStatus.NOT_FOUND.equals(existingUserSearch.getStatusCode())) {
-                bindingResult.rejectValue(EMAIL_FIELD_NAME, "validation.standard.email.exists");
+                ValidationMessages.rejectValue(bindingResult, EMAIL_FIELD_NAME, "validation.standard.email.exists");
             }
         }
     }
