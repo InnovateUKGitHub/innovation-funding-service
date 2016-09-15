@@ -86,9 +86,13 @@ function startSeleniumGrid() {
 
     if [ "$parallel" ]
     then
-      declare -i suiteCount=$(find ${testDirectory}/* -maxdepth 0 -type d | wc -l)
+      declare -i suiteCount=$(find ${testDirectory} -maxdepth 0 -type d | wc -l)
     else
       declare -i suiteCount=1
+    fi
+    if [[ $suiteCount -eq 0 ]]
+    then
+      suiteCount=1
     fi
     echo ${suiteCount}
     docker-compose -p robot up -d
@@ -119,9 +123,9 @@ function startPybot() {
         local excludeEmails='--exclude Email'
     fi
     if [[ $rerunFailed -eq 1 ]]; then
-    	pybot --outputdir target/${targetDir} --rerunfailed target/${targetDir}/output.xml --output rerun.xml --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:${postcodeLookupImplemented} -v UPLOAD_FOLDER:${uploadFileDir} -v DOWNLOAD_FOLDER:download_files -v BROWSER=chrome -v REMOTE_URL:'http://ifs-local-dev:4444/wd/hub' ${includeHappyPath} --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal ${excludeEmails} --name ${targetDir} ${1}/* &
+    	pybot --outputdir target/${targetDir} --rerunfailed target/${targetDir}/output.xml --output rerun.xml --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:${postcodeLookupImplemented} -v UPLOAD_FOLDER:${uploadFileDir} -v DOWNLOAD_FOLDER:download_files -v BROWSER=chrome -v REMOTE_URL:'http://ifs-local-dev:4444/wd/hub' ${includeHappyPath} --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal ${excludeEmails} --name ${targetDir} ${1} &
     else
-    	pybot --outputdir target/${targetDir} --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:${postcodeLookupImplemented} -v UPLOAD_FOLDER:${uploadFileDir} -v DOWNLOAD_FOLDER:download_files -v BROWSER=chrome -v REMOTE_URL:'http://ifs-local-dev:4444/wd/hub' ${includeHappyPath} --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal ${excludeEmails} --name ${targetDir} ${1}/* &
+    	pybot --outputdir target/${targetDir} --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:${postcodeLookupImplemented} -v UPLOAD_FOLDER:${uploadFileDir} -v DOWNLOAD_FOLDER:download_files -v BROWSER=chrome -v REMOTE_URL:'http://ifs-local-dev:4444/wd/hub' ${includeHappyPath} --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal ${excludeEmails} --name ${targetDir} ${1} &
     fi
 }
 
@@ -131,7 +135,7 @@ function runTests() {
 
     if [[ "$parallel" ]]
     then
-      for D in `find ${testDirectory}/* -maxdepth 0 -type d`
+      for D in `find ${testDirectory} -maxdepth 0 -type d`
       do
           startPybot ${D}
       done
@@ -241,7 +245,7 @@ if [[ "$quickTest" ]]
 then
     echo "using quickTest:   TRUE" >&2
     #resetDB
-    #addTestFiles
+    addTestFiles
     runTests
 elif [[ "$testScrub" ]]
 then
