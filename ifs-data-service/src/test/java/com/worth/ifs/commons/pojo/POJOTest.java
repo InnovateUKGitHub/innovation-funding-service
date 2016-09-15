@@ -109,7 +109,10 @@ public class POJOTest {
             RejectionReasonResource.class,
             ProjectLeadStatusResource.class,
             ProjectPartnerStatusResource.class,
-            ProjectTeamStatusResource.class
+            ProjectTeamStatusResource.class,
+            ProjectStatusResource.class,
+            CompetitionProjectsStatusResource.class
+
     );
 
     @Before
