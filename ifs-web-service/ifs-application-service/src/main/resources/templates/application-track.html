@@ -27,7 +27,7 @@
               <div th:remove="tag" th:text="${#temporals.monthName(currentApplication.submittedDate)}" />
               <div th:include="fragments/elements :: ordinal-day (date=${currentApplication.submittedDate})" th:remove="tag" />
               at
-              <div th:remove="tag" th:text="${#temporals.format(currentApplication.submittedDate, 'hh:mm a')}" />.
+              <div th:remove="tag" th:text="${#strings.toLowerCase(#temporals.format(currentApplication.submittedDate, 'hh:mma'))}" />.
             </div>
           </p>
     			<p class="linkbar">
