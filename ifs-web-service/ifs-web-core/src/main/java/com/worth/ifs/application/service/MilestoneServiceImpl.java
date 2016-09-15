@@ -29,6 +29,11 @@ public class MilestoneServiceImpl implements MilestoneService{
     }
 
     @Override
+    public MilestoneResource getMilestoneByTypeAndCompetitionId(MilestoneType type, Long competitionId) {
+        return milestoneRestService.getMilestoneByTypeAndCompetitionId(type, competitionId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
     public List<Error> update(List<MilestoneResource> milestones, Long competitionId) {
        RestResult<Void> result = milestoneRestService.update(milestones, competitionId);
        if(result.isFailure()) {
@@ -39,8 +44,11 @@ public class MilestoneServiceImpl implements MilestoneService{
 
     @Override
     public List<Error> updateMilestone(MilestoneResource milestone, Long competitionId) {
-        //todo
-        return null;
+        RestResult<Void> result = milestoneRestService.updateMilestone(milestone, competitionId);
+        if(result.isFailure()) {
+            return result.getFailure().getErrors();
+        }
+        return new ArrayList<>();
     }
 
     @Override

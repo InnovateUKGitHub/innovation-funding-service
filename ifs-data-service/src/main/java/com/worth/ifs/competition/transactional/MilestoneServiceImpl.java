@@ -74,7 +74,7 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
         Competition competition = competitionRepository.findById(id);
 
         List<Milestone> milestones = competition.getMilestones();
-
+        
         Milestone milestoneEntity = (Milestone) milestones.stream().filter((m) -> m.getId().equals(milestoneResource.getId()));
 //       @TODO JH validation on single milestone
         Milestone milestone = milestoneMapper.mapToDomain(milestoneResource);
@@ -119,7 +119,6 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
             		vm.addError(error);
         		}
         	}
-
         }
         return vm;
     }

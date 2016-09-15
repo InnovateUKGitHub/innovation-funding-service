@@ -14,6 +14,8 @@ import java.util.List;
 public interface MilestoneService {
     List<MilestoneResource> getAllDatesByCompetitionId(Long competitionId);
 
+    MilestoneResource getMilestoneByTypeAndCompetitionId(MilestoneType type, Long competitionId);
+
     List<Error> update(List<MilestoneResource> milestones, Long competitionId);
 
     List<Error> updateMilestone(MilestoneResource milestone, Long competitionId);
