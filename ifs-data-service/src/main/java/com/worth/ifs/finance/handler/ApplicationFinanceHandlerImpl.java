@@ -43,6 +43,7 @@ public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler 
                 applicationFinanceResourceId.getApplicationId(), applicationFinanceResourceId.getOrganisationId());
         ApplicationFinanceResource applicationFinanceResource = null;
 
+        //TODO: INFUND-5102 This to me seems like a very messy way of building resource object. You don't only need to map the domain object using the mapper, but then also do a buch of things in setFinanceDetails.  We should find a better way to handle this.
         if(applicationFinance!=null) {
             applicationFinanceResource = applicationFinanceMapper.mapToResource(applicationFinance);
             setFinanceDetails(applicationFinanceResource);

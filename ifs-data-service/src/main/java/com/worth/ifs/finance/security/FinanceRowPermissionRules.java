@@ -5,6 +5,8 @@ import com.worth.ifs.finance.domain.FinanceRow;
 import com.worth.ifs.finance.repository.FinanceRowRepository;
 import com.worth.ifs.finance.resource.FinanceRowMetaValueResource;
 import com.worth.ifs.finance.resource.cost.FinanceRowItem;
+import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.security.BasePermissionRules;
 import com.worth.ifs.security.PermissionRule;
 import com.worth.ifs.security.PermissionRules;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
@@ -23,7 +25,7 @@ import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
  */
 @Component
 @PermissionRules
-public class FinanceRowPermissionRules {
+public class FinanceRowPermissionRules extends BasePermissionRules {
 
     @Autowired
     private ProcessRoleRepository processRoleRepository;
@@ -58,6 +60,11 @@ public class FinanceRowPermissionRules {
     public boolean consortiumCanReadACostValueForTheirApplicationAndOrganisation(final FinanceRowMetaValueResource financeRowMetaValueResource, final UserResource user) {
         final FinanceRow cost = financeRowRepository.findOne(financeRowMetaValueResource.getFinanceRow());
         return isCollaborator(cost, user);
+    }
+
+    @PermissionRule(value = "READ_ORGANISATION_FUNDING_STATUS", description = "Any partner can check if any of the other partners are seeking funding")
+    public boolean projectPartnersCanCheckFundingStatusOfTeam(final ProjectResource project, final UserResource user) {
+        return isPartner(project.getId(), user.getId());
     }
 
     private boolean isCollaborator(final FinanceRow cost, final UserResource user) {
