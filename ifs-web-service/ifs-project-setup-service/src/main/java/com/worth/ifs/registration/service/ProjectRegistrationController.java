@@ -114,5 +114,4 @@ public class ProjectRegistrationController {
                 registrationForm.getPhoneNumber(),
                 organisationId);
     }
-
 }
