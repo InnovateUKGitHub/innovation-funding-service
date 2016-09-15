@@ -44,11 +44,12 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping("/application/{applicationId}/contributors")
 public class ApplicationContributorController{
-    public static final String APPLICATION_CONTRIBUTORS_DISPLAY = "application-contributors/display";
-    public static final String APPLICATION_CONTRIBUTORS_INVITE = "application-contributors/invite";
+    private static final String APPLICATION_CONTRIBUTORS_DISPLAY = "application-contributors/display";
+    private static final String APPLICATION_CONTRIBUTORS_INVITE = "application-contributors/invite";
+    private static final String APPLICATION_CONTRIBUTORS_REMOVE_CONFIRM = "application-contributors/remove-confirm";
     private static final String CONTRIBUTORS_COOKIE = "contributor_invite_state";
-    public static final String INVITES_SEND = "invitesSend";
-    public static final String INVITES_SAVED = "invitesSaved";
+    private static final String INVITES_SEND = "invitesSend";
+    private static final String INVITES_SAVED = "invitesSaved";
 
     @Autowired
     private InviteRestService inviteRestService;
@@ -100,6 +101,17 @@ public class ApplicationContributorController{
         model.addAttribute("organisationInvites", organisationInvites.values());
         model.addAttribute("removeContributorForm", new RemoveContributorsForm());
         return APPLICATION_CONTRIBUTORS_DISPLAY;
+    }
+
+    @RequestMapping(value = "/remove/{inviteId}/confirm", method = RequestMethod.GET)
+    public String deleteContributorConfirmation(@PathVariable("applicationId") final Long applicationId,
+                                                @PathVariable("inviteId") final Long inviteId,
+                                                Model model) {
+        model.addAttribute("currentApplication", applicationService.getById(applicationId));
+        model.addAttribute("inviteId", inviteId);
+        model.addAttribute("removeContributorForm", new RemoveContributorsForm());
+
+        return APPLICATION_CONTRIBUTORS_REMOVE_CONFIRM;
     }
 
     @RequestMapping(value = "/remove", method = RequestMethod.POST)
