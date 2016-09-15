@@ -97,7 +97,8 @@ the assessor fills in all fields
 the user shouldn't be able to accept the rejected competition
     When the user navigates to the page    ${Invitation_existing_assessor2}
     And the user clicks the button/link    jQuery=button:contains("Accept")
-    Page Should Contain    Sorry, you are unable to accept this invitation
+    Page Should Contain    You are unable to access this page
+    Page Should Contain    You have already rejected the invitation
 
 the calculation should be correct
     [Arguments]    ${TEXT}    ${Section_Xpath}
