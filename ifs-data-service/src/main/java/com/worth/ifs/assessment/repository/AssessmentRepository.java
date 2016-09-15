@@ -20,5 +20,5 @@ public interface AssessmentRepository extends PagingAndSortingRepository<Assessm
 
     Assessment findOneByParticipantId(Long processRoleId);
 
-    List<Assessment> findByProcessRoleIn(List<ProcessRole> processRoles);
+    List<Assessment> findByParticipantIn(List<ProcessRole> processRoles);
 }

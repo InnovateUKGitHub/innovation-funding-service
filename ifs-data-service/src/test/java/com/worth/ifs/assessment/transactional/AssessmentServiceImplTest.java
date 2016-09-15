@@ -71,7 +71,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
         when(processRoleRepositoryMock.findByUserIdAndApplicationId(userId, applications.get(0).getId())).thenReturn(processRoles.get(0));
         when(processRoleRepositoryMock.findByUserIdAndApplicationId(userId, applications.get(1).getId())).thenReturn(processRoles.get(1));
-        when(assessmentRepositoryMock.findByProcessRoleIn(processRoles)).thenReturn(assessments);
+        when(assessmentRepositoryMock.findByParticipantIn(processRoles)).thenReturn(assessments);
         when(assessmentMapperMock.mapToResource(same(assessments.get(0)))).thenReturn(expected.get(0));
         when(assessmentMapperMock.mapToResource(same(assessments.get(1)))).thenReturn(expected.get(1));
         when(applicationRepositoryMock.findByCompetitionId(competitionId)).thenReturn(applications);
@@ -83,7 +83,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         inOrder.verify(applicationRepositoryMock, calls(1)).findByCompetitionId(competitionId);
         inOrder.verify(processRoleRepositoryMock, calls(1)).findByUserIdAndApplicationId(userId, applications.get(0).getId());
         inOrder.verify(processRoleRepositoryMock, calls(1)).findByUserIdAndApplicationId(userId, applications.get(1).getId());
-        inOrder.verify(assessmentRepositoryMock, calls(1)).findByProcessRoleIn(processRoles);
+        inOrder.verify(assessmentRepositoryMock, calls(1)).findByParticipantIn(processRoles);
         inOrder.verify(assessmentMapperMock, calls(1)).mapToResource(assessments.get(0));
         inOrder.verify(assessmentMapperMock, calls(1)).mapToResource(assessments.get(1));
         inOrder.verifyNoMoreInteractions();

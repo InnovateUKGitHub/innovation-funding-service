@@ -67,7 +67,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
                 .filter(processRole -> processRole != null)
                 .collect(Collectors.toList());
 
-        return serviceSuccess(simpleMap(assessmentRepository.findByProcessRoleIn(processRoles), assessmentMapper::mapToResource));
+        return serviceSuccess(simpleMap(assessmentRepository.findByParticipantIn(processRoles), assessmentMapper::mapToResource));
     }
 
     @Override
