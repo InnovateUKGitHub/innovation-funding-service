@@ -1,6 +1,7 @@
 package com.worth.ifs.project.resource;
 
 import com.worth.ifs.commons.rest.LocalDateResource;
+import com.worth.ifs.commons.rest.ValidationMessages;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -9,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 
 public class SpendProfileTableResource {
+
+    private Boolean markedAsComplete;
 
     /*
      * Dynamically holds the months for the duration of the project
@@ -20,6 +23,8 @@ public class SpendProfileTableResource {
      */
     private Map<String, List<BigDecimal>> monthlyCostsPerCategoryMap;
     private Map<String, BigDecimal> eligibleCostPerCategoryMap;
+
+    private ValidationMessages validationMessages;
 
     public List<LocalDateResource> getMonths() {
         return months;
@@ -45,6 +50,23 @@ public class SpendProfileTableResource {
         this.eligibleCostPerCategoryMap = eligibleCostPerCategoryMap;
     }
 
+    public Boolean getMarkedAsComplete() {
+        return markedAsComplete;
+    }
+
+    public void setMarkedAsComplete(Boolean markedAsComplete) {
+        this.markedAsComplete = markedAsComplete;
+    }
+
+
+    public ValidationMessages getValidationMessages() {
+        return validationMessages;
+    }
+
+    public void setValidationMessages(ValidationMessages validationMessages) {
+        this.validationMessages = validationMessages;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -54,15 +76,22 @@ public class SpendProfileTableResource {
         SpendProfileTableResource that = (SpendProfileTableResource) o;
 
         return new EqualsBuilder()
+                .append(markedAsComplete, that.markedAsComplete)
                 .append(months, that.months)
                 .append(monthlyCostsPerCategoryMap, that.monthlyCostsPerCategoryMap)
+                .append(eligibleCostPerCategoryMap, that.eligibleCostPerCategoryMap)
+                .append(validationMessages, that.validationMessages)
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
+                .append(markedAsComplete)
                 .append(months)
+                .append(monthlyCostsPerCategoryMap)
+                .append(eligibleCostPerCategoryMap)
+                .append(validationMessages)
                 .toHashCode();
     }
 }

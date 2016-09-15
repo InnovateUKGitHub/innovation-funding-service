@@ -209,7 +209,7 @@ public class QuestionServiceTest extends BaseUnitTestMocksTest {
 
         Assessment assessment = newAssessment()
                 .with(id(assessmentId))
-                .withProcessRole(processRole)
+                .withParticipant(processRole)
                 .build();
 
         List<Question> questionsForSection1 = newQuestion().build(2);

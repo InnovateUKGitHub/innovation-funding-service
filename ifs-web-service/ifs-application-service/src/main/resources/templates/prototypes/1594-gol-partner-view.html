@@ -99,14 +99,17 @@
 			    </div>
 			</details>
 
-			<div id="upload-gol">
+			<div th:if="${param.status != null and param.status[0] == 'GOLRejected'}" id="upload-gol">
 		        <input type="file" name="file-gol" id="file-gol" class="inputfile" />
 		        <label for="file-gol" class="button-secondary extra-margin">+ Upload</label>
 			</div>
+
+			<a th:if="${param.status == null or param.status != null and param.status[0] != 'GOLRejected'}" href="#" class="uploaded-file">Grant offer letter 2016-07-28a.PDF</a>
+
 		</div>
 
 
-		<div th:if="${param.status == null}" th:remove="tag">
+		<div th:if="${param.status == null or param.status[0] == 'GOLRejected'}" th:remove="tag">
 
 			<div class="extra-margin">
 				<a href="#" data-js-modal="modal-send" class="button large">Submit signed offer letter</a>

@@ -10,7 +10,6 @@ import com.worth.ifs.application.mapper.SectionMapper;
 import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.application.repository.QuestionStatusRepository;
 import com.worth.ifs.application.resource.*;
-import com.worth.ifs.application.resource.*;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.commons.rest.ValidationMessages;
@@ -308,7 +307,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     @Override
     public ServiceResult<List<QuestionResource>> getQuestionsByAssessmentId(Long assessmentId) {
         return getAssessment(assessmentId).andOnSuccess(assessment ->
-                sectionService.getByCompetitionIdVisibleForAssessment(assessment.getProcessRole().getApplication().getCompetition().getId())
+                sectionService.getByCompetitionIdVisibleForAssessment(assessment.getParticipant().getApplication().getCompetition().getId())
                         .andOnSuccessReturn(sections -> sections.stream().map(sectionMapper::mapToDomain).flatMap(section -> section.getQuestions().stream()).map(questionMapper::mapToResource).collect(toList())));
     }
 
