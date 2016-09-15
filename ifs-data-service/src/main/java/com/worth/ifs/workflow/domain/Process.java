@@ -1,12 +1,11 @@
 package com.worth.ifs.workflow.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.worth.ifs.user.domain.ProcessRole;
-import org.hibernate.annotations.*;
+import com.worth.ifs.workflow.resource.ProcessStates;
+import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.*;
-import javax.persistence.Entity;
 import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.List;
@@ -18,12 +17,14 @@ import java.util.List;
 @Entity
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "process_type", discriminatorType = DiscriminatorType.STRING)
-public abstract class Process {
+public abstract class Process<ParticipantType, TargetType, StatesType extends ProcessStates> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    protected String event;
-    protected String status;
+    private String event;
+
+    @ManyToOne
+    protected ActivityState activityState;
 
     @Version
     @Temporal(TemporalType.TIMESTAMP)
@@ -37,24 +38,16 @@ public abstract class Process {
     @Cascade(CascadeType.ALL)
     protected List<ProcessOutcome> processOutcomes;
 
-    @ManyToOne
-    @JoinColumn(name="processRole", referencedColumnName = "id")
-    ProcessRole processRole;
-
     public Process() {
     }
 
-    public Process(ProcessRole processRole) {
-        this.processRole = processRole;
-    }
-
-    public Process(String event, String status) {
+    public Process(String event, ActivityState activityState) {
         this.event = event;
-        this.status = status;
+        this.activityState = activityState;
     }
 
-    public Process(String event, String status, LocalDate startDate, LocalDate endDate) {
-        this(event, status);
+    public Process(String event, ActivityState activityState, LocalDate startDate, LocalDate endDate) {
+        this(event, activityState);
         this.startDate = startDate;
         this.endDate = endDate;
     }
@@ -91,12 +84,8 @@ public abstract class Process {
         return id;
     }
 
-    public String getProcessStatus()  {
-        return status;
-    }
-
-    public void setProcessStatus(String status) {
-        this.status = status;
+    public void setActivityState(ActivityState status) {
+        this.activityState = status;
     }
 
     public String getProcessEvent() {
@@ -116,11 +105,17 @@ public abstract class Process {
         return lastModified;
     }
 
-    public void setProcessRole(ProcessRole processRole) {
-        this.processRole = processRole;
+    public abstract void setParticipant(ParticipantType participant);
+
+    public abstract ParticipantType getParticipant();
+
+    public abstract void setTarget(TargetType target);
+
+    public abstract TargetType getTarget();
+
+    public boolean isInState(StatesType state) {
+        return state.getBackingState().equals(activityState.getState());
     }
 
-    public ProcessRole getProcessRole() {
-        return processRole;
-    }
+    public abstract StatesType getActivityState();
 }

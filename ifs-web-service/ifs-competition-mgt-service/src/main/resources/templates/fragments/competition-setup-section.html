@@ -238,6 +238,16 @@
     <form data-autosave="compSetup" th:attr="data-competition=${competition.id}" data-section="additional"
           th:action="@{(${editable} ? '' : 'additional/edit')}" method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
 
+        <div class="error-summary" th:attr="aria-hidden=${!#fields.hasAnyErrors()}">
+            <h2 class="heading-medium error-summary-heading">
+                Unable to save section
+            </h2>
+
+            <ul class="error-summary-list">
+                <li th:each="err : ${#fields.allErrors()}" th:text="${err}"></li>
+            </ul>
+        </div>
+
         <fieldset th:if="${editable}">
             <legend class="visuallyhidden">Funding information</legend>
             <div class="grid-row">
@@ -254,7 +264,7 @@
                 </div>
             </div>
 
-            <div  th:each="(funder, iteration : ${competitionSetupForm.funders})" class="grid-row" id="co-funder-row-2">
+            <div th:each="(funder, iteration : ${competitionSetupForm.funders})" class="grid-row funder-row" th:id="'funder-row-'+${iteration.index}">
                 <div class="column-half">
                     <div th:class="${#fields.hasErrors('funders[__${iteration.index}__].funder')}? 'form-group error':'form-group'">
                         <label class="form-label" th:for="funders[__${iteration.index}__].funder">
@@ -281,9 +291,16 @@
                         <input required="required" type="number" min="0"
                                th:class="${#fields.hasErrors('funders[__${iteration.index}__].funderBudget') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
                                th:id="${iteration.index}+'-funderBudget'"
-                               th:field="${competitionSetupForm.funders[__${iteration.index}__].funderBudget}"
+                               th:field="${competitionSetupForm.funders[__${iteration.index}__].funderBudget}" value=""
                                data-required-errormessage="Please enter a budget" />
                         <span class="autosave-info" />
+
+                        <input type="hidden"
+                               th:field="${competitionSetupForm.funders[__${iteration.index}__].coFunder}"
+                               th:value="${iteration.index != 0}"/>
+
+                        <button th:if="${iteration.index != 0}" class="buttonlink alignright remove-funder" name="remove-funder" th:value="${iteration.index}"
+                                th:id="'remove-funder-' + ${iteration.index}">Remove</button>
                     </div>
                 </div>
                 <input required="required" type="hidden"
@@ -300,6 +317,7 @@
                     <p class="heading-small no-margin">Total: <span data-calculation-operations="+" data-calculation-fields="input[id*=funderBudget]" th:text="${competitionSetupForm.totalFunding == 0 ? '' : '&pound;' + #numbers.formatDecimal(competitionSetupForm.totalFunding, 0, 'COMMA', 0, 'POINT')}">£0</span></p>
 
                     <div class="alignright">
+                        <input type="hidden" name="removeFunder" />
                         <input type="hidden" name="funderCount" id="co-funder-count" th:value="${competitionSetupForm.fundersCount}" />
                         <button class="buttonlink" name="add-cofunder" id="add-cofunder">+Add co-funder</button>
                     </div>
@@ -683,14 +701,14 @@
                 </thead>
                 <tbody>
                   <tr th:each="(milestoneEntry : ${competitionSetupForm.milestoneEntries})"
-                      class="date-group"
+                      class="date-group form-group-row"
                       data-future-date=""
                       th:attr="data-date-invalid-errormessage=${milestoneEntry.value.milestoneType.milestoneDescription + ': please enter a valid date'},
                                data-date-future-errormessage=${milestoneEntry.value.milestoneType.milestoneDescription  + ': please enter a future date that is after the previous milestone'}">
 
-                      <td class="labelledby" th:id="${'milestone-' + milestoneEntry.key}">
+                      <th scope="row" th:id="${'milestone-' + milestoneEntry.key}">
                         <span th:text="${milestoneEntry.value.milestoneType.milestoneDescription}" />
-                      </td>
+                      </th>
                       <input type="hidden"
                              required="required"
                              th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].milestoneType'"

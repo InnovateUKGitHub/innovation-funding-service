@@ -54,12 +54,9 @@ public class AdditionalInfoSectionSaver extends AbstractSectionSaver implements 
             competitionFunderResource.setCoFunder(funder.getCoFunder());
 			competition.getFunders().add(competitionFunderResource);
 		});
-        try {
-            competitionService.update(competition);
-        } catch (Exception e) {
-            LOG.error(e.getMessage());
-            return asList(new Error("Competition object could not be saved", HttpStatus.BAD_REQUEST));
-        }
+
+		competitionService.update(competition);
+
 		return Collections.emptyList();
 	}
 
@@ -82,6 +79,14 @@ public class AdditionalInfoSectionSaver extends AbstractSectionSaver implements 
 				break;
 			case "competitionCode":
 				competitionResource.setCode(value);
+				break;
+			case "removeFunder":
+				int index = Integer.valueOf(value);
+				if (index > 0 && competitionResource.getFunders().size() > index) {
+					competitionResource.getFunders().remove(index);
+				} else {
+					return asList(new Error("Funder could not be removed", HttpStatus.BAD_REQUEST));
+				}
 				break;
 			default:
 				errors = tryUpdateFunders(competitionResource, fieldName, value);
@@ -110,7 +115,7 @@ public class AdditionalInfoSectionSaver extends AbstractSectionSaver implements 
                 funder.setFunder(value);
             } else if(fieldName.endsWith("funderBudget")) {
                 funder.setFunderBudget(new BigDecimal(value));
-            } else {
+			} else {
                return asList(new Error("Field not found", HttpStatus.BAD_REQUEST));
             }
         } catch (ParseException e) {
