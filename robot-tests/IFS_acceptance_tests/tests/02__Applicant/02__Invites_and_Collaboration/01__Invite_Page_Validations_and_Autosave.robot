@@ -213,6 +213,6 @@ Login and create a new application
 The user navigates to the invitation page of the test application
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Invitation page test
-    And the user should see the text in the page    View team members and add collaborators
-    And the user clicks the button/link    link=View team members and add collaborators
+    And the user should see the text in the page    view team members and add collaborators
+    And the user clicks the button/link    link=view team members and add collaborators
     And The user clicks the button/link    jQuery=.button:contains("Invite new contributors")
