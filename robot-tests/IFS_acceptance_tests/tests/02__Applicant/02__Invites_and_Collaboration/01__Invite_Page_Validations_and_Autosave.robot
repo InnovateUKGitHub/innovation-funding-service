@@ -83,7 +83,7 @@ Blank email is not allowed
     When the applicant fills the Partner organisation fields    1    Fannie May    Collaborator 10    ${EMPTY}
     And browser validations have been disabled
     And The user clicks the button/link    jquery=button:contains("Save Changes")
-    Then the user should see an error    Please enter your email address
+    Then the user should see an error    Please enter an email address
 
 Invalid email address is not allowed
     [Documentation]    INFUND-896
