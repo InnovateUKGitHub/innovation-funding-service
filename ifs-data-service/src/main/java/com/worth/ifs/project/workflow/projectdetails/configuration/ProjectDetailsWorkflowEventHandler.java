@@ -29,8 +29,9 @@ public class ProjectDetailsWorkflowEventHandler extends BaseWorkflowEventHandler
         return fireEvent(allProjectDetailsSuppliedEvent(projectDetails), projectDetails);
     }
 
-    public boolean submitProjectDetails(Long projectUserId, ProjectDetailsProcess projectDetails) {
-        return fireEvent(submitProjectDetailsMessage(projectUserId, projectDetails), projectDetails);
+    public boolean submitProjectDetails(Long projectUserId, Long projectId) {
+        ProjectDetailsProcess process = getProcessByTargetId(projectId);
+        return fireEvent(submitProjectDetailsMessage(projectUserId, process), process);
     }
 
     public boolean isSubmissionAllowed(Long projectId) {

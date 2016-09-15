@@ -22,7 +22,6 @@ import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
-import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
@@ -63,12 +62,10 @@ import static com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder.new
 import static com.worth.ifs.project.builder.ProjectBuilder.newProject;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static com.worth.ifs.project.builder.ProjectUserBuilder.newProjectUser;
-import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
-import static com.worth.ifs.user.resource.UserRoleType.FINANCE_CONTACT;
 import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static java.util.Arrays.asList;
@@ -153,12 +150,15 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
 
-        Project savedProject = newProject().build();
+        Project savedProject = newProject().withApplication(application).
+                withProjectUsers(asList(leadPartnerProjectUser, newProjectUser().build())).build();
 
         when(roleRepositoryMock.findOneByName(PARTNER.getName())).thenReturn(partnerRole);
 
         Project newProjectExpectations = createProjectExpectationsFromOriginalApplication(application);
         when(projectRepositoryMock.save(newProjectExpectations)).thenReturn(savedProject);
+
+        when(projectDetailsWorkflowEventHandlerMock.projectCreated(savedProject, leadPartnerProjectUser.getId())).thenReturn(true);
 
         when(projectMapperMock.mapToResource(savedProject)).thenReturn(newProjectResource);
 
@@ -329,7 +329,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         verify(projectRepositoryMock).findOne(123L);
         assertNull(existingProject.getTargetStartDate());
     }
-
+    
     @Test
     public void testUpdateFinanceContact() {
 
@@ -337,7 +337,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         Organisation organisation = newOrganisation().withId(5L).build();
         User user = newUser().withid(7L).build();
 
-        Role partnerRole = newRole().withType(PARTNER).build();
         newProjectUser().withOrganisation(organisation).withUser(user).withProject(project).withRole(PROJECT_PARTNER).build();
 
         when(projectRepositoryMock.findOne(123L)).thenReturn(project);
@@ -644,151 +643,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     }
 
     @Test
-    public void testSaveProjectSubmitDateTimeIsSuccessfulWhenAllProjectDetailsHaveBeenProvided() {
-        Organisation organisation1 = newOrganisation().build();
-        Organisation organisation2 = newOrganisation().build();
-        Organisation organisation3 = newOrganisation().build();
-
-        Role projectManagerRole = newRole().withType(UserRoleType.PROJECT_MANAGER).build();
-
-        ProjectUser projectManagerProjectUser = newProjectUser().withRole(PROJECT_MANAGER).build();
-        Address address = newAddress().build();
-        Project project = newProject().withId(1L).withAddress(address).withProjectUsers(singletonList(projectManagerProjectUser)).withTargetStartDate(LocalDate.now()).build();
-
-        Role financeContactRole = newRole().withType(FINANCE_CONTACT).build();
-        Role partnerRole = newRole().withType(PARTNER).build();
-
-        List<ProjectUser> projectUserObjs;
-
-        ProjectUser projectUser1WithPartnerRole = newProjectUser().withProject(project).withOrganisation(organisation1).withRole(PROJECT_PARTNER).build();
-        ProjectUser projectUser1WithFinanceRole = newProjectUser().withProject(project).withOrganisation(organisation1).withRole(PROJECT_FINANCE_CONTACT).build();
-        ProjectUser projectUser2WithPartnerRole = newProjectUser().withProject(project).withOrganisation(organisation2).withRole(PROJECT_PARTNER).build();
-        ProjectUser projectUser2WithFinanceRole = newProjectUser().withProject(project).withOrganisation(organisation2).withRole(PROJECT_FINANCE_CONTACT).build();
-        ProjectUser projectUser3WithPartnerRole = newProjectUser().withProject(project).withOrganisation(organisation3).withRole(PROJECT_PARTNER).build();
-        ProjectUser projectUser3WithFinanceRole = newProjectUser().withProject(project).withOrganisation(organisation3).withRole(PROJECT_FINANCE_CONTACT).build();
-
-        ProjectUserResource projectUser1WithPartnerRoleResource = newProjectUserResource().withProject(project.getId()).withOrganisation(organisation1.getId()).withRole(partnerRole.getId()).withRoleName(PARTNER.getName()).build();
-        ProjectUserResource projectUser1WithFinanceRoleResource = newProjectUserResource().withProject(project.getId()).withOrganisation(organisation1.getId()).withRole(financeContactRole.getId()).withRoleName(FINANCE_CONTACT.getName()).build();
-        ProjectUserResource projectUser2WithPartnerRoleResource = newProjectUserResource().withProject(project.getId()).withOrganisation(organisation2.getId()).withRole(partnerRole.getId()).withRoleName(PARTNER.getName()).build();
-        ProjectUserResource projectUser2WithFinanceRoleResource = newProjectUserResource().withProject(project.getId()).withOrganisation(organisation2.getId()).withRole(financeContactRole.getId()).withRoleName(FINANCE_CONTACT.getName()).build();
-        ProjectUserResource projectUser3WithPartnerRoleResource = newProjectUserResource().withProject(project.getId()).withOrganisation(organisation3.getId()).withRole(partnerRole.getId()).withRoleName(PARTNER.getName()).build();
-        ProjectUserResource projectUser3WithFinanceRoleResource = newProjectUserResource().withProject(project.getId()).withOrganisation(organisation3.getId()).withRole(partnerRole.getId()).withRoleName(FINANCE_CONTACT.getName()).build();
-        ProjectUserResource projectManagerProjectUserResource = newProjectUserResource().withProject(project.getId()).withOrganisation(organisation3.getId()).withRole(projectManagerRole.getId()).withRoleName(PROJECT_MANAGER.getName()).build();
-
-        projectUserObjs = asList(projectManagerProjectUser, projectUser1WithPartnerRole, projectUser1WithFinanceRole, projectUser2WithPartnerRole, projectUser2WithFinanceRole, projectUser3WithPartnerRole, projectUser3WithFinanceRole);
-
-        when(projectRepositoryMock.findOne(1L)).thenReturn(project);
-        when(projectUserRepositoryMock.findByProjectId(1L)).thenReturn(projectUserObjs);
-        when(organisationRepositoryMock.findOne(organisation1.getId())).thenReturn(organisation1);
-        when(organisationRepositoryMock.findOne(organisation2.getId())).thenReturn(organisation2);
-        when(organisationRepositoryMock.findOne(organisation3.getId())).thenReturn(organisation3);
-
-        when(projectUserMapperMock.mapToResource(projectUser1WithFinanceRole)).thenReturn(projectUser1WithFinanceRoleResource);
-        when(projectUserMapperMock.mapToResource(projectUser1WithPartnerRole)).thenReturn(projectUser1WithPartnerRoleResource);
-        when(projectUserMapperMock.mapToResource(projectUser2WithPartnerRole)).thenReturn(projectUser2WithPartnerRoleResource);
-        when(projectUserMapperMock.mapToResource(projectUser2WithFinanceRole)).thenReturn(projectUser2WithFinanceRoleResource);
-        when(projectUserMapperMock.mapToResource(projectUser3WithPartnerRole)).thenReturn(projectUser3WithPartnerRoleResource);
-        when(projectUserMapperMock.mapToResource(projectUser3WithFinanceRole)).thenReturn(projectUser3WithFinanceRoleResource);
-        when(projectUserMapperMock.mapToResource(projectManagerProjectUser)).thenReturn(projectManagerProjectUserResource);
-
-        ServiceResult result = service.saveProjectSubmitDateTime(1L, LocalDateTime.now());
-        assertTrue(result.isSuccess());
-    }
-
-    @Test
-    public void testSaveProjectSubmitDateTimeIsUnSuccessfulWhenAFinanceContactIsMissing() {
-        Organisation organisation1 = newOrganisation().build();
-        Organisation organisation2 = newOrganisation().build();
-        Organisation organisation3 = newOrganisation().build();
-
-        ProjectUser projectManagerProjectUser = newProjectUser().withRole(PROJECT_MANAGER).build();
-        Address address = newAddress().build();
-        Project project = newProject().withId(1L).withAddress(address).withProjectUsers(singletonList(projectManagerProjectUser)).withTargetStartDate(LocalDate.now()).build();
-
-        Role financeContactRole = newRole().withType(FINANCE_CONTACT).build();
-        Role partnerRole = newRole().withType(PARTNER).build();
-
-        List<ProjectUser> projectUserObjs;
-
-        ProjectUser projectUser1WithPartnerRole = newProjectUser().withProject(project).withOrganisation(organisation1).withRole(PROJECT_PARTNER).build();
-        ProjectUser projectUser1WithFinanceRole = newProjectUser().withProject(project).withOrganisation(organisation1).withRole(PROJECT_FINANCE_CONTACT).build();
-        ProjectUser projectUser2WithPartnerRole = newProjectUser().withProject(project).withOrganisation(organisation2).withRole(PROJECT_PARTNER).build();
-        ProjectUser projectUser2WithFinanceRole = newProjectUser().withProject(project).withOrganisation(organisation2).withRole(PROJECT_FINANCE_CONTACT).build();
-        ProjectUser projectUserWithPartnerRole = newProjectUser().withProject(project).withOrganisation(organisation3).withRole(PROJECT_PARTNER).build();
-
-        ProjectUserResource projectUser1WithPartnerRoleResource = newProjectUserResource().withProject(project.getId()).withOrganisation(organisation1.getId()).withRole(partnerRole.getId()).withRoleName(PARTNER.getName()).build();
-        ProjectUserResource projectUser1WithFinanceRoleResource = newProjectUserResource().withProject(project.getId()).withOrganisation(organisation1.getId()).withRole(financeContactRole.getId()).withRoleName(FINANCE_CONTACT.getName()).build();
-        ProjectUserResource projectUser2WithPartnerRoleResource = newProjectUserResource().withProject(project.getId()).withOrganisation(organisation2.getId()).withRole(partnerRole.getId()).withRoleName(PARTNER.getName()).build();
-        ProjectUserResource projectUser2WithFinanceRoleResource = newProjectUserResource().withProject(project.getId()).withOrganisation(organisation2.getId()).withRole(financeContactRole.getId()).withRoleName(FINANCE_CONTACT.getName()).build();
-        ProjectUserResource projectUserWithPartnerRoleResource = newProjectUserResource().withProject(project.getId()).withOrganisation(organisation3.getId()).withRole(partnerRole.getId()).withRoleName(PARTNER.getName()).build();
-
-        projectUserObjs = asList(projectUser1WithPartnerRole, projectUser1WithFinanceRole, projectUser2WithPartnerRole, projectUser2WithFinanceRole, projectUserWithPartnerRole);
-
-        when(projectRepositoryMock.findOne(1L)).thenReturn(project);
-        when(projectUserRepositoryMock.findByProjectId(1L)).thenReturn(projectUserObjs);
-        when(organisationRepositoryMock.findOne(organisation1.getId())).thenReturn(organisation1);
-        when(organisationRepositoryMock.findOne(organisation2.getId())).thenReturn(organisation2);
-        when(organisationRepositoryMock.findOne(organisation3.getId())).thenReturn(organisation3);
-
-        when(projectUserMapperMock.mapToResource(projectUser1WithFinanceRole)).thenReturn(projectUser1WithFinanceRoleResource);
-        when(projectUserMapperMock.mapToResource(projectUser1WithPartnerRole)).thenReturn(projectUser1WithPartnerRoleResource);
-        when(projectUserMapperMock.mapToResource(projectUser2WithPartnerRole)).thenReturn(projectUser2WithPartnerRoleResource);
-        when(projectUserMapperMock.mapToResource(projectUser2WithFinanceRole)).thenReturn(projectUser2WithFinanceRoleResource);
-        when(projectUserMapperMock.mapToResource(projectUserWithPartnerRole)).thenReturn(projectUserWithPartnerRoleResource);
-
-        ServiceResult<Void> result = service.saveProjectSubmitDateTime(1L, LocalDateTime.now());
-        assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_SUBMITTED_IF_INCOMPLETE));
-    }
-
-    @Test
-    public void testCannotSaveProjectSubmitDateTimeWhenNotAllProjectDetailsHaveBeenProvided() {
-        Organisation organisation1 = newOrganisation().build();
-        Organisation organisation2 = newOrganisation().build();
-        Organisation organisation3 = newOrganisation().build();
-
-        ProjectUser projectManagerProjectUser = newProjectUser().withRole(PROJECT_MANAGER).build();
-        Address address = newAddress().build();
-        Project project = newProject().withId(1L).withAddress(address).withProjectUsers(singletonList(projectManagerProjectUser)).build();
-
-
-        Role financeContactRole = newRole().withType(FINANCE_CONTACT).build();
-        Role partnerRole = newRole().withType(PARTNER).build();
-
-        List<ProjectUser> projectUserObjs;
-
-        ProjectUser projectUser1WithPartnerRole = newProjectUser().withProject(project).withOrganisation(organisation1).withRole(PROJECT_PARTNER).build();
-        ProjectUser projectUser1WithFinanceRole = newProjectUser().withProject(project).withOrganisation(organisation1).withRole(PROJECT_FINANCE_CONTACT).build();
-        ProjectUser projectUser2WithPartnerRole = newProjectUser().withProject(project).withOrganisation(organisation2).withRole(PROJECT_PARTNER).build();
-        ProjectUser projectUser2WithFinanceRole = newProjectUser().withProject(project).withOrganisation(organisation2).withRole(PROJECT_FINANCE_CONTACT).build();
-        ProjectUser projectUserWithPartnerRole = newProjectUser().withProject(project).withOrganisation(organisation3).withRole(PROJECT_PARTNER).build();
-
-        ProjectUserResource projectUser1WithPartnerRoleResource = newProjectUserResource().withProject(project.getId()).withOrganisation(organisation1.getId()).withRole(partnerRole.getId()).withRoleName(PARTNER.getName()).build();
-        ProjectUserResource projectUser1WithFinanceRoleResource = newProjectUserResource().withProject(project.getId()).withOrganisation(organisation1.getId()).withRole(financeContactRole.getId()).withRoleName(FINANCE_CONTACT.getName()).build();
-        ProjectUserResource projectUser2WithPartnerRoleResource = newProjectUserResource().withProject(project.getId()).withOrganisation(organisation2.getId()).withRole(partnerRole.getId()).withRoleName(PARTNER.getName()).build();
-        ProjectUserResource projectUser2WithFinanceRoleResource = newProjectUserResource().withProject(project.getId()).withOrganisation(organisation2.getId()).withRole(financeContactRole.getId()).withRoleName(FINANCE_CONTACT.getName()).build();
-        ProjectUserResource projectUserWithPartnerRoleResource = newProjectUserResource().withProject(project.getId()).withOrganisation(organisation3.getId()).withRole(partnerRole.getId()).withRoleName(PARTNER.getName()).build();
-
-        projectUserObjs = asList(projectUser1WithPartnerRole, projectUser1WithFinanceRole, projectUser2WithPartnerRole, projectUser2WithFinanceRole, projectUserWithPartnerRole);
-
-        when(projectRepositoryMock.findOne(1L)).thenReturn(project);
-        when(projectUserRepositoryMock.findByProjectId(1L)).thenReturn(projectUserObjs);
-        when(organisationRepositoryMock.findOne(organisation1.getId())).thenReturn(organisation1);
-        when(organisationRepositoryMock.findOne(organisation2.getId())).thenReturn(organisation2);
-        when(organisationRepositoryMock.findOne(organisation3.getId())).thenReturn(organisation3);
-
-        when(projectUserMapperMock.mapToResource(projectUser1WithFinanceRole)).thenReturn(projectUser1WithFinanceRoleResource);
-        when(projectUserMapperMock.mapToResource(projectUser1WithPartnerRole)).thenReturn(projectUser1WithPartnerRoleResource);
-        when(projectUserMapperMock.mapToResource(projectUser2WithPartnerRole)).thenReturn(projectUser2WithPartnerRoleResource);
-        when(projectUserMapperMock.mapToResource(projectUser2WithFinanceRole)).thenReturn(projectUser2WithFinanceRoleResource);
-        when(projectUserMapperMock.mapToResource(projectUserWithPartnerRole)).thenReturn(projectUserWithPartnerRoleResource);
-
-        ServiceResult<Void> result = service.saveProjectSubmitDateTime(1L, LocalDateTime.now());
-        assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_SUBMITTED_IF_INCOMPLETE));
-    }
-
-    @Test
     public void testSaveMOWithDiffProjectIdInURLAndMOResource() {
 
         Long projectid = 1L;
@@ -983,92 +837,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     }
 
     @Test
-    public void testFilesCanBeSubmitted() {
-        assertFilesCanBeSubmittedByProjectManagerAndFilesExist(
-                project::setCollaborationAgreement,
-                project::setExploitationPlan,
-                () -> service.isOtherDocumentsSubmitAllowed(123L, 1L));
-
-    }
-
-    @Test
-    public void testFilesCannotBeSubmittedIfUserNotProjectManager() {
-        assertFilesCannotBeSubmittedIfNotByProjectManager(
-                project::setCollaborationAgreement,
-                project::setExploitationPlan,
-                () -> service.isOtherDocumentsSubmitAllowed(123L, 1L));
-
-    }
-
-    @Test
-    public void testSaveDocumentsSubmitDateTimeIsSuccessfulWhenUploadsComplete() {
-        ProjectUser projectUserToSet = newProjectUser()
-                .withId(1L)
-                .withUser(newUser().withid(1L).build())
-                .withRole(ProjectParticipantRole.PROJECT_MANAGER)
-                .build();
-        List<ProjectUser> projectUsers = new ArrayList<>();
-        projectUsers.add(projectUserToSet);
-        Project project = newProject().build();
-        project.setProjectUsers(projectUsers);
-
-        when(projectUserRepositoryMock.findByProjectId(project.getId())).thenReturn(projectUsers);
-        when(projectRepositoryMock.findOne(project.getId())).thenReturn(project);
-
-        assertSetDocumentsDateimeIfProjectManagerAndFilesExist(
-                project::setCollaborationAgreement,
-                project::setExploitationPlan,
-                () -> service.saveDocumentsSubmitDateTime(project.getId(), LocalDateTime.now()));
-
-        assertNotNull(project.getCollaborationAgreement());
-        assertNotNull(project.getExploitationPlan());
-        assertTrue(project.getProjectUsers().get(0).getRole().getName()
-                .equals(UserRoleType.PROJECT_MANAGER.getName()));
-        assertNotNull(project.getDocumentsSubmittedDate());
-    }
-
-    @Test
-    public void testSaveDocumentsSubmitDateTimeFailsWhenUploadsImcomplete() {
-        ProjectUser projectUserToSet = newProjectUser()
-                .withId(1L)
-                .withUser(newUser().withid(1L).build())
-                .withRole(ProjectParticipantRole.PROJECT_MANAGER)
-                .build();
-        List<ProjectUser> projectUsers = new ArrayList<>();
-        projectUsers.add(projectUserToSet);
-        Project project = newProject().build();
-        project.setProjectUsers(projectUsers);
-
-        when(projectUserRepositoryMock.findByProjectId(project.getId())).thenReturn(projectUsers);
-        when(projectRepositoryMock.findOne(project.getId())).thenReturn(project);
-
-        ServiceResult<Void> result = service.saveDocumentsSubmitDateTime(project.getId(), LocalDateTime.now());
-
-        assertTrue(result.isFailure());
-        assertNull(project.getCollaborationAgreement());
-        assertNull(project.getExploitationPlan());
-        assertTrue(project.getProjectUsers().get(0).getRole().getName()
-                .equals(UserRoleType.PROJECT_MANAGER.getName()));
-        assertNull(project.getDocumentsSubmittedDate());
-    }
-
-
-    private void assertSetDocumentsDateimeIfProjectManagerAndFilesExist(Consumer<FileEntry> fileSetter1,
-                                                                       Consumer<FileEntry> fileSetter2,
-                                                                       Supplier<ServiceResult<Void>> getConditionFn) {
-        Supplier<InputStream> inputStreamSupplier1 = () -> null;
-        Supplier<InputStream> inputStreamSupplier2 = () -> null;
-
-        getFileEntryResources(fileSetter1, fileSetter2, inputStreamSupplier1, inputStreamSupplier2);
-        ServiceResult<Void> result = getConditionFn.get();
-
-        assertTrue(result.isSuccess());
-
-    }
-
-
-
-    @Test
     public void testAddPartnerOrganisationNotOnProject(){
         Organisation o = newOrganisation().build();
         Organisation organisationNotOnProject = newOrganisation().build();
@@ -1146,31 +914,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         assertFalse(result.isSuccess());
         assertTrue(result.isFailure());
-
-    }
-
-
-    private void assertFilesCanBeSubmittedByProjectManagerAndFilesExist(Consumer<FileEntry> fileSetter1,
-                                                                        Consumer<FileEntry> fileSetter2,
-                                                                        Supplier<ServiceResult<Boolean>> getConditionFn) {
-        ProjectUser projectUserToSet = newProjectUser()
-                .withId(1L)
-                .withUser(newUser().withid(1L).build())
-                .withRole(PROJECT_MANAGER)
-                .build();
-        List<ProjectUser> projectUsers = new ArrayList<>();
-        projectUsers.add(projectUserToSet);
-
-        when(projectUserRepositoryMock.findByProjectId(123L)).thenReturn(projectUsers);
-
-        Supplier<InputStream> inputStreamSupplier1 = () -> null;
-        Supplier<InputStream> inputStreamSupplier2 = () -> null;
-
-        getFileEntryResources(fileSetter1, fileSetter2, inputStreamSupplier1, inputStreamSupplier2);
-        ServiceResult<Boolean> result = getConditionFn.get();
-
-        assertTrue(result.isSuccess());
-        assertTrue(result.getSuccessObject());
 
     }
 

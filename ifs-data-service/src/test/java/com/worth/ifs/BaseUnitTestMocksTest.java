@@ -66,6 +66,7 @@ import com.worth.ifs.project.repository.MonitoringOfficerRepository;
 import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.project.repository.ProjectUserRepository;
 import com.worth.ifs.project.transactional.ProjectService;
+import com.worth.ifs.project.workflow.projectdetails.configuration.ProjectDetailsWorkflowEventHandler;
 import com.worth.ifs.sil.experian.service.SilExperianEndpoint;
 import com.worth.ifs.token.repository.TokenRepository;
 import com.worth.ifs.token.transactional.TokenService;
@@ -352,6 +353,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected RejectionReasonService rejectionReasonServiceMock;
+
+    @Mock
+    protected ProjectDetailsWorkflowEventHandler projectDetailsWorkflowEventHandlerMock;
 
     @Before
     public void setupMockInjection() {

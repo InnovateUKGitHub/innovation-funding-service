@@ -45,9 +45,11 @@ import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.OrganisationResource;
+import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -227,16 +229,16 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
     @Override
     public ServiceResult<Void> saveProjectSubmitDateTime(final Long projectId, LocalDateTime date) {
-        return getProject(projectId).
-                andOnSuccess(
-                        project -> {
-                            if (doIsSubmissionAllowed(projectId)) {
-                                return setSubmittedDate(project, date);
-                            } else {
-                                return serviceFailure(new Error(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_SUBMITTED_IF_INCOMPLETE));
-                            }
-                        }
-                ).andOnSuccessReturnVoid();
+        return getProject(projectId).andOnSuccess(project -> {
+            UserResource currentUser = (UserResource) SecurityContextHolder.getContext().getAuthentication().getDetails();
+            ProjectUser projectUser = simpleFindFirst(project.getProjectUsers(), pu -> pu.getUser().getId().equals(currentUser.getId())).get();
+
+            if (projectDetailsWorkflowHandler.submitProjectDetails(projectUser.getId(), projectId)) {
+                return setSubmittedDate(project, date);
+            } else {
+                return serviceFailure(new Error(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_SUBMITTED_IF_INCOMPLETE));
+            }
+        });
     }
 
     @Override
