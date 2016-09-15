@@ -14,6 +14,7 @@ import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisa
 import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -48,6 +49,9 @@ public class ProjectGrantOfferLetterControllerTest extends BaseControllerMockMVC
         assertEquals(project.getName(), model.getProjectName());
         assertFalse(model.isOfferSigned());
         assertNull(model.getSubmitDate());
+        assertTrue(model.isShowSubmitButton());
+        assertNull(model.getSubmitDate());
+        assertFalse(model.isSubmitted());
     }
 
 

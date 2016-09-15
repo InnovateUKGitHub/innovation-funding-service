@@ -18,7 +18,7 @@
 
     <!-- HARDCODED PROTOTYPE HTML -->
 
-    <th:block th:if="${model.rejected}">
+    <th:block th:if="${model.offerRejected}">
 
         <div class="warning-alert extra-margin-bottom">
             <h3 class="heading-small no-margin-top">The Grant offer letter has been returned to you as it has not been approved. A member of Innovate UK should be in contact to discuss their requirements.</h3>
@@ -45,7 +45,7 @@
         <p>The unsigned grant offer letter is available for your records.</p>
     </th:block>
 
-    <th:block th:if="${model.subbmitted}">
+    <th:block th:if="${model.submitted}">
         <p>The signed grant offer letter has been received by Innovate UK, and is awaiting review.</p>
 
         <p>The unsigned grant offer letter is available for your records.</p>
@@ -64,7 +64,7 @@
 
     <p th:unless="${!model.leadPartner}">This document needs to be agreed on with all project team members, with the document signed and received by Innovate UK to complete project setup</p>
 
-    <p th:unless="${model.leadPartner}">This document has been approved as it has been with the document signed and recieved by Innovate to complete project setup</p>
+    <p th:unless="${model.leadPartner and model.offerAccepted}">This document has been approved as it has been with the document signed and recieved by Innovate to complete project setup</p>
 
     <p><a href="#">Grant offer letter 2016-07-28a.PDF</a></p>
 
@@ -146,8 +146,5 @@
 <div th:include="fragments/layout :: footer" th:remove="tag" />
 <div th:include="fragments/layout :: body-end" th:remove="tag" />
 <script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-    // <![CDATA[
-
-    //
+</body>
+</html>

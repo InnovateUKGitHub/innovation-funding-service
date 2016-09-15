@@ -34,7 +34,7 @@ public class ProjectGrantOfferLetterController {
     private ProjectService projectService;
 
     @RequestMapping(method = GET)
-    public String viewGrantOfferLetterPage(@PathVariable(BASE_DIR + "Id") Long projectId, Model model,
+    public String viewGrantOfferLetterPage(@PathVariable("projectId") Long projectId, Model model,
                                            @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
         return createGrantOfferLetterPage(projectId, model, loggedInUser);
@@ -51,8 +51,8 @@ public class ProjectGrantOfferLetterController {
         boolean leadPartner = projectService.isUserLeadPartner(projectId, loggedInUser.getId());
 
         //TODO: get grant offer letter from project service
-        //TODO: get extra contract file from project service
         Optional<FileEntryResource> grantOfferLetter = Optional.of(new FileEntryResource(1L, "grantOfferLetter", "application/pdf", 10000));
+        //TODO: get extra contract file from project service
         Optional<FileEntryResource> additionalContractFile = Optional.of(new FileEntryResource(1L, "additionalContractFile", "application/pdf", 10000));
 
         //TODO: To be implenented - INFUND-4848
@@ -60,12 +60,11 @@ public class ProjectGrantOfferLetterController {
         boolean offerSigned = false;
         boolean offerAccepted = false;
         boolean offerRejected = false;
-        boolean submitted = false;
 
         return new ProjectGrantOfferLetterViewModel(projectId, project.getName(),
                 leadPartner, grantOfferLetter.map(FileDetailsViewModel::new).orElse(null),
                 additionalContractFile.map(FileDetailsViewModel::new).orElse(null),
-                offerSigned, submitted, submittedDate, offerAccepted, offerRejected);
+                offerSigned, submittedDate, offerAccepted, offerRejected);
     }
 
 
