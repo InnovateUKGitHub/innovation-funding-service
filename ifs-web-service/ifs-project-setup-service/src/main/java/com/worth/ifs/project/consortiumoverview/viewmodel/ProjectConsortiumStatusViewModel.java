@@ -1,68 +1,54 @@
 package com.worth.ifs.project.consortiumoverview.viewmodel;
 
-import java.util.List;
-
+import com.worth.ifs.project.resource.ProjectTeamStatusResource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class ProjectConsortiumStatusViewModel {
     private Long projectId;
-    private LeadPartnerModel leadPartner;
-    private List<RegularPartnerModel> otherPartners;
+    private ProjectTeamStatusResource projectTeamStatusResource;
 
-    public ProjectConsortiumStatusViewModel(final Long projectId, final LeadPartnerModel leadPartner, final List<RegularPartnerModel> otherPartners) {
+    public ProjectConsortiumStatusViewModel(final Long projectId, final ProjectTeamStatusResource projectTeamStatusResource) {
         this.projectId = projectId;
-        this.leadPartner = leadPartner;
-        this.otherPartners = otherPartners;
+        this.projectTeamStatusResource = projectTeamStatusResource;
     }
 
     public Long getProjectId() {
         return projectId;
     }
 
-    public LeadPartnerModel getLeadPartner() {
-        return leadPartner;
-    }
-
-    public List<RegularPartnerModel> getOtherPartners() {
-        return otherPartners;
+    public ProjectTeamStatusResource getProjectTeamStatusResource() {
+        return projectTeamStatusResource;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (obj == this) {
-            return true;
-        }
-        if (obj.getClass() != getClass()) {
-            return false;
-        }
-        ProjectConsortiumStatusViewModel rhs = (ProjectConsortiumStatusViewModel) obj;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ProjectConsortiumStatusViewModel that = (ProjectConsortiumStatusViewModel) o;
+
         return new EqualsBuilder()
-            .append(this.projectId, rhs.projectId)
-            .append(this.leadPartner, rhs.leadPartner)
-            .append(this.otherPartners, rhs.otherPartners)
-            .isEquals();
+                .append(projectId, that.projectId)
+                .append(projectTeamStatusResource, that.projectTeamStatusResource)
+                .isEquals();
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder()
-            .append(projectId)
-            .append(leadPartner)
-            .append(otherPartners)
-            .toHashCode();
+        return new HashCodeBuilder(17, 37)
+                .append(projectId)
+                .append(projectTeamStatusResource)
+                .toHashCode();
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-            .append("\nprojectId", projectId)
-            .append("\nleadPartner", leadPartner)
-            .append("\notherPartners", otherPartners)
-            .toString();
+                .append("projectId", projectId)
+                .append("projectTeamStatusResource", projectTeamStatusResource)
+                .toString();
     }
 }
