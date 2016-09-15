@@ -17,6 +17,8 @@ import com.worth.ifs.finance.resource.cost.AcademicCost;
 import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import com.worth.ifs.finance.security.*;
 import com.worth.ifs.finance.transactional.FinanceRowService;
+import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.project.security.ProjectLookupStrategy;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,6 +36,7 @@ import static com.worth.ifs.finance.builder.ApplicationFinanceResourceBuilder.ne
 import static com.worth.ifs.finance.builder.FinanceRowBuilder.newFinanceRow;
 import static com.worth.ifs.finance.builder.FinanceRowMetaFieldResourceBuilder.newFinanceRowMetaFieldResource;
 import static com.worth.ifs.finance.service.FinanceRowServiceSecurityTest.TestFinanceRowService.ARRAY_SIZE_FOR_POST_FILTER_TESTS;
+import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
@@ -52,6 +55,8 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
     private FinanceRowMetaFieldLookupStrategy financeRowMetaFieldLookupStrategy;
     private ApplicationFinanceLookupStrategy applicationFinanceLookupStrategy;
 
+    private ProjectLookupStrategy projectLookupStrategy;
+
     @Before
     public void lookupPermissionRules() {
         financeRowMetaFieldPermissionsRules = getMockPermissionRulesBean(FinanceRowMetaFieldPermissionsRules.class);
@@ -62,6 +67,8 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
         financeRowLookupStrategy = getMockPermissionEntityLookupStrategiesBean(FinanceRowLookupStrategy.class);
         financeRowMetaFieldLookupStrategy = getMockPermissionEntityLookupStrategiesBean(FinanceRowMetaFieldLookupStrategy.class);
         applicationFinanceLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ApplicationFinanceLookupStrategy.class);
+
+        projectLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ProjectLookupStrategy.class);
     }
 
     @Test
@@ -302,6 +309,21 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
         verify(applicationFinanceRules, times(nTimes)).consortiumCanSeeTheApplicationFinancesForTheirOrganisation(isA(ApplicationFinanceResource.class), isA(UserResource.class));
         verify(applicationFinanceRules, times(nTimes)).assessorCanSeeTheApplicationFinanceForOrganisationsInApplicationsTheyAssess(isA(ApplicationFinanceResource.class), isA(UserResource.class));
         verify(applicationFinanceRules, times(nTimes)).compAdminCanSeeApplicationFinancesForOrganisations(isA(ApplicationFinanceResource.class), isA(UserResource.class));
+    }
+
+    @Test
+    public void testOrganisationSeeksFunding() {
+        final Long projectId = 1L;
+        final Long applicationId = 1L;
+        final Long organisationId = 1L;
+
+        when(projectLookupStrategy.getProjectResource(projectId)).thenReturn(newProjectResource().with(id(projectId)).build());
+
+        assertAccessDenied(
+                () -> service.organisationSeeksFunding(projectId, applicationId, organisationId),
+                () -> {
+                    verify(costPermissionsRules).projectPartnersCanCheckFundingStatusOfTeam(isA(ProjectResource.class), isA(UserResource.class));
+                });
     }
 
     @Override

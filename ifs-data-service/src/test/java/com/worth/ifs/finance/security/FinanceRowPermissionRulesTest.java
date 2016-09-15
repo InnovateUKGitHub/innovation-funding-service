@@ -128,7 +128,6 @@ public class FinanceRowPermissionRulesTest extends BasePermissionRulesTest<Finan
         assertFalse(rules.consortiumCanUpdateACostForTheirApplicationAndOrganisation(cost, compAdmin));
     }
 
-
     @Test
     public void testConsortiumCanReadACostForTheirApplicationAndOrganisation() {
         assertTrue(rules.consortiumCanReadACostForTheirApplicationAndOrganisation(cost, leadApplicant));

@@ -134,6 +134,6 @@ public interface ProjectService {
             description = "The System Registration user can add a partner to a project")
     ServiceResult<Void> addPartner(Long projectId, Long userId, Long organisationId);
 
-    @PostFilter("hasPermission(returnObject, 'VIEW_TEAM_STATUS')")
+    @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'VIEW_TEAM_STATUS')")
     ServiceResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId);
 }
