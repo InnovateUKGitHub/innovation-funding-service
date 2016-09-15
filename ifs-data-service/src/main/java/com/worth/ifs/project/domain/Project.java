@@ -60,6 +60,14 @@ public class Project implements ProcessActivity {
     @JoinColumn(name="exploitationPlanFileEntryId", referencedColumnName="id")
     private FileEntry exploitationPlan;
 
+    @OneToOne
+    @JoinColumn(name="grantOfferLetterFileEntryId", referencedColumnName = "id")
+    private FileEntry grantOfferLetter;
+
+    @OneToOne
+    @JoinColumn(name="grantOfferLetterFileEntryId", referencedColumnName = "id")
+    private FileEntry additional;
+
     public Project() {}
 
     public Project(Long id, Application application, LocalDate targetStartDate, Address address,
