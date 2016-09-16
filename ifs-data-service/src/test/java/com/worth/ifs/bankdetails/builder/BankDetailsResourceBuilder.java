@@ -34,8 +34,8 @@ public class BankDetailsResourceBuilder extends BaseBuilder<BankDetailsResource,
         return withArray((id, bankDetails) -> setField("id", id, bankDetails), ids);
     }
 
-    public BankDetailsResourceBuilder withOrganisation(Long organisation) {
-        return with((bankDetails) -> bankDetails.setOrganisation(organisation));
+    public BankDetailsResourceBuilder withOrganisation(Long... organisations) {
+        return withArray((organisation, bankDetails) -> setField("organisation", organisation, bankDetails), organisations);
     }
 
     public BankDetailsResourceBuilder withOrganisationTypeName(String organisationTypeName) {
