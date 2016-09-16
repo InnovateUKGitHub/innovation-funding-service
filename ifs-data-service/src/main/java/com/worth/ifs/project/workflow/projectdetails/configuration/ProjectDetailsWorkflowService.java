@@ -28,18 +28,24 @@ public class ProjectDetailsWorkflowService extends BaseWorkflowEventHandler<Proj
         return fireEvent(projectCreatedEvent(project, originalLeadApplicantProjectUser), ProjectDetailsState.PENDING);
     }
 
-    public boolean projectDetailsAllSupplied(ProjectDetailsProcess projectDetails) {
-        return fireEvent(allProjectDetailsSuppliedEvent(projectDetails), projectDetails);
+    public boolean projectStartDateAdded(Project project, ProjectUser projectUser) {
+        return fireEvent(mandatoryValueAddedEvent(project, projectUser, PROJECT_START_DATE_ADDED), project);
     }
 
-    public boolean submitProjectDetails(ProjectUser projectUser, Long projectId) {
-        ProjectDetailsProcess process = getProcessByTargetId(projectId);
-        return fireEvent(submitProjectDetailsMessage(projectUser, process), process);
+    public boolean projectAddressAdded(Project project, ProjectUser projectUser) {
+        return fireEvent(mandatoryValueAddedEvent(project, projectUser, PROJECT_ADDRESS_ADDED), project);
     }
 
-    public boolean isSubmissionAllowed(Long projectId) {
-        ProjectDetailsProcess currentProcess = getProcessByTargetId(projectId);
-        return testEvent(submitProjectDetailsMessage(currentProcess.getParticipant(), currentProcess), currentProcess);
+    public boolean projectManagerAdded(Project project, ProjectUser projectUser) {
+        return fireEvent(mandatoryValueAddedEvent(project, projectUser, PROJECT_MANAGER_ADDED), project);
+    }
+
+    public boolean submitProjectDetails(ProjectUser projectUser, Project project) {
+        return fireEvent(submitProjectDetailsMessage(projectUser, project), project);
+    }
+
+    public boolean isSubmissionAllowed(Project project) {
+        return testEvent(submitProjectDetailsMessage(null, project), project);
     }
 
     private MessageBuilder<ProjectDetailsOutcomes> projectCreatedEvent(Project project, ProjectUser originalLeadApplicantProjectUser) {
@@ -49,17 +55,23 @@ public class ProjectDetailsWorkflowService extends BaseWorkflowEventHandler<Proj
                 .setHeader("projectUser", originalLeadApplicantProjectUser);
     }
 
-    private MessageBuilder<ProjectDetailsOutcomes> allProjectDetailsSuppliedEvent(ProjectDetailsProcess projectDetails) {
+    private MessageBuilder<ProjectDetailsOutcomes> mandatoryValueAddedEvent(Project project, ProjectUser projectUser,
+                                                                            ProjectDetailsOutcomes event) {
         return MessageBuilder
-                .withPayload(READY_TO_SUBMIT)
-                .setHeader("projectDetails", projectDetails);
+                .withPayload(event)
+                .setHeader("project", project)
+                .setHeader("projectUser", projectUser);
     }
 
-    private MessageBuilder<ProjectDetailsOutcomes> submitProjectDetailsMessage(ProjectUser projectUser, ProjectDetailsProcess projectDetails) {
+    private MessageBuilder<ProjectDetailsOutcomes> submitProjectDetailsMessage(ProjectUser projectUser, Project project) {
         return MessageBuilder
                 .withPayload(SUBMIT)
-                .setHeader("projectDetails", projectDetails)
+                .setHeader("project", project)
                 .setHeader("projectUser", projectUser);
+    }
+
+    private boolean fireEvent(MessageBuilder<ProjectDetailsOutcomes> event, Project project) {
+        return fireEvent(event, getCurrentProcess(project));
     }
 
     private boolean fireEvent(MessageBuilder<ProjectDetailsOutcomes> event, ProjectDetailsProcess currentState) {
@@ -70,13 +82,15 @@ public class ProjectDetailsWorkflowService extends BaseWorkflowEventHandler<Proj
         return stateHandler.handleEventWithState(event.build(), currentState);
     }
 
-    private boolean testEvent(MessageBuilder<ProjectDetailsOutcomes> event, ProjectDetailsProcess currentState) {
-        return testEvent(event, currentState.getActivityState());
+    private boolean testEvent(MessageBuilder<ProjectDetailsOutcomes> event, Project project) {
+        return testEvent(event, getCurrentProcess(project).getActivityState());
     }
 
     private boolean testEvent(MessageBuilder<ProjectDetailsOutcomes> event, ProjectDetailsState currentState) {
         return fireEvent(event.setHeader(TestableTransitionWorkflowAction.TESTING_GUARD_KEY, true), currentState);
     }
 
-
+    private ProjectDetailsProcess getCurrentProcess(Project project) {
+        return processRepository.findOneByTargetId(project.getId());
+    }
 }

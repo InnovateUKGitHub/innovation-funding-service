@@ -233,7 +233,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
             UserResource currentUser = (UserResource) SecurityContextHolder.getContext().getAuthentication().getDetails();
             ProjectUser projectUser = simpleFindFirst(project.getProjectUsers(), pu -> pu.getUser().getId().equals(currentUser.getId())).get();
 
-            if (projectDetailsWorkflowHandler.submitProjectDetails(projectUser, projectId)) {
+            if (projectDetailsWorkflowHandler.submitProjectDetails(projectUser, project)) {
                 return setSubmittedDate(project, date);
             } else {
                 return serviceFailure(new Error(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_SUBMITTED_IF_INCOMPLETE));
@@ -243,11 +243,11 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
     @Override
     public ServiceResult<Boolean> isSubmitAllowed(Long projectId) {
-        return serviceSuccess(doIsSubmissionAllowed(projectId));
+        return getProject(projectId).andOnSuccessReturn(this::doIsSubmissionAllowed);
     }
 
-    private boolean doIsSubmissionAllowed(Long projectId) {
-        return projectDetailsWorkflowHandler.isSubmissionAllowed(projectId);
+    private boolean doIsSubmissionAllowed(Project project) {
+        return projectDetailsWorkflowHandler.isSubmissionAllowed(project);
     }
 
     @Override
@@ -437,7 +437,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
                         return serviceFailure(badRequestError("project does not contain organisation"));
                     }
                     List<ProjectUser> partners = project.getProjectUsersWithRole(PROJECT_PARTNER);
-                    if (partners.stream().map(p -> p.getId()).collect(toList()).contains(userId)){
+                    if (partners.stream().map(p -> p.getUser().getId()).collect(toList()).contains(userId)){
                         return serviceSuccess(); // Already a partner
                     } else {
                         ProjectUser pu = new ProjectUser(user, project, PROJECT_PARTNER, organisation);

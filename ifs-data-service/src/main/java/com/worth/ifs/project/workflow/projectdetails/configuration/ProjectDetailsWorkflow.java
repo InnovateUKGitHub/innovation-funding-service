@@ -15,6 +15,7 @@ import org.springframework.statemachine.config.builders.StateMachineConfiguratio
 import org.springframework.statemachine.config.builders.StateMachineStateConfigurer;
 import org.springframework.statemachine.config.builders.StateMachineTransitionConfigurer;
 
+import java.util.EnumSet;
 import java.util.LinkedHashSet;
 
 import static com.worth.ifs.project.resource.ProjectDetailsOutcomes.PROJECT_CREATED;
@@ -49,7 +50,8 @@ public class ProjectDetailsWorkflow extends StateMachineConfigurerAdapter<Projec
     public void configure(StateMachineStateConfigurer<ProjectDetailsState, ProjectDetailsOutcomes> states) throws Exception {
         states.withStates()
                 .initial(PENDING)
-                .states(new LinkedHashSet<>(asList(ProjectDetailsState.values())));
+                .states(EnumSet.of(PENDING, READY_TO_SUBMIT, SUBMITTED))
+                .choice(DECIDE_IF_READY_TO_SUBMIT);
     }
 
     @Override

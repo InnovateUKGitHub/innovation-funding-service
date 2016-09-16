@@ -17,7 +17,7 @@ public class BaseWorkflowEventHandler<ProcessType, StateType, EventType> {
     private static final Log LOG = LogFactory.getLog(BaseWorkflowEventHandler.class);
 
     protected GenericPersistStateMachineHandler<StateType, EventType> stateHandler;
-    private ProcessRepository<ProcessType> processRepository;
+    protected ProcessRepository<ProcessType> processRepository;
 
     public BaseWorkflowEventHandler(GenericPersistStateMachineHandler<StateType, EventType> stateHandler, ProcessRepository<ProcessType> processRepository) {
         this.stateHandler = stateHandler;
