@@ -906,7 +906,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
     @Test
     public void testCreateCollaborationAgreementFileEntry() {
-        assertCreateFile(
+        projectServiceAssertions.assertCreateFile(
                 project::getCollaborationAgreement,
                 (fileToCreate, inputStreamSupplier) ->
                         service.createCollaborationAgreementFileEntry(123L, fileToCreate, inputStreamSupplier));
@@ -922,14 +922,14 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
     @Test
     public void testGetCollaborationAgreementFileEntryDetails() {
-        assertGetFileDetails(
+        projectServiceAssertions.assertGetFileDetails(
                 project::setCollaborationAgreement,
                 () -> service.getCollaborationAgreementFileEntryDetails(123L));
     }
 
     @Test
     public void testGetCollaborationAgreementFileContents() {
-        assertGetFileContents(
+        projectServiceAssertions.assertGetFileContents(
                 project::setCollaborationAgreement,
                 () -> service.getCollaborationAgreementFileContents(123L));
     }
@@ -944,7 +944,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
     @Test
     public void testCreateExploitationPlanFileEntry() {
-        assertCreateFile(
+        projectServiceAssertions.assertCreateFile(
                 project::getExploitationPlan,
                 (fileToCreate, inputStreamSupplier) ->
                         service.createExploitationPlanFileEntry(123L, fileToCreate, inputStreamSupplier));
@@ -960,14 +960,14 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
     @Test
     public void testGetExploitationPlanFileEntryDetails() {
-        assertGetFileDetails(
+        projectServiceAssertions.assertGetFileDetails(
                 project::setExploitationPlan,
                 () -> service.getExploitationPlanFileEntryDetails(123L));
     }
 
     @Test
     public void testGetExploitationPlanFileContents() {
-        assertGetFileContents(
+        projectServiceAssertions.assertGetFileContents(
                 project::setExploitationPlan,
                 () -> service.getExploitationPlanFileContents(123L));
     }
@@ -1310,53 +1310,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(fileEntryMapperMock.mapToResource(fileEntry1ToGet)).thenReturn(fileEntryResourcesToGet.get(0));
         when(fileEntryMapperMock.mapToResource(fileEntry2ToGet)).thenReturn(fileEntryResourcesToGet.get(1));
         return fileEntryResourcesToGet;
-    }
-
-    private void assertGetFileContents(Consumer<FileEntry> fileSetter, Supplier<ServiceResult<FileAndContents>> getFileContentsFn) {
-
-        FileEntry fileToGet = newFileEntry().build();
-        Supplier<InputStream> inputStreamSupplier = () -> null;
-
-        FileEntryResource fileResourceToGet = newFileEntryResource().build();
-
-        fileSetter.accept(fileToGet);
-        when(fileServiceMock.getFileByFileEntryId(fileToGet.getId())).thenReturn(serviceSuccess(inputStreamSupplier));
-        when(fileEntryMapperMock.mapToResource(fileToGet)).thenReturn(fileResourceToGet);
-
-        ServiceResult<FileAndContents> result = getFileContentsFn.get();
-        assertTrue(result.isSuccess());
-        assertEquals(fileResourceToGet, result.getSuccessObject().getFileEntry());
-        assertEquals(inputStreamSupplier, result.getSuccessObject().getContentsSupplier());
-    }
-
-    private void assertCreateFile(Supplier<FileEntry> fileGetter, BiFunction<FileEntryResource, Supplier<InputStream>, ServiceResult<FileEntryResource>> createFileFn) {
-
-        FileEntryResource fileToCreate = newFileEntryResource().build();
-        Supplier<InputStream> inputStreamSupplier = () -> null;
-
-        FileEntry createdFile = newFileEntry().build();
-        FileEntryResource createdFileResource = newFileEntryResource().build();
-
-        when(fileServiceMock.createFile(fileToCreate, inputStreamSupplier)).thenReturn(serviceSuccess(Pair.of(new File("blah"), createdFile)));
-        when(fileEntryMapperMock.mapToResource(createdFile)).thenReturn(createdFileResource);
-
-        ServiceResult<FileEntryResource> result = createFileFn.apply(fileToCreate, inputStreamSupplier);
-        assertTrue(result.isSuccess());
-        assertEquals(createdFileResource, result.getSuccessObject());
-        assertEquals(createdFile, fileGetter.get());
-    }
-
-    private void assertGetFileDetails(Consumer<FileEntry> fileSetter, Supplier<ServiceResult<FileEntryResource>> getFileDetailsFn) {
-        FileEntry fileToGet = newFileEntry().build();
-
-        FileEntryResource fileResourceToGet = newFileEntryResource().build();
-
-        fileSetter.accept(fileToGet);
-        when(fileEntryMapperMock.mapToResource(fileToGet)).thenReturn(fileResourceToGet);
-
-        ServiceResult<FileEntryResource> result = getFileDetailsFn.get();
-        assertTrue(result.isSuccess());
-        assertEquals(fileResourceToGet, result.getSuccessObject());
     }
 
     private void assertDeleteFile(Supplier<FileEntry> fileGetter, Consumer<FileEntry> fileSetter, Supplier<ServiceResult<Void>> deleteFileFn) {

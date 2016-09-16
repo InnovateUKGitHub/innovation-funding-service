@@ -14,6 +14,7 @@ import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.InputStream;
@@ -27,6 +28,7 @@ import static com.worth.ifs.util.EntityLookupCallbacks.find;
 /**
  * Module: innovation-funding-service-dev
  **/
+@Service
 public class ProjectGrantOfferServiceImpl extends BaseTransactionalService implements ProjectGrantOfferService{
 
     @Autowired

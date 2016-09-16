@@ -63,7 +63,7 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
 
     private MonitoringOfficerResource monitoringOfficerResource;
 
-    private RestDocumentationResultHandler document;
+        private RestDocumentationResultHandler document;
 
     @Before
     public void setUp() {

@@ -41,6 +41,13 @@ public class FileValidationConfig {
     @Value("${ifs.data.service.file.storage.projectsetupotherdocuments.valid.media.types}")
     private List<String> validMediaTypesForProjectSetupOtherDocuments;
 
+    @Value("${ifs.data.service.file.storage.projectsetupgrantofferletter.max.filesize.bytes}")
+    private Long maxFilesizeBytesForProjectSetupGrantOfferLetter;
+
+    @Value("${ifs.data.service.file.storage.projectsetupgrantofferletter.valid.media.types}")
+    private List<String> validMediaTypesForProjectSetupGrantOfferLetter;
+
+
     @Bean(name = "formInputResponseFileValidator")
     public FileHttpHeadersValidator getFormInputResponseFileValidator() {
         return createFileValidator(validMediaTypesForFormInputResponses, maxFilesizeBytesForFormInputResponses);
@@ -60,6 +67,12 @@ public class FileValidationConfig {
     public FileHttpHeadersValidator getProjectSetupOtherDocumentsFileValidator() {
         return createFileValidator(validMediaTypesForProjectSetupOtherDocuments, maxFilesizeBytesForProjectSetupOtherDocuments);
     }
+
+    @Bean(name = "projectSetupGrantOfferLetterFileValidator")
+    public FileHttpHeadersValidator getProjectSetupGrantOfferLetterFileValidator() {
+        return createFileValidator(validMediaTypesForProjectSetupGrantOfferLetter, maxFilesizeBytesForProjectSetupGrantOfferLetter);
+    }
+
 
     private FileHttpHeadersValidator createFileValidator(List<String> validMediaTypes, Long maxFilesizeBytes) {
         List<MediaType> mediaTypes = simpleMap(validMediaTypes, MediaType::valueOf);
