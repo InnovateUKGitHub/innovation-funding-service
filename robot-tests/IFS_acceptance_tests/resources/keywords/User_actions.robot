@@ -7,6 +7,7 @@ Resource          ../../resources/keywords/Login_actions.robot
 *** Keywords ***
 The user navigates to the page
     [Arguments]    ${TARGET_URL}
+    Wait for autosave
     Go To    ${TARGET_URL}
     Run Keyword And Ignore Error    Confirm Action
     # Error checking
@@ -24,14 +25,15 @@ The user navigates to the page
 
 The user navigates to the assessor page
     [Arguments]    ${TARGET_URL}
+    Wait for autosave
     Go To    ${TARGET_URL}
-    Run Keyword And Ignore Error    Confirm Action
     # Error checking
     Page Should Not Contain    Error
     Page Should Not Contain    something went wrong
 
 The user navigates to the page without the usual headers
     [Arguments]    ${TARGET_URL}
+    Wait for autosave
     Go To    ${TARGET_URL}
     # Error checking
     Page Should Not Contain    Error
@@ -41,6 +43,7 @@ The user navigates to the page without the usual headers
 
 The user navigates to the page and gets a custom error message
     [Arguments]    ${TARGET_URL}    ${CUSTOM_ERROR_MESSAGE}
+    Wait for autosave
     Go To    ${TARGET_URL}
     Page Should Contain    ${CUSTOM_ERROR_MESSAGE}
 
@@ -86,8 +89,8 @@ the user should be redirected to the correct page without error checking
     Page Should Contain    BETA
 
 the user reloads the page
+    Wait for autosave
     Reload Page
-    run keyword and ignore error    confirm action
     # Error checking
     Page Should Not Contain    Error
     Page Should Not Contain    something went wrong
@@ -242,6 +245,7 @@ Switch to the first browser
     Switch browser    1
 
 Create new application
+    Wait for autosave
     go to    ${CREATE_APPLICATION_PAGE}
     Input Text    id=application_name    Form test application
     Click Element    css=#content > form > input
@@ -284,8 +288,8 @@ The user clicks the button/link
     [Arguments]    ${BUTTON}
     wait until element is visible    ${BUTTON}
     Focus    ${BUTTON}
+    Wait for autosave
     click element    ${BUTTON}
-    run keyword and ignore error    confirm action
 
 The user should see the text in the page
     [Arguments]    ${VISIBLE_TEXT}
@@ -364,6 +368,7 @@ the user assigns the question to the collaborator
     Reload Page
 
 The user goes back to the previous page
+    Wait for autosave
     Go Back
 
 browser validations have been disabled
