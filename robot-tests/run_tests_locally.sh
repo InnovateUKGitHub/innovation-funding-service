@@ -186,7 +186,7 @@ function runSmokeTests {
 function runTestsAgainstDocker {
     echo "running tests against docker"
     cd ${scriptDir}
-    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v BROWSER:$browser -v SERVER_BASE:$webBase -v PROTOCOL:"https://" -v POSTCODE_LOOKUP_IMPLENTED:$postcodeLookupImplemented -v UPLOAD_FOLDER:$uploadFileDir -v DOWNLOAD_FOLDER:download_files -V VIRTUAL_DISPLAY:$useXvfb --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal --name IFS $testDirectory
+    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v BROWSER:$browser -v SERVER_BASE:$webBase -v PROTOCOL:"https://" -v POSTCODE_LOOKUP_IMPLENTED:$postcodeLookupImplemented -v UPLOAD_FOLDER:$uploadFileDir -v DOWNLOAD_FOLDER:download_files -v VIRTUAL_DISPLAY:$useXvfb --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal --name IFS $testDirectory
 }
 
 cd "$(dirname "$0")"
