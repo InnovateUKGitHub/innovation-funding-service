@@ -16,6 +16,7 @@ IFS.core.autoSave = (function(){
         },
         init : function(){
             s = this.settings;
+            jQuery('[data-autosave]').attr('data-save-status','done');
             jQuery('body').on('change keyup', s.textareas, function(e){
                 if(e.type == 'keyup'){
                   //wait until the user stops typing
