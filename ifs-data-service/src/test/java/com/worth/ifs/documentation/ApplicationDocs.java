@@ -48,5 +48,4 @@ public class ApplicationDocs {
             .withInviteList(asList(1L,2L,3L))
             .withAssessorFeedbackFileEntry(123L)
             .withCompletion(new BigDecimal(30L));
-
 }

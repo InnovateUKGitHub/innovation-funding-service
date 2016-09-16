@@ -304,7 +304,6 @@ public class ApplicationController extends AbstractApplicationController {
                     .findAny();
     }
 
-
     /**
      * Assign a question to a user
      *

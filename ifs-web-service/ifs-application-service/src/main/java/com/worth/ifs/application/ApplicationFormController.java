@@ -226,7 +226,6 @@ public class ApplicationFormController extends AbstractApplicationController {
             List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
             List<FormInputResource> formInputs = formInputService.findApplicationInputsByQuestion(questionId);
 
-
             if (params.containsKey(ASSIGN_QUESTION_PARAM)) {
                 assignQuestion(applicationId, request);
                 cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
@@ -619,7 +618,6 @@ public class ApplicationFormController extends AbstractApplicationController {
         }
     }
 
-
     private void setReturnToApplicationFormData(SectionResource section, ApplicationResource application, CompetitionResource competition,
                                                 UserResource user, Model model, ApplicationForm form, Long applicationId) {
         addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), Optional.ofNullable(section), model, form);
@@ -660,7 +658,6 @@ public class ApplicationFormController extends AbstractApplicationController {
             bindingResult.getGlobalErrors().forEach(e -> LOG.debug("Remote validation global: " + e.getObjectName()+ " v: " + e.getCode() + " v: " + e.getDefaultMessage()));
         }
     }
-
 
     private ValidationMessages saveQuestionResponses(HttpServletRequest request,
                                                           List<QuestionResource> questions,
@@ -955,7 +952,6 @@ public class ApplicationFormController extends AbstractApplicationController {
         applicationService.save(application);
         return errors;
     }
-
 
     private void assignQuestion(@PathVariable(APPLICATION_ID) final Long applicationId,
                                HttpServletRequest request) {

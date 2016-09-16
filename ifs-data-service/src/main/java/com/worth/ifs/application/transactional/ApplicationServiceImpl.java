@@ -348,7 +348,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         });
     }
 
-
     @Override
     public ServiceResult<CompletedPercentageResource> getProgressPercentageByApplicationId(final Long applicationId) {
         return getApplicationById(applicationId).andOnSuccessReturn(applicationResource -> {
@@ -443,7 +442,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         );
     }
 
-
     @Override
     public ServiceResult<List<Application>> getApplicationsByCompetitionIdAndStatus(Long competitionId, Collection<Long> applicationStatusId) {
         List<Application> applicationResults = applicationRepository.findByCompetitionIdAndApplicationStatusIdIn(competitionId, applicationStatusId);
@@ -493,8 +491,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
         return percentage(countCompleted, totalQuestions);
     }
-
-
 
     private List<ApplicationResource> applicationsToResources(List<Application> filtered) {
         return simpleMap(filtered, application -> applicationMapper.mapToResource(application));

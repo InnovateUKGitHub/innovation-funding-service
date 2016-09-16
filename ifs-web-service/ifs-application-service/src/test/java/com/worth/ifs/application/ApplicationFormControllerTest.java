@@ -43,7 +43,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations="classpath:application.properties")
 public class ApplicationFormControllerTest extends BaseUnitTest {
@@ -195,7 +194,6 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/application/" + application.getId() + "/form/section/" + sectionId));
     }
-
 
     @Test
     public void testAjaxAddCost() throws Exception {
@@ -366,8 +364,6 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
                 .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() + "**"))
                 .andExpect(cookie().exists(CookieFlashMessageFilter.COOKIE_NAME));
     }
-
-
 
     @Test
     public void testSaveFormElement() throws Exception {
@@ -579,7 +575,6 @@ public class ApplicationFormControllerTest extends BaseUnitTest {
     public void testDeleteCost() throws Exception {
         String sectionId = "1";
         Long costId = 1L;
-
 
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)

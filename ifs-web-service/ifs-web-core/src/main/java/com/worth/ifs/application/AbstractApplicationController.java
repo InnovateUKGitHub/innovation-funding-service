@@ -141,7 +141,6 @@ public abstract class AbstractApplicationController extends BaseController {
     @Autowired
     protected OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
 
-
     protected Long extractAssigneeProcessRoleIdFromAssignSubmit(HttpServletRequest request) {
         Long assigneeId = null;
         Map<String, String[]> params = request.getParameterMap();
@@ -410,7 +409,6 @@ public abstract class AbstractApplicationController extends BaseController {
     private List<QuestionResource> getQuestionsBySection(final List<Long> questionIds, final List<QuestionResource> questions) {
         return simpleFilter(questions, q -> questionIds.contains(q.getId()));
     }
-
 
     protected void addCompletedDetails(Model model, ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
         Future<Set<Long>> markedAsComplete = getMarkedAsCompleteDetails(application, userOrganisation); // List of question ids
