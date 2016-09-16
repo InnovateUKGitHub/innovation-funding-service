@@ -24,7 +24,7 @@ ${Invitation_nonexisting_assessor2}    ${server}/assessment/invite/competition/2
 *** Test Cases ***
 Assessor dashboard should be empty
     [Documentation]    INFUND-3716
-    [Tags]
+    [Tags]    HappyPath
     [Setup]
     Given the user should see the text in the page    Assessor Dashboard
     Then The user should not see the element    css=.my-applications h2
@@ -49,7 +49,7 @@ Existing assessor: Accept invitation
     ...    INFUND-304
     ...
     ...    INFUND-3716
-    [Tags]
+    [Tags]    HappyPath
     Given the user navigates to the page    ${Invitation_existing_assessor1}
     and the user should see the text in the page    Invitation to assess 'Juggling Craziness'
     And the user should see the text in the page    You are invited to act as an assessor for the competition 'Juggling Craziness'
@@ -64,6 +64,7 @@ Calculation of the Competitions for assessment should be correct
 
 Competition link should navigate to the applications
     [Documentation]    INFUND-3716
+    [Tags]    HappyPath
     When The user clicks the button/link    link=Juggling Craziness
     Then The user should see the text in the page    Applications for Assessment
     And the calculation should be correct    Applications for Assessment    //div/form/ul/li
@@ -96,7 +97,8 @@ the assessor fills in all fields
 the user shouldn't be able to accept the rejected competition
     When the user navigates to the page    ${Invitation_existing_assessor2}
     And the user clicks the button/link    jQuery=button:contains("Accept")
-    Page Should Contain    Sorry, you are unable to accept this invitation
+    Page Should Contain    You are unable to access this page
+    Page Should Contain    You have already rejected the invitation
 
 the calculation should be correct
     [Arguments]    ${TEXT}    ${Section_Xpath}

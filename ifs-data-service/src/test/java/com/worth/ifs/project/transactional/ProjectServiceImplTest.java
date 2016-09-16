@@ -5,12 +5,15 @@ import com.worth.ifs.address.domain.Address;
 import com.worth.ifs.address.domain.AddressType;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.bankdetails.domain.BankDetails;
 import com.worth.ifs.commons.error.CommonFailureKeys;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.FileAndContents;
+import com.worth.ifs.finance.domain.ApplicationFinance;
+import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.invite.builder.ProjectInviteResourceBuilder;
 import com.worth.ifs.invite.domain.ProjectParticipantRole;
 import com.worth.ifs.invite.resource.InviteProjectResource;
@@ -20,13 +23,10 @@ import com.worth.ifs.project.builder.ProjectBuilder;
 import com.worth.ifs.project.domain.MonitoringOfficer;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
-import com.worth.ifs.project.resource.MonitoringOfficerResource;
-import com.worth.ifs.project.resource.ProjectResource;
-import com.worth.ifs.project.resource.ProjectUserResource;
-import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.user.domain.Role;
-import com.worth.ifs.user.domain.User;
+import com.worth.ifs.project.finance.domain.SpendProfile;
+import com.worth.ifs.project.resource.*;
+import com.worth.ifs.user.domain.*;
+import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import com.worth.ifs.user.resource.UserRoleType;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Assert;
@@ -50,6 +50,7 @@ import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressRes
 import static com.worth.ifs.address.builder.AddressTypeBuilder.newAddressType;
 import static com.worth.ifs.address.resource.OrganisationAddressType.*;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
+import static com.worth.ifs.bankdetails.builder.BankDetailsBuilder.newBankDetails;
 import static com.worth.ifs.commons.error.CommonErrors.badRequestError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
@@ -57,14 +58,21 @@ import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.file.domain.builders.FileEntryBuilder.newFileEntry;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
+import static com.worth.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
+import static com.worth.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static com.worth.ifs.invite.domain.ProjectParticipantRole.*;
 import static com.worth.ifs.organisation.builder.OrganisationAddressBuilder.newOrganisationAddress;
 import static com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
 import static com.worth.ifs.project.builder.ProjectBuilder.newProject;
+import static com.worth.ifs.project.builder.ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+import static com.worth.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
 import static com.worth.ifs.project.builder.ProjectUserBuilder.newProjectUser;
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
+import static com.worth.ifs.project.builder.SpendProfileBuilder.newSpendProfile;
+import static com.worth.ifs.project.constant.ProjectActivityStates.*;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
+import static com.worth.ifs.user.builder.OrganisationTypeBuilder.newOrganisationType;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
@@ -412,8 +420,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     public void testUpdateFinanceContactWhenNotPresentOnTheProject() {
 
         long userIdForUserNotOnProject = 6L;
-
-        Role partnerRole = newRole().withType(PARTNER).build();
 
         Project existingProject = newProject().withId(123L).build();
         Project anotherProject = newProject().withId(9999L).build();
@@ -838,7 +844,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         when(projectRepositoryMock.findOne(projectid)).thenReturn(projectInDB);
 
-        when(monitoringOfficerRepository.findOneByProjectId(monitoringOfficerResource.getProject())).thenReturn(monitoringOfficerInDB);
+        when(monitoringOfficerRepositoryMock.findOneByProjectId(monitoringOfficerResource.getProject())).thenReturn(monitoringOfficerInDB);
 
         ServiceResult<Void> result = service.saveMonitoringOfficer(projectid, monitoringOfficerResource);
 
@@ -860,7 +866,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         when(projectRepositoryMock.findOne(projectid)).thenReturn(projectInDB);
 
-        when(monitoringOfficerRepository.findOneByProjectId(monitoringOfficerResource.getProject())).thenReturn(null);
+        when(monitoringOfficerRepositoryMock.findOneByProjectId(monitoringOfficerResource.getProject())).thenReturn(null);
 
         ServiceResult<Void> result = service.saveMonitoringOfficer(projectid, monitoringOfficerResource);
 
@@ -890,7 +896,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 .withPhoneNumber("079237439")
                 .build();
 
-        when(monitoringOfficerRepository.findOneByProjectId(projectid)).thenReturn(monitoringOfficerInDB);
+        when(monitoringOfficerRepositoryMock.findOneByProjectId(projectid)).thenReturn(monitoringOfficerInDB);
 
         ServiceResult<MonitoringOfficerResource> result = service.getMonitoringOfficer(projectid);
 
@@ -1120,6 +1126,99 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         assertTrue(shouldFail.isSuccess());
     }
 
+    @Test
+    public void testGetProjectTeamStatus(){
+        Role partnerRole = newRole().withType(PARTNER).build();
+
+        /**
+         * Create 3 organisations:
+         * 2 Business, 1 Academic
+         * **/
+        OrganisationType businessOrganisationType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
+        OrganisationType academicOrganisationType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.ACADEMIC).build();
+        List<Organisation> organisation = newOrganisation().withOrganisationType(businessOrganisationType).build(2);
+        organisation.add(newOrganisation().withOrganisationType(academicOrganisationType).build());
+
+        /**
+         * Create 3 users project partner roles for each of the 3 organisations above
+         */
+        List<User> users = newUser().build(3);
+        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_PARTNER).withUser(users.get(0), users.get(1), users.get(2)).withOrganisation(organisation.get(0), organisation.get(1), organisation.get(2)).build(3);
+
+        /**
+         * Create a project with 3 Project Users from 3 different organisations with an associated application
+         */
+        Project p = newProject().withProjectUsers(pu).withApplication(application).build();
+
+        /**
+         * Create 3 bank detail records, one for each organisation
+         */
+        List<BankDetails> bankDetails = newBankDetails().withOrganisation(organisation.get(0), organisation.get(1), organisation.get(2)).build(3);
+
+        /**
+         * Build spend profile object for use with one of the partners
+         */
+        SpendProfile spendProfile = newSpendProfile().build();
+
+        when(projectRepositoryMock.findOne(p.getId())).thenReturn(p);
+
+        when(projectUserRepositoryMock.findByProjectId(p.getId())).thenReturn(pu);
+
+        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(p.getId(), organisation.get(0).getId())).thenReturn(bankDetails.get(0));
+
+        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), organisation.get(0).getId())).thenReturn(spendProfile);
+
+        MonitoringOfficer monitoringOfficerInDB = MonitoringOfficerBuilder.newMonitoringOfficer().build();
+        when(monitoringOfficerRepositoryMock.findOneByProjectId(p.getId())).thenReturn(monitoringOfficerInDB);
+
+        when(organisationRepositoryMock.findOne(organisation.get(0).getId())).thenReturn(organisation.get(0));
+        when(organisationRepositoryMock.findOne(organisation.get(1).getId())).thenReturn(organisation.get(1));
+        when(organisationRepositoryMock.findOne(organisation.get(2).getId())).thenReturn(organisation.get(2));
+
+        List<ApplicationFinance> applicationFinances = newApplicationFinance().build(3);
+        when(applicationFinanceRepositoryMock.findByApplicationIdAndOrganisationId(p.getApplication().getId(), organisation.get(0).getId())).thenReturn(applicationFinances.get(0));
+        when(applicationFinanceRepositoryMock.findByApplicationIdAndOrganisationId(p.getApplication().getId(), organisation.get(1).getId())).thenReturn(applicationFinances.get(1));
+        when(applicationFinanceRepositoryMock.findByApplicationIdAndOrganisationId(p.getApplication().getId(), organisation.get(2).getId())).thenReturn(applicationFinances.get(2));
+
+        ApplicationFinanceResource applicationFinanceResource0 = newApplicationFinanceResource().withGrantClaimPercentage(20).withOrganisation(organisation.get(0).getId()).build();
+        when(applicationFinanceMapperMock.mapToResource(applicationFinances.get(0))).thenReturn(applicationFinanceResource0);
+
+        ApplicationFinanceResource applicationFinanceResource1 = newApplicationFinanceResource().withGrantClaimPercentage(20).withOrganisation(organisation.get(1).getId()).build();
+        when(applicationFinanceMapperMock.mapToResource(applicationFinances.get(1))).thenReturn(applicationFinanceResource1);
+
+        ApplicationFinanceResource applicationFinanceResource2 = newApplicationFinanceResource().withGrantClaimPercentage(20).withOrganisation(organisation.get(2).getId()).build();
+        when(applicationFinanceMapperMock.mapToResource(applicationFinances.get(2))).thenReturn(applicationFinanceResource2);
+
+        List<ProjectUserResource> puResource = newProjectUserResource().withProject(p.getId()).withOrganisation(organisation.get(0).getId(), organisation.get(1).getId(), organisation.get(2).getId()).withRole(partnerRole.getId()).withRoleName(PROJECT_PARTNER.getName()).build(3);
+
+        when(projectUserMapperMock.mapToResource(pu.get(0))).thenReturn(puResource.get(0));
+        when(projectUserMapperMock.mapToResource(pu.get(1))).thenReturn(puResource.get(1));
+        when(projectUserMapperMock.mapToResource(pu.get(2))).thenReturn(puResource.get(2));
+
+        when(financeRowServiceMock.organisationSeeksFunding(p.getId(), p.getApplication().getId(), organisation.get(0).getId())).thenReturn(serviceSuccess(true));
+        when(financeRowServiceMock.organisationSeeksFunding(p.getId(), p.getApplication().getId(), organisation.get(1).getId())).thenReturn(serviceSuccess(false));
+        when(financeRowServiceMock.organisationSeeksFunding(p.getId(), p.getApplication().getId(), organisation.get(2).getId())).thenReturn(serviceSuccess(false));
+
+        List<ProjectPartnerStatusResource> expectedPartnerStatuses = newProjectPartnerStatusResource().
+                withName(organisation.get(0).getName(), organisation.get(1).getName(), organisation.get(2).getName()).
+                withOrganisationType(OrganisationTypeEnum.getFromId(organisation.get(0).getOrganisationType().getId()), OrganisationTypeEnum.getFromId(organisation.get(1).getOrganisationType().getId()), OrganisationTypeEnum.getFromId(organisation.get(2).getOrganisationType().getId())).
+                withProjectDetailsStatus(ACTION_REQUIRED, ACTION_REQUIRED, ACTION_REQUIRED).
+                withMonitoringOfficerStatus(NOT_REQUIRED, NOT_REQUIRED, NOT_REQUIRED).
+                withBankDetailsStatus(PENDING, NOT_REQUIRED, NOT_REQUIRED).
+                withFinanceChecksStatus(ACTION_REQUIRED, ACTION_REQUIRED, ACTION_REQUIRED).
+                withSpendProfileStatus(ACTION_REQUIRED, NOT_STARTED, NOT_STARTED).
+                withOtherDocumentsStatus(NOT_REQUIRED, NOT_REQUIRED, NOT_REQUIRED).
+                withGrantOfferStatus(NOT_REQUIRED, NOT_REQUIRED, NOT_REQUIRED).
+                build(3);
+
+        ProjectTeamStatusResource expectedProjectTeamStatusResource = newProjectTeamStatusResource().withPartnerStatuses(expectedPartnerStatuses).build();
+
+        ServiceResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(p.getId());
+
+        result.isSuccess();
+
+        assertEquals(expectedProjectTeamStatusResource, result.getSuccessObject());
+    }
 
     private void assertFilesCannotBeSubmittedIfNotByProjectManager(Consumer<FileEntry> fileSetter1,
                                                                    Consumer<FileEntry> fileSetter2,

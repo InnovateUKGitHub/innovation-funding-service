@@ -31,17 +31,16 @@
             <dt>Innovate UK</dt>
             <dd>Application deadline:</dd>
             <dt>
-              <div th:remove="tag" th:text="${#temporals.format(currentCompetition.endDate, 'hh:mma EEEE')}" />
-              <div th:include="fragments/elements :: ordinal-day (date=${currentCompetition.endDate})" th:remove="tag" />
-              <div th:remove="tag" th:text="${#temporals.format(currentCompetition.endDate, 'MMMM yyyy')}" />
+              <div th:remove="tag" th:text="${#strings.toLowerCase(#temporals.format(currentCompetition.endDate, 'hh:mma '))}" />
+              <div th:remove="tag" th:text="${#temporals.format(currentCompetition.endDate, 'EEEE d MMMM yyyy')}" />
             </dt>
           </dl>
             <div th:include="fragments/elements :: progress-indicator" th:with="percentage=${completedQuestionsPercentage},size='medium'" class="extra-margin" />
         </div>
         <div class="column-half">
             <ul class="list-bullet">
-                <li><a th:href="'/application/'+${currentApplication.getId()}+'/contributors'">View team members and add collaborators</a></li>
-                <li><a th:href="'/competition/'+${currentCompetition.id}+'/info/terms-and-conditions'">View conditions of grant offer</a></li>
+                <li><a th:href="'/application/'+${currentApplication.getId()}+'/contributors'">view team members and add collaborators</a></li>
+                <li><a th:href="'/competition/'+${currentCompetition.id}+'/info/terms-and-conditions'">view conditions of grant offer</a></li>
             </ul>
         </div>
     </div>

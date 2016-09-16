@@ -168,12 +168,13 @@
 
 <!-- =========================== Element: Formatted Date =========================== -->
 <div  th:fragment="pretty-date (date)" >
-    <span th:remove="tag" th:with="today=(${#temporals.createToday()})">
-        <span th:remove="tag" th:if="${date.toLocalDate().equals(today)}" th:text="Today"/>
-        <span th:remove="tag" th:if="${date.toLocalDate().equals(today.minusDays(1))}" th:text="Yesterday"/>
-        <span th:remove="tag" th:unless="${date.toLocalDate().equals(today)} or ${date.toLocalDate().equals(today.minusDays(1))}"
-                  th:text="${#temporals.format(date, 'dd MMMM hh:mma')}"/>
-    </span>
+    <th:block th:with="today=(${#temporals.createToday()})">
+        <th:block th:if="${date.toLocalDate().equals(today)}" th:text="Today" />
+        <th:block th:if="${date.toLocalDate().equals(today.minusDays(1))}" th:text="Yesterday" />
+        <th:block th:unless="${date.toLocalDate().equals(today)} or ${date.toLocalDate().equals(today.minusDays(1))}">
+          <th:block th:text="${#temporals.format(date, 'dd MMMM')}"/> <th:block th:text="${#strings.toLowerCase(#temporals.format(date, 'hh:mma'))}"/>
+        </th:block>
+    </th:block>
 </div>
 
 <!--  ========================== Element: Agree to application terms =============== -->
@@ -212,7 +213,7 @@
 	        <h2 class="heading-small no-margin">Congratulations, your application has been successful</h2>
 	        <p>
             You have been successful in this round of funding.
-            <span th:if="${(competition.assessorFeedbackDate != null) and (competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK')}" th:text="${'Assessor feedback on your application will be available here by '+ #temporals.format(competition.assessorFeedbackDate, 'hh:mma')+' on '+ #temporals.format(competition.assessorFeedbackDate, 'dd/MM/yyyy')}" th:remove="tag" />
+            <span th:if="${(competition.assessorFeedbackDate != null) and (competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK')}" th:text="${'Assessor feedback on your application will be available here by '+ #strings.toLowerCase(#temporals.format(competition.assessorFeedbackDate, 'hh:mma'))+' on '+ #temporals.format(competition.assessorFeedbackDate, 'dd/MM/yyyy')}" th:remove="tag" />
           </p>
           <p th:if="${currentProject}">
             <a th:href="@{/project/{projectId}(projectId=${currentProject.id})}">Start to plan your project</a>
@@ -221,7 +222,7 @@
 	  <div class="warning-alert" th:if="${(application.applicationStatusName == 'rejected')}">
         <h2 class="heading-small no-margin">Your application has not been successful in this competition.</h2>
         <p th:if="${(competition.assessorFeedbackDate != null) and (competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK')}">
-          <span th:text="${'Assessor feedback on your application will be available here by '+ #temporals.format(competition.assessorFeedbackDate, 'hh:mma')+' on '+ #temporals.format(competition.assessorFeedbackDate, 'dd/MM/yyyy')}" th:remove="tag" />
+          <span th:text="${'Assessor feedback on your application will be available here by '+ #strings.toLowerCase(#temporals.format(competition.assessorFeedbackDate, 'hh:mma'))+' on '+ #temporals.format(competition.assessorFeedbackDate, 'dd/MM/yyyy')}" th:remove="tag" />
         </p>
     </div>
 </div>
