@@ -10,6 +10,7 @@ import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 public enum ProjectDetailsState implements ProcessStates {
 
     PENDING(State.PENDING),
+    DECIDE_IF_READY_TO_SUBMIT(State.PENDING),
     READY_TO_SUBMIT(State.READY_TO_SUBMIT),
     SUBMITTED(State.SUBMITTED);
 
