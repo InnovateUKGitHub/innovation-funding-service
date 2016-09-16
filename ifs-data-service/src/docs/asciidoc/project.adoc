@@ -425,3 +425,16 @@ include::{snippets}/project/get-team-status/response-fields.adoc[]
 
 ===== Curl Example
 include::{snippets}/project/get-team-status/curl-request.adoc[]
+
+=== Get current status for all projects in competition
+==== Success
+===== Request
+include::{snippets}/project/get-competition-status/http-request.adoc[]
+include::{snippets}/project/get-competition-status/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/get-competition-status/http-response.adoc[]
+include::{snippets}/project/get-competition-status/response-fields.adoc[]
+
+===== Curl Example
+include::{snippets}/project/get-competition-status/curl-request.adoc[]

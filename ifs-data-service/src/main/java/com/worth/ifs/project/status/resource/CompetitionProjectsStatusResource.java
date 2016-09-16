@@ -1,4 +1,4 @@
-package com.worth.ifs.project.resource;
+package com.worth.ifs.project.status.resource;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;

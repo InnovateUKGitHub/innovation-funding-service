@@ -5,8 +5,8 @@ import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.project.constant.ProjectActivityStates;
 import com.worth.ifs.project.domain.Project;
-import com.worth.ifs.project.resource.CompetitionProjectsStatusResource;
-import com.worth.ifs.project.resource.ProjectStatusResource;
+import com.worth.ifs.project.status.resource.CompetitionProjectsStatusResource;
+import com.worth.ifs.project.status.resource.ProjectStatusResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

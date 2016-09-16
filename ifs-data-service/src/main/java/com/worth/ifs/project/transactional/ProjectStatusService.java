@@ -1,7 +1,7 @@
 package com.worth.ifs.project.transactional;
 
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.project.resource.CompetitionProjectsStatusResource;
+import com.worth.ifs.project.status.resource.CompetitionProjectsStatusResource;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface ProjectStatusService {

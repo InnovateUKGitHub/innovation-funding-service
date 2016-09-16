@@ -1,4 +1,4 @@
-package com.worth.ifs.project.resource;
+package com.worth.ifs.project.status.resource;
 
 import com.worth.ifs.project.constant.ProjectActivityStates;
 import org.apache.commons.lang3.builder.EqualsBuilder;

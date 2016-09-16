@@ -23,15 +23,26 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
 	}
 	
     @Test
-    public void testAnyoneCanViewACompetition() {
+    public void testExternalUsersCannotViewACompetitionInSetup() {
         //null user cannot see competition in setup.
         assertFalse(rules.externalUsersCannotViewCompetitionsInSetup(newCompetitionResource().withCompetitionStatus(CompetitionResource.Status.COMPETITION_SETUP).build(), null));
         //null user can see open competitions
         assertTrue(rules.externalUsersCannotViewCompetitionsInSetup(newCompetitionResource().withCompetitionStatus(CompetitionResource.Status.OPEN).build(), null));
+    }
+
+    @Test
+    public void testCompAdminCanViewCompetitionInSetup(){
         //Comp admin can see competition in setup
-        assertTrue(rules.externalUsersCannotViewCompetitionsInSetup(newCompetitionResource().withCompetitionStatus(CompetitionResource.Status.COMPETITION_SETUP).build(),
+        assertTrue(rules.compAdminUserCanViewOpenCompetitions(newCompetitionResource().withCompetitionStatus(CompetitionResource.Status.COMPETITION_SETUP).build(),
                 UserResourceBuilder.newUserResource().withRolesGlobal(
                         Lists.newArrayList(RoleResourceBuilder.newRoleResource().withType(UserRoleType.COMP_ADMIN).build())).build()));
     }
-    
+
+    @Test
+    public void testProjectFinanceUserCanViewCompetitionInSetup(){
+        //Comp admin can see competition in setup
+        assertTrue(rules.projectFinanceUserCanViewOpenCompetitions(newCompetitionResource().withCompetitionStatus(CompetitionResource.Status.COMPETITION_SETUP).build(),
+                UserResourceBuilder.newUserResource().withRolesGlobal(
+                        Lists.newArrayList(RoleResourceBuilder.newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build())).build()));
+    }
 }
