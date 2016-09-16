@@ -44,6 +44,7 @@ import com.worth.ifs.file.transactional.FileService;
 import com.worth.ifs.finance.mapper.ApplicationFinanceMapper;
 import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
 import com.worth.ifs.finance.repository.FinanceRowRepository;
+import com.worth.ifs.finance.transactional.FinanceRowService;
 import com.worth.ifs.form.repository.FormInputRepository;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
 import com.worth.ifs.form.transactional.FormInputService;
@@ -160,7 +161,7 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected SectionRepository sectionRepositoryMock;
 
     @Mock
-    protected MonitoringOfficerRepository monitoringOfficerRepository;
+    protected MonitoringOfficerRepository monitoringOfficerRepositoryMock;
 
     @Mock
     protected MonitoringOfficerMapper monitoringOfficerMapper;
@@ -356,6 +357,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected RejectionReasonService rejectionReasonServiceMock;
+
+    @Mock
+    protected FinanceRowService financeRowServiceMock;
 
     @Before
     public void setupMockInjection() {

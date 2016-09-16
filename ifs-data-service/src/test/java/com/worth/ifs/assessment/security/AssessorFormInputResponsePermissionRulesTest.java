@@ -38,7 +38,7 @@ public class AssessorFormInputResponsePermissionRulesTest extends BasePermission
                 .withRole(ASSESSOR)
                 .build();
 
-        Assessment assessment = newAssessment().withProcessRole(processRole).build();
+        Assessment assessment = newAssessment().withParticipant(processRole).build();
         response = newAssessorFormInputResponseResource().withAssessment(assessment.getId()).build();
 
         when(processRoleRepositoryMock.findOne(processRoleId)).thenReturn(processRole);
