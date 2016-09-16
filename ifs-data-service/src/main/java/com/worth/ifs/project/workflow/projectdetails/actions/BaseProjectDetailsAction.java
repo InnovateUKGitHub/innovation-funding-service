@@ -4,6 +4,7 @@ import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectDetailsProcess;
 import com.worth.ifs.project.domain.ProjectUser;
 import com.worth.ifs.project.repository.ProjectDetailsProcessRepository;
+import com.worth.ifs.project.resource.ProjectDetailsState;
 import com.worth.ifs.workflow.TestableTransitionWorkflowAction;
 import com.worth.ifs.workflow.domain.ActivityState;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
@@ -19,7 +20,7 @@ import static com.worth.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
 /**
  * A base class for Project-related workflow Actions
  */
-abstract class BaseProjectDetailsAction extends TestableTransitionWorkflowAction {
+abstract class BaseProjectDetailsAction extends TestableTransitionWorkflowAction<ProjectDetailsState> {
 
     @Autowired
     private ActivityStateRepository activityStateRepository;
@@ -28,25 +29,25 @@ abstract class BaseProjectDetailsAction extends TestableTransitionWorkflowAction
     private ProjectDetailsProcessRepository projectDetailsProcessRepository;
 
     @Override
-    public void doExecute(StateContext<String, String> context) {
+    public void doExecute(StateContext<ProjectDetailsState, String> context) {
 
         ProcessOutcome updatedProcessOutcome = (ProcessOutcome) context.getMessageHeader("processOutcome");
-        State newState = State.valueOf(context.getTransition().getTarget().getId());
+        State newState = context.getTransition().getTarget().getId().getBackingState();
 
         ActivityState newActivityState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, newState);
         doExecute(getProjectFromContext(context), getProjectDetailsFromContext(context), getProjectUserFromContext(context),
                 newActivityState, Optional.ofNullable(updatedProcessOutcome));
     }
 
-    private Project getProjectFromContext(StateContext<String, String> context) {
+    private Project getProjectFromContext(StateContext<ProjectDetailsState, String> context) {
         return (Project) context.getMessageHeader("project");
     }
 
-    private ProjectDetailsProcess getProjectDetailsFromContext(StateContext<String, String> context) {
+    private ProjectDetailsProcess getProjectDetailsFromContext(StateContext<ProjectDetailsState, String> context) {
         return (ProjectDetailsProcess) context.getMessageHeader("projectDetails");
     }
 
-    private ProjectUser getProjectUserFromContext(StateContext<String, String> context) {
+    private ProjectUser getProjectUserFromContext(StateContext<ProjectDetailsState, String> context) {
         return (ProjectUser) context.getMessageHeader("projectUser");
     }
 

@@ -1,6 +1,8 @@
 package com.worth.ifs.project.workflow.projectdetails.configuration;
 
 import com.worth.ifs.project.repository.ProjectDetailsProcessRepository;
+import com.worth.ifs.project.resource.ProjectDetailsState;
+import com.worth.ifs.workflow.GenericPersistStateMachineHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -19,7 +21,7 @@ public class ProjectDetailsPersistHandlerConfig {
 
     @Autowired
     @Qualifier("projectDetailsStateMachine")
-    private StateMachine<String, String> stateMachine;
+    private StateMachine<ProjectDetailsState, String> stateMachine;
 
     @Autowired
     private ProjectDetailsProcessRepository projectDetailsProcessRepository;
@@ -30,6 +32,6 @@ public class ProjectDetailsPersistHandlerConfig {
 
     @Bean
     public ProjectDetailsWorkflowService projectDetailsWorkflowEventHandler() {
-        return new ProjectDetailsWorkflowService(new PersistStateMachineHandler(stateMachine), projectDetailsProcessRepository);
+        return new ProjectDetailsWorkflowService(new GenericPersistStateMachineHandler<>(stateMachine), projectDetailsProcessRepository);
     }
 }

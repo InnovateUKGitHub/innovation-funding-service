@@ -5,24 +5,24 @@ import com.worth.ifs.project.domain.ProjectDetailsProcess;
 import com.worth.ifs.project.repository.ProjectDetailsProcessRepository;
 import com.worth.ifs.project.resource.ProjectDetailsOutcomes;
 import com.worth.ifs.project.resource.ProjectDetailsState;
-import com.worth.ifs.workflow.TestableTransitionWorkflowAction;
 import com.worth.ifs.workflow.BaseWorkflowEventHandler;
+import com.worth.ifs.workflow.GenericPersistStateMachineHandler;
+import com.worth.ifs.workflow.TestableTransitionWorkflowAction;
 import org.springframework.messaging.support.MessageBuilder;
-import org.springframework.statemachine.recipes.persist.PersistStateMachineHandler;
 
 /**
  * {@code ProjectDetailsWorkflowService} is the entry point for triggering the workflow.
  * Based on the Project Detail's current state the next one is tried to transition to by triggering
  * an event.
  */
-public class ProjectDetailsWorkflowService extends BaseWorkflowEventHandler<ProjectDetailsProcess> {
+public class ProjectDetailsWorkflowService extends BaseWorkflowEventHandler<ProjectDetailsProcess, ProjectDetailsState, String> {
 
-    public ProjectDetailsWorkflowService(PersistStateMachineHandler stateHandler, ProjectDetailsProcessRepository projectDetailsProcessRepository) {
+    public ProjectDetailsWorkflowService(GenericPersistStateMachineHandler<ProjectDetailsState, String> stateHandler, ProjectDetailsProcessRepository projectDetailsProcessRepository) {
         super(stateHandler, projectDetailsProcessRepository);
     }
 
     public boolean projectCreated(Project project, Long originalLeadApplicantProjectUserId) {
-        return fireEvent(projectCreatedEvent(project, originalLeadApplicantProjectUserId), ProjectDetailsState.PENDING.name());
+        return fireEvent(projectCreatedEvent(project, originalLeadApplicantProjectUserId), ProjectDetailsState.PENDING);
     }
 
     public boolean projectDetailsAllSupplied(ProjectDetailsProcess projectDetails) {
@@ -60,18 +60,18 @@ public class ProjectDetailsWorkflowService extends BaseWorkflowEventHandler<Proj
     }
 
     private boolean fireEvent(MessageBuilder<String> event, ProjectDetailsProcess currentState) {
-        return fireEvent(event, currentState.getActivityState().getBackingState().name());
+        return fireEvent(event, currentState.getActivityState());
     }
 
-    private boolean fireEvent(MessageBuilder<String> event, String currentState) {
+    private boolean fireEvent(MessageBuilder<String> event, ProjectDetailsState currentState) {
         return stateHandler.handleEventWithState(event.build(), currentState);
     }
 
     private boolean testEvent(MessageBuilder<String> event, ProjectDetailsProcess currentState) {
-        return testEvent(event, currentState.getActivityState().getBackingState().name());
+        return testEvent(event, currentState.getActivityState());
     }
 
-    private boolean testEvent(MessageBuilder<String> event, String currentState) {
+    private boolean testEvent(MessageBuilder<String> event, ProjectDetailsState currentState) {
         return fireEvent(event.setHeader(TestableTransitionWorkflowAction.TESTING_GUARD_KEY, true), currentState);
     }
 

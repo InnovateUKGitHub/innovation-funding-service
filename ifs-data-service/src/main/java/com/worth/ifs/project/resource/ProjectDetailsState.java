@@ -3,9 +3,9 @@ package com.worth.ifs.project.resource;
 import com.worth.ifs.workflow.resource.ProcessStates;
 import com.worth.ifs.workflow.resource.State;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
 public enum ProjectDetailsState implements ProcessStates {
 
@@ -41,8 +41,12 @@ public enum ProjectDetailsState implements ProcessStates {
         return backingState;
     }
 
-    public static Set<String> getStates() {
-        return assessmentStatesMap.keySet();
+    public static List<String> getStates() {
+        return new ArrayList<>(assessmentStatesMap.keySet());
+    }
+
+    public static List<State> getBackingStates() {
+        return simpleMap(ProjectDetailsState.values(), ProcessStates::getBackingState);
     }
 
     public static ProjectDetailsState getByState(String state) {

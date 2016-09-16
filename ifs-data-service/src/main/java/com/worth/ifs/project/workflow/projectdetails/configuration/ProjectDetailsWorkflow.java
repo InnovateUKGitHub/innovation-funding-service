@@ -14,36 +14,40 @@ import org.springframework.statemachine.config.builders.StateMachineConfiguratio
 import org.springframework.statemachine.config.builders.StateMachineStateConfigurer;
 import org.springframework.statemachine.config.builders.StateMachineTransitionConfigurer;
 
+import java.util.LinkedHashSet;
+
+import static java.util.Arrays.asList;
+
 /**
  * Describes the workflow for the Project Details section for Project Setup.
  */
 @Configuration
 @EnableStateMachine(name = "projectDetailsStateMachine")
-public class ProjectDetailsWorkflow extends StateMachineConfigurerAdapter<String, String> {
+public class ProjectDetailsWorkflow extends StateMachineConfigurerAdapter<ProjectDetailsState, String> {
 
     @Override
-    public void configure(StateMachineConfigurationConfigurer<String, String> config) throws Exception {
+    public void configure(StateMachineConfigurationConfigurer<ProjectDetailsState, String> config) throws Exception {
         config.withConfiguration().listener(new WorkflowStateMachineListener());
 
     }
 
     @Override
-    public void configure(StateMachineStateConfigurer<String, String> states) throws Exception {
+    public void configure(StateMachineStateConfigurer<ProjectDetailsState, String> states) throws Exception {
         states.withStates()
-                .initial(ProjectDetailsState.PENDING.getStateName())
-                .states(ProjectDetailsState.getStates());
+                .initial(ProjectDetailsState.PENDING)
+                .states(new LinkedHashSet<>(asList(ProjectDetailsState.values())));
     }
 
     @Override
-    public void configure(StateMachineTransitionConfigurer<String, String> transitions) throws Exception {
+    public void configure(StateMachineTransitionConfigurer<ProjectDetailsState, String> transitions) throws Exception {
         transitions
                 .withExternal()
-                    .source(ProjectDetailsState.PENDING.getStateName()).target(ProjectDetailsState.READY_TO_SUBMIT.getStateName())
+                    .source(ProjectDetailsState.PENDING).target(ProjectDetailsState.READY_TO_SUBMIT)
                     .action(readyToSubmitProjectDetailsAction())
                     .guard(projectDetailsSuppliedGuard())
                     .and()
                 .withExternal()
-                    .source(ProjectDetailsState.READY_TO_SUBMIT.getStateName()).target(ProjectDetailsState.SUBMITTED.getStateName())
+                    .source(ProjectDetailsState.READY_TO_SUBMIT).target(ProjectDetailsState.SUBMITTED)
                     .event(AssessmentOutcomes.SUBMIT.getType())
                     .action(submitProjectDetailsAction())
                     .guard(projectDetailsSuppliedGuard());

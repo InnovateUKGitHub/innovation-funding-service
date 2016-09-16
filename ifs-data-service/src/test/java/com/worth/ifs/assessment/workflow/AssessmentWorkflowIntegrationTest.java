@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.junit.Assert.assertEquals;
 
 @Transactional
-public class AssessorWorkflowIntegrationTest extends BaseIntegrationTest {
+public class AssessmentWorkflowIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
     AssessmentWorkflowService assessmentWorkflowService;

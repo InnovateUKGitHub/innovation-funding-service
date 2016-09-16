@@ -1,6 +1,8 @@
 package com.worth.ifs.assessment.workflow.configuration;
 
 import com.worth.ifs.assessment.repository.AssessmentRepository;
+import com.worth.ifs.assessment.resource.AssessmentStates;
+import com.worth.ifs.workflow.GenericPersistStateMachineHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -19,7 +21,7 @@ public class AssessmentPersistHandlerConfig {
 
     @Autowired
     @Qualifier("assessmentStateMachine")
-    private StateMachine<String, String> stateMachine;
+    private StateMachine<AssessmentStates, String> stateMachine;
 
     @Autowired
     private AssessmentRepository assessmentRepository;
@@ -30,6 +32,6 @@ public class AssessmentPersistHandlerConfig {
 
     @Bean
     public AssessmentWorkflowService assessmentWorkflowEventHandler() {
-        return new AssessmentWorkflowService(new PersistStateMachineHandler(stateMachine), assessmentRepository);
+        return new AssessmentWorkflowService(new GenericPersistStateMachineHandler<AssessmentStates, String>(stateMachine), assessmentRepository);
     }
 }

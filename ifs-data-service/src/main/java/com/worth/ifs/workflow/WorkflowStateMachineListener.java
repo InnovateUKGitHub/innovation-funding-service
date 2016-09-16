@@ -10,7 +10,7 @@ import org.springframework.statemachine.state.State;
 /**
  * {@code WorkflowStateMachineListener} for various state machine events.
  */
-public class WorkflowStateMachineListener extends StateMachineListenerAdapter<String, String> {
+public class WorkflowStateMachineListener<S> extends StateMachineListenerAdapter<S, String> {
 
     private static final Log LOG = LogFactory.getLog(WorkflowStateMachineListener.class);
 
@@ -21,14 +21,14 @@ public class WorkflowStateMachineListener extends StateMachineListenerAdapter<St
     }
 
     @Override
-    public void stateMachineError(StateMachine<String, String> stateMachine, Exception exception) {
+    public void stateMachineError(StateMachine<S, String> stateMachine, Exception exception) {
         super.stateMachineError(stateMachine, exception);
         LOG.error("Workflow state machine error occurred", exception);
     }
 
     @Override
-    public void stateChanged(State<String, String> from, State<String, String> to) {
+    public void stateChanged(State<S, String> from, State<S, String> to) {
         super.stateChanged(from, to);
-        LOG.trace("Workflow state changed from [" + from.getId() + "] to [" + to.getId() + "]");
+        LOG.trace("Workflow state changed from [" + (from != null ? from.getId() : "no current state") + "] to [" + to.getId() + "]");
     }
 }

@@ -3,7 +3,7 @@ package com.worth.ifs.assessment.workflow.actions;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.resource.AssessmentOutcomes;
 import com.worth.ifs.assessment.resource.RecommendedValue;
-import com.worth.ifs.assessment.workflow.configuration.AssessorWorkflow;
+import com.worth.ifs.assessment.workflow.configuration.AssessmentWorkflow;
 import com.worth.ifs.workflow.domain.ActivityState;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
 
@@ -12,7 +12,7 @@ import java.util.Optional;
 /**
  * The {@code RecommendAction} is used by the assessor. It handles the recommendation
  * assessment event applied to an application.
- * For more info see {@link AssessorWorkflow}
+ * For more info see {@link AssessmentWorkflow}
  */
 public class RecommendAction extends BaseAssessmentAction {
 
