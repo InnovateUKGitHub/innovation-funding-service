@@ -25,6 +25,15 @@
 
 	<p>Invite new members of the Innovate UK operations team here. The team you select this individual as a member of will determine which areas of the service they can later access.</p>
 
+	<th:block th:if="${param.status != null and param.status[0] == 'invalidEmailAddress'}">
+
+		<div class="warning-alert extra-margin-bottom">
+			<h3 class="heading-small no-margin-top">Invalid email address</h3>
+			<p>For an individual to be invited to use the IFS system, they must use an email address with the @innovateuk.gov.uk email domain.</p>
+		</div>
+
+	</th:block>
+
 	<form>
 		<fieldset>
 			<legend class="visuallyhidden">Your details</legend>
@@ -46,7 +55,7 @@
 				</select>
 			</div>
 		</fieldset>
-		<button class="button button-large extra-margin" name="send-invitation" formaction="/prototypes" type="submit">Send invitation</button>
+		<a href="/prototypes/5080-invite-team-member?status=invalidEmailAddress" class="button button-large extra-margin">Send invitation</a>
 	</form>
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
