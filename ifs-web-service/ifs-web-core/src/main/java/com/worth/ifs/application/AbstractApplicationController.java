@@ -65,6 +65,7 @@ import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 public abstract class AbstractApplicationController extends BaseController {
     public static final String MARK_AS_COMPLETE = "mark_as_complete";
     public static final String MARK_SECTION_AS_COMPLETE = "mark_section_as_complete";
+    public static final String SUBMIT_SECTION = "submit-section";
     public static final String MARK_SECTION_AS_INCOMPLETE = "mark_section_as_incomplete";
     public static final String MARK_AS_INCOMPLETE = "mark_as_incomplete";
     public static final String UPLOAD_FILE = "upload_file";
@@ -83,6 +84,10 @@ public abstract class AbstractApplicationController extends BaseController {
     public static final String APPLICATION_START_DATE = "application.startDate";
     public static final String QUESTION_URL = "/question/";
     public static final String SECTION_URL = "/section/";
+
+    public static final String TERMS_AGREED_KEY = "termsAgreed";
+    public static final String STATE_AID_AGREED_KEY = "stateAidAgreed";
+
     private static final Log LOG = LogFactory.getLog(AbstractApplicationController.class);
 
     @Autowired

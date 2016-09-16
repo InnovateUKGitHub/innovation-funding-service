@@ -147,13 +147,8 @@ public class ApplicationController extends AbstractApplicationController {
     }
 
     @RequestMapping(value = "/{applicationId}/submit", method = RequestMethod.POST)
-    public String applicationSubmit(ApplicationForm form, Model model, @RequestParam(value = "agreeTerms", required = false) boolean agreeTerms, @PathVariable("applicationId") final Long applicationId,
+    public String applicationSubmit(ApplicationForm form, Model model, @PathVariable("applicationId") final Long applicationId,
                                     HttpServletRequest request, HttpServletResponse response){
-    	if(!agreeTerms) {
-    		cookieFlashMessageFilter.setFlashMessage(response, "agreeToTerms");
-    		return "redirect:/application/" + applicationId + "/confirm-submit";
-    	}
-    	
     	UserResource user = userAuthenticationService.getAuthenticatedUser(request);
     	ApplicationResource application = applicationService.getById(applicationId);
     	

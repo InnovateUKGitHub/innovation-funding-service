@@ -397,6 +397,7 @@
                 type="submit"
                 name="mark_section_as_complete"
                 th:value="${currentSection.getId()}"
+                id="mark-all-as-complete"
                 th:class="button">Mark all as complete
         </button>
         <button th:unless="${readonly}"
@@ -404,6 +405,7 @@
                 type="submit"
                 name="mark_section_as_incomplete"
                 th:value="${currentSection.getId()}"
+                id="edit-section"
                 th:class="buttonlink">Edit
         </button>
     </div>

@@ -178,20 +178,26 @@
 
 <!--  ========================== Element: Agree to application terms =============== -->
 <div th:fragment="application-agree-to-terms">
-	<div class="form-block">
+ 	<div th:class="${#fields.hasErrors('termsAgreed')}? 'form-block error':'form-block'">
+        <span th:if="${#fields.hasErrors('termsAgreed')}" th:remove="tag">
+            <span class="error-message"  th:each="err : ${#fields.errors('termsAgreed')}" th:text="${err}" />
+        </span>
 		<label class="block-label" for="agree-terms-page">
-			<input id="agree-terms-page" name="agreeTerms" type="checkbox" value="yes"/>
-			The members of this consortium agree to the <a target="_blank" th:href="@{/application/terms-and-conditions}">terms and conditions</a> of applying for funding through Innovate UK.
+        	<input id="agree-terms-page" th:field="${form.termsAgreed}" type="checkbox" value="yes"/>
+            As a member of this consortium I agree to the funding <a target="_blank" th:href="@{/application/terms-and-conditions}">terms and conditions</a> set out by Innovate UK.
 		</label>
 	</div>
 </div>
 
 <!--  ========================== Element: Agree to application terms =============== -->
 <div th:fragment="application-agree-to-state-aid">
-    <div class="form-block">
+    <div  th:class="${#fields.hasErrors('stateAidAgreed')}? 'form-block error':'form-block'">
+        <span th:if="${#fields.hasErrors('stateAidAgreed')}" th:remove="tag">
+            <span class="error-message"  th:each="err : ${#fields.errors('stateAidAgreed')}" th:text="${err}" />
+        </span>
         <label class="block-label" for="agree-state-aid-page">
-            <input id="agree-state-aid-page" name="agreeStateAid" type="checkbox" value="yes"/>
-            Agree to state aid (content TODO)
+            <input id="agree-state-aid-page" th:field="${form.stateAidAgreed}" type="checkbox" value="yes"/>
+            I confirm that my organisation is eligible for state aid funding.
         </label>
     </div>
 </div>

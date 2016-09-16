@@ -54,6 +54,7 @@ public class ApplicationResource {
     private Long assessorFeedbackFileEntry;
     private CompetitionResource.Status competitionStatus;
     private BigDecimal completion;
+    private Boolean stateAidAgreed;
 
     public Long getId() {
         return id;
@@ -269,5 +270,13 @@ public class ApplicationResource {
 
     public void setCompletion(final BigDecimal completion) {
         this.completion = completion;
+    }
+
+    public Boolean getStateAidAgreed() {
+        return stateAidAgreed;
+    }
+
+    public void setStateAidAgreed(Boolean stateAidAgreed) {
+        this.stateAidAgreed = stateAidAgreed;
     }
 }

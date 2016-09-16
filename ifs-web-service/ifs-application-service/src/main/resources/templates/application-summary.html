@@ -54,10 +54,10 @@
                 <span class="icon icon-information"></span>
                 <span> You will not be able to make changes to your application or resubmit after this point.</span>
             </div>
-            <div th:include="fragments/elements :: application-agree-to-terms" class="agree-to-terms-container" />
             <div class="alignright-button">
-                <a id="submit-application-button" class="button large no-margin-right" data-js-modal="modal-confirm-submit-application"
-                   th:href="@{/application/{id}/confirm-submit(id=${currentApplication.getId()})}" th:if="${applicationReadyForSubmit}">Submit application</a>
+                <form method="post" th:if="${applicationReadyForSubmit}" th:action="@{/application/{id}/submit(id=${currentApplication.getId()})}">
+                    <input type="submit" tabindex="0" class="button large" value="Submit application" />
+                </form>
                 <button disabled="disabled" class="button" th:unless="${applicationReadyForSubmit}">Submit application</button>
             </div>
         </div>

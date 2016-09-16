@@ -20,9 +20,9 @@ IFS.application.application_summary = (function(){
         },
         handleChangeAgreeTermsCheckbox: function() {
         	if(jQuery(s.checkbox).prop("checked")) {
-            IFS.application.application_summary.enableButton();
+                IFS.application.application_summary.enableButton();
         	} else {
-            IFS.application.application_summary.disableButton();
+                IFS.application.application_summary.disableButton();
         	}
         }
     };

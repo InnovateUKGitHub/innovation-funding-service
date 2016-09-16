@@ -333,6 +333,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             existingApplication.setName(application.getName());
             existingApplication.setDurationInMonths(application.getDurationInMonths());
             existingApplication.setStartDate(application.getStartDate());
+            existingApplication.setStateAidAgreed(application.getStateAidAgreed());
             Application savedApplication = applicationRepository.save(existingApplication);
             return applicationMapper.mapToResource(savedApplication);
         });
