@@ -1,5 +1,8 @@
 package com.worth.ifs.assessment.viewmodel;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import java.time.LocalDate;
 
 /**
@@ -12,9 +15,13 @@ public class AssessorDashboardUpcomingCompetitionViewModel {
     private LocalDate assessmentStartDate;
     private LocalDate assessmentEndDate;
 
-    public AssessorDashboardUpcomingCompetitionViewModel(Long competitionId, String displayLabel, String progressAssessed, String progressTotal, String deadlineDayOfMonth, String deadlineMonth, long daysLeft, long daysLeftPercentage) {
+    public AssessorDashboardUpcomingCompetitionViewModel(Long competitionId, String displayLabel,
+                                                         LocalDate assessmentStartDate,
+                                                         LocalDate assessmentEndDate) {
         this.competitionId = competitionId;
         this.displayLabel = displayLabel;
+        this.assessmentStartDate = assessmentStartDate;
+        this.assessmentEndDate = assessmentEndDate;
     }
 
     public Long getCompetitionId() {
@@ -47,5 +54,31 @@ public class AssessorDashboardUpcomingCompetitionViewModel {
 
     public void setAssessmentEndDate(LocalDate assessmentEndDate) {
         this.assessmentEndDate = assessmentEndDate;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AssessorDashboardUpcomingCompetitionViewModel that = (AssessorDashboardUpcomingCompetitionViewModel) o;
+
+        return new EqualsBuilder()
+                .append(competitionId, that.competitionId)
+                .append(displayLabel, that.displayLabel)
+                .append(assessmentStartDate, that.assessmentStartDate)
+                .append(assessmentEndDate, that.assessmentEndDate)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(competitionId)
+                .append(displayLabel)
+                .append(assessmentStartDate)
+                .append(assessmentEndDate)
+                .toHashCode();
     }
 }
