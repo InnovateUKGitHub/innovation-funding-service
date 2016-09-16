@@ -29,16 +29,11 @@ IFS.application.loadOrder = {
     init : function(){
       IFS.application.repeatableRows.init();
       IFS.application.financeSpecifics.init();
+      IFS.application.application_form.init();
     }
   },
   'app-details' : {
     init : function(){ IFS.application.application_page.init(); }
-  },
-  // 'app-summary' : {
-  //   init : function(){ IFS.application.application_summary.init(); }
-  // },
-  'app-form' : {
-    init : function(){ IFS.application.application_form.init(); }
   },
   'app-invite': {
     init : function(){ IFS.application.invites.init(); }

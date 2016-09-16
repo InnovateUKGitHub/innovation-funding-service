@@ -5,7 +5,7 @@
 </head>
 <body th:with="context='applicant'" class="app-summary" th:classappend="${currentApplication.isOpen() ? 'is-open' : 'is-closed' }">
 <div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
-<div th:if="${currentApplication.isOpen()}" th:include="fragments/modals ::modal-confirm-submit-application
+<div th:if="${currentApplication.isOpen() and applicationReadyForSubmit}" th:include="fragments/modals ::modal-confirm-submit-application
     (messageTitle='This is your final chance to make changes to the application.',
      message='You will not be able to access the application after this point. Are you sure you want to submit?',
      submitLink='/application/'+${currentApplication.getId()}+'/submit',
@@ -55,9 +55,8 @@
                 <span> You will not be able to make changes to your application or resubmit after this point.</span>
             </div>
             <div class="alignright-button">
-                <form method="post" th:if="${applicationReadyForSubmit}" th:action="@{/application/{id}/submit(id=${currentApplication.getId()})}">
-                    <input type="submit" tabindex="0" class="button large" value="Submit application" />
-                </form>
+                <a th:if="${applicationReadyForSubmit}" id="submit-application-button" class="button large no-margin-right" data-js-modal="modal-confirm-submit-application"
+                   th:href="@{/application/{id}/confirm-submit(id=${currentApplication.getId()})}">Submit application</a>
                 <button disabled="disabled" class="button" th:unless="${applicationReadyForSubmit}">Submit application</button>
             </div>
         </div>
