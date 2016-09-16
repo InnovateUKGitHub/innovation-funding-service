@@ -37,6 +37,7 @@ include::{snippets}/competitioninvite/accept-invite/curl-request.adoc[]
 ==== Request
 include::{snippets}/competitioninvite/reject-invite/http-request.adoc[]
 include::{snippets}/competitioninvite/reject-invite/path-parameters.adoc[]
+include::{snippets}/competitioninvite/reject-invite/request-fields.adoc[]
 
 ==== Response
 include::{snippets}/competitioninvite/reject-invite/http-response.adoc[]

@@ -10,9 +10,7 @@ import org.junit.Test;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.documentation.CompetitionInviteDocs.competitionInviteFields;
-import static com.worth.ifs.documentation.CompetitionInviteDocs.competitionInviteResourceBuilder;
-import static com.worth.ifs.invite.builder.RejectionReasonResourceBuilder.newRejectionReasonResource;
+import static com.worth.ifs.documentation.CompetitionInviteDocs.*;
 import static java.util.Optional.ofNullable;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -21,6 +19,7 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
@@ -94,13 +93,7 @@ public class CompetitionInviteDocumentation extends BaseControllerMockMVCTest<Co
     @Test
     public void rejectInvite() throws Exception {
         String hash = "invitehash";
-
-        CompetitionRejectionResource compRejection =
-                new CompetitionRejectionResource(newRejectionReasonResource()
-                        .withReason("Conflict of interest")
-                        .withActive(Boolean.TRUE)
-                        .withPriority(1)
-                        .withId(1L).build(), "own company");
+        CompetitionRejectionResource compRejection = competitionInviteResource;
 
         when(competitionInviteServiceMock.rejectInvite(hash, compRejection.getRejectReason(), ofNullable(compRejection.getRejectComment()))).thenReturn(serviceSuccess());
 
@@ -109,6 +102,7 @@ public class CompetitionInviteDocumentation extends BaseControllerMockMVCTest<Co
                 .content(new ObjectMapper().writeValueAsString(compRejection)))
                 .andExpect(status().isOk())
                 .andDo(this.document.snippets(
+                        requestFields(competitionRejectionFields),
                         pathParameters(
                                 parameterWithName("hash").description("hash of the invite being rejected")
                         )
