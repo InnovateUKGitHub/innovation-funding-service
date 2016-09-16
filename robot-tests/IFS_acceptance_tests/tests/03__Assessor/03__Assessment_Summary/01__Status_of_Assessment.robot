@@ -14,6 +14,7 @@ Resource          ../../../resources/keywords/User_actions.robot
 *** Test Cases ***
 To verify all the sections are present
     [Documentation]    INFUND-4648
+    [Tags]    HappyPath
     When The user navigates to the assessor page    ${Assessment_summary_incomplete_12}
     Then The user should see the element    jQuery=h2:contains("Overall scores")
     And The user should see the element    jQuery=h2:contains("Review assessment")
@@ -40,6 +41,7 @@ Assessment summary shows the questions without score
 
 Assessment summary shows questions as complete
     [Documentation]    INFUND-550
+    [Tags]    HappyPath
     [Setup]    log in as user    &{assessor_credentials}
     Given the user adds score and feedback for every question
     When the user clicks the button/link    link=Review assessment
@@ -52,6 +54,7 @@ Assessment summary shows questions as complete
 
 Assessment summary shows questions scores
     [Documentation]    INFUND-550
+    [Tags]    HappyPath
     Then The user should see the text in the page    Total: 50/50
     And The user should see the text in the page    100%
     And the table should show the correct scores
@@ -107,6 +110,7 @@ Assessor must Provide feedback when "No" is selected for funding suitability
 
 Word count check: Your feedback
     [Documentation]    INFUND-1485
+    [Tags]    HappyPath
     When The user navigates to the assessor page    ${Assessment_summary_complete_9}
     When The user enters text to a text field    id=form-textarea-feedback    Testing the feedback word count. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco
     Then the word count should be correct    Words remaining: -4

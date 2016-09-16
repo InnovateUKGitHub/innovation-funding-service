@@ -261,6 +261,12 @@ the user sees the text in the element
     Wait Until Keyword Succeeds    10    500ms    element should contain    ${element}    ${text}
 
 
+the user sees the text in the text field
+    [Arguments]    ${textfield}    ${text}
+    wait until element is visible    ${textfield}
+    wait until keyword succeeds    10    500ms    textfield should contain    ${textfield}    ${text}
+
+
 the user clears the text from the element
     [Arguments]    ${element}
     wait until element is visible    ${element}
@@ -616,7 +622,7 @@ invite a new academic
     [Arguments]    ${EMAIL_LEAD}    ${EMAIL_INVITED}
     guest user log-in    ${EMAIL_LEAD}    Passw0rd123
     the user clicks the button/link    link=${application_name}
-    the user clicks the button/link    link=View team members and add collaborators
+    the user clicks the button/link    link=view team members and add collaborators
     the user clicks the button/link    jQuery=.button:contains("Invite new contributors")
     the user clicks the button/link    jQuery=.button:contains("Add additional partner organisation")
     the user enters text to a text field    name=organisations[1].organisationName    university of liverpool

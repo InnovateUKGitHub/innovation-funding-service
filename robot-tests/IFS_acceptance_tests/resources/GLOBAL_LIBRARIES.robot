@@ -2,7 +2,7 @@
 Library           Selenium2Library
 Library           XvfbRobot
 Library           IFS_Selenium_Extension
-Library           ImapLibrary
+Library           ../libs/ImapLibrary.py
 Library           Collections
 Library           ExcelLibrary
 Library           FtpLibrary
