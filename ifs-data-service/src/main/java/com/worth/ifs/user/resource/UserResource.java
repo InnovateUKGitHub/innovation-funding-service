@@ -28,6 +28,9 @@ public class UserResource {
     private List<Long> organisations = new ArrayList<>();
     private List<Long> processRoles = new ArrayList<>();
     private List<RoleResource> roles = new ArrayList<>();
+    private String gender;
+    private String disability;
+    private Long ethnicity;
 
     public UserResource() {
     	// no-arg constructor
@@ -175,6 +178,9 @@ public class UserResource {
                 .append(organisations, that.organisations)
                 .append(processRoles, that.processRoles)
                 .append(roles, that.roles)
+                .append(gender, that.gender)
+                .append(disability, that.disability)
+                .append(ethnicity, that.ethnicity)
                 .isEquals();
     }
 
@@ -195,6 +201,9 @@ public class UserResource {
                 .append(organisations)
                 .append(processRoles)
                 .append(roles)
+                .append(gender)
+                .append(disability)
+                .append(ethnicity)
                 .toHashCode();
     }
 
@@ -208,5 +217,29 @@ public class UserResource {
 
     public boolean hasRole(UserRoleType role) {
         return simpleMap(roles, RoleResource::getName).contains(role.getName());
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getDisability() {
+        return disability;
+    }
+
+    public void setDisability(String disability) {
+        this.disability = disability;
+    }
+
+    public Long getEthnicity() {
+        return ethnicity;
+    }
+
+    public void setEthnicity(Long ethnicity) {
+        this.ethnicity = ethnicity;
     }
 }
