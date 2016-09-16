@@ -36,7 +36,7 @@ public class AssessmentWorkflow extends StateMachineConfigurerAdapter<Assessment
 
     @Override
     public void configure(StateMachineConfigurationConfigurer<AssessmentStates, AssessmentOutcomes> config) throws Exception {
-        config.withConfiguration().listener(new WorkflowStateMachineListener());
+        config.withConfiguration().listener(new WorkflowStateMachineListener<>());
 
     }
 

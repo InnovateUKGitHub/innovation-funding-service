@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
-public class ProjectDetailsWorkflowIntegrationTest extends BaseIntegrationTest {
+public class ProjectDetailsWorkflowServiceIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
     private ProjectDetailsWorkflowService projectDetailsWorkflowService;

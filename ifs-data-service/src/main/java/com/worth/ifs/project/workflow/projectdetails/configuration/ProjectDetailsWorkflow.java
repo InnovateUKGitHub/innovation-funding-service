@@ -29,7 +29,7 @@ public class ProjectDetailsWorkflow extends StateMachineConfigurerAdapter<Projec
 
     @Override
     public void configure(StateMachineConfigurationConfigurer<ProjectDetailsState, ProjectDetailsOutcomes> config) throws Exception {
-        config.withConfiguration().listener(new WorkflowStateMachineListener());
+        config.withConfiguration().listener(new WorkflowStateMachineListener<>());
 
     }
 
