@@ -5,6 +5,7 @@ import com.worth.ifs.assessment.resource.AssessmentOutcomes;
 import com.worth.ifs.assessment.workflow.configuration.AssessmentWorkflow;
 import com.worth.ifs.workflow.domain.ActivityState;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
+import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
@@ -13,6 +14,7 @@ import java.util.Optional;
  * for an application during assessment.
  * For more info see {@link AssessmentWorkflow}
  */
+@Component
 public class RejectAction extends BaseAssessmentAction {
 
     @Override

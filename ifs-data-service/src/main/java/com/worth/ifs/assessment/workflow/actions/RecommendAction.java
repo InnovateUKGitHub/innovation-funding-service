@@ -6,6 +6,7 @@ import com.worth.ifs.assessment.resource.RecommendedValue;
 import com.worth.ifs.assessment.workflow.configuration.AssessmentWorkflow;
 import com.worth.ifs.workflow.domain.ActivityState;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
+import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
@@ -14,6 +15,7 @@ import java.util.Optional;
  * assessment event applied to an application.
  * For more info see {@link AssessmentWorkflow}
  */
+@Component
 public class RecommendAction extends BaseAssessmentAction {
 
     @Override

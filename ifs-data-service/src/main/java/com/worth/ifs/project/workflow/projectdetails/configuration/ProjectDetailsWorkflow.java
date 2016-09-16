@@ -2,9 +2,11 @@ package com.worth.ifs.project.workflow.projectdetails.configuration;
 
 import com.worth.ifs.project.resource.ProjectDetailsOutcomes;
 import com.worth.ifs.project.resource.ProjectDetailsState;
+import com.worth.ifs.project.workflow.projectdetails.actions.ProjectCreatedAction;
 import com.worth.ifs.project.workflow.projectdetails.actions.SubmitProjectDetailsAction;
 import com.worth.ifs.project.workflow.projectdetails.guards.AllProjectDetailsSuppliedGuard;
 import com.worth.ifs.workflow.WorkflowStateMachineListener;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.statemachine.config.EnableStateMachine;
@@ -15,6 +17,7 @@ import org.springframework.statemachine.config.builders.StateMachineTransitionCo
 
 import java.util.LinkedHashSet;
 
+import static com.worth.ifs.project.resource.ProjectDetailsOutcomes.PROJECT_CREATED;
 import static com.worth.ifs.project.resource.ProjectDetailsOutcomes.PROJECT_START_DATE_ADDED;
 import static com.worth.ifs.project.resource.ProjectDetailsOutcomes.SUBMIT;
 import static com.worth.ifs.project.resource.ProjectDetailsState.*;
@@ -26,6 +29,15 @@ import static java.util.Arrays.asList;
 @Configuration
 @EnableStateMachine(name = "projectDetailsStateMachine")
 public class ProjectDetailsWorkflow extends StateMachineConfigurerAdapter<ProjectDetailsState, ProjectDetailsOutcomes> {
+
+    @Autowired
+    private ProjectCreatedAction projectCreatedAction;
+
+    @Autowired
+    private AllProjectDetailsSuppliedGuard allProjectDetailsSuppliedGuard;
+
+    @Autowired
+    private SubmitProjectDetailsAction submitProjectDetailsAction;
 
     @Override
     public void configure(StateMachineConfigurationConfigurer<ProjectDetailsState, ProjectDetailsOutcomes> config) throws Exception {
@@ -45,29 +57,25 @@ public class ProjectDetailsWorkflow extends StateMachineConfigurerAdapter<Projec
         transitions
             .withExternal()
                 .source(PENDING)
+                .event(PROJECT_CREATED)
+                .target(PENDING)
+                .action(projectCreatedAction)
+                .and()
+            .withExternal()
+                .source(PENDING)
                 .event(PROJECT_START_DATE_ADDED)
                 .target(DECIDE_IF_READY_TO_SUBMIT)
                 .and()
             .withChoice()
                 .source(DECIDE_IF_READY_TO_SUBMIT)
-                .first(READY_TO_SUBMIT, allProjectDetailsSuppliedGuard())
+                .first(READY_TO_SUBMIT, allProjectDetailsSuppliedGuard)
                 .last(PENDING)
                 .and()
             .withExternal()
                 .source(READY_TO_SUBMIT)
                 .event(SUBMIT)
                 .target(SUBMITTED)
-                .guard(allProjectDetailsSuppliedGuard())
-                .action(submitProjectDetailsAction());
-    }
-
-    @Bean
-    public SubmitProjectDetailsAction submitProjectDetailsAction() {
-        return new SubmitProjectDetailsAction();
-    }
-
-    @Bean
-    public AllProjectDetailsSuppliedGuard allProjectDetailsSuppliedGuard() {
-        return new AllProjectDetailsSuppliedGuard();
+                .guard(allProjectDetailsSuppliedGuard)
+                .action(submitProjectDetailsAction);
     }
 }

@@ -1,6 +1,7 @@
 package com.worth.ifs.project.workflow.projectdetails.actions;
 
 import com.worth.ifs.project.workflow.projectdetails.configuration.ProjectDetailsWorkflowService;
+import org.springframework.stereotype.Component;
 
 /**
  * The {@code {@link SubmitProjectDetailsAction }} is triggered when all Project Details have been filled in and the Project Manager
@@ -8,6 +9,7 @@ import com.worth.ifs.project.workflow.projectdetails.configuration.ProjectDetail
  *
  * For more info see {@link ProjectDetailsWorkflowService}
  */
+@Component
 public class SubmitProjectDetailsAction extends BaseProjectDetailsAction {
 
 }

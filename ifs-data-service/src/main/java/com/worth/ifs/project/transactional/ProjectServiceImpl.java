@@ -233,7 +233,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
             UserResource currentUser = (UserResource) SecurityContextHolder.getContext().getAuthentication().getDetails();
             ProjectUser projectUser = simpleFindFirst(project.getProjectUsers(), pu -> pu.getUser().getId().equals(currentUser.getId())).get();
 
-            if (projectDetailsWorkflowHandler.submitProjectDetails(projectUser.getId(), projectId)) {
+            if (projectDetailsWorkflowHandler.submitProjectDetails(projectUser, projectId)) {
                 return setSubmittedDate(project, date);
             } else {
                 return serviceFailure(new Error(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_SUBMITTED_IF_INCOMPLETE));
@@ -757,8 +757,8 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
     private ServiceResult<Void> createProcessEntriesForNewProject(Project newProject) {
 
-        ProjectUser originalLeadApplicant = newProject.getProjectUsers().get(0);
-        boolean projectDetailsProcessCreated = projectDetailsWorkflowHandler.projectCreated(newProject, originalLeadApplicant.getId());
+        ProjectUser originalLeadApplicantProjectUser = newProject.getProjectUsers().get(0);
+        boolean projectDetailsProcessCreated = projectDetailsWorkflowHandler.projectCreated(newProject, originalLeadApplicantProjectUser);
 
         if (projectDetailsProcessCreated) {
             return serviceSuccess();

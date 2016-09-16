@@ -16,12 +16,12 @@ import org.springframework.statemachine.StateContext;
 
 import java.util.Optional;
 
-import static com.worth.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
+import static com.worth.ifs.workflow.domain.ActivityType.PROJECT_SETUP_PROJECT_DETAILS;
 
 /**
  * A base class for Project-related workflow Actions
  */
-abstract class BaseProjectDetailsAction extends TestableTransitionWorkflowAction<ProjectDetailsState, ProjectDetailsOutcomes> {
+public abstract class BaseProjectDetailsAction extends TestableTransitionWorkflowAction<ProjectDetailsState, ProjectDetailsOutcomes> {
 
     @Autowired
     private ActivityStateRepository activityStateRepository;
@@ -35,7 +35,7 @@ abstract class BaseProjectDetailsAction extends TestableTransitionWorkflowAction
         ProcessOutcome updatedProcessOutcome = (ProcessOutcome) context.getMessageHeader("processOutcome");
         State newState = context.getTransition().getTarget().getId().getBackingState();
 
-        ActivityState newActivityState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, newState);
+        ActivityState newActivityState = activityStateRepository.findOneByActivityTypeAndState(PROJECT_SETUP_PROJECT_DETAILS, newState);
         doExecute(getProjectFromContext(context), getProjectDetailsFromContext(context), getProjectUserFromContext(context),
                 newActivityState, Optional.ofNullable(updatedProcessOutcome));
     }

@@ -158,7 +158,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         Project newProjectExpectations = createProjectExpectationsFromOriginalApplication(application);
         when(projectRepositoryMock.save(newProjectExpectations)).thenReturn(savedProject);
 
-        when(projectDetailsWorkflowServiceMock.projectCreated(savedProject, leadPartnerProjectUser.getId())).thenReturn(true);
+        when(projectDetailsWorkflowServiceMock.projectCreated(savedProject, leadPartnerProjectUser)).thenReturn(true);
 
         when(projectMapperMock.mapToResource(savedProject)).thenReturn(newProjectResource);
 

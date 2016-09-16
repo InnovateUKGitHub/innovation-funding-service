@@ -7,6 +7,7 @@ import com.worth.ifs.project.resource.ProjectDetailsState;
 import com.worth.ifs.user.domain.Organisation;
 import org.springframework.statemachine.StateContext;
 import org.springframework.statemachine.guard.Guard;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +17,7 @@ import static com.worth.ifs.util.CollectionFunctions.*;
 /**
  * This asserts that all mandatory Project Details have been included prior to allowing them to be submitted.
  */
+@Component
 public class AllProjectDetailsSuppliedGuard implements Guard<ProjectDetailsState, ProjectDetailsOutcomes> {
 
     @Override

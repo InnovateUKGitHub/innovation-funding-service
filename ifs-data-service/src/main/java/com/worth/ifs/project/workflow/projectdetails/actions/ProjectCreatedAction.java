@@ -8,6 +8,7 @@ import com.worth.ifs.project.workflow.projectdetails.configuration.ProjectDetail
 import com.worth.ifs.workflow.domain.ActivityState;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
@@ -17,6 +18,7 @@ import java.util.Optional;
  *
  * For more info see {@link ProjectDetailsWorkflowService}
  */
+@Component
 public class ProjectCreatedAction extends BaseProjectDetailsAction {
 
     @Autowired

@@ -5,6 +5,7 @@ import com.worth.ifs.assessment.resource.AssessmentOutcomes;
 import com.worth.ifs.assessment.resource.AssessmentStates;
 import org.springframework.statemachine.StateContext;
 import org.springframework.statemachine.guard.Guard;
+import org.springframework.stereotype.Component;
 
 import static com.worth.ifs.assessment.resource.AssessmentStates.SUBMITTED;
 
@@ -12,6 +13,7 @@ import static com.worth.ifs.assessment.resource.AssessmentStates.SUBMITTED;
  * {@code SubmitGuard} is responsible for testing if the transition can take place
  * to the next state. This will not happen if the evaluation is failing.
  */
+@Component
 public class SubmitGuard implements Guard<AssessmentStates, AssessmentOutcomes> {
 
     @Override

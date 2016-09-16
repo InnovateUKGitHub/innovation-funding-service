@@ -10,6 +10,7 @@ import com.worth.ifs.assessment.workflow.guards.AssessmentGuard;
 import com.worth.ifs.assessment.workflow.guards.ProcessOutcomeGuard;
 import com.worth.ifs.assessment.workflow.guards.SubmitGuard;
 import com.worth.ifs.workflow.WorkflowStateMachineListener;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.statemachine.config.EnableStateMachine;
@@ -34,6 +35,27 @@ import static java.util.Arrays.asList;
 @EnableStateMachine(name = "assessmentStateMachine")
 public class AssessmentWorkflow extends StateMachineConfigurerAdapter<AssessmentStates, AssessmentOutcomes> {
 
+    @Autowired
+    private RejectAction rejectAction;
+
+    @Autowired
+    private AcceptAction acceptAction;
+
+    @Autowired
+    private ProcessOutcomeGuard processOutcomeExistsGuard;
+
+    @Autowired
+    private AssessmentGuard assessmentExistsGuard;
+
+    @Autowired
+    private RecommendAction recommendAction;
+
+    @Autowired
+    private SubmitAction submitAction;
+
+    @Autowired
+    private SubmitGuard submitGuard;
+
     @Override
     public void configure(StateMachineConfigurationConfigurer<AssessmentStates, AssessmentOutcomes> config) throws Exception {
         config.withConfiguration().listener(new WorkflowStateMachineListener<>());
@@ -53,79 +75,43 @@ public class AssessmentWorkflow extends StateMachineConfigurerAdapter<Assessment
                 .withExternal()
                     .source(PENDING).target(REJECTED)
                     .event(REJECT)
-                    .action(rejectAction())
-                    .guard(processOutcomeExistsGuard())
+                    .action(rejectAction)
+                    .guard(processOutcomeExistsGuard)
                     .and()
                 .withExternal()
                     .source(PENDING).target(OPEN)
                     .event(ACCEPT)
-                    .action(acceptAction())
-                    .guard(assessmentExistsGuard())
+                    .action(acceptAction)
+                    .guard(assessmentExistsGuard)
                     .and()
                 .withExternal()
                     .source(OPEN).target(ASSESSED)
                     .event(RECOMMEND)
-                    .action(recommendAction())
-                    .guard(assessmentExistsGuard())
+                    .action(recommendAction)
+                    .guard(assessmentExistsGuard)
                     .and()
                 .withExternal()
                     .source(OPEN).target(REJECTED)
                     .event(REJECT)
-                    .action(rejectAction())
-                    .guard(processOutcomeExistsGuard())
+                    .action(rejectAction)
+                    .guard(processOutcomeExistsGuard)
                     .and()
                 .withExternal()
                     .source(ASSESSED).target(ASSESSED)
                     .event(RECOMMEND)
-                    .action(recommendAction())
-                    .guard(assessmentExistsGuard())
+                    .action(recommendAction)
+                    .guard(assessmentExistsGuard)
                     .and()
                 .withExternal()
                      .source(ASSESSED).target(REJECTED)
                      .event(REJECT)
-                     .action(rejectAction())
-                     .guard(processOutcomeExistsGuard())
+                     .action(rejectAction)
+                     .guard(processOutcomeExistsGuard)
                      .and()
                 .withExternal()
                     .source(ASSESSED).target(SUBMITTED)
                     .event(AssessmentOutcomes.SUBMIT)
-                    .action(submitAction())
-                    .guard(submitGuard());
+                    .action(submitAction)
+                    .guard(submitGuard);
     }
-
-    @Bean
-    public RejectAction rejectAction() {
-        return new RejectAction();
-    }
-
-    @Bean
-    public AcceptAction acceptAction() {
-        return new AcceptAction();
-    }
-
-    @Bean
-    public RecommendAction recommendAction() {
-        return new RecommendAction();
-    }
-
-    @Bean
-    SubmitAction submitAction() {
-        return new SubmitAction();
-    }
-
-    @Bean
-    public AssessmentGuard assessmentExistsGuard() {
-        return new AssessmentGuard();
-    }
-
-    @Bean
-    public ProcessOutcomeGuard processOutcomeExistsGuard() {
-        return new ProcessOutcomeGuard();
-    }
-
-    @Bean
-    public SubmitGuard submitGuard() {
-        return new SubmitGuard();
-    }
-
 }
