@@ -21,4 +21,25 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
                 .andExpect(status().isOk())
                 .andExpect(view().name("registration/register"));
     }
+
+    @Test
+    public void skills() throws Exception {
+        mockMvc.perform(get("/registration/skills"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("registration/innovation-areas"));
+    }
+
+    @Test
+    public void declaration() throws Exception {
+        mockMvc.perform(get("/registration/declaration"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("registration/declaration-of-interest"));
+    }
+
+    @Test
+    public void terms() throws Exception {
+        mockMvc.perform(get("/registration/terms"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("registration/terms"));
+    }
 }

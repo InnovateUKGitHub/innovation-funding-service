@@ -16,4 +16,18 @@ public class AssessorRegistrationController {
         return "registration/register";
     }
 
+    @RequestMapping(value = "skills", method = RequestMethod.GET)
+    public String skills() {
+        return "registration/innovation-areas";
+    }
+
+    @RequestMapping(value = "declaration", method = RequestMethod.GET)
+    public String declaration() {
+        return "registration/declaration-of-interest";
+    }
+
+    @RequestMapping(value = "terms", method = RequestMethod.GET)
+    public String terms() {
+        return "registration/terms";
+    }
 }
