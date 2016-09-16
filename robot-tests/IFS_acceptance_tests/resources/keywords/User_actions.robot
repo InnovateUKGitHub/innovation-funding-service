@@ -288,7 +288,7 @@ The user clicks the button/link
     [Arguments]    ${BUTTON}
     wait until element is visible    ${BUTTON}
     Focus    ${BUTTON}
-    Wait for autosave
+    wait for autosave
     click element    ${BUTTON}
 
 The user should see the text in the page
