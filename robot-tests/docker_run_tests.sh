@@ -25,12 +25,31 @@ function coloredEcho(){
     tput sgr0;
 }
 
+function clearDownFileRepository() {
+    echo "***********Deleting any uploaded files***************"
+    echo "storedFileFolder:   ${storedFileFolder}"
+    docker exec ifs_data_1  rm -rf ${storedFileFolder}
+
+    echo "***********Deleting any holding for scan files***************"
+    echo "virusScanHoldingFolder: ${virusScanHoldingFolder}"
+    docker exec ifs_data_1  rm -rf ${virusScanHoldingFolder}
+
+    echo "***********Deleting any quarantined files***************"
+    echo "virusScanQuarantinedFolder: ${virusScanQuarantinedFolder}"
+    docker exec ifs_data_1  rm -rf ${virusScanQuarantinedFolder}
+
+    echo "***********Deleting any scanned files***************"
+    echo "virusScanScannedFolder: ${virusScanScannedFolder}"
+    docker exec ifs_data_1  rm -rf ${virusScanScannedFolder}
+}
+
 function addTestFiles() {
+    clearDownFileRepository
     echo "***********Adding test files***************"
     echo "***********Making the quarantined directory ***************"
-    docker-compose -p ifs exec data mkdir -p ${virusScanQuarantinedFolder}
+    docker exec ifs_data_1 mkdir -p ${virusScanQuarantinedFolder}
     echo "***********Adding pretend quarantined file ***************"
-    docker-compose -p ifs exec data cp -R ${uploadFileDir}/8 ${virusScanQuarantinedFolder}/8
+    docker exec ifs_data_1 cp /tmp/ifs-local/8 ${virusScanQuarantinedFolder}/8
 }
 
 function resetLDAP() {
@@ -86,7 +105,7 @@ function startSeleniumGrid() {
 
     if [ "$parallel" ]
     then
-      declare -i suiteCount=$(find ${testDirectory} -maxdepth 0 -type d | wc -l)
+      declare -i suiteCount=$(find ${testDirectory}/* -maxdepth 0 -type d | wc -l)
     else
       declare -i suiteCount=1
     fi
@@ -135,7 +154,7 @@ function runTests() {
 
     if [[ "$parallel" ]]
     then
-      for D in `find ${testDirectory} -maxdepth 0 -type d`
+      for D in `find ${testDirectory}/* -maxdepth 0 -type d`
       do
           startPybot ${D}
       done
@@ -160,13 +179,18 @@ cd "$(dirname "$0")"
 echo "********GETTING ALL THE VARIABLES********"
 scriptDir=`pwd`
 echo "scriptDir:        ${scriptDir}"
-uploadFileDir=${scriptDir}"/upload_files"
+uploadFileDir="${scriptDir}/upload_files"
 cd ../ifs-data-service
 dataServiceCodeDir=`pwd`
 echo "dataServiceCodeDir:${dataServiceCodeDir}"
-baseFileStorage=`sed '/^\#/d' docker-build.gradle | grep 'ext.ifsFileStorageLocation'  | cut -d "=" -f2 | sed 's/"//g'`
+
+baseFileStorage="/tmp/uploads"
 echo "${baseFileStorage}"
-virusScanQuarantinedFolder=${baseFileStorage}/virus-scan-quarantined
+storedFileFolder="${baseFileStorage}/ifs/"
+virusScanHoldingFolder="${baseFileStorage}/virus-scan-holding/"
+virusScanQuarantinedFolder="${baseFileStorage}/virus-scan-quarantined"
+virusScanScannedFolder="${baseFileStorage}/virus-scan-scanned"
+
 echo "virusScanQuarantinedFolder:		${virusScanQuarantinedFolder}"
 echo "We are about to delete the above directories, make sure that they are right ones!"
 postcodeLookupKey=`sed '/^\#/d' docker-build.gradle | grep 'ext.postcodeLookupKey'  | cut -d "=" -f2 | sed 's/"//g'`
@@ -244,7 +268,7 @@ startSeleniumGrid
 if [[ "$quickTest" ]]
 then
     echo "using quickTest:   TRUE" >&2
-    #resetDB
+    resetDB
     addTestFiles
     runTests
 elif [[ "$testScrub" ]]

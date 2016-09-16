@@ -148,6 +148,7 @@ IFS.core.autoSave = (function(){
         processAjax : function(field){
           return function(){
             var form = field.closest('[data-autosave]');
+            form.attr('data-save-status','progress');
             var data = IFS.core.autoSave.getPostObject(field,form);
             var url = IFS.core.autoSave.getUrl(field,form);
             var defer = jQuery.Deferred();
@@ -208,6 +209,7 @@ IFS.core.autoSave = (function(){
                     autoSaveInfo.html('<span class="error-message">'+errorMessage+'</span>');
                 }
             }).always(function(){
+                form.attr('data-save-status','done');
                 defer.resolve();
            });
            return defer.promise();
