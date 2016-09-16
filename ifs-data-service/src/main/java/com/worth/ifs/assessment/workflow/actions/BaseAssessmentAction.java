@@ -3,6 +3,7 @@ package com.worth.ifs.assessment.workflow.actions;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.assessment.repository.ProcessOutcomeRepository;
+import com.worth.ifs.assessment.resource.AssessmentOutcomes;
 import com.worth.ifs.assessment.resource.AssessmentStates;
 import com.worth.ifs.workflow.TestableTransitionWorkflowAction;
 import com.worth.ifs.workflow.domain.ActivityState;
@@ -19,7 +20,7 @@ import static com.worth.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
 /**
  * A base class for Assessment-related workflow Actions
  */
-abstract class BaseAssessmentAction extends TestableTransitionWorkflowAction<AssessmentStates> {
+abstract class BaseAssessmentAction extends TestableTransitionWorkflowAction<AssessmentStates, AssessmentOutcomes> {
 
     @Autowired
     protected AssessmentRepository assessmentRepository;
@@ -31,7 +32,7 @@ abstract class BaseAssessmentAction extends TestableTransitionWorkflowAction<Ass
     private ActivityStateRepository activityStateRepository;
 
     @Override
-    public void doExecute(StateContext<AssessmentStates, String> context) {
+    public void doExecute(StateContext<AssessmentStates, AssessmentOutcomes> context) {
 
         Assessment assessment = getAssessmentFromContext(context);
         ProcessOutcome updatedProcessOutcome = (ProcessOutcome) context.getMessageHeader("processOutcome");
@@ -41,7 +42,7 @@ abstract class BaseAssessmentAction extends TestableTransitionWorkflowAction<Ass
         doExecute(assessment, newActivityState, Optional.ofNullable(updatedProcessOutcome));
     }
 
-    private Assessment getAssessmentFromContext(StateContext<AssessmentStates, String> context) {
+    private Assessment getAssessmentFromContext(StateContext<AssessmentStates, AssessmentOutcomes> context) {
 
         Assessment assessmentInContext = (Assessment) context.getMessageHeader("assessment");
 

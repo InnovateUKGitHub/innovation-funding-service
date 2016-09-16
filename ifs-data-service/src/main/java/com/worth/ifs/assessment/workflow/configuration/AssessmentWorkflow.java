@@ -20,6 +20,10 @@ import org.springframework.statemachine.config.builders.StateMachineTransitionCo
 
 import java.util.LinkedHashSet;
 
+import static com.worth.ifs.assessment.resource.AssessmentOutcomes.ACCEPT;
+import static com.worth.ifs.assessment.resource.AssessmentOutcomes.RECOMMEND;
+import static com.worth.ifs.assessment.resource.AssessmentOutcomes.REJECT;
+import static com.worth.ifs.assessment.resource.AssessmentStates.*;
 import static java.util.Arrays.asList;
 
 /**
@@ -28,63 +32,63 @@ import static java.util.Arrays.asList;
  */
 @Configuration
 @EnableStateMachine(name = "assessmentStateMachine")
-public class AssessmentWorkflow extends StateMachineConfigurerAdapter<AssessmentStates, String> {
+public class AssessmentWorkflow extends StateMachineConfigurerAdapter<AssessmentStates, AssessmentOutcomes> {
 
     @Override
-    public void configure(StateMachineConfigurationConfigurer<AssessmentStates, String> config) throws Exception {
+    public void configure(StateMachineConfigurationConfigurer<AssessmentStates, AssessmentOutcomes> config) throws Exception {
         config.withConfiguration().listener(new WorkflowStateMachineListener());
 
     }
 
     @Override
-    public void configure(StateMachineStateConfigurer<AssessmentStates, String> states) throws Exception {
+    public void configure(StateMachineStateConfigurer<AssessmentStates, AssessmentOutcomes> states) throws Exception {
         states.withStates()
-                .initial(AssessmentStates.PENDING)
+                .initial(PENDING)
                 .states(new LinkedHashSet<>(asList(AssessmentStates.values())));
     }
 
     @Override
-    public void configure(StateMachineTransitionConfigurer<AssessmentStates, String> transitions) throws Exception {
+    public void configure(StateMachineTransitionConfigurer<AssessmentStates, AssessmentOutcomes> transitions) throws Exception {
         transitions
                 .withExternal()
-                    .source(AssessmentStates.PENDING).target(AssessmentStates.REJECTED)
-                    .event(AssessmentOutcomes.REJECT.getType())
+                    .source(PENDING).target(REJECTED)
+                    .event(REJECT)
                     .action(rejectAction())
                     .guard(processOutcomeExistsGuard())
                     .and()
                 .withExternal()
-                    .source(AssessmentStates.PENDING).target(AssessmentStates.OPEN)
-                    .event(AssessmentOutcomes.ACCEPT.getType())
+                    .source(PENDING).target(OPEN)
+                    .event(ACCEPT)
                     .action(acceptAction())
                     .guard(assessmentExistsGuard())
                     .and()
                 .withExternal()
-                    .source(AssessmentStates.OPEN).target(AssessmentStates.ASSESSED)
-                    .event(AssessmentOutcomes.RECOMMEND.getType())
+                    .source(OPEN).target(ASSESSED)
+                    .event(RECOMMEND)
                     .action(recommendAction())
                     .guard(assessmentExistsGuard())
                     .and()
                 .withExternal()
-                    .source(AssessmentStates.OPEN).target(AssessmentStates.REJECTED)
-                    .event(AssessmentOutcomes.REJECT.getType())
+                    .source(OPEN).target(REJECTED)
+                    .event(REJECT)
                     .action(rejectAction())
                     .guard(processOutcomeExistsGuard())
                     .and()
                 .withExternal()
-                    .source(AssessmentStates.ASSESSED).target(AssessmentStates.ASSESSED)
-                    .event(AssessmentOutcomes.RECOMMEND.getType())
+                    .source(ASSESSED).target(ASSESSED)
+                    .event(RECOMMEND)
                     .action(recommendAction())
                     .guard(assessmentExistsGuard())
                     .and()
                 .withExternal()
-                     .source(AssessmentStates.ASSESSED).target(AssessmentStates.REJECTED)
-                     .event(AssessmentOutcomes.REJECT.getType())
+                     .source(ASSESSED).target(REJECTED)
+                     .event(REJECT)
                      .action(rejectAction())
                      .guard(processOutcomeExistsGuard())
                      .and()
                 .withExternal()
-                    .source(AssessmentStates.ASSESSED).target(AssessmentStates.SUBMITTED)
-                    .event(AssessmentOutcomes.SUBMIT.getType())
+                    .source(ASSESSED).target(SUBMITTED)
+                    .event(AssessmentOutcomes.SUBMIT)
                     .action(submitAction())
                     .guard(submitGuard());
     }

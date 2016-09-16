@@ -10,14 +10,18 @@ import com.worth.ifs.workflow.GenericPersistStateMachineHandler;
 import com.worth.ifs.workflow.TestableTransitionWorkflowAction;
 import org.springframework.messaging.support.MessageBuilder;
 
+import static com.worth.ifs.project.resource.ProjectDetailsOutcomes.PENDING;
+import static com.worth.ifs.project.resource.ProjectDetailsOutcomes.READY_TO_SUBMIT;
+import static com.worth.ifs.project.resource.ProjectDetailsOutcomes.SUBMIT;
+
 /**
  * {@code ProjectDetailsWorkflowService} is the entry point for triggering the workflow.
  * Based on the Project Detail's current state the next one is tried to transition to by triggering
  * an event.
  */
-public class ProjectDetailsWorkflowService extends BaseWorkflowEventHandler<ProjectDetailsProcess, ProjectDetailsState, String> {
+public class ProjectDetailsWorkflowService extends BaseWorkflowEventHandler<ProjectDetailsProcess, ProjectDetailsState, ProjectDetailsOutcomes> {
 
-    public ProjectDetailsWorkflowService(GenericPersistStateMachineHandler<ProjectDetailsState, String> stateHandler, ProjectDetailsProcessRepository projectDetailsProcessRepository) {
+    public ProjectDetailsWorkflowService(GenericPersistStateMachineHandler<ProjectDetailsState, ProjectDetailsOutcomes> stateHandler, ProjectDetailsProcessRepository projectDetailsProcessRepository) {
         super(stateHandler, projectDetailsProcessRepository);
     }
 
@@ -39,39 +43,39 @@ public class ProjectDetailsWorkflowService extends BaseWorkflowEventHandler<Proj
         return testEvent(submitProjectDetailsMessage(currentProcess.getParticipant().getId(), currentProcess), currentProcess);
     }
 
-    private MessageBuilder<String> projectCreatedEvent(Project project, Long originalLeadApplicantProjectUserId) {
+    private MessageBuilder<ProjectDetailsOutcomes> projectCreatedEvent(Project project, Long originalLeadApplicantProjectUserId) {
         return MessageBuilder
-                .withPayload(ProjectDetailsOutcomes.PENDING.getType())
+                .withPayload(PENDING)
                 .setHeader("project", project)
                 .setHeader("projectUserId", originalLeadApplicantProjectUserId);
     }
 
-    private MessageBuilder<String> allProjectDetailsSuppliedEvent(ProjectDetailsProcess projectDetails) {
+    private MessageBuilder<ProjectDetailsOutcomes> allProjectDetailsSuppliedEvent(ProjectDetailsProcess projectDetails) {
         return MessageBuilder
-                .withPayload(ProjectDetailsOutcomes.READY_TO_SUBMIT.getType())
+                .withPayload(READY_TO_SUBMIT)
                 .setHeader("projectDetails", projectDetails);
     }
 
-    private MessageBuilder<String> submitProjectDetailsMessage(Long projectUserId, ProjectDetailsProcess projectDetails) {
+    private MessageBuilder<ProjectDetailsOutcomes> submitProjectDetailsMessage(Long projectUserId, ProjectDetailsProcess projectDetails) {
         return MessageBuilder
-                .withPayload(ProjectDetailsOutcomes.SUBMIT.getType())
+                .withPayload(SUBMIT)
                 .setHeader("projectDetails", projectDetails)
                 .setHeader("projectUserId", projectUserId);
     }
 
-    private boolean fireEvent(MessageBuilder<String> event, ProjectDetailsProcess currentState) {
+    private boolean fireEvent(MessageBuilder<ProjectDetailsOutcomes> event, ProjectDetailsProcess currentState) {
         return fireEvent(event, currentState.getActivityState());
     }
 
-    private boolean fireEvent(MessageBuilder<String> event, ProjectDetailsState currentState) {
+    private boolean fireEvent(MessageBuilder<ProjectDetailsOutcomes> event, ProjectDetailsState currentState) {
         return stateHandler.handleEventWithState(event.build(), currentState);
     }
 
-    private boolean testEvent(MessageBuilder<String> event, ProjectDetailsProcess currentState) {
+    private boolean testEvent(MessageBuilder<ProjectDetailsOutcomes> event, ProjectDetailsProcess currentState) {
         return testEvent(event, currentState.getActivityState());
     }
 
-    private boolean testEvent(MessageBuilder<String> event, ProjectDetailsState currentState) {
+    private boolean testEvent(MessageBuilder<ProjectDetailsOutcomes> event, ProjectDetailsState currentState) {
         return fireEvent(event.setHeader(TestableTransitionWorkflowAction.TESTING_GUARD_KEY, true), currentState);
     }
 

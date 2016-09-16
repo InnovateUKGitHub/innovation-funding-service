@@ -1,6 +1,6 @@
 package com.worth.ifs.project.workflow.projectdetails.configuration;
 
-import com.worth.ifs.assessment.resource.AssessmentOutcomes;
+import com.worth.ifs.project.resource.ProjectDetailsOutcomes;
 import com.worth.ifs.project.resource.ProjectDetailsState;
 import com.worth.ifs.project.workflow.projectdetails.actions.ReadyToSubmitProjectDetailsAction;
 import com.worth.ifs.project.workflow.projectdetails.actions.SubmitProjectDetailsAction;
@@ -16,6 +16,8 @@ import org.springframework.statemachine.config.builders.StateMachineTransitionCo
 
 import java.util.LinkedHashSet;
 
+import static com.worth.ifs.project.resource.ProjectDetailsOutcomes.SUBMIT;
+import static com.worth.ifs.project.resource.ProjectDetailsState.*;
 import static java.util.Arrays.asList;
 
 /**
@@ -23,32 +25,32 @@ import static java.util.Arrays.asList;
  */
 @Configuration
 @EnableStateMachine(name = "projectDetailsStateMachine")
-public class ProjectDetailsWorkflow extends StateMachineConfigurerAdapter<ProjectDetailsState, String> {
+public class ProjectDetailsWorkflow extends StateMachineConfigurerAdapter<ProjectDetailsState, ProjectDetailsOutcomes> {
 
     @Override
-    public void configure(StateMachineConfigurationConfigurer<ProjectDetailsState, String> config) throws Exception {
+    public void configure(StateMachineConfigurationConfigurer<ProjectDetailsState, ProjectDetailsOutcomes> config) throws Exception {
         config.withConfiguration().listener(new WorkflowStateMachineListener());
 
     }
 
     @Override
-    public void configure(StateMachineStateConfigurer<ProjectDetailsState, String> states) throws Exception {
+    public void configure(StateMachineStateConfigurer<ProjectDetailsState, ProjectDetailsOutcomes> states) throws Exception {
         states.withStates()
-                .initial(ProjectDetailsState.PENDING)
+                .initial(PENDING)
                 .states(new LinkedHashSet<>(asList(ProjectDetailsState.values())));
     }
 
     @Override
-    public void configure(StateMachineTransitionConfigurer<ProjectDetailsState, String> transitions) throws Exception {
+    public void configure(StateMachineTransitionConfigurer<ProjectDetailsState, ProjectDetailsOutcomes> transitions) throws Exception {
         transitions
                 .withExternal()
-                    .source(ProjectDetailsState.PENDING).target(ProjectDetailsState.READY_TO_SUBMIT)
+                    .source(PENDING).target(READY_TO_SUBMIT)
                     .action(readyToSubmitProjectDetailsAction())
                     .guard(projectDetailsSuppliedGuard())
                     .and()
                 .withExternal()
-                    .source(ProjectDetailsState.READY_TO_SUBMIT).target(ProjectDetailsState.SUBMITTED)
-                    .event(AssessmentOutcomes.SUBMIT.getType())
+                    .source(READY_TO_SUBMIT).target(SUBMITTED)
+                    .event(SUBMIT)
                     .action(submitProjectDetailsAction())
                     .guard(projectDetailsSuppliedGuard());
     }

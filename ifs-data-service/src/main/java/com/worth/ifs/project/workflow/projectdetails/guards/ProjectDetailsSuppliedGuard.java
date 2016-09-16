@@ -2,6 +2,7 @@ package com.worth.ifs.project.workflow.projectdetails.guards;
 
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
+import com.worth.ifs.project.resource.ProjectDetailsOutcomes;
 import com.worth.ifs.project.resource.ProjectDetailsState;
 import com.worth.ifs.user.domain.Organisation;
 import org.springframework.context.annotation.Configuration;
@@ -17,10 +18,10 @@ import static com.worth.ifs.util.CollectionFunctions.*;
  * This asserts that all mandatory Project Details have been included prior to allowing them to be submitted.
  */
 @Configuration
-public class ProjectDetailsSuppliedGuard implements Guard<ProjectDetailsState, String> {
+public class ProjectDetailsSuppliedGuard implements Guard<ProjectDetailsState, ProjectDetailsOutcomes> {
 
     @Override
-    public boolean evaluate(StateContext<ProjectDetailsState, String> context) {
+    public boolean evaluate(StateContext<ProjectDetailsState, ProjectDetailsOutcomes> context) {
 
         Project project = (Project) context.getMessageHeader("project");
 

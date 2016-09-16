@@ -14,13 +14,13 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.junit.Assert.assertEquals;
 
 @Transactional
-public class AssessmentWorkflowIntegrationTest extends BaseIntegrationTest {
+public class AssessmentWorkflowServiceIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
-    AssessmentWorkflowService assessmentWorkflowService;
+    private AssessmentWorkflowService assessmentWorkflowService;
 
     @Autowired
-    AssessmentRepository assessmentRepository;
+    private AssessmentRepository assessmentRepository;
 
     private static final long PENDING_PROCESS_ROLE = 17L;
     private static final long OPEN_PROCESS_ROLE = 8L;
