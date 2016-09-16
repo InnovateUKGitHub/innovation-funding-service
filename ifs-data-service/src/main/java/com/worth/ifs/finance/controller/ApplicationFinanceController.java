@@ -148,7 +148,7 @@ public class ApplicationFinanceController {
                 toGetResponse();
     }
 
-    @RequestMapping(value = "/finances/{applicationId}/{organisationId}", method = GET)
+    @RequestMapping(value = "/application/{applicationId}/organisation/{organisationId}", method = GET)
     public RestResult<ApplicationFinanceResource> getApplicationOrganisationFinances(@PathVariable("applicationId") final Long applicationId,
                                                                                      @PathVariable("organisationId") final Long organisationId) {
 

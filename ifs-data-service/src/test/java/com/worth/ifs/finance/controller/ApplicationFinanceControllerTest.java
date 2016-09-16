@@ -1,9 +1,12 @@
 package com.worth.ifs.finance.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.BasicFileAndContents;
+import com.worth.ifs.finance.builder.ApplicationFinanceResourceBuilder;
+import com.worth.ifs.finance.handler.ApplicationFinanceHandler;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.ApplicationFinanceResourceId;
 import com.worth.ifs.finance.transactional.FinanceRowService;
@@ -26,6 +29,9 @@ public class ApplicationFinanceControllerTest extends BaseControllerMockMVCTest<
 
     @Mock
     private FinanceRowService financeRowServiceMock;
+
+    @Mock
+    private ApplicationFinanceHandler applicationFinanceHandlerMock;
 
     private ApplicationFinanceResource applicationFinanceResource;
     private Organisation organisation;
@@ -145,5 +151,25 @@ public class ApplicationFinanceControllerTest extends BaseControllerMockMVCTest<
         mockMvc.perform(get("/applicationfinance/financeDocument/fileentry?applicationFinanceId=123"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(fileEntry)));
+    }
+
+    @Test
+    public void getApplicationOrganisationFinances() throws Exception {
+
+        Long applicationId = 1L;
+        Long organisationId = 1L;
+
+        ApplicationFinanceResourceId applicationFinanceResourceId = new ApplicationFinanceResourceId(applicationId, organisationId);
+
+        ApplicationFinanceResource applicationFinanceResource = ApplicationFinanceResourceBuilder.newApplicationFinanceResource()
+                .withGrantClaimPercentage(20)
+                .build();
+
+        when(applicationFinanceHandlerMock.getApplicationOrganisationFinances(applicationFinanceResourceId)).thenReturn(applicationFinanceResource);
+
+        mockMvc.perform(get("/applicationfinance/application/{applicationId}/organisation/{organisationId}", applicationId, organisationId))
+                .andExpect(status().isOk())
+                .andExpect(content().string(new ObjectMapper().writeValueAsString(applicationFinanceResource)))
+        ;
     }
 }

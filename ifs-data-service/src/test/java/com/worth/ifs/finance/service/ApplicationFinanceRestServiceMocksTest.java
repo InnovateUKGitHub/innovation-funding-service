@@ -2,6 +2,7 @@ package com.worth.ifs.finance.service;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.file.resource.FileEntryResource;
+import com.worth.ifs.finance.builder.ApplicationFinanceResourceBuilder;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import org.junit.Test;
 
@@ -75,6 +76,22 @@ public class ApplicationFinanceRestServiceMocksTest extends BaseRestServiceUnitT
 
         FileEntryResource fileDetails = service.getFileDetails(123L).getSuccessObject();
         assertEquals(returnedResponse, fileDetails);
+    }
+
+    @Test
+    public void getApplicationOrganisationFinances() {
+
+        Long applicationId = 1L;
+        Long organisationId = 1L;
+
+        ApplicationFinanceResource returnedResponse = ApplicationFinanceResourceBuilder.newApplicationFinanceResource()
+                .withGrantClaimPercentage(20)
+                .build();
+
+        setupGetWithRestResultExpectations(applicationFinanceRestURL + "/application/" + applicationId + "/organisation/" + organisationId, ApplicationFinanceResource.class, returnedResponse);
+
+        ApplicationFinanceResource actualApplicationFinanceResource = service.getApplicationOrganisationFinances(applicationId, organisationId).getSuccessObject();
+        assertEquals(returnedResponse, actualApplicationFinanceResource);
     }
 
     @Test

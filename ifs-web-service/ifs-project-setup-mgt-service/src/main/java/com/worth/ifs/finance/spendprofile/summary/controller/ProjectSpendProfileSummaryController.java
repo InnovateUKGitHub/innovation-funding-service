@@ -95,7 +95,7 @@ public class ProjectSpendProfileSummaryController {
         Optional<SpendProfileResource> anySpendProfile = projectFinanceService.getSpendProfile(projectId, partnerOrganisations.get(0).getId());
 
         ApplicationFinanceResource applicationFinanceResource =
-                applicationFinanceService.getApplicationOrganisationFinances(application.getId(), partnerOrganisations.get(0).getId()).getSuccessObjectOrThrowException();
+                applicationFinanceService.getApplicationOrganisationFinances(application.getId(), partnerOrganisations.get(0).getId());
 
         List<ProjectSpendProfileSummaryViewModel.SpendProfileOrganisationRow> organisationRows = mapWithIndex(partnerOrganisations, (i, org) ->
 
@@ -111,7 +111,8 @@ public class ProjectSpendProfileSummaryController {
         return new ProjectSpendProfileSummaryViewModel(
                 projectId, competitionSummary, organisationRows,
                 project.getTargetStartDate(), project.getDurationInMonths().intValue(),
-                applicationFinanceResource.getTotal(), applicationFinanceResource.getTotalFundingSought(),
+                applicationFinanceResource.getTotal(),
+                applicationFinanceResource.getTotalFundingSought(),
                 applicationFinanceResource.getTotalOtherFunding(),
                 new BigDecimal(applicationFinanceResource.getGrantClaimPercentage().toString()),
                 anySpendProfile.isPresent());
