@@ -8,7 +8,7 @@ Documentation     INFUND-3013 As a partner I want to be able to download mandato
 ...               INFUND-2621 As a contributor I want to be able to review the current Project Setup status of all partners in my project so I can get an indication of the overall status of the consortium
 Suite Setup       Log in as user    jessica.doe@ludlow.co.uk    Passw0rd
 Suite Teardown    the user closes the browser
-Force Tags        Project Setup
+Force Tags        Project Setup    Pending    # TODO due to docker file script
 Resource          ../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../resources/variables/User_credentials.robot
@@ -92,9 +92,9 @@ Lead partner can view both documents
     Then the user should not see an error in the page
     And the user navigates to the page    ${project_in_setup_page}
     And the user should see the element    link=What's the status of each of my partners?
-    #TODO uncomment when INFUND-4735 is done  and INFUND-4744(status should be waiting)
-#    When the user clicks the button/link    link=What's the status of each of my partners?
-#    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(6)
+    #TODO  INFUND-4744(status should be waiting)
+    When the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(6)
     [Teardown]  the user navigates to the page    ${project_in_setup_page}
 
 Lead partner does not have the option to submit the mandatory documents
@@ -120,10 +120,9 @@ Non-lead partner can view both documents
     When the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
     And the user navigates to the page    ${project_in_setup_page}
-    #TODO uncomment when INFUND-4735 is done
-#    When the user clicks the button/link    link=What's the status of each of my partners?
-#    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(6)
-#    And the user goes back to the previous page
+    When the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(6)
+    And the user goes back to the previous page
 
 Non-lead partner cannot remove or submit right
     [Documentation]    INFUND-3013
@@ -146,9 +145,8 @@ PM can view both documents
     When the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
     And the user navigates to the page    ${project_in_setup_page}
-    #TODO update after INFUND-4735
-#    When the user clicks the button/link    link=What's the status of each of my partners?
-#    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(6)
+    When the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(6)
 
 PM can remove the second document
     [Documentation]    INFUND-3011
