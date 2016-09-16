@@ -103,7 +103,7 @@ function startSeleniumGrid() {
     cd ${testDirectory}
     cd ${scriptDir}
 
-    if [ "$parallel" ]
+    if [[ $parallel -eq 1 ]]
     then
       declare -i suiteCount=$(find ${testDirectory}/* -maxdepth 0 -type d | wc -l)
     else
@@ -152,7 +152,7 @@ function runTests() {
     echo "**********RUN THE WEB TESTS**********"
     cd ${scriptDir}
 
-    if [[ "$parallel" ]]
+    if [[ $parallel -eq 1 ]]
     then
       for D in `find ${testDirectory}/* -maxdepth 0 -type d`
       do
@@ -167,11 +167,17 @@ function runTests() {
         wait $job
     done
 
-    if [[ "$parallel" ]]
+    if [[ $parallel -eq 1 ]]
     then
       results=`find target/* -regex ".*/output\.xml"`
       rebot -d target ${results}
     fi
+}
+
+function clearOldReports() {
+  echo "**********REMOVING OLD REPORTS**********"
+  rm -rf target
+  mkdir target
 }
 
 setEnv
@@ -213,11 +219,10 @@ echo "webBase:           ${webBase}"
 unset opt
 unset quickTest
 unset testScrub
-unset parallel
-unset emails
 
 emails=0
 rerunFailed=0
+parallel=0
 
 testDirectory='IFS_acceptance_tests/tests'
 while getopts ":p :h :q :t :e :r :d:" opt ; do
@@ -264,6 +269,7 @@ done
 
 startSeleniumGrid
 
+clearOldReports
 
 if [[ "$quickTest" ]]
 then

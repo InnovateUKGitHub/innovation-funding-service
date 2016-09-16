@@ -8,3 +8,4 @@ Library           ExcelLibrary
 Library           FtpLibrary
 Library           OperatingSystem
 Library           ../libs/XlsxLibrary.py
+Library			  ../libs/IfsLibrary.py
