@@ -68,6 +68,8 @@ public class Project implements ProcessActivity {
     @JoinColumn(name="additionalContractFileEntryId", referencedColumnName = "id")
     private FileEntry additionalContractFile;
 
+    private boolean offerSigned = false;
+
     public Project() {}
 
     public Project(Long id, Application application, LocalDate targetStartDate, Address address,
@@ -224,5 +226,13 @@ public class Project implements ProcessActivity {
 
     public void setAdditionalContractFile(FileEntry additionalContractFile) {
         this.additionalContractFile = additionalContractFile;
+    }
+
+    public boolean isOfferSigned() {
+        return offerSigned;
+    }
+
+    public void setOfferSigned(boolean offerSigned) {
+        this.offerSigned = offerSigned;
     }
 }

@@ -2,6 +2,7 @@ package com.worth.ifs.project.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.address.resource.AddressResource;
+import com.worth.ifs.file.domain.FileEntry;
 
 import javax.validation.constraints.Digits;
 import java.time.LocalDate;
@@ -23,6 +24,9 @@ public class ProjectResource {
     private List<Long> projectUsers;
     private Long collaborationAgreement;
     private Long exploitationPlan;
+    private FileEntry grantOfferLetter;
+    private FileEntry additionalContractFile;
+    private boolean offerSigned;
 
     @Digits(integer = MAX_DURATION_IN_MONTHS_DIGITS, fraction = 0, message="{validation.application.details.duration.in.months.max.digits}")
     private Long durationInMonths;
@@ -128,5 +132,29 @@ public class ProjectResource {
 
     public void setExploitationPlan(Long exploitationPlan) {
         this.exploitationPlan = exploitationPlan;
+    }
+
+    public FileEntry getGrantOfferLetter() {
+        return grantOfferLetter;
+    }
+
+    public void setGrantOfferLetter(FileEntry grantOfferLetter) {
+        this.grantOfferLetter = grantOfferLetter;
+    }
+
+    public FileEntry getAdditionalContractFile() {
+        return additionalContractFile;
+    }
+
+    public void setAdditionalContractFile(FileEntry additionalContractFile) {
+        this.additionalContractFile = additionalContractFile;
+    }
+
+    public boolean isOfferSigned() {
+        return offerSigned;
+    }
+
+    public void setOfferSigned(boolean offerSigned) {
+        this.offerSigned = offerSigned;
     }
 }

@@ -107,7 +107,6 @@ public class ProjectGrantOfferControllerTest extends BaseControllerMockMVCTest<P
 
     }
 
-
     @Override
     protected ProjectGrantOfferController supplyControllerUnderTest() {
         return new ProjectGrantOfferController();
