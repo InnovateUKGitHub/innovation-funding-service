@@ -2,8 +2,8 @@ package com.worth.ifs.project.status;
 
 import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.project.resource.CompetitionProjectsStatusResource;
 import com.worth.ifs.project.service.ProjectStatusRestService;
+import com.worth.ifs.project.status.resource.CompetitionProjectsStatusResource;
 import org.junit.Test;
 import org.mockito.Mock;
 

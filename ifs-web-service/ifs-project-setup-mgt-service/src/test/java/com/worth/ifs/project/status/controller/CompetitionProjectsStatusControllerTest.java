@@ -1,7 +1,7 @@
 package com.worth.ifs.project.status.controller;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
-import com.worth.ifs.project.resource.CompetitionProjectsStatusResource;
+import com.worth.ifs.project.status.resource.CompetitionProjectsStatusResource;
 import org.junit.Test;
 
 import static com.worth.ifs.project.builder.CompetitionProjectsStatusResourceBuilder.newCompetitionProjectsStatusResource;
