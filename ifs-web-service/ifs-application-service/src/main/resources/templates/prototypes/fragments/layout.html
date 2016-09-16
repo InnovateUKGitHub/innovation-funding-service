@@ -29,6 +29,41 @@
     </ul>
 </div>
 
+<!-- ===========================Place: main <header>  =========================== -->
+
+<div th:fragment="admin-header">
+    <header role="banner" id="global-header">
+        <div th:include="fragments/elements :: notification" th:remove="tag" />
+        <div class="header-wrapper">
+            <div class="header-global header-admin">
+
+                <p class="innovate-title">Innovation Funding Service</p>
+                <span class="admin-user-name">James Danek</span>
+                <ul class="navigation-list navigation-right">
+                    <li>
+                        <a href="#">Admin</a>
+                    </li>
+                    <li>
+                        <a href="#">Dashboard</a>
+                    </li>
+                    <li>
+                        <a href="#">Account</a>
+                    </li>
+                    <li>
+                        <a href="#">Sign out</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <div class="grid-container phase-banner">
+        <p>
+            <strong class="phase-tag">BETA</strong>
+            <span>This is a new service – your <a href="mailto:IFSfeedback@innovateuk.gov.uk">feedback</a> will help us to improve it.</span>
+        </p>
+    </div>
+</div>
 
 <!-- ===========================Place: main <header>  =========================== --> 
 
