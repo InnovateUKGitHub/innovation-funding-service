@@ -39,6 +39,7 @@ import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static com.worth.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
+import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.time.LocalDateTime.now;
 import static java.util.Arrays.asList;
@@ -314,8 +315,25 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
     }
 
     @Test
-    public void save_noFeedback() throws Exception {
+    public void save_noFeedbackAndFundingConfirmationIsTrue() throws Exception {
         Boolean fundingConfirmation = TRUE;
+        String comment = "comment";
+
+        when(assessmentService.recommend(assessmentId, fundingConfirmation, null, comment)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/{assessmentId}/summary", assessmentId)
+                .contentType(APPLICATION_FORM_URLENCODED)
+                .param("fundingConfirmation", fundingConfirmation.toString())
+                .param("comment", comment))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/assessor/dashboard/competition/" + competitionId));
+
+        verify(assessmentService).recommend(assessmentId, fundingConfirmation, null, comment);
+    }
+
+    @Test
+    public void save_noFeedbackAndFundingConfirmationIsFalse() throws Exception {
+        Boolean fundingConfirmation = FALSE;
         String comment = "comment";
 
         MvcResult result = mockMvc.perform(post("/{assessmentId}/summary", assessmentId)
