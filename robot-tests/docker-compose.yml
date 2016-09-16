@@ -14,22 +14,19 @@ services:
         aliases:
           - hub
   chrome:
-    image: selenium/node-chrome
+    build:
+      context: .
+      dockerfile: chrome-dockerfile
     volumes:
-      - ./chrome-config.json:/opt/selenium/config.json
-      - ./pre_entry_point.sh:/opt/bin/pre_entry_point.sh
       - /dev/shm:/dev/shm
-    entrypoint: /opt/bin/pre_entry_point.sh
+    ports:
+      - '5900'
     links:
       - "hub:hub"
     external_links:
       - ifs-local-dev
     depends_on:
-      - hub
-    environment:
-      - HUB_PORT_4444_TCP_ADDR=hub
-      - HUB_PORT_4444_TCP_PORT=4444
-      - DBUS_SESSION_BUS_ADDRESS=/dev/null
+      - hub    
     networks:
       - selenium-network
       - ifs_front-tier
