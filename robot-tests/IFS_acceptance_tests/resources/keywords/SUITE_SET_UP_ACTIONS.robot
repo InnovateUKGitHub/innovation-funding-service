@@ -127,8 +127,8 @@ Create new academic application with the same user
 Invite and accept the invitation
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
-    And the user should see the text in the page    View team members and add collaborators
-    When the user clicks the button/link    link=View team members and add collaborators
+    And the user should see the text in the page    view team members and add collaborators
+    When the user clicks the button/link    link=view team members and add collaborators
     And the user clicks the button/link    jQuery=.button:contains("Invite new contributors")
     And the user clicks the button/link    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
     Input Text    name=organisations[1].organisationName    Academic Test
