@@ -44,7 +44,7 @@
                         <a href="/prototypes/5079-ifs-admin">Admin</a>
                     </li>
                     <li>
-                        <a href="/prototypes/3115-comp-dashboard">Dashboard</a>
+                        <a href="/prototypes/3115-comp-dashboard?user=admin">Dashboard</a>
                     </li>
                     <li>
                         <a href="#">Account</a>
@@ -53,6 +53,29 @@
                         <a href="#">Sign out</a>
                     </li>
                 </ul>
+            </div>
+        </div>
+    </header>
+
+    <div class="grid-container phase-banner">
+        <p>
+            <strong class="phase-tag">BETA</strong>
+            <span>This is a new service – your <a href="mailto:IFSfeedback@innovateuk.gov.uk">feedback</a> will help us to improve it.</span>
+        </p>
+    </div>
+</div>
+
+
+<!-- ===========================Place: main <header> logged out  =========================== -->
+
+<div th:fragment="admin-header-logged-out">
+    <header role="banner" id="global-header">
+        <div th:include="fragments/elements :: notification" th:remove="tag" />
+        <div class="header-wrapper">
+            <div class="header-global header-admin">
+
+                <p class="innovate-title">Innovation Funding Service</p>
+
             </div>
         </div>
     </header>
