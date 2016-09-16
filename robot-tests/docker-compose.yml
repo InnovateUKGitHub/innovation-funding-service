@@ -16,8 +16,8 @@ services:
   chrome:
     image: selenium/node-chrome
     volumes:
-      - ./chrome-config.json:/opt/selenium/config.json
-      - ./pre_entry_point.sh:/opt/bin/pre_entry_point.sh
+      - ./docker-conf/chromeconf:/opt/selenium
+      - ./docker-conf/entrypoint:/opt/bin
       - /dev/shm:/dev/shm
     entrypoint: /opt/bin/pre_entry_point.sh
     links:
