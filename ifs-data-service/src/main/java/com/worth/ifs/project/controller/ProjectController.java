@@ -11,6 +11,7 @@ import com.worth.ifs.file.transactional.FileHttpHeadersValidator;
 import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.project.resource.ProjectTeamStatusResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.user.resource.OrganisationResource;
@@ -277,5 +278,10 @@ public class ProjectController {
                                        @RequestParam(value = "userId", required = true) Long userId,
                                        @RequestParam(value = "organisationId", required = true) Long organisationId) {
         return projectService.addPartner(projectId, userId, organisationId).toPostResponse();
+    }
+
+    @RequestMapping(value = "/{projectId}/team-status", method = GET)
+    public RestResult<ProjectTeamStatusResource> getTeamStatus(@PathVariable(value = "projectId") Long projectId){
+        return projectService.getProjectTeamStatus(projectId).toGetResponse();
     }
 }

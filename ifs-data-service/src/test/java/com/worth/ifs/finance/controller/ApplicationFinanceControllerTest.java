@@ -6,19 +6,16 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.BasicFileAndContents;
 import com.worth.ifs.finance.builder.ApplicationFinanceResourceBuilder;
-import com.worth.ifs.finance.handler.ApplicationFinanceHandler;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.ApplicationFinanceResourceId;
-import com.worth.ifs.finance.transactional.FinanceRowService;
 import com.worth.ifs.user.domain.Organisation;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
 
-import static com.worth.ifs.util.JsonMappingUtil.toJson;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
+import static com.worth.ifs.util.JsonMappingUtil.toJson;
 import static java.util.Collections.singletonList;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -26,12 +23,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ApplicationFinanceControllerTest extends BaseControllerMockMVCTest<ApplicationFinanceController> {
-
-    @Mock
-    private FinanceRowService financeRowServiceMock;
-
-    @Mock
-    private ApplicationFinanceHandler applicationFinanceHandlerMock;
 
     private ApplicationFinanceResource applicationFinanceResource;
     private Organisation organisation;
