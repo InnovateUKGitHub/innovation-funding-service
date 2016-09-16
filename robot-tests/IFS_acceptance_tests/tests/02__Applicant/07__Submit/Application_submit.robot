@@ -82,7 +82,7 @@ Submit flow (complete application)
 The applicant should get a confirmation email
     [Documentation]    INFUND-1887
     [Tags]    Email    HappyPath    SmokeTest
-    Then the user should get a confirmation email
+    Then the user should get a confirmation email    ${test_mailbox_one}@gmail.com    ${test_mailbox_one_password}    Congratulations, you have successfully submitted an application for funding to Innovate
 
 Submitted application is read only
     [Documentation]    INFUND-1938
@@ -128,17 +128,6 @@ The user can check that the sections are read only
     the user should not see the element    jQuery=.button:contains("Edit")
     the user clicks the button/link    css=.section-overview section:nth-of-type(3) .collapsible:nth-of-type(1)
     the user should not see the element    jQuery=.button:contains("Edit")
-
-the user should get a confirmation email
-    Open Mailbox    server=imap.googlemail.com    user=${test_mailbox_one}@gmail.com    password=${test_mailbox_one_password}
-    ${LATEST} =    wait for email
-    ${HTML}=    get email body    ${LATEST}
-    log    ${HTML}
-    ${MATCHES1}=    Get Matches From Email    ${LATEST}    Congratulations, you have successfully submitted an application for funding to Innovate
-    log    ${MATCHES1}
-    Should Not Be Empty    ${MATCHES1}
-    Delete All Emails
-    close mailbox
 
 the submit button should be disabled
     the user selects the checkbox    id=agree-terms-page

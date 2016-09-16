@@ -97,6 +97,8 @@ ${smoke_test}     0
 ${submit_test_email}    ${test_mailbox_one}+submittest@gmail.com
 ${application_name}    Submit test application
 
+${docker}    0
+
 # Assessor variables
 ${Assessment_overview_9}    ${server}/assessment/9
 ${Assessment_summary_complete_9}    ${server}/assessment/9/summary
