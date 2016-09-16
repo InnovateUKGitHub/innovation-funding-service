@@ -14,5 +14,5 @@ import java.util.List;
 public interface MilestoneRepository extends CrudRepository<Milestone, Long> {
     List<Milestone> findAllByCompetitionId(Long competitionId);
 
-    Milestone findByTypeAndCompetitionId(MilestoneType type, Long competitionId);
+    Milestone findByTypeAndCompetitionId(Long competitionId, MilestoneType type);
 }

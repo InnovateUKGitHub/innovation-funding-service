@@ -21,7 +21,7 @@ public interface MilestoneService {
     @PreAuthorize("hasAuthority('comp_admin')")
     @SecuredBySpring(value="READ", securedType=MilestoneResource.class,
             description = "Only Comp Admins can request the milestones for the comopetition by its type")
-    ServiceResult<MilestoneResource> getMilestoneByTypeAndCompetitionId(MilestoneType type, final Long id);
+    ServiceResult<MilestoneResource> getMilestoneByTypeAndCompetitionId(final Long id, MilestoneType type);
 
     @PreAuthorize("hasAuthority('comp_admin')")
     @SecuredBySpring(value="UPDATE", securedType=MilestoneResource.class,

@@ -58,6 +58,9 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
 
     @Override
     public List<Error> updateMilestoneForCompetition(MilestoneResource milestone, Long competitionId) {
+        int i = 0;
+
+       // return milestoneService.updateMilestone(milestone, competitionId);
         return null;
     }
 

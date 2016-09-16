@@ -5,6 +5,7 @@ import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.MilestoneResource;
+import com.worth.ifs.competition.resource.MilestoneType;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.form.MilestonesForm;
 import com.worth.ifs.competitionsetup.model.MilestoneEntry;
@@ -83,17 +84,26 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
 
     @Override
     protected List<Error> updateCompetitionResourceWithAutoSave(List<Error> errors, CompetitionResource competitionResource, String fieldName, String value) throws ParseException {
-        switch (fieldName) {
-            case "milestoneEntries[BRIEFING_EVENT].milestoneType":
-                MilestoneResource milestone = new MilestoneResource();
-
-            //return competitionSetupMilestoneService.updateMilestoneForCompetition(parseDate(value));
-                //return null;
-            break;
-                //find matching milestone
-                //build case matching
-            default:
-                return asList(new Error("Field not found", HttpStatus.BAD_REQUEST));
+        if (fieldName != null) {
+            List<MilestoneResource> milestones = milestoneService.getAllDatesByCompetitionId(competitionResource.getId());
+            milestones.size();
+//
+// switch (fieldName) {
+//            case "milestoneEntries[BRIEFING_EVENT].milestoneType":
+//
+//           //     List<MilestoneResource> milestones = milestoneService.getAllDatesByCompetitionId(competitionResource.getId());
+//
+//         //       MilestoneResource milestone = milestoneService.getMilestoneByTypeAndCompetitionId(competitionResource.getId(), MilestoneType.BRIEFING_EVENT);
+//
+//                //  milestone.setDate(parseDate(value));
+//                //competitionSetupMilestoneService.updateMilestoneForCompetition(milestone, competitionResource.getId());
+//                //return competitionSetupMilestoneService.updateMilestoneForCompetition(parseDate(value));
+//                //return null;
+//            break;
+//                //find matching milestone
+//                //build case matching
+//            default:
+//                return asList(new Error("Field not found", HttpStatus.BAD_REQUEST));
         }
         return errors;
     }

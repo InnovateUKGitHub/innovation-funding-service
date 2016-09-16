@@ -48,8 +48,8 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
     }
 
     @Override
-    public ServiceResult<MilestoneResource> getMilestoneByTypeAndCompetitionId(MilestoneType type, Long id) {
-        return serviceSuccess (milestoneMapper.mapToResource(milestoneRepository.findByTypeAndCompetitionId(type, id)));
+    public ServiceResult<MilestoneResource> getMilestoneByTypeAndCompetitionId(Long id, MilestoneType type) {
+        return serviceSuccess (milestoneMapper.mapToResource(milestoneRepository.findByTypeAndCompetitionId(id, type)));
     }
 
     @Override

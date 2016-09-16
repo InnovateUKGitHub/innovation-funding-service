@@ -43,7 +43,7 @@ public class MilestoneRestServiceMocksTest extends BaseRestServiceUnitTest<Miles
         MilestoneResource returnedResponse = getBriefingEventMilestone();
 
         setupGetWithRestResultExpectations(milestonesRestURL + "/" + competitionId, MilestoneResource.class, returnedResponse);
-        MilestoneResource response = service.getMilestoneByTypeAndCompetitionId(MilestoneType.BRIEFING_EVENT, competitionId).getSuccessObject();
+        MilestoneResource response = service.getMilestoneByTypeAndCompetitionId(competitionId, MilestoneType.BRIEFING_EVENT).getSuccessObject();
         assertNotNull(response);
         assertEquals(returnedResponse, response);
     }
