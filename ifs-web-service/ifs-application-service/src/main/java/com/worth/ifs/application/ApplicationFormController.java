@@ -632,8 +632,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                                        BindingResult bindingResult, SectionResource section, ApplicationResource application,
                                        CompetitionResource competition, UserResource user, Model model
                                        ) {
-        if (!isMarkSectionAsIncompleteRequest(request.getParameterMap()) &&
-                !isSubmitSectionRequest(request.getParameterMap())) {
+        if (isMarkSectionAsCompleteRequest(request.getParameterMap())) {
             if (!form.isTermsAgreed()) {
                 bindingResult.rejectValue(TERMS_AGREED_KEY, "APPLICATION_AGREE_TERMS_AND_CONDITIONS");
                 setReturnToApplicationFormData(section, application, competition, user, model, form, application.getId());
