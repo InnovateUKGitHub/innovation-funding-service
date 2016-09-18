@@ -48,12 +48,13 @@ Calculations in the spend profile table
     Then element should contain    css=div.spend-profile-table tr:nth-child(5) td:nth-child(38)    £ 23,423     #Subcontracting
     Then element should contain    css=div.spend-profile-table tr:nth-child(6) td:nth-child(38)    £ 7,956      #Travel & subsistence
     Then element should contain    css=div.spend-profile-table tr:nth-child(7) td:nth-child(38)    £ 32,444     #Other costs
-    #TODO following keyword doesnt work cause cell value is String and needs to be converted to float (or int)  to be updated
-    # ${duration} is No of Months + 1, due to header
-#    And the sum of tds equals the total    div.spend-profile-table   1    37    32444    # Other Costs
-#    And the sum of tds equals the total    div.spend-profile-table   4    37    104354    # Labour
+     #${duration} is No of Months + 1, due to header
+    And the sum of tds equals the total    div.spend-profile-table   1    38    104354    # Labour
+    And the sum of tds equals the total    div.spend-profile-table   3    38    188025    # Materials
+    And the sum of tds equals the total    div.spend-profile-table   5    38    23423     # Subcontracting
+    And the sum of tds equals the total    div.spend-profile-table   6    38    7956      # Travel & subsistence
+    And the sum of tds equals the total    div.spend-profile-table   7    38    32444     # Other Costs
     [Teardown]    Logout as user
-
 
 Non-lead partner can view spend profile page
     [Documentation]    INFUND-3970
@@ -88,9 +89,11 @@ the sum of tds equals the total
     [Arguments]    ${table}   ${row}    ${duration}    ${total}
     # This Keyword perforfms a for loop that iterates per column (in a specific row)
     # gets the sum of the cells and evaluates whether the sum of them equals their total
-    ${sum} =  convert to number    ${0}
+    ${sum} =  convert to number    0
     ${total} =  convert to number    ${total}
     : FOR    ${i}    IN RANGE    2    ${duration}   # due to header in the first column
-    \    ${cell} =  convert to integer    jQuery=${table} tr:nth-child(${row}) td:nth-child(${i})
+    \    ${text} =  Get Text    jQuery=${table} tr:nth-child(${row}) td:nth-child(${i})
+    \    ${formatted} =  Remove String    ${text}    ,   # Remove the comma from the number
+    \    ${cell} =  convert to integer    ${formatted}
     \    ${sum} =  Evaluate    ${sum}+${cell}
     Should Be Equal As Integers    ${sum}    ${total}
