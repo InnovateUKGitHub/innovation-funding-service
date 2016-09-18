@@ -100,34 +100,37 @@ Assessor must Provide feedback when "No" is selected for funding suitability
     Given The user navigates to the assessor page    ${Assessment_summary_complete_9}
     When The user clicks the button/link    jQuery=.button:contains(Save assessment)
     Then The user should see an error    Please indicate your decision
-    When the assessor selects the radio button "No"
+    When the user selects the radio button    fundingConfirmation    false
     And The user clicks the button/link    jQuery=.button:contains(Save assessment)
     Then The user should see an error    Please enter your feedback
-    And The user enters text to a text field    id=form-textarea-feedback    Testing the feedback word count
+    And The user enters text to a text field    id=form-textarea-feedback    Testing the required feedback textarea when the decision is "No".
     And The user clicks the button/link    jQuery=.button:contains(Save assessment)
     Then The user should not see the text in the page    Please enter your feedback
-    And The user enters text to a text field    id=form-textarea-comments    Testing the feedback inputs for optional feedback textarea.
 
 Word count check: Your feedback
     [Documentation]    INFUND-1485
     [Tags]    HappyPath
-    When The user navigates to the assessor page    ${Assessment_summary_complete_9}
-    When The user enters text to a text field    id=form-textarea-feedback    Testing the feedback word count. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco
+    Given the user navigates to the assessor page    ${Assessment_summary_complete_9}
+    # TODO Temporarily setting the decision here since the word count is only validated after the required decision field is checked. This should be addressed by INFUND-4993.
+    When the user selects the radio button    fundingConfirmation    true
+    And the user enters text to a text field    id=form-textarea-feedback    Testing the feedback word count. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco
     Then the word count should be correct    Words remaining: -4
-    And The user clicks the button/link    jQuery=.button:contains(Save assessment)
-    Then The user should see an error    This field cannot contain more than 255 characters
-    And The user enters text to a text field    id=form-textarea-feedback    Testing the feedback word count
+    And the user clicks the button/link    jQuery=.button:contains(Save assessment)
+    Then the user should see an error    Maximum word count exceeded. Please reduce your word count to 100.
+    And the user enters text to a text field    id=form-textarea-feedback    Testing the feedback word count.
     Then the word count should be correct    Words remaining: 95
 
 Word count check: Comments for InnovateUK
     [Documentation]    INFUND-1485
-    When The user navigates to the assessor page    ${Assessment_summary_complete_9}
-    And The user enters text to a text field    id=form-textarea-comments    Testing the feedback inputs for optional feedback textarea. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco
-    Then the word count should be correct    Words remaining: -7
-    And The user clicks the button/link    jQuery=.button:contains(Save assessment)
-    Then The user should see an error    This field cannot contain more than 255 characters
-    And The user enters text to a text field    id=form-textarea-comments    Testing the feedback inputs for optional feedback textarea.
-    Then the word count should be correct    Words remaining: 92
+    Given the user navigates to the assessor page    ${Assessment_summary_complete_9}
+    # TODO Temporarily setting the decision here since the word count is only validated after the required decision field is checked. This should be addressed by INFUND-4993.
+    When the user selects the radio button    fundingConfirmation    true
+    And the user enters text to a text field    id=form-textarea-comments    Testing the comments word count. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco
+    Then the word count should be correct    Words remaining: -4
+    And the user clicks the button/link    jQuery=.button:contains(Save assessment)
+    Then the user should see an error    Maximum word count exceeded. Please reduce your word count to 100.
+    And the user enters text to a text field    id=form-textarea-comments    Testing the comments word count.
+    Then the word count should be correct    Words remaining: 95
     [Teardown]    Logout as user
 
 *** Keywords ***
@@ -197,12 +200,6 @@ the scores under each question should be correct
     Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(2)    10
     Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(3)    10
     Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(4)    10
-
-When the assessor selects the radio button "Yes"
-    Click Element    xpath=//input[@type='radio' and @name='fundingConfirmation' and (@value='Yes' or @id='fundingConfirmation1')]
-
-the assessor selects the radio button "No"
-    Click Element    xpath=//input[@type='radio' and @name='fundingConfirmation' and (@value='No' or @id='fundingConfirmation2')]
 
 the word count should be correct
     [Arguments]    ${wordCount}
