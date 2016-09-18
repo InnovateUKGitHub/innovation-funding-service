@@ -128,17 +128,6 @@ The option to notify applicants is enabled
     the user should see the element    id=publish-funding-decision
     the user should not see the element    css=#publish-funding-decision.button.disabled
 
-the user should get a confirmation email
-    [Arguments]    ${email_username}    ${email_password}    ${message}
-    Open Mailbox    server=imap.googlemail.com    user=${email_username}    password=${email_password}
-    ${LATEST} =    wait for email
-    ${HTML}=    get email body    ${LATEST}
-    log    ${HTML}
-    ${MATCHES1}=    Get Matches From Email    ${LATEST}    ${message}
-    log    ${MATCHES1}
-    Should Not Be Empty    ${MATCHES1}
-    Delete All Emails
-    close mailbox
 
 the successful application shows in the project setup section
     Element Should Contain    css=section.projects-in-setup    Cheese is good
