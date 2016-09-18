@@ -183,6 +183,12 @@ function runSmokeTests {
     pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v BROWSER:$browser -v SERVER_BASE:$smokeServer -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:$postcodeLookupImplemented -v UPLOAD_FOLDER:$uploadFileDir -v DOWNLOAD_FOLDER:download_files -v VIRTUAL_DISPLAY:NO -v test_mailbox_one:$testMailboxOne -v test_mailbox_two:$testMailboxTwo -v test_mailbox_one_password:$testMailboxOnePassword -v test_mailbox_two_password:$testMailboxTwoPassword -v test_title:'IFS smoke test' -v application_name:'IFS smoke test' -v unique_email_number:$dateFormat -v smoke_test:1 -v submit_test_email:'${test_mailbox_one}+${unique_email_number}@gmail.com' --include SmokeTest --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal --name IFS $testDirectory
 }
 
+function runTestsAgainstDocker {
+    echo "running tests against docker"
+    cd ${scriptDir}
+    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v BROWSER:$browser -v SERVER_BASE:$webBase -v PROTOCOL:"https://" -v POSTCODE_LOOKUP_IMPLENTED:$postcodeLookupImplemented -v UPLOAD_FOLDER:$uploadFileDir -v DOWNLOAD_FOLDER:download_files -v VIRTUAL_DISPLAY:$useXvfb -v docker:1 --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal --name IFS $testDirectory
+}
+
 cd "$(dirname "$0")"
 echo "********GETTING ALL THE VARIABLES********"
 scriptDir=`pwd`
@@ -283,13 +289,13 @@ useXvfb=true
 unset remoteRun
 unset startServersInDebugMode
 unset testMailboxOneExists
-
+unset secretMode
 
 browser="GoogleChrome"
 
 
 testDirectory='IFS_acceptance_tests/tests/*'
-while getopts ":q :t :h :p :r :d: :D :x :f :S:" opt ; do
+while getopts ":q :t :h :p :r :d: :D :x :f :s :S:" opt ; do
     case $opt in
         q)
          quickTest=1
@@ -322,6 +328,9 @@ while getopts ":q :t :h :p :r :d: :D :x :f :S:" opt ; do
          smokeTest=1
          smokeServer="$OPTARG"
         ;;
+	s)
+        secretMode=1
+	;;
         \?)
          coloredEcho "Invalid option: -$OPTARG" red >&2
          exit 1
@@ -379,6 +388,10 @@ elif [ "$smokeTest" ]
 then 
     echo "Running smoke test against chosen environment"
     runSmokeTests
+elif [ "$secretMode" ]
+then
+    echo "secret mode activated! make sure your docker environment is ready to run tests against"
+    runTestsAgainstDocker
 else
     echo "using quickTest:   FALSE" >&2
     stopServers

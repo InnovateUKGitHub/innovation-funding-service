@@ -22,7 +22,7 @@ Resource          ../../../resources/keywords/User_actions.robot
 *** Test Cases ***
 Navigation using next button
     [Documentation]    INFUND-4264
-    [Tags]
+    [Tags]    HappyPath
     Given the user navigates to the page    ${Assessment_overview_9}
     When the user clicks the button/link    link=Application details
     Then the user should see the text in the page    Application details
@@ -69,6 +69,7 @@ Project details sections should not be scorable
 
 Application questions should be scorable
     [Documentation]    INFUND-3400
+    [Tags]
     When the user clicks the button/link    jQuery=span:contains(Next)
     And The user should see the text in the page    How many balls can you juggle
     Then The user should see the element    jQuery=label:contains(Question score)
@@ -97,7 +98,7 @@ Scope: Autosave
     [Documentation]    INFUND-1483
     ...
     ...    INFUND-3780
-    [Tags]
+    [Tags]    HappyPath
     Given the user navigates to the page    ${Assessment_overview_9}
     And the user clicks the button/link    link=Scope
     When the user selects the option from the drop-down menu    Technical feasibility studies    id=research-category
@@ -113,7 +114,7 @@ Scope: Word count
     [Documentation]    INFUND-1483
     ...
     ...    INFUND-3400
-    [Tags]
+    [Tags]    HappyPath
     When the user enters text to a text field    css=#form-input-193 .editor    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco ullamco
     Then the user should see the text in the page    Words remaining: 0
 
@@ -127,7 +128,7 @@ Scope: on click guidance section should expand and collapse
 
 Scope: Status in the overview
     [Documentation]    INFUND-1483
-    [Tags]
+    [Tags]    HappyPath
     When the user clicks the button/link    jQuery=label:contains(Yes)
     And the user clicks the button/link    jquery=button:contains("Save and return to assessment overview")
     And the user should see the text in the page    In scope? Yes
@@ -166,7 +167,7 @@ Question 1: Word count
 
 Finance overview
     [Documentation]    INFUND-3394
-    [Tags]
+    [Tags]    HappyPath
     Given the user navigates to the page    ${Assessment_overview_9}
     When the user clicks the button/link    link=Finances overview
     Then the user should see the text in the page    Finances summary

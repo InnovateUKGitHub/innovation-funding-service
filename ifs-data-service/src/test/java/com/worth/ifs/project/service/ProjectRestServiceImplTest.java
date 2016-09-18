@@ -8,6 +8,7 @@ import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.project.resource.ProjectTeamStatusResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import org.junit.Test;
 import org.springframework.core.io.ByteArrayResource;
@@ -415,4 +416,14 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
         assertTrue(result.isSuccess());
     }
 
+    @Test
+    public void testGetProjectTeamStatus(){
+        String expectedUrl = projectRestURL + "/123/team-status";
+
+        setupGetWithRestResultExpectations(expectedUrl, ProjectTeamStatusResource.class, null, OK);
+
+        RestResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(123L);
+
+        assertTrue(result.isSuccess());
+    }
 }

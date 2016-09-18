@@ -26,7 +26,7 @@ services:
     external_links:
       - ifs-local-dev
     depends_on:
-      - hub    
+      - hub
     networks:
       - selenium-network
       - ifs_front-tier

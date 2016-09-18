@@ -288,7 +288,7 @@ The user clicks the button/link
     [Arguments]    ${BUTTON}
     wait until element is visible    ${BUTTON}
     Focus    ${BUTTON}
-    Wait for autosave
+    wait for autosave
     click element    ${BUTTON}
 
 The user should see the text in the page
@@ -737,7 +737,7 @@ invite a new academic
     [Arguments]    ${EMAIL_LEAD}    ${EMAIL_INVITED}
     guest user log-in    ${EMAIL_LEAD}    Passw0rd123
     the user clicks the button/link    link=${application_name}
-    the user clicks the button/link    link=View team members and add collaborators
+    the user clicks the button/link    link=view team members and add collaborators
     the user clicks the button/link    jQuery=.button:contains("Invite new contributors")
     the user clicks the button/link    jQuery=.button:contains("Add additional partner organisation")
     the user enters text to a text field    name=organisations[1].organisationName    university of liverpool

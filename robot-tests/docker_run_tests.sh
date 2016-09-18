@@ -294,3 +294,4 @@ else
 fi
 
 stopSeleniumGrid
+google-chrome target/${targetDir}/log.html &

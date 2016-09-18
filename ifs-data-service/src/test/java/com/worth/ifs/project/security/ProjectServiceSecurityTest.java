@@ -11,6 +11,7 @@ import com.worth.ifs.invite.builder.ProjectInviteResourceBuilder;
 import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.project.resource.ProjectTeamStatusResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.user.resource.OrganisationResource;
@@ -424,6 +425,18 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         });
     }
 
+    @Test
+    public void testGetProjectTeamStatus_deniedIfUserIsNotPartner(){
+        ProjectResource project = newProjectResource().build();
+
+        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
+
+        assertAccessDenied(() -> service.getProjectTeamStatus(123L), () -> {
+            verify(projectPermissionRules).partnersCanViewTeamStatus(project, getLoggedInUser());
+            verifyNoMoreInteractions(projectPermissionRules);
+        });
+    }
+
     @Override
     protected Class<TestProjectService> getServiceClass() {
         return TestProjectService.class;
@@ -595,6 +608,11 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         @Override
         public ServiceResult<Void> addPartner(Long projectId, Long userId, Long organisationId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId) {
             return null;
         }
     }
