@@ -1,11 +1,13 @@
 package com.worth.ifs.finance.spendprofile.summary.controller;
 
+import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.CompetitionSummaryResource;
 import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.ApplicationSummaryService;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.controller.ValidationHandler;
+import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.spendprofile.summary.form.ProjectSpendProfileForm;
 import com.worth.ifs.finance.spendprofile.summary.viewmodel.ProjectSpendProfileSummaryViewModel;
 import com.worth.ifs.project.ProjectService;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.util.CollectionFunctions.mapWithIndex;
@@ -48,6 +51,9 @@ public class ProjectSpendProfileSummaryController {
 
     @Autowired
     private ApplicationSummaryService applicationSummaryService;
+
+    @Autowired
+    private FinanceService financeService;
 
     @RequestMapping(value = "/summary", method = GET)
     public String viewSpendProfileSummary(@PathVariable Long projectId, Model model) {
@@ -89,6 +95,8 @@ public class ProjectSpendProfileSummaryController {
 
         Optional<SpendProfileResource> anySpendProfile = projectFinanceService.getSpendProfile(projectId, partnerOrganisations.get(0).getId());
 
+        List<ApplicationFinanceResource> applicationFinanceResourceList = financeService.getApplicationFinanceTotals(application.getId());
+
         List<ProjectSpendProfileSummaryViewModel.SpendProfileOrganisationRow> organisationRows = mapWithIndex(partnerOrganisations, (i, org) ->
 
                 new ProjectSpendProfileSummaryViewModel.SpendProfileOrganisationRow(
@@ -100,13 +108,36 @@ public class ProjectSpendProfileSummaryController {
                     getEnumForIndex(ProjectSpendProfileSummaryViewModel.QueriesRaised.class, i))
         );
 
+        BigDecimal projectTotal = calculateTotalForAllOrganisations(applicationFinanceResourceList,
+                applicationFinanceResource -> applicationFinanceResource.getTotal());
+        BigDecimal totalFundingSought =  calculateTotalForAllOrganisations(applicationFinanceResourceList,
+                applicationFinanceResource -> applicationFinanceResource.getTotalFundingSought());
+
         return new ProjectSpendProfileSummaryViewModel(
                 projectId, competitionSummary, organisationRows,
                 project.getTargetStartDate(), project.getDurationInMonths().intValue(),
-                BigDecimal.valueOf(400000), BigDecimal.valueOf(200000),
-                BigDecimal.valueOf(0),
-                BigDecimal.valueOf(50),
+                projectTotal,
+                totalFundingSought,
+                calculateTotalForAllOrganisations(applicationFinanceResourceList,
+                        applicationFinanceResource -> applicationFinanceResource.getTotalOtherFunding()),
+                calculateGrantPercentage(projectTotal, totalFundingSought),
                 anySpendProfile.isPresent());
+    }
+
+    private BigDecimal calculateTotalForAllOrganisations(List<ApplicationFinanceResource> applicationFinanceResourceList,
+                                                         Function<ApplicationFinanceResource, BigDecimal> keyExtractor) {
+
+        return applicationFinanceResourceList.stream().map(keyExtractor).reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    private BigDecimal calculateGrantPercentage(BigDecimal projectTotal, BigDecimal totalFundingSought) {
+
+        if (projectTotal.equals(BigDecimal.ZERO)) {
+            return BigDecimal.ZERO;
+        }
+
+        return totalFundingSought.divide(projectTotal).multiply(new BigDecimal("100"));
+
     }
 
     private <T extends Enum> T getEnumForIndex(Class<T> enums, int index) {
