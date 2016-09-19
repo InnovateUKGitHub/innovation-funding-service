@@ -6,7 +6,7 @@ Suite Setup       Run keywords    log in and create new application if there is 
 ...               AND    Applicant navigates to the finances of the Robot application
 ...               AND    The user enters the funding level
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        Finances    Applicant
+Force Tags        Applicant
 Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../../resources/variables/User_credentials.robot

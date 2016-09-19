@@ -10,7 +10,7 @@ Documentation     INFUND-3830: As a Competitions team member I want to view all 
 ...               INFUND-3004 As a Competition Executive I want the competition to automatically open based on the date that has been provided in the competition open field in the setup phase.
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    the user closes the browser
-Force Tags        CompAdmin    CompSetup
+Force Tags        CompAdmin
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -19,7 +19,7 @@ Resource          ../../../resources/keywords/User_actions.robot
 Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
 
 *** Variables ***
-@{database}     pymysql     ifs    root    password    ifs-database  3306
+@{database}       pymysql    ifs    root    password    ifs-database    3306
 
 *** Test Cases ***
 Live Competitions
@@ -77,17 +77,17 @@ Upcoming competitions ready for open
 
 Competition Opens automatically on date
     [Documentation]    INFUND-3004
-    [Tags]    MySQL
+    [Tags]    MySQL    Docker
     [Setup]    Connect to Database    @{database}
     Given the user should see the text in the page    Ready to open
     Then element should contain    jQuery=section:nth-child(4)    Sarcasm Stupendousness
-    ${yesterday} =  get yesterday
+    ${yesterday} =    get yesterday
     When execute sql string    UPDATE `ifs`.`milestone` SET `DATE`='${yesterday}' WHERE `id`='9';
     And reload page
     Then element should not contain    jQuery=section:nth-child(4)    Sarcasm Stupendousness
     When the user navigates to the page    ${SERVER}/management/dashboard/live
-    Then the user should see the text in the page     Open
-    And element should contain     jQuery=section:nth-child(3)    Sarcasm Stupendousness
+    Then the user should see the text in the page    Open
+    And element should contain    jQuery=section:nth-child(3)    Sarcasm Stupendousness
     [Teardown]    execute sql string    UPDATE `ifs`.`milestone` SET `DATE`='2018-02-24 00:00:00' WHERE `id`='9';
 
 Search existing applications
@@ -139,6 +139,6 @@ check calculations on one page
     Should Be Equal As Integers    ${length_summary}    ${NO_OF_COMP_Page_one}
 
 get yesterday
-    ${today} =  get time
-    ${yesterday} =  Subtract Time From Date  ${today}  1 day
+    ${today} =    get time
+    ${yesterday} =    Subtract Time From Date    ${today}    1 day
     [Return]    ${yesterday}

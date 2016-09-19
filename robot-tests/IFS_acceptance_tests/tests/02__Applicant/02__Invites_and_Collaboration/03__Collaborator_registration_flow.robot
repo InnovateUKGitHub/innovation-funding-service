@@ -1,9 +1,8 @@
 *** Settings ***
 Documentation     INFUND-1231: As a collaborator registering my company as Academic, I want to be able to enter full or partial details of the Academic organisation's name so I can select my Academic organisation from a list    #Invite flow without email. This test is using the old application
-...
 Suite Setup       The guest user opens the browser
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        Collaboration    Applicant
+Force Tags        Applicant
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -115,13 +114,12 @@ Catapult search (empty, invalid & valid inputs)
     When the user clicks the button/link    jQuery=.button:contains("Continue")
     Then the user should see the text in the page    An organisation name is required
     When the user enters text to a text field    name=organisationName    Digital Catapult
-#   Following disabled temporarily.  See INFUND-4497
-#   When the user clicks the button/link    jQuery=.button:contains("Find UK address")
-#   And the user should see the text in the page    Please enter a UK postcode
+    #    Following disabled temporarily.    See INFUND-4497
+    #    When the user clicks the button/link    jQuery=.button:contains("Find UK address")
+    #    And the user should see the text in the page    Please enter a UK postcode
     When the user enters text to a text field    name=addressForm.postcodeInput    BS14NT
     And the user clicks the button/link    jQuery=.button:contains("Find UK address")
     And the user clicks the button/link    jQuery=.button:contains("Use selected address")
-     # TODO Pending due to INFUND- 5135
     Then the address fields should be filled
 
 Catapult search (accept invitation flow)
