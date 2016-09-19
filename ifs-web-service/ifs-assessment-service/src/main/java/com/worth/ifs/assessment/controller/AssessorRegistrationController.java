@@ -32,19 +32,19 @@ public class AssessorRegistrationController {
     }
 
     @RequestMapping(value = "skills", method = RequestMethod.GET)
-    public String skills(Model model) {
+    public String getSkills(Model model) {
         model.addAttribute("model", assessorSkillsModelPopulator.populateModel());
         return "registration/innovation-areas";
     }
 
     @RequestMapping(value = "declaration", method = RequestMethod.GET)
-    public String declaration(Model model) {
+    public String getDeclaration(Model model) {
         model.addAttribute("model", assessorDeclarationModelPopulator.populateModel());
         return "registration/declaration-of-interest";
     }
 
     @RequestMapping(value = "terms", method = RequestMethod.GET)
-    public String terms(Model model) {
+    public String getTerms(Model model) {
         model.addAttribute("model", assessorTermsModelPopulator.populateModel());
         return "registration/terms";
     }
