@@ -131,37 +131,6 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
 
     @Test
     @Rollback
-    public void testFindByProcessRoles() throws Exception {
-        ProcessOutcome processOutcome1 = processOutcomeRepository.save(newProcessOutcome()
-                .build());
-
-        ProcessOutcome processOutcome2 = processOutcomeRepository.save(newProcessOutcome()
-                .build());
-
-        ProcessRole processRole1 = processRoleRepository.save(newProcessRole()
-                .build());
-
-        ProcessRole processRole2 = processRoleRepository.save(newProcessRole()
-                .build());
-
-        Application application = applicationRepository.findOne(1L);
-        ActivityState openState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, OPEN.getBackingState());
-
-        List<Assessment> assessments = newAssessment()
-                .withApplication(application)
-                .withProcessOutcome(asList(processOutcome1), asList(processOutcome2))
-                .withParticipant(processRole1, processRole2)
-                .withActivityState(openState)
-                .build(2);
-
-        List<Assessment> saved = assessments.stream().map(assessment -> repository.save(assessment)).collect(Collectors.toList());
-
-        List<Assessment> found = repository.findByParticipantIn(asList(processRole1, processRole2));
-        assertEquals(saved, found);
-    }
-
-    @Test
-    @Rollback
     public void testFindByUserIdAndCompetitionId() throws Exception {
         Long userId = 3L;
         Long competitionId = 1L;
