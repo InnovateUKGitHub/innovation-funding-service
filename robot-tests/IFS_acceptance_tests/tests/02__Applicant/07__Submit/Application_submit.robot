@@ -18,7 +18,7 @@ Documentation     -INFUND-172: As a lead applicant and I am on the application s
 ...               INFUND-1786 As a lead applicant I would like view the submitting an application terms and conditions page so that I know what I am agreeing to
 Suite Setup       new account complete all but one
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        Applicant    Submit
+Force Tags        Applicant
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/keywords/Login_actions.robot
@@ -28,12 +28,10 @@ Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
 
 *** Variables ***
 
-
-
 *** Test Cases ***
 Set up an application to submit
     [Documentation]    INFUND-205
-    [Tags]    HappyPath    Email     Pending
+    [Tags]    HappyPath    Email    Pending
     new account complete all but one
     # please note that this test case has been moved out of suite setup as it isn't required for smoke testing, but should still run for HappyPath and full test runs
 
