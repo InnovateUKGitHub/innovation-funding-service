@@ -240,7 +240,7 @@ Funding information client-side validations
     And the user enters text to a text field    id=budgetCode    2004
     Then the user should not see the error any more    Please enter a budget code
     And the user enters text to a text field    id=activityCode    4242
-    Then The user should not see the text in the page    Please enter an activity code
+    Then The user should not see the error text in the page    Please enter an activity code
 
 Funding information Autosave
     [Documentation]    INFUND-4581
@@ -708,3 +708,9 @@ the user should see the correct details in the eligibility form
     Checkbox Should Be Selected    id=research-categories-35
     Radio Button Should Be Set To    leadApplicantType    business
     Page Should Contain    30%
+
+The user should not see the error text in the page
+    [Arguments]    ${ERROR_TEXT}
+    run keyword and ignore error    mouse out    css=input
+    Focus    jQuery=.button:contains("Done")
+    Wait Until Page Does Not Contain    ${ERROR_TEXT}
