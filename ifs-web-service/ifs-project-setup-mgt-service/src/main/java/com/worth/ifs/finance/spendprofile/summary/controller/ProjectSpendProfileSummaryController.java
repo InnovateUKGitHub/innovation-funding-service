@@ -1,5 +1,6 @@
 package com.worth.ifs.finance.spendprofile.summary.controller;
 
+import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.CompetitionSummaryResource;
 import com.worth.ifs.application.service.ApplicationFinanceService;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.util.CollectionFunctions.mapWithIndex;
@@ -53,6 +55,9 @@ public class ProjectSpendProfileSummaryController {
 
     @Autowired
     private ApplicationFinanceService applicationFinanceService;
+
+    @Autowired
+    private FinanceService financeService;
 
     @RequestMapping(value = "/summary", method = GET)
     public String viewSpendProfileSummary(@PathVariable Long projectId, Model model) {
@@ -94,8 +99,7 @@ public class ProjectSpendProfileSummaryController {
 
         Optional<SpendProfileResource> anySpendProfile = projectFinanceService.getSpendProfile(projectId, partnerOrganisations.get(0).getId());
 
-        ApplicationFinanceResource applicationFinanceResource =
-                applicationFinanceService.getApplicationOrganisationFinances(application.getId(), partnerOrganisations.get(0).getId());
+        List<ApplicationFinanceResource> applicationFinanceResourceList = financeService.getApplicationFinanceTotals(application.getId());
 
         List<ProjectSpendProfileSummaryViewModel.SpendProfileOrganisationRow> organisationRows = mapWithIndex(partnerOrganisations, (i, org) ->
 
@@ -111,11 +115,28 @@ public class ProjectSpendProfileSummaryController {
         return new ProjectSpendProfileSummaryViewModel(
                 projectId, competitionSummary, organisationRows,
                 project.getTargetStartDate(), project.getDurationInMonths().intValue(),
-                applicationFinanceResource.getTotal(),
-                applicationFinanceResource.getTotalFundingSought(),
-                applicationFinanceResource.getTotalOtherFunding(),
-                new BigDecimal(applicationFinanceResource.getGrantClaimPercentage().toString()),
+                calculateTotalForAllOrganisations(applicationFinanceResourceList,
+                        applicationFinanceResource -> applicationFinanceResource.getTotal()),
+                calculateTotalForAllOrganisations(applicationFinanceResourceList,
+                        applicationFinanceResource -> applicationFinanceResource.getTotalFundingSought()),
+                calculateTotalForAllOrganisations(applicationFinanceResourceList,
+                        applicationFinanceResource -> applicationFinanceResource.getTotalOtherFunding()),
+                new BigDecimal(calculateIntegerTotalForAllOrganisations(applicationFinanceResourceList,
+                        applicationFinanceResource -> applicationFinanceResource.getGrantClaimPercentage()).toString()),
                 anySpendProfile.isPresent());
+    }
+
+    private BigDecimal calculateTotalForAllOrganisations(List<ApplicationFinanceResource> applicationFinanceResourceList,
+                                                         Function<ApplicationFinanceResource, BigDecimal> keyExtractor) {
+
+        return applicationFinanceResourceList.stream().map(keyExtractor).reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    // TODO - Should not be summing up. Will be addressed shortly.
+    private Integer calculateIntegerTotalForAllOrganisations(List<ApplicationFinanceResource> applicationFinanceResourceList,
+                                                             Function<ApplicationFinanceResource, Integer> keyExtractor) {
+
+       return applicationFinanceResourceList.stream().map(keyExtractor).reduce(0, (integer1, integer2) -> integer1 + integer2);
     }
 
     private <T extends Enum> T getEnumForIndex(Class<T> enums, int index) {
