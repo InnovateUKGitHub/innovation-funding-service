@@ -7,17 +7,24 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.finance.domain.ApplicationFinance;
+import com.worth.ifs.finance.domain.FinanceRow;
 import com.worth.ifs.finance.handler.OrganisationFinanceDefaultHandler;
 import com.worth.ifs.finance.handler.OrganisationFinanceDelegate;
 import com.worth.ifs.finance.handler.OrganisationFinanceHandler;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.ApplicationFinanceResourceId;
+import com.worth.ifs.finance.resource.category.FinanceRowCostCategory;
+import com.worth.ifs.finance.resource.cost.FinanceRowType;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.OrganisationType;
+import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.worth.ifs.BuilderAmendFunctions.id;
 import static com.worth.ifs.LambdaMatcher.lambdaMatches;
@@ -25,9 +32,14 @@ import static com.worth.ifs.application.builder.ApplicationBuilder.newApplicatio
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
 import static com.worth.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
+import static com.worth.ifs.finance.handler.item.GrantClaimHandler.COST_KEY;
+import static com.worth.ifs.finance.handler.item.GrantClaimHandler.GRANT_CLAIM;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
+import static com.worth.ifs.user.builder.OrganisationTypeBuilder.newOrganisationType;
+import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.when;
@@ -139,5 +151,35 @@ public class FinanceRowServiceImplTest extends BaseServiceUnitTest<FinanceRowSer
         ServiceResult<ApplicationFinanceResource> result = service.addCost(new ApplicationFinanceResourceId(123L, 456L));
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(CommonFailureKeys.COMPETITION_NOT_OPEN));
+    }
+
+    @Test
+    public void testOrganisationSeeksFunding(){
+        Long applicationId = 1L;
+        Long organisationId = 1L;
+        Long projectId = 1L;
+
+        Organisation organisation = newOrganisation().withOrganisationType(newOrganisationType().withOrganisationType(OrganisationTypeEnum.BUSINESS).build()).build();
+        when(organisationRepositoryMock.findOne(organisationId)).thenReturn(organisation);
+
+        ApplicationFinance applicationFinance = newApplicationFinance().build();
+        when(applicationFinanceRepositoryMock.findByApplicationIdAndOrganisationId(applicationId, organisationId)).thenReturn(applicationFinance);
+
+        ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource().withOrganisation(organisationId).withGrantClaimPercentage(20).build();
+        when(applicationFinanceMapperMock.mapToResource(applicationFinance)).thenReturn(applicationFinanceResource);
+
+        when(organisationFinanceDelegateMock.getOrganisationFinanceHandler(organisation.getOrganisationType().getName())).thenReturn(organisationFinanceDefaultHandlerMock);
+
+        Map<FinanceRowType, FinanceRowCostCategory> costs = new HashMap<>();
+
+        when(organisationFinanceDefaultHandlerMock.getOrganisationFinances(applicationFinanceResource.getId())).thenReturn(costs);
+
+        when(financeRowRepositoryMock.findByApplicationFinanceId(applicationFinanceResource.getId())).thenReturn(asList(new FinanceRow(1L, COST_KEY, "", GRANT_CLAIM, 20, BigDecimal.ZERO, applicationFinance,null)));
+
+        ServiceResult<Boolean> result = service.organisationSeeksFunding(projectId, applicationId, organisationId);
+
+        assertTrue(result.isSuccess());
+
+        assertFalse(result.getSuccessObject());
     }
 }

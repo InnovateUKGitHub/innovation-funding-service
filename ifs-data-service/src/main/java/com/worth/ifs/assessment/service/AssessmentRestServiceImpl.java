@@ -6,6 +6,9 @@ import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.assessmentResourceListType;
 import static java.lang.String.format;
 
 /**
@@ -25,6 +28,11 @@ public class AssessmentRestServiceImpl extends BaseRestService implements Assess
     @Override
     public RestResult<AssessmentResource> getById(final Long id) {
         return getWithRestResult(format("%s/%s", assessmentRestURL, id), AssessmentResource.class);
+    }
+
+    @Override
+    public RestResult<List<AssessmentResource>> getByUserAndCompetition(Long userId, Long competitionId) {
+        return getWithRestResult(format("%s/user/%s/competition/%s", assessmentRestURL, userId, competitionId), assessmentResourceListType());
     }
 
     @Override

@@ -12,14 +12,14 @@ Resource          ../../../resources/keywords/User_actions.robot
 *** Test Cases ***
 Assessment overview should show the expected questions
     [Documentation]    INFUND-3400
-    [Tags]
+    [Tags]    HappyPath
     [Setup]    guest user log-in    paul.plum@gmail.com    Passw0rd
     When the user navigates to the page    ${Assessment_overview_9}
     Then the user should see four sections
 
 Verify number of days remaining is displayed in Assessment overview
     [Documentation]    INFUND-4857
-    [Tags]
+    [Tags]    HappyPath
     Then The user should see the text in the page    Days left to submit
     And the assessor should see the number of days remaining
     And the days remaining should be correct
@@ -36,7 +36,7 @@ Other Assessors should not be able to access this application
     And the user fills in rejection details
     Then the user clicks the button/link    jQuery=button:contains("X")
     And the user clicks the button/link    css=#details-content-0 a
-   # Then the user fills in rejection details
+    # Then the user fills in rejection details
     And the user clicks the button/link    jquery=button:contains("Reject")
     Then The user should be redirected to the correct page    ${Assessor_competition_dashboard}
     [Teardown]    Logout as user
