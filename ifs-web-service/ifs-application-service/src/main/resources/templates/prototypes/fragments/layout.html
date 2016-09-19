@@ -29,6 +29,69 @@
     </ul>
 </div>
 
+<!-- ===========================Place: main <header>  =========================== -->
+
+<div th:fragment="prototype-admin-header">
+    <header role="banner" id="global-header">
+        <div th:include="fragments/elements :: notification" th:remove="tag" />
+        <div class="header-wrapper">
+            <div class="header-global header-admin">
+
+                <p class="innovate-title">Innovation Funding Service</p>
+
+                <th:block th:if="${status == 'loggedIn'}">
+
+                    <span class="admin-user-name">James Danek</span>
+                    <ul class="navigation-list navigation-right">
+                        <li>
+                            <a href="/prototypes/5079-ifs-admin">Admin</a>
+                        </li>
+                        <li>
+                            <a href="/prototypes/3115-comp-dashboard?user=admin">Dashboard</a>
+                        </li>
+                        <li>
+                            <a href="#">Account</a>
+                        </li>
+                        <li>
+                            <a href="/prototypes/3748-internal-sign-in">Sign out</a>
+                        </li>
+                    </ul>
+
+                </th:block>
+            </div>
+        </div>
+    </header>
+
+    <div class="grid-container phase-banner">
+        <p>
+            <strong class="phase-tag">BETA</strong>
+            <span>This is a new service – your <a href="mailto:IFSfeedback@innovateuk.gov.uk">feedback</a> will help us to improve it.</span>
+        </p>
+    </div>
+</div>
+
+
+<!-- ===========================Place: main <header> logged out  =========================== -->
+
+<!--<div th:fragment="admin-header-logged-out">-->
+    <!--<header role="banner" id="global-header">-->
+        <!--<div th:include="fragments/elements :: notification" th:remove="tag" />-->
+        <!--<div class="header-wrapper">-->
+            <!--<div class="header-global header-admin">-->
+
+                <!--<p class="innovate-title">Innovation Funding Service</p>-->
+
+            <!--</div>-->
+        <!--</div>-->
+    <!--</header>-->
+
+    <!--<div class="grid-container phase-banner">-->
+        <!--<p>-->
+            <!--<strong class="phase-tag">BETA</strong>-->
+            <!--<span>This is a new service – your <a href="mailto:IFSfeedback@innovateuk.gov.uk">feedback</a> will help us to improve it.</span>-->
+        <!--</p>-->
+    <!--</div>-->
+<!--</div>-->
 
 <!-- ===========================Place: main <header>  =========================== --> 
 
