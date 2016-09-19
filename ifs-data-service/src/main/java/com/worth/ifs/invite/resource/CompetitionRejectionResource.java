@@ -4,6 +4,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  * DTO for rejecting invites to Competitions.
@@ -12,7 +13,7 @@ public class CompetitionRejectionResource {
 
     @NotNull(message = "{validation.competitionrejectionresource.rejectReason.required}")
     private RejectionReasonResource rejectReason;
-
+    @Size(max = 5000, message = "{validation.field.too.many.characters}")
     private String rejectComment;
 
     public CompetitionRejectionResource() {

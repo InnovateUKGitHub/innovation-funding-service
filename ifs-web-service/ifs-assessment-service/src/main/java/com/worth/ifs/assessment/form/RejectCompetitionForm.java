@@ -6,6 +6,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  * Form field model for the competition rejection content
@@ -14,6 +15,7 @@ public class RejectCompetitionForm extends BaseBindingResultTarget {
 
     @NotNull(message = "{validation.rejectcompetitionform.rejectReason.required}")
     private RejectionReasonResource rejectReason;
+    @Size(max = 5000, message = "{validation.field.too.many.characters}")
     private String rejectComment;
 
     public RejectionReasonResource getRejectReason() {

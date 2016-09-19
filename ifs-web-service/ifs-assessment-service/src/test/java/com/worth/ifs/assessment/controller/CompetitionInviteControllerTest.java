@@ -9,6 +9,7 @@ import com.worth.ifs.assessment.viewmodel.RejectCompetitionViewModel;
 import com.worth.ifs.invite.resource.CompetitionInviteResource;
 import com.worth.ifs.invite.resource.CompetitionRejectionResource;
 import com.worth.ifs.invite.resource.RejectionReasonResource;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,6 +20,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.validation.BindingResult;
 
 import java.util.List;
 
@@ -31,6 +33,7 @@ import static com.worth.ifs.invite.builder.RejectionReasonResourceBuilder.newRej
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -196,6 +199,50 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
                 .andExpect(redirectedUrl("/invite/competition/hash/reject/thank-you"));
 
         verify(competitionInviteRestService).rejectInvite("hash", competitionRejectionResource);
+        verifyNoMoreInteractions(competitionInviteRestService);
+    }
+
+    @Test
+    public void rejectInvite_exceedsCharacterSizeLimit() throws Exception {
+        CompetitionInviteResource inviteResource = newCompetitionInviteResource().withCompetitionName("my competition").build();
+
+        when(competitionInviteRestService.getInvite("hash")).thenReturn(restSuccess(inviteResource));
+
+        String comment = RandomStringUtils.random(5001);
+
+        RejectCompetitionForm expectedForm = new RejectCompetitionForm();
+        expectedForm.setRejectReason(newRejectionReasonResource().with(id(1L)).build());
+        expectedForm.setRejectComment(comment);
+
+        MvcResult result = mockMvc.perform(post(restUrl + "{inviteHash}/reject", "hash")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("rejectReason", "1")
+                .param("rejectComment", comment))
+                .andExpect(status().isOk())
+                .andExpect(model().hasErrors())
+                .andExpect(model().attributeHasFieldErrors("form", "rejectComment"))
+                .andExpect(model().attribute("form", expectedForm))
+                .andExpect(model().attribute("rejectionReasons", rejectionReasons))
+                .andExpect(model().attributeExists("model"))
+                .andExpect(view().name("assessor-competition-reject-confirm")).andReturn();
+
+        RejectCompetitionViewModel model = (RejectCompetitionViewModel) result.getModelAndView().getModel().get("model");
+
+        assertEquals("hash", model.getCompetitionInviteHash());
+        assertEquals("my competition", model.getCompetitionName());
+
+        RejectCompetitionForm form = (RejectCompetitionForm) result.getModelAndView().getModel().get("form");
+
+        BindingResult bindingResult = form.getBindingResult();
+
+        assertTrue(bindingResult.hasErrors());
+        assertEquals(0, bindingResult.getGlobalErrorCount());
+        assertEquals(1, bindingResult.getFieldErrorCount());
+        assertTrue(bindingResult.hasFieldErrors("rejectComment"));
+        assertEquals("This field cannot contain more than {1} characters", bindingResult.getFieldError("rejectComment").getDefaultMessage());
+        assertEquals(5000, bindingResult.getFieldError("rejectComment").getArguments()[1]);
+
+        verify(competitionInviteRestService).getInvite("hash");
         verifyNoMoreInteractions(competitionInviteRestService);
     }
 
