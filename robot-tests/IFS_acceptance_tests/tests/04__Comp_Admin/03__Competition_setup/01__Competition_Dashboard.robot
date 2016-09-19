@@ -77,7 +77,7 @@ Upcoming competitions ready for open
 
 Competition Opens automatically on date
     [Documentation]    INFUND-3004
-    [Tags]    MySQL
+    [Tags]    MySQL    Docker
     [Setup]    Connect to Database    @{database}
     Given the user should see the text in the page    Ready to open
     Then element should contain    jQuery=section:nth-child(4)    Sarcasm Stupendousness
