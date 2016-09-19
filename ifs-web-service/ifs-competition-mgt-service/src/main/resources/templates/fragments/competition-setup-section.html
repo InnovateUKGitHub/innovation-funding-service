@@ -112,7 +112,7 @@
                                  placeholder="MM"
                                  required="required"
                                  data-required-errormessage="Please enter an opening month"
-                                 th:disabled="${!#strings.isEmpty(competitionSetupForm.openingDateMonth)}"
+                                 th:disabled="${!#strings.isEmpty(restrictInitialDetailsEdit)}"
                                  th:field="${competitionSetupForm.openingDateMonth}" />
                           <input th:if="${!#strings.isEmpty(restrictInitialDetailsEdit)}" type="hidden" th:field="${competitionSetupForm.openingDateMonth}" />
                       </div>
