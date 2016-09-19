@@ -58,9 +58,16 @@ public class ProjectSpendProfileSummaryControllerTest extends BaseControllerMock
 
         Optional<SpendProfileResource> anySpendProfile = Optional.of(spendProfileResource);
 
-        ApplicationFinanceResource applicationFinanceResource = ApplicationFinanceResourceBuilder.newApplicationFinanceResource()
+
+        ApplicationFinanceResource applicationFinanceResource1 = ApplicationFinanceResourceBuilder.newApplicationFinanceResource()
                 .withGrantClaimPercentage(20)
                 .build();
+        ApplicationFinanceResource applicationFinanceResource2 = ApplicationFinanceResourceBuilder.newApplicationFinanceResource()
+                .withGrantClaimPercentage(20)
+                .build();
+        List<ApplicationFinanceResource> applicationFinanceResourceList = new ArrayList<>();
+        applicationFinanceResourceList.add(applicationFinanceResource1);
+        applicationFinanceResourceList.add(applicationFinanceResource2);
 
         when(projectService.getById(projectId)).
                 thenReturn(projectResource);
@@ -79,8 +86,8 @@ public class ProjectSpendProfileSummaryControllerTest extends BaseControllerMock
         when(projectFinanceService.getSpendProfile(projectId, 1L)).
                 thenReturn(anySpendProfile);
 
-        when(applicationFinanceService.getApplicationOrganisationFinances(1L, 1L)).
-                thenReturn(applicationFinanceResource);
+        when(financeService.getApplicationFinanceTotals(1L)).
+                thenReturn(applicationFinanceResourceList);
 
         // Expected Results
         List<ProjectSpendProfileSummaryViewModel.SpendProfileOrganisationRow> expectedOrganisationRows = mapWithIndex(organisationResourceList, (i, org) ->
@@ -97,10 +104,10 @@ public class ProjectSpendProfileSummaryControllerTest extends BaseControllerMock
         ProjectSpendProfileSummaryViewModel expectedProjectSpendProfileSummaryViewModel =  new ProjectSpendProfileSummaryViewModel(
                 projectId, competitionSummaryResource, expectedOrganisationRows,
                 projectResource.getTargetStartDate(), projectResource.getDurationInMonths().intValue(),
-                applicationFinanceResource.getTotal(),
-                applicationFinanceResource.getTotalFundingSought(),
-                applicationFinanceResource.getTotalOtherFunding(),
-                new BigDecimal(applicationFinanceResource.getGrantClaimPercentage().toString()),
+                BigDecimal.ZERO,
+                BigDecimal.ZERO,
+                BigDecimal.ZERO,
+                new BigDecimal("40"),
                 anySpendProfile.isPresent());
 
         mockMvc.perform(get("/project/{projectId}/spend-profile/summary", projectId))
