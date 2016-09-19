@@ -1,9 +1,13 @@
 package com.worth.ifs.project.workflow.projectdetails.configuration;
 
+import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.project.repository.ProjectDetailsProcessRepository;
+import com.worth.ifs.project.repository.ProjectRepository;
+import com.worth.ifs.project.repository.ProjectUserRepository;
 import com.worth.ifs.project.resource.ProjectDetailsOutcomes;
 import com.worth.ifs.project.resource.ProjectDetailsState;
 import com.worth.ifs.workflow.GenericPersistStateMachineHandler;
+import com.worth.ifs.workflow.repository.ActivityStateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -20,19 +24,27 @@ import org.springframework.statemachine.recipes.persist.PersistStateMachineHandl
 @Configuration
 public class ProjectDetailsPersistHandlerConfig {
 
-    @Autowired
-    @Qualifier("projectDetailsStateMachine")
-    private StateMachine<ProjectDetailsState, ProjectDetailsOutcomes> stateMachine;
 
     @Autowired
     private ProjectDetailsProcessRepository projectDetailsProcessRepository;
+
+    @Autowired
+    private ActivityStateRepository activityStateRepository;
+
+    @Autowired
+    private ProjectRepository projectRepository;
+
+    @Autowired
+    private ProjectUserRepository projectUserRepository;
 
     public ProjectDetailsPersistHandlerConfig() {
     	// no-arg constructor
     }
 
-    @Bean
-    public ProjectDetailsWorkflowService projectDetailsWorkflowEventHandler() {
-        return new ProjectDetailsWorkflowService(new GenericPersistStateMachineHandler<>(stateMachine), projectDetailsProcessRepository);
-    }
+    // TODO DW - INFUND-4911 - just have ProjectDetailsWorkflowService as a @Component
+//    @Bean
+//    public ProjectDetailsWorkflowService projectDetailsWorkflowEventHandler() {
+//        return new ProjectDetailsWorkflowService(new GenericPersistStateMachineHandler<>(stateMachine), projectDetailsProcessRepository,
+//                activityStateRepository, projectRepository, projectUserRepository);
+//    }
 }

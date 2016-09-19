@@ -4,7 +4,7 @@ import com.worth.ifs.BaseUnitTestMocksTest;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.resource.AssessmentOutcomes;
 import com.worth.ifs.assessment.resource.AssessmentResource;
-import com.worth.ifs.assessment.workflow.configuration.AssessmentWorkflowService;
+import com.worth.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.workflow.domain.ActivityState;
@@ -37,7 +37,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
     private AssessmentService assessmentService = new AssessmentServiceImpl();
 
     @Mock
-    private AssessmentWorkflowService assessmentWorkflowService;
+    private AssessmentWorkflowHandler assessmentWorkflowService;
 
     @Test
     public void findById() throws Exception {

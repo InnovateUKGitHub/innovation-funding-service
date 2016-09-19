@@ -4,25 +4,44 @@ import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectDetailsProcess;
 import com.worth.ifs.project.domain.ProjectUser;
 import com.worth.ifs.project.repository.ProjectDetailsProcessRepository;
+import com.worth.ifs.project.repository.ProjectRepository;
+import com.worth.ifs.project.repository.ProjectUserRepository;
 import com.worth.ifs.project.resource.ProjectDetailsOutcomes;
 import com.worth.ifs.project.resource.ProjectDetailsState;
 import com.worth.ifs.workflow.BaseWorkflowEventHandler;
-import com.worth.ifs.workflow.GenericPersistStateMachineHandler;
 import com.worth.ifs.workflow.TestableTransitionWorkflowAction;
+import com.worth.ifs.workflow.domain.ActivityType;
+import com.worth.ifs.workflow.repository.ProcessRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.messaging.support.MessageBuilder;
+import org.springframework.statemachine.StateMachine;
+import org.springframework.stereotype.Component;
 
 import static com.worth.ifs.project.resource.ProjectDetailsOutcomes.*;
+import static com.worth.ifs.workflow.domain.ActivityType.PROJECT_SETUP_PROJECT_DETAILS;
 
 /**
  * {@code ProjectDetailsWorkflowService} is the entry point for triggering the workflow.
  * Based on the Project Detail's current state the next one is tried to transition to by triggering
  * an event.
  */
-public class ProjectDetailsWorkflowService extends BaseWorkflowEventHandler<ProjectDetailsProcess, ProjectDetailsState, ProjectDetailsOutcomes> {
+@Component
+public class ProjectDetailsWorkflowHandler extends BaseWorkflowEventHandler<ProjectDetailsProcess, ProjectDetailsState, ProjectDetailsOutcomes, Project, ProjectUser> {
 
-    public ProjectDetailsWorkflowService(GenericPersistStateMachineHandler<ProjectDetailsState, ProjectDetailsOutcomes> stateHandler, ProjectDetailsProcessRepository projectDetailsProcessRepository) {
-        super(stateHandler, projectDetailsProcessRepository);
-    }
+    @Autowired
+    @Qualifier("projectDetailsStateMachine")
+    private StateMachine<ProjectDetailsState, ProjectDetailsOutcomes> stateMachine;
+
+    @Autowired
+    private ProjectDetailsProcessRepository projectDetailsProcessRepository;
+
+    @Autowired
+    private ProjectRepository projectRepository;
+
+    @Autowired
+    private ProjectUserRepository projectUserRepository;
 
     public boolean projectCreated(Project project, ProjectUser originalLeadApplicantProjectUser) {
         return fireEvent(projectCreatedEvent(project, originalLeadApplicantProjectUser), ProjectDetailsState.PENDING);
@@ -46,6 +65,36 @@ public class ProjectDetailsWorkflowService extends BaseWorkflowEventHandler<Proj
 
     public boolean isSubmissionAllowed(Project project) {
         return testEvent(submitProjectDetailsMessage(null, project), project);
+    }
+
+    @Override
+    protected ProjectDetailsProcess createNewProcess(Project target, ProjectUser participant) {
+        return new ProjectDetailsProcess(participant, target, null);
+    }
+
+    @Override
+    protected ActivityType getActivityType() {
+        return PROJECT_SETUP_PROJECT_DETAILS;
+    }
+
+    @Override
+    protected ProcessRepository<ProjectDetailsProcess> getProcessRepository() {
+        return projectDetailsProcessRepository;
+    }
+
+    @Override
+    protected CrudRepository<Project, Long> getTargetRepository() {
+        return projectRepository;
+    }
+
+    @Override
+    protected CrudRepository<ProjectUser, Long> getParticipantRepository() {
+        return projectUserRepository;
+    }
+
+    @Override
+    protected StateMachine<ProjectDetailsState, ProjectDetailsOutcomes> getStateMachine() {
+        return stateMachine;
     }
 
     private MessageBuilder<ProjectDetailsOutcomes> projectCreatedEvent(Project project, ProjectUser originalLeadApplicantProjectUser) {
@@ -91,6 +140,6 @@ public class ProjectDetailsWorkflowService extends BaseWorkflowEventHandler<Proj
     }
 
     private ProjectDetailsProcess getCurrentProcess(Project project) {
-        return processRepository.findOneByTargetId(project.getId());
+        return getProcessByTargetId(project.getId());
     }
 }

@@ -6,8 +6,8 @@ import com.worth.ifs.project.domain.ProjectUser;
 import com.worth.ifs.project.repository.ProjectDetailsProcessRepository;
 import com.worth.ifs.project.resource.ProjectDetailsState;
 import com.worth.ifs.project.workflow.projectdetails.actions.BaseProjectDetailsAction;
-import com.worth.ifs.project.workflow.projectdetails.configuration.ProjectDetailsWorkflowService;
-import com.worth.ifs.workflow.BaseWorkflowServiceIntegrationTest;
+import com.worth.ifs.project.workflow.projectdetails.configuration.ProjectDetailsWorkflowHandler;
+import com.worth.ifs.workflow.BaseWorkflowHandlerIntegrationTest;
 import com.worth.ifs.workflow.domain.ActivityState;
 import com.worth.ifs.workflow.repository.ActivityStateRepository;
 import org.junit.Test;
@@ -28,11 +28,11 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class ProjectDetailsWorkflowServiceServiceIntegrationTest extends
-        BaseWorkflowServiceIntegrationTest<ProjectDetailsWorkflowService, ProjectDetailsProcessRepository, BaseProjectDetailsAction> {
+public class ProjectDetailsWorkflowHandlerIntegrationTest extends
+        BaseWorkflowHandlerIntegrationTest<ProjectDetailsWorkflowHandler, ProjectDetailsProcessRepository, BaseProjectDetailsAction> {
 
     @Autowired
-    private ProjectDetailsWorkflowService projectDetailsWorkflowService;
+    private ProjectDetailsWorkflowHandler projectDetailsWorkflowHandler;
 
     private ActivityStateRepository activityStateRepositoryMock;
     private ProjectDetailsProcessRepository projectDetailsProcessRepositoryMock;
@@ -56,7 +56,7 @@ public class ProjectDetailsWorkflowServiceServiceIntegrationTest extends
                 thenReturn(null);
 
         // now call the method under test
-        assertTrue(projectDetailsWorkflowService.projectCreated(project, projectUser));
+        assertTrue(projectDetailsWorkflowHandler.projectCreated(project, projectUser));
 
         verify(activityStateRepositoryMock).findOneByActivityTypeAndState(PROJECT_SETUP_PROJECT_DETAILS, PENDING);
         verify(projectDetailsProcessRepositoryMock).save(
@@ -79,7 +79,7 @@ public class ProjectDetailsWorkflowServiceServiceIntegrationTest extends
                 thenReturn(null);
 
         // now call the method under test
-        assertTrue(projectDetailsWorkflowService.projectStartDateAdded(project, projectUser));
+        assertTrue(projectDetailsWorkflowHandler.projectStartDateAdded(project, projectUser));
 
         verify(projectDetailsProcessRepositoryMock).findOneByTargetId(project.getId());
     }
@@ -98,8 +98,8 @@ public class ProjectDetailsWorkflowServiceServiceIntegrationTest extends
     }
 
     @Override
-    protected Class<ProjectDetailsWorkflowService> getWorkflowServiceType() {
-        return ProjectDetailsWorkflowService.class;
+    protected Class<ProjectDetailsWorkflowHandler> getWorkflowHandlerType() {
+        return ProjectDetailsWorkflowHandler.class;
     }
 
     @Override

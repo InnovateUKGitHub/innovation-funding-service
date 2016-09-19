@@ -23,7 +23,7 @@ import static org.mockito.Mockito.mock;
  * but rather swaps out real Repositories for mocks
  */
 @DirtiesContext
-public abstract class BaseWorkflowServiceIntegrationTest<WorkflowServiceType, ProcessRepositoryType extends ProcessRepository<?>, BaseActionType> extends BaseIntegrationTest {
+public abstract class BaseWorkflowHandlerIntegrationTest<WorkflowHandlerType, ProcessRepositoryType extends ProcessRepository<?>, BaseActionType> extends BaseIntegrationTest {
 
     private Map<Class<? extends Repository>, Pair<? extends Repository, ? extends Repository>> mocks = new HashMap<>();
 
@@ -43,9 +43,9 @@ public abstract class BaseWorkflowServiceIntegrationTest<WorkflowServiceType, Pr
         Map<String, BaseActionType> actions = applicationContext.getBeansOfType(getBaseActionType());
         actions.values().forEach(this::setMockRepositoriesOnTarget);
 
-        Map<String, WorkflowServiceType> workflowServiceBean = applicationContext.getBeansOfType(getWorkflowServiceType());
-        WorkflowServiceType workflowService = new ArrayList<>(workflowServiceBean.values()).get(0);
-        setMockRepositoriesOnTarget(workflowService);
+        Map<String, WorkflowHandlerType> workflowHandlerBean = applicationContext.getBeansOfType(getWorkflowHandlerType());
+        WorkflowHandlerType workflowHandler = new ArrayList<>(workflowHandlerBean.values()).get(0);
+        setMockRepositoriesOnTarget(workflowHandler);
 
         collectMocks(this::getMock);
     }
@@ -79,7 +79,7 @@ public abstract class BaseWorkflowServiceIntegrationTest<WorkflowServiceType, Pr
 
     protected abstract Class<BaseActionType> getBaseActionType();
 
-    protected abstract Class<WorkflowServiceType> getWorkflowServiceType();
+    protected abstract Class<WorkflowHandlerType> getWorkflowHandlerType();
 
     protected abstract Class<ProcessRepositoryType> getProcessRepositoryType();
 

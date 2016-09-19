@@ -8,4 +8,6 @@ public interface ProcessRepository<T>  {
     T findOneByParticipantId(Long participantId);
 
     T findOneByTargetId(Long targetId);
+
+    T save(T instance);
 }
