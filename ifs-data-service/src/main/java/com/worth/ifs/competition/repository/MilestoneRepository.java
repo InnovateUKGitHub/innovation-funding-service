@@ -12,7 +12,8 @@ import java.util.List;
  * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
  */
 public interface MilestoneRepository extends CrudRepository<Milestone, Long> {
+
     List<Milestone> findAllByCompetitionId(Long competitionId);
 
-    Milestone findByTypeAndCompetitionId(Long competitionId, MilestoneType type);
+    Milestone findByTypeAndCompetitionId(MilestoneType type, Long competitionId);
 }

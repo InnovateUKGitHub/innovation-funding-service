@@ -10,7 +10,6 @@ import com.worth.ifs.competition.repository.MilestoneRepository;
 import com.worth.ifs.competition.resource.MilestoneResource;
 import com.worth.ifs.competition.resource.MilestoneType;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -132,9 +131,8 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
                 milestone(MilestoneType.FUNDERS_PANEL, null),
                 milestone(MilestoneType.ASSESSMENT_PANEL, null),
                 milestone(MilestoneType.ALLOCATE_ASSESSORS, null),
-                milestone(MilestoneType.ASSESSOR_ACCEPTS, null)
-			);
-		
+				milestone(MilestoneType.ASSESSOR_ACCEPTS, null));
+
 		ServiceResult<Void> result = service.update(1L, milestones);
 		
 		assertFalse(result.isSuccess());
@@ -144,27 +142,50 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
 	}
 
 	@Test
-	@Ignore
-	//@TODO JH
-    public void updateMilestone() {
+	public void updateMilestone() {
+		LocalDateTime milestoneDate = LocalDateTime.now();
 
-	    Competition competition = newCompetition().build();
-        when(competitionRepository.findById(1L)).thenReturn(competition);
+		ServiceResult<Void> result = service.updateMilestone(milestone(MilestoneType.BRIEFING_EVENT, milestoneDate.plusMonths(1)));
+		assertTrue(result.isSuccess());
+	}
 
-        MilestoneResource milestone = milestone(MilestoneType.BRIEFING_EVENT, LocalDateTime.of(2050, 3, 11, 0, 0));
+	@Test
+	public void getAllMilestones() {
+		List<Milestone> milestones = asList(
+				milestone(MilestoneType.BRIEFING_EVENT),
+				milestone(MilestoneType.LINE_DRAW),
+				milestone(MilestoneType.NOTIFICATIONS));
+		when(milestoneRepository.findAllByCompetitionId(1L)).thenReturn(milestones);
 
-        ServiceResult<Void> result = service.updateMilestone(1L, milestone);
+		ServiceResult<List<MilestoneResource>> result = service.getAllDatesByCompetitionId(1L);
 
-        assertTrue(result.isSuccess());
-        assertEquals(MilestoneType.BRIEFING_EVENT, competition.getMilestones().get(0).getType());
-        assertEquals(LocalDateTime.of(2050, 3, 10, 0, 0), competition.getMilestones().get(0).getDate());
-    }
+		assertTrue(result.isSuccess());
+		assertNotNull(result);
+		assertEquals(3, milestones.size());
+	}
+
+	@Test
+	public void getMilestoneByTypeAndCompetition() {
+		Milestone milestone = milestone(MilestoneType.NOTIFICATIONS);
+		when(milestoneRepository.findByTypeAndCompetitionId(MilestoneType.NOTIFICATIONS, 1L)).thenReturn(milestone);
+
+		ServiceResult<MilestoneResource> result = service.getMilestoneByTypeAndCompetitionId(MilestoneType.NOTIFICATIONS, 1L);
+		assertTrue(result.isSuccess());
+		assertEquals(MilestoneType.NOTIFICATIONS, milestone.getType());
+		assertNull(milestone.getDate());
+	}
 
 	private MilestoneResource milestone(MilestoneType type, LocalDateTime date) {
 		MilestoneResource resource = new MilestoneResource();
 		resource.setType(type);
 		resource.setDate(date);
 		return resource;
+	}
+
+	private Milestone milestone(MilestoneType type) {
+		Milestone milestone = new Milestone();
+		milestone.setType(type);
+		return milestone;
 	}
 
 	@Override

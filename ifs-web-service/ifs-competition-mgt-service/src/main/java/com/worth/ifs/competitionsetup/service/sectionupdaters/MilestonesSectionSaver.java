@@ -11,22 +11,19 @@ import com.worth.ifs.competitionsetup.form.MilestonesForm;
 import com.worth.ifs.competitionsetup.model.MilestoneEntry;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
 import org.apache.commons.collections4.map.LinkedMap;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.el.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
-
-import static com.worth.ifs.commons.error.Error.fieldError;
-import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Competition setup section saver for the milestones section.
@@ -84,31 +81,21 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
 
     @Override
     protected List<Error> updateCompetitionResourceWithAutoSave(List<Error> errors, CompetitionResource competitionResource, String fieldName, String value) throws ParseException {
+        //@todo jh property key, validation
         if (fieldName != null) {
-            List<MilestoneResource> milestones = milestoneService.getAllDatesByCompetitionId(competitionResource.getId());
-            milestones.size();
-//
-// switch (fieldName) {
-//            case "milestoneEntries[BRIEFING_EVENT].milestoneType":
-//
-//           //     List<MilestoneResource> milestones = milestoneService.getAllDatesByCompetitionId(competitionResource.getId());
-//
-//         //       MilestoneResource milestone = milestoneService.getMilestoneByTypeAndCompetitionId(competitionResource.getId(), MilestoneType.BRIEFING_EVENT);
-//
-//                //  milestone.setDate(parseDate(value));
-//                //competitionSetupMilestoneService.updateMilestoneForCompetition(milestone, competitionResource.getId());
-//                //return competitionSetupMilestoneService.updateMilestoneForCompetition(parseDate(value));
-//                //return null;
-//            break;
-//                //find matching milestone
-//                //build case matching
-//            default:
-//                return asList(new Error("Field not found", HttpStatus.BAD_REQUEST));
+
+            MilestoneResource milestone = milestoneService.getMilestoneByTypeAndCompetitionId(competitionResource.getId(),
+                    MilestoneType.valueOf(getMilestoneTypeFromFieldName(fieldName)));
+            milestone.setDate(getDateFromFieldValue(value));
+            milestoneService.updateMilestone(milestone, competitionResource.getId());
+        } else {
+
+            errors.add(new Error("Milestone not found", HttpStatus.BAD_REQUEST));
         }
         return errors;
     }
 
-    private LocalDateTime parseDate(String value){
+    private LocalDateTime getDateFromFieldValue(String value) {
         try {
             String[] dateParts = value.split("-");
             return LocalDateTime.of(
@@ -121,5 +108,12 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
             //return asList(fieldError
             return null;
         }
+    }
+
+    private String getMilestoneTypeFromFieldName(String fieldName) {
+        Pattern typePattern = Pattern.compile("\\[(.*?)\\]");
+        Matcher typeMatcher = typePattern.matcher(fieldName);
+        boolean foundtype = typeMatcher.find();
+        return typeMatcher.group(1);
     }
 }

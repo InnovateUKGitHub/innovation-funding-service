@@ -712,16 +712,15 @@
                       <td class="js-addWeekDay" th:text="${milestoneEntry.value.dayOfWeek}"></td>
                       <td class="day">
                           <input type="number"
-                                placeholder="DD"
-                                min="1"
-                                max="31" maxlength="2"
-                                required="required"
-                                class="form-control width-small"
-                                data-date-in-table=""
-                                th:attr="aria-labelledby=${'milestone-' + milestoneEntry.key}"
-                                th:value="${milestoneEntry.value.day}"
-                                th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].day'"
-                          />
+                                 placeholder="DD"
+                                 min="1"
+                                 max="31" maxlength="2"
+                                 required="required"
+                                 class="form-control width-small"
+                                 data-date-in-table=""
+                                 th:attr="aria-labelledby=${'milestone-' + milestoneEntry.key}"
+                                 th:value="${milestoneEntry.value.day}"
+                                 th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].day'"/>
                       </td>
                       <td class="month">
                           <input type="number"
@@ -746,7 +745,9 @@
                                  th:value="${milestoneEntry.value.year}"
                                  th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].year'"/>
                           </td>
-                          <td class="autosave-info" />
+                      <td>
+                          <span class="autosave-info"/>
+                      </td>
                   </tr>
                 </tbody>
             </table>

@@ -1,16 +1,15 @@
 package com.worth.ifs.competition.service;
 
-import static com.worth.ifs.commons.service.ParameterizedTypeReferences.milestoneResourceListType;
-
-import java.util.List;
-
-import com.worth.ifs.competition.resource.MilestoneType;
-import org.springframework.stereotype.Service;
-
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.competition.domain.Milestone;
 import com.worth.ifs.competition.resource.MilestoneResource;
+import com.worth.ifs.competition.resource.MilestoneType;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.milestoneResourceListType;
 
 /**
  * MilestoneRestServiceImpl is a utility for CRUD operations on {@link Milestone}.
@@ -29,7 +28,7 @@ public class MilestoneRestServiceImpl extends BaseRestService implements Milesto
 
     @Override
     public RestResult<MilestoneResource> getMilestoneByTypeAndCompetitionId(Long competitionId, MilestoneType type) {
-        return getWithRestResult(milestonesRestURL + "/" + competitionId + "/getByType", MilestoneResource.class);
+        return getWithRestResult(milestonesRestURL + "/" + competitionId + "/getByType?type=" + type, MilestoneResource.class);
     }
 
     @Override
@@ -39,11 +38,11 @@ public class MilestoneRestServiceImpl extends BaseRestService implements Milesto
 
     @Override
     public RestResult<Void> updateMilestone(MilestoneResource milestone, Long competitionId) {
-        return putWithRestResult(milestonesRestURL + "/" + competitionId, milestone, Void.class);
+        return putWithRestResult(milestonesRestURL + "/" + competitionId + "/save", milestone, Void.class);
     }
 
     @Override
     public RestResult<MilestoneResource> create(MilestoneType type, Long competitionId) {
-        return postWithRestResult(milestonesRestURL + "/" + competitionId + "/save", type, MilestoneResource.class);
+        return postWithRestResult(milestonesRestURL + "/" + competitionId, type, MilestoneResource.class);
     }
 }

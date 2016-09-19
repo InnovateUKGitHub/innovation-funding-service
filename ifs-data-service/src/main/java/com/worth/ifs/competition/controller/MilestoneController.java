@@ -25,10 +25,10 @@ public class MilestoneController {
         return milestoneService.getAllDatesByCompetitionId(competitionId).toGetResponse();
     }
 
-    @RequestMapping(value = "/{competitionId}/getByType", method = RequestMethod.GET)
-    public RestResult<MilestoneResource> getMilestoneByTypeAndCompetitionId(@PathVariable("competitionId") final Long competitionId,
-                                                                            @RequestParam(value="milestoneType", required=true) MilestoneType type){
-        return milestoneService.getMilestoneByTypeAndCompetitionId(competitionId, type).toGetResponse();
+    @RequestMapping(value = "/{competitionId}/getByType", method = RequestMethod.GET, params = "type")
+    public RestResult<MilestoneResource> getMilestoneByTypeAndCompetitionId(@RequestParam(value = "type", required = true) final MilestoneType type,
+                                                                            @PathVariable("competitionId") final Long competitionId) {
+        return milestoneService.getMilestoneByTypeAndCompetitionId(type, competitionId).toGetResponse();
     }
 
     @RequestMapping(value = "/{competitionId}", method = RequestMethod.POST)
@@ -38,12 +38,13 @@ public class MilestoneController {
     }
 
     @RequestMapping(value = "/{competitionId}", method = RequestMethod.PUT)
-    public RestResult<Void> saveMilestones(@RequestBody List<MilestoneResource> milestones, @PathVariable("competitionId") final Long competitionId) {
+    public RestResult<Void> saveMilestones(@RequestBody final List<MilestoneResource> milestones,
+                                           @PathVariable("competitionId") final Long competitionId) {
          return milestoneService.update(competitionId, milestones).toPutResponse();
     }
 
     @RequestMapping(value = "/{competitionId}/save", method = RequestMethod.PUT)
-    public RestResult<Void> saveMilestone(@RequestBody MilestoneResource milestone, @PathVariable("competitionId") final Long competitionId) {
-        return milestoneService.updateMilestone(competitionId, milestone).toPutResponse();
+    public RestResult<Void> saveMilestone(@RequestBody final MilestoneResource milestone) {
+        return milestoneService.updateMilestone(milestone).toPutResponse();
     }
  }

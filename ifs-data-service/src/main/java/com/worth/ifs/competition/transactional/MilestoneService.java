@@ -1,13 +1,12 @@
 package com.worth.ifs.competition.transactional;
 
-import java.util.List;
-
+import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.competition.resource.MilestoneResource;
 import com.worth.ifs.competition.resource.MilestoneType;
 import com.worth.ifs.security.SecuredBySpring;
 import org.springframework.security.access.prepost.PreAuthorize;
 
-import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.competition.resource.MilestoneResource;
+import java.util.List;
 
 /**
  * Service for operations around the usage and processing of Milestones
@@ -21,7 +20,7 @@ public interface MilestoneService {
     @PreAuthorize("hasAuthority('comp_admin')")
     @SecuredBySpring(value="READ", securedType=MilestoneResource.class,
             description = "Only Comp Admins can request the milestones for the comopetition by its type")
-    ServiceResult<MilestoneResource> getMilestoneByTypeAndCompetitionId(final Long id, MilestoneType type);
+    ServiceResult<MilestoneResource> getMilestoneByTypeAndCompetitionId(final MilestoneType type, final Long id);
 
     @PreAuthorize("hasAuthority('comp_admin')")
     @SecuredBySpring(value="UPDATE", securedType=MilestoneResource.class,
@@ -31,7 +30,7 @@ public interface MilestoneService {
     @PreAuthorize("hasAuthority('comp_admin')")
     @SecuredBySpring(value="UPDATE", securedType=MilestoneResource.class,
             description = "Only Comp Admins is able to save single milestone for the given competitions")
-    ServiceResult<Void> updateMilestone(Long id, MilestoneResource milestone);
+    ServiceResult<Void> updateMilestone(MilestoneResource milestone);
 
     @PreAuthorize("hasAuthority('comp_admin')")
     @SecuredBySpring(value="UPDATE", securedType=MilestoneResource.class,

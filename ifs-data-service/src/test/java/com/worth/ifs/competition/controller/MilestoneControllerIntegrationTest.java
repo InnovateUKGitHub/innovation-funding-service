@@ -1,25 +1,21 @@
 package com.worth.ifs.competition.controller;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Stream;
-
+import com.worth.ifs.BaseControllerIntegrationTest;
+import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.competition.resource.MilestoneResource;
+import com.worth.ifs.competition.resource.MilestoneType;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.worth.ifs.BaseControllerIntegrationTest;
-import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.competition.resource.MilestoneResource;
-import com.worth.ifs.competition.resource.MilestoneType;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
+
+import static org.junit.Assert.*;
 
 /**
  * Integration test for testing the rest services of the milestone controller
@@ -65,17 +61,17 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
     @Rollback
     @Test
     public void testGetDateByTypeAndCompetitionId() throws Exception {
-        RestResult<MilestoneResource> milestoneResult = controller.getMilestoneByTypeAndCompetitionId(COMPETITION_ID_INVALID, MilestoneType.BRIEFING_EVENT);
+        RestResult<MilestoneResource> milestoneResult = controller.getMilestoneByTypeAndCompetitionId(MilestoneType.BRIEFING_EVENT, COMPETITION_ID_VALID);
         assertTrue(milestoneResult.isSuccess());
         MilestoneResource milestone = milestoneResult.getSuccessObject();
         assertNotNull(milestone);
-        assertEquals(LocalDateTime.of(2026,3,15,9,0), milestone.getDate());
+        assertEquals(LocalDateTime.of(2036, 3, 15, 9, 0), milestone.getDate());
     }
 
     @Rollback
     @Test
     public void testGetNullDateByTypeAndCompetitionId() throws Exception {
-        RestResult<MilestoneResource> milestoneResult = controller.getMilestoneByTypeAndCompetitionId(COMPETITION_ID_VALID, MilestoneType.NOTIFICATIONS);
+        RestResult<MilestoneResource> milestoneResult = controller.getMilestoneByTypeAndCompetitionId(MilestoneType.NOTIFICATIONS, COMPETITION_ID_VALID);
         assertTrue(milestoneResult.isSuccess());
         MilestoneResource milestone = milestoneResult.getSuccessObject();
         assertNull(milestone.getDate());
@@ -146,6 +142,18 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
         controller.saveMilestones(milestones, COMPETITION_ID_UPDATE);
     }
 
+    @Test
+    @Rollback
+    public void testUpdateSingleMilestone() throws Exception {
+        MilestoneResource milestone = getMilestoneByCompetitionByType(COMPETITION_ID_UPDATE, MilestoneType.BRIEFING_EVENT);
+
+        assertNotNull(milestone);
+
+        LocalDateTime milestoneDate = LocalDateTime.now();
+        milestone.setDate(milestoneDate.plusMonths(1));
+
+        controller.saveMilestone(milestone);
+    }
 
     private MilestoneResource createNewMilestone(MilestoneType name, Long competitionId) {
         RestResult<MilestoneResource> milestoneResult = controller.create(name, competitionId);
@@ -165,6 +173,12 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
 
     private List<MilestoneResource> getMilestonesForCompetition(Long competitionId){
         RestResult<List<MilestoneResource>> milestoneResult = controller.getAllDatesByCompetitionId(competitionId);
+        assertTrue(milestoneResult.isSuccess());
+        return milestoneResult.getSuccessObject();
+    }
+
+    private MilestoneResource getMilestoneByCompetitionByType(Long competitionId, MilestoneType type) {
+        RestResult<MilestoneResource> milestoneResult = controller.getMilestoneByTypeAndCompetitionId(type, competitionId);
         assertTrue(milestoneResult.isSuccess());
         return milestoneResult.getSuccessObject();
     }
