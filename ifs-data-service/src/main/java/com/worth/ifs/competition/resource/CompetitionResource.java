@@ -3,6 +3,7 @@ package com.worth.ifs.competition.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.application.resource.ApplicationResource;
+import freemarker.template.utility.NumberUtil;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -11,6 +12,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static java.time.temporal.ChronoUnit.DAYS;
 
 public class CompetitionResource {
     public static final ChronoUnit CLOSING_SOON_CHRONOUNIT = ChronoUnit.HOURS;
@@ -197,17 +200,17 @@ public class CompetitionResource {
 
     @JsonIgnore
     public long getDaysLeft() {
-        return getDaysBetween(LocalDateTime.now(), this.endDate);
+        return DAYS.between(LocalDateTime.now(), this.endDate);
     }
 
     @JsonIgnore
     public long getAssessmentDaysLeft() {
-        return getDaysBetween(LocalDateTime.now(), this.assessmentEndDate);
+        return DAYS.between(LocalDateTime.now(), this.assessmentEndDate);
     }
 
     @JsonIgnore
     public long getTotalDays() {
-        return getDaysBetween(this.startDate, this.endDate);
+        return DAYS.between(this.startDate, this.endDate);
     }
 
     @JsonIgnore
@@ -218,7 +221,7 @@ public class CompetitionResource {
 
     @JsonIgnore
     public long getAssessmentTotalDays() {
-        return getDaysBetween(this.assessmentStartDate, this.assessmentEndDate);
+        return DAYS.between(this.assessmentStartDate, this.assessmentEndDate);
     }
 
     @JsonIgnore
@@ -249,11 +252,7 @@ public class CompetitionResource {
         this.questions = questions;
     }
 
-    private long getDaysBetween(LocalDateTime dateA, LocalDateTime dateB) {
-        return ChronoUnit.DAYS.between(dateA, dateB);
-    }
-
-    private long getDaysLeftPercentage(long daysLeft, long totalDays) {
+    private static long getDaysLeftPercentage(long daysLeft, long totalDays) {
         if (daysLeft <= 0) {
             return 100;
         }
