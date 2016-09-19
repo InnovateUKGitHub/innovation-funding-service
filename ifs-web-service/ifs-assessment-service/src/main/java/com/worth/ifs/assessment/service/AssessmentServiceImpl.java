@@ -8,6 +8,8 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 import static java.util.Optional.ofNullable;
 
 /**
@@ -21,8 +23,13 @@ public class AssessmentServiceImpl implements AssessmentService {
     private AssessmentRestService assessmentRestService;
 
     @Override
-    public AssessmentResource getById(final Long id) {
+    public AssessmentResource getById(Long id) {
         return assessmentRestService.getById(id).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public List<AssessmentResource> getByUserAndCompetition(Long userId, Long competitionId) {
+        return assessmentRestService.getByUserAndCompetition(userId, competitionId).getSuccessObjectOrThrowException();
     }
 
     @Override
