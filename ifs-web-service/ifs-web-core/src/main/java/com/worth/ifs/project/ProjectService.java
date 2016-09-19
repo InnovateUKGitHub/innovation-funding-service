@@ -78,4 +78,12 @@ public interface ProjectService {
     ServiceResult<Void> setPartnerDocumentsSubmitted(Long projectId);
 
     ProjectTeamStatusResource getProjectTeamStatus(Long projectId);
+
+    Optional<ByteArrayResource> getGrantOfferLetterFile(Long projectId);
+
+    Optional<FileEntryResource> getGrantOfferLetterFileDetails(Long projectId);
+
+    Optional<ByteArrayResource> getAdditionalContractFile(Long projectId);
+
+    Optional<FileEntryResource> getAdditionalContractFileDetails(Long projectId);
 }

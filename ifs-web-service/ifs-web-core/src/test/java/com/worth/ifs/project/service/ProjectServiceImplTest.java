@@ -348,4 +348,28 @@ public class ProjectServiceImplTest {
 
         verify(projectRestService).getProjectTeamStatus(1L);
     }
+
+    @Test
+    public void testGetGrantOfferLetterFile() {
+
+        Optional<ByteArrayResource> content = Optional.of(new ByteArrayResource("My content!".getBytes()));
+        when(projectRestService.getGrantOfferLetterFile(123L)).thenReturn(restSuccess(content));
+
+        Optional<ByteArrayResource> result = service.getGrantOfferLetterFile(123L);
+        assertEquals(content, result);
+    }
+
+    @Test
+    public void testGetGrantOfferLetterFileDetails() {
+
+        FileEntryResource returnedFile = newFileEntryResource().build();
+
+        Optional<FileEntryResource> response = Optional.of(returnedFile);
+        when(projectRestService.getGrantOfferLetterFileDetails(123L)).thenReturn(restSuccess(response));
+
+        Optional<FileEntryResource> result = service.getGrantOfferLetterFileDetails(123L);
+        assertEquals(response, result);
+    }
+
+
 }

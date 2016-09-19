@@ -49,6 +49,8 @@ public class Project implements ProcessActivity {
 
     private LocalDateTime documentsSubmittedDate;
 
+    private LocalDateTime offerSubmittedDate;
+
     @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProjectUser> projectUsers = new ArrayList<>();
 
@@ -68,7 +70,7 @@ public class Project implements ProcessActivity {
     @JoinColumn(name="additionalContractFileEntryId", referencedColumnName = "id")
     private FileEntry additionalContractFile;
 
-    private boolean offerSigned = false;
+        private boolean offerSigned = false;
 
     public Project() {}
 
@@ -194,6 +196,14 @@ public class Project implements ProcessActivity {
 
     public void setDocumentsSubmittedDate(LocalDateTime documentsSubmittedDate) {
         this.documentsSubmittedDate = documentsSubmittedDate;
+    }
+
+    public LocalDateTime getOfferSubmittedDate() {
+        return offerSubmittedDate;
+    }
+
+    public void setOfferSubmittedDate(LocalDateTime offerSubmittedDate) {
+        this.offerSubmittedDate = offerSubmittedDate;
     }
 
     public FileEntry getCollaborationAgreement() {

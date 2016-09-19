@@ -153,4 +153,37 @@ public class ProjectRestServiceImpl extends BaseRestService implements ProjectRe
     public RestResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId){
         return getWithRestResult(projectRestURL + "/" + projectId + "/team-status", ProjectTeamStatusResource.class);
     }
+
+    @Override
+    public RestResult<Optional<ByteArrayResource>> getGrantOfferLetterFile(Long projectId) {
+        return getWithRestResult(projectRestURL + "/" + projectId + "/grant-offer", ByteArrayResource.class).toOptionalIfNotFound();
+    }
+
+    @Override
+    public RestResult<Optional<FileEntryResource>> getGrantOfferLetterFileDetails(Long projectId) {
+        return getWithRestResult(projectRestURL + "/" + projectId + "/grant-offer/details", FileEntryResource.class).toOptionalIfNotFound();
+    }
+
+    @Override
+    public RestResult<FileEntryResource> addGrantOfferLetterFile(Long projectId, String contentType,  long contentLength, String originalFilename, byte[] bytes) {
+        String url = projectRestURL + "/" + projectId + "/grant-offer?filename=" + originalFilename;
+        return postWithRestResult(url, bytes, createFileUploadHeader(contentType, contentLength), FileEntryResource.class);
+    }
+
+    @Override
+    public RestResult<Optional<ByteArrayResource>> getAdditionalContractFile(Long projectId) {
+        return getWithRestResult(projectRestURL + "/" + projectId + "/additional-contract", ByteArrayResource.class).toOptionalIfNotFound();
+    }
+
+    @Override
+    public RestResult<Optional<FileEntryResource>> getAdditionalContractFileDetails(Long projectId) {
+        return getWithRestResult(projectRestURL + "/" + projectId + "/additional-contract/details", FileEntryResource.class).toOptionalIfNotFound();
+    }
+
+    @Override
+    public RestResult<FileEntryResource> addAdditionalContractFile(Long projectId, String contentType, long contentLength, String originalFilename, byte[] bytes) {
+        String url = projectRestURL + "/" + projectId + "/additional-contract?filename=" + originalFilename;
+        return postWithRestResult(url, bytes, createFileUploadHeader(contentType, contentLength), FileEntryResource.class);
+    }
+
 }

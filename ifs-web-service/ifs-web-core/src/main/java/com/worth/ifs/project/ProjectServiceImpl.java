@@ -227,6 +227,26 @@ public class ProjectServiceImpl implements ProjectService {
         return projectRestService.getProjectTeamStatus(projectId).getSuccessObjectOrThrowException();
     }
 
+    @Override
+    public Optional<ByteArrayResource> getGrantOfferLetterFile(Long projectId) {
+        return projectRestService.getGrantOfferLetterFile(projectId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public Optional<FileEntryResource> getGrantOfferLetterFileDetails(Long projectId) {
+        return projectRestService.getGrantOfferLetterFileDetails(projectId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public Optional<ByteArrayResource> getAdditionalContractFile(Long projectId) {
+        return null;
+    }
+
+    @Override
+    public Optional<FileEntryResource> getAdditionalContractFileDetails(Long projectId) {
+        return null;
+    }
+
     private List<ProjectUserResource> getProjectUsersWithPartnerRole(Long projectId) {
         List<ProjectUserResource> projectUsers = getProjectUsersForProject(projectId);
         return simpleFilter(projectUsers, pu -> PARTNER.getName().equals(pu.getRoleName()));

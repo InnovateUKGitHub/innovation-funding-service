@@ -426,4 +426,33 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
 
         assertTrue(result.isSuccess());
     }
+
+    @Test
+    public void testGetGrantOfferLetterFileContent() {
+
+        String expectedUrl = projectRestURL + "/123/grant-offer";
+        ByteArrayResource returnedFileContents = new ByteArrayResource("Retrieved content".getBytes());
+
+        setupGetWithRestResultExpectations(expectedUrl, ByteArrayResource.class, returnedFileContents, OK);
+
+        // now run the method under test
+        ByteArrayResource retrievedFileEntry = service.getGrantOfferLetterFile(123L).getSuccessObject().get();
+
+        assertEquals(returnedFileContents, retrievedFileEntry);
+    }
+
+    @Test
+    public void testGetGrantOfferLetterFileContentEmptyIfNotFound() {
+
+        String expectedUrl = projectRestURL + "/123/grant-offer";
+
+        setupGetWithRestResultExpectations(expectedUrl, ByteArrayResource.class, null, NOT_FOUND);
+
+        // now run the method under test
+        Optional<ByteArrayResource> retrievedFileEntry = service.getGrantOfferLetterFile(123L).getSuccessObject();
+
+        assertFalse(retrievedFileEntry.isPresent());
+    }
+
+
 }

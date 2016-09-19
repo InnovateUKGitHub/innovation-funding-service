@@ -52,8 +52,10 @@ public class ProjectGrantOfferLetterController {
 
         //TODO: get grant offer letter from project service
         Optional<FileEntryResource> grantOfferLetter = Optional.of(new FileEntryResource(1L, "grantOfferLetter", "application/pdf", 10000));
+
         //TODO: get extra contract file from project service
         Optional<FileEntryResource> additionalContractFile = Optional.of(new FileEntryResource(1L, "additionalContractFile", "application/pdf", 10000));
+
 
         //TODO: To be implenented - INFUND-4848
         LocalDateTime submittedDate = null;
@@ -66,6 +68,5 @@ public class ProjectGrantOfferLetterController {
                 additionalContractFile.map(FileDetailsViewModel::new).orElse(null),
                 offerSigned, submittedDate, offerAccepted, offerRejected);
     }
-
 
 }
