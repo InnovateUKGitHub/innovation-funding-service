@@ -19,9 +19,9 @@ public class AssessmentSummaryForm implements BindingResultTarget {
 
     @NotNull(message = "{validation.assessmentsummaryform.fundingConfirmation.required}")
     private Boolean fundingConfirmation;
-    @Size(max = 255, message = "{validation.field.too.many.characters}")
+    @Size(max = 5000, message = "{validation.field.too.many.characters}")
     private String feedback;
-    @Size(max = 255, message = "{validation.field.too.many.characters}")
+    @Size(max = 5000, message = "{validation.field.too.many.characters}")
     private String comment;
     private BindingResult bindingResult;
     private List<ObjectError> objectErrors;
