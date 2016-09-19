@@ -26,6 +26,7 @@ import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.invite.builder.RejectionReasonResourceBuilder.newRejectionReasonResource;
 import static com.worth.ifs.util.JsonMappingUtil.fromJson;
 import static com.worth.ifs.util.JsonMappingUtil.toJson;
+import static java.util.Collections.nCopies;
 import static java.util.Optional.empty;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -188,6 +189,23 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
                 .build(), comment);
 
         Error rejectCommentError = fieldError("rejectComment", comment, "validation.field.too.many.characters", "", "5000", "0");
+
+        mockMvc.perform(
+                post("/competitioninvite/rejectInvite/{inviteHash}", "hash")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(rejectionResource)))
+                .andExpect(status().isNotAcceptable())
+                .andExpect(content().json(toJson(new RestErrorResponse(rejectCommentError))));
+    }
+
+    @Test
+    public void rejectInvite_exceedsWordLimit() throws Exception {
+        String comment = String.join(" ", nCopies(101, "comment"));
+        CompetitionRejectionResource rejectionResource = new CompetitionRejectionResource(newRejectionReasonResource()
+                .withId(1L)
+                .build(), comment);
+
+        Error rejectCommentError = fieldError("rejectComment", comment, "validation.field.max.word.count", "", "100");
 
         mockMvc.perform(
                 post("/competitioninvite/rejectInvite/{inviteHash}", "hash")

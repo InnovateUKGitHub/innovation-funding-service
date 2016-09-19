@@ -133,7 +133,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
         ServiceResult<Void> result = assessmentService.recommend(assessmentId, processOutcomeResource);
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(fieldError("feedback", feedback, "validation.field.max.word.count", 100), fieldError("comment", comment, "validation.field.max.word.count", 100)));
+        assertTrue(result.getFailure().is(fieldError("feedback", feedback, "validation.field.max.word.count", "", 100), fieldError("comment", comment, "validation.field.max.word.count", "", 100)));
     }
 
     @Test

@@ -1,5 +1,6 @@
 package com.worth.ifs.assessment.form;
 
+import com.worth.ifs.commons.validation.constraints.WordCount;
 import com.worth.ifs.controller.BaseBindingResultTarget;
 import com.worth.ifs.invite.resource.RejectionReasonResource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -16,6 +17,7 @@ public class RejectCompetitionForm extends BaseBindingResultTarget {
     @NotNull(message = "{validation.rejectcompetitionform.rejectReason.required}")
     private RejectionReasonResource rejectReason;
     @Size(max = 5000, message = "{validation.field.too.many.characters}")
+    @WordCount(max = 100, message = "{validation.field.max.word.count}")
     private String rejectComment;
 
     public RejectionReasonResource getRejectReason() {
