@@ -161,39 +161,41 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     @Override
     public ServiceResult<Void> setProjectManager(Long projectId, Long projectManagerUserId) {
         return getProject(projectId).
-                andOnSuccess(project -> validateIfProjectAlreadySubmitted(project)).
+                andOnSuccess(this::validateIfProjectAlreadySubmitted).
                 andOnSuccess(project -> validateProjectManager(project, projectManagerUserId).
-                        andOnSuccess(leadPartner -> createOrUpdateProjectManagerForProject(project, leadPartner)));
+                andOnSuccess(leadPartner -> createOrUpdateProjectManagerForProject(project, leadPartner)));
     }
 
     @Override
     public ServiceResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate) {
         return validateProjectStartDate(projectStartDate).
                 andOnSuccess(() -> getProject(projectId)).
-                andOnSuccess(project -> validateIfProjectAlreadySubmitted(project)).
+                andOnSuccess(this::validateIfProjectAlreadySubmitted).
                 andOnSuccessReturnVoid(project -> project.setTargetStartDate(projectStartDate));
     }
 
     @Override
     public ServiceResult<Void> updateFinanceContact(Long projectId, Long organisationId, Long financeContactUserId) {
         return getProject(projectId).
-                andOnSuccess(project -> validateIfProjectAlreadySubmitted(project)).
+                andOnSuccess(this::validateIfProjectAlreadySubmitted).
                 andOnSuccess(project -> validateProjectOrganisationFinanceContact(project, organisationId, financeContactUserId).
-                        andOnSuccess(projectUser -> createFinanceContactProjectUser(projectUser.getUser(), project, projectUser.getOrganisation()).
-                                andOnSuccessReturnVoid(financeContact -> addFinanceContactToProject(project, financeContact))));
+                andOnSuccess(projectUser -> createFinanceContactProjectUser(projectUser.getUser(), project, projectUser.getOrganisation()).
+                andOnSuccessReturnVoid(financeContact -> addFinanceContactToProject(project, financeContact))));
     }
 
     @Override
     public ServiceResult<Void> updateProjectAddress(Long organisationId, Long projectId, OrganisationAddressType organisationAddressType, AddressResource address) {
+
         Project project = projectRepository.findOne(projectId);
         Organisation leadOrganisation = organisationRepository.findOne(organisationId);
+
         if (address.getId() != null && addressRepository.exists(address.getId())) {
             Address existingAddress = addressRepository.findOne(address.getId());
             project.setAddress(existingAddress);
         } else {
             Address newAddress = addressMapper.mapToDomain(address);
             if (address.getOrganisations() == null || address.getOrganisations().size() == 0) {
-                AddressType addressType = addressTypeRepository.findOne((long) organisationAddressType.getOrdinal());
+                AddressType addressType = addressTypeRepository.findOne(organisationAddressType.getOrdinal());
                 List<OrganisationAddress> existingOrgAddresses = organisationAddressRepository.findByOrganisationIdAndAddressType(leadOrganisation.getId(), addressType);
                 existingOrgAddresses.stream().forEach(oA -> organisationAddressRepository.delete(oA));
                 OrganisationAddress organisationAddress = new OrganisationAddress(leadOrganisation, newAddress, addressType);
@@ -201,7 +203,12 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
             }
             project.setAddress(newAddress);
         }
-        return serviceSuccess();
+
+        if (projectDetailsWorkflowHandler.projectAddressAdded(project, getCurrentlyLoggedInPartner(project))) {
+            return serviceSuccess();
+        } else {
+            return serviceFailure(PROJECT_SETUP_CANNOT_PROGRESS_WORKFLOW);
+        }
     }
 
     @Override
@@ -229,9 +236,10 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
     @Override
     public ServiceResult<Void> saveProjectSubmitDateTime(final Long projectId, LocalDateTime date) {
+
         return getProject(projectId).andOnSuccess(project -> {
-            UserResource currentUser = (UserResource) SecurityContextHolder.getContext().getAuthentication().getDetails();
-            ProjectUser projectUser = simpleFindFirst(project.getProjectUsers(), pu -> pu.getUser().getId().equals(currentUser.getId())).get();
+
+            ProjectUser projectUser = getCurrentlyLoggedInPartner(project);
 
             if (projectDetailsWorkflowHandler.submitProjectDetails(project, projectUser)) {
                 return setSubmittedDate(project, date);
@@ -239,6 +247,16 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
                 return serviceFailure(new Error(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_SUBMITTED_IF_INCOMPLETE));
             }
         });
+    }
+
+    private ProjectUser getCurrentlyLoggedInPartner(Project project) {
+        return getCurrentlyLoggedInProjectUser(project, PROJECT_PARTNER);
+    }
+
+    private ProjectUser getCurrentlyLoggedInProjectUser(Project project, ProjectParticipantRole role) {
+        UserResource currentUser = (UserResource) SecurityContextHolder.getContext().getAuthentication().getDetails();
+        return simpleFindFirst(project.getProjectUsers(), pu ->
+                pu.getUser().getId().equals(currentUser.getId()) && pu.getRole().equals(role)).get();
     }
 
     @Override
@@ -555,8 +573,9 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         return getProject(projectId).andOnSuccess(project -> {
             if (!project.isProjectDetailsSubmitted()) {
                 return serviceFailure(new Error(PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED));
+            } else {
+                return serviceSuccess();
             }
-            return serviceSuccess();
         });
     }
 
@@ -601,15 +620,21 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         return serviceSuccess();
     }
 
-    private void addFinanceContactToProject(Project project, ProjectUser financeContact) {
+    private ServiceResult<Void> addFinanceContactToProject(Project project, ProjectUser financeContact) {
 
-        ProjectUser existingUser = project.getExistingProjectUserWithRoleForOrganisation(ProjectParticipantRole.PROJECT_FINANCE_CONTACT, financeContact.getOrganisation());
+        ProjectUser existingUser = project.getExistingProjectUserWithRoleForOrganisation(PROJECT_FINANCE_CONTACT, financeContact.getOrganisation());
 
         if (existingUser != null) {
             project.removeProjectUser(existingUser);
         }
 
         project.addProjectUser(financeContact);
+
+        if (projectDetailsWorkflowHandler.projectFinanceContactAdded(project, getCurrentlyLoggedInPartner(project))) {
+            return serviceSuccess();
+        } else {
+            return serviceFailure(PROJECT_SETUP_CANNOT_PROGRESS_WORKFLOW);
+        }
     }
 
     private ServiceResult<ProjectUser> createFinanceContactProjectUser(User user, Project project, Organisation organisation) {
@@ -758,9 +783,8 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     private ServiceResult<Void> createProcessEntriesForNewProject(Project newProject) {
 
         ProjectUser originalLeadApplicantProjectUser = newProject.getProjectUsers().get(0);
-        boolean projectDetailsProcessCreated = projectDetailsWorkflowHandler.projectCreated(newProject, originalLeadApplicantProjectUser);
 
-        if (projectDetailsProcessCreated) {
+        if (projectDetailsWorkflowHandler.projectCreated(newProject, originalLeadApplicantProjectUser)) {
             return serviceSuccess();
         } else {
             return serviceFailure(new Error(PROJECT_SETUP_UNABLE_TO_CREATE_PROJECT_PROCESSES));
@@ -798,7 +822,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
         Optional<ProjectUser> existingProjectManager = getExistingProjectManager(project);
 
-        return existingProjectManager.map(pm -> {
+        ServiceResult<Void> setProjectManagerResult = existingProjectManager.map(pm -> {
 
             pm.setUser(leadPartnerUser.getUser());
             pm.setOrganisation(leadPartnerUser.getOrganisation());
@@ -809,6 +833,15 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
                     PROJECT_MANAGER, leadPartnerUser.getOrganisation());
             project.addProjectUser(projectUser);
             return serviceSuccess();
+        });
+
+        return setProjectManagerResult.andOnSuccess(() -> {
+
+            if (projectDetailsWorkflowHandler.projectManagerAdded(project, leadPartnerUser)) {
+                return serviceSuccess();
+            } else {
+                return serviceFailure(PROJECT_SETUP_CANNOT_PROGRESS_WORKFLOW);
+            }
         });
     }
 
