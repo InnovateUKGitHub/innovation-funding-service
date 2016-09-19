@@ -63,7 +63,8 @@
 			<p>The grant offer letter has been created from the information supplied by the applicants.</p>
 
 			<div class="uploaded-file" id="gol-uploaded" th:unless="${param.action != null and param.action[0] == 'removeGOL'}">
-				<a href="#">Grant offer letter 2016-04-28a.PDF</a> <a th:href="@{?action=removeGOL}" class="extra-margin-left" id="gol-remove">Remove</a>
+				<a href="#">Grant offer letter 2016-04-28a.PDF</a> 
+				<!-- <a th:href="@{?action=removeGOL}" class="extra-margin-left" id="gol-remove">Remove</a> -->
 			</div>
 
 			<th:block th:if="${param.action != null and param.action[0] == 'removeGOL'}">

@@ -1,6 +1,8 @@
 package com.worth.ifs.application.resource;
 
 import com.worth.ifs.competition.resource.CompetitionResource;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -105,5 +107,35 @@ public class CompetitionSummaryResource {
 	
 	public void setApplicationsFunded(Long applicationsFunded) {
 		this.applicationsFunded = applicationsFunded;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+
+		if (o == null || getClass() != o.getClass()) return false;
+
+		CompetitionSummaryResource that = (CompetitionSummaryResource) o;
+
+		return new EqualsBuilder()
+				.append(competitionId, that.competitionId)
+				.append(competitionName, that.competitionName)
+				.append(competitionStatus, that.competitionStatus)
+				.append(applicationDeadline, that.applicationDeadline)
+				.append(totalNumberOfApplications, that.totalNumberOfApplications)
+				.append(applicationsStarted, that.applicationsStarted)
+				.append(applicationsInProgress, that.applicationsInProgress)
+				.append(applicationsSubmitted, that.applicationsSubmitted)
+				.append(applicationsNotSubmitted, that.applicationsNotSubmitted)
+				.append(applicationsFunded, that.applicationsFunded)
+				.isEquals();
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(17, 37)
+				.append(competitionId)
+				.append(competitionName)
+				.toHashCode();
 	}
 }
