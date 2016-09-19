@@ -40,7 +40,6 @@ import com.worth.ifs.email.service.EmailService;
 import com.worth.ifs.file.mapper.FileEntryMapper;
 import com.worth.ifs.file.transactional.FileHttpHeadersValidator;
 import com.worth.ifs.file.transactional.FileService;
-import com.worth.ifs.finance.handler.ApplicationFinanceHandler;
 import com.worth.ifs.finance.mapper.ApplicationFinanceMapper;
 import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
 import com.worth.ifs.finance.repository.FinanceRowRepository;

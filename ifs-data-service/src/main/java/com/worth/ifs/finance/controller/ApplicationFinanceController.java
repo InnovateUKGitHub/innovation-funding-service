@@ -8,7 +8,6 @@ import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.FileAndContents;
 import com.worth.ifs.file.transactional.FileHttpHeadersValidator;
 import com.worth.ifs.finance.domain.ApplicationFinance;
-import com.worth.ifs.finance.handler.ApplicationFinanceHandler;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.ApplicationFinanceResourceId;
 import com.worth.ifs.finance.transactional.FinanceRowService;
@@ -37,9 +36,6 @@ public class ApplicationFinanceController {
 
     @Autowired
     private FinanceRowService financeRowService;
-
-    @Autowired
-    private ApplicationFinanceHandler applicationFinanceHandler;
 
     @Autowired
     @Qualifier("applicationFinanceFileValidator")

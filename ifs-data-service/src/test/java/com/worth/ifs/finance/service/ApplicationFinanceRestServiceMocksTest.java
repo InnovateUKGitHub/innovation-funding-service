@@ -2,7 +2,6 @@ package com.worth.ifs.finance.service;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.file.resource.FileEntryResource;
-import com.worth.ifs.finance.builder.ApplicationFinanceResourceBuilder;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import org.junit.Test;
 
