@@ -30,8 +30,9 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...
 ...               INFUND-4581 As a Competitions team member I want the service to automatically save my edits while I work through Funding Information section in Competition Setup the so that I do not lose my changes
 ...
-...               INFUND-4725
-...               As a Competitions team member I want to be guided to complete all mandatory information in the Initial Details section so that I can access the correct details in the other sections in Competition Setup.
+...               INFUND-4725 As a Competitions team member I want to be guided to complete all mandatory information in the Initial Details section so that I can access the correct details in the other sections in Competition Setup. \
+...
+...               INFUND-4582 As a Competitions team member I want the service to automatically save my edits while I work through Eligibility section in Competition Setup the so that I do not lose my changes
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin    CompSetup
@@ -339,6 +340,12 @@ Eligibility client-side validations
     And the user enters text to a text field    id=streamName    Test stream name
     And the user moves focus to a different part of the page
     And the user should not see the text in the page    A stream name is required
+
+Eligibility Autosave
+    [Documentation]    INFUND-4582
+    When the user clicks the button/link    link=Competition set up
+    and the user clicks the button/link    link=Eligibility
+    Then the user should see the correct details in the eligibility form
 
 Eligibility can be marked as done then edit again
     [Documentation]    INFUND-3051
@@ -691,3 +698,14 @@ the user should see the correct details in the funding information form
     Should Be Equal As Strings    ${input_value}    2004
     ${input_value} =    Get Value    id=activityCode
     Should Be Equal As Strings    ${input_value}    4242
+
+the user should see the correct details in the eligibility form
+    Radio Button Should Be Set To    multipleStream    yes
+    ${input_value} =    Get Value    id=streamName
+    Should Be Equal    ${input_value}    Test stream name
+    Radio Button Should Be Set To    singleOrCollaborative    single
+    Checkbox Should Be Selected    id=research-categories-33
+    Checkbox Should Be Selected    id=research-categories-34
+    Checkbox Should Be Selected    id=research-categories-35
+    Radio Button Should Be Set To    leadApplicantType    business
+    Page Should Contain    30%
