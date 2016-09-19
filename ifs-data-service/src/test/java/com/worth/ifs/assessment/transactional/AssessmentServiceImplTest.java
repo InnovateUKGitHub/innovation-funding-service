@@ -202,6 +202,22 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
+    public void rejectInvitation_exceedsWordLimit() throws Exception {
+        String reason = "reason";
+        String comment = String.join(" ", nCopies(101, "comment"));
+
+        ProcessOutcomeResource processOutcomeResource = newProcessOutcomeResource()
+                .withComment(comment)
+                .withDescription(reason)
+                .withOutcomeType(AssessmentOutcomes.REJECT.getType())
+                .build();
+
+        ServiceResult<Void> result = assessmentService.rejectInvitation(1L, processOutcomeResource);
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(fieldError("comment", comment, "validation.field.max.word.count", "", 100)));
+    }
+
+    @Test
     public void rejectInvitation_eventNotAccepted() throws Exception {
         Long assessmentId = 1L;
         Long processRoleId = 2L;

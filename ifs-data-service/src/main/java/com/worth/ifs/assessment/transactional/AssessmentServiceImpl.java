@@ -59,7 +59,10 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
 
     @Override
     public ServiceResult<Void> recommend(Long assessmentId, ProcessOutcomeResource processOutcome) {
-        ValidationMessages validationMessages = getValidationMessagesWithDescriptionAsFeedback(validate(processOutcome));
+        // TODO lookup word limit: INFUND-4512
+        int wordLimit = 100;
+
+        ValidationMessages validationMessages = getValidationMessagesWithDescriptionAsFeedback(validate(processOutcome, wordLimit));
         if (validationMessages.hasErrors()) {
             return serviceFailure(validationMessages.getErrors());
         }
@@ -74,6 +77,11 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
 
     @Override
     public ServiceResult<Void> rejectInvitation(Long assessmentId, ProcessOutcomeResource processOutcome) {
+        ValidationMessages validationMessages = validate(processOutcome, 100);
+        if (validationMessages.hasErrors()) {
+            return serviceFailure(validationMessages.getErrors());
+        }
+
         return find(assessmentRepository.findOne(assessmentId), notFoundError(AssessmentRepository.class, assessmentId)).andOnSuccess(found -> {
             if (!assessmentWorkflowEventHandler.rejectInvitation(found.getParticipant().getId(), found, processOutcomeMapper.mapToDomain(processOutcome))) {
                 return serviceFailure(new Error(ASSESSMENT_REJECTION_FAILED));
@@ -88,10 +96,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
         return result;
     }
 
-    private ValidationMessages validate(ProcessOutcomeResource processOutcome) {
-        // TODO lookup word limit: INFUND-4512
-        int wordLimit = 100;
-
+    private ValidationMessages validate(ProcessOutcomeResource processOutcome, int wordLimit) {
         BeanPropertyBindingResult errors = new BeanPropertyBindingResult(processOutcome, "processOutcome");
         if (!validateWordCount(wordLimit, processOutcome.getDescription())) {
             rejectValue(errors, "description", "validation.field.max.word.count", "", wordLimit);
