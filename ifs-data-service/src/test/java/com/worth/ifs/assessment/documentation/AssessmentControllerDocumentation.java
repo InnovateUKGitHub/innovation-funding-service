@@ -10,6 +10,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
+import java.util.List;
+
 import static com.worth.ifs.assessment.builder.ProcessOutcomeResourceBuilder.newProcessOutcomeResource;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.documentation.AssessmentDocs.assessmentFields;
@@ -21,6 +23,7 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
@@ -53,6 +56,26 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
                                 parameterWithName("id").description("Id of the assessment that is being requested")
                         ),
                         responseFields(assessmentFields)
+                ));
+    }
+
+    @Test
+    public void findByUserAndCompetition() throws Exception {
+        long userId = 1L;
+        long competitionId = 2L;
+        List<AssessmentResource> assessmentResources = assessmentResourceBuilder.build(2);
+
+        when(assessmentServiceMock.findByUserAndCompetition(userId, competitionId)).thenReturn(serviceSuccess(assessmentResources));
+
+        mockMvc.perform(get("/assessment/user/{userId}/competition/{competitionId}", userId, competitionId))
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("userId").description("Id of the user whose assessments are being requested"),
+                                parameterWithName("competitionId").description("Id of the competition associated with the user's assessments")
+                        ),
+                        responseFields(
+                                fieldWithPath("[]").description("List of assessments the user is allowed to see")
+                        )
                 ));
     }
 

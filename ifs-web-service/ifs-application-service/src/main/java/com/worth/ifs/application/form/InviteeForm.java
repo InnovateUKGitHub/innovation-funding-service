@@ -14,7 +14,7 @@ public class InviteeForm implements Serializable {
     private Long userId;
     @NotEmpty (message="{validation.standard.personname.required}")
     private String personName;
-    @NotEmpty (message="{validation.standard.email.required}")
+    @NotEmpty (message="{validation.invite.email.required}")
     @Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message="{validation.standard.email.format}")
     @Size(max = 256, message = "{validation.standard.email.length.max}")
     private String email;

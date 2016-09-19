@@ -1,7 +1,12 @@
 package com.worth.ifs.invite.resource;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+import java.time.LocalDateTime;
+
+import static java.time.temporal.ChronoUnit.DAYS;
 
 /**
  * DTO for {@link com.worth.ifs.invite.domain.CompetitionParticipant}s.
@@ -16,6 +21,17 @@ public class CompetitionParticipantResource {
     private String rejectionReasonComment;
     private CompetitionParticipantRoleResource role;
     private ParticipantStatusResource status;
+    private String competitionName;
+    private LocalDateTime assessmentStartDate;
+    private LocalDateTime assessmentEndDate;
+
+    public String getCompetitionName() {
+        return competitionName;
+    }
+
+    public void setCompetitionName(String competitionName) {
+        this.competitionName = competitionName;
+    }
 
     public Long getId() {
         return id;
@@ -81,6 +97,53 @@ public class CompetitionParticipantResource {
         this.status = status;
     }
 
+    public LocalDateTime getAssessmentStartDate() {
+        return assessmentStartDate;
+    }
+
+    public void setAssessmentStartDate(LocalDateTime assessmentStartDate) {
+        this.assessmentStartDate = assessmentStartDate;
+    }
+
+    public LocalDateTime getAssessmentEndDate() {
+        return assessmentEndDate;
+    }
+
+    public void setAssessmentEndDate(LocalDateTime assessmentEndDate) {
+        this.assessmentEndDate = assessmentEndDate;
+    }
+
+
+    @JsonIgnore
+    public long getAssessmentDaysLeft() {
+        return DAYS.between(LocalDateTime.now(), assessmentEndDate);
+    }
+
+    @JsonIgnore
+    public long getAssessmentDaysLeftPercentage() {
+        return getDaysLeftPercentage(getAssessmentDaysLeft(), DAYS.between(assessmentStartDate, assessmentEndDate));
+    }
+
+    @JsonIgnore
+    public boolean isInAssessment() {
+        return assessmentStartDate.isBefore(LocalDateTime.now()) && assessmentEndDate.isAfter(LocalDateTime.now());
+    }
+
+    @JsonIgnore
+    public boolean isAnUpcomingAssessment() {
+        return assessmentStartDate.isAfter(LocalDateTime.now());
+    }
+
+
+    private static long getDaysLeftPercentage(long daysLeft, long totalDays) {
+        if (daysLeft <= 0) {
+            return 100;
+        }
+        double deadlineProgress = 100 - (((double) daysLeft / (double) totalDays) * 100);
+        long startDateToEndDatePercentage = (long) deadlineProgress;
+        return startDateToEndDatePercentage;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -98,6 +161,9 @@ public class CompetitionParticipantResource {
                 .append(rejectionReasonComment, that.rejectionReasonComment)
                 .append(role, that.role)
                 .append(status, that.status)
+                .append(competitionName, that.competitionName)
+                .append(assessmentStartDate, that.assessmentStartDate)
+                .append(assessmentEndDate, that.assessmentEndDate)
                 .isEquals();
     }
 
@@ -112,6 +178,9 @@ public class CompetitionParticipantResource {
                 .append(rejectionReasonComment)
                 .append(role)
                 .append(status)
+                .append(competitionName)
+                .append(assessmentStartDate)
+                .append(assessmentEndDate)
                 .toHashCode();
     }
 }

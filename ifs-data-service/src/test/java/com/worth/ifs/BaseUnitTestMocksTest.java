@@ -23,6 +23,7 @@ import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.assessment.repository.AssessorFormInputResponseRepository;
 import com.worth.ifs.assessment.transactional.AssessmentService;
 import com.worth.ifs.assessment.transactional.AssessorFormInputResponseService;
+import com.worth.ifs.assessment.transactional.CompetitionInviteService;
 import com.worth.ifs.authentication.service.IdentityProviderService;
 import com.worth.ifs.bankdetails.mapper.BankDetailsMapper;
 import com.worth.ifs.bankdetails.repository.BankDetailsRepository;
@@ -43,6 +44,7 @@ import com.worth.ifs.file.transactional.FileService;
 import com.worth.ifs.finance.mapper.ApplicationFinanceMapper;
 import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
 import com.worth.ifs.finance.repository.FinanceRowRepository;
+import com.worth.ifs.finance.transactional.FinanceRowService;
 import com.worth.ifs.form.repository.FormInputRepository;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
 import com.worth.ifs.form.transactional.FormInputService;
@@ -160,7 +162,7 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected SectionRepository sectionRepositoryMock;
 
     @Mock
-    protected MonitoringOfficerRepository monitoringOfficerRepository;
+    protected MonitoringOfficerRepository monitoringOfficerRepositoryMock;
 
     @Mock
     protected MonitoringOfficerMapper monitoringOfficerMapper;
@@ -203,6 +205,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected CompetitionInviteMapper competitionInviteMapperMock;
+
+    @Mock
+    protected CompetitionInviteService competitionInviteServiceMock;
 
     @Mock
     protected CompetitionParticipantMapper competitionParticipantMapperMock;
@@ -353,6 +358,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected RejectionReasonService rejectionReasonServiceMock;
+
+    @Mock
+    protected FinanceRowService financeRowServiceMock;
 
     @Mock
     protected ProjectDetailsWorkflowHandler projectDetailsWorkflowServiceMock;

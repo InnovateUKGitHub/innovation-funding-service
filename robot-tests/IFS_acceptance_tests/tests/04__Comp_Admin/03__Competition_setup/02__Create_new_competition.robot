@@ -27,36 +27,56 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...
 ...
 ...               INFUND-3001 As a Competitions team member I want the service to automatically save my edits while I work through Initial Details section in Competition Setup the so that I do not lose my changes
+...
+...               INFUND-4581 As a Competitions team member I want the service to automatically save my edits while I work through Funding Information section in Competition Setup the so that I do not lose my changes
+...
+...               INFUND-4725 As a Competitions team member I want to be guided to complete all mandatory information in the Initial Details section so that I can access the correct details in the other sections in Competition Setup. \
+...               INFUND-4582 As a Competitions team member I want the service to automatically save my edits while I work through Eligibility section in Competition Setup the so that I do not lose my changes
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        CompAdmin    CompSetup
+Force Tags        CompAdmin
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
-Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot    # TODO Known bug INFUND-4681, enforces the Competition Type (in Initial Details) to be Programme else Application Questions lead to 404, please do not change the value!
+Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
 
 *** Test Cases ***
 User can create a new competition
     [Documentation]    INFUND-2945
+    ...
     ...    INFUND-2982
+    ...
     ...    INFUND-2983
+    ...
     ...    INFUND-2986
+    ...
     ...    IFUND-3888
+    ...
     ...    INFUND-3002
+    ...
     ...    INFUND-2980
+    ...
+    ...    INFUND-4725
     [Tags]    HappyPath
     Given the user clicks the button/link    id=section-3
     When the user clicks the button/link    jQuery=.button:contains("Create competition")
     Then the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
     And The user should not see the element    jQuery('.button:contains("Save as Ready To Open")
+    And The user should not see the element    link=Funding Information
+    And The user should not see the element    link=Eligibility
+    And The user should not see the element    link=Milestones
+    And The user should not see the element    link=Application Questions
+    And The user should not see the element    link=Application Finances
+    And The user should not see the element    link=Assessors
+    And The user should not see the element    link=Description and brief
 
 New competition shows in Preparation section with the default name
     [Documentation]    INFUND-2980
     Given The user clicks the button/link    link=All competitions
     And The user clicks the button/link    id=section-3
-    Then the competition should show in the correct section    css=section:nth-child(4) li:nth-child(2)    No competition title defined    #this keyword checks if the new application shows in the second line of the "In preparation" competitions
+    Then the competition should show in the correct section    css=section:nth-of-type(1) li:nth-child(2)    No competition title defined    #this keyword checks if the new application shows in the second line of the "In preparation" competitions
 
 Initial details server-side validations
     [Documentation]    INFUND-2982
@@ -121,8 +141,7 @@ Initial details client-side validations
 
 Initial details: Autosave
     [Documentation]    INFUND-3001
-    [Tags]    Pending
-    #pendingI NFUND-4764
+    [Tags]
     When the user clicks the button/link    link=Competition set up
     and the user clicks the button/link    link=Initial Details
     Then the user should see the correct values in the initial details form
@@ -177,11 +196,21 @@ Initial details should have a green check
     Then the user should see the element    jQuery=img.section-status:eq(0)
     And the user should not see the element    jQuery=.button:contains("Save as Ready To Open")
 
+User should have access to all the sections
+    [Documentation]    INFUND-4725
+    Then The user should see the element    link=Funding Information
+    And The user should see the element    link=Eligibility
+    And The user should see the element    link=Milestones
+    And The user should see the element    link=Application Questions
+    And The user should see the element    link=Application Finances
+    And The user should see the element    link=Assessors
+    And The user should see the element    link=Description and brief
+
 New application shows in Preparation section with the new name
     [Documentation]    INFUND-2980
     Given The user clicks the button/link    link=All competitions
     And The user clicks the button/link    id=section-3
-    Then the competition should show in the correct section    css=section:nth-child(4) > ul    Test competition    #This keyword checks if the new competition shows in the "In preparation" test
+    Then the competition should show in the correct section    css=section:nth-of-type(1) > ul    Test competition    #This keyword checks if the new competition shows in the "In preparation" test
 
 Funding information server-side validations
     [Documentation]    INFUND-2985
@@ -200,6 +229,8 @@ Funding information server-side validations
 Funding information client-side validations
     [Documentation]    INFUND-2985
     [Tags]    HappyPath
+    When the user clicks the button/link    jQuery=.button:contains("Generate code")
+    Then The user should not see the text in the page    Please generate a competition code
     When the user enters text to a text field    id=funders0.funder    FunderName
     Then the user should not see the error any more    Please enter a funder name
     And the user enters text to a text field    id=0-funderBudget    20000
@@ -209,9 +240,13 @@ Funding information client-side validations
     And the user enters text to a text field    id=budgetCode    2004
     Then the user should not see the error any more    Please enter a budget code
     And the user enters text to a text field    id=activityCode    4242
-    Then the user should not see the error any more    Please enter an activity code
-    When the user clicks the button/link    jQuery=.button:contains("Generate code")
-    Then The user should not see the text in the page    Please generate a competition code
+    Then The user should not see the error text in the page    Please enter an activity code
+
+Funding information Autosave
+    [Documentation]    INFUND-4581
+    When the user clicks the button/link    link=Competition set up
+    and the user clicks the button/link    link=Funding Information
+    Then the user should see the correct details in the funding information form
 
 Funding informations calculations
     [Documentation]    INFUND-2985
@@ -238,6 +273,8 @@ Funding Information can be saved
 
 Funding Information can be edited
     [Documentation]    INFUND-3002
+    [Tags]    Pending
+    #TODO neAnd The user should see the elemented to enable this And The user should see the elementtest when the INFUND-5111 is fixed
     When the user clicks the button/link    jQuery=.button:contains("Edit")
     And the user enters text to a text field    id=funders0.funder    testFunder
     When the user clicks the button/link    jQuery=.button:contains("Done")
@@ -302,6 +339,12 @@ Eligibility client-side validations
     And the user enters text to a text field    id=streamName    Test stream name
     And the user moves focus to a different part of the page
     And the user should not see the text in the page    A stream name is required
+
+Eligibility Autosave
+    [Documentation]    INFUND-4582
+    When the user clicks the button/link    link=Competition set up
+    and the user clicks the button/link    link=Eligibility
+    Then the user should see the correct details in the eligibility form
 
 Eligibility can be marked as done then edit again
     [Documentation]    INFUND-3051
@@ -394,16 +437,14 @@ Application questions: All the sections should be visible
 
 Application questions: server side validations
     [Documentation]    INFUND-3000
-    [Tags]    HappyPath    Pending
-    # pending INFUND-4769
-    #Given The user clicks the button/link    jQuery=li:nth-child(5) .button:contains(Edit)
-    And The user should see the element    jQuery=.button[value="Save and close"]
+    [Tags]    HappyPath
+    Given The user should see the element    jQuery=.button[value="Save and close"]
     When the user leaves all the question field empty
     And The user clicks the button/link    jQuery=.button[value="Save and close"]
     And The user clicks the button/link    jQuery=.button[value="Save and close"]
     Then the validation error above the question should be visible    jQuery=label:contains(Question title)    This field cannot be left blank
     And the validation error above the question should be visible    jQuery=label:contains(Question guidance title)    This field cannot be left blank
-    And the validation error above the question should be visible    jQuery=div:nth-child(4) div:nth-child(4) label:contains(Question guidance)    This field cannot be left blank
+    And the validation error above the question should be visible    jQuery=label:contains(Question guidance)    This field cannot be left blank
 
 Application questions: Client side validations
     [Documentation]    INFUND-3000
@@ -411,7 +452,7 @@ Application questions: Client side validations
     Given the user fills the empty question fields
     Then the validation error above the question should not be visible    jQuery=label:contains(Question title)    This field cannot be left blank
     And the validation error above the question should not be visible    jQuery=label:contains(Question guidance title)    This field cannot be left blank
-    And the validation error above the question should not be visible    jQuery=div:nth-child(4) div:nth-child(4) label:contains(Question guidance)    This field cannot be left blank
+    And the validation error above the question should not be visible    jQuery=label:contains(Question guidance)    This field cannot be left blank
     And the validation error above the question should not be visible    jQuery=label:contains(Max word count)    This field cannot be left blank
     And the validation error above the question should not be visible    jQuery=label:contains(Max word count)    This field cannot be left blank
 
@@ -457,7 +498,7 @@ User should be able to Save the competition as open
     When the user clicks the button/link    jQuery=.button:contains("Save as Ready To Open")
     And the user clicks the button/link    link=All competitions
     And the user clicks the button/link    id=section-3
-    Then the competition should show in the correct section    css=section:nth-child(5) ul    Test competition
+    Then the competition should show in the correct section    css=section:nth-of-type(2) ul    Test competition
     # The above line checks that the section 'Ready to Open' there is a competition named Test competition
 
 *** Keywords ***
@@ -637,10 +678,39 @@ the user should see the correct values in the initial details form
     Page Should Contain    Health and life sciences
     Page Should Contain    Advanced Therapies
     ${input_value} =    Get Value    id=openingDateDay
-    Should Be Equal As Strings    ${input_value}    01
+    Should Be Equal As Strings    ${input_value}    1
     ${input_value} =    Get Value    Id=openingDateMonth
     Should Be Equal As Strings    ${input_value}    12
     ${input_value} =    Get Value    id=openingDateYear
     Should Be Equal As Strings    ${input_value}    2017
     Page Should Contain    Competition Technologist One
     page should contain    Competition Executive Two
+
+the user should see the correct details in the funding information form
+    ${input_value} =    Get Value    id=funders0.funder
+    Should Be Equal    ${input_value}    FunderName
+    ${input_value} =    Get Value    id=0-funderBudget
+    Should Be Equal As Strings    ${input_value}    20000.00
+    ${input_value} =    Get Value    id=pafNumber
+    Should Be Equal As Strings    ${input_value}    2016
+    ${input_value} =    Get Value    id=budgetCode
+    Should Be Equal As Strings    ${input_value}    2004
+    ${input_value} =    Get Value    id=activityCode
+    Should Be Equal As Strings    ${input_value}    4242
+
+the user should see the correct details in the eligibility form
+    Radio Button Should Be Set To    multipleStream    yes
+    ${input_value} =    Get Value    id=streamName
+    Should Be Equal    ${input_value}    Test stream name
+    Radio Button Should Be Set To    singleOrCollaborative    single
+    Checkbox Should Be Selected    id=research-categories-33
+    Checkbox Should Be Selected    id=research-categories-34
+    Checkbox Should Be Selected    id=research-categories-35
+    Radio Button Should Be Set To    leadApplicantType    business
+    Page Should Contain    30%
+
+The user should not see the error text in the page
+    [Arguments]    ${ERROR_TEXT}
+    run keyword and ignore error    mouse out    css=input
+    Focus    jQuery=.button:contains("Done")
+    Wait Until Page Does Not Contain    ${ERROR_TEXT}

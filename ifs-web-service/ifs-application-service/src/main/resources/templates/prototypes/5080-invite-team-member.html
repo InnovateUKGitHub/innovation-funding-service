@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="comp-dashboard">
+
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="prototypes/fragments/layout :: prototype-admin-header" th:with="status='loggedIn'" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader('IFS Admin', '/prototypes/5079-ifs-admin')" th:remove="tag" />
+
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+	<div class="hgroup no-margin-top" style="padding-top: 20px; margin-bottom: 30px">
+		<h1 class="heading-large no-margin">Add new team member</h1>
+	</div>
+
+	<p>Invite new members of the Innovate UK operations team here. The team you select this individual as a member of will determine which areas of the service they can later access.</p>
+
+	<th:block th:if="${param.status != null and param.status[0] == 'invalidEmailAddress'}">
+
+		<div class="warning-alert extra-margin-bottom">
+			<h2 class="heading-small no-margin-top">Invalid email address</h2>
+			<p>For an individual to be invited to use the IFS system, they must use an email address with the @innovateuk.gov.uk email domain.</p>
+		</div>
+
+	</th:block>
+
+	<form>
+		<fieldset>
+			<legend class="visuallyhidden">Your details</legend>
+			<div class="form-group">
+				<label class="form-label" for="email-address">
+					<span class="form-label-bold">Email address</span>
+				</label>
+				<input class="form-control" id="email-address" name="email" type="email" />
+			</div>
+			<div class="form-group">
+				<label class="form-label" for="team">
+					<span class="form-label-bold">Select team</span>
+				</label>
+				<select class="form-control width-medium" id="team" name="team">
+					<option value="">Competitions</option>
+					<option value="">Project finance</option>
+					<option value="">Grants and contracts</option>
+					<option value="">Monitoring</option>
+				</select>
+			</div>
+		</fieldset>
+		<a th:if="${param.status == null}" href="/prototypes/5080-invite-team-member?status=invalidEmailAddress" class="button button-large extra-margin">Send invitation</a>
+		<a th:if="${param.status != null and param.status[0] == 'invalidEmailAddress'}" href="/prototypes/3746-internal-email-invite" class="button button-large extra-margin">Send invitation</a>
+	</form>
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+
+</body>
+</html>

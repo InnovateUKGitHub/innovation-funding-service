@@ -2,13 +2,13 @@
 Documentation     INFUND-1458 As a existing user with an invitation to collaborate on an application and I am already registered with IFS I want to be able to use my existing credentials and confirm my details so that I don't have to follow the registration process again.
 ...
 ...
-...               INFUND-2716: Error in where the name of an invited partner doesn't update in 'View team members and add collaborators'
+...               INFUND-2716: Error in where the name of an invited partner doesn't update in 'view team members and add collaborators'
 ...
 ...
 ...               INFUND-3759: Existing Applicant should be able to accept invitations for other applications in the same organisation
 Suite Setup       The guest user opens the browser
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        Email    Applicant    Collaboration
+Force Tags        Email    Applicant
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -49,7 +49,7 @@ The continue button should redirect to the overview page
     Then the user should see the text in the page    Application overview
 
 When this user edits the name this should be changed in the View team page
-    [Documentation]    INFUND-2716: Error in where the name of an invited partner doesn't update in 'View team members and add collaborators'.
+    [Documentation]    INFUND-2716: Error in where the name of an invited partner doesn't update in 'view team members and add collaborators'.
     [Tags]    HappyPath
     Given the user navigates to the page    ${DASHBOARD_URL}
     When the user clicks the button/link    link=View and edit your profile details
@@ -69,13 +69,13 @@ the user enters profile details
     Wait Until Element Is Visible    id=title
     Input Text    id=firstName    Dennis
     Input Text    id=lastName    Bergkamp
-    focus         css=[name="create-account"]
+    focus    css=[name="create-account"]
     Click Element    css=[name="create-account"]
 
 the user should see the change in the view team members page
     click element    link=My dashboard
-    click element    xpath=//*[@id="content"]/div[2]/section[1]/ul/li[2]/div/div[1]/h3/a
-    click element    link=View team members and add collaborators
+    click element    css=#content section:nth-of-type(1) li:nth-child(2) h3 a
+    click element    link=view team members and add collaborators
     Page Should Contain Element    link= Dennis Bergkamp
     Capture Page Screenshot
 

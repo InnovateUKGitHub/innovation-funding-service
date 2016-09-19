@@ -18,19 +18,20 @@ ${Invitation_nonexisting_assessor3}    ${server}/assessment/invite/competition/1
 
 *** Test Cases ***
 Non-registered assessor: Accept invitation
-    [Documentation]    INFUND-228, INFUND-4636
-    [Setup]    log in as user    &{nonregistered_assessor2_credentials}
+    [Documentation]    INFUND-228
+    ...
+    ...    INFUND-4631
     [Tags]    Pending
+    [Setup]    log in as user    &{nonregistered_assessor2_credentials}
     Given the user navigates to the page    ${Invitation_nonexisting_assessor2}
     Then the user should see the text in the page    Invitation to assess 'Juggling Craziness'
     And the user should see the text in the page    You are invited to act as an assessor for the competition 'Juggling Craziness'.
     And the user clicks the button/link    jQuery=.button:contains("Accept")
 
-
 Non-registered assessor: Reject invitation
     [Documentation]    INFUND-4631, INFUND-4636
-    [Setup]    log in as user    &{nonregistered_assessor2_credentials}
     [Tags]
+    [Setup]    log in as user    &{nonregistered_assessor2_credentials}
     When the user navigates to the page    ${Invitation_nonregistered_assessor2}
     Then the user should see the text in the page    Invitation to assess 'Juggling Craziness'
     And the user clicks the button/link    css=form a

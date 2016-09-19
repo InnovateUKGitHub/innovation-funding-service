@@ -1,5 +1,8 @@
 package com.worth.ifs.finance.resource;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import java.io.Serializable;
 
 
@@ -23,4 +26,25 @@ public class ApplicationFinanceResourceId implements Serializable {
         return organisationId;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ApplicationFinanceResourceId that = (ApplicationFinanceResourceId) o;
+
+        return new EqualsBuilder()
+                .append(applicationId, that.applicationId)
+                .append(organisationId, that.organisationId)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(applicationId)
+                .append(organisationId)
+                .toHashCode();
+    }
 }
