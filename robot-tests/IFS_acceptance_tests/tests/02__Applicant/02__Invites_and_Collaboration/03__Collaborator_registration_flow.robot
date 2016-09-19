@@ -122,7 +122,7 @@ Catapult search (empty, invalid & valid inputs)
     And the user clicks the button/link    jQuery=.button:contains("Find UK address")
     And the user clicks the button/link    jQuery=.button:contains("Use selected address")
      # TODO Pending due to INFUND- 5135
-#    Then the address fields should be filled
+    Then the address fields should be filled
 
 Catapult search (accept invitation flow)
     [Documentation]    INFUND-1230
