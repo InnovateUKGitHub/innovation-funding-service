@@ -4,8 +4,8 @@ import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.assessment.model.AssessorDashboardModelPopulator;
 import com.worth.ifs.assessment.service.CompetitionParticipantRestService;
 import com.worth.ifs.assessment.viewmodel.AssessorDashboardActiveCompetitionViewModel;
+import com.worth.ifs.assessment.viewmodel.AssessorDashboardUpcomingCompetitionViewModel;
 import com.worth.ifs.assessment.viewmodel.AssessorDashboardViewModel;
-import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.invite.resource.CompetitionParticipantResource;
 import com.worth.ifs.invite.resource.CompetitionParticipantRoleResource;
 import com.worth.ifs.invite.resource.ParticipantStatusResource;
@@ -24,9 +24,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
-import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static com.worth.ifs.invite.builder.CompetitionParticipantResourceBuilder.newCompetitionParticipantResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static java.time.LocalDateTime.now;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -59,21 +59,14 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
 
     @Test
     public void dashboard() throws Exception {
-
-        CompetitionResource competition = newCompetitionResource()
-                .withId(2L)
-                .withName("Juggling Craziness")
-                .withAssessmentStartDate(LocalDateTime.now().minusDays(2))
-                .withAssessmentEndDate(LocalDateTime.now().plusDays(4))
-                .build();
-
-        when(competitionService.getById(2L)).thenReturn(competition);
-
         CompetitionParticipantResource participant = newCompetitionParticipantResource()
                 .withCompetitionParticipantRole(CompetitionParticipantRoleResource.ASSESSOR)
                 .withStatus(ParticipantStatusResource.ACCEPTED)
                 .withUser(3L)
                 .withCompetition(2L)
+                .withCompetitionName("Juggling Craziness")
+                .withAssessmentStartDate(now().minusDays(2))
+                .withAssessmentEndDate(now().plusDays(4))
                 .build();
 
         when(competitionParticipantRestService.getParticipants(3L, CompetitionParticipantRoleResource.ASSESSOR, ParticipantStatusResource.ACCEPTED)).thenReturn(restSuccess(asList(participant)));
@@ -88,12 +81,150 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
 
         List<AssessorDashboardActiveCompetitionViewModel> expectedActiveCompetitions = asList(
                 new AssessorDashboardActiveCompetitionViewModel(2L, "Juggling Craziness", 1, 2,
-                        competition.getAssessmentEndDate().toLocalDate(),
-                        competition.getAssessmentDaysLeft(),
-                        competition.getAssessmentDaysLeftPercentage())
+                        LocalDateTime.now().plusDays(4).toLocalDate(),
+                        3,
+                        50
+                )
         );
 
         assertEquals(expectedActiveCompetitions, model.getActiveCompetitions());
+        assertTrue(model.getUpcomingCompetitions().isEmpty());
+    }
+
+    @Test
+    public void dashboard_activeStartsToday() throws Exception {
+        CompetitionParticipantResource participant = newCompetitionParticipantResource()
+                .withCompetitionParticipantRole(CompetitionParticipantRoleResource.ASSESSOR)
+                .withStatus(ParticipantStatusResource.ACCEPTED)
+                .withUser(3L)
+                .withCompetition(2L)
+                .withCompetitionName("Juggling Craziness")
+                .withAssessmentStartDate(now().minusDays(0))
+                .withAssessmentEndDate(now().plusDays(6))
+                .build();
+
+        when(competitionParticipantRestService.getParticipants(3L, CompetitionParticipantRoleResource.ASSESSOR, ParticipantStatusResource.ACCEPTED)).thenReturn(restSuccess(asList(participant)));
+
+        MvcResult result = mockMvc.perform(get("/assessor/dashboard"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("model"))
+                .andExpect(view().name("assessor-dashboard"))
+                .andReturn();
+
+        AssessorDashboardViewModel model = (AssessorDashboardViewModel) result.getModelAndView().getModel().get("model");
+
+        List<AssessorDashboardActiveCompetitionViewModel> expectedActiveCompetitions = asList(
+                new AssessorDashboardActiveCompetitionViewModel(2L, "Juggling Craziness", 1, 2,
+                        LocalDateTime.now().plusDays(6).toLocalDate(),
+                        5,
+                        16
+                )
+        );
+
+        assertEquals(expectedActiveCompetitions, model.getActiveCompetitions());
+        assertTrue(model.getUpcomingCompetitions().isEmpty());
+    }
+
+    @Test
+    public void dashboard_activeEndsToday() throws Exception {
+        CompetitionParticipantResource participant = newCompetitionParticipantResource()
+                .withCompetitionParticipantRole(CompetitionParticipantRoleResource.ASSESSOR)
+                .withStatus(ParticipantStatusResource.ACCEPTED)
+                .withUser(3L)
+                .withCompetition(2L)
+                .withCompetitionName("Juggling Craziness")
+                .withAssessmentStartDate(now().minusDays(2))
+                .withAssessmentEndDate(now().plusDays(0))
+                .build();
+
+        when(competitionParticipantRestService.getParticipants(3L, CompetitionParticipantRoleResource.ASSESSOR, ParticipantStatusResource.ACCEPTED)).thenReturn(restSuccess(asList(participant)));
+
+        MvcResult result = mockMvc.perform(get("/assessor/dashboard"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("model"))
+                .andExpect(view().name("assessor-dashboard"))
+                .andReturn();
+
+        AssessorDashboardViewModel model = (AssessorDashboardViewModel) result.getModelAndView().getModel().get("model");
+
+        List<AssessorDashboardActiveCompetitionViewModel> expectedActiveCompetitions = asList(
+                new AssessorDashboardActiveCompetitionViewModel(2L, "Juggling Craziness", 1, 2,
+                        LocalDateTime.now().plusDays(4).toLocalDate(),
+                        3,
+                        50
+                )
+        );
+
+        assertTrue(model.getActiveCompetitions().isEmpty());
+        assertTrue(model.getUpcomingCompetitions().isEmpty());
+    }
+
+
+    @Test
+    public void dashboard_upcomingAssessments() throws Exception {
+        CompetitionParticipantResource participant = newCompetitionParticipantResource()
+                .withCompetitionParticipantRole(CompetitionParticipantRoleResource.ASSESSOR)
+                .withStatus(ParticipantStatusResource.ACCEPTED)
+                .withUser(3L)
+                .withCompetition(2L)
+                .withCompetitionName("Juggling Craziness")
+                .withAssessmentStartDate(now().plusDays(1))
+                .withAssessmentEndDate(now().plusDays(7))
+                .build();
+
+        when(competitionParticipantRestService.getParticipants(3L, CompetitionParticipantRoleResource.ASSESSOR, ParticipantStatusResource.ACCEPTED)).thenReturn(restSuccess(asList(participant)));
+
+        MvcResult result = mockMvc.perform(get("/assessor/dashboard"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("model"))
+                .andExpect(view().name("assessor-dashboard"))
+                .andReturn();
+
+        AssessorDashboardViewModel model = (AssessorDashboardViewModel) result.getModelAndView().getModel().get("model");
+
+        List<AssessorDashboardUpcomingCompetitionViewModel> expectedUpcomingCompetitions = asList(
+                new AssessorDashboardUpcomingCompetitionViewModel(
+                        2L, "Juggling Craziness",
+                        LocalDateTime.now().plusDays(1).toLocalDate(),
+                        LocalDateTime.now().plusDays(7).toLocalDate()
+                )
+        );
+
+        assertTrue(model.getActiveCompetitions().isEmpty());
+        assertEquals(expectedUpcomingCompetitions, model.getUpcomingCompetitions());
+    }
+
+    @Test
+    public void dashboard_pastAssessments() throws Exception {
+        CompetitionParticipantResource participant = newCompetitionParticipantResource()
+                .withCompetitionParticipantRole(CompetitionParticipantRoleResource.ASSESSOR)
+                .withStatus(ParticipantStatusResource.ACCEPTED)
+                .withUser(3L)
+                .withCompetition(2L)
+                .withCompetitionName("Juggling Craziness")
+                .withAssessmentStartDate(now().minusDays(1))
+                .withAssessmentEndDate(now().minusDays(0))
+                .build();
+
+        when(competitionParticipantRestService.getParticipants(3L, CompetitionParticipantRoleResource.ASSESSOR, ParticipantStatusResource.ACCEPTED)).thenReturn(restSuccess(asList(participant)));
+
+        MvcResult result = mockMvc.perform(get("/assessor/dashboard"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("model"))
+                .andExpect(view().name("assessor-dashboard"))
+                .andReturn();
+
+        AssessorDashboardViewModel model = (AssessorDashboardViewModel) result.getModelAndView().getModel().get("model");
+
+        List<AssessorDashboardUpcomingCompetitionViewModel> expectedUpcomingCompetitions = asList(
+                new AssessorDashboardUpcomingCompetitionViewModel(
+                        2L, "Juggling Craziness",
+                        LocalDateTime.now().plusDays(2).toLocalDate(),
+                        LocalDateTime.now().plusDays(8).toLocalDate()
+                )
+        );
+
+        assertTrue(model.getActiveCompetitions().isEmpty());
         assertTrue(model.getUpcomingCompetitions().isEmpty());
     }
 }

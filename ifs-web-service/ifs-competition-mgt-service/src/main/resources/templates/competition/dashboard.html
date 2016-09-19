@@ -6,10 +6,12 @@
         <div class="column-half">
             <h1 class="heading-large">All competitions</h1>
         </div>
-        <div class="column-half alignright form-search">
+        <div class="column-half alignright">
+          <div class="form-search">
             <label class="visuallyhidden" for="searchQuery">Search for:</label>
-            <input type="search" th:value="${searchQuery}" name="searchQuery" id="searchQuery" class="search-query" placeholder="Search competitions" required="required" />
+            <input type="search" th:value="${searchQuery}" name="searchQuery" id="searchQuery" class="search-query" placeholder="Search competitions" />
             <input type="submit" id="searchsubmit" value="Search" class="btn" />
+          </div>
         </div>
     </div>
 </div>
