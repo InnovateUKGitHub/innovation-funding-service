@@ -108,17 +108,19 @@ public class ProjectSpendProfileSummaryController {
                     getEnumForIndex(ProjectSpendProfileSummaryViewModel.QueriesRaised.class, i))
         );
 
+        BigDecimal projectTotal = calculateTotalForAllOrganisations(applicationFinanceResourceList,
+                applicationFinanceResource -> applicationFinanceResource.getTotal());
+        BigDecimal totalFundingSought =  calculateTotalForAllOrganisations(applicationFinanceResourceList,
+                applicationFinanceResource -> applicationFinanceResource.getTotalFundingSought());
+
         return new ProjectSpendProfileSummaryViewModel(
                 projectId, competitionSummary, organisationRows,
                 project.getTargetStartDate(), project.getDurationInMonths().intValue(),
-                calculateTotalForAllOrganisations(applicationFinanceResourceList,
-                        applicationFinanceResource -> applicationFinanceResource.getTotal()),
-                calculateTotalForAllOrganisations(applicationFinanceResourceList,
-                        applicationFinanceResource -> applicationFinanceResource.getTotalFundingSought()),
+                projectTotal,
+                totalFundingSought,
                 calculateTotalForAllOrganisations(applicationFinanceResourceList,
                         applicationFinanceResource -> applicationFinanceResource.getTotalOtherFunding()),
-                new BigDecimal(calculateIntegerTotalForAllOrganisations(applicationFinanceResourceList,
-                        applicationFinanceResource -> applicationFinanceResource.getGrantClaimPercentage()).toString()),
+                calculateGrantPercentage(projectTotal, totalFundingSought),
                 anySpendProfile.isPresent());
     }
 
@@ -128,11 +130,14 @@ public class ProjectSpendProfileSummaryController {
         return applicationFinanceResourceList.stream().map(keyExtractor).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    // TODO - Should not be summing up. Will be addressed shortly.
-    private Integer calculateIntegerTotalForAllOrganisations(List<ApplicationFinanceResource> applicationFinanceResourceList,
-                                                             Function<ApplicationFinanceResource, Integer> keyExtractor) {
+    private BigDecimal calculateGrantPercentage(BigDecimal projectTotal, BigDecimal totalFundingSought) {
 
-       return applicationFinanceResourceList.stream().map(keyExtractor).reduce(0, (integer1, integer2) -> integer1 + integer2);
+        if (projectTotal.equals(BigDecimal.ZERO)) {
+            return BigDecimal.ZERO;
+        }
+
+        return totalFundingSought.divide(projectTotal).multiply(new BigDecimal("100"));
+
     }
 
     private <T extends Enum> T getEnumForIndex(Class<T> enums, int index) {

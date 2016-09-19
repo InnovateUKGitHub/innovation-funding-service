@@ -107,7 +107,7 @@ public class ProjectSpendProfileSummaryControllerTest extends BaseControllerMock
                 BigDecimal.ZERO,
                 BigDecimal.ZERO,
                 BigDecimal.ZERO,
-                new BigDecimal("40"),
+                BigDecimal.ZERO,
                 anySpendProfile.isPresent());
 
         mockMvc.perform(get("/project/{projectId}/spend-profile/summary", projectId))
