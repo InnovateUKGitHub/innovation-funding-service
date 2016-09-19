@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -48,8 +47,8 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
     }
 
     @Override
-    public ServiceResult<MilestoneResource> getMilestoneByTypeAndCompetitionId(Long id, MilestoneType type) {
-        return serviceSuccess (milestoneMapper.mapToResource(milestoneRepository.findByTypeAndCompetitionId(id, type)));
+    public ServiceResult<MilestoneResource> getMilestoneByTypeAndCompetitionId(MilestoneType type, Long id) {
+        return serviceSuccess(milestoneMapper.mapToResource(milestoneRepository.findByTypeAndCompetitionId(type, id)));
     }
 
     @Override
@@ -70,16 +69,10 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
     }
 
     @Override
-    public ServiceResult<Void> updateMilestone(Long id, MilestoneResource milestoneResource){
-        Competition competition = competitionRepository.findById(id);
-
-        List<Milestone> milestones = competition.getMilestones();
-        
-        Milestone milestoneEntity = (Milestone) milestones.stream().filter((m) -> m.getId().equals(milestoneResource.getId()));
-//       @TODO JH validation on single milestone
-        Milestone milestone = milestoneMapper.mapToDomain(milestoneResource);
-        milestoneRepository.save(milestone);
-
+    public ServiceResult<Void> updateMilestone(MilestoneResource milestoneResource) {
+        //@TODO
+        System.out.println("SINGLE MILESTONE UPDATE COMPLETE");
+        milestoneRepository.save(milestoneMapper.mapToDomain(milestoneResource));
         return serviceSuccess();
     }
 
@@ -98,7 +91,7 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
         ValidationMessages vm = new ValidationMessages();
 
         milestones.sort((c1, c2) -> c1.getType().compareTo(c2.getType()));
-        
+
         milestones.forEach(m -> {
         	if(m.getDate() == null) {
         		Error error = new Error("error.milestone.nulldate", HttpStatus.BAD_REQUEST);
