@@ -4,6 +4,7 @@ import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.Builder;
 import com.worth.ifs.invite.resource.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -64,7 +65,19 @@ public class CompetitionParticipantResourceBuilder extends BaseBuilder<Competiti
     }
 
     public CompetitionParticipantResourceBuilder withStatus(ParticipantStatusResource... statuses) {
-        return withArray((status, inviteResource) -> setField("status", status, inviteResource), statuses);
+        return withArray((status, competitionParticipantResource) -> setField("status", status, competitionParticipantResource), statuses);
+    }
+
+    public CompetitionParticipantResourceBuilder withCompetitionName(String... competitionNames) {
+        return withArray((competitionName, competitionParticipantResource) -> setField("competitionName", competitionName, competitionParticipantResource), competitionNames);
+    }
+
+    public CompetitionParticipantResourceBuilder withAssessmentStartDate(LocalDateTime... competitionStartDates) {
+        return withArray((competitionStartDate, competitionParticipantResource) -> setField("assessmentStartDate", competitionStartDate, competitionParticipantResource), competitionStartDates);
+    }
+
+    public CompetitionParticipantResourceBuilder withAssessmentEndDate(LocalDateTime... competitionEndDates) {
+        return withArray((competitionEndDate, competitionParticipantResource) -> setField("assessmentEndDate", competitionEndDate, competitionParticipantResource), competitionEndDates);
     }
 
     @Override
