@@ -101,9 +101,6 @@ public class BaseUnitTest {
     public UserAuthentication loggedInUserAuthentication;
 
     protected final Log log = LogFactory.getLog(getClass());
-
-    @Mock
-    public ApplicationFinanceService applicationFinanceService;
     @Mock
     public ApplicationFinanceRestService applicationFinanceRestService;
     @Mock

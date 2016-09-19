@@ -79,22 +79,6 @@ public class ApplicationFinanceRestServiceMocksTest extends BaseRestServiceUnitT
     }
 
     @Test
-    public void getApplicationOrganisationFinances() {
-
-        Long applicationId = 1L;
-        Long organisationId = 1L;
-
-        ApplicationFinanceResource returnedResponse = ApplicationFinanceResourceBuilder.newApplicationFinanceResource()
-                .withGrantClaimPercentage(20)
-                .build();
-
-        setupGetWithRestResultExpectations(applicationFinanceRestURL + "/application/" + applicationId + "/organisation/" + organisationId, ApplicationFinanceResource.class, returnedResponse);
-
-        ApplicationFinanceResource actualApplicationFinanceResource = service.getApplicationOrganisationFinances(applicationId, organisationId).getSuccessObject();
-        assertEquals(returnedResponse, actualApplicationFinanceResource);
-    }
-
-    @Test
     public void test_addApplicationFinance_nullSafe() {
         assertNull(service.addApplicationFinanceForOrganisation(123L, null));
         assertNull(service.addApplicationFinanceForOrganisation(null, 456L));

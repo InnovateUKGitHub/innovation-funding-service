@@ -3,7 +3,6 @@ package com.worth.ifs.finance.spendprofile.summary.controller;
 import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.CompetitionSummaryResource;
-import com.worth.ifs.application.service.ApplicationFinanceService;
 import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.ApplicationSummaryService;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -52,9 +51,6 @@ public class ProjectSpendProfileSummaryController {
 
     @Autowired
     private ApplicationSummaryService applicationSummaryService;
-
-    @Autowired
-    private ApplicationFinanceService applicationFinanceService;
 
     @Autowired
     private FinanceService financeService;

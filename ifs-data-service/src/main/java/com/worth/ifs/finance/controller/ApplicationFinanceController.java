@@ -147,14 +147,4 @@ public class ApplicationFinanceController {
                 andOnSuccessReturn(FileAndContents::getFileEntry).
                 toGetResponse();
     }
-
-    @RequestMapping(value = "/application/{applicationId}/organisation/{organisationId}", method = GET)
-    public RestResult<ApplicationFinanceResource> getApplicationOrganisationFinances(@PathVariable("applicationId") final Long applicationId,
-                                                                                     @PathVariable("organisationId") final Long organisationId) {
-
-        ApplicationFinanceResourceId applicationFinanceResourceId = new ApplicationFinanceResourceId(applicationId, organisationId);
-        ApplicationFinanceResource applicationFinanceResource = applicationFinanceHandler.getApplicationOrganisationFinances(applicationFinanceResourceId);
-
-        return RestResult.restSuccess(applicationFinanceResource);
-    }
 }

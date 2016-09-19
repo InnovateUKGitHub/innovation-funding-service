@@ -358,9 +358,6 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     @Mock
     protected FinanceRowService financeRowServiceMock;
 
-    @Mock
-    protected ApplicationFinanceHandler applicationFinanceHandlerMock;
-
     @Before
     public void setupMockInjection() {
         // Process mock annotations

@@ -114,10 +114,4 @@ public class ApplicationFinanceRestServiceImpl extends BaseRestService implement
 
         return getWithRestResult(url, FileEntryResource.class);
     }
-
-    @Override
-    public RestResult<ApplicationFinanceResource> getApplicationOrganisationFinances(Long applicationId, Long organisationId) {
-
-        return getWithRestResult(applicationFinanceRestURL + "/application/" + applicationId + "/organisation/" + organisationId, ApplicationFinanceResource.class);
-    }
 }

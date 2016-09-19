@@ -143,24 +143,4 @@ public class ApplicationFinanceControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(fileEntry)));
     }
-
-    @Test
-    public void getApplicationOrganisationFinances() throws Exception {
-
-        Long applicationId = 1L;
-        Long organisationId = 1L;
-
-        ApplicationFinanceResourceId applicationFinanceResourceId = new ApplicationFinanceResourceId(applicationId, organisationId);
-
-        ApplicationFinanceResource applicationFinanceResource = ApplicationFinanceResourceBuilder.newApplicationFinanceResource()
-                .withGrantClaimPercentage(20)
-                .build();
-
-        when(applicationFinanceHandlerMock.getApplicationOrganisationFinances(applicationFinanceResourceId)).thenReturn(applicationFinanceResource);
-
-        mockMvc.perform(get("/applicationfinance/application/{applicationId}/organisation/{organisationId}", applicationId, organisationId))
-                .andExpect(status().isOk())
-                .andExpect(content().string(new ObjectMapper().writeValueAsString(applicationFinanceResource)))
-        ;
-    }
 }
