@@ -58,6 +58,16 @@ public class User implements Serializable {
             inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
     private List<Role> roles = new ArrayList<>();
 
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
+    @Enumerated(EnumType.STRING)
+    private Disability disability;
+
+    @ManyToOne
+    @JoinColumn(name="ethnicity_id", referencedColumnName = "id")
+    private Ethnicity ethnicity;
+
     public User() {
         // no-arg constructor
     }
@@ -237,4 +247,27 @@ public class User implements Serializable {
         this.status = status;
     }
 
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
+
+    public Disability getDisability() {
+        return disability;
+    }
+
+    public void setDisability(Disability disability) {
+        this.disability = disability;
+    }
+
+    public Ethnicity getEthnicity() {
+        return ethnicity;
+    }
+
+    public void setEthnicity(Ethnicity ethnicity) {
+        this.ethnicity = ethnicity;
+    }
 }
