@@ -152,9 +152,7 @@
                 rows="4"
                 th:field="*{rejectComment}"></textarea>
             <div class="textarea-footer">
-                <span class="count-label">
-                    <span class="count-down positive" aria-live="polite">Words remaining: 100 </span>
-                </span>
+                <div th:include="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, rejectComment)})" th:remove="tag"/>
             </div>
         </div>
         <button class="button large button-warning extra-margin" name="submit-app-details">Reject</button>
