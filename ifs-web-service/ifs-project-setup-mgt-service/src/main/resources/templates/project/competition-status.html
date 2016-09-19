@@ -2,275 +2,68 @@
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
-    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
-
 </head>
+<body th:with="context='project-management'" class="project-management">
 
-<body class="full-width comp-dashboard">
-
-<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
 <div th:include="fragments/layout :: global-header" th:remove="tag" />
 
-
-<main id="content">
+<main id="content" class="full-width">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition dashboard'}, ${'/prototypes/3115-comp-dashboard?section=setup'})" th:remove="tag" />
 
-	<!-- HARDCODED PROTOTYPE HTML -->
-	
-	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'4891061: Innovate UK'}, ${'Technology inspired'}, ${'Projects in setup'})" th:remove="tag" />
-
-	<!--<div th:include="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:with="page='project-setup', status='closed'" th:remove="tag" />
-
-	 <div th:include="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:with="page='project-setup', status='closed'" th:remove="tag" /> -->
-
-	<div class="constrain-width">
-		
-		<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
-		
-		<!-- <div class="info-area">
-			<section class="boxed">
-				<h3 class="heading-medium no-margin-top">Project setup stages</h3>
-				<ol class="list-number">
-					<li>Project Details</li>
-					<li>Monitoring Officer</li>
-					<li>Bank Details</li>
-					<li>Finance Checks</li>
-					<li>Forecasts/profile spend</li>
-					<li>Other Documents</li>
-					<li>Grant Offer Letter</li>
-					<li>Exported to _connect</li>
-				</ol>
-			</section>
-		</div> -->
-
-			<div class="table-overflow">
-				<table id="table-project-status">
-					<thead>
-						<tr>
-							<th scope="col">Project</th>
-							<th class="status" scope="col">Project details</th>
-							<th class="status" scope="col">MO</th>
-							<th class="status" scope="col">Bank details</th>
-							<th class="status" scope="col">Finance checks</th>
-							<th class="status" scope="col">Spend profile</th>
-							<th class="status" scope="col">Other docs</th>
-							<th class="status" scope="col">GOL</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr class="cell-border-right">
-							<th scope="row">
-								<h2 class="heading-small no-margin">Mobile data logistics for projects</h2>
-								<p class="no-margin"><a href="/prototypes/1968-admin-readonly-application?closed&#38;status=setup">194730</a></p>
-								<small>3 partners <br />
-								Lead: Aptrans Ltd </small>
-							</th>
-							<td class="status action"><a href="/prototypes/2850-internal-project-details?status=incomplete"><span class="visuallyhidden">OK</span></a></td>
-							<td id="assignMo" class="status action"><a href="/prototypes/1576-assign-mo" title="Assign monitoring officer"><span class="visuallyhidden">Action</span></a></td>
-							<td class="status">&nbsp;</td>
-							<td class="status">&nbsp;</td>
-							<td class="status">&nbsp;</td>
-							<td class="status">&nbsp;</td>
-							<td class="status">&nbsp;</td>
-						</tr>
-						<tr class="cell-border-right">
-							<th scope="row">
-								<h2 class="heading-small no-margin">Novel bioreactor design for fermentation of syngas to industrially relevant chemicals</h2>
-								<p class="no-margin"><a href="/prototypes/1968-admin-readonly-application?closed&#38;status=setup">194731</a></p>
-								<small>3 partners <br />
-								Lead: Acidophil Ltd </small>
-							</th>
-							<td class="status ok"><a href="/prototypes/2850-internal-project-details"><span class="visuallyhidden">OK</span></a></td>
-							<td id="assignMo" class="status ok"><a href="/prototypes/1576-assign-mo?status=edit" title="Edit monitoring officer"><span class="visuallyhidden">Action</span></a></td>
-							<td class="status action"><a href="/prototypes/4547-review-all-bank-details" title="Review bank details"><span class="visuallyhidden">Action</span></a></td>
-							<td class="status action"><a href="/prototypes/1199-project-finances" title="Finance checks"><span class="visuallyhidden">Action</span></a></td>
-							<td class="status">&nbsp;</td>
-							<td class="status">&nbsp;</td>
-							<td class="status">&nbsp;</td>
-						</tr>
-						<tr class="cell-border-right">
-							<th scope="row">
-								<h2 class="heading-small no-margin">Mushroom production: integration of novel bacteriophage biocontrol technology</h2>
-								<p class="no-margin"><a href="/prototypes/1968-admin-readonly-application?closed&#38;status=setup">194732</a></p>
-								<small>3 partners <br />
-								Lead: APS Biocontrol Ltd </small>
-							</th>
-							<td class="status ok"><a href="/prototypes/2850-internal-project-details"><span class="visuallyhidden">OK</span></a></td>
-							<td id="assignMo" class="status ok"><a href="/prototypes/1576-assign-mo?status=edit" title="Edit monitoring officer"><span class="visuallyhidden">OK</span></a></td>
-							<td class="status ok"><a href="/prototypes/4547-review-all-bank-details?status=accepted" title="View bank details"><span class="visuallyhidden">OK</span></a></td>
-							<td class="status action"><a href="/prototypes/1199-project-finances" title="Finance checks"><span class="visuallyhidden">Action</span></a></td>
-							<td class="status action"><a href="/prototypes/4422-internal-spend-profile"><span class="visuallyhidden">Action</span></a></td>
-							<td class="status">&nbsp;</td>
-							<td class="status">&nbsp;</td>
-						</tr>
-						<tr class="cell-border-right">
-							<th scope="row">
-								<h2 class="heading-small no-margin">Low-cost dissolved ozone sensor using ultra-violet LED</h2>
-								<p class="no-margin"><a href="/prototypes/1968-admin-readonly-application?closed&#38;status=setup">194733</a></p>
-								<small>3 partners <br />
-								Lead: Aqua21 Ltd </small>
-							</th>
-							<td class="status ok"><a href="/prototypes/2850-internal-project-details"><span class="visuallyhidden">OK</span></a></td>
-							<td id="assignMo" class="status ok"><a href="/prototypes/1576-assign-mo?status=edit" title="Edit monitoring officer"><span class="visuallyhidden">OK</span></a></td>
-							<td class="status ok"><a href="/prototypes/4547-review-all-bank-details?status=accepted" title="View bank details"><span class="visuallyhidden">OK</span></a></td>
-							<td class="status action"><a href="/prototypes/1199-project-finances" title="Finance checks"><span class="visuallyhidden">Action</span></a></td>
-							<td class="status action"><a href="/prototypes/4422-internal-spend-profile"><span class="visuallyhidden">Action</span></a></td>
-							<td class="status action"><a href="/prototypes/2682-moderate-docs" title="View other documents"><span class="visuallyhidden">Action</span></a></td>
-							<td class="status action"><a href="/prototypes/1595-internal-gol"><span class="visuallyhidden">Action</span></a></td>
-						</tr>
-						<tr class="cell-border-right">
-							<th scope="row">
-								<h2 class="heading-small no-margin">ENSA1 – enhanced situational awareness for robotic vehicle control</h2>
-								<p class="no-margin"><a href="/prototypes/1968-admin-readonly-application?closed&#38;status=setup">194734</a></p>
-								<small>3 partners <br />
-								Lead: Barnard Microsystems Ltd </small>
-							</th>
-							<td class="status ok"><a href="/prototypes/2850-internal-project-details"><span class="visuallyhidden">OK</span></a></td>
-							<td id="assignMo" class="status ok"><a href="/prototypes/1576-assign-mo?status=edit" title="Edit monitoring officer"><span class="visuallyhidden">OK</span></a></td>
-							<td class="status ok"><a href="/prototypes/4547-review-all-bank-details?status=accepted" title="View bank details"><span class="visuallyhidden">OK</span></a></td>
-							<td class="status action"><a href="/prototypes/1199-project-finances" title="Finance checks"><span class="visuallyhidden">Action</span></a></td>
-							<td class="status action"><a href="/prototypes/4422-internal-spend-profile"><span class="visuallyhidden">Action</span></a></td>
-							<td class="status rejected"><a href="/prototypes/2682-moderate-docs?status=reject" title="View other documents"><span class="visuallyhidden">Action</span></a></td>
-							<td class="status rejected"><a href="/prototypes/1595-internal-gol?status=GOLRejected"><span class="visuallyhidden">Action</span></a></td>
-						</tr>
-						<tr class="cell-border-right">
-							<th scope="row">
-								<h2 class="heading-small no-margin">Low-cost, mid-range 3D scanner</h2>
-								<p class="no-margin"><a href="/prototypes/1968-admin-readonly-application?closed&#38;status=setup">194735</a></p>
-								<small>3 partners <br />
-								Lead: Cadscan</small>
-							</th>
-							<td class="status ok"><a href="/prototypes/2850-internal-project-details"><span class="visuallyhidden">OK</span></a></td>
-							<td id="assignMo" class="status ok"><a href="/prototypes/1576-assign-mo?status=edit" title="Edit monitoring officer"><span class="visuallyhidden">OK</span></a></td>
-							<td class="status ok"><a href="/prototypes/4547-review-all-bank-details?status=accepted" title="View bank details"><span class="visuallyhidden">OK</span></a></td>
-							<td class="status action"><a href="/prototypes/1199-project-finances" title="Finance checks"><span class="visuallyhidden">Action</span></a></td>
-							<td class="status rejected"><a href="/prototypes/4422-internal-spend-profile?status=reject"><span class="visuallyhidden">Action</span></a></td>
-							<td class="status">&nbsp;</td>
-							<td class="status">&nbsp;</td>
-						</tr>
-						<tr class="cell-border-right">
-							<th scope="row">
-								<h2 class="heading-small no-margin">A carbon nanomaterial, advanced X-ray source</h2>
-								<p class="no-margin"><a href="/prototypes/1968-admin-readonly-application?closed&#38;status=setup">194736</a></p>
-								<small>3 partners <br />
-								Lead: Cambridge Xray Systems</small>
-							</th>
-							<td class="status ok"><a href="/prototypes/2850-internal-project-details"><span class="visuallyhidden">OK</span></a></td>
-							<td id="assignMo" class="status ok"><a href="/prototypes/1576-assign-mo?status=edit" title="Edit monitoring officer"><span class="visuallyhidden">OK</span></a></td>
-							<td class="status ok"><a href="/prototypes/4547-review-all-bank-details?status=accepted" title="View bank details"><span class="visuallyhidden">OK</span></a></td>
-							<td class="status action"><a href="/prototypes/1199-project-finances" title="Finance checks"><span class="visuallyhidden">Action</span></a></td>
-							<td class="status ok"><a href="/prototypes/4422-internal-spend-profile?status=accepted"><span class="visuallyhidden">Action</span></a></td>
-							<td class="status ok"><a href="/prototypes/2682-moderate-docs?status=accepted" title="View other documents"><span class="visuallyhidden">Action</span></a></td>
-							<td class="status ok"><a href="/prototypes/1595-internal-gol?status=GOLAccepted"><span class="visuallyhidden">Action</span></a></td>
-						</tr>
-						<tr class="cell-border-right">
-							<th scope="row">
-								<h2 class="heading-small no-margin">Modular picosecond seed lasers for industrial laser processing</h2>
-								<p class="no-margin"><a href="/prototypes/1968-admin-readonly-application?closed&#38;status=setup">194737</a></p>
-								<small>3 partners <br />
-								Lead: Chromacity</small>
-							</th>
-							<td class="status">&nbsp;</td>
-							<td class="status">&nbsp;</td>
-							<td class="status">&nbsp;</td>
-							<td class="status">&nbsp;</td>
-							<td class="status">&nbsp;</td>
-							<td class="status">&nbsp;</td>
-							<td class="status">&nbsp;</td>
-						</tr>
-						<tr class="cell-border-right">
-							<th scope="row">
-								<h2 class="heading-small no-margin">Collaborative, web-enabled remote visualisation and analysis of in-situ, large high performance computing data</h2>
-								<p class="no-margin"><a href="/prototypes/1968-admin-readonly-application?closed&#38;status=setup">194738</a></p>
-								<small>3 partners <br />
-								Lead: Constelcom Ltd</small>
-							</th>
-							<td class="status">&nbsp;</td>
-							<td class="status">&nbsp;</td>
-							<td class="status">&nbsp;</td>
-							<td class="status">&nbsp;</td>
-							<td class="status">&nbsp;</td>
-							<td class="status">&nbsp;</td>
-							<td class="status">&nbsp;</td>
-						</tr>
-						<tr class="cell-border-right">
-							<th scope="row">
-								<h2 class="heading-small no-margin">A virtual simulation system for autonomous environmental exploration</h2>
-								<p class="no-margin"><a href="/prototypes/1968-admin-readonly-application?closed&#38;status=setup">194739</a></p>
-								<small>3 partners <br />
-								Lead: Cool Game Arcade </small>
-							</th>
-							<td class="status">&nbsp;</td>
-							<td class="status">&nbsp;</td>
-							<td class="status">&nbsp;</td>
-							<td class="status">&nbsp;</td>
-							<td class="status">&nbsp;</td>
-							<td class="status">&nbsp;</td>
-							<td class="status">&nbsp;</td>
-						</tr>
-						
-					</tbody>
-				</table>
-			</div>
-
-			
-
-		</div>
+  <div class="grid-row">
+    <div class="column-two-thirds">
+      <div class="page-title">
+        <h1 class="heading-xlarge" th:text="${model.competitionName}" />
+      </div>
+    </div>
+      <div class="column-third alignright extra-margin">
+    </div>
+  </div>
+  <hr/>
+  <div class="table-overflow">
+    <table id="table-project-status">
+      <thead>
+        <tr>
+          <th scope="col">Project</th>
+          <th class="status" scope="col">Project details</th>
+          <th class="status" scope="col">MO</th>
+          <th class="status" scope="col">Bank details</th>
+          <th class="status" scope="col">Finance checks</th>
+          <th class="status" scope="col">Spend profile</th>
+          <th class="status" scope="col">Other docs</th>
+          <th class="status" scope="col">GOL</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="project : ${model.projectStatusResources}">
+            <th scope="row">
+              <div class="heading-small no-margin" th:text="${project.projectTitle}" />
+              <a th:text="${project.projectNumber}" th:href="${'/management/competition/'+model.competitionNumber+'/application/'+project.projectNumber}" />
+              <small style="display:block">
+                <th:block th:text="${project.numberOfPartners > 1 ? project.numberOfPartners+' partners' : project.numberOfPartners+' partner'}" /><br/>
+                <th:block th:text="${'Lead: '+project.projectLeadOrganisationName}" />
+              </small>
+            </th>
+            <th:block th:include="project/fragments :: project-status-table(${project.projectDetailsStatus})"/>
+            <th:block th:include="project/fragments :: project-status-table(${project.monitoringOfficerStatus})"/>
+            <th:block th:include="project/fragments :: project-status-table(${project.bankDetailsStatus})"/>
+            <th:block th:include="project/fragments :: project-status-table(${project.financeChecksStatus})"/>
+            <th:block th:include="project/fragments :: project-status-table(${project.spendProfileStatus})"/>
+            <th:block th:include="project/fragments :: project-status-table(${project.otherDocumentsStatus})"/>
+            <th:block th:include="project/fragments :: project-status-table(${project.grantOfferLetterStatus})"/>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
 
 
-
-	<!-- END OFHARDCODED PROTOTYPE HTML -->
-
+		<!-- </div> -->
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
-</main>
 
+</main>
 <div th:include="fragments/layout :: footer" th:remove="tag" />
 <div th:include="fragments/layout :: body-end" th:remove="tag" />
-<script src="/js/ifs_prototype/jquery.waypoints.min.js" type="text/javascript"></script>
-<script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
-<script type="text/javascript">
-	// <![CDATA[
-	jQuery(document).ready(function(){
-
-		function $_GET(param) {
-	        var vars = {};
-	        window.location.href.replace( location.hash, '' ).replace( 
-	            /[?&]+([^=&]+)=?([^&]*)?/gi, // regexp
-	            function( m, key, value ) { // callback
-	                vars[key] = value !== undefined ? value : '';
-	            }
-	        );
-
-	        if ( param ) {
-	            return vars[param] ? vars[param] : null;    
-	        }
-	        return vars;
-	    }
-
-		var moFirstName = $_GET('first-name'),
-			moLastName = $_GET('last-name'),
-			moEmail = $_GET('email');
-			moPhoneNumber = $_GET('phone-number');
-
-
-		if (moFirstName != null && moLastName != null && moEmail != null || localStorage.getItem('moDetails') != null){
-			localStorage.setItem('moFirstName', moFirstName);
-			localStorage.setItem('moLastName', moLastName);
-			localStorage.setItem('moEmail', moEmail);
-			localStorage.setItem('moPhoneNumber', moPhoneNumber);
-			localStorage.setItem('moDetails', 'set');
-
-			jQuery('#assignMo').removeClass('action');
-			jQuery('#assignMo').addClass('ok');
-			jQuery('#assignMo a').text('OK');
-			jQuery('#assignMo a').attr('href', '/prototypes/1576-assign-mo?status=edit');
-		}
-
-	});
-	// ]]>
-</script>
 </body>
 </html>
