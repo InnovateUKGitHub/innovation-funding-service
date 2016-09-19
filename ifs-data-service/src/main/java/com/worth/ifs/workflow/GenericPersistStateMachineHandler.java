@@ -33,11 +33,7 @@ public class GenericPersistStateMachineHandler<StateType, EventType> extends Lif
     public GenericPersistStateMachineHandler(StateMachine<StateType, EventType> stateMachine) {
         Assert.notNull(stateMachine, "State machine must be set");
         this.stateMachine = stateMachine;
-    }
-
-    @Override
-    protected void onInit() throws Exception {
-        stateMachine.getStateMachineAccessor().doWithAllRegions(function -> function.addStateMachineInterceptor(interceptor));
+        this.stateMachine.getStateMachineAccessor().doWithAllRegions(function -> function.addStateMachineInterceptor(interceptor));
     }
 
     /**

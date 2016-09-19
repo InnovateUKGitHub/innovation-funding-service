@@ -100,23 +100,23 @@ public class ProjectDetailsWorkflowHandler extends BaseWorkflowEventHandler<Proj
     private MessageBuilder<ProjectDetailsOutcomes> projectCreatedEvent(Project project, ProjectUser originalLeadApplicantProjectUser) {
         return MessageBuilder
                 .withPayload(PROJECT_CREATED)
-                .setHeader("project", project)
-                .setHeader("projectUser", originalLeadApplicantProjectUser);
+                .setHeader("target", project)
+                .setHeader("participant", originalLeadApplicantProjectUser);
     }
 
     private MessageBuilder<ProjectDetailsOutcomes> mandatoryValueAddedEvent(Project project, ProjectUser projectUser,
                                                                             ProjectDetailsOutcomes event) {
         return MessageBuilder
                 .withPayload(event)
-                .setHeader("project", project)
-                .setHeader("projectUser", projectUser);
+                .setHeader("target", project)
+                .setHeader("participant", projectUser);
     }
 
     private MessageBuilder<ProjectDetailsOutcomes> submitProjectDetailsMessage(ProjectUser projectUser, Project project) {
         return MessageBuilder
                 .withPayload(SUBMIT)
-                .setHeader("project", project)
-                .setHeader("projectUser", projectUser);
+                .setHeader("target", project)
+                .setHeader("participant", projectUser);
     }
 
     private boolean fireEvent(MessageBuilder<ProjectDetailsOutcomes> event, Project project) {

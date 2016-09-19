@@ -9,8 +9,10 @@ import org.springframework.statemachine.StateContext;
 import org.springframework.statemachine.guard.Guard;
 import org.springframework.stereotype.Component;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static com.worth.ifs.util.CollectionFunctions.*;
 
@@ -23,7 +25,7 @@ public class AllProjectDetailsSuppliedGuard implements Guard<ProjectDetailsState
     @Override
     public boolean evaluate(StateContext<ProjectDetailsState, ProjectDetailsOutcomes> context) {
 
-        Project project = (Project) context.getMessageHeader("project");
+        Project project = (Project) context.getMessageHeader("target");
 
         return validateIsReadyForSubmission(project);
     }
@@ -32,15 +34,15 @@ public class AllProjectDetailsSuppliedGuard implements Guard<ProjectDetailsState
         return project.getAddress() != null &&
                 getExistingProjectManager(project).isPresent() &&
                 project.getTargetStartDate() != null &&
-                allFinanceContactsSet(project) &&
-                project.getSubmittedDate() != null;
+                allFinanceContactsSet(project);
     }
 
     private boolean allFinanceContactsSet(Project project) {
         List<ProjectUser> projectUsers = project.getProjectUsers();
-        List<Organisation> partnerOrganisations = simpleMap(projectUsers, ProjectUser::getOrganisation);
+        Set<Organisation> partnerOrganisations = new HashSet<>(simpleMap(projectUsers, ProjectUser::getOrganisation));
         List<ProjectUser> financeRoles = simpleFilter(projectUsers, ProjectUser::isFinanceContact);
-        return financeRoles.size() == partnerOrganisations.size();
+        Set<Organisation> financeRoleOrgs = new HashSet<>(simpleMap(financeRoles, ProjectUser::getOrganisation));
+        return financeRoleOrgs.containsAll(partnerOrganisations);
     }
 
     private Optional<ProjectUser> getExistingProjectManager(Project project) {

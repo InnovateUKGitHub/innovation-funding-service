@@ -1,5 +1,6 @@
 package com.worth.ifs.workflow;
 
+import com.worth.ifs.invite.domain.ProcessActivity;
 import com.worth.ifs.workflow.domain.ActivityState;
 import com.worth.ifs.workflow.domain.ActivityType;
 import com.worth.ifs.workflow.domain.Process;
@@ -17,12 +18,15 @@ import org.springframework.statemachine.state.State;
 import org.springframework.statemachine.transition.Transition;
 
 import javax.annotation.PostConstruct;
+import java.util.Optional;
+
+import static org.springframework.statemachine.state.PseudoStateKind.CHOICE;
 
 /**
- * A superclass for workflow handlers that expose public "service" methods for pushing Process subclasses through
+ * A superclass for workflow handlers that expose public handler methods for pushing Process subclasses through
  * workflows
  */
-public abstract class BaseWorkflowEventHandler<ProcessType extends Process<ParticipantType, TargetType, StateType>, StateType extends ProcessStates, EventType extends OutcomeType, TargetType, ParticipantType> {
+public abstract class BaseWorkflowEventHandler<ProcessType extends Process<ParticipantType, TargetType, StateType>, StateType extends ProcessStates, EventType extends OutcomeType, TargetType extends ProcessActivity, ParticipantType> {
 
     private static final Log LOG = LogFactory.getLog(BaseWorkflowEventHandler.class);
 
@@ -53,35 +57,30 @@ public abstract class BaseWorkflowEventHandler<ProcessType extends Process<Parti
 
             LOG.debug("STATE: " + state.getId() + " transition: " + transition + " message: " + message + " transition: " + transition + " stateMachine " + stateMachine.getClass().getName());
 
-            ProcessType processToUpdate = getOrCreateProcess(message);
-            ActivityState newState = activityStateRepository.findOneByActivityTypeAndState(getActivityType(), state.getId().getBackingState());
-            processToUpdate.setActivityState(newState);
-            processToUpdate.setProcessEvent(message.getPayload().getType());
+            if (state.getPseudoState() == null || state.getPseudoState().getKind() != CHOICE) {
 
-            getProcessRepository().save(processToUpdate);
+                ProcessType processToUpdate = getOrCreateProcess(message);
+                ActivityState newState = activityStateRepository.findOneByActivityTypeAndState(getActivityType(), state.getId().getBackingState());
+                processToUpdate.setActivityState(newState);
+                processToUpdate.setProcessEvent(message.getPayload().getType());
+
+                getProcessRepository().save(processToUpdate);
+            }
         }
     }
 
     private ProcessType getOrCreateProcess(Message<EventType> message) {
 
-        Long targetId = (Long) message.getHeaders().get("targetId");
+        TargetType target = (TargetType) message.getHeaders().get("target");
 
-        ProcessType processToUpdate;
-        ProcessType existingProcess = getProcessByTargetId(targetId);
+        Optional<ProcessType> existingProcess = Optional.ofNullable(getProcessByTargetId(target.getId()));
 
-        if (existingProcess != null) {
-            processToUpdate = existingProcess;
-        } else {
-            Long participantId = (Long) message.getHeaders().get("participantId");
-            processToUpdate = createNewProcess(targetId, participantId);
-        }
+        ProcessType processToUpdate = existingProcess.orElseGet(() -> {
+            ParticipantType participant = (ParticipantType) message.getHeaders().get("participant");
+            return createNewProcess(target, participant);
+        });
+
         return processToUpdate;
-    }
-
-    private ProcessType createNewProcess(Long targetId, Long participantId) {
-        TargetType target = getTargetRepository().findOne(targetId);
-        ParticipantType participant = getParticipantRepository().findOne(participantId);
-        return createNewProcess(target, participant);
     }
 
     protected abstract ProcessType createNewProcess(TargetType target, ParticipantType participant);

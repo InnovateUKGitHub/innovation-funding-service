@@ -61,7 +61,7 @@ public class ProjectDetailsWorkflow extends StateMachineConfigurerAdapter<Projec
                 .source(PENDING)
                 .event(PROJECT_CREATED)
                 .target(PENDING)
-                .action(projectCreatedAction)
+//                .action(projectCreatedAction)
                 .and()
             .withExternal()
                 .source(PENDING)
@@ -77,7 +77,7 @@ public class ProjectDetailsWorkflow extends StateMachineConfigurerAdapter<Projec
                 .source(READY_TO_SUBMIT)
                 .event(SUBMIT)
                 .target(SUBMITTED)
-                .guard(allProjectDetailsSuppliedGuard)
-                .action(submitProjectDetailsAction);
+                .guard(allProjectDetailsSuppliedGuard);
+//                .action(submitProjectDetailsAction);
     }
 }
