@@ -73,7 +73,7 @@
     position: absolute;
     width: 210px;
     @include box-sizing(border-box);
-    border-right: 1px solid #bfc1c3;
+    border-right: 1px solid $grey-2;
     background-color: #fff;
 
     +td,

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="app-overview">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="prototypes/fragments/layout :: admin-header-logged-out" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${(param.edit == null ? 'Back':'Your profile')}, ${(param.edit == null ? '/prototypes/1360-assessor-invite-start' : '/prototypes/1178-assessor-profile-details')})" th:remove="tag" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+	<div class="hgroup no-margin-top" style="padding-top: 20px; margin-bottom: 30px">
+        <h1 class="heading-large no-margin" th:text="${(param.edit == null ? 'Create internal account':'Edit your profile')}">Create internal account</h1>
+    </div>
+
+	<h2 class="heading-medium">Your details</h2>
+
+	<form>
+		<fieldset>
+			<legend class="visuallyhidden">Your details</legend>
+			<div class="form-group">
+				<label class="form-label" for="title">
+					<span class="form-label-bold">Title</span>
+				</label>
+				<select class="form-control width-medium" id="title" name="title">
+					<option value="">Mr</option>
+					<option value="">Miss</option>
+					<option value="">Mrs</option>
+					<option value="">Ms</option>
+					<option value="">Dr</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<label class="form-label" for="first-name">
+					<span class="form-label-bold">First name</span>
+				</label>
+				<input class="form-control" id="first-name" name="first-name" type="text" th:value="${(param.edit == null ? '':'Joe')}"/>
+			</div>
+			<div class="form-group">
+				<label class="form-label" for="last-name">
+					<span class="form-label-bold">Last name</span>
+				</label>
+				<input class="form-control" id="last-name" name="last-name" type="text" th:value="${(param.edit == null ? '':'Bloggs')}"/>
+			</div>
+
+			<div class="form-group">
+				<label class="form-label" for="password">
+					<span class="form-label-bold">Password</span>
+					<span class="form-hint">Your password is case-sensitive and needs to:</span>
+					<ul class="list-bullet form-hint">
+						<li>be between 10 and 30 characters long</li>
+						<li>contain at least 1 capital letter</li>
+						<li>contain at least 1 number</li>
+					</ul>
+				</label>
+				<input class="form-control" id="password" name="password" type="password" />
+			</div>
+			<div class="form-group">
+				<label class="form-label" for="retype-password">
+					<span class="form-label-bold">Re-type password</span>
+				</label>
+				<input class="form-control" id="retype-password" name="retype-password" type="password" />
+			</div>
+
+			<div class="form-group">
+				<h3 class="heading-small">Invited email</h3>
+				<p class="form-hint">You have been invited into this system by:<br /><strong>exampleperson@inovateuk.gov.uk</strong></p>
+			</div>
+			<div class="form-group">
+				<h3 class="heading-small">Inovate UK team</h3>
+				<p class="form-hint">You have been invited into this system as part of the following team:<br /><strong>Project Finance team</strong></p>
+			</div>
+
+		</fieldset>
+
+		<a href="/prototypes/3115-comp-dashboard?user=admin" class="button button-large extra-margin">Continue</a>
+
+	</form>
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<script type="text/javascript">
+
+
+</script>
+</body>
+</html>

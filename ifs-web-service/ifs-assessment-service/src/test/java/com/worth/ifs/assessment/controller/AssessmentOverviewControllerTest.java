@@ -267,7 +267,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(model().attribute("form", expectedForm))
                 .andExpect(model().attributeExists("model"))
                 .andExpect(model().hasErrors())
-                .andExpect(model().attributeHasFieldErrors("form"))
+                .andExpect(model().attributeHasFieldErrors("form", "rejectReason"))
                 .andExpect(view().name("assessment/reject-invitation-confirm"))
                 .andReturn();
 
@@ -298,7 +298,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         Long assessmentId = 1L;
         Long applicationId = 2L;
         String reason = "reason";
-        String comment = RandomStringUtils.random(256);
+        String comment = RandomStringUtils.random(5001);
 
         AssessmentResource assessment = newAssessmentResource()
                 .with(id(assessmentId))
@@ -324,7 +324,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(model().attribute("form", expectedForm))
                 .andExpect(model().attributeExists("model"))
                 .andExpect(model().hasErrors())
-                .andExpect(model().attributeHasFieldErrors("form"))
+                .andExpect(model().attributeHasFieldErrors("form", "rejectComment"))
                 .andExpect(view().name("assessment/reject-invitation-confirm"))
                 .andReturn();
 
@@ -343,7 +343,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         assertEquals(1, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("rejectComment"));
         assertEquals("This field cannot contain more than {1} characters", bindingResult.getFieldError("rejectComment").getDefaultMessage());
-        assertEquals(255, bindingResult.getFieldError("rejectComment").getArguments()[1]);
+        assertEquals(5000, bindingResult.getFieldError("rejectComment").getArguments()[1]);
 
         InOrder inOrder = Mockito.inOrder(assessmentService, applicationService);
         inOrder.verify(assessmentService, calls(1)).getById(assessmentId);
