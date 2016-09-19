@@ -6,7 +6,6 @@ import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.security.PermissionEntityLookupStrategies;
 import com.worth.ifs.security.PermissionEntityLookupStrategy;
-import com.worth.ifs.user.repository.ProcessRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,9 +18,6 @@ public class AssessmentLookupStrategy {
 
     @Autowired
     private AssessmentRepository assessmentRepository;
-
-    @Autowired
-    private ProcessRoleRepository processRoleRepository;
 
     @Autowired
     private AssessmentMapper assessmentMapper;

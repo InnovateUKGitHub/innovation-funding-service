@@ -1,6 +1,5 @@
 package com.worth.ifs.assessment.transactional;
 
-import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.mapper.AssessmentMapper;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
@@ -10,7 +9,6 @@ import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.transactional.BaseTransactionalService;
-import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.workflow.mapper.ProcessOutcomeMapper;
 import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
 import org.jsoup.Jsoup;
@@ -20,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.BeanPropertyBindingResult;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.ASSESSMENT_RECOMMENDATION_FAILED;
@@ -60,14 +57,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
 
     @Override
     public ServiceResult<List<AssessmentResource>> findByUserAndCompetition(Long userId, Long competitionId) {
-        List<Application> applications = applicationRepository.findByCompetitionId(competitionId);
-
-        List<ProcessRole> processRoles = applications.stream()
-                .map(application -> processRoleRepository.findByUserIdAndApplicationId(userId, application.getId()))
-                .filter(processRole -> processRole != null)
-                .collect(Collectors.toList());
-
-        return serviceSuccess(simpleMap(assessmentRepository.findByParticipantIn(processRoles), assessmentMapper::mapToResource));
+        return serviceSuccess(simpleMap(assessmentRepository.findByParticipantUserIdAndParticipantApplicationCompetitionId(userId, competitionId), assessmentMapper::mapToResource));
     }
 
     @Override

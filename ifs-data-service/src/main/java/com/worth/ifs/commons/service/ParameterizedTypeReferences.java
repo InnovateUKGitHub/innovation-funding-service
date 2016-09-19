@@ -166,7 +166,7 @@ public final class ParameterizedTypeReferences {
         return new ParameterizedTypeReference<List<CompetitionParticipantResource>>() {};
     }
 
-    public static ParameterizedTypeReference<List<AssessmentResource>> assessmentResourceResourceListType() {
+    public static ParameterizedTypeReference<List<AssessmentResource>> assessmentResourceListType() {
         return new ParameterizedTypeReference<List<AssessmentResource>>() {};
     }
 

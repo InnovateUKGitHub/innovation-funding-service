@@ -11,7 +11,7 @@ import java.util.List;
 
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static com.worth.ifs.assessment.builder.ProcessOutcomeResourceBuilder.newProcessOutcomeResource;
-import static com.worth.ifs.commons.service.ParameterizedTypeReferences.assessmentResourceResourceListType;
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.assessmentResourceListType;
 import static java.lang.String.format;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
@@ -51,7 +51,7 @@ public class AssessmentRestServiceImplTest extends BaseRestServiceUnitTest<Asses
         Long userId = 1L;
         Long competitionId = 2L;
 
-        setupGetWithRestResultExpectations(format("%s/user/%s/competition/%s", assessmentRestURL, userId, competitionId), assessmentResourceResourceListType(), expected, OK);
+        setupGetWithRestResultExpectations(format("%s/user/%s/competition/%s", assessmentRestURL, userId, competitionId), assessmentResourceListType(), expected, OK);
         List<AssessmentResource> response = service.getByUserAndCompetition(userId, competitionId).getSuccessObject();
         assertSame(expected, response);
     }
