@@ -25,6 +25,9 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.worth.ifs.commons.error.Error.fieldError;
+import static org.codehaus.groovy.runtime.InvokerHelper.asList;
+
 /**
  * Competition setup section saver for the milestones section.
  */
@@ -80,19 +83,22 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
     public boolean supportsForm(Class<? extends CompetitionSetupForm> clazz) { return MilestonesForm.class.equals(clazz); }
 
     @Override
-    protected List<Error> updateCompetitionResourceWithAutoSave(List<Error> errors, CompetitionResource competitionResource, String fieldName, String value) throws ParseException {
-        //@todo jh property key, validation
-        if (fieldName != null) {
+    protected List<Error> updateCompetitionResourceWithAutoSave(List<Error> errors, CompetitionResource competitionResource, String fieldName, String value) {
+      try{
+          MilestoneResource milestone = milestoneService.getMilestoneByTypeAndCompetitionId(
+                  MilestoneType.valueOf(getMilestoneTypeFromFieldName(fieldName)), competitionResource.getId());
 
-            MilestoneResource milestone = milestoneService.getMilestoneByTypeAndCompetitionId(competitionResource.getId(),
-                    MilestoneType.valueOf(getMilestoneTypeFromFieldName(fieldName)));
-            milestone.setDate(getDateFromFieldValue(value));
-            milestoneService.updateMilestone(milestone, competitionResource.getId());
-        } else {
+          errors.addAll(validateMilestoneDate(milestone, getDateFromFieldValue(value)));
 
-            errors.add(new Error("Milestone not found", HttpStatus.BAD_REQUEST));
-        }
-        return errors;
+          if(!errors.isEmpty()) {
+              return errors;
+          }
+          milestoneService.updateMilestone(milestone, competitionResource.getId());
+      }catch(Exception ex){
+          LOG.error(ex.getMessage());
+          return makeErrorList();
+      }
+      return  Collections.emptyList();
     }
 
     private LocalDateTime getDateFromFieldValue(String value) {
@@ -104,16 +110,28 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
                     Integer.parseInt(dateParts[0]),
                     0, 0, 0);
         } catch (Exception e) {
-            LOG.error(e.getMessage());
-            //return asList(fieldError
+            LOG.error("Invalid milestone on autosave " + e.getMessage());
             return null;
         }
+    }
+
+    private List<Error> validateMilestoneDate(MilestoneResource milestone, LocalDateTime milestoneDate) {
+        if (milestoneDate.isBefore(LocalDateTime.now())){
+            return asList(fieldError("", milestoneDate.toString(), "competition.setup.milestone.date.not.in.future"));
+        }
+        milestone.setDate(milestoneDate);
+
+        return Collections.emptyList();
+    }
+
+    private List<Error> makeErrorList()  {
+        return asList(fieldError("", null, "competition.setup.milestone.date.not.able.to.save"));
     }
 
     private String getMilestoneTypeFromFieldName(String fieldName) {
         Pattern typePattern = Pattern.compile("\\[(.*?)\\]");
         Matcher typeMatcher = typePattern.matcher(fieldName);
-        boolean foundtype = typeMatcher.find();
+        typeMatcher.find();
         return typeMatcher.group(1);
     }
 }

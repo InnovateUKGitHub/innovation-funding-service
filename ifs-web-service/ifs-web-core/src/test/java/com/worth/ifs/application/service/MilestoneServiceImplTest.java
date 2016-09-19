@@ -48,7 +48,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
     }
 
     @Test
-    public void test_getMilestoneByTypeAndCompeitionId() {
+    public void test_getMilestoneByTypeAndCompetitionId() {
 
         LocalDateTime milestoneDate = LocalDateTime.now();
         MilestoneResource milestoneResource = getNewBriefingEventMilestone(milestoneDate);

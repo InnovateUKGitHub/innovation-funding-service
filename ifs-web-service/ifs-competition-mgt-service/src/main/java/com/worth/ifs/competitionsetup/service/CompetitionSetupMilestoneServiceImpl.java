@@ -56,15 +56,6 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
         return milestoneService.update(updatedMilestones, competitionId);
     }
 
-    @Override
-    public List<Error> updateMilestoneForCompetition(MilestoneResource milestone, Long competitionId) {
-        int i = 0;
-
-       // return milestoneService.updateMilestone(milestone, competitionId);
-        return null;
-    }
-
-
     private LocalDateTime getMilestoneDate(Integer day, Integer month, Integer year){
         if (day != null && month != null && year != null){
             return LocalDateTime.of(year, month, day, 0, 0);

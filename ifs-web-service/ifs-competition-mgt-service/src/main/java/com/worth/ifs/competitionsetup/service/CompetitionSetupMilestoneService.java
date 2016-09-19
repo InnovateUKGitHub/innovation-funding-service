@@ -18,8 +18,6 @@ public interface CompetitionSetupMilestoneService {
 
     List<Error> updateMilestonesForCompetition(List<MilestoneResource> milestones, LinkedMap<String, MilestoneEntry> milestoneEntries, Long competitionId);
 
-    List<Error> updateMilestoneForCompetition(MilestoneResource milestone, Long competitionId);
-
 	List<Error> validateMilestoneDates(LinkedMap<String, MilestoneEntry> milestonesFormEntries);
 
 	void sortMilestones(MilestonesForm MilestoneForm);
