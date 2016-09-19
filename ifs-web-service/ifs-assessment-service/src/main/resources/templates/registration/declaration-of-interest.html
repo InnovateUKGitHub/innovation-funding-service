@@ -44,114 +44,127 @@
                 <div class="form-group">
                     <fieldset class="inline">
                         <legend class="heading-small">Do you have any appointments, directorships or consultancies?</legend>
-                        <label class="block-label">
-                            <input value="Yes" type="radio" />
-                            Yes
-                        </label>
-                        <label class="block-label">
-                            <input value="No" type="radio" />
-                            No
-                        </label>
+
+                        <div class="form-group form-group-compound">
+                            <label class="block-label" data-target="toggle-appointments">
+                                <input value="Yes" type="radio" />
+                                Yes
+                            </label>
+                            <label class="block-label">
+                                <input value="No" type="radio" />
+                                No
+                            </label>
+                        </div>
+
+                        <div class="panel-indent js-hidden" id="toggle-appointments">
+                            <div class="grid-row">
+                                <div class="column-half">
+                                    <div class="form-group">
+                                        <label class="form-label-bold">Organisation</label>
+                                        <input class="form-control width-full" type="text" />
+                                    </div>
+                                </div>
+                                <div class="column-half">
+                                    <div class="form-group">
+                                        <label class="form-label-bold">Position</label>
+                                        <input class="form-control width-full" type="text" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <p class="alignright extra-margin"><button class="buttonlink" type="submit">Add another position</button></p>
+                        </div>
                     </fieldset>
                 </div>
-
-                <div class="grid-row extra-margin">
-                    <div class="column-half">
-                        <div class="form-group">
-                            <label class="form-label-bold">Organisation</label>
-                            <input class="form-control width-full" type="text" />
-                        </div>
-                    </div>
-                    <div class="column-half">
-                        <div class="form-group">
-                            <label class="form-label-bold">Position</label>
-                            <input class="form-control width-full" type="text" />
-                        </div>
-                    </div>
-                </div>
-
-                <p class="alignright"><button class="buttonlink" type="submit">Add another position</button></p>
 
                 <div class="form-group">
                     <fieldset class="inline">
                         <legend class="heading-small">Do you have any other financial interests?</legend>
                         <p class="form-hint">Do you have a position or investment in a company from which you can benefit financially?</p>
 
-                        <label class="block-label">
-                            <input value="Yes" type="radio" />
-                            Yes
-                        </label>
-                        <label class="block-label">
-                            <input value="No" type="radio" />
-                            No
-                        </label>
+                        <div class="form-group form-group-compound">
+                            <label class="block-label" data-target="toggle-interest">
+                                <input value="Yes" type="radio" />
+                                Yes
+                            </label>
+                            <label class="block-label">
+                                <input value="No" type="radio" />
+                                No
+                            </label>
+                        </div>
+
+                        <div class="panel-indent js-hidden" id="toggle-interest">
+                            <label class="form-label-bold">Please describe these interests?</label>
+                            <textarea class="form-control width-full" cols="30" rows="3"></textarea>
+                        </div>
                     </fieldset>
                 </div>
-
-                <div class="form-group">
-                    <label class="form-label-bold">Please describe these interests?</label>
-                    <textarea class="form-control width-full" cols="30" rows="3"></textarea>
-                </div>
-
 
                 <h3 class="heading-medium">Close family member affiliations</h3>
 
                 <div class="form-group">
                     <fieldset class="inline">
                         <legend class="heading-small">Do any of your close family members have any appointments, directorships or consultancies?</legend>
-                        <label class="block-label">
-                            <input value="Yes" type="radio" />
-                            Yes
-                        </label>
-                        <label class="block-label">
-                            <input value="No" type="radio" />
-                            No
-                        </label>
+
+                        <div class="form-group form-group-compound">
+                            <label class="block-label" data-target="toggle-family-appointments">
+                                <input value="Yes" type="radio" />
+                                Yes
+                            </label>
+                            <label class="block-label">
+                                <input value="No" type="radio" />
+                                No
+                            </label>
+                        </div>
+
+                        <div class="panel-indent js-hidden" id="toggle-family-appointments">
+                            <div class="grid-row extra-margin">
+                                <div class="column-third">
+                                    <div class="form-group">
+                                        <label class="form-label-bold">Relation</label>
+                                        <input class="form-control width-full" type="text" />
+                                    </div>
+                                </div>
+                                    <div class="column-third">
+                                        <div class="form-group">
+                                            <label class="form-label-bold">Organisation</label>
+                                            <input class="form-control width-full" type="text" />
+                                        </div>
+                                    </div>
+                                <div class="column-third">
+                                    <div class="form-group">
+                                        <label class="form-label-bold">Position</label>
+                                        <input class="form-control width-full" type="text" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <p class="alignright"><button class="buttonlink" type="submit">Add another family member</button></p>
+                        </div>
                     </fieldset>
                 </div>
-
-                <div class="grid-row extra-margin">
-                    <div class="column-third">
-                        <div class="form-group">
-                            <label class="form-label-bold">Relation</label>
-                            <input class="form-control width-full" type="text" />
-                        </div>
-                    </div>
-                        <div class="column-third">
-                            <div class="form-group">
-                                <label class="form-label-bold">Organisation</label>
-                                <input class="form-control width-full" type="text" />
-                            </div>
-                        </div>
-                    <div class="column-third">
-                        <div class="form-group">
-                            <label class="form-label-bold">Position</label>
-                            <input class="form-control width-full" type="text" />
-                        </div>
-                    </div>
-                </div>
-
-                <p class="alignright"><button class="buttonlink" type="submit">Add another family member</button></p>
 
                 <div class="form-group">
                     <fieldset class="inline">
                         <legend class="heading-small">Do any of your close family members have any other financial interests?</legend>
                         <p class="form-hint">Do any of your close family members have a position or investment in a company from which you can benefit financially?</p>
 
-                        <label class="block-label">
-                            <input value="Yes" type="radio" />
-                            Yes
-                        </label>
-                        <label class="block-label">
-                            <input value="No" type="radio" />
-                            No
-                        </label>
-                    </fieldset>
-                </div>
+                        <div class="form-group form-group-compound">
+                            <label class="block-label" data-target="toggle-family-interest">
+                                <input value="Yes" type="radio" />
+                                Yes
+                            </label>
+                            <label class="block-label">
+                                <input value="No" type="radio" />
+                                No
+                            </label>
+                        </div>
 
-                <div class="form-group">
-                    <label class="form-label-bold">Please describe these interests</label>
-                    <textarea class="form-control width-full" cols="30" rows="3"></textarea>
+                        <div class="panel-indent js-hidden" id="toggle-family-interest">
+                            <label class="form-label-bold">Please describe these interests</label>
+                            <textarea class="form-control width-full" cols="30" rows="3"></textarea>
+                        </div>
+                    </fieldset>
                 </div>
 
                 <div class="form-group">
