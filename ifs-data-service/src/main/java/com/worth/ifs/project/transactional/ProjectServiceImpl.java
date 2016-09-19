@@ -233,7 +233,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
             UserResource currentUser = (UserResource) SecurityContextHolder.getContext().getAuthentication().getDetails();
             ProjectUser projectUser = simpleFindFirst(project.getProjectUsers(), pu -> pu.getUser().getId().equals(currentUser.getId())).get();
 
-            if (projectDetailsWorkflowHandler.submitProjectDetails(projectUser, project)) {
+            if (projectDetailsWorkflowHandler.submitProjectDetails(project, projectUser)) {
                 return setSubmittedDate(project, date);
             } else {
                 return serviceFailure(new Error(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_SUBMITTED_IF_INCOMPLETE));

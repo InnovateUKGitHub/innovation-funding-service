@@ -20,7 +20,7 @@ import org.springframework.statemachine.transition.Transition;
 import javax.annotation.PostConstruct;
 import java.util.Optional;
 
-import static org.springframework.statemachine.state.PseudoStateKind.CHOICE;
+import static com.worth.ifs.workflow.TestableTransitionWorkflowAction.TESTING_GUARD_KEY;
 
 /**
  * A superclass for workflow handlers that expose public handler methods for pushing Process subclasses through
@@ -55,17 +55,19 @@ public abstract class BaseWorkflowEventHandler<ProcessType extends Process<Parti
         public void onPersist(State<StateType, EventType> state, Message<EventType> message,
                               Transition<StateType, EventType> transition, StateMachine<StateType, EventType> stateMachine) {
 
+            if (message.getHeaders().get(TESTING_GUARD_KEY) != null) {
+                LOG.debug("TESTING STATE CHANGE: " + state.getId() + " transition: " + transition + " message: " + message + " transition: " + transition + " stateMachine " + stateMachine.getClass().getName());
+                return;
+            }
+
             LOG.debug("STATE: " + state.getId() + " transition: " + transition + " message: " + message + " transition: " + transition + " stateMachine " + stateMachine.getClass().getName());
 
-            if (state.getPseudoState() == null || state.getPseudoState().getKind() != CHOICE) {
+            ProcessType processToUpdate = getOrCreateProcess(message);
+            ActivityState newState = activityStateRepository.findOneByActivityTypeAndState(getActivityType(), state.getId().getBackingState());
+            processToUpdate.setActivityState(newState);
+            processToUpdate.setProcessEvent(message.getPayload().getType());
 
-                ProcessType processToUpdate = getOrCreateProcess(message);
-                ActivityState newState = activityStateRepository.findOneByActivityTypeAndState(getActivityType(), state.getId().getBackingState());
-                processToUpdate.setActivityState(newState);
-                processToUpdate.setProcessEvent(message.getPayload().getType());
-
-                getProcessRepository().save(processToUpdate);
-            }
+            getProcessRepository().save(processToUpdate);
         }
     }
 

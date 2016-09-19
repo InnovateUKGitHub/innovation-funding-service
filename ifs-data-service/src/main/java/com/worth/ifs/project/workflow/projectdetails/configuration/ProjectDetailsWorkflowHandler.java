@@ -59,7 +59,11 @@ public class ProjectDetailsWorkflowHandler extends BaseWorkflowEventHandler<Proj
         return fireEvent(mandatoryValueAddedEvent(project, projectUser, PROJECT_MANAGER_ADDED), project);
     }
 
-    public boolean submitProjectDetails(ProjectUser projectUser, Project project) {
+    public boolean projectFinanceContactAdded(Project project, ProjectUser projectUser) {
+        return fireEvent(mandatoryValueAddedEvent(project, projectUser, PROJECT_FINANCE_CONTACT_ADDED), project);
+    }
+
+    public boolean submitProjectDetails(Project project, ProjectUser projectUser) {
         return fireEvent(submitProjectDetailsMessage(projectUser, project), project);
     }
 

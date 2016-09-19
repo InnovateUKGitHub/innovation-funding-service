@@ -1,13 +1,14 @@
 package com.worth.ifs.workflow;
 
 import org.springframework.messaging.Message;
+import org.springframework.statemachine.StateContext;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.access.StateMachineAccess;
 import org.springframework.statemachine.listener.AbstractCompositeListener;
+import org.springframework.statemachine.listener.StateMachineListenerAdapter;
 import org.springframework.statemachine.state.State;
 import org.springframework.statemachine.support.DefaultStateMachineContext;
 import org.springframework.statemachine.support.LifecycleObjectSupport;
-import org.springframework.statemachine.support.StateMachineInterceptorAdapter;
 import org.springframework.statemachine.transition.Transition;
 import org.springframework.util.Assert;
 
@@ -16,13 +17,16 @@ import java.util.List;
 
 /**
  * Copy of the Spring State Machine recipe {@link org.springframework.statemachine.recipes.persist.PersistStateMachineHandler}
- * with the exception that this Handler is generic and so is able to support State Machines that aren;t constrained to String
- * states.  This gives us type safety with our states
+ * with the exception that this Handler is generic and so is able to support State Machines that aren't constrained to String
+ * states.  This gives us type safety with our states.
+ *
+ * In addition, this version uses a stateMachineListener rather than an Interceptor as it triggers more appropriate lifecycle
+ * events for persisting state changes when dealing with events that cause self-transitions or when evaluating pseudo-state
+ * effects
  */
 public class GenericPersistStateMachineHandler<StateType, EventType> extends LifecycleObjectSupport {
 
     private final StateMachine<StateType, EventType> stateMachine;
-    private final GenericPersistingStateChangeInterceptor interceptor = new GenericPersistingStateChangeInterceptor();
     private final GenericCompositePersistStateChangeListener listeners = new GenericCompositePersistStateChangeListener();
 
     /**
@@ -33,7 +37,17 @@ public class GenericPersistStateMachineHandler<StateType, EventType> extends Lif
     public GenericPersistStateMachineHandler(StateMachine<StateType, EventType> stateMachine) {
         Assert.notNull(stateMachine, "State machine must be set");
         this.stateMachine = stateMachine;
-        this.stateMachine.getStateMachineAccessor().doWithAllRegions(function -> function.addStateMachineInterceptor(interceptor));
+        this.stateMachine.addStateListener(new PersistingStateMachineListener());
+    }
+
+    private class PersistingStateMachineListener extends StateMachineListenerAdapter<StateType, EventType> {
+
+        @Override
+        public void stateContext(StateContext<StateType, EventType> stateContext) {
+            if (stateContext.getStage() == StateContext.Stage.STATE_CHANGED) {
+                listeners.onPersist(stateContext.getTarget(), stateContext.getMessage(), stateContext.getTransition(), stateContext.getStateMachine());
+            }
+        }
     }
 
     /**
@@ -83,15 +97,6 @@ public class GenericPersistStateMachineHandler<StateType, EventType> extends Lif
          */
         void onPersist(State<StateType, EventType> state, Message<EventType> message, Transition<StateType, EventType> transition,
                        StateMachine<StateType, EventType> stateMachine);
-    }
-
-    private class GenericPersistingStateChangeInterceptor extends StateMachineInterceptorAdapter<StateType, EventType> {
-
-        @Override
-        public void preStateChange(State<StateType, EventType> state, Message<EventType> message,
-                                   Transition<StateType, EventType> transition, StateMachine<StateType, EventType> stateMachine) {
-            listeners.onPersist(state, message, transition, stateMachine);
-        }
     }
 
     private class GenericCompositePersistStateChangeListener extends AbstractCompositeListener<GenericPersistStateChangeListener<StateType, EventType>> implements

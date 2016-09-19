@@ -2,12 +2,9 @@ package com.worth.ifs.project.workflow.projectdetails.configuration;
 
 import com.worth.ifs.project.resource.ProjectDetailsOutcomes;
 import com.worth.ifs.project.resource.ProjectDetailsState;
-import com.worth.ifs.project.workflow.projectdetails.actions.ProjectCreatedAction;
-import com.worth.ifs.project.workflow.projectdetails.actions.SubmitProjectDetailsAction;
 import com.worth.ifs.project.workflow.projectdetails.guards.AllProjectDetailsSuppliedGuard;
 import com.worth.ifs.workflow.WorkflowStateMachineListener;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.statemachine.config.EnableStateMachine;
 import org.springframework.statemachine.config.StateMachineConfigurerAdapter;
@@ -16,13 +13,10 @@ import org.springframework.statemachine.config.builders.StateMachineStateConfigu
 import org.springframework.statemachine.config.builders.StateMachineTransitionConfigurer;
 
 import java.util.EnumSet;
-import java.util.LinkedHashSet;
 
-import static com.worth.ifs.project.resource.ProjectDetailsOutcomes.PROJECT_CREATED;
-import static com.worth.ifs.project.resource.ProjectDetailsOutcomes.PROJECT_START_DATE_ADDED;
-import static com.worth.ifs.project.resource.ProjectDetailsOutcomes.SUBMIT;
+import static com.worth.ifs.project.resource.ProjectDetailsOutcomes.*;
 import static com.worth.ifs.project.resource.ProjectDetailsState.*;
-import static java.util.Arrays.asList;
+import static com.worth.ifs.project.resource.ProjectDetailsState.PENDING;
 
 /**
  * Describes the workflow for the Project Details section for Project Setup.
@@ -32,13 +26,7 @@ import static java.util.Arrays.asList;
 public class ProjectDetailsWorkflow extends StateMachineConfigurerAdapter<ProjectDetailsState, ProjectDetailsOutcomes> {
 
     @Autowired
-    private ProjectCreatedAction projectCreatedAction;
-
-    @Autowired
     private AllProjectDetailsSuppliedGuard allProjectDetailsSuppliedGuard;
-
-    @Autowired
-    private SubmitProjectDetailsAction submitProjectDetailsAction;
 
     @Override
     public void configure(StateMachineConfigurationConfigurer<ProjectDetailsState, ProjectDetailsOutcomes> config) throws Exception {
@@ -51,7 +39,8 @@ public class ProjectDetailsWorkflow extends StateMachineConfigurerAdapter<Projec
         states.withStates()
                 .initial(PENDING)
                 .states(EnumSet.of(PENDING, READY_TO_SUBMIT, SUBMITTED))
-                .choice(DECIDE_IF_READY_TO_SUBMIT);
+                .choice(DECIDE_IF_READY_TO_SUBMIT)
+                .end(SUBMITTED);
     }
 
     @Override
@@ -61,11 +50,25 @@ public class ProjectDetailsWorkflow extends StateMachineConfigurerAdapter<Projec
                 .source(PENDING)
                 .event(PROJECT_CREATED)
                 .target(PENDING)
-//                .action(projectCreatedAction)
                 .and()
             .withExternal()
                 .source(PENDING)
                 .event(PROJECT_START_DATE_ADDED)
+                .target(DECIDE_IF_READY_TO_SUBMIT)
+                .and()
+            .withExternal()
+                .source(PENDING)
+                .event(PROJECT_ADDRESS_ADDED)
+                .target(DECIDE_IF_READY_TO_SUBMIT)
+                .and()
+            .withExternal()
+                .source(PENDING)
+                .event(PROJECT_MANAGER_ADDED)
+                .target(DECIDE_IF_READY_TO_SUBMIT)
+                .and()
+            .withExternal()
+                .source(PENDING)
+                .event(PROJECT_FINANCE_CONTACT_ADDED)
                 .target(DECIDE_IF_READY_TO_SUBMIT)
                 .and()
             .withChoice()
@@ -78,6 +81,5 @@ public class ProjectDetailsWorkflow extends StateMachineConfigurerAdapter<Projec
                 .event(SUBMIT)
                 .target(SUBMITTED)
                 .guard(allProjectDetailsSuppliedGuard);
-//                .action(submitProjectDetailsAction);
     }
 }
