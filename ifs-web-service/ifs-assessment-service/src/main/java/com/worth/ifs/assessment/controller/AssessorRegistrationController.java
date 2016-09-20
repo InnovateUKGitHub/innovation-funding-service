@@ -23,6 +23,7 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
  * Controller to manage Assessor Registration.
  */
@@ -43,12 +44,11 @@ public class AssessorRegistrationController {
     @RequestMapping(value = "/register", method = RequestMethod.GET)
     public String registerForm(Model model, HttpServletRequest request, HttpServletResponse response) {
 
-        addRegistrationFormToModel(model, request, response);
-
         String inviteHash = CookieUtil.getCookieValue(request, ASSESSOR_INVITE_HASH);
 
-        model.addAttribute("model", modelPopulator.populateModel(inviteHash));
 
+        addRegistrationFormToModel(model, request, response);
+        model.addAttribute("model", modelPopulator.populateModel(inviteHash));
         String destination = "registration/register";
 
         return destination;
@@ -77,6 +77,13 @@ public class AssessorRegistrationController {
 
         return destination;
     }
+
+/*    @ModelAttribute("ethnicityOptions")
+    public List<EthnicityResource> populateEthnicityOptions() {
+        return userRestService.findAllActiveEthnicities().getSuccessObjectOrThrowException();
+    }
+
+    }*/
 
     private void addAddressOptions(AssessorRegistrationForm registrationForm) {
         if (StringUtils.hasText(registrationForm.getAddressForm().getPostcodeInput())) {
