@@ -2,6 +2,8 @@
 Documentation     INFUND-3720: As an Assessor I can see deadlines for the assessment of applications currently in assessment on my dashboard, so that I am reminded to deliver my work on time.
 ...
 ...               INFUND-3716: As an Assessor when I have accepted to assess within a competition and the assessment period is current, I can see the number of competitions and their titles on my dashboard, so that I can plan my work.
+...
+...               INFUND-4562: Securing of services related to Assessor Journey changes - Sprint 14
 Suite Setup
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Assessor
@@ -23,7 +25,7 @@ ${SCREEN_NO_OF_DAYS_LEFT}
 Milestone date for assessment submission
     [Documentation]    INFUND-4857
     [Setup]    log in as user    &{existing_assessor1_credentials}  #worth.email.test+assessor1@gmail.com
-    [Tags]
+    [Tags]    Pending
     When the user navigates to the page    ${Assessor_competition_dashboard}
     Then the assessor should see the date for submission of assessment
 
@@ -32,6 +34,7 @@ Number of days remaining until assessment submission
     [Tags]    Pending
     Then the assessor should see the number of days remaining
     And the days remaining should be correct
+    [Teardown]    logout as user
 
 *** Keywords ***
 the assessor should see the date for submission of assessment
