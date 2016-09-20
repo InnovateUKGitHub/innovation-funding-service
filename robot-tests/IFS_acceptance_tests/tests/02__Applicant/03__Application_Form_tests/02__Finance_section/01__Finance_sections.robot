@@ -12,7 +12,7 @@ Documentation     INFUND-45: As an applicant and I am on the application form on
 Suite Setup       Run keywords    log in and create new application if there is not one already
 ...               AND    Applicant navigates to the finances of the Robot application
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        Applicant    Finances
+Force Tags        Applicant
 Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../../resources/variables/User_credentials.robot
@@ -71,23 +71,23 @@ the Applicant should see all the "Your Finance" Sections
 the user adds three material rows
     the user clicks the button/link    jQuery=button:contains("Materials")
     the user should see the element    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
-    Input Text    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    01
-    Focus    jQuery=button:contains('Add another materials cost')
-    the user clicks the button/link    jQuery=button:contains('Add another materials cost')
+    the user enters text to a text field    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    01
+    the user moves focus to the element    jQuery=button:contains(Add another materials cost)
+    the user clicks the button/link    jQuery=button:contains(Add another materials cost)
     the user should see the element    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input
-    Input Text    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    01
-    Focus    jQuery=button:contains('Add another materials cost')
-    the user clicks the button/link    jQuery=button:contains('Add another materials cost')
+    the user enters text to a text field    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    01
+    the user moves focus to the element    jQuery=button:contains(Add another materials cost)
+    the user clicks the button/link    jQuery=button:contains(Add another materials cost)
     the user should see the element    css=#material-costs-table tbody tr:nth-of-type(3) td:nth-of-type(2) input
-    Input Text    css=#material-costs-table tbody tr:nth-of-type(3) td:nth-of-type(2) input    01
-    Mouse Out    css=#material-costs-table tbody tr:nth-of-type(3) td:nth-of-type(2) input
-    Focus    link=Please refer to our guide to project costs for further information.
+    the user enters text to a text field    css=#material-costs-table tbody tr:nth-of-type(3) td:nth-of-type(2) input    01
+    the user moves the mouse away from the element    css=#material-costs-table tbody tr:nth-of-type(3) td:nth-of-type(2) input
+    the user moves focus to the element    link=Please refer to our guide to project costs for further information.
 
 the user removes the materials rows
     [Documentation]    INFUND-2965
     the user clicks the button/link    jQuery=#material-costs-table button:contains("Remove")
     the user should not see the element    css=#material-costs-table tbody tr:nth-of-type(4) td:nth-of-type(2) input
-    Focus    jQuery=#material-costs-table button:contains("Remove")
+    the user moves focus to the element    jQuery=#material-costs-table button:contains("Remove")
     the user clicks the button/link    jQuery=#material-costs-table button:contains("Remove")
     the user should not see the element    css=#material-costs-table tbody tr:nth-of-type(3) td:nth-of-type(2) input
     the user clicks the button/link    jQuery=#material-costs-table button:contains("Remove")
@@ -95,12 +95,14 @@ the user removes the materials rows
     the user clicks the button/link    jQuery=button:contains("Materials")
 
 the Funding levels value should be empty
+    the user should see the element    id=cost-financegrantclaim
     ${input_value} =    Get Value    id=cost-financegrantclaim
     log    ${input_value}
     Should Not Be Equal As Strings    ${input_value}    0
     Should Be Equal As Strings    ${input_value}    ${EMPTY}
 
 the working days per year should be 232 by default
+    the user should see the element    css=[name^="labour-labourDaysYearly"]
     ${Days_value} =    Get Value    css=[name^="labour-labourDaysYearly"]
     Should Be Equal As Strings    ${Days_value}    232
 

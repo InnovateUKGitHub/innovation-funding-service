@@ -13,7 +13,6 @@ import com.worth.ifs.assessment.service.AssessorFormInputResponseService;
 import com.worth.ifs.assessment.viewmodel.AssessmentFeedbackApplicationDetailsViewModel;
 import com.worth.ifs.assessment.viewmodel.AssessmentFeedbackViewModel;
 import com.worth.ifs.assessment.viewmodel.AssessmentNavigationViewModel;
-import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.form.resource.FormInputResource;
@@ -21,6 +20,7 @@ import com.worth.ifs.form.service.FormInputService;
 import com.worth.ifs.model.OrganisationDetailsModelPopulator;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -29,18 +29,19 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
+import static com.worth.ifs.controller.ErrorLookupHelper.lookupErrorMessageResourceBundleEntries;
 import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static com.worth.ifs.util.CollectionFunctions.simpleToMap;
 import static com.worth.ifs.util.MapFunctions.toListOfPairs;
+import static java.lang.String.format;
 import static java.util.stream.Collectors.toMap;
 
 @Controller
 @RequestMapping("/{assessmentId}")
 public class AssessmentFeedbackController {
-    
+
     private static final String FORM_ATTR_NAME = "form";
 
     @Autowired
@@ -61,27 +62,21 @@ public class AssessmentFeedbackController {
     @Autowired
     private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
 
+    @Autowired
+    private MessageSource messageSource;
+
     @RequestMapping(value = "/question/{questionId}", method = RequestMethod.GET)
     public String getQuestion(Model model,
                               @ModelAttribute(FORM_ATTR_NAME) Form form,
-                              BindingResult bindingResult,
                               @PathVariable("assessmentId") Long assessmentId,
                               @PathVariable("questionId") Long questionId) {
+
         if (isApplicationDetailsQuestion(questionId)) {
             return getApplicationDetails(model, assessmentId, questionId);
         }
 
-        AssessmentFeedbackViewModel viewModel = assessmentFeedbackModelPopulator.populateModel(assessmentId, questionId);
-
-        Map<Long, AssessorFormInputResponseResource> mappedResponses = viewModel.getAssessorResponses();
-        mappedResponses.forEach((k, v) ->
-                form.addFormInput(k.toString(), v.getValue())
-        );
-
-        model.addAttribute("model", viewModel);
-        model.addAttribute("navigation", assessmentFeedbackNavigationModelPopulator.populateModel(assessmentId, questionId));
-
-        return "assessment/application-question";
+        populateQuestionForm(form, assessmentId, questionId);
+        return doViewQuestion(model, assessmentId, questionId);
     }
 
     @RequestMapping(value = "/formInput/{formInputId}", method = RequestMethod.POST)
@@ -93,32 +88,52 @@ public class AssessmentFeedbackController {
             @RequestParam("value") String value) {
 
         ServiceResult<Void> result = assessorFormInputResponseService.updateFormInputResponse(assessmentId, formInputId, value);
-        return createJsonObjectNode(result.isSuccess(), result.getErrors());
+        List<String> lookupUpMessages = lookupErrorMessageResourceBundleEntries(messageSource, result);
+        return createJsonObjectNode(result.isSuccess(), lookupUpMessages);
     }
 
     @RequestMapping(value = "/question/{questionId}", method = RequestMethod.POST)
     public String save(
             Model model,
             @ModelAttribute(FORM_ATTR_NAME) Form form,
-            BindingResult bindingResult,
+            @SuppressWarnings("UnusedParameters") BindingResult bindingResult,
             ValidationHandler validationHandler,
             @PathVariable("assessmentId") Long assessmentId,
             @PathVariable("questionId") Long questionId) {
 
-        Supplier<String> failureView = () -> getQuestion(model, form, bindingResult, assessmentId, questionId);
+        Supplier<String> failureView = () -> doViewQuestion(model, assessmentId, questionId);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             List<FormInputResource> formInputs = formInputService.findAssessmentInputsByQuestion(questionId);
             List<Pair<Long, String>> formInputResponses = getFormInputResponses(form, formInputs);
             formInputResponses.stream().forEach(responsePair -> {
                 // TODO INFUND-4105 optimise this to save multiple responses at a time
+                String formInputField = format("formInput[%s]", responsePair.getLeft());
                 ServiceResult<Void> updateResult = assessorFormInputResponseService.updateFormInputResponse(assessmentId, responsePair.getLeft(), responsePair.getRight());
-                validationHandler.addAnyErrors(updateResult, toField("formErrors"));
+                validationHandler.addAnyErrors(updateResult, toField(formInputField));
             });
 
             return validationHandler.
                     failNowOrSucceedWith(failureView, () -> redirectToAssessmentOverview(assessmentId));
         });
+    }
+
+    private List<AssessorFormInputResponseResource> getAssessorResponses(Long assessmentId, Long questionId) {
+        return assessorFormInputResponseService.getAllAssessorFormInputResponsesByAssessmentAndQuestion(assessmentId, questionId);
+    }
+
+    private Form populateQuestionForm(Form form, Long assessmentId, Long questionId) {
+        List<AssessorFormInputResponseResource> assessorResponses = getAssessorResponses(assessmentId, questionId);
+        Map<Long, AssessorFormInputResponseResource> mappedResponses = simpleToMap(assessorResponses, AssessorFormInputResponseResource::getFormInput);
+        mappedResponses.forEach((k, v) -> form.addFormInput(k.toString(), v.getValue()));
+        return form;
+    }
+
+    private String doViewQuestion(Model model, Long assessmentId, Long questionId) {
+        AssessmentFeedbackViewModel viewModel = assessmentFeedbackModelPopulator.populateModel(assessmentId, questionId);
+        model.addAttribute("model", viewModel);
+        model.addAttribute("navigation", assessmentFeedbackNavigationModelPopulator.populateModel(assessmentId, questionId));
+        return "assessment/application-question";
     }
 
     private String redirectToAssessmentOverview(Long assessmentId) {
@@ -154,13 +169,13 @@ public class AssessmentFeedbackController {
         return simpleFilter(responses, responsePair -> formInputResourceMap.containsKey(responsePair.getLeft()));
     }
 
-    private ObjectNode createJsonObjectNode(boolean success, List<Error> errors) {
+    private ObjectNode createJsonObjectNode(boolean success, List<String> errors) {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode node = mapper.createObjectNode();
         node.put("success", success ? "true" : "false");
         if (!success) {
             ArrayNode errorsNode = mapper.createArrayNode();
-            errors.stream().map(u -> u.getErrorMessage()).collect(Collectors.toList()).forEach(errorsNode::add);
+            errors.forEach(errorsNode::add);
             node.set("validation_errors", errorsNode);
         }
         return node;

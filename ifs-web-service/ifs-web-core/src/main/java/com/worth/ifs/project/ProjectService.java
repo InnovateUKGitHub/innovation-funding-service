@@ -1,21 +1,22 @@
 package com.worth.ifs.project;
 
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
-import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.project.resource.ProjectTeamStatusResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.user.resource.OrganisationResource;
-import org.springframework.core.io.ByteArrayResource;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
+import org.springframework.core.io.ByteArrayResource;
 
 /**
  * A service for dealing with ProjectResources via the appropriate Rest services
@@ -81,6 +82,8 @@ public interface ProjectService {
     ServiceResult<Boolean> isOtherDocumentSubmitAllowed(Long projectId);
 
     ServiceResult<Void> setPartnerDocumentsSubmitted(Long projectId);
+
+    ProjectTeamStatusResource getProjectTeamStatus(Long projectId);
 
     ServiceResult<Void> inviteFinanceContact (Long projectId, InviteProjectResource inviteProjectResource);
 

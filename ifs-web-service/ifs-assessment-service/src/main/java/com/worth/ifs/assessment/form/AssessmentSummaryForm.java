@@ -1,9 +1,9 @@
 package com.worth.ifs.assessment.form;
 
 import com.worth.ifs.controller.BindingResultTarget;
+import com.worth.ifs.validator.constraints.FieldRequiredIf;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 
@@ -14,13 +14,14 @@ import java.util.List;
 /**
  * Form field model for the decision made by an assessor about an application while reviewing the assessment summary.
  */
+@FieldRequiredIf(required = "feedback", argument = "fundingConfirmation", predicate = false, message = "{validation.assessmentsummaryform.feedback.required}")
 public class AssessmentSummaryForm implements BindingResultTarget {
 
-    @NotNull(message = "Please indicate your decision")
+    @NotNull(message = "{validation.assessmentsummaryform.fundingConfirmation.required}")
     private Boolean fundingConfirmation;
-    @NotEmpty(message = "Please enter your feedback")
-    @Size (max = 5000)
+    @Size(max = 5000, message = "{validation.field.too.many.characters}")
     private String feedback;
+    @Size(max = 5000, message = "{validation.field.too.many.characters}")
     private String comment;
     private BindingResult bindingResult;
     private List<ObjectError> objectErrors;

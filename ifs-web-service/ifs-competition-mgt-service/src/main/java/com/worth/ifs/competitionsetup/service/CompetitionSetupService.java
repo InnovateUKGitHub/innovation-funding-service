@@ -7,6 +7,8 @@ import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.springframework.ui.Model;
 
 import java.util.List;
+import java.util.Optional;
+
 /**
  * service for logic around handling the various sections of competition setup.
  */
@@ -18,11 +20,11 @@ public interface CompetitionSetupService {
 	CompetitionSetupForm getSectionFormData(CompetitionResource competitionResource,
 			CompetitionSetupSection section);
 
-	List<Error> autoSaveCompetitionSetupSection(CompetitionResource competitionResource, CompetitionSetupSection section,
-												String fieldName, String value);
+    List<Error> autoSaveCompetitionSetupSection(CompetitionResource competitionResource, CompetitionSetupSection section,
+                                                String fieldName, String value, Optional<Long> objectId);
 
-	List<Error> saveCompetitionSetupSection(CompetitionSetupForm competitionSetupForm,
-											CompetitionResource competitionResource, CompetitionSetupSection section);
+    List<Error> saveCompetitionSetupSection(CompetitionSetupForm competitionSetupForm,
+                                            CompetitionResource competitionResource, CompetitionSetupSection section);
 
 	boolean isCompetitionReadyToOpen(CompetitionResource competitionResource);
 

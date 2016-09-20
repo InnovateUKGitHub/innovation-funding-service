@@ -8,7 +8,7 @@ Documentation     INFUND-3013 As a partner I want to be able to download mandato
 ...               INFUND-2621 As a contributor I want to be able to review the current Project Setup status of all partners in my project so I can get an indication of the overall status of the consortium
 Suite Setup       Log in as user    jessica.doe@ludlow.co.uk    Passw0rd
 Suite Teardown    the user closes the browser
-Force Tags        Project Setup
+Force Tags        Project Setup    Pending    # TODO due to docker file script
 Resource          ../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../resources/variables/User_credentials.robot
@@ -39,8 +39,8 @@ PM cannot submit when both documents are not uploaded
     When the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Other documents
     #Then the user should see the 2 Upload buttons
-    And the user should see the element    jQuery=#content div:nth-child(9) form div label
-    And the user should see the element    jQuery=#content div:nth-child(10) form div label
+    And the user should see the element    jQuery=label[for="collaborationAgreement"]
+    And the user should see the element    jQuery=label[for="exploitationPlan"]
     Then the user should not see the element    jQuery=.button.enabled:contains("Submit partner documents")
     [Teardown]    Logout as user
 
@@ -92,9 +92,9 @@ Lead partner can view both documents
     Then the user should not see an error in the page
     And the user navigates to the page    ${project_in_setup_page}
     And the user should see the element    link=What's the status of each of my partners?
-    #TODO uncomment when INFUND-4735 is done  and INFUND-4744(status should be waiting)
-#    When the user clicks the button/link    link=What's the status of each of my partners?
-#    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(6)
+    #TODO  INFUND-4744(status should be waiting)
+    When the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(6)
     [Teardown]  the user navigates to the page    ${project_in_setup_page}
 
 Lead partner does not have the option to submit the mandatory documents
@@ -120,10 +120,9 @@ Non-lead partner can view both documents
     When the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
     And the user navigates to the page    ${project_in_setup_page}
-    #TODO uncomment when INFUND-4735 is done
-#    When the user clicks the button/link    link=What's the status of each of my partners?
-#    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(6)
-#    And the user goes back to the previous page
+    When the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(6)
+    And the user goes back to the previous page
 
 Non-lead partner cannot remove or submit right
     [Documentation]    INFUND-3013
@@ -146,9 +145,8 @@ PM can view both documents
     When the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
     And the user navigates to the page    ${project_in_setup_page}
-    #TODO update after INFUND-4735
-#    When the user clicks the button/link    link=What's the status of each of my partners?
-#    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(6)
+    When the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(6)
 
 PM can remove the second document
     [Documentation]    INFUND-3011
@@ -186,7 +184,7 @@ Non-lead partner cannot view either document once removed
 
 PM can upload both documents
     [Documentation]    INFUND-3011
-    [Tags]
+    [Tags]    HappyPath
     [Setup]    guest user log-in    worth.email.test+projectlead@gmail.com    Passw0rd
     Given the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Other documents
@@ -205,10 +203,11 @@ Status in the dashboard remains pending after uploads
 Mandatory document submission
     [Documentation]    INFUND-3011
     [Setup]    guest user log-in    worth.email.test+projectlead@gmail.com    Passw0rd
-    [Tags]
+    [Tags]    HappyPath
     # This ticket assumes that Project_details suite has set as PM the 'test twenty'
     Given the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Other documents
+    And the user reloads the page
     When the user clicks the button/link    jQuery=.button:contains("Submit partner documents")
     And the user clicks the button/link    jQuery=.button:contains("Cancel")
     Then the user should see the element    name=removeExploitationPlanClicked    # testing here that the section has not become read-only
@@ -219,15 +218,11 @@ Mandatory document submission
     Then the user should be redirected to the correct page    ${project_in_setup_page}
     And the user should see the element    jQuery=ul li.complete:nth-child(7)
 
-PM cannot remove the documents after submitting
-    [Documentation]    INFUND-3012
-    When the user clicks the button/link    link=Other documents
-    Then the user should not see the text in the page    Remove
-    And the user should not see the element    name=removeCollaborationAgreementClicked
-    And the user should not see the element    name=removeExploitationPlanClicked
 
 PM can still view both documents after submitting
     [Documentation]    INFUND-3012
+    [Tags]    HappyPath
+    Given the user clicks the button/link    link=Other documents
     When the user should see the text in the page    ${valid_pdf}
     And the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
@@ -235,6 +230,13 @@ PM can still view both documents after submitting
     Then the user clicks the button/link    link=${valid_pdf}
     And the user should not see an error in the page
     And the user goes back to the previous page
+
+
+PM cannot remove the documents after submitting
+    [Documentation]    INFUND-3012
+    Then the user should not see the text in the page    Remove
+    And the user should not see the element    name=removeCollaborationAgreementClicked
+    And the user should not see the element    name=removeExploitationPlanClicked
     [Teardown]    logout as user
 
 Lead partner cannot remove the documents after submission by PM

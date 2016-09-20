@@ -1,5 +1,9 @@
 package com.worth.ifs.project;
 
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.application.service.ApplicationService;
@@ -10,23 +14,22 @@ import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.invite.service.ProjectInviteRestService;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.project.resource.ProjectTeamStatusResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.project.service.ProjectRestService;
 import com.worth.ifs.user.resource.OrganisationResource;
-import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.OrganisationRestService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-
 import static com.worth.ifs.commons.rest.RestResult.aggregate;
 import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
-import static com.worth.ifs.util.CollectionFunctions.*;
+import static com.worth.ifs.util.CollectionFunctions.removeDuplicates;
+import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
 /**
  * A service for dealing with ProjectResources via the appropriate Rest services
@@ -229,6 +232,11 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public boolean isUserPartner(Long projectId, Long userId) {
         return !simpleFilter(getPartners(projectId), projectUser -> projectUser.getUser().equals(userId)).isEmpty();
+    }
+
+    @Override
+    public ProjectTeamStatusResource getProjectTeamStatus(Long projectId){
+        return projectRestService.getProjectTeamStatus(projectId).getSuccessObjectOrThrowException();
     }
 
     private List<ProjectUserResource> getProjectUsersWithPartnerRole(Long projectId) {

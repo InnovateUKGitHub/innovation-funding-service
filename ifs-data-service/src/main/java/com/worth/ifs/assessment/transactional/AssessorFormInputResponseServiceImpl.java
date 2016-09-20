@@ -3,7 +3,6 @@ package com.worth.ifs.assessment.transactional;
 import com.worth.ifs.assessment.mapper.AssessorFormInputResponseMapper;
 import com.worth.ifs.assessment.repository.AssessorFormInputResponseRepository;
 import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
-import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.transactional.FormInputService;
@@ -16,7 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
-import static com.worth.ifs.commons.error.CommonFailureKeys.FORM_WORD_LIMIT_EXCEEDED;
+import static com.worth.ifs.commons.error.Error.fieldError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
@@ -86,7 +85,7 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
             String cleaned = Jsoup.parse(value).text();
 
             if (cleaned.split("\\s+").length > formInputResource.getWordCount()) {
-                return serviceFailure(new Error(FORM_WORD_LIMIT_EXCEEDED));
+                return serviceFailure(fieldError("value", value, "validation.field.max.word.count", wordLimit));
             }
         }
         return serviceSuccess();

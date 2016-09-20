@@ -106,7 +106,7 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
 
     @Override
     protected <R> BaseEitherBackedResult<R, ServiceFailure> createFailure(FailingOrSucceedingResult<R, ServiceFailure> failure) {
-        return failure != null ? serviceFailure(failure.getFailure()) : serviceFailure(internalServerErrorError("Unexpected error"));
+        return failure != null ? serviceFailure(failure.getFailure()) : serviceFailure(internalServerErrorError());
     }
 
     /**
@@ -129,6 +129,18 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
      */
     public RestResult<T> toPostCreateResponse() {
         return handleSuccessOrFailure(failure -> toRestFailure(), RestResult::toPostCreateResponse);
+    }
+
+    /**
+     * Convenience method to convert a ServiceResult into an appropriate RestResult for a POST request that is
+     * accepting data.
+     * <p>
+     * This will be a RestResult containing the body of the ServiceResult and a "202 - Accepted" response.
+     * <p>
+     * This is an appropriate response for a POST that is creating data.  To update data, consider using a PUT.
+     */
+    public RestResult<T> toPostAcceptResponse() {
+        return handleSuccessOrFailure(failure -> toRestFailure(), RestResult::toPostAcceptResponse);
     }
 
     /**

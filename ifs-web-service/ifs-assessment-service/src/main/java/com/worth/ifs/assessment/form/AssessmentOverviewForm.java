@@ -6,13 +6,16 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.Size;
+
 /**
  * Form field model for the assessment rejection content
  */
 public class AssessmentOverviewForm extends BaseBindingResultTarget {
 
-    @NotEmpty(message = "Please enter a reason")
+    @NotEmpty(message = "{validation.assessmentoverviewform.rejectReason.required}")
     private String rejectReason;
+    @Size(max = 5000, message = "{validation.field.too.many.characters}")
     private String rejectComment;
 
     public String getRejectReason() {

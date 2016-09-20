@@ -4,10 +4,10 @@ import com.worth.ifs.BaseUnitTestMocksTest;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.resource.AssessmentOutcomes;
 import com.worth.ifs.assessment.resource.AssessmentResource;
-import com.worth.ifs.assessment.resource.AssessmentStates;
 import com.worth.ifs.assessment.workflow.AssessmentWorkflowEventHandler;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.workflow.domain.ActivityState;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
 import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
 import org.junit.Test;
@@ -15,14 +15,19 @@ import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import java.util.Arrays;
+import java.util.List;
 
 import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static com.worth.ifs.assessment.builder.ProcessOutcomeBuilder.newProcessOutcome;
 import static com.worth.ifs.assessment.builder.ProcessOutcomeResourceBuilder.newProcessOutcomeResource;
-import static com.worth.ifs.commons.error.CommonFailureKeys.*;
+import static com.worth.ifs.assessment.resource.AssessmentStates.OPEN;
+import static com.worth.ifs.commons.error.CommonFailureKeys.ASSESSMENT_RECOMMENDATION_FAILED;
+import static com.worth.ifs.commons.error.CommonFailureKeys.ASSESSMENT_REJECTION_FAILED;
+import static com.worth.ifs.commons.error.Error.fieldError;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
+import static com.worth.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
+import static java.util.Collections.nCopies;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.*;
@@ -39,9 +44,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
     public void findById() throws Exception {
         Long assessmentId = 1L;
 
-        Assessment assessment = newAssessment()
-                .build();
-
+        Assessment assessment = newAssessment().build();
         AssessmentResource expected = newAssessmentResource().build();
 
         when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
@@ -54,6 +57,24 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
+    public void findByUserAndCompetition() throws Exception {
+        Long userId = 2L;
+        Long competitionId = 1L;
+
+        List<Assessment> assessments = newAssessment().build(2);
+        List<AssessmentResource> expected = newAssessmentResource().build(2);
+
+        when(assessmentRepositoryMock.findByParticipantUserIdAndParticipantApplicationCompetitionId(userId, competitionId)).thenReturn(assessments);
+        when(assessmentMapperMock.mapToResource(same(assessments.get(0)))).thenReturn(expected.get(0));
+        when(assessmentMapperMock.mapToResource(same(assessments.get(1)))).thenReturn(expected.get(1));
+
+        List<AssessmentResource> found = assessmentService.findByUserAndCompetition(userId, competitionId).getSuccessObject();
+
+        assertEquals(expected, found);
+        verify(assessmentRepositoryMock, only()).findByParticipantUserIdAndParticipantApplicationCompetitionId(userId, competitionId);
+    }
+
+    @Test
     public void recommend() throws Exception {
         Long assessmentId = 1L;
         Long processRoleId = 2L;
@@ -61,8 +82,8 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         ProcessRole processRole = newProcessRole().withId(processRoleId).build();
         Assessment assessment = newAssessment()
                 .withId(assessmentId)
-                .withProcessStatus(AssessmentStates.OPEN)
-                .withProcessRole(processRole)
+                .withParticipant(processRole)
+                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, OPEN.getBackingState()))
                 .build();
 
         ProcessOutcome processOutcome = newProcessOutcome().build();
@@ -86,24 +107,24 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void recommend_DescriptionExceedsWordLimit() throws Exception {
+    public void recommend_exceedsWordLimit() throws Exception {
         Long assessmentId = 1L;
         Long processRoleId = 2L;
-        String[] feedbackArray = new String[120];
-        Arrays.fill(feedbackArray, "feedback ");
-        String feedback = Arrays.toString(feedbackArray);
+        String feedback = String.join(" ", nCopies(101, "feedback"));
+        String comment = String.join(" ", nCopies(101, "comment"));
 
         ProcessRole processRole = newProcessRole().withId(processRoleId).build();
         Assessment assessment = newAssessment()
                 .withId(assessmentId)
-                .withProcessStatus(AssessmentStates.OPEN)
-                .withProcessRole(processRole)
+                .withParticipant(processRole)
+                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, OPEN.getBackingState()))
                 .build();
 
         ProcessOutcome processOutcome = newProcessOutcome().build();
 
         ProcessOutcomeResource processOutcomeResource = newProcessOutcomeResource()
-                .withDescription(feedback.substring(1, feedback.length()-1).replaceAll(",", ""))
+                .withDescription(feedback)
+                .withComment(comment)
                 .withOutcomeType(AssessmentOutcomes.RECOMMEND.getType())
                 .build();
 
@@ -112,38 +133,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
         ServiceResult<Void> result = assessmentService.recommend(assessmentId, processOutcomeResource);
         assertTrue(result.isFailure());
-        assertEquals(SUMMARY_FEEDBACK_WORD_LIMIT_EXCEEDED.getErrorKey(),result.getErrors().get(0).getErrorKey());
-    }
-
-    @Test
-    public void recommend_CommentExceedsWordLimit() throws Exception {
-        Long assessmentId = 1L;
-        Long processRoleId = 2L;
-        String[] commentArray = new String[120];
-        Arrays.fill(commentArray, "comment ");
-        String comment = Arrays.toString(commentArray);
-
-        ProcessRole processRole = newProcessRole().withId(processRoleId).build();
-        Assessment assessment = newAssessment()
-                .withId(assessmentId)
-                .withProcessStatus(AssessmentStates.OPEN)
-                .withProcessRole(processRole)
-                .build();
-
-        ProcessOutcome processOutcome = newProcessOutcome().build();
-
-        ProcessOutcomeResource processOutcomeResource = newProcessOutcomeResource()
-                .withComment(comment.substring(1, comment.length()-1).replaceAll(",", ""))
-                .withOutcomeType(AssessmentOutcomes.RECOMMEND.getType())
-                .build();
-
-        when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
-        when(processOutcomeMapperMock.mapToDomain(processOutcomeResource)).thenReturn(processOutcome);
-
-        ServiceResult<Void> result = assessmentService.recommend(assessmentId, processOutcomeResource);
-
-        assertTrue(result.isFailure());
-        assertEquals(SUMMARY_COMMENT_WORD_LIMIT_EXCEEDED.getErrorKey(),result.getErrors().get(0).getErrorKey());
+        assertTrue(result.getFailure().is(fieldError("feedback", feedback, "validation.field.max.word.count", 100), fieldError("comment", comment, "validation.field.max.word.count", 100)));
     }
 
     @Test
@@ -154,8 +144,8 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         ProcessRole processRole = newProcessRole().withId(processRoleId).build();
         Assessment assessment = newAssessment()
                 .withId(assessmentId)
-                .withProcessStatus(AssessmentStates.OPEN)
-                .withProcessRole(processRole)
+                .withParticipant(processRole)
+                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, OPEN.getBackingState()))
                 .build();
 
         ProcessOutcome processOutcome = newProcessOutcome().build();
@@ -187,8 +177,8 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         ProcessRole processRole = newProcessRole().withId(processRoleId).build();
         Assessment assessment = newAssessment()
                 .withId(assessmentId)
-                .withProcessStatus(AssessmentStates.OPEN)
-                .withProcessRole(processRole)
+                .withParticipant(processRole)
+                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, OPEN.getBackingState()))
                 .build();
 
         ProcessOutcome processOutcome = newProcessOutcome().build();
@@ -219,8 +209,8 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         ProcessRole processRole = newProcessRole().withId(processRoleId).build();
         Assessment assessment = newAssessment()
                 .withId(assessmentId)
-                .withProcessStatus(AssessmentStates.OPEN)
-                .withProcessRole(processRole)
+                .withParticipant(processRole)
+                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, OPEN.getBackingState()))
                 .build();
 
         ProcessOutcome processOutcome = newProcessOutcome().build();

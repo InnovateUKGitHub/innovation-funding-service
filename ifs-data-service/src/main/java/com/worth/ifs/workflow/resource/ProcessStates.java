@@ -5,5 +5,8 @@ package com.worth.ifs.workflow.resource;
  * These are used to progress through the workflow.
  */
 public interface ProcessStates {
-    String getState();
+
+    String getStateName();
+
+    State getBackingState();
 }

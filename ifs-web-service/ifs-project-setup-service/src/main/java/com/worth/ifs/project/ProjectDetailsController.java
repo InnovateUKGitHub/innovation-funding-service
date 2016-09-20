@@ -1,12 +1,24 @@
 package com.worth.ifs.project;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import java.util.concurrent.ExecutionException;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
+import javax.validation.Valid;
+
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.bankdetails.form.ProjectDetailsAddressForm;
-import com.worth.ifs.bankdetails.resource.BankDetailsResource;
 import com.worth.ifs.bankdetails.service.BankDetailsRestService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -16,46 +28,47 @@ import com.worth.ifs.form.AddressForm;
 import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.organisation.service.OrganisationAddressRestService;
-import com.worth.ifs.project.consortiumoverview.viewmodel.ConsortiumPartnerStatus;
-import com.worth.ifs.project.consortiumoverview.viewmodel.LeadPartnerModel;
-import com.worth.ifs.project.consortiumoverview.viewmodel.ProjectConsortiumStatusViewModel;
-import com.worth.ifs.project.consortiumoverview.viewmodel.RegularPartnerModel;
 import com.worth.ifs.project.form.FinanceContactForm;
 import com.worth.ifs.project.form.InviteeForm;
 import com.worth.ifs.project.form.ProjectManagerForm;
-import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
-import com.worth.ifs.project.viewmodel.*;
+import com.worth.ifs.project.viewmodel.FinanceContactModel;
+import com.worth.ifs.project.viewmodel.ProjectDetailsAddressViewModel;
+import com.worth.ifs.project.viewmodel.ProjectDetailsStartDateForm;
+import com.worth.ifs.project.viewmodel.ProjectDetailsStartDateViewModel;
+import com.worth.ifs.project.viewmodel.ProjectDetailsViewModel;
+import com.worth.ifs.project.viewmodel.SelectFinanceContactViewModel;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.OrganisationRestService;
 import com.worth.ifs.user.service.UserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.validation.Valid;
-import java.time.LocalDate;
-import java.util.*;
-import java.util.concurrent.ExecutionException;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-
-import static com.worth.ifs.address.resource.OrganisationAddressType.*;
+import static com.worth.ifs.address.resource.OrganisationAddressType.OPERATING;
+import static com.worth.ifs.address.resource.OrganisationAddressType.PROJECT;
+import static com.worth.ifs.address.resource.OrganisationAddressType.REGISTERED;
 import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
-import static com.worth.ifs.project.consortiumoverview.viewmodel.ConsortiumPartnerStatus.*;
 import static com.worth.ifs.project.viewmodel.FinanceContactStatus.EXISTING;
 import static com.worth.ifs.project.viewmodel.FinanceContactStatus.PENDING;
 import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
 import static com.worth.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
-import static com.worth.ifs.util.CollectionFunctions.*;
+import static com.worth.ifs.util.CollectionFunctions.getOnlyElement;
+import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
+import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 /**
  * This controller will handle all requests that are related to project details.
@@ -360,118 +373,6 @@ public class ProjectDetailsController extends AddressLookupBaseController {
     public String submitProjectDetails(@PathVariable("projectId") Long projectId) {
         projectService.setApplicationDetailsSubmitted(projectId).getSuccessObjectOrThrowException();
         return redirectToProjectDetails(projectId);
-    }
-
-    @RequestMapping(value="/{projectId}/team-status", method = GET)
-    public String viewProjectTeamStatus(Model model, @PathVariable("projectId") final Long projectId) {
-
-        model.addAttribute("model", getProjectTeamStatusViewModel(projectId));
-        return "project/consortium-status";
-    }
-
-    private ProjectConsortiumStatusViewModel getProjectTeamStatusViewModel(final Long projectId) {
-        ProjectResource project = projectService.getById(projectId);
-        OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
-        List<OrganisationResource> otherOrganisations = projectService.getPartnerOrganisationsForProject(projectId);
-
-        Optional<MonitoringOfficerResource> monitoringOfficer = projectService.getMonitoringOfficerForProject(projectId);
-        Optional<BankDetailsResource> leadBankDetails = bankDetailsService.getBankDetailsByProjectAndOrganisation(projectId, leadOrganisation.getId()).toOptionalIfNotFound().getSuccessObject();
-
-
-        ConsortiumPartnerStatus leadProjectDetailsSubmitted = createProjectDetailsStatus(project);
-        ConsortiumPartnerStatus monitoringOfficerStatus = createMonitoringOfficerStatus(monitoringOfficer, leadProjectDetailsSubmitted);
-        ConsortiumPartnerStatus leadBankDetailsStatus = createBankDetailStatus(leadBankDetails);
-        ConsortiumPartnerStatus financeChecksStatus = createFinanceCheckStatus(leadBankDetails, leadBankDetailsStatus);
-        ConsortiumPartnerStatus spendProfileStatus = createSpendProfileStatus(financeChecksStatus);
-        ConsortiumPartnerStatus otherDocumentsStatus = createOtherDocumentStatus(project);
-        ConsortiumPartnerStatus grantOfferLetterStatus = createGrantOfferLetterStatus();
-
-        final LeadPartnerModel leadPartnerModel = new LeadPartnerModel(
-            leadOrganisation.getName(),
-            leadProjectDetailsSubmitted,
-            monitoringOfficerStatus,
-            leadBankDetailsStatus,
-            financeChecksStatus,
-            spendProfileStatus,
-            otherDocumentsStatus,
-            grantOfferLetterStatus
-        );
-
-        final List<RegularPartnerModel> otherPartnersModels = otherOrganisations.stream().filter(partner -> !partner.getId().equals(leadOrganisation.getId())).map(partner -> createPartnerModel(project, partner)).collect(Collectors.toList());
-
-        return new ProjectConsortiumStatusViewModel(projectId, leadPartnerModel, otherPartnersModels);
-    }
-
-    private RegularPartnerModel createPartnerModel(final ProjectResource project, final OrganisationResource partner) {
-
-        Optional<BankDetailsResource> bankDetails = bankDetailsService.getBankDetailsByProjectAndOrganisation(project.getId(), partner.getId()).toOptionalIfNotFound().getSuccessObject();
-
-        final String name = partner.getName();
-        final ConsortiumPartnerStatus projectDetailsStatus = createProjectDetailsStatus(project);
-        final ConsortiumPartnerStatus bankDetailsStatus = createBankDetailStatus(bankDetails);
-        final ConsortiumPartnerStatus financeChecksStatus = createFinanceCheckStatus(bankDetails, bankDetailsStatus);
-        final ConsortiumPartnerStatus spendProfileStatus = createSpendProfileStatus(financeChecksStatus);
-
-        return new RegularPartnerModel(
-            name,
-            projectDetailsStatus,
-            bankDetailsStatus,
-            financeChecksStatus,
-            spendProfileStatus
-        );
-    }
-
-    private ConsortiumPartnerStatus createProjectDetailsStatus(final ProjectResource project) {
-        return project.isProjectDetailsSubmitted()?COMPLETE:ACTION_REQUIRED;
-    }
-
-    private ConsortiumPartnerStatus createMonitoringOfficerStatus(final Optional<MonitoringOfficerResource> monitoringOfficer, final ConsortiumPartnerStatus leadProjectDetailsSubmitted) {
-        if(leadProjectDetailsSubmitted.equals(COMPLETE)){
-            return monitoringOfficer.isPresent()? COMPLETE : ConsortiumPartnerStatus.PENDING;
-        }else{
-            return NOT_STARTED;
-        }
-
-    }
-
-    private ConsortiumPartnerStatus createBankDetailStatus(final Optional<BankDetailsResource> bankDetails) {
-        if(bankDetails.isPresent()){
-            return bankDetails.get().isApproved()?COMPLETE:ConsortiumPartnerStatus.PENDING;
-        }else{
-            return ACTION_REQUIRED;
-        }
-    }
-
-    private ConsortiumPartnerStatus createFinanceCheckStatus(final Optional<BankDetailsResource> bankDetails, final ConsortiumPartnerStatus bankDetailsStatus) {
-        if(bankDetailsStatus.equals(COMPLETE)){
-            //TODO update logic when Finance checks are implemented
-            return COMPLETE;
-        }
-        else{
-            return NOT_STARTED;
-        }
-    }
-
-    private ConsortiumPartnerStatus createSpendProfileStatus(final ConsortiumPartnerStatus financeChecksStatus) {
-        if(financeChecksStatus.equals(COMPLETE)){
-            //TODO update logic when spend profile is implemented
-            return COMPLETE;
-        }else{
-            return NOT_STARTED;
-        }
-    }
-
-    private ConsortiumPartnerStatus createOtherDocumentStatus(final ProjectResource project) {
-        if(project.getCollaborationAgreement()!= null && project.getExploitationPlan()!= null){
-            return COMPLETE;
-        }else{
-            return ACTION_REQUIRED;
-        }
-    }
-
-    private ConsortiumPartnerStatus createGrantOfferLetterStatus() {
-        //TODO update logic when GrantOfferLetter is implemented
-        return NOT_STARTED;
     }
 
     private ProjectManagerForm populateOriginalProjectManagerForm(final Long projectId) {

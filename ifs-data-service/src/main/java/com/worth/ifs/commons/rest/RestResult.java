@@ -5,7 +5,10 @@ import com.worth.ifs.commons.error.CommonFailureKeys;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.error.ErrorTemplate;
 import com.worth.ifs.commons.error.exception.*;
-import com.worth.ifs.commons.service.*;
+import com.worth.ifs.commons.service.BaseEitherBackedResult;
+import com.worth.ifs.commons.service.ExceptionThrowingFunction;
+import com.worth.ifs.commons.service.FailingOrSucceedingResult;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.util.Either;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -18,7 +21,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -81,79 +83,79 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
         final Error error = getMostRelevantErrorForEndUser(restFailure.getErrors());
 
         if(restFailure.has(GENERAL_NOT_FOUND)){
-            throw new ObjectNotFoundException(error.getErrorMessage(), error.getArguments());
+            throw new ObjectNotFoundException(error.getErrorKey(), error.getArguments());
         }
 
-        if(restFailure.has(GENERAL_FORBIDDEN)){
-            throw new ForbiddenActionException(error.getErrorMessage(), error.getArguments());
+        if(restFailure.has(GENERAL_FORBIDDEN) || restFailure.has(GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION)){
+            throw new ForbiddenActionException(error.getErrorKey(), error.getArguments());
         }
 
         if(restFailure.has(NOTIFICATIONS_UNABLE_TO_RENDER_TEMPLATE)){
-            throw new UnableToRenderNotificationTemplateException(error.getErrorMessage(), error.getArguments());
+            throw new UnableToRenderNotificationTemplateException(error.getErrorKey(), error.getArguments());
         }
 
         if(restFailure.has(GENERAL_UNEXPECTED_ERROR) || restFailure.has(CommonFailureKeys.EMAILS_NOT_SENT_MULTIPLE)){
-            throw new GeneralUnexpectedErrorException(error.getErrorMessage(), error.getArguments());
+            throw new GeneralUnexpectedErrorException(error.getErrorKey(), error.getArguments());
         }
 
         if(restFailure.has(NOTIFICATIONS_UNABLE_TO_SEND_SINGLE)){
-            throw new UnableToSendEmailsException(error.getErrorMessage(), error.getArguments());
+            throw new UnableToSendEmailsException(error.getErrorKey(), error.getArguments());
         }
 
         if(restFailure.has(FILES_DUPLICATE_FILE_CREATED)){
-            throw new DuplicateFileCreatedException(error.getErrorMessage(), error.getArguments());
+            throw new DuplicateFileCreatedException(error.getErrorKey(), error.getArguments());
         }
 
         if(restFailure.has(FILES_FILE_ALREADY_LINKED_TO_FORM_INPUT_RESPONSE)){
-            throw new FileAlreadyLinkedToFormInputResponseException(error.getErrorMessage(), error.getArguments());
+            throw new FileAlreadyLinkedToFormInputResponseException(error.getErrorKey(), error.getArguments());
         }
 
         if(restFailure.has(FILES_INCORRECTLY_REPORTED_FILESIZE)){
-            throw new IncorrectlyReportedFileSizeException(error.getErrorMessage(), error.getArguments());
+            throw new IncorrectlyReportedFileSizeException(error.getErrorKey(), error.getArguments());
         }
 
         if(restFailure.has(FILES_INCORRECTLY_REPORTED_MEDIA_TYPE)){
-            throw new IncorrectlyReportedMediaTypeException(error.getErrorMessage(), error.getArguments());
+            throw new IncorrectlyReportedMediaTypeException(error.getErrorKey(), error.getArguments());
         }
 
         if(restFailure.has(FILES_UNABLE_TO_CREATE_FILE)){
-            throw new UnableToCreateFileException(error.getErrorMessage(), error.getArguments());
+            throw new UnableToCreateFileException(error.getErrorKey(), error.getArguments());
         }
 
         if(restFailure.has(FILES_UNABLE_TO_CREATE_FOLDERS)){
-            throw new UnableToCreateFoldersException(error.getErrorMessage(), error.getArguments());
+            throw new UnableToCreateFoldersException(error.getErrorKey(), error.getArguments());
         }
 
         if(restFailure.has(FILES_UNABLE_TO_DELETE_FILE)){
-            throw new UnableToDeleteFileException(error.getErrorMessage(), error.getArguments());
+            throw new UnableToDeleteFileException(error.getErrorKey(), error.getArguments());
         }
 
         if(restFailure.has(FILES_UNABLE_TO_UPDATE_FILE)){
-            throw new UnableToUpdateFileException(error.getErrorMessage(), error.getArguments());
+            throw new UnableToUpdateFileException(error.getErrorKey(), error.getArguments());
         }
 
         if (restFailure.has(GENERAL_INCORRECT_TYPE)){
-            throw new IncorrectArgumentTypeException(error.getErrorMessage(), error.getArguments());
+            throw new IncorrectArgumentTypeException(error.getErrorKey(), error.getArguments());
         }
 
         if (restFailure.has(FILES_FILE_AWAITING_VIRUS_SCAN)){
-            throw new FileAwaitingVirusScanException(error.getErrorMessage(), error.getArguments());
+            throw new FileAwaitingVirusScanException(error.getErrorKey(), error.getArguments());
         }
 
         if (restFailure.has(FILES_FILE_QUARANTINED)){
-            throw new FileQuarantinedException(error.getErrorMessage(), error.getArguments());
+            throw new FileQuarantinedException(error.getErrorKey(), error.getArguments());
         }
 
         if (restFailure.has(USERS_EMAIL_VERIFICATION_TOKEN_NOT_FOUND)) {
-            throw new InvalidURLException(error.getErrorMessage(), error.getArguments());
+            throw new InvalidURLException(error.getErrorKey(), error.getArguments());
         }
 
         if (restFailure.has(USERS_EMAIL_VERIFICATION_TOKEN_EXPIRED)) {
-            throw new RegistrationTokenExpiredException(error.getErrorMessage(), error.getArguments());
+            throw new RegistrationTokenExpiredException(error.getErrorKey(), error.getArguments());
         }
 
         if(restFailure.has(BANK_DETAILS_DONT_EXIST_FOR_GIVEN_PROJECT_AND_ORGANISATION)){
-            throw new ObjectNotFoundException(error.getErrorMessage(), error.getArguments());
+            throw new ObjectNotFoundException(error.getErrorKey(), error.getArguments());
         }
 
         if (restFailure.has(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_UNOPENED_INVITE)) {
@@ -304,7 +306,7 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
 
     public static <T> RestResult<T> fromException(HttpStatusCodeException e) {
         return fromJson(e.getResponseBodyAsString(), RestErrorResponse.class).mapLeftOrRight(
-                failure -> RestResult.<T>restFailure(internalServerErrorError("Unable to process JSON response as type " + RestErrorResponse.class.getSimpleName())),
+                failure -> RestResult.<T>restFailure(GENERAL_REST_RESULT_UNABLE_TO_PROCESS_REST_ERROR_RESPONSE),
                 success -> RestResult.<T>restFailure(success.getErrors(), e.getStatusCode())
         );
     }
@@ -314,7 +316,7 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
         if (allExpectedSuccessStatusCodes.contains(response.getStatusCode())) {
             return RestResult.<T>restSuccess(response.getBody(), response.getStatusCode());
         } else {
-            return RestResult.<T>restFailure(new com.worth.ifs.commons.error.Error(response.getStatusCode(), "Unexpected status code " + response.getStatusCode(), response.getStatusCode()));
+            return RestResult.<T>restFailure(new com.worth.ifs.commons.error.Error(GENERAL_REST_RESULT_UNEXPECTED_STATUS_CODE, response.getStatusCode()));
         }
     }
 
@@ -338,6 +340,18 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
      */
     public static <T> RestResult<T> toPostCreateResponse(T body) {
         return restSuccess(body, CREATED);
+    }
+
+    /**
+     * Convenience method to convert a ServiceResult into an appropriate RestResult for a POST request that is
+     * accepting data.
+     *
+     * This will be a RestResult containing the body of the ServiceResult and a "202 - Accepted" response.
+     *
+     * This is an appropriate response for a POST that is creating data.  To update data, consider using a PUT.
+     */
+    public static <T> RestResult<T> toPostAcceptResponse(T body) {
+        return restSuccess(body, ACCEPTED);
     }
 
     /**

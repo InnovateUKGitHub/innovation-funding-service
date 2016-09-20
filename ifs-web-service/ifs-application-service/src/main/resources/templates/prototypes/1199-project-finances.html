@@ -25,6 +25,12 @@
 	
 	<hr />
 
+	<th:block th:if="${param.status != null and param.status[0] == 'financeChecksComplete'}">
+		<div class="success-alert extra-margin-bottom">
+			<h3 class="heading-small no-margin-top">Spend profiles have been sent to all partners, following finance checks.</h3>
+		</div>
+	</th:block>
+
 	<h2 class="heading-medium">Overview</h2>
 
 	<table>
@@ -49,6 +55,28 @@
 			</tr>
 		</tbody>
 	</table>
+
+	
+	<th:block th:if="${param.status != null and param.status[0] == 'warning'}">
+
+		<div class="eligibility extra-margin-top">
+
+			<dl class="list-eligibility">
+				<dt>Maximum research participation</dt>
+				<dd>30%</dd>
+				<dt>Current research participation</dt>
+				<dd>32%</dd>
+			</dl>
+			
+			<div class="warning-alert">
+		        <h2 class="heading-small no-margin">Maximum research participation exceeded</h2>
+		        <p>Please seek confirmation that the project is still eligible for funding.</p>
+		    </div>
+
+		</div>
+
+	</th:block>
+
 	
 	<h2 class="heading-medium">Progress</h2>
 
@@ -101,14 +129,14 @@
 					<small>Partner</small>
 				</th>
 				<td class="aligncentre">
-					<a href="#" title="Viability">Approved</a>
+					<a href="/prototypes/3601-viability?status=approved" title="Viability">Approved</a>
 				</td>
 				<td class="aligncentre cell-border-right">
 					Green
 				</td>
 				
 				<td class="aligncentre">
-					<a href="#" title="Eligibility">Approved</a>
+					<a href="/prototypes/1581-project-eligibility?status=approved" title="Eligibility">Approved</a>
 				</td>
 				<td class="aligncentre cell-border-right">
 					Red
@@ -154,37 +182,41 @@
 		<a href="/prototypes/1199-project-finances-overview">Project finance overview</a>
 	</div>
 
-	<h3 class="heading-medium">Generate spend profile</h3>
+	<th:block th:unless="${param.status != null and param.status[0] == 'financeChecksComplete'}">
 
-	<p>To get your spend profile, both viability and eligibility sections above must be approved for all partners. This will then create individual flat profile spends for partners. Partners can edit their profile spends during the course of the project.</p>
+		<h3 class="heading-medium">Generate spend profile</h3>
 
-	<a href="#" class="button button-large" data-js-modal="generate-spend-profile">Generate spend profile</a>
+		<p>To get your spend profile, both viability and eligibility sections above must be approved for all partners. This will create individual flat profile spends for partners. Partners can edit their profile spends during the course of the project.</p>
 
-	<div class="generate-spend-profile" role="dialog" aria-hidden="true" style="margin-top: -174px;">
-        <button class="js-close close" aria-label="Close Popup">X</button>
-        <div>
+		<a href="#" class="button button-large" data-js-modal="generate-spend-profile">Generate spend profile</a>
 
-			<h2 class="heading-medium no-margin">Generate spend profile</h2>
+		<div class="generate-spend-profile" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+			<button class="js-close close" aria-label="Close Popup">X</button>
+			<div>
 
-			<p>This will generate a flat profile spend for all project partners. This assumes that finance checks have been completed for all partners and this section will be locked.</p>
+				<h2 class="heading-medium no-margin">Generate spend profile</h2>
 
-			<p>Partners will be notified that they can now create their spend profile.</p>
+				<p>This will generate a flat profile spend for all project partners. This assumes that finance checks have been completed for all partners and this section will be locked.</p>
 
-			<hr />
+				<p>Partners will be notified that they can now create their spend profile.</p>
 
-        	<div class="alignright-button">
-				
-				<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
+				<hr />
 
-				<input type="hidden" id="status" name="status" value="orgSizeChanged" />
+				<div class="alignright-button">
 
-        		<a class="button" th:href="@{${#httpServletRequest.requestURI}}">Generate spend profile</a>
+					<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
 
-        	</div>
+					<input type="hidden" id="status" name="status" value="orgSizeChanged" />
 
-        </div>
-    </div>
+					<!--<a class="button" th:href="@{${#httpServletRequest.requestURI}}">Generate spend profile</a>-->
+					<a class="button" href="/prototypes/4151-admin-competition-dash">Generate spend profile</a>
 
+				</div>
+
+			</div>
+		</div>
+
+	</th:block>
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 

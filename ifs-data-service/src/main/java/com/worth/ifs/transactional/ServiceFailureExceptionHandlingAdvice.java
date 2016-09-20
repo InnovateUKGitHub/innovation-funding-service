@@ -10,7 +10,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.NoTransactionException;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
+import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_SERVICE_RESULT_EXCEPTION_THROWN_DURING_PROCESSING;
+import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_SERVICE_RESULT_NULL_RESULT_RETURNED;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 
 /**
@@ -42,7 +43,7 @@ public class ServiceFailureExceptionHandlingAdvice {
 
             if (result == null) {
                 LOG.warn("Null ServiceResult being returned from method.  Converting to ServiceFailure");
-                return serviceFailure(internalServerErrorError("Null ServiceResult returned from method"));
+                return serviceFailure(GENERAL_SERVICE_RESULT_NULL_RESULT_RETURNED);
             } else {
                 return result;
             }
@@ -50,7 +51,7 @@ public class ServiceFailureExceptionHandlingAdvice {
         } catch (Exception e) {
             LOG.warn(e.getClass().getSimpleName() + " caught while processing ServiceResult-returning method.  Converting to a ServiceFailure", e);
             handleFailure(null);
-            return serviceFailure(internalServerErrorError());
+            return serviceFailure(GENERAL_SERVICE_RESULT_EXCEPTION_THROWN_DURING_PROCESSING);
         }
     }
 
@@ -58,7 +59,7 @@ public class ServiceFailureExceptionHandlingAdvice {
         LOG.debug("Failure encountered during processing of a ServiceResult-returning Service method - rolling back any transactions");
         if(result!=null) {
             result.getFailure().getErrors().stream().forEach(error ->
-                LOG.debug("    " + error.getErrorKey() + ": " + error.getErrorMessage())
+                LOG.debug("    " + error.getErrorKey())
             );
         }
 

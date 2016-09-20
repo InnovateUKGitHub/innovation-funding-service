@@ -1,11 +1,10 @@
 package com.worth.ifs.invite.builder;
 
 import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.invite.resource.CompetitionParticipantResource;
-import com.worth.ifs.invite.resource.CompetitionParticipantRoleResource;
-import com.worth.ifs.invite.resource.ParticipantStatusResource;
-import com.worth.ifs.invite.resource.RejectionReasonResource;
+import com.worth.ifs.Builder;
+import com.worth.ifs.invite.resource.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -45,8 +44,12 @@ public class CompetitionParticipantResourceBuilder extends BaseBuilder<Competiti
         return withArray((competition, competitionParticipantResource) -> setField("competitionId", competition, competitionParticipantResource), competitions);
     }
 
-    public CompetitionParticipantResourceBuilder withInvite(Long... invites) {
-        return withArray((invite, competitionParticipantResource) -> setField("inviteId", invite, competitionParticipantResource), invites);
+    public CompetitionParticipantResourceBuilder withInvite(CompetitionInviteResource... invites) {
+        return withArray((invite, competitionParticipantResource) -> setField("invite", invite, competitionParticipantResource), invites);
+    }
+
+    public CompetitionParticipantResourceBuilder withInvite(Builder<CompetitionInviteResource, ?> invite) {
+        return withInvite(invite.build());
     }
 
     public CompetitionParticipantResourceBuilder withRejectionReason(RejectionReasonResource... rejectionReasons) {
@@ -62,7 +65,19 @@ public class CompetitionParticipantResourceBuilder extends BaseBuilder<Competiti
     }
 
     public CompetitionParticipantResourceBuilder withStatus(ParticipantStatusResource... statuses) {
-        return withArray((status, inviteResource) -> setField("status", status, inviteResource), statuses);
+        return withArray((status, competitionParticipantResource) -> setField("status", status, competitionParticipantResource), statuses);
+    }
+
+    public CompetitionParticipantResourceBuilder withCompetitionName(String... competitionNames) {
+        return withArray((competitionName, competitionParticipantResource) -> setField("competitionName", competitionName, competitionParticipantResource), competitionNames);
+    }
+
+    public CompetitionParticipantResourceBuilder withAssessmentStartDate(LocalDateTime... competitionStartDates) {
+        return withArray((competitionStartDate, competitionParticipantResource) -> setField("assessmentStartDate", competitionStartDate, competitionParticipantResource), competitionStartDates);
+    }
+
+    public CompetitionParticipantResourceBuilder withAssessmentEndDate(LocalDateTime... competitionEndDates) {
+        return withArray((competitionEndDate, competitionParticipantResource) -> setField("assessmentEndDate", competitionEndDate, competitionParticipantResource), competitionEndDates);
     }
 
     @Override

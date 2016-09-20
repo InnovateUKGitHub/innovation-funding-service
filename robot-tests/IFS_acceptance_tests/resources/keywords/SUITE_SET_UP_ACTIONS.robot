@@ -127,8 +127,8 @@ Create new academic application with the same user
 Invite and accept the invitation
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
-    And the user should see the text in the page    View team members and add collaborators
-    When the user clicks the button/link    link=View team members and add collaborators
+    And the user should see the text in the page    view team members and add collaborators
+    When the user clicks the button/link    link=view team members and add collaborators
     And the user clicks the button/link    jQuery=.button:contains("Invite new contributors")
     And the user clicks the button/link    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
     Input Text    name=organisations[1].organisationName    Academic Test
@@ -190,12 +190,12 @@ the user marks finances as complete
     the user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains(No) input
     the user selects the radio button    financePosition-organisationSize    LARGE
     the user enters text to a text field    id=cost-financegrantclaim    20
-    Focus    jQuery=button:contains("Mark all as complete")
+    the user moves focus to the element    jQuery=button:contains("Mark all as complete")
     the user clicks the button/link    jQuery=button:contains("Mark all as complete")
     Sleep    1s
 
 the user marks the finances as complete
-    Focus    jQuery=button:contains("Mark all as complete")
+    the user moves focus to the element    jQuery=button:contains("Mark all as complete")
     the user clicks the button/link    jQuery=button:contains("Mark all as complete")
     Sleep    1s
 
