@@ -81,7 +81,8 @@ public class ProjectSetupStatusController {
 
         boolean funded = isApplicationFunded(project, organisation, competition);
 
-        return new ProjectSetupStatusViewModel(project, competition, monitoringOfficer, bankDetails, funded, organisation.getId());
+        // TODO DW - INFUND-4915 - wire back in the projectDetailsSubmitted value
+        return new ProjectSetupStatusViewModel(project, competition, monitoringOfficer, bankDetails, funded, organisation.getId(), false);
     }
 
     private boolean isApplicationFunded(ProjectResource project, OrganisationResource organisation, CompetitionResource competition){

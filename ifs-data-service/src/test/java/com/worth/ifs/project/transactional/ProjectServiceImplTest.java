@@ -169,7 +169,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         Project newProjectExpectations = createProjectExpectationsFromOriginalApplication(application);
         when(projectRepositoryMock.save(newProjectExpectations)).thenReturn(savedProject);
 
-        when(projectDetailsWorkflowServiceMock.projectCreated(savedProject, leadPartnerProjectUser)).thenReturn(true);
+        when(projectDetailsWorkflowHandlerMock.projectCreated(savedProject, leadPartnerProjectUser)).thenReturn(true);
 
         when(projectMapperMock.mapToResource(savedProject)).thenReturn(newProjectResource);
 
@@ -189,11 +189,12 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     @Test
     public void testSetProjectManagerWhenProjectDetailsAlreadySubmitted() {
 
-        Project existingProject = newProject().withSubmittedDate(LocalDateTime.now()).build();
+        Project existingProject = newProject().build();
 
         assertTrue(existingProject.getProjectUsers().isEmpty());
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(existingProject);
+        when(projectDetailsWorkflowHandlerMock.isSubmitted(existingProject)).thenReturn(true);
 
         ServiceResult<Void> result = service.setProjectManager(projectId, userId);
         assertTrue(result.isFailure());
@@ -207,7 +208,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         when(roleRepositoryMock.findOneByName(PROJECT_MANAGER.getName())).thenReturn(projectManagerRole);
 
-        when(projectDetailsWorkflowServiceMock.projectManagerAdded(project, leadPartnerProjectUser)).thenReturn(true);
+        when(projectDetailsWorkflowHandlerMock.projectManagerAdded(project, leadPartnerProjectUser)).thenReturn(true);
 
         setLoggedInUser(newUserResource().withId(user.getId()).build());
 
@@ -242,7 +243,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         when(roleRepositoryMock.findOneByName(PROJECT_MANAGER.getName())).thenReturn(projectManagerRole);
 
-        when(projectDetailsWorkflowServiceMock.projectManagerAdded(project, leadPartnerProjectUser)).thenReturn(true);
+        when(projectDetailsWorkflowHandlerMock.projectManagerAdded(project, leadPartnerProjectUser)).thenReturn(true);
 
         setLoggedInUser(newUserResource().withId(leadPartnerProjectUser.getId()).build());
 
@@ -259,7 +260,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         assertEquals(expectedProjectManager, project.getProjectUsers().get(project.getProjectUsers().size() - 1));
 
-        verify(projectDetailsWorkflowServiceMock).projectManagerAdded(project, leadPartnerProjectUser);
+        verify(projectDetailsWorkflowHandlerMock).projectManagerAdded(project, leadPartnerProjectUser);
     }
 
     @Test
@@ -337,11 +338,12 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         LocalDate now = LocalDate.now();
         LocalDate validDate = LocalDate.of(now.getYear(), now.getMonthValue(), 1).plusMonths(1);
 
-        Project existingProject = newProject().withSubmittedDate(LocalDateTime.now()).build();
+        Project existingProject = newProject().build();
         assertNull(existingProject.getTargetStartDate());
-        assertNotNull(existingProject.getSubmittedDate());
 
         when(projectRepositoryMock.findOne(123L)).thenReturn(existingProject);
+
+        when(projectDetailsWorkflowHandlerMock.isSubmitted(existingProject)).thenReturn(true);
 
         ServiceResult<Void> updateResult = service.updateProjectStartDate(123L, validDate);
         assertTrue(updateResult.isFailure());
@@ -455,11 +457,12 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     @Test
     public void testUpdateFinanceContactWhenProjectDetailsAlreadySubmitted() {
 
-        Project project = newProject().withId(123L).withSubmittedDate(LocalDateTime.now()).build();
+        Project project = newProject().withId(123L).build();
 
         assertTrue(project.getProjectUsers().isEmpty());
 
         when(projectRepositoryMock.findOne(123L)).thenReturn(project);
+        when(projectDetailsWorkflowHandlerMock.isSubmitted(project)).thenReturn(true);
 
         ServiceResult<Void> updateResult = service.updateFinanceContact(123L, 5L, 7L);
 
@@ -623,7 +626,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(addressRepositoryMock.exists(existingRegisteredAddressResource.getId())).thenReturn(true);
         when(addressRepositoryMock.findOne(existingRegisteredAddressResource.getId())).thenReturn(registeredAddress);
 
-        when(projectDetailsWorkflowServiceMock.projectAddressAdded(project, leadPartnerProjectUser)).thenReturn(true);
+        when(projectDetailsWorkflowHandlerMock.projectAddressAdded(project, leadPartnerProjectUser)).thenReturn(true);
 
         setLoggedInUser(newUserResource().withId(user.getId()).build());
 
@@ -643,7 +646,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(addressRepositoryMock.exists(existingOperatingAddressResource.getId())).thenReturn(true);
         when(addressRepositoryMock.findOne(existingOperatingAddressResource.getId())).thenReturn(operatingAddress);
 
-        when(projectDetailsWorkflowServiceMock.projectAddressAdded(project, leadPartnerProjectUser)).thenReturn(true);
+        when(projectDetailsWorkflowHandlerMock.projectAddressAdded(project, leadPartnerProjectUser)).thenReturn(true);
 
         setLoggedInUser(newUserResource().withId(user.getId()).build());
 
@@ -668,7 +671,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(organisationAddressRepositoryMock.findByOrganisationIdAndAddressType(leadOrganisation.getId(), projectAddressType)).thenReturn(emptyList());
         when(organisationAddressRepositoryMock.save(organisationAddress)).thenReturn(organisationAddress);
 
-        when(projectDetailsWorkflowServiceMock.projectAddressAdded(project, leadPartnerProjectUser)).thenReturn(true);
+        when(projectDetailsWorkflowHandlerMock.projectAddressAdded(project, leadPartnerProjectUser)).thenReturn(true);
 
         setLoggedInUser(newUserResource().withId(user.getId()).build());
 
@@ -681,13 +684,12 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         LocalDateTime now = LocalDateTime.now();
 
-        when(projectDetailsWorkflowServiceMock.submitProjectDetails(project, leadPartnerProjectUser)).thenReturn(true);
+        when(projectDetailsWorkflowHandlerMock.submitProjectDetails(project, leadPartnerProjectUser)).thenReturn(true);
 
         setLoggedInUser(newUserResource().withId(user.getId()).build());
 
         ServiceResult<Void> result = service.submitProjectDetails(project.getId(), now);
         assertTrue(result.isSuccess());
-        assertEquals(now, project.getSubmittedDate());
     }
 
     @Test
@@ -695,14 +697,13 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         LocalDateTime now = LocalDateTime.now();
 
-        when(projectDetailsWorkflowServiceMock.submitProjectDetails(project, leadPartnerProjectUser)).thenReturn(false);
+        when(projectDetailsWorkflowHandlerMock.submitProjectDetails(project, leadPartnerProjectUser)).thenReturn(false);
 
         setLoggedInUser(newUserResource().withId(user.getId()).build());
 
         ServiceResult<Void> result = service.submitProjectDetails(project.getId(), now);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_SUBMITTED_IF_INCOMPLETE));
-        assertNotEquals(now, project.getSubmittedDate());
     }
 
     @Test
@@ -751,11 +752,11 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 .build();
 
 
-        Project projectInDB = newProject().withId(1L).withSubmittedDate(LocalDateTime.now()).build();
+        Project projectInDB = newProject().withId(1L).build();
 
         when(projectRepositoryMock.findOne(projectid)).thenReturn(projectInDB);
-
         when(monitoringOfficerRepositoryMock.findOneByProjectId(monitoringOfficerResource.getProject())).thenReturn(monitoringOfficerInDB);
+        when(projectDetailsWorkflowHandlerMock.isSubmitted(projectInDB)).thenReturn(true);
 
         ServiceResult<Void> result = service.saveMonitoringOfficer(projectid, monitoringOfficerResource);
 
@@ -773,11 +774,11 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         Long projectid = 1L;
 
-        Project projectInDB = newProject().withId(1L).withSubmittedDate(LocalDateTime.now()).build();
+        Project projectInDB = newProject().withId(1L).build();
 
         when(projectRepositoryMock.findOne(projectid)).thenReturn(projectInDB);
-
         when(monitoringOfficerRepositoryMock.findOneByProjectId(monitoringOfficerResource.getProject())).thenReturn(null);
+        when(projectDetailsWorkflowHandlerMock.isSubmitted(projectInDB)).thenReturn(true);
 
         ServiceResult<Void> result = service.saveMonitoringOfficer(projectid, monitoringOfficerResource);
 

@@ -363,7 +363,7 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected FinanceRowService financeRowServiceMock;
 
     @Mock
-    protected ProjectDetailsWorkflowHandler projectDetailsWorkflowServiceMock;
+    protected ProjectDetailsWorkflowHandler projectDetailsWorkflowHandlerMock;
 
     @Before
     public void setupMockInjection() {

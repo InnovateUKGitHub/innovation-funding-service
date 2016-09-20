@@ -259,7 +259,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
             ProjectUser projectUser = getCurrentlyLoggedInPartner(project);
 
             if (projectDetailsWorkflowHandler.submitProjectDetails(project, projectUser)) {
-                return setSubmittedDate(project, date);
+                return serviceSuccess();
             } else {
                 return serviceFailure(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_SUBMITTED_IF_INCOMPLETE);
             }
@@ -590,7 +590,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     private ServiceResult<Void> validateInMonitoringOfficerAssignableState(final Long projectId) {
 
         return getProject(projectId).andOnSuccess(project -> {
-            if (!project.isProjectDetailsSubmitted()) {
+            if (!projectDetailsWorkflowHandler.isSubmitted(project)) {
                 return serviceFailure(PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED);
             } else {
                 return serviceSuccess();
@@ -632,11 +632,6 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
     private ServiceResult<MonitoringOfficer> getExistingMonitoringOfficerForProject(Long projectId) {
         return find(monitoringOfficerRepository.findOneByProjectId(projectId), notFoundError(MonitoringOfficer.class, projectId));
-    }
-
-    private ServiceResult<Void> setSubmittedDate(Project project, LocalDateTime date) {
-        project.setSubmittedDate(date);
-        return serviceSuccess();
     }
 
     private ServiceResult<Void> addFinanceContactToProject(Project project, ProjectUser financeContact) {
@@ -779,7 +774,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
     private ServiceResult<Project> validateIfProjectAlreadySubmitted(final Project project) {
 
-        if (project.isProjectDetailsSubmitted()) {
+        if (projectDetailsWorkflowHandler.isSubmitted(project)) {
             return serviceFailure(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_UPDATED_IF_ALREADY_SUBMITTED);
         }
 
@@ -976,7 +971,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     }
 
     private ProjectActivityStates createProjectDetailsStatus(Project project) {
-        return project.isProjectDetailsSubmitted() ? COMPLETE : ACTION_REQUIRED;
+        return projectDetailsWorkflowHandler.isSubmitted(project) ? COMPLETE : ACTION_REQUIRED;
     }
 
     private ProjectActivityStates createMonitoringOfficerStatus(final Optional<MonitoringOfficer> monitoringOfficer, final ProjectActivityStates leadProjectDetailsSubmitted) {

@@ -5,7 +5,6 @@ import com.worth.ifs.application.resource.CompetitionSummaryResource;
 import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.ApplicationSummaryService;
 import com.worth.ifs.application.service.CompetitionService;
-import com.worth.ifs.commons.error.exception.ForbiddenActionException;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.controller.ValidationHandler;
@@ -121,10 +120,11 @@ public class ProjectMonitoringOfficerController {
 
     private void checkInCorrectStateToUseMonitoringOfficerPage(Long projectId) {
         ProjectResource project = projectService.getById(projectId);
+        // TODO DW - INFUND-4915 - wire back in the projectDetailsSubmitted value
 
-        if (!project.isProjectDetailsSubmitted()) {
-            throw new ForbiddenActionException("Unable to assign Monitoring Officers until the Project Details have been submitted");
-        }
+//        if (!project.isProjectDetailsSubmitted()) {
+//            throw new ForbiddenActionException("Unable to assign Monitoring Officers until the Project Details have been submitted");
+//        }
     }
 
     private String viewMonitoringOfficer(Model model, Long projectId, ProjectMonitoringOfficerForm form, boolean existingMonitoringOfficerAssigned) {

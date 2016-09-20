@@ -52,16 +52,6 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public SpendProfileResource getSpendProfile(final Long projectId, final Long organisationId) {
-
-        if (projectId == null || organisationId == null) {
-            return null;
-        }
-
-        return projectRestService.getSpendProfile(projectId, organisationId).getSuccessObjectOrThrowException();
-    }
-
-    @Override
     public ProjectResource getByApplicationId(Long applicationId) {
         if(applicationId == null) {
             return null;
@@ -215,11 +205,6 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public boolean isUserLeadPartner(Long projectId, Long userId) {
         return !simpleFilter(getLeadPartners(projectId), projectUser -> projectUser.getUser().equals(userId)).isEmpty();
-    }
-
-    @Override
-    public boolean isUserPartner(Long projectId, Long userId) {
-        return !simpleFilter(getPartners(projectId), projectUser -> projectUser.getUser().equals(userId)).isEmpty();
     }
 
     @Override

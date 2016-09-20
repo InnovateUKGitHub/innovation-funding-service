@@ -24,12 +24,13 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
     private boolean isFunded;
     private Long organisationId;
 
-    public ProjectSetupStatusViewModel(ProjectResource project, CompetitionResource competition, Optional<MonitoringOfficerResource> monitoringOfficerResource, Optional<BankDetailsResource> bankDetails, boolean isFunded, Long organisationId) {
+    // TODO DW - INFUND-4915 - wire back in the projectDetailsSubmitted value
+    public ProjectSetupStatusViewModel(ProjectResource project, CompetitionResource competition, Optional<MonitoringOfficerResource> monitoringOfficerResource, Optional<BankDetailsResource> bankDetails, boolean isFunded, Long organisationId, boolean projectDetailsSubmitted) {
         this.projectId = project.getId();
         this.projectName = project.getName();
         this.applicationId = project.getApplication();
         this.competitionName = competition.getName();
-        this.projectDetailsSubmitted = project.isProjectDetailsSubmitted();
+        this.projectDetailsSubmitted = projectDetailsSubmitted;
         this.partnerDocumentsSubmitted = project.isPartnerDocumentsSubmitted();
         this.monitoringOfficerAssigned = monitoringOfficerResource.isPresent();
         this.monitoringOfficerName = monitoringOfficerResource.map(mo -> mo.getFullName()).orElse("");
