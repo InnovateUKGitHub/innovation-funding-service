@@ -44,9 +44,9 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping("/application/{applicationId}/contributors")
 public class ApplicationContributorController{
-    private static final String APPLICATION_CONTRIBUTORS_DISPLAY = "application-contributors/display";
-    private static final String APPLICATION_CONTRIBUTORS_INVITE = "application-contributors/invite";
-    private static final String APPLICATION_CONTRIBUTORS_REMOVE_CONFIRM = "application-contributors/remove-confirm";
+    public static final String APPLICATION_CONTRIBUTORS_DISPLAY = "application-contributors/display";
+    public static final String APPLICATION_CONTRIBUTORS_INVITE = "application-contributors/invite";
+    public static final String APPLICATION_CONTRIBUTORS_REMOVE_CONFIRM = "application-contributors/remove-confirm";
     private static final String CONTRIBUTORS_COOKIE = "contributor_invite_state";
     private static final String INVITES_SEND = "invitesSend";
     private static final String INVITES_SAVED = "invitesSaved";

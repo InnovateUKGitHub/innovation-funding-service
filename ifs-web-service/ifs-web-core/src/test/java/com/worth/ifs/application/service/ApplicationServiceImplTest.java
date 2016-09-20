@@ -6,6 +6,7 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.service.CompetitionsRestService;
+import com.worth.ifs.invite.service.InviteRestService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,6 +25,7 @@ import static java.math.BigDecimal.ZERO;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.calls;
 import static org.mockito.Mockito.when;
 
@@ -33,6 +35,8 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     private ApplicationRestService applicationRestService;
     @Mock
     private CompetitionsRestService competitionsRestService;
+    @Mock
+    private InviteRestService inviteRestService;
 
     private Long userId;
     
@@ -76,6 +80,8 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         when(competitionsRestService.getCompetitionById(closedCompetition.getId())).thenReturn(restSuccess(closedCompetition));
 
     	when(applicationRestService.getApplicationsByUserId(userId)).thenReturn(restSuccess(applications));
+
+        when(inviteRestService.removeApplicationInvite(anyLong())).thenReturn(restSuccess());
     }
 
     @Override
@@ -179,6 +185,13 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     	ApplicationResource application = new ApplicationResource();
         service.save(application);
         Mockito.inOrder(applicationRestService).verify(applicationRestService, calls(1)).saveApplication(application);
+    }
+
+    @Test
+    public void testRemoveCollaborator() throws Exception {
+        Long applicationInviteId = 80512L;
+        service.removeCollaborator(applicationInviteId);
+        Mockito.inOrder(inviteRestService).verify(inviteRestService, calls(1)).removeApplicationInvite(applicationInviteId);
     }
 
 }
