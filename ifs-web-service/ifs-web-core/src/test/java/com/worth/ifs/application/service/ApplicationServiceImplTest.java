@@ -33,8 +33,10 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
 
     @Mock
     private ApplicationRestService applicationRestService;
+
     @Mock
     private CompetitionsRestService competitionsRestService;
+
     @Mock
     private InviteRestService inviteRestService;
 

@@ -72,6 +72,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
     @Autowired
     private UserMapper userMapper;
+
     @Autowired
     private ApplicationInviteMapper applicationInviteMapper;
 
@@ -80,8 +81,10 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
     @Autowired
     private ApplicationInviteRepository applicationInviteRepository;
+
     @Autowired
     private QuestionStatusRepository questionStatusRepository;
+
     @Autowired
     private UserRepository userRepository;
 
