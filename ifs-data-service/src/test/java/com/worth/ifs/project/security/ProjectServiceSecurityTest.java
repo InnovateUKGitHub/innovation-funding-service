@@ -502,7 +502,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         }
 
         @Override
-        public ServiceResult<Void> saveProjectSubmitDateTime(Long id, LocalDateTime date) {
+        public ServiceResult<Void> submitProjectDetails(Long id, LocalDateTime date) {
             return null;
         }
 
