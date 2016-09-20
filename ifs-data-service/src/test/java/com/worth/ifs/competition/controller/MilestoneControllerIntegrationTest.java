@@ -42,8 +42,8 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
 
     @Rollback
     @Test
-    public void testGetAllDatesByCompetitionId() throws Exception {
-        RestResult<List<MilestoneResource>> milestoneResult = controller.getAllDatesByCompetitionId(COMPETITION_ID_VALID);
+    public void testGetAllMilestonesByCompetitionId() throws Exception {
+        RestResult<List<MilestoneResource>> milestoneResult = controller.getAllMilestonesByCompetitionId(COMPETITION_ID_VALID);
         assertTrue(milestoneResult.isSuccess());
         List<MilestoneResource> milestone = milestoneResult.getSuccessObject();
         assertNotNull(milestone);
@@ -52,7 +52,7 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
 
     @Rollback
     @Test
-    public void testEmptyGetAllDatesByCompetitionId() throws Exception {
+    public void testEmptyGetAllMilestonesByCompetitionId() throws Exception {
         List<MilestoneResource> milestone = getMilestonesForCompetition(COMPETITION_ID_INVALID);
         assertTrue(milestone.isEmpty());
         assertNotNull(milestone);
@@ -172,7 +172,7 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
     }
 
     private List<MilestoneResource> getMilestonesForCompetition(Long competitionId){
-        RestResult<List<MilestoneResource>> milestoneResult = controller.getAllDatesByCompetitionId(competitionId);
+        RestResult<List<MilestoneResource>> milestoneResult = controller.getAllMilestonesByCompetitionId(competitionId);
         assertTrue(milestoneResult.isSuccess());
         return milestoneResult.getSuccessObject();
     }

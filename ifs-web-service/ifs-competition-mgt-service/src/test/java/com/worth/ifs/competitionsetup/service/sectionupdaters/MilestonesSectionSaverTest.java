@@ -67,7 +67,7 @@ public class MilestonesSectionSaverTest {
 
         competitionSetupForm.setMilestoneEntries(populateMilestoneFormEntry());
 
-        when(milestoneService.getAllDatesByCompetitionId(anyLong())).thenReturn(resourceList);
+        when(milestoneService.getAllMilestonesByCompetitionId(anyLong())).thenReturn(resourceList);
         service.saveSection(competition, competitionSetupForm);
         List<Long> milestones = competition.getMilestones();
 

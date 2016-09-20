@@ -31,12 +31,12 @@ public class MilestoneRestServiceMocksTest extends BaseRestServiceUnitTest<Miles
     }
 
     @Test
-    public void test_getAllDatesByCompetitionId() {
+    public void test_getAllMilestonesByCompetitionId() {
         List<MilestoneResource> returnedResponse = new ArrayList<>();
         returnedResponse.add(getOpenDateMilestone());
 
         setupGetWithRestResultExpectations(milestonesRestURL + "/" + competitionId, milestoneResourceListType(), returnedResponse);
-        List<MilestoneResource> response = service.getAllDatesByCompetitionId(competitionId).getSuccessObject();
+        List<MilestoneResource> response = service.getAllMilestonesByCompetitionId(competitionId).getSuccessObject();
         assertNotNull(response);
         assertEquals(returnedResponse, response);
     }
@@ -69,13 +69,13 @@ public class MilestoneRestServiceMocksTest extends BaseRestServiceUnitTest<Miles
     }
 
     @Test
-    public void test_update() {
+    public void test_updateMilestones() {
 
         List<MilestoneResource> returnedResponse = new ArrayList<>();
         returnedResponse.add(getOpenDateMilestone());
 
         setupGetWithRestResultExpectations(milestonesRestURL + "/" + competitionId, milestoneResourceListType(), returnedResponse);
-        List<MilestoneResource> response = service.getAllDatesByCompetitionId(competitionId).getSuccessObject();
+        List<MilestoneResource> response = service.getAllMilestonesByCompetitionId(competitionId).getSuccessObject();
 
         assertNotNull(response);
         assertEquals(returnedResponse, response);
@@ -84,9 +84,8 @@ public class MilestoneRestServiceMocksTest extends BaseRestServiceUnitTest<Miles
         milestone.setDate(milestone.getDate().plusDays(7));
         response.set(0, milestone);
 
-        //TODO fix one of those
         setupPutWithRestResultExpectations(milestonesRestURL + "/" + competitionId, Void.class, response, null, HttpStatus.OK);
-        service.update(response, competitionId);
+        service.updateMilestones(response, competitionId);
         setupPutWithRestResultVerifications(milestonesRestURL + "/" + competitionId, Void.class, response);
     }
 

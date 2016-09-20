@@ -13,11 +13,11 @@ import java.util.List;
 @Service
 public interface MilestoneService {
 
-    List<MilestoneResource> getAllDatesByCompetitionId(Long competitionId);
+    List<MilestoneResource> getAllMilestonesByCompetitionId(Long competitionId);
 
     MilestoneResource getMilestoneByTypeAndCompetitionId(MilestoneType type, Long competitionId);
 
-    List<Error> update(List<MilestoneResource> milestones, Long competitionId);
+    List<Error> updateMilestones(List<MilestoneResource> milestones, Long competitionId);
 
     List<Error> updateMilestone(MilestoneResource milestone, Long competitionId);
 

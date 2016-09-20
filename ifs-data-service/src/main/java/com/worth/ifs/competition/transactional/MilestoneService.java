@@ -15,7 +15,7 @@ public interface MilestoneService {
     @PreAuthorize("hasAuthority('comp_admin')")
     @SecuredBySpring(value="READ", securedType=MilestoneResource.class,
             description = "Only Comp Admins can see all the milestones for the given comopetition")
-    ServiceResult<List<MilestoneResource>> getAllDatesByCompetitionId(final Long id);
+    ServiceResult<List<MilestoneResource>> getAllMilestonesByCompetitionId(final Long id);
 
     @PreAuthorize("hasAuthority('comp_admin')")
     @SecuredBySpring(value="READ", securedType=MilestoneResource.class,
@@ -25,7 +25,7 @@ public interface MilestoneService {
     @PreAuthorize("hasAuthority('comp_admin')")
     @SecuredBySpring(value="UPDATE", securedType=MilestoneResource.class,
             description = "Only Comp Admins is able to save all the milestones for the given competitions")
-    ServiceResult<Void> update(Long id, List<MilestoneResource> milestones);
+    ServiceResult<Void> updateMilestones(Long id, List<MilestoneResource> milestones);
 
     @PreAuthorize("hasAuthority('comp_admin')")
     @SecuredBySpring(value="UPDATE", securedType=MilestoneResource.class,

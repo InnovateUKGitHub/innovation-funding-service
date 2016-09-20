@@ -68,7 +68,7 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
     }
 
     private List<Error> returnErrorsFoundOnSave(LinkedMap<String, MilestoneEntry> milestoneEntries, Long competitionId){
-        List<MilestoneResource> milestones = milestoneService.getAllDatesByCompetitionId(competitionId);
+        List<MilestoneResource> milestones = milestoneService.getAllMilestonesByCompetitionId(competitionId);
 
         List<Error> errors = competitionSetupMilestoneService.validateMilestoneDates(milestoneEntries);
 

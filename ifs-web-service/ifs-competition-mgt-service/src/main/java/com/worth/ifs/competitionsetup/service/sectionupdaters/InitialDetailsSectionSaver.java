@@ -175,7 +175,7 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
         milestoneEntry.setMonth(openingDate.getMonth().getValue());
         milestoneEntry.setYear(openingDate.getYear());
 
-        List<MilestoneResource> milestones = milestoneService.getAllDatesByCompetitionId(competitionId);
+        List<MilestoneResource> milestones = milestoneService.getAllMilestonesByCompetitionId(competitionId);
         if(milestones.isEmpty()) {
             milestones = competitionSetupMilestoneService.createMilestonesForCompetition(competitionId);
         }

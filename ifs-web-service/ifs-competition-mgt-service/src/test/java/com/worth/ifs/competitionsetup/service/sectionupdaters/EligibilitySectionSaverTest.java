@@ -62,7 +62,7 @@ public class EligibilitySectionSaverTest {
 
 	@Test
 	public void testAutoSaveResearchCategoryCheck() {
-		when(milestoneService.getAllDatesByCompetitionId(1L)).thenReturn(asList(getMilestone()));
+		when(milestoneService.getAllMilestonesByCompetitionId(1L)).thenReturn(asList(getMilestone()));
 
 		Set<Long> researchCategories = new HashSet<>();
 		researchCategories.add(33L);
@@ -81,7 +81,7 @@ public class EligibilitySectionSaverTest {
 
 	@Test
 	public void testAutoSaveResearchCategoryUncheck() {
-		when(milestoneService.getAllDatesByCompetitionId(1L)).thenReturn(asList(getMilestone()));
+		when(milestoneService.getAllMilestonesByCompetitionId(1L)).thenReturn(asList(getMilestone()));
 
 		Set<Long> researchCategories = new HashSet<>();
 		researchCategories.add(33L);
@@ -101,7 +101,7 @@ public class EligibilitySectionSaverTest {
 
 	@Test
 	public void testAutoSaveMultipleStreamYes() {
-		when(milestoneService.getAllDatesByCompetitionId(1L)).thenReturn(asList(getMilestone()));
+		when(milestoneService.getAllMilestonesByCompetitionId(1L)).thenReturn(asList(getMilestone()));
 
 		Set<Long> researchCategories = new HashSet<>();
 		researchCategories.add(33L);
@@ -122,7 +122,7 @@ public class EligibilitySectionSaverTest {
 
 	@Test
 	public void testAutoSaveMultipleStreamNo() {
-		when(milestoneService.getAllDatesByCompetitionId(1L)).thenReturn(asList(getMilestone()));
+		when(milestoneService.getAllMilestonesByCompetitionId(1L)).thenReturn(asList(getMilestone()));
 
 		Set<Long> researchCategories = new HashSet<>();
 		researchCategories.add(33L);
@@ -143,7 +143,7 @@ public class EligibilitySectionSaverTest {
 
 	@Test
 	public void testAutoSaveSingleOrCollaborative() {
-		when(milestoneService.getAllDatesByCompetitionId(1L)).thenReturn(asList(getMilestone()));
+		when(milestoneService.getAllMilestonesByCompetitionId(1L)).thenReturn(asList(getMilestone()));
 
 		Set<Long> researchCategories = new HashSet<>();
 		researchCategories.add(33L);
@@ -165,7 +165,7 @@ public class EligibilitySectionSaverTest {
 
 	@Test
 	public void testAutoSaveResearchParticipationAmountId() {
-		when(milestoneService.getAllDatesByCompetitionId(1L)).thenReturn(asList(getMilestone()));
+		when(milestoneService.getAllMilestonesByCompetitionId(1L)).thenReturn(asList(getMilestone()));
 
 		Set<Long> researchCategories = new HashSet<>();
 		researchCategories.add(33L);

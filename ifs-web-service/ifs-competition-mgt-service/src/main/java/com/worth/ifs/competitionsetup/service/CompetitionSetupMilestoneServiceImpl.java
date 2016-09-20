@@ -53,7 +53,7 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
             }
         });
 
-        return milestoneService.update(updatedMilestones, competitionId);
+        return milestoneService.updateMilestones(updatedMilestones, competitionId);
     }
 
     private LocalDateTime getMilestoneDate(Integer day, Integer month, Integer year){

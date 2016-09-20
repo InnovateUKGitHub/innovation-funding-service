@@ -42,7 +42,7 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
     private MilestoneMapper milestoneMapper;
 
     @Override
-    public ServiceResult<List<MilestoneResource>> getAllDatesByCompetitionId(Long id) {
+    public ServiceResult<List<MilestoneResource>> getAllMilestonesByCompetitionId(Long id) {
         return serviceSuccess ((List<MilestoneResource>) milestoneMapper.mapToResource(milestoneRepository.findAllByCompetitionId(id)));
     }
 
@@ -52,7 +52,7 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
     }
 
     @Override
-    public ServiceResult<Void> update(Long id, List<MilestoneResource> milestones) {
+    public ServiceResult<Void> updateMilestones(Long id, List<MilestoneResource> milestones) {
         
     	Competition competition = competitionRepository.findById(id);
     	
@@ -70,8 +70,6 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
 
     @Override
     public ServiceResult<Void> updateMilestone(MilestoneResource milestoneResource) {
-        //@TODO
-        System.out.println("SINGLE MILESTONE UPDATE COMPLETE");
         milestoneRepository.save(milestoneMapper.mapToDomain(milestoneResource));
         return serviceSuccess();
     }

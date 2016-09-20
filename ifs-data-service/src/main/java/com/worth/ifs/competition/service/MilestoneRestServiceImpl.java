@@ -22,7 +22,7 @@ public class MilestoneRestServiceImpl extends BaseRestService implements Milesto
     private String milestonesRestURL = "/milestone";
 
     @Override
-    public RestResult<List<MilestoneResource>> getAllDatesByCompetitionId(Long competitionId) {
+    public RestResult<List<MilestoneResource>> getAllMilestonesByCompetitionId(Long competitionId) {
         return getWithRestResult(milestonesRestURL + "/" + competitionId, milestoneResourceListType());
     }
 
@@ -32,7 +32,7 @@ public class MilestoneRestServiceImpl extends BaseRestService implements Milesto
     }
 
     @Override
-    public RestResult<Void> update(List<MilestoneResource> milestones, Long competitionId) {
+    public RestResult<Void> updateMilestones(List<MilestoneResource> milestones, Long competitionId) {
         return putWithRestResult(milestonesRestURL + "/" + competitionId, milestones, Void.class);
     }
 

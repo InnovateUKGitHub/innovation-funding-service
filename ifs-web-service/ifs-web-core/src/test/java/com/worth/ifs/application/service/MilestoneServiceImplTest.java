@@ -30,15 +30,15 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
     }
 
     @Test
-    public void test_getAllDatesByCompetitionId() {
+    public void test_getAllMilestonesByCompetitionId() {
         LocalDateTime milestoneDate = LocalDateTime.now();
 
         List<MilestoneResource> milestonesList = new ArrayList<>();
         milestonesList.add(getNewOpenDateMilestone(milestoneDate));
 
-        when(milestoneRestService.getAllDatesByCompetitionId(1L)).thenReturn(restSuccess(milestonesList));
+        when(milestoneRestService.getAllMilestonesByCompetitionId(1L)).thenReturn(restSuccess(milestonesList));
 
-        List<MilestoneResource> found = service.getAllDatesByCompetitionId(1L);
+        List<MilestoneResource> found = service.getAllMilestonesByCompetitionId(1L);
 
         MilestoneResource foundMilestone = found.get(0);
         assertEquals(Long.valueOf(1L), foundMilestone.getId());
@@ -77,16 +77,16 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
     }
 
     @Test
-    public void test_update() {
+    public void test_updateMilestones() {
         LocalDateTime milestoneDate = LocalDateTime.now();
 
         List<MilestoneResource> milestonesList = new ArrayList<>();
         milestonesList.add(getNewOpenDateMilestone(milestoneDate));
         milestonesList.get(0).setId(2L);
 
-        when(milestoneRestService.update(milestonesList, 1L)).thenReturn(restSuccess());
+        when(milestoneRestService.updateMilestones(milestonesList, 1L)).thenReturn(restSuccess());
 
-        List<Error> errorList = service.update(milestonesList, 1L);
+        List<Error> errorList = service.updateMilestones(milestonesList, 1L);
         assertTrue(errorList.isEmpty());
     }
 
