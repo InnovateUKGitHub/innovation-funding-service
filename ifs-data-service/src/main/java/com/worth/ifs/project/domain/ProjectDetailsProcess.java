@@ -12,11 +12,11 @@ import javax.persistence.ManyToOne;
 public class ProjectDetailsProcess extends Process<ProjectUser, Project, ProjectDetailsState> {
 
     @ManyToOne
-    @JoinColumn(name="participant_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JoinColumn(name="participant_id", referencedColumnName = "id")
     private ProjectUser participant;
 
     @ManyToOne
-    @JoinColumn(name="target_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JoinColumn(name="target_id", referencedColumnName = "id")
     private Project target;
 
     // for ORM use
