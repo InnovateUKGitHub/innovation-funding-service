@@ -61,7 +61,7 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
                 .with(id(null))
                 .withCompetition(competition)
                 .withUser(newUser()
-                        .withid(3L)
+                        .withId(3L)
                         .withFirstName("Professor")
                 )
                 .withInvite(newCompetitionInvite()
