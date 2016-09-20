@@ -34,7 +34,7 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               INFUND-4582 As a Competitions team member I want the service to automatically save my edits while I work through Eligibility section in Competition Setup the so that I do not lose my changes
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        CompAdmin    CompSetup
+Force Tags        CompAdmin
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -240,7 +240,7 @@ Funding information client-side validations
     And the user enters text to a text field    id=budgetCode    2004
     Then the user should not see the error any more    Please enter a budget code
     And the user enters text to a text field    id=activityCode    4242
-    Then The user should not see the text in the page    Please enter an activity code
+    Then The user should not see the error text in the page    Please enter an activity code
 
 Funding information Autosave
     [Documentation]    INFUND-4581
@@ -708,3 +708,9 @@ the user should see the correct details in the eligibility form
     Checkbox Should Be Selected    id=research-categories-35
     Radio Button Should Be Set To    leadApplicantType    business
     Page Should Contain    30%
+
+The user should not see the error text in the page
+    [Arguments]    ${ERROR_TEXT}
+    run keyword and ignore error    mouse out    css=input
+    Focus    jQuery=.button:contains("Done")
+    Wait Until Page Does Not Contain    ${ERROR_TEXT}
