@@ -1,14 +1,13 @@
 package com.worth.ifs.user.mapper;
 
 import com.worth.ifs.commons.mapper.BaseMapper;
+import com.worth.ifs.commons.mapper.GlobalMapperConfig;
 import com.worth.ifs.user.domain.Ethnicity;
-import com.worth.ifs.user.domain.OrganisationType;
 import com.worth.ifs.user.resource.EthnicityResource;
-import com.worth.ifs.user.resource.OrganisationTypeResource;
 import org.mapstruct.Mapper;
 
 @Mapper(
-    componentModel = "spring",
+    config =  GlobalMapperConfig.class,
     uses = {
     }
 )
