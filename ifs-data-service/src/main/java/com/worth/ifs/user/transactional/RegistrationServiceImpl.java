@@ -118,7 +118,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         User newUser = assembleUserFromResource(userResource);
         return validateUser(userResource, userResource.getPassword()).andOnSuccess(validUser -> addOrganisationToUser(newUser, organisationId).andOnSuccess(user ->
                 addRoleToUser(user, roleName))).andOnSuccess(() ->
-                createUserWithUid(newUser, userResource.getPassword()));
+                    createUserWithUid(newUser, userResource.getPassword()));
     }
 
 	private ServiceResult<UserResource> validateUser(UserResource userResource, String password) {

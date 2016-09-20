@@ -4,9 +4,13 @@ import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.service.AddressRestService;
 import com.worth.ifs.assessment.form.AssessorRegistrationForm;
 import com.worth.ifs.assessment.model.AssessorRegistrationModelPopulator;
+import com.worth.ifs.assessment.service.AssessorRestService;
+import com.worth.ifs.assessment.service.AssessorRestServiceImpl;
 import com.worth.ifs.assessment.service.CompetitionInviteRestService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.form.AddressForm;
+import com.worth.ifs.registration.form.RegistrationForm;
+import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.util.CookieUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -40,6 +44,9 @@ public class AssessorRegistrationController {
     @Autowired
     private AssessorRegistrationModelPopulator modelPopulator;
 
+    @Autowired
+    private AssessorRestService assessorRestService;
+
     @RequestMapping(value = "/register", method = RequestMethod.GET)
     public String registerForm(Model model, HttpServletRequest request, HttpServletResponse response) {
 
@@ -67,6 +74,12 @@ public class AssessorRegistrationController {
                                      Model model) {
         addAddressOptions(registrationForm);
 
+        String inviteHash = CookieUtil.getCookieValue(request, ASSESSOR_INVITE_HASH);
+
+
+        model.addAttribute("model", modelPopulator.populateModel(inviteHash));
+
+
         //Retrieve invite
         //Add email address to model
         //Attempt account creation
@@ -76,6 +89,21 @@ public class AssessorRegistrationController {
         String destination = "registration/register";
 
         return destination;
+    }
+
+    private RestResult<UserResource> createUser(String hash, RegistrationForm registrationForm) {
+        return assessorRestService.createAssessorByInviteHash(
+                hash,
+                registrationForm.getFirstName(),
+                registrationForm.getLastName(),
+                registrationForm.getPassword(),
+                registrationForm.getEmail(),
+                registrationForm.getTitle(),
+                registrationForm.getPhoneNumber(),
+                "",
+                "",
+                1L
+                );
     }
 
     private void addAddressOptions(AssessorRegistrationForm registrationForm) {
