@@ -25,12 +25,31 @@ function coloredEcho(){
     tput sgr0;
 }
 
+function clearDownFileRepository() {
+    echo "***********Deleting any uploaded files***************"
+    echo "storedFileFolder:   ${storedFileFolder}"
+    docker exec ifs_data_1  rm -rf ${storedFileFolder}
+
+    echo "***********Deleting any holding for scan files***************"
+    echo "virusScanHoldingFolder: ${virusScanHoldingFolder}"
+    docker exec ifs_data_1  rm -rf ${virusScanHoldingFolder}
+
+    echo "***********Deleting any quarantined files***************"
+    echo "virusScanQuarantinedFolder: ${virusScanQuarantinedFolder}"
+    docker exec ifs_data_1  rm -rf ${virusScanQuarantinedFolder}
+
+    echo "***********Deleting any scanned files***************"
+    echo "virusScanScannedFolder: ${virusScanScannedFolder}"
+    docker exec ifs_data_1  rm -rf ${virusScanScannedFolder}
+}
+
 function addTestFiles() {
+    clearDownFileRepository
     echo "***********Adding test files***************"
     echo "***********Making the quarantined directory ***************"
-    docker-compose -p ifs exec data mkdir -p ${virusScanQuarantinedFolder}
+    docker exec ifs_data_1 mkdir -p ${virusScanQuarantinedFolder}
     echo "***********Adding pretend quarantined file ***************"
-    docker-compose -p ifs exec data cp -R ${uploadFileDir}/8 ${virusScanQuarantinedFolder}/8
+    docker exec ifs_data_1 cp /tmp/ifs-local/8 ${virusScanQuarantinedFolder}/8
 }
 
 function resetLDAP() {
@@ -84,9 +103,9 @@ function startSeleniumGrid() {
     cd ${testDirectory}
     cd ${scriptDir}
 
-    if [ "$parallel" ]
+    if [[ $parallel -eq 1 ]]
     then
-      declare -i suiteCount=$(find ${testDirectory} -maxdepth 0 -type d | wc -l)
+      declare -i suiteCount=$(find ${testDirectory}/* -maxdepth 0 -type d | wc -l)
     else
       declare -i suiteCount=1
     fi
@@ -118,14 +137,14 @@ function startPybot() {
     fi
     if [[ $emails -eq 1 ]]
       then
-        local excludeEmails=''
+        local emailsString='--exclude Email'
       else
-        local excludeEmails='--exclude Email'
+        local emailsString=''
     fi
     if [[ $rerunFailed -eq 1 ]]; then
-    	pybot --outputdir target/${targetDir} --rerunfailed target/${targetDir}/output.xml --output rerun.xml --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:${postcodeLookupImplemented} -v UPLOAD_FOLDER:${uploadFileDir} -v DOWNLOAD_FOLDER:download_files -v BROWSER=chrome -v REMOTE_URL:'http://ifs-local-dev:4444/wd/hub' ${includeHappyPath} --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal ${excludeEmails} --name ${targetDir} ${1} &
+    	pybot --outputdir target/${targetDir} --rerunfailed target/${targetDir}/output.xml --output rerun.xml --pythonpath IFS_acceptance_tests/libs -v docker:1 -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:${postcodeLookupImplemented} -v UPLOAD_FOLDER:${uploadFileDir} -v DOWNLOAD_FOLDER:download_files -v BROWSER=chrome -v REMOTE_URL:'http://ifs-local-dev:4444/wd/hub' ${includeHappyPath} --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal ${emailsString} --name ${targetDir} ${1} &
     else
-    	pybot --outputdir target/${targetDir} --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:${postcodeLookupImplemented} -v UPLOAD_FOLDER:${uploadFileDir} -v DOWNLOAD_FOLDER:download_files -v BROWSER=chrome -v REMOTE_URL:'http://ifs-local-dev:4444/wd/hub' ${includeHappyPath} --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal ${excludeEmails} --name ${targetDir} ${1} &
+    	pybot --outputdir target/${targetDir} --pythonpath IFS_acceptance_tests/libs -v docker:1 -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:${postcodeLookupImplemented} -v UPLOAD_FOLDER:${uploadFileDir} -v DOWNLOAD_FOLDER:download_files -v BROWSER=chrome -v REMOTE_URL:'http://ifs-local-dev:4444/wd/hub' ${includeHappyPath} --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal ${emailsString} --name ${targetDir} ${1} &
     fi
 }
 
@@ -133,9 +152,9 @@ function runTests() {
     echo "**********RUN THE WEB TESTS**********"
     cd ${scriptDir}
 
-    if [[ "$parallel" ]]
+    if [[ $parallel -eq 1 ]]
     then
-      for D in `find ${testDirectory} -maxdepth 0 -type d`
+      for D in `find ${testDirectory}/* -maxdepth 0 -type d`
       do
           startPybot ${D}
       done
@@ -148,11 +167,17 @@ function runTests() {
         wait $job
     done
 
-    if [[ "$parallel" ]]
+    if [[ $parallel -eq 1 ]]
     then
       results=`find target/* -regex ".*/output\.xml"`
       rebot -d target ${results}
     fi
+}
+
+function clearOldReports() {
+  echo "**********REMOVING OLD REPORTS**********"
+  rm -rf target
+  mkdir target
 }
 
 setEnv
@@ -160,13 +185,18 @@ cd "$(dirname "$0")"
 echo "********GETTING ALL THE VARIABLES********"
 scriptDir=`pwd`
 echo "scriptDir:        ${scriptDir}"
-uploadFileDir=${scriptDir}"/upload_files"
+uploadFileDir="${scriptDir}/upload_files"
 cd ../ifs-data-service
 dataServiceCodeDir=`pwd`
 echo "dataServiceCodeDir:${dataServiceCodeDir}"
-baseFileStorage=`sed '/^\#/d' docker-build.gradle | grep 'ext.ifsFileStorageLocation'  | cut -d "=" -f2 | sed 's/"//g'`
+
+baseFileStorage="/tmp/uploads"
 echo "${baseFileStorage}"
-virusScanQuarantinedFolder=${baseFileStorage}/virus-scan-quarantined
+storedFileFolder="${baseFileStorage}/ifs/"
+virusScanHoldingFolder="${baseFileStorage}/virus-scan-holding/"
+virusScanQuarantinedFolder="${baseFileStorage}/virus-scan-quarantined"
+virusScanScannedFolder="${baseFileStorage}/virus-scan-scanned"
+
 echo "virusScanQuarantinedFolder:		${virusScanQuarantinedFolder}"
 echo "We are about to delete the above directories, make sure that they are right ones!"
 postcodeLookupKey=`sed '/^\#/d' docker-build.gradle | grep 'ext.postcodeLookupKey'  | cut -d "=" -f2 | sed 's/"//g'`
@@ -189,11 +219,10 @@ echo "webBase:           ${webBase}"
 unset opt
 unset quickTest
 unset testScrub
-unset parallel
-unset emails
 
 emails=0
 rerunFailed=0
+parallel=0
 
 testDirectory='IFS_acceptance_tests/tests'
 while getopts ":p :h :q :t :e :r :d:" opt ; do
@@ -240,11 +269,12 @@ done
 
 startSeleniumGrid
 
+clearOldReports
 
 if [[ "$quickTest" ]]
 then
     echo "using quickTest:   TRUE" >&2
-    #resetDB
+    resetDB
     addTestFiles
     runTests
 elif [[ "$testScrub" ]]
@@ -264,3 +294,4 @@ else
 fi
 
 stopSeleniumGrid
+google-chrome target/${targetDir}/log.html &
