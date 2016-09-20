@@ -1,6 +1,8 @@
 package com.worth.ifs.finance.spendprofile.summary.viewmodel;
 
 import com.worth.ifs.application.resource.CompetitionSummaryResource;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -79,6 +81,33 @@ public class ProjectSpendProfileSummaryViewModel {
         public QueriesRaised getQueriesRaised() {
             return queriesRaised;
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+
+            if (o == null || getClass() != o.getClass()) return false;
+
+            SpendProfileOrganisationRow that = (SpendProfileOrganisationRow) o;
+
+            return new EqualsBuilder()
+                    .append(id, that.id)
+                    .append(name, that.name)
+                    .append(viability, that.viability)
+                    .append(viabilityRagStatus, that.viabilityRagStatus)
+                    .append(eligibility, that.eligibility)
+                    .append(eligibilityRagStatus, that.eligibilityRagStatus)
+                    .append(queriesRaised, that.queriesRaised)
+                    .isEquals();
+        }
+
+        @Override
+        public int hashCode() {
+            return new HashCodeBuilder(17, 37)
+                    .append(id)
+                    .append(name)
+                    .toHashCode();
+        }
     }
 
     private Long projectId;
@@ -152,5 +181,35 @@ public class ProjectSpendProfileSummaryViewModel {
 
     public boolean isShowSpendProfilesGeneratedMessage() {
         return spendProfilesGenerated;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ProjectSpendProfileSummaryViewModel that = (ProjectSpendProfileSummaryViewModel) o;
+
+        return new EqualsBuilder()
+                .append(durationInMonths, that.durationInMonths)
+                .append(spendProfilesGenerated, that.spendProfilesGenerated)
+                .append(projectId, that.projectId)
+                .append(competitionSummary, that.competitionSummary)
+                .append(partnerOrganisationDetails, that.partnerOrganisationDetails)
+                .append(projectStartDate, that.projectStartDate)
+                .append(totalProjectCost, that.totalProjectCost)
+                .append(grantAppliedFor, that.grantAppliedFor)
+                .append(otherPublicSectorFunding, that.otherPublicSectorFunding)
+                .append(totalPercentageGrant, that.totalPercentageGrant)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(projectId)
+                .append(grantAppliedFor)
+                .toHashCode();
     }
 }
