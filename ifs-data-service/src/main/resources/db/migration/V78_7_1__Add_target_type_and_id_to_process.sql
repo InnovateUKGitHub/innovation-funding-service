@@ -1,4 +1,4 @@
-ALTER TABLE process ADD COLUMN target_id BIGINT(20) NOT NULL;
+ALTER TABLE process ADD COLUMN target_id BIGINT(20) NULL;
 
 UPDATE process p SET p.target_id = (
   SELECT a.id FROM process_role pr

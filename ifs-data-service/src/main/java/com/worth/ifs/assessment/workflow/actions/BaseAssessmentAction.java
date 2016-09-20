@@ -3,13 +3,15 @@ package com.worth.ifs.assessment.workflow.actions;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.assessment.repository.ProcessOutcomeRepository;
+import com.worth.ifs.assessment.resource.AssessmentOutcomes;
+import com.worth.ifs.assessment.resource.AssessmentStates;
+import com.worth.ifs.workflow.TestableTransitionWorkflowAction;
 import com.worth.ifs.workflow.domain.ActivityState;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
-import com.worth.ifs.workflow.resource.State;
 import com.worth.ifs.workflow.repository.ActivityStateRepository;
+import com.worth.ifs.workflow.resource.State;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.statemachine.StateContext;
-import org.springframework.statemachine.action.Action;
 
 import java.util.Optional;
 
@@ -18,7 +20,7 @@ import static com.worth.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
 /**
  * A base class for Assessment-related workflow Actions
  */
-abstract class BaseAssessmentAction implements Action<String, String> {
+abstract class BaseAssessmentAction extends TestableTransitionWorkflowAction<AssessmentStates, AssessmentOutcomes> {
 
     @Autowired
     protected AssessmentRepository assessmentRepository;
@@ -30,17 +32,17 @@ abstract class BaseAssessmentAction implements Action<String, String> {
     private ActivityStateRepository activityStateRepository;
 
     @Override
-    public void execute(StateContext<String, String> context) {
+    public void doExecute(StateContext<AssessmentStates, AssessmentOutcomes> context) {
 
         Assessment assessment = getAssessmentFromContext(context);
         ProcessOutcome updatedProcessOutcome = (ProcessOutcome) context.getMessageHeader("processOutcome");
-        State newState = State.valueOf(context.getTransition().getTarget().getId());
+        State newState = context.getTransition().getTarget().getId().getBackingState();
 
         ActivityState newActivityState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, newState);
         doExecute(assessment, newActivityState, Optional.ofNullable(updatedProcessOutcome));
     }
 
-    private Assessment getAssessmentFromContext(StateContext<String, String> context) {
+    private Assessment getAssessmentFromContext(StateContext<AssessmentStates, AssessmentOutcomes> context) {
 
         Assessment assessmentInContext = (Assessment) context.getMessageHeader("assessment");
 

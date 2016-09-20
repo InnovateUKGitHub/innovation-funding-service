@@ -7,7 +7,9 @@ import com.worth.ifs.address.repository.AddressRepository;
 import com.worth.ifs.address.repository.AddressTypeRepository;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
+import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.FundingDecision;
+import com.worth.ifs.bankdetails.domain.BankDetails;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.domain.FileEntry;
@@ -16,6 +18,7 @@ import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.BasicFileAndContents;
 import com.worth.ifs.file.service.FileAndContents;
 import com.worth.ifs.file.transactional.FileService;
+import com.worth.ifs.finance.transactional.FinanceRowService;
 import com.worth.ifs.invite.domain.ProjectParticipantRole;
 import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.notifications.resource.ExternalUserNotificationTarget;
@@ -26,17 +29,28 @@ import com.worth.ifs.notifications.service.NotificationService;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
 import com.worth.ifs.organisation.mapper.OrganisationMapper;
 import com.worth.ifs.organisation.repository.OrganisationAddressRepository;
+import com.worth.ifs.project.constant.ProjectActivityStates;
 import com.worth.ifs.project.domain.MonitoringOfficer;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
+import com.worth.ifs.project.finance.domain.SpendProfile;
+import com.worth.ifs.project.finance.repository.SpendProfileRepository;
 import com.worth.ifs.project.mapper.MonitoringOfficerMapper;
+import com.worth.ifs.project.mapper.ProjectMapper;
+import com.worth.ifs.project.mapper.ProjectUserMapper;
+import com.worth.ifs.project.repository.MonitoringOfficerRepository;
 import com.worth.ifs.project.resource.*;
+import com.worth.ifs.project.workflow.projectdetails.configuration.ProjectDetailsWorkflowHandler;
 import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.OrganisationResource;
+import com.worth.ifs.user.resource.OrganisationTypeEnum;
+import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -46,18 +60,20 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import static com.worth.ifs.commons.error.CommonErrors.badRequestError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.service.ServiceResult.*;
-import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
-import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static com.worth.ifs.invite.domain.ProjectParticipantRole.*;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
+import static com.worth.ifs.project.constant.ProjectActivityStates.NOT_REQUIRED;
 import static com.worth.ifs.project.transactional.ProjectServiceImpl.Notifications.INVITE_FINANCE_CONTACT;
 import static com.worth.ifs.project.transactional.ProjectServiceImpl.Notifications.INVITE_PROJECT_MANAGER;
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static com.worth.ifs.util.CollectionFunctions.*;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
+import static com.worth.ifs.util.EntityLookupCallbacks.getOnlyElementOrFail;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
@@ -66,6 +82,12 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
 public class ProjectServiceImpl extends AbstractProjectServiceImpl implements ProjectService {
+
+    @Autowired
+    private ProjectUserMapper projectUserMapper;
+
+    @Autowired
+    private ProjectMapper projectMapper;
 
     @Autowired
     private MonitoringOfficerMapper monitoringOfficerMapper;
@@ -83,6 +105,9 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     private AddressTypeRepository addressTypeRepository;
 
     @Autowired
+    private MonitoringOfficerRepository monitoringOfficerRepository;
+
+    @Autowired
     private OrganisationMapper organisationMapper;
 
     @Autowired
@@ -96,6 +121,12 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     @Autowired
     private FileEntryMapper fileEntryMapper;
+
+    @Autowired
+    private SpendProfileRepository spendProfileRepository;
+
+    @Autowired
+    private ProjectDetailsWorkflowHandler projectDetailsWorkflowHandler;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -130,7 +161,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     @Override
     public ServiceResult<Void> setProjectManager(Long projectId, Long projectManagerUserId) {
         return getProject(projectId).
-                andOnSuccess(project -> validateIfProjectAlreadySubmitted(project)).
+                andOnSuccess(this::validateIfProjectAlreadySubmitted).
                 andOnSuccess(project -> validateProjectManager(project, projectManagerUserId).
                         andOnSuccess(leadPartner -> createOrUpdateProjectManagerForProject(project, leadPartner)));
     }
@@ -139,14 +170,14 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     public ServiceResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate) {
         return validateProjectStartDate(projectStartDate).
                 andOnSuccess(() -> getProject(projectId)).
-                andOnSuccess(project -> validateIfProjectAlreadySubmitted(project)).
+                andOnSuccess(this::validateIfProjectAlreadySubmitted).
                 andOnSuccessReturnVoid(project -> project.setTargetStartDate(projectStartDate));
     }
 
     @Override
     public ServiceResult<Void> updateFinanceContact(Long projectId, Long organisationId, Long financeContactUserId) {
         return getProject(projectId).
-                andOnSuccess(project -> validateIfProjectAlreadySubmitted(project)).
+                andOnSuccess(this::validateIfProjectAlreadySubmitted).
                 andOnSuccess(project -> validateProjectOrganisationFinanceContact(project, organisationId, financeContactUserId).
                         andOnSuccess(projectUser -> createFinanceContactProjectUser(projectUser.getUser(), project, projectUser.getOrganisation()).
                                 andOnSuccessReturnVoid(financeContact -> addFinanceContactToProject(project, financeContact))));
@@ -154,15 +185,17 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     @Override
     public ServiceResult<Void> updateProjectAddress(Long organisationId, Long projectId, OrganisationAddressType organisationAddressType, AddressResource address) {
+
         Project project = projectRepository.findOne(projectId);
         Organisation leadOrganisation = organisationRepository.findOne(organisationId);
+
         if (address.getId() != null && addressRepository.exists(address.getId())) {
             Address existingAddress = addressRepository.findOne(address.getId());
             project.setAddress(existingAddress);
         } else {
             Address newAddress = addressMapper.mapToDomain(address);
             if (address.getOrganisations() == null || address.getOrganisations().size() == 0) {
-                AddressType addressType = addressTypeRepository.findOne((long) organisationAddressType.getOrdinal());
+                AddressType addressType = addressTypeRepository.findOne(organisationAddressType.getOrdinal());
                 List<OrganisationAddress> existingOrgAddresses = organisationAddressRepository.findByOrganisationIdAndAddressType(leadOrganisation.getId(), addressType);
                 existingOrgAddresses.stream().forEach(oA -> organisationAddressRepository.delete(oA));
                 OrganisationAddress organisationAddress = new OrganisationAddress(leadOrganisation, newAddress, addressType);
@@ -170,7 +203,12 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
             }
             project.setAddress(newAddress);
         }
-        return serviceSuccess();
+
+        if (projectDetailsWorkflowHandler.projectAddressAdded(project, getCurrentlyLoggedInPartner(project))) {
+            return serviceSuccess();
+        } else {
+            return serviceFailure(PROJECT_SETUP_CANNOT_PROGRESS_WORKFLOW);
+        }
     }
 
     @Override
@@ -193,22 +231,27 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     @Override
-    public ServiceResult<Void> saveProjectSubmitDateTime(final Long projectId, LocalDateTime date) {
-        return getProject(projectId).
-                andOnSuccess(
-                        project -> {
-                            if (validateIsReadyForSubmission(project)) {
-                                return setSubmittedDate(project, date);
-                            } else {
-                                return serviceFailure(new Error(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_SUBMITTED_IF_INCOMPLETE));
-                            }
-                        }
-                ).andOnSuccessReturnVoid();
+    public ServiceResult<Void> submitProjectDetails(final Long projectId, LocalDateTime date) {
+
+        return getProject(projectId).andOnSuccess(project -> {
+
+            ProjectUser projectUser = getCurrentlyLoggedInPartner(project);
+
+            if (projectDetailsWorkflowHandler.submitProjectDetails(project, projectUser)) {
+                return setSubmittedDate(project, date);
+            } else {
+                return serviceFailure(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_SUBMITTED_IF_INCOMPLETE);
+            }
+        });
     }
 
     @Override
     public ServiceResult<Boolean> isSubmitAllowed(Long projectId) {
-        return getProject(projectId).andOnSuccess(project -> serviceSuccess(validateIsReadyForSubmission(project)));
+        return getProject(projectId).andOnSuccessReturn(this::doIsSubmissionAllowed);
+    }
+
+    private boolean doIsSubmissionAllowed(Project project) {
+        return projectDetailsWorkflowHandler.isSubmissionAllowed(project);
     }
 
     @Override
@@ -219,7 +262,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                             if (validateDocumentsUploaded(project)) {
                                 return setDocumentsSubmittedDate(project, date);
                             } else {
-                                return serviceFailure(new Error(PROJECT_SETUP_OTHER_DOCUMENTS_MUST_BE_UPLOADED_BEFORE_SUBMIT));
+                                return serviceFailure(PROJECT_SETUP_OTHER_DOCUMENTS_MUST_BE_UPLOADED_BEFORE_SUBMIT);
                             }
                         }
                 ).andOnSuccessReturnVoid();
@@ -238,11 +281,11 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                 .allMatch(serviceResult -> (serviceResult.isSuccess()) && (serviceResult.getSuccessObject().getFileEntry().getFilesizeBytes() > 0));
 
         if (!allMatch) {
-            return serviceFailure(new Error(PROJECT_SETUP_OTHER_DOCUMENTS_MUST_BE_UPLOADED_BEFORE_SUBMIT));
+            return serviceFailure(PROJECT_SETUP_OTHER_DOCUMENTS_MUST_BE_UPLOADED_BEFORE_SUBMIT);
         }
         return projectManager.isPresent()
                 && projectManager.get().getUser().getId().equals(userId) ? serviceSuccess(true)
-                : serviceFailure(new Error(PROJECT_SETUP_OTHER_DOCUMENTS_CAN_ONLY_SUBMITTED_BY_PROJECT_MANAGER));
+                : serviceFailure(PROJECT_SETUP_OTHER_DOCUMENTS_CAN_ONLY_SUBMITTED_BY_PROJECT_MANAGER);
 
     }
 
@@ -398,7 +441,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                         return serviceFailure(badRequestError("project does not contain organisation"));
                     }
                     List<ProjectUser> partners = project.getProjectUsersWithRole(PROJECT_PARTNER);
-                    if (partners.stream().map(ProjectUser::getId).collect(toList()).contains(userId)) {
+                    if (partners.stream().map(p -> p.getUser().getId()).collect(toList()).contains(userId)){
                         return serviceSuccess(); // Already a partner
                     } else {
                         ProjectUser pu = new ProjectUser(user, project, PROJECT_PARTNER, organisation);
@@ -505,7 +548,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     private ServiceResult<Void> validateMonitoringOfficer(final Long projectId, final MonitoringOfficerResource monitoringOfficerResource) {
 
         if (!projectId.equals(monitoringOfficerResource.getProject())) {
-            return serviceFailure(new Error(PROJECT_SETUP_PROJECT_ID_IN_URL_MUST_MATCH_PROJECT_ID_IN_MONITORING_OFFICER_RESOURCE));
+            return serviceFailure(PROJECT_SETUP_PROJECT_ID_IN_URL_MUST_MATCH_PROJECT_ID_IN_MONITORING_OFFICER_RESOURCE);
         } else {
             return serviceSuccess();
         }
@@ -515,9 +558,10 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
         return getProject(projectId).andOnSuccess(project -> {
             if (!project.isProjectDetailsSubmitted()) {
-                return serviceFailure(new Error(PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED));
+                return serviceFailure(PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED);
+            } else {
+                return serviceSuccess();
             }
-            return serviceSuccess();
         });
     }
 
@@ -546,7 +590,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     @Override
     public ServiceResult<OrganisationResource> getOrganisationByProjectAndUser(Long projectId, Long userId) {
         ProjectUser projectUser = projectUserRepository.findByProjectIdAndRoleAndUserId(projectId, PROJECT_PARTNER, userId);
-        if (projectUser != null && projectUser.getOrganisation() != null) {
+        if(projectUser != null && projectUser.getOrganisation() != null) {
             return serviceSuccess(organisationMapper.mapToResource(organisationRepository.findOne(projectUser.getOrganisation().getId())));
         } else {
             return serviceFailure(new Error(CANNOT_FIND_ORG_FOR_GIVEN_PROJECT_AND_USER, NOT_FOUND));
@@ -558,15 +602,21 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         return serviceSuccess();
     }
 
-    private void addFinanceContactToProject(Project project, ProjectUser financeContact) {
+    private ServiceResult<Void> addFinanceContactToProject(Project project, ProjectUser financeContact) {
 
-        ProjectUser existingUser = project.getExistingProjectUserWithRoleForOrganisation(ProjectParticipantRole.PROJECT_FINANCE_CONTACT, financeContact.getOrganisation());
+        ProjectUser existingUser = project.getExistingProjectUserWithRoleForOrganisation(PROJECT_FINANCE_CONTACT, financeContact.getOrganisation());
 
         if (existingUser != null) {
             project.removeProjectUser(existingUser);
         }
 
         project.addProjectUser(financeContact);
+
+        if (projectDetailsWorkflowHandler.projectFinanceContactAdded(project, getCurrentlyLoggedInPartner(project))) {
+            return serviceSuccess();
+        } else {
+            return serviceFailure(PROJECT_SETUP_CANNOT_PROGRESS_WORKFLOW);
+        }
     }
 
     private ServiceResult<ProjectUser> createFinanceContactProjectUser(User user, Project project, Organisation organisation) {
@@ -601,14 +651,58 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         return serviceSuccess(projectTeamStatusResource);
     }
 
-    private ServiceResult<Void> inviteContact(Long projectId, InviteProjectResource inviteResource, ProjectServiceImpl.Notifications kindOfNotification) {
+    private ProjectPartnerStatusResource getProjectPartnerStatus(Project project, Organisation partnerOrganisation) {
+        Organisation leadOrganisation = project.getApplication().getLeadOrganisation();
+        Optional<MonitoringOfficer> monitoringOfficer = getExistingMonitoringOfficerForProject(project.getId()).getOptionalSuccessObject();
+        Optional<BankDetails> bankDetails = Optional.ofNullable(bankDetailsRepository.findByProjectIdAndOrganisationId(project.getId(), partnerOrganisation.getId()));
+        Optional<SpendProfile> spendProfile = Optional.ofNullable(spendProfileRepository.findOneByProjectIdAndOrganisationId(project.getId(), partnerOrganisation.getId()));
+        OrganisationTypeEnum organisationType = OrganisationTypeEnum.getFromId(partnerOrganisation.getOrganisationType().getId());
+
+        ProjectActivityStates bankDetailsStatus = createBankDetailStatus(project, bankDetails, partnerOrganisation);
+        ProjectActivityStates financeChecksStatus = createFinanceCheckStatus(bankDetailsStatus);
+        ProjectActivityStates leadProjectDetailsSubmitted = createProjectDetailsStatus(project);
+        ProjectActivityStates monitoringOfficerStatus = createMonitoringOfficerStatus(monitoringOfficer, leadProjectDetailsSubmitted);
+        ProjectActivityStates spendProfileStatus = createSpendProfileStatus(financeChecksStatus, spendProfile);
+        ProjectActivityStates otherDocumentsStatus = createOtherDocumentStatus(project);
+        ProjectActivityStates grantOfferLetterStatus = createGrantOfferLetterStatus();
+
+        ProjectPartnerStatusResource projectPartnerStatusResource;
+
+        if (partnerOrganisation.equals(leadOrganisation)) {
+            projectPartnerStatusResource = new ProjectLeadStatusResource(
+                    partnerOrganisation.getName(),
+                    organisationType,
+                    leadProjectDetailsSubmitted,
+                    monitoringOfficerStatus,
+                    bankDetailsStatus,
+                    financeChecksStatus,
+                    spendProfileStatus,
+                    otherDocumentsStatus,
+                    grantOfferLetterStatus);
+        } else {
+            projectPartnerStatusResource = new ProjectPartnerStatusResource(
+                    partnerOrganisation.getName(),
+                    organisationType,
+                    leadProjectDetailsSubmitted,
+                    NOT_REQUIRED,
+                    bankDetailsStatus,
+                    financeChecksStatus,
+                    spendProfileStatus,
+                    NOT_REQUIRED,
+                    NOT_REQUIRED);
+        }
+
+        return projectPartnerStatusResource;
+    }
+
+    private ServiceResult<Void> inviteContact(Long projectId, InviteProjectResource inviteResource, Notifications kindOfNotification) {
 
         Notification notification = createInviteContactNotification(projectId, inviteResource, kindOfNotification);
         ServiceResult<Void> inviteContactEmailSendResult = notificationService.sendNotification(notification, EMAIL);
         return processAnyFailuresOrSucceed(singletonList(inviteContactEmailSendResult));
     }
 
-    private Notification createInviteContactNotification(Long projectId, InviteProjectResource inviteResource, ProjectServiceImpl.Notifications kindOfNotification) {
+    private Notification createInviteContactNotification(Long projectId, InviteProjectResource inviteResource, Notifications kindOfNotification) {
         NotificationTarget notificationTarget = createInviteContactNotificationTarget(inviteResource);
         Map<String, Object> globalArguments = createGlobalArgsForInviteContactEmail(projectId, inviteResource);
         return new Notification(systemNotificationSource, singletonList(notificationTarget),
@@ -631,5 +725,202 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     private String getInviteUrl(String baseUrl, InviteProjectResource inviteResource) {
         return String.format("%s/accept-invite/%s", baseUrl, inviteResource.getHash());
+    }
+
+    private ServiceResult<Void> validateProjectStartDate(LocalDate date) {
+
+        if (date.getDayOfMonth() != 1) {
+            return serviceFailure(PROJECT_SETUP_DATE_MUST_START_ON_FIRST_DAY_OF_MONTH);
+        }
+
+        if (date.isBefore(LocalDate.now())) {
+            return serviceFailure(PROJECT_SETUP_DATE_MUST_BE_IN_THE_FUTURE);
+        }
+
+        return serviceSuccess();
+    }
+
+
+    private ServiceResult<Project> validateIfProjectAlreadySubmitted(final Project project) {
+
+        if (project.isProjectDetailsSubmitted()) {
+            return serviceFailure(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_UPDATED_IF_ALREADY_SUBMITTED);
+        }
+
+        return serviceSuccess(project);
+    }
+
+    private ServiceResult<ProjectUser> validateProjectOrganisationFinanceContact(Project project, Long organisationId, Long financeContactUserId) {
+
+        List<ProjectUser> projectUsers = project.getProjectUsers();
+
+        List<ProjectUser> matchingUserOrganisationProcessRoles = simpleFilter(projectUsers,
+                pr -> organisationId.equals(pr.getOrganisation().getId()) && financeContactUserId.equals(pr.getUser().getId()));
+
+        if (matchingUserOrganisationProcessRoles.isEmpty()) {
+            return serviceFailure(PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_USER_ON_THE_PROJECT_FOR_THE_ORGANISATION);
+        }
+
+        List<ProjectUser> partnerUsers = simpleFilter(matchingUserOrganisationProcessRoles, ProjectUser::isPartner);
+
+        if (partnerUsers.isEmpty()) {
+            return serviceFailure(PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_PARTNER_ON_THE_PROJECT_FOR_THE_ORGANISATION);
+        }
+
+        return getOnlyElementOrFail(partnerUsers);
+    }
+
+    private ServiceResult<ProjectUser> validateProjectManager(Project project, Long projectManagerUserId) {
+
+        List<ProjectUser> leadPartners = getLeadPartners(project);
+        List<ProjectUser> matchingProjectUsers = simpleFilter(leadPartners, pu -> pu.getUser().getId().equals(projectManagerUserId));
+
+        if (!matchingProjectUsers.isEmpty()) {
+            return getOnlyElementOrFail(matchingProjectUsers);
+        } else {
+            return serviceFailure(PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_LEAD_PARTNER);
+        }
+    }
+
+    private List<ProjectUser> getLeadPartners(Project project) {
+        Application application = project.getApplication();
+        Organisation leadPartnerOrganisation = application.getLeadOrganisation();
+        return simpleFilter(project.getProjectUsers(), pu -> organisationsEqual(leadPartnerOrganisation, pu)
+                && pu.getRole().isPartner());
+    }
+
+    private boolean organisationsEqual(Organisation leadPartnerOrganisation, ProjectUser pu) {
+        return pu.getOrganisation().getId().equals(leadPartnerOrganisation.getId());
+    }
+
+    private List<ProjectResource> projectsToResources(List<Project> filtered) {
+        return simpleMap(filtered, project -> projectMapper.mapToResource(project));
+    }
+
+    private ServiceResult<Project> getProject(long projectId) {
+        return find(projectRepository.findOne(projectId), notFoundError(Project.class, projectId));
+    }
+
+    private ServiceResult<Project> getProjectByApplication(long applicationId) {
+        return find(projectRepository.findOneByApplicationId(applicationId), notFoundError(Project.class, applicationId));
+    }
+
+    private ServiceResult<ProjectResource> createProjectFromApplicationId(final Long applicationId) {
+
+        return getApplication(applicationId).andOnSuccess(application -> {
+
+            Project project = new Project();
+            project.setApplication(application);
+            project.setDurationInMonths(application.getDurationInMonths());
+            project.setName(application.getName());
+            project.setTargetStartDate(application.getStartDate());
+
+            ProcessRole leadApplicantRole = simpleFindFirst(application.getProcessRoles(), ProcessRole::isLeadApplicant).get();
+            List<ProcessRole> collaborativeRoles = simpleFilter(application.getProcessRoles(), ProcessRole::isCollaborator);
+            List<ProcessRole> allRoles = combineLists(leadApplicantRole, collaborativeRoles);
+
+            List<ServiceResult<ProjectUser>> correspondingProjectUsers = simpleMap(allRoles,
+                    role -> createPartnerProjectUser(project, role.getUser(), role.getOrganisation()));
+
+            ServiceResult<List<ProjectUser>> projectUserCollection = aggregate(correspondingProjectUsers);
+
+            ServiceResult<Project> saveProjectResult = projectUserCollection.andOnSuccessReturn(projectUsers -> {
+                projectUsers.forEach(project::addProjectUser);
+                return projectRepository.save(project);
+            });
+
+            return saveProjectResult.
+                    andOnSuccess(newProject -> createProcessEntriesForNewProject(newProject).
+                            andOnSuccessReturn(() -> projectMapper.mapToResource(newProject)));
+        });
+    }
+
+    private ServiceResult<Void> createProcessEntriesForNewProject(Project newProject) {
+
+        ProjectUser originalLeadApplicantProjectUser = newProject.getProjectUsers().get(0);
+
+        if (projectDetailsWorkflowHandler.projectCreated(newProject, originalLeadApplicantProjectUser)) {
+            return serviceSuccess();
+        } else {
+            return serviceFailure(PROJECT_SETUP_UNABLE_TO_CREATE_PROJECT_PROCESSES);
+        }
+    }
+
+    private ServiceResult<ProjectUser> createPartnerProjectUser(Project project, User user, Organisation organisation) {
+        return createProjectUserForRole(project, user, organisation, PROJECT_PARTNER);
+    }
+
+    private ServiceResult<ProjectUser> createProjectUserForRole(Project project, User user, Organisation organisation, ProjectParticipantRole role) {
+        return serviceSuccess(new ProjectUser(user, project, role, organisation));
+    }
+
+    private boolean validateDocumentsUploaded(final Project project) {
+        return project.getExploitationPlan() != null
+                && project.getCollaborationAgreement() != null
+                && getExistingProjectManager(project).isPresent()
+                && project.getDocumentsSubmittedDate() == null;
+    }
+
+    private ServiceResult<Void> createOrUpdateProjectManagerForProject(Project project, ProjectUser leadPartnerUser) {
+
+        Optional<ProjectUser> existingProjectManager = getExistingProjectManager(project);
+
+        ServiceResult<Void> setProjectManagerResult = existingProjectManager.map(pm -> {
+
+            pm.setUser(leadPartnerUser.getUser());
+            pm.setOrganisation(leadPartnerUser.getOrganisation());
+            return serviceSuccess();
+
+        }).orElseGet(() -> {
+            ProjectUser projectUser = new ProjectUser(leadPartnerUser.getUser(), leadPartnerUser.getProcess(),
+                    PROJECT_MANAGER, leadPartnerUser.getOrganisation());
+            project.addProjectUser(projectUser);
+            return serviceSuccess();
+        });
+
+        return setProjectManagerResult.andOnSuccess(() -> {
+
+            if (projectDetailsWorkflowHandler.projectManagerAdded(project, leadPartnerUser)) {
+                return serviceSuccess();
+            } else {
+                return serviceFailure(PROJECT_SETUP_CANNOT_PROGRESS_WORKFLOW);
+            }
+        });
+    }
+
+    private ProjectUser getCurrentlyLoggedInPartner(Project project) {
+        return getCurrentlyLoggedInProjectUser(project, PROJECT_PARTNER);
+    }
+
+    private ProjectUser getCurrentlyLoggedInProjectUser(Project project, ProjectParticipantRole role) {
+        UserResource currentUser = (UserResource) SecurityContextHolder.getContext().getAuthentication().getDetails();
+        return simpleFindFirst(project.getProjectUsers(), pu ->
+                pu.getUser().getId().equals(currentUser.getId()) && pu.getRole().equals(role)).get();
+    }
+
+    private List<Organisation> getPartnerOrganisations(List<ProjectUserResource> projectRoles) {
+        final Comparator<Organisation> compareById =
+                Comparator.comparingLong(Organisation::getId);
+
+        final Supplier<SortedSet<Organisation>> supplier = () -> new TreeSet<>(compareById);
+
+        SortedSet<Organisation> organisationSet = projectRoles.stream()
+                .filter(uar -> uar.getRoleName().equals(PROJECT_PARTNER.getName()))
+                .map(uar -> organisationRepository.findOne(uar.getOrganisation()))
+                .collect(Collectors.toCollection(supplier));
+
+        return new ArrayList<>(organisationSet);
+    }
+
+    private List<Organisation> getPartnerOrganisations(Long projectId) {
+        List<ProjectUser> projectUserObjs = getProjectUsersByProjectId(projectId);
+        List<ProjectUserResource> projectRoles = simpleMap(projectUserObjs, projectUserMapper::mapToResource);
+        return getPartnerOrganisations(projectRoles);
+    }
+
+    private Optional<ProjectUser> getExistingProjectManager(Project project) {
+        List<ProjectUser> projectUsers = getProjectUsersByProjectId(project.getId());
+        List<ProjectUser> projectManagers = simpleFilter(projectUsers, pu -> pu.getRole().isProjectManager());
+        return getOnlyElementOrEmpty(projectManagers);
     }
 }

@@ -118,7 +118,7 @@ public class ProjectController {
 
     @RequestMapping(value = "/{projectId}/setApplicationDetailsSubmitted", method = POST)
     public RestResult<Void> setApplicationDetailsSubmitted(@PathVariable("projectId") final Long projectId){
-        return projectService.saveProjectSubmitDateTime(projectId, LocalDateTime.now()).toPostResponse();
+        return projectService.submitProjectDetails(projectId, LocalDateTime.now()).toPostResponse();
     }
 
     @RequestMapping(value = "/{projectId}/isSubmitAllowed", method = GET)
