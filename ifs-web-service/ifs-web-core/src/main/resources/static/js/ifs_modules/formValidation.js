@@ -371,12 +371,7 @@ IFS.core.formValidation = (function(){
             var minWordsLength = parseInt(field.attr('data-minwordslength'),10);
             var value = field.val();
 
-            //regex = replace newlines with space \r\n, \n, \r
-            value = value.replace(/(\r\n|\n|\r)/gm," ");
-            //remove markdown lists ('* ','1. ','2. ','**','_') from markdown as it influences word count
-            value = value.replace(/([[0-9]+\.\ |\*\ |\*\*|_)/gm,"");
-
-            var words = jQuery.trim(value).split(' ');
+            var words = IFS.core.formValidation.countWords(value);
 
             if((words.length > 0) && (words.length < minWordsLength)){
               if(showMessage) { IFS.core.formValidation.setInvalid(field,errorMessage);}
@@ -392,12 +387,7 @@ IFS.core.formValidation = (function(){
             var maxWordsLength = parseInt(field.attr('data-maxwordslength'),10);
             var value = field.val();
 
-            //regex = replace newlines with space \r\n, \n, \r
-            value = value.replace(/(\r\n|\n|\r)/gm," ");
-            //remove markdown lists ('* ','1. ','2. ','**','_') from markdown as it influences word count
-            value = value.replace(/([[0-9]+\.\ |\*\ |\*\*|_)/gm,"");
-
-            var words = jQuery.trim(value).split(' ');
+            var words = IFS.core.formValidation.countWords(value);
 
             if(words.length > maxWordsLength){
               if(showMessage) { IFS.core.formValidation.setInvalid(field,errorMessage);}
@@ -618,6 +608,20 @@ IFS.core.formValidation = (function(){
                 return false;
               }
             }
+        },
+        countWords : function(value){
+          var val = value;
+
+          if(){
+            //regex = replace newlines with space \r\n, \n, \r
+            val = value.replace(/(\r\n|\n|\r)/gm," ");
+            //remove markdown lists ('* ','1. ','2. ','**','_') from markdown as it influences word count
+            val = value.replace(/([[0-9]+\.\ |\*\ |\*\*|_)/gm,"");
+
+            return jQuery.trim(val).split(' ');
+          } else {
+            return false;
+          }
         }
     };
 })();
