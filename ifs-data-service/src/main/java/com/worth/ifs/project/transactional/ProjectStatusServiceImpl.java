@@ -30,7 +30,7 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
                         project.getName(),
                         project.getId(),
                         project.getFormattedId(),
-                        project.getId(),
+                        project.getApplication().getId(),
                         project.getApplication().getFormattedId(),
                         getProjectPartnerCount(project.getId()),
                         project.getApplication().getLeadOrganisation().getName(),
