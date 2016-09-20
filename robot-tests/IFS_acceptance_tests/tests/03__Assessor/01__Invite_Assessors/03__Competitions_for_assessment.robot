@@ -29,7 +29,7 @@ Milestone date for assessment submission
 
 Number of days remaining until assessment submission
     [Documentation]    INFUND-4857
-    [Tags]
+    [Tags]    Pending
     Then the assessor should see the number of days remaining
     And the days remaining should be correct
 

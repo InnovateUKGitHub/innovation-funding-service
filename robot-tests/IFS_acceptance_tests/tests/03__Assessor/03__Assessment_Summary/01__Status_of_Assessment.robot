@@ -31,7 +31,7 @@ To verify all the sections are present
 
 Number of days remaining until assessment submission
     [Documentation]    INFUND-4857
-    [Tags]    HappyPath
+    [Tags]    HappyPath    Pending
     Then The user should see the text in the page    Days left to submit
     And the assessor should see the number of days remaining
     And the days remaining should be correct
