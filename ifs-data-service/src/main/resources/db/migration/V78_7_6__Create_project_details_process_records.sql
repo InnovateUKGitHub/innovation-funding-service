@@ -13,20 +13,20 @@ INSERT INTO process (end_date, event, last_modified, start_date, process_type, t
 
 
 INSERT INTO process (end_date, event, last_modified, start_date, process_type, target_id, participant_id, activity_state_id)
-  SELECT null, 'mandatory-value-added', null, null, 'ProjectDetailsProcess', p.id, pu.id, a.id
+  SELECT null, 'start-date-added', now(), null, 'ProjectDetailsProcess', p.id, pu.id, a.id
     FROM project p
     JOIN application app ON app.id = p.application_id
     JOIN process_role pr ON pr.application_id = app.id AND pr.role_id = 1
     JOIN project_user pu ON pu.project_id = p.id AND pu.user_id = pr.user_id and pu.project_role = 'PROJECT_PARTNER'
     JOIN activity_state a ON activity_type = 'PROJECT_SETUP_PROJECT_DETAILS' AND a.state = 'READY_TO_SUBMIT'
-    WHERE p.submitted_date IS NOT NULL AND
+    WHERE p.submitted_date IS NULL AND
           p.target_start_date IS NOT NULL AND
           p.address IS NOT NULL AND
-          NOT EXISTS (SELECT 1 FROM project_user pu2 JOIN organisation o WHERE NOT EXISTS (SELECT 1 FROM project_user pu3 WHERE pu3.organisation_id = o.id AND pu3.project_role = 'FINANCE_CONTACT'));
+          EXISTS (SELECT 1 FROM project_user pu2 WHERE pu2.project_role = 'PROJECT_MANAGER' AND pu2.project_id = p.id);
 
 
 INSERT INTO process (end_date, event, last_modified, start_date, process_type, target_id, participant_id, activity_state_id)
-  SELECT null, null, null, null, 'ProjectDetailsProcess', p.id, pu.id, a.id
+  SELECT null, 'pending', now(), null, 'ProjectDetailsProcess', p.id, pu.id, a.id
     FROM project p
     JOIN application app ON app.id = p.application_id
     JOIN process_role pr ON pr.application_id = app.id AND pr.role_id = 1

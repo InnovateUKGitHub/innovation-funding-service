@@ -252,7 +252,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     }
 
     @Override
-    public ServiceResult<Void> saveProjectSubmitDateTime(final Long projectId, LocalDateTime date) {
+    public ServiceResult<Void> submitProjectDetails(final Long projectId, LocalDateTime date) {
 
         return getProject(projectId).andOnSuccess(project -> {
 
@@ -261,7 +261,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
             if (projectDetailsWorkflowHandler.submitProjectDetails(project, projectUser)) {
                 return setSubmittedDate(project, date);
             } else {
-                return serviceFailure(new Error(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_SUBMITTED_IF_INCOMPLETE));
+                return serviceFailure(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_SUBMITTED_IF_INCOMPLETE);
             }
         });
     }
@@ -283,7 +283,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
                             if (validateDocumentsUploaded(project)) {
                                 return setDocumentsSubmittedDate(project, date);
                             } else {
-                                return serviceFailure(new Error(PROJECT_SETUP_OTHER_DOCUMENTS_MUST_BE_UPLOADED_BEFORE_SUBMIT));
+                                return serviceFailure(PROJECT_SETUP_OTHER_DOCUMENTS_MUST_BE_UPLOADED_BEFORE_SUBMIT);
                             }
                         }
                 ).andOnSuccessReturnVoid();
@@ -302,11 +302,11 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
                 .allMatch(serviceResult -> (serviceResult.isSuccess()) && (serviceResult.getSuccessObject().getFileEntry().getFilesizeBytes() > 0));
 
         if (!allMatch) {
-            return serviceFailure(new Error(PROJECT_SETUP_OTHER_DOCUMENTS_MUST_BE_UPLOADED_BEFORE_SUBMIT));
+            return serviceFailure(PROJECT_SETUP_OTHER_DOCUMENTS_MUST_BE_UPLOADED_BEFORE_SUBMIT);
         }
         return projectManager.isPresent()
                 && projectManager.get().getUser().getId().equals(userId) ? serviceSuccess(true)
-                : serviceFailure(new Error(PROJECT_SETUP_OTHER_DOCUMENTS_CAN_ONLY_SUBMITTED_BY_PROJECT_MANAGER));
+                : serviceFailure(PROJECT_SETUP_OTHER_DOCUMENTS_CAN_ONLY_SUBMITTED_BY_PROJECT_MANAGER);
 
     }
 
@@ -581,7 +581,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     private ServiceResult<Void> validateMonitoringOfficer(final Long projectId, final MonitoringOfficerResource monitoringOfficerResource) {
 
         if (!projectId.equals(monitoringOfficerResource.getProject())) {
-            return serviceFailure(new Error(PROJECT_SETUP_PROJECT_ID_IN_URL_MUST_MATCH_PROJECT_ID_IN_MONITORING_OFFICER_RESOURCE));
+            return serviceFailure(PROJECT_SETUP_PROJECT_ID_IN_URL_MUST_MATCH_PROJECT_ID_IN_MONITORING_OFFICER_RESOURCE);
         } else {
             return serviceSuccess();
         }
@@ -591,7 +591,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
         return getProject(projectId).andOnSuccess(project -> {
             if (!project.isProjectDetailsSubmitted()) {
-                return serviceFailure(new Error(PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED));
+                return serviceFailure(PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED);
             } else {
                 return serviceSuccess();
             }
@@ -767,11 +767,11 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     private ServiceResult<Void> validateProjectStartDate(LocalDate date) {
 
         if (date.getDayOfMonth() != 1) {
-            return serviceFailure(new Error(PROJECT_SETUP_DATE_MUST_START_ON_FIRST_DAY_OF_MONTH));
+            return serviceFailure(PROJECT_SETUP_DATE_MUST_START_ON_FIRST_DAY_OF_MONTH);
         }
 
         if (date.isBefore(LocalDate.now())) {
-            return serviceFailure(new Error(PROJECT_SETUP_DATE_MUST_BE_IN_THE_FUTURE));
+            return serviceFailure(PROJECT_SETUP_DATE_MUST_BE_IN_THE_FUTURE);
         }
 
         return serviceSuccess();
@@ -780,7 +780,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     private ServiceResult<Project> validateIfProjectAlreadySubmitted(final Project project) {
 
         if (project.isProjectDetailsSubmitted()) {
-            return serviceFailure(new Error(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_UPDATED_IF_ALREADY_SUBMITTED));
+            return serviceFailure(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_UPDATED_IF_ALREADY_SUBMITTED);
         }
 
         return serviceSuccess(project);
@@ -794,13 +794,13 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
                 pr -> organisationId.equals(pr.getOrganisation().getId()) && financeContactUserId.equals(pr.getUser().getId()));
 
         if (matchingUserOrganisationProcessRoles.isEmpty()) {
-            return serviceFailure(new Error(PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_USER_ON_THE_PROJECT_FOR_THE_ORGANISATION));
+            return serviceFailure(PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_USER_ON_THE_PROJECT_FOR_THE_ORGANISATION);
         }
 
         List<ProjectUser> partnerUsers = simpleFilter(matchingUserOrganisationProcessRoles, ProjectUser::isPartner);
 
         if (partnerUsers.isEmpty()) {
-            return serviceFailure(new Error(PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_PARTNER_ON_THE_PROJECT_FOR_THE_ORGANISATION));
+            return serviceFailure(PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_PARTNER_ON_THE_PROJECT_FOR_THE_ORGANISATION);
         }
 
         return getOnlyElementOrFail(partnerUsers);
@@ -814,7 +814,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         if (!matchingProjectUsers.isEmpty()) {
             return getOnlyElementOrFail(matchingProjectUsers);
         } else {
-            return serviceFailure(new Error(PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_LEAD_PARTNER));
+            return serviceFailure(PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_LEAD_PARTNER);
         }
     }
 
@@ -866,7 +866,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         if (projectDetailsWorkflowHandler.projectCreated(newProject, originalLeadApplicantProjectUser)) {
             return serviceSuccess();
         } else {
-            return serviceFailure(new Error(PROJECT_SETUP_UNABLE_TO_CREATE_PROJECT_PROCESSES));
+            return serviceFailure(PROJECT_SETUP_UNABLE_TO_CREATE_PROJECT_PROCESSES);
         }
     }
 

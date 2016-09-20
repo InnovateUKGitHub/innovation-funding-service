@@ -437,8 +437,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         long userIdForUserNotOnProject = 6L;
 
-        Role partnerRole = newRole().withType(PARTNER).build();
-
         Project existingProject = newProject().withId(123L).build();
         Project anotherProject = newProject().withId(9999L).build();
 
@@ -676,6 +674,35 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         ServiceResult<Void> result = service.updateProjectAddress(leadOrganisation.getId(), project.getId(), PROJECT, newAddressResource);
         assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void testSubmitProjectDetails() {
+
+        LocalDateTime now = LocalDateTime.now();
+
+        when(projectDetailsWorkflowServiceMock.submitProjectDetails(project, leadPartnerProjectUser)).thenReturn(true);
+
+        setLoggedInUser(newUserResource().withId(user.getId()).build());
+
+        ServiceResult<Void> result = service.submitProjectDetails(project.getId(), now);
+        assertTrue(result.isSuccess());
+        assertEquals(now, project.getSubmittedDate());
+    }
+
+    @Test
+    public void testSubmitProjectDetailsButSubmissionNotAllowed() {
+
+        LocalDateTime now = LocalDateTime.now();
+
+        when(projectDetailsWorkflowServiceMock.submitProjectDetails(project, leadPartnerProjectUser)).thenReturn(false);
+
+        setLoggedInUser(newUserResource().withId(user.getId()).build());
+
+        ServiceResult<Void> result = service.submitProjectDetails(project.getId(), now);
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_SUBMITTED_IF_INCOMPLETE));
+        assertNotEquals(now, project.getSubmittedDate());
     }
 
     @Test
