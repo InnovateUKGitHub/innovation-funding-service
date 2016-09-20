@@ -147,9 +147,18 @@ function startServers {
 function resetDocker {
     echo "********RESETTING DOCKERIZED ENVIRONMENT******************"
     cd ${scriptDir}
-    ../setup-files/scripts/docker/migrate.sh
-    ../setup-files/scripts/docker/startup.sh
-    ../setup-files/scripts/docker/deploy.sh all
+    cd ../setup-files/scripts/docker
+    docker-machine stop
+    wait
+    docker-machine start
+    wait
+    ./migrate.sh
+    wait
+    ./startup.sh
+    wait
+    ./deploy.sh all
+    wait
+    cd -
 }
 
 function runTests {
