@@ -28,10 +28,15 @@ public class ProjectPartnerStatusResource {
     private ProjectActivityStates financeChecksStatus;
     private ProjectActivityStates spendProfileStatus;
 
+    // TODO DW - INFUND-4915 - implement
+    private ProjectActivityStates companiesHouseStatus;
+    private ProjectActivityStates financeContactStatus;
+
     /* Following properties are only applicable to lead partner */
     private ProjectActivityStates monitoringOfficerStatus;
     private ProjectActivityStates otherDocumentsStatus;
     private ProjectActivityStates grantOfferLetterStatus;
+
 
     //Required for Json Mapping.
     public ProjectPartnerStatusResource() {}
@@ -127,6 +132,22 @@ public class ProjectPartnerStatusResource {
 
     public void setGrantOfferLetterStatus(ProjectActivityStates grantOfferLetterStatus) {
         this.grantOfferLetterStatus = grantOfferLetterStatus;
+    }
+
+    public ProjectActivityStates getCompaniesHouseStatus() {
+        return companiesHouseStatus;
+    }
+
+    public void setCompaniesHouseStatus(ProjectActivityStates companiesHouseStatus) {
+        this.companiesHouseStatus = companiesHouseStatus;
+    }
+
+    public ProjectActivityStates getFinanceContactStatus() {
+        return financeContactStatus;
+    }
+
+    public void setFinanceContactStatus(ProjectActivityStates financeContactStatus) {
+        this.financeContactStatus = financeContactStatus;
     }
 
     @Override

@@ -3,7 +3,10 @@ package com.worth.ifs.project.sections;
 import com.worth.ifs.project.resource.ProjectPartnerStatusResource;
 import com.worth.ifs.project.resource.ProjectTeamStatusResource;
 import com.worth.ifs.user.resource.OrganisationResource;
+import com.worth.ifs.user.resource.OrganisationTypeEnum;
 
+import static com.worth.ifs.project.constant.ProjectActivityStates.COMPLETE;
+import static com.worth.ifs.project.constant.ProjectActivityStates.PENDING;
 import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
@@ -14,48 +17,39 @@ class ProjectSetupProgressChecker {
 
     private ProjectTeamStatusResource projectTeamStatus;
 
+    public ProjectSetupProgressChecker(ProjectTeamStatusResource projectTeamStatus) {
+        this.projectTeamStatus = projectTeamStatus;
+    }
+
     public boolean isCompaniesHouseDetailsComplete(OrganisationResource organisation) {
-
-
-        ProjectPartnerStatusResource matchingPartner = simpleFindFirst(projectTeamStatus.getPartnerStatuses(), status -> status.getOrganisationId().equals(organisation.getId())).get();
-        // TODO DW - implement
-        return true;
+        return COMPLETE.equals(getMatchingPartnerStatus(organisation).getCompaniesHouseStatus());
     }
 
     public boolean isBusinessOrganisationType(OrganisationResource organisation) {
-
-        // TODO DW - implement
-        return false;
+        return !OrganisationTypeEnum.isResearch(organisation.getOrganisationType());
     }
 
-
     public boolean isProjectDetailsSectionComplete() {
-
-        // TODO DW - implement
-        return true;
+        return COMPLETE.equals(projectTeamStatus.getLeadPartnerStatus().getProjectDetailsStatus());
     }
 
     public boolean isFinanceContactSubmitted(OrganisationResource organisation) {
-
-        // TODO DW - implement
-        return true;
+        return COMPLETE.equals(getMatchingPartnerStatus(organisation).getFinanceContactStatus());
     }
 
     public boolean isBankDetailsApproved(OrganisationResource organisation) {
-
-        // TODO DW - implement
-        return true;
+        return COMPLETE.equals(getMatchingPartnerStatus(organisation).getBankDetailsStatus());
     }
 
     public boolean isBankDetailsQueried(OrganisationResource organisation) {
-
-        // TODO DW - implement
-        return true;
+        return PENDING.equals(getMatchingPartnerStatus(organisation).getBankDetailsStatus());
     }
 
     public boolean isSpendProfileGenerated() {
+        return COMPLETE.equals(projectTeamStatus.getLeadPartnerStatus().getSpendProfileStatus());
+    }
 
-        // TODO DW - implement
-        return true;
+    private ProjectPartnerStatusResource getMatchingPartnerStatus(OrganisationResource organisation) {
+        return simpleFindFirst(projectTeamStatus.getPartnerStatuses(), status -> status.getOrganisationId().equals(organisation.getId())).get();
     }
 }

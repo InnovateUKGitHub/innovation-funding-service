@@ -42,6 +42,7 @@ public enum OrganisationTypeEnum {
     public static OrganisationTypeEnum getFromId(Long organisationTypeId){
         return lookup.get(organisationTypeId);
     }
+
     public static boolean isResearch(OrganisationTypeEnum organisationType){
         return organisationType.equals(RESEARCH) || (organisationType.getParentOrganisationType() != null && organisationType.getParentOrganisationType().equals(RESEARCH));
     }
