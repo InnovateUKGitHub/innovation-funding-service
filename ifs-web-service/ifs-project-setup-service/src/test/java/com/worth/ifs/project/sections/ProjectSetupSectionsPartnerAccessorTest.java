@@ -32,184 +32,184 @@ public class ProjectSetupSectionsPartnerAccessorTest extends BaseUnitTest {
     @Test
     public void testCheckAccessToCompaniesHouseSectionHappyPath() {
 
-        when(projectSetupProgressCheckerMock.isBusinessOrganisationType(project, user, organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isBusinessOrganisationType(organisation)).thenReturn(true);
 
-        accessor.checkAccessToCompaniesHouseSection(project, user, organisation);
+        accessor.checkAccessToCompaniesHouseSection(organisation);
 
-        verifyInteractions(mock -> mock.isBusinessOrganisationType(project, user, organisation));
+        verifyInteractions(mock -> mock.isBusinessOrganisationType(organisation));
     }
 
     @Test(expected = ForbiddenActionException.class)
     public void testCheckAccessToCompaniesHouseSectionButOrganisationIsNotBusiness() {
 
-        when(projectSetupProgressCheckerMock.isBusinessOrganisationType(project, user, organisation)).thenReturn(false);
+        when(projectSetupProgressCheckerMock.isBusinessOrganisationType(organisation)).thenReturn(false);
 
-        accessor.checkAccessToCompaniesHouseSection(project, user, organisation);
+        accessor.checkAccessToCompaniesHouseSection(organisation);
 
-        verifyInteractions(mock -> mock.isBusinessOrganisationType(project, user, organisation));
+        verifyInteractions(mock -> mock.isBusinessOrganisationType(organisation));
     }
 
     @Test
     public void testCheckAccessToProjectDetailsSectionHappyPathForBusinessOrganisation() {
 
-        when(projectSetupProgressCheckerMock.isBusinessOrganisationType(project, user, organisation)).thenReturn(true);
-        when(projectSetupProgressCheckerMock.isCompaniesHouseDetailsComplete(project, user, organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isBusinessOrganisationType(organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
 
-        accessor.checkAccessToProjectDetailsSection(project, user, organisation);
+        accessor.checkAccessToProjectDetailsSection(organisation);
 
         verifyInteractions(
-                mock -> mock.isBusinessOrganisationType(project, user, organisation),
-                mock -> mock.isCompaniesHouseDetailsComplete(project, user, organisation)
+                mock -> mock.isBusinessOrganisationType(organisation),
+                mock -> mock.isCompaniesHouseDetailsComplete(organisation)
         );
     }
 
     @Test
     public void testCheckAccessToProjectDetailsSectionHappyPathForNonBusinessTypeOrganisation() {
 
-        when(projectSetupProgressCheckerMock.isBusinessOrganisationType(project, user, organisation)).thenReturn(false);
+        when(projectSetupProgressCheckerMock.isBusinessOrganisationType(organisation)).thenReturn(false);
 
-        accessor.checkAccessToProjectDetailsSection(project, user, organisation);
+        accessor.checkAccessToProjectDetailsSection(organisation);
 
-        verifyInteractions(mock -> mock.isBusinessOrganisationType(project, user, organisation));
+        verifyInteractions(mock -> mock.isBusinessOrganisationType(organisation));
     }
 
     @Test(expected = ForbiddenActionException.class)
     public void testCheckAccessToProjectDetailsSectionButCompaniesHouseSectionIncomplete() {
 
-        when(projectSetupProgressCheckerMock.isBusinessOrganisationType(project, user, organisation)).thenReturn(true);
-        when(projectSetupProgressCheckerMock.isCompaniesHouseDetailsComplete(project, user, organisation)).thenReturn(false);
+        when(projectSetupProgressCheckerMock.isBusinessOrganisationType(organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(false);
 
-        accessor.checkAccessToProjectDetailsSection(project, user, organisation);
+        accessor.checkAccessToProjectDetailsSection(organisation);
 
         verifyInteractions(
-                mock -> mock.isBusinessOrganisationType(project, user, organisation),
-                mock -> mock.isCompaniesHouseDetailsComplete(project, user, organisation)
+                mock -> mock.isBusinessOrganisationType(organisation),
+                mock -> mock.isCompaniesHouseDetailsComplete(organisation)
         );
     }
 
     @Test
     public void testCheckAccessToMonitoringOfficerSectionHappyPath() {
 
-        when(projectSetupProgressCheckerMock.isBusinessOrganisationType(project, user, organisation)).thenReturn(true);
-        when(projectSetupProgressCheckerMock.isCompaniesHouseDetailsComplete(project, user, organisation)).thenReturn(true);
-        when(projectSetupProgressCheckerMock.isProjectDetailsSectionComplete(project, user, organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isBusinessOrganisationType(organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isProjectDetailsSectionComplete()).thenReturn(true);
 
-        accessor.checkAccessToMonitoringOfficerSection(project, user, organisation);
+        accessor.checkAccessToMonitoringOfficerSection(organisation);
 
         verifyInteractions(
-                mock -> mock.isBusinessOrganisationType(project, user, organisation),
-                mock -> mock.isCompaniesHouseDetailsComplete(project, user, organisation),
-                mock -> mock.isProjectDetailsSectionComplete(project, user, organisation)
+                mock -> mock.isBusinessOrganisationType(organisation),
+                mock -> mock.isCompaniesHouseDetailsComplete(organisation),
+                mock -> mock.isProjectDetailsSectionComplete()
         );
     }
 
     @Test(expected = ForbiddenActionException.class)
     public void testCheckAccessToMonitoringOfficerSectionButProjectDetailsSectionIncomplete() {
-        when(projectSetupProgressCheckerMock.isProjectDetailsSectionComplete(project, user, organisation)).thenReturn(false);
-        accessor.checkAccessToMonitoringOfficerSection(project, user, organisation);
+        when(projectSetupProgressCheckerMock.isProjectDetailsSectionComplete()).thenReturn(false);
+        accessor.checkAccessToMonitoringOfficerSection(organisation);
     }
 
     @Test
     public void testCheckAccessToBankDetailsSectionHappyPath() {
 
-        when(projectSetupProgressCheckerMock.isBusinessOrganisationType(project, user, organisation)).thenReturn(true);
-        when(projectSetupProgressCheckerMock.isCompaniesHouseDetailsComplete(project, user, organisation)).thenReturn(true);
-        when(projectSetupProgressCheckerMock.isFinanceContactSubmitted(project, user, organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isBusinessOrganisationType(organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isFinanceContactSubmitted(organisation)).thenReturn(true);
 
-        accessor.checkAccessToBankDetailsSection(project, user, organisation);
+        accessor.checkAccessToBankDetailsSection(organisation);
 
         verifyInteractions(
-                mock -> mock.isBusinessOrganisationType(project, user, organisation),
-                mock -> mock.isCompaniesHouseDetailsComplete(project, user, organisation),
-                mock -> mock.isFinanceContactSubmitted(project, user, organisation)
+                mock -> mock.isBusinessOrganisationType(organisation),
+                mock -> mock.isCompaniesHouseDetailsComplete(organisation),
+                mock -> mock.isFinanceContactSubmitted(organisation)
         );
     }
 
     @Test(expected = ForbiddenActionException.class)
     public void testCheckAccessToBankDetailsSectionButFinanceContactNotYetSubmitted() {
 
-        when(projectSetupProgressCheckerMock.isBusinessOrganisationType(project, user, organisation)).thenReturn(true);
-        when(projectSetupProgressCheckerMock.isCompaniesHouseDetailsComplete(project, user, organisation)).thenReturn(true);
-        when(projectSetupProgressCheckerMock.isFinanceContactSubmitted(project, user, organisation)).thenReturn(false);
+        when(projectSetupProgressCheckerMock.isBusinessOrganisationType(organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isFinanceContactSubmitted(organisation)).thenReturn(false);
 
-        accessor.checkAccessToBankDetailsSection(project, user, organisation);
+        accessor.checkAccessToBankDetailsSection(organisation);
     }
 
     @Test
     public void testCheckAccessToFinanceChecksSectionHappyPathWhenBankDetailsApproved() {
 
-        when(projectSetupProgressCheckerMock.isBusinessOrganisationType(project, user, organisation)).thenReturn(true);
-        when(projectSetupProgressCheckerMock.isCompaniesHouseDetailsComplete(project, user, organisation)).thenReturn(true);
-        when(projectSetupProgressCheckerMock.isProjectDetailsSectionComplete(project, user, organisation)).thenReturn(true);
-        when(projectSetupProgressCheckerMock.isBankDetailsApproved(project, user, organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isBusinessOrganisationType(organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isProjectDetailsSectionComplete()).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isBankDetailsApproved(organisation)).thenReturn(true);
 
-        accessor.checkAccessToFinanceChecksSection(project, user, organisation);
+        accessor.checkAccessToFinanceChecksSection(organisation);
 
         verifyInteractions(
-                mock -> mock.isBusinessOrganisationType(project, user, organisation),
-                mock -> mock.isCompaniesHouseDetailsComplete(project, user, organisation),
-                mock -> mock.isProjectDetailsSectionComplete(project, user, organisation),
-                mock -> mock.isBankDetailsApproved(project, user, organisation)
+                mock -> mock.isBusinessOrganisationType(organisation),
+                mock -> mock.isCompaniesHouseDetailsComplete(organisation),
+                mock -> mock.isProjectDetailsSectionComplete(),
+                mock -> mock.isBankDetailsApproved(organisation)
         );
     }
 
     @Test
     public void testCheckAccessToFinanceChecksSectionHappyPathWhenBankDetailsQueried() {
 
-        when(projectSetupProgressCheckerMock.isBusinessOrganisationType(project, user, organisation)).thenReturn(true);
-        when(projectSetupProgressCheckerMock.isCompaniesHouseDetailsComplete(project, user, organisation)).thenReturn(true);
-        when(projectSetupProgressCheckerMock.isProjectDetailsSectionComplete(project, user, organisation)).thenReturn(true);
-        when(projectSetupProgressCheckerMock.isBankDetailsApproved(project, user, organisation)).thenReturn(false);
-        when(projectSetupProgressCheckerMock.isBankDetailsQueried(project, user, organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isBusinessOrganisationType(organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isProjectDetailsSectionComplete()).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isBankDetailsApproved(organisation)).thenReturn(false);
+        when(projectSetupProgressCheckerMock.isBankDetailsQueried(organisation)).thenReturn(true);
 
-        accessor.checkAccessToFinanceChecksSection(project, user, organisation);
+        accessor.checkAccessToFinanceChecksSection(organisation);
 
         verifyInteractions(
-                mock -> mock.isBusinessOrganisationType(project, user, organisation),
-                mock -> mock.isCompaniesHouseDetailsComplete(project, user, organisation),
-                mock -> mock.isProjectDetailsSectionComplete(project, user, organisation),
-                mock -> mock.isBankDetailsApproved(project, user, organisation),
-                mock -> mock.isBankDetailsQueried(project, user, organisation)
+                mock -> mock.isBusinessOrganisationType(organisation),
+                mock -> mock.isCompaniesHouseDetailsComplete(organisation),
+                mock -> mock.isProjectDetailsSectionComplete(),
+                mock -> mock.isBankDetailsApproved(organisation),
+                mock -> mock.isBankDetailsQueried(organisation)
         );
     }
 
     @Test(expected = ForbiddenActionException.class)
     public void testCheckAccessToFinanceChecksSectionButBankDetailsNotApprovedOrQueried() {
 
-        when(projectSetupProgressCheckerMock.isBusinessOrganisationType(project, user, organisation)).thenReturn(true);
-        when(projectSetupProgressCheckerMock.isCompaniesHouseDetailsComplete(project, user, organisation)).thenReturn(true);
-        when(projectSetupProgressCheckerMock.isProjectDetailsSectionComplete(project, user, organisation)).thenReturn(true);
-        when(projectSetupProgressCheckerMock.isBankDetailsApproved(project, user, organisation)).thenReturn(false);
-        when(projectSetupProgressCheckerMock.isBankDetailsQueried(project, user, organisation)).thenReturn(false);
+        when(projectSetupProgressCheckerMock.isBusinessOrganisationType(organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isProjectDetailsSectionComplete()).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isBankDetailsApproved(organisation)).thenReturn(false);
+        when(projectSetupProgressCheckerMock.isBankDetailsQueried(organisation)).thenReturn(false);
 
-        accessor.checkAccessToFinanceChecksSection(project, user, organisation);
+        accessor.checkAccessToFinanceChecksSection(organisation);
     }
 
     @Test
     public void testCheckAccessToSpendProfileSectionHappyPath() {
 
-        when(projectSetupProgressCheckerMock.isBusinessOrganisationType(project, user, organisation)).thenReturn(true);
-        when(projectSetupProgressCheckerMock.isCompaniesHouseDetailsComplete(project, user, organisation)).thenReturn(true);
-        when(projectSetupProgressCheckerMock.isProjectDetailsSectionComplete(project, user, organisation)).thenReturn(true);
-        when(projectSetupProgressCheckerMock.isBankDetailsApproved(project, user, organisation)).thenReturn(true);
-        when(projectSetupProgressCheckerMock.isSpendProfileGenerated(project, user, organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isBusinessOrganisationType(organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isProjectDetailsSectionComplete()).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isBankDetailsApproved(organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isSpendProfileGenerated()).thenReturn(true);
 
-        accessor.checkAccessToSpendProfileSection(project, user, organisation);
+        accessor.checkAccessToSpendProfileSection(organisation);
 
         verifyInteractions(
-                mock -> mock.isBusinessOrganisationType(project, user, organisation),
-                mock -> mock.isCompaniesHouseDetailsComplete(project, user, organisation),
-                mock -> mock.isProjectDetailsSectionComplete(project, user, organisation),
-                mock -> mock.isBankDetailsApproved(project, user, organisation),
-                mock -> mock.isSpendProfileGenerated(project, user, organisation)
+                mock -> mock.isBusinessOrganisationType(organisation),
+                mock -> mock.isCompaniesHouseDetailsComplete(organisation),
+                mock -> mock.isProjectDetailsSectionComplete(),
+                mock -> mock.isBankDetailsApproved(organisation),
+                mock -> mock.isSpendProfileGenerated()
         );
     }
 
     @Test(expected = ForbiddenActionException.class)
     public void testCheckAccessToSpendProfileSectionButSpendProfileNotYetGenerated() {
 
-        when(projectSetupProgressCheckerMock.isSpendProfileGenerated(project, user, organisation)).thenReturn(false);
-        accessor.checkAccessToFinanceChecksSection(project, user, organisation);
+        when(projectSetupProgressCheckerMock.isSpendProfileGenerated()).thenReturn(false);
+        accessor.checkAccessToFinanceChecksSection(organisation);
     }
 
     @SafeVarargs
