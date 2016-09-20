@@ -9,4 +9,6 @@ package com.worth.ifs.invite.domain;
  * @see com.worth.ifs.workflow.domain.Process
  */
 public interface ProcessActivity {
+
+    Long getId();
 }

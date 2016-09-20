@@ -2,7 +2,6 @@ package com.worth.ifs.finance.resource;
 
 import com.worth.ifs.BaseUnitTestMocksTest;
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.resource.cost.Materials;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.resource.OrganisationSize;
@@ -13,7 +12,6 @@ import java.math.BigDecimal;
 
 import static com.worth.ifs.BuilderAmendFunctions.clearUniqueIds;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
-import static com.worth.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
 import static com.worth.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.junit.Assert.assertEquals;
@@ -73,7 +71,7 @@ public class ApplicationFinanceResourceTest extends BaseUnitTestMocksTest {
                 .withOrganisation(organisation.getId()).build();
 
         assertEquals(applicationFinanceResource.getApplication(), new Long(1L));
-        assertEquals(applicationFinanceResource.getOrganisation(), new Long(1L));
+        assertEquals(applicationFinanceResource.getOrganisation(), new Long(2L));
     }
 
     @Test
