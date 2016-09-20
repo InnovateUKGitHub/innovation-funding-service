@@ -28,7 +28,10 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
         List<ProjectStatusResource> projectStatusResources = projects.stream().map(project ->
                 new ProjectStatusResource(
                         project.getName(),
-                        project.getId() + "",
+                        project.getId(),
+                        project.getFormattedId(),
+                        project.getId(),
+                        project.getApplication().getFormattedId(),
                         getProjectPartnerCount(project.getId()),
                         project.getApplication().getLeadOrganisation().getName(),
                         getProjectDetailsStatus(project),
@@ -40,7 +43,7 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
                         getGrantOfferLetterStatus(project))).collect(Collectors.toList());
 
 
-        CompetitionProjectsStatusResource competitionProjectsStatusResource = new CompetitionProjectsStatusResource(competition.getId() + "",competition.getName(), projectStatusResources);
+        CompetitionProjectsStatusResource competitionProjectsStatusResource = new CompetitionProjectsStatusResource(competition.getId(), competition.getFormattedId(), competition.getName(), projectStatusResources);
 
         return ServiceResult.serviceSuccess(competitionProjectsStatusResource);
     }

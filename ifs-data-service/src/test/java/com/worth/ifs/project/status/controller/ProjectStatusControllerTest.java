@@ -22,7 +22,7 @@ public class ProjectStatusControllerTest extends BaseControllerMockMVCTest<Proje
         final Long competitionId = 123L;
         final CompetitionProjectsStatusResource cpsr = newCompetitionProjectsStatusResource().
                 withCompetitionName("ABC").
-                withCompetitionNumber("123456").
+                withCompetitionNumber(competitionId).
                 withProjectStatusResources(newProjectStatusResource().withProjectNumber().build(3)).build();
         ServiceResult<CompetitionProjectsStatusResource> expected = serviceSuccess(cpsr);
         when(projectStatusServiceMock.getCompetitionStatus(competitionId)).thenReturn(expected);
