@@ -15,6 +15,8 @@ import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
+import java.util.List;
+
 import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static com.worth.ifs.assessment.builder.ProcessOutcomeBuilder.newProcessOutcome;
@@ -26,8 +28,7 @@ import static com.worth.ifs.commons.error.Error.fieldError;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
 import static java.util.Collections.nCopies;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.*;
 
@@ -43,9 +44,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
     public void findById() throws Exception {
         Long assessmentId = 1L;
 
-        Assessment assessment = newAssessment()
-                .build();
-
+        Assessment assessment = newAssessment().build();
         AssessmentResource expected = newAssessmentResource().build();
 
         when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
@@ -55,6 +54,24 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
         assertSame(expected, found);
         verify(assessmentRepositoryMock, only()).findOne(assessmentId);
+    }
+
+    @Test
+    public void findByUserAndCompetition() throws Exception {
+        Long userId = 2L;
+        Long competitionId = 1L;
+
+        List<Assessment> assessments = newAssessment().build(2);
+        List<AssessmentResource> expected = newAssessmentResource().build(2);
+
+        when(assessmentRepositoryMock.findByParticipantUserIdAndParticipantApplicationCompetitionId(userId, competitionId)).thenReturn(assessments);
+        when(assessmentMapperMock.mapToResource(same(assessments.get(0)))).thenReturn(expected.get(0));
+        when(assessmentMapperMock.mapToResource(same(assessments.get(1)))).thenReturn(expected.get(1));
+
+        List<AssessmentResource> found = assessmentService.findByUserAndCompetition(userId, competitionId).getSuccessObject();
+
+        assertEquals(expected, found);
+        verify(assessmentRepositoryMock, only()).findByParticipantUserIdAndParticipantApplicationCompetitionId(userId, competitionId);
     }
 
     @Test

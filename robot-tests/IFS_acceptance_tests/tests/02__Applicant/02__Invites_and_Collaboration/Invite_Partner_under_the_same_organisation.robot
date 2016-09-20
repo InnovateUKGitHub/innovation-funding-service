@@ -2,7 +2,7 @@
 Documentation     INFUND-3262: Wrong invitees show when invite new collaborators
 Suite Setup       Given Guest user log-in    &{lead_applicant_credentials}
 Suite Teardown    the user closes the browser
-Force Tags        Applicant    Collaboration
+Force Tags        Applicant
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
