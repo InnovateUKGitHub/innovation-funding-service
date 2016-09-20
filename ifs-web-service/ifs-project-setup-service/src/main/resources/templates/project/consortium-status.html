@@ -35,8 +35,8 @@
               </tr>
             </thead>
             <tbody>
-              <tr th:include="project/fragments :: consortium-partner-status-row(${model.leadPartner})" />
-              <th:block th:each="partner : ${model.otherPartners}">
+              <tr th:include="project/fragments :: consortium-partner-status-row(${model.projectTeamStatusResource.leadPartnerStatus})" th:if="${model.projectTeamStatusResource.leadPartnerStatus}"/>
+              <th:block th:each="partner : ${model.projectTeamStatusResource.otherPartnersStatuses}">
                   <tr th:include="project/fragments :: consortium-partner-status-row(${partner})"/>
               </th:block>
               </tbody>

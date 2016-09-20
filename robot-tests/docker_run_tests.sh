@@ -25,12 +25,31 @@ function coloredEcho(){
     tput sgr0;
 }
 
+function clearDownFileRepository() {
+    echo "***********Deleting any uploaded files***************"
+    echo "storedFileFolder:   ${storedFileFolder}"
+    docker exec ifs_data_1  rm -rf ${storedFileFolder}
+
+    echo "***********Deleting any holding for scan files***************"
+    echo "virusScanHoldingFolder: ${virusScanHoldingFolder}"
+    docker exec ifs_data_1  rm -rf ${virusScanHoldingFolder}
+
+    echo "***********Deleting any quarantined files***************"
+    echo "virusScanQuarantinedFolder: ${virusScanQuarantinedFolder}"
+    docker exec ifs_data_1  rm -rf ${virusScanQuarantinedFolder}
+
+    echo "***********Deleting any scanned files***************"
+    echo "virusScanScannedFolder: ${virusScanScannedFolder}"
+    docker exec ifs_data_1  rm -rf ${virusScanScannedFolder}
+}
+
 function addTestFiles() {
+    clearDownFileRepository
     echo "***********Adding test files***************"
     echo "***********Making the quarantined directory ***************"
-    docker-compose -p ifs exec data mkdir -p ${virusScanQuarantinedFolder}
+    docker exec ifs_data_1 mkdir -p ${virusScanQuarantinedFolder}
     echo "***********Adding pretend quarantined file ***************"
-    docker-compose -p ifs exec data cp -R ${uploadFileDir}/8 ${virusScanQuarantinedFolder}/8
+    docker exec ifs_data_1 cp /tmp/ifs-local/8 ${virusScanQuarantinedFolder}/8
 }
 
 function resetLDAP() {
@@ -73,28 +92,31 @@ function buildAndDeploy() {
 
 }
 
-function startServers() {
-    cd ../setup-files/scripts/docker
-    ./startup.sh
-    wait
-}
-
 function startSeleniumGrid() {
     cd ../robot-tests
     cd ${testDirectory}
     cd ${scriptDir}
 
-    if [ "$parallel" ]
+    if [[ $parallel -eq 1 ]]
     then
       declare -i suiteCount=$(find ${testDirectory}/* -maxdepth 0 -type d | wc -l)
     else
       declare -i suiteCount=1
     fi
+    if [[ $suiteCount -eq 0 ]]
+    then
+      suiteCount=1
+    fi
     echo ${suiteCount}
     docker-compose -p robot up -d
     docker-compose -p robot scale chrome=${suiteCount}
     unset suiteCount
-}
+    if [[ $quickTest -eq 1 ]]
+    then
+      echo "waiting 5 seconds for the grid to be properly started"
+      sleep 5
+    fi    
+  }
 
 function stopSeleniumGrid() {
     cd ../robot-tests
@@ -114,14 +136,14 @@ function startPybot() {
     fi
     if [[ $emails -eq 1 ]]
       then
-        local excludeEmails=''
+        local emailsString='--exclude Email'
       else
-        local excludeEmails='--exclude Email'
+        local emailsString=''
     fi
     if [[ $rerunFailed -eq 1 ]]; then
-    	pybot --outputdir target/${targetDir} --rerunfailed target/${targetDir}/output.xml --output rerun.xml --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:${postcodeLookupImplemented} -v UPLOAD_FOLDER:${uploadFileDir} -v DOWNLOAD_FOLDER:download_files -v BROWSER=chrome -v REMOTE_URL:'http://ifs-local-dev:4444/wd/hub' ${includeHappyPath} --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal ${excludeEmails} --name ${targetDir} ${1}/* &
+    	pybot --outputdir target/${targetDir} --rerunfailed target/${targetDir}/output.xml --output rerun.xml --pythonpath IFS_acceptance_tests/libs -v docker:1 -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:${postcodeLookupImplemented} -v UPLOAD_FOLDER:${uploadFileDir} -v DOWNLOAD_FOLDER:download_files -v BROWSER=chrome -v REMOTE_URL:'http://ifs-local-dev:4444/wd/hub' ${includeHappyPath} --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal ${emailsString} --name ${targetDir} ${1} &
     else
-    	pybot --outputdir target/${targetDir} --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:${postcodeLookupImplemented} -v UPLOAD_FOLDER:${uploadFileDir} -v DOWNLOAD_FOLDER:download_files -v BROWSER=chrome -v REMOTE_URL:'http://ifs-local-dev:4444/wd/hub' ${includeHappyPath} --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal ${excludeEmails} --name ${targetDir} ${1}/* &
+    	pybot --outputdir target/${targetDir} --pythonpath IFS_acceptance_tests/libs -v docker:1 -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:${postcodeLookupImplemented} -v UPLOAD_FOLDER:${uploadFileDir} -v DOWNLOAD_FOLDER:download_files -v BROWSER=chrome -v REMOTE_URL:'http://ifs-local-dev:4444/wd/hub' ${includeHappyPath} --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal ${emailsString} --name ${targetDir} ${1} &
     fi
 }
 
@@ -129,7 +151,7 @@ function runTests() {
     echo "**********RUN THE WEB TESTS**********"
     cd ${scriptDir}
 
-    if [[ "$parallel" ]]
+    if [[ $parallel -eq 1 ]]
     then
       for D in `find ${testDirectory}/* -maxdepth 0 -type d`
       do
@@ -144,11 +166,17 @@ function runTests() {
         wait $job
     done
 
-    if [[ "$parallel" ]]
+    if [[ $parallel -eq 1 ]]
     then
       results=`find target/* -regex ".*/output\.xml"`
       rebot -d target ${results}
     fi
+}
+
+function clearOldReports() {
+  echo "**********REMOVING OLD REPORTS**********"
+  rm -rf target
+  mkdir target
 }
 
 setEnv
@@ -156,13 +184,18 @@ cd "$(dirname "$0")"
 echo "********GETTING ALL THE VARIABLES********"
 scriptDir=`pwd`
 echo "scriptDir:        ${scriptDir}"
-uploadFileDir=${scriptDir}"/upload_files"
+uploadFileDir="${scriptDir}/upload_files"
 cd ../ifs-data-service
 dataServiceCodeDir=`pwd`
 echo "dataServiceCodeDir:${dataServiceCodeDir}"
-baseFileStorage=`sed '/^\#/d' docker-build.gradle | grep 'ext.ifsFileStorageLocation'  | cut -d "=" -f2 | sed 's/"//g'`
+
+baseFileStorage="/tmp/uploads"
 echo "${baseFileStorage}"
-virusScanQuarantinedFolder=${baseFileStorage}/virus-scan-quarantined
+storedFileFolder="${baseFileStorage}/ifs/"
+virusScanHoldingFolder="${baseFileStorage}/virus-scan-holding/"
+virusScanQuarantinedFolder="${baseFileStorage}/virus-scan-quarantined"
+virusScanScannedFolder="${baseFileStorage}/virus-scan-scanned"
+
 echo "virusScanQuarantinedFolder:		${virusScanQuarantinedFolder}"
 echo "We are about to delete the above directories, make sure that they are right ones!"
 postcodeLookupKey=`sed '/^\#/d' docker-build.gradle | grep 'ext.postcodeLookupKey'  | cut -d "=" -f2 | sed 's/"//g'`
@@ -183,52 +216,55 @@ echo "webBase:           ${webBase}"
 
 
 unset opt
-unset quickTest
 unset testScrub
-unset parallel
-unset emails
 
+quickTest=0
 emails=0
 rerunFailed=0
+parallel=0
+stopGrid=0
 
 testDirectory='IFS_acceptance_tests/tests'
-while getopts ":p :h :q :t :e :r :d:" opt ; do
+while getopts ":p :h :q :t :e :r :c :d:" opt ; do
     case $opt in
         p)
-         parallel=1
+          parallel=1
         ;;
         q)
-         quickTest=1
+          quickTest=1
         ;;
         h)
-         happyPath=1
+          happyPath=1
         ;;
         t)
-         testScrub=1
+          testScrub=1
         ;;
         e)
-         emails=1
+          emails=1
         ;;
         r)
-		  rerunFailed=1
-		;;
-		d)
-         testDirectory="$OPTARG"
-         parallel=0
+		      rerunFailed=1
+    		;;
+    		d)
+           testDirectory="$OPTARG"
+           parallel=0
+        ;;
+        c)
+          stopGrid=1
         ;;
         \?)
-         coloredEcho "Invalid option: -$OPTARG" red >&2
-         exit 1
+           coloredEcho "Invalid option: -$OPTARG" red >&2
+           exit 1
         ;;
         :)
-         case $OPTARG in
-         	d)
+          case $OPTARG in
+         	  d)
              coloredEcho "Option -$OPTARG requires the location of the robottest files relative to $scriptDir." red >&2
             ;;
             *)
              coloredEcho "Option -$OPTARG requires an argument." red >&2
             ;;
-         esac
+          esac
         exit 1
         ;;
     esac
@@ -236,27 +272,33 @@ done
 
 startSeleniumGrid
 
+clearOldReports
 
-if [[ "$quickTest" ]]
+if [[ $quickTest -eq 1 ]]
 then
-    echo "using quickTest:   TRUE" >&2
-    #resetDB
-    #addTestFiles
-    runTests
+  echo "using quickTest:   TRUE" >&2
+  runTests
 elif [[ "$testScrub" ]]
 then
-    echo "using testScrub mode: this will do all the dirty work but omit the tests" >&2
-    startServers
-    #buildAndDeploy
-    resetDB
-    addTestFiles
+  echo "using testScrub mode: this will do all the dirty work but omit the tests" >&2
+  resetDB
+  addTestFiles
 else
-    echo "using quickTest:   FALSE" >&2
-    startServers
-    #buildAndDeploy toDO: fix this with docker
-    resetDB
-    addTestFiles
-    runTests
+  echo "using quickTest:   FALSE" >&2
+  resetDB
+  addTestFiles
+  runTests
 fi
 
-stopSeleniumGrid
+if [[ $stopGrid -eq 1 ]]
+then
+  stopSeleniumGrid
+fi
+if [[ $(which google-chrome) ]]
+then
+  google-chrome target/${targetDir}/report.html &
+else
+  wd=$(pwd)
+  report="target/${targetDir}/report.html" 
+  open "file://${wd}/${report}"
+fi

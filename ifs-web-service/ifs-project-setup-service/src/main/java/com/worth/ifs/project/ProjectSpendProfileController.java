@@ -6,13 +6,17 @@ import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.project.finance.ProjectFinanceService;
 import com.worth.ifs.project.form.SpendProfileForm;
 import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.project.resource.SpendProfileTableResource;
 import com.worth.ifs.project.util.DateUtil;
 import com.worth.ifs.project.util.FinancialYearDate;
 import com.worth.ifs.project.validation.SpendProfileCostValidator;
+import com.worth.ifs.project.viewmodel.ProjectSpendProfileProjectManagerViewModel;
 import com.worth.ifs.project.viewmodel.ProjectSpendProfileViewModel;
 import com.worth.ifs.project.viewmodel.SpendProfileSummaryModel;
 import com.worth.ifs.project.viewmodel.SpendProfileSummaryYearModel;
+import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.util.CollectionFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,15 +31,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static com.worth.ifs.commons.error.CommonFailureKeys.SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE;
+import static com.worth.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
+import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -44,10 +47,12 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
  * This controller will handle all requests that are related to spend profile.
  */
 @Controller
-@RequestMapping("/project/{projectId}/partner-organisation/{organisationId}/spend-profile")
+@RequestMapping("/" + ProjectSpendProfileController.BASE_DIR + "/{projectId}/partner-organisation/{organisationId}/spend-profile")
 public class ProjectSpendProfileController {
 
     private static final String FORM_ATTR_NAME = "form";
+    public static final String BASE_DIR = "project";
+    public static final String REVIEW_TEMPLATE_NAME = "spend-profile-review";
 
     @Autowired
     private ProjectService projectService;
@@ -64,8 +69,21 @@ public class ProjectSpendProfileController {
                                    @PathVariable("projectId") final Long projectId,
                                    @PathVariable("organisationId") final Long organisationId,
                                    @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-        model.addAttribute("model", buildSpendProfileViewModel(projectId, organisationId));
-        return "project/spend-profile";
+
+        if (userHasProjectManagerRole(loggedInUser, projectId)) {
+            return viewProjectManagerSpendProfile(model, projectId);
+        }
+        return reviewSpendProfilePage(model, projectId, organisationId, loggedInUser);
+    }
+
+    @RequestMapping(value = "/review", method = GET)
+    public String reviewSpendProfilePage(Model model,
+                                                 @PathVariable("projectId") final Long projectId,
+                                                 @PathVariable("organisationId") final Long organisationId,
+                                                 @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+
+            model.addAttribute("model", buildSpendProfileViewModel(projectId, organisationId));
+        return BASE_DIR + "/spend-profile";
     }
 
     @RequestMapping(value = "/edit", method = GET)
@@ -81,13 +99,12 @@ public class ProjectSpendProfileController {
         form.setTable(spendProfileTableResource);
 
         if(spendProfileTableResource.getMarkedAsComplete()) {
-            markSpendProfileInComplete(model, projectId, organisationId, "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile");
+            markSpendProfileInComplete(model, projectId, organisationId, "redirect:/" + BASE_DIR + "/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile");
         }
         model.addAttribute("model", buildSpendProfileViewModel(projectResource, organisationId, spendProfileTableResource));
 
-        return "project/spend-profile";
+        return BASE_DIR + "/spend-profile";
     }
-
     @RequestMapping(value = "/edit", method = POST)
     public String saveSpendProfile(@ModelAttribute(FORM_ATTR_NAME) SpendProfileForm form,
                                    @SuppressWarnings("unused") BindingResult bindingResult,
@@ -111,6 +128,20 @@ public class ProjectSpendProfileController {
         ServiceResult<Void> result = projectFinanceService.saveSpendProfile(projectId, organisationId, spendProfileTableResource);
 
         return validationHandler.addAnyErrors(result).failNowOrSucceedWith(() -> failureView, () -> successView);
+    }
+
+    private String viewProjectManagerSpendProfile(Model model, Long projectId) {
+        model.addAttribute("model", populateSpendProfileProjectManagerViewModel(projectId));
+        return BASE_DIR + "/" + REVIEW_TEMPLATE_NAME;
+    }
+
+    private Map<String, Boolean> getPartnersSpendProfileProgress(Long projectId, List<OrganisationResource> partnerOrganisations) {
+        HashMap<String, Boolean> partnerProgressMap = new HashMap<>();
+        partnerOrganisations.stream().forEach(organisation -> {
+            Optional<SpendProfileResource> spendProfile = projectFinanceService.getSpendProfile(projectId, organisation.getId());
+            partnerProgressMap.put(organisation.getName(),spendProfile.get().isMarkedAsComplete());
+        });
+        return partnerProgressMap;
     }
 
     @RequestMapping(value = "/complete", method = POST)
@@ -145,7 +176,7 @@ public class ProjectSpendProfileController {
             ProjectSpendProfileViewModel spendProfileViewModel = buildSpendProfileViewModel(projectId, organisationId);
             spendProfileViewModel.setObjectErrors(Collections.singletonList(new ObjectError(SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE.getErrorKey(), "Cannot mark as complete, because totals more than eligible")));
             model.addAttribute("model", spendProfileViewModel);
-            return "project/spend-profile";
+            return BASE_DIR + "/spend-profile";
         } else {
             return successView;
         }
@@ -228,5 +259,28 @@ public class ProjectSpendProfileController {
                         }
 
                 ).collect(toList());
+    }
+
+    private ProjectSpendProfileProjectManagerViewModel populateSpendProfileProjectManagerViewModel(Long projectId) {
+        ProjectResource projectResource = projectService.getById(projectId);
+
+        List<OrganisationResource> partnerOrganisations = projectService.getPartnerOrganisationsForProject(projectId);
+
+        Map<String, Boolean> partnersSpendProfileProgress = getPartnersSpendProfileProgress(projectId, partnerOrganisations);
+
+        return new ProjectSpendProfileProjectManagerViewModel(projectId,
+                projectResource.getName(),
+                partnersSpendProfileProgress,
+                partnerOrganisations);
+    }
+
+    private boolean userHasProjectManagerRole(UserResource user, Long projectId) {
+        Optional<ProjectUserResource> existingProjectManager = getProjectManager(projectId);
+        return existingProjectManager.isPresent() && existingProjectManager.get().getUser().equals(user.getId());
+    }
+
+    private Optional<ProjectUserResource> getProjectManager(Long projectId) {
+        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
+        return simpleFindFirst(projectUsers, pu -> PROJECT_MANAGER.getName().equals(pu.getRoleName()));
     }
 }

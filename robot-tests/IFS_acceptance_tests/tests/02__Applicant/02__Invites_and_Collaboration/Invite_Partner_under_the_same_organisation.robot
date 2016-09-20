@@ -2,7 +2,7 @@
 Documentation     INFUND-3262: Wrong invitees show when invite new collaborators
 Suite Setup       Given Guest user log-in    &{lead_applicant_credentials}
 Suite Teardown    the user closes the browser
-Force Tags        Applicant    Collaboration
+Force Tags        Applicant
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -36,11 +36,11 @@ Create a new application
 the new application should show the correct partners
     Given the user navigates to the page    ${DASHBOARD_URL}
     When The user clicks the button/link    link=TEST ONE
-    And The user clicks the button/link    link=View team members and add collaborators
+    And The user clicks the button/link    link=view team members and add collaborators
     Then The user should not see the text in the page    Partner two
     And The user should see the text in the page    Partner one
     When the user navigates to the page    ${DASHBOARD_URL}
     And The user clicks the button/link    link=TEST TWO
-    And The user clicks the button/link    link=View team members and add collaborators
+    And The user clicks the button/link    link=view team members and add collaborators
     Then The user should not see the text in the page    Partner one
     And The user should see the text in the page    Partner two
