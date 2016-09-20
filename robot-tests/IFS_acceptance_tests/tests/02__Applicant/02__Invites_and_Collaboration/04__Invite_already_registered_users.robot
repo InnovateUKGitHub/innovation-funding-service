@@ -8,7 +8,7 @@ Documentation     INFUND-1458 As a existing user with an invitation to collabora
 ...               INFUND-3759: Existing Applicant should be able to accept invitations for other applications in the same organisation
 Suite Setup       The guest user opens the browser
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        Email    Applicant    Collaboration
+Force Tags        Email    Applicant
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -69,7 +69,7 @@ the user enters profile details
     Wait Until Element Is Visible    id=title
     Input Text    id=firstName    Dennis
     Input Text    id=lastName    Bergkamp
-    focus         css=[name="create-account"]
+    focus    css=[name="create-account"]
     Click Element    css=[name="create-account"]
 
 the user should see the change in the view team members page

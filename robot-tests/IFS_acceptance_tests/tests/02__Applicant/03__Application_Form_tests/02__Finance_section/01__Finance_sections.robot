@@ -12,7 +12,7 @@ Documentation     INFUND-45: As an applicant and I am on the application form on
 Suite Setup       Run keywords    log in and create new application if there is not one already
 ...               AND    Applicant navigates to the finances of the Robot application
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        Applicant    Finances
+Force Tags        Applicant
 Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../../resources/variables/User_credentials.robot
@@ -95,7 +95,7 @@ the user removes the materials rows
     the user clicks the button/link    jQuery=button:contains("Materials")
 
 the Funding levels value should be empty
-    the user should see the element       id=cost-financegrantclaim
+    the user should see the element    id=cost-financegrantclaim
     ${input_value} =    Get Value    id=cost-financegrantclaim
     log    ${input_value}
     Should Not Be Equal As Strings    ${input_value}    0
