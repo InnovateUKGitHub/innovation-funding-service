@@ -185,6 +185,13 @@ public class ProjectSetupSectionsPartnerAccessorTest extends BaseUnitTest {
         accessor.checkAccessToFinanceChecksSection(organisation);
     }
 
+    @Test(expected = ForbiddenActionException.class)
+    public void testCheckAccessToFinanceChecksSectionButSpendProfileNotYetGenerated() {
+
+        when(projectSetupProgressCheckerMock.isSpendProfileGenerated()).thenReturn(false);
+        accessor.checkAccessToFinanceChecksSection(organisation);
+    }
+
     @Test
     public void testCheckAccessToSpendProfileSectionHappyPath() {
 
@@ -203,13 +210,6 @@ public class ProjectSetupSectionsPartnerAccessorTest extends BaseUnitTest {
                 mock -> mock.isBankDetailsApproved(organisation),
                 mock -> mock.isSpendProfileGenerated()
         );
-    }
-
-    @Test(expected = ForbiddenActionException.class)
-    public void testCheckAccessToSpendProfileSectionButSpendProfileNotYetGenerated() {
-
-        when(projectSetupProgressCheckerMock.isSpendProfileGenerated()).thenReturn(false);
-        accessor.checkAccessToFinanceChecksSection(organisation);
     }
 
     @SafeVarargs
