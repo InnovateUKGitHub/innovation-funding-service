@@ -59,7 +59,9 @@ small {
 .cell-border-right th {
     border-right: 1px solid $border-colour;
 }
-
+table small {
+	display: block;
+}
 
 /* SG
 
