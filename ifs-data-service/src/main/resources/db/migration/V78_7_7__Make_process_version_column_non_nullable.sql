@@ -1,0 +1,1 @@
+ALTER TABLE process MODIFY COLUMN last_modified DATETIME NOT NULL;

@@ -92,12 +92,6 @@ function buildAndDeploy() {
 
 }
 
-function startServers() {
-    cd ../setup-files/scripts/docker
-    ./startup.sh
-    wait
-}
-
 function startSeleniumGrid() {
     cd ../robot-tests
     cd ${testDirectory}
@@ -117,7 +111,12 @@ function startSeleniumGrid() {
     docker-compose -p robot up -d
     docker-compose -p robot scale chrome=${suiteCount}
     unset suiteCount
-}
+    if [[ $quickTest -eq 1 ]]
+    then
+      echo "waiting 5 seconds for the grid to be properly started"
+      sleep 5
+    fi    
+  }
 
 function stopSeleniumGrid() {
     cd ../robot-tests
@@ -217,51 +216,55 @@ echo "webBase:           ${webBase}"
 
 
 unset opt
-unset quickTest
 unset testScrub
 
+quickTest=0
 emails=0
 rerunFailed=0
 parallel=0
+stopGrid=0
 
 testDirectory='IFS_acceptance_tests/tests'
-while getopts ":p :h :q :t :e :r :d:" opt ; do
+while getopts ":p :h :q :t :e :r :c :d:" opt ; do
     case $opt in
         p)
-         parallel=1
+          parallel=1
         ;;
         q)
-         quickTest=1
+          quickTest=1
         ;;
         h)
-         happyPath=1
+          happyPath=1
         ;;
         t)
-         testScrub=1
+          testScrub=1
         ;;
         e)
-         emails=1
+          emails=1
         ;;
         r)
-		  rerunFailed=1
-		;;
-		d)
-         testDirectory="$OPTARG"
-         parallel=0
+		      rerunFailed=1
+    		;;
+    		d)
+           testDirectory="$OPTARG"
+           parallel=0
+        ;;
+        c)
+          stopGrid=1
         ;;
         \?)
-         coloredEcho "Invalid option: -$OPTARG" red >&2
-         exit 1
+           coloredEcho "Invalid option: -$OPTARG" red >&2
+           exit 1
         ;;
         :)
-         case $OPTARG in
-         	d)
+          case $OPTARG in
+         	  d)
              coloredEcho "Option -$OPTARG requires the location of the robottest files relative to $scriptDir." red >&2
             ;;
             *)
              coloredEcho "Option -$OPTARG requires an argument." red >&2
             ;;
-         esac
+          esac
         exit 1
         ;;
     esac
@@ -271,27 +274,31 @@ startSeleniumGrid
 
 clearOldReports
 
-if [[ "$quickTest" ]]
+if [[ $quickTest -eq 1 ]]
 then
-    echo "using quickTest:   TRUE" >&2
-    resetDB
-    addTestFiles
-    runTests
+  echo "using quickTest:   TRUE" >&2
+  runTests
 elif [[ "$testScrub" ]]
 then
-    echo "using testScrub mode: this will do all the dirty work but omit the tests" >&2
-    startServers
-    #buildAndDeploy
-    resetDB
-    addTestFiles
+  echo "using testScrub mode: this will do all the dirty work but omit the tests" >&2
+  resetDB
+  addTestFiles
 else
-    echo "using quickTest:   FALSE" >&2
-    startServers
-    #buildAndDeploy toDO: fix this with docker
-    resetDB
-    addTestFiles
-    runTests
+  echo "using quickTest:   FALSE" >&2
+  resetDB
+  addTestFiles
+  runTests
 fi
 
-stopSeleniumGrid
-google-chrome target/${targetDir}/log.html &
+if [[ $stopGrid -eq 1 ]]
+then
+  stopSeleniumGrid
+fi
+if [[ $(which google-chrome) ]]
+then
+  google-chrome target/${targetDir}/report.html &
+else
+  wd=$(pwd)
+  report="target/${targetDir}/report.html" 
+  open "file://${wd}/${report}"
+fi
