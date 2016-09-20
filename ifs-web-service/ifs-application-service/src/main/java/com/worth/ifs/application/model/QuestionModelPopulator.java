@@ -219,7 +219,6 @@ public class QuestionModelPopulator {
         Map<String, String> formInputs = form.getFormInput();
         formInputs.put("application_details-title", application.getName());
         formInputs.put("application_details-duration", String.valueOf(application.getDurationInMonths()));
-        formInputs.put("application_details-resubmission", application.getResubmission() == null ? "" : application.getResubmission().toString());
         if(application.getStartDate() == null){
             formInputs.put("application_details-startdate_day", "");
             formInputs.put("application_details-startdate_month", "");
@@ -300,6 +299,7 @@ public class QuestionModelPopulator {
     private List<QuestionStatusResource> getQuestionStatuses(Long questionId, Long applicationId) {
         return questionService.findQuestionStatusesByQuestionAndApplicationId(questionId, applicationId);
     }
+
 
     private Set<Long> getAssigneeQuestions(QuestionResource question, List<QuestionStatusResource> questionStatuses, Long userId) {
         Set<Long> assigned = new HashSet<Long>();
