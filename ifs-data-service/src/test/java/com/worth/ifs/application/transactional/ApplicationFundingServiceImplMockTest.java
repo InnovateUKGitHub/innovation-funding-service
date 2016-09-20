@@ -212,7 +212,7 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
 				withRole(leadApplicantRole, leadApplicantRole, leadApplicantRole).
 				build(3);
 
-		Map<Long, FundingDecision> decision = asMap(1L, FUNDED, 2L, UNFUNDED, 3L, FUNDED);
+		Map<Long, FundingDecision> decision = asMap(fundedApplication1.getId(), FUNDED, unfundedApplication2.getId(), UNFUNDED, fundedApplication3.getId(), FUNDED);
 
         UserNotificationTarget fundedApplication1LeadApplicantTarget = new UserNotificationTarget(fundedApplication1LeadApplicant);
         UserNotificationTarget fundedApplication3LeadApplicantTarget = new UserNotificationTarget(fundedApplication3LeadApplicant);
@@ -286,7 +286,7 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
                 withRole(leadApplicantRole, collaboratorRole, leadApplicantRole, collaboratorRole).
                 build(3);
 
-        Map<Long, FundingDecision> decision = asMap(1L, FUNDED, 2L, UNFUNDED);
+        Map<Long, FundingDecision> decision = asMap(fundedApplication1.getId(), FUNDED, unfundedApplication2.getId(), UNFUNDED);
 
         List<NotificationTarget> expectedFundedLeadApplicants = asList(new UserNotificationTarget(fundedApplication1LeadApplicant));
         Notification expectedFundedNotification =
