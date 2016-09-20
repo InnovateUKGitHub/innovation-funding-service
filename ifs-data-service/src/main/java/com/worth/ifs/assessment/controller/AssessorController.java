@@ -3,6 +3,7 @@ package com.worth.ifs.assessment.controller;
 import com.worth.ifs.assessment.transactional.AssessorService;
 import com.worth.ifs.assessment.transactional.CompetitionInviteService;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.transactional.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +25,7 @@ public class AssessorController {
     private AssessorService assessorService;
 
     @RequestMapping(value= "/register/{hash}", method = POST)
-    public RestResult<UserResource> registerAssessorByHash(@PathVariable("hash") final String hash, @RequestBody UserResource userResource) {
-        //TODO: Upon successful creation user should be logged in automatically
-
-        return assessorService.registerAssessorByHash(hash, userResource).toGetResponse();
+    public RestResult<Void> registerAssessorByHash(@PathVariable("hash") final String hash, @RequestBody UserResource userResource) {
+        return assessorService.registerAssessorByHash(hash, userResource).toPostResponse();
     }
 }
