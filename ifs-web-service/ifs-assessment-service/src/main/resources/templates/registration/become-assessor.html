@@ -31,7 +31,7 @@
                 <li>to accept the terms and conditions for assessing Innovate UK</li>
             </ul>
 
-        	<a th:href="@{/registration/register" class="button button-large">Create account</a>
+        	<a th:href="@{/registration/{inviteHash}/register(inviteHash=${model.competitionInviteHash})}" class="button button-large">Create account</a>
 
             <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>
         </main>
