@@ -13,6 +13,13 @@ Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
 
+*** Variables ***
+${NO_OF_DAYS_LEFT}    ${EMPTY}
+${CURRENT_DATE}    ${EMPTY}
+${MILESTONE_DATE}    2016-12-31
+${STARTING_DATE}    ${EMPTY}
+${SCREEN_NO_OF_DAYS_LEFT}    ${EMPTY}
+
 *** Test Cases ***
 All the sections are present in the summary
     [Documentation]    INFUND-4648
@@ -24,7 +31,14 @@ All the sections are present in the summary
     And The user should see the element    id=form-label-feedback
     And The user should see the element    id=form-label-comments
 
-Questions should show as incomplete
+Number of days remaining until assessment submission
+    [Documentation]    INFUND-4857
+    [Tags]    HappyPath    Pending
+    Then The user should see the text in the page    Days left to submit
+    And the assessor should see the number of days remaining
+    And the days remaining should be correct
+
+Assessment summary shows questions as incomplete
     [Documentation]    INFUND-550
     Then the collapsible button should contain    jQuery=button:contains(1. How many)    Incomplete
     And the collapsible button should contain    jQuery=button:contains(2. Mediums)    Incomplete
@@ -203,3 +217,15 @@ the word count should be correct
 And the total scores should be correct
     And Element should contain    css=div:nth-child(5) p.no-margin strong    Total: 50/50
     And Element should contain    css=div:nth-child(5) p:nth-child(2) strong    100%
+
+the assessor should see the number of days remaining
+    the user should see the element    css=.sub-header .pie-overlay .day
+
+the days remaining should be correct
+    ${CURRENT_DATE}=    Get Current Date    result_format=%Y-%m-%d    exclude_millis=true
+    ${STARTING_DATE}=    Add Time To Date    ${CURRENT_DATE}    1 day    result_format=%Y-%m-%d    exclude_millis=true
+    ${MILESTONE_DATE}=    Convert Date    2016-12-31    result_format=%Y-%m-%d    exclude_millis=true
+    ${NO_OF_DAYS_LEFT}=    Subtract Date From Date    ${MILESTONE_DATE}    ${STARTING_DATE}    verbose    exclude_millis=true
+    ${NO_OF_DAYS_LEFT}=    Remove String    ${NO_OF_DAYS_LEFT}    days
+    ${SCREEN_NO_OF_DAYS_LEFT}=    Get Text    css=.sub-header .pie-overlay .day
+    Should Be Equal As Numbers    ${NO_OF_DAYS_LEFT}    ${SCREEN_NO_OF_DAYS_LEFT}
