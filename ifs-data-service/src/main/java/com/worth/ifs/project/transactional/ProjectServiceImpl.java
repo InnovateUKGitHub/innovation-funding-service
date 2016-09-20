@@ -702,6 +702,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
         if (partnerOrganisation.equals(leadOrganisation)) {
             projectPartnerStatusResource = new ProjectLeadStatusResource(
+                    partnerOrganisation.getId(),
                     partnerOrganisation.getName(),
                     organisationType,
                     leadProjectDetailsSubmitted,
@@ -713,6 +714,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
                     grantOfferLetterStatus);
         } else {
             projectPartnerStatusResource = new ProjectPartnerStatusResource(
+                    partnerOrganisation.getId(),
                     partnerOrganisation.getName(),
                     organisationType,
                     leadProjectDetailsSubmitted,

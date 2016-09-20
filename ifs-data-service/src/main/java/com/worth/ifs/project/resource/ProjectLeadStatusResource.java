@@ -13,6 +13,7 @@ public class ProjectLeadStatusResource extends ProjectPartnerStatusResource {
     public ProjectLeadStatusResource() {}
 
     public ProjectLeadStatusResource(
+            Long organisationId,
             String name,
             OrganisationTypeEnum organisationType,
             ProjectActivityStates projectDetailsStatus,
@@ -22,7 +23,7 @@ public class ProjectLeadStatusResource extends ProjectPartnerStatusResource {
             ProjectActivityStates spendProfileStatus,
             ProjectActivityStates otherDocumentsStatus,
             ProjectActivityStates grantOfferLetterStatus) {
-        super(name, organisationType, projectDetailsStatus, monitoringOfficerStatus, bankDetailsStatus, financeChecksStatus, spendProfileStatus, otherDocumentsStatus, grantOfferLetterStatus);
+        super(organisationId, name, organisationType, projectDetailsStatus, monitoringOfficerStatus, bankDetailsStatus, financeChecksStatus, spendProfileStatus, otherDocumentsStatus, grantOfferLetterStatus);
     }
 
     @Override

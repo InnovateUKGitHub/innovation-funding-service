@@ -18,6 +18,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
         @JsonSubTypes.Type(value=ProjectLeadStatusResource.class, name="projectLeadStatusResource")
 })
 public class ProjectPartnerStatusResource {
+
+    private Long organisationId;
     private String name;
     private OrganisationTypeEnum organisationType;
 
@@ -34,7 +36,8 @@ public class ProjectPartnerStatusResource {
     //Required for Json Mapping.
     public ProjectPartnerStatusResource() {}
 
-    public ProjectPartnerStatusResource(String name, OrganisationTypeEnum organisationType, ProjectActivityStates projectDetailsStatus, ProjectActivityStates monitoringOfficerStatus, ProjectActivityStates bankDetailsStatus, ProjectActivityStates financeChecksStatus, ProjectActivityStates spendProfileStatus, ProjectActivityStates otherDocumentsStatus, ProjectActivityStates grantOfferLetterStatus) {
+    public ProjectPartnerStatusResource(Long organisationId, String name, OrganisationTypeEnum organisationType, ProjectActivityStates projectDetailsStatus, ProjectActivityStates monitoringOfficerStatus, ProjectActivityStates bankDetailsStatus, ProjectActivityStates financeChecksStatus, ProjectActivityStates spendProfileStatus, ProjectActivityStates otherDocumentsStatus, ProjectActivityStates grantOfferLetterStatus) {
+        this.organisationId = organisationId;
         this.name = name;
         this.organisationType = organisationType;
         this.projectDetailsStatus = projectDetailsStatus;
@@ -44,6 +47,14 @@ public class ProjectPartnerStatusResource {
         this.spendProfileStatus = spendProfileStatus;
         this.otherDocumentsStatus = otherDocumentsStatus;
         this.grantOfferLetterStatus = grantOfferLetterStatus;
+    }
+
+    public Long getOrganisationId() {
+        return organisationId;
+    }
+
+    public void setOrganisationId(Long organisationId) {
+        this.organisationId = organisationId;
     }
 
     public String getName() {
