@@ -1,1 +1,0 @@
-UPDATE `question` SET `short_name`='Shortname' WHERE `id`='42';

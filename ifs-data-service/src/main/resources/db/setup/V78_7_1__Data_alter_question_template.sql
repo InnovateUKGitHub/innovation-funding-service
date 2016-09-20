@@ -1,0 +1,1 @@
+UPDATE `question_template` SET `short_name`='Je-s Output' WHERE `id`='35';
