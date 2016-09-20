@@ -8,17 +8,16 @@
 
 <div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="prototypes/fragments/layout :: admin-header-logged-out" th:remove="tag" />
+<div th:include="prototypes/fragments/layout :: prototype-admin-header" th:with="status='loggedOut'" th:remove="tag" />
 
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${(param.edit == null ? 'Back':'Your profile')}, ${(param.edit == null ? '/prototypes/1360-assessor-invite-start' : '/prototypes/1178-assessor-profile-details')})" th:remove="tag" />
 
-	<!-- HARDCODED PROTOTYPE HTML -->
+	 <!--HARDCODED PROTOTYPE HTML-->
 
 	<div class="hgroup no-margin-top" style="padding-top: 20px; margin-bottom: 30px">
-        <h1 class="heading-large no-margin" th:text="${(param.edit == null ? 'Create internal account':'Edit your profile')}">Create internal account</h1>
+        <h1 class="heading-large no-margin">Create internal account</h1>
     </div>
 
 	<h2 class="heading-medium">Your details</h2>
