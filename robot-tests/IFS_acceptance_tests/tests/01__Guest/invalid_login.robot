@@ -23,80 +23,57 @@ ${invalid_password}    allinlowercaseandnonumbers
 *** Test Cases ***
 Email persists with correct email address and wrong password
     [Documentation]    INFUND-703
-    [Tags]    Log in
+    [Tags]
     ${correct_email}    ${incorrect_password}
 
 Email persists with correct email address and invalid password
     [Documentation]    INFUND-703
-    [Tags]    Log in
+    [Tags]
     ${correct_email}    ${invalid_password}
 
 Email persists with correct email address and empty password
     [Documentation]    INFUND-703
-    [Tags]    Log in
+    [Tags]
     ${correct_email}    ${EMPTY}
 
 Email persists with wrong email address and correct password
     [Documentation]    INFUND-703
-    [Tags]    Log in
+    [Tags]
     ${incorrect_email}    ${correct_password}
 
 Email persists with wrong email address and wrong password
     [Documentation]    INFUND-703
-    [Tags]    Log in
+    [Tags]
     ${incorrect_email}    ${incorrect_password}
 
 Email persists with wrong email address and invalid password
     [Documentation]    INFUND-703
-    [Tags]    Log in
+    [Tags]
     ${incorrect_email}    ${invalid_password}
 
 Email persists with wrong email address and empty password
     [Documentation]    INFUND-703
-    [Tags]    Log in
+    [Tags]
     ${incorrect_email}    ${EMPTY}
 
 Email persists with invalid email address and correct password
     [Documentation]    INFUND-703
-    [Tags]    Log in
+    [Tags]
     ${invalid_email}    ${correct_password}
 
 Email persists with invalid email address and wrong password
     [Documentation]    INFUND-703
-    [Tags]    Log in
+    [Tags]
     ${invalid_email}    ${incorrect_password}
 
 Email persists with invalid email address and invalid password
     [Documentation]    INFUND-703
-    [Tags]    Log in
+    [Tags]
     ${invalid_email}    ${invalid_password}
 
 Email persists with invalid email address and empty password
     [Documentation]    INFUND-703
-    [Tags]    Log in
+    [Tags]
     ${invalid_email}    ${EMPTY}
 
 *** Keywords ***
-#Email persists on invalid login
-#    [Arguments]    ${email_address}    ${password}
-#    Given the guest user inserts user email & password    ${email_address}    ${password}
-#    When the user tries to log in
-#    Then the user is not logged-in
-#    And the email address should persist    ${email_address}
-#
-#the user is not logged-in
-#    Element Should Not Be Visible    link=My dashboard
-#    Element Should Not Be Visible    link=Logout
-#
-#the email address should persist
-#
-#    [Arguments]     ${email_address}
-#    # Note: we have to do it this way rather than the more straightforward eg Textfield Value Should Be
-#    # due to a bug in selenium2library
-#    ${stored_data}=     Get Value       id=username
-#    Should Be Equal     ${stored_data}      ${email_address}
-#
-#
-#the user tries to log in
-#    the user clicks the button/link    css=button[name="_eventId_proceed"]
-#    the user should see the text in the page    ${unsuccessful_login_message}

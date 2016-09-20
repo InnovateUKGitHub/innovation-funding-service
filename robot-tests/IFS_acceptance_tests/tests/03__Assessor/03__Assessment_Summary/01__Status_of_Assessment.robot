@@ -14,6 +14,7 @@ Resource          ../../../resources/keywords/User_actions.robot
 *** Test Cases ***
 To verify all the sections are present
     [Documentation]    INFUND-4648
+    [Tags]    HappyPath
     When The user navigates to the assessor page    ${Assessment_summary_incomplete_12}
     Then The user should see the element    jQuery=h2:contains("Overall scores")
     And The user should see the element    jQuery=h2:contains("Review assessment")
@@ -40,6 +41,7 @@ Assessment summary shows the questions without score
 
 Assessment summary shows questions as complete
     [Documentation]    INFUND-550
+    [Tags]    HappyPath
     [Setup]    log in as user    &{assessor_credentials}
     Given the user adds score and feedback for every question
     When the user clicks the button/link    link=Review assessment
@@ -52,6 +54,7 @@ Assessment summary shows questions as complete
 
 Assessment summary shows questions scores
     [Documentation]    INFUND-550
+    [Tags]    HappyPath
     Then The user should see the text in the page    Total: 50/50
     And The user should see the text in the page    100%
     And the table should show the correct scores
@@ -64,8 +67,8 @@ Overall scores section
     [Documentation]    INFUND-4648
     Then each question will contain links to respective questions
     And the scores under each question should be correct
-    And Element should contain    css=div:nth-child(6) p.no-margin strong    Total: 50/50
-    And Element should contain    css=div:nth-child(6) p:nth-child(2) strong    100%
+    And Element should contain    css=div:nth-child(5) p.no-margin strong    Total: 50/50
+    And Element should contain    css=div:nth-child(5) p:nth-child(2) strong    100%
 
 Assessment summary shows feedback in each section
     [Documentation]    INFUND-550
@@ -95,13 +98,40 @@ Assessor should be able to re-edit before submit
 Assessor must Provide feedback when "No" is selected for funding suitability
     [Documentation]    INFUND-1485
     Given The user navigates to the assessor page    ${Assessment_summary_complete_9}
-    When the assessor selects the radio button
+    When The user clicks the button/link    jQuery=.button:contains(Save assessment)
+    Then The user should see an error    Please indicate your decision
+    When the user selects the radio button    fundingConfirmation    false
     And The user clicks the button/link    jQuery=.button:contains(Save assessment)
     Then The user should see an error    Please enter your feedback
-    And The user enters text to a text field    id=form-textarea-feedback    Testing the feedback inputs
+    And The user enters text to a text field    id=form-textarea-feedback    Testing the required feedback textarea when the decision is "No".
     And The user clicks the button/link    jQuery=.button:contains(Save assessment)
     Then The user should not see the text in the page    Please enter your feedback
-    And The user enters text to a text field    id=form-textarea-comments    Testing the feedback inputs for optional feedback textarea.
+
+Word count check: Your feedback
+    [Documentation]    INFUND-1485
+    [Tags]    HappyPath
+    Given the user navigates to the assessor page    ${Assessment_summary_complete_9}
+    # TODO Temporarily setting the decision here since the word count is only validated after the required decision field is checked. This should be addressed by INFUND-4993.
+    When the user selects the radio button    fundingConfirmation    true
+    And the user enters text to a text field    id=form-textarea-feedback    Testing the feedback word count. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco
+    Then the word count should be correct    Words remaining: -4
+    And the user clicks the button/link    jQuery=.button:contains(Save assessment)
+    Then the user should see an error    Maximum word count exceeded. Please reduce your word count to 100.
+    And the user enters text to a text field    id=form-textarea-feedback    Testing the feedback word count.
+    Then the word count should be correct    Words remaining: 95
+
+Word count check: Comments for InnovateUK
+    [Documentation]    INFUND-1485
+    Given the user navigates to the assessor page    ${Assessment_summary_complete_9}
+    # TODO Temporarily setting the decision here since the word count is only validated after the required decision field is checked. This should be addressed by INFUND-4993.
+    When the user selects the radio button    fundingConfirmation    true
+    And the user enters text to a text field    id=form-textarea-comments    Testing the comments word count. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco
+    Then the word count should be correct    Words remaining: -4
+    And the user clicks the button/link    jQuery=.button:contains(Save assessment)
+    Then the user should see an error    Maximum word count exceeded. Please reduce your word count to 100.
+    And the user enters text to a text field    id=form-textarea-comments    Testing the comments word count.
+    Then the word count should be correct    Words remaining: 95
+    [Teardown]    Logout as user
 
 *** Keywords ***
 The assessor navigates to the summary page
@@ -171,6 +201,6 @@ the scores under each question should be correct
     Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(3)    10
     Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(4)    10
 
-the assessor selects the radio button
-    Click Element    xpath=//input[@type='radio' and @name='fundingConfirmation' and (@value='No' or @id='fundingConfirmation2')]
-
+the word count should be correct
+    [Arguments]    ${wordCount}
+    the user should see the text in the page    ${wordCount}

@@ -1,9 +1,10 @@
 package com.worth.ifs.assessment.workflow.guards;
 
 import com.worth.ifs.assessment.domain.Assessment;
-import com.worth.ifs.assessment.resource.AssessmentStates;
 import org.springframework.statemachine.StateContext;
 import org.springframework.statemachine.guard.Guard;
+
+import static com.worth.ifs.assessment.resource.AssessmentStates.SUBMITTED;
 
 /**
  * {@code SubmitGuard} is responsible for testing if the transition can take place
@@ -17,6 +18,6 @@ public class SubmitGuard implements Guard<String, String> {
         if(assessment ==null)
             return false;
 
-        return assessment.isStarted() && !assessment.getProcessStatus().equals(AssessmentStates.SUBMITTED);
+        return assessment.isStarted() && !assessment.isInState(SUBMITTED);
     }
 }

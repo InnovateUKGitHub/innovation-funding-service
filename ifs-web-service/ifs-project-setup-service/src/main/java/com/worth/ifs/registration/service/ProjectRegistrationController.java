@@ -14,7 +14,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -30,9 +29,6 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Controller
 public class ProjectRegistrationController {
-
-    @Autowired
-    Validator validator;
 
     @Autowired
     private UserService userService;
@@ -86,7 +82,7 @@ public class ProjectRegistrationController {
                 return populateModelWithErrorsAndReturnErrorView(errors, model);
             }
             if (emailExists(registrationForm.getEmail())) {
-                bindingResult.addError(new FieldError(EMAIL_FIELD_NAME, EMAIL_FIELD_NAME, registrationForm.getEmail(), false, null, null, "Email address is already in use"));
+                ValidationMessages.rejectValue(bindingResult, EMAIL_FIELD_NAME, "validation.standard.email.exists");
                 return restSuccess(REGISTRATION_REGISTER_VIEW);
             }
             RestResult<String> result = createUser(registrationForm, invite.getOrganisation())
@@ -118,5 +114,4 @@ public class ProjectRegistrationController {
                 registrationForm.getPhoneNumber(),
                 organisationId);
     }
-
 }

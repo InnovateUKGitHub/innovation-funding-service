@@ -1,12 +1,10 @@
 package com.worth.ifs.assessment.repository;
 
+import com.worth.ifs.assessment.domain.Assessment;
+import org.springframework.data.repository.PagingAndSortingRepository;
+
 import java.util.List;
 import java.util.Set;
-
-import org.springframework.data.repository.PagingAndSortingRepository;
-import org.springframework.data.repository.query.Param;
-
-import com.worth.ifs.assessment.domain.Assessment;
 
 
 /**
@@ -19,5 +17,7 @@ public interface AssessmentRepository extends PagingAndSortingRepository<Assessm
     @Override
     Set<Assessment> findAll();
 
-    Assessment findOneByProcessRoleId(Long processRoleId);
+    Assessment findOneByParticipantId(Long processRoleId);
+
+    List<Assessment> findByParticipantUserIdAndParticipantApplicationCompetitionId(Long userId, Long competitionId);
 }

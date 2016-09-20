@@ -143,12 +143,30 @@ table td{
         float:left;
     }
 }
-tr.date-group.error {
-    border:none;
-    .error-message {
-      display: none;
-    }
+
+tr.form-group-row.error {
+  border:none;
+  background-position: 4px 50%;
+
+  .error-message {
+    display: none;
+  }
+  th{
+    @extend .warning-alert;
+    background-position: 10px 50%;
+    padding-left: 40px;
+    margin-top: 0;
+    color:#000;
+  }
+  td{
+    background: $highlight-colour;
+  }
+  td:first-child {
+    border-left: 5px solid $red;
+  }
 }
+
+
 .form-date{
     overflow: hidden;
     margin-bottom: 30px;
