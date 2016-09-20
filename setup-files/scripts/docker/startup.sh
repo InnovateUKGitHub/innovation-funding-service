@@ -1,5 +1,7 @@
 #!/bin/bash
 
+sudo echo "Entering sudo now so the script doesn't hang later!"
+
 setHostFile(){
     cp /etc/hosts /tmp/hostsbackup
     ip_address=$(docker-machine ip default)

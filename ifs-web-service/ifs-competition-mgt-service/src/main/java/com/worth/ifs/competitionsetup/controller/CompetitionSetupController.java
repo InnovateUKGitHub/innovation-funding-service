@@ -31,7 +31,6 @@ import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -40,7 +39,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
 
 /**
  * Controller for showing and handling the different competition setup sections
@@ -72,10 +70,12 @@ public class CompetitionSetupController {
     @Autowired
     private CompetitionSetupMilestoneService competitionSetupMilestoneService;
 
+    private static final String READY_TO_OPEN_KEY = "readyToOpen";
+
+    private static final String RESTRICT_INITIAL_DETAILS_EDIT = "restrictInitialDetailsEdit";
+
     @Autowired
     private Validator validator;
-
-    public static final String READY_TO_OPEN_KEY = "readyToOpen";
 
     @RequestMapping(value = "/{competitionId}", method = RequestMethod.GET)
     public String initCompetitionSetupSection(Model model, @PathVariable(COMPETITION_ID_KEY) Long competitionId) {
@@ -96,7 +96,6 @@ public class CompetitionSetupController {
 
     @RequestMapping(value = "/{competitionId}/section/{sectionPath}/edit", method = RequestMethod.POST)
     public String setSectionAsIncomplete(@PathVariable(COMPETITION_ID_KEY) Long competitionId, @PathVariable(SECTION_PATH_KEY) String sectionPath) {
-
     	CompetitionSetupSection section = CompetitionSetupSection.fromPath(sectionPath);
     	if(section == null) {
     		LOG.error("Invalid section path specified: " + sectionPath);
@@ -156,10 +155,12 @@ public class CompetitionSetupController {
             Map<String, Object> modelMap = model.asMap();
 
             if(!(Boolean) modelMap.get("isInitialComplete") && !section.equals(CompetitionSetupSection.INITIAL_DETAILS)) {
-                LOG.error("User should first fill fill the initial details");
+                LOG.error("User should first fill the initial details");
                 return "redirect:/dashboard";
             }
         }
+
+        checkRestrictionOfInitialDetails(section, competition, model);
 
         return "competition/setup";
     }
@@ -202,7 +203,8 @@ public class CompetitionSetupController {
                                               BindingResult bindingResult,
                                               @PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                               Model model) {
-
+        CompetitionResource competitionResource = competitionService.getById(competitionId);
+        checkRestrictionOfInitialDetails(CompetitionSetupSection.INITIAL_DETAILS, competitionResource, model);
         return genericCompetitionSetupSection(competitionSetupForm, bindingResult, competitionId, CompetitionSetupSection.INITIAL_DETAILS, model);
     }
 
@@ -333,7 +335,6 @@ public class CompetitionSetupController {
         }
     }
 
-
     private String genericCompetitionSetupSection(CompetitionSetupForm competitionSetupForm, BindingResult bindingResult, Long competitionId, CompetitionSetupSection section, Model model) {
         CompetitionResource competition = competitionService.getById(competitionId);
 
@@ -368,10 +369,7 @@ public class CompetitionSetupController {
             });
         }
 
-        if(bindingResult.hasErrors()) {
-           return false;
-        }
-        return true;
+        return !bindingResult.hasErrors();
     }
 
     private boolean isSendToDashboard(CompetitionResource competition) {
@@ -412,6 +410,15 @@ public class CompetitionSetupController {
             } else {
                 LOG.error("Question(" + questionId + ") not found");
             }
+        }
+    }
+
+    private void checkRestrictionOfInitialDetails(CompetitionSetupSection section,
+                                                CompetitionResource competitionResource,
+                                                Model model) {
+        if (section == CompetitionSetupSection.INITIAL_DETAILS &&
+                competitionResource.getSectionSetupStatus().containsKey(section)) {
+            model.addAttribute(RESTRICT_INITIAL_DETAILS_EDIT, Boolean.TRUE);
         }
     }
 }

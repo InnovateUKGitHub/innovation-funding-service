@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="app-overview">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="prototypes/fragments/layout :: prototype-admin-header" th:with="status='loggedOut'" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+	 <!--HARDCODED PROTOTYPE HTML-->
+
+	<div class="grid-row">
+		<div class="column-half">
+			<div class="hgroup no-margin-top" style="padding-top: 20px; margin-bottom: 30px">
+				<h1 class="heading-large no-margin">Internal Sign in</h1>
+			</div>
+
+			<form>
+				<fieldset>
+					<legend class="visuallyhidden">Your details</legend>
+					<div class="form-group">
+						<label class="form-label" for="email-address">
+							<span class="form-label-bold">Email address</span>
+						</label>
+						<input class="form-control" id="email-address" name="email-address" type="email" />
+					</div>
+					<div class="form-group">
+						<label class="form-label" for="password">
+							<span class="form-label-bold">Password</span>
+						</label>
+						<input class="form-control" id="password" name="password" type="password" />
+					</div>
+				</fieldset>
+				<button class="button button-large extra-margin" name="sign-in" type="submit" formaction="#">Sign in</button>
+			</form>
+
+		</div>
+		<div class="column-half">
+			<div class="hgroup no-margin-top" style="padding-top: 20px; margin-bottom: 30px">
+				<h2 class="heading-large no-margin">Not got an account?</h2>
+				<p>If you have not yet been set up with an Innovation Funding service account, please *exampleadminemail@innovateuk.gov.uk</p>
+				<p><a href="#">Forgot your password?</a></p>
+			</div>
+		</div>
+	</div>
+
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<script type="text/javascript">
+
+
+</script>
+</body>
+</html>
