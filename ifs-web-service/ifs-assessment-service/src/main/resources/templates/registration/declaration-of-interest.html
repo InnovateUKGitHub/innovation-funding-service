@@ -22,36 +22,63 @@
 
             <h2 class="heading-large">Your affiliations</h2>
 
-            <form th:action="@{/registration/declaration}" method="post">
+            <form th:action="@{/registration/declaration}" method="post" th:object="${form}">
+                <div class="error-summary" th:if="${#fields.hasErrors('global')}">
+                    <h2 class="heading-medium error-summary-heading">We were unable to save your changes</h2>
+                    <ul class="error-summary-list">
+                        <li th:each="err : ${#fields.globalErrors()}" th:text="${err}"></li>
+                    </ul>
+                </div>
+
                 <h3 class="heading-medium no-margin">Principal employer and role</h3>
                 <p class="form-hint">Tell us about your current employer and position</p>
 
-                <div class="form-group extra-margin">
-                    <label class="form-label-bold">Prinicipal employer</label>
-                    <input class="form-control width-full" type="text" />
+                <div class="form-group extra-margin" th:classappend="${#fields.hasErrors('principalEmployer')}? error">
+                    <label class="form-label-bold" th:for="${#ids.next('principalEmployer')}">
+                        Prinicipal employer
+                        <span th:if="${#fields.hasErrors('principalEmployer')}" th:remove="tag">
+                            <span class="error-message"  th:each="err : ${#fields.errors('principalEmployer')}" th:text="${err}" />
+                        </span>
+                    </label>
+                    <input class="form-control width-full" type="text" th:field="*{principalEmployer}" th:errorclass="field-error" />
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label-bold">Role</label>
-                    <input class="form-control width-full" type="text" />
+                <div class="form-group" th:classappend="${#fields.hasErrors('role')}? error">
+                    <label class="form-label-bold" th:for="${#ids.next('role')}">
+                        Role
+                        <span th:if="${#fields.hasErrors('principalEmployer')}" th:remove="tag">
+                            <span class="error-message"  th:each="err : ${#fields.errors('principalEmployer')}" th:text="${err}" />
+                        </span>
+                    </label>
+                    <input class="form-control width-full" type="text" th:field="*{role}" th:errorclass="field-error" />
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label-bold">Professional affiliations</label>
-                    <textarea class="form-control width-full" cols="30" rows="3"></textarea>
+                <div class="form-group" th:classappend="${#fields.hasErrors('professionalAffiliations')}? error">
+                    <label class="form-label-bold"  th:for="${#ids.next('professionalAffiliations')}">
+                        Professional affiliations
+                        <span th:if="${#fields.hasErrors('professionalAffiliations')}" th:remove="tag">
+                            <span class="error-message"  th:each="err : ${#fields.errors('professionalAffiliations')}" th:text="${err}" />
+                        </span>
+                    </label>
+                    <textarea class="form-control width-full" cols="30" rows="3" th:field="*{professionalAffiliations}" th:errorclass="field-error"></textarea>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" th:classappend="${#fields.hasErrors('hasAppointments')}? error">
                     <fieldset class="inline">
-                        <legend class="heading-small">Do you have any appointments, directorships or consultancies?</legend>
+                        <legend class="heading-small">
+                            Do you have any appointments, directorships or consultancies?
+                            <span th:if="${#fields.hasErrors('hasAppointments')}" th:remove="tag">
+                                <span class="error-message"  th:each="err : ${#fields.errors('hasAppointments')}" th:text="${err}" />
+                            </span>
+                        </legend>
 
                         <div class="form-group form-group-compound">
                             <label class="block-label" data-target="toggle-appointments">
-                                <input value="Yes" type="radio" />
+                                <input value="yes" type="radio" th:field="*{hasAppointments}" />
                                 Yes
                             </label>
                             <label class="block-label">
-                                <input value="No" type="radio" />
+                                <input value="no" type="radio" th:field="*{hasAppointments}" />
                                 No
                             </label>
                         </div>
@@ -77,18 +104,23 @@
                     </fieldset>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" th:classappend="${#fields.hasErrors('hasFinancialInterests')}? error">
                     <fieldset class="inline">
-                        <legend class="heading-small">Do you have any other financial interests?</legend>
+                        <legend class="heading-small">
+                            Do you have any other financial interests?
+                            <span th:if="${#fields.hasErrors('hasFinancialInterests')}" th:remove="tag">
+                                <span class="error-message"  th:each="err : ${#fields.errors('hasFinancialInterests')}" th:text="${err}" />
+                            </span>
+                        </legend>
                         <p class="form-hint">Do you have a position or investment in a company from which you can benefit financially?</p>
 
                         <div class="form-group form-group-compound">
                             <label class="block-label" data-target="toggle-interest">
-                                <input value="Yes" type="radio" />
+                                <input value="Yes" type="radio" th:field="*{hasFinancialInterests}" />
                                 Yes
                             </label>
                             <label class="block-label">
-                                <input value="No" type="radio" />
+                                <input value="No" type="radio" th:field="*{hasFinancialInterests}" />
                                 No
                             </label>
                         </div>
@@ -102,17 +134,22 @@
 
                 <h3 class="heading-medium">Close family member affiliations</h3>
 
-                <div class="form-group">
+                <div class="form-group" th:classappend="${#fields.hasErrors('hasFamilyAffiliations')}? error">
                     <fieldset class="inline">
-                        <legend class="heading-small">Do any of your close family members have any appointments, directorships or consultancies?</legend>
+                        <legend class="heading-small">
+                            Do any of your close family members have any appointments, directorships or consultancies?
+                            <span th:if="${#fields.hasErrors('hasFamilyAffiliations')}" th:remove="tag">
+                                <span class="error-message"  th:each="err : ${#fields.errors('hasFamilyAffiliations')}" th:text="${err}" />
+                            </span>
+                        </legend>
 
                         <div class="form-group form-group-compound">
                             <label class="block-label" data-target="toggle-family-appointments">
-                                <input value="Yes" type="radio" />
+                                <input value="Yes" type="radio" th:field="*{hasFamilyAffiliations}" />
                                 Yes
                             </label>
                             <label class="block-label">
-                                <input value="No" type="radio" />
+                                <input value="No" type="radio" th:field="*{hasFamilyAffiliations}" />
                                 No
                             </label>
                         </div>
@@ -144,18 +181,23 @@
                     </fieldset>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" th:classappend="${#fields.hasErrors('hasFamilyFinancialInterests')}? error">
                     <fieldset class="inline">
-                        <legend class="heading-small">Do any of your close family members have any other financial interests?</legend>
+                        <legend class="heading-small">
+                            Do any of your close family members have any other financial interests?
+                            <span th:if="${#fields.hasErrors('hasFamilyFinancialInterests')}" th:remove="tag">
+                                <span class="error-message"  th:each="err : ${#fields.errors('hasFamilyFinancialInterests')}" th:text="${err}" />
+                            </span>
+                        </legend>
                         <p class="form-hint">Do any of your close family members have a position or investment in a company from which you can benefit financially?</p>
 
                         <div class="form-group form-group-compound">
                             <label class="block-label" data-target="toggle-family-interest">
-                                <input value="Yes" type="radio" />
+                                <input value="Yes" type="radio" th:field="*{hasFamilyFinancialInterests}" />
                                 Yes
                             </label>
                             <label class="block-label">
-                                <input value="No" type="radio" />
+                                <input value="No" type="radio" th:field="*{hasFamilyFinancialInterests}" />
                                 No
                             </label>
                         </div>
@@ -167,9 +209,12 @@
                     </fieldset>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" th:classappend="${#fields.hasErrors('accurateAccount')}? error">
+                    <span th:if="${#fields.hasErrors('accurateAccount')}" th:remove="tag">
+                        <span class="error-message"  th:each="err : ${#fields.errors('accurateAccount')}" th:text="${err}" />
+                    </span>
                     <label class="block-label">
-                        <input type="checkbox" />
+                        <input type="checkbox" th:field="*{accurateAccount}" />
                         I confirm that for the financial year ended 31 March 2017 that the above represents an accurate account of my interests outside Innovate UK
                     </label>
                 </div>
