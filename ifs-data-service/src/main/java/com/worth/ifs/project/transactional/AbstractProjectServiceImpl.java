@@ -70,7 +70,7 @@ class AbstractProjectServiceImpl extends BaseTransactionalService {
     @Autowired
     FinanceRowService financeRowService;
 
-    protected ProjectActivityStates createOtherDocumentStatus(final Project project) {
+    ProjectActivityStates createOtherDocumentStatus(final Project project) {
         if (project.getCollaborationAgreement() != null && project.getExploitationPlan() != null) {
             return COMPLETE;
         } else {
@@ -78,16 +78,16 @@ class AbstractProjectServiceImpl extends BaseTransactionalService {
         }
     }
 
-    protected ProjectActivityStates createGrantOfferLetterStatus() {
+    ProjectActivityStates createGrantOfferLetterStatus() {
         //TODO update logic when GrantOfferLetter is implemented
         return NOT_STARTED;
     }
 
-    protected ServiceResult<MonitoringOfficer> getExistingMonitoringOfficerForProject(Long projectId) {
+    ServiceResult<MonitoringOfficer> getExistingMonitoringOfficerForProject(Long projectId) {
         return find(monitoringOfficerRepository.findOneByProjectId(projectId), notFoundError(MonitoringOfficer.class, projectId));
     }
 
-    protected ProjectPartnerStatusResource getProjectPartnerStatus(Project project, Organisation partnerOrganisation) {
+    ProjectPartnerStatusResource getProjectPartnerStatus(Project project, Organisation partnerOrganisation) {
         Organisation leadOrganisation = project.getApplication().getLeadOrganisation();
         Optional<MonitoringOfficer> monitoringOfficer = getExistingMonitoringOfficerForProject(project.getId()).getOptionalSuccessObject();
         Optional<BankDetails> bankDetails = Optional.ofNullable(bankDetailsRepository.findByProjectIdAndOrganisationId(project.getId(), partnerOrganisation.getId()));
@@ -131,7 +131,7 @@ class AbstractProjectServiceImpl extends BaseTransactionalService {
         return projectPartnerStatusResource;
     }
 
-    protected ServiceResult<Void> validateProjectStartDate(LocalDate date) {
+    ServiceResult<Void> validateProjectStartDate(LocalDate date) {
 
         if (date.getDayOfMonth() != 1) {
             return serviceFailure(new Error(PROJECT_SETUP_DATE_MUST_START_ON_FIRST_DAY_OF_MONTH));
@@ -144,7 +144,7 @@ class AbstractProjectServiceImpl extends BaseTransactionalService {
         return serviceSuccess();
     }
 
-    protected ServiceResult<Project> validateIfProjectAlreadySubmitted(final Project project) {
+    ServiceResult<Project> validateIfProjectAlreadySubmitted(final Project project) {
 
         if (project.isProjectDetailsSubmitted()) {
             return serviceFailure(new Error(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_UPDATED_IF_ALREADY_SUBMITTED));
@@ -153,7 +153,7 @@ class AbstractProjectServiceImpl extends BaseTransactionalService {
         return serviceSuccess(project);
     }
 
-    protected ServiceResult<ProjectUser> validateProjectOrganisationFinanceContact(Project project, Long organisationId, Long financeContactUserId) {
+    ServiceResult<ProjectUser> validateProjectOrganisationFinanceContact(Project project, Long organisationId, Long financeContactUserId) {
 
         List<ProjectUser> projectUsers = project.getProjectUsers();
 
@@ -173,7 +173,7 @@ class AbstractProjectServiceImpl extends BaseTransactionalService {
         return getOnlyElementOrFail(partnerUsers);
     }
 
-    protected ServiceResult<ProjectUser> validateProjectManager(Project project, Long projectManagerUserId) {
+    ServiceResult<ProjectUser> validateProjectManager(Project project, Long projectManagerUserId) {
 
         List<ProjectUser> leadPartners = getLeadPartners(project);
         List<ProjectUser> matchingProjectUsers = simpleFilter(leadPartners, pu -> pu.getUser().getId().equals(projectManagerUserId));
@@ -185,18 +185,18 @@ class AbstractProjectServiceImpl extends BaseTransactionalService {
         }
     }
 
-    protected List<ProjectUser> getLeadPartners(Project project) {
+    private List<ProjectUser> getLeadPartners(Project project) {
         Application application = project.getApplication();
         Organisation leadPartnerOrganisation = application.getLeadOrganisation();
         return simpleFilter(project.getProjectUsers(), pu -> organisationsEqual(leadPartnerOrganisation, pu)
                 && pu.getRole().isPartner());
     }
 
-    protected boolean organisationsEqual(Organisation leadPartnerOrganisation, ProjectUser pu) {
+    private boolean organisationsEqual(Organisation leadPartnerOrganisation, ProjectUser pu) {
         return pu.getOrganisation().getId().equals(leadPartnerOrganisation.getId());
     }
 
-    protected ServiceResult<ProjectResource> createProjectFromApplicationId(final Long applicationId) {
+    ServiceResult<ProjectResource> createProjectFromApplicationId(final Long applicationId) {
         return getApplication(applicationId).andOnSuccess(application -> {
             Project project = new Project();
             project.setApplication(application);
@@ -216,15 +216,15 @@ class AbstractProjectServiceImpl extends BaseTransactionalService {
         });
     }
 
-    protected ServiceResult<ProjectUser> createPartnerProjectUser(Project project, User user, Organisation organisation) {
+    private ServiceResult<ProjectUser> createPartnerProjectUser(Project project, User user, Organisation organisation) {
         return createProjectUserForRole(project, user, organisation, PROJECT_PARTNER);
     }
 
-    protected ServiceResult<ProjectUser> createProjectUserForRole(Project project, User user, Organisation organisation, ProjectParticipantRole role) {
+    ServiceResult<ProjectUser> createProjectUserForRole(Project project, User user, Organisation organisation, ProjectParticipantRole role) {
         return serviceSuccess(new ProjectUser(user, project, role, organisation));
     }
 
-    protected List<ProjectResource> projectsToResources(List<Project> filtered) {
+    List<ProjectResource> projectsToResources(List<Project> filtered) {
         return simpleMap(filtered, project -> projectMapper.mapToResource(project));
     }
 
@@ -232,11 +232,11 @@ class AbstractProjectServiceImpl extends BaseTransactionalService {
         return find(projectRepository.findOne(projectId), notFoundError(Project.class, projectId));
     }
 
-    protected ServiceResult<Project> getProjectByApplication(long applicationId) {
+    ServiceResult<Project> getProjectByApplication(long applicationId) {
         return find(projectRepository.findOneByApplicationId(applicationId), notFoundError(Project.class, applicationId));
     }
 
-    protected boolean validateIsReadyForSubmission(final Project project) {
+    boolean validateIsReadyForSubmission(final Project project) {
         return !(project.getAddress() == null
                 || !getExistingProjectManager(project).isPresent()
                 || project.getTargetStartDate() == null
@@ -244,18 +244,18 @@ class AbstractProjectServiceImpl extends BaseTransactionalService {
                 || project.getSubmittedDate() != null);
     }
 
-    protected boolean validateDocumentsUploaded(final Project project) {
+    boolean validateDocumentsUploaded(final Project project) {
         return project.getExploitationPlan() != null
                 && project.getCollaborationAgreement() != null
                 && getExistingProjectManager(project).isPresent()
                 && project.getDocumentsSubmittedDate() == null;
     }
 
-    protected List<ProjectUser> getProjectUsersByProjectId(Long projectId) {
+    List<ProjectUser> getProjectUsersByProjectId(Long projectId) {
         return projectUserRepository.findByProjectId(projectId);
     }
 
-    protected boolean allFinanceContactsNotSet(Long projectId) {
+    private boolean allFinanceContactsNotSet(Long projectId) {
         List<ProjectUser> projectUserObjs = getProjectUsersByProjectId(projectId);
         List<ProjectUserResource> projectUserResources = simpleMap(projectUserObjs, projectUserMapper::mapToResource);
         List<Organisation> partnerOrganisations = getPartnerOrganisations(projectId);
@@ -263,13 +263,13 @@ class AbstractProjectServiceImpl extends BaseTransactionalService {
         return financeRoles.size() < partnerOrganisations.size();
     }
 
-    protected List<Organisation> getPartnerOrganisations(Long projectId) {
+    List<Organisation> getPartnerOrganisations(Long projectId) {
         List<ProjectUser> projectUserObjs = getProjectUsersByProjectId(projectId);
         List<ProjectUserResource> projectRoles = simpleMap(projectUserObjs, projectUserMapper::mapToResource);
         return getPartnerOrganisations(projectRoles);
     }
 
-    protected List<Organisation> getPartnerOrganisations(List<ProjectUserResource> projectRoles) {
+    private List<Organisation> getPartnerOrganisations(List<ProjectUserResource> projectRoles) {
         final Comparator<Organisation> compareById =
                 Comparator.comparingLong(Organisation::getId);
 
@@ -283,7 +283,7 @@ class AbstractProjectServiceImpl extends BaseTransactionalService {
         return new ArrayList<>(organisationSet);
     }
 
-    protected ServiceResult<Void> createOrUpdateProjectManagerForProject(Project project, ProjectUser leadPartnerUser) {
+    ServiceResult<Void> createOrUpdateProjectManagerForProject(Project project, ProjectUser leadPartnerUser) {
 
         Optional<ProjectUser> existingProjectManager = getExistingProjectManager(project);
 
@@ -301,17 +301,17 @@ class AbstractProjectServiceImpl extends BaseTransactionalService {
         });
     }
 
-    protected Optional<ProjectUser> getExistingProjectManager(Project project) {
+    Optional<ProjectUser> getExistingProjectManager(Project project) {
         List<ProjectUser> projectUsers = getProjectUsersByProjectId(project.getId());
         List<ProjectUser> projectManagers = simpleFilter(projectUsers, pu -> pu.getRole().isProjectManager());
         return getOnlyElementOrEmpty(projectManagers);
     }
 
-    protected ProjectActivityStates createProjectDetailsStatus(Project project) {
+    ProjectActivityStates createProjectDetailsStatus(Project project) {
         return project.isProjectDetailsSubmitted() ? COMPLETE : ACTION_REQUIRED;
     }
 
-    protected ProjectActivityStates createMonitoringOfficerStatus(final Optional<MonitoringOfficer> monitoringOfficer, final ProjectActivityStates leadProjectDetailsSubmitted) {
+    ProjectActivityStates createMonitoringOfficerStatus(final Optional<MonitoringOfficer> monitoringOfficer, final ProjectActivityStates leadProjectDetailsSubmitted) {
         if (leadProjectDetailsSubmitted.equals(COMPLETE)) {
             return monitoringOfficer.isPresent() ? COMPLETE : PENDING;
         } else {
@@ -320,7 +320,7 @@ class AbstractProjectServiceImpl extends BaseTransactionalService {
 
     }
 
-    protected ProjectActivityStates createBankDetailStatus(final Project project, final Optional<BankDetails> bankDetails, final Organisation partnerOrganisation) {
+    ProjectActivityStates createBankDetailStatus(final Project project, final Optional<BankDetails> bankDetails, final Organisation partnerOrganisation) {
         if (bankDetails.isPresent()) {
             return bankDetails.get().isApproved() ? COMPLETE : PENDING;
         } else {
@@ -333,7 +333,7 @@ class AbstractProjectServiceImpl extends BaseTransactionalService {
         }
     }
 
-    protected ProjectActivityStates createFinanceCheckStatus(final ProjectActivityStates bankDetailsStatus) {
+    private ProjectActivityStates createFinanceCheckStatus(final ProjectActivityStates bankDetailsStatus) {
         if(bankDetailsStatus.equals(COMPLETE) || bankDetailsStatus.equals(PENDING) || bankDetailsStatus.equals(NOT_REQUIRED)){
             return ACTION_REQUIRED;
         } else {
@@ -342,7 +342,8 @@ class AbstractProjectServiceImpl extends BaseTransactionalService {
         }
     }
 
-    protected ProjectActivityStates createSpendProfileStatus(final ProjectActivityStates financeCheckStatus, final Optional<SpendProfile> spendProfile) {
+    ProjectActivityStates createSpendProfileStatus(final ProjectActivityStates financeCheckStatus, final Optional<SpendProfile> spendProfile) {
+        //TODO - Implement REJECT status when internal spend profile action story is completed
         if (spendProfile.isPresent()) {
             if (spendProfile.get().isMarkedAsComplete()) {
                 return COMPLETE;

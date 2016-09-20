@@ -34,17 +34,17 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
         List<ProjectStatusResource> projectStatusResources = projects.stream().map(project -> {
             ProjectActivityStates projectDetailsStatus = getProjectDetailsStatus(project);
             return new ProjectStatusResource(
-                        project.getName(),
-                        project.getId() + "",
-                        getProjectPartnerCount(project.getId()),
-                        project.getApplication().getLeadOrganisation().getName(),
-                        projectDetailsStatus,
-                        getBankDetailsStatus(project),
-                        getFinanceChecksStatus(project),
-                        getSpendProfileStatus(project),
-                        getMonitoringOfficerStatus(project, projectDetailsStatus),
-                        getOtherDocumentsStatus(project),
-                        getGrantOfferLetterStatus(project));
+                    project.getName(),
+                    project.getId() + "",
+                    getProjectPartnerCount(project.getId()),
+                    project.getApplication().getLeadOrganisation().getName(),
+                    projectDetailsStatus,
+                    getBankDetailsStatus(project),
+                    getFinanceChecksStatus(project),
+                    getSpendProfileStatus(project),
+                    getMonitoringOfficerStatus(project, projectDetailsStatus),
+                    getOtherDocumentsStatus(project),
+                    getGrantOfferLetterStatus(project));
         }).collect(Collectors.toList());
 
 
@@ -62,14 +62,25 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
     }
 
     private ProjectActivityStates getBankDetailsStatus(Project project){
-        List<Organisation> organisations = project.getOrganisations();
-        for(Organisation organisation : organisations){
+        // Show hourglass when there is at least one org which hasn't submitted bank details but is required to.
+        for(Organisation organisation : project.getOrganisations()){
             Optional<BankDetails> bankDetails = Optional.ofNullable(bankDetailsRepository.findByProjectIdAndOrganisationId(project.getId(), organisation.getId()));
             ProjectActivityStates organisationBankDetailsStatus = createBankDetailStatus(project, bankDetails, organisation);
-            if(organisationBankDetailsStatus != NOT_REQUIRED && organisationBankDetailsStatus != COMPLETE){
+            if(!bankDetails.isPresent() && !organisationBankDetailsStatus.equals(NOT_REQUIRED)){
                 return PENDING;
             }
         }
+
+        // Show action required by internal user (pending flag) when all bank details submitted but at least one requires manual approval.
+        for(Organisation organisation : project.getOrganisations()){
+            Optional<BankDetails> bankDetails = Optional.ofNullable(bankDetailsRepository.findByProjectIdAndOrganisationId(project.getId(), organisation.getId()));
+            ProjectActivityStates organisationBankDetailsStatus = createBankDetailStatus(project, bankDetails, organisation);
+            if(bankDetails.isPresent() && organisationBankDetailsStatus.equals(PENDING)){
+                return ACTION_REQUIRED;
+            }
+        }
+
+        // otherwise show a tick
         return COMPLETE;
     }
 
@@ -109,6 +120,7 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
     }
 
     private ProjectActivityStates getGrantOfferLetterStatus(Project project){
+        // TODO: Set status when GOL internal view is completed.
         return createGrantOfferLetterStatus();
     }
 }
