@@ -50,7 +50,7 @@ The user has the options to edit the details and to approve the bank details
     And the user should see the element    jQuery=.button:contains("Approve bank account details")
 
 
-The user can change bank account details
+The user can change address and companies house details
     [Documentation]    INFUND-4054
     [Tags]    HappyPath
     Given the user clicks the button/link        link=Change bank account details
@@ -59,6 +59,31 @@ The user can change bank account details
     When the user enters text to a text field    id=street    Montrose House 2
     And the user enters text to a text field     id=company-name    Vitruvius Stonework not LImited
     And the user enters text to a text field     id=companies-house-number    60674011
+
+Bank account number and sort code validations client side
+    [Documentation]    INFUND-4054
+    [Tags]
+    When the user enters text to a text field    id=bank-acc-number    1234567
+    And the user enters text to a text field    id=bank-sort-code    12345
+    And the user moves focus to the element    link=Cancel bank account changes
+    Then the user should see the text in the page    Please enter a valid account number
+    And the user should see the text in the page    Please enter a valid sort code
+    When the user enters text to a text field    id=bank-acc-number    123456789
+    And the user enters text to a text field    id=bank-sort-code    1234567
+    And the user moves focus to the element    link=Cancel bank account changes
+    Then the user sees the text in the element    id=bank-acc-number    ${empty}
+    And the user sees the text in the element    id=bank-sort-code    ${empty}
+    And the user should not see an error in the page
+
+Bank account number and sort code validations server side
+    [Documentation]    INFUND-4054
+    [Tags]
+     When the user enters text to a text field    id=bank-acc-number    abcdefgh
+     And the user enters text to a text field    id=bank-sort-code    abcdef
+     And the user clicks the button/link           jQuery=.column-half.alignright .button:contains("Update bank account details")
+     And the user clicks the button/link           jQuery=.modal-partner-change-bank-details .button:contains("Update bank account details")   #Due to popup
+     Then the user should see the text in the page    Please enter a valid account numbe
+     And the user should see the text in the page    Please enter a valid sort code
 
 The user cancels bank details changes
     [Documentation]    INFUND-4054
