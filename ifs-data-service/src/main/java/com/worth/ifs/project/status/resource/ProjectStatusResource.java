@@ -7,7 +7,10 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class ProjectStatusResource {
     private String projectTitle;
-    private String projectNumber;
+    private Long projectNumber;
+    private String formattedProjectNumber;
+    private Long applicationNumber;
+    private String formattedApplicationNumber;
     private Integer numberOfPartners;
     private String projectLeadOrganisationName;
 
@@ -19,9 +22,12 @@ public class ProjectStatusResource {
     private ProjectActivityStates otherDocumentsStatus;
     private ProjectActivityStates grantOfferLetterStatus;
 
-    public ProjectStatusResource(String projectTitle, String projectNumber, Integer numberOfPartners, String projectLeadOrganisationName, ProjectActivityStates projectDetailsStatus, ProjectActivityStates bankDetailsStatus, ProjectActivityStates financeChecksStatus, ProjectActivityStates spendProfileStatus, ProjectActivityStates monitoringOfficerStatus, ProjectActivityStates otherDocumentsStatus, ProjectActivityStates grantOfferLetterStatus) {
+    public ProjectStatusResource(String projectTitle, Long projectNumber, String formattedProjectNumber, Long applicationNumber, String formattedApplicationNumber, Integer numberOfPartners, String projectLeadOrganisationName, ProjectActivityStates projectDetailsStatus, ProjectActivityStates bankDetailsStatus, ProjectActivityStates financeChecksStatus, ProjectActivityStates spendProfileStatus, ProjectActivityStates monitoringOfficerStatus, ProjectActivityStates otherDocumentsStatus, ProjectActivityStates grantOfferLetterStatus) {
         this.projectTitle = projectTitle;
         this.projectNumber = projectNumber;
+        this.formattedProjectNumber = formattedProjectNumber;
+        this.applicationNumber = applicationNumber;
+        this.formattedApplicationNumber = formattedApplicationNumber;
         this.numberOfPartners = numberOfPartners;
         this.projectLeadOrganisationName = projectLeadOrganisationName;
         this.projectDetailsStatus = projectDetailsStatus;
@@ -45,12 +51,8 @@ public class ProjectStatusResource {
         this.projectTitle = projectTitle;
     }
 
-    public String getProjectNumber() {
+    public Long getProjectNumber() {
         return projectNumber;
-    }
-
-    public void setProjectNumber(String projectNumber) {
-        this.projectNumber = projectNumber;
     }
 
     public Integer getNumberOfPartners() {
@@ -125,6 +127,34 @@ public class ProjectStatusResource {
         this.grantOfferLetterStatus = grantOfferLetterStatus;
     }
 
+    public void setProjectNumber(Long projectNumber) {
+        this.projectNumber = projectNumber;
+    }
+
+    public String getFormattedProjectNumber() {
+        return formattedProjectNumber;
+    }
+
+    public void setFormattedProjectNumber(String formattedProjectNumber) {
+        this.formattedProjectNumber = formattedProjectNumber;
+    }
+
+    public Long getApplicationNumber() {
+        return applicationNumber;
+    }
+
+    public void setApplicationNumber(Long applicationNumber) {
+        this.applicationNumber = applicationNumber;
+    }
+
+    public String getFormattedApplicationNumber() {
+        return formattedApplicationNumber;
+    }
+
+    public void setFormattedApplicationNumber(String formattedApplicationNumber) {
+        this.formattedApplicationNumber = formattedApplicationNumber;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -136,6 +166,9 @@ public class ProjectStatusResource {
         return new EqualsBuilder()
                 .append(projectTitle, that.projectTitle)
                 .append(projectNumber, that.projectNumber)
+                .append(formattedProjectNumber, that.formattedProjectNumber)
+                .append(applicationNumber, that.applicationNumber)
+                .append(formattedApplicationNumber, that.formattedApplicationNumber)
                 .append(numberOfPartners, that.numberOfPartners)
                 .append(projectLeadOrganisationName, that.projectLeadOrganisationName)
                 .append(projectDetailsStatus, that.projectDetailsStatus)
@@ -153,6 +186,9 @@ public class ProjectStatusResource {
         return new HashCodeBuilder(17, 37)
                 .append(projectTitle)
                 .append(projectNumber)
+                .append(formattedProjectNumber)
+                .append(applicationNumber)
+                .append(formattedApplicationNumber)
                 .append(numberOfPartners)
                 .append(projectLeadOrganisationName)
                 .append(projectDetailsStatus)
@@ -170,6 +206,9 @@ public class ProjectStatusResource {
         return new ToStringBuilder(this)
                 .append("projectTitle", projectTitle)
                 .append("projectNumber", projectNumber)
+                .append("formattedProjectNumber", formattedProjectNumber)
+                .append("applicationNumber", applicationNumber)
+                .append("formattedApplicationNumber", formattedApplicationNumber)
                 .append("numberOfPartners", numberOfPartners)
                 .append("projectLeadOrganisationName", projectLeadOrganisationName)
                 .append("projectDetailsStatus", projectDetailsStatus)

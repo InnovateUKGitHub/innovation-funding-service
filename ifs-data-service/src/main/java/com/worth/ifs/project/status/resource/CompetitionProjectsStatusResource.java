@@ -7,13 +7,15 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import java.util.List;
 
 public class CompetitionProjectsStatusResource {
-    private String competitionNumber;
+    private Long competitionNumber;
+    private String formattedCompetitionNumber;
     private String competitionName;
 
     private List<ProjectStatusResource> projectStatusResources;
 
-    public CompetitionProjectsStatusResource(String competitionNumber, String competitionName, List<ProjectStatusResource> projectStatusResources) {
+    public CompetitionProjectsStatusResource(Long competitionNumber, String formattedCompetitionNumber, String competitionName, List<ProjectStatusResource> projectStatusResources) {
         this.competitionNumber = competitionNumber;
+        this.formattedCompetitionNumber = formattedCompetitionNumber;
         this.competitionName = competitionName;
         this.projectStatusResources = projectStatusResources;
     }
@@ -22,11 +24,11 @@ public class CompetitionProjectsStatusResource {
     public CompetitionProjectsStatusResource() {
     }
 
-    public String getCompetitionNumber() {
+    public Long getCompetitionNumber() {
         return competitionNumber;
     }
 
-    public void setCompetitionNumber(String competitionNumber) {
+    public void setCompetitionNumber(Long competitionNumber) {
         this.competitionNumber = competitionNumber;
     }
 
@@ -46,6 +48,14 @@ public class CompetitionProjectsStatusResource {
         this.projectStatusResources = projectStatusResources;
     }
 
+    public String getFormattedCompetitionNumber() {
+        return formattedCompetitionNumber;
+    }
+
+    public void setFormattedCompetitionNumber(String formattedCompetitionNumber) {
+        this.formattedCompetitionNumber = formattedCompetitionNumber;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -56,6 +66,7 @@ public class CompetitionProjectsStatusResource {
 
         return new EqualsBuilder()
                 .append(competitionNumber, that.competitionNumber)
+                .append(formattedCompetitionNumber, that.formattedCompetitionNumber)
                 .append(competitionName, that.competitionName)
                 .append(projectStatusResources, that.projectStatusResources)
                 .isEquals();
@@ -65,6 +76,7 @@ public class CompetitionProjectsStatusResource {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(competitionNumber)
+                .append(formattedCompetitionNumber)
                 .append(competitionName)
                 .append(projectStatusResources)
                 .toHashCode();
@@ -74,6 +86,7 @@ public class CompetitionProjectsStatusResource {
     public String toString() {
         return new ToStringBuilder(this)
                 .append("competitionNumber", competitionNumber)
+                .append("formattedCompetitionNumber", formattedCompetitionNumber)
                 .append("competitionName", competitionName)
                 .append("projectStatusResources", projectStatusResources)
                 .toString();

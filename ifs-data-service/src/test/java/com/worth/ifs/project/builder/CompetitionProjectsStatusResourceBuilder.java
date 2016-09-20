@@ -29,7 +29,7 @@ public class CompetitionProjectsStatusResourceBuilder extends BaseBuilder<Compet
         return new CompetitionProjectsStatusResourceBuilder(emptyList());
     }
 
-    public CompetitionProjectsStatusResourceBuilder withCompetitionNumber(String ... competitionNumbers) {
+    public CompetitionProjectsStatusResourceBuilder withCompetitionNumber(Long ... competitionNumbers) {
         return withArray((competitionNumber, cps) -> setField("competitionNumber", competitionNumber, cps), competitionNumbers);
     }
 
