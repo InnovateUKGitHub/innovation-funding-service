@@ -51,6 +51,14 @@ IFS.core.formValidation = (function(){
                 fields : '[maxlength]',
                 messageInvalid : "This field cannot contain more than %maxlength% characters"
             },
+            minwordslength : {
+                fields : '[data-minwordslength]',
+                messageInvalid : "This field has a minimum number of words"
+            },
+            maxwordslength : {
+                fields : '[data-maxwordslength]',
+                messageInvalid : "This field has a maximum number of words"
+            },
             date : {
                 fields : '.date-group input',
                 messageInvalid : {
@@ -90,6 +98,8 @@ IFS.core.formValidation = (function(){
           jQuery('body').on('blur change',s.required.fields,function(){ IFS.core.formValidation.checkRequired(jQuery(this),true); });
           jQuery('body').on('change',s.minlength.fields,function(){ IFS.core.formValidation.checkMinLength(jQuery(this),true); });
           jQuery('body').on('change',s.maxlength.fields,function(){ IFS.core.formValidation.checkMaxLength(jQuery(this),true); });
+          jQuery('body').on('change',s.minwordslength.fields,function(){ IFS.core.formValidation.checkMinWordsLength(jQuery(this),true); });
+          jQuery('body').on('change',s.maxwordslength.fields,function(){ IFS.core.formValidation.checkMaxWordsLength(jQuery(this),true); });
           jQuery('body').on('change',s.tel.fields,function(){ IFS.core.formValidation.checkTel(jQuery(this),true); });
           jQuery('body').on('change',s.date.fields,function(){  IFS.core.formValidation.checkDate(jQuery(this),true); });
 
@@ -348,6 +358,48 @@ IFS.core.formValidation = (function(){
             var errorMessage = IFS.core.formValidation.getErrorMessage(field,'maxlength');
             var maxlength = parseInt(field.attr('maxlength'),10);
             if(field.val().length > maxlength){
+              if(showMessage) { IFS.core.formValidation.setInvalid(field,errorMessage);}
+              return false;
+            }
+            else {
+              if(showMessage) {IFS.core.formValidation.setValid(field,errorMessage);}
+              return true;
+            }
+        },
+        checkMinWordsLength : function(field,showMessage){
+            var errorMessage = IFS.core.formValidation.getErrorMessage(field,'minwordslength');
+            var minWordsLength = parseInt(field.attr('data-minwordslength'),10);
+            var value = field.val();
+
+            //regex = replace newlines with space \r\n, \n, \r
+            value = value.replace(/(\r\n|\n|\r)/gm," ");
+            //remove markdown lists ('* ','1. ','2. ','**','_') from markdown as it influences word count
+            value = value.replace(/([[0-9]+\.\ |\*\ |\*\*|_)/gm,"");
+
+            var words = jQuery.trim(value).split(' ');
+
+            if((words.length > 0) && (words.length < minWordsLength)){
+              if(showMessage) { IFS.core.formValidation.setInvalid(field,errorMessage);}
+              return false;
+            }
+            else {
+              if(showMessage) { IFS.core.formValidation.setValid(field,errorMessage);}
+              return true;
+            }
+        },
+        checkMaxWordsLength : function(field,showMessage){
+            var errorMessage = IFS.core.formValidation.getErrorMessage(field,'maxwordslength');
+            var maxWordsLength = parseInt(field.attr('data-maxwordslength'),10);
+            var value = field.val();
+
+            //regex = replace newlines with space \r\n, \n, \r
+            value = value.replace(/(\r\n|\n|\r)/gm," ");
+            //remove markdown lists ('* ','1. ','2. ','**','_') from markdown as it influences word count
+            value = value.replace(/([[0-9]+\.\ |\*\ |\*\*|_)/gm,"");
+
+            var words = jQuery.trim(value).split(' ');
+
+            if(words.length > maxWordsLength){
               if(showMessage) { IFS.core.formValidation.setInvalid(field,errorMessage);}
               return false;
             }
