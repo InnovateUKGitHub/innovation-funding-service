@@ -53,6 +53,7 @@ import com.worth.ifs.invite.mapper.CompetitionParticipantRoleMapper;
 import com.worth.ifs.invite.mapper.ParticipantStatusMapper;
 import com.worth.ifs.invite.mapper.RejectionReasonMapper;
 import com.worth.ifs.invite.repository.*;
+import com.worth.ifs.invite.transactional.EthnicityService;
 import com.worth.ifs.invite.transactional.InviteProjectService;
 import com.worth.ifs.invite.transactional.RejectionReasonService;
 import com.worth.ifs.notifications.resource.SystemNotificationSource;
@@ -71,6 +72,7 @@ import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.sil.experian.service.SilExperianEndpoint;
 import com.worth.ifs.token.repository.TokenRepository;
 import com.worth.ifs.token.transactional.TokenService;
+import com.worth.ifs.user.mapper.EthnicityMapper;
 import com.worth.ifs.user.mapper.UserMapper;
 import com.worth.ifs.user.repository.*;
 import com.worth.ifs.user.transactional.PasswordPolicyValidator;
@@ -360,6 +362,15 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected FinanceRowService financeRowServiceMock;
+
+    @Mock
+    protected EthnicityRepository ethnicityRepositoryMock;
+
+    @Mock
+    protected EthnicityMapper ethnicityMapperMock;
+
+    @Mock
+    protected EthnicityService ethnicityServiceMock;
 
     @Before
     public void setupMockInjection() {

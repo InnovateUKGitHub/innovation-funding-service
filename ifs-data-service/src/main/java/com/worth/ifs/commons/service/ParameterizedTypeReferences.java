@@ -23,10 +23,7 @@ import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.RejectionReasonResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
-import com.worth.ifs.user.resource.OrganisationResource;
-import com.worth.ifs.user.resource.OrganisationTypeResource;
-import com.worth.ifs.user.resource.ProcessRoleResource;
-import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.resource.*;
 import org.springframework.core.ParameterizedTypeReference;
 
 import java.util.List;
@@ -170,4 +167,7 @@ public final class ParameterizedTypeReferences {
         return new ParameterizedTypeReference<List<AssessmentResource>>() {};
     }
 
+    public static ParameterizedTypeReference<List<EthnicityResource>> ethnicityResourceListType() {
+        return new ParameterizedTypeReference<List<EthnicityResource>>() {};
+    }
 }
