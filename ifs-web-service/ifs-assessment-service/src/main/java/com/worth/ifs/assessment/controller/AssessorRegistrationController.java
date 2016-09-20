@@ -3,14 +3,10 @@ package com.worth.ifs.assessment.controller;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.service.AddressRestService;
 import com.worth.ifs.assessment.form.AssessorRegistrationForm;
+import com.worth.ifs.assessment.model.AssessorRegistrationBecomeAnAssessorModelPopulator;
 import com.worth.ifs.assessment.model.AssessorRegistrationModelPopulator;
-import com.worth.ifs.assessment.service.AssessorRestService;
-import com.worth.ifs.assessment.service.AssessorRestServiceImpl;
-import com.worth.ifs.assessment.service.CompetitionInviteRestService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.form.AddressForm;
-import com.worth.ifs.registration.form.RegistrationForm;
-import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.util.CookieUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -33,28 +30,32 @@ import java.util.List;
 @Controller
 @RequestMapping("/registration")
 public class AssessorRegistrationController {
-    public static final String ASSESSOR_INVITE_HASH = "assessor_invite_hash";
 
     @Autowired
     private AddressRestService addressRestService;
 
     @Autowired
-    private CompetitionInviteRestService inviteRestService;
+    private AssessorRegistrationBecomeAnAssessorModelPopulator becomeAnAssessorModelPopulator;
 
     @Autowired
-    private AssessorRegistrationModelPopulator modelPopulator;
+    private AssessorRegistrationModelPopulator registrationModelPopulator;
 
-    @Autowired
-    private AssessorRestService assessorRestService;
+    @RequestMapping(value = "/{inviteHash}/start", method = RequestMethod.GET)
+    public String becomeAnAssessor(Model model,
+                                   @PathVariable("inviteHash") String inviteHash) {
+        model.addAttribute("model", becomeAnAssessorModelPopulator.populateModel(inviteHash));
+        return "registration/become-assessor";
+    }
 
-    @RequestMapping(value = "/register", method = RequestMethod.GET)
-    public String registerForm(Model model, HttpServletRequest request, HttpServletResponse response) {
+    @RequestMapping(value = "/{inviteHash}/register", method = RequestMethod.GET)
+    public String registerForm(Model model,
+                               @PathVariable("inviteHash") String inviteHash,
+                               HttpServletRequest request,
+                               HttpServletResponse response) {
 
         addRegistrationFormToModel(model, request, response);
 
-        String inviteHash = CookieUtil.getCookieValue(request, ASSESSOR_INVITE_HASH);
-
-        model.addAttribute("model", modelPopulator.populateModel(inviteHash));
+        model.addAttribute("model", registrationModelPopulator.populateModel(inviteHash));
 
         String destination = "registration/register";
 
@@ -73,12 +74,6 @@ public class AssessorRegistrationController {
                                      HttpServletRequest request,
                                      Model model) {
         addAddressOptions(registrationForm);
-
-        String inviteHash = CookieUtil.getCookieValue(request, ASSESSOR_INVITE_HASH);
-
-
-        model.addAttribute("model", modelPopulator.populateModel(inviteHash));
-
 
         //Retrieve invite
         //Add email address to model

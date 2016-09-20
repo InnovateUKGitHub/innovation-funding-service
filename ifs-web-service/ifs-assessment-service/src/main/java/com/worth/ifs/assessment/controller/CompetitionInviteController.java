@@ -11,7 +11,6 @@ import com.worth.ifs.invite.resource.CompetitionRejectionResource;
 import com.worth.ifs.invite.resource.RejectionReasonResource;
 import com.worth.ifs.invite.service.RejectionReasonRestService;
 import com.worth.ifs.user.resource.UserResource;
-import com.worth.ifs.util.CookieUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,7 +35,6 @@ import static java.lang.String.format;
 @Controller
 @RequestMapping("/invite")
 public class CompetitionInviteController extends BaseController {
-    public static final String ASSESSOR_INVITE_HASH = "assessor_invite_hash";
 
     @Autowired
     private CompetitionInviteRestService inviteRestService;
@@ -65,14 +63,13 @@ public class CompetitionInviteController extends BaseController {
                                HttpServletResponse response) {
         boolean userIsLoggedIn = loggedInUser != null;
         if (userIsLoggedIn) {
-            return format("redirect:/invite-accept/competition/%s/accept",inviteHash);
+            return format("redirect:/invite-accept/competition/%s/accept", inviteHash);
         } else {
             return inviteRestService.checkExistingUser(inviteHash).andOnSuccessReturn(userExists -> {
                 if (userExists) {
                     return doViewAcceptUserExistsButNotLoggedIn(model, inviteHash);
                 } else {
-                    CookieUtil.saveToCookie(response, ASSESSOR_INVITE_HASH, inviteHash);
-                    return "redirect:/registration/register";
+                    return format("redirect:/registration/%s/start", inviteHash);
                 }
             }).getSuccessObject();
         }
