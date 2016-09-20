@@ -1,8 +1,7 @@
 *** Settings ***
 Documentation     INFUND-2607 As an applicant I want to have a link to the feedback for my application from the Application Overview page when it becomes available so I can review the assessor feedback for my application
-
 Suite Teardown    the user closes the browser
-Force Tags        Comp admin    Upload
+Force Tags        Upload    CompAdmin
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -16,7 +15,6 @@ ${successful_application_overview}    ${server}/application/16
 ${unsuccessful_application_overview}    ${server}/application/17
 ${successful_application_comp_admin_view}    ${server}/management/competition/3/application/16
 ${unsuccessful_application_comp_admin_view}    ${server}/management/competition/3/application/17
-
 
 *** Test Cases ***
 Comp admin can view uploaded feedback
