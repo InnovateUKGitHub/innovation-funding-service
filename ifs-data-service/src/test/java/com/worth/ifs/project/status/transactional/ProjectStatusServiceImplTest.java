@@ -7,7 +7,6 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
-import com.worth.ifs.invite.domain.ProjectParticipantRole;
 import com.worth.ifs.project.builder.MonitoringOfficerBuilder;
 import com.worth.ifs.project.domain.MonitoringOfficer;
 import com.worth.ifs.project.domain.Project;
@@ -20,7 +19,6 @@ import com.worth.ifs.project.transactional.ProjectStatusServiceImpl;
 import com.worth.ifs.user.domain.*;
 import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import java.util.List;
 
@@ -43,7 +41,6 @@ import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.resource.UserRoleType.APPLICANT;
 import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
-import static freemarker.template.utility.Collections12.singletonList;
 import static org.junit.Assert.assertTrue;
 import static org.powermock.api.mockito.PowerMockito.when;
 
@@ -62,7 +59,8 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
         /**
          * Create partner and lead applicant role
          */
-        Role leadApplicantRole = newRole().withType(APPLICANT).build();
+        Role leadApplicantRole = newRole().withType(LEADAPPLICANT).build();
+        Role applicantRole = newRole().withType(APPLICANT).build();
         Role partnerRole = newRole().withType(PARTNER).build();
 
         /**
@@ -83,14 +81,14 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
         /**
          * Create 3 applications, one for each org, with process roles
          */
-        List<ProcessRole> applicantProcessRoles = newProcessRole().withUser(users.get(0), users.get(1), users.get(2)).withRole(leadApplicantRole).withOrganisation(organisations.get(0), organisations.get(1), organisations.get(2)).build(3);
+        List<ProcessRole> applicantProcessRoles = newProcessRole().withUser(users.get(0), users.get(1), users.get(2)).withRole(leadApplicantRole, applicantRole, applicantRole).withOrganisation(organisations.get(0), organisations.get(1), organisations.get(2)).build(3);
         List<Application> applications = newApplication().withCompetition(competition).withProcessRoles(applicantProcessRoles.get(0), applicantProcessRoles.get(1), applicantProcessRoles.get(2)).build(3);
 
         /**
          * Create 3 project with 3 Project Users from 3 different organisations with associated applications
          */
         List<ProjectUser> projectUsers = newProjectUser().withRole(PROJECT_PARTNER).withUser(users.get(0), users.get(1), users.get(2)).withOrganisation(organisations.get(0), organisations.get(1), organisations.get(2)).build(3);
-        List<Project> projects = newProject().withApplication(applications.get(0), applications.get(1), applications.get(2)).withProjectUsers(projectUsers.get(0), ).build(3);
+        List<Project> projects = newProject().withApplication(applications.get(0), applications.get(1), applications.get(2)).withProjectUsers(projectUsers).build(3);
 
         /**
          * Create 3 bank detail records, one for each organisation
@@ -118,38 +116,58 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
         when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(projects.get(1).getId(), organisations.get(1).getId())).thenReturn(bankDetails.get(1));
         when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(projects.get(2).getId(), organisations.get(2).getId())).thenReturn(bankDetails.get(2));
 
-        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), organisation.get(0).getId())).thenReturn(spendProfile);
+        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(projects.get(0).getId(), organisations.get(0).getId())).thenReturn(spendProfile);
+        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(projects.get(1).getId(), organisations.get(1).getId())).thenReturn(spendProfile);
+        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(projects.get(2).getId(), organisations.get(2).getId())).thenReturn(spendProfile);
 
         MonitoringOfficer monitoringOfficerInDB = MonitoringOfficerBuilder.newMonitoringOfficer().build();
-        when(monitoringOfficerRepositoryMock.findOneByProjectId(p.getId())).thenReturn(monitoringOfficerInDB);
+        when(monitoringOfficerRepositoryMock.findOneByProjectId(projects.get(0).getId())).thenReturn(monitoringOfficerInDB);
+        when(monitoringOfficerRepositoryMock.findOneByProjectId(projects.get(1).getId())).thenReturn(monitoringOfficerInDB);
+        when(monitoringOfficerRepositoryMock.findOneByProjectId(projects.get(2).getId())).thenReturn(monitoringOfficerInDB);
 
-        when(organisationRepositoryMock.findOne(organisation.get(0).getId())).thenReturn(organisation.get(0));
-        when(organisationRepositoryMock.findOne(organisation.get(1).getId())).thenReturn(organisation.get(1));
-        when(organisationRepositoryMock.findOne(organisation.get(2).getId())).thenReturn(organisation.get(2));
+        when(organisationRepositoryMock.findOne(organisations.get(0).getId())).thenReturn(organisations.get(0));
+        when(organisationRepositoryMock.findOne(organisations.get(1).getId())).thenReturn(organisations.get(1));
+        when(organisationRepositoryMock.findOne(organisations.get(2).getId())).thenReturn(organisations.get(2));
 
         List<ApplicationFinance> applicationFinances = newApplicationFinance().build(3);
-        when(applicationFinanceRepositoryMock.findByApplicationIdAndOrganisationId(p.getApplication().getId(), organisation.get(0).getId())).thenReturn(applicationFinances.get(0));
-        when(applicationFinanceRepositoryMock.findByApplicationIdAndOrganisationId(p.getApplication().getId(), organisation.get(1).getId())).thenReturn(applicationFinances.get(1));
-        when(applicationFinanceRepositoryMock.findByApplicationIdAndOrganisationId(p.getApplication().getId(), organisation.get(2).getId())).thenReturn(applicationFinances.get(2));
+        when(applicationFinanceRepositoryMock.findByApplicationIdAndOrganisationId(projects.get(0).getApplication().getId(), organisations.get(0).getId())).thenReturn(applicationFinances.get(0));
+        when(applicationFinanceRepositoryMock.findByApplicationIdAndOrganisationId(projects.get(0).getApplication().getId(), organisations.get(1).getId())).thenReturn(applicationFinances.get(1));
+        when(applicationFinanceRepositoryMock.findByApplicationIdAndOrganisationId(projects.get(0).getApplication().getId(), organisations.get(2).getId())).thenReturn(applicationFinances.get(2));
 
-        ApplicationFinanceResource applicationFinanceResource0 = newApplicationFinanceResource().withGrantClaimPercentage(20).withOrganisation(organisation.get(0).getId()).build();
+        when(applicationFinanceRepositoryMock.findByApplicationIdAndOrganisationId(projects.get(1).getApplication().getId(), organisations.get(0).getId())).thenReturn(applicationFinances.get(0));
+        when(applicationFinanceRepositoryMock.findByApplicationIdAndOrganisationId(projects.get(1).getApplication().getId(), organisations.get(1).getId())).thenReturn(applicationFinances.get(1));
+        when(applicationFinanceRepositoryMock.findByApplicationIdAndOrganisationId(projects.get(1).getApplication().getId(), organisations.get(2).getId())).thenReturn(applicationFinances.get(2));
+
+        when(applicationFinanceRepositoryMock.findByApplicationIdAndOrganisationId(projects.get(2).getApplication().getId(), organisations.get(0).getId())).thenReturn(applicationFinances.get(0));
+        when(applicationFinanceRepositoryMock.findByApplicationIdAndOrganisationId(projects.get(2).getApplication().getId(), organisations.get(1).getId())).thenReturn(applicationFinances.get(1));
+        when(applicationFinanceRepositoryMock.findByApplicationIdAndOrganisationId(projects.get(2).getApplication().getId(), organisations.get(2).getId())).thenReturn(applicationFinances.get(2));
+
+        ApplicationFinanceResource applicationFinanceResource0 = newApplicationFinanceResource().withGrantClaimPercentage(20).withOrganisation(organisations.get(0).getId()).build();
         when(applicationFinanceMapperMock.mapToResource(applicationFinances.get(0))).thenReturn(applicationFinanceResource0);
 
-        ApplicationFinanceResource applicationFinanceResource1 = newApplicationFinanceResource().withGrantClaimPercentage(20).withOrganisation(organisation.get(1).getId()).build();
+        ApplicationFinanceResource applicationFinanceResource1 = newApplicationFinanceResource().withGrantClaimPercentage(20).withOrganisation(organisations.get(1).getId()).build();
         when(applicationFinanceMapperMock.mapToResource(applicationFinances.get(1))).thenReturn(applicationFinanceResource1);
 
-        ApplicationFinanceResource applicationFinanceResource2 = newApplicationFinanceResource().withGrantClaimPercentage(20).withOrganisation(organisation.get(2).getId()).build();
+        ApplicationFinanceResource applicationFinanceResource2 = newApplicationFinanceResource().withGrantClaimPercentage(20).withOrganisation(organisations.get(2).getId()).build();
         when(applicationFinanceMapperMock.mapToResource(applicationFinances.get(2))).thenReturn(applicationFinanceResource2);
 
-        List<ProjectUserResource> puResource = newProjectUserResource().withProject(p.getId()).withOrganisation(organisation.get(0).getId(), organisation.get(1).getId(), organisation.get(2).getId()).withRole(partnerRole.getId()).withRoleName(PROJECT_PARTNER.getName()).build(3);
+        List<ProjectUserResource> puResource = newProjectUserResource().withProject(projects.get(0).getId()).withOrganisation(organisations.get(0).getId(), organisations.get(1).getId(), organisations.get(2).getId()).withRole(partnerRole.getId()).withRoleName(PROJECT_PARTNER.getName()).build(3);
 
-        when(projectUserMapperMock.mapToResource(pu.get(0))).thenReturn(puResource.get(0));
-        when(projectUserMapperMock.mapToResource(pu.get(1))).thenReturn(puResource.get(1));
-        when(projectUserMapperMock.mapToResource(pu.get(2))).thenReturn(puResource.get(2));
+        when(projectUserMapperMock.mapToResource(projectUsers.get(0))).thenReturn(puResource.get(0));
+        when(projectUserMapperMock.mapToResource(projectUsers.get(1))).thenReturn(puResource.get(1));
+        when(projectUserMapperMock.mapToResource(projectUsers.get(2))).thenReturn(puResource.get(2));
 
-        when(financeRowServiceMock.organisationSeeksFunding(p.getId(), p.getApplication().getId(), organisation.get(0).getId())).thenReturn(serviceSuccess(true));
-        when(financeRowServiceMock.organisationSeeksFunding(p.getId(), p.getApplication().getId(), organisation.get(1).getId())).thenReturn(serviceSuccess(false));
-        when(financeRowServiceMock.organisationSeeksFunding(p.getId(), p.getApplication().getId(), organisation.get(2).getId())).thenReturn(serviceSuccess(false));
+        when(financeRowServiceMock.organisationSeeksFunding(projects.get(0).getId(), projects.get(0).getApplication().getId(), organisations.get(0).getId())).thenReturn(serviceSuccess(true));
+        when(financeRowServiceMock.organisationSeeksFunding(projects.get(0).getId(), projects.get(0).getApplication().getId(), organisations.get(1).getId())).thenReturn(serviceSuccess(false));
+        when(financeRowServiceMock.organisationSeeksFunding(projects.get(0).getId(), projects.get(0).getApplication().getId(), organisations.get(2).getId())).thenReturn(serviceSuccess(false));
+
+        when(financeRowServiceMock.organisationSeeksFunding(projects.get(1).getId(), projects.get(1).getApplication().getId(), organisations.get(0).getId())).thenReturn(serviceSuccess(true));
+        when(financeRowServiceMock.organisationSeeksFunding(projects.get(1).getId(), projects.get(1).getApplication().getId(), organisations.get(1).getId())).thenReturn(serviceSuccess(false));
+        when(financeRowServiceMock.organisationSeeksFunding(projects.get(1).getId(), projects.get(1).getApplication().getId(), organisations.get(2).getId())).thenReturn(serviceSuccess(false));
+
+        when(financeRowServiceMock.organisationSeeksFunding(projects.get(2).getId(), projects.get(2).getApplication().getId(), organisations.get(0).getId())).thenReturn(serviceSuccess(true));
+        when(financeRowServiceMock.organisationSeeksFunding(projects.get(2).getId(), projects.get(2).getApplication().getId(), organisations.get(1).getId())).thenReturn(serviceSuccess(false));
+        when(financeRowServiceMock.organisationSeeksFunding(projects.get(2).getId(), projects.get(2).getApplication().getId(), organisations.get(2).getId())).thenReturn(serviceSuccess(false));
 
 
         ServiceResult<CompetitionProjectsStatusResource> result = service.getCompetitionStatus(competitionId);
