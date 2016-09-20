@@ -71,8 +71,8 @@ Bank account number and sort code validations client side
     When the user enters text to a text field    id=bank-acc-number    123456789
     And the user enters text to a text field    id=bank-sort-code    1234567
     And the user moves focus to the element    link=Cancel bank account changes
-    Then the user sees the text in the element    id=bank-acc-number    ${empty}
-    And the user sees the text in the element    id=bank-sort-code    ${empty}
+    Then the user sees the text in the element    id=bank-acc-number    ${empty}    # Account numbers more than 8 numbers not allowed, so the input is not accepted
+    And the user sees the text in the element    id=bank-sort-code    ${empty}    # Sort codes more than 6 numbers not allowed, so the input is not accepted
     And the user should not see an error in the page
 
 Bank account number and sort code validations server side
@@ -82,7 +82,7 @@ Bank account number and sort code validations server side
      And the user enters text to a text field    id=bank-sort-code    abcdef
      And the user clicks the button/link           jQuery=.column-half.alignright .button:contains("Update bank account details")
      And the user clicks the button/link           jQuery=.modal-partner-change-bank-details .button:contains("Update bank account details")   #Due to popup
-     Then the user should see the text in the page    Please enter a valid account numbe
+     Then the user should see the text in the page    Please enter a valid account numbe    # this test will need to be updated once the typo is fixed in the error message
      And the user should see the text in the page    Please enter a valid sort code
 
 The user cancels bank details changes
