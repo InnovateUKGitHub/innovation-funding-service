@@ -37,7 +37,7 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
                     project.getName(),
                     project.getId(),
                     project.getFormattedId(),
-                    project.getId(),
+                    project.getApplication().getId(),
                     project.getApplication().getFormattedId(),
                     getProjectPartnerCount(project.getId()),
                     project.getApplication().getLeadOrganisation().getName(),
@@ -49,7 +49,6 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
                     getOtherDocumentsStatus(project),
                     getGrantOfferLetterStatus(project));
         }).collect(Collectors.toList());
-
 
         CompetitionProjectsStatusResource competitionProjectsStatusResource = new CompetitionProjectsStatusResource(competition.getId(), competition.getFormattedId(), competition.getName(), projectStatusResources);
 
@@ -89,7 +88,6 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
 
     private ProjectActivityStates getFinanceChecksStatus(Project project){
         return ACTION_REQUIRED;
-
     }
 
     private ProjectActivityStates getSpendProfileStatus(Project project){
