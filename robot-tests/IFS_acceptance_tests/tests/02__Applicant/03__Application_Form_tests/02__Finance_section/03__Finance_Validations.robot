@@ -6,7 +6,7 @@ Suite Setup       Run keywords    log in and create new application if there is 
 ...               AND    Applicant navigates to the finances of the Robot application
 ...               AND    The user enters the funding level
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        Finances    Applicant
+Force Tags        Applicant
 Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../../resources/variables/User_credentials.robot
@@ -23,7 +23,7 @@ Mark as complete with empty other funding row should be impossible
     ...    AND    the user moves focus to the element    jQuery=button:contains('Add another source of funding')
     ...    AND    the user clicks the button/link    jQuery=button:contains('Add another source of funding')
     When the user marks the finances as complete
-    Then the user should see the element    css=.error-summary-list
+    Then the user should see the element    css=.error
 
 Other funding client side
     [Tags]

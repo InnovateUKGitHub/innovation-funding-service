@@ -10,7 +10,7 @@
 
             <h2 class="heading-medium extra-margin-top">Technology inspired <br/> Ref: 0102468</h2>
 
-            <p th:unless="${site == 'rc'}">Choose a tab to find people, invite them to assess this competition and assign assessors to one or more applications.</p>
+            <p th:unless="${site == 'rc'}">Choose a tab to find, invite and assign assessors to one or more applications.</p>
 
             <p th:unless="${site == null}">Choose a tab to find people, invite them to join your panel and assign panelists to one or more applications.</p>
         
@@ -303,7 +303,7 @@
             <div class="grid-row">
                 <div class="column-two-thirds">
                     
-                    <h2 class="heading-small" th:unless="${site == 'rc'}">Invite people to become an assessor for this competition</h2>
+                    <h2 class="heading-small" th:unless="${site == 'rc'}">Invite a person to become an assessor for this competition.</h2>
                     <h2 class="heading-small" th:unless="${site == null}">Invite people to join the panel for this opportunity.</h2>
 
                     <p>You can invite people on your list either individually or as a group.</p>
@@ -311,7 +311,7 @@
             </div>
 
             <details class="extra-margin-bottom" th:unless="${site == 'rc'}">
-                <summary><span class="summary">Add non-registered assessor to list</span></summary>
+                <summary><span class="summary">Add non-registered assessor to your list</span></summary>
                 <div class="panel-indent">
                     <form th:action="${#httpServletRequest.requestURI}">
                         <fieldset>

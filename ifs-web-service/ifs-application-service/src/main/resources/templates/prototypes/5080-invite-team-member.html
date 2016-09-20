@@ -9,7 +9,7 @@
 
 <div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="prototypes/fragments/layout :: admin-header" th:remove="tag" />
+<div th:include="prototypes/fragments/layout :: prototype-admin-header" th:with="status='loggedIn'" th:remove="tag" />
 
 
 <main id="content">
@@ -28,7 +28,7 @@
 	<th:block th:if="${param.status != null and param.status[0] == 'invalidEmailAddress'}">
 
 		<div class="warning-alert extra-margin-bottom">
-			<h3 class="heading-small no-margin-top">Invalid email address</h3>
+			<h2 class="heading-small no-margin-top">Invalid email address</h2>
 			<p>For an individual to be invited to use the IFS system, they must use an email address with the @innovateuk.gov.uk email domain.</p>
 		</div>
 
@@ -55,7 +55,8 @@
 				</select>
 			</div>
 		</fieldset>
-		<a href="/prototypes/5080-invite-team-member?status=invalidEmailAddress" class="button button-large extra-margin">Send invitation</a>
+		<a th:if="${param.status == null}" href="/prototypes/5080-invite-team-member?status=invalidEmailAddress" class="button button-large extra-margin">Send invitation</a>
+		<a th:if="${param.status != null and param.status[0] == 'invalidEmailAddress'}" href="/prototypes/3746-internal-email-invite" class="button button-large extra-margin">Send invitation</a>
 	</form>
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
