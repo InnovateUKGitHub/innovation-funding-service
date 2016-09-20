@@ -105,7 +105,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
 
         mockMvc.perform(post(restUrl + "{inviteHash}/accept", "hash"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/registration/register"));
+                .andExpect(redirectedUrl("/registration/hash/start"));
 
         verify(competitionInviteRestService).checkExistingUser("hash");
     }

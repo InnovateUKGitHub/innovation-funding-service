@@ -24,9 +24,9 @@ public class UserDocs {
             fieldWithPath("organisations").description("organisations that the user is associated with"),
             fieldWithPath("processRoles").description("process roles defining the relationship between the user and applications, organisations and roles"),
             fieldWithPath("roles").description("roles that the user is associated with"),
-            fieldWithPath("gender").description("the gender of the user"),
-            fieldWithPath("disability").description("the disability of the user"),
-            fieldWithPath("ethnicity").description("the ethnicity of the user")
+            fieldWithPath("gender").description("gender of the user"),
+            fieldWithPath("disability").description("disability of the user"),
+            fieldWithPath("ethnicity").description("ethnic group of the user")
     };
 
 }
