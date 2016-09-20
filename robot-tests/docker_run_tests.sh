@@ -111,7 +111,12 @@ function startSeleniumGrid() {
     docker-compose -p robot up -d
     docker-compose -p robot scale chrome=${suiteCount}
     unset suiteCount
-}
+    if [[ $quickTest -eq 1 ]]
+    then
+      echo "waiting 5 seconds for the grid to be properly started"
+      sleep 5
+    fi    
+  }
 
 function stopSeleniumGrid() {
     cd ../robot-tests
@@ -211,15 +216,16 @@ echo "webBase:           ${webBase}"
 
 
 unset opt
-unset quickTest
 unset testScrub
 
+quickTest=0
 emails=0
 rerunFailed=0
 parallel=0
+stopGrid=0
 
 testDirectory='IFS_acceptance_tests/tests'
-while getopts ":p :h :q :t :e :r :d:" opt ; do
+while getopts ":p :h :q :t :e :r :c :d:" opt ; do
     case $opt in
         p)
           parallel=1
@@ -243,6 +249,9 @@ while getopts ":p :h :q :t :e :r :d:" opt ; do
            testDirectory="$OPTARG"
            parallel=0
         ;;
+        c)
+          stopGrid=1
+        ;;
         \?)
            coloredEcho "Invalid option: -$OPTARG" red >&2
            exit 1
@@ -265,21 +274,31 @@ startSeleniumGrid
 
 clearOldReports
 
-if [[ "$quickTest" ]]
+if [[ $quickTest -eq 1 ]]
 then
-    echo "using quickTest:   TRUE" >&2
-    runTests
+  echo "using quickTest:   TRUE" >&2
+  runTests
 elif [[ "$testScrub" ]]
 then
-    echo "using testScrub mode: this will do all the dirty work but omit the tests" >&2
-    resetDB
-    addTestFiles
+  echo "using testScrub mode: this will do all the dirty work but omit the tests" >&2
+  resetDB
+  addTestFiles
 else
-    echo "using quickTest:   FALSE" >&2
-    resetDB
-    addTestFiles
-    runTests
+  echo "using quickTest:   FALSE" >&2
+  resetDB
+  addTestFiles
+  runTests
 fi
 
-stopSeleniumGrid
-google-chrome target/${targetDir}/log.html &
+if [[ $stopGrid -eq 1 ]]
+then
+  stopSeleniumGrid
+fi
+if [[ $(which google-chrome) ]]
+then
+  google-chrome target/${targetDir}/report.html &
+else
+  wd=$(pwd)
+  report="target/${targetDir}/report.html" 
+  open "file://${wd}/${report}"
+fi
