@@ -55,7 +55,7 @@ public class ApplicationMarkAsCompleteValidator implements Validator {
                 }
                 if (StringUtils.isEmpty(application.getPreviousApplicationTitle())) {
                     LOG.debug("MarkAsComplete application details validation message for previous application title: " + application.getPreviousApplicationTitle());
-                    rejectValue(errors, ".previousApplicationTitle", "validation.application.previous.application.title.required");
+                    rejectValue(errors, "previousApplicationTitle", "validation.application.previous.application.title.required");
                 }
             }
         } else {
