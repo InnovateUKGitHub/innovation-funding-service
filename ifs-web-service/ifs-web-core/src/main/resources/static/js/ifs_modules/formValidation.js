@@ -370,7 +370,6 @@ IFS.core.formValidation = (function(){
             var errorMessage = IFS.core.formValidation.getErrorMessage(field,'minwordslength');
             var minWordsLength = parseInt(field.attr('data-minwordslength'),10);
             var value = field.val();
-
             var words = IFS.core.formValidation.countWords(value);
 
             if((words.length > 0) && (words.length < minWordsLength)){
@@ -386,7 +385,6 @@ IFS.core.formValidation = (function(){
             var errorMessage = IFS.core.formValidation.getErrorMessage(field,'maxwordslength');
             var maxWordsLength = parseInt(field.attr('data-maxwordslength'),10);
             var value = field.val();
-
             var words = IFS.core.formValidation.countWords(value);
 
             if(words.length > maxWordsLength){
@@ -612,7 +610,7 @@ IFS.core.formValidation = (function(){
         countWords : function(value){
           var val = value;
 
-          if(){
+          if(typeof(val) !== 'undefined'){
             //regex = replace newlines with space \r\n, \n, \r
             val = value.replace(/(\r\n|\n|\r)/gm," ");
             //remove markdown lists ('* ','1. ','2. ','**','_') from markdown as it influences word count
