@@ -9,6 +9,13 @@ Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
 
+*** Variables ***
+${NO_OF_DAYS_LEFT}
+${CURRENT_DATE}
+${MILESTONE_DATE}    2016-12-31
+${STARTING_DATE}
+${SCREEN_NO_OF_DAYS_LEFT}
+
 *** Test Cases ***
 Assessment overview should show the expected questions
     [Documentation]    INFUND-3400
@@ -17,7 +24,7 @@ Assessment overview should show the expected questions
     When the user navigates to the page    ${Assessment_overview_9}
     Then the user should see four sections
 
-Verify number of days remaining is displayed in Assessment overview
+Number of days remaining until assessment submission
     [Documentation]    INFUND-4857
     [Tags]    HappyPath
     Then The user should see the text in the page    Days left to submit
@@ -58,5 +65,10 @@ the assessor should see the number of days remaining
     the user should see the element    css=.sub-header .pie-overlay .day
 
 the days remaining should be correct
-    ${DAYS_LEFT}=    Get Text    css=.sub-header .pie-overlay .day
-    Should Be True    ${DAYS_LEFT}>=0
+    ${CURRENT_DATE}=    Get Current Date    result_format=%Y-%m-%d    exclude_millis=true
+    ${STARTING_DATE}=    Add Time To Date    ${CURRENT_DATE}    1 day    result_format=%Y-%m-%d    exclude_millis=true
+    ${MILESTONE_DATE}=    Convert Date    2016-12-31    result_format=%Y-%m-%d    exclude_millis=true
+    ${NO_OF_DAYS_LEFT}=    Subtract Date From Date    ${MILESTONE_DATE}    ${STARTING_DATE}    verbose    exclude_millis=true
+    ${NO_OF_DAYS_LEFT}=    Remove String    ${NO_OF_DAYS_LEFT}    days
+    ${SCREEN_NO_OF_DAYS_LEFT}=    Get Text    css=.sub-header .pie-overlay .day
+    Should Be Equal As Numbers    ${NO_OF_DAYS_LEFT}    ${SCREEN_NO_OF_DAYS_LEFT}

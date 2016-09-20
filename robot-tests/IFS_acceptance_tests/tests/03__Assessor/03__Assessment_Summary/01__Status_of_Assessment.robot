@@ -11,6 +11,13 @@ Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
 
+*** Variables ***
+${NO_OF_DAYS_LEFT}
+${CURRENT_DATE}
+${MILESTONE_DATE}    2016-12-31
+${STARTING_DATE}
+${SCREEN_NO_OF_DAYS_LEFT}
+
 *** Test Cases ***
 To verify all the sections are present
     [Documentation]    INFUND-4648
@@ -21,6 +28,13 @@ To verify all the sections are present
     And The user should see the element    jQuery=span:contains("Do you believe that this application is suitable for funding?")
     And The user should see the element    id=form-label-feedback
     And The user should see the element    id=form-label-comments
+
+Number of days remaining until assessment submission
+    [Documentation]    INFUND-4857
+    [Tags]    HappyPath
+    Then The user should see the text in the page    Days left to submit
+    And the assessor should see the number of days remaining
+    And the days remaining should be correct
 
 Assessment summary shows questions as incomplete
     [Documentation]    INFUND-550
@@ -204,3 +218,15 @@ the scores under each question should be correct
 the word count should be correct
     [Arguments]    ${wordCount}
     the user should see the text in the page    ${wordCount}
+
+the assessor should see the number of days remaining
+    the user should see the element    css=.sub-header .pie-overlay .day
+
+the days remaining should be correct
+    ${CURRENT_DATE}=    Get Current Date    result_format=%Y-%m-%d    exclude_millis=true
+    ${STARTING_DATE}=    Add Time To Date    ${CURRENT_DATE}    1 day    result_format=%Y-%m-%d    exclude_millis=true
+    ${MILESTONE_DATE}=    Convert Date    2016-12-31    result_format=%Y-%m-%d    exclude_millis=true
+    ${NO_OF_DAYS_LEFT}=    Subtract Date From Date    ${MILESTONE_DATE}    ${STARTING_DATE}    verbose    exclude_millis=true
+    ${NO_OF_DAYS_LEFT}=    Remove String    ${NO_OF_DAYS_LEFT}    days
+    ${SCREEN_NO_OF_DAYS_LEFT}=    Get Text    css=.sub-header .pie-overlay .day
+    Should Be Equal As Numbers    ${NO_OF_DAYS_LEFT}    ${SCREEN_NO_OF_DAYS_LEFT}
