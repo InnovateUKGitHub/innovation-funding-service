@@ -18,7 +18,6 @@ import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.BasicFileAndContents;
 import com.worth.ifs.file.service.FileAndContents;
 import com.worth.ifs.file.transactional.FileService;
-import com.worth.ifs.finance.transactional.FinanceRowService;
 import com.worth.ifs.invite.domain.ProjectParticipantRole;
 import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.notifications.resource.ExternalUserNotificationTarget;
@@ -163,7 +162,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         return getProject(projectId).
                 andOnSuccess(this::validateIfProjectAlreadySubmitted).
                 andOnSuccess(project -> validateProjectManager(project, projectManagerUserId).
-                        andOnSuccess(leadPartner -> createOrUpdateProjectManagerForProject(project, leadPartner)));
+                andOnSuccess(leadPartner -> createOrUpdateProjectManagerForProject(project, leadPartner)));
     }
 
     @Override
@@ -179,8 +178,8 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         return getProject(projectId).
                 andOnSuccess(this::validateIfProjectAlreadySubmitted).
                 andOnSuccess(project -> validateProjectOrganisationFinanceContact(project, organisationId, financeContactUserId).
-                        andOnSuccess(projectUser -> createFinanceContactProjectUser(projectUser.getUser(), project, projectUser.getOrganisation()).
-                                andOnSuccessReturnVoid(financeContact -> addFinanceContactToProject(project, financeContact))));
+                andOnSuccess(projectUser -> createFinanceContactProjectUser(projectUser.getUser(), project, projectUser.getOrganisation()).
+                andOnSuccessReturnVoid(financeContact -> addFinanceContactToProject(project, financeContact))));
     }
 
     @Override
@@ -740,7 +739,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         return serviceSuccess();
     }
 
-
     private ServiceResult<Project> validateIfProjectAlreadySubmitted(final Project project) {
 
         if (project.isProjectDetailsSubmitted()) {
@@ -793,18 +791,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         return pu.getOrganisation().getId().equals(leadPartnerOrganisation.getId());
     }
 
-    private List<ProjectResource> projectsToResources(List<Project> filtered) {
-        return simpleMap(filtered, project -> projectMapper.mapToResource(project));
-    }
-
-    private ServiceResult<Project> getProject(long projectId) {
-        return find(projectRepository.findOne(projectId), notFoundError(Project.class, projectId));
-    }
-
-    private ServiceResult<Project> getProjectByApplication(long applicationId) {
-        return find(projectRepository.findOneByApplicationId(applicationId), notFoundError(Project.class, applicationId));
-    }
-
     private ServiceResult<ProjectResource> createProjectFromApplicationId(final Long applicationId) {
 
         return getApplication(applicationId).andOnSuccess(application -> {
@@ -831,7 +817,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
             return saveProjectResult.
                     andOnSuccess(newProject -> createProcessEntriesForNewProject(newProject).
-                            andOnSuccessReturn(() -> projectMapper.mapToResource(newProject)));
+                    andOnSuccessReturn(() -> projectMapper.mapToResource(newProject)));
         });
     }
 
@@ -852,6 +838,18 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     private ServiceResult<ProjectUser> createProjectUserForRole(Project project, User user, Organisation organisation, ProjectParticipantRole role) {
         return serviceSuccess(new ProjectUser(user, project, role, organisation));
+    }
+
+    private List<ProjectResource> projectsToResources(List<Project> filtered) {
+        return simpleMap(filtered, project -> projectMapper.mapToResource(project));
+    }
+
+    private ServiceResult<Project> getProject(long projectId) {
+        return find(projectRepository.findOne(projectId), notFoundError(Project.class, projectId));
+    }
+
+    private ServiceResult<Project> getProjectByApplication(long applicationId) {
+        return find(projectRepository.findOneByApplicationId(applicationId), notFoundError(Project.class, applicationId));
     }
 
     private boolean validateDocumentsUploaded(final Project project) {
@@ -898,6 +896,18 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                 pu.getUser().getId().equals(currentUser.getId()) && pu.getRole().equals(role)).get();
     }
 
+    private Optional<ProjectUser> getExistingProjectManager(Project project) {
+        List<ProjectUser> projectUsers = project.getProjectUsers();
+        List<ProjectUser> projectManagers = simpleFilter(projectUsers, pu -> pu.getRole().isProjectManager());
+        return getOnlyElementOrEmpty(projectManagers);
+    }
+
+    private List<Organisation> getPartnerOrganisations(Long projectId) {
+        List<ProjectUser> projectUserObjs = getProjectUsersByProjectId(projectId);
+        List<ProjectUserResource> projectRoles = simpleMap(projectUserObjs, projectUserMapper::mapToResource);
+        return getPartnerOrganisations(projectRoles);
+    }
+
     private List<Organisation> getPartnerOrganisations(List<ProjectUserResource> projectRoles) {
         final Comparator<Organisation> compareById =
                 Comparator.comparingLong(Organisation::getId);
@@ -910,17 +920,5 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                 .collect(Collectors.toCollection(supplier));
 
         return new ArrayList<>(organisationSet);
-    }
-
-    private List<Organisation> getPartnerOrganisations(Long projectId) {
-        List<ProjectUser> projectUserObjs = getProjectUsersByProjectId(projectId);
-        List<ProjectUserResource> projectRoles = simpleMap(projectUserObjs, projectUserMapper::mapToResource);
-        return getPartnerOrganisations(projectRoles);
-    }
-
-    private Optional<ProjectUser> getExistingProjectManager(Project project) {
-        List<ProjectUser> projectUsers = getProjectUsersByProjectId(project.getId());
-        List<ProjectUser> projectManagers = simpleFilter(projectUsers, pu -> pu.getRole().isProjectManager());
-        return getOnlyElementOrEmpty(projectManagers);
     }
 }
