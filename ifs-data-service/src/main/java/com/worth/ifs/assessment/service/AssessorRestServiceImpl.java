@@ -3,6 +3,8 @@ package com.worth.ifs.assessment.service;
 
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
+import com.worth.ifs.user.resource.Disability;
+import com.worth.ifs.user.resource.Gender;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +15,7 @@ public class AssessorRestServiceImpl extends BaseRestService implements Assessor
     private static final String registerUserByHashUrl = "/register";
 
     @Override
-    public RestResult<UserResource> createAssessorByInviteHash(String hash, String firstName, String lastName, String password, String email, String title, String phoneNumber, String gender, String disability, Long ethnicity) {
+    public RestResult<UserResource> createAssessorByInviteHash(String hash, String firstName, String lastName, String password, String email, String title, String phoneNumber, Gender gender, Disability disability, Long ethnicity) {
         UserResource user = new UserResource();
 
         user.setFirstName(firstName);

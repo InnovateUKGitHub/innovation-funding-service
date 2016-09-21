@@ -5,8 +5,13 @@ import com.worth.ifs.address.service.AddressRestService;
 import com.worth.ifs.assessment.form.AssessorRegistrationForm;
 import com.worth.ifs.assessment.model.AssessorRegistrationBecomeAnAssessorModelPopulator;
 import com.worth.ifs.assessment.model.AssessorRegistrationModelPopulator;
+import com.worth.ifs.assessment.service.AssessorRestService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.form.AddressForm;
+import com.worth.ifs.registration.form.RegistrationForm;
+import com.worth.ifs.user.resource.Disability;
+import com.worth.ifs.user.resource.Gender;
+import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.util.CookieUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -40,6 +45,9 @@ public class AssessorRegistrationController {
     @Autowired
     private AssessorRegistrationModelPopulator registrationModelPopulator;
 
+    @Autowired
+    private AssessorRestService assessorRestService;
+
     @RequestMapping(value = "/{inviteHash}/start", method = RequestMethod.GET)
     public String becomeAnAssessor(Model model,
                                    @PathVariable("inviteHash") String inviteHash) {
@@ -53,18 +61,15 @@ public class AssessorRegistrationController {
                                HttpServletRequest request,
                                HttpServletResponse response) {
 
-        addRegistrationFormToModel(model, request, response);
+        addRegistrationFormToModel(model, inviteHash);
 
-        model.addAttribute("model", registrationModelPopulator.populateModel(inviteHash));
-
-        String destination = "registration/register";
-
-        return destination;
+        return "registration/register";
     }
 
-    private void addRegistrationFormToModel(Model model, HttpServletRequest request, HttpServletResponse response) {
+    private void addRegistrationFormToModel(Model model, String inviteHash) {
         AssessorRegistrationForm registrationForm = new AssessorRegistrationForm();
         model.addAttribute("registrationForm", registrationForm);
+        model.addAttribute("model", registrationModelPopulator.populateModel(inviteHash));
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
@@ -73,20 +78,15 @@ public class AssessorRegistrationController {
                                      HttpServletResponse response,
                                      HttpServletRequest request,
                                      Model model) {
+
         addAddressOptions(registrationForm);
 
-        //Retrieve invite
-        //Add email address to model
-        //Attempt account creation
-        //Login user automatically
-        //Redirect user to details page
-
-        String destination = "registration/register";
-
-        return destination;
+        return "registration/register";
     }
 
     private RestResult<UserResource> createUser(String hash, RegistrationForm registrationForm) {
+        //TODO: Properly attach Gender/Disability/Ethnicity from registrationForm
+
         return assessorRestService.createAssessorByInviteHash(
                 hash,
                 registrationForm.getFirstName(),
@@ -95,8 +95,8 @@ public class AssessorRegistrationController {
                 registrationForm.getEmail(),
                 registrationForm.getTitle(),
                 registrationForm.getPhoneNumber(),
-                "",
-                "",
+                Gender.NOT_STATED,
+                Disability.NOT_STATED,
                 1L
                 );
     }
