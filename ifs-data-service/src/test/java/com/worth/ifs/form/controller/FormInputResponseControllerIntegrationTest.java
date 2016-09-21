@@ -109,7 +109,7 @@ public class FormInputResponseControllerIntegrationTest extends BaseControllerIn
 
         ValidationMessages errors = controller.saveQuestionResponse(jsonObj).getSuccessObject();
         assertThat(errors.getErrors(), hasSize(1));
-        assertThat(errors.getErrors(), hasItem(fieldError("value", value, "validation.field.max.word.count", "400")));
+        assertThat(errors.getErrors(), hasItem(fieldError("value", value, "validation.field.max.word.count", "", "400")));
     }
 
     @Test

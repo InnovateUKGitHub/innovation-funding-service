@@ -18,6 +18,8 @@ import static com.worth.ifs.assessment.builder.ProcessOutcomeResourceBuilder.new
 import static com.worth.ifs.commons.error.CommonErrors.forbiddenError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION;
+import static com.worth.ifs.commons.error.Error.fieldError;
+import static java.util.Collections.nCopies;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -141,6 +143,29 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
 
         AssessmentResource assessmentResult = controller.findById(assessmentId).getSuccessObject();
         assertEquals(AssessmentStates.REJECTED, assessmentResult.getAssessmentState());
+    }
+
+    @Test
+    public void rejectInvitation_exceedsWordLimit() {
+        Long assessmentId = 2L;
+        Long processRole = 8L;
+
+        String reason = "reason";
+        String comment = String.join(" ", nCopies(101, "comment"));
+
+        loginPaulPlum();
+        AssessmentResource assessmentResource = controller.findById(assessmentId).getSuccessObject();
+        assertEquals(AssessmentStates.OPEN, assessmentResource.getAssessmentState());
+        assertEquals(processRole, assessmentResource.getProcessRole());
+
+        ProcessOutcomeResource processOutcome = newProcessOutcomeResource()
+                .withComment(comment)
+                .withDescription(reason)
+                .withOutcomeType(AssessmentOutcomes.REJECT.getType())
+                .build();
+        RestResult<Void> result = controller.rejectInvitation(assessmentResource.getId(), processOutcome);
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(fieldError("comment", comment, "validation.field.max.word.count", "", "100")));
     }
 
     @Test

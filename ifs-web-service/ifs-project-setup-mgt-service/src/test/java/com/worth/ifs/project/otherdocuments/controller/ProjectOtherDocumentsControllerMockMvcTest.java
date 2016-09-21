@@ -1,7 +1,6 @@
 package com.worth.ifs.project.otherdocuments.controller;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
-import com.worth.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.project.otherdocuments.viewmodel.ProjectPartnerDocumentsViewModel;
 import com.worth.ifs.project.resource.ProjectResource;
@@ -37,7 +36,7 @@ public class ProjectOtherDocumentsControllerMockMvcTest extends BaseControllerMo
                 .withEmail("d@d.com")
                 .withRoleName(PROJECT_MANAGER.getName()).build(1);
 
-        List<OrganisationResource> partnerOrganisations = newOrganisationResource().build(3);
+        List<OrganisationResource> partnerOrganisations = newOrganisationResource().withName("Org1", "Org2", "Org3").build(3);
 
         when(projectService.getById(projectId)).thenReturn(project);
         when(projectService.getCollaborationAgreementFileDetails(projectId)).thenReturn(Optional.empty());
@@ -51,20 +50,20 @@ public class ProjectOtherDocumentsControllerMockMvcTest extends BaseControllerMo
     private void assertProjectDetailsPrepopulatedOk(ProjectPartnerDocumentsViewModel model) {
 
         assertEquals(Long.valueOf(123), model.getProjectId());
-        assertEquals("Project 1", model.getProjectName());
+        assertEquals("My Project", model.getProjectName());
         assertEquals("Test Lead Organisation", model.getLeadPartnerOrganisationName());
         assertEquals("Dave Smith", model.getProjectManagerName());
         assertEquals("01234123123", model.getProjectManagerTelephone());
         assertEquals("d@d.com", model.getProjectManagerEmail());
 
-        List<String> testOrgList= new ArrayList<String>(Arrays.asList("OrganisationResource 1", "OrganisationResource 2", "OrganisationResource 3"));
+        List<String> testOrgList= new ArrayList<String>(Arrays.asList("Org1", "Org2", "Org3"));
         assertEquals(asList(testOrgList), asList(model.getPartnerOrganisationNames()));
     }
 
     @Test
     public void testViewOtherDocumentsPage() throws Exception {
 
-        ProjectResource project = newProjectResource().withId(projectId).build();
+        ProjectResource project = newProjectResource().withId(projectId).withName("My Project").build();
 
         setupViewOtherDocumentsTestExpectations (project);
 
@@ -72,7 +71,6 @@ public class ProjectOtherDocumentsControllerMockMvcTest extends BaseControllerMo
                 andExpect(view().name("project/other-documents")).
                 andReturn();
 
-        Map<String, Object> modelMap = result.getModelAndView().getModel();
         ProjectPartnerDocumentsViewModel model = (ProjectPartnerDocumentsViewModel) result.getModelAndView().getModel().get("model");
 
         assertProjectDetailsPrepopulatedOk(model);
@@ -82,7 +80,7 @@ public class ProjectOtherDocumentsControllerMockMvcTest extends BaseControllerMo
     @Test
     public void testViewOtherDocumentsPageWithExistingDocuments() throws Exception {
 
-        ProjectResource project = newProjectResource().withId(projectId).build();
+        ProjectResource project = newProjectResource().withId(projectId).withName("My Project").build();
 
         setupViewOtherDocumentsTestExpectations (project);
 
@@ -96,15 +94,10 @@ public class ProjectOtherDocumentsControllerMockMvcTest extends BaseControllerMo
                 andExpect(view().name("project/other-documents")).
                 andReturn();
 
-        Map<String, Object> modelMap = result.getModelAndView().getModel();
         ProjectPartnerDocumentsViewModel model = (ProjectPartnerDocumentsViewModel) result.getModelAndView().getModel().get("model");
 
         // assert the project details are correct
         assertProjectDetailsPrepopulatedOk(model);
-
-        FileDetailsViewModel expectedCollaborationAgreement = new FileDetailsViewModel(existingCollaborationAgreement);
-        FileDetailsViewModel expectedExploitationPlan = new FileDetailsViewModel(existingExplotationPlan);
-
    }
 
     @Test
