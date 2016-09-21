@@ -30,8 +30,7 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...
 ...               INFUND-4581 As a Competitions team member I want the service to automatically save my edits while I work through Funding Information section in Competition Setup the so that I do not lose my changes
 ...
-...               INFUND-4725 As a Competitions team member I want to be guided to complete all mandatory information in the Initial Details section so that I can access the correct details in the other sections in Competition Setup. \
-...               INFUND-4582 As a Competitions team member I want the service to automatically save my edits while I work through Eligibility section in Competition Setup the so that I do not lose my changes
+...               INFUND-4725 As a Competitions team member I want to be guided to complete all mandatory information in the Initial Details section so that I can access the correct details in the other sections in Competition Setup. \ INFUND-4582 As a Competitions team member I want the service to automatically save my edits while I work through Eligibility section in Competition Setup the so that I do not lose my changes
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin
@@ -643,7 +642,7 @@ the user fills the milestones with valid data
     input text    name=milestoneEntries[NOTIFICATIONS].year    2019
     input text    name=milestoneEntries[RELEASE_FEEDBACK].day    22
     input text    name=milestoneEntries[RELEASE_FEEDBACK].month    1
-    input text    name=milestoneEntries[RELEASE_FEEDBACK].year    2019
+    input text    name=milestoneEntries[RELEASE_FEEDBACK].year    2020
     Focus    jQuery=button:contains(Done)
     sleep    500ms
 
@@ -668,7 +667,7 @@ the pre-field date should be correct
     Should Be Equal As Strings    ${YEAR}    2017
     ${MONTH} =    Get Value    css=.date-group:nth-child(1) .month .width-small
     Should Be Equal As Strings    ${MONTH}    12
-    ${DAY} =    Get Value    css=.date-group:nth-child(1) .js-visited
+    ${DAY} =    Get Value    css=.date-group:nth-child(1) .day
     Should Be Equal As Strings    ${DAY}    1
 
 the user should see the correct values in the initial details form
