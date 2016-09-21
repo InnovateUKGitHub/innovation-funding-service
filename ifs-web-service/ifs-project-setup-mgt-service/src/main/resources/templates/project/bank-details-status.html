@@ -1,8 +1,46 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
+	<div th:include="fragments/layout :: head" th:with="pageTitle='Bank Details Partner progress'" th:remove="tag" />
 </head>
-<body>
-    <p th:text="${model.competitionId}"></p>
+<body th:with="context='project-management'" class="project-management application-overview">
+
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+<main id="content">
+	<div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+  <div class="grid-row">
+    <div class="column-two-thirds">
+      <div class="page-title">
+        <p class="subtitle no-margin" th:text="|${model.formattedProjectId}|" />
+				<h1 class="heading-xlarge">Project Details</h1>
+      </div>
+    </div>
+    <div class="column-third alignright extra-margin">
+      <h2 class="bold-small blue-block">Bank Details</h2>
+    </div>
+  </div>
+  <hr/>
+  <p>This overview shows whether each partner has submitted their bank details and if an additional review is required. When all bank details have been approved, this section will be marked as complete.</p>
+  <h2 class="heading-medium">Partner progress</h2>
+  <table>
+    <thead>
+      <th scope="col">Partner</th>
+      <th scope="col">Progress</th>
+    </thead>
+    <tbody>
+      <tr th:each="partner : ${model.bankDetailsStatusResources}">
+          <td>
+            <a th:href="@{project/{projectId}/organisation/{organisationId}/review-bank-details(projectId=${model.projectId},organisationId=${partner.organisationId})}" th:text="${partner.organisationName}" />
+          </td>
+          <td th:text="${partner.bankDetailsStatus}" />
+      </tr>
+    </tbody>
+  </table>
+	<div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
 </body>
 </html>
