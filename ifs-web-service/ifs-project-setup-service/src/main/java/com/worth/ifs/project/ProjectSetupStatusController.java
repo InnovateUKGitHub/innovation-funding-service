@@ -11,6 +11,8 @@ import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.service.ApplicationFinanceRestService;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.project.resource.ProjectTeamStatusResource;
+import com.worth.ifs.project.sections.ProjectSetupSectionPartnerAccessor;
 import com.worth.ifs.project.viewmodel.ProjectSetupStatusViewModel;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
@@ -81,8 +83,11 @@ public class ProjectSetupStatusController {
 
         boolean funded = isApplicationFunded(project, organisation, competition);
 
-        // TODO DW - INFUND-4915 - wire back in the projectDetailsSubmitted value
-        return new ProjectSetupStatusViewModel(project, competition, monitoringOfficer, bankDetails, funded, organisation.getId(), false);
+        ProjectTeamStatusResource teamStatus = projectService.getProjectTeamStatus(projectId);
+        ProjectSetupSectionPartnerAccessor statusAccessor = new ProjectSetupSectionPartnerAccessor(teamStatus);
+        boolean projectDetailsSubmitted = statusAccessor.isProjectDetailsSubmitted();
+
+        return new ProjectSetupStatusViewModel(project, competition, monitoringOfficer, bankDetails, funded, organisation.getId(), projectDetailsSubmitted);
     }
 
     private boolean isApplicationFunded(ProjectResource project, OrganisationResource organisation, CompetitionResource competition){

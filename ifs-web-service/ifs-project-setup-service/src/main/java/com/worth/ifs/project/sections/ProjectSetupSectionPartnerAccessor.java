@@ -1,13 +1,16 @@
 package com.worth.ifs.project.sections;
 
-import com.worth.ifs.commons.error.exception.ForbiddenActionException;
 import com.worth.ifs.project.resource.ProjectTeamStatusResource;
 import com.worth.ifs.user.resource.OrganisationResource;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * This is a helper class for determining whether or not a given Project Setup section is available to access
  */
 public class ProjectSetupSectionPartnerAccessor {
+
+    private static final Log LOG = LogFactory.getLog(ProjectSetupSectionPartnerAccessor.class);
 
     private ProjectSetupProgressChecker projectSetupProgressChecker;
 
@@ -15,80 +18,100 @@ public class ProjectSetupSectionPartnerAccessor {
         this.projectSetupProgressChecker = new ProjectSetupProgressChecker(projectTeamStatus);
     }
 
-    public void checkAccessToCompaniesHouseSection(OrganisationResource organisation) {
+    public boolean checkAccessToCompaniesHouseSection(OrganisationResource organisation) {
 
         if (projectSetupProgressChecker.isBusinessOrganisationType(organisation)) {
-            return;
+            return true;
         }
 
-        throwForbiddenException("Unable to access Companies House section if not a Business Organisation");
+        return fail("Unable to access Companies House section if not a Business Organisation");
     }
 
-    public void checkAccessToProjectDetailsSection(OrganisationResource organisation) {
+    public boolean canAccessProjectDetailsSection(OrganisationResource organisation) {
 
-        checkCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
+        return isCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
                 "Unable to access Project Details section until Companies House details are complete for Organisation");
     }
 
-    public void checkAccessToMonitoringOfficerSection(OrganisationResource organisation) {
+    public boolean checkAccessToMonitoringOfficerSection(OrganisationResource organisation) {
 
-        checkCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
-                "Unable to access Monitoring Officer section until Companies House details are complete for Organisation");
-
-        if (!projectSetupProgressChecker.isProjectDetailsSectionComplete()) {
-            throwForbiddenException("Unable to access Monitoring Officer section until Project Details are submitted");
+        if (!isCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
+                "Unable to access Monitoring Officer section until Companies House details are complete for Organisation")) {
+            return false;
         }
+
+        if (!projectSetupProgressChecker.isProjectDetailsSubmitted()) {
+            return fail("Unable to access Monitoring Officer section until Project Details are submitted");
+        }
+
+        return true;
     }
 
-    public void checkAccessToBankDetailsSection(OrganisationResource organisation) {
+    public boolean checkAccessToBankDetailsSection(OrganisationResource organisation) {
 
-        checkCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
-                "Unable to access Bank Details section until Companies House information is complete");
+        if (!isCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
+                "Unable to access Bank Details section until Companies House information is complete")) {
+            return false;
+        }
 
         if (!projectSetupProgressChecker.isFinanceContactSubmitted(organisation)) {
 
-            throwForbiddenException("Unable to access Bank Details section until this Partner Organisation has submitted " +
+            return fail("Unable to access Bank Details section until this Partner Organisation has submitted " +
                     "its Finance Contact");
         }
+
+        return true;
     }
 
-    public void checkAccessToFinanceChecksSection(OrganisationResource organisation) {
+    public boolean checkAccessToFinanceChecksSection(OrganisationResource organisation) {
 
-        checkCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
-                "Unable to access Bank Details section until Companies House information is complete");
+        if (!isCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
+                "Unable to access Bank Details section until Companies House information is complete")) {
+            return false;
+        }
 
-        if (!projectSetupProgressChecker.isProjectDetailsSectionComplete()) {
-            throwForbiddenException("Unable to access Finance Checks section until the Project Details section is complete");
+        if (!projectSetupProgressChecker.isProjectDetailsSubmitted()) {
+            return fail("Unable to access Finance Checks section until the Project Details section is complete");
         }
 
         if (!isBankDetailsApprovedOrQueried(organisation)) {
 
-            throwForbiddenException("Unable to access Finance Checks section until this Partner Organisation has had its " +
+            return fail("Unable to access Finance Checks section until this Partner Organisation has had its " +
                     "Bank Details approved or queried");
         }
+
+        return true;
     }
 
-    public void checkAccessToSpendProfileSection(OrganisationResource organisation) {
+    public boolean checkAccessToSpendProfileSection(OrganisationResource organisation) {
 
-        checkCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
-                "Unable to access Spend Profile section until Companies House information is complete");
+        if (!isCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
+                "Unable to access Spend Profile section until Companies House information is complete")) {
+            return false;
+        }
 
-        if (!projectSetupProgressChecker.isProjectDetailsSectionComplete()) {
+        if (!projectSetupProgressChecker.isProjectDetailsSubmitted()) {
 
-            throwForbiddenException("Unable to access Spend Profile section until the Project Details section is complete");
+            return fail("Unable to access Spend Profile section until the Project Details section is complete");
         }
 
         if (!isBankDetailsApprovedOrQueried(organisation)) {
 
-            throwForbiddenException("Unable to access Spend Profile section until this Organisation's Bank Details have been " +
+            return fail("Unable to access Spend Profile section until this Organisation's Bank Details have been " +
                     "approved or queried");
         }
 
         if (!projectSetupProgressChecker.isSpendProfileGenerated()) {
 
-            throwForbiddenException("Unable to access Spend Profile section until this Partner Organisation has had its " +
+            return fail("Unable to access Spend Profile section until this Partner Organisation has had its " +
                     "Spend Profile generated");
         }
+
+        return true;
+    }
+
+    public boolean isProjectDetailsSubmitted() {
+        return projectSetupProgressChecker.isProjectDetailsSubmitted();
     }
 
     private boolean isBankDetailsApprovedOrQueried(OrganisationResource organisation) {
@@ -96,20 +119,22 @@ public class ProjectSetupSectionPartnerAccessor {
                 projectSetupProgressChecker.isBankDetailsQueried(organisation);
     }
 
-    private void throwForbiddenException(String message) {
-        throw new ForbiddenActionException(message);
+    private boolean fail(String message) {
+        LOG.info(message);
+        return false;
     }
 
-    private void checkCompaniesHouseSectionIsUnnecessaryOrComplete(OrganisationResource organisation, String failureMessage) {
+    private boolean isCompaniesHouseSectionIsUnnecessaryOrComplete(OrganisationResource organisation, String failureMessage) {
 
         if (!projectSetupProgressChecker.isBusinessOrganisationType(organisation)) {
-            return;
+            return true;
         }
 
         if (projectSetupProgressChecker.isCompaniesHouseDetailsComplete(organisation)) {
-            return;
+            return true;
         }
 
-        throwForbiddenException(failureMessage);
+        LOG.info(failureMessage);
+        return false;
     }
 }

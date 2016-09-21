@@ -7,6 +7,7 @@ import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.project.builder.ProjectResourceBuilder;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.project.resource.ProjectTeamStatusResource;
 import com.worth.ifs.project.viewmodel.ProjectSetupStatusViewModel;
 import com.worth.ifs.user.resource.OrganisationResource;
 import org.junit.Ignore;
@@ -23,7 +24,9 @@ import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static com.worth.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
+import static com.worth.ifs.project.builder.ProjectLeadStatusResourceBuilder.newProjectLeadStatusResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+import static com.worth.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
@@ -61,6 +64,12 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
 
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId())).thenReturn(
                 restFailure(notFoundError(BankDetailsResource.class, 1L)));
+
+        ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
+                withProjectLeadStatus(newProjectLeadStatusResource().build()).
+                build();
+
+        when(projectService.getProjectTeamStatus(project.getId())).thenReturn(teamStatus);
 
         MvcResult result = mockMvc.perform(get("/project/{id}", projectId))
                 .andExpect(status().isOk())
@@ -218,6 +227,12 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId())).thenReturn(
                 restFailure(notFoundError(BankDetailsResource.class, 1L)));
 
+        ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
+                withProjectLeadStatus(newProjectLeadStatusResource().build()).
+                build();
+
+        when(projectService.getProjectTeamStatus(project.getId())).thenReturn(teamStatus);
+
         MvcResult result = mockMvc.perform(get("/project/{id}", projectId))
                 .andExpect(status().isOk())
                 .andExpect(view().name("project/setup-status"))
@@ -228,7 +243,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
     }
 
     @Test
-    public void testViewProjectSetupStatusWithNullUnfundedPartnerOrganisation() throws Exception {
+    public void testViewProjectSetupStatusWithUnfundedPartnerOrganisation() throws Exception {
 
         ProjectResource project = projectBuilder.build();
         OrganisationResource organisationResource = newOrganisationResource().build();
@@ -238,6 +253,12 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
         when(competitionService.getById(application.getCompetition())).thenReturn(competition);
         when(projectService.getMonitoringOfficerForProject(projectId)).thenReturn(Optional.empty());
         when(projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId())).thenReturn(organisationResource);
+
+        ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
+                withProjectLeadStatus(newProjectLeadStatusResource().build()).
+                build();
+
+        when(projectService.getProjectTeamStatus(project.getId())).thenReturn(teamStatus);
 
         when(applicationFinanceRestService.getFinanceDetails(application.getId(), organisationResource.getId())).
                 thenReturn(restSuccess(newApplicationFinanceResource().build()));

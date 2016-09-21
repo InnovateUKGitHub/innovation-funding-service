@@ -29,7 +29,7 @@ class ProjectSetupProgressChecker {
         return !OrganisationTypeEnum.isResearch(organisation.getOrganisationType());
     }
 
-    public boolean isProjectDetailsSectionComplete() {
+    public boolean isProjectDetailsSubmitted() {
         return COMPLETE.equals(projectTeamStatus.getLeadPartnerStatus().getProjectDetailsStatus());
     }
 

@@ -9,8 +9,12 @@ import com.worth.ifs.bankdetails.form.ProjectDetailsAddressForm;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.project.resource.ProjectTeamStatusResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
-import com.worth.ifs.project.viewmodel.*;
+import com.worth.ifs.project.viewmodel.ProjectDetailsAddressViewModel;
+import com.worth.ifs.project.viewmodel.ProjectDetailsStartDateForm;
+import com.worth.ifs.project.viewmodel.ProjectDetailsStartDateViewModel;
+import com.worth.ifs.project.viewmodel.ProjectDetailsViewModel;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import org.junit.Before;
@@ -34,13 +38,14 @@ import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static com.worth.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
+import static com.worth.ifs.project.builder.ProjectLeadStatusResourceBuilder.newProjectLeadStatusResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+import static com.worth.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
 import static java.util.Collections.singletonList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -62,12 +67,14 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     protected ProjectDetailsController supplyControllerUnderTest() {
         return new ProjectDetailsController();
     }
-    
+
     @Test
-    public void testCompetitionDetailsCompetitionId() throws Exception {
+    public void testProjectDetails() throws Exception {
+        Long projectId = 20L;
+
         CompetitionResource competitionResource = newCompetitionResource().build();
-    	ApplicationResource applicationResource = newApplicationResource().withCompetition(competitionResource.getId()).build();
-        ProjectResource project = newProjectResource().withApplication(applicationResource).build();
+        ApplicationResource applicationResource = newApplicationResource().withCompetition(competitionResource.getId()).build();
+        ProjectResource project = newProjectResource().withId(projectId).build();
 
         OrganisationResource leadOrganisation = newOrganisationResource().build();
 
@@ -77,27 +84,37 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 withRoleName(PARTNER.getName()).
                 build(1);
 
+        ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
+                withProjectLeadStatus(newProjectLeadStatusResource().build()).
+                build();
+
         when(applicationService.getById(project.getApplication())).thenReturn(applicationResource);
+        when(competitionService.getById(competitionResource.getId())).thenReturn(competitionResource);
         when(projectService.getById(project.getId())).thenReturn(project);
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrganisation);
+        when(projectService.isUserLeadPartner(projectId, loggedInUser.getId())).thenReturn(true);
+        when(projectService.getProjectTeamStatus(projectId)).thenReturn(teamStatus);
+        when(projectService.isSubmitAllowed(projectId)).thenReturn(serviceSuccess(true));
+
         when(organisationRestService.getOrganisationById(leadOrganisation.getId())).thenReturn(restSuccess(leadOrganisation));
 
-        when(competitionService.getById(applicationResource.getCompetition())).thenReturn(competitionResource);
-        when(projectService.isSubmitAllowed(project.getId())).thenReturn(serviceSuccess(false));
-
-        MvcResult result = mockMvc.perform(get("/project/{id}/details", project.getId()))
+        MvcResult result = mockMvc.perform(get("/project/{id}/details", projectId))
                 .andExpect(status().isOk())
                 .andExpect(view().name("project/detail"))
-                .andExpect(model().attribute("isSubmissionAllowed", false))
                 .andReturn();
 
-        ProjectDetailsViewModel viewModel = (ProjectDetailsViewModel) result.getModelAndView().getModel().get("model");
-        assertEquals(project, viewModel.getProject());
-        assertEquals(applicationResource, viewModel.getApp());
-        assertEquals(competitionResource, viewModel.getCompetition());
+        ProjectDetailsViewModel model = (ProjectDetailsViewModel) result.getModelAndView().getModel().get("model");
+        assertEquals(applicationResource, model.getApp());
+        assertEquals(competitionResource, model.getCompetition());
+        assertEquals(project, model.getProject());
+        assertEquals(singletonList(leadOrganisation), model.getPartnerOrganisations());
+        assertEquals(null, model.getProjectManager());
+        assertFalse(model.isProjectDetailsSubmitted());
+        assertTrue(model.isSubmissionAllowed());
+        assertTrue(model.isUserLeadPartner());
     }
-    
+
     @Test
     public void testProjectDetailsProjectManager() throws Exception {
     	Long projectId = 20L;
