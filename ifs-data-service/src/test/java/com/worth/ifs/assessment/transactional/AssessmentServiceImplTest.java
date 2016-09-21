@@ -133,7 +133,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
         ServiceResult<Void> result = assessmentService.recommend(assessmentId, processOutcomeResource);
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(fieldError("feedback", feedback, "validation.field.max.word.count", 100), fieldError("comment", comment, "validation.field.max.word.count", 100)));
+        assertTrue(result.getFailure().is(fieldError("feedback", feedback, "validation.field.max.word.count", "", 100), fieldError("comment", comment, "validation.field.max.word.count", "", 100)));
     }
 
     @Test
@@ -199,6 +199,22 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         inOrder.verify(processOutcomeMapperMock, calls(1)).mapToDomain(processOutcomeResource);
         inOrder.verify(assessmentWorkflowService, calls(1)).rejectInvitation(processRoleId, assessment, processOutcome);
         inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void rejectInvitation_exceedsWordLimit() throws Exception {
+        String reason = "reason";
+        String comment = String.join(" ", nCopies(101, "comment"));
+
+        ProcessOutcomeResource processOutcomeResource = newProcessOutcomeResource()
+                .withComment(comment)
+                .withDescription(reason)
+                .withOutcomeType(AssessmentOutcomes.REJECT.getType())
+                .build();
+
+        ServiceResult<Void> result = assessmentService.rejectInvitation(1L, processOutcomeResource);
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(fieldError("comment", comment, "validation.field.max.word.count", "", 100)));
     }
 
     @Test
