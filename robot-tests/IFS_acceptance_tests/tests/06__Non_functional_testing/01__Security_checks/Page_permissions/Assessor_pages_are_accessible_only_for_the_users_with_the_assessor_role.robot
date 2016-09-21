@@ -68,7 +68,7 @@ Applicant can't access the assessor's review application page
 
 Applicant can't access the assessor's review application page (outside the question range)
     [Documentation]    INFUND-4568
-    [Tags]
+    [Tags]    Pending
     Then the user navigates to the page and gets a custom error message    ${ASSESSOR_ASSESSMENT_QUESTIONS_48}    You do not have the necessary permissions for your request
 
 
@@ -87,7 +87,7 @@ First Assessor shouldn't be able to see second assessor's assessments
 
 First assessor shouldn't be able to access second assessor's application questions
     [Documentation]    INFUND-4568
-    [Tags]
+    [Tags]    Pending
     When the user navigates to the assessor page    ${ASSESSOR_ASSESSMENT_QUESTIONS_11}
     Then The user should see permissions error message
     [Teardown]    the user closes the browser
