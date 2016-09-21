@@ -199,11 +199,11 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
                         .with(id(null))
                         .withName("name")
                         .withEmail("no-user-exists@for-this.address")
-                        .withUser(newUser().withid(1L))
+                        .withUser(newUser().withId(1L))
                         .withHash("hash")
                         .withCompetition(competition)
                         .build())
-                .withUser(newUser().withid(1L))
+                .withUser(newUser().withId(1L))
                 .build());
         assertTrue(controller.openInvite("hash").isSuccess());
         setLoggedInUser(getPaulPlum());
@@ -277,11 +277,11 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
                         .with(id(null))
                         .withName("name")
                         .withEmail("paul.plum@gmail.com")
-                        .withUser(newUser().withid(getPaulPlum().getId()).build())
+                        .withUser(newUser().withId(getPaulPlum().getId()).build())
                         .withHash("hash")
                         .withCompetition(competition)
                         .build())
-                .withUser(newUser().withid(getPaulPlum().getId()))
+                .withUser(newUser().withId(getPaulPlum().getId()))
                 .build());
 
         assertTrue(controller.openInvite("hash").isSuccess());

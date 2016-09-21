@@ -13,6 +13,7 @@ import com.worth.ifs.notifications.resource.NotificationTarget;
 import com.worth.ifs.token.domain.Token;
 import com.worth.ifs.token.resource.TokenType;
 import com.worth.ifs.user.domain.*;
+import com.worth.ifs.user.resource.RoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,11 +37,13 @@ import static com.worth.ifs.user.builder.CompAdminEmailBuilder.newCompAdminEmail
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static com.worth.ifs.user.builder.ProjectFinanceEmailBuilder.newProjectFinanceEmail;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
+import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.UserRoleType.*;
 import static com.worth.ifs.util.MapFunctions.asMap;
 import static java.time.LocalDateTime.now;
+import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
@@ -53,7 +56,7 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
  * Tests around Registration Service
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ RegistrationServiceImpl.class, StandardPasswordEncoder.class })
+@PrepareForTest({RegistrationServiceImpl.class, StandardPasswordEncoder.class})
 public class RegistrationServiceImplTest extends BaseServiceUnitTest<RegistrationServiceImpl> {
 
     private static final String webBaseUrl = "http://ifs-local-dev";
@@ -69,7 +72,83 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
     }
 
     @Test
-    public void testCreateApplicantUser() {
+    public void createUser() throws Exception {
+        RoleResource roleResource = newRoleResource().build();
+        Role role = newRole().build();
+
+        UserResource userToCreateResource = newUserResource()
+                .withId((Long) null)
+                .withTitle("Mr")
+                .withFirstName("First")
+                .withLastName("Last")
+                // TODO
+                //.withGender()
+                // TODO
+                //.withEthnicGroup()
+                // TODO
+                //.withDisability()
+                .withPhoneNumber("01234 567890")
+                .withEmail("email@example.com")
+                .withPassword("Passw0rd123")
+                .withRolesGlobal(asList(roleResource))
+                .build();
+
+        User userToCreate = newUser()
+                .withId((Long) null)
+                .withTitle("Mr")
+                .withFirstName("First")
+                .withLastName("Last")
+                // TODO
+                //.withGender()
+                // TODO
+                //.withEthnicGroup()
+                // TODO
+                //.withDisability()
+                .withPhoneNumber("01234 567890")
+                .withEmailAddress("email@example.com")
+                .withRolesGlobal(role)
+                .build();
+
+        when(passwordPolicyValidatorMock.validatePassword("Passw0rd123", userToCreateResource)).thenReturn(serviceSuccess());
+        when(userMapperMock.mapToDomain(userToCreateResource)).thenReturn(userToCreate);
+        when(idpServiceMock.createUserRecordWithUid("email@example.com", "Passw0rd123")).thenReturn(serviceSuccess("new-uid"));
+
+        User userToSave = createLambdaMatcher(user -> {
+            assertNull(user.getId());
+            assertEquals("Mr", user.getTitle());
+            assertEquals("First Last", user.getName());
+            assertEquals("First", user.getFirstName());
+            assertEquals("Last", user.getLastName());
+            // TODO
+            // assertEquals("", user.getGender());
+            // TODO
+            // assertEquals("", user.EthnicGroup());
+            // TODO
+            // assertEquals("", user.getDisability());
+            assertEquals("01234 567890", user.getPhoneNumber());
+            assertEquals("email@example.com", user.getEmail());
+
+            assertEquals("new-uid", user.getUid());
+            assertEquals(1, user.getRoles().size());
+            assertEquals(role, user.getRoles().get(0));
+            assertTrue(user.getOrganisations().isEmpty());
+
+            return true;
+        });
+
+        User savedUser = newUser().build();
+        UserResource savedUserResource = newUserResource().build();
+
+        when(userRepositoryMock.save(userToSave)).thenReturn(savedUser);
+        when(userMapperMock.mapToResource(savedUser)).thenReturn(savedUserResource);
+
+        ServiceResult<UserResource> result = service.createUser(userToCreateResource);
+        assertTrue(result.isSuccess());
+        assertEquals(savedUserResource, result.getSuccessObject());
+    }
+
+    @Test
+    public void testCreateOrganisationUser() {
 
         UserResource userToCreate = newUserResource().
                 withFirstName("First").
@@ -307,7 +386,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(notFoundError(Role.class, COMP_ADMIN.getName())));
     }
-    
+
     @Test
     public void testCreateProjectFinanceUserForOrganisation() {
         UserResource userToCreate = newUserResource().

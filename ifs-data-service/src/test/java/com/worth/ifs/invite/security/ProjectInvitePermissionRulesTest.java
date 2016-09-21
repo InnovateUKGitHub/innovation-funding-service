@@ -57,12 +57,12 @@ public class ProjectInvitePermissionRulesTest extends BasePermissionRulesTest<Pr
         projectUserForUserOnOgranisationOne = newProjectUser()
                 .withOrganisation(organisationOne)
                 .withProject(project)
-                .withUser(newUser().withid(userOnProjectForOrganisationOne.getId()).build())
+                .withUser(newUser().withId(userOnProjectForOrganisationOne.getId()).build())
                 .build();
         projectUserForUserOnOgranisationTwo = newProjectUser()
                 .withOrganisation(organisationTwo)
                 .withProject(project)
-                .withUser(newUser().withid(userOnProjectForOrganisationTwo.getId()).build())
+                .withUser(newUser().withId(userOnProjectForOrganisationTwo.getId()).build())
                 .build();
         inviteProjectResourceForOrganisationOne = newInviteProjectResource()
                 .withProject(project.getId())
