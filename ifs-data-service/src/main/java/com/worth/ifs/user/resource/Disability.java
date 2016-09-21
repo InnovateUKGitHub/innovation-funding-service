@@ -1,4 +1,6 @@
-package com.worth.ifs.user.domain;
+package com.worth.ifs.user.resource;
+
+import com.worth.ifs.user.domain.User;
 
 /**
  * The disabilities of a {@link User}.

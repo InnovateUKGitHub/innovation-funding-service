@@ -28,8 +28,8 @@ public class UserResource {
     private List<Long> organisations = new ArrayList<>();
     private List<Long> processRoles = new ArrayList<>();
     private List<RoleResource> roles = new ArrayList<>();
-    private String gender;
-    private String disability;
+    private Gender gender;
+    private Disability disability;
     private Long ethnicity;
 
     public UserResource() {
@@ -219,19 +219,19 @@ public class UserResource {
         return simpleMap(roles, RoleResource::getName).contains(role.getName());
     }
 
-    public String getGender() {
+    public Gender getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
+    public void setGender(Gender gender) {
         this.gender = gender;
     }
 
-    public String getDisability() {
+    public Disability getDisability() {
         return disability;
     }
 
-    public void setDisability(String disability) {
+    public void setDisability(Disability disability) {
         this.disability = disability;
     }
 
