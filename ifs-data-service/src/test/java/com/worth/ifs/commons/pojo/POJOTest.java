@@ -112,8 +112,6 @@ public class POJOTest {
             ProjectLeadStatusResource.class,
             ProjectPartnerStatusResource.class,
             ProjectTeamStatusResource.class,
-            ProjectStatusResource.class,
-            CompetitionProjectsStatusResource.class,
             ProjectBankDetailsStatusSummary.class,
             BankDetailsStatusResource.class
     );

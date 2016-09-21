@@ -1,6 +1,7 @@
 package com.worth.ifs.bankdetails;
 
 import com.worth.ifs.bankdetails.resource.BankDetailsResource;
+import com.worth.ifs.bankdetails.resource.ProjectBankDetailsStatusSummary;
 import com.worth.ifs.commons.service.ServiceResult;
 
 /**

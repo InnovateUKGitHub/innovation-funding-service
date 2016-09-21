@@ -128,9 +128,10 @@ public class BankDetailsServiceImpl implements BankDetailsService{
         ProjectBankDetailsStatusSummary projectBankDetailsStatusSummary = new ProjectBankDetailsStatusSummary();
         projectBankDetailsStatusSummary.setBankDetailsStatusResources(bankDetailsStatusResources);
         projectBankDetailsStatusSummary.setProjectId(projectId);
-        projectBankDetailsStatusSummary.setFormattedProjectId(project.getFormattedId());
+        // TODO: Add this after other branch is merged
+        //projectBankDetailsStatusSummary.setFormattedProjectId(project.getFormattedId());
         projectBankDetailsStatusSummary.setCompetitionId(project.getApplication().getCompetition().getId());
-        projectBankDetailsStatusSummary.setFormattedCompetitionId(project.getApplication().getCompetition().getFormattedId());
+        //projectBankDetailsStatusSummary.setFormattedCompetitionId(project.getApplication().getCompetition().getFormattedId());
         return serviceSuccess(projectBankDetailsStatusSummary);
     }
 

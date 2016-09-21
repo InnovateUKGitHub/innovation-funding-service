@@ -6,6 +6,7 @@ import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.bankdetails.BankDetailsService;
 import com.worth.ifs.bankdetails.form.ChangeBankDetailsForm;
 import com.worth.ifs.bankdetails.resource.BankDetailsResource;
+import com.worth.ifs.bankdetails.resource.ProjectBankDetailsStatusSummary;
 import com.worth.ifs.bankdetails.viewmodel.BankDetailsReviewViewModel;
 import com.worth.ifs.bankdetails.viewmodel.ChangeBankDetailsViewModel;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -60,7 +61,6 @@ public class BankDetailsManagementController {
             Model model,
             @PathVariable("projectId") Long projectId,
             @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-        final ProjectResource project = projectService.getById(projectId);
         final ProjectBankDetailsStatusSummary bankDetailsStatusSummary = bankDetailsService.getBankDetailsByProject(projectId);
         return doViewBankDetailsSummaryPage(bankDetailsStatusSummary, model);
     }
@@ -240,5 +240,10 @@ public class BankDetailsManagementController {
     private void populateAddress(AddressForm addressForm, BankDetailsResource bankDetails){
         addressForm.setManualAddress(true);
         addressForm.setSelectedPostcode(bankDetails.getOrganisationAddress().getAddress());
+    }
+
+    private String doViewBankDetailsSummaryPage(ProjectBankDetailsStatusSummary projectBankDetailsStatusSummary, Model model){
+        model.addAttribute("model", projectBankDetailsStatusSummary);
+        return "project/bank-details-status";
     }
 }
