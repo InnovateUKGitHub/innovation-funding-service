@@ -43,7 +43,7 @@ public class MilestoneController {
          return milestoneService.updateMilestones(competitionId, milestones).toPutResponse();
     }
 
-    @RequestMapping(value = "/{competitionId}/save", method = RequestMethod.PUT)
+    @RequestMapping(value = "/", method = RequestMethod.PUT)
     public RestResult<Void> saveMilestone(@RequestBody final MilestoneResource milestone) {
         return milestoneService.updateMilestone(milestone).toPutResponse();
     }

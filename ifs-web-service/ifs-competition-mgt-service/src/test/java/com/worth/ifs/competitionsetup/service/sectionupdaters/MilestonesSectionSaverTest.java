@@ -109,25 +109,23 @@ public class MilestonesSectionSaverTest {
 
     @Test
     public void testAutoSaveCompetitionSetupSectionDateNotInFuture() throws ParseException {
-        List<Error> errors = new ArrayList<>();
         String fieldName =  "milestoneEntries[BRIEFING_EVENT].milestoneType";
         when(milestoneService.getMilestoneByTypeAndCompetitionId(MilestoneType.BRIEFING_EVENT, 1L)).thenReturn(getBriefingEventMilestone());
 
-        CompetitionResource competition = newCompetitionResource().build();
+        CompetitionResource competition = newCompetitionResource().withId(1L).build();
         competition.setMilestones(Arrays.asList(10L));
 
-        service.updateCompetitionResourceWithAutoSave(errors, competition, fieldName, "20-10-2015");
+        List<Error> errors = service.autoSaveSectionField(competition, fieldName, "20-10-2015", null);
 
         assertTrue(!errors.isEmpty());
         assertEquals(errors.get(0).getErrorKey(), "competition.setup.milestone.date.not.in.future");
     }
 
     private MilestoneResource getBriefingEventMilestone(){
-        MilestoneResource milestone = new MilestoneResource();
-        milestone.setId(10L);
-        milestone.setType(MilestoneType.BRIEFING_EVENT);
-        milestone.setDate(LocalDateTime.of(2020, 12, 1, 0, 0));
-        milestone.setCompetition(1L);
-        return milestone;
+        return newMilestoneResource()
+                .withId(1L)
+                .withName(MilestoneType.OPEN_DATE)
+                .withDate(LocalDateTime.of(2020, 12, 1, 0, 0))
+                .withCompetitionId(1L).build();
     }
 }

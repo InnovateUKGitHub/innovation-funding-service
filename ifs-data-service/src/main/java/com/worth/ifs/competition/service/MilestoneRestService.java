@@ -17,7 +17,7 @@ public interface MilestoneRestService {
 
     RestResult<Void> updateMilestones(List<MilestoneResource> milestones, Long competitionId);
 
-    RestResult<Void> updateMilestone(MilestoneResource milestone, Long competitionId);
+    RestResult<Void> updateMilestone(MilestoneResource milestone);
 
     RestResult<MilestoneResource> create(MilestoneType type, Long competitionId);
 }

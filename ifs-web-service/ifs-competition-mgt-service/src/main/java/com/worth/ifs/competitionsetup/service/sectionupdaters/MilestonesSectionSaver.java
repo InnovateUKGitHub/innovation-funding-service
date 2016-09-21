@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -64,7 +65,7 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
 
     @Override
     public List<Error> autoSaveSectionField(CompetitionResource competitionResource, String fieldName, String value, Optional<Long> ObjectId) {
-        return performAutoSaveField(competitionResource, fieldName, value);
+        return updateMilestoneWithValueByFieldname(competitionResource, fieldName, value);
     }
 
     private List<Error> returnErrorsFoundOnSave(LinkedMap<String, MilestoneEntry> milestoneEntries, Long competitionId){
@@ -84,21 +85,26 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
 
     @Override
     protected List<Error> updateCompetitionResourceWithAutoSave(List<Error> errors, CompetitionResource competitionResource, String fieldName, String value) {
-      try{
-          MilestoneResource milestone = milestoneService.getMilestoneByTypeAndCompetitionId(
-                  MilestoneType.valueOf(getMilestoneTypeFromFieldName(fieldName)), competitionResource.getId());
-
-          errors.addAll(validateMilestoneDate(milestone, getDateFromFieldValue(value)));
-
-          if(!errors.isEmpty()) {
-              return errors;
-          }
-          milestoneService.updateMilestone(milestone, competitionResource.getId());
-      }catch(Exception ex){
-          LOG.error(ex.getMessage());
-          return makeErrorList();
-      }
       return  Collections.emptyList();
+    }
+
+    private List<Error> updateMilestoneWithValueByFieldname(CompetitionResource competitionResource, String fieldName, String value) {
+        List<Error> errors = new ArrayList<>();
+        try{
+            MilestoneResource milestone = milestoneService.getMilestoneByTypeAndCompetitionId(
+                    MilestoneType.valueOf(getMilestoneTypeFromFieldName(fieldName)), competitionResource.getId());
+
+            errors.addAll(validateMilestoneDate(milestone, getDateFromFieldValue(value)));
+
+            if(!errors.isEmpty()) {
+                return errors;
+            }
+            milestoneService.updateMilestone(milestone);
+        }catch(Exception ex){
+            LOG.error(ex.getMessage());
+            return makeErrorList();
+        }
+        return  errors;
     }
 
     private LocalDateTime getDateFromFieldValue(String value) {

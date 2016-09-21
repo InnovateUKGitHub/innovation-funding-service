@@ -104,9 +104,9 @@ public class MilestoneRestServiceMocksTest extends BaseRestServiceUnitTest<Miles
         LocalDateTime date = LocalDateTime.now();
         response.setDate(date);
 
-        setupPutWithRestResultExpectations(milestonesRestURL + "/" + competitionId + "/save", Void.class, response, null, HttpStatus.OK);
-        service.updateMilestone(response, competitionId);
-        setupPutWithRestResultVerifications(milestonesRestURL + "/" + competitionId + "/save", Void.class, response);
+        setupPutWithRestResultExpectations(milestonesRestURL + "/", Void.class, response, null, HttpStatus.OK);
+        service.updateMilestone(response);
+        setupPutWithRestResultVerifications(milestonesRestURL + "/", Void.class, response);
     }
 
     private MilestoneResource getOpenDateMilestone() {

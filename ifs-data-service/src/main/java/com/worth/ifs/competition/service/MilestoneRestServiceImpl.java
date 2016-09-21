@@ -37,8 +37,8 @@ public class MilestoneRestServiceImpl extends BaseRestService implements Milesto
     }
 
     @Override
-    public RestResult<Void> updateMilestone(MilestoneResource milestone, Long competitionId) {
-        return putWithRestResult(milestonesRestURL + "/" + competitionId + "/save", milestone, Void.class);
+    public RestResult<Void> updateMilestone(MilestoneResource milestone) {
+        return putWithRestResult(milestonesRestURL + "/", milestone, Void.class);
     }
 
     @Override

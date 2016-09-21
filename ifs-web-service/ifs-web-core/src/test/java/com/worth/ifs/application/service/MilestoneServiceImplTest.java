@@ -95,9 +95,9 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
         LocalDateTime milestoneDate = LocalDateTime.now();
         MilestoneResource milestone = getNewBriefingEventMilestone(milestoneDate);
 
-        when(milestoneRestService.updateMilestone(milestone, 1L)).thenReturn(restSuccess());
+        when(milestoneRestService.updateMilestone(milestone)).thenReturn(restSuccess());
 
-        List<Error> errors = service.updateMilestone(milestone, 1L);
+        List<Error> errors = service.updateMilestone(milestone);
         assertTrue(errors.isEmpty());
     }
 

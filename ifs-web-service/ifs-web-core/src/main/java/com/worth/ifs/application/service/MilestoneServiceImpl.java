@@ -43,8 +43,8 @@ public class MilestoneServiceImpl implements MilestoneService{
     }
 
     @Override
-    public List<Error> updateMilestone(MilestoneResource milestone, Long competitionId) {
-        RestResult<Void> result = milestoneRestService.updateMilestone(milestone, competitionId);
+    public List<Error> updateMilestone(MilestoneResource milestone) {
+        RestResult<Void> result = milestoneRestService.updateMilestone(milestone);
         if(result.isFailure()) {
             return result.getFailure().getErrors();
         }
