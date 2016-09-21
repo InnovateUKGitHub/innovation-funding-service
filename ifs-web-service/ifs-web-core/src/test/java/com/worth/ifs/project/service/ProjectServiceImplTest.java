@@ -371,5 +371,41 @@ public class ProjectServiceImplTest {
         assertEquals(response, result);
     }
 
+    @Test
+    public void testGetAdditionalContractFile() {
+
+        Optional<ByteArrayResource> content = Optional.of(new ByteArrayResource("My content!".getBytes()));
+        when(projectRestService.getAdditionalContractFile(123L)).thenReturn(restSuccess(content));
+
+        Optional<ByteArrayResource> result = service.getAdditionalContractFile(123L);
+        assertEquals(content, result);
+    }
+
+    @Test
+    public void testGetAdditionalContractDetails() {
+
+        FileEntryResource returnedFile = newFileEntryResource().build();
+
+        Optional<FileEntryResource> response = Optional.of(returnedFile);
+        when(projectRestService.getAdditionalContractFileDetails(123L)).thenReturn(restSuccess(response));
+
+        Optional<FileEntryResource> result = service.getAdditionalContractFileDetails(123L);
+        assertEquals(response, result);
+    }
+
+    @Test
+    public void testAddGrantOfferLetter() {
+
+        FileEntryResource createdFile = newFileEntryResource().build();
+
+        when(projectRestService.addGrantOfferLetterFile(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes())).
+                thenReturn(restSuccess(createdFile));
+
+        ServiceResult<FileEntryResource> result =
+                service.addGrantOfferLetter(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes());
+
+        assertTrue(result.isSuccess());
+        assertEquals(createdFile, result.getSuccessObject());
+    }
 
 }

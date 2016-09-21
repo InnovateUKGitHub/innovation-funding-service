@@ -6,7 +6,7 @@ import com.worth.ifs.project.viewmodel.BasicProjectDetailsViewModel;
 import java.time.LocalDateTime;
 
 /**
- * Module: innovation-funding-service-dev
+ * A view model that backs the Project grant offer letter page
  **/
 public class ProjectGrantOfferLetterViewModel implements BasicProjectDetailsViewModel {
 

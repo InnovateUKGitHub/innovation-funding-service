@@ -27,6 +27,7 @@ public class ProjectResource {
     private Long grantOfferLetter;
     private Long additionalContractFile;
     private boolean offerSigned;
+    private boolean offerRejected;
 
     @Digits(integer = MAX_DURATION_IN_MONTHS_DIGITS, fraction = 0, message="{validation.application.details.duration.in.months.max.digits}")
     private Long durationInMonths;
@@ -169,5 +170,13 @@ public class ProjectResource {
 
     public void setOfferSigned(boolean offerSigned) {
         this.offerSigned = offerSigned;
+    }
+
+    public boolean isOfferRejected() {
+        return offerRejected;
+    }
+
+    public void setOfferRejected(boolean offerRejected) {
+        this.offerRejected = offerRejected;
     }
 }

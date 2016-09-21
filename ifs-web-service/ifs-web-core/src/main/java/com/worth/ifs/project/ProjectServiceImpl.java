@@ -239,12 +239,17 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public Optional<ByteArrayResource> getAdditionalContractFile(Long projectId) {
-        return null;
+        return projectRestService.getAdditionalContractFile(projectId).getSuccessObjectOrThrowException();
     }
 
     @Override
     public Optional<FileEntryResource> getAdditionalContractFileDetails(Long projectId) {
-        return null;
+        return projectRestService.getAdditionalContractFileDetails(projectId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public ServiceResult<FileEntryResource> addGrantOfferLetter(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes) {
+        return projectRestService.addGrantOfferLetterFile(projectId, contentType, fileSize, originalFilename, bytes).toServiceResult();
     }
 
     private List<ProjectUserResource> getProjectUsersWithPartnerRole(Long projectId) {

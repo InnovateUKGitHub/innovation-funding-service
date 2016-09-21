@@ -88,7 +88,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
 
     @Test
     public void testCreateGrantOfferLetterFileEntry() {
-        projectServiceAssertions.assertCreateFile(
+        assertCreateFile(
                 project::getGrantOfferLetter,
                 (fileToCreate, inputStreamSupplier) ->
                         service.createGrantOfferLetterFileEntry(123L, fileToCreate, inputStreamSupplier));
@@ -96,7 +96,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
 
     @Test
     public void testCreateAdditionalContractFileEntry() {
-        projectServiceAssertions.assertCreateFile(
+        assertCreateFile(
                 project::getAdditionalContractFile,
                 (fileToCreate, inputStreamSupplier) ->
                         service.createAdditionalContractFileEntry(123L, fileToCreate, inputStreamSupplier));
@@ -105,31 +105,40 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
 
     @Test
     public void testGetAdditionalContractFileEntryDetails() {
-        projectServiceAssertions.assertGetFileDetails(
+        assertGetFileDetails(
                 project::setAdditionalContractFile,
                 () -> service.getAdditionalContractFileEntryDetails(123L));
     }
 
     @Test
     public void testGetGrantOfferLetterFileEntryDetails() {
-        projectServiceAssertions.assertGetFileDetails(
+        assertGetFileDetails(
                 project::setGrantOfferLetter,
                 () -> service.getGrantOfferLetterFileEntryDetails(123L));
     }
 
     @Test
     public void testGetAdditionalContractFileContents() {
-        projectServiceAssertions.assertGetFileContents(
+        assertGetFileContents(
                 project::setAdditionalContractFile,
                 () -> service.getAdditionalContractFileAndContents(123L));
     }
 
     @Test
     public void testGetGrantOfferLetterFileContents() {
-        projectServiceAssertions.assertGetFileContents(
+        assertGetFileContents(
                 project::setGrantOfferLetter,
                 () -> service.getGrantOfferLetterFileAndContents(123L));
     }
+
+    @Test
+    public void testUpdateGrantOfferLetterFileEntry() {
+        assertUpdateFile(
+                project::getGrantOfferLetter,
+                (fileToUpdate, inputStreamSupplier) ->
+                        service.updateGrantOfferLetterFile(123L, fileToUpdate, inputStreamSupplier));
+    }
+
 
     @Override
     protected ProjectGrantOfferService supplyServiceUnderTest() {

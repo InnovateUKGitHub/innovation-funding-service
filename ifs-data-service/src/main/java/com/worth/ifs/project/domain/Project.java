@@ -70,7 +70,9 @@ public class Project implements ProcessActivity {
     @JoinColumn(name="additionalContractFileEntryId", referencedColumnName = "id")
     private FileEntry additionalContractFile;
 
-        private boolean offerSigned = false;
+    private boolean offerSigned = false;
+
+    private boolean offerRejected = false;
 
     public Project() {}
 
@@ -244,5 +246,13 @@ public class Project implements ProcessActivity {
 
     public void setOfferSigned(boolean offerSigned) {
         this.offerSigned = offerSigned;
+    }
+
+    public boolean isOfferRejected() {
+        return offerRejected;
+    }
+
+    public void setOfferRejected(boolean offerRejected) {
+        this.offerRejected = offerRejected;
     }
 }

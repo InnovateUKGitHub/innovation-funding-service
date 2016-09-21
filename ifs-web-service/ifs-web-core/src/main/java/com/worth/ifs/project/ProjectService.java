@@ -86,4 +86,7 @@ public interface ProjectService {
     Optional<ByteArrayResource> getAdditionalContractFile(Long projectId);
 
     Optional<FileEntryResource> getAdditionalContractFileDetails(Long projectId);
+
+    ServiceResult<FileEntryResource> addGrantOfferLetter(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes);
+
 }

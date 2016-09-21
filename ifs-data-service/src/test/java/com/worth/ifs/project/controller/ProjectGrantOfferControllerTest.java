@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
 import java.util.function.BiFunction;
+import java.util.function.Function;
 
 import static java.util.Collections.emptyMap;
 import static org.mockito.Matchers.eq;
@@ -35,8 +36,8 @@ public class ProjectGrantOfferControllerTest extends BaseControllerMockMVCTest<P
     public void getGrantOfferLetterFileContents() throws Exception {
         Long projectId = 123L;
 
-        BiFunction<ProjectGrantOfferService, FileEntryResource, ServiceResult<FileAndContents>> serviceCallToUpload =
-                (service, fileToUpload) -> service.getGrantOfferLetterFileAndContents(projectId);
+        Function<ProjectGrantOfferService, ServiceResult<FileAndContents>> serviceCallToUpload =
+                (service) -> service.getGrantOfferLetterFileAndContents(projectId);
 
         assertGetFileContents("/project/{projectId}/grant-offer", new Object[] {projectId},
                 emptyMap(), projectGrantOfferServiceMock, serviceCallToUpload).
@@ -47,8 +48,8 @@ public class ProjectGrantOfferControllerTest extends BaseControllerMockMVCTest<P
     public void getAdditionalContractrFileContents() throws Exception {
         Long projectId = 123L;
 
-        BiFunction<ProjectGrantOfferService, FileEntryResource, ServiceResult<FileAndContents>> serviceCallToUpload =
-                (service, fileToUpload) -> service.getAdditionalContractFileAndContents(projectId);
+        Function<ProjectGrantOfferService, ServiceResult<FileAndContents>> serviceCallToUpload =
+                (service) -> service.getAdditionalContractFileAndContents(projectId);
 
         assertGetFileContents("/project/{projectId}/additional-contract", new Object[] {projectId},
                 emptyMap(), projectGrantOfferServiceMock, serviceCallToUpload).

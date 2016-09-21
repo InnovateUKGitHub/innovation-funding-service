@@ -13,12 +13,11 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 import static com.worth.ifs.file.controller.FileControllerUtils.handleFileDownload;
+import static com.worth.ifs.file.controller.FileControllerUtils.handleFileUpdate;
 import static com.worth.ifs.file.controller.FileControllerUtils.handleFileUpload;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 /**
- * Module: innovation-funding-service-dev
  * Project Controller extension for grant offer data and operations through a REST API
  **/
 @RestController
@@ -89,4 +88,15 @@ public class ProjectGrantOfferController {
         );
     }
 
+    @RequestMapping(value = "/{projectId}/grant-offer", method = PUT, produces = "application/json")
+    public RestResult<Void> updateGrantOfferLetterFile(
+            @RequestHeader(value = "Content-Type", required = false) String contentType,
+            @RequestHeader(value = "Content-Length", required = false) String contentLength,
+            @PathVariable(value = "projectId") long projectId,
+            @RequestParam(value = "filename", required = false) String originalFilename,
+            HttpServletRequest request) {
+
+        return handleFileUpdate(contentType, contentLength, originalFilename, fileValidator, request, (fileAttributes, inputStreamSupplier) ->
+                projectGrantOfferService.updateGrantOfferLetterFile(projectId, fileAttributes.toFileEntryResource(), inputStreamSupplier));
+    }
 }

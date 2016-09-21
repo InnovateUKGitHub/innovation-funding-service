@@ -497,8 +497,8 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
 
         Long projectId = 123L;
 
-        BiFunction<ProjectService, FileEntryResource, ServiceResult<FileAndContents>> serviceCallToUpload =
-                (service, fileToUpload) -> service.getCollaborationAgreementFileContents(projectId);
+        Function<ProjectService, ServiceResult<FileAndContents>> serviceCallToUpload =
+                (service) -> service.getCollaborationAgreementFileContents(projectId);
 
         assertGetFileContents("/project/{projectId}/collaboration-agreement", new Object[] {projectId},
                 emptyMap(), projectServiceMock, serviceCallToUpload).
@@ -562,8 +562,8 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
 
         Long projectId = 123L;
 
-        BiFunction<ProjectService, FileEntryResource, ServiceResult<FileAndContents>> serviceCallToUpload =
-                (service, fileToUpload) -> service.getExploitationPlanFileContents(projectId);
+        Function<ProjectService, ServiceResult<FileAndContents>> serviceCallToUpload =
+                (service) -> service.getExploitationPlanFileContents(projectId);
 
         assertGetFileContents("/project/{projectId}/exploitation-plan", new Object[] {projectId},
                 emptyMap(), projectServiceMock, serviceCallToUpload).

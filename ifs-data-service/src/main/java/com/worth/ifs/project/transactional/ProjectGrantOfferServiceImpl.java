@@ -121,6 +121,14 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
 
     }
 
+    @Override
+    public ServiceResult<Void> updateGrantOfferLetterFile(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
+        return getProject(projectId).
+                andOnSuccess(project -> fileService.updateFile(fileEntryResource, inputStreamSupplier).
+                        andOnSuccessReturnVoid(fileDetails -> linkGrantOfferLetterFileToProject(project, fileDetails)));
+
+    }
+
     private FileEntryResource linkAdditionalContractFileToProject(Project project, Pair<File, FileEntry> fileDetails) {
         FileEntry fileEntry = fileDetails.getValue();
         project.setAdditionalContractFile(fileEntry);

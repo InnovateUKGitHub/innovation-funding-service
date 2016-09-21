@@ -299,7 +299,6 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     @Mock
     protected ProjectGrantOfferService projectGrantOfferServiceMock;
 
-
     @Mock
     protected ProjectMapper projectMapperMock;
 
@@ -365,10 +364,6 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected FinanceRowService financeRowServiceMock;
-
-    //Project service Test Helper class
-    @Mock
-    protected ProjectServiceAssertions projectServiceAssertions;
 
     @Before
     public void setupMockInjection() {
