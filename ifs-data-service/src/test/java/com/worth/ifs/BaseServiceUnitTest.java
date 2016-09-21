@@ -1,11 +1,15 @@
 package com.worth.ifs;
 
+
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.FileAndContents;
 import org.apache.commons.lang3.tuple.Pair;
+import com.worth.ifs.commons.security.UserAuthentication;
+import com.worth.ifs.user.resource.UserResource;
 import org.mockito.InjectMocks;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.io.File;
 import java.io.InputStream;
@@ -94,6 +98,11 @@ public abstract class BaseServiceUnitTest<ServiceType> extends BaseUnitTestMocks
         assertEquals(updatedFile, fileGetter.get());
 
         verify(fileServiceMock).updateFile(fileToUpdate, inputStreamSupplier);
+    }
+
+
+    protected void setLoggedInUser(UserResource loggedInUser) {
+        SecurityContextHolder.getContext().setAuthentication(new UserAuthentication(loggedInUser));
     }
 
 }

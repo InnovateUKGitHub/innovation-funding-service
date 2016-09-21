@@ -29,19 +29,17 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
 
     @Before
     public void setup() {
-        Long processRoleId = 1L;
-        Long userId = 2L;
 
-        assessorUser = newUserResource().withId(userId).build();
+        assessorUser = newUserResource().build();
         otherUser = newUserResource().build();
 
         ProcessRole processRole = newProcessRole()
-                .withUser(newUser().with(id(userId)).build())
+                .withUser(newUser().with(id(assessorUser.getId())).build())
                 .build();
 
         assessment = newAssessmentResource().withProcessRole(processRole.getId()).build();
 
-        when(processRoleRepositoryMock.findOne(processRoleId)).thenReturn(processRole);
+        when(processRoleRepositoryMock.findOne(processRole.getId())).thenReturn(processRole);
     }
 
     @Test

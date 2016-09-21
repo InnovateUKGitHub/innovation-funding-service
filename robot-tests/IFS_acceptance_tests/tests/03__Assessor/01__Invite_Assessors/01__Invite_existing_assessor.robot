@@ -66,11 +66,10 @@ Competition link should navigate to the applications
     [Documentation]    INFUND-3716
     [Tags]    HappyPath
     [Setup]    Run Keywords    logout as user
-    ...               AND    Log in as user    email=paul.plum@gmail.com    password=Passw0rd    # Note that for this test we want to check what the application list looks like, so we need to log in as a user that has per-existing applications assigned to them
+    ...    AND    Log in as user    email=paul.plum@gmail.com    password=Passw0rd    # Note that for this test we want to check what the application list looks like, so we need to log in as a user that has per-existing applications assigned to them
     When The user clicks the button/link    link=Juggling Craziness
     Then The user should see the text in the page    Applications for Assessment
     And the calculation should be correct    Applications for Assessment    //div/form/ul/li
-
 
 Existing assessor shouldn't be able to accept other assessor's invitation
     [Documentation]    INFUND-228
@@ -79,16 +78,6 @@ Existing assessor shouldn't be able to accept other assessor's invitation
     [Tags]
     Given the user navigates to the page    ${Invitation_nonexisting_assessor2}
     when the user clicks the button/link    jQuery=button:contains(Accept)
-    Then The user should see permissions error message
-
-Existing assessor shouldn't be able to reject other assessor's invitation
-    [Documentation]    INFUND-4631
-    [Tags]    Pending
-    # Pending INFUND-5003
-    Given the user navigates to the page    ${Invitation_nonexisting_assessor2}
-    when the user clicks the button/link    css=form a
-    And the assessor fills in all fields
-    And the user clicks the button/link    jQuery=button:contains("Reject")
     Then The user should see permissions error message
 
 *** Keywords ***
