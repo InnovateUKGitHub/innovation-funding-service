@@ -128,6 +128,11 @@ the user should be logged-in as an Assessor
     Title Should Be    Assessor Dashboard - Innovation Funding Service
 
 the user opens the mailbox and clicks the reset link
+    run keyword if    ${docker}==1    the user opens the local mailbox and clicks the reset link
+    run keyword if    ${docker}!=1    the user opens the remote mailbox and clicks the reset link
+
+
+the user opens the remote mailbox and clicks the reset link
     Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
     ${LATEST} =    wait for email
     ${HTML}=    get email body    ${LATEST}
@@ -140,6 +145,22 @@ the user opens the mailbox and clicks the reset link
     Capture Page Screenshot
     Delete All Emails
     close mailbox
+
+the user opens the local mailbox and clicks the reset link
+    Open Mailbox    server=ifs-local-dev    port=9876    user=smtp    password=smtp    is_secure=False
+    ${LATEST} =    wait for email
+    ${HTML}=    get email body    ${LATEST}
+    log    ${HTML}
+    ${LINK}=    Get Links From Email    ${LATEST}
+    log    ${LINK}
+    ${VERIFY_EMAIL}=    Get From List    ${LINK}    1
+    log    ${VERIFY_EMAIL}
+    go to    ${VERIFY_EMAIL}
+    Capture Page Screenshot
+    Delete All Emails
+    close mailbox
+
+
 
 Clear the login fields
     Reload Page

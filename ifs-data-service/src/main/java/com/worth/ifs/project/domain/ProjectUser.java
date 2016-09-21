@@ -99,6 +99,10 @@ public class ProjectUser extends Participant<Project, ProjectInvite, ProjectPart
         return getRole().isPartner();
     }
 
+    public boolean isFinanceContact() {
+        return getRole().isFinanceContact();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

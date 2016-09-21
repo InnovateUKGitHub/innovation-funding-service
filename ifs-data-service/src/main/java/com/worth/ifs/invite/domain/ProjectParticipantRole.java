@@ -43,6 +43,10 @@ public enum ProjectParticipantRole implements ParticipantRole<Project> {
         return this == PROJECT_MANAGER;
     }
 
+    public boolean isFinanceContact() {
+        return this == PROJECT_FINANCE_CONTACT;
+    }
+
     public static ProjectParticipantRole getById(Long id) {
         return idMap.get(id);
     }

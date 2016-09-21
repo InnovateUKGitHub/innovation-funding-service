@@ -15,7 +15,7 @@ public class AssessmentOverviewForm extends BaseBindingResultTarget {
 
     @NotEmpty(message = "{validation.assessmentoverviewform.rejectReason.required}")
     private String rejectReason;
-    @Size(max = 255, message = "{validation.field.too.many.characters}")
+    @Size(max = 5000, message = "{validation.field.too.many.characters}")
     private String rejectComment;
 
     public String getRejectReason() {

@@ -6,15 +6,20 @@ Documentation     INFUND-3830: As a Competitions team member I want to view all 
 ...               INFUND-3832 As a Competitions team member I want to view all competitions that are ‘upcoming’ so I can keep track of them and access further details for each competition in that state
 ...
 ...               INFUND-3829 As a Competitions team member I want a dashboard that displays all competitions in different states so I can manage and keep track of them
+...
+...               INFUND-3004 As a Competition Executive I want the competition to automatically open based on the date that has been provided in the competition open field in the setup phase.
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    the user closes the browser
-Force Tags        CompAdmin    CompSetup
+Force Tags        CompAdmin
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
 Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
+
+*** Variables ***
+@{database}       pymysql    ifs    root    password    ifs-database    3306
 
 *** Test Cases ***
 Live Competitions
@@ -70,6 +75,21 @@ Upcoming competitions ready for open
     [Documentation]    INFUND-3003
     Then The user should see the text in the page    Sarcasm Stupendousness
 
+Competition Opens automatically on date
+    [Documentation]    INFUND-3004
+    [Tags]    MySQL    Docker
+    [Setup]    Connect to Database    @{database}
+    Given the user should see the text in the page    Ready to open
+    Then element should contain    jQuery=section:nth-child(4)    Sarcasm Stupendousness
+    ${yesterday} =    get yesterday
+    When execute sql string    UPDATE `ifs`.`milestone` SET `DATE`='${yesterday}' WHERE `id`='9';
+    And reload page
+    Then element should not contain    jQuery=section:nth-child(4)    Sarcasm Stupendousness
+    When the user navigates to the page    ${SERVER}/management/dashboard/live
+    Then the user should see the text in the page    Open
+    And element should contain    jQuery=section:nth-child(3)    Sarcasm Stupendousness
+    [Teardown]    execute sql string    UPDATE `ifs`.`milestone` SET `DATE`='2018-02-24 00:00:00' WHERE `id`='9';
+
 Search existing applications
     [Documentation]    INFUND-3829
     When The user enters text to a text field    id=searchQuery    Juggling Craziness
@@ -117,3 +137,8 @@ check calculations on one page
     ${NO_OF_COMP_Page_one}=    Get Matching Xpath Count    //section/div/ul/li
     ${length_summary}=    Get text    css=.heading-xlarge    #gets the total number
     Should Be Equal As Integers    ${length_summary}    ${NO_OF_COMP_Page_one}
+
+get yesterday
+    ${today} =    get time
+    ${yesterday} =    Subtract Time From Date    ${today}    1 day
+    [Return]    ${yesterday}
