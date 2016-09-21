@@ -7,12 +7,12 @@ import com.worth.ifs.assessment.model.AssessorRegistrationBecomeAnAssessorModelP
 import com.worth.ifs.assessment.model.AssessorRegistrationModelPopulator;
 import com.worth.ifs.assessment.service.AssessorRestService;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.form.AddressForm;
-import com.worth.ifs.registration.form.RegistrationForm;
+import com.worth.ifs.registration.resource.UserRegistrationResource;
 import com.worth.ifs.user.resource.Disability;
+import com.worth.ifs.user.resource.EthnicityResource;
 import com.worth.ifs.user.resource.Gender;
-import com.worth.ifs.user.resource.UserResource;
-import com.worth.ifs.util.CookieUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -40,13 +40,13 @@ public class AssessorRegistrationController {
     private AddressRestService addressRestService;
 
     @Autowired
+    private AssessorRestService assessorRestService;
+
+    @Autowired
     private AssessorRegistrationBecomeAnAssessorModelPopulator becomeAnAssessorModelPopulator;
 
     @Autowired
     private AssessorRegistrationModelPopulator registrationModelPopulator;
-
-    @Autowired
-    private AssessorRestService assessorRestService;
 
     @RequestMapping(value = "/{inviteHash}/start", method = RequestMethod.GET)
     public String becomeAnAssessor(Model model,
@@ -58,47 +58,36 @@ public class AssessorRegistrationController {
     @RequestMapping(value = "/{inviteHash}/register", method = RequestMethod.GET)
     public String registerForm(Model model,
                                @PathVariable("inviteHash") String inviteHash,
+                               @ModelAttribute("form") AssessorRegistrationForm form,
                                HttpServletRequest request,
                                HttpServletResponse response) {
 
-        addRegistrationFormToModel(model, inviteHash);
-
+        model.addAttribute("model", registrationModelPopulator.populateModel(inviteHash));
         return "registration/register";
     }
 
-    private void addRegistrationFormToModel(Model model, String inviteHash) {
-        AssessorRegistrationForm registrationForm = new AssessorRegistrationForm();
-        model.addAttribute("registrationForm", registrationForm);
-        model.addAttribute("model", registrationModelPopulator.populateModel(inviteHash));
-    }
-
-    @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public String registerFormSubmit(@Valid @ModelAttribute("registrationForm") AssessorRegistrationForm registrationForm,
+    @RequestMapping(value = "/{inviteHash}/register", method = RequestMethod.POST)
+    public String registerFormSubmit(Model model,
+                                     @PathVariable("inviteHash") String inviteHash,
+                                     @Valid @ModelAttribute("registrationForm") AssessorRegistrationForm registrationForm,
                                      BindingResult bindingResult,
-                                     HttpServletResponse response,
-                                     HttpServletRequest request,
-                                     Model model) {
+                                     ValidationHandler validationHandler) {
 
         addAddressOptions(registrationForm);
 
-        return "registration/register";
-    }
-
-    private RestResult<UserResource> createUser(String hash, RegistrationForm registrationForm) {
+        UserRegistrationResource userRegistrationResource = new UserRegistrationResource();
+        userRegistrationResource.setTitle(registrationForm.getTitle());
+        userRegistrationResource.setFirstName(registrationForm.getFirstName());
+        userRegistrationResource.setLastName(registrationForm.getLastName());
+        userRegistrationResource.setPhoneNumber(registrationForm.getPhoneNumber());
         //TODO: Properly attach Gender/Disability/Ethnicity from registrationForm
+        userRegistrationResource.setGender(Gender.NOT_STATED);
+        userRegistrationResource.setDisability(Disability.NOT_STATED);
+        userRegistrationResource.setEthnicity(new EthnicityResource());
 
-        return assessorRestService.createAssessorByInviteHash(
-                hash,
-                registrationForm.getFirstName(),
-                registrationForm.getLastName(),
-                registrationForm.getPassword(),
-                registrationForm.getEmail(),
-                registrationForm.getTitle(),
-                registrationForm.getPhoneNumber(),
-                Gender.NOT_STATED,
-                Disability.NOT_STATED,
-                1L
-                );
+        assessorRestService.createAssessorByInviteHash(inviteHash, userRegistrationResource).getSuccessObjectOrThrowException();
+
+        return "registration/register";
     }
 
     private void addAddressOptions(AssessorRegistrationForm registrationForm) {

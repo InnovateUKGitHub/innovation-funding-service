@@ -74,6 +74,7 @@ import com.worth.ifs.sil.experian.service.SilExperianEndpoint;
 import com.worth.ifs.token.repository.TokenRepository;
 import com.worth.ifs.token.transactional.TokenService;
 import com.worth.ifs.user.mapper.EthnicityMapper;
+import com.worth.ifs.user.mapper.RoleMapper;
 import com.worth.ifs.user.mapper.UserMapper;
 import com.worth.ifs.user.repository.*;
 import com.worth.ifs.user.transactional.PasswordPolicyValidator;
@@ -255,6 +256,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected IdentityProviderService idpServiceMock;
+
+    @Mock
+    protected RoleMapper roleMapperMock;
 
     @Mock
     protected TokenService tokenServiceMock;

@@ -32,6 +32,7 @@ import static com.worth.ifs.commons.error.CommonErrors.badRequestError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.invite.builder.EthnicityBuilder.newEthnicity;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static com.worth.ifs.user.builder.CompAdminEmailBuilder.newCompAdminEmail;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
@@ -40,6 +41,8 @@ import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static com.worth.ifs.user.resource.Disability.NO;
+import static com.worth.ifs.user.resource.Gender.NOT_STATED;
 import static com.worth.ifs.user.resource.UserRoleType.*;
 import static com.worth.ifs.util.MapFunctions.asMap;
 import static java.time.LocalDateTime.now;
@@ -75,18 +78,16 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
     public void createUser() throws Exception {
         RoleResource roleResource = newRoleResource().build();
         Role role = newRole().build();
+        Ethnicity ethnicity = newEthnicity().with(id(1L)).build();
 
         UserResource userToCreateResource = newUserResource()
                 .withId((Long) null)
                 .withTitle("Mr")
                 .withFirstName("First")
                 .withLastName("Last")
-                // TODO
-                //.withGender()
-                // TODO
-                //.withEthnicGroup()
-                // TODO
-                //.withDisability()
+                .withGender(NOT_STATED)
+                .withEthnicity(ethnicity.getId())
+                .withDisability(NO)
                 .withPhoneNumber("01234 567890")
                 .withEmail("email@example.com")
                 .withPassword("Passw0rd123")
@@ -98,12 +99,9 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
                 .withTitle("Mr")
                 .withFirstName("First")
                 .withLastName("Last")
-                // TODO
-                //.withGender()
-                // TODO
-                //.withEthnicGroup()
-                // TODO
-                //.withDisability()
+                .withGender(NOT_STATED)
+                .withEthnicity(ethnicity)
+                .withDisability(NO)
                 .withPhoneNumber("01234 567890")
                 .withEmailAddress("email@example.com")
                 .withRolesGlobal(role)
@@ -119,12 +117,9 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
             assertEquals("First Last", user.getName());
             assertEquals("First", user.getFirstName());
             assertEquals("Last", user.getLastName());
-            // TODO
-            // assertEquals("", user.getGender());
-            // TODO
-            // assertEquals("", user.EthnicGroup());
-            // TODO
-            // assertEquals("", user.getDisability());
+            assertEquals(NOT_STATED, user.getGender());
+            assertEquals(ethnicity, user.getEthnicity());
+            assertEquals(NO, user.getDisability());
             assertEquals("01234 567890", user.getPhoneNumber());
             assertEquals("email@example.com", user.getEmail());
 
