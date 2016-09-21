@@ -7,13 +7,11 @@ import com.worth.ifs.assessment.model.AssessorRegistrationBecomeAnAssessorModelP
 import com.worth.ifs.assessment.model.AssessorRegistrationModelPopulator;
 import com.worth.ifs.assessment.service.AssessorRestService;
 import com.worth.ifs.assessment.service.CompetitionInviteRestService;
+import com.worth.ifs.assessment.viewmodel.AssessorRegistrationViewModel;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.form.AddressForm;
 import com.worth.ifs.invite.service.EthnicityRestService;
-import com.worth.ifs.registration.form.RegistrationForm;
-import com.worth.ifs.user.resource.Disability;
 import com.worth.ifs.user.resource.EthnicityResource;
-import com.worth.ifs.user.resource.Gender;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -57,26 +55,28 @@ public class AssessorRegistrationController {
     private AssessorRestService assessorRestService;
 
     @RequestMapping(value = "/{inviteHash}/start", method = RequestMethod.GET)
-    public String becomeAnAssessor(Model model,
-                                   @PathVariable("inviteHash") String inviteHash) {
+    public String becomeAnAssessor(Model model, @PathVariable("inviteHash") String inviteHash) {
+
         model.addAttribute("model", becomeAnAssessorModelPopulator.populateModel(inviteHash));
         return "registration/become-assessor";
     }
 
     @RequestMapping(value = "/{inviteHash}/register", method = RequestMethod.GET)
     public String registerForm(Model model,
+                               @ModelAttribute("registrationForm") AssessorRegistrationForm form,
+                               BindingResult bindingResult,
                                @PathVariable("inviteHash") String inviteHash,
                                HttpServletRequest request,
                                HttpServletResponse response) {
 
         addRegistrationFormToModel(model, inviteHash);
-
         return "registration/register";
     }
 
     private void addRegistrationFormToModel(Model model, String inviteHash) {
         AssessorRegistrationForm registrationForm = new AssessorRegistrationForm();
         model.addAttribute("registrationForm", registrationForm);
+        model.addAttribute("ethnicityOptions", getEthnicityOptions());
         model.addAttribute("model", registrationModelPopulator.populateModel(inviteHash));
     }
 
@@ -92,28 +92,23 @@ public class AssessorRegistrationController {
         return "registration/register";
     }
 
-    private RestResult<UserResource> createUser(String hash, RegistrationForm registrationForm) {
-        //TODO: Properly attach Gender/Disability/Ethnicity from registrationForm
+
+    private RestResult<UserResource> createUser(String hash, AssessorRegistrationForm registrationForm, Model model) {
+        AssessorRegistrationViewModel viewModel = (AssessorRegistrationViewModel) model.asMap().get("model");
 
         return assessorRestService.createAssessorByInviteHash(
-                hash,
+                viewModel.getCompetitionInviteHash(),
                 registrationForm.getFirstName(),
                 registrationForm.getLastName(),
                 registrationForm.getPassword(),
-                registrationForm.getEmail(),
+                viewModel.getEmail(),
                 registrationForm.getTitle(),
                 registrationForm.getPhoneNumber(),
-                Gender.NOT_STATED,
-                Disability.NOT_STATED,
-                1L
+                registrationForm.getGender(),
+                registrationForm.getDisability(),
+                registrationForm.getEthnicity().getId()
                 );
     }
-
-    @ModelAttribute("ethnicityOptions")
-    public List<EthnicityResource> populateEthnicityOptions() {
-        return ethnicityRestService.findAllActive().getSuccessObjectOrThrowException();
-    }
-
 
     private void addAddressOptions(AssessorRegistrationForm registrationForm) {
         if (StringUtils.hasText(registrationForm.getAddressForm().getPostcodeInput())) {
@@ -132,4 +127,9 @@ public class AssessorRegistrationController {
                 addresses -> addresses);
         return addressResourceList;
     }
+
+    private List<EthnicityResource> getEthnicityOptions() {
+        return ethnicityRestService.findAllActive().getSuccessObjectOrThrowException();
+    }
+
 }

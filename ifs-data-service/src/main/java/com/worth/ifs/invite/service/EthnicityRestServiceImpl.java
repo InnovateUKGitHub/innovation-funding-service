@@ -3,6 +3,7 @@ package com.worth.ifs.invite.service;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.user.resource.EthnicityResource;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -15,6 +16,7 @@ import static java.lang.String.format;
  * This class connects to the {@link com.worth.ifs.invite.controller.EthnicityController}
  * through a REST call.
  */
+@Service
 public class EthnicityRestServiceImpl extends BaseRestService implements EthnicityRestService {
 
     private String ethnicityRestUrl = "/ethnicity";

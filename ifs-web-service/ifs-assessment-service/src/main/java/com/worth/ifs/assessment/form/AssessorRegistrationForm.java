@@ -1,5 +1,6 @@
 package com.worth.ifs.assessment.form;
 
+import com.worth.ifs.controller.BaseBindingResultTarget;
 import com.worth.ifs.form.AddressForm;
 import com.worth.ifs.user.resource.Disability;
 import com.worth.ifs.user.resource.EthnicityResource;
@@ -16,7 +17,7 @@ import javax.validation.constraints.Size;
  * Form field model for the Assessor Registration
  */
 @FieldMatch(first = "password", second = "retypedPassword", message = "Passwords must match")
-public class AssessorRegistrationForm {
+public class AssessorRegistrationForm  extends BaseBindingResultTarget {
 
     @NotEmpty(message = "{validation.standard.title.selectionrequired}")
     @Size(max = 5, message = "{validation.standard.title.length.max}")
@@ -162,4 +163,5 @@ public class AssessorRegistrationForm {
     public void setUseSearchResultAddress(boolean useSearchResultAddress) {
         this.useSearchResultAddress = useSearchResultAddress;
     }
+
 }
