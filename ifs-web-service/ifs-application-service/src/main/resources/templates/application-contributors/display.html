@@ -58,11 +58,13 @@
             <li th:each="invite, inviteStats: ${organisationInviteResource.inviteResources}">
                 <a th:if="${invite.nameConfirmed == null}" th:href="${'mailto:'+invite.email}" th:text="${invite.name}" />
                 <a th:unless="${invite.nameConfirmed == null}" th:href="${'mailto:'+invite.email}" th:text="${invite.nameConfirmed}" />
+                <th:block th:if="${userIsLead}">
+                    - <a th:href="'/application/' + ${currentApplication.getId()} + '/contributors/remove/' + ${invite.id} + '/confirm'"
+                                   th:attr="data-invite-id=${invite.id}"
+                                   data-js-modal="modal-submit-remove-collaborator" class="buttonlink no-margin font-xsmall">Remove</a><br/>
+                </th:block>
                 <small th:if="${invite.status.name() ==  T(com.worth.ifs.invite.constant.InviteStatus).CREATED.name() || invite.status.name() == T(com.worth.ifs.invite.constant.InviteStatus).SENT.name()}">(pending)</small>
-                <a th:if="${userIsLead}"
-                   th:href="'/application/' + ${currentApplication.getId()} + '/contributors/remove/' + ${invite.id} + '/confirm'"
-                   th:attr="data-invite-id=${invite.id}"
-                   data-js-modal="modal-submit-remove-collaborator" class="buttonlink">Remove</a>
+
             </li>
         </ul>
     </div>
