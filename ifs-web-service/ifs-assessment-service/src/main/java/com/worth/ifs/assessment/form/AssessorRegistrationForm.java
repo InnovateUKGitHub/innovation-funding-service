@@ -1,10 +1,14 @@
 package com.worth.ifs.assessment.form;
 
 import com.worth.ifs.form.AddressForm;
+import com.worth.ifs.user.resource.Disability;
+import com.worth.ifs.user.resource.EthnicityResource;
+import com.worth.ifs.user.resource.Gender;
 import com.worth.ifs.validator.constraints.FieldMatch;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
@@ -49,9 +53,14 @@ public class AssessorRegistrationForm {
     })
     private String retypedPassword;
 
-    //private Gender gender;
-    //private EthnicityResource ethnicity;
-    //private Disability disability;
+    @NotNull(message = "{validation.assessoraccountform.gender.required}")
+    private Gender gender;
+
+    @NotNull(message = "{validation.assessoraccountform.ethnicity.required}")
+    private EthnicityResource ethnicity;
+
+    @NotNull(message = "{validation.assessoraccountform.disability.required}")
+    private Disability disability;
 
     @Valid
     private AddressForm addressForm = new AddressForm();
@@ -64,8 +73,71 @@ public class AssessorRegistrationForm {
     @Pattern(regexp = "([0-9\\ +-])+",  message= "{validation.standard.phonenumber.format}")
     private String phoneNumber;
 
+    private boolean useSearchResultAddress = false;
 
+    public String getTitle() {
+        return title;
+    }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getRetypedPassword() {
+        return retypedPassword;
+    }
+
+    public void setRetypedPassword(String retypedPassword) {
+        this.retypedPassword = retypedPassword;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
+
+    public EthnicityResource getEthnicity() {
+        return ethnicity;
+    }
+
+    public void setEthnicity(EthnicityResource ethnicity) {
+        this.ethnicity = ethnicity;
+    }
+
+    public Disability getDisability() {
+        return disability;
+    }
+
+    public void setDisability(Disability disability) {
+        this.disability = disability;
+    }
 
     public AddressForm getAddressForm() {
         return addressForm;
@@ -74,7 +146,14 @@ public class AssessorRegistrationForm {
     public void setAddressForm(AddressForm addressForm) {
         this.addressForm = addressForm;
     }
-    private boolean useSearchResultAddress = false;
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
 
     public boolean isUseSearchResultAddress() {
         return useSearchResultAddress;

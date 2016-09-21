@@ -8,6 +8,8 @@ import com.worth.ifs.assessment.model.AssessorRegistrationModelPopulator;
 import com.worth.ifs.assessment.service.CompetitionInviteRestService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.form.AddressForm;
+import com.worth.ifs.invite.service.EthnicityRestService;
+import com.worth.ifs.user.resource.EthnicityResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,6 +38,9 @@ public class AssessorRegistrationController {
 
     @Autowired
     private CompetitionInviteRestService inviteRestService;
+
+    @Autowired
+    private EthnicityRestService ethnicityRestService;
 
     @Autowired
     private AssessorRegistrationBecomeAnAssessorModelPopulator becomeAnAssessorModelPopulator;
@@ -89,12 +94,11 @@ public class AssessorRegistrationController {
         return destination;
     }
 
-/*    @ModelAttribute("ethnicityOptions")
+    @ModelAttribute("ethnicityOptions")
     public List<EthnicityResource> populateEthnicityOptions() {
-        return userRestService.findAllActiveEthnicities().getSuccessObjectOrThrowException();
+        return ethnicityRestService.findAllActive().getSuccessObjectOrThrowException();
     }
 
-    }*/
 
     private void addAddressOptions(AssessorRegistrationForm registrationForm) {
         if (StringUtils.hasText(registrationForm.getAddressForm().getPostcodeInput())) {
