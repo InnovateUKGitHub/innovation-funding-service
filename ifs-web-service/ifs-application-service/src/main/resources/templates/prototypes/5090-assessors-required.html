@@ -4,65 +4,57 @@
     <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
-<body>
+<body class="comp-dashboard">
 
 
 <div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<div th:include="prototypes/fragments/layout :: prototype-admin-header" th:with="status='loggedIn',user='Vicky Brown'" th:remove="tag" />
+
 
 <main id="content">
-	
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader('Competition setup', '/prototypes/2469-comp-setup')" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
+
 	<div class="hgroup" style="padding-top: 20px">
 		<p class="subtitle no-margin">Connected digital additive manufacturing</p>
-		<h1 class="heading-xlarge no-margin">Application finances</h1>
-	</div>
-
-	<div class="panel-indent">
-		<p>
-			Each partner is required to complete the following finance sections, selected by the template for this competition.
-		</p>
+		<h1 class="heading-xlarge no-margin">Assessment</h1>
 	</div>
 
 	<form>
 		<fieldset>
-			<legend class="visuallyhidden">Finances</legend>
+			<legend class="visuallyhidden">Assessors</legend>
 			<div class="form-group">
 				<fieldset class="inline">
-					<h3 class="heading-small">Finances form</h3>
-					<label class="block-label" for="full-finances">
-						<input id="full-finances" name="finance-size" value="full" type="radio" />
-						Full application finances
+					<h3 class="heading-small">How many assessors are required to assess each application?</h3>
+					<label class="block-label" for="assessors-one">
+						<input id="assessors-one" name="assessors-required" value="1" type="radio" />
+						1
 					</label>
-					<label class="block-label" for="light-finances">
-						<input id="light-finances" name="finance-size" value="light" type="radio" checked="checked" />
-						Light finances
+					<label class="block-label" for="assessors-three">
+						<input id="assessors-three" name="assessors-required" value="3" type="radio" />
+						3
+					</label>
+					<label class="block-label" for="assessors-five">
+						<input id="assessors-five" name="assessors-required" value="5" type="radio" checked="checked" />
+						5
 					</label>
 				</fieldset>
 			</div>
 			<div class="form-group">
-				<fieldset class="inline">
-					<h3 class="heading-small">Include Project Growth Table</h3>
-					<label class="block-label" for="project-growth-yes">
-						<input id="project-growth-yes" name="include-project-growth" value="yes" type="radio" />
-						Yes
-					</label>
-					<label class="block-label" for="project-growth-no">
-						<input id="project-growth-no" name="include-project-growth" value="no" type="radio" checked="checked" />
-						No
-					</label>
-				</fieldset>
+				<label class="form-label" for="remittance">
+					<span class="form-label-bold">How much will assessors be paid per application they assess?</span>
+					<span class="form-hint">This information will be distributed in the assessor invites.</span>
+				</label>
+				<input class="form-control width-medium" id="remittance" name="remittance" value="£100" type="text" />
 			</div>
+
 			<div class="extra-margin">
 				<a role="button" tabindex="0" class="button" href="/prototypes/2469-comp-setup">Done</a>
 			</div>
 		</fieldset>
 	</form>
-
 
 	<div class="extra-margin">
 		<a href="/prototypes/2469-comp-setup" class="button-secondary">Return to setup overview</a>
@@ -75,12 +67,12 @@
 				<span class="pagination-part-title">Assessors</span>
 			</a>
 		</li>
-	    <li class="next">
-	        <a rel="next" title="Navigate to next part" href="#">
-	            <span class="pagination-label">Next</span>
-	            <span class="pagination-part-title">Finance</span>
-	        </a>
-	    </li>
+		<li class="next">
+			<a rel="next" title="Navigate to next part" href="#">
+				<span class="pagination-label">Next</span>
+				<span class="pagination-part-title">Finance</span>
+			</a>
+		</li>
 	</ul>
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
@@ -90,8 +82,6 @@
 
 <div th:include="fragments/layout :: footer" th:remove="tag" />
 <div th:include="fragments/layout :: body-end" th:remove="tag" />
-<script type="text/javascript">
 
-</script>
 </body>
 </html>
