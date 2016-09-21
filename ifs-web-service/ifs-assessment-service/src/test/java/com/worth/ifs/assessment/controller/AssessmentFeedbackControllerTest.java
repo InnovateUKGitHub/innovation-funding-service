@@ -22,7 +22,6 @@ import com.worth.ifs.form.resource.FormInputTypeResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
@@ -147,7 +146,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         assertEquals("Market opportunity", model.getQuestionShortName());
         assertEquals("1. What is the business opportunity that this project addresses?", model.getQuestionName());
         assertEquals(Integer.valueOf(50), model.getMaximumScore());
-        assertEquals("Value 1", model.getApplicantResponse());
+        assertEquals("Value 64", model.getApplicantResponse());
         assertEquals(assessmentFormInputs, model.getAssessmentFormInputs());
         assertTrue(model.isScoreFormInputExists());
         assertFalse(model.isScopeFormInputExists());
@@ -273,9 +272,9 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         String value = "This is the feedback";
         Long formInputId = 1L;
 
-        when(assessorFormInputResponseService.updateFormInputResponse(ASSESSMENT_ID, formInputId, value)).thenReturn(serviceFailure(fieldError("value", "Feedback", "validation.field.max.word.count", 100)));
+        when(assessorFormInputResponseService.updateFormInputResponse(ASSESSMENT_ID, formInputId, value)).thenReturn(serviceFailure(fieldError("value", "Feedback", "validation.field.max.word.count", "", 100)));
 
-        when(messageSource.getMessage("validation.field.max.word.count", new Object[]{"100"}, Locale.UK)).thenReturn("Maximum word count exceeded. Please reduce your word count to 100.");
+        when(messageSource.getMessage("validation.field.max.word.count", new Object[]{"", "100"}, Locale.UK)).thenReturn("Maximum word count exceeded. Please reduce your word count to 100.");
 
         MvcResult result = mockMvc.perform(post("/{assessmentId}/formInput/{formInputId}", ASSESSMENT_ID, formInputId)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -310,9 +309,8 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(redirectedUrl(format("/%s", ASSESSMENT_ID)))
                 .andReturn();
 
-        InOrder inOrder = inOrder(assessorFormInputResponseService);
-        inOrder.verify(assessorFormInputResponseService, calls(1)).updateFormInputResponse(ASSESSMENT_ID, formInputIdScore, "10");
-        inOrder.verify(assessorFormInputResponseService, calls(1)).updateFormInputResponse(ASSESSMENT_ID, formInputIdFeedback, "Feedback");
+        verify(assessorFormInputResponseService, times(1)).updateFormInputResponse(ASSESSMENT_ID, formInputIdScore, "10");
+        verify(assessorFormInputResponseService, times(1)).updateFormInputResponse(ASSESSMENT_ID, formInputIdFeedback, "Feedback");
     }
 
     @Test
@@ -344,9 +342,8 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(view().name("assessment/application-question"))
                 .andReturn();
 
-        InOrder inOrder = inOrder(assessorFormInputResponseService);
-        inOrder.verify(assessorFormInputResponseService, calls(1)).updateFormInputResponse(ASSESSMENT_ID, formInputIdScore, "10");
-        inOrder.verify(assessorFormInputResponseService, calls(1)).updateFormInputResponse(ASSESSMENT_ID, formInputIdFeedback, "Feedback");
+        verify(assessorFormInputResponseService, times(1)).updateFormInputResponse(ASSESSMENT_ID, formInputIdScore, "10");
+        verify(assessorFormInputResponseService, times(1)).updateFormInputResponse(ASSESSMENT_ID, formInputIdFeedback, "Feedback");
 
         Form form = (Form) result.getModelAndView().getModel().get("form");
 
@@ -374,7 +371,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         String formInputFeedbackField = format("formInput[%s]", formInputIdFeedback);
 
         when(assessorFormInputResponseService.updateFormInputResponse(ASSESSMENT_ID, formInputIdScore, "10")).thenReturn(serviceSuccess());
-        when(assessorFormInputResponseService.updateFormInputResponse(ASSESSMENT_ID, formInputIdFeedback, "Feedback")).thenReturn(serviceFailure(fieldError("value", "Feedback", "validation.field.max.word.count", 100)));
+        when(assessorFormInputResponseService.updateFormInputResponse(ASSESSMENT_ID, formInputIdFeedback, "Feedback")).thenReturn(serviceFailure(fieldError("value", "Feedback", "validation.field.max.word.count", "", 100)));
 
         // For re-display of question view following the invalid data entry
         List<FormInputResource> applicationFormInputs = this.setupApplicationFormInputs(QUESTION_ID, FORM_INPUT_TYPES.get("textarea"));
@@ -391,9 +388,8 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(view().name("assessment/application-question"))
                 .andReturn();
 
-        InOrder inOrder = inOrder(assessorFormInputResponseService);
-        inOrder.verify(assessorFormInputResponseService, calls(1)).updateFormInputResponse(ASSESSMENT_ID, formInputIdScore, "10");
-        inOrder.verify(assessorFormInputResponseService, calls(1)).updateFormInputResponse(ASSESSMENT_ID, formInputIdFeedback, "Feedback");
+        verify(assessorFormInputResponseService, times(1)).updateFormInputResponse(ASSESSMENT_ID, formInputIdScore, "10");
+        verify(assessorFormInputResponseService, times(1)).updateFormInputResponse(ASSESSMENT_ID, formInputIdFeedback, "Feedback");
 
         Form form = (Form) result.getModelAndView().getModel().get("form");
 
@@ -405,7 +401,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         assertEquals(1, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors(formInputFeedbackField));
         assertEquals("validation.field.max.word.count", bindingResult.getFieldError(formInputFeedbackField).getCode());
-        assertEquals("100", bindingResult.getFieldError(formInputFeedbackField).getArguments()[0]);
+        assertEquals("100", bindingResult.getFieldError(formInputFeedbackField).getArguments()[1]);
     }
 
     @Override

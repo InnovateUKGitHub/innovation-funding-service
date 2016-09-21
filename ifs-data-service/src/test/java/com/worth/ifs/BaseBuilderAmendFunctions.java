@@ -2,7 +2,8 @@ package com.worth.ifs;
 
 import org.springframework.test.util.ReflectionTestUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -15,10 +16,10 @@ import static org.springframework.test.util.ReflectionTestUtils.getField;
  */
 public class BaseBuilderAmendFunctions {
 
-    private static Map<Class, Long> nextId = new HashMap<>();
+    private static Long nextId = 1L;
 
     public static void clearUniqueIds() {
-        nextId = new HashMap<>();
+        nextId = 1L;
     }
 
     public static <T> Consumer<T> id(Long id) {
@@ -38,12 +39,7 @@ public class BaseBuilderAmendFunctions {
     }
 
     public static <T> BiConsumer<Integer, T> uniqueIds() {
-        return (i, t) -> {
-            Class<?> clazz = t.getClass();
-            Long id = nextId.get(clazz) != null ? nextId.get(clazz) : 1L;
-            setId(id, t);
-            nextId.put(clazz, id + 1);
-        };
+        return (i, t) -> setId(nextId++, t);
     }
 
     public static <T> Consumer<T> idBasedNames(String prefix) {
