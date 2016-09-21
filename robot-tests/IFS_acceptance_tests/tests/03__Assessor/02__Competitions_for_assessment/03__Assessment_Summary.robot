@@ -2,6 +2,8 @@
 Documentation     INFUND-550: As an assessor I want the ‘Assessment summary’ page to show me complete and incomplete sections, so that I can easily judge how much of the application is left to do
 ...
 ...               INFUND-1485: As an Assessor I want to be able to provide my final feedback for the application so that I can tell Innovate UK whether or not I recommend the application for funding.
+...
+...               INFUND-4217 Assessor journey form validation
 Suite Setup       guest user log-in    felix.wilson@gmail.com    Passw0rd
 Suite Teardown    the user closes the browser
 Force Tags        Assessor
@@ -11,8 +13,15 @@ Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
 
+*** Variables ***
+${NO_OF_DAYS_LEFT}    ${EMPTY}
+${CURRENT_DATE}    ${EMPTY}
+${MILESTONE_DATE}    2016-12-31
+${STARTING_DATE}    ${EMPTY}
+${SCREEN_NO_OF_DAYS_LEFT}    ${EMPTY}
+
 *** Test Cases ***
-To verify all the sections are present
+All the sections are present in the summary
     [Documentation]    INFUND-4648
     [Tags]    HappyPath
     When The user navigates to the assessor page    ${Assessment_summary_incomplete_12}
@@ -22,37 +31,40 @@ To verify all the sections are present
     And The user should see the element    id=form-label-feedback
     And The user should see the element    id=form-label-comments
 
+Number of days remaining until assessment submission
+    [Documentation]    INFUND-4857
+    [Tags]    HappyPath    Pending
+    Then The user should see the text in the page    Days left to submit
+    And the assessor should see the number of days remaining
+    And the days remaining should be correct
+
 Assessment summary shows questions as incomplete
     [Documentation]    INFUND-550
-    Given The user navigates to the assessor page    ${Assessment_summary_incomplete_12}
     Then the collapsible button should contain    jQuery=button:contains(1. How many)    Incomplete
     And the collapsible button should contain    jQuery=button:contains(2. Mediums)    Incomplete
     And the collapsible button should contain    jQuery=button:contains(3. Preference)    Incomplete
     And the collapsible button should contain    jQuery=button:contains(4. Attire)    Incomplete
     And the collapsible button should contain    jQuery=button:contains(Scope)    Incomplete
 
-Assessment summary shows the questions without score
+Questions should show without score
     [Documentation]    INFUND-550
     Then the collapsible button should contain    jQuery=button:contains(1. How many)    N/A
     And the collapsible button should contain    jQuery=button:contains(2. Mediums)    N/A
     And the collapsible button should contain    jQuery=button:contains(3. Preference)    N/A
     And the collapsible button should contain    jQuery=button:contains(4. Attire)    N/A
-    [Teardown]    logout as user
 
-Assessment summary shows questions as complete
+Questions should show as complete
     [Documentation]    INFUND-550
     [Tags]    HappyPath
-    [Setup]    log in as user    &{assessor_credentials}
     Given the user adds score and feedback for every question
     When the user clicks the button/link    link=Review assessment
-    Then The user should be redirected to the correct page    ${Assessment_summary_complete_9}
     Then the collapsible button should contain    jQuery=button:contains(1. How many)    Complete
     And the collapsible button should contain    jQuery=button:contains(2. Mediums)    Complete
     And the collapsible button should contain    jQuery=button:contains(3. Preference)    Complete
     And the collapsible button should contain    jQuery=button:contains(4. Attire)    Complete
     And the collapsible button should contain    jQuery=button:contains(Scope)    Complete
 
-Assessment summary shows questions scores
+Questions should show the scores
     [Documentation]    INFUND-550
     [Tags]    HappyPath
     Then The user should see the text in the page    Total: 50/50
@@ -67,10 +79,9 @@ Overall scores section
     [Documentation]    INFUND-4648
     Then each question will contain links to respective questions
     And the scores under each question should be correct
-    And Element should contain    css=div:nth-child(5) p.no-margin strong    Total: 50/50
-    And Element should contain    css=div:nth-child(5) p:nth-child(2) strong    100%
+    And the total scores should be correct
 
-Assessment summary shows feedback in each section
+Feedback should show in each section
     [Documentation]    INFUND-550
     When The user clicks the button/link    jQuery=button:contains(1. How many)
     Then The user should see the text in the page    Testing how many feedback text
@@ -86,18 +97,19 @@ Assessment summary shows feedback in each section
 Assessor should be able to re-edit before submit
     [Documentation]    INFUND-3400
     When The user clicks the button/link    jQuery=#collapsible-1 a:contains(Return to this question)
-    and The user should see the text in the page    This is the applicant response from Test One for How Many
+    and The user should see the text in the page    This is the applicant response from Test Seven for How Many
     When the user selects the option from the drop-down menu    8    id=assessor-question-score
     And the user enters text to a text field    css=#form-input-195 .editor    This is a new feedback entry.
     And the user clicks the button/link    jQuery=a:contains(Back to assessment overview)
-    And The assessor navigates to the summary page
+    And the user clicks the button/link    jQuery=a:contains(Review assessment)
     When The user clicks the button/link    jQuery=button:contains(1. How many)
     Then the user should see the text in the page    This is a new feedback entry.
     And the user should see the text in the page    8
 
-Assessor must Provide feedback when "No" is selected for funding suitability
+Feedback validations
     [Documentation]    INFUND-1485
-    Given The user navigates to the assessor page    ${Assessment_summary_complete_9}
+    ...
+    ...    INFUND-4217
     When The user clicks the button/link    jQuery=.button:contains(Save assessment)
     Then The user should see an error    Please indicate your decision
     When the user selects the radio button    fundingConfirmation    false
@@ -109,8 +121,9 @@ Assessor must Provide feedback when "No" is selected for funding suitability
 
 Word count check: Your feedback
     [Documentation]    INFUND-1485
+    ...
+    ...    INFUND-4217
     [Tags]    HappyPath
-    Given the user navigates to the assessor page    ${Assessment_summary_complete_9}
     # TODO Temporarily setting the decision here since the word count is only validated after the required decision field is checked. This should be addressed by INFUND-4993.
     When the user selects the radio button    fundingConfirmation    true
     And the user enters text to a text field    id=form-textarea-feedback    Testing the feedback word count. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco
@@ -122,7 +135,8 @@ Word count check: Your feedback
 
 Word count check: Comments for InnovateUK
     [Documentation]    INFUND-1485
-    Given the user navigates to the assessor page    ${Assessment_summary_complete_9}
+    ...
+    ...    INFUND-4217
     # TODO Temporarily setting the decision here since the word count is only validated after the required decision field is checked. This should be addressed by INFUND-4993.
     When the user selects the radio button    fundingConfirmation    true
     And the user enters text to a text field    id=form-textarea-comments    Testing the comments word count. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco
@@ -131,7 +145,6 @@ Word count check: Comments for InnovateUK
     Then the user should see an error    Maximum word count exceeded. Please reduce your word count to 100.
     And the user enters text to a text field    id=form-textarea-comments    Testing the comments word count.
     Then the word count should be correct    Words remaining: 95
-    [Teardown]    Logout as user
 
 *** Keywords ***
 The assessor navigates to the summary page
@@ -144,7 +157,7 @@ the collapsible button should contain
     Element Should Contain    ${BUTTON}    ${TEXT}
 
 the user adds score and feedback for every question
-    Given the user navigates to the page    ${Assessment_overview_9}
+    Given the user clicks the button/link    link=Back to assessment overview
     And the user clicks the button/link    link=Scope
     When the user selects the option from the drop-down menu    Technical feasibility studies    id=research-category
     And the user clicks the button/link    jQuery=label:contains(Yes)
@@ -176,24 +189,20 @@ the table should show the correct scores
 each question will contain links to respective questions
     The user should see the element    link=Q1
     the user clicks the button/link    link=Q1
-    The user should be redirected to the correct page    ${Application_question_url}
-    the user should see the text in the page    How many
-    The user navigates to the page    ${Assessment_summary_complete_9}
+    The user should be redirected to the correct page    /question/47
+    The user navigates to the page    ${Assessment_summary_incomplete_12}
     The user should see the element    link=Q2
     the user clicks the button/link    link=Q2
-    The user should be redirected to the correct page    ${Application_question_168}
-    the user should see the text in the page    Mediums
-    The user navigates to the page    ${Assessment_summary_complete_9}
+    The user should be redirected to the correct page    /question/168
+    The user navigates to the page    ${Assessment_summary_incomplete_12}
     The user should see the element    link=Q3
     the user clicks the button/link    link=Q3
-    The user should be redirected to the correct page    ${Application_question_169}
-    the user should see the text in the page    Preferences
-    The user navigates to the page    ${Assessment_summary_complete_9}
+    The user should be redirected to the correct page    /question/169
+    The user navigates to the page    ${Assessment_summary_incomplete_12}
     The user should see the element    link=Q4
     the user clicks the button/link    link=Q4
-    The user should be redirected to the correct page    ${Application_question_170}
-    the user should see the text in the page    Attire
-    The user navigates to the page    ${Assessment_summary_complete_9}
+    The user should be redirected to the correct page    /question/170
+    The user navigates to the page    ${Assessment_summary_incomplete_12}
 
 the scores under each question should be correct
     Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(1)    20
@@ -204,3 +213,19 @@ the scores under each question should be correct
 the word count should be correct
     [Arguments]    ${wordCount}
     the user should see the text in the page    ${wordCount}
+
+And the total scores should be correct
+    And Element should contain    css=div:nth-child(5) p.no-margin strong    Total: 50/50
+    And Element should contain    css=div:nth-child(5) p:nth-child(2) strong    100%
+
+the assessor should see the number of days remaining
+    the user should see the element    css=.sub-header .pie-overlay .day
+
+the days remaining should be correct
+    ${CURRENT_DATE}=    Get Current Date    result_format=%Y-%m-%d    exclude_millis=true
+    ${STARTING_DATE}=    Add Time To Date    ${CURRENT_DATE}    1 day    result_format=%Y-%m-%d    exclude_millis=true
+    ${MILESTONE_DATE}=    Convert Date    2016-12-31    result_format=%Y-%m-%d    exclude_millis=true
+    ${NO_OF_DAYS_LEFT}=    Subtract Date From Date    ${MILESTONE_DATE}    ${STARTING_DATE}    verbose    exclude_millis=true
+    ${NO_OF_DAYS_LEFT}=    Remove String    ${NO_OF_DAYS_LEFT}    days
+    ${SCREEN_NO_OF_DAYS_LEFT}=    Get Text    css=.sub-header .pie-overlay .day
+    Should Be Equal As Numbers    ${NO_OF_DAYS_LEFT}    ${SCREEN_NO_OF_DAYS_LEFT}
