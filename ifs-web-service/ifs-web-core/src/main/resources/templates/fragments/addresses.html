@@ -2,7 +2,8 @@
 <div th:fragment="company-address-details">
     <div id="manual-company-input" class="extra-margin">
         <fieldset>
-            <legend class="visuallyhidden">Organisation details</legend>
+            <legend th:if="${legend}" class="visuallyhidden" th:text="${legend}" />
+            <legend th:unless="${legend}" class="visuallyhidden">Organisation details</legend>
             <div th:class="${#fields.hasErrors('*{addressForm.postcodeInput}') and form.addressForm.triedToSearch} ? 'form-group error' : 'form-group'">
                 <label class="form-label" for="addressForm.postcodeInput">
                     <span class="form-label-bold">Postcode</span>

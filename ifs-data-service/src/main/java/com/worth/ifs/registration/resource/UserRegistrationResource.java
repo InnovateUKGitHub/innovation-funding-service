@@ -3,8 +3,11 @@ package com.worth.ifs.registration.resource;
 import com.worth.ifs.user.resource.Disability;
 import com.worth.ifs.user.resource.EthnicityResource;
 import com.worth.ifs.user.resource.Gender;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
@@ -42,13 +45,13 @@ public class UserRegistrationResource {
     @Pattern(regexp = "([0-9\\ +-])+", message = "{validation.standard.phonenumber.format}")
     private String phoneNumber;
 
-    @NotEmpty(message = "validation.standard.gender.selectionrequired")
+    @NotNull(message = "validation.standard.gender.selectionrequired")
     private Gender gender;
 
-    @NotEmpty(message = "validation.standard.disability.selectionrequired")
+    @NotNull(message = "validation.standard.disability.selectionrequired")
     private Disability disability;
 
-    @NotEmpty(message = "validation.standard.ethnicity.selectionrequired")
+    @NotNull(message = "validation.standard.ethnicity.selectionrequired")
     private EthnicityResource ethnicity;
 
     @NotEmpty(message = "{validation.standard.password.required}")
@@ -134,5 +137,43 @@ public class UserRegistrationResource {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        UserRegistrationResource that = (UserRegistrationResource) o;
+
+        return new EqualsBuilder()
+                .append(title, that.title)
+                .append(firstName, that.firstName)
+                .append(lastName, that.lastName)
+                .append(phoneNumber, that.phoneNumber)
+                .append(gender, that.gender)
+                .append(disability, that.disability)
+                .append(ethnicity, that.ethnicity)
+                .append(password, that.password)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(title)
+                .append(firstName)
+                .append(lastName)
+                .append(phoneNumber)
+                .append(gender)
+                .append(disability)
+                .append(ethnicity)
+                .append(password)
+                .toHashCode();
     }
 }

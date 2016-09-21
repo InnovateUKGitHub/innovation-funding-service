@@ -43,6 +43,8 @@ public class AssessorServiceImpl implements AssessorService {
         userResource.setEthnicity(userRegistrationResource.getEthnicity().getId());
         userResource.setPassword(userRegistrationResource.getPassword());
 
+        // TODO: Handle failures gracefully and hand them back to the webservice
+        // TODO: Retrieve and add assessor role through RoleService before account creation
         return retrieveInvite(inviteHash).andOnSuccess(inviteResource -> {
             userResource.setEmail(inviteResource.getEmail());
             return getAssessorRoleResource().andOnSuccess(assessorRole -> {
