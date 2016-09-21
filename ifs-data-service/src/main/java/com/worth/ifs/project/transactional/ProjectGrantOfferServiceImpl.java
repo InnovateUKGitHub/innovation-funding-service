@@ -41,6 +41,16 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     private FileEntryMapper fileEntryMapper;
 
     @Override
+    public ServiceResult<FileAndContents> getSignedGrantOfferLetterFileAndContents(Long projectId) {
+        return getProject(projectId).andOnSuccess(project -> {
+
+            FileEntry fileEntry = project.getSignedGrantOfferLetter();
+
+            return getFileAndContentsResult(fileEntry);
+        });
+    }
+
+    @Override
     public ServiceResult<FileAndContents> getGrantOfferLetterFileAndContents(Long projectId) {
         return getProject(projectId).andOnSuccess(project -> {
 
@@ -70,6 +80,21 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     }
 
     @Override
+    public ServiceResult<FileEntryResource> getSignedGrantOfferLetterFileEntryDetails(Long projectId) {
+        return getProject(projectId).andOnSuccess(project -> {
+
+            FileEntry fileEntry = project.getSignedGrantOfferLetter();
+
+            if (fileEntry == null) {
+                return serviceFailure(notFoundError(FileEntry.class));
+            }
+
+            return serviceSuccess(fileEntryMapper.mapToResource(fileEntry));
+        });
+
+    }
+
+    @Override
     public ServiceResult<FileEntryResource> getGrantOfferLetterFileEntryDetails(Long projectId) {
         return getProject(projectId).andOnSuccess(project -> {
 
@@ -81,7 +106,6 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
 
             return serviceSuccess(fileEntryMapper.mapToResource(fileEntry));
         });
-
     }
 
     @Override
@@ -100,16 +124,29 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     }
 
     @Override
-    public ServiceResult<FileEntryResource> createGrantOfferLetterFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
+    public ServiceResult<FileEntryResource> createSignedGrantOfferLetterFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
         return getProject(projectId).
                 andOnSuccess(project -> fileService.createFile(fileEntryResource, inputStreamSupplier).
-                        andOnSuccessReturn(fileDetails -> linkGrantOfferLetterFileToProject(project, fileDetails)));
+                        andOnSuccessReturn(fileDetails -> linkGrantOfferLetterFileToProject(project, fileDetails, true)));
 
     }
 
-    private FileEntryResource linkGrantOfferLetterFileToProject(Project project, Pair<File, FileEntry> fileDetails) {
+    @Override
+    public ServiceResult<FileEntryResource> createGrantOfferLetterFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
+        return getProject(projectId).
+                andOnSuccess(project -> fileService.createFile(fileEntryResource, inputStreamSupplier).
+                        andOnSuccessReturn(fileDetails -> linkGrantOfferLetterFileToProject(project, fileDetails, false)));
+    }
+
+    private FileEntryResource linkGrantOfferLetterFileToProject(Project project, Pair<File, FileEntry> fileDetails, boolean signed) {
         FileEntry fileEntry = fileDetails.getValue();
-        project.setGrantOfferLetter(fileEntry);
+
+        if (signed) {
+            project.setSignedGrantOfferLetter(fileEntry);
+        } else {
+            project.setGrantOfferLetter(fileEntry);
+        }
+
         return fileEntryMapper.mapToResource(fileEntry);
     }
 
@@ -122,10 +159,10 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     }
 
     @Override
-    public ServiceResult<Void> updateGrantOfferLetterFile(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
+    public ServiceResult<Void> updateSignedGrantOfferLetterFile(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
         return getProject(projectId).
                 andOnSuccess(project -> fileService.updateFile(fileEntryResource, inputStreamSupplier).
-                        andOnSuccessReturnVoid(fileDetails -> linkGrantOfferLetterFileToProject(project, fileDetails)));
+                        andOnSuccessReturnVoid(fileDetails -> linkGrantOfferLetterFileToProject(project, fileDetails, true)));
 
     }
 

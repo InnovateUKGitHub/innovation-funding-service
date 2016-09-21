@@ -64,13 +64,15 @@ public class Project implements ProcessActivity {
 
     @OneToOne
     @JoinColumn(name="grantOfferLetterFileEntryId", referencedColumnName = "id")
+    private FileEntry signedGrantOfferLetter;
+
+    @OneToOne
+    @JoinColumn(name="grantOfferLetterFileEntryId", referencedColumnName = "id")
     private FileEntry grantOfferLetter;
 
     @OneToOne
     @JoinColumn(name="additionalContractFileEntryId", referencedColumnName = "id")
     private FileEntry additionalContractFile;
-
-    private boolean offerSigned = false;
 
     private boolean offerRejected = false;
 
@@ -224,12 +226,12 @@ public class Project implements ProcessActivity {
         this.exploitationPlan = exploitationPlan;
     }
 
-    public FileEntry getGrantOfferLetter() {
-        return grantOfferLetter;
+    public FileEntry getSignedGrantOfferLetter() {
+        return signedGrantOfferLetter;
     }
 
-    public void setGrantOfferLetter(FileEntry grantOfferLetter) {
-        this.grantOfferLetter = grantOfferLetter;
+    public void setSignedGrantOfferLetter(FileEntry signedGrantOfferLetter) {
+        this.signedGrantOfferLetter = signedGrantOfferLetter;
     }
 
     public FileEntry getAdditionalContractFile() {
@@ -240,19 +242,19 @@ public class Project implements ProcessActivity {
         this.additionalContractFile = additionalContractFile;
     }
 
-    public boolean isOfferSigned() {
-        return offerSigned;
-    }
-
-    public void setOfferSigned(boolean offerSigned) {
-        this.offerSigned = offerSigned;
-    }
-
     public boolean isOfferRejected() {
         return offerRejected;
     }
 
     public void setOfferRejected(boolean offerRejected) {
         this.offerRejected = offerRejected;
+    }
+
+    public FileEntry getGrantOfferLetter() {
+        return grantOfferLetter;
+    }
+
+    public void setGrantOfferLetter(FileEntry grantOfferLetter) {
+        this.grantOfferLetter = grantOfferLetter;
     }
 }

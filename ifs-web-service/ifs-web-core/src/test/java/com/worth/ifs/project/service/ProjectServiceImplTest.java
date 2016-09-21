@@ -353,7 +353,7 @@ public class ProjectServiceImplTest {
     public void testGetGrantOfferLetterFile() {
 
         Optional<ByteArrayResource> content = Optional.of(new ByteArrayResource("My content!".getBytes()));
-        when(projectRestService.getGrantOfferLetterFile(123L)).thenReturn(restSuccess(content));
+        when(projectRestService.getSignedGrantOfferLetterFile(123L)).thenReturn(restSuccess(content));
 
         Optional<ByteArrayResource> result = service.getGrantOfferLetterFile(123L);
         assertEquals(content, result);
@@ -365,7 +365,7 @@ public class ProjectServiceImplTest {
         FileEntryResource returnedFile = newFileEntryResource().build();
 
         Optional<FileEntryResource> response = Optional.of(returnedFile);
-        when(projectRestService.getGrantOfferLetterFileDetails(123L)).thenReturn(restSuccess(response));
+        when(projectRestService.getSignedGrantOfferLetterFileDetails(123L)).thenReturn(restSuccess(response));
 
         Optional<FileEntryResource> result = service.getGrantOfferLetterFileDetails(123L);
         assertEquals(response, result);
@@ -402,7 +402,7 @@ public class ProjectServiceImplTest {
                 thenReturn(restSuccess(createdFile));
 
         ServiceResult<FileEntryResource> result =
-                service.addGrantOfferLetter(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes());
+                service.addSignedGrantOfferLetter(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes());
 
         assertTrue(result.isSuccess());
         assertEquals(createdFile, result.getSuccessObject());

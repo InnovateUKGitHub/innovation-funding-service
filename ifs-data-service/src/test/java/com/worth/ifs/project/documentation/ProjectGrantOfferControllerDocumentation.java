@@ -43,6 +43,18 @@ public class ProjectGrantOfferControllerDocumentation extends BaseControllerMock
         Long projectId = 123L;
 
         BiFunction<ProjectGrantOfferService, FileEntryResource, ServiceResult<FileEntryResource>> serviceCallToUpload =
+                (service, fileToUpload) -> service.createSignedGrantOfferLetterFileEntry(eq(projectId), eq(fileToUpload), fileUploadInputStreamExpectations());
+
+        assertFileUploadProcess("/project/" + projectId + "/signed-grant-offer", projectGrantOfferServiceMock, serviceCallToUpload).
+                andDo(documentFileUploadMethod(document));
+    }
+
+    @Test
+    public void addGeneratedGrantOfferLetter() throws Exception {
+
+        Long projectId = 111L;
+
+        BiFunction<ProjectGrantOfferService, FileEntryResource, ServiceResult<FileEntryResource>> serviceCallToUpload =
                 (service, fileToUpload) -> service.createGrantOfferLetterFileEntry(eq(projectId), eq(fileToUpload), fileUploadInputStreamExpectations());
 
         assertFileUploadProcess("/project/" + projectId + "/grant-offer", projectGrantOfferServiceMock, serviceCallToUpload).
@@ -67,12 +79,26 @@ public class ProjectGrantOfferControllerDocumentation extends BaseControllerMock
         Long projectId = 123L;
 
         BiFunction<ProjectGrantOfferService, FileEntryResource, ServiceResult<FileEntryResource>> serviceCallToUpload =
+                (service, fileToUpload) -> service.getSignedGrantOfferLetterFileEntryDetails(projectId);
+
+        assertGetFileDetails("/project/{projectId}/signed-grant-offer/details", new Object[]{projectId}, emptyMap(),
+                projectGrantOfferServiceMock, serviceCallToUpload).
+                andDo(documentFileGetDetailsMethod(document));
+    }
+
+    @Test
+    public void getGeneratedGrantOfferLetterFileEntryDetails() throws Exception {
+
+        Long projectId = 123L;
+
+        BiFunction<ProjectGrantOfferService, FileEntryResource, ServiceResult<FileEntryResource>> serviceCallToUpload =
                 (service, fileToUpload) -> service.getGrantOfferLetterFileEntryDetails(projectId);
 
         assertGetFileDetails("/project/{projectId}/grant-offer/details", new Object[]{projectId}, emptyMap(),
                 projectGrantOfferServiceMock, serviceCallToUpload).
                 andDo(documentFileGetDetailsMethod(document));
     }
+
 
     @Test
     public void getAdditionalContractFileEntryDetails() throws Exception {
@@ -106,6 +132,20 @@ public class ProjectGrantOfferControllerDocumentation extends BaseControllerMock
         Long projectId = 123L;
 
         Function<ProjectGrantOfferService, ServiceResult<FileAndContents>> serviceCallToUpload =
+                (service) -> service.getSignedGrantOfferLetterFileAndContents(projectId);
+
+
+        assertGetFileContents("/project/{projectId}/signed-grant-offer", new Object[]{projectId},
+                emptyMap(), projectGrantOfferServiceMock, serviceCallToUpload).
+                andDo(documentFileGetContentsMethod(document));
+    }
+
+    @Test
+    public void getGeneratedGrantOfferLetterFileContents() throws Exception {
+
+        Long projectId = 123L;
+
+        Function<ProjectGrantOfferService, ServiceResult<FileAndContents>> serviceCallToUpload =
                 (service) -> service.getGrantOfferLetterFileAndContents(projectId);
 
 
@@ -113,4 +153,5 @@ public class ProjectGrantOfferControllerDocumentation extends BaseControllerMock
                 emptyMap(), projectGrantOfferServiceMock, serviceCallToUpload).
                 andDo(documentFileGetContentsMethod(document));
     }
+
 }

@@ -62,7 +62,7 @@ public class ProjectGrantOfferControllerTest extends BaseControllerMockMVCTest<P
         Long projectId = 123L;
 
         BiFunction<ProjectGrantOfferService, FileEntryResource, ServiceResult<FileEntryResource>> serviceCallToUpload =
-                (service, fileToUpload) -> service.getGrantOfferLetterFileEntryDetails(projectId);
+                (service, fileToUpload) -> service.getSignedGrantOfferLetterFileEntryDetails(projectId);
 
         assertGetFileDetails("/project/{projectId}/grant-offer/details", new Object[] {projectId},
                 emptyMap(),
@@ -89,7 +89,7 @@ public class ProjectGrantOfferControllerTest extends BaseControllerMockMVCTest<P
         Long projectId = 123L;
 
         BiFunction<ProjectGrantOfferService, FileEntryResource, ServiceResult<FileEntryResource>> serviceCallToUpload =
-                (service, fileToUpload) -> service.createGrantOfferLetterFileEntry(eq(projectId), eq(fileToUpload), fileUploadInputStreamExpectations());
+                (service, fileToUpload) -> service.createSignedGrantOfferLetterFileEntry(eq(projectId), eq(fileToUpload), fileUploadInputStreamExpectations());
 
         assertFileUploadProcess("/project/" + projectId + "/grant-offer/", projectGrantOfferServiceMock, serviceCallToUpload).
                 andDo(documentFileUploadMethod(document));

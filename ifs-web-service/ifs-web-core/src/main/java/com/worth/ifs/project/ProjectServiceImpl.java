@@ -229,12 +229,12 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public Optional<ByteArrayResource> getGrantOfferLetterFile(Long projectId) {
-        return projectRestService.getGrantOfferLetterFile(projectId).getSuccessObjectOrThrowException();
+        return projectRestService.getSignedGrantOfferLetterFile(projectId).getSuccessObjectOrThrowException();
     }
 
     @Override
     public Optional<FileEntryResource> getGrantOfferLetterFileDetails(Long projectId) {
-        return projectRestService.getGrantOfferLetterFileDetails(projectId).getSuccessObjectOrThrowException();
+        return projectRestService.getSignedGrantOfferLetterFileDetails(projectId).getSuccessObjectOrThrowException();
     }
 
     @Override
@@ -248,7 +248,22 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ServiceResult<FileEntryResource> addGrantOfferLetter(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes) {
+    public Optional<ByteArrayResource> getGeneratedGrantOfferFile(Long projectId) {
+        return null;
+    }
+
+    @Override
+    public Optional<FileEntryResource> getGeneratedGrantOfferFileDetails(Long projectId) {
+        return null;
+    }
+
+    @Override
+    public ServiceResult<FileEntryResource> addSignedGrantOfferLetter(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes) {
+        return projectRestService.addSignedGrantOfferLetterFile(projectId, contentType, fileSize, originalFilename, bytes).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<FileEntryResource> addGeneratedGrantOfferLetter(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes) {
         return projectRestService.addGrantOfferLetterFile(projectId, contentType, fileSize, originalFilename, bytes).toServiceResult();
     }
 

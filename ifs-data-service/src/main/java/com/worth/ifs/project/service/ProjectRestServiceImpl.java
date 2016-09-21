@@ -155,17 +155,23 @@ public class ProjectRestServiceImpl extends BaseRestService implements ProjectRe
     }
 
     @Override
-    public RestResult<Optional<ByteArrayResource>> getGrantOfferLetterFile(Long projectId) {
-        return getWithRestResult(projectRestURL + "/" + projectId + "/grant-offer", ByteArrayResource.class).toOptionalIfNotFound();
+    public RestResult<Optional<ByteArrayResource>> getSignedGrantOfferLetterFile(Long projectId) {
+        return getWithRestResult(projectRestURL + "/" + projectId + "/signed-grant-offer", ByteArrayResource.class).toOptionalIfNotFound();
     }
 
     @Override
-    public RestResult<Optional<FileEntryResource>> getGrantOfferLetterFileDetails(Long projectId) {
-        return getWithRestResult(projectRestURL + "/" + projectId + "/grant-offer/details", FileEntryResource.class).toOptionalIfNotFound();
+    public RestResult<Optional<FileEntryResource>> getSignedGrantOfferLetterFileDetails(Long projectId) {
+        return getWithRestResult(projectRestURL + "/" + projectId + "/signed-grant-offer/details", FileEntryResource.class).toOptionalIfNotFound();
     }
 
     @Override
-    public RestResult<FileEntryResource> addGrantOfferLetterFile(Long projectId, String contentType,  long contentLength, String originalFilename, byte[] bytes) {
+    public RestResult<FileEntryResource> addSignedGrantOfferLetterFile(Long projectId, String contentType, long contentLength, String originalFilename, byte[] bytes) {
+        String url = projectRestURL + "/" + projectId + "/signed-grant-offer?filename=" + originalFilename;
+        return postWithRestResult(url, bytes, createFileUploadHeader(contentType, contentLength), FileEntryResource.class);
+    }
+
+    @Override
+    public RestResult<FileEntryResource> addGrantOfferLetterFile(Long projectId, String contentType, long contentLength, String originalFilename, byte[] bytes) {
         String url = projectRestURL + "/" + projectId + "/grant-offer?filename=" + originalFilename;
         return postWithRestResult(url, bytes, createFileUploadHeader(contentType, contentLength), FileEntryResource.class);
     }
@@ -178,6 +184,16 @@ public class ProjectRestServiceImpl extends BaseRestService implements ProjectRe
     @Override
     public RestResult<Optional<FileEntryResource>> getAdditionalContractFileDetails(Long projectId) {
         return getWithRestResult(projectRestURL + "/" + projectId + "/additional-contract/details", FileEntryResource.class).toOptionalIfNotFound();
+    }
+
+    @Override
+    public RestResult<Optional<ByteArrayResource>> getGrantOfferFile(Long projectId) {
+        return getWithRestResult(projectRestURL + "/" + projectId + "/grant-offer", ByteArrayResource.class).toOptionalIfNotFound();
+    }
+
+    @Override
+    public RestResult<Optional<FileEntryResource>> getGrantOfferFileDetails(Long projectId) {
+        return getWithRestResult(projectRestURL + "/" + projectId + "/grant-offer/details", FileEntryResource.class).toOptionalIfNotFound();
     }
 
     @Override

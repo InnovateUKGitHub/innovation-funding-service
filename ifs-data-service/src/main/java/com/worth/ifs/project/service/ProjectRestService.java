@@ -39,10 +39,13 @@ public interface ProjectRestService {
     RestResult<Void> setPartnerDocumentsSubmitted(Long projectId);
     RestResult<Void> addPartner(Long projectId, Long userId, Long organisationId);
     RestResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId);
-    RestResult<Optional<ByteArrayResource>> getGrantOfferLetterFile(Long projectId);
-    RestResult<Optional<FileEntryResource>> getGrantOfferLetterFileDetails(Long projectId);
+    RestResult<Optional<ByteArrayResource>> getSignedGrantOfferLetterFile(Long projectId);
+    RestResult<Optional<FileEntryResource>> getSignedGrantOfferLetterFileDetails(Long projectId);
+    RestResult<FileEntryResource> addSignedGrantOfferLetterFile(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes);
     RestResult<FileEntryResource> addGrantOfferLetterFile(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes);
     RestResult<Optional<ByteArrayResource>> getAdditionalContractFile(Long projectId);
     RestResult<Optional<FileEntryResource>> getAdditionalContractFileDetails(Long projectId);
+    RestResult<Optional<ByteArrayResource>> getGrantOfferFile(Long projectId);
+    RestResult<Optional<FileEntryResource>> getGrantOfferFileDetails(Long projectId);
     RestResult<FileEntryResource> addAdditionalContractFile(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes);
 }

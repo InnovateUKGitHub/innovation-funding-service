@@ -57,17 +57,12 @@ public class ProjectBuilder extends BaseBuilder<Project, ProjectBuilder> {
     }
 
     public ProjectBuilder withGrantOfferLetter(FileEntry grantOfferLetter) {
-        return with (project -> project.setGrantOfferLetter(grantOfferLetter));
+        return with (project -> project.setSignedGrantOfferLetter(grantOfferLetter));
     }
 
     public ProjectBuilder withAdditionalContractFile(FileEntry additionalContractFile) {
         return with (project -> project.setAdditionalContractFile(additionalContractFile));
     }
-
-    public ProjectBuilder withOfferSigned(boolean offerSigned) {
-        return with (project -> project.setOfferSigned(offerSigned));
-    }
-
 
     public ProjectBuilder withDuration(Long... durations) {
         return withArray((duration, project) -> project.setDurationInMonths(duration), durations);

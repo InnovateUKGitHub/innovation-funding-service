@@ -25,9 +25,9 @@ public class ProjectDocs {
             fieldWithPath("offerSubmittedDate").description("Date that grant offer letter documents were submitted by the Lead partner or project manager. Null means the details have not yet been submitted"),
             fieldWithPath("collaborationAgreement").description("Id of the File Entry that contains the Collaboration Agreement of the partner organisations"),
             fieldWithPath("exploitationPlan").description("Id of the File Entry that contains the Exploitation Plan of the partner organisations"),
-            fieldWithPath("grantOfferLetter").description("Id of the File Entry that contains the Grant Offer Letter"),
+            fieldWithPath("signedGrantOfferLetter").description("Id of the File Entry that contains the Signed Grant Offer Letter"),
             fieldWithPath("additionalContractFile").description("Id of the File Entry that contains tadditional contract file"),
-            fieldWithPath("offerSigned").description("Flag to indicate if grant offer letter file is signed"),
+            fieldWithPath("grantOfferLetter").description("Id of the File Entry that contains the generated Grant Offer Letter"),
             fieldWithPath("offerRejected").description("Flag to indicate if grant offer has been rejected"),
 
     };

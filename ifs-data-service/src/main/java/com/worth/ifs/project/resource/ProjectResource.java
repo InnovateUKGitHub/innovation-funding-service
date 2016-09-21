@@ -24,9 +24,9 @@ public class ProjectResource {
     private List<Long> projectUsers;
     private Long collaborationAgreement;
     private Long exploitationPlan;
+    private Long signedGrantOfferLetter;
     private Long grantOfferLetter;
     private Long additionalContractFile;
-    private boolean offerSigned;
     private boolean offerRejected;
 
     @Digits(integer = MAX_DURATION_IN_MONTHS_DIGITS, fraction = 0, message="{validation.application.details.duration.in.months.max.digits}")
@@ -148,12 +148,12 @@ public class ProjectResource {
         this.exploitationPlan = exploitationPlan;
     }
 
-    public Long getGrantOfferLetter() {
-        return grantOfferLetter;
+    public Long getSignedGrantOfferLetter() {
+        return signedGrantOfferLetter;
     }
 
-    public void setGrantOfferLetter(Long grantOfferLetter) {
-        this.grantOfferLetter = grantOfferLetter;
+    public void setSignedGrantOfferLetter(Long signedGrantOfferLetter) {
+        this.signedGrantOfferLetter = signedGrantOfferLetter;
     }
 
     public Long getAdditionalContractFile() {
@@ -164,19 +164,19 @@ public class ProjectResource {
         this.additionalContractFile = additionalContractFile;
     }
 
-    public boolean isOfferSigned() {
-        return offerSigned;
-    }
-
-    public void setOfferSigned(boolean offerSigned) {
-        this.offerSigned = offerSigned;
-    }
-
     public boolean isOfferRejected() {
         return offerRejected;
     }
 
     public void setOfferRejected(boolean offerRejected) {
         this.offerRejected = offerRejected;
+    }
+
+    public Long getGrantOfferLetter() {
+        return grantOfferLetter;
+    }
+
+    public void setGrantOfferLetter(Long grantOfferLetter) {
+        this.grantOfferLetter = grantOfferLetter;
     }
 }

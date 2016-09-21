@@ -48,7 +48,7 @@ public class ProjectGrantOfferLetterController {
         return createGrantOfferLetterPage(projectId, model, loggedInUser, form);
     }
 
-    @RequestMapping(params = "uploadGrantOfferLetterClicked", method = POST)
+    @RequestMapping(params = "uploadSignedGrantOfferLetterClicked", method = POST)
     public String uploadGrantOfferLetterFile(
             @PathVariable("projectId") final Long projectId,
             @ModelAttribute(FORM_ATTR) ProjectOtherDocumentsForm form,
@@ -61,11 +61,28 @@ public class ProjectGrantOfferLetterController {
 
             MultipartFile file = form.getExploitationPlan();
 
-            return projectService.addExploitationPlanDocument(projectId, file.getContentType(), file.getSize(),
+            return projectService.addSignedGrantOfferLetter(projectId, file.getContentType(), file.getSize(),
                     file.getOriginalFilename(), getMultipartFileBytes(file));
         });
     }
 
+    @RequestMapping(params = "uploadGeneratedOfferLetterClicked", method = POST)
+    public String uploadGeneratedGrantOfferLetterFile(
+            @PathVariable("projectId") final Long projectId,
+            @ModelAttribute(FORM_ATTR) ProjectOtherDocumentsForm form,
+            @SuppressWarnings("unused") BindingResult bindingResult,
+            ValidationHandler validationHandler,
+            Model model,
+            @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+
+        return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "exploitationPlan", form, () -> {
+
+            MultipartFile file = form.getExploitationPlan();
+
+            return projectService.addGeneratedGrantOfferLetter(projectId, file.getContentType(), file.getSize(),
+                    file.getOriginalFilename(), getMultipartFileBytes(file));
+        });
+    }
 
     private String createGrantOfferLetterPage(Long projectId, Model model, UserResource loggedInUser, ProjectOtherDocumentsForm form) {
         ProjectGrantOfferLetterViewModel viewModel = populateGrantOfferLetterViewModel(projectId, loggedInUser);
@@ -78,23 +95,22 @@ public class ProjectGrantOfferLetterController {
         ProjectResource project = projectService.getById(projectId);
         boolean leadPartner = projectService.isUserLeadPartner(projectId, loggedInUser.getId());
 
-        //TODO: get grant offer letter from project service
-        Optional<FileEntryResource> grantOfferLetter = Optional.of(new FileEntryResource(1L, "grantOfferLetter", "application/pdf", 10000));
+        Optional<FileEntryResource> signedGrantOfferLetterFile = projectService.getGrantOfferLetterFileDetails(projectId);
 
-        //TODO: get extra contract file from project service
-        Optional<FileEntryResource> additionalContractFile = Optional.of(new FileEntryResource(1L, "additionalContractFile", "application/pdf", 10000));
+        Optional<FileEntryResource> grantOfferFileDetails = projectService.getGeneratedGrantOfferFileDetails(projectId);
 
+        Optional<FileEntryResource> additionalContractFile = projectService.getAdditionalContractFileDetails(projectId);
 
-        //TODO: To be implenented - INFUND-4848
         LocalDateTime submittedDate = null;
         boolean offerSigned = false;
         boolean offerAccepted = false;
         boolean offerRejected = false;
 
         return new ProjectGrantOfferLetterViewModel(projectId, project.getName(),
-                leadPartner, grantOfferLetter.map(FileDetailsViewModel::new).orElse(null),
+                leadPartner, grantOfferFileDetails.map(FileDetailsViewModel::new).orElse(null),
+                signedGrantOfferLetterFile.map(FileDetailsViewModel::new).orElse(null),
                 additionalContractFile.map(FileDetailsViewModel::new).orElse(null),
-                offerSigned, submittedDate, offerAccepted, offerRejected);
+                project.getOfferSubmittedDate(), project.isOfferRejected());
     }
 
     private String performActionOrBindErrorsToField(Long projectId, ValidationHandler validationHandler, Model model, UserResource loggedInUser, String fieldName, ProjectOtherDocumentsForm form, Supplier<FailingOrSucceedingResult<?, ?>> actionFn) {

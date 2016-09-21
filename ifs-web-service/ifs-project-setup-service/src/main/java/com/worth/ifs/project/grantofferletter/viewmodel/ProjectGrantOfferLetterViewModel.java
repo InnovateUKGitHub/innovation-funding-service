@@ -14,24 +14,21 @@ public class ProjectGrantOfferLetterViewModel implements BasicProjectDetailsView
     private final String projectName;
     private final boolean leadPartner;
     private FileDetailsViewModel grantOfferLetterFile;
+    private FileDetailsViewModel signedGrantOfferLetterFile;
     private FileDetailsViewModel additionalContractFile;
-    private boolean offerSigned;
-    private boolean submitted;
     private LocalDateTime submitDate;
-    private boolean offerAccepted;
     private boolean offerRejected;
 
     public ProjectGrantOfferLetterViewModel(Long projectId, String projectName, boolean leadPartner, FileDetailsViewModel grantOfferLetterFile,
-                                            FileDetailsViewModel additionalContractFile,
-                                            boolean offerSigned, LocalDateTime submitDate, boolean offerAccepted, boolean offerRejected) {
+                                            FileDetailsViewModel signedGrantOfferLetterFile, FileDetailsViewModel additionalContractFile,
+                                            LocalDateTime submitDate, boolean offerRejected) {
         this.projectId = projectId;
         this.projectName = projectName;
         this.leadPartner = leadPartner;
         this.grantOfferLetterFile = grantOfferLetterFile;
+        this.signedGrantOfferLetterFile = signedGrantOfferLetterFile;
         this.additionalContractFile = additionalContractFile;
-        this.offerSigned = offerSigned;
         this.submitDate = submitDate;
-        this.offerAccepted = offerAccepted;
         this.offerRejected = offerRejected;
     }
 
@@ -54,23 +51,11 @@ public class ProjectGrantOfferLetterViewModel implements BasicProjectDetailsView
     }
 
     public boolean isSubmitted() {
-        return submitDate != null && !offerAccepted;
-    }
-
-    public void setSubmitted(boolean submitted) {
-        this.submitted = submitted;
+        return submitDate != null;
     }
 
     public FileDetailsViewModel getGrantOfferLetterFile() {
         return grantOfferLetterFile;
-    }
-
-    public boolean isOfferAccepted() {
-        return offerAccepted;
-    }
-
-    public void setOfferAccepted(boolean offerAccepted) {
-        this.offerAccepted = offerAccepted;
     }
 
     public boolean isOfferRejected() {
@@ -94,11 +79,7 @@ public class ProjectGrantOfferLetterViewModel implements BasicProjectDetailsView
     }
 
     public boolean isOfferSigned() {
-        return offerSigned && submitted;
-    }
-
-    public void setOfferSigned(boolean offerSigned) {
-        this.offerSigned = offerSigned;
+        return signedGrantOfferLetterFile != null;
     }
 
     public LocalDateTime getSubmitDate() {
@@ -107,5 +88,13 @@ public class ProjectGrantOfferLetterViewModel implements BasicProjectDetailsView
 
     public void setSubmitDate(LocalDateTime submitDate) {
         this.submitDate = submitDate;
+    }
+
+    public FileDetailsViewModel getSignedGrantOfferLetterFile() {
+        return signedGrantOfferLetterFile;
+    }
+
+    public void setSignedGrantOfferLetterFile(FileDetailsViewModel signedGrantOfferLetterFile) {
+        this.signedGrantOfferLetterFile = signedGrantOfferLetterFile;
     }
 }

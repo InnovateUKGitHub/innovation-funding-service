@@ -32,12 +32,20 @@ public class ProjectGrantOfferController {
     private FileHttpHeadersValidator fileValidator;
 
 
-    @RequestMapping(value = "/{projectId}/grant-offer", method = GET)
+    @RequestMapping(value = "/{projectId}/signed-grant-offer", method = GET)
     public @ResponseBody
     ResponseEntity<Object> getGrantOfferLetterFileContents(
             @PathVariable("projectId") long projectId) throws IOException {
+        return handleFileDownload(() -> projectGrantOfferService.getSignedGrantOfferLetterFileAndContents(projectId));
+    }
+
+    @RequestMapping(value = "/{projectId}/grant-offer", method = GET)
+    public @ResponseBody
+    ResponseEntity<Object> getGeneratedGrantOfferLetterFileContents(
+            @PathVariable("projectId") long projectId) throws IOException {
         return handleFileDownload(() -> projectGrantOfferService.getGrantOfferLetterFileAndContents(projectId));
     }
+
 
     @RequestMapping(value = "/{projectId}/additional-contract", method = GET)
     public @ResponseBody
@@ -47,12 +55,20 @@ public class ProjectGrantOfferController {
     }
 
 
+    @RequestMapping(value = "/{projectId}/signed-grant-offer/details", method = GET, produces = "application/json")
+    public RestResult<FileEntryResource> getSignedGrantOfferLetterFileEntryDetails(
+            @PathVariable("projectId") long projectId) throws IOException {
+
+        return projectGrantOfferService.getSignedGrantOfferLetterFileEntryDetails(projectId).toGetResponse();
+    }
+
     @RequestMapping(value = "/{projectId}/grant-offer/details", method = GET, produces = "application/json")
     public RestResult<FileEntryResource> getGrantOfferLetterFileEntryDetails(
             @PathVariable("projectId") long projectId) throws IOException {
 
         return projectGrantOfferService.getGrantOfferLetterFileEntryDetails(projectId).toGetResponse();
     }
+
 
     @RequestMapping(value = "/{projectId}/additional-contract/details", method = GET, produces = "application/json")
     public RestResult<FileEntryResource> getAdditionalContractFileEntryDetails(
@@ -61,6 +77,19 @@ public class ProjectGrantOfferController {
         return projectGrantOfferService.getAdditionalContractFileEntryDetails(projectId).toGetResponse();
     }
 
+
+    @RequestMapping(value = "/{projectId}/signed-grant-offer", method = POST, produces = "application/json")
+    public RestResult<FileEntryResource> addSignedGrantOfferLetterFile(
+            @RequestHeader(value = "Content-Type", required = false) String contentType,
+            @RequestHeader(value = "Content-Length", required = false) String contentLength,
+            @PathVariable(value = "projectId") long projectId,
+            @RequestParam(value = "filename", required = false) String originalFilename,
+            HttpServletRequest request) {
+
+        return handleFileUpload(contentType, contentLength, originalFilename, fileValidator, request, (fileAttributes, inputStreamSupplier) ->
+                projectGrantOfferService.createSignedGrantOfferLetterFileEntry(projectId, fileAttributes.toFileEntryResource(), inputStreamSupplier)
+        );
+    }
 
     @RequestMapping(value = "/{projectId}/grant-offer", method = POST, produces = "application/json")
     public RestResult<FileEntryResource> addGrantOfferLetterFile(
@@ -75,6 +104,7 @@ public class ProjectGrantOfferController {
         );
     }
 
+
     @RequestMapping(value = "/{projectId}/additional-contract", method = POST, produces = "application/json")
     public RestResult<FileEntryResource> addAdditionalContractFile(
             @RequestHeader(value = "Content-Type", required = false) String contentType,
@@ -88,7 +118,7 @@ public class ProjectGrantOfferController {
         );
     }
 
-    @RequestMapping(value = "/{projectId}/grant-offer", method = PUT, produces = "application/json")
+    @RequestMapping(value = "/{projectId}/signed-grant-offer", method = PUT, produces = "application/json")
     public RestResult<Void> updateGrantOfferLetterFile(
             @RequestHeader(value = "Content-Type", required = false) String contentType,
             @RequestHeader(value = "Content-Length", required = false) String contentLength,
@@ -97,6 +127,6 @@ public class ProjectGrantOfferController {
             HttpServletRequest request) {
 
         return handleFileUpdate(contentType, contentLength, originalFilename, fileValidator, request, (fileAttributes, inputStreamSupplier) ->
-                projectGrantOfferService.updateGrantOfferLetterFile(projectId, fileAttributes.toFileEntryResource(), inputStreamSupplier));
+                projectGrantOfferService.updateSignedGrantOfferLetterFile(projectId, fileAttributes.toFileEntryResource(), inputStreamSupplier));
     }
 }
