@@ -42,9 +42,9 @@
 
                 <th:block th:if="${status == 'loggedIn'}">
 
-                    <span class="admin-user-name ">James Danek</span>
+                    <span class="admin-user-name" th:text="${user}">James Danek</span>
                     <ul class="navigation-list navigation-right">
-                        <li>
+                        <li th:if="${userRole == 'admin'}">
                             <a href="/prototypes/5079-ifs-admin">Admin</a>
                         </li>
                         <li>
