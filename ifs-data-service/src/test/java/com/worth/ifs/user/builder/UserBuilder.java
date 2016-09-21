@@ -67,7 +67,7 @@ public class UserBuilder extends BaseBuilder<User, UserBuilder> {
         return withArray((title, user) -> setField("title", title, user), titles);
     }
 
-    public UserBuilder withid(Long... ids) {
+    public UserBuilder withId(Long... ids) {
         return withArray((id, object) -> setField("id", id, object), ids);
     }
 
