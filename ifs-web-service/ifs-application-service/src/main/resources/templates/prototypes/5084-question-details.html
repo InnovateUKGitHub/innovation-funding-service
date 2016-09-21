@@ -82,7 +82,11 @@
 					<label class="form-label" for="guidance">
 						<span class="form-label-bold">Guidance</span>
 					</label>
-					<textarea class="form-control" id="guidance" rowspan="20" name="guidance"></textarea>
+					<textarea class="form-control width-full" id="guidance" rows="5" name="guidance">You should describe:
+- the business opportunity you have identified and how you plan to take advantage of it
+- the customer needs you have identified and how your project will meet them
+- the challenges you expect to face and how you will overcome them
+					</textarea>
 				</div>
 				<div class="form-group">
 					<label class="form-label" for="word-count">
@@ -180,6 +184,24 @@
 				</div>
 				<div class="form-group">
 					<h3 class="heading-small">Guidance table</h3>
+					<table>
+						<thead>
+							<tr>
+								<th>Score<span class="visuallyhidden"> from</span></th>
+								<th><span class="visuallyhidden">Score to</span></th>
+								<th>Justification</th>
+								<th><span class="visuallyhidden">Action</span></th>
+							</tr>
+						</thead>
+						<tbody>
+							<div th:include="prototypes/fragments/comp-setup :: prototype-section-guidance-row" th:with="rowNo=1,scoreFrom=${'9'},scoreTo=${'10'},justification=${'The project is fully described with milestones and timeframes. The plan is realistic and should meet the objectives of the project.'}" th:remove="tag"/>
+							<div th:include="prototypes/fragments/comp-setup :: prototype-section-guidance-row" th:with="rowNo=2,scoreFrom=${'7'},scoreTo=${'8'},justification=${'The plan is well described and complete. There is a reasonable chance it will meet the objectives if the project.'}" th:remove="tag"/>
+							<div th:include="prototypes/fragments/comp-setup :: prototype-section-guidance-row" th:with="rowNo=3,scoreFrom=${'5'},scoreTo=${'6'},justification=${'The plan is not completely described or there may be some deficiencies in some aspects. More work will be required before the plan can be said to be realistic.'}" th:remove="tag"/>
+							<div th:include="prototypes/fragments/comp-setup :: prototype-section-guidance-row" th:with="rowNo=4,scoreFrom=${'3'},scoreTo=${'4'},justification=${'The plan has serious deficiencies or major missing aspects. The plan has little chance of meeting the objectives of the project.'}" th:remove="tag"/>
+							<div th:include="prototypes/fragments/comp-setup :: prototype-section-guidance-row" th:with="rowNo=5,scoreFrom=${'1'},scoreTo=${'2'},justification=${'The plan is totally unrealistic or fails to meet the objectives of the project.'}" th:remove="tag"/>
+						</tbody>
+					</table>
+					<a href="#" class="add-new-group">+ add new score group</a>
 				</div>
 				<div class="form-group">
 					<label class="form-label" for="max-word-count">
