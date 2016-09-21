@@ -10,11 +10,11 @@ Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
 
 *** Variables ***
-${NO_OF_DAYS_LEFT}
-${CURRENT_DATE}
+#${NO_OF_DAYS_LEFT}    ${EMPTY}
+#${CURRENT_DATE}    ${EMPTY}
 ${MILESTONE_DATE}    2016-12-31
-${STARTING_DATE}
-${SCREEN_NO_OF_DAYS_LEFT}
+#${STARTING_DATE}    ${EMPTY}
+#${SCREEN_NO_OF_DAYS_LEFT}    ${EMPTY}
 
 *** Test Cases ***
 Assessment overview should show the expected questions
