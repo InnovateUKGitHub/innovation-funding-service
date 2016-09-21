@@ -114,14 +114,36 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
 
     @Rollback
     @Test
-    public void testUpdateMilestone() throws Exception {
+    public void testUpdateMilestones() throws Exception {
         List<MilestoneResource> milestones = getMilestonesForCompetition(COMPETITION_ID_VALID);
 
+        //Open date
         MilestoneResource milestone = milestones.get(0);
-        milestone.setType(MilestoneType.OPEN_DATE);
-        milestone.setDate(LocalDateTime.now());
+        milestone.setDate(LocalDateTime.of(2036, 03, 15, 9, 0));
 
-        controller.saveMilestones(milestones, COMPETITION_ID_VALID);
+        //Submission date
+        milestone = milestones.get(1);
+        milestone.setDate(LocalDateTime.of(2036, 03, 15, 9, 0));
+
+        //Funders panel date
+        milestone = milestones.get(2);
+        milestone.setDate(LocalDateTime.of(2036, 03, 15, 9, 0));
+
+        //Assesors accepts date
+        milestone = milestones.get(3);
+        milestone.setDate(LocalDateTime.of(2036, 03, 15, 9, 0));
+
+        //Assessor deadline date
+        milestone = milestones.get(4);
+        milestone.setDate(LocalDateTime.of(2036, 03, 15, 9, 0));
+
+        //Notifications date
+        milestone = milestones.get(5);
+        milestone.setDate(LocalDateTime.of(2036, 03, 15, 9, 0));
+
+        RestResult<Void> milestoneResult = controller.saveMilestones(milestones, COMPETITION_ID_VALID);
+        assertTrue(milestoneResult.isSuccess());
+        assertTrue(milestoneResult.getErrors().isEmpty());
     }
 
     @Rollback
@@ -139,7 +161,8 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
             milestone.setDate(milestoneDate.plusDays(1));
         });
 
-        controller.saveMilestones(milestones, COMPETITION_ID_UPDATE);
+        RestResult<Void> milestoneResult = controller.saveMilestones(milestones, COMPETITION_ID_UPDATE);
+        assertTrue(milestoneResult.isSuccess());
     }
 
     @Test
@@ -152,7 +175,9 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
         LocalDateTime milestoneDate = LocalDateTime.now();
         milestone.setDate(milestoneDate.plusMonths(1));
 
-        controller.saveMilestone(milestone);
+        RestResult<Void> result = controller.saveMilestone(milestone);
+        assertTrue(result.isSuccess());
+        assertTrue(result.getErrors().isEmpty());
     }
 
     private MilestoneResource createNewMilestone(MilestoneType name, Long competitionId) {
