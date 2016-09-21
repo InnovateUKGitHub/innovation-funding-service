@@ -33,10 +33,12 @@ public class AllProjectDetailsSuppliedGuard implements Guard<ProjectDetailsState
     private boolean validateIsReadyForSubmission(final Project project) {
         return project.getAddress() != null &&
                 getExistingProjectManager(project).isPresent() &&
-                project.getTargetStartDate() != null &&
-                allFinanceContactsSet(project);
+                project.getTargetStartDate() != null
+                //&& allFinanceContactsSet(project)
+                ;
     }
 
+    // This function is unused, should I delete this. I am tempted to keep this - just in case
     private boolean allFinanceContactsSet(Project project) {
         List<ProjectUser> projectUsers = project.getProjectUsers();
         Set<Organisation> partnerOrganisations = new HashSet<>(simpleMap(projectUsers, ProjectUser::getOrganisation));
