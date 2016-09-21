@@ -41,7 +41,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
  * This controller is for serving internal project finance user, allowing them to view and manage project bank account details.
  */
 @Controller
-@RequestMapping("/project/{projectId}/organisation/{organisationId}/review-bank-details")
+@RequestMapping("/project/{projectId}")
 public class BankDetailsManagementController {
 
     private static final String FORM_ATTR_NAME = "form";
@@ -55,8 +55,17 @@ public class BankDetailsManagementController {
     @Autowired
     private BankDetailsService bankDetailsService;
 
+    @RequestMapping(value = "/review-all-bank-details", method = GET)
+    public String viewPartnerBankDetails(
+            Model model,
+            @PathVariable("projectId") Long projectId,
+            @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+        final ProjectResource project = projectService.getById(projectId);
+        final ProjectBankDetailsStatusSummary bankDetailsStatusSummary = bankDetailsService.getBankDetailsByProject(projectId);
+        return doViewBankDetailsSummaryPage(bankDetailsStatusSummary, model);
+    }
 
-    @RequestMapping(method = GET)
+    @RequestMapping(value = "/organisation/{organisationId}/review-bank-details", method = GET)
     public String viewBankDetails(
             Model model,
             @PathVariable("projectId") Long projectId,
@@ -68,7 +77,7 @@ public class BankDetailsManagementController {
         return doViewReviewBankDetails(organisationResource, project, bankDetailsResource, model);
     }
 
-    @RequestMapping(method = POST)
+    @RequestMapping(value = "/organisation/{organisationId}/review-bank-details", method = POST)
     public String approveBankDetails(
             Model model,
             @PathVariable("projectId") Long projectId,
@@ -80,7 +89,7 @@ public class BankDetailsManagementController {
         return doViewReviewBankDetails(organisationResource, project, bankDetailsResource, model);
     }
 
-    @RequestMapping(method = GET, path = "/change")
+    @RequestMapping(value = "/organisation/{organisationId}/review-bank-details/change", method = GET)
     public String changeBankDetailsView(
             Model model,
             @PathVariable("projectId") Long projectId,
@@ -94,7 +103,7 @@ public class BankDetailsManagementController {
         return doViewChangeBankDetailsNotUpdated(organisationResource, project, bankDetailsResource, model);
     }
 
-    @RequestMapping(method = POST, path = "/change")
+    @RequestMapping(value = "/organisation/{organisationId}/review-bank-details/change", method = POST)
     public String changeBankDetails(
             Model model,
             @PathVariable("projectId") Long projectId,

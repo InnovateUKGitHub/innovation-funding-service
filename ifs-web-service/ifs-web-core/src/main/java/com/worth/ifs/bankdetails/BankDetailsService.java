@@ -11,4 +11,5 @@ public interface BankDetailsService {
     ServiceResult<Void> submitBankDetails(final Long projectId, final BankDetailsResource bankDetailsResource);
     ServiceResult<Void> updateBankDetails(final Long projectId, final BankDetailsResource bankDetailsResource);
     BankDetailsResource getBankDetailsByProjectAndOrganisation(final Long projectId, final Long organisationId);
+    ProjectBankDetailsStatusSummary getBankDetailsByProject(final Long projectId);
 }

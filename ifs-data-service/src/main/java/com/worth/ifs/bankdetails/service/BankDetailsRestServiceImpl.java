@@ -1,6 +1,7 @@
 package com.worth.ifs.bankdetails.service;
 
 import com.worth.ifs.bankdetails.resource.BankDetailsResource;
+import com.worth.ifs.bankdetails.resource.ProjectBankDetailsStatusSummary;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 import org.springframework.stereotype.Service;
@@ -28,5 +29,10 @@ public class BankDetailsRestServiceImpl extends BaseRestService implements BankD
     @Override
     public RestResult<BankDetailsResource> getBankDetailsByProjectAndOrganisation(Long projectId, Long organisationId) {
         return getWithRestResult(projectRestURL + "/" + projectId + "/bank-details?organisationId=" + organisationId, BankDetailsResource.class);
+    }
+
+    @Override
+    public RestResult<ProjectBankDetailsStatusSummary> getBankDetailsByProject(Long projectId) {
+        return getWithRestResult(projectRestURL + "/" + projectId + "/bank-details/status-summary", ProjectBankDetailsStatusSummary.class);
     }
 }

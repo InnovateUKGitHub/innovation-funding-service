@@ -11,6 +11,8 @@ import com.worth.ifs.bankdetails.mapper.BankDetailsMapper;
 import com.worth.ifs.bankdetails.mapper.SILBankDetailsMapper;
 import com.worth.ifs.bankdetails.repository.BankDetailsRepository;
 import com.worth.ifs.bankdetails.resource.BankDetailsResource;
+import com.worth.ifs.bankdetails.resource.BankDetailsStatusResource;
+import com.worth.ifs.bankdetails.resource.ProjectBankDetailsStatusSummary;
 import com.worth.ifs.commons.error.CommonFailureKeys;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -18,6 +20,7 @@ import com.worth.ifs.organisation.domain.OrganisationAddress;
 import com.worth.ifs.organisation.mapper.OrganisationAddressMapper;
 import com.worth.ifs.organisation.repository.OrganisationAddressRepository;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
+import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.sil.experian.resource.AccountDetails;
 import com.worth.ifs.sil.experian.resource.Address;
@@ -112,6 +115,23 @@ public class BankDetailsServiceImpl implements BankDetailsService{
                             );
                         }
                 );
+    }
+
+    @Override
+    public ServiceResult<ProjectBankDetailsStatusSummary> getProjectBankDetailsStatusSummary(Long projectId) {
+        Project project = projectRepository.findOne(projectId);
+        List<BankDetails> bankDetails = bankDetailsRepository.findByProjectId(projectId);
+        List<BankDetailsStatusResource> bankDetailsStatusResources = bankDetails.stream().map(
+                bd -> new BankDetailsStatusResource()
+        ).collect(Collectors.toList());
+
+        ProjectBankDetailsStatusSummary projectBankDetailsStatusSummary = new ProjectBankDetailsStatusSummary();
+        projectBankDetailsStatusSummary.setBankDetailsStatusResources(bankDetailsStatusResources);
+        projectBankDetailsStatusSummary.setProjectId(projectId);
+        projectBankDetailsStatusSummary.setFormattedProjectId(project.getFormattedId());
+        projectBankDetailsStatusSummary.setCompetitionId(project.getApplication().getCompetition().getId());
+        projectBankDetailsStatusSummary.setFormattedCompetitionId(project.getApplication().getCompetition().getFormattedId());
+        return serviceSuccess(projectBankDetailsStatusSummary);
     }
 
     @Override

@@ -38,4 +38,9 @@ public class BankDetailsServiceImpl implements BankDetailsService {
     public BankDetailsResource getBankDetailsByProjectAndOrganisation(Long projectId, Long organisationId) {
         return bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationId).getSuccessObjectOrThrowException();
     }
+
+    @Override
+    public ProjectBankDetailsStatusSummary getBankDetailsByProject(Long projectId) {
+        return bankDetailsRestService.getBankDetailsByProject(projectId);
+    }
 }
