@@ -5,7 +5,9 @@ Documentation     INFUND-228: As an Assessor I can see competitions that I have 
 ...
 ...               INFUND-304: As an assessor I want to be able to accept the invitation for a competition, so that the competition team is aware that I am available for assessment
 ...
-...               INFUND-3716: As an Assessor when I have accepted to assess within a competition and the assessment period is current, I can see the number of competitions and their titles on my dashboard, so that I can plan my work.
+...               INFUND-3716: As an Assessor when I have accepted to assess within a competition and the assessment period is current, I can see the number of competitions and their titles on my dashboard, so that I can plan my work. \
+...
+...               INFUND-3720 As an Assessor I can see deadlines for the assessment of applications currently in assessment on my dashboard, so that I am reminded to deliver my work on time
 Suite Setup       log in as user    &{existing_assessor1_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Assessor
@@ -58,12 +60,12 @@ Existing assessor: Accept invitation
     And the user should see the element    link=Juggling Craziness
 
 Milestone date for assessment submission is visible
-    [Documentation]    INFUND-4857
-    [Tags]    Pending
+    [Documentation]    INFUND-3720
+    [Tags]
     Then the assessor should see the date for submission of assessment
 
 Number of days remaining until assessment submission
-    [Documentation]    INFUND-4857
+    [Documentation]    INFUND-3720
     [Tags]    Pending
     Then the assessor should see the number of days remaining
     And the days remaining should be correct
