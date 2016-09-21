@@ -467,12 +467,12 @@ public class ApplicationFormController extends AbstractApplicationController {
                 .forEach(e -> {
                     if (validationMessage.getObjectName().equals("costItem")) {
                         if (hasText(e.getErrorKey())) {
-                            toFieldErrors.addError(fieldError("formInput[cost-" + validationMessage.getObjectId() + "-" + e.getFieldName() + "]", e.getFieldRejectedValue(), e.getErrorKey()));
+                            toFieldErrors.addError(fieldError("formInput[cost-" + validationMessage.getObjectId() + "-" + e.getFieldName() + "]", e.getFieldRejectedValue(), e.getErrorKey(), e.getArguments()));
                         } else {
-                            toFieldErrors.addError(fieldError("formInput[cost-" + validationMessage.getObjectId() + "]", e.getFieldRejectedValue(), e.getErrorKey()));
+                            toFieldErrors.addError(fieldError("formInput[cost-" + validationMessage.getObjectId() + "]", e.getFieldRejectedValue(), e.getErrorKey(), e.getArguments()));
                         }
                     } else {
-                        toFieldErrors.addError(fieldError("formInput[" + validationMessage.getObjectId() + "]", e.getFieldRejectedValue(), (String) e.getErrorKey()));
+                        toFieldErrors.addError(fieldError("formInput[" + validationMessage.getObjectId() + "]", e.getFieldRejectedValue(), (String) e.getErrorKey(), e.getArguments()));
                     }
                 })
         );
