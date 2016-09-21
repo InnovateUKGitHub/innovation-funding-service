@@ -6,7 +6,6 @@ Documentation     INFUND-228: As an Assessor I can see competitions that I have 
 ...               INFUND-304: As an assessor I want to be able to accept the invitation for a competition, so that the competition team is aware that I am available for assessment
 ...
 ...               INFUND-3716: As an Assessor when I have accepted to assess within a competition and the assessment period is current, I can see the number of competitions and their titles on my dashboard, so that I can plan my work. \
-...
 ...               INFUND-3720 As an Assessor I can see deadlines for the assessment of applications currently in assessment on my dashboard, so that I am reminded to deliver my work on time
 Suite Setup       log in as user    &{existing_assessor1_credentials}
 Suite Teardown    TestTeardown User closes the browser
@@ -38,9 +37,11 @@ Existing assessor: Reject invitation
     When the user navigates to the page    ${Invitation_existing_assessor2}
     And the user should see the text in the page    Invitation to assess 'Sarcasm Stupendousness'
     And the user clicks the button/link    css=form a
+    And The user enters text to a text field    id=rejectComment    a a a a a a a a \ a a a a \ a a a a a a \ a a a a a \ a a a a \ a a a a \ a a a a a a a a a a a \ a a \ a a a a a a a a a a \ a a a a a a a a a a a a a a a a a a a \ a a a a a a a \ a a a \ a a \ aa \ a a a a a a a a a a a a a a \ a
     And the user clicks the button/link    jQuery=button:contains("Reject")
     Then the user should see an error    This field cannot be left blank
-    And the assessor fills in all fields
+    And the user should see an error    This field cannot contain more than 100 words
+    And the assessor fills all fields with valid inputs
     And the user clicks the button/link    jQuery=button:contains("Reject")
     And the user should see the text in the page    Thank you for letting us know you are unable to assess applications within this competition.
     And the user shouldn't be able to accept the rejected competition
@@ -66,7 +67,7 @@ Milestone date for assessment submission is visible
 
 Number of days remaining until assessment submission
     [Documentation]    INFUND-3720
-    [Tags]    Pending
+    [Tags]
     Then the assessor should see the number of days remaining
     And the days remaining should be correct
 
@@ -94,7 +95,7 @@ Existing assessor shouldn't be able to accept other assessor's invitation
     Then The user should see permissions error message
 
 *** Keywords ***
-the assessor fills in all fields
+the assessor fills all fields with valid inputs
     Select From List By Index    id=rejectReason    2
     The user should not see the text in the page    This field cannot be left blank
     Input Text    id=rejectComment    Unable to assess this application.
