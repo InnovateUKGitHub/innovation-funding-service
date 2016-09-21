@@ -4,7 +4,7 @@ import com.worth.ifs.BaseUnitTestMocksTest;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.resource.AssessmentOutcomes;
 import com.worth.ifs.assessment.resource.AssessmentResource;
-import com.worth.ifs.assessment.workflow.AssessmentWorkflowEventHandler;
+import com.worth.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.workflow.domain.ActivityState;
@@ -38,7 +38,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
     private AssessmentService assessmentService = new AssessmentServiceImpl();
 
     @Mock
-    private AssessmentWorkflowEventHandler assessmentWorkflowEventHandler;
+    private AssessmentWorkflowHandler assessmentWorkflowService;
 
     @Test
     public void findById() throws Exception {
@@ -94,15 +94,15 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
         when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
         when(processOutcomeMapperMock.mapToDomain(processOutcomeResource)).thenReturn(processOutcome);
-        when(assessmentWorkflowEventHandler.recommend(processRoleId, assessment, processOutcome)).thenReturn(true);
+        when(assessmentWorkflowService.recommend(processRoleId, assessment, processOutcome)).thenReturn(true);
 
         ServiceResult<Void> result = assessmentService.recommend(assessmentId, processOutcomeResource);
         assertTrue(result.isSuccess());
 
-        InOrder inOrder = inOrder(assessmentRepositoryMock, processOutcomeMapperMock, assessmentWorkflowEventHandler);
+        InOrder inOrder = inOrder(assessmentRepositoryMock, processOutcomeMapperMock, assessmentWorkflowService);
         inOrder.verify(assessmentRepositoryMock, calls(1)).findOne(assessmentId);
         inOrder.verify(processOutcomeMapperMock, calls(1)).mapToDomain(processOutcomeResource);
-        inOrder.verify(assessmentWorkflowEventHandler, calls(1)).recommend(processRoleId, assessment, processOutcome);
+        inOrder.verify(assessmentWorkflowService, calls(1)).recommend(processRoleId, assessment, processOutcome);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -156,16 +156,16 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
         when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
         when(processOutcomeMapperMock.mapToDomain(processOutcomeResource)).thenReturn(processOutcome);
-        when(assessmentWorkflowEventHandler.recommend(processRoleId, assessment, processOutcome)).thenReturn(false);
+        when(assessmentWorkflowService.recommend(processRoleId, assessment, processOutcome)).thenReturn(false);
 
         ServiceResult<Void> result = assessmentService.recommend(assessmentId, processOutcomeResource);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(ASSESSMENT_RECOMMENDATION_FAILED));
 
-        InOrder inOrder = inOrder(assessmentRepositoryMock, processOutcomeMapperMock, assessmentWorkflowEventHandler);
+        InOrder inOrder = inOrder(assessmentRepositoryMock, processOutcomeMapperMock, assessmentWorkflowService);
         inOrder.verify(assessmentRepositoryMock, calls(1)).findOne(assessmentId);
         inOrder.verify(processOutcomeMapperMock, calls(1)).mapToDomain(processOutcomeResource);
-        inOrder.verify(assessmentWorkflowEventHandler, calls(1)).recommend(processRoleId, assessment, processOutcome);
+        inOrder.verify(assessmentWorkflowService, calls(1)).recommend(processRoleId, assessment, processOutcome);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -189,15 +189,15 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
         when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
         when(processOutcomeMapperMock.mapToDomain(processOutcomeResource)).thenReturn(processOutcome);
-        when(assessmentWorkflowEventHandler.rejectInvitation(processRoleId, assessment, processOutcome)).thenReturn(true);
+        when(assessmentWorkflowService.rejectInvitation(processRoleId, assessment, processOutcome)).thenReturn(true);
 
         ServiceResult<Void> result = assessmentService.rejectInvitation(assessmentId, processOutcomeResource);
         assertTrue(result.isSuccess());
 
-        InOrder inOrder = inOrder(assessmentRepositoryMock, processOutcomeMapperMock, assessmentWorkflowEventHandler);
+        InOrder inOrder = inOrder(assessmentRepositoryMock, processOutcomeMapperMock, assessmentWorkflowService);
         inOrder.verify(assessmentRepositoryMock, calls(1)).findOne(assessmentId);
         inOrder.verify(processOutcomeMapperMock, calls(1)).mapToDomain(processOutcomeResource);
-        inOrder.verify(assessmentWorkflowEventHandler, calls(1)).rejectInvitation(processRoleId, assessment, processOutcome);
+        inOrder.verify(assessmentWorkflowService, calls(1)).rejectInvitation(processRoleId, assessment, processOutcome);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -237,16 +237,16 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
         when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
         when(processOutcomeMapperMock.mapToDomain(processOutcomeResource)).thenReturn(processOutcome);
-        when(assessmentWorkflowEventHandler.rejectInvitation(processRoleId, assessment, processOutcome)).thenReturn(false);
+        when(assessmentWorkflowService.rejectInvitation(processRoleId, assessment, processOutcome)).thenReturn(false);
 
         ServiceResult<Void> result = assessmentService.rejectInvitation(assessmentId, processOutcomeResource);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(ASSESSMENT_REJECTION_FAILED));
 
-        InOrder inOrder = inOrder(assessmentRepositoryMock, processOutcomeMapperMock, assessmentWorkflowEventHandler);
+        InOrder inOrder = inOrder(assessmentRepositoryMock, processOutcomeMapperMock, assessmentWorkflowService);
         inOrder.verify(assessmentRepositoryMock, calls(1)).findOne(assessmentId);
         inOrder.verify(processOutcomeMapperMock, calls(1)).mapToDomain(processOutcomeResource);
-        inOrder.verify(assessmentWorkflowEventHandler, calls(1)).rejectInvitation(processRoleId, assessment, processOutcome);
+        inOrder.verify(assessmentWorkflowService, calls(1)).rejectInvitation(processRoleId, assessment, processOutcome);
         inOrder.verifyNoMoreInteractions();
     }
 }

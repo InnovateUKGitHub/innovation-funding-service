@@ -22,7 +22,6 @@ import com.worth.ifs.form.resource.FormInputTypeResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
@@ -147,7 +146,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         assertEquals("Market opportunity", model.getQuestionShortName());
         assertEquals("1. What is the business opportunity that this project addresses?", model.getQuestionName());
         assertEquals(Integer.valueOf(50), model.getMaximumScore());
-        assertEquals("Value 1", model.getApplicantResponse());
+        assertEquals("Value 64", model.getApplicantResponse());
         assertEquals(assessmentFormInputs, model.getAssessmentFormInputs());
         assertTrue(model.isScoreFormInputExists());
         assertFalse(model.isScopeFormInputExists());
@@ -310,9 +309,8 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(redirectedUrl(format("/%s", ASSESSMENT_ID)))
                 .andReturn();
 
-        InOrder inOrder = inOrder(assessorFormInputResponseService);
-        inOrder.verify(assessorFormInputResponseService, calls(1)).updateFormInputResponse(ASSESSMENT_ID, formInputIdScore, "10");
-        inOrder.verify(assessorFormInputResponseService, calls(1)).updateFormInputResponse(ASSESSMENT_ID, formInputIdFeedback, "Feedback");
+        verify(assessorFormInputResponseService, times(1)).updateFormInputResponse(ASSESSMENT_ID, formInputIdScore, "10");
+        verify(assessorFormInputResponseService, times(1)).updateFormInputResponse(ASSESSMENT_ID, formInputIdFeedback, "Feedback");
     }
 
     @Test
@@ -344,9 +342,8 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(view().name("assessment/application-question"))
                 .andReturn();
 
-        InOrder inOrder = inOrder(assessorFormInputResponseService);
-        inOrder.verify(assessorFormInputResponseService, calls(1)).updateFormInputResponse(ASSESSMENT_ID, formInputIdScore, "10");
-        inOrder.verify(assessorFormInputResponseService, calls(1)).updateFormInputResponse(ASSESSMENT_ID, formInputIdFeedback, "Feedback");
+        verify(assessorFormInputResponseService, times(1)).updateFormInputResponse(ASSESSMENT_ID, formInputIdScore, "10");
+        verify(assessorFormInputResponseService, times(1)).updateFormInputResponse(ASSESSMENT_ID, formInputIdFeedback, "Feedback");
 
         Form form = (Form) result.getModelAndView().getModel().get("form");
 
@@ -391,9 +388,8 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(view().name("assessment/application-question"))
                 .andReturn();
 
-        InOrder inOrder = inOrder(assessorFormInputResponseService);
-        inOrder.verify(assessorFormInputResponseService, calls(1)).updateFormInputResponse(ASSESSMENT_ID, formInputIdScore, "10");
-        inOrder.verify(assessorFormInputResponseService, calls(1)).updateFormInputResponse(ASSESSMENT_ID, formInputIdFeedback, "Feedback");
+        verify(assessorFormInputResponseService, times(1)).updateFormInputResponse(ASSESSMENT_ID, formInputIdScore, "10");
+        verify(assessorFormInputResponseService, times(1)).updateFormInputResponse(ASSESSMENT_ID, formInputIdFeedback, "Feedback");
 
         Form form = (Form) result.getModelAndView().getModel().get("form");
 

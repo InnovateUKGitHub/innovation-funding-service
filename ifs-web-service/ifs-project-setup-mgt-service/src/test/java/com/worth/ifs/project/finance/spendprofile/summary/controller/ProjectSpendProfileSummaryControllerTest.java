@@ -1,17 +1,17 @@
 package com.worth.ifs.project.finance.spendprofile.summary.controller;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
+import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.CompetitionSummaryResource;
 import com.worth.ifs.finance.builder.ApplicationFinanceResourceBuilder;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.spendprofile.summary.controller.ProjectSpendProfileSummaryController;
 import com.worth.ifs.finance.spendprofile.summary.viewmodel.ProjectSpendProfileSummaryViewModel;
 import com.worth.ifs.project.builder.SpendProfileResourceBuilder;
+import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 import org.junit.Test;
-import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.application.resource.CompetitionSummaryResource;
-import com.worth.ifs.project.resource.ProjectResource;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -26,9 +26,7 @@ import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisa
 import static com.worth.ifs.util.CollectionFunctions.mapWithIndex;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
 public class ProjectSpendProfileSummaryControllerTest extends BaseControllerMockMVCTest<ProjectSpendProfileSummaryController> {
@@ -36,19 +34,19 @@ public class ProjectSpendProfileSummaryControllerTest extends BaseControllerMock
     @Test
     public void viewSpendProfileSummarySuccess() throws Exception {
 
-        Long projectId = 1L;
+        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().
+                withId(123L).
+                build();
+
+        ApplicationResource applicationResource = newApplicationResource()
+                .withCompetition(competitionSummaryResource.getCompetitionId())
+                .build();
 
         ProjectResource projectResource = newProjectResource()
-                .withApplication(1L)
+                .withApplication(applicationResource.getId())
                 .withTargetStartDate(LocalDate.of(2018, 3, 1))
                 .withDuration(3L)
                 .build();
-
-        ApplicationResource applicationResource = newApplicationResource()
-                .withCompetition(1L)
-                .build();
-
-        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().build();
 
         OrganisationResource organisationResource = newOrganisationResource().build();
         List<OrganisationResource> organisationResourceList = new ArrayList<>();
@@ -69,24 +67,23 @@ public class ProjectSpendProfileSummaryControllerTest extends BaseControllerMock
         applicationFinanceResourceList.add(applicationFinanceResource1);
         applicationFinanceResourceList.add(applicationFinanceResource2);
 
-        when(projectService.getById(projectId)).
+        when(projectService.getById(projectResource.getId())).
                 thenReturn(projectResource);
 
-        when(applicationService.getById(1L)).
+        when(applicationService.getById(applicationResource.getId())).
                 thenReturn(applicationResource);
 
-
-        when(applicationSummaryService.getCompetitionSummaryByCompetitionId(1L)).
+        when(applicationSummaryService.getCompetitionSummaryByCompetitionId(competitionSummaryResource.getCompetitionId())).
                 thenReturn(competitionSummaryResource);
 
-        when(projectService.getPartnerOrganisationsForProject(projectId)).
+        when(projectService.getPartnerOrganisationsForProject(projectResource.getId())).
                 thenReturn(organisationResourceList);
 
 
-        when(projectFinanceService.getSpendProfile(projectId, 1L)).
+        when(projectFinanceService.getSpendProfile(projectResource.getId(), organisationResource.getId())).
                 thenReturn(anySpendProfile);
 
-        when(financeService.getApplicationFinanceTotals(1L)).
+        when(financeService.getApplicationFinanceTotals(applicationResource.getId())).
                 thenReturn(applicationFinanceResourceList);
 
         // Expected Results
@@ -102,7 +99,7 @@ public class ProjectSpendProfileSummaryControllerTest extends BaseControllerMock
         );
 
         ProjectSpendProfileSummaryViewModel expectedProjectSpendProfileSummaryViewModel =  new ProjectSpendProfileSummaryViewModel(
-                projectId, competitionSummaryResource, expectedOrganisationRows,
+                projectResource.getId(), competitionSummaryResource, expectedOrganisationRows,
                 projectResource.getTargetStartDate(), projectResource.getDurationInMonths().intValue(),
                 BigDecimal.ZERO,
                 BigDecimal.ZERO,
@@ -110,7 +107,7 @@ public class ProjectSpendProfileSummaryControllerTest extends BaseControllerMock
                 BigDecimal.ZERO,
                 anySpendProfile.isPresent());
 
-        mockMvc.perform(get("/project/{projectId}/spend-profile/summary", projectId))
+        mockMvc.perform(get("/project/{projectId}/spend-profile/summary", projectResource.getId()))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", expectedProjectSpendProfileSummaryViewModel))
                 .andExpect(view().name("project/finance/spend-profile/summary"))
