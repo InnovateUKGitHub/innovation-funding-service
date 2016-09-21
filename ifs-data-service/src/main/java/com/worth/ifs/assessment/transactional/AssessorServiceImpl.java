@@ -50,7 +50,7 @@ public class AssessorServiceImpl implements AssessorService {
     private ServiceResult<Void> createAssessor(CompetitionInviteResource invite, UserResource userResource) {
         userResource.setEmail(invite.getEmail());
         userResource.setRoles(retrieveAssessorRole());
-        //TODO: Retrieve and add assessor role before account creation
+        //TODO: Retrieve and add assessor role through RoleService before account creation
         return userRegistrationService.createUser(userResource).andOnSuccessReturnVoid();
     }
     private ServiceResult<CompetitionInviteResource> retrieveInvite(String inviteHash) {

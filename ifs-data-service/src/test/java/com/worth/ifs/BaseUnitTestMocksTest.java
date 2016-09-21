@@ -23,6 +23,7 @@ import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.assessment.repository.AssessorFormInputResponseRepository;
 import com.worth.ifs.assessment.transactional.AssessmentService;
 import com.worth.ifs.assessment.transactional.AssessorFormInputResponseService;
+import com.worth.ifs.assessment.transactional.AssessorService;
 import com.worth.ifs.assessment.transactional.CompetitionInviteService;
 import com.worth.ifs.authentication.service.IdentityProviderService;
 import com.worth.ifs.bankdetails.mapper.BankDetailsMapper;
@@ -375,6 +376,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected EthnicityService ethnicityServiceMock;
+
+    @Mock
+    protected AssessorService assessorServiceMock;
 
     @Before
     public void setupMockInjection() {
