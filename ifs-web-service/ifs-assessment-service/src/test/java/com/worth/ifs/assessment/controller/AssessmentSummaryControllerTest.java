@@ -433,8 +433,8 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
 
         when(assessmentService.recommend(assessmentId, fundingConfirmation, feedback, comment))
                 .thenReturn(serviceFailure(asList(
-                        fieldError("feedback", feedback, "validation.field.max.word.count", 100),
-                        fieldError("comment", comment, "validation.field.max.word.count", 100)))
+                        fieldError("feedback", feedback, "validation.field.max.word.count", "", 100),
+                        fieldError("comment", comment, "validation.field.max.word.count", "", 100)))
                 );
 
         MvcResult result = mockMvc.perform(post("/{assessmentId}/summary", assessmentId)
@@ -465,9 +465,9 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
         assertTrue(bindingResult.hasFieldErrors("feedback"));
         assertTrue(bindingResult.hasFieldErrors("comment"));
         assertEquals("validation.field.max.word.count", bindingResult.getFieldError("feedback").getCode());
-        assertEquals("100", bindingResult.getFieldError("feedback").getArguments()[0]);
+        assertEquals("100", bindingResult.getFieldError("feedback").getArguments()[1]);
         assertEquals("validation.field.max.word.count", bindingResult.getFieldError("comment").getCode());
-        assertEquals("100", bindingResult.getFieldError("comment").getArguments()[0]);
+        assertEquals("100", bindingResult.getFieldError("comment").getArguments()[1]);
 
         verify(assessmentService).getById(assessmentId);
         verifyNoMoreInteractions(assessmentService);

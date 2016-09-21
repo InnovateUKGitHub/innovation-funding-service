@@ -7,7 +7,6 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.invite.domain.CompetitionInvite;
-import com.worth.ifs.invite.domain.CompetitionParticipant;
 import com.worth.ifs.invite.domain.RejectionReason;
 import com.worth.ifs.invite.repository.CompetitionInviteRepository;
 import com.worth.ifs.invite.repository.CompetitionParticipantRepository;
@@ -16,7 +15,6 @@ import com.worth.ifs.invite.resource.CompetitionRejectionResource;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.repository.UserRepository;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

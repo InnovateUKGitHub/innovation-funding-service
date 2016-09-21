@@ -138,14 +138,24 @@
                         value="1">Not available</option>
             </select>
         </div>
-        <div class="form-group" th:classappend="${#fields.hasErrors('rejectComment')}? error">
+        <div class="form-group word-count" th:classappend="${#fields.hasErrors('rejectComment')}? error">
             <label class="form-label" th:for="${#ids.next('rejectComment')}">
                 Use this space to provide more information
                 <span th:if="${#fields.hasErrors('rejectComment')}" th:remove="tag">
                     <span class="error-message"  th:each="err : ${#fields.errors('rejectComment')}" th:text="${err}" />
                 </span>
             </label>
-            <textarea class="form-control width-full" th:errorclass="field-error" rows="4" th:field="*{rejectComment}"></textarea>
+            <textarea
+                class="form-control width-full"
+                data-max_words="100"
+                data-maxwordslength="100"
+                data-maxwordslength-errormessage="This field cannot contain more than 100 words"
+                th:errorclass="field-error"
+                rows="4"
+                th:field="*{rejectComment}"></textarea>
+            <div class="textarea-footer">
+                <div th:include="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, rejectComment)})" th:remove="tag"/>
+            </div>
         </div>
         <button class="button large button-warning extra-margin" name="submit-app-details">Reject</button>
     </form>
