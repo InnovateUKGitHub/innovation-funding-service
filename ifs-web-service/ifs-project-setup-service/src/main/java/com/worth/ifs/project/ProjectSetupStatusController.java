@@ -26,6 +26,8 @@ import org.springframework.web.context.request.NativeWebRequest;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
+import static com.worth.ifs.user.resource.OrganisationTypeEnum.isResearch;
+
 /**
  * This controller will handle all requests that are related to a project.
  */
@@ -83,8 +85,13 @@ public class ProjectSetupStatusController {
     }
 
     private boolean isApplicationFunded(ProjectResource project, OrganisationResource organisation){
-        ApplicationFinanceResource applicationFinance = financeService.getFinanceDetails(project.getApplication(), organisation.getId()).getSuccessObjectOrThrowException();
-        Integer grantClaim = applicationFinance.getGrantClaimPercentage();
+        Integer grantClaim;
+        if(isResearch(organisation.getOrganisationType())){
+            grantClaim = 100;
+        } else {
+            ApplicationFinanceResource applicationFinance = financeService.getFinanceDetails(project.getApplication(), organisation.getId()).getSuccessObjectOrThrowException();
+            grantClaim = applicationFinance.getGrantClaimPercentage();
+        }
         return grantClaim != null && grantClaim > 0;
     }
 }
