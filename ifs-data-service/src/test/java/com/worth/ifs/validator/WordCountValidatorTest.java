@@ -54,7 +54,7 @@ public class WordCountValidatorTest {
         assertEquals(1, bindingResult.getErrorCount());
         assertTrue(bindingResult.hasFieldErrors("value"));
         assertEquals("validation.field.max.word.count", bindingResult.getFieldError("value").getCode());
-        assertEquals(500, bindingResult.getFieldError("value").getArguments()[0]);
+        assertEquals(500, bindingResult.getFieldError("value").getArguments()[1]);
     }
 
     @Test

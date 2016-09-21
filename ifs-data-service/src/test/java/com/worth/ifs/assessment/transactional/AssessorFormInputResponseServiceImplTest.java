@@ -256,7 +256,7 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
 
         ServiceResult<Void> result = assessorFormInputResponseService.updateFormInputResponse(assessorFormInputResponseResource);
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(fieldError("value", value, "validation.field.max.word.count", 100)));
+        assertTrue(result.getFailure().is(fieldError("value", value, "validation.field.max.word.count", "", 100)));
     }
 
     @Test
