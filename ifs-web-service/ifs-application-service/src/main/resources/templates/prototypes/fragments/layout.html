@@ -24,7 +24,8 @@
         <li th:class="${(sprint == 'sprint11' ? 'selected' : '')}"><a href="/prototypes/index-sprint11">11</a></li>
         <li th:class="${(sprint == 'sprint12' ? 'selected' : '')}"><a href="/prototypes/index-sprint12">12</a></li>
         <li th:class="${(sprint == 'sprint13' ? 'selected' : '')}"><a href="/prototypes/index-sprint13">13</a></li>
-        <li th:class="${(sprint == 'sprint14' ? 'selected' : '')}"><a href="/prototypes/index-sprint14">14 <small>(<strong>Current sprint</strong>)</small></a></li>
+        <li th:class="${(sprint == 'sprint14' ? 'selected' : '')}"><a href="/prototypes/index-sprint14">14</a></li>
+        <li th:class="${(sprint == 'sprint15' ? 'selected' : '')}"><a href="/prototypes/index-sprint15">15 <small>(<strong>Current sprint</strong>)</small></a></li>
         <li style="float: right" th:class="${(sprint == 'demo' ? 'selected' : '')}"><a href="/prototypes/index-demo">Demo</a></li>
     </ul>
 </div>
@@ -41,9 +42,9 @@
 
                 <th:block th:if="${status == 'loggedIn'}">
 
-                    <span class="admin-user-name ">James Danek</span>
+                    <span class="admin-user-name" th:text="${user}">James Danek</span>
                     <ul class="navigation-list navigation-right">
-                        <li>
+                        <li th:if="${userRole == 'admin'}">
                             <a href="/prototypes/5079-ifs-admin">Admin</a>
                         </li>
                         <li>

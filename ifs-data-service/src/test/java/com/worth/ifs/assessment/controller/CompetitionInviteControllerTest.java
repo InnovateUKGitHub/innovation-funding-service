@@ -5,12 +5,12 @@ import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.assessment.transactional.CompetitionInviteService;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestErrorResponse;
-import com.worth.ifs.invite.builder.RejectionReasonResourceBuilder;
 import com.worth.ifs.invite.domain.CompetitionInvite;
 import com.worth.ifs.invite.domain.CompetitionParticipant;
 import com.worth.ifs.invite.resource.CompetitionInviteResource;
 import com.worth.ifs.invite.resource.CompetitionRejectionResource;
 import com.worth.ifs.invite.resource.RejectionReasonResource;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
@@ -23,8 +23,10 @@ import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.error.Error.fieldError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.invite.builder.RejectionReasonResourceBuilder.newRejectionReasonResource;
 import static com.worth.ifs.util.JsonMappingUtil.fromJson;
 import static com.worth.ifs.util.JsonMappingUtil.toJson;
+import static java.util.Collections.nCopies;
 import static java.util.Optional.empty;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -131,10 +133,10 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
 
     @Test
     public void rejectInvite() throws Exception {
-        RejectionReasonResource rejectionReasonResource = RejectionReasonResourceBuilder
-                .newRejectionReasonResource()
-                .withId(1L)
-                .build();
+        RejectionReasonResource rejectionReasonResource =
+                newRejectionReasonResource()
+                        .withId(1L)
+                        .build();
         CompetitionRejectionResource rejectionResource = new CompetitionRejectionResource(rejectionReasonResource, "too busy");
 
         when(competitionInviteService.rejectInvite("hash", rejectionReasonResource, Optional.of("too busy"))).thenReturn(serviceSuccess());
@@ -163,10 +165,10 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
 
     @Test
     public void rejectInvite_noReasonComment() throws Exception {
-        RejectionReasonResource rejectionReasonResource = RejectionReasonResourceBuilder
-                .newRejectionReasonResource()
-                .withId(1L)
-                .build();
+        RejectionReasonResource rejectionReasonResource =
+                newRejectionReasonResource()
+                        .withId(1L)
+                        .build();
         CompetitionRejectionResource rejectionResource = new CompetitionRejectionResource(rejectionReasonResource, null);
 
         when(competitionInviteService.rejectInvite("hash", rejectionReasonResource, empty())).thenReturn(serviceSuccess());
@@ -180,11 +182,45 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
     }
 
     @Test
-    public void rejectInvite_hashNotExists() throws Exception {
-        RejectionReasonResource rejectionReasonResource = RejectionReasonResourceBuilder
-                .newRejectionReasonResource()
+    public void rejectInvite_exceedsCharacterSizeLimit() throws Exception {
+        String comment = RandomStringUtils.random(5001);
+        CompetitionRejectionResource rejectionResource = new CompetitionRejectionResource(newRejectionReasonResource()
                 .withId(1L)
-                .build();
+                .build(), comment);
+
+        Error rejectCommentError = fieldError("rejectComment", comment, "validation.field.too.many.characters", "", "5000", "0");
+
+        mockMvc.perform(
+                post("/competitioninvite/rejectInvite/{inviteHash}", "hash")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(rejectionResource)))
+                .andExpect(status().isNotAcceptable())
+                .andExpect(content().json(toJson(new RestErrorResponse(rejectCommentError))));
+    }
+
+    @Test
+    public void rejectInvite_exceedsWordLimit() throws Exception {
+        String comment = String.join(" ", nCopies(101, "comment"));
+        CompetitionRejectionResource rejectionResource = new CompetitionRejectionResource(newRejectionReasonResource()
+                .withId(1L)
+                .build(), comment);
+
+        Error rejectCommentError = fieldError("rejectComment", comment, "validation.field.max.word.count", "", "100");
+
+        mockMvc.perform(
+                post("/competitioninvite/rejectInvite/{inviteHash}", "hash")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(rejectionResource)))
+                .andExpect(status().isNotAcceptable())
+                .andExpect(content().json(toJson(new RestErrorResponse(rejectCommentError))));
+    }
+
+    @Test
+    public void rejectInvite_hashNotExists() throws Exception {
+        RejectionReasonResource rejectionReasonResource =
+                newRejectionReasonResource()
+                        .withId(1L)
+                        .build();
         CompetitionRejectionResource rejectionResource = new CompetitionRejectionResource(rejectionReasonResource, "too busy");
 
         when(competitionInviteService.rejectInvite("hashNotExists", rejectionReasonResource, Optional.of("too busy"))).thenReturn(serviceFailure(notFoundError(CompetitionParticipant.class, "hashNotExists")));
@@ -257,10 +293,10 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
     }
 
     private void rejectFailure(Error expectedError) throws Exception {
-        RejectionReasonResource rejectionReasonResource = RejectionReasonResourceBuilder
-                .newRejectionReasonResource()
-                .withId(1L)
-                .build();
+        RejectionReasonResource rejectionReasonResource =
+                newRejectionReasonResource()
+                        .withId(1L)
+                        .build();
         CompetitionRejectionResource rejectionResource = new CompetitionRejectionResource(rejectionReasonResource, "too busy");
 
         when(competitionInviteService.rejectInvite("hash", rejectionReasonResource, Optional.of("too busy"))).thenReturn(serviceFailure(expectedError));
