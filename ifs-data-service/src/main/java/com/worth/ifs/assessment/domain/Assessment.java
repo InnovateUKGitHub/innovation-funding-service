@@ -33,6 +33,11 @@ public class Assessment extends Process<ProcessRole, Application, AssessmentStat
         this.participant = processRole;
     }
 
+    public Assessment(Application application, ProcessRole processRole) {
+        this(processRole);
+        this.target = application;
+    }
+
     public Boolean isStarted() {
         if(getActivityState()!=null) {
             return isInState(ASSESSED);
