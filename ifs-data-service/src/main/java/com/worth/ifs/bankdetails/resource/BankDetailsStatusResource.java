@@ -10,6 +10,15 @@ public class BankDetailsStatusResource {
     private String organisationName;
     private ProjectActivityStates bankDetailsStatus;
 
+    public BankDetailsStatusResource() {
+    }
+
+    public BankDetailsStatusResource(Long organisationId, String organisationName, ProjectActivityStates bankDetailsStatus) {
+        this.organisationId = organisationId;
+        this.organisationName = organisationName;
+        this.bankDetailsStatus = bankDetailsStatus;
+    }
+
     public Long getOrganisationId() {
         return organisationId;
     }
