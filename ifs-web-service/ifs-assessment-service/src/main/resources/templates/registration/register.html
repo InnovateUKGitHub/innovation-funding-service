@@ -28,7 +28,7 @@
 
                 <h2 class="heading-medium">Your details</h2>
                 <div th:class="${#fields.hasErrors('title')}? 'form-group error':'form-group'">
-                    <label class="form-label" th:for="${#ids.next('title')}">
+                    <label class="form-label" th:for="title">
                         <span class="form-label-bold">Title</span>
                         <span class="error-message" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">
                             <span class="error-message"  th:each="err : ${#fields.errors('title')}" th:text="${err}" />
@@ -44,7 +44,7 @@
                 </div>
 
                 <div th:class="${#fields.hasErrors('firstName')}? 'form-group error':'form-group'">
-                    <label class="form-label" th:for="${#ids.next('firstName')}">
+                    <label class="form-label" th:for="firstName">
                         <span class="form-label-bold">First name</span>
                         <span th:if="${#fields.hasErrors('firstName')}" th:remove="tag">
                               <span class="error-message"  th:each="err : ${#fields.errors('firstName')}" th:text="${err}" />
@@ -53,17 +53,77 @@
                     <input class="form-control" th:errorclass="field-error" type="text" th:field="*{firstName}" />
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label" th:for="${#ids.next('lastName')}">
+                <div class="form-group" th:classappend="${#fields.hasErrors('lastName')}? error">
+                    <label class="form-label" th:for="lastName">
                         <span class="form-label-bold">Last name</span>
+                        <span th:if="${#fields.hasErrors('lastName')}" th:remove="tag">
+                              <span class="error-message"  th:each="err : ${#fields.errors('lastName')}" th:text="${err}" />
+                        </span>
                     </label>
                     <input class="form-control" th:errorclass="field-error" type="text" th:field="*{lastName}" />
                 </div>
 
-                <div th:include="fragments/addresses :: company-address-details" th:with="form=${registrationForm}" th:remove="tag"></div>
+                <div class="form-group">
+                    <fieldset class="inline">
+                        <legend>
+                            <span class="heading-small">Gender</span>
+                        </legend>
+                        <div class="form-group">
+                            <label class="block-label" for="radio-indent-1">
+                                <input id="radio-indent-1" name="gender-group" value="male" type="radio" />
+                                Male
+                            </label>
+                            <label class="block-label" for="radio-indent-2">
+                                <input id="radio-indent-2" name="gender-group" value="female" type="radio" />
+                                Female
+                            </label>
+                            <label class="block-label" for="radio-indent-3">
+                                <input id="radio-indent-3" name="gender-group" value="prefer-not-to-say" type="radio" />
+                                Prefer not to say
+                            </label>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="form-group">
+                    <fieldset class="inline">
+                        <legend>
+                            <span class="heading-small">Your ethnic group</span>
+                        </legend>
+                        <div class="form-group">
+                            <label class="block-label" th:each="ethnicity : ${ethnicityOptions}">
+                                <input th:field="*{ethnicityOptions}" type="radio" />
+                                <span th:text="${ethnicity.displayName}" th:remove="tag" />
+                            </label>
+                        </div>
+                    </fieldset>
+                </div>
+
+                <div class="form-group">
+                    <fieldset class="inline">
+                        <legend>
+                            <span class="heading-small">Do you consider yourself disabled?</span>
+                        </legend>
+                        <div class="form-group">
+                            <label class="block-label" for="radio-indent-4">
+                                <input id="radio-indent-4" name="disability-group" value="yes" type="radio" />
+                                Yes
+                            </label>
+                            <label class="block-label" for="radio-indent-5">
+                                <input id="radio-indent-5" name="disability-group" value="no" type="radio" />
+                                No
+                            </label>
+                            <label class="block-label" for="radio-indent-6">
+                                <input id="radio-indent-6" name="disability-group" value="prefer-not-to-say" type="radio" />
+                                Prefer not to say
+                            </label>
+                        </div>
+                    </fieldset>
+                </div>
+
+                <div th:include="fragments/addresses :: company-address-details" th:with="form=${registrationForm}, legend='Address search'" th:remove="tag"></div>
 
                 <div class="form-group extra-margin">
-                    <label class="form-label" th:for="${#ids.next('phoneNumber')}">
+                    <label class="form-label" th:for="phoneNumber">
                         <span class="form-label-bold">Phone number</span>
                         <span class="form-hint">We may use this to contact you about the application</span>
                         <span th:if="${#fields.hasErrors('phoneNumber')}" th:remove="tag">
@@ -79,7 +139,7 @@
                 </div>
                 <div class="form-group">
                     <h3 class="heading-small">Password</h3>
-                    <label class="form-label" th:for="${#ids.next('password')}">
+                    <label class="form-label" th:for="password">
                         <span class="visuallyhidden">Password</span>
                         <span class="form-hint">
                             Your password is case-sensitive and needs to:<br />
@@ -97,7 +157,7 @@
                            maxlength="30" />
                 </div>
                 <div class="form-group">
-                    <label class="form-label" th:for="${#ids.next('retypedPassword')}">
+                    <label class="form-label" th:for="retypedPassword">
                         <span class="form-label-bold">Re-type password</span>
                         <span th:if="${#fields.hasErrors('retypedPassword')}" th:remove="tag">
                               <span class="error-message"  th:each="err : ${#fields.errors('retypedPassword')}" th:text="${err}" />
