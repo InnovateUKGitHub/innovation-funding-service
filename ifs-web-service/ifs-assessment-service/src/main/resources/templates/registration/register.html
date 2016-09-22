@@ -69,9 +69,9 @@
                             <span class="heading-small">Gender</span>
                         </legend>
                         <div class="form-group">
-                            <label class="block-label" th:each="gender : ${T(com.worth.ifs.user.resource.Gender).values()}">
-                                <input th:field="*{gender}" th:value="${gender.id}" type="radio" />
-                                <span th:text="${gender.displayName}" th:remove="tag" />
+                            <label class="block-label" th:each="gen : ${T(com.worth.ifs.user.resource.Gender).values()}">
+                                <input th:field="*{gender}" th:value="${gen}" type="radio" />
+                                <span th:text="${gen.displayName}" th:remove="tag" />
                             </label>
                         </div>
                     </fieldset>
@@ -83,9 +83,9 @@
                             <span class="heading-small">Your ethnic group</span>
                         </legend>
                         <div class="form-group">
-                            <label class="block-label" th:each="ethnicity : ${ethnicityOptions}">
-                                <input th:field="*{ethnicity}" th:value="${ethnicity.id}" type="radio" />
-                                <span th:text="${ethnicity.description}" th:remove="tag" />
+                            <label class="block-label" th:each="eth : ${ethnicityOptions}">
+                                <input th:field="*{ethnicity}" th:value="${eth.id}" type="radio" />
+                                <span th:text="${eth.description}" th:remove="tag" />
                             </label>
                         </div>
                     </fieldset>
@@ -97,9 +97,9 @@
                             <span class="heading-small">Do you consider yourself disabled?</span>
                         </legend>
                         <div class="form-group">
-                            <label class="block-label" th:each="disability : ${T(com.worth.ifs.user.resource.Disability).values()}">
-                                <input th:field="*{disability}" th:value="${disability.id}" type="radio" />
-                                <span th:text="${disability.displayName}" th:remove="tag" />
+                            <label class="block-label" th:each="dis : ${T(com.worth.ifs.user.resource.Disability).values()}">
+                                <input th:field="*{disability}" th:value="${dis}" type="radio" />
+                                <span th:text="${dis.displayName}" th:remove="tag" />
                             </label>
                         </div>
                     </fieldset>

@@ -100,6 +100,7 @@ public class AssessorRegistrationController {
         userRegistrationResource.setGender(registrationForm.getGender());
         userRegistrationResource.setDisability(registrationForm.getDisability());
         userRegistrationResource.setEthnicity(registrationForm.getEthnicity());
+        userRegistrationResource.setPassword(registrationForm.getPassword());
 
         assessorRestService.createAssessorByInviteHash(inviteHash, userRegistrationResource).getSuccessObjectOrThrowException();
 
