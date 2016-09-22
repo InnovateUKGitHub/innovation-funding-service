@@ -1,5 +1,3 @@
-//Based upon Lea verou's SVG pie, adjusted with jquery for more legacy support
-//http://www.smashingmagazine.com/2015/07/designing-simple-pie-charts-with-css/
 IFS.application.invite_display = (function(){
     "use strict";
      var s; // private alias to settings
