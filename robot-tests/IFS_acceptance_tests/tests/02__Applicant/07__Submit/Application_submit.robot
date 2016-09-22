@@ -149,6 +149,7 @@ the applicant marks the first section as complete
     Input Text    id=application_details-startdate_year    2018
     Clear Element Text    id=application_details-startdate_month
     Input Text    id=application_details-startdate_month    11
+    the user clicks the button/link    jQuery=label:contains("Yes")
     the user clicks the button/link    name=mark_as_complete
 
 the applicant clicks the submit and then clicks the "close button" in the modal

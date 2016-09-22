@@ -728,13 +728,41 @@ public class ApplicationFormController extends AbstractApplicationController {
             return;
         }
 
-        ValidationMessages errors = new ValidationMessages();
-
         if (updatedApplication.getName() != null) {
             LOG.debug("setApplicationDetails: " + updatedApplication.getName());
             application.setName(updatedApplication.getName());
         }
 
+        setResubmissionDetails(application, updatedApplication);
+
+        if (updatedApplication.getStartDate() != null) {
+            LOG.debug("setApplicationDetails date 123: " + updatedApplication.getStartDate().toString());
+            if (updatedApplication.getStartDate().isEqual(LocalDate.MIN)
+                    || updatedApplication.getStartDate().isBefore(LocalDate.now())) {
+                // user submitted a empty date field or date before today
+                application.setStartDate(null);
+            } else{
+                application.setStartDate(updatedApplication.getStartDate());
+            }
+        } else {
+            application.setStartDate(null);
+        }
+
+        if (updatedApplication.getDurationInMonths() != null) {
+            LOG.debug("setApplicationDetails: " + updatedApplication.getDurationInMonths());
+            application.setDurationInMonths(updatedApplication.getDurationInMonths());
+        }
+        else {
+            application.setDurationInMonths(null);
+        }
+    }
+
+    /**
+     * Set the submitted details relating to resubmission of applications.
+     * @param application
+     * @param updatedApplication
+     */
+    private void setResubmissionDetails(ApplicationResource application, ApplicationResource updatedApplication) {
         if (updatedApplication.getResubmission() != null) {
             LOG.debug("setApplicationDetails: resubmission " + updatedApplication.getResubmission());
             application.setResubmission(updatedApplication.getResubmission());
@@ -745,26 +773,6 @@ public class ApplicationFormController extends AbstractApplicationController {
                 application.setPreviousApplicationNumber(null);
                 application.setPreviousApplicationTitle(null);
             }
-        }
-
-        if (updatedApplication.getStartDate() != null) {
-            LOG.debug("setApplicationDetails date 123: " + updatedApplication.getStartDate().toString());
-            if (updatedApplication.getStartDate().isEqual(LocalDate.MIN)
-                    || updatedApplication.getStartDate().isBefore(LocalDate.now())) {
-                // user submitted a empty date field or date before today
-                application.setStartDate(null);
-            }else{
-                application.setStartDate(updatedApplication.getStartDate());
-            }
-        }else{
-            application.setStartDate(null);
-        }
-        if (updatedApplication.getDurationInMonths() != null) {
-            LOG.debug("setApplicationDetails: " + updatedApplication.getDurationInMonths());
-            application.setDurationInMonths(updatedApplication.getDurationInMonths());
-        }
-        else {
-            application.setDurationInMonths(null);
         }
     }
 
