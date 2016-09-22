@@ -19,7 +19,7 @@ Resource          ../../../resources/keywords/User_actions.robot
 All the sections are present in the summary
     [Documentation]    INFUND-4648
     [Tags]    HappyPath
-    When The user navigates to the assessor page    ${Assessment_summary_incomplete_12}
+    When The user navigates to the assessor page    ${Assessment_summary_Pending_12}
     Then The user should see the element    jQuery=h2:contains("Overall scores")
     And The user should see the element    jQuery=h2:contains("Review assessment")
     And The user should see the element    jQuery=span:contains("Do you believe that this application is suitable for funding?")
@@ -141,6 +141,19 @@ Word count check: Comments for InnovateUK
     And the user enters text to a text field    id=form-textarea-comments    Testing the comments word count.
     Then the word count should be correct    Words remaining: 95
 
+You feedback is not mandatory when "Yes" is selected in funding suitability
+    [Documentation]    INFUND-4996
+    [Tags]    Pending
+    Then the user selects the radio button    fundingConfirmation    true
+    And The user clicks the button/link    jQuery=.button:contains(Save assessment)
+    Then The user should not see the text in the page    Please enter your feedback
+    And The user should see the text in the page    Only assessments which are Open can be recommended.
+    And The user navigates to the assessor page    ${Assessment_summary_open_11}
+    Then Clear Element Text    id=form-textarea-feedback
+    And the user selects the radio button    fundingConfirmation    true
+    And The user clicks the button/link    jQuery=.button:contains(Save assessment)
+    Then The user should not see the text in the page    Please enter your feedback
+
 *** Keywords ***
 The assessor navigates to the summary page
     Given the user navigates to the page    ${Assessment_overview_9}
@@ -185,19 +198,19 @@ each question will contain links to respective questions
     The user should see the element    link=Q1
     the user clicks the button/link    link=Q1
     The user should be redirected to the correct page    /question/47
-    The user navigates to the page    ${Assessment_summary_incomplete_12}
+    The user navigates to the page    ${Assessment_summary_Pending_12}
     The user should see the element    link=Q2
     the user clicks the button/link    link=Q2
     The user should be redirected to the correct page    /question/168
-    The user navigates to the page    ${Assessment_summary_incomplete_12}
+    The user navigates to the page    ${Assessment_summary_Pending_12}
     The user should see the element    link=Q3
     the user clicks the button/link    link=Q3
     The user should be redirected to the correct page    /question/169
-    The user navigates to the page    ${Assessment_summary_incomplete_12}
+    The user navigates to the page    ${Assessment_summary_Pending_12}
     The user should see the element    link=Q4
     the user clicks the button/link    link=Q4
     The user should be redirected to the correct page    /question/170
-    The user navigates to the page    ${Assessment_summary_incomplete_12}
+    The user navigates to the page    ${Assessment_summary_Pending_12}
 
 the scores under each question should be correct
     Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(1)    20
