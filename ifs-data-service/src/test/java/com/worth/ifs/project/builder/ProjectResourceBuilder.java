@@ -77,10 +77,6 @@ public class ProjectResourceBuilder extends BaseBuilder<ProjectResource, Project
         return with (project -> project.setAdditionalContractFile(additionalContractFile));
     }
 
-    public ProjectResourceBuilder withOfferSigned(boolean offerSigned) {
-        return with (project -> project.setOfferSigned(offerSigned));
-    }
-
     public ProjectResourceBuilder withProjectUsers(List<Long>... projectUsers) {
         return withArray((userList, project) -> project.setProjectUsers(userList), projectUsers);
     }
