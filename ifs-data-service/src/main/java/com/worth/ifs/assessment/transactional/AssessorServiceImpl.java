@@ -64,8 +64,8 @@ public class AssessorServiceImpl implements AssessorService {
         return find(roleRepository.findOneByName(ASSESSOR.name()), notFoundError(Role.class, ASSESSOR.name())).andOnSuccessReturn(roleMapper::mapToResource);
     }
 
-    private ServiceResult<UserResource> createUser(UserResource userResource) {
-        return userRegistrationService.createUser(userResource);
+    private ServiceResult<Void> createUser(UserResource userResource) {
+        return userRegistrationService.createUser(userResource).andOnSuccess(created -> userRegistrationService.activateUser(created.getId()));
     }
 
     private ServiceResult<Void> acceptInvite(String inviteHash) {

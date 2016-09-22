@@ -8,7 +8,6 @@ import com.worth.ifs.assessment.form.AssessorSkillsForm;
 import com.worth.ifs.assessment.form.AssessorTermsForm;
 import com.worth.ifs.assessment.model.*;
 import com.worth.ifs.assessment.service.AssessorRestService;
-import com.worth.ifs.assessment.service.CompetitionInviteRestService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.form.AddressForm;
@@ -43,9 +42,6 @@ public class AssessorRegistrationController {
 
     @Autowired
     private AssessorRestService assessorRestService;
-
-    @Autowired
-    private CompetitionInviteRestService inviteRestService;
 
     @Autowired
     private EthnicityRestService ethnicityRestService;

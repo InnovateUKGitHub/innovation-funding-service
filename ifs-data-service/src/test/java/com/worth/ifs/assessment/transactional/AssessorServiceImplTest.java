@@ -84,6 +84,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
         UserResource createdUser = newUserResource().build();
 
         when(registrationServiceMock.createUser(userToCreate)).thenReturn(serviceSuccess(createdUser));
+        when(registrationServiceMock.activateUser(createdUser.getId())).thenReturn(serviceSuccess());
         when(competitionInviteServiceMock.acceptInvite(hash)).thenReturn(serviceSuccess());
 
         ServiceResult<Void> serviceResult = assessorService.registerAssessorByHash(hash, userRegistrationResource);
@@ -93,6 +94,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
         inOrder.verify(competitionInviteServiceMock).getInvite(hash);
         inOrder.verify(roleRepositoryMock).findOneByName(ASSESSOR.name());
         inOrder.verify(registrationServiceMock).createUser(isA(UserResource.class));
+        inOrder.verify(registrationServiceMock).activateUser(createdUser.getId());
         inOrder.verify(competitionInviteServiceMock).acceptInvite(hash);
         inOrder.verifyNoMoreInteractions();
     }
@@ -119,8 +121,8 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
         ServiceResult<Void> serviceResult = assessorService.registerAssessorByHash(hash, userRegistrationResource);
 
         verify(competitionInviteServiceMock).getInvite(hash);
-        verify(registrationServiceMock, never()).createUser(isA(UserResource.class));
-        verify(competitionInviteServiceMock, never()).acceptInvite(isA(String.class));
+        verifyNoMoreInteractions(registrationServiceMock);
+        verifyNoMoreInteractions(competitionInviteServiceMock);
 
         assertTrue(serviceResult.isFailure());
         assertTrue(serviceResult.getFailure().is(notFoundError(CompetitionInvite.class, "inviteHashNotExists")));
@@ -172,11 +174,13 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
         Error notFoundError = new Error(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_UNOPENED_INVITE, "Juggling Craziness");
 
         when(registrationServiceMock.createUser(userToCreate)).thenReturn(serviceSuccess(createdUser));
+        when(registrationServiceMock.activateUser(createdUser.getId())).thenReturn(serviceSuccess());
         when(competitionInviteServiceMock.acceptInvite(hash)).thenReturn(serviceFailure(notFoundError));
 
         ServiceResult<Void> serviceResult = assessorService.registerAssessorByHash(hash, userRegistrationResource);
 
         verify(registrationServiceMock).createUser(isA(UserResource.class));
+        verify(registrationServiceMock).activateUser(createdUser.getId());
         verify(competitionInviteServiceMock).getInvite(hash);
         verify(competitionInviteServiceMock).acceptInvite(hash);
 
@@ -230,8 +234,9 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
         ServiceResult<Void> serviceResult = assessorService.registerAssessorByHash(hash, userRegistrationResource);
 
         verify(registrationServiceMock).createUser(isA(UserResource.class));
+        verifyNoMoreInteractions(registrationServiceMock);
         verify(competitionInviteServiceMock).getInvite(hash);
-        verify(competitionInviteServiceMock, never()).acceptInvite(isA(String.class));
+        verifyNoMoreInteractions(competitionInviteServiceMock);
 
         assertTrue(serviceResult.isFailure());
         assertTrue(serviceResult.getFailure().is(new Error(RestIdentityProviderService.ServiceFailures.UNABLE_TO_CREATE_USER, INTERNAL_SERVER_ERROR)));
