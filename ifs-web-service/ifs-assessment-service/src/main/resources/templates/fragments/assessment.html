@@ -130,7 +130,7 @@
                     <span class="error-message"  th:each="err : ${#fields.errors('rejectReason')}" th:text="${err}" />
                 </span>
             </label>
-            <select class="form-control" th:errorclass="field-error" required="required" th:field="*{rejectReason}">
+            <select class="form-control" data-required-errormessage="The reason cannot be blank" th:errorclass="field-error" required="required" th:field="*{rejectReason}">
                 <option value="">Select a reason</option>
                 <option th:each="reason : ${rejectionReasons}"
                         th:value="${reason.id}"
@@ -186,10 +186,10 @@
             <label class="form-label" th:for="rejectReason">
                 Please select a reason for rejecting the application
                 <span th:if="${#fields.hasErrors('rejectReason')}" th:remove="tag">
-                    <span data-errorfield="rejectReason" class="error-message"  th:each="err : ${#fields.errors('rejectReason')}" th:text="${err}" />
+                    <span class="error-message"  th:each="err : ${#fields.errors('rejectReason')}" th:text="${err}" />
                 </span>
             </label>
-            <select class="form-control" th:errorclass="field-error" required="required" data-required-errormessage="Please enter a reason" th:field="*{rejectReason}">
+            <select class="form-control" data-required-errormessage="Please enter a reason" th:errorclass="field-error" required="required" th:field="*{rejectReason}">
                 <option value="">Select a reason</option>
                 <option value="conflict-of-interest">Conflict of interest</option>
                 <option value="not-my-area-of-interest">Not my area of expertise</option>
@@ -200,7 +200,7 @@
             <label class="form-label" th:for="rejectComment">
                 Use this space to provide more information
                 <span th:if="${#fields.hasErrors('rejectComment')}" th:remove="tag">
-                    <span data-errorfield="rejectComment" class="error-message"  th:each="err : ${#fields.errors('rejectComment')}" th:text="${err}" />
+                    <span class="error-message"  th:each="err : ${#fields.errors('rejectComment')}" th:text="${err}" />
                 </span>
             </label>
             <textarea
