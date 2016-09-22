@@ -7,6 +7,8 @@
 
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
 <div th:include="fragments/layout :: global-header" th:remove="tag" />
+<div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
+<div th:include="fragments/modals :: modal-partner-confirm-bank-details" th:remove="tag"/>
 
 <main id="content">
 	<div th:include="fragments/layout :: main-content-start" th:remove="tag" />
@@ -24,10 +26,16 @@
 	</div>
 
 	<hr/>
-	<p>The following bank account details have been submitted to Innovate UK by Aptrans Ltd for use during the project Technology Inspired, awaiting internal review from Innovate UK</p>
+	<th:block th:if="${model.approved || model.approvedManually}">
+		<div class="success-alert">
+			<h2 class="heading-small no-margin-top">The bank details provided have been approved.</h2>
+		</div>
+	</th:block>
+	<th:block th:unless="${model.approved || model.approvedManually}">
+		<p>The following bank account details have been submitted to Innovate UK by <th:block th:text="${model.organisationName}" /> for use during the project <th:block th:text="${model.projectName}" />, awaiting internal review from Innovate UK</p>
+	</th:block>
 
 	<h2 class="heading-medium">Finance contact</h2>
-
 	<p>
 		<th:block th:unless="${#strings.isEmpty(model.financeContactName)}">
 				<th:block th:text="${model.financeContactName}" /><br/>
@@ -81,9 +89,8 @@
 			<a th:href="@{/project/{id}/organisation/{orgId}/review-bank-details/change(id=${model.projectId}, orgId=${model.organisationId})}">Change bank account details</a>
 		</div>
 		<div class="column-half alignright">
-			<form>
-				<button class="no-margin-right button">Approve bank account details</button>
-			</form>
+				<button data-js-modal="modal-partner-confirm-bank-details" class="no-margin-right button">Approve bank account details</button>
+
 		</div>
 	</div>
 

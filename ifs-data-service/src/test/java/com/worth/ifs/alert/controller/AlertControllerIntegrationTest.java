@@ -135,6 +135,7 @@ public class AlertControllerIntegrationTest extends BaseControllerIntegrationTes
 
         // check that it can be found
         assertNotNull(created.getId());
+        alertResource.setId(created.getId());
         assertEquals(alertResource, controller.findById(created.getId()).getSuccessObjectOrThrowException());
 
         // now delete it

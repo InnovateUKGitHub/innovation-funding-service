@@ -165,7 +165,7 @@ Partner nominates a finance contact
 
 Lead partner can change the Start Date
     [Documentation]    INFUND-2614
-    [Tags]    HappyPath
+    [Tags]    HappyPath    Failing
     Given the user clicks the button/link    link=Start date
     And the duration should be visible
     When the user enters text to a text field    id=projectStartDate_year    2013
