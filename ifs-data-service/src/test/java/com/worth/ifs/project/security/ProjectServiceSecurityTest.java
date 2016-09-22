@@ -426,13 +426,14 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
     }
 
     @Test
-    public void testGetProjectTeamStatus_deniedIfUserIsNotPartner(){
+    public void testGetProjectTeamStatus(){
         ProjectResource project = newProjectResource().build();
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
 
         assertAccessDenied(() -> classUnderTest.getProjectTeamStatus(123L), () -> {
             verify(projectPermissionRules).partnersCanViewTeamStatus(project, getLoggedInUser());
+            verify(projectPermissionRules).compAdminsCanViewTeamStatus(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
         });
     }

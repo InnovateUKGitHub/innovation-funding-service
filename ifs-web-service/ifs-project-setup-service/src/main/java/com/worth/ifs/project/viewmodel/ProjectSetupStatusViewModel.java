@@ -24,7 +24,6 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
     private boolean isFunded;
     private Long organisationId;
 
-    // TODO DW - INFUND-4915 - wire back in the projectDetailsSubmitted value
     public ProjectSetupStatusViewModel(ProjectResource project, CompetitionResource competition, Optional<MonitoringOfficerResource> monitoringOfficerResource, Optional<BankDetailsResource> bankDetails, boolean isFunded, Long organisationId, boolean projectDetailsSubmitted) {
         this.projectId = project.getId();
         this.projectName = project.getName();

@@ -10,7 +10,6 @@ import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectTeamStatusResource;
 import com.worth.ifs.project.viewmodel.ProjectSetupStatusViewModel;
 import com.worth.ifs.user.resource.OrganisationResource;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -27,6 +26,7 @@ import static com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder.new
 import static com.worth.ifs.project.builder.ProjectLeadStatusResourceBuilder.newProjectLeadStatusResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static com.worth.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
+import static com.worth.ifs.project.constant.ProjectActivityStates.COMPLETE;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
@@ -90,13 +90,18 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
     }
 
     @Test
-    @Ignore("TODO DW - INFUND-4915 - reinstate")
     public void testViewProjectSetupStatusWithProjectDetailsSubmitted() throws Exception {
 
         ProjectResource project = projectBuilder.
-                //withSubmittedDate(LocalDateTime.of(2016, 10, 10, 0, 0)).
                 build();
+
         OrganisationResource organisationResource = newOrganisationResource().build();
+
+        ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
+                withProjectLeadStatus(newProjectLeadStatusResource().
+                        withProjectDetailsStatus(COMPLETE).
+                        build()).
+                build();
 
         when(applicationService.getById(application.getId())).thenReturn(application);
         when(projectService.getById(projectId)).thenReturn(project);
@@ -109,6 +114,8 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
 
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId())).thenReturn(
                 restFailure(notFoundError(BankDetailsResource.class, 1L)));
+
+        when(projectService.getProjectTeamStatus(projectId)).thenReturn(teamStatus);
 
         MvcResult result = mockMvc.perform(get("/project/{id}", projectId))
                 .andExpect(status().isOk())
@@ -127,18 +134,22 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
         assertNull(viewModel.getBankDetails());
     }
 
-
     @Test
-    @Ignore("TODO DW - INFUND-4915 - reinstate")
     public void testViewProjectSetupStatusWithMonitoringOfficerAssigned() throws Exception {
 
-        ProjectResource project = projectBuilder.
-//                withSubmittedDate(LocalDateTime.of(2016, 10, 10, 0, 0)).
-                build();
+        ProjectResource project = projectBuilder.withId(projectId).build();
         MonitoringOfficerResource monitoringOfficer = newMonitoringOfficerResource().build();
         OrganisationResource organisationResource = newOrganisationResource().build();
         Optional<MonitoringOfficerResource> monitoringOfficerResult = Optional.of(monitoringOfficer);
 
+        ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
+                withProjectLeadStatus(newProjectLeadStatusResource().
+                        withProjectDetailsStatus(COMPLETE).
+                        build()).
+                build();
+
+        when(projectService.getById(projectId)).thenReturn(project);
+        when(projectService.getProjectTeamStatus(projectId)).thenReturn(teamStatus);
         when(applicationService.getById(application.getId())).thenReturn(application);
         when(projectService.getById(projectId)).thenReturn(project);
         when(competitionService.getById(application.getCompetition())).thenReturn(competition);
@@ -169,17 +180,20 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
     }
 
     @Test
-    @Ignore("TODO DW - INFUND-4915 - reinstate")
     public void testViewProjectSetupStatusWithBankDetailsEntered() throws Exception {
 
-        ProjectResource project = projectBuilder.
-//                withSubmittedDate(LocalDateTime.of(2016, 10, 10, 0, 0)).
-                build();
+        ProjectResource project = projectBuilder.build();
 
         MonitoringOfficerResource monitoringOfficer = newMonitoringOfficerResource().build();
         OrganisationResource organisationResource = newOrganisationResource().build();
         Optional<MonitoringOfficerResource> monitoringOfficerResult = Optional.of(monitoringOfficer);
         BankDetailsResource bankDetailsResource = newBankDetailsResource().build();
+
+        ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
+                withProjectLeadStatus(newProjectLeadStatusResource().
+                        withProjectDetailsStatus(COMPLETE).
+                        build()).
+                build();
 
         when(applicationService.getById(application.getId())).thenReturn(application);
         when(projectService.getById(projectId)).thenReturn(project);
@@ -191,6 +205,8 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
                 thenReturn(restSuccess(newApplicationFinanceResource().withGrantClaimPercentage(0).build()));
 
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId())).thenReturn(restSuccess(bankDetailsResource));
+
+        when(projectService.getProjectTeamStatus(projectId)).thenReturn(teamStatus);
 
         MvcResult result = mockMvc.perform(get("/project/{id}", projectId))
                 .andExpect(status().isOk())
