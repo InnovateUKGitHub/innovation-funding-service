@@ -352,7 +352,6 @@ public class ApplicationFormController extends AbstractApplicationController {
         }
 
         errors.addAll(validationApplicationStartDate(request));
-
         setApplicationDetails(application, form.getApplication());
 
         if(userIsLeadApplicant(application, user.getId())) {
@@ -734,24 +733,46 @@ public class ApplicationFormController extends AbstractApplicationController {
             application.setName(updatedApplication.getName());
         }
 
+        setResubmissionDetails(application, updatedApplication);
+
         if (updatedApplication.getStartDate() != null) {
             LOG.debug("setApplicationDetails date 123: " + updatedApplication.getStartDate().toString());
             if (updatedApplication.getStartDate().isEqual(LocalDate.MIN)
                     || updatedApplication.getStartDate().isBefore(LocalDate.now())) {
                 // user submitted a empty date field or date before today
                 application.setStartDate(null);
-            }else{
+            } else{
                 application.setStartDate(updatedApplication.getStartDate());
             }
-        }else{
+        } else {
             application.setStartDate(null);
         }
+
         if (updatedApplication.getDurationInMonths() != null) {
             LOG.debug("setApplicationDetails: " + updatedApplication.getDurationInMonths());
             application.setDurationInMonths(updatedApplication.getDurationInMonths());
         }
         else {
             application.setDurationInMonths(null);
+        }
+    }
+
+    /**
+     * Set the submitted details relating to resubmission of applications.
+     * @param application
+     * @param updatedApplication
+     */
+    private void setResubmissionDetails(ApplicationResource application, ApplicationResource updatedApplication) {
+        if (updatedApplication.getResubmission() != null) {
+            LOG.debug("setApplicationDetails: resubmission " + updatedApplication.getResubmission());
+            application.setResubmission(updatedApplication.getResubmission());
+            if (updatedApplication.getResubmission()) {
+                application.setPreviousApplicationNumber(updatedApplication.getPreviousApplicationNumber());
+                application.setPreviousApplicationTitle(updatedApplication.getPreviousApplicationTitle());
+            } else {
+                application.setPreviousApplicationNumber(null);
+                application.setPreviousApplicationTitle(null);
+            }
         }
     }
 
@@ -884,6 +905,15 @@ public class ApplicationFormController extends AbstractApplicationController {
             }
         } else if (fieldName.startsWith(APPLICATION_START_DATE)) {
             errors = this.saveApplicationStartDate(application, fieldName, value);
+        } else if (fieldName.equals("application.resubmission")) {
+            application.setResubmission(Boolean.valueOf(value));
+            applicationService.save(application);
+        } else if (fieldName.equals("application.previousApplicationNumber")) {
+            application.setPreviousApplicationNumber(value);
+            applicationService.save(application);
+        } else if (fieldName.equals("application.previousApplicationTitle")) {
+            application.setPreviousApplicationTitle(value);
+            applicationService.save(application);
         }
         return errors;
     }
