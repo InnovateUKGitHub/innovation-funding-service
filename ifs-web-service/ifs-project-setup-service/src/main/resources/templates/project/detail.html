@@ -81,6 +81,12 @@
         </tbody>
     </table>
 
+    <a th:if="${model.userLeadPartner and model.submissionAllowed and model.projectDetailsSubmitted == null}" th:href="@{/project/{id}/confirm-project-details(id=${model.project.getId()})}" class="button extra-margin" data-js-modal="modal-project-details">Submit project details</a>
+    <div class="extra-margin"  th:if="${model.userLeadPartner and !model.submissionAllowed and model.projectDetailsSubmitted == null}">
+        <p>You are not able to submit until all sections above are marked as complete.</p>
+        <button disabled="disabled" class="button">Submit project details</button>
+    </div>
+
     <h2 class="heading-medium">Finance contacts</h2>
 
     <p>Each partner must provide a finance contact who will be sent any queries from us around partner finances.</p>
