@@ -1,161 +1,239 @@
 package com.worth.ifs.assessment.transactional;
 
 import com.worth.ifs.BaseUnitTestMocksTest;
+import com.worth.ifs.BuilderAmendFunctions;
+import com.worth.ifs.authentication.service.RestIdentityProviderService;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.invite.domain.CompetitionInvite;
 import com.worth.ifs.invite.resource.CompetitionInviteResource;
+import com.worth.ifs.registration.resource.UserRegistrationResource;
 import com.worth.ifs.user.domain.Role;
-import com.worth.ifs.user.mapper.RoleMapper;
-import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.resource.RoleResource;
 import com.worth.ifs.user.resource.UserResource;
-import com.worth.ifs.user.resource.UserRoleType;
-import com.worth.ifs.user.transactional.RegistrationService;
 import org.junit.Test;
+import org.mockito.InOrder;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 
+import static com.worth.ifs.LambdaMatcher.createLambdaMatcher;
 import static com.worth.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.COMPETITION_PARTICIPANT_CANNOT_ACCEPT_UNOPENED_INVITE;
-import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
-import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_UNEXPECTED_ERROR;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
+import static com.worth.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static com.worth.ifs.user.resource.Disability.NO;
+import static com.worth.ifs.user.resource.Gender.NOT_STATED;
+import static com.worth.ifs.user.resource.UserRoleType.ASSESSOR;
+import static java.util.Arrays.asList;
+import static org.junit.Assert.*;
+import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.*;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
 
     @InjectMocks
     private AssessorService assessorService = new AssessorServiceImpl();
 
-    @Mock
-    private RegistrationService userRegistrationService;
-
-    @Mock
-    private CompetitionInviteService competitionInviteService;
-
-    @Mock
-    private RoleRepository roleRepository;
-
-    @Mock
-    private RoleMapper roleMapper;
-
     @Test
-    public void registerAssessorByHash_callCorrectServicesAndHaveSuccessfulAutocome() throws Exception {
-        UserResource userResource = newUserResource().build();
-        CompetitionInviteResource competitionInviteResource = newCompetitionInviteResource().build();
+    public void registerAssessorByHash_callCorrectServicesAndHaveSuccessfulOutcome() throws Exception {
         String hash = "testhash";
+
+        UserRegistrationResource userRegistrationResource = newUserRegistrationResource()
+                .withTitle("Mr")
+                .withFirstName("First")
+                .withLastName("Last")
+                .withPhoneNumber("01234 567890")
+                .withGender(NOT_STATED)
+                .withEthnicity(newEthnicityResource().with(BuilderAmendFunctions.id(1L)).build())
+                .withDisability(NO)
+                .withPassword("Password123")
+                .build();
+
         Role role = newRole().build();
         RoleResource roleResource = newRoleResource().build();
 
-        ServiceResult<UserResource> userResourceRestResult = ServiceResult.serviceSuccess(userResource);
-        ServiceResult<CompetitionInviteResource> inviteResult = ServiceResult.serviceSuccess(competitionInviteResource);
-        ServiceResult<Void> acceptedInviteResult = ServiceResult.serviceSuccess();
+        CompetitionInviteResource competitionInviteResource = newCompetitionInviteResource()
+                .withEmail("email@example.com")
+                .build();
 
+        when(competitionInviteServiceMock.getInvite(hash)).thenReturn(serviceSuccess(competitionInviteResource));
+        when(roleRepositoryMock.findOneByName(ASSESSOR.name())).thenReturn(role);
+        when(roleMapperMock.mapToResource(role)).thenReturn(roleResource);
 
-        when(userRegistrationService.createUser(userResource)).thenReturn(userResourceRestResult);
-        when(competitionInviteService.getInvite(hash)).thenReturn(inviteResult);
-        when(competitionInviteService.acceptInvite(hash)).thenReturn(acceptedInviteResult);
-        when(roleRepository.findOneByName(UserRoleType.ASSESSOR.name())).thenReturn(role);
-        when(roleMapper.mapToResource(role)).thenReturn(roleResource);
+        UserResource userToCreate = createLambdaMatcher(user -> {
+            assertNull(user.getId());
+            assertEquals("Mr", user.getTitle());
+            assertEquals("First", user.getFirstName());
+            assertEquals("Last", user.getLastName());
+            assertEquals("01234 567890", user.getPhoneNumber());
+            assertEquals(NOT_STATED, user.getGender());
+            assertEquals(Long.valueOf(1L), user.getEthnicity());
+            assertEquals(NO, user.getDisability());
+            assertEquals("email@example.com", user.getEmail());
+            assertEquals(asList(roleResource), user.getRoles());
 
-        ServiceResult<Void> serviceResult = assessorService.registerAssessorByHash(hash, userResource);
+            return true;
+        });
 
-        verify(userRegistrationService, times(1)).createUser(userResource);
-        verify(competitionInviteService, times(1)).getInvite(hash);
-        verify(competitionInviteService, times(1)).acceptInvite(hash);
+        UserResource createdUser = newUserResource().build();
 
+        when(registrationServiceMock.createUser(userToCreate)).thenReturn(serviceSuccess(createdUser));
+        when(competitionInviteServiceMock.acceptInvite(hash)).thenReturn(serviceSuccess());
+
+        ServiceResult<Void> serviceResult = assessorService.registerAssessorByHash(hash, userRegistrationResource);
         assertTrue(serviceResult.isSuccess());
+
+        InOrder inOrder = inOrder(competitionInviteServiceMock, roleRepositoryMock, registrationServiceMock);
+        inOrder.verify(competitionInviteServiceMock).getInvite(hash);
+        inOrder.verify(roleRepositoryMock).findOneByName(ASSESSOR.name());
+        inOrder.verify(registrationServiceMock).createUser(isA(UserResource.class));
+        inOrder.verify(competitionInviteServiceMock).acceptInvite(hash);
+        inOrder.verifyNoMoreInteractions();
     }
 
     @Test
     public void registerAssessorByHash_inviteDoesNotExistResultsInFailureAndSkippingUserRegistrationAndInviteAcceptance() throws Exception {
-        UserResource userResource = newUserResource().build();
-        CompetitionInviteResource competitionInviteResource = newCompetitionInviteResource().build();
-        String hash = "testhash";
+        String hash = "inviteHashNotExists";
 
-        Error notFoundError = new Error(GENERAL_NOT_FOUND, "invite not found", "", NOT_FOUND);
+        UserRegistrationResource userRegistrationResource = newUserRegistrationResource()
+                .withTitle("Mr")
+                .withFirstName("First")
+                .withLastName("Last")
+                .withPhoneNumber("01234 567890")
+                .withGender(NOT_STATED)
+                .withEthnicity(newEthnicityResource().with(BuilderAmendFunctions.id(1L)).build())
+                .withDisability(NO)
+                .withPassword("Password123")
+                .build();
 
-        ServiceResult<UserResource> userResourceRestResult = ServiceResult.serviceSuccess(userResource);
-        ServiceResult<CompetitionInviteResource> inviteResult = ServiceResult.serviceFailure(notFoundError);
+        ServiceResult<CompetitionInviteResource> inviteResult = serviceFailure(notFoundError(CompetitionInvite.class, hash));
 
-        when(userRegistrationService.createUser(userResource)).thenReturn(userResourceRestResult);
-        when(competitionInviteService.getInvite(hash)).thenReturn(inviteResult);
+        when(competitionInviteServiceMock.getInvite(hash)).thenReturn(inviteResult);
 
-        ServiceResult<Void> serviceResult = assessorService.registerAssessorByHash(hash, userResource);
+        ServiceResult<Void> serviceResult = assessorService.registerAssessorByHash(hash, userRegistrationResource);
 
-        verify(userRegistrationService, times(0)).createUser(userResource);
-        verify(competitionInviteService, times(1)).getInvite(hash);
-        verify(competitionInviteService, times(0)).acceptInvite(hash);
+        verify(competitionInviteServiceMock).getInvite(hash);
+        verify(registrationServiceMock, never()).createUser(isA(UserResource.class));
+        verify(competitionInviteServiceMock, never()).acceptInvite(isA(String.class));
 
         assertTrue(serviceResult.isFailure());
-        assertEquals(serviceResult.getErrors().get(0),notFoundError);
+        assertTrue(serviceResult.getFailure().is(notFoundError(CompetitionInvite.class, "inviteHashNotExists")));
     }
 
     @Test
     public void registerAssessorByHash_unopenedInviteCannotBeAcceptedResultsInServiceFailure() throws Exception {
-        UserResource userResource = newUserResource().build();
-        CompetitionInviteResource competitionInviteResource = newCompetitionInviteResource().build();
         String hash = "testhash";
+
+        UserRegistrationResource userRegistrationResource = newUserRegistrationResource()
+                .withTitle("Mr")
+                .withFirstName("First")
+                .withLastName("Last")
+                .withPhoneNumber("01234 567890")
+                .withGender(NOT_STATED)
+                .withEthnicity(newEthnicityResource().with(BuilderAmendFunctions.id(1L)).build())
+                .withDisability(NO)
+                .withPassword("Password123")
+                .build();
+
         Role role = newRole().build();
         RoleResource roleResource = newRoleResource().build();
 
-        Error notFoundError = new Error(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_UNOPENED_INVITE, "invite already accepted", "", BAD_REQUEST);
+        CompetitionInviteResource competitionInviteResource = newCompetitionInviteResource()
+                .withEmail("email@example.com")
+                .build();
 
-        ServiceResult<UserResource> userResourceRestResult = ServiceResult.serviceSuccess(userResource);
-        ServiceResult<CompetitionInviteResource> inviteResult = ServiceResult.serviceSuccess(competitionInviteResource);
-        ServiceResult<Void> acceptedInviteResult = ServiceResult.serviceFailure(notFoundError);
+        when(competitionInviteServiceMock.getInvite(hash)).thenReturn(serviceSuccess(competitionInviteResource));
+        when(roleRepositoryMock.findOneByName(ASSESSOR.name())).thenReturn(role);
+        when(roleMapperMock.mapToResource(role)).thenReturn(roleResource);
 
-        when(userRegistrationService.createUser(userResource)).thenReturn(userResourceRestResult);
-        when(competitionInviteService.getInvite(hash)).thenReturn(inviteResult);
-        when(competitionInviteService.acceptInvite(hash)).thenReturn(acceptedInviteResult);
-        when(roleRepository.findOneByName(UserRoleType.ASSESSOR.name())).thenReturn(role);
-        when(roleMapper.mapToResource(role)).thenReturn(roleResource);
+        UserResource userToCreate = createLambdaMatcher(user -> {
+            assertNull(user.getId());
+            assertEquals("Mr", user.getTitle());
+            assertEquals("First", user.getFirstName());
+            assertEquals("Last", user.getLastName());
+            assertEquals("01234 567890", user.getPhoneNumber());
+            assertEquals(NOT_STATED, user.getGender());
+            assertEquals(Long.valueOf(1L), user.getEthnicity());
+            assertEquals(NO, user.getDisability());
+            assertEquals("email@example.com", user.getEmail());
+            assertEquals(asList(roleResource), user.getRoles());
 
-        ServiceResult<Void> serviceResult = assessorService.registerAssessorByHash(hash, userResource);
+            return true;
+        });
 
-        verify(userRegistrationService, times(1)).createUser(userResource);
-        verify(competitionInviteService, times(1)).getInvite(hash);
-        verify(competitionInviteService, times(1)).acceptInvite(hash);
+        UserResource createdUser = newUserResource().build();
+
+        Error notFoundError = new Error(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_UNOPENED_INVITE, "Juggling Craziness");
+
+        when(registrationServiceMock.createUser(userToCreate)).thenReturn(serviceSuccess(createdUser));
+        when(competitionInviteServiceMock.acceptInvite(hash)).thenReturn(serviceFailure(notFoundError));
+
+        ServiceResult<Void> serviceResult = assessorService.registerAssessorByHash(hash, userRegistrationResource);
+
+        verify(registrationServiceMock).createUser(isA(UserResource.class));
+        verify(competitionInviteServiceMock).getInvite(hash);
+        verify(competitionInviteServiceMock).acceptInvite(hash);
 
         assertTrue(serviceResult.isFailure());
-        assertEquals(serviceResult.getErrors().get(0),notFoundError);
+        assertTrue(serviceResult.getFailure().is(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_UNOPENED_INVITE, "Juggling Craziness"));
     }
 
     @Test
     public void registerAssessorByHash_userValidationFailureResultsInFailureAndNotAcceptingInvite() throws Exception {
-        UserResource userResource = newUserResource().build();
-        CompetitionInviteResource competitionInviteResource = newCompetitionInviteResource().build();
         String hash = "testhash";
+
+        UserRegistrationResource userRegistrationResource = newUserRegistrationResource()
+                .withTitle("Mr")
+                .withFirstName("First")
+                .withLastName("Last")
+                .withPhoneNumber("01234 567890")
+                .withGender(NOT_STATED)
+                .withEthnicity(newEthnicityResource().with(BuilderAmendFunctions.id(1L)).build())
+                .withDisability(NO)
+                .withPassword("Password123")
+                .build();
+
         Role role = newRole().build();
         RoleResource roleResource = newRoleResource().build();
 
-        Error notFoundError = new Error(GENERAL_UNEXPECTED_ERROR, "unexpected error", "", BAD_REQUEST);
+        CompetitionInviteResource competitionInviteResource = newCompetitionInviteResource()
+                .withEmail("email@example.com")
+                .build();
 
-        ServiceResult<UserResource> userResourceRestResult = ServiceResult.serviceFailure(notFoundError);
-        ServiceResult<CompetitionInviteResource> inviteResult = ServiceResult.serviceSuccess(competitionInviteResource);
-        ServiceResult<Void> acceptedInviteResult = ServiceResult.serviceSuccess();
+        when(competitionInviteServiceMock.getInvite(hash)).thenReturn(serviceSuccess(competitionInviteResource));
+        when(roleRepositoryMock.findOneByName(ASSESSOR.name())).thenReturn(role);
+        when(roleMapperMock.mapToResource(role)).thenReturn(roleResource);
 
-        when(userRegistrationService.createUser(userResource)).thenReturn(userResourceRestResult);
-        when(competitionInviteService.getInvite(hash)).thenReturn(inviteResult);
-        when(competitionInviteService.acceptInvite(hash)).thenReturn(acceptedInviteResult);
-        when(roleRepository.findOneByName(UserRoleType.ASSESSOR.name())).thenReturn(role);
-        when(roleMapper.mapToResource(role)).thenReturn(roleResource);
+        UserResource userToCreate = createLambdaMatcher(user -> {
+            assertNull(user.getId());
+            assertEquals("Mr", user.getTitle());
+            assertEquals("First", user.getFirstName());
+            assertEquals("Last", user.getLastName());
+            assertEquals("01234 567890", user.getPhoneNumber());
+            assertEquals(NOT_STATED, user.getGender());
+            assertEquals(Long.valueOf(1L), user.getEthnicity());
+            assertEquals(NO, user.getDisability());
+            assertEquals("email@example.com", user.getEmail());
+            assertEquals(asList(roleResource), user.getRoles());
 
-        ServiceResult<Void> serviceResult = assessorService.registerAssessorByHash(hash, userResource);
+            return true;
+        });
 
-        verify(userRegistrationService, times(1)).createUser(userResource);
-        verify(competitionInviteService, times(1)).getInvite(hash);
-        verify(competitionInviteService, times(0)).acceptInvite(hash);
+        when(registrationServiceMock.createUser(userToCreate)).thenReturn(serviceFailure(new Error(RestIdentityProviderService.ServiceFailures.UNABLE_TO_CREATE_USER, INTERNAL_SERVER_ERROR)));
+
+        ServiceResult<Void> serviceResult = assessorService.registerAssessorByHash(hash, userRegistrationResource);
+
+        verify(registrationServiceMock).createUser(isA(UserResource.class));
+        verify(competitionInviteServiceMock).getInvite(hash);
+        verify(competitionInviteServiceMock, never()).acceptInvite(isA(String.class));
 
         assertTrue(serviceResult.isFailure());
-        assertEquals(serviceResult.getErrors().get(0),notFoundError);
+        assertTrue(serviceResult.getFailure().is(new Error(RestIdentityProviderService.ServiceFailures.UNABLE_TO_CREATE_USER, INTERNAL_SERVER_ERROR)));
     }
 }

@@ -55,7 +55,12 @@ public class AdditionalInfoSectionSaver extends AbstractSectionSaver implements 
 			competition.getFunders().add(competitionFunderResource);
 		});
 
-		competitionService.update(competition);
+		try {
+			competitionService.update(competition);
+		} catch (RuntimeException e) {
+			LOG.error("Competition object not available");
+			return asList(new Error("competition.setup.autosave.should.be.completed", HttpStatus.BAD_REQUEST));
+		}
 
 		return Collections.emptyList();
 	}
@@ -85,7 +90,7 @@ public class AdditionalInfoSectionSaver extends AbstractSectionSaver implements 
 				if (index > 0 && competitionResource.getFunders().size() > index) {
 					competitionResource.getFunders().remove(index);
 				} else {
-					return asList(new Error("Funder could not be removed", HttpStatus.BAD_REQUEST));
+					return asList(new Error("competition.setup.autosave.funder.could.not.be.removed", HttpStatus.BAD_REQUEST));
 				}
 				break;
 			default:

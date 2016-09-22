@@ -10,8 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.persistence.EntityManager;
 import java.util.List;
 
-import static com.worth.ifs.invite.builder.EthnicityBuilder.newEthnicity;
-import static com.worth.ifs.invite.builder.EthnicityResourceBuilder.newEthnicityResource;
+import static com.worth.ifs.user.builder.EthnicityBuilder.newEthnicity;
+import static com.worth.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
 import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.assertEquals;
 

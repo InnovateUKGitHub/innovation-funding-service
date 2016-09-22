@@ -1,11 +1,10 @@
-package com.worth.ifs.invite.builder;
+package com.worth.ifs.user.builder;
 
 import com.worth.ifs.user.domain.Ethnicity;
 import org.junit.Test;
 
 import java.util.List;
 
-import static com.worth.ifs.invite.builder.EthnicityBuilder.newEthnicity;
 import static org.junit.Assert.assertEquals;
 
 public class EthnicityBuilderTest {
@@ -18,7 +17,7 @@ public class EthnicityBuilderTest {
         int expectedPriority = 3;
         boolean expectedActive = false;
 
-        Ethnicity ethnicity = newEthnicity()
+        Ethnicity ethnicity = EthnicityBuilder.newEthnicity()
                 .withId(expectedId)
                 .withName(expectedName)
                 .withDescription(expectedDescription)
@@ -41,7 +40,7 @@ public class EthnicityBuilderTest {
         Integer[] expectedPriorities = { 3, 5 };
         Boolean[] expectedActives = { false, true };
 
-        List<Ethnicity> ethnicities = newEthnicity()
+        List<Ethnicity> ethnicities = EthnicityBuilder.newEthnicity()
                 .withId(expectedIds)
                 .withName(expectedNames)
                 .withDescription(expectedDescriptions)

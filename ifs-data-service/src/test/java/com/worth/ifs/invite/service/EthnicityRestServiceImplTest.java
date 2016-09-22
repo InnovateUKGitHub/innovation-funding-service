@@ -7,7 +7,7 @@ import org.junit.Test;
 import java.util.List;
 
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.ethnicityResourceListType;
-import static com.worth.ifs.invite.builder.EthnicityResourceBuilder.newEthnicityResource;
+import static com.worth.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
 import static java.lang.String.format;
 import static org.junit.Assert.assertSame;
 import static org.springframework.http.HttpStatus.OK;

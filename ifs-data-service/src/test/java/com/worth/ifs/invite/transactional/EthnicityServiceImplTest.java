@@ -9,8 +9,8 @@ import org.mockito.InjectMocks;
 
 import java.util.List;
 
-import static com.worth.ifs.invite.builder.EthnicityBuilder.newEthnicity;
-import static com.worth.ifs.invite.builder.EthnicityResourceBuilder.newEthnicityResource;
+import static com.worth.ifs.user.builder.EthnicityBuilder.newEthnicity;
+import static com.worth.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Matchers.same;

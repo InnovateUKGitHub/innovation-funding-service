@@ -1,10 +1,6 @@
-package com.worth.ifs.invite.builder;
+package com.worth.ifs.user.builder;
 
 import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.Builder;
-import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.invite.domain.ApplicationInvite;
-import com.worth.ifs.invite.domain.InviteOrganisation;
 import com.worth.ifs.user.domain.Ethnicity;
 
 import java.util.List;
