@@ -153,7 +153,7 @@
                 th:errorclass="field-error"
                 rows="4"
                 th:field="*{rejectComment}"></textarea>
-            <div class="textarea-footer">
+            <div class="textarea-footer" th:with="rejectComment=*{rejectComment}">
                 <div th:include="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, rejectComment)})" th:remove="tag"/>
             </div>
         </div>
@@ -211,7 +211,7 @@
                 th:errorclass="field-error"
                 rows="4"
                 th:field="*{rejectComment}"></textarea>
-            <div class="textarea-footer">
+            <div class="textarea-footer" th:with="rejectComment=*{rejectComment}">
                 <div th:include="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, rejectComment)})" th:remove="tag"/>
             </div>
         </div>
