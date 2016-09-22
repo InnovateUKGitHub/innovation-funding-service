@@ -5,6 +5,7 @@ import com.worth.ifs.competition.resource.CollaborationLevel;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.LeadApplicantType;
+import com.worth.ifs.competition.resource.ThreeStateType;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.form.EligibilityForm;
 import com.worth.ifs.competitionsetup.utils.CompetitionUtils;
@@ -48,7 +49,7 @@ public class EligibilityFormPopulator implements CompetitionSetupFormPopulator {
 			competitionSetupForm.setLeadApplicantType(type.getCode());
 		}
 
-        competitionSetupForm.setResubmission(CompetitionUtils.booleanToText(competitionResource.isResubmission()));
+        competitionSetupForm.setResubmission(competitionResource.getResubmission().getBooleanName());
 
 		return competitionSetupForm;
 	}

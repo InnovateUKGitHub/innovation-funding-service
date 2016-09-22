@@ -1,11 +1,8 @@
 package com.worth.ifs.competition.builder;
 
 import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.competition.resource.CollaborationLevel;
-import com.worth.ifs.competition.resource.CompetitionFunderResource;
-import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.*;
 import com.worth.ifs.competition.resource.CompetitionResource.Status;
-import com.worth.ifs.competition.resource.LeadApplicantType;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -50,7 +47,7 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return with(competition -> competition.setResearchCategories(categories));
     }
 
-    public CompetitionResourceBuilder withResubmission(boolean resubmission) {
+    public CompetitionResourceBuilder withResubmission(ThreeStateType resubmission) {
         return with(competition -> competition.setResubmission(resubmission));
     }
 

@@ -15,6 +15,7 @@ import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionResource.Status;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.CompetitionTypeResource;
+import com.worth.ifs.competition.resource.ThreeStateType;
 import com.worth.ifs.competitiontemplate.domain.CompetitionTemplate;
 import com.worth.ifs.competitiontemplate.domain.FormInputTemplate;
 import com.worth.ifs.competitiontemplate.domain.QuestionTemplate;
@@ -148,7 +149,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     public ServiceResult<CompetitionResource> create() {
         Competition competition = new Competition();
         competition.setSetupComplete(false);
-        competition.setResubmission(true);
+        competition.setResubmission(ThreeStateType.UNSET);
         return serviceSuccess(competitionMapper.mapToResource(competitionRepository.save(competition)));
     }
 

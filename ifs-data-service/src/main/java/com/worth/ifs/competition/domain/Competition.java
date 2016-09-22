@@ -78,7 +78,9 @@ public class Competition implements ProcessActivity {
     private String innovateBudget;
 
     private boolean multiStream;
-    private boolean resubmission;
+    @Enumerated(EnumType.STRING)
+    private ThreeStateType resubmission;
+
     private String streamName;
     @Enumerated(EnumType.STRING)
     private CollaborationLevel collaborationLevel;
@@ -426,11 +428,11 @@ public class Competition implements ProcessActivity {
 		this.multiStream = multiStream;
 	}
 
-    public boolean isResubmission() {
+    public ThreeStateType getResubmission() {
         return resubmission;
     }
 
-    public void setResubmission(boolean resubmission) {
+    public void setResubmission(ThreeStateType resubmission) {
         this.resubmission = resubmission;
     }
 
