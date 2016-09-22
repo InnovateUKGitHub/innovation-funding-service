@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
@@ -55,6 +56,9 @@ public class ApplicationResource {
     private CompetitionResource.Status competitionStatus;
     private BigDecimal completion;
     private Boolean stateAidAgreed;
+    private Boolean resubmission;
+    private String previousApplicationNumber;
+    private String previousApplicationTitle;
 
     public Long getId() {
         return id;
@@ -139,6 +143,24 @@ public class ApplicationResource {
     public void setCompetition(Long competition) {
         this.competition = competition;
     }
+
+    public Boolean getResubmission() {
+        return resubmission;
+    }
+
+    public void setResubmission(Boolean resubmission) { this.resubmission = resubmission; }
+
+    public String getPreviousApplicationNumber() {
+        return previousApplicationNumber;
+    }
+
+    public void setPreviousApplicationNumber(String previousApplicationNumber) { this.previousApplicationNumber = previousApplicationNumber; }
+
+    public String getPreviousApplicationTitle() {
+        return previousApplicationTitle;
+    }
+
+    public void setPreviousApplicationTitle(String previousApplicationTitle) { this.previousApplicationTitle = previousApplicationTitle; }
 
     @JsonIgnore
     public List<Long> getInvites() {

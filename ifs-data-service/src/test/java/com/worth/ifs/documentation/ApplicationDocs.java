@@ -30,7 +30,11 @@ public class ApplicationDocs {
             fieldWithPath("competitionStatus").description("Competition Status"),
             fieldWithPath("applicationFinances").description("list of ApplicationFinance Id's"),
             fieldWithPath("assessorFeedbackFileEntry").description("Uploaded Assessor Feedback for the Application"),
-            fieldWithPath("completion").description("percentage of completion of the application")
+            fieldWithPath("completion").description("percentage of completion of the application"),
+            fieldWithPath("resubmission").description("indicator that this application is a resubmission"),
+            fieldWithPath("previousApplicationNumber").description("the application number of the previous submission"),
+            fieldWithPath("previousApplicationTitle").description("the application title of the previous submission")
+
     };
 
     public static final ApplicationResourceBuilder applicationResourceBuilder = newApplicationResource()
