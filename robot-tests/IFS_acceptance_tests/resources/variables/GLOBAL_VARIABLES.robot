@@ -110,4 +110,5 @@ ${Finance_summar_9_url}    ${server}/assessment/9/finances
 ${Assessor_competition_dashboard}    ${server}/assessment/assessor/dashboard
 ${Assessor_application_dashboard}    ${server}/assessment/assessor/dashboard/competition/2
 ${Assessment_overview_11}    ${server}/assessment/11
-${Assessment_summary_incomplete_12}    ${server}/assessment/12/summary
+${Assessment_summary_Pending_12}    ${server}/assessment/12/summary
+${Assessment_summary_open_11}    ${server}/assessment/11/summary
