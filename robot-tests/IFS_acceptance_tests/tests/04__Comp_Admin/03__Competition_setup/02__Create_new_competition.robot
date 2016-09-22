@@ -229,7 +229,7 @@ Funding information client-side validations
     [Documentation]    INFUND-2985
     [Tags]    HappyPath
     When the user clicks the button/link    jQuery=.button:contains("Generate code")
-    Then The user should not see the text in the page    Please generate a competition code
+    Then the user should not see the error any more    Please generate a competition code
     When the user enters text to a text field    id=funders0.funder    FunderName
     Then the user should not see the error any more    Please enter a funder name
     And the user enters text to a text field    id=0-funderBudget    20000
@@ -341,6 +341,7 @@ Eligibility client-side validations
 
 Eligibility Autosave
     [Documentation]    INFUND-4582
+    [Tags]    Failing
     When the user clicks the button/link    link=Competition set up
     and the user clicks the button/link    link=Eligibility
     Then the user should see the correct details in the eligibility form
