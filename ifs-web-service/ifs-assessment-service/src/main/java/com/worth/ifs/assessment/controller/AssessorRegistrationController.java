@@ -9,17 +9,12 @@ import com.worth.ifs.assessment.form.AssessorTermsForm;
 import com.worth.ifs.assessment.model.*;
 import com.worth.ifs.assessment.service.AssessorRestService;
 import com.worth.ifs.assessment.service.CompetitionInviteRestService;
-import com.worth.ifs.assessment.viewmodel.AssessorRegistrationViewModel;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.form.AddressForm;
 import com.worth.ifs.invite.service.EthnicityRestService;
-import com.worth.ifs.user.resource.EthnicityResource;
-import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.registration.resource.UserRegistrationResource;
-import com.worth.ifs.user.resource.Disability;
 import com.worth.ifs.user.resource.EthnicityResource;
-import com.worth.ifs.user.resource.Gender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -84,14 +79,8 @@ public class AssessorRegistrationController {
                               BindingResult bindingResult) {
 
         model.addAttribute("model", registrationModelPopulator.populateModel(inviteHash));
-        return "registration/register";
-    }
-
-    private void addRegistrationFormToModel(Model model, String inviteHash) {
-        AssessorRegistrationForm registrationForm = new AssessorRegistrationForm();
-        model.addAttribute("registrationForm", registrationForm);
         model.addAttribute("ethnicityOptions", getEthnicityOptions());
-        model.addAttribute("model", registrationModelPopulator.populateModel(inviteHash));
+        return "registration/register";
     }
 
     @RequestMapping(value = "/{inviteHash}/register", method = RequestMethod.POST)
@@ -103,16 +92,14 @@ public class AssessorRegistrationController {
 
         addAddressOptions(registrationForm);
 
-        AssessorRegistrationViewModel viewModel = (AssessorRegistrationViewModel) model.asMap().get("model");
         UserRegistrationResource userRegistrationResource = new UserRegistrationResource();
         userRegistrationResource.setTitle(registrationForm.getTitle());
         userRegistrationResource.setFirstName(registrationForm.getFirstName());
         userRegistrationResource.setLastName(registrationForm.getLastName());
         userRegistrationResource.setPhoneNumber(registrationForm.getPhoneNumber());
-        //TODO: Properly attach Gender/Disability/Ethnicity from registrationForm
-        userRegistrationResource.setGender(Gender.NOT_STATED);
-        userRegistrationResource.setDisability(Disability.NOT_STATED);
-        userRegistrationResource.setEthnicity(new EthnicityResource());
+        userRegistrationResource.setGender(registrationForm.getGender());
+        userRegistrationResource.setDisability(registrationForm.getDisability());
+        userRegistrationResource.setEthnicity(registrationForm.getEthnicity());
 
         assessorRestService.createAssessorByInviteHash(inviteHash, userRegistrationResource).getSuccessObjectOrThrowException();
 
@@ -152,23 +139,6 @@ public class AssessorRegistrationController {
         return "registration/terms";
     }
 
-    private RestResult<UserResource> createUser(String hash, AssessorRegistrationForm registrationForm, Model model) {
-        AssessorRegistrationViewModel viewModel = (AssessorRegistrationViewModel) model.asMap().get("model");
-        UserRegistrationResource userRegistrationResource = new UserRegistrationResource();
-        userRegistrationResource.setTitle(registrationForm.getTitle());
-        userRegistrationResource.setFirstName(registrationForm.getFirstName());
-        userRegistrationResource.setLastName(registrationForm.getLastName());
-        userRegistrationResource.setPhoneNumber(registrationForm.getPhoneNumber());
-        //TODO: Properly attach Gender/Disability/Ethnicity from registrationForm
-        userRegistrationResource.setGender(Gender.NOT_STATED);
-        userRegistrationResource.setDisability(Disability.NOT_STATED);
-        userRegistrationResource.setEthnicity(new EthnicityResource());
-
-        assessorRestService.createAssessorByInviteHash(inviteHash, userRegistrationResource).getSuccessObjectOrThrowException();
-
-        return "registration/register";
-
-    }
 
     private void addAddressOptions(AssessorRegistrationForm registrationForm) {
         if (StringUtils.hasText(registrationForm.getAddressForm().getPostcodeInput())) {
@@ -191,5 +161,4 @@ public class AssessorRegistrationController {
     private List<EthnicityResource> getEthnicityOptions() {
         return ethnicityRestService.findAllActive().getSuccessObjectOrThrowException();
     }
-
 }

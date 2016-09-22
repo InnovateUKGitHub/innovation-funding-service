@@ -16,9 +16,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
 
 import static com.worth.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
-import static com.worth.ifs.invite.builder.EthnicityResourceBuilder.newEthnicityResource;
-import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
+import static com.worth.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
+import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
