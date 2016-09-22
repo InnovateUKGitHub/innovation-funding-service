@@ -11,8 +11,6 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.workflow.mapper.ProcessOutcomeMapper;
 import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BeanPropertyBindingResult;
@@ -28,9 +26,8 @@ import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
-import static java.util.Optional.ofNullable;
+import static com.worth.ifs.util.StringFunctions.countWords;
 import static java.util.stream.Collectors.toList;
-import static org.apache.commons.lang3.StringUtils.stripToNull;
 
 /**
  * Transactional and secured service providing operations around {@link com.worth.ifs.assessment.domain.Assessment} data.
@@ -62,7 +59,10 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
 
     @Override
     public ServiceResult<Void> recommend(Long assessmentId, ProcessOutcomeResource processOutcome) {
-        ValidationMessages validationMessages = getValidationMessagesWithDescriptionAsFeedback(validate(processOutcome));
+        // TODO lookup word limit: INFUND-4512
+        int wordLimit = 100;
+
+        ValidationMessages validationMessages = getValidationMessagesWithDescriptionAsFeedback(validate(processOutcome, wordLimit));
         if (validationMessages.hasErrors()) {
             return serviceFailure(validationMessages.getErrors());
         }
@@ -77,6 +77,11 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
 
     @Override
     public ServiceResult<Void> rejectInvitation(Long assessmentId, ProcessOutcomeResource processOutcome) {
+        ValidationMessages validationMessages = validate(processOutcome, 100);
+        if (validationMessages.hasErrors()) {
+            return serviceFailure(validationMessages.getErrors());
+        }
+
         return find(assessmentRepository.findOne(assessmentId), notFoundError(AssessmentRepository.class, assessmentId)).andOnSuccess(found -> {
             if (!assessmentWorkflowService.rejectInvitation(found.getParticipant().getId(), found, processOutcomeMapper.mapToDomain(processOutcome))) {
                 return serviceFailure(new Error(ASSESSMENT_REJECTION_FAILED));
@@ -91,27 +96,19 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
         return result;
     }
 
-    private ValidationMessages validate(ProcessOutcomeResource processOutcome) {
-        // TODO lookup word limit: INFUND-4512
-        int wordLimit = 100;
-
+    private ValidationMessages validate(ProcessOutcomeResource processOutcome, int wordLimit) {
         BeanPropertyBindingResult errors = new BeanPropertyBindingResult(processOutcome, "processOutcome");
         if (!validateWordCount(wordLimit, processOutcome.getDescription())) {
-            rejectValue(errors, "description", "validation.field.max.word.count", wordLimit);
+            rejectValue(errors, "description", "validation.field.max.word.count", "", wordLimit);
         }
 
         if (!validateWordCount(wordLimit, processOutcome.getComment())) {
-            rejectValue(errors, "comment", "validation.field.max.word.count", wordLimit);
+            rejectValue(errors, "comment", "validation.field.max.word.count", "", wordLimit);
         }
         return new ValidationMessages(errors);
     }
 
     private boolean validateWordCount(int wordLimit, String content) {
-        return ofNullable(stripToNull(content)).map(contentValue -> {
-            // clean any HTML markup from the value
-            Document doc = Jsoup.parse(contentValue);
-            String cleaned = doc.text();
-            return cleaned.split("\\s+").length <= wordLimit;
-        }).orElse(true);
+        return countWords(content) <= wordLimit;
     }
 }
