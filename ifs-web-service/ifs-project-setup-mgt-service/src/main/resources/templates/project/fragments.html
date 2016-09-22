@@ -1,0 +1,19 @@
+<th:block th:fragment="bankDetailsStatus(statusName)">
+  <th:block th:switch="${statusName}">
+      <th:block th:case="'NOT_REQUIRED'">
+        Not required from this partner
+      </th:block>
+      <th:block th:case="'NOT_STARTED'">
+         Not yet submitted
+      </th:block>
+      <th:block th:case="'ACTION_REQUIRED'">
+          <span class="action">Review required</span>
+      </th:block>
+      <th:block th:case="'PENDING'">
+          <span class="waiting">Pending</span>
+      </th:block>
+      <th:block th:case="'COMPLETE'">
+          <span class="yes">Complete</span>
+      </th:block>
+  </th:block>
+</th:block>
