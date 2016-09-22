@@ -31,7 +31,7 @@ public class CompetitionParticipantServiceSecurityTest extends BaseServiceSecuri
     private CompetitionParticipantLookupStrategy competitionParticipantLookupStrategy;
 
     @Override
-    protected Class<? extends CompetitionParticipantService> getServiceClass() {
+    protected Class<? extends CompetitionParticipantService> getClassUnderTest() {
         return CompetitionParticipantServiceSecurityTest.TestCompetitionParticipantService.class;
     }
 
@@ -54,7 +54,7 @@ public class CompetitionParticipantServiceSecurityTest extends BaseServiceSecuri
 
         setLoggedInUser(assessorUserResource);
 
-        assertTrue(service.getCompetitionParticipants(7L, CompetitionParticipantRoleResource.ASSESSOR, ParticipantStatusResource.ACCEPTED).getSuccessObject().isEmpty());
+        assertTrue(classUnderTest.getCompetitionParticipants(7L, CompetitionParticipantRoleResource.ASSESSOR, ParticipantStatusResource.ACCEPTED).getSuccessObject().isEmpty());
 
         verify(competitionParticipantPermissionRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).userCanViewTheirOwnCompetitionParticipation(any(CompetitionParticipantResource.class), eq(assessorUserResource));
     }

@@ -3,7 +3,7 @@ package com.worth.ifs.finance.security;
 import com.worth.ifs.BasePermissionRulesTest;
 import com.worth.ifs.finance.builder.FinanceRowMetaFieldResourceBuilder;
 import com.worth.ifs.finance.resource.FinanceRowMetaFieldResource;
-import com.worth.ifs.security.CustomPermissionEvaluator;
+import com.worth.ifs.commons.security.CustomPermissionEvaluator;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;

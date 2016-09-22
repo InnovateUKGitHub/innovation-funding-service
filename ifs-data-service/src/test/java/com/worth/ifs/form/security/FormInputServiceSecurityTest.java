@@ -33,7 +33,7 @@ public class FormInputServiceSecurityTest extends BaseServiceSecurityTest<FormIn
     @Test
     public void testFindResponsesByApplication() {
         long applicationId = 1l;
-        service.findResponsesByApplication(applicationId);
+        classUnderTest.findResponsesByApplication(applicationId);
         verify(formInputResponsePermissionRules, times(TestFormInputService.ARRAY_SIZE_FOR_POST_FILTER_TESTS)).consortiumCanSeeTheInputResponsesForApplicationWhenSharedBetweenOrganisations(isA(FormInputResponseResource.class), isA(UserResource.class));
         verify(formInputResponsePermissionRules, times(TestFormInputService.ARRAY_SIZE_FOR_POST_FILTER_TESTS)).assessorCanSeeTheInputResponsesInApplicationsForOrganisationsTheyAssess(isA(FormInputResponseResource.class), isA(UserResource.class));
         verify(formInputResponsePermissionRules, times(TestFormInputService.ARRAY_SIZE_FOR_POST_FILTER_TESTS)).compAdminCanSeeFormInputResponsesForApplications(isA(FormInputResponseResource.class), isA(UserResource.class));
@@ -44,7 +44,7 @@ public class FormInputServiceSecurityTest extends BaseServiceSecurityTest<FormIn
     public void testFindResponsesByFormInputIdAndApplicationId() {
         long applicationId = 1l;
         long formInputResponseId = 2l;
-        service.findResponsesByFormInputIdAndApplicationId(applicationId, formInputResponseId);
+        classUnderTest.findResponsesByFormInputIdAndApplicationId(applicationId, formInputResponseId);
         verify(formInputResponsePermissionRules, times(TestFormInputService.ARRAY_SIZE_FOR_POST_FILTER_TESTS)).consortiumCanSeeTheInputResponsesForApplicationWhenSharedBetweenOrganisations(isA(FormInputResponseResource.class), isA(UserResource.class));
         verify(formInputResponsePermissionRules, times(TestFormInputService.ARRAY_SIZE_FOR_POST_FILTER_TESTS)).assessorCanSeeTheInputResponsesInApplicationsForOrganisationsTheyAssess(isA(FormInputResponseResource.class), isA(UserResource.class));
         verify(formInputResponsePermissionRules, times(TestFormInputService.ARRAY_SIZE_FOR_POST_FILTER_TESTS)).compAdminCanSeeFormInputResponsesForApplications(isA(FormInputResponseResource.class), isA(UserResource.class));
@@ -59,13 +59,13 @@ public class FormInputServiceSecurityTest extends BaseServiceSecurityTest<FormIn
         final long userId = 3l;
         final FormInputResponseCommand formInputResponseCommand = new FormInputResponseCommand(formInputId, applicationId, userId, "test text");
         assertAccessDenied(
-                () -> service.saveQuestionResponse(formInputResponseCommand),
+                () -> classUnderTest.saveQuestionResponse(formInputResponseCommand),
                 () -> verify(formInputResponsePermissionRules).aConsortiumMemberCanUpdateAFormInputResponse(isA(FormInputResponseCommand.class), isA(UserResource.class))
         );
     }
 
     @Override
-    protected Class<TestFormInputService> getServiceClass() {
+    protected Class<TestFormInputService> getClassUnderTest() {
         return TestFormInputService.class;
     }
 

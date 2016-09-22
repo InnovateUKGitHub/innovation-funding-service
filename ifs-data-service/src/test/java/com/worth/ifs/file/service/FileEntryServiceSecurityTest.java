@@ -37,7 +37,7 @@ public class FileEntryServiceSecurityTest extends BaseServiceSecurityTest<FileEn
         final Long applicationFinanceId = 1L;
         when(applicationFinanceLookupStrategy.getApplicationFinance(applicationFinanceId)).thenReturn(newApplicationFinanceResource().build());
         assertAccessDenied(
-                () -> service.getFileEntryByApplicationFinanceId(applicationFinanceId),
+                () -> classUnderTest.getFileEntryByApplicationFinanceId(applicationFinanceId),
                 () -> {
                     verify(applicationFinanceRules).consortiumMemberCanGetFileEntryResourceByFinanceIdOfACollaborator(isA(ApplicationFinanceResource.class), isA(UserResource.class));
                     verify(applicationFinanceRules).compAdminCanGetFileEntryResourceForFinanceIdOfACollaborator(isA(ApplicationFinanceResource.class), isA(UserResource.class));
@@ -45,7 +45,7 @@ public class FileEntryServiceSecurityTest extends BaseServiceSecurityTest<FileEn
     }
 
     @Override
-    protected Class<? extends FileEntryService> getServiceClass() {
+    protected Class<? extends FileEntryService> getClassUnderTest() {
         return TestFileEntryService.class;
     }
 

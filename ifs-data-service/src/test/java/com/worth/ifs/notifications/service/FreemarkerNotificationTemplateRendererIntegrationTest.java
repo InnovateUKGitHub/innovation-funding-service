@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
-import com.worth.ifs.BaseIntegrationTest;
+import com.worth.ifs.commons.BaseIntegrationTest;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.notifications.resource.UserNotificationSource;
 import com.worth.ifs.notifications.resource.UserNotificationTarget;

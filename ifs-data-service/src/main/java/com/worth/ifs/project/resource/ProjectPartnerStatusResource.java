@@ -8,6 +8,8 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import static com.worth.ifs.project.constant.ProjectActivityStates.COMPLETE;
+
 /**
  * Used for returning status of each partner (except lead, for which there is a more specific class with constructor)
  * There is a constructor here which is used by subclass but is package local.
@@ -29,8 +31,8 @@ public class ProjectPartnerStatusResource {
     private ProjectActivityStates spendProfileStatus;
 
     // TODO DW - INFUND-4915 - implement
-    private ProjectActivityStates companiesHouseStatus;
-    private ProjectActivityStates financeContactStatus;
+    private ProjectActivityStates companiesHouseStatus = COMPLETE;
+    private ProjectActivityStates financeContactStatus = COMPLETE;
 
     /* Following properties are only applicable to lead partner */
     private ProjectActivityStates monitoringOfficerStatus;

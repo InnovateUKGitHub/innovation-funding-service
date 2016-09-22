@@ -1,16 +1,14 @@
-package com.worth.ifs.security;
-
-import java.util.List;
+package com.worth.ifs.commons.security;
 
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.ApplicationStatus;
-import com.worth.ifs.commons.security.UserAuthentication;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.resource.UserResource;
-
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+
+import java.util.List;
 
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;

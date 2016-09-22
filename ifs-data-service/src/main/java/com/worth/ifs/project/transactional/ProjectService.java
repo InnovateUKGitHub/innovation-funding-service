@@ -12,7 +12,7 @@ import com.worth.ifs.project.resource.ProjectTeamStatusResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 
 import com.worth.ifs.invite.resource.InviteProjectResource;
-import com.worth.ifs.security.SecuredBySpring;
+import com.worth.ifs.commons.security.SecuredBySpring;
 import com.worth.ifs.user.resource.OrganisationResource;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;

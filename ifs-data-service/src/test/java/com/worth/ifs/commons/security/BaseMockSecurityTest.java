@@ -1,10 +1,10 @@
-package com.worth.ifs;
+package com.worth.ifs.commons.security;
 
-import com.worth.ifs.security.CustomPermissionEvaluator;
-import com.worth.ifs.security.CustomPermissionEvaluator.PermissionedObjectClassesToListOfLookup;
-import com.worth.ifs.security.CustomPermissionEvaluator.PermissionedObjectClassToPermissionsToPermissionsMethods;
-import com.worth.ifs.security.CustomPermissionEvaluator.ListOfOwnerAndMethod;
-import com.worth.ifs.security.CustomPermissionEvaluator.PermissionsToPermissionsMethods;
+import com.worth.ifs.commons.BaseIntegrationTest;
+import com.worth.ifs.commons.security.CustomPermissionEvaluator.ListOfOwnerAndMethod;
+import com.worth.ifs.commons.security.CustomPermissionEvaluator.PermissionedObjectClassToPermissionsToPermissionsMethods;
+import com.worth.ifs.commons.security.CustomPermissionEvaluator.PermissionedObjectClassesToListOfLookup;
+import com.worth.ifs.commons.security.CustomPermissionEvaluator.PermissionsToPermissionsMethods;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.After;
 import org.junit.Before;
@@ -44,7 +44,7 @@ public abstract class BaseMockSecurityTest extends BaseIntegrationTest {
     private PermissionedObjectClassesToListOfLookup originalLookupStrategyMap;
 
     /**
-     * Look up a Mockito mock for a given {@link com.worth.ifs.security.PermissionRules} annotated bean class
+     * Look up a Mockito mock for a given {@link PermissionRules} annotated bean class
      *
      * @param clazz
      * @param <T>
@@ -56,7 +56,7 @@ public abstract class BaseMockSecurityTest extends BaseIntegrationTest {
 
 
     /**
-     * Look up a Mockito mock for a given {@link com.worth.ifs.security.PermissionEntityLookupStrategies} annotated bean class
+     * Look up a Mockito mock for a given {@link PermissionEntityLookupStrategies} annotated bean class
      *
      * @param clazz
      * @param <T>
@@ -67,7 +67,7 @@ public abstract class BaseMockSecurityTest extends BaseIntegrationTest {
     }
 
     /**
-     * Register a temporary bean definition for the class under test (as provided by getServiceClass()), and replace
+     * Register a temporary bean definition for the class under test (as provided by getClassUnderTest()), and replace
      * all PermissionRules with mocks that can be looked up with getMockPermissionRulesBean().
      */
     @Before

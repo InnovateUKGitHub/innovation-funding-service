@@ -5,7 +5,7 @@ import com.worth.ifs.invite.domain.ApplicationInvite;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.invite.resource.InviteResultsResource;
-import com.worth.ifs.security.SecuredBySpring;
+import com.worth.ifs.commons.security.SecuredBySpring;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;

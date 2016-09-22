@@ -1,4 +1,4 @@
-package com.worth.ifs;
+package com.worth.ifs.security;
 
 import au.com.bytecode.opencsv.CSVWriter;
 import com.worth.ifs.commons.security.BaseDocumentingSecurityTest;
@@ -17,9 +17,9 @@ import java.io.IOException;
  * Subclasses of this base class are therefore able to test the security annotations of their various methods by verifying
  * that individual PermissionRule methods are being called (on their owning mocks) and the same verifications auto-documented
  */
-public abstract class BaseServiceSecurityTest<T> extends BaseDocumentingSecurityTest<T> {
+public abstract class BaseControllerSecurityTest<T> extends BaseDocumentingSecurityTest<T> {
 
-    public static final String SERVICE_DOCUMENTATION_FILENAME = "build/service-calls-and-permission-rules.csv";
+    public static final String CONTROLLER_DOCUMENTATION_FILENAME = "build/controller-calls-and-permission-rules.csv";
 
     /**
      * A static initialization block that will ensure that we start any BaseServiceSecurityTest subclasses with a fresh
@@ -27,16 +27,16 @@ public abstract class BaseServiceSecurityTest<T> extends BaseDocumentingSecurity
      */
     static {
 
-        try (FileWriter fileWriter = new FileWriter(SERVICE_DOCUMENTATION_FILENAME)) {
+        try (FileWriter fileWriter = new FileWriter(CONTROLLER_DOCUMENTATION_FILENAME)) {
             CSVWriter writer = new CSVWriter(fileWriter, '\t');
-            writer.writeNext(new String[]{"Service call", "Permission rules checked"});
+            writer.writeNext(new String[]{"Controller call", "Permission rules checked"});
         } catch (IOException e) {
-            throw new RuntimeException("Unable to create csv for service documentation");
+            throw new RuntimeException("Unable to create csv for controller documentation");
         }
     }
 
     @Override
     protected String getDocumentationFilename() {
-        return SERVICE_DOCUMENTATION_FILENAME;
+        return CONTROLLER_DOCUMENTATION_FILENAME;
     }
 }

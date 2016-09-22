@@ -1,4 +1,4 @@
-package com.worth.ifs;
+package com.worth.ifs.commons;
 
 import org.junit.Before;
 

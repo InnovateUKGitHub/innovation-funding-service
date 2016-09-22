@@ -1,101 +1,103 @@
 package com.worth.ifs.project;
 
+import com.worth.ifs.security.BaseControllerSecurityTest;
+import com.worth.ifs.user.resource.UserResource;
+import org.junit.Before;
 import org.junit.Test;
 
-public class ProjectDetailsControllerSecurityTest extends BaseControllerSecurityTest<ProjectDetailsController, ProjectDetailsControllerSecurityAspect, ProjectDetailsControllerSecurityAdvisor> {
+import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
+public class ProjectDetailsControllerSecurityTest extends BaseControllerSecurityTest<ProjectDetailsController> {
+
+    @Override
+    protected Class<? extends ProjectDetailsController> getClassUnderTest() {
+        return ProjectDetailsController.class;
+    }
+
+    private ProjectSetupSectionsPermissionRules permissionRules;
+
+    @Before
+    public void lookupPermissionRules() {
+        permissionRules = getMockPermissionRulesBean(ProjectSetupSectionsPermissionRules.class);
+    }
 
     @Test
     public void testViewProjectDetails() {
-        assertSecured(controller -> controller.viewProjectDetails(123L, null, null));
+        assertSecured(() -> classUnderTest.viewProjectDetails(123L, null, null));
     }
 
     @Test
     public void testProjectDetailConfirmSubmit() {
-        assertSecured(controller -> controller.projectDetailConfirmSubmit(123L, null, null));
+        assertSecured(() -> classUnderTest.projectDetailConfirmSubmit(123L, null, null));
     }
 
     @Test
     public void testViewFinanceContact() {
-        assertSecured(controller -> controller.viewFinanceContact(123L, null, null, null));
+        assertSecured(() -> classUnderTest.viewFinanceContact(123L, null, null, null));
     }
 
     @Test
     public void testUpdateFinanceContact() {
-        assertSecured(controller -> controller.updateFinanceContact(123L, null, null, null, null, null));
+        assertSecured(() -> classUnderTest.updateFinanceContact(123L, null, null, null, null, null));
     }
 
     @Test
     public void testViewProjectManager() {
-        assertSecured(controller -> controller.viewProjectManager(123L, null, null));
+        assertSecured(() -> classUnderTest.viewProjectManager(123L, null, null));
     }
 
     @Test
     public void testUpdateProjectManager() {
-        assertSecured(controller -> controller.updateProjectManager(123L, null, null, null, null, null));
+        assertSecured(() -> classUnderTest.updateProjectManager(123L, null, null, null, null, null));
     }
 
     @Test
     public void testViewStartDate() {
-        assertSecured(controller -> controller.viewStartDate(123L, null, null, null));
+        assertSecured(() -> classUnderTest.viewStartDate(123L, null, null, null));
     }
 
     @Test
     public void testUpdateStartDate() {
-        assertSecured(controller -> controller.updateStartDate(123L, null, null, null, null, null));
+        assertSecured(() -> classUnderTest.updateStartDate(123L, null, null, null, null, null));
     }
 
     @Test
     public void testViewAddress() {
-        assertSecured(controller -> controller.viewAddress(123L, null, null));
+        assertSecured(() -> classUnderTest.viewAddress(123L, null, null));
     }
 
     @Test
     public void testSearchAddress() {
-        assertSecured(controller -> controller.searchAddress(123L, null, null));
+        assertSecured(() -> classUnderTest.searchAddress(123L, null, null));
     }
 
     @Test
     public void testUpdateAddress() {
-        assertSecured(controller -> controller.updateAddress(123L, null, null, null, null));
+        assertSecured(() -> classUnderTest.updateAddress(123L, null, null, null, null));
     }
 
     @Test
     public void testSelectAddress() {
-        assertSecured(controller -> controller.selectAddress(123L, null, null));
+        assertSecured(() -> classUnderTest.selectAddress(123L, null, null));
     }
 
     @Test
     public void testManualAddress() {
-        assertSecured(controller -> controller.manualAddress(123L, null, null));
+        assertSecured(() -> classUnderTest.manualAddress(123L, null, null));
     }
 
     @Test
     public void testSubmitProjectDetails() {
-        assertSecured(controller -> controller.submitProjectDetails(123L));
+        assertSecured(() -> classUnderTest.submitProjectDetails(123L));
     }
 
-    @Override
-    protected Class<ProjectDetailsController> getControllerType() {
-        return ProjectDetailsController.class;
-    }
-
-    @Override
-    protected Class<ProjectDetailsControllerSecurityAspect> getAspectType() {
-        return ProjectDetailsControllerSecurityAspect.class;
-    }
-
-    @Override
-    protected Class<ProjectDetailsControllerSecurityAdvisor> getAdvisorType() {
-        return ProjectDetailsControllerSecurityAdvisor.class;
-    }
-
-    @Override
-    protected boolean getExpectedSecurityCheck(ProjectDetailsControllerSecurityAdvisor advisor) {
-        return advisor.canAccessProjectDetailsSection(123L);
-    }
-
-    @Override
-    protected String getExpectedForbiddenMessage() {
-        return "Unable to access the Project Details section at this time";
+    private void assertSecured(Runnable invokeControllerFn) {
+        assertAccessDenied(
+                invokeControllerFn::run,
+                () -> verify(permissionRules, times(1)).partnerCanAccessProjectDetailsSection(eq(123L), isA(UserResource.class))
+        );
     }
 }
