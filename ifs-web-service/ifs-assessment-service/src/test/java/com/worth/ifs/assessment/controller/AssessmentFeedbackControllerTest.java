@@ -272,9 +272,9 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         String value = "This is the feedback";
         Long formInputId = 1L;
 
-        when(assessorFormInputResponseService.updateFormInputResponse(ASSESSMENT_ID, formInputId, value)).thenReturn(serviceFailure(fieldError("value", "Feedback", "validation.field.max.word.count", 100)));
+        when(assessorFormInputResponseService.updateFormInputResponse(ASSESSMENT_ID, formInputId, value)).thenReturn(serviceFailure(fieldError("value", "Feedback", "validation.field.max.word.count", "", 100)));
 
-        when(messageSource.getMessage("validation.field.max.word.count", new Object[]{"100"}, Locale.UK)).thenReturn("Maximum word count exceeded. Please reduce your word count to 100.");
+        when(messageSource.getMessage("validation.field.max.word.count", new Object[]{"", "100"}, Locale.UK)).thenReturn("Maximum word count exceeded. Please reduce your word count to 100.");
 
         MvcResult result = mockMvc.perform(post("/{assessmentId}/formInput/{formInputId}", ASSESSMENT_ID, formInputId)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -371,7 +371,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         String formInputFeedbackField = format("formInput[%s]", formInputIdFeedback);
 
         when(assessorFormInputResponseService.updateFormInputResponse(ASSESSMENT_ID, formInputIdScore, "10")).thenReturn(serviceSuccess());
-        when(assessorFormInputResponseService.updateFormInputResponse(ASSESSMENT_ID, formInputIdFeedback, "Feedback")).thenReturn(serviceFailure(fieldError("value", "Feedback", "validation.field.max.word.count", 100)));
+        when(assessorFormInputResponseService.updateFormInputResponse(ASSESSMENT_ID, formInputIdFeedback, "Feedback")).thenReturn(serviceFailure(fieldError("value", "Feedback", "validation.field.max.word.count", "", 100)));
 
         // For re-display of question view following the invalid data entry
         List<FormInputResource> applicationFormInputs = this.setupApplicationFormInputs(QUESTION_ID, FORM_INPUT_TYPES.get("textarea"));
@@ -401,7 +401,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         assertEquals(1, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors(formInputFeedbackField));
         assertEquals("validation.field.max.word.count", bindingResult.getFieldError(formInputFeedbackField).getCode());
-        assertEquals("100", bindingResult.getFieldError(formInputFeedbackField).getArguments()[0]);
+        assertEquals("100", bindingResult.getFieldError(formInputFeedbackField).getArguments()[1]);
     }
 
     @Override
