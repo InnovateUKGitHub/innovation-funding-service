@@ -32,7 +32,7 @@ public class BankDetailsRestServiceImpl extends BaseRestService implements BankD
     }
 
     @Override
-    public RestResult<ProjectBankDetailsStatusSummary> getBankDetailsByProject(Long projectId) {
+    public RestResult<ProjectBankDetailsStatusSummary> getBankDetailsStatusSummaryByProject(Long projectId) {
         return getWithRestResult(projectRestURL + "/" + projectId + "/bank-details/status-summary", ProjectBankDetailsStatusSummary.class);
     }
 }

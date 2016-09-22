@@ -21,11 +21,10 @@ import com.worth.ifs.organisation.mapper.OrganisationAddressMapper;
 import com.worth.ifs.organisation.repository.OrganisationAddressRepository;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.project.domain.Project;
-import com.worth.ifs.project.domain.ProjectUser;
 import com.worth.ifs.project.mapper.ProjectUserMapper;
 import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.project.repository.ProjectUserRepository;
-import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.project.users.ProjectUsersHelper;
 import com.worth.ifs.sil.experian.resource.AccountDetails;
 import com.worth.ifs.sil.experian.resource.Address;
 import com.worth.ifs.sil.experian.resource.Condition;
@@ -37,8 +36,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
-import java.util.function.Supplier;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.worth.ifs.address.resource.OrganisationAddressType.BANK_DETAILS;
@@ -47,11 +46,7 @@ import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.error.Error.globalError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
-import static com.worth.ifs.project.constant.ProjectActivityStates.COMPLETE;
-import static com.worth.ifs.project.constant.ProjectActivityStates.NOT_STARTED;
-import static com.worth.ifs.project.constant.ProjectActivityStates.PENDING;
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static com.worth.ifs.project.constant.ProjectActivityStates.*;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static java.lang.Short.parseShort;
 import static java.util.Arrays.asList;
@@ -99,6 +94,9 @@ public class BankDetailsServiceImpl implements BankDetailsService{
     @Autowired
     private SilExperianEndpoint silExperianEndpoint;
 
+    @Autowired
+    private ProjectUsersHelper projectUsersHelper;
+
     private SILBankDetailsMapper silBankDetailsMapper = new SILBankDetailsMapper();
 
     @Override
@@ -144,7 +142,7 @@ public class BankDetailsServiceImpl implements BankDetailsService{
         Organisation leadOrganisation = project.getApplication().getLeadOrganisation();
         List<BankDetailsStatusResource> bankDetailsStatusResources = new ArrayList<>();
         bankDetailsStatusResources.add(getBankDetailsStatusForOrg(projectId, leadOrganisation));
-        List<Organisation> organisations = getPartnerOrganisations(projectId).stream().filter(org -> !org.getId().equals(leadOrganisation.getId())).collect(Collectors.toList());
+        List<Organisation> organisations = projectUsersHelper.getPartnerOrganisations(projectId).stream().filter(org -> !org.getId().equals(leadOrganisation.getId())).collect(Collectors.toList());
         bankDetailsStatusResources.addAll(organisations.stream().map(org -> getBankDetailsStatusForOrg(projectId, org)).collect(Collectors.toList()));
         // TODO: Add formatted ids after other branch is merged
         ProjectBankDetailsStatusSummary projectBankDetailsStatusSummary = new ProjectBankDetailsStatusSummary(project.getApplication().getCompetition().getId(), "", project.getId(), "", bankDetailsStatusResources);
@@ -296,29 +294,5 @@ public class BankDetailsServiceImpl implements BankDetailsService{
                     return globalError(EXPERIAN_VALIDATION_FAILED, singletonList(condition.getDescription()));
                 }).
                 collect(Collectors.toList());
-    }
-
-    private List<ProjectUser> getProjectUsersByProjectId(Long projectId) {
-        return projectUserRepository.findByProjectId(projectId);
-    }
-
-    private List<Organisation> getPartnerOrganisations(Long projectId) {
-        List<ProjectUser> projectUserObjs = getProjectUsersByProjectId(projectId);
-        List<ProjectUserResource> projectRoles = simpleMap(projectUserObjs, projectUserMapper::mapToResource);
-        return getPartnerOrganisations(projectRoles);
-    }
-
-    private List<Organisation> getPartnerOrganisations(List<ProjectUserResource> projectRoles) {
-        final Comparator<Organisation> compareById =
-                Comparator.comparingLong(Organisation::getId);
-
-        final Supplier<SortedSet<Organisation>> supplier = () -> new TreeSet<>(compareById);
-
-        SortedSet<Organisation> organisationSet = projectRoles.stream()
-                .filter(uar -> uar.getRoleName().equals(PROJECT_PARTNER.getName()))
-                .map(uar -> organisationRepository.findOne(uar.getOrganisation()))
-                .collect(Collectors.toCollection(supplier));
-
-        return new ArrayList<>(organisationSet);
     }
 }

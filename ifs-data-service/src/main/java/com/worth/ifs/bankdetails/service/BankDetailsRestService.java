@@ -9,5 +9,5 @@ public interface BankDetailsRestService {
     RestResult<Void> submitBankDetails(final Long projectId, final BankDetailsResource bankDetailsResource);
     RestResult<Void> updateBankDetails(final Long projectId, final BankDetailsResource bankDetailsResource);
     RestResult<BankDetailsResource> getBankDetailsByProjectAndOrganisation(final Long projectId, final Long organisationId);
-    RestResult<ProjectBankDetailsStatusSummary> getBankDetailsByProject(final Long projectId);
+    RestResult<ProjectBankDetailsStatusSummary> getBankDetailsStatusSummaryByProject(final Long projectId);
 }
