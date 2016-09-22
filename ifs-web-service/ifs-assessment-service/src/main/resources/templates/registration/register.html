@@ -69,21 +69,14 @@
                             <span class="heading-small">Gender</span>
                         </legend>
                         <div class="form-group">
-                            <label class="block-label" for="radio-indent-1">
-                                <input id="radio-indent-1" name="gender-group" value="male" type="radio" />
-                                Male
-                            </label>
-                            <label class="block-label" for="radio-indent-2">
-                                <input id="radio-indent-2" name="gender-group" value="female" type="radio" />
-                                Female
-                            </label>
-                            <label class="block-label" for="radio-indent-3">
-                                <input id="radio-indent-3" name="gender-group" value="prefer-not-to-say" type="radio" />
-                                Prefer not to say
+                            <label class="block-label" th:each="gender : ${T(com.worth.ifs.user.resource.Gender).values()}">
+                                <input th:field="*{gender}" th:value="${gender.id}" type="radio" />
+                                <span th:text="${gender.displayName}" th:remove="tag" />
                             </label>
                         </div>
                     </fieldset>
                 </div>
+
                 <div class="form-group">
                     <fieldset class="inline">
                         <legend>
@@ -91,8 +84,8 @@
                         </legend>
                         <div class="form-group">
                             <label class="block-label" th:each="ethnicity : ${ethnicityOptions}">
-                                <input th:field="*{ethnicityOptions}" type="radio" />
-                                <span th:text="${ethnicity.displayName}" th:remove="tag" />
+                                <input th:field="*{ethnicity}" th:value="${ethnicity.id}" type="radio" />
+                                <span th:text="${ethnicity.description}" th:remove="tag" />
                             </label>
                         </div>
                     </fieldset>
@@ -104,17 +97,9 @@
                             <span class="heading-small">Do you consider yourself disabled?</span>
                         </legend>
                         <div class="form-group">
-                            <label class="block-label" for="radio-indent-4">
-                                <input id="radio-indent-4" name="disability-group" value="yes" type="radio" />
-                                Yes
-                            </label>
-                            <label class="block-label" for="radio-indent-5">
-                                <input id="radio-indent-5" name="disability-group" value="no" type="radio" />
-                                No
-                            </label>
-                            <label class="block-label" for="radio-indent-6">
-                                <input id="radio-indent-6" name="disability-group" value="prefer-not-to-say" type="radio" />
-                                Prefer not to say
+                            <label class="block-label" th:each="disability : ${T(com.worth.ifs.user.resource.Disability).values()}">
+                                <input th:field="*{disability}" th:value="${disability.id}" type="radio" />
+                                <span th:text="${disability.displayName}" th:remove="tag" />
                             </label>
                         </div>
                     </fieldset>
