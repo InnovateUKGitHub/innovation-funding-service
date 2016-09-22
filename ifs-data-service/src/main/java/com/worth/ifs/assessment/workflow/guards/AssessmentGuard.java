@@ -1,19 +1,21 @@
 package com.worth.ifs.assessment.workflow.guards;
 
 import com.worth.ifs.assessment.domain.Assessment;
-import org.springframework.context.annotation.Configuration;
+import com.worth.ifs.assessment.resource.AssessmentOutcomes;
+import com.worth.ifs.assessment.resource.AssessmentStates;
 import org.springframework.statemachine.StateContext;
 import org.springframework.statemachine.guard.Guard;
+import org.springframework.stereotype.Component;
 
 /**
  * {@code AssessmentGuard} is responsible for testing if the transition can take place
  * to the next state. This will not happen if the evaluation is failing.
  */
-@Configuration
-public class AssessmentGuard implements Guard<String, String> {
+@Component
+public class AssessmentGuard implements Guard<AssessmentStates, AssessmentOutcomes> {
 
     @Override
-    public boolean evaluate(StateContext<String, String> context) {
+    public boolean evaluate(StateContext<AssessmentStates, AssessmentOutcomes> context) {
         Object assessmentObject = context.getMessageHeader("assessment");
         Object processRoleId = context.getMessageHeader("processRoleId");
 

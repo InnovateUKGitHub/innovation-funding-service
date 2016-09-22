@@ -27,21 +27,19 @@ public class AssessorFormInputResponsePermissionRulesTest extends BasePermission
 
     @Before
     public void setUp() throws Exception {
-        Long processRoleId = 1L;
-        Long userId = 2L;
 
         applicantUser = newUserResource().build();
-        assessorUser = newUserResource().withId(userId).build();
+        assessorUser = newUserResource().build();
 
         ProcessRole processRole = newProcessRole()
-                .withUser(newUser().with(id(userId)).build())
+                .withUser(newUser().with(id(assessorUser.getId())).build())
                 .withRole(ASSESSOR)
                 .build();
 
         Assessment assessment = newAssessment().withParticipant(processRole).build();
         response = newAssessorFormInputResponseResource().withAssessment(assessment.getId()).build();
 
-        when(processRoleRepositoryMock.findOne(processRoleId)).thenReturn(processRole);
+        when(processRoleRepositoryMock.findOne(processRole.getId())).thenReturn(processRole);
         when(assessmentRepositoryMock.findOne(response.getAssessment())).thenReturn(assessment);
     }
 

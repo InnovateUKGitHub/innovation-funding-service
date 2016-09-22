@@ -1,24 +1,5 @@
 package com.worth.ifs.application.mapper;
 
-import static com.worth.ifs.BaseBuilderAmendFunctions.clearUniqueIds;
-import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
-import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
-import static com.worth.ifs.user.builder.UserBuilder.newUser;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.math.BigDecimal;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
-
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.ApplicationStatus;
@@ -32,6 +13,24 @@ import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.resource.UserRoleType;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+
+import java.math.BigDecimal;
+
+import static com.worth.ifs.BaseBuilderAmendFunctions.clearUniqueIds;
+import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
+import static com.worth.ifs.user.builder.UserBuilder.newUser;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 
 @RunWith(MockitoJUnitRunner.class)
@@ -98,7 +97,7 @@ public class ApplicationSummaryMapperTest {
 		assertEquals("In Progress", result.getStatus());
 		assertEquals(Integer.valueOf(66), result.getCompletedPercentage());
 		assertEquals("leadorg", result.getLead());
-		assertEquals("User 1", result.getLeadApplicant());
+		assertEquals("User 4", result.getLeadApplicant());
 		assertEquals(Integer.valueOf(2), result.getNumberOfPartners());
 		assertEquals(new BigDecimal("1.23"), result.getGrantRequested());
 		assertEquals(new BigDecimal("9.87"), result.getTotalProjectCost());
