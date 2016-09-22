@@ -16,7 +16,7 @@
                 <h1 class="heading-xlarge">Create assessor account</h1>
             </div>
 
-            <form th:action="@{/registration/register}" method="post" th:object="${registrationForm}">
+            <form th:action="@{/registration/register}" method="post" th:object="${form}">
                 <div class="error-summary" th:if="${#fields.hasErrors('*')}">
                     <h1 class="heading-medium error-summary-heading">
                         We were unable to create your account
@@ -120,7 +120,7 @@
                     </fieldset>
                 </div>
 
-                <div th:include="fragments/addresses :: company-address-details" th:with="form=${registrationForm}, legend='Address search'" th:remove="tag"></div>
+                <div th:include="fragments/addresses :: company-address-details" th:with="form=${form}, legend='Address search'" th:remove="tag"></div>
 
                 <div class="form-group extra-margin">
                     <label class="form-label" th:for="phoneNumber">
