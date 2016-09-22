@@ -136,7 +136,6 @@ public class BankDetailsServiceImpl implements BankDetailsService{
         bankDetailsStatusResources.add(getBankDetailsStatusForOrg(projectId, leadOrganisation));
         List<Organisation> organisations = projectUsersHelper.getPartnerOrganisations(projectId).stream().filter(org -> !org.getId().equals(leadOrganisation.getId())).collect(Collectors.toList());
         bankDetailsStatusResources.addAll(organisations.stream().map(org -> getBankDetailsStatusForOrg(projectId, org)).collect(Collectors.toList()));
-        // TODO: Add formatted ids after other branch is merged
         ProjectBankDetailsStatusSummary projectBankDetailsStatusSummary = new ProjectBankDetailsStatusSummary(project.getApplication().getCompetition().getId(), project.getId(),bankDetailsStatusResources);
         return serviceSuccess(projectBankDetailsStatusSummary);
     }
