@@ -130,7 +130,7 @@
                     <span class="error-message"  th:each="err : ${#fields.errors('rejectReason')}" th:text="${err}" />
                 </span>
             </label>
-            <select class="form-control" th:errorclass="field-error" required="required" th:field="*{rejectReason}">
+            <select class="form-control" data-required-errormessage="The reason cannot be blank" th:errorclass="field-error" required="required" th:field="*{rejectReason}">
                 <option value="">Select a reason</option>
                 <option th:each="reason : ${rejectionReasons}"
                         th:value="${reason.id}"
@@ -149,7 +149,7 @@
                 class="form-control width-full"
                 data-max_words="100"
                 data-maxwordslength="100"
-                data-maxwordslength-errormessage="This field cannot contain more than 100 words"
+                data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 100."
                 th:errorclass="field-error"
                 rows="4"
                 th:field="*{rejectComment}"></textarea>
@@ -183,13 +183,13 @@
         </div>
 
         <div class="form-group" th:classappend="${#fields.hasErrors('rejectReason')}? error">
-            <label class="form-label" th:for="${#ids.next('rejectReason')}">
+            <label class="form-label" th:for="rejectReason">
                 Please select a reason for rejecting the application
                 <span th:if="${#fields.hasErrors('rejectReason')}" th:remove="tag">
                     <span class="error-message"  th:each="err : ${#fields.errors('rejectReason')}" th:text="${err}" />
                 </span>
             </label>
-            <select class="form-control" th:errorclass="field-error" required="required" th:field="*{rejectReason}">
+            <select class="form-control" data-required-errormessage="Please enter a reason" th:errorclass="field-error" required="required" th:field="*{rejectReason}">
                 <option value="">Select a reason</option>
                 <option value="conflict-of-interest">Conflict of interest</option>
                 <option value="not-my-area-of-interest">Not my area of expertise</option>
@@ -197,7 +197,7 @@
             </select>
         </div>
         <div class="form-group word-count" th:classappend="${#fields.hasErrors('rejectComment')}? error">
-            <label class="form-label" th:for="${#ids.next('rejectComment')}">
+            <label class="form-label" th:for="rejectComment">
                 Use this space to provide more information
                 <span th:if="${#fields.hasErrors('rejectComment')}" th:remove="tag">
                     <span class="error-message"  th:each="err : ${#fields.errors('rejectComment')}" th:text="${err}" />
@@ -207,7 +207,7 @@
                 class="form-control width-full"
                 data-max_words="100"
                 data-maxwordslength="100"
-                data-maxwordslength-errormessage="This field cannot contain more than 100 words"
+                data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 100."
                 th:errorclass="field-error"
                 rows="4"
                 th:field="*{rejectComment}"></textarea>
