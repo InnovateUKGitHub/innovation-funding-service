@@ -57,35 +57,38 @@ Calculations in the spend profile table
 
 Lead Partner can see Spend profile summary
     [Documentation]    INFUND-3971
-    [Tags]    Pending
+    [Tags]
     Given the user navigates to the page            ${server}/project-setup/project/1/partner-organisation/31/spend-profile/
     And the user should see the text in the page    Project costs for financial year
-    And focus                                       jQuery=div.grid-container table
-    Then element should contain                     jQuery=tr:nth-child(1) td:nth-child(2)    £ 29,667
-    And element should contain                      jQuery=tr:nth-child(1) td:nth-child(2)    £ 118,740
-    And element should contain                      jQuery=tr:nth-child(1) td:nth-child(2)    £ 118,740
-    And element should contain                      jQuery=tr:nth-child(1) td:nth-child(2)    £ 89,055
+    And the user moves focus to the element         jQuery=div.grid-container table
+    Then element should contain                     jQuery=div.grid-container table tr:nth-child(1) td:nth-child(2)    £ 29,667
+    And element should contain                      jQuery=div.grid-container table tr:nth-child(2) td:nth-child(2)    £ 118,740
+    And element should contain                      jQuery=div.grid-container table tr:nth-child(3) td:nth-child(2)    £ 118,740
+    And element should contain                      jQuery=div.grid-container table tr:nth-child(4) td:nth-child(2)    £ 89,055
 
 Lead partner can edit his spend profile with invalid values
     [Documentation]    INFUND-3765
-    [Tags]    Pending
+    [Tags]
     When the user clicks the button/link             jQuery=.button:contains("Edit spend profile")
     Then the text box should be editable             css=#row-Labour-0
     When the user enters text to a text field        css=#row-Labour-0    2899
+    And the user moves focus to the element          css=#row-Labour-2
     Then the user should see the text in the page    Unable to save spend profile
     And the user should see the text in the page     Your total costs are higher than your eligible costs
-#    Then element text should be                      css=#row-total-Labour    £ 104,364
-    And the user should see the element              jQuery=.tr:nth-child(1).error
+    Then the field has value                         css=#row-total-Labour    £ 104,364
+    And the user should see the element              jQuery=tr:nth-child(1) .cell-error
     When the user clicks the button/link             jQuery=.button:contains("Save and return to spend profile overview")
     Then the user should see the text in the page    Your spend profile has total costs higher than eligible project costs,
     When the user clicks the button/link             jQuery=.button:contains("Edit spend profile")
     Then the user enters text to a text field        css=#row-Labour-0    2889
     # And the user should not see the element        jQuery=.tr:nth-child(1).error    TODO INFUND-5156
     When the user enters text to a text field        css=#row-Materials-3    -55
+    And the user moves focus to the element          css=#row-Materials-5
     Then the user should see the text in the page    This field should be 0 or higher
     # When the user enters text to a text field      css=#row-Labour-3    35.25
     # Then the user should see the text in the page  TODO INFUND-5172
     When the user enters text to a text field        css=#row-Materials-3    5223
+    And the user moves focus to the element          css=#row-Materials-5
     # And the user should not see the text in the page   This field should be 0 or higher    TODO INFUND-5160
     # Then the user should not see the element       jQuery=.tr:nth-child(1).error    TODO INFUND-5156
     Then the user clicks the button/link             jQuery=.button:contains("Save and return to spend profile overview")
@@ -97,10 +100,12 @@ Lead partner can edit his spend profile with valid values
     When the user clicks the button/link                 jQuery=.button:contains("Edit spend profile")
     Then the text box should be editable                 css=#row-Labour-0
     When the user enters text to a text field            css=#row-Labour-24    2000
-    Then element should contain                          css=#row-total-Labour    £ 103,455
+    And the user moves focus to the element              css=#row-Labour-25
+    Then the field has value                             css=#row-total-Labour    £ 103,455
     And the user should not see the text in the page     Unable to save spend profile
     When the user enters text to a text field            css=#row-Travel--subsistence-35    0
-    Then element should contain                          css=#row-total-Travel--subsistence    £ 7,735
+    And the user moves focus to the element              css=#row-Travel--subsistence-33
+    Then the field has value                             css=#row-total-Travel--subsistence    £ 7,735
     And the user should not see the text in the page     Unable to save spend profile
     Then the user clicks the button/link                 jQuery=.button:contains("Save and return to spend profile overview")
     Then the user should not see the text in the page    Your spend profile has total costs higher than eligible project costs,
@@ -110,8 +115,8 @@ Lead Partners Spend profile summary gets updated when edited
     [Tags]    Pending
     Given the user navigates to the page             ${server}/project-setup/project/1/partner-organisation/31/spend-profile/
     Then the user should see the text in the page    Project costs for financial year
-    And element should contain                       jQuery=tr:nth-child(1) td:nth-child(2)    £ 117,841
-    And element should contain                       jQuery=tr:nth-child(1) td:nth-child(2)    £ 88,834
+    And element should contain                       jQuery=div.grid-container table tr:nth-child(3) td:nth-child(2)    £ 118,740
+    And element should contain                       jQuery=div.grid-container table tr:nth-child(4) td:nth-child(2)    £ 88,834
 
 Lead partner submits Spend Profile
     [Documentation]    INFUND-3765
@@ -166,3 +171,8 @@ the text box should be editable
     [Arguments]    ${element}
     Wait until element is visible    ${element}
     Element Should Be Enabled        ${element}
+
+the field has value
+    [Arguments]    ${field}    ${value}
+    ${var} =  get value     ${field}
+    should be equal as strings    ${var}    ${value}
