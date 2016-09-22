@@ -37,16 +37,16 @@ public class ProjectSetupSectionsPermissionRules {
     @PermissionRule(value = "ACCESS_PROJECT_DETAILS_SECTION", description = "A partner can access the Project Details section when their Companies House data is complete or not required")
     public boolean partnerCanAccessProjectDetailsSection(Long projectId, UserResource user) {
 
-        ProjectTeamStatusResource teamStatus = projectService.getProjectTeamStatus(projectId);
-        ProjectSetupSectionPartnerAccessor sectionAccessor = new ProjectSetupSectionPartnerAccessor(teamStatus);
-
         List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
         Optional<ProjectUserResource> loggedInPartner = simpleFindFirst(projectUsers,
                 pu -> pu.getUser().equals(user.getId()) && UserRoleType.PARTNER.getName().equals(pu.getRoleName()));
 
         return loggedInPartner.map(partner -> {
 
+            ProjectTeamStatusResource teamStatus = projectService.getProjectTeamStatus(projectId);
+            ProjectSetupSectionPartnerAccessor sectionAccessor = new ProjectSetupSectionPartnerAccessor(teamStatus);
             OrganisationResource organisation = organisationService.getOrganisationById(partner.getOrganisation());
+
             return sectionAccessor.canAccessProjectDetailsSection(organisation);
 
         }).orElseGet(() -> {

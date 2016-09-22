@@ -15,7 +15,10 @@ import static com.worth.ifs.project.builder.ProjectTeamStatusResourceBuilder.new
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRulesTest<ProjectSetupSectionsPermissionRules> {
@@ -23,7 +26,7 @@ public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRules
     private UserResource user = newUserResource().build();
 
     @Test
-    public void testAllowedAccess() {
+    public void testPartnerCanAccessProjectDetailsSection() {
 
         OrganisationResource organisation = newOrganisationResource().build();
 
@@ -45,6 +48,31 @@ public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRules
         when(organisationServiceMock.getOrganisationById(organisation.getId())).thenReturn(organisation);
 
         assertTrue(rules.partnerCanAccessProjectDetailsSection(123L, user));
+
+        verify(projectServiceMock).getProjectTeamStatus(123L);
+        verify(projectServiceMock).getProjectUsersForProject(123L);
+        verify(organisationServiceMock).getOrganisationById(organisation.getId());
+    }
+
+    @Test
+    public void testPartnerCanAccessProjectDetailsSectionButNotOnThisProject() {
+
+        UserResource differentUser = newUserResource().build();
+
+        OrganisationResource organisation = newOrganisationResource().build();
+
+        List<ProjectUserResource> projectUsers = newProjectUserResource().
+                withUser(differentUser.getId()).
+                withRoleName(UserRoleType.PARTNER).
+                withOrganisation(organisation.getId()).
+                build(1);
+
+        when(projectServiceMock.getProjectUsersForProject(123L)).thenReturn(projectUsers);
+
+        assertFalse(rules.partnerCanAccessProjectDetailsSection(123L, user));
+
+        verify(projectServiceMock, never()).getProjectTeamStatus(123L);
+        verify(organisationServiceMock, never()).getOrganisationById(organisation.getId());
     }
 
     @Override
