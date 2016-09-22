@@ -21,9 +21,7 @@ import com.worth.ifs.organisation.mapper.OrganisationAddressMapper;
 import com.worth.ifs.organisation.repository.OrganisationAddressRepository;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.project.domain.Project;
-import com.worth.ifs.project.mapper.ProjectUserMapper;
 import com.worth.ifs.project.repository.ProjectRepository;
-import com.worth.ifs.project.repository.ProjectUserRepository;
 import com.worth.ifs.project.users.ProjectUsersHelper;
 import com.worth.ifs.sil.experian.resource.AccountDetails;
 import com.worth.ifs.sil.experian.resource.Address;
@@ -57,12 +55,6 @@ public class BankDetailsServiceImpl implements BankDetailsService{
 
     private final int EXPERIAN_INVALID_ACC_NO_ERROR_ID = 4;
     private final int EXPERIAN_MODULUS_CHECK_FAILURE_ID = 7;
-
-    @Autowired
-    private ProjectUserRepository projectUserRepository;
-
-    @Autowired
-    private ProjectUserMapper projectUserMapper;
 
     @Autowired
     protected OrganisationRepository organisationRepository;
@@ -145,7 +137,7 @@ public class BankDetailsServiceImpl implements BankDetailsService{
         List<Organisation> organisations = projectUsersHelper.getPartnerOrganisations(projectId).stream().filter(org -> !org.getId().equals(leadOrganisation.getId())).collect(Collectors.toList());
         bankDetailsStatusResources.addAll(organisations.stream().map(org -> getBankDetailsStatusForOrg(projectId, org)).collect(Collectors.toList()));
         // TODO: Add formatted ids after other branch is merged
-        ProjectBankDetailsStatusSummary projectBankDetailsStatusSummary = new ProjectBankDetailsStatusSummary(project.getApplication().getCompetition().getId(), "", project.getId(), "", bankDetailsStatusResources);
+        ProjectBankDetailsStatusSummary projectBankDetailsStatusSummary = new ProjectBankDetailsStatusSummary(project.getApplication().getCompetition().getId(), project.getId(),bankDetailsStatusResources);
         return serviceSuccess(projectBankDetailsStatusSummary);
     }
 

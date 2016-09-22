@@ -27,17 +27,17 @@ public class ProjectUsersHelper {
     @Autowired
     OrganisationRepository organisationRepository;
 
-    public List<ProjectUser> getProjectUsersByProjectId(Long projectId) {
-        return projectUserRepository.findByProjectId(projectId);
-    }
-
     public List<Organisation> getPartnerOrganisations(Long projectId) {
         List<ProjectUser> projectUserObjs = getProjectUsersByProjectId(projectId);
         List<ProjectUserResource> projectRoles = simpleMap(projectUserObjs, projectUserMapper::mapToResource);
         return getPartnerOrganisations(projectRoles);
     }
 
-    public List<Organisation> getPartnerOrganisations(List<ProjectUserResource> projectRoles) {
+    private List<ProjectUser> getProjectUsersByProjectId(Long projectId) {
+        return projectUserRepository.findByProjectId(projectId);
+    }
+
+    private List<Organisation> getPartnerOrganisations(List<ProjectUserResource> projectRoles) {
         final Comparator<Organisation> compareById =
                 Comparator.comparingLong(Organisation::getId);
 

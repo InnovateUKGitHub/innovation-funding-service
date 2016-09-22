@@ -42,6 +42,6 @@ public class BankDetailsServiceImpl implements BankDetailsService {
 
     @Override
     public ProjectBankDetailsStatusSummary getBankDetailsByProject(Long projectId) {
-        return bankDetailsRestService.getBankDetailsByProject(projectId).getSuccessObjectOrThrowException();
+        return bankDetailsRestService.getBankDetailsStatusSummaryByProject(projectId).getSuccessObjectOrThrowException();
     }
 }

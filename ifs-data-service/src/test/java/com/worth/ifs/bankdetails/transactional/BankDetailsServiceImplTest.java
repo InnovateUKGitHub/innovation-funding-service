@@ -193,10 +193,8 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
         List<BankDetailsStatusResource> bankDetailsStatusResource = newBankDetailsStatusResource().withOrganisationId(organisation.getId()).withOrganisationName(organisation.getName()).withBankDetailsStatus(ProjectActivityStates.PENDING).build(1);
 
         ProjectBankDetailsStatusSummary expected = newProjectBankDetailsStatusSummary().build();
-        expected.setFormattedProjectId("");
         expected.setProjectId(projectId);
         expected.setCompetitionId(competition.getId());
-        expected.setFormattedCompetitionId("");
         expected.setBankDetailsStatusResources(bankDetailsStatusResource);
         ServiceResult<ProjectBankDetailsStatusSummary> result = service.getProjectBankDetailsStatusSummary(projectId);
         assertTrue(result.isSuccess());

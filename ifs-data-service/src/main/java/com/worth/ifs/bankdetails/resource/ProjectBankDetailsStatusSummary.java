@@ -6,21 +6,19 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.List;
 
+import static com.worth.ifs.application.resource.ApplicationResource.formatter;
+
 public class ProjectBankDetailsStatusSummary {
     private Long competitionId;
-    private String formattedCompetitionId;
     private Long projectId;
-    private String formattedProjectId;
     private List<BankDetailsStatusResource> bankDetailsStatusResources;
 
     public ProjectBankDetailsStatusSummary() {
     }
 
-    public ProjectBankDetailsStatusSummary(Long competitionId, String formattedCompetitionId, Long projectId, String formattedProjectId, List<BankDetailsStatusResource> bankDetailsStatusResources) {
+    public ProjectBankDetailsStatusSummary(Long competitionId, Long projectId, List<BankDetailsStatusResource> bankDetailsStatusResources) {
         this.competitionId = competitionId;
-        this.formattedCompetitionId = formattedCompetitionId;
         this.projectId = projectId;
-        this.formattedProjectId = formattedProjectId;
         this.bankDetailsStatusResources = bankDetailsStatusResources;
     }
 
@@ -33,11 +31,7 @@ public class ProjectBankDetailsStatusSummary {
     }
 
     public String getFormattedCompetitionId() {
-        return formattedCompetitionId;
-    }
-
-    public void setFormattedCompetitionId(String formattedCompetitionId) {
-        this.formattedCompetitionId = formattedCompetitionId;
+        return formatter.format(competitionId);
     }
 
     public Long getProjectId() {
@@ -49,11 +43,7 @@ public class ProjectBankDetailsStatusSummary {
     }
 
     public String getFormattedProjectId() {
-        return formattedProjectId;
-    }
-
-    public void setFormattedProjectId(String formattedProjectId) {
-        this.formattedProjectId = formattedProjectId;
+        return formatter.format(projectId);
     }
 
     public List<BankDetailsStatusResource> getBankDetailsStatusResources() {
@@ -74,9 +64,7 @@ public class ProjectBankDetailsStatusSummary {
 
         return new EqualsBuilder()
                 .append(competitionId, that.competitionId)
-                .append(formattedCompetitionId, that.formattedCompetitionId)
                 .append(projectId, that.projectId)
-                .append(formattedProjectId, that.formattedProjectId)
                 .append(bankDetailsStatusResources, that.bankDetailsStatusResources)
                 .isEquals();
     }
@@ -85,9 +73,7 @@ public class ProjectBankDetailsStatusSummary {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(competitionId)
-                .append(formattedCompetitionId)
                 .append(projectId)
-                .append(formattedProjectId)
                 .append(bankDetailsStatusResources)
                 .toHashCode();
     }
@@ -96,9 +82,7 @@ public class ProjectBankDetailsStatusSummary {
     public String toString() {
         return new ToStringBuilder(this)
                 .append("competitionId", competitionId)
-                .append("formattedCompetitionId", formattedCompetitionId)
                 .append("projectId", projectId)
-                .append("formattedProjectId", formattedProjectId)
                 .append("bankDetailsStatusResources", bankDetailsStatusResources)
                 .toString();
     }

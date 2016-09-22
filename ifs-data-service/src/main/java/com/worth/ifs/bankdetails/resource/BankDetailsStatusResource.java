@@ -5,6 +5,8 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import static com.worth.ifs.application.resource.ApplicationResource.formatter;
+
 public class BankDetailsStatusResource {
     private Long organisationId;
     private String organisationName;
@@ -25,6 +27,10 @@ public class BankDetailsStatusResource {
 
     public void setOrganisationId(Long organisationId) {
         this.organisationId = organisationId;
+    }
+
+    public String getFormattedOrganisationId(){
+        return formatter.format(organisationId);
     }
 
     public String getOrganisationName() {
