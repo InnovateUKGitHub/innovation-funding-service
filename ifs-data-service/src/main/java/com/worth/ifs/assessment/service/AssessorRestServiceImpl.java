@@ -9,10 +9,10 @@ import static java.lang.String.format;
 
 @Service
 public class AssessorRestServiceImpl extends BaseRestService implements AssessorRestService {
-    private static final String registerUserByHashUrl = "/register";
+    private static final String assessorRestURL = "/assessor";
 
     @Override
     public RestResult<Void> createAssessorByInviteHash(String hash, UserRegistrationResource userRegistrationResource) {
-        return postWithRestResultAnonymous(format("%s/%s/%s", registerUserByHashUrl, hash), userRegistrationResource, Void.class);
+        return postWithRestResultAnonymous(format("%s/register/%s", assessorRestURL, hash), userRegistrationResource, Void.class);
     }
 }

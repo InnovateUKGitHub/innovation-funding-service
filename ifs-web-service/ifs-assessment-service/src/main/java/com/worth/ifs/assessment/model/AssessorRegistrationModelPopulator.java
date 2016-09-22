@@ -38,7 +38,7 @@ public class AssessorRegistrationModelPopulator {
 
         String email = getAssociatedEmailFromInvite(inviteHash);
 
-        return new AssessorRegistrationViewModel(email, genderOptions, ethnicityOptions, disabledOptions);
+        return new AssessorRegistrationViewModel(inviteHash, email, genderOptions, ethnicityOptions, disabledOptions);
     }
 
     private String getAssociatedEmailFromInvite(String inviteHash) {
