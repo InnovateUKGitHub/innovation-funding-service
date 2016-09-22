@@ -249,8 +249,8 @@
                 <button type="button" class="js-close button buttonlink large">Cancel</button>
             </div>
             <form class="column-half alignright-button"
-                  th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}+'?approved=true'}" method="post">
-                <button class="button large" name="submit-other-documents">Accept Documents</button>
+                  th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post">
+                <button class="button large" name="approved" value="true">Accept Documents</button>
             </form>
         </div>
 
@@ -265,26 +265,15 @@
         <p>If these documents are rejected, the project manager will be informed along with the reason for rejection.
             They will then need to provide new versions of the documents before the project can begin.</p>
         <hr/>
-        <form class="column-half alignright-button"
-              th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}(rejected=true,rejectionReason=${rejectionReason})}" th:object="${form}" method="post">
-
-            <div class="form-group">
-                <label for="rejection-observations" class="form-label">Please provide a reason for rejection.</label>
-                <textarea th:field="*{rejectionReason}" id="rejection-observations" name="rejectionReason" class="form-control"></textarea>
+        <div class="grid-row form-group">
+            <div class="column-half">
+                <button type="button" class="js-close button buttonlink large">Cancel</button>
             </div>
-
-            <hr/>
-
-            <div class="grid-row form-group">
-                <div class="column-half">
-                    <button type="button" class="js-close button buttonlink large">Cancel</button>
-                </div>
-                <div>
-                    <button class="button large" name="submit-other-documents">Reject Documents</button>
-                </div>
+            <div class="column-half alignright-button">
+              <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${form}" method="post">
+                <button class="button large button-warning" name="approved" value="false">Reject Documents</button>
+              </form>
             </div>
-
-        </form>
-
+        </div>
     </div>
 </div>
