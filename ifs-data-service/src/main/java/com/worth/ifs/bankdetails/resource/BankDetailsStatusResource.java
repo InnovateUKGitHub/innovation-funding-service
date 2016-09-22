@@ -1,5 +1,6 @@
 package com.worth.ifs.bankdetails.resource;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.project.constant.ProjectActivityStates;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -29,6 +30,7 @@ public class BankDetailsStatusResource {
         this.organisationId = organisationId;
     }
 
+    @JsonIgnore
     public String getFormattedOrganisationId(){
         return formatter.format(organisationId);
     }

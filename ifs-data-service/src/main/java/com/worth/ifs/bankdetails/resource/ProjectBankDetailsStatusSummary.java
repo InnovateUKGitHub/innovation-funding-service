@@ -1,5 +1,6 @@
 package com.worth.ifs.bankdetails.resource;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -30,6 +31,7 @@ public class ProjectBankDetailsStatusSummary {
         this.competitionId = competitionId;
     }
 
+    @JsonIgnore
     public String getFormattedCompetitionId() {
         return formatter.format(competitionId);
     }
@@ -42,6 +44,7 @@ public class ProjectBankDetailsStatusSummary {
         this.projectId = projectId;
     }
 
+    @JsonIgnore
     public String getFormattedProjectId() {
         return formatter.format(projectId);
     }
