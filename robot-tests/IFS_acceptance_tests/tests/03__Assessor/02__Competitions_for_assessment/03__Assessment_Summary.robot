@@ -4,6 +4,8 @@ Documentation     INFUND-550: As an assessor I want the ‘Assessment summary’
 ...               INFUND-1485: As an Assessor I want to be able to provide my final feedback for the application so that I can tell Innovate UK whether or not I recommend the application for funding.
 ...
 ...               INFUND-4217 Assessor journey form validation
+...
+...               INFUND-3720 As an Assessor I can see deadlines for the assessment of applications currently in assessment on my dashboard, so that I am reminded to deliver my work on time
 Suite Setup       guest user log-in    felix.wilson@gmail.com    Passw0rd
 Suite Teardown    the user closes the browser
 Force Tags        Assessor
@@ -12,13 +14,6 @@ Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
-
-*** Variables ***
-${NO_OF_DAYS_LEFT}    ${EMPTY}
-${CURRENT_DATE}    ${EMPTY}
-${MILESTONE_DATE}    2016-12-31
-${STARTING_DATE}    ${EMPTY}
-${SCREEN_NO_OF_DAYS_LEFT}    ${EMPTY}
 
 *** Test Cases ***
 All the sections are present in the summary
@@ -32,8 +27,8 @@ All the sections are present in the summary
     And The user should see the element    id=form-label-comments
 
 Number of days remaining until assessment submission
-    [Documentation]    INFUND-4857
-    [Tags]    HappyPath    Pending
+    [Documentation]    INFUND-3720
+    [Tags]    HappyPath
     Then The user should see the text in the page    Days left to submit
     And the assessor should see the number of days remaining
     And the days remaining should be correct
