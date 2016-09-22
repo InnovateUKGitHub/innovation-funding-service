@@ -43,7 +43,7 @@ IFS.competition_management.setup = (function(){
                     //Code is now valid, remove all error messages.
                     IFS.core.formValidation.setValid(field,"");
                     field.val(data.message);
-                    field.trigger('change');
+                    jQuery('body').trigger('updateSerializedFormState');
                   }
                   else {
                     IFS.core.formValidation.setInvalid(field,data.message);
