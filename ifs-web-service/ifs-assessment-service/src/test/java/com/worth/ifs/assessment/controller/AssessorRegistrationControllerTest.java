@@ -70,7 +70,7 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
     }
 
     @Test
-    public void registerAssessor() throws Exception {
+    public void yourDetails() throws Exception {
         CompetitionInviteResource competitionInviteResource = newCompetitionInviteResource().withEmail("test@test.com").build();
 
         when(competitionInviteRestService.getInvite("hash")).thenReturn(RestResult.restSuccess(competitionInviteResource));
@@ -81,12 +81,6 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(view().name("registration/register"));
-    }
-
-
-    @Test
-    public void yourDetails() throws Exception {
-        // TODO
     }
 
     @Test

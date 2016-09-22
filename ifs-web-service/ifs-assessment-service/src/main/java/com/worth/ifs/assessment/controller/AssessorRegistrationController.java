@@ -27,6 +27,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
+
+import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
+import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 
 /**
  * Controller to manage Assessor Registration.
@@ -71,36 +75,38 @@ public class AssessorRegistrationController {
     @RequestMapping(value = "/{inviteHash}/register", method = RequestMethod.GET)
     public String yourDetails(Model model,
                               @PathVariable("inviteHash") String inviteHash,
-                              @ModelAttribute(FORM_ATTR_NAME) AssessorRegistrationForm form,
-                              BindingResult bindingResult) {
-
-        model.addAttribute("model", registrationModelPopulator.populateModel(inviteHash));
-        model.addAttribute("ethnicityOptions", getEthnicityOptions());
-        return "registration/register";
+                              @ModelAttribute(FORM_ATTR_NAME) AssessorRegistrationForm form) {
+        return doViewYourDetails(model, inviteHash);
     }
 
     @RequestMapping(value = "/{inviteHash}/register", method = RequestMethod.POST)
     public String submitYourDetails(Model model,
                                     @PathVariable("inviteHash") String inviteHash,
                                     @Valid @ModelAttribute(FORM_ATTR_NAME) AssessorRegistrationForm registrationForm,
-                                    BindingResult bindingResult,
+                                    @SuppressWarnings("unused") BindingResult bindingResult,
                                     ValidationHandler validationHandler) {
 
         addAddressOptions(registrationForm);
 
-        UserRegistrationResource userRegistrationResource = new UserRegistrationResource();
-        userRegistrationResource.setTitle(registrationForm.getTitle());
-        userRegistrationResource.setFirstName(registrationForm.getFirstName());
-        userRegistrationResource.setLastName(registrationForm.getLastName());
-        userRegistrationResource.setPhoneNumber(registrationForm.getPhoneNumber());
-        userRegistrationResource.setGender(registrationForm.getGender());
-        userRegistrationResource.setDisability(registrationForm.getDisability());
-        userRegistrationResource.setEthnicity(registrationForm.getEthnicity());
-        userRegistrationResource.setPassword(registrationForm.getPassword());
+        Supplier<String> failureView = () -> doViewYourDetails(model, inviteHash);
 
-        assessorRestService.createAssessorByInviteHash(inviteHash, userRegistrationResource).getSuccessObjectOrThrowException();
+        return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
-        return "registration/register";
+            UserRegistrationResource userRegistrationResource = new UserRegistrationResource();
+            userRegistrationResource.setTitle(registrationForm.getTitle());
+            userRegistrationResource.setFirstName(registrationForm.getFirstName());
+            userRegistrationResource.setLastName(registrationForm.getLastName());
+            userRegistrationResource.setPhoneNumber(registrationForm.getPhoneNumber());
+            userRegistrationResource.setGender(registrationForm.getGender());
+            userRegistrationResource.setDisability(registrationForm.getDisability());
+            userRegistrationResource.setEthnicity(registrationForm.getEthnicity());
+            userRegistrationResource.setPassword(registrationForm.getPassword());
+
+            RestResult<Void> result = assessorRestService.createAssessorByInviteHash(inviteHash, userRegistrationResource);
+
+            return validationHandler.addAnyErrors(result, fieldErrorsToFieldErrors(), asGlobalErrors()).
+                    failNowOrSucceedWith(failureView, () -> "redirect:/registration/skills");
+        });
     }
 
     @RequestMapping(value = "skills", method = RequestMethod.GET)
@@ -153,6 +159,12 @@ public class AssessorRegistrationController {
                 failure -> new ArrayList<>(),
                 addresses -> addresses);
         return addressResourceList;
+    }
+
+    private String doViewYourDetails(Model model, String inviteHash) {
+        model.addAttribute("model", registrationModelPopulator.populateModel(inviteHash));
+        model.addAttribute("ethnicityOptions", getEthnicityOptions());
+        return "registration/register";
     }
 
     private List<EthnicityResource> getEthnicityOptions() {
