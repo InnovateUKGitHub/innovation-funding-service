@@ -303,9 +303,6 @@
                                 th:id="'remove-funder-' + ${iteration.index}">Remove</button>
                     </div>
                 </div>
-                <input required="required" type="hidden"
-                       th:id="${iteration.index}+'-coFunder'"
-                       th:field="${competitionSetupForm.funders[__${iteration.index}__].coFunder}" />
             </div>
 
 
