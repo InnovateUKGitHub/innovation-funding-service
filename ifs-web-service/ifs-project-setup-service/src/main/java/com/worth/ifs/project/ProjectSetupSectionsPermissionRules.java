@@ -8,6 +8,7 @@ import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.project.sections.ProjectSetupSectionPartnerAccessor;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.resource.UserRoleType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ import java.util.Optional;
 import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
- * TODO DW - document this class
+ * Permission checker around the access to various sections within the Project Setup process
  */
 @PermissionRules
 @Component
@@ -33,7 +34,7 @@ public class ProjectSetupSectionsPermissionRules {
     @Autowired
     private OrganisationService organisationService;
 
-    @PermissionRule(value = "ACCESS_PROJECT_DETAILS_SECTION", description = "A partner can access the Project Details section when...")
+    @PermissionRule(value = "ACCESS_PROJECT_DETAILS_SECTION", description = "A partner can access the Project Details section when their Companies House data is complete or not required")
     public boolean partnerCanAccessProjectDetailsSection(Long projectId, UserResource user) {
 
         ProjectTeamStatusResource teamStatus = projectService.getProjectTeamStatus(projectId);
@@ -41,7 +42,7 @@ public class ProjectSetupSectionsPermissionRules {
 
         List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
         Optional<ProjectUserResource> loggedInPartner = simpleFindFirst(projectUsers,
-                pu -> pu.getUser().equals(user.getId()) && "partner".equals(pu.getRoleName()));
+                pu -> pu.getUser().equals(user.getId()) && UserRoleType.PARTNER.getName().equals(pu.getRoleName()));
 
         return loggedInPartner.map(partner -> {
 
