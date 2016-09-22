@@ -54,13 +54,13 @@ public class AssessorRegistrationForm extends BaseBindingResultTarget {
     })
     private String retypedPassword;
 
-    @NotNull(message = "{validation.standard.gender.required}")
+    @NotNull(message = "{validation.standard.gender.selectionrequired}")
     private Gender gender;
 
-    @NotNull(message = "{validation.standard.ethnicity.required}")
+    @NotNull(message = "{validation.standard.ethnicity.selectionrequired}")
     private EthnicityResource ethnicity;
 
-    @NotNull(message = "{validation.standard.disability.required}")
+    @NotNull(message = "{validation.standard.disability.selectionrequired}")
     private Disability disability;
 
     @Valid
