@@ -123,17 +123,23 @@
 
             <p class="form-hint extra-margin">You can access these terms of contract at any time from your profile. <a href="#">Download terms of contract</a></p>
 
-            <form>
-                <div class="form-group">
-                    <label class="block-label">
-                        <input type="checkbox" />
-                        I agree to the terms of contract for becoming an assessor
-                    </label>
+            <form th:action="@{/registration/terms}" method="post" th:object="${form}">
+                <div class="form-group" th:classappend="${#fields.hasErrors('agreesToTerms')}? error">
+                    <fieldset>
+                        <legend>
+                            <span class="visuallyhidden">Terms of contract</span>
+                            <span th:if="${#fields.hasErrors('agreesToTerms')}" th:remove="tag">
+                                <span class="error-message"  th:each="err : ${#fields.errors('agreesToTerms')}" th:text="${err}" />
+                            </span>
+                        </legend>
+                        <label class="block-label">
+                            <input type="checkbox" th:field="*{agreesToTerms}" />
+                            I agree to the terms of contract for becoming an assessor
+                        </label>
+                    </fieldset>
                 </div>
 
-                <div class="form-block extra-margin">
-                    <button class="button button-large" type="submit">Continue</button>
-                </div>
+                <button class="button button-large extra-margin" type="submit">Continue</button>
             </form>
 
             <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>
