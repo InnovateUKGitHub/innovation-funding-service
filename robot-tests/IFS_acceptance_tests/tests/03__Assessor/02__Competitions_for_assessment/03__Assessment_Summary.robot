@@ -143,7 +143,7 @@ Word count check: Comments for InnovateUK
 
 You feedback is not mandatory when "Yes" is selected in funding suitability
     [Documentation]    INFUND-4996
-    [Tags]
+    [Tags]    Pending
     Then the user selects the radio button    fundingConfirmation    true
     And The user clicks the button/link    jQuery=.button:contains(Save assessment)
     Then The user should not see the text in the page    Please enter your feedback
