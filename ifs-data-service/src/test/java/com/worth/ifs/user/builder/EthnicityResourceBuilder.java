@@ -1,4 +1,4 @@
-package com.worth.ifs.invite.builder;
+package com.worth.ifs.user.builder;
 
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.BuilderAmendFunctions;

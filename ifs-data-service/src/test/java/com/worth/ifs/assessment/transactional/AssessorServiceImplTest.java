@@ -21,7 +21,7 @@ import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.COMPETITION_PARTICIPANT_CANNOT_ACCEPT_UNOPENED_INVITE;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.invite.builder.EthnicityResourceBuilder.newEthnicityResource;
+import static com.worth.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
 import static com.worth.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;

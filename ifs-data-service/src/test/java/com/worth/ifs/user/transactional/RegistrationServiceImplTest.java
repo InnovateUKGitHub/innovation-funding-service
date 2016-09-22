@@ -32,7 +32,7 @@ import static com.worth.ifs.commons.error.CommonErrors.badRequestError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.invite.builder.EthnicityBuilder.newEthnicity;
+import static com.worth.ifs.user.builder.EthnicityBuilder.newEthnicity;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static com.worth.ifs.user.builder.CompAdminEmailBuilder.newCompAdminEmail;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;

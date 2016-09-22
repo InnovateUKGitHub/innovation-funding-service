@@ -12,7 +12,7 @@ import org.junit.Test;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.invite.builder.EthnicityResourceBuilder.newEthnicityResource;
+import static com.worth.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
 import static com.worth.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
 import static com.worth.ifs.user.resource.Disability.NO;
 import static com.worth.ifs.user.resource.Gender.NOT_STATED;

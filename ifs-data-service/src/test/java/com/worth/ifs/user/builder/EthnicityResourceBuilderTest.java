@@ -1,11 +1,10 @@
-package com.worth.ifs.invite.builder;
+package com.worth.ifs.user.builder;
 
 import com.worth.ifs.user.resource.EthnicityResource;
 import org.junit.Test;
 
 import java.util.List;
 
-import static com.worth.ifs.invite.builder.EthnicityResourceBuilder.newEthnicityResource;
 import static org.junit.Assert.assertEquals;
 
 public class EthnicityResourceBuilderTest {
@@ -17,7 +16,7 @@ public class EthnicityResourceBuilderTest {
         String expectedDescription = "White";
         int expectedPriority = 3;
 
-        EthnicityResource ethnicity = newEthnicityResource()
+        EthnicityResource ethnicity = EthnicityResourceBuilder.newEthnicityResource()
                 .withId(expectedId)
                 .withName(expectedName)
                 .withDescription(expectedDescription)
@@ -37,7 +36,7 @@ public class EthnicityResourceBuilderTest {
         String[] expectedDescriptions = { "White", "Black" };
         Integer[] expectedPriorities = { 3, 5 };
 
-        List<EthnicityResource> ethnicities = newEthnicityResource()
+        List<EthnicityResource> ethnicities = EthnicityResourceBuilder.newEthnicityResource()
                 .withId(expectedIds)
                 .withName(expectedNames)
                 .withDescription(expectedDescriptions)

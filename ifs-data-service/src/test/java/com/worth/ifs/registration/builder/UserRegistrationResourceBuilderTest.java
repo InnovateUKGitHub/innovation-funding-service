@@ -8,7 +8,7 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static com.worth.ifs.invite.builder.EthnicityResourceBuilder.newEthnicityResource;
+import static com.worth.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
 import static com.worth.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
 import static com.worth.ifs.user.resource.Disability.NO;
 import static com.worth.ifs.user.resource.Disability.YES;
