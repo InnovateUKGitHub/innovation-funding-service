@@ -67,7 +67,7 @@
 	    	<thead>
 	    		<tr>
 	    			<th scope="col" class="heading-small">Section</th>
-	    			<th scope="col" class="heading-small" id="project-cost">Project costs</th>
+	    			<th scope="col" class="heading-small alignright" id="project-cost">Project costs</th>
 	    		</tr>
 	    	</thead>
 	    	<tfoot>
@@ -75,10 +75,10 @@
 	    			<th scope="col" class="heading-small"> 
 	    				Total project costs
 	    			</th>
-	    			<td class="heading-small" th:unless="${param.status != null and param.status[0] == 'approved'}">
+	    			<td class="heading-small alignright" th:unless="${param.status != null and param.status[0] == 'approved'}">
 	    				&pound;20,0000
 	    			</td>
-	    			<td class="heading-small" th:unless="${param.status == null or param.status[0] != 'approved'}">
+	    			<td class="heading-small alignright" th:unless="${param.status == null or param.status[0] != 'approved'}">
 	    				&pound;70,000
 	    			</td>
 	    		</tr>
@@ -86,38 +86,38 @@
 	    	<tbody>
 	    		<tr>
 	    			<th scope="col" id="labour">Labour</th>
-	    			<td th:unless="${param.status != null and param.status[0] == 'approved'}"><input type="text" class="form-control" value="&pound;20,000" aria-labelledby="project-cost labour"/></td>
-	    			<td th:unless="${param.status == null or param.status[0] != 'approved'}">&pound;8,000</td>
+	    			<td class="alignright" th:unless="${param.status != null and param.status[0] == 'approved'}"><input type="text" class="form-control alignright" value="&pound;20,000" aria-labelledby="project-cost labour"/></td>
+	    			<td class="alignright" th:unless="${param.status == null or param.status[0] != 'approved'}">&pound;8,000</td>
 	    		</tr>
 	    		<tr>
 	    			<th scope="col" id="admin-support-costs">Administration support costs</th>
-	    			<td th:unless="${param.status != null and param.status[0] == 'approved'}"><input type="text" class="form-control" aria-labelledby="project-cost admin-support-costs" /></td>
-	    			<td th:unless="${param.status == null or param.status[0] != 'approved'}">&pound;2,000</td>
+	    			<td class="alignright" th:unless="${param.status != null and param.status[0] == 'approved'}"><input type="text" class="form-control alignright" aria-labelledby="project-cost admin-support-costs" /></td>
+	    			<td class="alignright" th:unless="${param.status == null or param.status[0] != 'approved'}">&pound;2,000</td>
 	    		</tr>
 	    		<tr>
 	    			<th scope="col" id="materials">Materials</th>
-	    			<td th:unless="${param.status != null and param.status[0] == 'approved'}"><input type="text" class="form-control" aria-labelledby="project-cost materials" /></td>
-	    			<td th:unless="${param.status == null or param.status[0] != 'approved'}">&pound;10,000</td>
+	    			<td class="alignright" th:unless="${param.status != null and param.status[0] == 'approved'}"><input type="text" class="form-control alignright" aria-labelledby="project-cost materials" /></td>
+	    			<td class="alignright" th:unless="${param.status == null or param.status[0] != 'approved'}">&pound;10,000</td>
 	    		</tr>
 	    		<tr>
 	    			<th scope="col" id="capital-usage">Capital usage</th>
-	    			<td th:unless="${param.status != null and param.status[0] == 'approved'}"><input type="text" class="form-control" aria-labelledby="project-cost capital-usage" /></td>
-	    			<td th:unless="${param.status == null or param.status[0] != 'approved'}">&pound;10,000</td>
+	    			<td class="alignright" th:unless="${param.status != null and param.status[0] == 'approved'}"><input type="text" class="form-control alignright" aria-labelledby="project-cost capital-usage" /></td>
+	    			<td class="alignright" th:unless="${param.status == null or param.status[0] != 'approved'}">&pound;10,000</td>
 	    		</tr>
 	    		<tr>
 	    			<th scope="col" id="subcontracting-costs">Subcontracting costs</th>
-	    			<td th:unless="${param.status != null and param.status[0] == 'approved'}"><input type="text" class="form-control" aria-labelledby="project-cost subcontracting-costs" /></td>
-	    			<td th:unless="${param.status == null or param.status[0] != 'approved'}">&pound;10,000</td>
+	    			<td class="alignright" th:unless="${param.status != null and param.status[0] == 'approved'}"><input type="text" class="form-control alignright" aria-labelledby="project-cost subcontracting-costs" /></td>
+	    			<td class="alignright" th:unless="${param.status == null or param.status[0] != 'approved'}">&pound;10,000</td>
 	    		</tr>
 	    		<tr>
 	    			<th scope="col" id="travel-subsistence">Travel and subsistence</th>
-	    			<td th:unless="${param.status != null and param.status[0] == 'approved'}"><input type="text" class="form-control" aria-labelledby="project-cost travel-subsistence" /></td>
-	    			<td th:unless="${param.status == null or param.status[0] != 'approved'}">&pound;10,000</td>
+	    			<td class="alignright" th:unless="${param.status != null and param.status[0] == 'approved'}"><input type="text" class="form-control alignright" aria-labelledby="project-cost travel-subsistence" /></td>
+	    			<td class="alignright" th:unless="${param.status == null or param.status[0] != 'approved'}">&pound;10,000</td>
 	    		</tr>
 	    		<tr>
 	    			<th scope="col" id="other-costs">Other costs</th>
-	    			<td th:unless="${param.status != null and param.status[0] == 'approved'}"><input type="text" class="form-control" aria-labelledby="project-cost other-costs" /></td>
-	    			<td th:unless="${param.status == null or param.status[0] != 'approved'}">&pound;10,000</td>
+	    			<td class="alignright" th:unless="${param.status != null and param.status[0] == 'approved'}"><input type="text" class="form-control alignright" aria-labelledby="project-cost other-costs" /></td>
+	    			<td class="alignright" th:unless="${param.status == null or param.status[0] != 'approved'}">&pound;10,000</td>
 	    		</tr>
 	    	</tbody>
 	    </table>
