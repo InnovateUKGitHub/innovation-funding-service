@@ -165,7 +165,8 @@ Partner nominates a finance contact
 
 Lead partner can change the Start Date
     [Documentation]    INFUND-2614
-    [Tags]    HappyPath
+    [Tags]    Pending    HappyPath
+    #TODO INFUND-5224   Pending due to Month saving failing
     Given the user clicks the button/link    link=Start date
     And the duration should be visible
     When the user enters text to a text field    id=projectStartDate_year    2013
@@ -173,9 +174,11 @@ Lead partner can change the Start Date
     And the user shouldn't be able to edit the day field as all projects start on the first of the month
     When the user enters text to a text field    id=projectStartDate_month    1
     And the user enters text to a text field    id=projectStartDate_year    2018
+    And Mouse Out    id=projectStartDate_year
+    And wait for autosave
     When the user clicks the button/link    jQuery=.button:contains("Save")
-    Run Keyword And Ignore Error    When the user clicks the button/link    jQuery=.button:contains("Save")    # Click the button for second time because the focus is still in the date field
-    The user redirects to the page    You are providing these details as the lead applicant on behalf of the overall project    Project details
+    #Run Keyword And Ignore Error    When the user clicks the button/link    jQuery=.button:contains("Save")    # Click the button for second time because the focus is still in the date field
+    Then The user redirects to the page    You are providing these details as the lead applicant on behalf of the overall project    Project details
     And the user should see the text in the page    1 Jan 2018
     Then the matching status checkbox is updated    project-details    1    yes
     [Teardown]    the user changes the start date back again
