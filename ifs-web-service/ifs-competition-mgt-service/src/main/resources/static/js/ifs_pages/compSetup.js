@@ -117,11 +117,35 @@ IFS.competition_management.setup = (function(){
     },
     handleRemoveCoFunder: function() {
         jQuery(document).on('click', '.remove-funder', function() {
-            var index = jQuery(this).val();
+            var $this = jQuery(this),
+                index = $this.val(),
+                funderRow = $this.closest('.funder-row'),
+                count = parseInt(jQuery('#co-funder-count').val(),10);
+
             jQuery('[name="removeFunder"]').val(index);
-            IFS.core.autoSave.fieldChanged('[name="removeFunder"]');
-            jQuery(this).closest('.funder-row').remove();
+            IFS.core.autoSave.fieldChanged('[name="removeFunder"]')
+            funderRow.remove();
+            jQuery('#co-funder-count').val(count - 1);
+            IFS.competition_management.setup.reindexFunderRows();
+            //Force recalculation of the total.
+            jQuery('body').trigger('recalculateAllFinances')
             return false;
+        });
+    },
+    reindexFunderRows: function() {
+        jQuery('[name*="funders"]').each(function() {
+            var $this = jQuery(this),
+                thisIndex = $this.closest('.funder-row').index('.funder-row'),
+                oldAttr = $this.attr('name'),
+                newAttr = oldAttr.replace(/funders\[\d\]/, 'funders[' +thisIndex+ ']');
+
+            $this.attr('name', newAttr);
+        });
+        jQuery('button.remove-funder').each(function() {
+            var $this = jQuery(this),
+                thisIndex = $this.closest('.funder-row').index('.funder-row');
+
+            $this.val(thisIndex);
         });
     },
     milestonesExtraValidation : function(){

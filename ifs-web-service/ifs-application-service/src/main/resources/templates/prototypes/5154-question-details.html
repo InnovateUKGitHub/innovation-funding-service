@@ -14,12 +14,15 @@
 <main id="content">
 	
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader('Application process', '/prototypes/5085-application-process')" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader('Application questions', '/prototypes/5085-application-process')" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<div class="hgroup" style="padding-top: 20px">
 		<p class="subtitle no-margin">Connected digital additive manufacturing</p>
-		<h1 class="heading-xlarge no-margin">Edit 'Business opportunity'</h1>
+		<h1 class="heading-xlarge no-margin">
+			<th:block th:if="${param.status != null and param.status[0] == 'edit'}">Edit 'Business opportunity'</th:block>
+			<th:block th:if="${param.status == null}">Business opportunity</th:block>
+		</h1>
 	</div>
 
 	<p class="extra-margin">Make changes to the question'Business opportunity'. You can amend how this is presented, and also the wording and guidance assessors are given for scoring the question.</p>
@@ -212,14 +215,14 @@
 					<input class="form-control width-medium" id="max-word-count" name="max-word-count" value="400" type="number" />
 				</div>
 			</th:block>
-			<div class="extra-margin">
-				<a th:if="${param.status == null}" role="button" tabindex="0" class="button-secondary" href="/prototypes/5084-question-details?status=edit">Edit this question</a>
-				<a th:if="${param.status != null and param.status[0] == 'edit'}" role="button" tabindex="0" class="button" href="/prototypes/5085-application-process">Save and close</a>
-			</div>
-			<div th:if="${param.status == null}" class="extra-margin">
-				<a href="/prototypes/5085-application-process" class="button-secondary">Return to application process</a>
-			</div>
 		</fieldset>
+		<div class="extra-margin">
+			<a th:if="${param.status == null}" role="button" tabindex="0" class="button" href="/prototypes/5084-question-details?status=edit">Edit this question</a>
+			<a th:if="${param.status != null and param.status[0] == 'edit'}" role="button" tabindex="0" class="button" href="/prototypes/5085-application-process">Save and close</a>
+		</div>
+		<div th:if="${param.status == null}" class="extra-margin">
+			<a href="/prototypes/5085-application-process" class="button-secondary">Return to application process</a>
+		</div>
 	</form>
 
 
