@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static com.worth.ifs.project.builder.ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource;
 import static com.worth.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
@@ -44,7 +45,7 @@ public class ProjectTeamStatusControllerTest extends BaseControllerMockMVCTest<P
 
         ProjectTeamStatusResource expectedTeamStatus = buildTeamStatus();
 
-        when(projectService.getProjectTeamStatus(projectId)).thenReturn(expectedTeamStatus);
+        when(projectService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedTeamStatus);
 
         ProjectConsortiumStatusViewModel expected = new ProjectConsortiumStatusViewModel(projectId, expectedTeamStatus);
 

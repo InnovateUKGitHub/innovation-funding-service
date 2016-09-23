@@ -1,8 +1,8 @@
 package com.worth.ifs.alert.security;
 
 import com.worth.ifs.BaseServiceSecurityTest;
-import com.worth.ifs.alert.resource.AlertType;
 import com.worth.ifs.alert.resource.AlertResource;
+import com.worth.ifs.alert.resource.AlertType;
 import com.worth.ifs.alert.transactional.AlertService;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.user.resource.UserResource;
@@ -12,9 +12,9 @@ import org.junit.Test;
 import java.util.List;
 
 import static com.worth.ifs.alert.builder.AlertResourceBuilder.newAlertResource;
-import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class AlertServiceSecurityTest extends BaseServiceSecurityTest<AlertService> {
 
@@ -22,7 +22,7 @@ public class AlertServiceSecurityTest extends BaseServiceSecurityTest<AlertServi
     private AlertLookupStrategy alertLookupStrategy;
 
     @Override
-    protected Class<? extends AlertService> getServiceClass() {
+    protected Class<? extends AlertService> getClassUnderTest() {
         return TestAlertService.class;
     }
 
@@ -37,7 +37,7 @@ public class AlertServiceSecurityTest extends BaseServiceSecurityTest<AlertServi
         final AlertResource alertResource = newAlertResource()
                 .build();
         assertAccessDenied(
-                () -> service.create(alertResource),
+                () -> classUnderTest.create(alertResource),
                 () -> {
                     verify(alertPermissionRules).systemMaintenanceUserCanCreateAlerts(isA(AlertResource.class), isA(UserResource.class));
                 });
@@ -50,7 +50,7 @@ public class AlertServiceSecurityTest extends BaseServiceSecurityTest<AlertServi
                 .build());
 
         assertAccessDenied(
-                () -> service.delete(9999L),
+                () -> classUnderTest.delete(9999L),
                 () -> {
                     verify(alertPermissionRules).systemMaintenanceUserCanDeleteAlerts(isA(AlertResource.class), isA(UserResource.class));
                 });

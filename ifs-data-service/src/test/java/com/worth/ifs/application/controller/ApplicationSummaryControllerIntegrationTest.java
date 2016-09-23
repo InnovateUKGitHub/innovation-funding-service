@@ -25,7 +25,7 @@ import org.springframework.test.annotation.Rollback;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.worth.ifs.security.SecuritySetter.swapOutForUser;
+import static com.worth.ifs.commons.security.SecuritySetter.swapOutForUser;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.*;
 

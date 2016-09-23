@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import static com.worth.ifs.security.SecuritySetter.swapOutForUser;
+import static com.worth.ifs.commons.security.SecuritySetter.swapOutForUser;
 import static org.junit.Assert.*;
 
 @Rollback

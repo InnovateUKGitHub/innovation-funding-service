@@ -8,6 +8,8 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import static com.worth.ifs.project.constant.ProjectActivityStates.COMPLETE;
+
 /**
  * Used for returning status of each partner (except lead, for which there is a more specific class with constructor)
  * There is a constructor here which is used by subclass but is package local.
@@ -18,6 +20,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
         @JsonSubTypes.Type(value=ProjectLeadStatusResource.class, name="projectLeadStatusResource")
 })
 public class ProjectPartnerStatusResource {
+
+    private Long organisationId;
     private String name;
     private OrganisationTypeEnum organisationType;
 
@@ -26,15 +30,21 @@ public class ProjectPartnerStatusResource {
     private ProjectActivityStates financeChecksStatus;
     private ProjectActivityStates spendProfileStatus;
 
+    // TODO DW - INFUND-4915 - implement
+    private ProjectActivityStates companiesHouseStatus = COMPLETE;
+    private ProjectActivityStates financeContactStatus = COMPLETE;
+
     /* Following properties are only applicable to lead partner */
     private ProjectActivityStates monitoringOfficerStatus;
     private ProjectActivityStates otherDocumentsStatus;
     private ProjectActivityStates grantOfferLetterStatus;
 
+
     //Required for Json Mapping.
     public ProjectPartnerStatusResource() {}
 
-    public ProjectPartnerStatusResource(String name, OrganisationTypeEnum organisationType, ProjectActivityStates projectDetailsStatus, ProjectActivityStates monitoringOfficerStatus, ProjectActivityStates bankDetailsStatus, ProjectActivityStates financeChecksStatus, ProjectActivityStates spendProfileStatus, ProjectActivityStates otherDocumentsStatus, ProjectActivityStates grantOfferLetterStatus) {
+    public ProjectPartnerStatusResource(Long organisationId, String name, OrganisationTypeEnum organisationType, ProjectActivityStates projectDetailsStatus, ProjectActivityStates monitoringOfficerStatus, ProjectActivityStates bankDetailsStatus, ProjectActivityStates financeChecksStatus, ProjectActivityStates spendProfileStatus, ProjectActivityStates otherDocumentsStatus, ProjectActivityStates grantOfferLetterStatus) {
+        this.organisationId = organisationId;
         this.name = name;
         this.organisationType = organisationType;
         this.projectDetailsStatus = projectDetailsStatus;
@@ -44,6 +54,14 @@ public class ProjectPartnerStatusResource {
         this.spendProfileStatus = spendProfileStatus;
         this.otherDocumentsStatus = otherDocumentsStatus;
         this.grantOfferLetterStatus = grantOfferLetterStatus;
+    }
+
+    public Long getOrganisationId() {
+        return organisationId;
+    }
+
+    public void setOrganisationId(Long organisationId) {
+        this.organisationId = organisationId;
     }
 
     public String getName() {
@@ -116,6 +134,22 @@ public class ProjectPartnerStatusResource {
 
     public void setGrantOfferLetterStatus(ProjectActivityStates grantOfferLetterStatus) {
         this.grantOfferLetterStatus = grantOfferLetterStatus;
+    }
+
+    public ProjectActivityStates getCompaniesHouseStatus() {
+        return companiesHouseStatus;
+    }
+
+    public void setCompaniesHouseStatus(ProjectActivityStates companiesHouseStatus) {
+        this.companiesHouseStatus = companiesHouseStatus;
+    }
+
+    public ProjectActivityStates getFinanceContactStatus() {
+        return financeContactStatus;
+    }
+
+    public void setFinanceContactStatus(ProjectActivityStates financeContactStatus) {
+        this.financeContactStatus = financeContactStatus;
     }
 
     @Override

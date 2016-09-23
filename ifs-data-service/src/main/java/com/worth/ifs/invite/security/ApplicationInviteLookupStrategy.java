@@ -1,10 +1,10 @@
 package com.worth.ifs.invite.security;
 
+import com.worth.ifs.commons.security.PermissionEntityLookupStrategies;
+import com.worth.ifs.commons.security.PermissionEntityLookupStrategy;
 import com.worth.ifs.invite.mapper.ApplicationInviteMapper;
 import com.worth.ifs.invite.repository.ApplicationInviteRepository;
 import com.worth.ifs.invite.resource.ApplicationInviteResource;
-import com.worth.ifs.security.PermissionEntityLookupStrategies;
-import com.worth.ifs.security.PermissionEntityLookupStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

@@ -13,6 +13,9 @@ import java.util.Optional;
 public interface RegistrationService {
 
     @PreAuthorize("hasPermission(#user, 'CREATE')")
+    ServiceResult<UserResource> createUser(@P("user") UserResource userResource);
+
+    @PreAuthorize("hasPermission(#user, 'CREATE')")
     ServiceResult<UserResource> createOrganisationUser(Long organisationId, @P("user") UserResource userResource);
 
     @PreAuthorize("hasPermission(#user, 'VERIFY')")
