@@ -15,20 +15,17 @@
     <div th:if="${agreeToTerms}" class="event-alert" >
       	<p><span>You must agree to the terms and conditions.</span></p>
 	</div>
-	
+
 	<div th:if="${cannotSubmit}" class="event-alert" >
         <p><span>This competition has already closed, you are no longer able to submit your application.</span></p>
     </div>
-   		
+
 	<h2 class="heading-medium">This is your final chance to make changes to the application.</h2>
     <p>You will not be able to access the application after this point. Are you sure you want to submit?</p>
     <form method="post" th:action="@{/application/{id}/submit(id=${currentApplication.getId()})}">
-		<div th:include="fragments/elements :: application-agree-to-terms" th:remove="tag" />
-	    <div>
 	        <input type="submit" tabindex="0" class="button large" value="Yes, I want to submit my application" />
 	        <a role="button" tabindex="1" class="button buttonlink large" th:href="@{/application/{id}/summary(id=${currentApplication.getId()})}">Cancel</a>
-	    </div>
-	</form>
+  	</form>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
 </main>
