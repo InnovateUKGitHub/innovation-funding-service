@@ -120,7 +120,7 @@ Lead Partners Spend profile summary gets updated when edited
 
 Lead partner submits Spend Profile
     [Documentation]    INFUND-3765
-    [Tags]
+    [Tags]    Pending
     Given the user navigates to the page            ${server}/project-setup/project/1/partner-organisation/31/spend-profile/
     When the user clicks the button/link            jQuery=.button:contains("Mark as complete")
     Then the user should see the text in the page   Your Spend Profile is currently marked as complete
