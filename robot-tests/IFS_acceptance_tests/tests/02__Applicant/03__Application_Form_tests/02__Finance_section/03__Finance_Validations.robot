@@ -30,6 +30,7 @@ Other funding client side
     [Setup]    the user should see the element    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
     When the user enters invalid inputs in the other funding fields    ${EMPTY}    132020    -6565
     Then the user gets the expected validation errors    Invalid secured date    Funding source cannot be blank
+    And the user moves focus to the element    jQuery=other-funding-table div:nth-child(1) button
     And the user should see an error    This field should be 1 or higher
 
 Other funding server side
@@ -64,7 +65,7 @@ Labour client side
     Given the user clicks the button/link    jQuery=button:contains("Labour")
     When the user enters text to a text field    css=[name^="labour-labourDaysYearly"]    -1
     And the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input    ${EMPTY}
-    Then the user gets the expected validation errors    This field should be 1 or higher    This field cannot be left blank
+    Then the user gets the expected validation errors    This field should be 1 or higher
     When the user enters text to a text field    css=[name^="labour-labourDaysYearly"]    366
     And the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input    12121212121212121212121212
     And the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(4) input    123456789101112
