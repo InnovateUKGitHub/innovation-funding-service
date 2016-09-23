@@ -93,7 +93,7 @@
                         <label class="block-label"
                                    th:each="gen : ${T(com.worth.ifs.user.resource.Gender).values()}">
                                 <input th:field="*{gender}" th:value="${gen}" type="radio" required="required"
-                                       data-required-errormessage="Please select a Gender option"/>
+                                       data-required-errormessage="Please select a gender"/>
                                 <span th:text="${gen.displayName}" th:remove="tag"/>
                           </label>
                     </fieldset>
@@ -109,7 +109,7 @@
                         </legend>
                         <label class="block-label" th:each="eth : ${ethnicityOptions}">
                                 <input th:field="*{ethnicity}" th:value="${eth.id}" type="radio" required="required"
-                                       data-required-errormessage="Please select an Ethnic Group option"/>
+                                       data-required-errormessage="Please select an ethnicity"/>
                                 <span th:text="${eth.description}" th:remove="tag"/>
                           </label>
                     </fieldset>
@@ -124,7 +124,7 @@
                             </span>
                         </legend>
                         <label class="block-label" th:each="dis : ${T(com.worth.ifs.user.resource.Disability).values()}">
-                                <input th:field="*{disability}" th:value="${dis}" type="radio" required="required" data-required-errormessage="Please select a Disability option" />
+                                <input th:field="*{disability}" th:value="${dis}" type="radio" required="required" data-required-errormessage="Please select a disability" />
                                 <span th:text="${dis.displayName}" th:remove="tag" />
                           </label>
                     </fieldset>
