@@ -23,11 +23,8 @@ import com.worth.ifs.organisation.repository.OrganisationAddressRepository;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.repository.ProjectRepository;
-
 import com.worth.ifs.project.users.ProjectUsersHelper;
-
 import com.worth.ifs.project.workflow.projectdetails.configuration.ProjectDetailsWorkflowHandler;
-
 import com.worth.ifs.sil.experian.resource.AccountDetails;
 import com.worth.ifs.sil.experian.resource.Address;
 import com.worth.ifs.sil.experian.resource.Condition;
@@ -156,9 +153,13 @@ public class BankDetailsServiceImpl implements BankDetailsService{
     private BankDetailsStatusResource getBankDetailsStatusForOrg(Project project, Organisation org){
         Boolean isSeekingFunding = financeRowService.organisationSeeksFunding(project.getId(), project.getApplication().getId(), org.getId()).getSuccessObject();
 
+        if(isResearch(OrganisationTypeEnum.getFromId(org.getOrganisationType().getId())) || !isSeekingFunding){
+            return new BankDetailsStatusResource(org.getId(), org.getName(), NOT_REQUIRED);
+        }
+
         return getByProjectAndOrganisation(project.getId(), org.getId()).handleSuccessOrFailure(
                 failure -> new BankDetailsStatusResource(org.getId(), org.getName(), NOT_STARTED),
-                success -> new BankDetailsStatusResource(org.getId(), org.getName(), success.isApproved() ? COMPLETE : (isResearch(OrganisationTypeEnum.getFromId(org.getOrganisationType().getId())) || !isSeekingFunding) ? NOT_REQUIRED : PENDING));
+                success -> new BankDetailsStatusResource(org.getId(), org.getName(), success.isApproved() ? COMPLETE : PENDING));
     }
 
     @Override
