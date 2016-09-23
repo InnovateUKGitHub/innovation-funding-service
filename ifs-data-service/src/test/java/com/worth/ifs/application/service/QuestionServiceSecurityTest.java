@@ -54,7 +54,7 @@ public class QuestionServiceSecurityTest extends BaseServiceSecurityTest<Questio
     @Test
     public void testFindByCompetition() {
         final Long competitionId = 1L;
-        service.findByCompetition(competitionId);
+        classUnderTest.findByCompetition(competitionId);
         verify(questionPermissionRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).loggedInUsersCanSeeAllQuestions(isA(QuestionResource.class), isA(UserResource.class));
     }
 
@@ -63,7 +63,7 @@ public class QuestionServiceSecurityTest extends BaseServiceSecurityTest<Questio
         final Long questionId = 1L;
         when(questionResourceLookupStrategy.findResourceById(questionId)).thenReturn(newQuestionResource().build());
         assertAccessDenied(
-                () -> service.getQuestionById(questionId),
+                () -> classUnderTest.getQuestionById(questionId),
                 () -> verify(questionPermissionRules).loggedInUsersCanSeeAllQuestions(isA(QuestionResource.class), isA(UserResource.class))
         );
     }
@@ -73,7 +73,7 @@ public class QuestionServiceSecurityTest extends BaseServiceSecurityTest<Questio
     public void testGetNextQuestion() {
         final Long questionId = 1L;
         assertAccessDenied(
-                () -> service.getNextQuestion(questionId),
+                () -> classUnderTest.getNextQuestion(questionId),
                 () -> verify(questionPermissionRules).loggedInUsersCanSeeAllQuestions(isA(QuestionResource.class), isA(UserResource.class))
         );
     }
@@ -82,7 +82,7 @@ public class QuestionServiceSecurityTest extends BaseServiceSecurityTest<Questio
     public void testGetPreviousQuestionBySection() {
         final Long sectionId = 1L;
         assertAccessDenied(
-                () -> service.getPreviousQuestionBySection(sectionId),
+                () -> classUnderTest.getPreviousQuestionBySection(sectionId),
                 () -> verify(questionPermissionRules).loggedInUsersCanSeeAllQuestions(isA(QuestionResource.class), isA(UserResource.class))
         );
     }
@@ -91,7 +91,7 @@ public class QuestionServiceSecurityTest extends BaseServiceSecurityTest<Questio
     public void testGetNextQuestionBySection() {
         final Long sectionId = 1L;
         assertAccessDenied(
-                () -> service.getNextQuestionBySection(sectionId),
+                () -> classUnderTest.getNextQuestionBySection(sectionId),
                 () -> verify(questionPermissionRules).loggedInUsersCanSeeAllQuestions(isA(QuestionResource.class), isA(UserResource.class))
         );
     }
@@ -100,7 +100,7 @@ public class QuestionServiceSecurityTest extends BaseServiceSecurityTest<Questio
     public void testGetPreviousQuestion() {
         final Long sectionId = 1L;
         assertAccessDenied(
-                () -> service.getPreviousQuestion(sectionId),
+                () -> classUnderTest.getPreviousQuestion(sectionId),
                 () -> verify(questionPermissionRules).loggedInUsersCanSeeAllQuestions(isA(QuestionResource.class), isA(UserResource.class))
         );
     }
@@ -109,7 +109,7 @@ public class QuestionServiceSecurityTest extends BaseServiceSecurityTest<Questio
     public void testQuestionResourceByFormInputType() {
         final String formInputTypeTitle = "test";
         assertAccessDenied(
-                () -> service.getQuestionResourceByFormInputType(formInputTypeTitle),
+                () -> classUnderTest.getQuestionResourceByFormInputType(formInputTypeTitle),
                 () -> verify(questionPermissionRules).loggedInUsersCanSeeAllQuestions(isA(QuestionResource.class), isA(UserResource.class))
         );
     }
@@ -118,14 +118,14 @@ public class QuestionServiceSecurityTest extends BaseServiceSecurityTest<Questio
     public void testGetQuestionByFormInputType() {
         final String formInputTypeTitle = "test";
         assertAccessDenied(
-                () -> service.getQuestionByFormInputType(formInputTypeTitle),
+                () -> classUnderTest.getQuestionByFormInputType(formInputTypeTitle),
                 () -> verify(questionPermissionRules).loggedInUsersCanSeeAllQuestions(isA(Question.class), isA(UserResource.class))
         );
     }
 
     @Test
     public void testGetQuestionsBySectionIdAndType() {
-        service.getQuestionsBySectionIdAndType(1L, QuestionType.GENERAL);
+        classUnderTest.getQuestionsBySectionIdAndType(1L, QuestionType.GENERAL);
         verify(questionPermissionRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).loggedInUsersCanSeeAllQuestions(isA(QuestionResource.class), isA(UserResource.class));
     }
 
@@ -135,13 +135,13 @@ public class QuestionServiceSecurityTest extends BaseServiceSecurityTest<Questio
 
         when(assessmentLookupStrategy.getAssessmentResource(assessmentId)).thenReturn(newAssessmentResource().build());
         assertAccessDenied(
-                () -> service.getQuestionsByAssessmentId(assessmentId),
+                () -> classUnderTest.getQuestionsByAssessmentId(assessmentId),
                 () -> verify(assessmentPermissionRules).userCanReadAssessment(isA(AssessmentResource.class), isA(UserResource.class))
         );
     }
 
     @Override
-    protected Class<TestQuestionService> getServiceClass() {
+    protected Class<TestQuestionService> getClassUnderTest() {
         return TestQuestionService.class;
     }
 

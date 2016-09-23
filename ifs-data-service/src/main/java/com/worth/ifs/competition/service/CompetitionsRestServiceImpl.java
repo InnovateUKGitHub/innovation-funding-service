@@ -6,7 +6,6 @@ import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.resource.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.xmlbeans.impl.jam.internal.elements.VoidClassImpl;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;

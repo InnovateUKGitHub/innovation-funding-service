@@ -28,7 +28,7 @@ public class ApplicationFundingServiceSecurityTest extends BaseServiceSecurityTe
 
 		RoleResource compAdminRole = newRoleResource().withType(COMP_ADMIN).build();
 		setLoggedInUser(newUserResource().withRolesGlobal(singletonList(compAdminRole)).build());
-		service.makeFundingDecision(123L, new HashMap<Long, FundingDecision>());
+		classUnderTest.makeFundingDecision(123L, new HashMap<Long, FundingDecision>());
 	}
 
 	@Test
@@ -36,7 +36,7 @@ public class ApplicationFundingServiceSecurityTest extends BaseServiceSecurityTe
 
 		setLoggedInUser(null);
 		try {
-			service.makeFundingDecision(123L, new HashMap<Long, FundingDecision>());
+			classUnderTest.makeFundingDecision(123L, new HashMap<Long, FundingDecision>());
 			fail("Should not have been able to make funding decision without first logging in");
 		} catch (AccessDeniedException e) {
 			// expected behaviour
@@ -47,7 +47,7 @@ public class ApplicationFundingServiceSecurityTest extends BaseServiceSecurityTe
 	public void testFundingDecisionDeniedIfNoGlobalRolesAtAll() {
 
 		try {
-			service.makeFundingDecision(123L, new HashMap<Long, FundingDecision>());
+			classUnderTest.makeFundingDecision(123L, new HashMap<Long, FundingDecision>());
 			fail("Should not have been able to make funding decision without the global comp admin role");
 		} catch (AccessDeniedException e) {
 			// expected behaviour
@@ -65,7 +65,7 @@ public class ApplicationFundingServiceSecurityTest extends BaseServiceSecurityTe
 			setLoggedInUser(
 					newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
 			try {
-				service.makeFundingDecision(123L, new HashMap<Long, FundingDecision>());
+				classUnderTest.makeFundingDecision(123L, new HashMap<Long, FundingDecision>());
 				fail("Should not have been able to make funding decision without the global Comp Admin role");
 			} catch (AccessDeniedException e) {
 				// expected behaviour
@@ -78,7 +78,7 @@ public class ApplicationFundingServiceSecurityTest extends BaseServiceSecurityTe
 
 		RoleResource compAdminRole = newRoleResource().withType(COMP_ADMIN).build();
 		setLoggedInUser(newUserResource().withRolesGlobal(singletonList(compAdminRole)).build());
-		service.saveFundingDecisionData(123L, new HashMap<Long, FundingDecision>());
+		classUnderTest.saveFundingDecisionData(123L, new HashMap<Long, FundingDecision>());
 	}
 
 	@Test
@@ -86,7 +86,7 @@ public class ApplicationFundingServiceSecurityTest extends BaseServiceSecurityTe
 
 		setLoggedInUser(null);
 		try {
-			service.saveFundingDecisionData(123L, new HashMap<Long, FundingDecision>());
+			classUnderTest.saveFundingDecisionData(123L, new HashMap<Long, FundingDecision>());
 			fail("Should not have been able to save funding decision data without first logging in");
 		} catch (AccessDeniedException e) {
 			// expected behaviour
@@ -97,7 +97,7 @@ public class ApplicationFundingServiceSecurityTest extends BaseServiceSecurityTe
 	public void testSaveFundingDecisionDataDeniedIfNoGlobalRolesAtAll() {
 
 		try {
-			service.saveFundingDecisionData(123L, new HashMap<Long, FundingDecision>());
+			classUnderTest.saveFundingDecisionData(123L, new HashMap<Long, FundingDecision>());
 			fail("Should not have been able to save funding decision data without the global comp admin role");
 		} catch (AccessDeniedException e) {
 			// expected behaviour
@@ -115,7 +115,7 @@ public class ApplicationFundingServiceSecurityTest extends BaseServiceSecurityTe
 			setLoggedInUser(
 					newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
 			try {
-				service.saveFundingDecisionData(123L, new HashMap<Long, FundingDecision>());
+				classUnderTest.saveFundingDecisionData(123L, new HashMap<Long, FundingDecision>());
 				fail("Should not have been able to save funding decision data without the global Comp Admin role");
 			} catch (AccessDeniedException e) {
 				// expected behaviour
@@ -124,7 +124,7 @@ public class ApplicationFundingServiceSecurityTest extends BaseServiceSecurityTe
 	}
 	
 	@Override
-	protected Class<? extends ApplicationFundingService> getServiceClass() {
+	protected Class<? extends ApplicationFundingService> getClassUnderTest() {
 		return TestApplicationFundingService.class;
 	}
 

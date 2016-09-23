@@ -31,6 +31,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.worth.ifs.file.controller.FileControllerUtils.*;
+import static java.util.Optional.ofNullable;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 /**
@@ -287,7 +288,8 @@ public class ProjectController {
     }
 
     @RequestMapping(value = "/{projectId}/team-status", method = GET)
-    public RestResult<ProjectTeamStatusResource> getTeamStatus(@PathVariable(value = "projectId") Long projectId){
-        return projectService.getProjectTeamStatus(projectId).toGetResponse();
+    public RestResult<ProjectTeamStatusResource> getTeamStatus(@PathVariable(value = "projectId") Long projectId,
+                                                               @RequestParam(value = "filterByUserId", required = false) Long filterByUserId){
+        return projectService.getProjectTeamStatus(projectId, ofNullable(filterByUserId)).toGetResponse();
     }
 }

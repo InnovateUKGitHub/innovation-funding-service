@@ -1,8 +1,8 @@
 package com.worth.ifs.user.security;
 
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.security.PermissionRule;
-import com.worth.ifs.security.PermissionRules;
+import com.worth.ifs.commons.security.PermissionRule;
+import com.worth.ifs.commons.security.PermissionRules;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.repository.ProcessRoleRepository;

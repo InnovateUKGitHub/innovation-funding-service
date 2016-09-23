@@ -8,7 +8,7 @@ import com.worth.ifs.application.resource.FormInputResponseFileEntryId;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.form.domain.FormInputResponse;
-import com.worth.ifs.security.SecuredBySpring;
+import com.worth.ifs.commons.security.SecuredBySpring;
 import com.worth.ifs.user.resource.UserRoleType;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;

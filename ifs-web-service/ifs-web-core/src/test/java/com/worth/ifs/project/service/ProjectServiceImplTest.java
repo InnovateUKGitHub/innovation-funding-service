@@ -340,12 +340,25 @@ public class ProjectServiceImplTest {
     public void testGetProjectTeamStatus() throws Exception {
         ProjectTeamStatusResource expectedProjectTeamStatusResource = newProjectTeamStatusResource().build();
 
-        when(projectRestService.getProjectTeamStatus(1L)).thenReturn(restSuccess(expectedProjectTeamStatusResource));
+        when(projectRestService.getProjectTeamStatus(1L, Optional.empty())).thenReturn(restSuccess(expectedProjectTeamStatusResource));
 
-        ProjectTeamStatusResource projectTeamStatusResource = service.getProjectTeamStatus(1L);
+        ProjectTeamStatusResource projectTeamStatusResource = service.getProjectTeamStatus(1L, Optional.empty());
 
         assertEquals(expectedProjectTeamStatusResource, projectTeamStatusResource);
 
-        verify(projectRestService).getProjectTeamStatus(1L);
+        verify(projectRestService).getProjectTeamStatus(1L, Optional.empty());
+    }
+
+    @Test
+    public void testGetProjectTeamStatusWithFilterByUserId() throws Exception {
+        ProjectTeamStatusResource expectedProjectTeamStatusResource = newProjectTeamStatusResource().build();
+
+        when(projectRestService.getProjectTeamStatus(1L, Optional.of(456L))).thenReturn(restSuccess(expectedProjectTeamStatusResource));
+
+        ProjectTeamStatusResource projectTeamStatusResource = service.getProjectTeamStatus(1L, Optional.of(456L));
+
+        assertEquals(expectedProjectTeamStatusResource, projectTeamStatusResource);
+
+        verify(projectRestService).getProjectTeamStatus(1L, Optional.of(456L));
     }
 }

@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static com.worth.ifs.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
 import static com.worth.ifs.bankdetails.builder.BankDetailsStatusResourceBuilder.newBankDetailsStatusResource;
@@ -521,7 +522,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
     @Test
     public void getTeamStatus() throws Exception {
         ProjectTeamStatusResource projectTeamStatusResource = buildTeamStatus();
-        when(projectServiceMock.getProjectTeamStatus(123L)).thenReturn(serviceSuccess(projectTeamStatusResource));
+        when(projectServiceMock.getProjectTeamStatus(123L, Optional.empty())).thenReturn(serviceSuccess(projectTeamStatusResource));
         mockMvc.perform(get("/project/{projectId}/team-status", 123L)).
                 andExpect(status().isOk()).
                 andExpect(content().json(toJson(projectTeamStatusResource))).
@@ -547,6 +548,24 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                         ),
                         responseFields(projectBankDetailsStatusSummaryFields)
                 ));
+    }
+    public void getTeamStatusWithFilterByUserId() throws Exception {
+        ProjectTeamStatusResource projectTeamStatusResource = buildTeamStatus();
+        when(projectServiceMock.getProjectTeamStatus(123L, Optional.of(456L))).thenReturn(serviceSuccess(projectTeamStatusResource));
+        mockMvc.perform(get("/project/{projectId}/team-status", 123L).
+                param("filterByUserId", "456")).
+                andExpect(status().isOk()).
+                andExpect(content().json(toJson(projectTeamStatusResource))).
+                andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project that the Project Users are being requested from")
+                        ),
+                        requestParameters(
+                                parameterWithName("filterByUserId").description("Optional id of a user with which the partner organisations " +
+                                        "will be filtered by, such that the non-lead partner organisations will only include organisations that " +
+                                        "this user is a partner in")
+                        ),
+                        responseFields(projectTeamStatusResourceFields)));
     }
 
     private ProjectTeamStatusResource buildTeamStatus(){

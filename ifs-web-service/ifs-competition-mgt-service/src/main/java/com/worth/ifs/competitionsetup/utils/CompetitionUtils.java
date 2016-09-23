@@ -10,6 +10,9 @@ public class CompetitionUtils {
     }
 
     public static String booleanToText(Boolean value) {
+        if(value == null) {
+            return "";
+        }
         return value ? "yes" : "no";
     }
 

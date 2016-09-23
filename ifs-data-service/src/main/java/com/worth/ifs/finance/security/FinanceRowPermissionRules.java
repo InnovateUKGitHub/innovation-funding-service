@@ -7,8 +7,8 @@ import com.worth.ifs.finance.resource.FinanceRowMetaValueResource;
 import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.security.BasePermissionRules;
-import com.worth.ifs.security.PermissionRule;
-import com.worth.ifs.security.PermissionRules;
+import com.worth.ifs.commons.security.PermissionRule;
+import com.worth.ifs.commons.security.PermissionRules;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.resource.UserResource;
@@ -87,5 +87,4 @@ public class FinanceRowPermissionRules extends BasePermissionRules {
         final boolean isCollaborator = checkProcessRole(user, applicationId, organisationId, COLLABORATOR, roleRepository, processRoleRepository);
         return isLead || isCollaborator;
     }
-
 }

@@ -438,3 +438,18 @@ include::{snippets}/project/get-bank-details-project-summary/response-fields.ado
 
 ===== Curl Example
 include::{snippets}/project/get-bank-details-project-summary/curl-request.adoc[]
+
+
+
+=== Get Project Team Status (with optional filter by user id)
+==== Success
+===== Request
+include::{snippets}/project/get-team-status-with-filter-by-user-id/http-request.adoc[]
+include::{snippets}/project/get-team-status-with-filter-by-user-id/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/get-team-status-with-filter-by-user-id/http-response.adoc[]
+include::{snippets}/project/get-team-status-with-filter-by-user-id/response-fields.adoc[]
+
+===== Curl Example
+include::{snippets}/project/get-team-status-with-filter-by-user-id/curl-request.adoc[]

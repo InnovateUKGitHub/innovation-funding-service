@@ -21,7 +21,7 @@ public class TokenServiceSecurityTest extends BaseServiceSecurityTest<TokenServi
     private TokenPermissionRules tokenRules;
 
     @Override
-    protected Class<? extends TokenService> getServiceClass() {
+    protected Class<? extends TokenService> getClassUnderTest() {
         return TestTokenService.class;
     }
 
@@ -33,7 +33,7 @@ public class TokenServiceSecurityTest extends BaseServiceSecurityTest<TokenServi
     @Test
     public void getEmailToken() throws Exception {
         assertAccessDenied(
-                () -> service.getPasswordResetToken("hash"),
+                () -> classUnderTest.getPasswordResetToken("hash"),
                 () -> {
                     verify(tokenRules).systemRegistrationUserCanReadTokens(isA(Token.class), isA(UserResource.class));
                     verifyNoMoreInteractions(tokenRules);
@@ -43,7 +43,7 @@ public class TokenServiceSecurityTest extends BaseServiceSecurityTest<TokenServi
     @Test
     public void getPasswordResetToken() throws Exception {
         assertAccessDenied(
-                () -> service.getEmailToken("hash"),
+                () -> classUnderTest.getEmailToken("hash"),
                 () -> {
                     verify(tokenRules).systemRegistrationUserCanReadTokens(isA(Token.class), isA(UserResource.class));
                     verifyNoMoreInteractions(tokenRules);
@@ -54,7 +54,7 @@ public class TokenServiceSecurityTest extends BaseServiceSecurityTest<TokenServi
     public void removeToken() throws Exception {
         final Token token = new Token(VERIFY_EMAIL_ADDRESS, User.class.getName(), 1L, "hash", now(), JsonNodeFactory.instance.objectNode());
         assertAccessDenied(
-                () -> service.removeToken(token),
+                () -> classUnderTest.removeToken(token),
                 () -> {
                     verify(tokenRules).systemRegistrationUserCanDeleteTokens(token, getLoggedInUser());
                     verifyNoMoreInteractions(tokenRules);
@@ -65,7 +65,7 @@ public class TokenServiceSecurityTest extends BaseServiceSecurityTest<TokenServi
     public void handleExtraAttributes() throws Exception {
         final Token token = new Token(VERIFY_EMAIL_ADDRESS, User.class.getName(), 1L, "hash", now(), JsonNodeFactory.instance.objectNode());
         assertAccessDenied(
-                () -> service.handleExtraAttributes(token),
+                () -> classUnderTest.handleExtraAttributes(token),
                 () -> {
                     verify(tokenRules, times(1)).systemRegistrationUserCanReadTokens(token, getLoggedInUser());
                     verifyNoMoreInteractions(tokenRules);

@@ -25,7 +25,7 @@ public class AssessorFormInputResponseServiceSecurityTest extends BaseServiceSec
     private AssessmentPermissionRules assessmentPermissionRules;
 
     @Override
-    protected Class<? extends AssessorFormInputResponseService> getServiceClass() {
+    protected Class<? extends AssessorFormInputResponseService> getClassUnderTest() {
         return TestAssessorFormInputResponseService.class;
     }
 
@@ -43,7 +43,7 @@ public class AssessorFormInputResponseServiceSecurityTest extends BaseServiceSec
 
         when(assessmentLookupStrategy.getAssessmentResource(assessmentId)).thenReturn(newAssessmentResource().build());
         assertAccessDenied(
-                () -> service.getAllAssessorFormInputResponses(assessmentId),
+                () -> classUnderTest.getAllAssessorFormInputResponses(assessmentId),
                 () -> verify(assessmentPermissionRules).userCanReadAssessment(isA(AssessmentResource.class), isA(UserResource.class))
         );
     }
@@ -55,7 +55,7 @@ public class AssessorFormInputResponseServiceSecurityTest extends BaseServiceSec
 
         when(assessmentLookupStrategy.getAssessmentResource(assessmentId)).thenReturn(newAssessmentResource().build());
         assertAccessDenied(
-                () -> service.getAllAssessorFormInputResponsesByAssessmentAndQuestion(assessmentId, questionId),
+                () -> classUnderTest.getAllAssessorFormInputResponsesByAssessmentAndQuestion(assessmentId, questionId),
                 () -> verify(assessmentPermissionRules).userCanReadAssessment(isA(AssessmentResource.class), isA(UserResource.class))
         );
     }
@@ -67,7 +67,7 @@ public class AssessorFormInputResponseServiceSecurityTest extends BaseServiceSec
 
         when(assessorFormInputResponseLookupStrategy.getAssessorFormInputResponseResource(assessorFormInputResponseId)).thenReturn(newAssessorFormInputResponseResource().withId(assessorFormInputResponseId).build());
         assertAccessDenied(
-                () -> service.updateFormInputResponse(response),
+                () -> classUnderTest.updateFormInputResponse(response),
                 () -> verify(assessorFormInputResponsePermissionRules).userCanUpdateAssessorFormInputResponse(isA(AssessorFormInputResponseResource.class), isA(UserResource.class))
         );
     }
