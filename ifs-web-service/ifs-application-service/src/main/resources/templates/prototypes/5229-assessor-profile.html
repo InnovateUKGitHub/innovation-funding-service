@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Dashboard'}, ${'#'})" th:remove="tag" />
+
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Assessor profile'}, ${null})" th:remove="tag" />
+
+	<h1 class="heading-large">Innovation area and skills</h1>
+	
+	<div class="grid-row">
+		<div class="column-half">
+			<h2 class="heading-medium no-margin-bottom">Innovation areas</h2>
+			<ul class="list-bullet">
+				<li>Digital sciences</li>
+				<li>Information &#38; communications technology (ICT)</li>
+			</ul>
+		</div>
+
+		<div class="column-half">
+			<h2 class="heading-medium no-margin-bottom">Type</h2>
+			<ul class="list-bullet">
+				<li>Business</li>
+			</ul>
+		</div>
+
+	</div>
+
+	<h2 class="heading-medium no-margin-bottom">Skills</h2>
+	<p>Human computer interaction, Wearables, IoT</p>
+	
+	<h2 class="heading-medium">Assessor details</h2>
+	
+	<div class="grid-row">
+		
+		<div class="column-half">
+
+			<h3 class="heading-small no-margin-bottom">Email</h3>
+			<p><a href="mailto:j.b@assessor.com">j.b@assessor.com</a></p>
+
+			<h3 class="heading-small no-margin-bottom">Phone</h3>
+			<p>01234 567891</p>
+
+			<h3 class="heading-small no-margin-bottom">Principal employer and role</h3>
+			<p>ASDF solutions <br /> CEO</p>
+
+		</div>
+		
+		<div class="column-half">
+			<h3 class="heading-small no-margin-bottom">Address</h3>
+			<p>
+				Nomensa <br />
+				King William House <br />
+				13 Queens Square <br />
+				Bristol <br />
+				BS3 1RF
+			</p>
+		</div>
+
+	</div>
+
+	<h2 class="heading-medium">Personal affiliations</h2>
+
+	<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Officiis inventore in exercitationem. Doloremque quas, cupiditate voluptatem corporis consectetur hic, suscipit eos ipsum atque dignissimos, animi quaerat corrupti? Illum, libero totam!</p>
+
+	<a href="/prototypes/5230-assessor-doi" class="button button-secondary">View declaration of interest</a>
+	<a href="#" class="button button-secondary">Download CV</a>
+
+	<h2 class="heading-medium">Training <small><a href="#">Update training details</a></small></h2>
+
+	<dl class="standard-definition-list">
+		
+		<dt>Panel approved</dt>
+		<dd>Yes</dd>
+
+		<dt>Training log entry</dt>
+		<dd>No</dd>
+
+	</dl>
+
+	<h3 class="heading-small">Comments</h3>
+
+	<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eaque porro fuga facilis, enim quam, sit veniam quis quidem quod eveniet delectus ea sequi nemo voluptatibus, non velit quibusdam. Qui, dolor.</p>
+
+	<h2 class="heading-medium">Assessment history</h2>
+
+	<table>
+		<thead>
+			<tr>
+				<th scope="col">Competition title</th>
+				<th scope="col">No. assessed</th>
+				<th scope="col">Innovation area</th>
+				<th scope="col">Assessment complete</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>Technology inspired</td>
+				<td>4</td>
+				<td>Digital services</td>
+				<td>23 January 2016</td>
+			</tr>
+			<tr>
+				<td>Future robotics</td>
+				<td>6</td>
+				<td>Digital services</td>
+				<td>3 December 2015</td>
+			</tr>
+			<tr>
+				<td>Digital services</td>
+				<td>10</td>
+				<td>Digital services</td>
+				<td>4 November 2014</td>
+			</tr>
+		</tbody>
+	</table>
+
+
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+</body>
+</html>
