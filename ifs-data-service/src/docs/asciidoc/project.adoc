@@ -425,3 +425,16 @@ include::{snippets}/project/get-team-status/response-fields.adoc[]
 
 ===== Curl Example
 include::{snippets}/project/get-team-status/curl-request.adoc[]
+
+=== Get Project Team Bank Details Status Summary
+==== Success
+===== Request
+include::{snippets}/project/get-bank-details-project-summary/http-request.adoc[]
+include::{snippets}/project/get-bank-details-project-summary/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/get-bank-details-project-summary/http-response.adoc[]
+include::{snippets}/project/get-bank-details-project-summary/response-fields.adoc[]
+
+===== Curl Example
+include::{snippets}/project/get-bank-details-project-summary/curl-request.adoc[]

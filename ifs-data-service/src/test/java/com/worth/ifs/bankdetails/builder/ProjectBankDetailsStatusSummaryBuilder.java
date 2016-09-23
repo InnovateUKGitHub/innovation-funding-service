@@ -1,6 +1,7 @@
 package com.worth.ifs.bankdetails.builder;
 
 import com.worth.ifs.BaseBuilder;
+import com.worth.ifs.bankdetails.resource.BankDetailsStatusResource;
 import com.worth.ifs.bankdetails.resource.ProjectBankDetailsStatusSummary;
 
 import java.util.List;
@@ -32,7 +33,12 @@ public class ProjectBankDetailsStatusSummaryBuilder extends BaseBuilder<ProjectB
         return withArray((competitionId, bankDetailsSummary) -> setField("competitionId", competitionId, bankDetailsSummary), competitionIds);
     }
 
-    public ProjectBankDetailsStatusSummaryBuilder withProjectIds(Long... projectIds) {
+    public ProjectBankDetailsStatusSummaryBuilder withProjectId(Long... projectIds) {
         return withArray((projectId, bankDetailsSummary) -> setField("projectId", projectId, bankDetailsSummary), projectIds);
+    }
+
+    @SafeVarargs
+    public final ProjectBankDetailsStatusSummaryBuilder withBankDetailsStatusResources(List<BankDetailsStatusResource>... bankDetailsStatusResourcesList){
+        return withArray((bankDetailsStatusResources, bankDetailsSummary) -> setField("bankDetailsStatusResources", bankDetailsStatusResources, bankDetailsSummary), bankDetailsStatusResourcesList);
     }
 }
