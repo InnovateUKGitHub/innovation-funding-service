@@ -252,14 +252,10 @@ caption {
 	text-align:left;
 }
 
-td.status,
-th.status {
-	width: 70px;
-	text-align: center;
-	padding-left: 0.625em;
-	padding-right: 0.625em;
-	background-position: 50% 50%;
 
+td.status,
+th.status,
+span.status {
 	&.na{
 		background: $grey-3;
 	}
@@ -274,6 +270,21 @@ th.status {
 	}
 	&.waiting{
 		@extend  %icon-timer;
+		background-size: 33px 30px;
+	}
+}
+td.status,
+th.status {
+	text-align: center;
+	padding-left: 0.625em;
+	padding-right: 0.625em;
+	background-position: 50% 50%;
+	width: 70px;
+}
+span.status {
+	padding-left: 30px;
+	background-position: left center;
+	&.waiting{
 		background-size: 33px 30px;
 	}
 }
