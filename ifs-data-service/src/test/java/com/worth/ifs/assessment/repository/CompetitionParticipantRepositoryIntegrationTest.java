@@ -145,7 +145,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
     public void getByUserRoleStatus() {
         CompetitionInvite invite = new CompetitionInvite("name1", "tom1@poly.io", "hash", competition);
         User user = newUser()
-                .withid(3L)
+                .withId(3L)
                 .withFirstName("Professor")
                 .build();
         CompetitionParticipant savedParticipant = repository.save( new CompetitionParticipant(competition, user, invite));
