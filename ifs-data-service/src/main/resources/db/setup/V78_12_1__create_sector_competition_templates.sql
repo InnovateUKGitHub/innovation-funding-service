@@ -16,8 +16,10 @@ ALTER TABLE `question_template`
 CHANGE COLUMN `id` `id` BIGINT(20) NOT NULL AUTO_INCREMENT ;
 ALTER TABLE `question_template_form_input_template` ADD CONSTRAINT `FK_qtfit_qtid` FOREIGN KEY (`question_template_id`) REFERENCES `question_template` (`id`);
 
+ALTER TABLE `form_input_template_form_validator` DROP FOREIGN KEY `FK_fitv_fitid`;
 ALTER TABLE `form_input_template`
 CHANGE COLUMN `id` `id` BIGINT(20) NOT NULL AUTO_INCREMENT ;
+ALTER TABLE `form_input_template_form_validator` ADD CONSTRAINT `FK_fitv_fitid` FOREIGN KEY (`form_input_template_id`) REFERENCES `form_input_template` (`id`);
 
 INSERT INTO `competition_type` (`NAME`, `state_aid`, `active`) VALUES ('Sector', 1, '1');
 
