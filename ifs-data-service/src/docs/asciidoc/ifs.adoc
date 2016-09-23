@@ -117,6 +117,10 @@ include::application-status.adoc[]
 == Application Funding Decision
 include::application-funding-decision.adoc[]
 
+[[assessor]]
+== Assessor
+include::assessor.adoc[]
+
 [[assessorfeedback]]
 == AssessorFeedback
 include::assessor-feedback.adoc[]
@@ -132,6 +136,10 @@ include::section.adoc[]
 [[competition]]
 == Competition
 include::competition.adoc[]
+
+[[competitioninvite]]
+== Competition Invite
+include::competitionInvite.adoc[]
 
 [[assessment]]
 == Assessment

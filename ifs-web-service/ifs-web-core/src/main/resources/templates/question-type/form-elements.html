@@ -428,8 +428,8 @@
 <div th:fragment="form-word-count (maxWords, currentWordsLeft)">
     <div th:unless="${maxWords == 0}" th:remove="tag">
 		<span class="count-label">
-				<span class="count-down" aria-live="polite" th:if="${currentWordsLeft}" th:classappend="${currentWordsLeft &lt; 0}? negative : positive">Words remaining: <div th:text="${currentWordsLeft}" th:remove="tag" /> </span>
-				<span class="count-down" aria-live="polite" th:unless="${currentWordsLeft}" th:classappend="${maxWords &lt; 0}? negative : positive" >Words remaining: <div th:text="${maxWords}" th:remove="tag" /> </span>
+				<span class="count-down" aria-live="polite" th:unless="${currentWordsLeft == null}" th:classappend="${currentWordsLeft &lt; 0}? negative : positive">Words remaining: <div th:text="${currentWordsLeft}" th:remove="tag" /> </span>
+				<span class="count-down" aria-live="polite" th:if="${currentWordsLeft == null}" th:classappend="${maxWords &lt; 0}? negative : positive" >Words remaining: <div th:text="${maxWords}" th:remove="tag" /> </span>
 		</span>
     </div>
 </div>

@@ -10,6 +10,7 @@ IFS.competition_management.setup = (function(){
         IFS.competition_management.setup.handleCompetitionCode();
 
         IFS.competition_management.setup.handleAddCoFunder();
+        IFS.competition_management.setup.handleRemoveCoFunder();
 
         jQuery("body.competition-management.competition-setup").on('change','#competitionTypeId',function(){
           IFS.competition_management.setup.handleStateAid();
@@ -42,6 +43,7 @@ IFS.competition_management.setup = (function(){
                     //Code is now valid, remove all error messages.
                     IFS.core.formValidation.setValid(field,"");
                     field.val(data.message);
+                    jQuery('body').trigger('updateSerializedFormState');
                   }
                   else {
                     IFS.core.formValidation.setInvalid(field,data.message);
@@ -71,7 +73,8 @@ IFS.competition_management.setup = (function(){
                       }
                   });
                   if(!pageLoad) {
-                    innovationCategory.trigger('change');
+                    IFS.core.autoSave.fieldChanged('[name="innovationSectorCategoryId"]');
+                    IFS.core.autoSave.fieldChanged('[name="innovationAreaCategoryId"]');
                   }
               }
           });
@@ -103,13 +106,47 @@ IFS.competition_management.setup = (function(){
     handleAddCoFunder: function() {
       jQuery(document).on('click','#add-cofunder',function() {
           var count = parseInt(jQuery('#co-funder-count').val(),10);
-          jQuery('<div class="grid-row" id="co-funder-row-'+ count +'"><div class="column-half"><div class="form-group"><input type="text" maxlength="255" data-maxlength-errormessage="Co-funders has a maximum length of 255 characters" class="form-control width-x-large" id="' + count +'-funder" name="coFunders['+ count +'].coFunder" value=""></div> </div>' +
-              '<div class="column-half"><div class="form-group"><input type="number" min="0" class="form-control width-x-large" id="' + count +'-funderBudget" name="coFunders['+ count +'].coFunderBudget" value=""></div> </div></div>')
+          jQuery('<div class="grid-row funder-row" id="funder-row-'+ count +'"><div class="column-half"><div class="form-group"><input type="text" maxlength="255" data-maxlength-errormessage="Funders has a maximum length of 255 characters" class="form-control width-x-large" id="' + count +'-funder" name="funders['+ count +'].funder" value=""><span class="autosave-info" /></div></div>' +
+              '<div class="column-half"><div class="form-group"><input type="number" min="0" class="form-control width-x-large" id="' + count +'-funderBudget" name="funders['+ count +'].funderBudget" value=""><span class="autosave-info" /><input required="required" type="hidden" id="' + count +'-coFunder" name="funders['+ count +'].coFunder" value="true">' +
+              '<button class="buttonlink remove-funder" name="remove-funder" value="'+ count +'" id="remove-funder-'+ count +'">Remove</button></div></div></div>')
               .insertBefore('#dynamic-row-pointer');
 
           jQuery('#co-funder-count').val(count + 1);
           return false;
       });
+    },
+    handleRemoveCoFunder: function() {
+        jQuery(document).on('click', '.remove-funder', function() {
+            var $this = jQuery(this),
+                index = $this.val(),
+                funderRow = $this.closest('.funder-row'),
+                count = parseInt(jQuery('#co-funder-count').val(),10);
+
+            jQuery('[name="removeFunder"]').val(index);
+            IFS.core.autoSave.fieldChanged('[name="removeFunder"]')
+            funderRow.remove();
+            jQuery('#co-funder-count').val(count - 1);
+            IFS.competition_management.setup.reindexFunderRows();
+            //Force recalculation of the total.
+            jQuery('body').trigger('recalculateAllFinances')
+            return false;
+        });
+    },
+    reindexFunderRows: function() {
+        jQuery('[name*="funders"]').each(function() {
+            var $this = jQuery(this),
+                thisIndex = $this.closest('.funder-row').index('.funder-row'),
+                oldAttr = $this.attr('name'),
+                newAttr = oldAttr.replace(/funders\[\d\]/, 'funders[' +thisIndex+ ']');
+
+            $this.attr('name', newAttr);
+        });
+        jQuery('button.remove-funder').each(function() {
+            var $this = jQuery(this),
+                thisIndex = $this.closest('.funder-row').index('.funder-row');
+
+            $this.val(thisIndex);
+        });
     },
     milestonesExtraValidation : function(){
       //some extra javascript to hide the server side messages when the field is valid

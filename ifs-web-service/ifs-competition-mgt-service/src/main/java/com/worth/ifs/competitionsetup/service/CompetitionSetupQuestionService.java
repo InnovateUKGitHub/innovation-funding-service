@@ -7,5 +7,7 @@ import com.worth.ifs.competitionsetup.model.Question;
  */
 public interface CompetitionSetupQuestionService {
 
+	Question getQuestion(Long questionId);
+
 	void updateQuestion(Question question);
 }

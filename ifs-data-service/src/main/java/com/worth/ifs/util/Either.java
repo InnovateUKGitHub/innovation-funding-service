@@ -53,7 +53,7 @@ public class Either<L, R> {
             ExceptionThrowingFunction<? super R, ? extends T> rFunc) {
         try {
             return isLeft() ? lFunc.apply(left) : rFunc.apply(right);
-        } catch (Exception e) {
+        } catch (Throwable e) {
             LOG.warn("Exception caught while processing function - throwing as a runtime exception", e);
             throw new RuntimeException(e);
         }
@@ -63,7 +63,7 @@ public class Either<L, R> {
             ExceptionThrowingFunction<? super R, Either<L, T>> rFunc) {
         try {
             return isLeft() ? left(left) : rFunc.apply(right);
-        } catch (Exception e) {
+        } catch (Throwable e) {
             LOG.warn("Exception caught while processing function - throwing as a runtime exception", e);
             throw new RuntimeException(e);
         }
@@ -92,7 +92,7 @@ public class Either<L, R> {
         checkEitherState();
 
         if (!isLeft()) {
-            throw new NoSuchElementException("Not a left value");
+            throw new NoSuchElementException("Not a left value.  Right value is  " + getRight());
         }
 
         return left;
@@ -102,7 +102,7 @@ public class Either<L, R> {
         checkEitherState();
 
         if (!isRight()) {
-            throw new NoSuchElementException("Not a right value");
+            throw new NoSuchElementException("Not a right value.  Left value is " + getLeft());
         }
 
         return right;

@@ -51,6 +51,14 @@ IFS.core.formValidation = (function(){
                 fields : '[maxlength]',
                 messageInvalid : "This field cannot contain more than %maxlength% characters"
             },
+            minwordslength : {
+                fields : '[data-minwordslength]',
+                messageInvalid : "This field has a minimum number of words"
+            },
+            maxwordslength : {
+                fields : '[data-maxwordslength]',
+                messageInvalid : "This field has a maximum number of words"
+            },
             date : {
                 fields : '.date-group input',
                 messageInvalid : {
@@ -90,6 +98,8 @@ IFS.core.formValidation = (function(){
           jQuery('body').on('blur change',s.required.fields,function(){ IFS.core.formValidation.checkRequired(jQuery(this),true); });
           jQuery('body').on('change',s.minlength.fields,function(){ IFS.core.formValidation.checkMinLength(jQuery(this),true); });
           jQuery('body').on('change',s.maxlength.fields,function(){ IFS.core.formValidation.checkMaxLength(jQuery(this),true); });
+          jQuery('body').on('change',s.minwordslength.fields,function(){ IFS.core.formValidation.checkMinWordsLength(jQuery(this),true); });
+          jQuery('body').on('change',s.maxwordslength.fields,function(){ IFS.core.formValidation.checkMaxWordsLength(jQuery(this),true); });
           jQuery('body').on('change',s.tel.fields,function(){ IFS.core.formValidation.checkTel(jQuery(this),true); });
           jQuery('body').on('change',s.date.fields,function(){  IFS.core.formValidation.checkDate(jQuery(this),true); });
 
@@ -356,6 +366,36 @@ IFS.core.formValidation = (function(){
               return true;
             }
         },
+        checkMinWordsLength : function(field,showMessage){
+            var errorMessage = IFS.core.formValidation.getErrorMessage(field,'minwordslength');
+            var minWordsLength = parseInt(field.attr('data-minwordslength'),10);
+            var value = field.val();
+            var words = IFS.core.formValidation.countWords(value);
+
+            if((words.length > 0) && (words.length < minWordsLength)){
+              if(showMessage) { IFS.core.formValidation.setInvalid(field,errorMessage);}
+              return false;
+            }
+            else {
+              if(showMessage) { IFS.core.formValidation.setValid(field,errorMessage);}
+              return true;
+            }
+        },
+        checkMaxWordsLength : function(field,showMessage){
+            var errorMessage = IFS.core.formValidation.getErrorMessage(field,'maxwordslength');
+            var maxWordsLength = parseInt(field.attr('data-maxwordslength'),10);
+            var value = field.val();
+            var words = IFS.core.formValidation.countWords(value);
+
+            if(words.length > maxWordsLength){
+              if(showMessage) { IFS.core.formValidation.setInvalid(field,errorMessage);}
+              return false;
+            }
+            else {
+              if(showMessage) {IFS.core.formValidation.setValid(field,errorMessage);}
+              return true;
+            }
+        },
         checkTel : function(field,showMessage){
             var tel = field.val();
             var errorMessage = IFS.core.formValidation.getErrorMessage(field,'tel');
@@ -488,45 +528,73 @@ IFS.core.formValidation = (function(){
             return errorMessage;
         },
         setInvalid : function(field,message){
-            var formGroup = field.closest('.form-group,tr.date-group');
-            if(formGroup){
+            var formGroup = field.closest('.form-group,tr.form-group-row');
+            var name = IFS.core.formValidation.getIdentifier(field);
+
+            if(formGroup.length){
                 if(s.html5validationMode){ field[0].setCustomValidity(message);}
-                field.addClass('field-error');
+                formGroup.addClass('error');
+
                 //if the message isn't in this formgroup yet we will add it, a form-group can have multiple errors.
-                var errorEl = formGroup.find('.error-message:contains("'+message+'")');
+                var errorEl = formGroup.find('[data-errorfield="'+name+'"]:contains("'+message+'"),.error-message:not([data-errorfield]):contains("'+message+'")');
                 if(errorEl.length === 0){
-                    formGroup.addClass('error');
-                    var html = '<span class="error-message">'+message+'</span>';
-                    formGroup.find('legend,label,.labelledby').first().append(html);
+                    field.addClass('field-error');
+                    var html = '<span data-errorfield="'+name+'" class="error-message">'+message+'</span>';
+                    formGroup.find('legend,label,[scope="row"]').first().append(html);
                 }
             }
-            if(jQuery('ul.error-summary-list li:contains('+message+')').length === 0){
-                jQuery('.error-summary-list').append('<li>'+message+'</li>');
+
+            if(jQuery('ul.error-summary-list [data-errorfield="'+name+'"]:contains('+message+')').length === 0){
+                jQuery('.error-summary-list').append('<li data-errorfield="'+name+'">'+message+'</li>');
             }
+
             jQuery('.error-summary').attr('aria-hidden',false);
             jQuery(window).trigger('updateWysiwygPosition');
         },
         setValid : function(field,message){
+            var formGroup = field.closest('.form-group.error,tr.form-group-row.error');
+            var errorSummary = jQuery('.error-summary-list');
+            var name = IFS.core.formValidation.getIdentifier(field);
 
-            var formGroup = field.closest('.form-group.error,tr.date-group.error');
-            if(formGroup){
-              formGroup.find('.error-message:contains("'+message+'")').remove();
+            if(formGroup.length){
+              //client side remove in form group
+              formGroup.find('[data-errorfield="'+name+'"]:contains("'+message+'")').remove();
+              //server side remove in form group
+              formGroup.find('.error-message:not([data-errorfield]):contains("'+message+'")').first().remove();
 
-               //if this was the last error we remove the error styling
-               if(formGroup.find('.error-message').length === 0){
-                   formGroup.removeClass('error');
-                   field.removeClass('field-error');
-                   if(s.html5validationMode){ field[0].setCustomValidity('');}
-               }
+              //if this was the last error we remove the error styling
+              if(formGroup.find('[data-errorfield],.error-message:not([data-errorfield])').length === 0){
+                 formGroup.removeClass('error');
+              }
+              if(formGroup.find('[data-errorfield="'+name+'"]').length === 0) {
+                field.removeClass('field-error');
+                if(s.html5validationMode){ field[0].setCustomValidity('');}
+              }
             }
-            if(jQuery('.error-summary-list li:contains('+message+')').length){
-              jQuery('.error-summary-list li:contains('+message+')').remove();
-            }
 
+            if(errorSummary.length){
+              //remove clientside in summary
+              errorSummary.find('[data-errorfield="'+name+'"]:contains('+message+')').remove();
+              //remove server side in summary
+              errorSummary.find('li:not([data-errorfield]):contains("'+message+'")').first().remove();
+            }
             if(jQuery('.error-summary-list li:not(.list-header)').length === 0){
-              jQuery('.error-summary').attr('aria-hidden',true);
+              jQuery('.error-summary').attr('aria-hidden','true');
             }
             jQuery(window).trigger('updateWysiwygPosition');
+        },
+        getIdentifier : function(el){
+            if(el.is('[data-date]')){
+              el =  el.closest('.date-group').find('input[type="hidden"]');
+            }
+
+            if(el.prop('id').length){
+              return el.prop('id');
+            }
+            else if(el.prop('name').length) {
+              return  el.prop('name');
+            }
+            return false;
         },
         checkHTML5validationMode : function(){
             var testField =jQuery('input');
@@ -538,6 +606,20 @@ IFS.core.formValidation = (function(){
                 return false;
               }
             }
+        },
+        countWords : function(value){
+          var val = value;
+
+          if(typeof(val) !== 'undefined'){
+            //regex = replace newlines with space \r\n, \n, \r
+            val = value.replace(/(\r\n|\n|\r)/gm," ");
+            //remove markdown lists ('* ','1. ','2. ','**','_') from markdown as it influences word count
+            val = value.replace(/([[0-9]+\.\ |\*\ |\*\*|_)/gm,"");
+
+            return jQuery.trim(val).split(' ');
+          } else {
+            return false;
+          }
         }
     };
 })();

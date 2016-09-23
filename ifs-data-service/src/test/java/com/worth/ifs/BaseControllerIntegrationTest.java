@@ -1,5 +1,6 @@
 package com.worth.ifs;
 
+import com.worth.ifs.commons.BaseIntegrationTest;
 import com.worth.ifs.security.SecurityRuleUtil;
 import com.worth.ifs.user.mapper.UserMapper;
 import com.worth.ifs.user.repository.UserRepository;
@@ -10,10 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+
 /**
  * This this the base class for Controller integration tests.  Subclasses will have access to a Controller and be able
  * to test it against a full stack of real REST services, transactional Services and Repositories.
- *
+ * <p>
  * Created by dwatson on 02/10/15.
  */
 @Rollback
@@ -28,10 +31,18 @@ public abstract class BaseControllerIntegrationTest<ControllerType> extends Base
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private EntityManager em;
+
     protected ControllerType controller;
 
     @Autowired
     protected abstract void setControllerUnderTest(ControllerType controller);
+
+    protected void flushAndClearSession() {
+        em.flush();
+        em.clear();
+    }
 
     protected UserResource getSteveSmith() {
         return getByEmail("steve.smith@empire.com");
@@ -47,6 +58,10 @@ public abstract class BaseControllerIntegrationTest<ControllerType> extends Base
 
     protected UserResource getPaulPlum() {
         return getByEmail("paul.plum@gmail.com");
+    }
+
+    protected UserResource getFelixWilson() {
+        return getByEmail("felix.wilson@gmail.com");
     }
 
     protected UserResource getAnonUser() {
@@ -81,4 +96,7 @@ public abstract class BaseControllerIntegrationTest<ControllerType> extends Base
         setLoggedInUser(getPaulPlum());
     }
 
+    protected void loginFelixWilson() {
+        setLoggedInUser(getFelixWilson());
+    }
 }

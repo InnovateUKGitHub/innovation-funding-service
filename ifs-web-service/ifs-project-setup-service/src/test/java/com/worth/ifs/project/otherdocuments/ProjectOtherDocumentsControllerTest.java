@@ -406,6 +406,25 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
                 andExpect(redirectedUrl("/project/1/partner/documents"));
     }
 
+    @Test
+    public void testViewConfirmDocuemntsPage() throws Exception {
+
+        long projectId = 123L;
+        long userId = 1L;
+        ProjectResource project = newProjectResource().withId(projectId).build();
+
+        when(projectService.getById(projectId)).thenReturn(project);
+        when(projectService.getCollaborationAgreementFileDetails(projectId)).thenReturn(Optional.empty());
+        when(projectService.getExploitationPlanFileDetails(projectId)).thenReturn(Optional.empty());
+        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(emptyList());
+        when(projectService.isUserLeadPartner(projectId, loggedInUser.getId())).thenReturn(true);
+        when(projectService.isOtherDocumentSubmitAllowed(projectId)).thenReturn(serviceSuccess(true));
+
+        mockMvc.perform(get("/project/{id}/partner/documents/confirm", projectId)).
+                andExpect(status().isOk()).
+                andExpect(view().name("project/other-documents-confirm")).
+                andReturn();
+    }
 
     @Override
     protected ProjectOtherDocumentsController supplyControllerUnderTest() {

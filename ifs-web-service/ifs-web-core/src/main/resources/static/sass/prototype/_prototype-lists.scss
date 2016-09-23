@@ -321,8 +321,25 @@ dl.standard-definition-list{
             background: url(../images/charts/offer-success-last.png) no-repeat;
         }
 
-         &.unsuccessful{
+        &.unsuccessful{
             background: url(../images/charts/offer-unsuccessful-last.png) no-repeat;
+        }
+
+    }
+
+    &.setup-complete{
+
+        >li{
+            background: none;
+            
+            span{
+                margin-left: 0;
+
+                &:before{
+                    border: none;
+                }
+            }
+
         }
 
     }

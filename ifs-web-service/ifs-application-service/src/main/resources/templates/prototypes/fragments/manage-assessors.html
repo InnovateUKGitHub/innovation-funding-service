@@ -10,7 +10,7 @@
 
             <h2 class="heading-medium extra-margin-top">Technology inspired <br/> Ref: 0102468</h2>
 
-            <p th:unless="${site == 'rc'}">Choose a tab to find people, invite them to assess this competition and assign assessors to one or more applications.</p>
+            <p th:unless="${site == 'rc'}">Choose a tab to find, invite and assign assessors to one or more applications.</p>
 
             <p th:unless="${site == null}">Choose a tab to find people, invite them to join your panel and assign panelists to one or more applications.</p>
         
@@ -303,7 +303,7 @@
             <div class="grid-row">
                 <div class="column-two-thirds">
                     
-                    <h2 class="heading-small" th:unless="${site == 'rc'}">Invite people to become an assessor for this competition</h2>
+                    <h2 class="heading-small" th:unless="${site == 'rc'}">Invite a person to become an assessor for this competition.</h2>
                     <h2 class="heading-small" th:unless="${site == null}">Invite people to join the panel for this opportunity.</h2>
 
                     <p>You can invite people on your list either individually or as a group.</p>
@@ -311,7 +311,7 @@
             </div>
 
             <details class="extra-margin-bottom" th:unless="${site == 'rc'}">
-                <summary><span class="summary">Add non-registered assessor to list</span></summary>
+                <summary><span class="summary">Add non-registered assessor to your list</span></summary>
                 <div class="panel-indent">
                     <form th:action="${#httpServletRequest.requestURI}">
                         <fieldset>
@@ -495,10 +495,10 @@
             <h1 class="heading-xlarge no-margin-bottom">Assign assessor</h1>
             
             <th:block th:if="${param.view == null or param.view != null and param.view[0] == 'application'}">
-                    
-                <h2 class="heading-medium" th:text="${(param.application != null ? param.application[0] : 'Application name here')}">APPLICATION</h2>
+                
+                <h2 class="heading-medium">No: <a href="#" th:text="${(param.number != null ? param.number[0] : '00000000000')}"></a></h2>
 
-                <h2 class="heading-medium no-margin-top">No: <a href="#" th:text="${(param.number != null ? param.number[0] : '00000000000')}"></a></h2>
+                <h2 class="heading-medium no-margin-top" th:text="${(param.application != null ? param.application[0] : 'Application name here')}">APPLICATION</h2>
 
                 <th:block th:if="${site == 'rc'}">
 
@@ -510,17 +510,17 @@
                     
                     <div class="grid-row extra-margin-bottom">
                         <div class="column-half">
+                            <h3 class="heading-small">Innovation area</h3>
+                            <ul class="list-bullet">
+                                <li>Advanced materials</li>
+                            </ul>
+                        </div>
+                        <div class="column-half">
                             <h3 class="heading-small">Partners</h3>
                             <ul class="list-bullet">
                                 <li>Aptrans Ltd (Lead)</li>
                                 <li>Biotech Corp</li>
                                 <li>University of Cardiff</li>
-                            </ul>
-                        </div>
-                        <div class="column-half">
-                            <h3 class="heading-small">Innovation area</h3>
-                            <ul class="list-bullet">
-                                <li>Advanced materials</li>
                             </ul>
                         </div>
                     </div>
@@ -624,7 +624,7 @@
 
                 <div class="grid-row extra-margin">
                     <div class="column-half">
-                        <label class="form-label" for="filterSearch" th:text="${(site == 'rc' ? 'Name and/or organisation' : 'Name')}">FILTER SEARCH</label>
+                        <label class="form-label" for="filterSearch" th:text="${(site == 'rc' ? 'Name and/or organisation' : 'Keyword')}">FILTER SEARCH</label>
                          <input type="text" class="form-control" id="filterSearch" name="filterSearch" />
                     </div>
 
@@ -649,8 +649,8 @@
         <div class="tabular-list">
 
             <ul class="tabular-list__row-header hide-mobile">
-                <li id="assessor-name" class="width-third"><a href="#">Assessor name</a></li>
-                <li id="assessor-area" class="width-third"><a href="#">Innovation area and skills</a></li>
+                <li id="assessor-name" class="width-third">Assessor</li>
+                <li id="assessor-area" class="width-third">Innovation area and skills</li>
                 <li id="assessor-type" class="width-third"><a href="#">Number of applications</a></li>
             </ul>
 

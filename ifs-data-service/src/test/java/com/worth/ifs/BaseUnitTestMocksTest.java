@@ -23,6 +23,8 @@ import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.assessment.repository.AssessorFormInputResponseRepository;
 import com.worth.ifs.assessment.transactional.AssessmentService;
 import com.worth.ifs.assessment.transactional.AssessorFormInputResponseService;
+import com.worth.ifs.assessment.transactional.AssessorService;
+import com.worth.ifs.assessment.transactional.CompetitionInviteService;
 import com.worth.ifs.authentication.service.IdentityProviderService;
 import com.worth.ifs.bankdetails.mapper.BankDetailsMapper;
 import com.worth.ifs.bankdetails.repository.BankDetailsRepository;
@@ -33,8 +35,9 @@ import com.worth.ifs.category.repository.CategoryLinkRepository;
 import com.worth.ifs.category.repository.CategoryRepository;
 import com.worth.ifs.category.transactional.CategoryLinkService;
 import com.worth.ifs.category.transactional.CategoryService;
+import com.worth.ifs.commons.BaseTest;
 import com.worth.ifs.commons.security.UserAuthenticationService;
-import com.worth.ifs.competition.repository.CompetitionCoFunderRepository;
+import com.worth.ifs.competition.repository.CompetitionFunderRepository;
 import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.email.service.EmailService;
 import com.worth.ifs.file.mapper.FileEntryMapper;
@@ -43,6 +46,7 @@ import com.worth.ifs.file.transactional.FileService;
 import com.worth.ifs.finance.mapper.ApplicationFinanceMapper;
 import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
 import com.worth.ifs.finance.repository.FinanceRowRepository;
+import com.worth.ifs.finance.transactional.FinanceRowService;
 import com.worth.ifs.form.repository.FormInputRepository;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
 import com.worth.ifs.form.transactional.FormInputService;
@@ -51,6 +55,7 @@ import com.worth.ifs.invite.mapper.CompetitionParticipantRoleMapper;
 import com.worth.ifs.invite.mapper.ParticipantStatusMapper;
 import com.worth.ifs.invite.mapper.RejectionReasonMapper;
 import com.worth.ifs.invite.repository.*;
+import com.worth.ifs.invite.transactional.EthnicityService;
 import com.worth.ifs.invite.transactional.InviteProjectService;
 import com.worth.ifs.invite.transactional.RejectionReasonService;
 import com.worth.ifs.notifications.resource.SystemNotificationSource;
@@ -66,13 +71,17 @@ import com.worth.ifs.project.repository.MonitoringOfficerRepository;
 import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.project.repository.ProjectUserRepository;
 import com.worth.ifs.project.transactional.ProjectService;
+import com.worth.ifs.project.workflow.projectdetails.configuration.ProjectDetailsWorkflowHandler;
 import com.worth.ifs.sil.experian.service.SilExperianEndpoint;
 import com.worth.ifs.token.repository.TokenRepository;
 import com.worth.ifs.token.transactional.TokenService;
+import com.worth.ifs.user.mapper.EthnicityMapper;
+import com.worth.ifs.user.mapper.RoleMapper;
 import com.worth.ifs.user.mapper.UserMapper;
 import com.worth.ifs.user.repository.*;
 import com.worth.ifs.user.transactional.PasswordPolicyValidator;
 import com.worth.ifs.user.transactional.RegistrationService;
+import com.worth.ifs.user.transactional.RoleService;
 import com.worth.ifs.user.transactional.UserService;
 import com.worth.ifs.workflow.mapper.ProcessOutcomeMapper;
 import org.junit.Before;
@@ -138,6 +147,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected RoleRepository roleRepositoryMock;
 
     @Mock
+    protected RoleService roleServiceMock;
+
+    @Mock
     protected ProcessRoleRepository processRoleRepositoryMock;
 
     @Mock
@@ -159,7 +171,7 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected SectionRepository sectionRepositoryMock;
 
     @Mock
-    protected MonitoringOfficerRepository monitoringOfficerRepository;
+    protected MonitoringOfficerRepository monitoringOfficerRepositoryMock;
 
     @Mock
     protected MonitoringOfficerMapper monitoringOfficerMapper;
@@ -202,6 +214,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected CompetitionInviteMapper competitionInviteMapperMock;
+
+    @Mock
+    protected CompetitionInviteService competitionInviteServiceMock;
 
     @Mock
     protected CompetitionParticipantMapper competitionParticipantMapperMock;
@@ -247,6 +262,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected IdentityProviderService idpServiceMock;
+
+    @Mock
+    protected RoleMapper roleMapperMock;
 
     @Mock
     protected TokenService tokenServiceMock;
@@ -330,7 +348,7 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected BankDetailsService bankDetailsServiceMock;
 
     @Mock
-    protected CompetitionCoFunderRepository competitionCoFunderRepositoryMock;
+    protected CompetitionFunderRepository competitionFunderRepositoryMock;
 
     @Mock
     protected SilExperianEndpoint silExperianEndpointMock;
@@ -352,6 +370,24 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected RejectionReasonService rejectionReasonServiceMock;
+
+    @Mock
+    protected FinanceRowService financeRowServiceMock;
+
+    @Mock
+    protected ProjectDetailsWorkflowHandler projectDetailsWorkflowHandlerMock;
+
+    @Mock
+    protected EthnicityRepository ethnicityRepositoryMock;
+
+    @Mock
+    protected EthnicityMapper ethnicityMapperMock;
+
+    @Mock
+    protected EthnicityService ethnicityServiceMock;
+
+    @Mock
+    protected AssessorService assessorServiceMock;
 
     @Before
     public void setupMockInjection() {

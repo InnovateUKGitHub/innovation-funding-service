@@ -27,14 +27,14 @@ public class UserProfileServiceSecurityTest extends BaseServiceSecurityTest<User
 
     @Test
     public void testUpdateProfile() {
-        assertAccessDenied(() -> service.updateProfile(newUserResource().build()), () -> {
+        assertAccessDenied(() -> classUnderTest.updateProfile(newUserResource().build()), () -> {
             verify(rules).usersCanUpdateTheirOwnProfiles(isA(UserResource.class), isA(UserResource.class));
             verifyNoMoreInteractions(rules);
         });
     }
 
     @Override
-    protected Class<? extends UserProfileService> getServiceClass() {
+    protected Class<? extends UserProfileService> getClassUnderTest() {
         return TestUserProfileService.class;
     }
 

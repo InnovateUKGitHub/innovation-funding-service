@@ -14,7 +14,7 @@ import java.util.List;
 
 import static com.worth.ifs.alert.builder.AlertResourceBuilder.newAlertResource;
 import static com.worth.ifs.alert.resource.AlertType.MAINTENANCE;
-import static com.worth.ifs.security.SecuritySetter.basicSecurityUser;
+import static com.worth.ifs.commons.security.SecuritySetter.basicSecurityUser;
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.UserRoleType.SYSTEM_MAINTAINER;
@@ -135,6 +135,7 @@ public class AlertControllerIntegrationTest extends BaseControllerIntegrationTes
 
         // check that it can be found
         assertNotNull(created.getId());
+        alertResource.setId(created.getId());
         assertEquals(alertResource, controller.findById(created.getId()).getSuccessObjectOrThrowException());
 
         // now delete it

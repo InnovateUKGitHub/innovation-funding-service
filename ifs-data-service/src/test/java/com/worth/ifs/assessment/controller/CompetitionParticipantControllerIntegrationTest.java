@@ -22,10 +22,10 @@ import static com.worth.ifs.assessment.builder.CompetitionParticipantBuilder.new
 import static com.worth.ifs.invite.constant.InviteStatus.CREATED;
 import static com.worth.ifs.invite.domain.CompetitionParticipantRole.ASSESSOR;
 import static com.worth.ifs.invite.domain.ParticipantStatus.PENDING;
-import static com.worth.ifs.security.SecuritySetter.swapOutForUser;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.assertEquals;
 import static com.worth.ifs.BuilderAmendFunctions.id;
+import static org.junit.Assert.assertTrue;
 
 
 public class CompetitionParticipantControllerIntegrationTest extends BaseControllerIntegrationTest<CompetitionParticipantController> {
@@ -54,14 +54,14 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
 
     @Before
     public void setUp() throws Exception {
-        swapOutForUser(getPaulPlum());
+        loginPaulPlum();
 
         Competition competition = competitionRepository.findOne(1L);
         competitionParticipantRepository.save( newCompetitionParticipant()
                 .with(id(null))
                 .withCompetition(competition)
                 .withUser(newUser()
-                        .withid(3L)
+                        .withId(3L)
                         .withFirstName("Professor")
                 )
                 .withInvite(newCompetitionInvite()
@@ -81,12 +81,28 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
     }
 
     @Test
-    public void findByUserIdRoleAndStatus() {
-        Long userId = 3L;
+    public void getParticipants() {
+        List<CompetitionParticipantResource> participants = controller.getParticipants(
+                getPaulPlum().getId(),
+                CompetitionParticipantRoleResource.ASSESSOR,
+                ParticipantStatusResource.PENDING)
+                .getSuccessObject();
 
-        List<CompetitionParticipantResource> participants = controller.getParticipants(userId, CompetitionParticipantRoleResource.ASSESSOR ,ParticipantStatusResource.PENDING).getSuccessObject();
         assertEquals(1, participants.size());
         assertEquals(Long.valueOf(1L), participants.get(0).getCompetitionId());
         assertEquals(Long.valueOf(3L), participants.get(0).getUserId());
+    }
+
+    @Test
+    public void getParticipants_differentUser() {
+        loginFelixWilson();
+
+        List<CompetitionParticipantResource> participants = controller.getParticipants(
+                getPaulPlum().getId(),
+                CompetitionParticipantRoleResource.ASSESSOR,
+                ParticipantStatusResource.PENDING)
+                .getSuccessObject();
+
+        assertTrue(participants.isEmpty());
     }
 }

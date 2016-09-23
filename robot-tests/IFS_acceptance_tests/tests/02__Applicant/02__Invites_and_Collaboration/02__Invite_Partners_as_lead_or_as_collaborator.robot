@@ -16,7 +16,7 @@ Documentation     INFUND-901: As a lead applicant I want to invite application c
 ...               INFUND-3742: The overview with contributors is not matching with actual invites
 Suite Setup       log in and create new application for collaboration if there is not one already
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        Collaboration    Appllicant
+Force Tags        Appllicant
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -33,8 +33,8 @@ Application team page
     [Tags]    HappyPath
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Invite robot test application
-    And the user should see the text in the page    View team members and add collaborators
-    When the user clicks the button/link    link=View team members and add collaborators
+    And the user should see the text in the page    view team members and add collaborators
+    When the user clicks the button/link    link=view team members and add collaborators
     Then the user should see the text in the page    Application team
     And the user should see the text in the page    View and manage your contributors and partners in the application.
     And the lead applicant should have the correct status
@@ -75,7 +75,7 @@ Pending partners visible in Application team page
     [Tags]    HappyPath
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Invite robot test application
-    When the user clicks the button/link    link=View team members and add collaborators
+    When the user clicks the button/link    link=view team members and add collaborators
     Then the status of the invited people should be correct in the application team page
     The Lead organisation should show only one time
 
@@ -84,7 +84,7 @@ Pending partners visible in the Manage contributors page
     [Tags]    HappyPath
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Invite robot test application
-    When the user clicks the button/link    link=View team members and add collaborators
+    When the user clicks the button/link    link=view team members and add collaborators
     When the user clicks the button/link    jQuery=.button:contains("Invite new contributors")
     Then the user should see the text in the page    Manage Contributors
     And the status of the people should be correct in the Manage contributors page
@@ -125,7 +125,7 @@ Partner can invite others to his own organisation
     #Given guest user log-in    ${test_mailbox_one}+inviteorg1@gmail.com    Passw0rd123
     When the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Invite robot test application
-    And the user clicks the button/link    link=View team members and add collaborators
+    And the user clicks the button/link    link=view team members and add collaborators
     And the user clicks the button/link    jQuery=.button:contains("Invite new contributors")
     Then the user can invite another person to their own organisation
 
@@ -152,7 +152,7 @@ Lead should not be able to edit Partners
     Given guest user log-in    &{lead_applicant_credentials}
     And the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Invite robot test application
-    When the user clicks the button/link    link=View team members and add collaborators
+    When the user clicks the button/link    link=view team members and add collaborators
     When the user clicks the button/link    jQuery=.button:contains("Invite new contributors")
     Then the user should see the text in the page    Manage Contributors
     And the invited collaborators are not editable
@@ -167,7 +167,7 @@ Lead applicant invites a non registered user in the same organisation
     [Setup]    Delete the emails from both test mailboxes
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Invite robot test application
-    When the user clicks the button/link    link=View team members and add collaborators
+    When the user clicks the button/link    link=view team members and add collaborators
     When the user clicks the button/link    jQuery=.button:contains("Invite new contributors")
     Then the user should see the text in the page    Manage Contributors
     And the user clicks the button/link    jQuery=li:nth-child(1) button:contains("Add another person")
@@ -243,7 +243,7 @@ the user can see the updated company name throughout the application
     the user should see the text in the page    NOMENSA LTD
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=${application_name}
-    When the user clicks the button/link    link=View team members and add collaborators
+    When the user clicks the button/link    link=view team members and add collaborators
     the user should see the text in the page    NOMENSA LTD
 
 the user can invite another person to their own organisation
@@ -274,7 +274,7 @@ log into smoke test application
     logout as user
     guest user log-in    ${test_mailbox_one}+${unique_email_number}@gmail.com    Passw0rd123
     the user clicks the button/link    link=IFS smoke test
-    the user clicks the button/link    link=View team members and add collaborators
+    the user clicks the button/link    link=view team members and add collaborators
 
 The Lead organisation should show only one time
-    Xpath Should Match X Times    //div/h2    2
+    Element Should not Contain    css=div:nth-child(7)    Steve Smith

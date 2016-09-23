@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 
@@ -54,8 +55,7 @@ public class EligibilitySectionSaver extends AbstractSectionSaver implements Com
 			competition.setStreamName(null);
 		}
 
-		boolean resubmission = "yes".equals(eligibilityForm.getResubmission());
-		competition.setResubmission(resubmission);
+		competition.setResubmission(CompetitionUtils.textToBoolean(eligibilityForm.getResubmission()));
 
 		CollaborationLevel level = CollaborationLevel.fromCode(eligibilityForm.getSingleOrCollaborative());
 		competition.setCollaborationLevel(level);
@@ -69,7 +69,7 @@ public class EligibilitySectionSaver extends AbstractSectionSaver implements Com
 	}
 
 	@Override
-	public List<Error> autoSaveSectionField(CompetitionResource competitionResource, String fieldName, String value) {
+	public List<Error> autoSaveSectionField(CompetitionResource competitionResource, String fieldName, String value, Optional<Long> objectId) {
 		return performAutoSaveField(competitionResource, fieldName, value);
 	}
 

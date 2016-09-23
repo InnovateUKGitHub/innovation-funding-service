@@ -5,6 +5,7 @@ import com.worth.ifs.alert.resource.AlertResource;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.QuestionStatusResource;
+import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.category.resource.CategoryResource;
@@ -22,10 +23,7 @@ import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.RejectionReasonResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
-import com.worth.ifs.user.resource.OrganisationResource;
-import com.worth.ifs.user.resource.OrganisationTypeResource;
-import com.worth.ifs.user.resource.ProcessRoleResource;
-import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.resource.*;
 import org.springframework.core.ParameterizedTypeReference;
 
 import java.util.List;
@@ -163,5 +161,13 @@ public final class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<List<CompetitionParticipantResource>> competitionParticipantResourceListType() {
         return new ParameterizedTypeReference<List<CompetitionParticipantResource>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<AssessmentResource>> assessmentResourceListType() {
+        return new ParameterizedTypeReference<List<AssessmentResource>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<EthnicityResource>> ethnicityResourceListType() {
+        return new ParameterizedTypeReference<List<EthnicityResource>>() {};
     }
 }

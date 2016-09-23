@@ -22,7 +22,7 @@ public class CostCategoryType {
     @ManyToOne(cascade = ALL, optional = false)
     private CostCategoryGroup costCategoryGroup;
 
-    CostCategoryType() {
+    public CostCategoryType() {
         // for ORM use
     }
 

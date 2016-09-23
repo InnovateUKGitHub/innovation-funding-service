@@ -2,7 +2,6 @@ package com.worth.ifs.assessment;
 
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -12,26 +11,24 @@ import static com.worth.ifs.assessment.resource.AssessmentStates.*;
 
 public class AssessmentStatusComparatorTest {
 
-    @Ignore
     @Test
     public void testCompareByStatus() throws Exception {
         List<AssessmentResource> assessmentsCompare = newAssessmentResource()
-                .withProcessStatus(ASSESSED, PENDING, SUBMITTED, OPEN, REJECTED)
+                .withActivityState(ASSESSED, PENDING, SUBMITTED, OPEN, REJECTED)
                 .build(5);
 
         AssessmentStatusComparator comparator = new AssessmentStatusComparator();
 
         assessmentsCompare.sort(comparator);
 
-        Assert.assertEquals(PENDING.getState(), assessmentsCompare.get(0).getStatus());
-        Assert.assertEquals(REJECTED.getState(), assessmentsCompare.get(1).getStatus());
-        Assert.assertEquals(OPEN.getState(), assessmentsCompare.get(2).getStatus());
-        Assert.assertEquals(ASSESSED.getState(), assessmentsCompare.get(3).getStatus());
-        Assert.assertEquals(SUBMITTED.getState(), assessmentsCompare.get(4).getStatus());
+        Assert.assertEquals(PENDING, assessmentsCompare.get(0).getAssessmentState());
+        Assert.assertEquals(REJECTED, assessmentsCompare.get(1).getAssessmentState());
+        Assert.assertEquals(OPEN, assessmentsCompare.get(2).getAssessmentState());
+        Assert.assertEquals(ASSESSED, assessmentsCompare.get(3).getAssessmentState());
+        Assert.assertEquals(SUBMITTED, assessmentsCompare.get(4).getAssessmentState());
 
     }
 
-    @Ignore
     @Test
     public void testCompareNullValues() throws Exception {
         List<AssessmentResource> assessmentsCompare = newAssessmentResource()
@@ -47,7 +44,6 @@ public class AssessmentStatusComparatorTest {
         Assert.assertEquals(10L, assessmentsCompare.get(2).getId().longValue());
     }
 
-    @Ignore
     @Test
     public void testCompareNullValues2() throws Exception {
         List<AssessmentResource> assessmentsCompare = newAssessmentResource()
@@ -63,13 +59,12 @@ public class AssessmentStatusComparatorTest {
     /**
      * When the AssessmentState is the same, the ordering should be done by ID.
      */
-    @Ignore
     @Test
     public void testCompareById() throws Exception {
 
         List<AssessmentResource> assessmentsCompare = newAssessmentResource()
                 .withId(5L, 10L, 1L)
-                .withProcessStatus(ASSESSED, ASSESSED, ASSESSED)
+                .withActivityState(ASSESSED, ASSESSED, ASSESSED)
                 .build(3);
 
         AssessmentStatusComparator comparator = new AssessmentStatusComparator();

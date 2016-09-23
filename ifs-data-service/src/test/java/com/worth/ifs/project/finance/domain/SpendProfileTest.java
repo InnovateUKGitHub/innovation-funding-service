@@ -30,7 +30,7 @@ public class SpendProfileTest {
         Organisation organisation = newOrganisation().withName("My Org").build();
         Project project = newProject().with(name("My Proj")).build();
 
-        SpendProfile spendProfile = new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileCosts);
+        SpendProfile spendProfile = new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileCosts, false);
 
         assertEquals(organisation, spendProfile.getOrganisation());
         assertEquals(project, spendProfile.getProject());
@@ -39,11 +39,11 @@ public class SpendProfileTest {
         assertEquals("Eligible costs for Partner Organisation", spendProfile.getEligibleCosts().getDescription());
         assertEquals(asList(new BigDecimal("1.23"), new BigDecimal("4.56")),
                 simpleMap(spendProfile.getEligibleCosts().getCosts(), Cost::getValue));
-        spendProfile.getEligibleCosts().getCosts().forEach(c -> assertEquals(spendProfile.getEligibleCosts(), c.getCostGroup().get()));
+        spendProfile.getEligibleCosts().getCosts().forEach(c -> assertEquals(spendProfile.getEligibleCosts(), c.getCostGroup()));
 
         assertEquals("Spend Profile figures for Partner Organisation", spendProfile.getSpendProfileFigures().getDescription());
         assertEquals(asList(new BigDecimal("7.89"), new BigDecimal("10.11")),
                 simpleMap(spendProfile.getSpendProfileFigures().getCosts(), Cost::getValue));
-        spendProfile.getSpendProfileFigures().getCosts().forEach(c -> assertEquals(spendProfile.getSpendProfileFigures(), c.getCostGroup().get()));
+        spendProfile.getSpendProfileFigures().getCosts().forEach(c -> assertEquals(spendProfile.getSpendProfileFigures(), c.getCostGroup()));
     }
 }

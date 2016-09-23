@@ -7,7 +7,6 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.invite.domain.CompetitionInvite;
-import com.worth.ifs.invite.domain.CompetitionParticipant;
 import com.worth.ifs.invite.domain.RejectionReason;
 import com.worth.ifs.invite.repository.CompetitionInviteRepository;
 import com.worth.ifs.invite.repository.CompetitionParticipantRepository;
@@ -22,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import static com.worth.ifs.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.assessment.builder.CompetitionInviteBuilder.newCompetitionInvite;
 import static com.worth.ifs.assessment.builder.CompetitionParticipantBuilder.newCompetitionParticipant;
+import static com.worth.ifs.commons.error.CommonErrors.forbiddenError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.invite.builder.RejectionReasonResourceBuilder.newRejectionReasonResource;
@@ -187,7 +187,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
     }
 
     @Test
-    public void acceptInvite() throws Exception {
+    public void acceptInvite_participantIsDifferentUser() {
         competitionParticipantRepository.save(newCompetitionParticipant()
                 .with(id(null))
                 .withStatus(PENDING)
@@ -197,12 +197,94 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
                         .with(id(null))
                         .withName("name")
                         .withEmail("no-user-exists@for-this.address")
-                        .withUser((User) null)
+                        .withUser(newUser().withId(1L))
                         .withHash("hash")
                         .withCompetition(competition)
                         .build())
+                .withUser(newUser().withId(1L))
                 .build());
-        controller.openInvite("hash");
+        assertTrue(controller.openInvite("hash").isSuccess());
+        setLoggedInUser(getPaulPlum());
+
+        RestResult<Void> serviceResult = controller.acceptInvite("hash");
+        assertTrue(serviceResult.isFailure());
+        assertTrue(serviceResult.getFailure().is(forbiddenError(GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION)));
+    }
+
+    @Test
+    public void acceptInvite_noParticipantUserAndInviteHasSameEmail() {
+        competitionParticipantRepository.save(newCompetitionParticipant()
+                .with(id(null))
+                .withStatus(PENDING)
+                .withRole(ASSESSOR)
+                .withCompetition(competition)
+                .withInvite(newCompetitionInvite()
+                        .with(id(null))
+                        .withName("name")
+                        .withEmail("paul.plum@gmail.com")
+                        .withUser((User[]) null)
+                        .withHash("hash")
+                        .withCompetition(competition)
+                        .build())
+                .withUser((User[]) null)
+                .build());
+
+        assertTrue(controller.openInvite("hash").isSuccess());
+        setLoggedInUser(getPaulPlum());
+
+        RestResult<Void> serviceResult = controller.acceptInvite("hash");
+        assertTrue(serviceResult.isSuccess());
+    }
+
+    @Test
+    public void acceptInvite_noParticipantUserAndInviteHasDifferentEmail() {
+        competitionParticipantRepository.save(newCompetitionParticipant()
+                .with(id(null))
+                .withStatus(PENDING)
+                .withRole(ASSESSOR)
+                .withCompetition(competition)
+                .withInvite(newCompetitionInvite()
+                        .with(id(null))
+                        .withName("name")
+                        .withEmail("no-user-exists@for-this.address")
+                        .withUser((User[]) null)
+                        .withHash("hash")
+                        .withCompetition(competition)
+                        .build())
+                .withUser((User[]) null)
+                .build());
+        assertTrue(controller.openInvite("hash").isSuccess());
+
+        setLoggedInUser(getPaulPlum());
+
+        RestResult<Void> serviceResult = controller.acceptInvite("hash");
+
+        assertTrue(serviceResult.isFailure());
+        assertTrue(serviceResult.getFailure().is(forbiddenError(GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION)));
+    }
+
+    @Test
+    public void acceptInvite() throws Exception {
+
+        competitionParticipantRepository.save(newCompetitionParticipant()
+                .with(id(null))
+                .withStatus(PENDING)
+                .withRole(ASSESSOR)
+                .withCompetition(competition)
+                .withInvite(newCompetitionInvite()
+                        .with(id(null))
+                        .withName("name")
+                        .withEmail("paul.plum@gmail.com")
+                        .withUser(newUser().withId(getPaulPlum().getId()).build())
+                        .withHash("hash")
+                        .withCompetition(competition)
+                        .build())
+                .withUser(newUser().withId(getPaulPlum().getId()))
+                .build());
+
+        assertTrue(controller.openInvite("hash").isSuccess());
+
+        setLoggedInUser(getPaulPlum());
 
         RestResult<Void> serviceResult = controller.acceptInvite("hash");
         assertTrue(serviceResult.isSuccess());
@@ -210,9 +292,10 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
 
     @Test
     public void acceptInvite_hashNotExists() throws Exception {
+        setLoggedInUser(getPaulPlum());
         RestResult<Void> serviceResult = controller.acceptInvite("hash not exists");
         assertTrue(serviceResult.isFailure());
-        assertTrue(serviceResult.getFailure().is(notFoundError(CompetitionParticipant.class, "hash not exists")));
+        assertTrue(serviceResult.getFailure().is(forbiddenError(GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION)));
     }
 
     @Test
@@ -225,14 +308,17 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
                 .withInvite(newCompetitionInvite()
                         .with(id(null))
                         .withName("name")
-                        .withEmail("no-user-exists@for-this.address")
+                        .withEmail("paul.plum@gmail.com")
                         .withUser((User) null)
                         .withHash("hash")
                         .withCompetition(competition)
                         .build())
                 .build());
 
+        setLoggedInUser(getPaulPlum());
+
         RestResult<Void> serviceResult = controller.acceptInvite("hash");
+
         assertTrue(serviceResult.isFailure());
         assertTrue(serviceResult.getFailure().is(new Error(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_UNOPENED_INVITE, "Connected digital additive manufacturing")));
     }
@@ -247,7 +333,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
                 .withInvite(newCompetitionInvite()
                         .with(id(null))
                         .withName("name")
-                        .withEmail("no-user-exists@for-this.address")
+                        .withEmail("paul.plum@gmail.com")
                         .withUser((User) null)
                         .withHash("hash")
                         .withCompetition(competition)
@@ -255,10 +341,13 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
                 .build());
         controller.openInvite("hash");
 
+
         CompetitionRejectionResource competitionRejectionResource =
                 new CompetitionRejectionResource(newRejectionReasonResource().withId(1L).build(), "too busy");
         RestResult<Void> serviceResult = controller.rejectInvite("hash", competitionRejectionResource);
         assertTrue(serviceResult.isSuccess());
+
+        setLoggedInUser(getPaulPlum());
         RestResult<Void> acceptResult = controller.acceptInvite("hash");
 
         assertTrue(acceptResult.isFailure());
@@ -323,7 +412,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
                 .withInvite(newCompetitionInvite()
                         .with(id(null))
                         .withName("name")
-                        .withEmail("no-user-exists@for-this.address")
+                        .withEmail("paul.plum@gmail.com")
                         .withUser((User) null)
                         .withHash("hash")
                         .withCompetition(competition)
@@ -331,11 +420,15 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
                 .build());
         controller.openInvite("hash");
 
+        setLoggedInUser(getPaulPlum());
+
         RestResult<Void> serviceResult = controller.acceptInvite("hash");
         assertTrue(serviceResult.isSuccess());
 
         CompetitionRejectionResource competitionRejectionResource =
                 new CompetitionRejectionResource(newRejectionReasonResource().withId(1L).build(), "too busy");
+
+        setLoggedInUser(getSystemRegistrationUser());
         RestResult<Void> rejectResult = controller.rejectInvite("hash", competitionRejectionResource);
 
         assertTrue(rejectResult.isFailure());

@@ -4,20 +4,17 @@ import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.commons.error.Error;
-import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.project.ProjectServiceImpl;
-import com.worth.ifs.project.builder.SpendProfileResourceBuilder;
 import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.project.resource.ProjectTeamStatusResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
-import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.core.io.ByteArrayResource;
 
@@ -33,13 +30,11 @@ import static com.worth.ifs.commons.rest.RestResult.restFailure;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+import static com.worth.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static junit.framework.TestCase.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -339,5 +334,31 @@ public class ProjectServiceImplTest {
         assertTrue(submitted.isSuccess());
 
         verify(projectRestService).setPartnerDocumentsSubmitted(1L);
+    }
+
+    @Test
+    public void testGetProjectTeamStatus() throws Exception {
+        ProjectTeamStatusResource expectedProjectTeamStatusResource = newProjectTeamStatusResource().build();
+
+        when(projectRestService.getProjectTeamStatus(1L, Optional.empty())).thenReturn(restSuccess(expectedProjectTeamStatusResource));
+
+        ProjectTeamStatusResource projectTeamStatusResource = service.getProjectTeamStatus(1L, Optional.empty());
+
+        assertEquals(expectedProjectTeamStatusResource, projectTeamStatusResource);
+
+        verify(projectRestService).getProjectTeamStatus(1L, Optional.empty());
+    }
+
+    @Test
+    public void testGetProjectTeamStatusWithFilterByUserId() throws Exception {
+        ProjectTeamStatusResource expectedProjectTeamStatusResource = newProjectTeamStatusResource().build();
+
+        when(projectRestService.getProjectTeamStatus(1L, Optional.of(456L))).thenReturn(restSuccess(expectedProjectTeamStatusResource));
+
+        ProjectTeamStatusResource projectTeamStatusResource = service.getProjectTeamStatus(1L, Optional.of(456L));
+
+        assertEquals(expectedProjectTeamStatusResource, projectTeamStatusResource);
+
+        verify(projectRestService).getProjectTeamStatus(1L, Optional.of(456L));
     }
 }

@@ -27,8 +27,8 @@ import com.worth.ifs.bankdetails.domain.BankDetails;
 import com.worth.ifs.bankdetails.resource.BankDetailsResource;
 import com.worth.ifs.commons.rest.LocalDateResource;
 import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.competition.resource.CompetitionCoFunderResource;
 import com.worth.ifs.competition.resource.CompetitionCountResource;
+import com.worth.ifs.competition.resource.CompetitionFunderResource;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.FinanceRowMetaField;
@@ -40,10 +40,13 @@ import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.invite.resource.RejectionReasonResource;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
 import com.worth.ifs.project.domain.Project;
+import com.worth.ifs.project.finance.resource.*;
 import com.worth.ifs.project.resource.*;
+import com.worth.ifs.registration.resource.UserRegistrationResource;
 import com.worth.ifs.token.domain.Token;
 import com.worth.ifs.token.resource.TokenResource;
 import com.worth.ifs.user.domain.OrganisationType;
+import com.worth.ifs.user.resource.EthnicityResource;
 import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
 import org.junit.Assert;
 import org.junit.Before;
@@ -94,12 +97,23 @@ public class POJOTest {
             BankDetails.class,
             BankDetailsResource.class,
             MonitoringOfficerResource.class,
+            CostCategoryGroupResource.class,
+            CostCategoryResource.class,
+            CostGroupResource.class,
+            CostResource.class,
+            CostTimePeriodResource.class,
+            CostCategoryTypeResource.class,
             SpendProfileResource.class,
             SpendProfileTableResource.class,
-            CompetitionCoFunderResource.class,
+            CompetitionFunderResource.class,
             CompetitionCountResource.class,
             LocalDateResource.class,
-            RejectionReasonResource.class
+            RejectionReasonResource.class,
+            ProjectLeadStatusResource.class,
+            ProjectPartnerStatusResource.class,
+            ProjectTeamStatusResource.class,
+            EthnicityResource.class,
+            UserRegistrationResource.class
     );
 
     @Before

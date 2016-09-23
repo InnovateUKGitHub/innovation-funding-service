@@ -345,6 +345,50 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
     }
 
     @Test
+    public void testCompAdminCanDownloadOtherDocuments() {
+
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+
+        setUpUserAsCompAdmin(project, user);
+
+        assertTrue(rules.competitionAdminCanDownloadOtherDocuments(project, user));
+    }
+
+    @Test
+    public void testNonCompAdminCannotDownloadOtherDocuments() {
+
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+
+        setUpUserNotAsCompAdmin(project, user);
+
+        assertFalse(rules.competitionAdminCanDownloadOtherDocuments(project, user));
+    }
+
+    @Test
+    public void testProjectFinanceUserCanDownloadOtherDocuments() {
+
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+
+        setUpUserAsProjectFinanceUser(project, user);
+
+        assertTrue(rules.projectFinanceUserCanDownloadOtherDocuments(project, user));
+    }
+
+    @Test
+    public void testNonProjectFinanceUserCanDownloadOtherDocuments() {
+
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+
+        setUpUserNotAsProjectFinanceUser(project, user);
+
+        assertFalse(rules.projectFinanceUserCanDownloadOtherDocuments(project, user));
+    }
+
+    @Test
     public void testLeadPartnersCanDeleteOtherDocuments() {
 
         ProjectResource project = newProjectResource().build();
@@ -377,9 +421,35 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
 
     }
 
-    private void setUpUserAsProjectManager(ProjectResource projectResource, UserResource user) {
-        Role projectManagerRole = newRole().build();
+    @Test
+    public void testPartnersCanViewTeamStatus(){
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+        setupUserAsPartner(project, user);
+        assertTrue(rules.partnersCanViewTeamStatus(project, user));
+    }
 
+    @Test
+    public void testNonPartnersCannotViewTeamStatus(){
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+        setupUserNotAsPartner(project, user);
+        assertFalse(rules.partnersCanViewTeamStatus(project, user));
+    }
+
+    @Test
+    public void testCompAdminsCanViewTeamStatus(){
+        ProjectResource project = newProjectResource().build();
+        assertTrue(rules.compAdminsCanViewTeamStatus(project, compAdminUser()));
+    }
+
+    @Test
+    public void testNonCompAdminsCannotViewTeamStatus(){
+        ProjectResource project = newProjectResource().build();
+        assertFalse(rules.compAdminsCanViewTeamStatus(project, projectFinanceUser()));
+    }
+
+    private void setUpUserAsProjectManager(ProjectResource projectResource, UserResource user) {
         List<ProjectUser> projectManagerUser = newProjectUser().build(1);
 
         when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(projectResource.getId(), user.getId(), ProjectParticipantRole.PROJECT_MANAGER ))
@@ -405,8 +475,8 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
     }
 
     private void setUpUserAsProjectFinanceUser(ProjectResource project, UserResource user) {
-        List<RoleResource> projectFinanaceUser = newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build(1);
-        user.setRoles(projectFinanaceUser);
+        List<RoleResource> projectFinanceUser = newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build(1);
+        user.setRoles(projectFinanceUser);
     }
 
     private void setUpUserNotAsProjectFinanceUser(ProjectResource project, UserResource user) {
@@ -421,5 +491,4 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
         when(roleRepositoryMock.findOneByName(PARTNER.getName())).thenReturn(partnerRole);
         when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(project.getId(), user.getId(), PROJECT_PARTNER)).thenReturn(userIsPartner ? partnerProjectUser : emptyList());
     }
-
 }
