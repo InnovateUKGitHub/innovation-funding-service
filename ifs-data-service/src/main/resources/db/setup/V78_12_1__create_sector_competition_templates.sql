@@ -1,7 +1,9 @@
 
-
+ALTER TABLE `section_template` DROP FOREIGN KEY `FK_st_ctid`;
 ALTER TABLE `competition_template`
 CHANGE COLUMN `id` `id` BIGINT(20) NOT NULL AUTO_INCREMENT ;
+ALTER TABLE `section_template` ADD CONSTRAINT `FK_st_ctid` FOREIGN KEY (`competition_template_id`) REFERENCES `competition_template` (`id`);
+
 
 ALTER TABLE `section_template`
 CHANGE COLUMN `id` `id` BIGINT(20) NOT NULL AUTO_INCREMENT ;
