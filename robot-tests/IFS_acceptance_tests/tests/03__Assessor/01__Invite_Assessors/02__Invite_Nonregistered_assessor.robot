@@ -36,7 +36,7 @@ Non-registered assessor: Reject invitation
     Then the user should see the text in the page    Invitation to assess 'Juggling Craziness'
     And the user clicks the button/link    css=form a
     When the user clicks the button/link    jQuery=button:contains("Reject")
-    Then the user should see an error    Please enter a reason
+    Then the user should see an error    The reason cannot be blank
     And the assessor fills in all fields
     And the user clicks the button/link    jQuery=button:contains("Reject")
     Then the user should see the text in the page    Thank you for letting us know you are unable to assess applications within this competition.
