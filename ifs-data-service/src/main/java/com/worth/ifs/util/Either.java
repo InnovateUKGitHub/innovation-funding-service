@@ -53,7 +53,7 @@ public class Either<L, R> {
             ExceptionThrowingFunction<? super R, ? extends T> rFunc) {
         try {
             return isLeft() ? lFunc.apply(left) : rFunc.apply(right);
-        } catch (Exception e) {
+        } catch (Throwable e) {
             LOG.warn("Exception caught while processing function - throwing as a runtime exception", e);
             throw new RuntimeException(e);
         }
@@ -63,7 +63,7 @@ public class Either<L, R> {
             ExceptionThrowingFunction<? super R, Either<L, T>> rFunc) {
         try {
             return isLeft() ? left(left) : rFunc.apply(right);
-        } catch (Exception e) {
+        } catch (Throwable e) {
             LOG.warn("Exception caught while processing function - throwing as a runtime exception", e);
             throw new RuntimeException(e);
         }

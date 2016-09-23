@@ -28,7 +28,6 @@ public class ProjectTest {
     Address address;
     Long durationInMonths;
     String name;
-    LocalDateTime submittedDate;
     LocalDateTime documentsSubmittedDate;
 
     @Before
@@ -39,8 +38,7 @@ public class ProjectTest {
         address = new Address();
         durationInMonths = 12L;
         name = "My Project";
-        submittedDate = LocalDateTime.now();
-        project = new Project(id, application, startDate, address, durationInMonths, name, submittedDate, documentsSubmittedDate);
+        project = new Project(id, application, startDate, address, durationInMonths, name, documentsSubmittedDate);
     }
 
     @Test
@@ -51,7 +49,6 @@ public class ProjectTest {
         assertEquals(project.getAddress(), address);
         assertEquals(project.getDurationInMonths(), durationInMonths);
         assertEquals(project.getName(), name);
-        assertEquals(project.getSubmittedDate(), submittedDate);
         assertEquals(project.getDocumentsSubmittedDate(), documentsSubmittedDate);
     }
 

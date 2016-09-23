@@ -23,8 +23,6 @@ public interface ProjectService {
 
     ProjectResource getById(Long projectId);
 
-    SpendProfileResource getSpendProfile(Long projectId, Long organisationId);
-
     ProjectResource getByApplicationId(Long applicationId);
 
     ServiceResult<Void> updateFinanceContact(Long projectId, Long organisationId, Long financeContactUserId);
@@ -71,13 +69,11 @@ public interface ProjectService {
 
     List<ProjectUserResource> getLeadPartners(Long projectId);
 
-    boolean isUserPartner(Long projectId, Long userId);
-
     List<ProjectUserResource> getPartners(Long projectId);
 
     ServiceResult<Boolean> isOtherDocumentSubmitAllowed(Long projectId);
 
     ServiceResult<Void> setPartnerDocumentsSubmitted(Long projectId);
 
-    ProjectTeamStatusResource getProjectTeamStatus(Long projectId);
+    ProjectTeamStatusResource getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId);
 }

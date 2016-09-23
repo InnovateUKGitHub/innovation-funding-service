@@ -1,11 +1,11 @@
-package com.worth.ifs.security;
+package com.worth.ifs.commons.security;
 
 
 import com.worth.ifs.BaseUnitTestMocksTest;
-import com.worth.ifs.commons.security.UserAuthentication;
-import com.worth.ifs.security.CustomPermissionEvaluator.ListOfOwnerAndMethod;
-import com.worth.ifs.security.CustomPermissionEvaluator.PermissionedObjectClassToPermissionsMethods;
-import com.worth.ifs.security.CustomPermissionEvaluator.PermissionedObjectClassToPermissionsToPermissionsMethods;
+import com.worth.ifs.commons.security.*;
+import com.worth.ifs.commons.security.CustomPermissionEvaluator.ListOfOwnerAndMethod;
+import com.worth.ifs.commons.security.CustomPermissionEvaluator.PermissionedObjectClassToPermissionsMethods;
+import com.worth.ifs.commons.security.CustomPermissionEvaluator.PermissionedObjectClassToPermissionsToPermissionsMethods;
 import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Before;

@@ -1,15 +1,16 @@
-package com.worth.ifs;
+package com.worth.ifs.commons;
 
+import com.worth.ifs.Application;
+import com.worth.ifs.BaseRepositoryIntegrationTest;
+import com.worth.ifs.BaseWebIntegrationTest;
 import com.worth.ifs.commons.security.UserAuthentication;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.persistence.EntityManager;
 import java.util.Arrays;
 import java.util.List;
 
@@ -26,14 +27,6 @@ public abstract class BaseIntegrationTest extends BaseTest {
 
     public static final int USER_COUNT  = 16;
     public static final List<String> ALL_USERS_EMAIL = Arrays.asList("steve.smith@empire.com", "jessica.doe@ludlow.co.uk", "paul.plum@gmail.com", "competitions@innovateuk.gov.uk", "finance@innovateuk.gov.uk", "pete.tom@egg.com", "felix.wilson@gmail.com", "ewan+1@hiveit.co.uk", "ifs_web_user@innovateuk.org", "compadmin@innovateuk.test", "comp_exec1@innovateuk.test", "comp_exec2@innovateuk.test", "comp_technologist1@innovateuk.test", "comp_technologist2@innovateuk.test");
-
-    @Autowired
-    private EntityManager em;
-
-    protected void flushAndClearSession() {
-        em.flush();
-        em.clear();
-    }
 
     /**
      * Set a user on the Spring Security ThreadLocals

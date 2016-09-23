@@ -1,6 +1,5 @@
-package com.worth.ifs.security;
+package com.worth.ifs.commons.security;
 
-import com.worth.ifs.commons.security.UserAuthentication;
 import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;

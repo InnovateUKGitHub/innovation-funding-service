@@ -149,6 +149,20 @@ public class BaseBuilderAmendFunctions {
         return setField(fieldName, newList, instance);
     }
 
+    public static <T> T addListToList(String fieldName, List<?> value, T instance) {
+
+        List<Object> existingList = (List<Object>) getField(instance, fieldName);
+        List<Object> newList = new ArrayList<>();
+
+        if (existingList != null) {
+            newList.addAll(existingList);
+        }
+
+        newList.addAll(value);
+
+        return setField(fieldName, newList, instance);
+    }
+
     public static Function<Integer, Integer> zeroBasedIndexes() {
         return Function.identity();
     }

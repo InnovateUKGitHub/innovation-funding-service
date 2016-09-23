@@ -4,7 +4,7 @@ import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.finance.handler.item.FinanceRowHandler;
 import com.worth.ifs.finance.resource.cost.FinanceRowItem;
-import com.worth.ifs.security.NotSecured;
+import com.worth.ifs.commons.security.NotSecured;
 import org.springframework.validation.BindingResult;
 
 import java.util.List;

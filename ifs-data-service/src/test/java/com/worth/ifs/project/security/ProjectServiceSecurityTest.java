@@ -27,10 +27,7 @@ import org.springframework.security.access.method.P;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
@@ -71,7 +68,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         when(projectLookupStrategy.getProjectResource(projectId)).thenReturn(newProjectResource().build());
 
         assertAccessDenied(
-                () -> service.getProjectById(projectId),
+                () -> classUnderTest.getProjectById(projectId),
                 () -> {
                     verify(projectPermissionRules, times(1)).partnersOnProjectCanView(isA(ProjectResource.class), isA(UserResource.class));
                     verify(projectPermissionRules, times(1)).compAdminsCanViewProjects(isA(ProjectResource.class), isA(UserResource.class));
@@ -82,14 +79,14 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
     @Test
     public void testCreateProjectFromApplicationAllowedIfCompAdminRole() {
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(COMP_ADMIN).build())).build());
-        service.createProjectFromApplication(123L);
+        classUnderTest.createProjectFromApplication(123L);
     }
 
     @Test
     public void testCreateProjectFromApplicationDeniedForApplicant() {
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(APPLICANT).build())).build());
         try {
-            service.createProjectFromApplication(123L);
+            classUnderTest.createProjectFromApplication(123L);
             fail("Should not have been able to create project from application as applicant");
         } catch(AccessDeniedException ade){
             //expected behaviour
@@ -100,13 +97,13 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
     public void testCreateProjectFromFundingDecisionsAllowedIfGlobalCompAdminRole() {
         RoleResource compAdminRole = newRoleResource().withType(COMP_ADMIN).build();
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(compAdminRole)).build());
-        service.createProjectsFromFundingDecisions(new HashMap<>());
+        classUnderTest.createProjectsFromFundingDecisions(new HashMap<>());
     }
 
     @Test
     public void testCreateProjectFromFundingDecisionsAllowedIfNoGlobalRolesAtAll() {
         try {
-            service.createProjectsFromFundingDecisions(new HashMap<>());
+            classUnderTest.createProjectsFromFundingDecisions(new HashMap<>());
             Assert.fail("Should not have been able to create project from application without the global Comp Admin role");
         } catch (AccessDeniedException e) {
             // expected behaviour
@@ -124,7 +121,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
             setLoggedInUser(
                     newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
             try {
-                service.createProjectsFromFundingDecisions(new HashMap<>());
+                classUnderTest.createProjectsFromFundingDecisions(new HashMap<>());
                 Assert.fail("Should not have been able to create project from application without the global Comp Admin role");
             } catch (AccessDeniedException e) {
                 // expected behaviour
@@ -139,7 +136,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
 
-        assertAccessDenied(() -> service.updateProjectStartDate(123L, LocalDate.now()), () -> {
+        assertAccessDenied(() -> classUnderTest.updateProjectStartDate(123L, LocalDate.now()), () -> {
             verify(projectPermissionRules).leadPartnersCanUpdateTheBasicProjectDetails(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
         });
@@ -152,7 +149,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         when(projectLookupStrategy.getProjectResource(456L)).thenReturn(project);
 
-        assertAccessDenied(() -> service.updateProjectAddress(123L, 456L, OrganisationAddressType.ADD_NEW, newAddressResource().build()), () -> {
+        assertAccessDenied(() -> classUnderTest.updateProjectAddress(123L, 456L, OrganisationAddressType.ADD_NEW, newAddressResource().build()), () -> {
             verify(projectPermissionRules).leadPartnersCanUpdateTheBasicProjectDetails(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
         });
@@ -165,7 +162,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
 
-        assertAccessDenied(() -> service.updateFinanceContact(123L, 456L, 789L), () -> {
+        assertAccessDenied(() -> classUnderTest.updateFinanceContact(123L, 456L, 789L), () -> {
             verify(projectPermissionRules).partnersCanUpdateTheirOwnOrganisationsFinanceContacts(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
         });
@@ -184,7 +181,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
                 .withHash("sample/url")
                 .build();
 
-        assertAccessDenied(() -> service.inviteProjectManager(projectId, inviteResource),
+        assertAccessDenied(() -> classUnderTest.inviteProjectManager(projectId, inviteResource),
                 () -> {
                     verify(projectPermissionRules).partnersCanInviteTheirOwnOrganisationsProjectManager(inviteResource, getLoggedInUser());
                     verifyNoMoreInteractions(projectPermissionRules);
@@ -204,7 +201,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
                 .withHash("sample/url")
                 .build();
 
-        assertAccessDenied(() -> service.inviteFinanceContact(projectId, inviteResource),
+        assertAccessDenied(() -> classUnderTest.inviteFinanceContact(projectId, inviteResource),
                 () -> {
                     verify(projectPermissionRules).partnersCanInviteTheirOwnOrganisationsFinanceContacts(inviteResource, getLoggedInUser());
                     verifyNoMoreInteractions(projectPermissionRules);
@@ -218,7 +215,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
 
-        assertAccessDenied(() -> service.setProjectManager(123L, 456L), () -> {
+        assertAccessDenied(() -> classUnderTest.setProjectManager(123L, 456L), () -> {
             verify(projectPermissionRules).leadPartnersCanUpdateTheBasicProjectDetails(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
         });
@@ -231,7 +228,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
 
-        assertAccessDenied(() -> service.getProjectUsers(123L), () -> {
+        assertAccessDenied(() -> classUnderTest.getProjectUsers(123L), () -> {
             verify(projectPermissionRules).partnersOnProjectCanView(project, getLoggedInUser());
             verify(projectPermissionRules).compAdminsCanViewProjects(project, getLoggedInUser());
             verify(projectPermissionRules).projectFinanceUsersCanViewProjects(project, getLoggedInUser());
@@ -245,7 +242,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
 
-        assertAccessDenied(() -> service.getMonitoringOfficer(123L), () -> {
+        assertAccessDenied(() -> classUnderTest.getMonitoringOfficer(123L), () -> {
             verify(projectPermissionRules).compAdminsCanViewMonitoringOfficersForAnyProject(project, getLoggedInUser());
             verify(projectPermissionRules).partnersCanViewMonitoringOfficersOnTheirProjects(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
@@ -258,7 +255,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
 
-        assertAccessDenied(() -> service.saveMonitoringOfficer(123L, newMonitoringOfficerResource().build()), () -> {
+        assertAccessDenied(() -> classUnderTest.saveMonitoringOfficer(123L, newMonitoringOfficerResource().build()), () -> {
             verify(projectPermissionRules).compAdminsCanAssignMonitoringOfficersForAnyProject(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
         });
@@ -270,7 +267,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
 
-        assertAccessDenied(() -> service.notifyStakeholdersOfMonitoringOfficerChange(newMonitoringOfficerResource().withProject(123L).build()),
+        assertAccessDenied(() -> classUnderTest.notifyStakeholdersOfMonitoringOfficerChange(newMonitoringOfficerResource().withProject(123L).build()),
                 () -> {
             verify(projectPermissionRules).compAdminsCanAssignMonitoringOfficersForAnyProject(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
@@ -284,7 +281,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
 
-        assertAccessDenied(() -> service.createCollaborationAgreementFileEntry(123L, null, null), () -> {
+        assertAccessDenied(() -> classUnderTest.createCollaborationAgreementFileEntry(123L, null, null), () -> {
             verify(projectPermissionRules).leadPartnersCanUploadOtherDocuments(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
         });
@@ -297,7 +294,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
 
-        assertAccessDenied(() -> service.getCollaborationAgreementFileEntryDetails(123L), () -> {
+        assertAccessDenied(() -> classUnderTest.getCollaborationAgreementFileEntryDetails(123L), () -> {
             verify(projectPermissionRules).partnersCanViewOtherDocumentsDetails(project, getLoggedInUser());
             verify(projectPermissionRules).competitionAdminCanViewOtherDocumentsDetails(project, getLoggedInUser());
             verify(projectPermissionRules).projectFinanceUserCanViewOtherDocumentsDetails(project, getLoggedInUser());
@@ -312,7 +309,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
 
-        assertAccessDenied(() -> service.getCollaborationAgreementFileContents(123L), () -> {
+        assertAccessDenied(() -> classUnderTest.getCollaborationAgreementFileContents(123L), () -> {
             verify(projectPermissionRules).competitionAdminCanDownloadOtherDocuments(project, getLoggedInUser());
             verify(projectPermissionRules).projectFinanceUserCanDownloadOtherDocuments(project, getLoggedInUser());
             verify(projectPermissionRules).partnersCanDownloadOtherDocuments(project, getLoggedInUser());
@@ -327,7 +324,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
 
-        assertAccessDenied(() -> service.deleteCollaborationAgreementFile(123L), () -> {
+        assertAccessDenied(() -> classUnderTest.deleteCollaborationAgreementFile(123L), () -> {
             verify(projectPermissionRules).leadPartnersCanDeleteOtherDocuments(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
         });
@@ -341,7 +338,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
 
-        assertAccessDenied(() -> service.createExploitationPlanFileEntry(123L, null, null), () -> {
+        assertAccessDenied(() -> classUnderTest.createExploitationPlanFileEntry(123L, null, null), () -> {
             verify(projectPermissionRules).leadPartnersCanUploadOtherDocuments(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
         });
@@ -354,7 +351,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
 
-        assertAccessDenied(() -> service.getExploitationPlanFileEntryDetails(123L), () -> {
+        assertAccessDenied(() -> classUnderTest.getExploitationPlanFileEntryDetails(123L), () -> {
             verify(projectPermissionRules).competitionAdminCanViewOtherDocumentsDetails(project, getLoggedInUser());
             verify(projectPermissionRules).projectFinanceUserCanViewOtherDocumentsDetails(project, getLoggedInUser());
             verify(projectPermissionRules).partnersCanViewOtherDocumentsDetails(project, getLoggedInUser());
@@ -369,7 +366,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
 
-        assertAccessDenied(() -> service.getExploitationPlanFileContents(123L), () -> {
+        assertAccessDenied(() -> classUnderTest.getExploitationPlanFileContents(123L), () -> {
             verify(projectPermissionRules).competitionAdminCanDownloadOtherDocuments(project, getLoggedInUser());
             verify(projectPermissionRules).projectFinanceUserCanDownloadOtherDocuments(project, getLoggedInUser());
             verify(projectPermissionRules).partnersCanDownloadOtherDocuments(project, getLoggedInUser());
@@ -384,7 +381,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
 
-        assertAccessDenied(() -> service.deleteExploitationPlanFile(123L), () -> {
+        assertAccessDenied(() -> classUnderTest.deleteExploitationPlanFile(123L), () -> {
             verify(projectPermissionRules).leadPartnersCanDeleteOtherDocuments(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
         });
@@ -397,7 +394,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         nonSystemRegistrationRoles.forEach(role -> {
             setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
             try {
-                service.addPartner(1L, 2L, 3L);
+                classUnderTest.addPartner(1L, 2L, 3L);
                 Assert.fail("Should not have been able to add a partner without the system registrar role");
             } catch (AccessDeniedException e) {
                 // expected behaviour
@@ -407,7 +404,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
     @Test
     public void testAddPartnerAllowedIfSystemRegistrar() {
             setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(SYSTEM_REGISTRATION_USER).build())).build());
-            service.addPartner(1L, 2L, 3L);
+            classUnderTest.addPartner(1L, 2L, 3L);
             // There should be no exception thrown
     }
 
@@ -417,7 +414,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         nonSystemRegistrationRoles.forEach(role -> {
             setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
             try {
-                service.addPartner(1L, 2L, 3L);
+                classUnderTest.addPartner(1L, 2L, 3L);
                 Assert.fail("Should not have been able to add a partner without the system registrar role");
             } catch (AccessDeniedException e) {
                 // expected behaviour
@@ -426,19 +423,20 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
     }
 
     @Test
-    public void testGetProjectTeamStatus_deniedIfUserIsNotPartner(){
+    public void testGetProjectTeamStatus(){
         ProjectResource project = newProjectResource().build();
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
 
-        assertAccessDenied(() -> service.getProjectTeamStatus(123L), () -> {
+        assertAccessDenied(() -> classUnderTest.getProjectTeamStatus(123L, Optional.empty()), () -> {
             verify(projectPermissionRules).partnersCanViewTeamStatus(project, getLoggedInUser());
+            verify(projectPermissionRules).compAdminsCanViewTeamStatus(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
         });
     }
 
     @Override
-    protected Class<TestProjectService> getServiceClass() {
+    protected Class<TestProjectService> getClassUnderTest() {
         return TestProjectService.class;
     }
 
@@ -617,7 +615,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         }
 
         @Override
-        public ServiceResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId) {
+        public ServiceResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId) {
             return null;
         }
     }

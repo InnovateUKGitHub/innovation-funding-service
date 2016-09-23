@@ -18,7 +18,6 @@ public class ProjectResource {
     private LocalDate targetStartDate;
     private AddressResource address;
     private String name;
-    private LocalDateTime submittedDate;
     private LocalDateTime documentsSubmittedDate;
     private List<Long> projectUsers;
     private Long collaborationAgreement;
@@ -27,11 +26,6 @@ public class ProjectResource {
 
     @Digits(integer = MAX_DURATION_IN_MONTHS_DIGITS, fraction = 0, message="{validation.application.details.duration.in.months.max.digits}")
     private Long durationInMonths;
-
-    @JsonIgnore
-    public boolean isProjectDetailsSubmitted(){
-        return submittedDate != null;
-    }
 
     @JsonIgnore
     public boolean isPartnerDocumentsSubmitted(){
@@ -97,14 +91,6 @@ public class ProjectResource {
 
     public void setApplication(Long application) {
         this.application = application;
-    }
-
-    public LocalDateTime getSubmittedDate() {
-        return submittedDate;
-    }
-
-    public void setSubmittedDate(LocalDateTime submittedDate) {
-        this.submittedDate = submittedDate;
     }
 
     public LocalDateTime getDocumentsSubmittedDate() {

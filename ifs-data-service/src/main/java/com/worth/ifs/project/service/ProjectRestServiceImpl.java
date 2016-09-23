@@ -155,7 +155,9 @@ public class ProjectRestServiceImpl extends BaseRestService implements ProjectRe
     }
 
     @Override
-    public RestResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId){
-        return getWithRestResult(projectRestURL + "/" + projectId + "/team-status", ProjectTeamStatusResource.class);
+    public RestResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId){
+        return filterByUserId.
+                map(userId -> getWithRestResult(projectRestURL + "/" + projectId + "/team-status?filterByUserId=" + userId, ProjectTeamStatusResource.class))
+                .orElseGet(() -> getWithRestResult(projectRestURL + "/" + projectId + "/team-status", ProjectTeamStatusResource.class));
     }
 }
