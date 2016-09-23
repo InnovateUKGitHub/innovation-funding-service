@@ -101,6 +101,13 @@ public class Error implements Serializable {
         error.fieldRejectedValue = fieldRejectedValue;
         return error;
     }
+    /**
+     * A convenience method to create a field error
+     */
+    public static Error fieldError(String fieldName, Error error) {
+        error.fieldName = fieldName;
+        return error;
+    }
 
     /**
      * A convenience method to create a global (non-field) error
