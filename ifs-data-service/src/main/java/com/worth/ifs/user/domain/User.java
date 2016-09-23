@@ -58,6 +58,9 @@ public class User implements Serializable {
             inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
     private List<Role> roles = new ArrayList<>();
 
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
+    private Profile profile;
+
     public User() {
         // no-arg constructor
     }
@@ -162,8 +165,7 @@ public class User implements Serializable {
         }
 
         stringBuilder
-                .append(lastName)
-                .toString();
+                .append(lastName);
 
         return stringBuilder.toString();
     }
@@ -237,4 +239,12 @@ public class User implements Serializable {
         this.status = status;
     }
 
+    public Profile getProfile() {
+        return profile;
+    }
+
+    public void setProfile(Profile profile) {
+        this.profile = profile;
+        profile.setUser(this);
+    }
 }

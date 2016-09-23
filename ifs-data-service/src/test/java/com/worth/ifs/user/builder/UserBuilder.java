@@ -1,10 +1,7 @@
 package com.worth.ifs.user.builder;
 
 import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.user.domain.Role;
-import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.domain.*;
 import com.worth.ifs.user.resource.UserStatus;
 
 import java.util.List;
@@ -85,6 +82,10 @@ public class UserBuilder extends BaseBuilder<User, UserBuilder> {
 
     public UserBuilder withUid(String... uids) {
         return withArray((uid, object) -> setField("uid", uid, object), uids);
+    }
+
+    public UserBuilder withProfile(Profile... profiles) {
+        return withArray((profile, user) -> setField("profile", profile, user), profiles);
     }
 
     @Override
