@@ -83,7 +83,7 @@ public class ProjectSetupStatusController {
 
         boolean funded = isApplicationFunded(project, organisation, competition);
 
-        ProjectTeamStatusResource teamStatus = projectService.getProjectTeamStatus(projectId);
+        ProjectTeamStatusResource teamStatus = projectService.getProjectTeamStatus(projectId, Optional.empty());
         ProjectSetupSectionPartnerAccessor statusAccessor = new ProjectSetupSectionPartnerAccessor(teamStatus);
         boolean projectDetailsSubmitted = statusAccessor.isProjectDetailsSubmitted();
 

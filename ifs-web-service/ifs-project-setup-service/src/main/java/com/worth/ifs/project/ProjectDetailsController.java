@@ -87,7 +87,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         List<OrganisationResource> partnerOrganisations = getPartnerOrganisations(projectUsers);
         boolean isSubmissionAllowed = projectService.isSubmitAllowed(projectId).getSuccessObject();
 
-        ProjectTeamStatusResource teamStatus = projectService.getProjectTeamStatus(projectId);
+        ProjectTeamStatusResource teamStatus = projectService.getProjectTeamStatus(projectId, Optional.empty());
         ProjectSetupSectionPartnerAccessor statusAccessor = new ProjectSetupSectionPartnerAccessor(teamStatus);
         boolean projectDetailsSubmitted = statusAccessor.isProjectDetailsSubmitted();
 

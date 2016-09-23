@@ -69,7 +69,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
                 withProjectLeadStatus(newProjectLeadStatusResource().build()).
                 build();
 
-        when(projectService.getProjectTeamStatus(project.getId())).thenReturn(teamStatus);
+        when(projectService.getProjectTeamStatus(project.getId(), Optional.empty())).thenReturn(teamStatus);
 
         MvcResult result = mockMvc.perform(get("/project/{id}", projectId))
                 .andExpect(status().isOk())
@@ -115,7 +115,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId())).thenReturn(
                 restFailure(notFoundError(BankDetailsResource.class, 1L)));
 
-        when(projectService.getProjectTeamStatus(projectId)).thenReturn(teamStatus);
+        when(projectService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(teamStatus);
 
         MvcResult result = mockMvc.perform(get("/project/{id}", projectId))
                 .andExpect(status().isOk())
@@ -149,7 +149,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
                 build();
 
         when(projectService.getById(projectId)).thenReturn(project);
-        when(projectService.getProjectTeamStatus(projectId)).thenReturn(teamStatus);
+        when(projectService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(teamStatus);
         when(applicationService.getById(application.getId())).thenReturn(application);
         when(projectService.getById(projectId)).thenReturn(project);
         when(competitionService.getById(application.getCompetition())).thenReturn(competition);
@@ -206,7 +206,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
 
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId())).thenReturn(restSuccess(bankDetailsResource));
 
-        when(projectService.getProjectTeamStatus(projectId)).thenReturn(teamStatus);
+        when(projectService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(teamStatus);
 
         MvcResult result = mockMvc.perform(get("/project/{id}", projectId))
                 .andExpect(status().isOk())
@@ -247,7 +247,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
                 withProjectLeadStatus(newProjectLeadStatusResource().build()).
                 build();
 
-        when(projectService.getProjectTeamStatus(project.getId())).thenReturn(teamStatus);
+        when(projectService.getProjectTeamStatus(project.getId(), Optional.empty())).thenReturn(teamStatus);
 
         MvcResult result = mockMvc.perform(get("/project/{id}", projectId))
                 .andExpect(status().isOk())
@@ -274,7 +274,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
                 withProjectLeadStatus(newProjectLeadStatusResource().build()).
                 build();
 
-        when(projectService.getProjectTeamStatus(project.getId())).thenReturn(teamStatus);
+        when(projectService.getProjectTeamStatus(project.getId(), Optional.empty())).thenReturn(teamStatus);
 
         when(applicationFinanceRestService.getFinanceDetails(application.getId(), organisationResource.getId())).
                 thenReturn(restSuccess(newApplicationFinanceResource().build()));

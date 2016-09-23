@@ -12,6 +12,7 @@ import static com.worth.ifs.project.builder.ProjectLeadStatusResourceBuilder.new
 import static com.worth.ifs.project.builder.ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource;
 import static com.worth.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static com.worth.ifs.user.resource.OrganisationTypeEnum.BUSINESS;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
@@ -27,9 +28,11 @@ public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRules
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
                 withProjectLeadStatus(newProjectLeadStatusResource().
                         withOrganisationId(456L).
+                        withOrganisationType(BUSINESS).
                         build()).
                 withPartnerStatuses(newProjectPartnerStatusResource().
                         withOrganisationId(789L).
+                        withOrganisationType(BUSINESS).
                         build(1)).
                 build();
 
@@ -53,6 +56,7 @@ public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRules
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
                 withProjectLeadStatus(newProjectLeadStatusResource().
                         withOrganisationId(456L).
+                        withOrganisationType(BUSINESS).
                         build()).
                 build();
 
