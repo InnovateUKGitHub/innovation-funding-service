@@ -108,8 +108,7 @@ public class ProjectOtherDocumentsController {
                 projectManagerName, projectManagerTelephone, projectManagerEmail,
                 collaborationAgreement.map(FileDetailsViewModel::new).orElse(null),
                 exploitationPlan.map(FileDetailsViewModel::new).orElse(null),
-                partnerOrganisationNames, form != null && form.isApproved(),
-                form != null && form.isRejected(), form != null ? form.getRejectionReason() : null);
+                partnerOrganisationNames, project.getOtherDocumentsApproved());
     }
 
     private ResponseEntity<ByteArrayResource> returnFileIfFoundOrThrowNotFoundException(Long projectId, Optional<ByteArrayResource> content, Optional<FileEntryResource> fileDetails) {
