@@ -396,6 +396,7 @@ Milestones: Page should contain the correct fields
 Milestones: Server side validations
     [Documentation]    INFUND-2993
     When the user fills the milestones with invalid data
+    And the users waits until the page is autosaved
     And the user clicks the button/link    jQuery=button:contains(Done)
     Then Validation summary should be visible
 
@@ -668,7 +669,7 @@ the pre-field date should be correct
     Should Be Equal As Strings    ${YEAR}    2017
     ${MONTH} =    Get Value    css=.date-group:nth-child(1) .month .width-small
     Should Be Equal As Strings    ${MONTH}    12
-    ${DAY} =    Get Value    css=.date-group:nth-child(1) .day
+    ${DAY} =    Get Value    css=.date-group:nth-child(1) .day .width-small
     Should Be Equal As Strings    ${DAY}    1
 
 the user should see the correct values in the initial details form
@@ -714,3 +715,7 @@ The user should not see the error text in the page
     run keyword and ignore error    mouse out    css=input
     Focus    jQuery=.button:contains("Done")
     Wait Until Page Does Not Contain    ${ERROR_TEXT}
+
+the users waits until the page is autosaved
+    Focus    jQuery=button:contains(Done)
+    Wait For Autosave
