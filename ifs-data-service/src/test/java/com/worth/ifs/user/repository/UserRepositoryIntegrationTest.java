@@ -28,7 +28,7 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
     }
 
     @Autowired
-    UserMapper userMapper;
+    private UserMapper userMapper;
 
     @Test
     public void test_findAll() {
