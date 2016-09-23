@@ -14,7 +14,7 @@
 <main id="content">
 	
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader('Competition setup', '/prototypes/2469-comp-setup')" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader('Application questions', '/prototypes/5085-application-process')" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<div class="hgroup" style="padding-top: 20px">
@@ -58,30 +58,10 @@
 				</fieldset>
 			</div>
 			<div class="extra-margin">
-				<a role="button" tabindex="0" class="button" href="/prototypes/2469-comp-setup">Done</a>
+				<a role="button" tabindex="0" class="button" href="/prototypes/5085-application-process">Done</a>
 			</div>
 		</fieldset>
 	</form>
-
-
-	<div class="extra-margin">
-		<a href="/prototypes/2469-comp-setup" class="button-secondary">Return to setup overview</a>
-	</div>
-
-	<ul class="pagination">
-		<li class="prev">
-			<a rel="next" title="Navigate to previous part" href="#">
-				<span class="pagination-label">Previous</span>
-				<span class="pagination-part-title">Assessors</span>
-			</a>
-		</li>
-	    <li class="next">
-	        <a rel="next" title="Navigate to next part" href="#">
-	            <span class="pagination-label">Next</span>
-	            <span class="pagination-part-title">Finance</span>
-	        </a>
-	    </li>
-	</ul>
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
