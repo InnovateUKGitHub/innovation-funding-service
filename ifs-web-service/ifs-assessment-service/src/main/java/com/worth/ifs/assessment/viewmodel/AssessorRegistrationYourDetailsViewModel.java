@@ -6,11 +6,11 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 /**
  * Holder of model attributes for the Assessor Registration.
  */
-public class AssessorRegistrationViewModel {
+public class AssessorRegistrationYourDetailsViewModel {
     private String competitionInviteHash;
     private String email;
 
-    public AssessorRegistrationViewModel(String competitionInviteHash, String email) {
+    public AssessorRegistrationYourDetailsViewModel(String competitionInviteHash, String email) {
         this.email = email;
         this.competitionInviteHash = competitionInviteHash;
     }
@@ -37,7 +37,7 @@ public class AssessorRegistrationViewModel {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        AssessorRegistrationViewModel that = (AssessorRegistrationViewModel) o;
+        AssessorRegistrationYourDetailsViewModel that = (AssessorRegistrationYourDetailsViewModel) o;
 
         return new EqualsBuilder()
                 .append(competitionInviteHash, that.competitionInviteHash)

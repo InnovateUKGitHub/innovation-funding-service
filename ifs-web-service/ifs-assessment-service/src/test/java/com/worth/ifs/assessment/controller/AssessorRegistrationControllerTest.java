@@ -3,7 +3,7 @@ package com.worth.ifs.assessment.controller;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.assessment.model.*;
 import com.worth.ifs.assessment.viewmodel.AssessorRegistrationBecomeAnAssessorViewModel;
-import com.worth.ifs.assessment.viewmodel.AssessorRegistrationViewModel;
+import com.worth.ifs.assessment.viewmodel.AssessorRegistrationYourDetailsViewModel;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.invite.resource.CompetitionInviteResource;
 import com.worth.ifs.invite.service.EthnicityRestService;
@@ -33,19 +33,19 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
 
     @Spy
     @InjectMocks
-    private AssessorRegistrationModelPopulator registrationModelPopulator;
+    private AssessorRegistrationYourDetailsModelPopulator registrationModelPopulator;
 
     @Spy
     @InjectMocks
-    private AssessorSkillsModelPopulator assessorSkillsModelPopulator;
+    private AssessorRegistrationSkillsModelPopulator assessorRegistrationSkillsModelPopulator;
 
     @Spy
     @InjectMocks
-    private AssessorDeclarationModelPopulator assessorDeclarationModelPopulator;
+    private AssessorRegistrationDeclarationModelPopulator assessorRegistrationDeclarationModelPopulator;
 
     @Spy
     @InjectMocks
-    private AssessorTermsModelPopulator assessorTermsModelPopulator;
+    private AssessorRegistrationTermsModelPopulator assessorRegistrationTermsModelPopulator;
 
     @Mock
     private EthnicityRestService ethnicityRestService;
@@ -75,7 +75,7 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
 
         when(competitionInviteRestService.getInvite("hash")).thenReturn(RestResult.restSuccess(competitionInviteResource));
         when(ethnicityRestService.findAllActive()).thenReturn(RestResult.restSuccess(asList(newEthnicityResource())));
-        AssessorRegistrationViewModel expectedViewModel = new AssessorRegistrationViewModel("hash", "test@test.com");
+        AssessorRegistrationYourDetailsViewModel expectedViewModel = new AssessorRegistrationYourDetailsViewModel("hash", "test@test.com");
 
         mockMvc.perform(get("/registration/{inviteHash}/register", "hash"))
                 .andExpect(status().isOk())
@@ -84,7 +84,7 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
     }
 
     @Test
-    public void skills() throws Exception {
+    public void profileSkills() throws Exception {
         mockMvc.perform(get("/registration/skills"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("model"))
@@ -92,7 +92,7 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
     }
 
     @Test
-    public void declaration() throws Exception {
+    public void profileDeclaration() throws Exception {
         mockMvc.perform(get("/registration/declaration"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("model"))
@@ -100,7 +100,7 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
     }
 
     @Test
-    public void terms() throws Exception {
+    public void profileTerms() throws Exception {
         mockMvc.perform(get("/registration/terms"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("model"))
