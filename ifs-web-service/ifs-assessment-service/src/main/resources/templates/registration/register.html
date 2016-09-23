@@ -50,17 +50,36 @@
                               <span class="error-message"  th:each="err : ${#fields.errors('firstName')}" th:text="${err}" />
                         </span>
                     </label>
-                    <input class="form-control" th:errorclass="field-error" type="text" th:field="*{firstName}" />
+                    <input class="form-control"
+                           th:errorclass="field-error"
+                           type="text"
+                           th:field="*{firstName}"
+                           required="required"
+                           minlength="2"
+                           maxlength="70"
+                           data-minlength-errormessage="Your first name should have at least 2 characters"
+                           data-maxlength-errormessage="Your first name cannot have more than 70 characters"
+                           data-required-errormessage="Please enter a first name"
+                    />
                 </div>
 
-                <div class="form-group" th:classappend="${#fields.hasErrors('lastName')}? error">
-                    <label class="form-label" th:for="lastName">
+                <div th:class="${#fields.hasErrors('lastName')}? 'form-group error':'form-group'">
+                    <label class="form-label" for="lastName">
                         <span class="form-label-bold">Last name</span>
                         <span th:if="${#fields.hasErrors('lastName')}" th:remove="tag">
                               <span class="error-message"  th:each="err : ${#fields.errors('lastName')}" th:text="${err}" />
                         </span>
                     </label>
-                    <input class="form-control" th:errorclass="field-error" type="text" th:field="*{lastName}" />
+                    <input th:class="${#fields.hasErrors('lastName') ? 'form-control field-error' : 'form-control'}"
+                           id="lastName"
+                           type="text"
+                           th:field="*{lastName}"
+                           required="required"
+                           minlength="2"
+                           maxlength="70"
+                           data-minlength-errormessage="Your last name should have at least 2 characters"
+                           data-maxlength-errormessage="Your last name cannot have more than 70 characters"
+                           data-required-errormessage="Please enter a last name"/>
                 </div>
 
                 <div class="form-group" th:classappend="${#fields.hasErrors('gender')}? error">
@@ -73,7 +92,7 @@
                         </span>
                         <div class="form-group">
                             <label class="block-label" th:each="gen : ${T(com.worth.ifs.user.resource.Gender).values()}">
-                                <input th:field="*{gender}" th:value="${gen}" type="radio" />
+                                <input th:field="*{gender}" th:value="${gen}" type="radio" required="required" data-required-errormessage="Please select a Gender option" />
                                 <span th:text="${gen.displayName}" th:remove="tag" />
                             </label>
                         </div>
@@ -90,7 +109,7 @@
                         </span>
                         <div class="form-group">
                             <label class="block-label" th:each="eth : ${ethnicityOptions}">
-                                <input th:field="*{ethnicity}" th:value="${eth.id}" type="radio" />
+                                <input th:field="*{ethnicity}" th:value="${eth.id}" type="radio" required="required" data-required-errormessage="Please select an Ethnic Group option" />
                                 <span th:text="${eth.description}" th:remove="tag" />
                             </label>
                         </div>
@@ -107,7 +126,7 @@
                         </span>
                         <div class="form-group">
                             <label class="block-label" th:each="dis : ${T(com.worth.ifs.user.resource.Disability).values()}">
-                                <input th:field="*{disability}" th:value="${dis}" type="radio" />
+                                <input th:field="*{disability}" th:value="${dis}" type="radio" required="required" data-required-errormessage="Please select a Disability option" />
                                 <span th:text="${dis.displayName}" th:remove="tag" />
                             </label>
                         </div>
@@ -116,7 +135,7 @@
 
                 <div th:include="fragments/addresses :: company-address-details" th:with="form=${form}, legend='Address search'" th:remove="tag"></div>
 
-                <div class="form-group extra-margin">
+                <div class="form-group extra-margin" th:classappend="${#fields.hasErrors('phoneNumber')}? error">
                     <label class="form-label" th:for="phoneNumber">
                         <span class="form-label-bold">Phone number</span>
                         <span class="form-hint">We may use this to contact you about the application</span>
@@ -124,14 +143,23 @@
                               <span class="error-message"  th:each="err : ${#fields.errors('phoneNumber')}" th:text="${err}" />
                         </span>
                     </label>
-                    <input class="form-control" th:errorclass="field-error" type="tel" th:field="*{phoneNumber}" />
+                    <input class="form-control"
+                           th:errorclass="field-error"
+                           type="tel"
+                           th:field="*{phoneNumber}"
+                           required="required"
+                           minlength="8"
+                           maxlength="20"
+                           data-minlength-errormessage="Input for your phone number has a minimum length of 8 characters"
+                           data-maxlength-errormessage="Input for your phone number has a maximum length of 20 characters"
+                           data-required-errormessage="Please enter a phone number"/>
                 </div>
 
                 <div class="form-group">
                     <h3 class="heading-small">Email</h3>
                     <p class="form-hint">You will need this to sign into your account, the provided email is:<br /><strong th:text="${model.email}"></strong></p>
                 </div>
-                <div class="form-group">
+                <div class="form-group" th:classappend="${#fields.hasErrors('password')}? error">
                     <h3 class="heading-small">Password</h3>
                     <label class="form-label" th:for="password">
                         <span class="visuallyhidden">Password</span>
@@ -147,18 +175,37 @@
                               <span class="error-message"  th:each="err : ${#fields.errors('password')}" th:text="${err}" />
                         </span>
                     </label>
-                    <input class="form-control" th:errorclass="field-error" type="password" th:field="*{password}" minlength="10"
-                           maxlength="30" />
+                    <input class="form-control"
+                           th:errorclass="field-error"
+                           type="password"
+                           th:field="*{password}"
+                           required="required"
+                           minlength="10"
+                           maxlength="30"
+                           data-required-errormessage="Password must contain some text"
+                           data-minlength-errormessage="Password must at least be 10 characters"
+                           data-maxlength-errormessage="Password must not be more than 30 characters"
+                    />
                 </div>
-                <div class="form-group">
+
+                <div class="form-group" th:classappend="${#fields.hasErrors('retypedPassword')}? error">
                     <label class="form-label" th:for="retypedPassword">
                         <span class="form-label-bold">Re-type password</span>
                         <span th:if="${#fields.hasErrors('retypedPassword')}" th:remove="tag">
                               <span class="error-message"  th:each="err : ${#fields.errors('retypedPassword')}" th:text="${err}" />
                         </span>
                     </label>
-                    <input class="form-control" th:errorclass="field-error" type="password"  th:field="*{retypedPassword}" minlength="10"
-                           maxlength="30" />
+                    <input class="form-control"
+                           th:errorclass="field-error"
+                           type="password"
+                           th:field="*{retypedPassword}"
+                           required="required"
+                           minlength="10"
+                           maxlength="30"
+                           data-required-errormessage="Password must contain some text"
+                           data-minlength-errormessage="Password must at least be 10 characters"
+                           data-maxlength-errormessage="Password must not be more than 30 characters"
+                    />
                 </div>
 
                 <button class="button button-large extra-margin" name="create-account" type="submit">Continue</button>
