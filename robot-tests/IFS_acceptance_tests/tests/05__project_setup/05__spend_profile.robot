@@ -124,6 +124,7 @@ Lead partner submits Spend Profile
     Given the user navigates to the page            ${server}/project-setup/project/1/partner-organisation/31/spend-profile/
     When the user clicks the button/link            jQuery=.button:contains("Mark as complete")
     Then the user should see the text in the page   Your Spend Profile is currently marked as complete
+    And the user should see the element             css=#row-Travel--subsistence-33 [readonly]
     [Teardown]    Logout as user
 
 # TODO update the acc tests for Editing the Spend Profile by a non-lead partner  INFUND-5153
