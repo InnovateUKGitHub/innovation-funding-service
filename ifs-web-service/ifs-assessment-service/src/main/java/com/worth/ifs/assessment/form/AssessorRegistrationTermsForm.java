@@ -1,12 +1,12 @@
 package com.worth.ifs.assessment.form;
 
-public class AssessorTermsForm {
+public class AssessorRegistrationTermsForm {
     private Boolean agreesToTerms;
 
-    public AssessorTermsForm() {
+    public AssessorRegistrationTermsForm() {
     }
 
-    public AssessorTermsForm(Boolean agreesToTerms) {
+    public AssessorRegistrationTermsForm(Boolean agreesToTerms) {
         this.agreesToTerms = agreesToTerms;
     }
 

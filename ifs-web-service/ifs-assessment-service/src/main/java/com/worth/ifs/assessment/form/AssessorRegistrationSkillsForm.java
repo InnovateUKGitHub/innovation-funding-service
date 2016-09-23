@@ -1,14 +1,14 @@
 package com.worth.ifs.assessment.form;
 
-public class AssessorSkillsForm {
+public class AssessorRegistrationSkillsForm {
 
     private String skillAreas;
     private String assessorType;
 
-    public AssessorSkillsForm() {
+    public AssessorRegistrationSkillsForm() {
     }
 
-    public AssessorSkillsForm(String skillAreas, String assessorType) {
+    public AssessorRegistrationSkillsForm(String skillAreas, String assessorType) {
         this.skillAreas = skillAreas;
         this.assessorType = assessorType;
     }
