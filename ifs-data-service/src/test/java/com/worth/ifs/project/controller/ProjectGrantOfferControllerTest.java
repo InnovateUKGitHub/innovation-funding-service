@@ -18,9 +18,7 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 
-/**
- * Module: innovation-funding-service-dev
- **/
+
 public class ProjectGrantOfferControllerTest extends BaseControllerMockMVCTest<ProjectGrantOfferController> {
 
     private RestDocumentationResultHandler document;
@@ -64,11 +62,10 @@ public class ProjectGrantOfferControllerTest extends BaseControllerMockMVCTest<P
         BiFunction<ProjectGrantOfferService, FileEntryResource, ServiceResult<FileEntryResource>> serviceCallToUpload =
                 (service, fileToUpload) -> service.getSignedGrantOfferLetterFileEntryDetails(projectId);
 
-        assertGetFileDetails("/project/{projectId}/grant-offer/details", new Object[] {projectId},
+        assertGetFileDetails("/project/{projectId}/signed-grant-offer/details", new Object[] {projectId},
                 emptyMap(),
                 projectGrantOfferServiceMock, serviceCallToUpload).
                 andDo(documentFileGetDetailsMethod(document));
-
     }
     @Test
     public void getAdditionaContractFileEntryDetails() throws Exception {
@@ -91,9 +88,8 @@ public class ProjectGrantOfferControllerTest extends BaseControllerMockMVCTest<P
         BiFunction<ProjectGrantOfferService, FileEntryResource, ServiceResult<FileEntryResource>> serviceCallToUpload =
                 (service, fileToUpload) -> service.createSignedGrantOfferLetterFileEntry(eq(projectId), eq(fileToUpload), fileUploadInputStreamExpectations());
 
-        assertFileUploadProcess("/project/" + projectId + "/grant-offer/", projectGrantOfferServiceMock, serviceCallToUpload).
+        assertFileUploadProcess("/project/" + projectId + "/signed-grant-offer/", projectGrantOfferServiceMock, serviceCallToUpload).
                 andDo(documentFileUploadMethod(document));
-
     }
 
     @Test

@@ -9,6 +9,7 @@ import com.worth.ifs.user.domain.Organisation;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -63,7 +64,7 @@ public class Project implements ProcessActivity {
     private FileEntry exploitationPlan;
 
     @OneToOne
-    @JoinColumn(name="grantOfferLetterFileEntryId", referencedColumnName = "id")
+    @JoinColumn(name="signedGrantOfferFileEntryId", referencedColumnName = "id")
     private FileEntry signedGrantOfferLetter;
 
     @OneToOne
@@ -74,13 +75,14 @@ public class Project implements ProcessActivity {
     @JoinColumn(name="additionalContractFileEntryId", referencedColumnName = "id")
     private FileEntry additionalContractFile;
 
-    private boolean offerRejected = false;
+    @NotNull
+    private boolean offerRejected;
 
     public Project() {}
 
     public Project(Long id, Application application, LocalDate targetStartDate, Address address,
                    Long durationInMonths, String name, LocalDateTime submittedDate,
-                   LocalDateTime documentsSubmittedDate) {
+                   LocalDateTime documentsSubmittedDate, LocalDateTime offerSubmittedDate, boolean offerRejected) {
         this.id = id;
         this.application = application;
         this.targetStartDate = targetStartDate;
@@ -89,6 +91,8 @@ public class Project implements ProcessActivity {
         this.name = name;
         this.submittedDate = submittedDate;
         this.documentsSubmittedDate = documentsSubmittedDate;
+        this.offerSubmittedDate = offerSubmittedDate;
+        this.offerRejected = offerRejected;
     }
 
     public void addProjectUser(ProjectUser projectUser) {

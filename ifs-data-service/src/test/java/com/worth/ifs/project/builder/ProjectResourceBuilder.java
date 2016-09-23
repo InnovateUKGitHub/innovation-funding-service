@@ -69,8 +69,12 @@ public class ProjectResourceBuilder extends BaseBuilder<ProjectResource, Project
         return with (project -> project.setExploitationPlan(exploitationPlan));
     }
 
-    public ProjectResourceBuilder withGrantOfferLetter(Long grantOfferLetter) {
+    public ProjectResourceBuilder withSignedGrantOfferLetter(Long grantOfferLetter) {
         return with (project -> project.setSignedGrantOfferLetter(grantOfferLetter));
+    }
+
+    public ProjectResourceBuilder withGrantOfferLetter(Long grantOfferLetter) {
+        return with (project -> project.setGrantOfferLetter(grantOfferLetter));
     }
 
     public ProjectResourceBuilder withAdditionalContractFile(Long additionalContractFile) {

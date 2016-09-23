@@ -40,7 +40,7 @@ public class ProjectTest {
         durationInMonths = 12L;
         name = "My Project";
         submittedDate = LocalDateTime.now();
-        project = new Project(id, application, startDate, address, durationInMonths, name, submittedDate, documentsSubmittedDate);
+        project = new Project(id, application, startDate, address, durationInMonths, name, submittedDate, documentsSubmittedDate,null, false);
     }
 
     @Test

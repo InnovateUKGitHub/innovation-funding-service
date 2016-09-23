@@ -394,6 +394,21 @@ public class ProjectServiceImplTest {
     }
 
     @Test
+    public void testAddSignedGrantOfferLetter() {
+
+        FileEntryResource createdFile = newFileEntryResource().build();
+
+        when(projectRestService.addSignedGrantOfferLetterFile(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes())).
+                thenReturn(restSuccess(createdFile));
+
+        ServiceResult<FileEntryResource> result =
+                service.addSignedGrantOfferLetter(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes());
+
+        assertTrue(result.isSuccess());
+        assertEquals(createdFile, result.getSuccessObject());
+    }
+
+    @Test
     public void testAddGrantOfferLetter() {
 
         FileEntryResource createdFile = newFileEntryResource().build();
@@ -402,7 +417,7 @@ public class ProjectServiceImplTest {
                 thenReturn(restSuccess(createdFile));
 
         ServiceResult<FileEntryResource> result =
-                service.addSignedGrantOfferLetter(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes());
+                service.addGrantOfferLetter(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes());
 
         assertTrue(result.isSuccess());
         assertEquals(createdFile, result.getSuccessObject());

@@ -10,29 +10,8 @@ import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-/**
- * Module: innovation-funding-service-dev
- **/
+
 public class ProjectGrantOfferPermissionRulesTest extends BasePermissionRulesTest<ProjectGrantOfferPermissionRules> {
-    @Test
-    public void partnersCanDownloadGrantOfferLetter() throws Exception {
-
-    }
-
-    @Test
-    public void partnersCanViewGrantOfferLetter() throws Exception {
-
-    }
-
-    @Test
-    public void leadPartnerCanUploadGrantOfferLetter() throws Exception {
-
-    }
-
-    @Test
-    public void projectManagerCanUploadGrantOfferLetter() throws Exception {
-
-    }
 
     @Test
     public void testLeadPartnersCanCreateSignedGrantOfferLetter() {
