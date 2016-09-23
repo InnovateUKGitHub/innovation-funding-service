@@ -29,7 +29,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.worth.ifs.address.builder.AddressBuilder.newAddress;
@@ -39,7 +38,6 @@ import static com.worth.ifs.bankdetails.builder.BankDetailsBuilder.newBankDetail
 import static com.worth.ifs.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
 import static com.worth.ifs.bankdetails.builder.BankDetailsStatusResourceBuilder.newBankDetailsStatusResource;
 import static com.worth.ifs.bankdetails.builder.ProjectBankDetailsStatusSummaryBuilder.newProjectBankDetailsStatusSummary;
-
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
@@ -190,7 +188,7 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
     @Test
     public void testGetProjectBankDetailsStatusSummary(){
         Long projectId = 123L;
-        Competition competition = newCompetition().build();
+        Competition competition = newCompetition().withName("Greener Jet Engines").build();
         Application application = newApplication().withCompetition(competition).build();
         organisation.setOrganisationType(newOrganisationType().withOrganisationType(OrganisationTypeEnum.BUSINESS).build());
         ProcessRole leadApplicantRole = newProcessRole().withRole(UserRoleType.LEADAPPLICANT).withOrganisation(organisation).withApplication(application).build();
@@ -207,6 +205,7 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
         ProjectBankDetailsStatusSummary expected = newProjectBankDetailsStatusSummary().build();
         expected.setProjectId(projectId);
         expected.setCompetitionId(competition.getId());
+        expected.setCompetitionName(competition.getName());
         expected.setBankDetailsStatusResources(bankDetailsStatusResource);
         ServiceResult<ProjectBankDetailsStatusSummary> result = service.getProjectBankDetailsStatusSummary(projectId);
         assertTrue(result.isSuccess());
