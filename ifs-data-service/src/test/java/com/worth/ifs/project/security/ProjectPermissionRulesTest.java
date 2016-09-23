@@ -400,5 +400,15 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
         setupUserNotAsPartner(project, user);
         assertFalse(rules.partnersCanViewTeamStatus(project, user));
     }
+    @Test
+    public void testCompAdminsCanViewTeamStatus(){
+        ProjectResource project = newProjectResource().build();
+        assertTrue(rules.compAdminsCanViewTeamStatus(project, compAdminUser()));
+    }
 
+    @Test
+    public void testNonCompAdminsCannotViewTeamStatus(){
+        ProjectResource project = newProjectResource().build();
+        assertFalse(rules.compAdminsCanViewTeamStatus(project, projectFinanceUser()));
+    }
 }

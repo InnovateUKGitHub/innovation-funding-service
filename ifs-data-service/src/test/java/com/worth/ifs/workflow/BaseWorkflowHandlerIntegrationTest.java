@@ -1,6 +1,6 @@
 package com.worth.ifs.workflow;
 
-import com.worth.ifs.BaseIntegrationTest;
+import com.worth.ifs.commons.BaseIntegrationTest;
 import com.worth.ifs.workflow.repository.ProcessRepository;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Before;

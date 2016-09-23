@@ -1,6 +1,6 @@
 package com.worth.ifs.transactional;
 
-import com.worth.ifs.BaseIntegrationTest;
+import com.worth.ifs.commons.BaseIntegrationTest;
 import com.worth.ifs.commons.service.ServiceResult;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;

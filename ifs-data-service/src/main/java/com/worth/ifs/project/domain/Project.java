@@ -46,8 +46,6 @@ public class Project implements ProcessActivity {
 
     private String name;
 
-    private LocalDateTime submittedDate;
-
     private LocalDateTime documentsSubmittedDate;
 
     private LocalDateTime offerSubmittedDate;
@@ -81,15 +79,15 @@ public class Project implements ProcessActivity {
     public Project() {}
 
     public Project(Long id, Application application, LocalDate targetStartDate, Address address,
-                   Long durationInMonths, String name, LocalDateTime submittedDate,
-                   LocalDateTime documentsSubmittedDate, LocalDateTime offerSubmittedDate, boolean offerRejected) {
+
+                   Long durationInMonths, String name, LocalDateTime documentsSubmittedDate) {
+
         this.id = id;
         this.application = application;
         this.targetStartDate = targetStartDate;
         this.address = address;
         this.durationInMonths = durationInMonths;
         this.name = name;
-        this.submittedDate = submittedDate;
         this.documentsSubmittedDate = documentsSubmittedDate;
         this.offerSubmittedDate = offerSubmittedDate;
         this.offerRejected = offerRejected;
@@ -111,10 +109,6 @@ public class Project implements ProcessActivity {
         }
 
         return getOnlyElement(matchingUser);
-    }
-
-    public boolean isProjectDetailsSubmitted() {
-        return submittedDate != null;
     }
 
     public Long getId() {
@@ -188,14 +182,6 @@ public class Project implements ProcessActivity {
     public void setProjectUsers(List<ProjectUser> projectUsers) {
         this.projectUsers.clear();
         this.projectUsers.addAll(projectUsers);
-    }
-
-    public LocalDateTime getSubmittedDate() {
-        return submittedDate;
-    }
-
-    public void setSubmittedDate(LocalDateTime submittedDate) {
-        this.submittedDate = submittedDate;
     }
 
     public LocalDateTime getDocumentsSubmittedDate() {

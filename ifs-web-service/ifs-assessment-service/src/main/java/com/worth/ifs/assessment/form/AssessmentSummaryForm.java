@@ -1,5 +1,6 @@
 package com.worth.ifs.assessment.form;
 
+import com.worth.ifs.commons.validation.constraints.WordCount;
 import com.worth.ifs.controller.BindingResultTarget;
 import com.worth.ifs.validator.constraints.FieldRequiredIf;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -20,8 +21,10 @@ public class AssessmentSummaryForm implements BindingResultTarget {
     @NotNull(message = "{validation.assessmentsummaryform.fundingConfirmation.required}")
     private Boolean fundingConfirmation;
     @Size(max = 5000, message = "{validation.field.too.many.characters}")
+    @WordCount(max = 100, message = "{validation.field.max.word.count}")
     private String feedback;
     @Size(max = 5000, message = "{validation.field.too.many.characters}")
+    @WordCount(max = 100, message = "{validation.field.max.word.count}")
     private String comment;
     private BindingResult bindingResult;
     private List<ObjectError> objectErrors;

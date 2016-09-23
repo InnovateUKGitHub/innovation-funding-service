@@ -258,6 +258,7 @@ The user enters text to a text field
     Clear Element Text    ${TEXT_FIELD}
     input text    ${TEXT_FIELD}    ${TEXT_INPUT}
     Mouse Out    ${TEXT_FIELD}
+    Wait for autosave
 
 the user sees the text in the element
     [Arguments]    ${element}    ${text}

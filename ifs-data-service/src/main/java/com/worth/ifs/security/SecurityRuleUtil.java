@@ -1,5 +1,6 @@
 package com.worth.ifs.security;
 
+import com.worth.ifs.commons.security.CustomPermissionEvaluator;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.repository.ProcessRoleRepository;

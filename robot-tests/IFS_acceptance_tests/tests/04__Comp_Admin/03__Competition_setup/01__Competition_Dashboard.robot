@@ -19,7 +19,7 @@ Resource          ../../../resources/keywords/User_actions.robot
 Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
 
 *** Variables ***
-@{database}       pymysql    ifs    root    password    ifs-database    3306
+@{database}       pymysql    ${database_name}    ${database_user}    ${database_password}    ${database_host}    ${database_port}
 
 *** Test Cases ***
 Live Competitions
@@ -77,13 +77,13 @@ Upcoming competitions ready for open
 
 Competition Opens automatically on date
     [Documentation]    INFUND-3004
-    [Tags]    MySQL    Docker
+    [Tags]    MySQL
     [Setup]    Connect to Database    @{database}
     Given the user should see the text in the page    Ready to open
     Then element should contain    jQuery=section:nth-child(4)    Sarcasm Stupendousness
     ${yesterday} =    get yesterday
     When execute sql string    UPDATE `ifs`.`milestone` SET `DATE`='${yesterday}' WHERE `id`='9';
-    And reload page
+    And the user reloads the page
     Then element should not contain    jQuery=section:nth-child(4)    Sarcasm Stupendousness
     When the user navigates to the page    ${SERVER}/management/dashboard/live
     Then the user should see the text in the page    Open

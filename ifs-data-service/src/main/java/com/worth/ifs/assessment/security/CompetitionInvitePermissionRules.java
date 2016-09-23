@@ -1,6 +1,6 @@
 package com.worth.ifs.assessment.security;
 
-import com.worth.ifs.security.PermissionRules;
+import com.worth.ifs.commons.security.PermissionRules;
 import org.springframework.stereotype.Component;
 
 /**

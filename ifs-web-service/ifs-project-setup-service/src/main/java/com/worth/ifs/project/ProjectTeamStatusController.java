@@ -8,6 +8,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.Optional;
+
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 /**
@@ -22,7 +24,7 @@ public class ProjectTeamStatusController {
 
     @RequestMapping(method = GET)
     public String viewProjectTeamStatus(Model model, @PathVariable("projectId") final Long projectId) {
-        ProjectTeamStatusResource teamStatus = projectService.getProjectTeamStatus(projectId);
+        ProjectTeamStatusResource teamStatus = projectService.getProjectTeamStatus(projectId, Optional.empty());
         model.addAttribute("model", new ProjectConsortiumStatusViewModel(projectId, teamStatus));
         return "project/consortium-status";
     }

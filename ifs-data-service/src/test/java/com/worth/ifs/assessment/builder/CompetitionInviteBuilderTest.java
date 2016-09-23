@@ -22,7 +22,7 @@ public class CompetitionInviteBuilderTest {
         Long expectedId = 7L;
         InviteStatus expectedStatus = SENT;
         String expectedEmail = "tom@poly.io";
-        User expectedUser = newUser().withid(5L).build();
+        User expectedUser = newUser().withId(5L).build();
         Competition expectedCompetition = newCompetition().withName("Juggling Craziness").build();
         String expectedHash = "68656c6c6f";
         String expectedName = "paul plum";
@@ -52,7 +52,7 @@ public class CompetitionInviteBuilderTest {
         Long[] expectedIds = { 7L, 13L };
         InviteStatus[] expectedStatuses = { SENT, OPENED };
         String[] expectedEmails = { "tom@poly.io", "steve.smith@empire.com" };
-        User[] expectedUsers = newUser().withid(5L, 11L).buildArray(2, User.class);
+        User[] expectedUsers = newUser().withId(5L, 11L).buildArray(2, User.class);
         Competition[] expectedCompetitions = newCompetition().withName("Juggling Craziness", "Intermediate Juggling").buildArray(2, Competition.class);
         String[] expectedHashes = { "68656c6c6f", "776f726c64" };
         String[] expectedNames = { "paul plum", "steve smith" };

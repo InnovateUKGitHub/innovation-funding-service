@@ -2,7 +2,7 @@ package com.worth.ifs.alert.security;
 
 import com.worth.ifs.BasePermissionRulesTest;
 import com.worth.ifs.alert.resource.AlertResource;
-import com.worth.ifs.security.CustomPermissionEvaluator;
+import com.worth.ifs.commons.security.CustomPermissionEvaluator;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;

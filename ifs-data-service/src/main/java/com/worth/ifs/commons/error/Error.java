@@ -103,6 +103,13 @@ public class Error implements Serializable {
     }
 
     /**
+     * A convenience method to create a field error with existing Error object
+     */
+    public static Error fieldError(String fieldName, Error error) {
+        return fieldError(fieldName, error.getFieldRejectedValue(), error.getErrorKey(), error.getArguments());
+    }
+
+    /**
      * A convenience method to create a global (non-field) error
      */
     public static Error globalError(String errorKey) {

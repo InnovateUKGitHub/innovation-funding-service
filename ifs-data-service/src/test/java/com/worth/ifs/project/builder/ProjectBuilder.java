@@ -8,7 +8,6 @@ import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -16,7 +15,8 @@ import static com.worth.ifs.BuilderAmendFunctions.setField;
 import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
 
-public class ProjectBuilder extends BaseBuilder<Project, ProjectBuilder> {
+public class
+ProjectBuilder extends BaseBuilder<Project, ProjectBuilder> {
 
     private ProjectBuilder(List<BiConsumer<Integer, Project>> multiActions) {
         super(multiActions);
@@ -78,10 +78,6 @@ public class ProjectBuilder extends BaseBuilder<Project, ProjectBuilder> {
 
     public ProjectBuilder withProjectUsers(List<ProjectUser>... projectUsers){
         return withArray((users, project) -> project.setProjectUsers(users), projectUsers);
-    }
-
-    public ProjectBuilder withSubmittedDate(LocalDateTime... submittedDate){
-        return withArray((subDate, project) -> project.setSubmittedDate(subDate), submittedDate);
     }
 
     @Override

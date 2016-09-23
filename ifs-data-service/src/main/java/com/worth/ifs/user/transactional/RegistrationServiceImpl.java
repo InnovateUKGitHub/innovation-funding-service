@@ -21,6 +21,7 @@ import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.resource.UserStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.method.P;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -42,7 +43,6 @@ import static java.util.Collections.singletonList;
  */
 @Service
 public class RegistrationServiceImpl extends BaseTransactionalService implements RegistrationService {
-
 
     final JsonNodeFactory factory = JsonNodeFactory.instance;
 
@@ -66,13 +66,13 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     @Autowired
     private CompAdminEmailRepository compAdminEmailRepository;
-    
+
     @Autowired
     private ProjectFinanceEmailRepository projectFinanceEmailRepository;
 
     @Autowired
     private NotificationService notificationService;
-    
+
     @Autowired
     private SystemNotificationSource systemNotificationSource;
 
@@ -86,31 +86,37 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     private String webBaseUrl;
 
     private boolean isUserCompAdmin(final String email) {
-        if(StringUtils.hasText(email)) {
+        if (StringUtils.hasText(email)) {
             CompAdminEmail existingUserSearch = compAdminEmailRepository.findOneByEmail(email);
-            if(existingUserSearch != null) {
+            if (existingUserSearch != null) {
                 return true;
             }
         }
         return false;
     }
-    
+
     private boolean isUserProjectFinance(String email) {
-    	if(StringUtils.hasText(email)) {
+        if (StringUtils.hasText(email)) {
             ProjectFinanceEmail existingUserSearch = projectFinanceEmailRepository.findOneByEmail(email);
-            if(existingUserSearch != null) {
+            if (existingUserSearch != null) {
                 return true;
             }
         }
         return false;
-	}
+    }
+
+    @Override
+    public ServiceResult<UserResource> createUser(@P("user") UserResource userResource) {
+        return validateUser(userResource, userResource.getPassword()).andOnSuccess(validUser ->
+                createUserWithUid(userMapper.mapToDomain(userResource), userResource.getPassword()));
+    }
 
     @Override
     public ServiceResult<UserResource> createOrganisationUser(Long organisationId, UserResource userResource) {
         String roleName;
-        if(isUserCompAdmin(userResource.getEmail())){
+        if (isUserCompAdmin(userResource.getEmail())) {
             roleName = COMP_ADMIN.getName();
-        } else if(isUserProjectFinance(userResource.getEmail())){
+        } else if (isUserProjectFinance(userResource.getEmail())) {
             roleName = PROJECT_FINANCE.getName();
         } else {
             roleName = APPLICANT.getName();
@@ -121,12 +127,12 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
                 createUserWithUid(newUser, userResource.getPassword()));
     }
 
-	private ServiceResult<UserResource> validateUser(UserResource userResource, String password) {
+    private ServiceResult<UserResource> validateUser(UserResource userResource, String password) {
         return passwordPolicyValidator.validatePassword(password, userResource).andOnSuccessReturn(() -> userResource);
     }
 
     @Override
-    public ServiceResult<Void> activateUser(Long userId){
+    public ServiceResult<Void> activateUser(Long userId) {
         return getUser(userId).andOnSuccessReturnVoid(u -> {
             idpService.activateUser(u.getUid());
             u.setStatus(UserStatus.ACTIVE);
@@ -208,7 +214,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         final String emailVerificationHash = getEmailVerificationHash(user);
 
         final ObjectNode extraInfo = factory.objectNode();
-        if(competitionId.isPresent()){
+        if (competitionId.isPresent()) {
             extraInfo.put("competitionId", competitionId.get());
         }
         final Token token = new Token(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getName(), user.getId(), emailVerificationHash, now(), extraInfo);

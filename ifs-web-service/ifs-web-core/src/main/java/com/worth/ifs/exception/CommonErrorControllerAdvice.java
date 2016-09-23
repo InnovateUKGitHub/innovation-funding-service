@@ -6,6 +6,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
@@ -13,7 +14,8 @@ import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Collections;
+
+import static java.util.Collections.emptyList;
 
 /**
  * This controller can handle all Exceptions, so the user should always gets a
@@ -50,9 +52,16 @@ public abstract class CommonErrorControllerAdvice extends BaseErrorControllerAdv
 
     @ResponseStatus(value= HttpStatus.FORBIDDEN)  // 403
     @ExceptionHandler(value = ForbiddenActionException.class)
-    public ModelAndView accessDeniedException(HttpServletRequest req, ForbiddenActionException e) {
+    public ModelAndView forbiddenActionException(HttpServletRequest req, ForbiddenActionException e) {
         LOG.debug("ErrorController  actionNotAllowed", e);
         return createErrorModelAndViewWithStatusAndView(e, req, e.getArguments(), HttpStatus.FORBIDDEN, "forbidden");
+    }
+
+    @ResponseStatus(value= HttpStatus.FORBIDDEN)  // 403
+    @ExceptionHandler(value = AccessDeniedException.class)
+    public ModelAndView accessDeniedException(HttpServletRequest req, AccessDeniedException e) {
+        LOG.debug("ErrorController  actionNotAllowed", e);
+        return createErrorModelAndViewWithStatusAndView(e, req, emptyList(), HttpStatus.FORBIDDEN, "forbidden");
     }
 
     @ResponseStatus(value= HttpStatus.NOT_FOUND)  // 404
@@ -82,7 +91,7 @@ public abstract class CommonErrorControllerAdvice extends BaseErrorControllerAdv
         LOG.debug("ErrorController payloadTooLarge", e );
         // TODO: Check if we can include more information by checking root cause as follows:
         // if(e.getRootCause() != null && e.getRootCause() instanceof FileUploadBase.FileSizeLimitExceededException)
-        return createErrorModelAndViewWithStatusAndView(e, req, Collections.emptyList(), HttpStatus.PAYLOAD_TOO_LARGE, "413");
+        return createErrorModelAndViewWithStatusAndView(e, req, emptyList(), HttpStatus.PAYLOAD_TOO_LARGE, "413");
     }
 
     @ResponseStatus(value= HttpStatus.UNSUPPORTED_MEDIA_TYPE)  // 415
@@ -139,7 +148,7 @@ public abstract class CommonErrorControllerAdvice extends BaseErrorControllerAdv
     @ExceptionHandler(value = {GeneralUnexpectedErrorException.class, Exception.class})
     public ModelAndView defaultErrorHandler(HttpServletRequest req, Exception e) {
         LOG.debug("ErrorController  defaultErrorHandler", e);
-        return createErrorModelAndViewWithStatus(e, req, Collections.emptyList(), HttpStatus.INTERNAL_SERVER_ERROR);
+        return createErrorModelAndViewWithStatus(e, req, emptyList(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ResponseStatus(value= HttpStatus.FORBIDDEN)  // 403

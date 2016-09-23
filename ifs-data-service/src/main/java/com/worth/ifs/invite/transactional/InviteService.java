@@ -2,10 +2,10 @@ package com.worth.ifs.invite.transactional;
 
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.invite.domain.ApplicationInvite;
-import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.ApplicationInviteResource;
+import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResultsResource;
-import com.worth.ifs.security.SecuredBySpring;
+import com.worth.ifs.commons.security.SecuredBySpring;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;
@@ -60,10 +60,12 @@ public interface InviteService {
             additionalComments = "The hash should be unguessable so the only way to successfully call this method would be to have been given the hash in the first place")
     ServiceResult<Boolean> checkUserExistingByInviteHash(@P("hash") String hash);
 
-
     @PreAuthorize("hasAuthority('system_registrar')")
     @SecuredBySpring(value = "GET_USER_ON_HASH",
             description = "The System Registration user can see if there is a user for a given hash",
             additionalComments = "The hash should be unguessable so the only way to successfully call this method would be to have been given the hash in the first place")
     ServiceResult<UserResource> getUserByInviteHash(@P("hash") String hash);
+
+    @PreAuthorize("hasPermission(#applicationInviteId, 'com.worth.ifs.invite.resource.ApplicationInviteResource', 'DELETE')")
+    ServiceResult<Void> removeApplicationInvite(Long applicationInviteId);
 }
