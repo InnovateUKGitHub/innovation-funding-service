@@ -32,7 +32,6 @@
             <div th:include="fragments/modals :: close-button" th:remove="tag"/>
             <h2 th:text="${messageTitle}" class="heading-medium no-margin"></h2>
             <p th:text="${message}"></p>
-            <input id="agree-terms" name="agreeTerms" type="hidden" value="yes"/>
             <div>
                 <input type="submit" tabindex="0" class="button large" th:value="${submitText}"/>
                 <button type="button" tabindex="1" class="js-close button buttonlink large"
