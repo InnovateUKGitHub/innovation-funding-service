@@ -12,7 +12,7 @@ Documentation     INFUND-262: As a (lead) applicant, I want to see which fields 
 ...               INFUND-3288: Assigning questions more than once leads to an internal server error
 Suite Teardown    TestTeardown User closes the browser
 Test Teardown
-Force Tags        Applicant    Collaboration
+Force Tags        Applicant
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot

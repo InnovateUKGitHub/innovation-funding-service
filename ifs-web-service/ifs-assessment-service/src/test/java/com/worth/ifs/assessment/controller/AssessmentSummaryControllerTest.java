@@ -292,7 +292,7 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
                 .andExpect(model().attributeExists("form"))
                 .andExpect(model().attributeExists("model"))
                 .andExpect(model().hasErrors())
-                .andExpect(model().attributeHasFieldErrors("form"))
+                .andExpect(model().attributeHasFieldErrors("form", "fundingConfirmation"))
                 .andExpect(view().name("assessment/application-summary"))
                 .andReturn();
 
@@ -386,8 +386,8 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
     @Test
     public void save_exceedsCharacterSizeLimit() throws Exception {
         Boolean fundingConfirmation = TRUE;
-        String feedback = RandomStringUtils.random(256);
-        String comment = RandomStringUtils.random(256);
+        String feedback = RandomStringUtils.random(5001);
+        String comment = RandomStringUtils.random(5001);
 
         MvcResult result = mockMvc.perform(post("/{assessmentId}/summary", assessmentId)
                 .contentType(APPLICATION_FORM_URLENCODED)
@@ -398,7 +398,8 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
                 .andExpect(model().attributeExists("form"))
                 .andExpect(model().attributeExists("model"))
                 .andExpect(model().hasErrors())
-                .andExpect(model().attributeHasFieldErrors("form"))
+                .andExpect(model().attributeHasFieldErrors("form", "feedback"))
+                .andExpect(model().attributeHasFieldErrors("form", "comment"))
                 .andExpect(view().name("assessment/application-summary"))
                 .andReturn();
 
@@ -416,9 +417,9 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
         assertTrue(bindingResult.hasFieldErrors("feedback"));
         assertTrue(bindingResult.hasFieldErrors("comment"));
         assertEquals("This field cannot contain more than {1} characters", bindingResult.getFieldError("feedback").getDefaultMessage());
-        assertEquals(255, bindingResult.getFieldError("feedback").getArguments()[1]);
+        assertEquals(5000, bindingResult.getFieldError("feedback").getArguments()[1]);
         assertEquals("This field cannot contain more than {1} characters", bindingResult.getFieldError("comment").getDefaultMessage());
-        assertEquals(255, bindingResult.getFieldError("comment").getArguments()[1]);
+        assertEquals(5000, bindingResult.getFieldError("comment").getArguments()[1]);
 
         verify(assessmentService).getById(assessmentId);
         verifyNoMoreInteractions(assessmentService);
@@ -432,8 +433,8 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
 
         when(assessmentService.recommend(assessmentId, fundingConfirmation, feedback, comment))
                 .thenReturn(serviceFailure(asList(
-                        fieldError("feedback", feedback, "validation.field.max.word.count", 100),
-                        fieldError("comment", comment, "validation.field.max.word.count", 100)))
+                        fieldError("feedback", feedback, "validation.field.max.word.count", "", 100),
+                        fieldError("comment", comment, "validation.field.max.word.count", "", 100)))
                 );
 
         MvcResult result = mockMvc.perform(post("/{assessmentId}/summary", assessmentId)
@@ -445,7 +446,8 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
                 .andExpect(model().attributeExists("form"))
                 .andExpect(model().attributeExists("model"))
                 .andExpect(model().hasErrors())
-                .andExpect(model().attributeHasFieldErrors("form"))
+                .andExpect(model().attributeHasFieldErrors("form", "feedback"))
+                .andExpect(model().attributeHasFieldErrors("form", "comment"))
                 .andExpect(view().name("assessment/application-summary"))
                 .andReturn();
 
@@ -463,9 +465,9 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
         assertTrue(bindingResult.hasFieldErrors("feedback"));
         assertTrue(bindingResult.hasFieldErrors("comment"));
         assertEquals("validation.field.max.word.count", bindingResult.getFieldError("feedback").getCode());
-        assertEquals("100", bindingResult.getFieldError("feedback").getArguments()[0]);
+        assertEquals("100", bindingResult.getFieldError("feedback").getArguments()[1]);
         assertEquals("validation.field.max.word.count", bindingResult.getFieldError("comment").getCode());
-        assertEquals("100", bindingResult.getFieldError("comment").getArguments()[0]);
+        assertEquals("100", bindingResult.getFieldError("comment").getArguments()[1]);
 
         verify(assessmentService).getById(assessmentId);
         verifyNoMoreInteractions(assessmentService);

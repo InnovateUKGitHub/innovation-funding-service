@@ -163,7 +163,6 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
     @Test
     public void markAsCompleteSpendProfileWhenSpendHigherThanEligible() throws Exception {
 
-        Long projectId = 1L;
         Long organisationId = 1L;
 
         ProjectResource projectResource = newProjectResource()
@@ -178,13 +177,13 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         when(projectFinanceService.getSpendProfileTable(projectResource.getId(), organisationId)).thenReturn(table);
 
-        when(projectFinanceService.markSpendProfile(projectId, organisationId, true)).thenReturn(serviceFailure(SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE));
+        when(projectFinanceService.markSpendProfile(projectResource.getId(), organisationId, true)).thenReturn(serviceFailure(SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE));
 
         ProjectSpendProfileViewModel expectedViewModel = buildExpectedProjectSpendProfileViewModel(organisationId, projectResource, table);
 
         expectedViewModel.setObjectErrors(Collections.singletonList(new ObjectError(SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE.getErrorKey(), "Cannot mark as complete, because totals more than eligible")));
 
-        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/complete", projectId, organisationId)
+        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/complete", projectResource.getId(), organisationId)
         )
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", expectedViewModel))
@@ -208,8 +207,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
     @Test
     public void editSpendProfileSuccess() throws Exception {
 
-        Long projectId = 1L;
-        Long organisationId = 1L;
+        Long organisationId = 123L;
 
         ProjectResource projectResource = newProjectResource()
                 .withName("projectName1")
@@ -228,7 +226,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         SpendProfileForm expectedForm = new SpendProfileForm();
         expectedForm.setTable(table);
 
-        mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/edit", projectId, organisationId)
+        mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/edit", projectResource.getId(), organisationId)
         )
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", expectedViewModel))

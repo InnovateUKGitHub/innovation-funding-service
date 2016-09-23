@@ -9,7 +9,7 @@ Documentation     INFUND-3780: As an Assessor I want the system to autosave my w
 ...
 ...               INFUND-3394 Acceptance Test: Assessor should be able to view the full application and finance summaries for assessment
 ...
-...               INFUND-3859: As an Assessor I want to see how many words I can enter as feedback so that I know how much I can write.
+...               INFUND-3859: As an Assessor I want to see how many words I can enter as feedback so that I know how much I can write. \
 Suite Setup       guest user log-in    paul.plum@gmail.com    Passw0rd
 Suite Teardown    the user closes the browser
 Force Tags        Assessor

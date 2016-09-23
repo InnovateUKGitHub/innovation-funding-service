@@ -3,10 +3,12 @@
 <head>
     <div th:include="fragments/layout :: head" th:with="pageTitle='Application Details'" th:remove="tag"></div>
 </head>
-<body th:with="context='applicant'" class="app-invite">
+<body th:with="context='applicant'" class="app-invite-display">
 
 <div th:include="fragments/layout :: body-start" th:remove="tag"></div>
 <div th:include="fragments/layout :: global-header" th:remove="tag"></div>
+<div th:if="${userIsLead}" th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
+<div th:if="${userIsLead}" th:include="fragments/modals :: modal-submit-remove-collaborator" th:remove="tag"/>
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
@@ -56,15 +58,18 @@
             <li th:each="invite, inviteStats: ${organisationInviteResource.inviteResources}">
                 <a th:if="${invite.nameConfirmed == null}" th:href="${'mailto:'+invite.email}" th:text="${invite.name}" />
                 <a th:unless="${invite.nameConfirmed == null}" th:href="${'mailto:'+invite.email}" th:text="${invite.nameConfirmed}" />
+                <th:block th:if="${userIsLead}">
+                    - <a th:href="'/application/' + ${currentApplication.getId()} + '/contributors/remove/' + ${invite.id} + '/confirm'"
+                                   th:attr="data-invite-id=${invite.id}"
+                                   data-js-modal="modal-submit-remove-collaborator" class="buttonlink no-margin font-xsmall">Remove</a><br/>
+                </th:block>
                 <small th:if="${invite.status.name() ==  T(com.worth.ifs.invite.constant.InviteStatus).CREATED.name() || invite.status.name() == T(com.worth.ifs.invite.constant.InviteStatus).SENT.name()}">(pending)</small>
+
             </li>
         </ul>
     </div>
 
     <p><a th:href="'/application/'+${currentApplication.getId()}+'/contributors/invite'" class="button">Invite new contributors</a></p>
-
-
-
     <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>
 </main>
 

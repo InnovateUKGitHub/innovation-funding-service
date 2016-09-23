@@ -30,11 +30,10 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...
 ...               INFUND-4581 As a Competitions team member I want the service to automatically save my edits while I work through Funding Information section in Competition Setup the so that I do not lose my changes
 ...
-...               INFUND-4725
-...               As a Competitions team member I want to be guided to complete all mandatory information in the Initial Details section so that I can access the correct details in the other sections in Competition Setup.
+...               INFUND-4725 As a Competitions team member I want to be guided to complete all mandatory information in the Initial Details section so that I can access the correct details in the other sections in Competition Setup. \ INFUND-4582 As a Competitions team member I want the service to automatically save my edits while I work through Eligibility section in Competition Setup the so that I do not lose my changes
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        CompAdmin    CompSetup
+Force Tags        CompAdmin
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -229,6 +228,8 @@ Funding information server-side validations
 Funding information client-side validations
     [Documentation]    INFUND-2985
     [Tags]    HappyPath
+    When the user clicks the button/link    jQuery=.button:contains("Generate code")
+    Then the user should not see the error any more    Please generate a competition code
     When the user enters text to a text field    id=funders0.funder    FunderName
     Then the user should not see the error any more    Please enter a funder name
     And the user enters text to a text field    id=0-funderBudget    20000
@@ -238,9 +239,7 @@ Funding information client-side validations
     And the user enters text to a text field    id=budgetCode    2004
     Then the user should not see the error any more    Please enter a budget code
     And the user enters text to a text field    id=activityCode    4242
-    Then the user should not see the error any more    Please enter an activity code
-    When the user clicks the button/link    jQuery=.button:contains("Generate code")
-    Then The user should not see the text in the page    Please generate a competition code
+    Then The user should not see the error text in the page    Please enter an activity code
 
 Funding information Autosave
     [Documentation]    INFUND-4581
@@ -328,17 +327,25 @@ Eligibility client-side validations
     When the user selects the checkbox    id=research-categories-33
     And the user selects the checkbox    id=research-categories-34
     And the user selects the checkbox    id=research-categories-35
-    And the user moves focus to a different part of the page
+    And the user moves focus to a different part of the page and waits for autosave
     When the user selects the radio button    singleOrCollaborative    single
     And the user selects the radio button    leadApplicantType    business
-    And the user selects the option from the drop-down menu    30%    name=researchParticipationAmountId
-    And the user moves focus to a different part of the page
+    And the user moves focus to a different part of the page and waits for autosave
+    And the user selects the option from the drop-down menu    50%    name=researchParticipationAmountId
+    And the user moves focus to a different part of the page and waits for autosave
     Then the user should not see the text in the page    Please select a collaboration level
     And the user should not see the text in the page    Please select a lead applicant type
     And the user should not see the text in the page    Please select at least one research category
     And the user enters text to a text field    id=streamName    Test stream name
-    And the user moves focus to a different part of the page
+    And the user moves focus to a different part of the page and waits for autosave
     And the user should not see the text in the page    A stream name is required
+
+Eligibility Autosave
+    [Documentation]    INFUND-4582
+    [Tags]
+    When the user clicks the button/link    link=Competition set up
+    and the user clicks the button/link    link=Eligibility
+    Then the user should see the correct details in the eligibility form
 
 Eligibility can be marked as done then edit again
     [Documentation]    INFUND-3051
@@ -351,7 +358,7 @@ Eligibility can be marked as done then edit again
     Then the user should see the text in the page    Yes
     And the user should see the text in the page    Single
     And the user should see the text in the page    Business
-    And the user should see the text in the page    30%
+    And the user should see the text in the page    50%
     And the user should see the text in the page    Test stream name
     And the user should see the text in the page    Technical feasibility, Industrial research, Experimental development
     And The user should not see the element    id=streamName
@@ -496,8 +503,9 @@ User should be able to Save the competition as open
     # The above line checks that the section 'Ready to Open' there is a competition named Test competition
 
 *** Keywords ***
-the user moves focus to a different part of the page
+the user moves focus to a different part of the page and waits for autosave
     focus    link=Sign out
+    Wait For Autosave
 
 the user should not see the error any more
     [Arguments]    ${ERROR_TEXT}
@@ -691,3 +699,20 @@ the user should see the correct details in the funding information form
     Should Be Equal As Strings    ${input_value}    2004
     ${input_value} =    Get Value    id=activityCode
     Should Be Equal As Strings    ${input_value}    4242
+
+the user should see the correct details in the eligibility form
+    Radio Button Should Be Set To    multipleStream    yes
+    ${input_value} =    Get Value    id=streamName
+    Should Be Equal    ${input_value}    Test stream name
+    Radio Button Should Be Set To    singleOrCollaborative    single
+    Checkbox Should Be Selected    id=research-categories-33
+    Checkbox Should Be Selected    id=research-categories-34
+    Checkbox Should Be Selected    id=research-categories-35
+    Radio Button Should Be Set To    leadApplicantType    business
+    Page Should Contain    50%
+
+The user should not see the error text in the page
+    [Arguments]    ${ERROR_TEXT}
+    run keyword and ignore error    mouse out    css=input
+    Focus    jQuery=.button:contains("Done")
+    Wait Until Page Does Not Contain    ${ERROR_TEXT}

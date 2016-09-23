@@ -7,11 +7,15 @@ import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestErrorResponse;
 import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
 import org.junit.Test;
+import org.springframework.http.MediaType;
+
+import java.util.List;
 
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static com.worth.ifs.assessment.builder.ProcessOutcomeResourceBuilder.newProcessOutcomeResource;
 import static com.worth.ifs.commons.error.CommonFailureKeys.ASSESSMENT_RECOMMENDATION_FAILED;
 import static com.worth.ifs.commons.error.CommonFailureKeys.ASSESSMENT_REJECTION_FAILED;
+import static com.worth.ifs.commons.error.Error.fieldError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.JsonMappingUtil.toJson;
@@ -45,6 +49,23 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
                 .andExpect(content().string(objectMapper.writeValueAsString(expected)));
 
         verify(assessmentServiceMock, only()).findById(assessmentId);
+    }
+
+    @Test
+    public void findByUserAndCompetition() throws Exception {
+        List<AssessmentResource> expected = newAssessmentResource()
+                .build(2);
+
+        Long userId = 1L;
+        Long competitionId = 2L;
+
+        when(assessmentServiceMock.findByUserAndCompetition(userId, competitionId)).thenReturn(serviceSuccess(expected));
+
+        mockMvc.perform(get("/assessment/user/{userId}/competition/{competitionId}", userId, competitionId))
+                .andExpect(status().isOk())
+                .andExpect(content().string(objectMapper.writeValueAsString(expected)));
+
+        verify(assessmentServiceMock, only()).findByUserAndCompetition(userId, competitionId);
     }
 
     @Test
@@ -94,6 +115,22 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
                 .andExpect(status().isOk());
 
         verify(assessmentServiceMock, only()).rejectInvitation(assessmentId, processOutcome);
+    }
+
+    @Test
+    public void rejectInvitation_exceedsWordLimit() throws Exception {
+        Long assessmentId = 1L;
+
+        ProcessOutcomeResource processOutcome = newProcessOutcomeResource()
+                .build();
+
+        when(assessmentServiceMock.rejectInvitation(assessmentId, processOutcome)).thenReturn(serviceFailure(fieldError("comment", "comment", "validation.field.max.word.count", "", 100)));
+
+        mockMvc.perform(put("/assessment/{id}/rejectInvitation", assessmentId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(processOutcome)))
+                .andExpect(status().isNotAcceptable())
+                .andExpect(content().json(toJson(new RestErrorResponse(fieldError("comment", "comment", "validation.field.max.word.count", "", "100")))));
     }
 
     @Test
