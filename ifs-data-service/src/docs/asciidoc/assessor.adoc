@@ -1,0 +1,11 @@
+=== Register assessor by hash
+==== Request
+include::{snippets}/assessor/register-assessor-by-hash/http-request.adoc[]
+include::{snippets}/assessor/register-assessor-by-hash/path-parameters.adoc[]
+include::{snippets}/assessor/register-assessor-by-hash/request-fields.adoc[]
+
+==== Response
+include::{snippets}/assessor/register-assessor-by-hash/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/assessor/register-assessor-by-hash/curl-request.adoc[]

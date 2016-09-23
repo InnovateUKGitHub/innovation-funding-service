@@ -55,13 +55,14 @@ public class CompetitionTypeControllerIntegrationTest extends BaseControllerInte
         List<CompetitionTypeResource> competitionTypes = competitionTypesResult.getSuccessObject();
 
         // Check if all the type are here.
-        assertEquals(4L, (long) competitionTypes.size());
+        assertEquals(5L, (long) competitionTypes.size());
 
         // Test ordering.
         assertEquals("Programme", competitionTypes.get(0).getName());
         assertEquals("Additive Manufacturing", competitionTypes.get(1).getName());
         assertEquals("SBRI", competitionTypes.get(2).getName());
         assertEquals("Special", competitionTypes.get(3).getName());
+        assertEquals("Sector", competitionTypes.get(4).getName());
     }
 
 }
