@@ -7,7 +7,6 @@ import com.worth.ifs.competition.resource.CollaborationLevel;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.LeadApplicantType;
-import com.worth.ifs.competition.resource.ThreeStateType;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.form.EligibilityForm;
 import com.worth.ifs.competitionsetup.utils.CompetitionUtils;
@@ -56,7 +55,7 @@ public class EligibilitySectionSaver extends AbstractSectionSaver implements Com
 			competition.setStreamName(null);
 		}
 
-		competition.setResubmission(ThreeStateType.fromBooleanName(eligibilityForm.getResubmission()));
+		competition.setResubmission(CompetitionUtils.textToBoolean(eligibilityForm.getResubmission()));
 
 		CollaborationLevel level = CollaborationLevel.fromCode(eligibilityForm.getSingleOrCollaborative());
 		competition.setCollaborationLevel(level);
@@ -104,7 +103,7 @@ public class EligibilitySectionSaver extends AbstractSectionSaver implements Com
 				}
 				break;
 			case "resubmission":
-				competitionResource.setResubmission(ThreeStateType.fromBooleanName(value));
+				competitionResource.setResubmission(CompetitionUtils.textToBoolean(value));
 				break;
 			default:
 				return asList(new Error("Field not found", HttpStatus.BAD_REQUEST));

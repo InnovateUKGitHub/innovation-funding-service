@@ -55,7 +55,7 @@ public class CompetitionResource {
     private String budgetCode;
     private String code;
 
-    private ThreeStateType resubmission;
+    private Boolean resubmission;
     private Boolean multiStream;
     private String streamName;
     private CollaborationLevel collaborationLevel;
@@ -394,11 +394,11 @@ public class CompetitionResource {
         this.multiStream = multiStream;
     }
 
-    public ThreeStateType getResubmission() {
+    public Boolean getResubmission() {
         return resubmission;
     }
 
-    public void setResubmission(ThreeStateType resubmission) {
+    public void setResubmission(Boolean resubmission) {
         this.resubmission = resubmission;
     }
 

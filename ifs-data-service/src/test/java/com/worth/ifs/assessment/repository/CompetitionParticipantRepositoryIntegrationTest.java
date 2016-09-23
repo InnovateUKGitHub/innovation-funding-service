@@ -4,7 +4,6 @@ import com.worth.ifs.BaseRepositoryIntegrationTest;
 import com.worth.ifs.assessment.builder.CompetitionInviteBuilder;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.repository.CompetitionRepository;
-import com.worth.ifs.competition.resource.ThreeStateType;
 import com.worth.ifs.invite.domain.*;
 import com.worth.ifs.invite.repository.CompetitionParticipantRepository;
 import com.worth.ifs.invite.repository.RejectionReasonRepository;
@@ -13,9 +12,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Optional;
-
 import java.util.List;
+import java.util.Optional;
 
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.invite.constant.InviteStatus.OPENED;
@@ -41,7 +39,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
     @Before
     public void setup() {
-        competition = competitionRepository.save( newCompetition().withName("competition").withResubmission(ThreeStateType.UNSET).build()) ;
+        competition = competitionRepository.save( newCompetition().withName("competition").build()) ;
     }
 
     @Test

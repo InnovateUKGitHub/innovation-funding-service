@@ -33,7 +33,6 @@ public class EligibilityFormPopulatorTest {
 				.withMaxResearchRatio(30)
 				.withMultiStream(true)
 				.withStreamName("streamname")
-				.withResubmission(ThreeStateType.UNSET)
 				.withCollaborationLevel(CollaborationLevel.COLLABORATIVE)
 				.withLeadApplicantType(LeadApplicantType.BUSINESS)
 				.build();

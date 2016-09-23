@@ -47,7 +47,7 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return with(competition -> competition.setResearchCategories(categories));
     }
 
-    public CompetitionResourceBuilder withResubmission(ThreeStateType resubmission) {
+    public CompetitionResourceBuilder withResubmission(Boolean resubmission) {
         return with(competition -> competition.setResubmission(resubmission));
     }
 
