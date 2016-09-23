@@ -1,6 +1,6 @@
 package com.worth.ifs.application.controller;
 
-import com.worth.ifs.BaseIntegrationTest;
+import com.worth.ifs.commons.BaseIntegrationTest;
 import org.flywaydb.core.Flyway;
 import org.junit.After;
 import org.junit.Test;

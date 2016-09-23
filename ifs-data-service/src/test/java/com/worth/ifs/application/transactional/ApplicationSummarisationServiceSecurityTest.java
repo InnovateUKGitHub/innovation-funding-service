@@ -22,7 +22,7 @@ public class ApplicationSummarisationServiceSecurityTest extends BaseServiceSecu
 
 		RoleResource compAdminRole = newRoleResource().withType(COMP_ADMIN).build();
 		setLoggedInUser(newUserResource().withRolesGlobal(singletonList(compAdminRole)).build());
-		service.getTotalProjectCost(null);
+		classUnderTest.getTotalProjectCost(null);
 	}
 
 	@Test
@@ -30,7 +30,7 @@ public class ApplicationSummarisationServiceSecurityTest extends BaseServiceSecu
 
 		setLoggedInUser(null);
 		try {
-			service.getTotalProjectCost(null);
+			classUnderTest.getTotalProjectCost(null);
 			fail("Should not have been able to get total project cost without first logging in");
 		} catch (AccessDeniedException e) {
 			// expected behaviour
@@ -41,7 +41,7 @@ public class ApplicationSummarisationServiceSecurityTest extends BaseServiceSecu
 	public void testTotalCostDeniedIfNoGlobalRolesAtAll() {
 
 		try {
-			service.getTotalProjectCost(null);
+			classUnderTest.getTotalProjectCost(null);
 			fail("Should not have been able to get total project cost without the global comp admin role");
 		} catch (AccessDeniedException e) {
 			// expected behaviour
@@ -53,7 +53,7 @@ public class ApplicationSummarisationServiceSecurityTest extends BaseServiceSecu
 
 		RoleResource compAdminRole = newRoleResource().withType(COMP_ADMIN).build();
 		setLoggedInUser(newUserResource().withRolesGlobal(singletonList(compAdminRole)).build());
-		service.getFundingSought(null);
+		classUnderTest.getFundingSought(null);
 	}
 
 	@Test
@@ -61,7 +61,7 @@ public class ApplicationSummarisationServiceSecurityTest extends BaseServiceSecu
 
 		setLoggedInUser(null);
 		try {
-			service.getFundingSought(null);
+			classUnderTest.getFundingSought(null);
 			fail("Should not have been able to get funding sought without first logging in");
 		} catch (AccessDeniedException e) {
 			// expected behaviour
@@ -72,7 +72,7 @@ public class ApplicationSummarisationServiceSecurityTest extends BaseServiceSecu
 	public void testFundingSoughtDeniedIfNoGlobalRolesAtAll() {
 
 		try {
-			service.getFundingSought(null);
+			classUnderTest.getFundingSought(null);
 			fail("Should not have been able to get funding sought without the global comp admin role");
 		} catch (AccessDeniedException e) {
 			// expected behaviour
@@ -80,7 +80,7 @@ public class ApplicationSummarisationServiceSecurityTest extends BaseServiceSecu
 	}
 
 	@Override
-	protected Class<? extends ApplicationSummarisationService> getServiceClass() {
+	protected Class<? extends ApplicationSummarisationService> getClassUnderTest() {
 		return TestApplicationSummarisationService.class;
 	}
 

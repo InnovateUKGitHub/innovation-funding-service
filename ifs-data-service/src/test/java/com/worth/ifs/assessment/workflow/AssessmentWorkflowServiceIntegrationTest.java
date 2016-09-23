@@ -1,6 +1,6 @@
 package com.worth.ifs.assessment.workflow;
 
-import com.worth.ifs.BaseIntegrationTest;
+import com.worth.ifs.commons.BaseIntegrationTest;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.assessment.resource.AssessmentOutcomes;

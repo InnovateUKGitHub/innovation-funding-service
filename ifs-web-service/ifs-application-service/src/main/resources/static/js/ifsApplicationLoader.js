@@ -38,7 +38,10 @@ IFS.application.loadOrder = {
     init : function(){ IFS.application.application_summary.init(); }
   },
   'app-invite': {
-    init : function(){ IFS.application.invites.init(); }
+      init : function(){ IFS.application.invites.init(); }
+    },
+  'app-invite-display': {
+    init : function(){ IFS.application.invite_display.init(); }
   },
   'competition-management': {
     init : function(){ IFS.application.competition_management.init(); }

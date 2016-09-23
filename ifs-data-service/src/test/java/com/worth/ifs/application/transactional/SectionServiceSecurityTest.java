@@ -47,7 +47,7 @@ public class SectionServiceSecurityTest extends BaseServiceSecurityTest<SectionS
         Long markedAsCompleteById = 3L;
         when(applicationLookupStrategy.getApplicationResource(applicationId)).thenReturn(newApplicationResource().build());
         assertAccessDenied(
-                () -> service.markSectionAsComplete(sectionId, applicationId, markedAsCompleteById),
+                () -> classUnderTest.markSectionAsComplete(sectionId, applicationId, markedAsCompleteById),
                 () -> verify(sectionPermissionRules).onlyLeadApplicantCanMarkSectionAsComplete(isA(ApplicationResource.class), isA(UserResource.class))
         );
     }
@@ -59,19 +59,19 @@ public class SectionServiceSecurityTest extends BaseServiceSecurityTest<SectionS
         Long markedAsCompleteById = 3L;
         when(applicationLookupStrategy.getApplicationResource(applicationId)).thenReturn(newApplicationResource().build());
         assertAccessDenied(
-                () -> service.markSectionAsInComplete(sectionId, applicationId, markedAsCompleteById),
+                () -> classUnderTest.markSectionAsInComplete(sectionId, applicationId, markedAsCompleteById),
                 () -> verify(sectionPermissionRules).onlyLeadApplicantCanMarkSectionAsInComplete(isA(ApplicationResource.class), isA(UserResource.class))
         );
     }
 
     @Test
     public void testPermissionForGetByCompetitionIdVisibleForAssessment() {
-        service.getByCompetitionIdVisibleForAssessment(1L);
+        classUnderTest.getByCompetitionIdVisibleForAssessment(1L);
         verify(sectionPermissionRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).userCanReadSection(isA(SectionResource.class), isA(UserResource.class));
     }
 
     @Override
-    protected Class<? extends SectionService> getServiceClass() {
+    protected Class<? extends SectionService> getClassUnderTest() {
         return TestSectionService.class;
     }
 

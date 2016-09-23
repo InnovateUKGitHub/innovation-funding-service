@@ -4,8 +4,8 @@ import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.mapper.AssessmentMapper;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.assessment.resource.AssessmentResource;
-import com.worth.ifs.security.PermissionEntityLookupStrategies;
-import com.worth.ifs.security.PermissionEntityLookupStrategy;
+import com.worth.ifs.commons.security.PermissionEntityLookupStrategies;
+import com.worth.ifs.commons.security.PermissionEntityLookupStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

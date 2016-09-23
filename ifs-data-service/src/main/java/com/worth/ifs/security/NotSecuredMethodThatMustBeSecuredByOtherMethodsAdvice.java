@@ -1,6 +1,7 @@
 package com.worth.ifs.security;
 
 import com.worth.ifs.commons.interceptor.AbstractIfsMethodsAdvice;
+import com.worth.ifs.commons.security.NotSecured;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;

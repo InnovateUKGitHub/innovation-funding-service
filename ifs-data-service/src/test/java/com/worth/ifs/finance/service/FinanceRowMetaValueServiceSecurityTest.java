@@ -33,14 +33,14 @@ public class FinanceRowMetaValueServiceSecurityTest extends BaseServiceSecurityT
     public void testFindApplicationFinanceByApplicationIdAndOrganisation() {
         final FinanceRowMetaValueId financeRowMetaValueId = new FinanceRowMetaValueId();
         assertAccessDenied(
-                () -> service.findOne(financeRowMetaValueId),
+                () -> classUnderTest.findOne(financeRowMetaValueId),
                 () -> costPermissionsRules.consortiumCanReadACostValueForTheirApplicationAndOrganisation(isA(FinanceRowMetaValueResource.class), isA(UserResource.class))
         );
     }
 
 
     @Override
-    protected Class<TestFinanceRowMetaValueService> getServiceClass() {
+    protected Class<TestFinanceRowMetaValueService> getClassUnderTest() {
         return TestFinanceRowMetaValueService.class;
     }
 
