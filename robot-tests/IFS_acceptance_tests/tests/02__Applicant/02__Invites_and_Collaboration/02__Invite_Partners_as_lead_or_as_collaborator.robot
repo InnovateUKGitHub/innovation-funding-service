@@ -277,4 +277,4 @@ log into smoke test application
     the user clicks the button/link    link=view team members and add collaborators
 
 The Lead organisation should show only one time
-    Xpath Should Match X Times    //div/h2    2
+    Element Should not Contain    css=div:nth-child(7)    Steve Smith

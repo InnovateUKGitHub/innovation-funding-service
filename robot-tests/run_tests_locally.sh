@@ -167,9 +167,9 @@ function runTests {
 
     if [ "$localMailSendingImplemented" ]
     then
-        pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v BROWSER:$browser -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:$postcodeLookupImplemented -v UPLOAD_FOLDER:$uploadFileDir -v DOWNLOAD_FOLDER:download_files -v VIRTUAL_DISPLAY:$useXvfb -v test_mailbox_one:$testMailboxOne -v test_mailbox_two:$testMailboxTwo -v test_mailbox_one_password:$testMailboxOnePassword -v test_mailbox_two_password:$testMailboxTwoPassword --exclude Docker --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal --name IFS $testDirectory
+        pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v BROWSER:$browser -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:$postcodeLookupImplemented -v UPLOAD_FOLDER:$uploadFileDir -v DOWNLOAD_FOLDER:download_files -v VIRTUAL_DISPLAY:$useXvfb -v test_mailbox_one:$testMailboxOne -v test_mailbox_two:$testMailboxTwo -v test_mailbox_one_password:$testMailboxOnePassword -v test_mailbox_two_password:$testMailboxTwoPassword -v database_user:$mysqlUser -v database_password:$mysqlPassword -v database_host:localhost --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal --name IFS $testDirectory
     else
-        pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v BROWSER:$browser -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:$postcodeLookupImplemented -v UPLOAD_FOLDER:$uploadFileDir -v DOWNLOAD_FOLDER:download_files -v VIRTUAL_DISPLAY:$useXvfb --exclude Docker --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal --exclude Email --name IFS $testDirectory
+        pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v BROWSER:$browser -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:$postcodeLookupImplemented -v UPLOAD_FOLDER:$uploadFileDir -v DOWNLOAD_FOLDER:download_files -v VIRTUAL_DISPLAY:$useXvfb -v database_user:$mysqlUser -v database_password:$mysqlPassword -v database_host:localhost --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal --exclude Email --name IFS $testDirectory
     fi
 }
 
@@ -180,23 +180,23 @@ function runHappyPathTests {
 
     if [ "$localMailSendingImplemented" ]
     then
-        pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v BROWSER:$browser -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:$postcodeLookupImplemented -v UPLOAD_FOLDER:$uploadFileDir -v DOWNLOAD_FOLDER:download_files -v VIRTUAL_DISPLAY:$useXvfb -v test_mailbox_one:$testMailboxOne -v test_mailbox_two:$testMailboxTwo -v test_mailbox_one_password:$testMailboxOnePassword -v test_mailbox_two_password:$testMailboxTwoPassword --include HappyPath --exclude Docker --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal --name IFS $testDirectory
+        pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v BROWSER:$browser -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:$postcodeLookupImplemented -v UPLOAD_FOLDER:$uploadFileDir -v DOWNLOAD_FOLDER:download_files -v VIRTUAL_DISPLAY:$useXvfb -v test_mailbox_one:$testMailboxOne -v test_mailbox_two:$testMailboxTwo -v test_mailbox_one_password:$testMailboxOnePassword -v test_mailbox_two_password:$testMailboxTwoPassword -v database_user:$mysqlUser -v database_password:$mysqlPassword -v database_host:localhost --include HappyPath --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal --name IFS $testDirectory
     else
-        pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v BROWSER:$browser -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:$postcodeLookupImplemented -v UPLOAD_FOLDER:$uploadFileDir -v DOWNLOAD_FOLDER:download_files -v VIRTUAL_DISPLAY:$useXvfb --include HappyPath --exclude Docker --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal --exclude Email --name IFS $testDirectory
+        pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v BROWSER:$browser -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:$postcodeLookupImplemented -v UPLOAD_FOLDER:$uploadFileDir -v DOWNLOAD_FOLDER:download_files -v VIRTUAL_DISPLAY:$useXvfb -v database_user:$mysqlUser -v database_password:$mysqlPassword -v database_host:localhost --include HappyPath --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal --exclude Email --name IFS $testDirectory
     fi
 }
 
 function runTestsRemotely {
     echo "***********RUNNING AGAINST THE IFS DEV SERVER...**********"
     cd ${scriptDir}
-    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v BROWSER:$browser -v SERVER_AUTH:ifs:Fund1ng -v SERVER_BASE:ifs.dev.innovateuk.org -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:'YES' -v LOCAL_MAIL_SENDING_IMPLEMENTED:'YES' -v UPLOAD_FOLDER:$uploadFileDir -v RUNNING_ON_DEV:'YES' --exclude Docker --exclude Failing --exclude Pending --exclude FailingForDev --name IFS $testDirectory
+    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v BROWSER:$browser -v SERVER_AUTH:ifs:Fund1ng -v SERVER_BASE:ifs.dev.innovateuk.org -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:'YES' -v LOCAL_MAIL_SENDING_IMPLEMENTED:'YES' -v UPLOAD_FOLDER:$uploadFileDir -v RUNNING_ON_DEV:'YES' --exclude MySQL --exclude Failing --exclude Pending --exclude FailingForDev --name IFS $testDirectory
 }
 
 
 function runSmokeTests {
     echo "***************RUNNING SMOKE TEST. PLEASE WATCH YOUR SCREEN!*****************"
     cd ${scriptDir}
-    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v BROWSER:$browser -v SERVER_BASE:$smokeServer -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:$postcodeLookupImplemented -v UPLOAD_FOLDER:$uploadFileDir -v DOWNLOAD_FOLDER:download_files -v VIRTUAL_DISPLAY:NO -v test_mailbox_one:$testMailboxOne -v test_mailbox_two:$testMailboxTwo -v test_mailbox_one_password:$testMailboxOnePassword -v test_mailbox_two_password:$testMailboxTwoPassword -v test_title:'IFS smoke test' -v application_name:'IFS smoke test' -v unique_email_number:$dateFormat -v smoke_test:1 -v submit_test_email:'${test_mailbox_one}+${unique_email_number}@gmail.com' --include SmokeTest --exclude Docker --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal --name IFS $testDirectory
+    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v BROWSER:$browser -v SERVER_BASE:$smokeServer -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:$postcodeLookupImplemented -v UPLOAD_FOLDER:$uploadFileDir -v DOWNLOAD_FOLDER:download_files -v VIRTUAL_DISPLAY:NO -v test_mailbox_one:$testMailboxOne -v test_mailbox_two:$testMailboxTwo -v test_mailbox_one_password:$testMailboxOnePassword -v test_mailbox_two_password:$testMailboxTwoPassword -v test_title:'IFS smoke test' -v application_name:'IFS smoke test' -v unique_email_number:$dateFormat -v smoke_test:1 -v submit_test_email:'${test_mailbox_one}+${unique_email_number}@gmail.com' --include SmokeTest --exclude MySQL --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal --name IFS $testDirectory
 }
 
 function runTestsAgainstDocker {

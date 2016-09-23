@@ -358,7 +358,7 @@ Eligibility can be marked as done then edit again
     Then the user should see the text in the page    Yes
     And the user should see the text in the page    Single
     And the user should see the text in the page    Business
-    And the user should see the text in the page    30%
+    And the user should see the text in the page    50%
     And the user should see the text in the page    Test stream name
     And the user should see the text in the page    Technical feasibility, Industrial research, Experimental development
     And The user should not see the element    id=streamName

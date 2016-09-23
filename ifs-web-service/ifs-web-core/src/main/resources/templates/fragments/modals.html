@@ -287,3 +287,28 @@
 
     </div>
 </div>
+
+<!-- Confirmation on removing collaborators -->
+<div th:fragment="modal-submit-remove-collaborator" th:if="${userIsLead}">
+    <div class="modal-submit-remove-collaborator" role="dialog" aria-hidden="true">
+        <div th:include="fragments/modals :: close-button" th:remove="tag"/>
+
+        <h2 class="heading-medium no-margin">Removing collaborator</h2>
+        <p>Are you sure you wish to remove this collaborator form this application.</p>
+        <p>This step cannot be undone.</p>
+        <hr/>
+        <div class="grid-row extra-margin">
+            <form method="post"
+                  th:action="@{/application/{appId}/contributors/remove(appId = ${currentApplication.getId()})}"
+                  th:object="${removeContributorForm}" id="submit-remove-collaborator-form">
+                <input type="hidden" value="" name="applicationInviteId"/>
+                <div class="column-half">
+                    <button type="button" class="js-close buttonlink large">Cancel</button>
+                </div>
+                <div class="column-half alignright-button">
+                    <button class="button large" name="publish" value="publish" type="submit">Remove</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
