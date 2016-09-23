@@ -32,8 +32,8 @@ public class SectionRepositoryIntegrationTest extends BaseRepositoryIntegrationT
 
     @Test
     public void test_findByCompetitionIdAndDisplayInAssessmentApplicationSummaryTrueOrderByPriorityAsc() throws Exception {
-        final Long competitionId = competitionRepository.save(newCompetition().withResubmission(ThreeStateType.UNSET).build()).getId();
-        final Long otherCompetitionId = competitionRepository.save(newCompetition().withResubmission(ThreeStateType.UNSET).build()).getId();
+        final Long competitionId = competitionRepository.save(newCompetition().withId(2L).withResubmission(ThreeStateType.UNSET).build()).getId();
+        final Long otherCompetitionId = competitionRepository.save(newCompetition().withId(3L).withResubmission(ThreeStateType.UNSET).build()).getId();
 
         List<Pair<Long, Boolean>> compIdVisibilityPairs = asListOfPairs(competitionId, TRUE, competitionId, TRUE, competitionId, FALSE, otherCompetitionId, TRUE, otherCompetitionId, TRUE, otherCompetitionId, FALSE);
         List<Section> saved = mapWithIndex(compIdVisibilityPairs, (index, compIdVisibilityPair) -> {
