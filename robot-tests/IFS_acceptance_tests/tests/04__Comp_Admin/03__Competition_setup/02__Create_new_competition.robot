@@ -272,7 +272,7 @@ Funding Information can be saved
 
 Funding Information can be edited
     [Documentation]    INFUND-3002
-    [Tags]    Pending
+    [Tags]
     #TODO neAnd The user should see the elemented to enable this And The user should see the elementtest when the INFUND-5111 is fixed
     When the user clicks the button/link    jQuery=.button:contains("Edit")
     And the user enters text to a text field    id=funders0.funder    testFunder
@@ -304,6 +304,7 @@ Eligibility page should contain the correct options
     And the user should see the element    jQuery=label:contains(Technical feasibility)
     And the user should see the element    jQuery=label:contains(Industrial research)
     And the user should see the element    jQuery=label:contains(Experimental development)
+    And the resubmition should not have a default selection
 
 Eligibility server-side validations
     [Documentation]    INFUND-2986
@@ -315,6 +316,7 @@ Eligibility server-side validations
     And the user should see the text in the page    Please select a collaboration level
     And the user should see the text in the page    Please select a lead applicant type
     And the user should see the text in the page    A stream name is required
+    And the user should see the text in the page    Please select a resubmission option
 
 Eligibility client-side validations
     [Documentation]    INFUND-2986
@@ -339,6 +341,8 @@ Eligibility client-side validations
     And the user enters text to a text field    id=streamName    Test stream name
     And the user moves focus to a different part of the page and waits for autosave
     And the user should not see the text in the page    A stream name is required
+    And the user selects the radio button    resubmission    no
+    And the user should not see the text in the page    Please select a resubmission option
 
 Eligibility Autosave
     [Documentation]    INFUND-4582
@@ -710,9 +714,13 @@ the user should see the correct details in the eligibility form
     Checkbox Should Be Selected    id=research-categories-35
     Radio Button Should Be Set To    leadApplicantType    business
     Page Should Contain    50%
+    Radio Button Should Be Set To    resubmission    no
 
 The user should not see the error text in the page
     [Arguments]    ${ERROR_TEXT}
     run keyword and ignore error    mouse out    css=input
     Focus    jQuery=.button:contains("Done")
     Wait Until Page Does Not Contain    ${ERROR_TEXT}
+
+And the resubmition should not have a default selection
+    Radio Button Should Not Be Selected    resubmission
