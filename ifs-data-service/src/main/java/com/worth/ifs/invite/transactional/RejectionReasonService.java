@@ -2,7 +2,7 @@ package com.worth.ifs.invite.transactional;
 
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.invite.resource.RejectionReasonResource;
-import com.worth.ifs.security.NotSecured;
+import com.worth.ifs.commons.security.NotSecured;
 
 import java.util.List;
 
