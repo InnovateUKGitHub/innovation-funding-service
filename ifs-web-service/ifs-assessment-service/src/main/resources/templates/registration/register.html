@@ -90,14 +90,12 @@
                               <span class="error-message" th:each="err : ${#fields.errors('gender')}" th:text="${err}"/>
                             </span>
                         </legend>
-                        <div class="form-group">
-                            <label class="block-label"
+                        <label class="block-label"
                                    th:each="gen : ${T(com.worth.ifs.user.resource.Gender).values()}">
                                 <input th:field="*{gender}" th:value="${gen}" type="radio" required="required"
                                        data-required-errormessage="Please select a Gender option"/>
                                 <span th:text="${gen.displayName}" th:remove="tag"/>
-                            </label>
-                        </div>
+                          </label>
                     </fieldset>
                 </div>
 
@@ -109,13 +107,11 @@
                               <span class="error-message" th:each="err : ${#fields.errors('ethnicity')}" th:text="${err}"/>
                             </span>
                         </legend>
-                        <div class="form-group">
-                            <label class="block-label" th:each="eth : ${ethnicityOptions}">
+                        <label class="block-label" th:each="eth : ${ethnicityOptions}">
                                 <input th:field="*{ethnicity}" th:value="${eth.id}" type="radio" required="required"
                                        data-required-errormessage="Please select an Ethnic Group option"/>
                                 <span th:text="${eth.description}" th:remove="tag"/>
-                            </label>
-                        </div>
+                          </label>
                     </fieldset>
                 </div>
 
@@ -127,12 +123,10 @@
                               <span class="error-message"  th:each="err : ${#fields.errors('disability')}" th:text="${err}" />
                             </span>
                         </legend>
-                        <div class="form-group">
-                            <label class="block-label" th:each="dis : ${T(com.worth.ifs.user.resource.Disability).values()}">
+                        <label class="block-label" th:each="dis : ${T(com.worth.ifs.user.resource.Disability).values()}">
                                 <input th:field="*{disability}" th:value="${dis}" type="radio" required="required" data-required-errormessage="Please select a Disability option" />
                                 <span th:text="${dis.displayName}" th:remove="tag" />
-                            </label>
-                        </div>
+                          </label>
                     </fieldset>
                 </div>
 
