@@ -214,7 +214,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         Long assessmentId = 1L;
         Long competitionId = 2L;
         String reason = "reason";
-        String comment = "comment";
+        String comment = String.join(" ", nCopies(100, "comment"));
 
         AssessmentResource assessment = newAssessmentResource()
                 .with(id(assessmentId))
@@ -242,7 +242,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         Long assessmentId = 1L;
         Long applicationId = 2L;
         String reason = "";
-        String comment = "comment";
+        String comment = String.join(" ", nCopies(100, "comment"));
 
         AssessmentResource assessment = newAssessmentResource()
                 .with(id(assessmentId))
@@ -415,7 +415,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         Long assessmentId = 1L;
         Long applicationId = 2L;
         String reason = "reason";
-        String comment = "comment";
+        String comment = String.join(" ", nCopies(100, "comment"));
 
         AssessmentResource assessment = newAssessmentResource()
                 .with(id(assessmentId))

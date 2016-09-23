@@ -1,6 +1,6 @@
 package com.worth.ifs.assessment.form;
 
-public class AssessorDeclarationForm {
+public class AssessorRegistrationDeclarationForm {
 
     private String principalEmployer;
     private String role;
@@ -13,10 +13,10 @@ public class AssessorDeclarationForm {
     private Boolean hasFamilyFinancialInterests;
     private Boolean isAccurateAccount;
 
-    public AssessorDeclarationForm() {
+    public AssessorRegistrationDeclarationForm() {
     }
 
-    public AssessorDeclarationForm(String principalEmployer, String role, String professionalAffiliations, Boolean hasAppointments, Boolean hasFinancialInterests, Boolean hasFamilyAffiliations, Boolean hasFamilyFinancialInterests, Boolean isAccurateAccount) {
+    public AssessorRegistrationDeclarationForm(String principalEmployer, String role, String professionalAffiliations, Boolean hasAppointments, Boolean hasFinancialInterests, Boolean hasFamilyAffiliations, Boolean hasFamilyFinancialInterests, Boolean isAccurateAccount) {
         this.principalEmployer = principalEmployer;
         this.role = role;
         this.professionalAffiliations = professionalAffiliations;

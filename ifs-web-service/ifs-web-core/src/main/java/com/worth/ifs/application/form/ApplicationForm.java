@@ -17,6 +17,11 @@ public class ApplicationForm extends Form {
     private MultipartFile assessorFeedback;
 
     private boolean adminMode = false;
+
+    private boolean termsAgreed;
+
+    private boolean stateAidAgreed;
+
     private Long impersonateOrganisationId;
 
     public ApplicationForm() {
@@ -53,5 +58,21 @@ public class ApplicationForm extends Form {
 
     public void setAssessorFeedback(MultipartFile assessorFeedback) {
         this.assessorFeedback = assessorFeedback;
+    }
+
+    public boolean isTermsAgreed() {
+        return termsAgreed;
+    }
+
+    public void setTermsAgreed(boolean termsAgreed) {
+        this.termsAgreed = termsAgreed;
+    }
+
+    public boolean isStateAidAgreed() {
+        return stateAidAgreed;
+    }
+
+    public void setStateAidAgreed(boolean stateAidAgreed) {
+        this.stateAidAgreed = stateAidAgreed;
     }
 }
