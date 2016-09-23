@@ -290,10 +290,10 @@ the grant value should be correct in the finance summary page
 auto-save should work for the "Grant" field
     the user clears the text from the element    id=cost-financegrantclaim
     the user moves focus to the element    jQuery= button:contains('complete')
-    Sleep    500ms
+    wait for autosave
     the user enters text to a text field    id=cost-financegrantclaim    25
     the user moves focus to the element    jQuery= button:contains('complete')
-    Sleep    300ms
+    wait for autosave
     the user reloads the page
     the user moves focus to the element    jQuery= button:contains('complete')
     the user should see the element    id=cost-financegrantclaim
