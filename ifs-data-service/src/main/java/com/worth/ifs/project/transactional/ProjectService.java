@@ -24,6 +24,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 /**
@@ -135,5 +136,5 @@ public interface ProjectService {
     ServiceResult<Void> addPartner(Long projectId, Long userId, Long organisationId);
 
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'VIEW_TEAM_STATUS')")
-    ServiceResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId);
+    ServiceResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId);
 }

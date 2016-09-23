@@ -123,7 +123,7 @@ public class ProjectMonitoringOfficerController {
 
     private void checkInCorrectStateToUseMonitoringOfficerPage(Long projectId) {
 
-        ProjectTeamStatusResource teamStatus = projectService.getProjectTeamStatus(projectId);
+        ProjectTeamStatusResource teamStatus = projectService.getProjectTeamStatus(projectId, Optional.empty());
 
         if (!COMPLETE.equals(teamStatus.getLeadPartnerStatus().getProjectDetailsStatus())) {
             throw new ForbiddenActionException("Unable to assign Monitoring Officers until the Project Details have been submitted");

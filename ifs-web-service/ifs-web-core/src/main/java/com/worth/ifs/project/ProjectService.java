@@ -73,5 +73,5 @@ public interface ProjectService {
 
     ServiceResult<Void> setPartnerDocumentsSubmitted(Long projectId);
 
-    ProjectTeamStatusResource getProjectTeamStatus(Long projectId);
+    ProjectTeamStatusResource getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId);
 }

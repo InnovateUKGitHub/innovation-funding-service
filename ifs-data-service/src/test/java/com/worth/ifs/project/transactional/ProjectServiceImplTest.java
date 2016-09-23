@@ -40,6 +40,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -64,6 +65,7 @@ import static com.worth.ifs.invite.domain.ProjectParticipantRole.*;
 import static com.worth.ifs.organisation.builder.OrganisationAddressBuilder.newOrganisationAddress;
 import static com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
 import static com.worth.ifs.project.builder.ProjectBuilder.newProject;
+import static com.worth.ifs.project.builder.ProjectLeadStatusResourceBuilder.newProjectLeadStatusResource;
 import static com.worth.ifs.project.builder.ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static com.worth.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
@@ -1051,14 +1053,17 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
          * **/
         OrganisationType businessOrganisationType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
         OrganisationType academicOrganisationType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.ACADEMIC).build();
-        List<Organisation> organisation = newOrganisation().withOrganisationType(businessOrganisationType).build(2);
-        organisation.add(newOrganisation().withOrganisationType(academicOrganisationType).build());
+        List<Organisation> organisations = new ArrayList<>();
+        organisations.add(application.getLeadOrganisation());
+        application.getLeadOrganisation().setOrganisationType(businessOrganisationType);
+        organisations.add(newOrganisation().withOrganisationType(businessOrganisationType).build());
+        organisations.add(newOrganisation().withOrganisationType(academicOrganisationType).build());
 
         /**
          * Create 3 users project partner roles for each of the 3 organisations above
          */
         List<User> users = newUser().build(3);
-        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_PARTNER).withUser(users.get(0), users.get(1), users.get(2)).withOrganisation(organisation.get(0), organisation.get(1), organisation.get(2)).build(3);
+        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_PARTNER).withUser(users.get(0), users.get(1), users.get(2)).withOrganisation(organisations.get(0), organisations.get(1), organisations.get(2)).build(3);
 
         /**
          * Create a project with 3 Project Users from 3 different organisations with an associated application
@@ -1068,7 +1073,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         /**
          * Create 3 bank detail records, one for each organisation
          */
-        List<BankDetails> bankDetails = newBankDetails().withOrganisation(organisation.get(0), organisation.get(1), organisation.get(2)).build(3);
+        List<BankDetails> bankDetails = newBankDetails().withOrganisation(organisations.get(0), organisations.get(1), organisations.get(2)).build(3);
 
         /**
          * Build spend profile object for use with one of the partners
@@ -1079,60 +1084,113 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         when(projectUserRepositoryMock.findByProjectId(p.getId())).thenReturn(pu);
 
-        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(p.getId(), organisation.get(0).getId())).thenReturn(bankDetails.get(0));
+        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(p.getId(), organisations.get(0).getId())).thenReturn(bankDetails.get(0));
 
-        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), organisation.get(0).getId())).thenReturn(spendProfile);
+        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), organisations.get(0).getId())).thenReturn(spendProfile);
 
         MonitoringOfficer monitoringOfficerInDB = MonitoringOfficerBuilder.newMonitoringOfficer().build();
         when(monitoringOfficerRepositoryMock.findOneByProjectId(p.getId())).thenReturn(monitoringOfficerInDB);
 
-        when(organisationRepositoryMock.findOne(organisation.get(0).getId())).thenReturn(organisation.get(0));
-        when(organisationRepositoryMock.findOne(organisation.get(1).getId())).thenReturn(organisation.get(1));
-        when(organisationRepositoryMock.findOne(organisation.get(2).getId())).thenReturn(organisation.get(2));
+        when(organisationRepositoryMock.findOne(organisations.get(0).getId())).thenReturn(organisations.get(0));
+        when(organisationRepositoryMock.findOne(organisations.get(1).getId())).thenReturn(organisations.get(1));
+        when(organisationRepositoryMock.findOne(organisations.get(2).getId())).thenReturn(organisations.get(2));
 
         List<ApplicationFinance> applicationFinances = newApplicationFinance().build(3);
-        when(applicationFinanceRepositoryMock.findByApplicationIdAndOrganisationId(p.getApplication().getId(), organisation.get(0).getId())).thenReturn(applicationFinances.get(0));
-        when(applicationFinanceRepositoryMock.findByApplicationIdAndOrganisationId(p.getApplication().getId(), organisation.get(1).getId())).thenReturn(applicationFinances.get(1));
-        when(applicationFinanceRepositoryMock.findByApplicationIdAndOrganisationId(p.getApplication().getId(), organisation.get(2).getId())).thenReturn(applicationFinances.get(2));
+        when(applicationFinanceRepositoryMock.findByApplicationIdAndOrganisationId(p.getApplication().getId(), organisations.get(0).getId())).thenReturn(applicationFinances.get(0));
+        when(applicationFinanceRepositoryMock.findByApplicationIdAndOrganisationId(p.getApplication().getId(), organisations.get(1).getId())).thenReturn(applicationFinances.get(1));
+        when(applicationFinanceRepositoryMock.findByApplicationIdAndOrganisationId(p.getApplication().getId(), organisations.get(2).getId())).thenReturn(applicationFinances.get(2));
 
-        ApplicationFinanceResource applicationFinanceResource0 = newApplicationFinanceResource().withGrantClaimPercentage(20).withOrganisation(organisation.get(0).getId()).build();
+        ApplicationFinanceResource applicationFinanceResource0 = newApplicationFinanceResource().withGrantClaimPercentage(20).withOrganisation(organisations.get(0).getId()).build();
         when(applicationFinanceMapperMock.mapToResource(applicationFinances.get(0))).thenReturn(applicationFinanceResource0);
 
-        ApplicationFinanceResource applicationFinanceResource1 = newApplicationFinanceResource().withGrantClaimPercentage(20).withOrganisation(organisation.get(1).getId()).build();
+        ApplicationFinanceResource applicationFinanceResource1 = newApplicationFinanceResource().withGrantClaimPercentage(20).withOrganisation(organisations.get(1).getId()).build();
         when(applicationFinanceMapperMock.mapToResource(applicationFinances.get(1))).thenReturn(applicationFinanceResource1);
 
-        ApplicationFinanceResource applicationFinanceResource2 = newApplicationFinanceResource().withGrantClaimPercentage(20).withOrganisation(organisation.get(2).getId()).build();
+        ApplicationFinanceResource applicationFinanceResource2 = newApplicationFinanceResource().withGrantClaimPercentage(20).withOrganisation(organisations.get(2).getId()).build();
         when(applicationFinanceMapperMock.mapToResource(applicationFinances.get(2))).thenReturn(applicationFinanceResource2);
 
-        List<ProjectUserResource> puResource = newProjectUserResource().withProject(p.getId()).withOrganisation(organisation.get(0).getId(), organisation.get(1).getId(), organisation.get(2).getId()).withRole(partnerRole.getId()).withRoleName(PROJECT_PARTNER.getName()).build(3);
+        List<ProjectUserResource> puResource = newProjectUserResource().withProject(p.getId()).withOrganisation(organisations.get(0).getId(), organisations.get(1).getId(), organisations.get(2).getId()).withRole(partnerRole.getId()).withRoleName(PROJECT_PARTNER.getName()).build(3);
 
         when(projectUserMapperMock.mapToResource(pu.get(0))).thenReturn(puResource.get(0));
         when(projectUserMapperMock.mapToResource(pu.get(1))).thenReturn(puResource.get(1));
         when(projectUserMapperMock.mapToResource(pu.get(2))).thenReturn(puResource.get(2));
 
-        when(financeRowServiceMock.organisationSeeksFunding(p.getId(), p.getApplication().getId(), organisation.get(0).getId())).thenReturn(serviceSuccess(true));
-        when(financeRowServiceMock.organisationSeeksFunding(p.getId(), p.getApplication().getId(), organisation.get(1).getId())).thenReturn(serviceSuccess(false));
-        when(financeRowServiceMock.organisationSeeksFunding(p.getId(), p.getApplication().getId(), organisation.get(2).getId())).thenReturn(serviceSuccess(false));
+        when(financeRowServiceMock.organisationSeeksFunding(p.getId(), p.getApplication().getId(), organisations.get(0).getId())).thenReturn(serviceSuccess(true));
+        when(financeRowServiceMock.organisationSeeksFunding(p.getId(), p.getApplication().getId(), organisations.get(1).getId())).thenReturn(serviceSuccess(false));
+        when(financeRowServiceMock.organisationSeeksFunding(p.getId(), p.getApplication().getId(), organisations.get(2).getId())).thenReturn(serviceSuccess(false));
 
-        List<ProjectPartnerStatusResource> expectedPartnerStatuses = newProjectPartnerStatusResource().
-                withName(organisation.get(0).getName(), organisation.get(1).getName(), organisation.get(2).getName()).
-                withOrganisationType(OrganisationTypeEnum.getFromId(organisation.get(0).getOrganisationType().getId()), OrganisationTypeEnum.getFromId(organisation.get(1).getOrganisationType().getId()), OrganisationTypeEnum.getFromId(organisation.get(2).getOrganisationType().getId())).
-                withProjectDetailsStatus(ACTION_REQUIRED, ACTION_REQUIRED, ACTION_REQUIRED).
-                withMonitoringOfficerStatus(NOT_REQUIRED, NOT_REQUIRED, NOT_REQUIRED).
-                withBankDetailsStatus(PENDING, NOT_REQUIRED, NOT_REQUIRED).
-                withFinanceChecksStatus(ACTION_REQUIRED, ACTION_REQUIRED, ACTION_REQUIRED).
-                withSpendProfileStatus(ACTION_REQUIRED, NOT_STARTED, NOT_STARTED).
-                withOtherDocumentsStatus(NOT_REQUIRED, NOT_REQUIRED, NOT_REQUIRED).
-                withGrantOfferStatus(NOT_REQUIRED, NOT_REQUIRED, NOT_REQUIRED).
-                build(3);
+        ProjectLeadStatusResource expectedLeadPartnerOrganisationStatus = newProjectLeadStatusResource().
+                withName(organisations.get(0).getName()).
+                withOrganisationType(
+                        OrganisationTypeEnum.getFromId(organisations.get(0).getOrganisationType().getId())).
+                withOrganisationId(organisations.get(0).getId()).
+                withProjectDetailsStatus(ACTION_REQUIRED).
+                withMonitoringOfficerStatus(NOT_STARTED).
+                withBankDetailsStatus(PENDING).
+                withFinanceChecksStatus(ACTION_REQUIRED).
+                withSpendProfileStatus(ACTION_REQUIRED).
+                withOtherDocumentsStatus(ACTION_REQUIRED).
+                withGrantOfferStatus(NOT_STARTED).
+                build();
 
-        ProjectTeamStatusResource expectedProjectTeamStatusResource = newProjectTeamStatusResource().withPartnerStatuses(expectedPartnerStatuses).build();
+        List<ProjectPartnerStatusResource> expectedFullPartnerStatuses = newProjectPartnerStatusResource().
+                withName(organisations.get(1).getName(), organisations.get(2).getName()).
+                withOrganisationType(
+                        OrganisationTypeEnum.getFromId(organisations.get(1).getOrganisationType().getId()),
+                        OrganisationTypeEnum.getFromId(organisations.get(2).getOrganisationType().getId())).
+                withOrganisationId(organisations.get(1).getId(), organisations.get(2).getId()).
+                withProjectDetailsStatus(ACTION_REQUIRED, ACTION_REQUIRED).
+                withMonitoringOfficerStatus(NOT_REQUIRED, NOT_REQUIRED).
+                withBankDetailsStatus(NOT_REQUIRED, NOT_REQUIRED).
+                withFinanceChecksStatus(ACTION_REQUIRED, ACTION_REQUIRED).
+                withSpendProfileStatus(NOT_STARTED, NOT_STARTED).
+                withOtherDocumentsStatus(NOT_REQUIRED, NOT_REQUIRED).
+                withGrantOfferStatus(NOT_REQUIRED, NOT_REQUIRED).
+                build(2);
 
-        ServiceResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(p.getId());
+        ProjectTeamStatusResource expectedProjectTeamStatusResource = newProjectTeamStatusResource().
+                withProjectLeadStatus(expectedLeadPartnerOrganisationStatus).
+                withPartnerStatuses(expectedFullPartnerStatuses).
+                build();
 
+        // try without filtering
+        ServiceResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(p.getId(), Optional.empty());
         result.isSuccess();
-
         assertEquals(expectedProjectTeamStatusResource, result.getSuccessObject());
+
+        List<ProjectPartnerStatusResource> expectedPartnerStatusesFilteredOnNonLead = newProjectPartnerStatusResource().
+                withName(organisations.get(2).getName()).
+                withOrganisationType(
+                        OrganisationTypeEnum.getFromId(organisations.get(2).getOrganisationType().getId())).
+                withOrganisationId(organisations.get(2).getId()).
+                withProjectDetailsStatus(ACTION_REQUIRED).
+                withMonitoringOfficerStatus(NOT_REQUIRED).
+                withBankDetailsStatus(NOT_REQUIRED).
+                withFinanceChecksStatus(ACTION_REQUIRED).
+                withSpendProfileStatus(NOT_STARTED).
+                withOtherDocumentsStatus(NOT_REQUIRED).
+                withGrantOfferStatus(NOT_REQUIRED).
+                build(1);
+
+        // try with filtering on a non-lead partner organisation
+        ProjectTeamStatusResource expectedProjectTeamStatusResourceFilteredOnNonLead = newProjectTeamStatusResource().
+                withProjectLeadStatus(expectedLeadPartnerOrganisationStatus).
+                withPartnerStatuses(expectedPartnerStatusesFilteredOnNonLead).
+                build();
+
+        ServiceResult<ProjectTeamStatusResource> resultWithNonLeadFilter = service.getProjectTeamStatus(p.getId(), Optional.of(users.get(2).getId()));
+        resultWithNonLeadFilter.isSuccess();
+        assertEquals(expectedProjectTeamStatusResourceFilteredOnNonLead, resultWithNonLeadFilter.getSuccessObject());
+
+        // try with filtering on a lead partner organisation
+        ProjectTeamStatusResource expectedProjectTeamStatusResourceFilteredOnLead = newProjectTeamStatusResource().
+                withProjectLeadStatus(expectedLeadPartnerOrganisationStatus).
+                build();
+
+        ServiceResult<ProjectTeamStatusResource> resultWithLeadFilter = service.getProjectTeamStatus(p.getId(), Optional.of(users.get(0).getId()));
+        resultWithLeadFilter.isSuccess();
+        assertEquals(expectedProjectTeamStatusResourceFilteredOnLead, resultWithLeadFilter.getSuccessObject());
+
     }
 
     private void assertFilesCannotBeSubmittedIfNotByProjectManager(Consumer<FileEntry> fileSetter1,

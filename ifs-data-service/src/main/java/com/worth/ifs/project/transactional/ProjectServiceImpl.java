@@ -668,14 +668,22 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     }
 
     @Override
-    public ServiceResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId) {
+    public ServiceResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId) {
         Project project = projectRepository.findOne(projectId);
-        List<Organisation> allPartnerOrganisations = getPartnerOrganisations(projectId);
+        Organisation leadOrganisation = project.getApplication().getLeadOrganisation();
 
-        List<ProjectPartnerStatusResource> projectPartnerStatusResources = new ArrayList<>();
-        for (Organisation partnerOrganisation : allPartnerOrganisations) {
-            projectPartnerStatusResources.add(getProjectPartnerStatus(project, partnerOrganisation));
-        }
+        Optional<ProjectUser> partnerUserForFilterUser = filterByUserId.flatMap(
+                userId -> simpleFindFirst(project.getProjectUsers(),
+                        pu -> pu.getUser().getId().equals(userId) && pu.getRole().isPartner()));
+
+        List<Organisation> allPartnerOrganisations = getPartnerOrganisations(projectId);
+        List<Organisation> partnerOrganisationsToInclude =
+                simpleFilter(allPartnerOrganisations, partner ->
+                        partner.getId().equals(leadOrganisation.getId()) ||
+                        (partnerUserForFilterUser.map(pu -> partner.getId().equals(pu.getOrganisation().getId())).orElse(true)));
+
+        List<ProjectPartnerStatusResource> projectPartnerStatusResources =
+                simpleMap(partnerOrganisationsToInclude, partner -> getProjectPartnerStatus(project, partner));
 
         ProjectTeamStatusResource projectTeamStatusResource = new ProjectTeamStatusResource();
         projectTeamStatusResource.setPartnerStatuses(projectPartnerStatusResources);

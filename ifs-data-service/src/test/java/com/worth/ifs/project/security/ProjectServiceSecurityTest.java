@@ -27,10 +27,7 @@ import org.springframework.security.access.method.P;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
@@ -431,7 +428,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
 
-        assertAccessDenied(() -> classUnderTest.getProjectTeamStatus(123L), () -> {
+        assertAccessDenied(() -> classUnderTest.getProjectTeamStatus(123L, Optional.empty()), () -> {
             verify(projectPermissionRules).partnersCanViewTeamStatus(project, getLoggedInUser());
             verify(projectPermissionRules).compAdminsCanViewTeamStatus(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
@@ -613,7 +610,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         }
 
         @Override
-        public ServiceResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId) {
+        public ServiceResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId) {
             return null;
         }
     }

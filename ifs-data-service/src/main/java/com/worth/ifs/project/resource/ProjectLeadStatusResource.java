@@ -2,7 +2,6 @@ package com.worth.ifs.project.resource;
 
 import com.worth.ifs.project.constant.ProjectActivityStates;
 import com.worth.ifs.user.resource.OrganisationTypeEnum;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
  * Used for returning status for project lead.
@@ -24,11 +23,5 @@ public class ProjectLeadStatusResource extends ProjectPartnerStatusResource {
             ProjectActivityStates otherDocumentsStatus,
             ProjectActivityStates grantOfferLetterStatus) {
         super(organisationId, name, organisationType, projectDetailsStatus, monitoringOfficerStatus, bankDetailsStatus, financeChecksStatus, spendProfileStatus, otherDocumentsStatus, grantOfferLetterStatus);
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this)
-                .toString();
     }
 }

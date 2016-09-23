@@ -208,8 +208,8 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ProjectTeamStatusResource getProjectTeamStatus(Long projectId){
-        return projectRestService.getProjectTeamStatus(projectId).getSuccessObjectOrThrowException();
+    public ProjectTeamStatusResource getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId){
+        return projectRestService.getProjectTeamStatus(projectId, filterByUserId).getSuccessObjectOrThrowException();
     }
 
     private List<ProjectUserResource> getProjectUsersWithPartnerRole(Long projectId) {
