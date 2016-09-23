@@ -568,7 +568,12 @@ IFS.core.formValidation = (function(){
               }
               if(formGroup.find('[data-errorfield="'+name+'"]').length === 0) {
                 field.removeClass('field-error');
-                if(s.html5validationMode){ field[0].setCustomValidity('');}
+                if(s.html5validationMode){
+                  jQuery('[name='+name+'],#'+name).each(function(){
+                    this.setCustomValidity('');
+                  });
+                }
+
               }
             }
 
@@ -587,12 +592,11 @@ IFS.core.formValidation = (function(){
             if(el.is('[data-date]')){
               el =  el.closest('.date-group').find('input[type="hidden"]');
             }
-
-            if(el.prop('id').length){
-              return el.prop('id');
-            }
-            else if(el.prop('name').length) {
+            if(el.prop('name').length) {
               return  el.prop('name');
+            }
+            else if(el.prop('id').length){
+              return el.prop('id');
             }
             return false;
         },
