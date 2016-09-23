@@ -44,7 +44,6 @@ public interface ProjectRestService {
     RestResult<Boolean> isOtherDocumentsSubmitAllowed(Long projectId);
     RestResult<Void> setPartnerDocumentsSubmitted(Long projectId);
     RestResult<Void> addPartner(Long projectId, Long userId, Long organisationId);
-    RestResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId);
     RestResult<Void> inviteFinanceContact(Long projectId, InviteProjectResource inviteResource);
-
+    RestResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId);
 }

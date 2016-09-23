@@ -3,7 +3,7 @@ package com.worth.ifs.form.transactional;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.resource.*;
-import com.worth.ifs.security.NotSecured;
+import com.worth.ifs.commons.security.NotSecured;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;

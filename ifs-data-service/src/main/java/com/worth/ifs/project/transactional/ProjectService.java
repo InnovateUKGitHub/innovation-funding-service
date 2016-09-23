@@ -18,13 +18,23 @@ import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectTeamStatusResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
-import com.worth.ifs.security.SecuredBySpring;
+
+import com.worth.ifs.invite.resource.InviteProjectResource;
+import com.worth.ifs.commons.security.SecuredBySpring;
 import com.worth.ifs.user.resource.OrganisationResource;
 
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
+
+import java.io.InputStream;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Supplier;
 
 /**
  * Transactional and secure service for Project processing work
@@ -135,5 +145,5 @@ public interface ProjectService {
     ServiceResult<Void> addPartner(Long projectId, Long userId, Long organisationId);
 
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'VIEW_TEAM_STATUS')")
-    ServiceResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId);
+    ServiceResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId);
 }

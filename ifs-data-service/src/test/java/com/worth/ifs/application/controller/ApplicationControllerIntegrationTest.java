@@ -24,7 +24,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 
-import static com.worth.ifs.security.SecuritySetter.swapOutForUser;
+import static com.worth.ifs.commons.security.SecuritySetter.swapOutForUser;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;

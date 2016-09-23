@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+<main id="content">
+	
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader('Application questions', '/prototypes/5085-application-process')" th:remove="tag" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+	<div class="hgroup" style="padding-top: 20px">
+		<p class="subtitle no-margin">Connected digital additive manufacturing</p>
+		<h1 class="heading-xlarge no-margin">Application details</h1>
+	</div>
+
+
+	<p>These are the default questions included in the Application details section.</p>
+
+	<form>
+		<fieldset>
+			<legend class="visuallyhidden">To be included:</legend>
+			<h2 class="heading-medium extra-margin">To be included:</h2>
+			<div class="form-group">
+				<fieldset class="inline">
+					<h3 class="heading-small">Project title</h3>
+					<label class="block-label" for="project-title-yes">
+						<input id="project-title-yes" name="project-title-group" value="yes" type="radio" checked="checked" />
+						Yes
+					</label>
+					<label class="block-label" for="project-title-no">
+						<input id="project-title-no" name="project-title-group" value="no" type="radio" />
+						No
+					</label>
+				</fieldset>
+			</div>
+			<div class="form-group">
+				<fieldset class="inline">
+					<h3 class="heading-small">Resubmission question</h3>
+					<label class="block-label" for="resubmission-title-yes">
+						<input id="resubmission-title-yes" name="resubmission-title-group" value="yes" type="radio" checked="checked" />
+						Yes
+					</label>
+					<label class="block-label" for="project-title-no">
+						<input id="resubmission-title-no" name="resubmission-title-group" value="no" type="radio" />
+						No
+					</label>
+				</fieldset>
+			</div>
+			<div class="form-group">
+				<fieldset class="inline">
+					<h3 class="heading-small">Estimated start date</h3>
+					<label class="block-label" for="estimated-start-date-yes">
+						<input id="estimated-start-date-yes" name="estimated-start-date-group" value="yes" type="radio" checked="checked" />
+						Yes
+					</label>
+					<label class="block-label" for="estimated-start-date-no">
+						<input id="estimated-start-date-no" name="estimated-start-date-group" value="no" type="radio" />
+						No
+					</label>
+				</fieldset>
+			</div>
+			<div class="form-group">
+				<fieldset class="inline">
+					<h3 class="heading-small">Duration</h3>
+					<label class="block-label" for="duration-yes">
+						<input id="duration-yes" name="duration-group" value="yes" type="radio" checked="checked" />
+						Yes
+					</label>
+					<label class="block-label" for="duration-no">
+						<input id="duration-no" name="duration-group" value="no" type="radio" />
+						No
+					</label>
+				</fieldset>
+			</div>
+			<button role="button extra-margin" class="button" formaction="/prototypes/5085-application-process" type="submit">Done</button>
+
+		</fieldset>
+	</form>
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<script type="text/javascript">
+
+</script>
+</body>
+</html>

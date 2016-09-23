@@ -64,7 +64,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         final long applicationId = 1L;
         when(applicationLookupStrategy.getApplicationResource(applicationId)).thenReturn(newApplicationResource().build());
         assertAccessDenied(
-                () -> service.sendNotificationApplicationSubmitted(applicationId),
+                () -> classUnderTest.sendNotificationApplicationSubmitted(applicationId),
                 () -> verify(applicationRules).aLeadApplicantCanSendApplicationSubmittedNotification(isA(ApplicationResource.class), isA(UserResource.class))
         );
     }
@@ -75,7 +75,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         final long applicationId = 1L;
         when(applicationLookupStrategy.getApplicationResource(applicationId)).thenReturn(newApplicationResource().build());
         assertAccessDenied(
-                () -> service.getApplicationById(applicationId),
+                () -> classUnderTest.getApplicationById(applicationId),
                 () -> {
                     verify(applicationRules).usersConnectedToTheApplicationCanView(isA(ApplicationResource.class), isA(UserResource.class));
                     verify(applicationRules).compAdminsCanViewApplications(isA(ApplicationResource.class), isA(UserResource.class));
@@ -87,7 +87,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
     @Test
     public void test_createApplicationByAppNameForUserIdAndCompetitionId_allowedIfGlobalApplicationRole() {
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(APPLICANT).build())).build());
-        service.createApplicationByApplicationNameForUserIdAndCompetitionId("An application", 123L, 456L);
+        classUnderTest.createApplicationByApplicationNameForUserIdAndCompetitionId("An application", 123L, 456L);
     }
 
     @Test
@@ -95,7 +95,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
 
         setLoggedInUser(null);
         try {
-            service.createApplicationByApplicationNameForUserIdAndCompetitionId("An application", 123L, 456L);
+            classUnderTest.createApplicationByApplicationNameForUserIdAndCompetitionId("An application", 123L, 456L);
             fail("Should not have been able to create an Application without first logging in");
         } catch (AccessDeniedException e) {
             // expected behaviour
@@ -106,7 +106,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
     public void test_createApplicationByAppNameForUserIdAndCompetitionId_deniedIfNoGlobalRolesAtAll() {
 
         try {
-            service.createApplicationByApplicationNameForUserIdAndCompetitionId("An application", 123L, 456L);
+            classUnderTest.createApplicationByApplicationNameForUserIdAndCompetitionId("An application", 123L, 456L);
             fail("Should not have been able to create an Application without the global Applicant role");
         } catch (AccessDeniedException e) {
             // expected behaviour
@@ -121,7 +121,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
             setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
 
             try {
-                service.createApplicationByApplicationNameForUserIdAndCompetitionId("An application", 123L, 456L);
+                classUnderTest.createApplicationByApplicationNameForUserIdAndCompetitionId("An application", 123L, 456L);
                 fail("Should not have been able to create an Application without the global Applicant role or as a system registrar");
             } catch (AccessDeniedException e) {
                 // expected behaviour
@@ -137,7 +137,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
 
         when(fileUploadRules.applicantCanUploadFilesInResponsesForOwnApplication(file, getLoggedInUser())).thenReturn(true);
 
-        service.createFormInputResponseFileUpload(file, () -> null);
+        classUnderTest.createFormInputResponseFileUpload(file, () -> null);
 
         verify(fileUploadRules).applicantCanUploadFilesInResponsesForOwnApplication(file, getLoggedInUser());
     }
@@ -151,7 +151,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         when(fileUploadRules.applicantCanUploadFilesInResponsesForOwnApplication(file, getLoggedInUser())).thenReturn(false);
 
         try {
-            service.createFormInputResponseFileUpload(file, () -> null);
+            classUnderTest.createFormInputResponseFileUpload(file, () -> null);
             fail("Should not have been able to create the file upload, as access was denied");
         } catch (AccessDeniedException e) {
             // expected behaviour
@@ -168,7 +168,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
 
         when(fileUploadRules.applicantCanUploadFilesInResponsesForOwnApplication(file, getLoggedInUser())).thenReturn(true);
 
-        service.updateFormInputResponseFileUpload(file, () -> null);
+        classUnderTest.updateFormInputResponseFileUpload(file, () -> null);
 
         verify(fileUploadRules).applicantCanUploadFilesInResponsesForOwnApplication(file, getLoggedInUser());
     }
@@ -182,7 +182,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         when(fileUploadRules.applicantCanUploadFilesInResponsesForOwnApplication(file, getLoggedInUser())).thenReturn(false);
 
         try {
-            service.updateFormInputResponseFileUpload(file, () -> null);
+            classUnderTest.updateFormInputResponseFileUpload(file, () -> null);
             fail("Should not have been able to update the file upload, as access was denied");
         } catch (AccessDeniedException e) {
             // expected behaviour
@@ -201,7 +201,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         when(fileUploadLookup.getFormInputResponseFileEntryResource(file.getCompoundId())).thenReturn(file);
         when(fileUploadRules.applicantCanUploadFilesInResponsesForOwnApplication(file, getLoggedInUser())).thenReturn(true);
 
-        service.deleteFormInputResponseFileUpload(file.getCompoundId());
+        classUnderTest.deleteFormInputResponseFileUpload(file.getCompoundId());
 
         verify(fileUploadRules).applicantCanUploadFilesInResponsesForOwnApplication(file, getLoggedInUser());
     }
@@ -216,7 +216,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         when(fileUploadRules.applicantCanUploadFilesInResponsesForOwnApplication(file, getLoggedInUser())).thenReturn(false);
 
         try {
-            service.deleteFormInputResponseFileUpload(file.getCompoundId());
+            classUnderTest.deleteFormInputResponseFileUpload(file.getCompoundId());
             fail("Should not have been able to delete the file upload, as access was denied");
         } catch (AccessDeniedException e) {
             // expected behaviour
@@ -235,7 +235,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         when(fileUploadRules.applicantCanUploadFilesInResponsesForOwnApplication(file, getLoggedInUser())).thenReturn(false);
 
         try {
-            service.deleteFormInputResponseFileUpload(file.getCompoundId());
+            classUnderTest.deleteFormInputResponseFileUpload(file.getCompoundId());
             fail("Should not have been able to delete the file upload, as the resource was not looked up successfully");
         } catch (AccessDeniedException e) {
             // expected behaviour
@@ -253,7 +253,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         when(fileUploadLookup.getFormInputResponseFileEntryResource(file.getCompoundId())).thenReturn(file);
         when(fileUploadRules.applicantCanDownloadFilesInResponsesForOwnApplication(file, getLoggedInUser())).thenReturn(true);
 
-        service.getFormInputResponseFileUpload(file.getCompoundId());
+        classUnderTest.getFormInputResponseFileUpload(file.getCompoundId());
 
         verify(fileUploadRules).applicantCanDownloadFilesInResponsesForOwnApplication(file, getLoggedInUser());
     }
@@ -268,7 +268,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         when(fileUploadRules.applicantCanDownloadFilesInResponsesForOwnApplication(file, getLoggedInUser())).thenReturn(false);
 
         try {
-            service.getFormInputResponseFileUpload(file.getCompoundId());
+            classUnderTest.getFormInputResponseFileUpload(file.getCompoundId());
             fail("Should not have been able to read the file upload, as access was denied");
         } catch (AccessDeniedException e) {
             // expected behaviour
@@ -286,7 +286,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         when(fileUploadLookup.getFormInputResponseFileEntryResource(file.getCompoundId())).thenReturn(null);
 
         try {
-            service.getFormInputResponseFileUpload(file.getCompoundId());
+            classUnderTest.getFormInputResponseFileUpload(file.getCompoundId());
             fail("Should not have been able to read the file upload, as resource lookup failed");
         } catch (AccessDeniedException e) {
             // expected behaviour
@@ -296,7 +296,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
     }
 
     @Override
-    protected Class<? extends ApplicationService> getServiceClass() {
+    protected Class<? extends ApplicationService> getClassUnderTest() {
         return TestApplicationService.class;
     }
 

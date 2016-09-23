@@ -64,16 +64,6 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public SpendProfileResource getSpendProfile(final Long projectId, final Long organisationId) {
-
-        if (projectId == null || organisationId == null) {
-            return null;
-        }
-
-        return projectRestService.getSpendProfile(projectId, organisationId).getSuccessObjectOrThrowException();
-    }
-
-    @Override
     public ProjectResource getByApplicationId(Long applicationId) {
         if(applicationId == null) {
             return null;
@@ -230,13 +220,8 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public boolean isUserPartner(Long projectId, Long userId) {
-        return !simpleFilter(getPartners(projectId), projectUser -> projectUser.getUser().equals(userId)).isEmpty();
-    }
-
-    @Override
-    public ProjectTeamStatusResource getProjectTeamStatus(Long projectId){
-        return projectRestService.getProjectTeamStatus(projectId).getSuccessObjectOrThrowException();
+    public ProjectTeamStatusResource getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId){
+        return projectRestService.getProjectTeamStatus(projectId, filterByUserId).getSuccessObjectOrThrowException();
     }
 
     private List<ProjectUserResource> getProjectUsersWithPartnerRole(Long projectId) {

@@ -34,6 +34,7 @@ import com.worth.ifs.category.repository.CategoryLinkRepository;
 import com.worth.ifs.category.repository.CategoryRepository;
 import com.worth.ifs.category.transactional.CategoryLinkService;
 import com.worth.ifs.category.transactional.CategoryService;
+import com.worth.ifs.commons.BaseTest;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.repository.CompetitionFunderRepository;
 import com.worth.ifs.competition.repository.CompetitionRepository;
@@ -363,7 +364,7 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected FinanceRowService financeRowServiceMock;
 
     @Mock
-    protected ProjectDetailsWorkflowHandler projectDetailsWorkflowServiceMock;
+    protected ProjectDetailsWorkflowHandler projectDetailsWorkflowHandlerMock;
 
     @Before
     public void setupMockInjection() {

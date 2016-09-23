@@ -1,7 +1,6 @@
 package com.worth.ifs.user.transactional;
 
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.security.NotSecured;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
