@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -100,11 +99,6 @@ public class ProjectGrantOfferLetterController {
         Optional<FileEntryResource> grantOfferFileDetails = projectService.getGeneratedGrantOfferFileDetails(projectId);
 
         Optional<FileEntryResource> additionalContractFile = projectService.getAdditionalContractFileDetails(projectId);
-
-        LocalDateTime submittedDate = null;
-        boolean offerSigned = false;
-        boolean offerAccepted = false;
-        boolean offerRejected = false;
 
         return new ProjectGrantOfferLetterViewModel(projectId, project.getName(),
                 leadPartner, grantOfferFileDetails.map(FileDetailsViewModel::new).orElse(null),
