@@ -422,7 +422,18 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
 
         setupGetWithRestResultExpectations(expectedUrl, ProjectTeamStatusResource.class, null, OK);
 
-        RestResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(123L);
+        RestResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(123L, Optional.empty());
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void testGetProjectTeamStatusWithFilterByUserId(){
+        String expectedUrl = projectRestURL + "/123/team-status?filterByUserId=456";
+
+        setupGetWithRestResultExpectations(expectedUrl, ProjectTeamStatusResource.class, null, OK);
+
+        RestResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(123L, Optional.of(456L));
 
         assertTrue(result.isSuccess());
     }

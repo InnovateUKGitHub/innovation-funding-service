@@ -1,7 +1,7 @@
 package com.worth.ifs.user.transactional;
 
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.security.NotSecured;
+import com.worth.ifs.commons.security.NotSecured;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.resource.UserRoleType;
 import org.springframework.security.access.method.P;

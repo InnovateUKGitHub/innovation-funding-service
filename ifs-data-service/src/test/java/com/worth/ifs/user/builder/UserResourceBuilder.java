@@ -1,6 +1,8 @@
 package com.worth.ifs.user.builder;
 
 import com.worth.ifs.BaseBuilder;
+import com.worth.ifs.user.resource.Disability;
+import com.worth.ifs.user.resource.Gender;
 import com.worth.ifs.user.resource.RoleResource;
 import com.worth.ifs.user.resource.UserResource;
 
@@ -50,6 +52,18 @@ public class UserResourceBuilder extends BaseBuilder<UserResource, UserResourceB
 
     public UserResourceBuilder withLastName(String... lastNames) {
         return withArray((lastName, user) -> setField("lastName", lastName, user), lastNames);
+    }
+
+    public UserResourceBuilder withDisability(Disability... disabilities) {
+        return withArray((disability, user) -> setField("disability", disability, user), disabilities);
+    }
+
+    public UserResourceBuilder withEthnicity(Long... ethnicities) {
+        return withArray((ethnicity, user) -> setField("ethnicity", ethnicity, user), ethnicities);
+    }
+
+    public UserResourceBuilder withGender(Gender... genders) {
+        return withArray((gender, user) -> setField("gender", gender, user), genders);
     }
 
     public UserResourceBuilder withPhoneNumber(String... phoneNumbers) {

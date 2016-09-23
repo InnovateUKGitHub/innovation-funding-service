@@ -472,7 +472,7 @@
                 <fieldset class="inline">
                     <legend>
 		                <!--<span class="form-label-bold">Stream</span>-->
-		                <span class="form-label-bold">Does the competition have multiple stream?</span>
+		                <span class="form-label-bold">Does the competition have multiple streams?</span>
 		                <span th:if="${#fields.hasErrors('multipleStream')}" th:remove="tag">
 		                      <span class="error-message"  th:each="err : ${#fields.errors('multipleStream')}" th:text="${err}" />
 		                </span>
@@ -807,7 +807,7 @@
         These match the template for the competition type you chose - to change questions you can change the competition type in 'Initial details'
     </div>
 
-    <p>Template: Programme 10 questions</p>
+    <p>Template: <span th:text="${competition.competitionTypeName}"></span> <span th:text="${#lists.size(questions)}"></span> questions</p>
 
     <h2 class="heading-large">Questions</h2>
 

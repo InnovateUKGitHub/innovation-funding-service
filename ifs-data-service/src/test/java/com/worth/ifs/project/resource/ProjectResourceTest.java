@@ -6,7 +6,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
@@ -25,7 +24,6 @@ public class ProjectResourceTest {
     Long duration;
     LocalDate targetStartDate;
     ProjectResource projectResource;
-    LocalDateTime submittedDate;
 
     @Before
     public void setup(){
@@ -43,7 +41,6 @@ public class ProjectResourceTest {
                 .withAddress(addressResource)
                 .withDuration(duration)
                 .withTargetStartDate(targetStartDate)
-                .withSubmittedDate(submittedDate)
                 .build();
     }
 
@@ -52,7 +49,6 @@ public class ProjectResourceTest {
         assertEquals(projectResource.getId(), id);
         assertEquals(projectResource.getAddress(), addressResource);
         assertEquals(projectResource.getName(), name);
-        assertEquals(projectResource.getSubmittedDate(), submittedDate);
         assertEquals(projectResource.getDurationInMonths(), duration);
         assertEquals(projectResource.getApplication(), applicationResource.getId());
         assertEquals(projectResource.getFormattedId(), "00000001");

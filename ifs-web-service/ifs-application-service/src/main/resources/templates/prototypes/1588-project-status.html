@@ -19,7 +19,15 @@
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Project setup status'})" th:remove="tag" />
 
-	<p class="form-hint">You need to complete the following steps before this project can begin. All partners have individual steps to complete.</p>
+	<p class="form-hint" th:unless="${param.status != null and param.status[0] == 'setup-complete'}">You need to complete the following steps before this project can begin. All partners have individual steps to complete.</p>
+
+	<th:block th:if="${param.status != null and param.status[0] == 'setup-complete'}">
+		<div class="success-alert extra-margin-bottom">
+			The project is live, you can review progress at <a href="#">_connect</a>
+		</div>
+
+		<p>The following steps have been completed allowing the project to begin. All steps have been completed by all partners.</p>
+	</th:block>
 
 	<div class="warning-alert extra-margin-bottom" th:unless="${param.status == null or param.status[0] != 'noCompHouse'}">
         <h2 class="heading-small no-margin">Your business is not currently linked with Companies House</h2>
@@ -28,9 +36,9 @@
         <p><a href="/prototypes/4242-register-no-companies-house">Business has no legal repsonsibility to register with Companies House</a></p>
     </div>
 	
-	<strong><a href="/prototypes/1589-team-status">What's the status of each of my partners?</a></strong>
+	<strong th:unless="${param.status != null and param.status[0] == 'setup-complete'}"><a href="/prototypes/1589-team-status">What's the status of each of my partners?</a></strong>
 	
-	<ul class="application-progress-list extra-margin" th:unless="${param.status != null and param.status[0] == 'noCompHouse'}">
+	<ul class="application-progress-list extra-margin"  th:classappend="${(param.status != null and param.status[0] == 'setup-complete' ? 'setup-complete' : '' )}" th:unless="${param.status != null and param.status[0] == 'noCompHouse'}">
 		<li class="complete">
 			<span>
 				<h2 class="heading-medium">Successful application</h2>
