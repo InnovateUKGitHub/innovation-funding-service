@@ -39,7 +39,7 @@ Existing assessor: Reject invitation
     And the user clicks the button/link    css=form a
     And The user enters text to a text field    id=rejectComment    a a a a a a a a \ a a a a \ a a a a a a \ a a a a a \ a a a a \ a a a a \ a a a a a a a a a a a \ a a \ a a a a a a a a a a \ a a a a a a a a a a a a a a a a a a a \ a a a a a a a \ a a a \ a a \ aa \ a a a a a a a a a a a a a a \ a
     And the user clicks the button/link    jQuery=button:contains("Reject")
-    Then the user should see an error    This field cannot be left blank
+    Then the user should see an error    The reason cannot be blank
     And the user should see an error    This field cannot contain more than 100 words
     And the assessor fills all fields with valid inputs
     And the user clicks the button/link    jQuery=button:contains("Reject")
