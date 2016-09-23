@@ -35,7 +35,8 @@ public class BankDetailsDocs {
             .withOrganiationAddress(newOrganisationAddressResource().build());
 
     public static final FieldDescriptor[] projectBankDetailsStatusSummaryFields = {
-            fieldWithPath("competitionId").description("Competition Id of project"),
+            fieldWithPath("competitionId").description("Competition Id"),
+            fieldWithPath("competitionName").description("Competition name"),
             fieldWithPath("projectId").description("Project id to which the "),
             fieldWithPath("bankDetailsStatusResources").description("Bank details status")
     };

@@ -11,13 +11,14 @@ import static com.worth.ifs.application.resource.ApplicationResource.formatter;
 
 public class ProjectBankDetailsStatusSummary {
     private Long competitionId;
+    private String competitionName;
     private Long projectId;
     private List<BankDetailsStatusResource> bankDetailsStatusResources;
 
     public ProjectBankDetailsStatusSummary() {
     }
 
-    public ProjectBankDetailsStatusSummary(Long competitionId, Long projectId, List<BankDetailsStatusResource> bankDetailsStatusResources) {
+    public ProjectBankDetailsStatusSummary(Long competitionId, String competitionName, Long projectId, List<BankDetailsStatusResource> bankDetailsStatusResources) {
         this.competitionId = competitionId;
         this.projectId = projectId;
         this.bankDetailsStatusResources = bankDetailsStatusResources;
@@ -57,6 +58,14 @@ public class ProjectBankDetailsStatusSummary {
         this.bankDetailsStatusResources = bankDetailsStatusResources;
     }
 
+    public String getCompetitionName() {
+        return competitionName;
+    }
+
+    public void setCompetitionName(String competitionName) {
+        this.competitionName = competitionName;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -67,6 +76,7 @@ public class ProjectBankDetailsStatusSummary {
 
         return new EqualsBuilder()
                 .append(competitionId, that.competitionId)
+                .append(competitionName, that.competitionName)
                 .append(projectId, that.projectId)
                 .append(bankDetailsStatusResources, that.bankDetailsStatusResources)
                 .isEquals();
@@ -76,6 +86,7 @@ public class ProjectBankDetailsStatusSummary {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(competitionId)
+                .append(competitionName)
                 .append(projectId)
                 .append(bankDetailsStatusResources)
                 .toHashCode();
@@ -85,6 +96,7 @@ public class ProjectBankDetailsStatusSummary {
     public String toString() {
         return new ToStringBuilder(this)
                 .append("competitionId", competitionId)
+                .append("competitionName", competitionName)
                 .append("projectId", projectId)
                 .append("bankDetailsStatusResources", bankDetailsStatusResources)
                 .toString();
