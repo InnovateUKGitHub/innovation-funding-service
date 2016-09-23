@@ -22,11 +22,11 @@
     </div>
     <hr/>
 
-    <div class="success-alert" th:if="${model.approved}">
+    <div class="success-alert" th:if="${model.approved == true}">
         <p class="heading-small no-margin-top">The documents provided have been approved.</p>
     </div>
 
-    <div class="warning-alert"  th:if="${model.rejected}">
+    <div class="warning-alert" th:if="${model.approved == false}">
         <p class="heading-small no-margin-top">These documents after review have been rejected and returned to the project team.</p>
     </div>
 
