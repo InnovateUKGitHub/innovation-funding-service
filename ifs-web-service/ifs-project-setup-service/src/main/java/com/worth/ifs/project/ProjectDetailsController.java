@@ -18,6 +18,7 @@ import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.CompetitionService;
+import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.bankdetails.form.ProjectDetailsAddressForm;
 import com.worth.ifs.bankdetails.service.BankDetailsRestService;
 import com.worth.ifs.commons.rest.RestResult;
@@ -41,7 +42,6 @@ import com.worth.ifs.project.viewmodel.ProjectDetailsViewModel;
 import com.worth.ifs.project.viewmodel.SelectFinanceContactViewModel;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
-import com.worth.ifs.user.service.OrganisationRestService;
 import com.worth.ifs.user.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,7 +91,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
     private CompetitionService competitionService;
 
     @Autowired
-    private OrganisationRestService organisationRestService;
+    private OrganisationService organisationService;
 
     @Autowired
     private OrganisationAddressRestService organisationAddressRestService;
@@ -529,7 +529,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
         SortedSet<OrganisationResource> organisationSet = projectRoles.stream()
                 .filter(uar -> uar.getRoleName().equals(PARTNER.getName()))
-                .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisation()).getSuccessObjectOrThrowException())
+                .map(uar -> organisationService.getOrganisationById(uar.getOrganisation()))
                 .collect(Collectors.toCollection(supplier));
 
         return new ArrayList<>(organisationSet);
@@ -545,7 +545,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                                                                            String email, Long organisationId) {
         ProjectResource projectResource = projectService.getById(projectId);
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
-        OrganisationResource inviteOrganisation = organisationRestService.getOrganisationById(organisationId).getSuccessObject();
+        OrganisationResource inviteOrganisation = organisationService.getOrganisationById(organisationId);
 
         InviteProjectResource inviteResource = new InviteProjectResource();
 
