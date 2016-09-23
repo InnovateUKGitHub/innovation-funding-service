@@ -8,7 +8,6 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.invite.domain.CompetitionInvite;
 import com.worth.ifs.invite.resource.CompetitionInviteResource;
 import com.worth.ifs.registration.resource.UserRegistrationResource;
-import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.resource.RoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Test;
@@ -21,9 +20,8 @@ import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.COMPETITION_PARTICIPANT_CANNOT_ACCEPT_UNOPENED_INVITE;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
 import static com.worth.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
-import static com.worth.ifs.user.builder.RoleBuilder.newRole;
+import static com.worth.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.Disability.NO;
@@ -55,7 +53,6 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
                 .withPassword("Password123")
                 .build();
 
-        Role role = newRole().build();
         RoleResource roleResource = newRoleResource().build();
 
         CompetitionInviteResource competitionInviteResource = newCompetitionInviteResource()
@@ -63,8 +60,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
                 .build();
 
         when(competitionInviteServiceMock.getInvite(hash)).thenReturn(serviceSuccess(competitionInviteResource));
-        when(roleRepositoryMock.findOneByName(ASSESSOR.name())).thenReturn(role);
-        when(roleMapperMock.mapToResource(role)).thenReturn(roleResource);
+        when(roleServiceMock.findByUserRoleType(ASSESSOR)).thenReturn(serviceSuccess(roleResource));
 
         UserResource userToCreate = createLambdaMatcher(user -> {
             assertNull(user.getId());
@@ -90,9 +86,9 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
         ServiceResult<Void> serviceResult = assessorService.registerAssessorByHash(hash, userRegistrationResource);
         assertTrue(serviceResult.isSuccess());
 
-        InOrder inOrder = inOrder(competitionInviteServiceMock, roleRepositoryMock, registrationServiceMock);
+        InOrder inOrder = inOrder(competitionInviteServiceMock, roleServiceMock, registrationServiceMock);
         inOrder.verify(competitionInviteServiceMock).getInvite(hash);
-        inOrder.verify(roleRepositoryMock).findOneByName(ASSESSOR.name());
+        inOrder.verify(roleServiceMock).findByUserRoleType(ASSESSOR);
         inOrder.verify(registrationServiceMock).createUser(isA(UserResource.class));
         inOrder.verify(registrationServiceMock).activateUser(createdUser.getId());
         inOrder.verify(competitionInviteServiceMock).acceptInvite(hash);
@@ -121,6 +117,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
         ServiceResult<Void> serviceResult = assessorService.registerAssessorByHash(hash, userRegistrationResource);
 
         verify(competitionInviteServiceMock).getInvite(hash);
+        verifyNoMoreInteractions(roleServiceMock);
         verifyNoMoreInteractions(registrationServiceMock);
         verifyNoMoreInteractions(competitionInviteServiceMock);
 
@@ -143,7 +140,6 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
                 .withPassword("Password123")
                 .build();
 
-        Role role = newRole().build();
         RoleResource roleResource = newRoleResource().build();
 
         CompetitionInviteResource competitionInviteResource = newCompetitionInviteResource()
@@ -151,8 +147,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
                 .build();
 
         when(competitionInviteServiceMock.getInvite(hash)).thenReturn(serviceSuccess(competitionInviteResource));
-        when(roleRepositoryMock.findOneByName(ASSESSOR.name())).thenReturn(role);
-        when(roleMapperMock.mapToResource(role)).thenReturn(roleResource);
+        when(roleServiceMock.findByUserRoleType(ASSESSOR)).thenReturn(serviceSuccess(roleResource));
 
         UserResource userToCreate = createLambdaMatcher(user -> {
             assertNull(user.getId());
@@ -179,10 +174,13 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
 
         ServiceResult<Void> serviceResult = assessorService.registerAssessorByHash(hash, userRegistrationResource);
 
-        verify(registrationServiceMock).createUser(isA(UserResource.class));
-        verify(registrationServiceMock).activateUser(createdUser.getId());
-        verify(competitionInviteServiceMock).getInvite(hash);
-        verify(competitionInviteServiceMock).acceptInvite(hash);
+        InOrder inOrder = inOrder(competitionInviteServiceMock, roleServiceMock, registrationServiceMock);
+        inOrder.verify(competitionInviteServiceMock).getInvite(hash);
+        inOrder.verify(roleServiceMock).findByUserRoleType(ASSESSOR);
+        inOrder.verify(registrationServiceMock).createUser(isA(UserResource.class));
+        inOrder.verify(registrationServiceMock).activateUser(createdUser.getId());
+        inOrder.verify(competitionInviteServiceMock).acceptInvite(hash);
+        inOrder.verifyNoMoreInteractions();
 
         assertTrue(serviceResult.isFailure());
         assertTrue(serviceResult.getFailure().is(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_UNOPENED_INVITE, "Juggling Craziness"));
@@ -203,7 +201,6 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
                 .withPassword("Password123")
                 .build();
 
-        Role role = newRole().build();
         RoleResource roleResource = newRoleResource().build();
 
         CompetitionInviteResource competitionInviteResource = newCompetitionInviteResource()
@@ -211,8 +208,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
                 .build();
 
         when(competitionInviteServiceMock.getInvite(hash)).thenReturn(serviceSuccess(competitionInviteResource));
-        when(roleRepositoryMock.findOneByName(ASSESSOR.name())).thenReturn(role);
-        when(roleMapperMock.mapToResource(role)).thenReturn(roleResource);
+        when(roleServiceMock.findByUserRoleType(ASSESSOR)).thenReturn(serviceSuccess(roleResource));
 
         UserResource userToCreate = createLambdaMatcher(user -> {
             assertNull(user.getId());
@@ -237,6 +233,12 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
         verifyNoMoreInteractions(registrationServiceMock);
         verify(competitionInviteServiceMock).getInvite(hash);
         verifyNoMoreInteractions(competitionInviteServiceMock);
+
+        InOrder inOrder = inOrder(competitionInviteServiceMock, roleServiceMock, registrationServiceMock);
+        inOrder.verify(competitionInviteServiceMock).getInvite(hash);
+        inOrder.verify(roleServiceMock).findByUserRoleType(ASSESSOR);
+        inOrder.verify(registrationServiceMock).createUser(isA(UserResource.class));
+        inOrder.verifyNoMoreInteractions();
 
         assertTrue(serviceResult.isFailure());
         assertTrue(serviceResult.getFailure().is(new Error(RestIdentityProviderService.ServiceFailures.UNABLE_TO_CREATE_USER, INTERNAL_SERVER_ERROR)));

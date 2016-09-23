@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 
 @Component
-public class AssessorRegistrationModelPopulator {
+public class AssessorRegistrationYourDetailsModelPopulator {
 
     @Autowired
     private CompetitionInviteRestService inviteRestService;

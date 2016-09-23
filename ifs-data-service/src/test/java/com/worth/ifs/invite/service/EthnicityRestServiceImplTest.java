@@ -19,7 +19,7 @@ public class EthnicityRestServiceImplTest extends BaseRestServiceUnitTest<Ethnic
     @Override
     protected EthnicityRestServiceImpl registerRestServiceUnderTest() {
         EthnicityRestServiceImpl ethnicityRestService = new EthnicityRestServiceImpl();
-        ethnicityRestService.setRejectionReasonRestUrl(ethnicityRestUrl);
+        ethnicityRestService.setEthnicityRestUrl(ethnicityRestUrl);
         return ethnicityRestService;
     }
 

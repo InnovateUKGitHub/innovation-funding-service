@@ -7,7 +7,6 @@ import com.worth.ifs.user.resource.EthnicityResource;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.persistence.EntityManager;
 import java.util.List;
 
 import static com.worth.ifs.user.builder.EthnicityBuilder.newEthnicity;
@@ -26,14 +25,10 @@ public class EthnicityControllerIntegrationTest extends BaseControllerIntegratio
     @Autowired
     private EthnicityRepository repository;
 
-    @Autowired
-    private EntityManager em;
-
     @Test
     public void findAllActive() throws Exception {
         repository.deleteAll();
-        em.flush();
-        em.clear();
+        flushAndClearSession();
 
         List<Ethnicity> saved = newEthnicity()
                 .withId(null, null, null, null)

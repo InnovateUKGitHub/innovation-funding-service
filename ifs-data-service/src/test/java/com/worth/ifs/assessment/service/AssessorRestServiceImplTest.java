@@ -11,12 +11,13 @@ import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.OK;
 
 public class AssessorRestServiceImplTest extends BaseRestServiceUnitTest<AssessorRestServiceImpl> {
-    private static final String assessorRestURL = "/assessor";
-
+    private static final String assessorRestUrl = "/assessor";
 
     @Override
     protected AssessorRestServiceImpl registerRestServiceUnderTest() {
-        return new AssessorRestServiceImpl();
+        AssessorRestServiceImpl assessorRestService = new AssessorRestServiceImpl();
+        assessorRestService.setAssessorRestUrl(assessorRestUrl);
+        return assessorRestService;
     }
 
     @Test
@@ -24,7 +25,7 @@ public class AssessorRestServiceImplTest extends BaseRestServiceUnitTest<Assesso
         String hash = "testhash";
 
         UserRegistrationResource userRegistrationResource = newUserRegistrationResource().build();
-        setupPostWithRestResultAnonymousExpectations(format("%s/register/%s", assessorRestURL, hash), Void.class, userRegistrationResource, null, OK);
+        setupPostWithRestResultAnonymousExpectations(format("%s/register/%s", assessorRestUrl, hash), Void.class, userRegistrationResource, null, OK);
 
         RestResult<Void> response = service.createAssessorByInviteHash(hash, userRegistrationResource);
         assertTrue(response.isSuccess());
