@@ -30,7 +30,7 @@ Other funding client side
     [Setup]    the user should see the element    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
     When the user enters invalid inputs in the other funding fields    ${EMPTY}    132020    -6565
     Then the user gets the expected validation errors    Invalid secured date    Funding source cannot be blank
-    And the user moves focus to the element    link=Add another source of funding
+    And the user moves focus to the element    jQuery=label:contains(Yes) input
     And the user should see an error    This field should be 1 or higher
 
 Other funding server side
