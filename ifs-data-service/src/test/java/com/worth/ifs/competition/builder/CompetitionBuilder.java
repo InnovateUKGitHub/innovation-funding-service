@@ -52,6 +52,10 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
         return with(competition -> setField("fundersPanelEndDate", endDate, competition));
     }
 
+    public CompetitionBuilder withResubmission(Boolean resubmission) {
+        return with(competition -> setField("resubmission", resubmission, competition));
+    }
+
     public CompetitionBuilder withActitiyCode(String activityCode) {
         return with(competition -> setField("activitiyCode", activityCode, competition));
     }

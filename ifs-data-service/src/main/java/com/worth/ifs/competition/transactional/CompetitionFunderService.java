@@ -1,7 +1,7 @@
 package com.worth.ifs.competition.transactional;
 
 import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.security.NotSecured;
+import com.worth.ifs.commons.security.NotSecured;
 import org.springframework.security.access.method.P;
 
 /**

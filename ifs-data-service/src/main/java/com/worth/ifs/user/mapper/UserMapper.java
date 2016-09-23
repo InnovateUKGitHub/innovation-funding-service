@@ -17,7 +17,8 @@ import org.mapstruct.Mappings;
         uses = {
             OrganisationMapper.class,
             RoleMapper.class,
-            ProcessRoleMapper.class
+            ProcessRoleMapper.class,
+            EthnicityMapper.class
         }
 )
 public abstract class UserMapper extends BaseMapper<User, UserResource, Long> {
@@ -28,7 +29,7 @@ public abstract class UserMapper extends BaseMapper<User, UserResource, Long> {
     @Override
     public abstract UserResource mapToResource(User domain);
 
-    public Long mapRoleToId(User object) {
+    public Long mapUserToId(User object) {
         if (object == null) {
             return null;
         }

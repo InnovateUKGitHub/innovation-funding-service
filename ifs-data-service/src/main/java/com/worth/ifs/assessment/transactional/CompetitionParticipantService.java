@@ -4,7 +4,7 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.invite.resource.CompetitionParticipantResource;
 import com.worth.ifs.invite.resource.CompetitionParticipantRoleResource;
 import com.worth.ifs.invite.resource.ParticipantStatusResource;
-import com.worth.ifs.security.SecuredBySpring;
+import com.worth.ifs.commons.security.SecuredBySpring;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostFilter;
 

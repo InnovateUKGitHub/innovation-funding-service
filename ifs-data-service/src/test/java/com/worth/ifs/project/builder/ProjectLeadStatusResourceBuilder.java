@@ -3,6 +3,7 @@ package com.worth.ifs.project.builder;
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.project.constant.ProjectActivityStates;
 import com.worth.ifs.project.resource.ProjectLeadStatusResource;
+import com.worth.ifs.user.resource.OrganisationTypeEnum;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -27,6 +28,10 @@ public class ProjectLeadStatusResourceBuilder extends BaseBuilder<ProjectLeadSta
     @Override
     protected ProjectLeadStatusResource createInitial() {
         return new ProjectLeadStatusResource();
+    }
+
+    public ProjectLeadStatusResourceBuilder withName(String... names){
+        return withArray((name, partnerStatus) -> partnerStatus.setName(name), names);
     }
 
     public ProjectLeadStatusResourceBuilder withBankDetailsStatus(ProjectActivityStates... bankDetailsStatuses){
@@ -55,5 +60,13 @@ public class ProjectLeadStatusResourceBuilder extends BaseBuilder<ProjectLeadSta
 
     public ProjectLeadStatusResourceBuilder withSpendProfileStatus(ProjectActivityStates... spendProfileStatuses){
         return withArray((spendProfileStatus, partnerStatus) -> partnerStatus.setSpendProfileStatus(spendProfileStatus), spendProfileStatuses);
+    }
+
+    public ProjectLeadStatusResourceBuilder withOrganisationType(OrganisationTypeEnum... organisationTypes){
+        return withArray((organisationType, partnerStatus) -> partnerStatus.setOrganisationType(organisationType), organisationTypes);
+    }
+
+    public ProjectLeadStatusResourceBuilder withOrganisationId(Long... organisationIds){
+        return withArray((organisationId, partnerStatus) -> partnerStatus.setOrganisationId(organisationId), organisationIds);
     }
 }

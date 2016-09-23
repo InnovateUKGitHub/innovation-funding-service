@@ -148,7 +148,6 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     public ServiceResult<CompetitionResource> create() {
         Competition competition = new Competition();
         competition.setSetupComplete(false);
-        competition.setResubmission(true);
         return serviceSuccess(competitionMapper.mapToResource(competitionRepository.save(competition)));
     }
 

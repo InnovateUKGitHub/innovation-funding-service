@@ -12,9 +12,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Optional;
-
 import java.util.List;
+import java.util.Optional;
 
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.invite.constant.InviteStatus.OPENED;
@@ -146,7 +145,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
     public void getByUserRoleStatus() {
         CompetitionInvite invite = new CompetitionInvite("name1", "tom1@poly.io", "hash", competition);
         User user = newUser()
-                .withid(3L)
+                .withId(3L)
                 .withFirstName("Professor")
                 .build();
         CompetitionParticipant savedParticipant = repository.save( new CompetitionParticipant(competition, user, invite));

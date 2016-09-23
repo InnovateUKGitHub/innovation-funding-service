@@ -19,6 +19,7 @@ import com.worth.ifs.organisation.mapper.OrganisationAddressMapper;
 import com.worth.ifs.organisation.repository.OrganisationAddressRepository;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.project.repository.ProjectRepository;
+import com.worth.ifs.project.workflow.projectdetails.configuration.ProjectDetailsWorkflowHandler;
 import com.worth.ifs.sil.experian.resource.AccountDetails;
 import com.worth.ifs.sil.experian.resource.Address;
 import com.worth.ifs.sil.experian.resource.Condition;
@@ -75,6 +76,9 @@ public class BankDetailsServiceImpl implements BankDetailsService{
     @Autowired
     private SilExperianEndpoint silExperianEndpoint;
 
+    @Autowired
+    private ProjectDetailsWorkflowHandler projectDetailsWorkflowHandler;
+
     private SILBankDetailsMapper silBankDetailsMapper = new SILBankDetailsMapper();
 
     @Override
@@ -129,7 +133,7 @@ public class BankDetailsServiceImpl implements BankDetailsService{
         return find(projectRepository.findOne(projectId),
                 new Error(BANK_DETAILS_CANNOT_BE_SUBMITTED_BEFORE_PROJECT_DETAILS)).
                 andOnSuccess(project -> {
-                    if (project.getSubmittedDate() == null) {
+                    if (!projectDetailsWorkflowHandler.isSubmitted(project)) {
                         return serviceFailure(new Error(BANK_DETAILS_CANNOT_BE_SUBMITTED_BEFORE_PROJECT_DETAILS));
                     }
                     return serviceSuccess();
