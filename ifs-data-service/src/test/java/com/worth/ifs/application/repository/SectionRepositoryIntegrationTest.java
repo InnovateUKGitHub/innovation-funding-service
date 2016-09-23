@@ -2,8 +2,8 @@ package com.worth.ifs.application.repository;
 
 import com.worth.ifs.BaseRepositoryIntegrationTest;
 import com.worth.ifs.application.domain.Section;
-import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.repository.CompetitionRepository;
+import com.worth.ifs.competition.resource.ThreeStateType;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +32,8 @@ public class SectionRepositoryIntegrationTest extends BaseRepositoryIntegrationT
 
     @Test
     public void test_findByCompetitionIdAndDisplayInAssessmentApplicationSummaryTrueOrderByPriorityAsc() throws Exception {
-        final Long competitionId = competitionRepository.save(new Competition()).getId();
-        final Long otherCompetitionId = competitionRepository.save(new Competition()).getId();
+        final Long competitionId = competitionRepository.save(newCompetition().withResubmission(ThreeStateType.UNSET).build()).getId();
+        final Long otherCompetitionId = competitionRepository.save(newCompetition().withResubmission(ThreeStateType.UNSET).build()).getId();
 
         List<Pair<Long, Boolean>> compIdVisibilityPairs = asListOfPairs(competitionId, TRUE, competitionId, TRUE, competitionId, FALSE, otherCompetitionId, TRUE, otherCompetitionId, TRUE, otherCompetitionId, FALSE);
         List<Section> saved = mapWithIndex(compIdVisibilityPairs, (index, compIdVisibilityPair) -> {

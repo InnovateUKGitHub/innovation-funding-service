@@ -5,6 +5,7 @@ import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.domain.Milestone;
 import com.worth.ifs.competition.resource.CompetitionResource.Status;
+import com.worth.ifs.competition.resource.ThreeStateType;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -50,6 +51,10 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
     }
     public CompetitionBuilder withFundersPanelEndDate(LocalDateTime endDate) {
         return with(competition -> setField("fundersPanelEndDate", endDate, competition));
+    }
+
+    public CompetitionBuilder withResubmission(ThreeStateType type) {
+        return with(competition -> setField("resubmission", type, competition));
     }
 
     public CompetitionBuilder withActitiyCode(String activityCode) {

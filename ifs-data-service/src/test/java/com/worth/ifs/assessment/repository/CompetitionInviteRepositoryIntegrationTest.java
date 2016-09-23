@@ -1,9 +1,9 @@
 package com.worth.ifs.assessment.repository;
 
 import com.worth.ifs.BaseRepositoryIntegrationTest;
-import com.worth.ifs.competition.builder.CompetitionBuilder;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.repository.CompetitionRepository;
+import com.worth.ifs.competition.resource.ThreeStateType;
 import com.worth.ifs.invite.domain.CompetitionInvite;
 import com.worth.ifs.invite.repository.CompetitionInviteRepository;
 import org.junit.Before;
@@ -30,7 +30,7 @@ public class CompetitionInviteRepositoryIntegrationTest extends BaseRepositoryIn
 
     @Before
     public void setup() {
-        competition = competitionRepository.save( newCompetition().withName("competition").build()) ;
+        competition = competitionRepository.save( newCompetition().withName("competition").withResubmission(ThreeStateType.UNSET).build()) ;
     }
 
     @Test
