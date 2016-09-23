@@ -568,7 +568,12 @@ IFS.core.formValidation = (function(){
               }
               if(formGroup.find('[data-errorfield="'+name+'"]').length === 0) {
                 field.removeClass('field-error');
-                if(s.html5validationMode){ field[0].setCustomValidity('');}
+                if(s.html5validationMode){
+                  jQuery('[name='+name+'],#'+name).each(function(){
+                    this.setCustomValidity('');
+                  });
+                }
+
               }
             }
 
