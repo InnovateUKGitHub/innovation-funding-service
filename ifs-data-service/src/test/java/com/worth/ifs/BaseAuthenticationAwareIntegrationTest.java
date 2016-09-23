@@ -1,16 +1,11 @@
 package com.worth.ifs;
 
-import com.worth.ifs.commons.security.UserAuthentication;
+import com.worth.ifs.commons.BaseIntegrationTest;
 import com.worth.ifs.security.SecurityRuleUtil;
 import com.worth.ifs.user.mapper.UserMapper;
 import com.worth.ifs.user.repository.UserRepository;
 import com.worth.ifs.user.resource.UserResource;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.persistence.EntityManager;
 import java.util.Arrays;
@@ -29,22 +24,8 @@ public abstract class BaseAuthenticationAwareIntegrationTest extends BaseIntegra
 
     @Autowired
     private UserMapper userMapper;
-
-    /**
-     * Set a user on the Spring Security ThreadLocals
-     *
-     * @param user
-     */
-    protected void setLoggedInUser(UserResource user) {
-        SecurityContextHolder.getContext().setAuthentication(new UserAuthentication(user));
-    }
-
-    /**
-     * Get the user on the Spring Security ThreadLocals
-     */
-    protected UserResource getLoggedInUser() {
-        return ((UserAuthentication) SecurityContextHolder.getContext().getAuthentication()).getDetails();
-    }
+    @Autowired
+    private EntityManager em;
 
     protected UserResource getSteveSmith() {
         return getByEmail("steve.smith@empire.com");
@@ -100,5 +81,10 @@ public abstract class BaseAuthenticationAwareIntegrationTest extends BaseIntegra
 
     protected void loginFelixWilson() {
         setLoggedInUser(getFelixWilson());
+    }
+
+    protected void flushAndClearSession() {
+        em.flush();
+        em.clear();
     }
 }

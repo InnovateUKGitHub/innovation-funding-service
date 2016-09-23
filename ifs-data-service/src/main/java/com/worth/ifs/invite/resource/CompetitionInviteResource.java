@@ -1,5 +1,6 @@
 package com.worth.ifs.invite.resource;
 
+import com.worth.ifs.invite.constant.InviteStatus;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -13,6 +14,8 @@ public class CompetitionInviteResource extends InviteResource {
     private String competitionName;
 
     private String email;
+
+    private InviteStatus status;
 
     public String getCompetitionName() {
         return competitionName;
@@ -38,6 +41,14 @@ public class CompetitionInviteResource extends InviteResource {
         this.id = id;
     }
 
+    public InviteStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(InviteStatus status) {
+        this.status = status;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -50,6 +61,7 @@ public class CompetitionInviteResource extends InviteResource {
                 .append(id, that.id)
                 .append(competitionName, that.competitionName)
                 .append(email, that.email)
+                .append(status, that.status)
                 .isEquals();
     }
 
@@ -59,6 +71,7 @@ public class CompetitionInviteResource extends InviteResource {
                 .append(id)
                 .append(competitionName)
                 .append(email)
+                .append(status)
                 .toHashCode();
     }
 }
