@@ -55,7 +55,12 @@ public class AdditionalInfoSectionSaver extends AbstractSectionSaver implements 
 			competition.getFunders().add(competitionFunderResource);
 		});
 
-		competitionService.update(competition);
+		try {
+			competitionService.update(competition);
+		} catch (RuntimeException e) {
+			LOG.error("Competition object not available");
+			return asList(new Error("competition.setup.autosave.should.be.completed", HttpStatus.BAD_REQUEST));
+		}
 
 		return Collections.emptyList();
 	}
@@ -82,10 +87,16 @@ public class AdditionalInfoSectionSaver extends AbstractSectionSaver implements 
 				break;
 			case "removeFunder":
 				int index = Integer.valueOf(value);
-				if (index > 0 && competitionResource.getFunders().size() > index) {
+				//If the index is out of range then ignore it, The UI will add rows without them being persisted yet.
+				if (competitionResource.getFunders().size() <= index) {
+					break;
+				}
+
+				//Not allowed to remove 0th index.
+				if (index > 0) {
 					competitionResource.getFunders().remove(index);
 				} else {
-					return asList(new Error("Funder could not be removed", HttpStatus.BAD_REQUEST));
+					return asList(new Error("competition.setup.autosave.funder.could.not.be.removed", HttpStatus.BAD_REQUEST));
 				}
 				break;
 			default:
