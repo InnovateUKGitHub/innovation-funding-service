@@ -21,6 +21,7 @@ public class ProjectBankDetailsStatusSummary {
     public ProjectBankDetailsStatusSummary(Long competitionId, String competitionName, Long projectId, List<BankDetailsStatusResource> bankDetailsStatusResources) {
         this.competitionId = competitionId;
         this.projectId = projectId;
+        this.competitionName = competitionName;
         this.bankDetailsStatusResources = bankDetailsStatusResources;
     }
 
