@@ -1,6 +1,6 @@
 package com.worth.ifs.transactional;
 
-import com.worth.ifs.BaseIntegrationTest;
+import com.worth.ifs.commons.BaseIntegrationTest;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.repository.UserRepository;
 import org.junit.Test;

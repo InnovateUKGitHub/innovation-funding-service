@@ -6,6 +6,7 @@ import com.worth.ifs.application.model.OpenFinanceSectionSectionModelPopulator;
 import com.worth.ifs.application.resource.*;
 import com.worth.ifs.application.service.AssessorFeedbackRestService;
 import com.worth.ifs.application.service.CompetitionService;
+import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.resource.CompetitionResource;
@@ -32,11 +33,13 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
+import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -46,6 +49,7 @@ import static com.worth.ifs.competition.resource.CompetitionResource.Status.FUND
 import static com.worth.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
 import static com.worth.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static java.util.Arrays.asList;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -85,33 +89,35 @@ public class ApplicationManagementController extends AbstractApplicationControll
 
     @RequestMapping(value= "/{applicationId}", method = GET)
     public String displayApplicationForCompetitionAdministrator(@PathVariable("applicationId") final Long applicationId,
+                                                                @PathVariable("competitionId") final Long competitionId,
                                                                 @ModelAttribute("form") ApplicationForm form,
                                                                 Model model,
                                                                 HttpServletRequest request
     ){
-        UserResource user = getLoggedUser(request);
-        form.setAdminMode(true);
+        return validateApplicationAndCompetitionIds(applicationId, competitionId, (application) -> {
+            UserResource user = getLoggedUser(request);
+            form.setAdminMode(true);
 
-        List<FormInputResponseResource> responses = formInputResponseService.getByApplication(applicationId);
+            List<FormInputResponseResource> responses = formInputResponseService.getByApplication(applicationId);
 
-        ApplicationResource application = applicationService.getById(applicationId);
-        // so the mode is viewonly
-        application.enableViewMode();
+            // so the mode is viewonly
+            application.enableViewMode();
 
-        CompetitionResource competition = competitionService.getById(application.getCompetition());
-        addApplicationAndSections(application, competition, user.getId(), Optional.empty(), Optional.empty(), model, form);
-        organisationDetailsModelPopulator.populateModel(model, application.getId());
-        addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form);
-        addAppendices(applicationId, responses, model);
+            CompetitionResource competition = competitionService.getById(application.getCompetition());
+            addApplicationAndSections(application, competition, user.getId(), Optional.empty(), Optional.empty(), model, form);
+            organisationDetailsModelPopulator.populateModel(model, application.getId());
+            addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form);
+            addAppendices(applicationId, responses, model);
 
-        model.addAttribute("form", form);
-        model.addAttribute("applicationReadyForSubmit", false);
-        model.addAttribute("isCompManagementDownload", true);
+            model.addAttribute("form", form);
+            model.addAttribute("applicationReadyForSubmit", false);
+            model.addAttribute("isCompManagementDownload", true);
 
-        AssessorFeedbackViewModel assessorFeedbackViewModel = getAssessorFeedbackViewModel(application, competition);
-        model.addAttribute("assessorFeedback", assessorFeedbackViewModel);
+            AssessorFeedbackViewModel assessorFeedbackViewModel = getAssessorFeedbackViewModel(application, competition);
+            model.addAttribute("assessorFeedback", assessorFeedbackViewModel);
 
-        return "competition-mgt-application-overview";
+            return "competition-mgt-application-overview";
+        });
     }
 
     @RequestMapping(value = "/{applicationId}/assessorFeedback", method = GET)
@@ -133,7 +139,7 @@ public class ApplicationManagementController extends AbstractApplicationControll
             Model model,
             HttpServletRequest request) {
 
-        Supplier<String> failureView = () -> displayApplicationForCompetitionAdministrator(applicationId, applicationForm, model, request);
+        Supplier<String> failureView = () -> displayApplicationForCompetitionAdministrator(applicationId, competitionId, applicationForm, model, request);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
@@ -157,7 +163,7 @@ public class ApplicationManagementController extends AbstractApplicationControll
                                              ValidationHandler validationHandler,
                                              HttpServletRequest request) {
 
-        Supplier<String> failureView = () -> displayApplicationForCompetitionAdministrator(applicationId, applicationForm, model, request);
+        Supplier<String> failureView = () -> displayApplicationForCompetitionAdministrator(applicationId, competitionId, applicationForm, model, request);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
@@ -170,29 +176,36 @@ public class ApplicationManagementController extends AbstractApplicationControll
     }
 
     @RequestMapping(value = "/{applicationId}/finances/{organisationId}", method = RequestMethod.GET)
-    public String displayApplicationForCompetitionAdministrator(@PathVariable("applicationId") final String applicationIdString,
+    public String displayApplicationForCompetitionAdministrator(@PathVariable("applicationId") final Long applicationId,
+                                                                @PathVariable("competitionId") final Long competitionId,
                                                                 @PathVariable("organisationId") final String organisationId,
                                                                 @ModelAttribute("form") ApplicationForm form,
                                                                 Model model,
                                                                 BindingResult bindingResult
     ) throws ExecutionException, InterruptedException {
-        Long applicationId = Long.valueOf(applicationIdString);
-        ApplicationResource application = applicationService.getById(applicationId);
-        SectionResource financeSection = sectionService.getFinanceSection(application.getCompetition());
-        List<SectionResource> allSections = sectionService.getAllByCompetitionId(application.getCompetition());
-        List<FormInputResponseResource> responses = formInputResponseService.getByApplication(applicationId);
-        UserResource impersonatingUser = getImpersonateUserByOrganisationId(organisationId, form, applicationId);
 
-        // so the mode is viewonly
-        form.setAdminMode(true);
-        application.enableViewMode();
-        model.addAttribute("responses", formInputResponseService.mapFormInputResponsesToFormInput(responses));
-        model.addAttribute("applicationReadyForSubmit", false);
+        return validateApplicationAndCompetitionIds(applicationId, competitionId, (application) -> {
+            SectionResource financeSection = sectionService.getFinanceSection(application.getCompetition());
+            List<SectionResource> allSections = sectionService.getAllByCompetitionId(application.getCompetition());
+            List<FormInputResponseResource> responses = formInputResponseService.getByApplication(applicationId);
+            UserResource impersonatingUser;
+            try {
+                impersonatingUser = getImpersonateUserByOrganisationId(organisationId, form, applicationId);
+            } catch(ExecutionException | InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+            // so the mode is viewonly
+            form.setAdminMode(true);
+            application.enableViewMode();
+            model.addAttribute("responses", formInputResponseService.mapFormInputResponsesToFormInput(responses));
+            model.addAttribute("applicationReadyForSubmit", false);
 
 
-        openFinanceSectionSectionModelPopulator.populateModel(form, model, application, financeSection, impersonatingUser, bindingResult, allSections);
+            openFinanceSectionSectionModelPopulator.populateModel(form, model, application, financeSection, impersonatingUser, bindingResult, allSections);
 
-        return "comp-mgt-application-finances";
+            return "comp-mgt-application-finances";
+        });
     }
 
     private UserResource getImpersonateUserByOrganisationId(@PathVariable("organisationId") String organisationId, @ModelAttribute("form") ApplicationForm form, Long applicationId) throws InterruptedException, ExecutionException {
@@ -237,8 +250,12 @@ public class ApplicationManagementController extends AbstractApplicationControll
      */
     @RequestMapping(value="/{applicationId}/print")
     public String printManagementApplication(@PathVariable("applicationId") Long applicationId,
+                                             @PathVariable("competitionId") Long competitionId,
                                              Model model, HttpServletRequest request) {
-        return print(applicationId, model, request);
+
+        return validateApplicationAndCompetitionIds(applicationId, competitionId, (application) -> {
+            return print(applicationId, model, request);
+        });
     }
 
     private void addAppendices(Long applicationId, List<FormInputResponseResource> responses, Model model) {
@@ -269,5 +286,15 @@ public class ApplicationManagementController extends AbstractApplicationControll
 
     private String redirectToApplicationOverview(Long competitionId, Long applicationId) {
         return "redirect:/competition/" + competitionId + "/application/" + applicationId;
+    }
+
+
+    private String validateApplicationAndCompetitionIds(Long applicationId, Long competitionId, Function<ApplicationResource, String> success) {
+        ApplicationResource application = applicationService.getById(applicationId);
+        if (application.getCompetition().equals(competitionId)) {
+            return success.apply(application);
+        } else {
+            throw new ObjectNotFoundException();
+        }
     }
 }

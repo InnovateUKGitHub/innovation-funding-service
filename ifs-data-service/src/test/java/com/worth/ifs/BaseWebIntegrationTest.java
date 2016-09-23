@@ -1,5 +1,6 @@
 package com.worth.ifs;
 
+import com.worth.ifs.commons.BaseIntegrationTest;
 import org.springframework.boot.test.WebIntegrationTest;
 
 /**

@@ -1,6 +1,7 @@
 package com.worth.ifs;
 
-import com.worth.ifs.security.NotSecured;
+import com.worth.ifs.commons.BaseIntegrationTest;
+import com.worth.ifs.commons.security.NotSecured;
 import com.worth.ifs.security.NotSecuredMethodException;
 import com.worth.ifs.security.SecuredMethodsInStackCountInterceptor;
 import org.junit.Assert;
