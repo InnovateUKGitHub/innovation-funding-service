@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+<main id="content">
+	
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader('Application questions', '/prototypes/5085-application-process')" th:remove="tag" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+	<div class="hgroup" style="padding-top: 20px">
+		<p class="subtitle no-margin">Connected digital additive manufacturing</p>
+		<h1 class="heading-xlarge no-margin">
+			<th:block th:if="${param.status != null and param.status[0] == 'edit'}">Edit 'Scope'</th:block>
+			<th:block th:if="${param.status == null}">Scope</th:block>
+		</h1>
+	</div>
+
+	<p class="extra-margin">Make changes to the question 'Scope'. You can amend how this is presented to the applicant, and also the wording and guidance assessors are given for scoring this question.</p>
+
+	<form>
+		<fieldset>
+			<legend class="visuallyhidden">Application question</legend>
+			<h2 class="heading-medium extra-margin">Application question</h2>
+
+			<th:block th:if="${param.status == null}">
+				<dl class="application-question-list grid-row">
+					<dt class="column-third">Question heading</dt>
+					<dd class="column-two-thirds">Scope</dd>
+					<dt class="column-third">Question title</dt>
+					<dd class="column-two-thirds">How does your project align with the scope of this competition?</dd>
+					<dt class="column-third">Question subtitle</dt>
+					<dd class="column-two-thirds">If your application doesn't align with the scope, we will reject it.</dd>
+					<dt class="column-third">Guidance title</dt>
+					<dd class="column-two-thirds">What should I include in the project scope?</dd>
+					<dt class="column-third">Guidance</dt>
+					<dd class="column-two-thirds">It is important that you read the following guidance.<br />
+						<span>To show how your project aligns with the scope of this competition, you need to:</span>
+						<ul class="list-bullet">
+							<li>read the competition brief in full</li>
+							<li>understand the background, challenge and scope of the competition</li>
+							<li>address the research objectives in your application</li>
+							<li>match your project's objectives and activities to these</li>
+						</ul>
+						<span>Once you have submitted your application, you should not change this section unless:</span>
+						<ul class="list-bullet">
+							<li>we ask you to provide more information</li>
+							<li>we ask you to make it clearer</li>
+						</ul>
+					</dd>
+					<dt class="column-third">Max word count</dt>
+					<dd class="column-two-thirds">400</dd>
+					<dt class="column-third">Appendix</dt>
+					<dd class="column-two-thirds">No</dd>
+				</dl>
+			</th:block>
+			<th:block th:if="${param.status != null and param.status[0] == 'edit'}">
+				<div class="form-group">
+					<label class="form-label" for="question-heading">
+						<span class="form-label-bold">Question heading</span>
+					</label>
+					<input class="form-control" id="question-heading" name="question-heading" value="Scope" type="text" />
+				</div>
+				<div class="form-group">
+					<label class="form-label" for="question-title">
+						<span class="form-label-bold">Question title</span>
+					</label>
+					<input class="form-control" id="question-title" name="question-title" value="How does your project align with the scope of this competition?" type="text" />
+				</div>
+				<div class="form-group">
+					<label class="form-label" for="question-subtitle">
+						<span class="form-label-bold">Question subtitle</span>
+					</label>
+					<input class="form-control" id="question-subtitle" name="question-subtitle" value="If your application doesn't align with the scope, we will reject it." type="text" />
+				</div>
+				<div class="form-group">
+					<label class="form-label" for="guidance-title">
+						<span class="form-label-bold">Guidance title</span>
+					</label>
+					<input class="form-control" id="guidance-title" name="guidance-title" value="What should I include in the project scope?" type="text" />
+				</div>
+				<div class="form-group">
+					<label class="form-label" for="guidance">
+						<span class="form-label-bold">Guidance</span>
+					</label>
+					<textarea class="form-control width-full" id="guidance" rows="5" name="guidance">It is important that you read the following guidance.
+To show how your project aligns with the scope of this competition, you need to:
+- read the competition brief in full
+- address the research objectives in your application
+- match your project's objectives and activities to these
+
+Once you have submitted your application, you should not change this section unless:
+- we ask you to provide more information
+- we ask you to make it clearer
+
+					</textarea>
+				</div>
+				<div class="form-group">
+					<label class="form-label" for="word-count">
+						<span class="form-label-bold">Max word count</span>
+					</label>
+					<input class="form-control width-medium" id="word-count" name="word-count" value="400" type="number" />
+				</div>
+				<div class="form-group">
+					<fieldset class="inline">
+						<h3 class="heading-small">Appendix</h3>
+						<legend class="visuallyhidden">Appendix</legend>
+						<label class="block-label" for="appendix-yes">
+							<input id="appendix-yes" name="appendix-group" value="Yes" type="radio" />
+							Yes
+						</label>
+						<label class="block-label" for="appendix-no">
+							<input id="appendix-no" name="appendix-group" value="No" type="radio" checked="checked" />
+							No
+						</label>
+					</fieldset>
+				</div>
+			</th:block>
+		</fieldset>
+		<fieldset>
+			<legend class="visuallyhidden">Assessment of this question</legend>
+			<h2 class="heading-medium extra-margin">Assessment of this question</h2>
+
+			<th:block th:if="${param.status == null}">
+				<dl class="application-question-list grid-row">
+					<dt class="column-third">Scored</dt>
+					<dd class="column-two-thirds">No</dd>
+					<dt class="column-third">Written feedback</dt>
+					<dd class="column-two-thirds">No</dd>
+				</dl>
+			</th:block>
+			<th:block th:if="${param.status != null and param.status[0] == 'edit'}">
+				<div class="form-group">
+					<fieldset class="inline">
+						<h3 class="heading-small">Research category question</h3>
+						<legend class="visuallyhidden">Research category question</legend>
+						<label class="block-label" for="research-question-yes">
+							<input id="research-question-yes" name="research-question-group" value="Yes" type="radio" checked="checked" />
+							Yes
+						</label>
+						<label class="block-label" for="research-question-no">
+							<input id="research-question-no" name="research-question-group" value="No" type="radio" />
+							No
+						</label>
+					</fieldset>
+				</div>
+				<div class="form-group">
+					<fieldset class="inline">
+						<h3 class="heading-small">Scored</h3>
+						<legend class="visuallyhidden">Scored</legend>
+						<label class="block-label" for="scored-yes">
+							<input id="scored-yes" name="scored-group" value="Yes" type="radio" />
+							Yes
+						</label>
+						<label class="block-label" for="scored-no">
+							<input id="scored-no" name="scored-group" value="No" type="radio" checked="checked" />
+							No
+						</label>
+					</fieldset>
+				</div>
+				<div class="form-group">
+					<fieldset class="inline">
+						<h3 class="heading-small">Scope 'Y/N' question</h3>
+						<legend class="visuallyhidden">Scope 'Y/N' question</legend>
+						<label class="block-label" for="scope-question-yes">
+							<input id="scope-question-yes" name="scope-question-group" value="Yes" type="radio" checked="checked" />
+							Yes
+						</label>
+						<label class="block-label" for="scope-question-no">
+							<input id="scope-question-no" name="scope-question-group" value="No" type="radio" />
+							No
+						</label>
+					</fieldset>
+				</div>
+				<div class="form-group">
+					<label class="form-label" for="assessment-guidance">
+						<span class="form-label-bold">Guidance</span>
+					</label>
+					<textarea class="form-control width-full" id="assessment-guidance" rows="5" name="assessment-guidance">Your answer should be based upon the following:
+Your assessment of the project scope should be based upon the competition brief.
+
+					</textarea>
+				</div>
+				<div class="form-group">
+					<h3 class="heading-small">Guidance table</h3>
+					<table>
+						<thead>
+						<tr>
+							<th>Score</th>
+							<th>Justification</th>
+							<th><span class="visuallyhidden">Action</span></th>
+						</tr>
+						</thead>
+						<tbody>
+							<div th:include="prototypes/fragments/comp-setup :: prototype-section-assessment-guidance-row" th:with="rowNo=1,score=${'YES'},justification=${'The application contains the following:  Is the consortia business led? Are there two or more partners to the collaboration? Does it meet the scope of the competition as defined in the competition brief?The application contains the following:  Is the consortia business led? Are there two or more partners to the collaboration? Does it meet the scope of the competition as defined in the competition brief?'}" th:remove="tag" />
+							<div th:include="prototypes/fragments/comp-setup :: prototype-section-assessment-guidance-row" th:with="rowNo=2,score=${'NO'},justification=${'One or more of the above requirements have not been satisfied.'}" th:remove="tag" />
+						</tbody>
+					</table>
+					<p class="alignright extra-margin">
+						<a href="#" class="add-new-group">+ add new score group</a>
+					</p>
+				</div>
+				<div class="form-group">
+					<label class="form-label" for="max-word-count">
+						<span class="form-label-bold">Max word count</span>
+					</label>
+					<input class="form-control width-medium" id="max-word-count" name="max-word-count" value="100" type="number" />
+				</div>
+			</th:block>
+		</fieldset>
+
+		<div class="extra-margin">
+			<a th:if="${param.status == null}" role="button" tabindex="0" class="button" href="/prototypes/5210-project-scope?status=edit">Edit this question</a>
+			<a th:if="${param.status != null and param.status[0] == 'edit'}" role="button" tabindex="0" class="button" href="/prototypes/5085-application-process">Save and close</a>
+		</div>
+		<div th:if="${param.status == null}" class="extra-margin">
+			<a href="/prototypes/5085-application-process" class="button-secondary">Return to application process</a>
+		</div>
+	</form>
+
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<script type="text/javascript">
+
+</script>
+</body>
+</html>

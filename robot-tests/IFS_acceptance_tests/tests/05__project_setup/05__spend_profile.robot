@@ -2,6 +2,10 @@
 Documentation     INFUND-3970 As a partner I want a spend profile page in Project setup so that I can access and share Spend profile information within my partner organisation before submitting to the Project Manager
 ...
 ...               INFUND-3764 As a partner I want to view a Spend Profile showing my partner organisation's eligible project costs divided equally over the duration of our project to begin review our project costs before submitting to the Project Manager
+...
+...               INFUND-3765 As a partner I want to be able to edit my Spend profile so I can prepare an updated profile for my organisation before submission to the Project Manager
+...
+...               INFUND-3971 As a partner I want to be able to view my spend profile in a summary table so that I can review my spend profile by financial year
 Suite Setup       the project finance user generates the spend profile table
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -23,6 +27,7 @@ Lead partner can view spend profile page
     Given the user clicks the button/link    link=00000001: best riffs
     When the user clicks the button/link    link=Spend profile
     Then the user should not see an error in the page
+#    Then the user clicks the button/link    link=Vitruvius Stonework Limited    # That's for when the Lead Partner has to choose which SP to see
     And the user should see the text in the page    Your project costs have been reviewed and confirmed by Innovate UK
 
 Lead partner can see correct project start date and duration
@@ -37,19 +42,86 @@ Calculations in the spend profile table
     [Tags]    HappyPath
     Given the user should see the element    jQuery=div.spend-profile-table
     Then element should contain    css=div.spend-profile-table tr:nth-child(1) td:nth-child(38)    £ 104,354    #Labour
-    Then element should contain    css=div.spend-profile-table tr:nth-child(2) td:nth-child(38)    £ 0    #Overheads
+    Then element should contain    css=div.spend-profile-table tr:nth-child(2) td:nth-child(38)    £ 0          #Overheads
     Then element should contain    css=div.spend-profile-table tr:nth-child(3) td:nth-child(38)    £ 188,025    #Materials
-    Then element should contain    css=div.spend-profile-table tr:nth-child(4) td:nth-child(38)    £ 0    #Capital usage
-    Then element should contain    css=div.spend-profile-table tr:nth-child(5) td:nth-child(38)    £ 23,423    #Subcontracting
-    Then element should contain    css=div.spend-profile-table tr:nth-child(6) td:nth-child(38)    £ 7,956    #Travel & subsistence
-    Then element should contain    css=div.spend-profile-table tr:nth-child(7) td:nth-child(38)    £ 32,444    #Other costs
-    #${duration} is No of Months + 1, due to header
-    And the sum of tds equals the total    div.spend-profile-table    1    38    104354    # Labour
-    And the sum of tds equals the total    div.spend-profile-table    3    38    188025    # Materials
-    And the sum of tds equals the total    div.spend-profile-table    5    38    23423    # Subcontracting
-    And the sum of tds equals the total    div.spend-profile-table    6    38    7956    # Travel & subsistence
-    And the sum of tds equals the total    div.spend-profile-table    7    38    32444    # Other Costs
+    Then element should contain    css=div.spend-profile-table tr:nth-child(4) td:nth-child(38)    £ 0          #Capital usage
+    Then element should contain    css=div.spend-profile-table tr:nth-child(5) td:nth-child(38)    £ 23,423     #Subcontracting
+    Then element should contain    css=div.spend-profile-table tr:nth-child(6) td:nth-child(38)    £ 7,956      #Travel & subsistence
+    Then element should contain    css=div.spend-profile-table tr:nth-child(7) td:nth-child(38)    £ 32,444     #Other costs
+     #${duration} is No of Months + 1, due to header
+    And the sum of tds equals the total    div.spend-profile-table   1    38    104354    # Labour
+    And the sum of tds equals the total    div.spend-profile-table   3    38    188025    # Materials
+    And the sum of tds equals the total    div.spend-profile-table   5    38    23423     # Subcontracting
+    And the sum of tds equals the total    div.spend-profile-table   6    38    7956      # Travel & subsistence
+    And the sum of tds equals the total    div.spend-profile-table   7    38    32444     # Other Costs
+
+Lead Partner can see Spend profile summary
+    [Documentation]    INFUND-3971
+    [Tags]    Pending
+    Given the user navigates to the page            ${server}/project-setup/project/1/partner-organisation/31/spend-profile/
+    And the user should see the text in the page    Project costs for financial year
+    And focus                                       jQuery=div.grid-container table
+    Then element should contain                     jQuery=tr:nth-child(1) td:nth-child(2)    £ 29,667
+    And element should contain                      jQuery=tr:nth-child(1) td:nth-child(2)    £ 118,740
+    And element should contain                      jQuery=tr:nth-child(1) td:nth-child(2)    £ 118,740
+    And element should contain                      jQuery=tr:nth-child(1) td:nth-child(2)    £ 89,055
+
+Lead partner can edit his spend profile with invalid values
+    [Documentation]    INFUND-3765
+    [Tags]    Pending
+    When the user clicks the button/link             jQuery=.button:contains("Edit spend profile")
+    Then the text box should be editable             css=#row-Labour-0
+    When the user enters text to a text field        css=#row-Labour-0    2899
+    Then the user should see the text in the page    Unable to save spend profile
+    And the user should see the text in the page     Your total costs are higher than your eligible costs
+#    Then element text should be                      css=#row-total-Labour    £ 104,364
+    And the user should see the element              jQuery=.tr:nth-child(1).error
+    When the user clicks the button/link             jQuery=.button:contains("Save and return to spend profile overview")
+    Then the user should see the text in the page    Your spend profile has total costs higher than eligible project costs,
+    When the user clicks the button/link             jQuery=.button:contains("Edit spend profile")
+    Then the user enters text to a text field        css=#row-Labour-0    2889
+    # And the user should not see the element        jQuery=.tr:nth-child(1).error    TODO INFUND-5156
+    When the user enters text to a text field        css=#row-Materials-3    -55
+    Then the user should see the text in the page    This field should be 0 or higher
+    # When the user enters text to a text field      css=#row-Labour-3    35.25
+    # Then the user should see the text in the page  TODO INFUND-5172
+    When the user enters text to a text field        css=#row-Materials-3    5223
+    # And the user should not see the text in the page   This field should be 0 or higher    TODO INFUND-5160
+    # Then the user should not see the element       jQuery=.tr:nth-child(1).error    TODO INFUND-5156
+    Then the user clicks the button/link             jQuery=.button:contains("Save and return to spend profile overview")
+
+Lead partner can edit his spend profile with valid values
+    [Documentation]    INFUND-3765
+    [Tags]    Pending
+    Given the user navigates to the page                 ${server}/project-setup/project/1/partner-organisation/31/spend-profile/
+    When the user clicks the button/link                 jQuery=.button:contains("Edit spend profile")
+    Then the text box should be editable                 css=#row-Labour-0
+    When the user enters text to a text field            css=#row-Labour-24    2000
+    Then element should contain                          css=#row-total-Labour    £ 103,455
+    And the user should not see the text in the page     Unable to save spend profile
+    When the user enters text to a text field            css=#row-Travel--subsistence-35    0
+    Then element should contain                          css=#row-total-Travel--subsistence    £ 7,735
+    And the user should not see the text in the page     Unable to save spend profile
+    Then the user clicks the button/link                 jQuery=.button:contains("Save and return to spend profile overview")
+    Then the user should not see the text in the page    Your spend profile has total costs higher than eligible project costs,
+
+Lead Partners Spend profile summary gets updated when edited
+    [Documentation]    INFUND-3971
+    [Tags]    Pending
+    Given the user navigates to the page             ${server}/project-setup/project/1/partner-organisation/31/spend-profile/
+    Then the user should see the text in the page    Project costs for financial year
+    And element should contain                       jQuery=tr:nth-child(1) td:nth-child(2)    £ 117,841
+    And element should contain                       jQuery=tr:nth-child(1) td:nth-child(2)    £ 88,834
+
+Lead partner submits Spend Profile
+    [Documentation]    INFUND-3765
+    [Tags]
+    Given the user navigates to the page            ${server}/project-setup/project/1/partner-organisation/31/spend-profile/
+    When the user clicks the button/link            jQuery=.button:contains("Mark as complete")
+    Then the user should see the text in the page   Your Spend Profile is currently marked as complete
     [Teardown]    Logout as user
+
+# TODO update the acc tests for Editing the Spend Profile by a non-lead partner  INFUND-5153
 
 Non-lead partner can view spend profile page
     [Documentation]    INFUND-3970
@@ -67,6 +139,7 @@ Non-lead partner can see correct project start date and duration
     And the user should see the text in the page    January 2017
     And the user should see the text in the page    36 Months
     [Teardown]    Logout as user
+
 
 *** Keywords ***
 the project finance user generates the spend profile table
@@ -88,3 +161,8 @@ the sum of tds equals the total
     \    ${cell} =    convert to integer    ${formatted}
     \    ${sum} =    Evaluate    ${sum}+${cell}
     Should Be Equal As Integers    ${sum}    ${total}
+
+the text box should be editable
+    [Arguments]    ${element}
+    Wait until element is visible    ${element}
+    Element Should Be Enabled        ${element}
