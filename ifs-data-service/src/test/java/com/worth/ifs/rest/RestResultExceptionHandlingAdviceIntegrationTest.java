@@ -1,6 +1,6 @@
 package com.worth.ifs.rest;
 
-import com.worth.ifs.BaseIntegrationTest;
+import com.worth.ifs.commons.BaseIntegrationTest;
 import com.worth.ifs.commons.rest.RestResult;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;

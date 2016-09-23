@@ -3,8 +3,8 @@ package com.worth.ifs.application;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.form.ContributorsForm;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
-import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.ApplicationInviteResource;
+import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.lang3.CharEncoding;
 import org.junit.Before;
@@ -20,6 +20,8 @@ import javax.servlet.http.Cookie;
 import java.net.URLEncoder;
 import java.util.Arrays;
 
+import static com.worth.ifs.application.ApplicationContributorController.APPLICATION_CONTRIBUTORS_INVITE;
+import static com.worth.ifs.application.ApplicationContributorController.APPLICATION_CONTRIBUTORS_REMOVE_CONFIRM;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertEquals;
@@ -46,6 +48,7 @@ public class ApplicationContributorControllerTest extends BaseControllerMockMVCT
     private String inviteUrl;
     private String applicationRedirectUrl;
     private String inviteOverviewRedirectUrl;
+    private String removeUrl;
 
 
     @Override
@@ -66,11 +69,12 @@ public class ApplicationContributorControllerTest extends BaseControllerMockMVCT
 
         applicationId = applications.get(0).getId();
         alternativeApplicationId = applicationId + 1;
+        removeUrl = String.format("/application/%d/contributors/remove", applicationId);
         inviteUrl = String.format("/application/%d/contributors/invite", applicationId);
         redirectUrl = String.format("redirect:/application/%d/contributors/invite", applicationId);
         applicationRedirectUrl = String.format("redirect:/application/%d", applicationId);
         inviteOverviewRedirectUrl = String.format("redirect:/application/%d/contributors", applicationId);
-        viewName = "application-contributors/invite";
+        viewName = APPLICATION_CONTRIBUTORS_INVITE;
     }
 
     @Test
@@ -374,8 +378,31 @@ public class ApplicationContributorControllerTest extends BaseControllerMockMVCT
         assertNotNull(contributorsFormResult.getOrganisations().get(0));
         assertEquals(0, contributorsFormResult.getOrganisations().get(0).getInvites().size());
     }
-    
-	private void loginNonLeadUser(String email) {
+
+    @Test
+    public void whenUserIsRemovedRedirectToOverview() throws Exception {
+        mockMvc.perform(
+                post(removeUrl)
+                    .param("applicationInviteId", "2")
+        )
+        .andExpect(status().is3xxRedirection())
+        .andExpect(view().name(inviteOverviewRedirectUrl));
+    }
+
+    @Test
+    public void whenUserHasNoJSUserMustConfirm() throws Exception {
+        Long inviteId = 2314L;
+
+        mockMvc.perform(
+                get(removeUrl + String.format("/%d/confirm", inviteId))
+        )
+        .andExpect(status().is2xxSuccessful())
+        .andExpect(view().name(APPLICATION_CONTRIBUTORS_REMOVE_CONFIRM))
+        .andExpect(model().attribute("inviteId", inviteId))
+        .andExpect(model().attributeExists("removeContributorForm"));
+    }
+
+    private void loginNonLeadUser(String email) {
     	UserResource user = newUserResource().withId(2L).withFirstName("test").withLastName("name").withEmail(email).build();
     	loginUser(user);
 	}
@@ -386,6 +413,4 @@ public class ApplicationContributorControllerTest extends BaseControllerMockMVCT
     	inviteOrgResource.setInviteResources(Arrays.asList(new ApplicationInviteResource(null, name, email, null, null, null, null)));
     	when(inviteRestService.getInvitesByApplication(isA(Long.class))).thenReturn(restSuccess(Arrays.asList(inviteOrgResource)));
 	}
-
-
 }

@@ -1,4 +1,4 @@
-package com.worth.ifs.security;
+package com.worth.ifs.commons.security;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

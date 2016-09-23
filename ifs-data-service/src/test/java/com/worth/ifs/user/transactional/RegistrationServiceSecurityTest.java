@@ -45,7 +45,7 @@ public class RegistrationServiceSecurityTest extends BaseServiceSecurityTest<Reg
 
         UserResource userToCreate = newUserResource().build();
 
-        assertAccessDenied(() -> service.createOrganisationUser(123L, userToCreate), () -> {
+        assertAccessDenied(() -> classUnderTest.createOrganisationUser(123L, userToCreate), () -> {
             verify(rules).systemRegistrationUserCanCreateUsers(userToCreate, getLoggedInUser());
             verifyNoMoreInteractions(rules);
         });
@@ -58,7 +58,7 @@ public class RegistrationServiceSecurityTest extends BaseServiceSecurityTest<Reg
 
         when(lookup.findById(123L)).thenReturn(userToActivate);
 
-        assertAccessDenied(() -> service.activateUser(123L), () -> {
+        assertAccessDenied(() -> classUnderTest.activateUser(123L), () -> {
             verify(rules).systemRegistrationUserCanActivateUsers(userToActivate, getLoggedInUser());
             verifyNoMoreInteractions(rules);
         });
@@ -69,7 +69,7 @@ public class RegistrationServiceSecurityTest extends BaseServiceSecurityTest<Reg
         final UserResource userToSendVerificationEmail = newUserResource().build();
 
         assertAccessDenied(
-                () -> service.sendUserVerificationEmail(userToSendVerificationEmail, of(123L)),
+                () -> classUnderTest.sendUserVerificationEmail(userToSendVerificationEmail, of(123L)),
                 () -> {
                     verify(rules).systemRegistrationUserCanSendUserVerificationEmail(userToSendVerificationEmail, getLoggedInUser());
                     verifyNoMoreInteractions(rules);
@@ -81,7 +81,7 @@ public class RegistrationServiceSecurityTest extends BaseServiceSecurityTest<Reg
         final UserResource userToSendVerificationEmail = newUserResource().build();
 
         assertAccessDenied(
-                () -> service.resendUserVerificationEmail(userToSendVerificationEmail),
+                () -> classUnderTest.resendUserVerificationEmail(userToSendVerificationEmail),
                 () -> {
                     verify(rules).systemRegistrationUserCanSendUserVerificationEmail(userToSendVerificationEmail, getLoggedInUser());
                     verifyNoMoreInteractions(rules);
@@ -89,7 +89,7 @@ public class RegistrationServiceSecurityTest extends BaseServiceSecurityTest<Reg
     }
 
     @Override
-    protected Class<? extends RegistrationService> getServiceClass() {
+    protected Class<? extends RegistrationService> getClassUnderTest() {
         return TestRegistrationService.class;
     }
 

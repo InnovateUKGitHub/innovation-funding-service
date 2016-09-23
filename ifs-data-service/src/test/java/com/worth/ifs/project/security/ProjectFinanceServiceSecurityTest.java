@@ -40,10 +40,10 @@ public class ProjectFinanceServiceSecurityTest extends BaseServiceSecurityTest<P
             setLoggedInUser(userWithRole);
 
             if (PROJECT_FINANCE.equals(role)) {
-                service.generateSpendProfile(123L);
+                classUnderTest.generateSpendProfile(123L);
             } else {
                 try {
-                    service.generateSpendProfile(123L);
+                    classUnderTest.generateSpendProfile(123L);
                     fail("Should have thrown an AccessDeniedException for any non-Finance Team members");
                 } catch (AccessDeniedException e) {
                     // expected behaviour
@@ -60,7 +60,7 @@ public class ProjectFinanceServiceSecurityTest extends BaseServiceSecurityTest<P
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
-        assertAccessDenied(() -> service.getSpendProfileTable(projectOrganisationCompositeId),
+        assertAccessDenied(() -> classUnderTest.getSpendProfileTable(projectOrganisationCompositeId),
                 () -> {
 
                     verify(projectFinancePermissionRules).partnersCanViewTheirOwnSpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
@@ -78,7 +78,7 @@ public class ProjectFinanceServiceSecurityTest extends BaseServiceSecurityTest<P
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
-        assertAccessDenied(() -> service.getSpendProfile(projectOrganisationCompositeId),
+        assertAccessDenied(() -> classUnderTest.getSpendProfile(projectOrganisationCompositeId),
                 () -> {
 
                     verify(projectFinancePermissionRules).partnersCanViewTheirOwnSpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
@@ -98,7 +98,7 @@ public class ProjectFinanceServiceSecurityTest extends BaseServiceSecurityTest<P
 
         SpendProfileTableResource table = new SpendProfileTableResource();
 
-        assertAccessDenied(() -> service.saveSpendProfile(projectOrganisationCompositeId, table),
+        assertAccessDenied(() -> classUnderTest.saveSpendProfile(projectOrganisationCompositeId, table),
                 () -> {
 
                     verify(projectFinancePermissionRules).partnersCanEditTheirOwnSpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
@@ -114,7 +114,7 @@ public class ProjectFinanceServiceSecurityTest extends BaseServiceSecurityTest<P
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
-        assertAccessDenied(() -> service.markSpendProfile(projectOrganisationCompositeId, true),
+        assertAccessDenied(() -> classUnderTest.markSpendProfile(projectOrganisationCompositeId, true),
                 () -> {
 
                     verify(projectFinancePermissionRules).partnersCanMarkSpendProfileAsComplete(projectOrganisationCompositeId, getLoggedInUser());
@@ -123,7 +123,7 @@ public class ProjectFinanceServiceSecurityTest extends BaseServiceSecurityTest<P
     }
 
     @Override
-    protected Class<TestProjectFinanceService> getServiceClass() {
+    protected Class<TestProjectFinanceService> getClassUnderTest() {
         return TestProjectFinanceService.class;
     }
 

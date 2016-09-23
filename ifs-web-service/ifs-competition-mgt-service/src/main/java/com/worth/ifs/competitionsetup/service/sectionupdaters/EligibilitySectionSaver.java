@@ -55,8 +55,7 @@ public class EligibilitySectionSaver extends AbstractSectionSaver implements Com
 			competition.setStreamName(null);
 		}
 
-		boolean resubmission = "yes".equals(eligibilityForm.getResubmission());
-		competition.setResubmission(resubmission);
+		competition.setResubmission(CompetitionUtils.textToBoolean(eligibilityForm.getResubmission()));
 
 		CollaborationLevel level = CollaborationLevel.fromCode(eligibilityForm.getSingleOrCollaborative());
 		competition.setCollaborationLevel(level);
