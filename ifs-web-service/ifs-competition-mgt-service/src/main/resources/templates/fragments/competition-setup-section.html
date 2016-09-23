@@ -182,17 +182,11 @@
         <fieldset th:if="${!editable}" id="section-1-">
 
             <dl class="standard-definition-list">
-                <dt>Competition executive</dt>
-                <dd th:each="(competitionExecutiveUser : ${competitionExecutiveUsers})" th:text="${competitionExecutiveUser.name}" th:if="${competitionSetupForm.executiveUserId == competitionExecutiveUser.id}">User</dd>
-
-                <dt>Opening date</dt>
-                <dd th:text="${competitionSetupForm.openingDateDay+'/'+competitionSetupForm.openingDateMonth+'/'+competitionSetupForm.openingDateYear}"></dd>
-
-                <dt>Competition Lead technologist</dt>
-                <dd th:each="(competitionLeadTechUser : ${competitionLeadTechUsers})" th:text="${competitionLeadTechUser.name}" th:if="${competitionLeadTechUser.id == competitionSetupForm.leadTechnologistUserId}">Lead technologist</dd>
-
                 <dt>Competition title</dt>
                 <dd th:text="${competitionSetupForm.title}"></dd>
+
+                <dt>Competition type</dt>
+                <dd th:each="(competitionType : ${competitionTypes})" th:text="${competitionType.name}"  th:if="${competitionType.id == competitionSetupForm.competitionTypeId}">Competition Type</dd>
 
                 <dt>Innovation sector</dt>
                 <dd th:each="(innovationSector : ${innovationSectors})" th:if="${innovationSector.id == competitionSetupForm.innovationSectorCategoryId}" th:text="${innovationSector.name}">Innovation Sector</dd>
@@ -200,9 +194,16 @@
                 <dt>Innovation area</dt>
                 <dd th:each="(innovationArea : ${innovationAreas})" th:if="${competitionSetupForm.innovationAreaCategoryId == innovationArea.id}" th:text="${innovationArea.name}">Innovation Area</dd>
 
-                <dt>Competition type</dt>
-                <dd th:each="(competitionType : ${competitionTypes})" th:text="${competitionType.name}"  th:if="${competitionType.id == competitionSetupForm.competitionTypeId}">Competition Type</dd>
-                <dt>State aid</dt>
+                <dt>Opening date</dt>
+                <dd th:text="${competitionSetupForm.openingDateDay+'/'+competitionSetupForm.openingDateMonth+'/'+competitionSetupForm.openingDateYear}"></dd>
+
+                <dt>Competition Lead technologist</dt>
+                <dd th:each="(competitionLeadTechUser : ${competitionLeadTechUsers})" th:text="${competitionLeadTechUser.name}" th:if="${competitionLeadTechUser.id == competitionSetupForm.leadTechnologistUserId}">Lead technologist</dd>
+
+                <dt>Competition executive</dt>
+                <dd th:each="(competitionExecutiveUser : ${competitionExecutiveUsers})" th:text="${competitionExecutiveUser.name}" th:if="${competitionSetupForm.executiveUserId == competitionExecutiveUser.id}">User</dd>
+
+               <dt>State aid</dt>
                 <dd>
                     <span th:each="(competitionType : ${competitionTypes})" th:remove="tag">
                         <span class="yes" th:if="${competitionSetupForm.competitionTypeId == competitionType.id and competitionType.stateAid == true}">Yes</span>

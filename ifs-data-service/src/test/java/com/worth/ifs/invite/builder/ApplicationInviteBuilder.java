@@ -5,6 +5,7 @@ import com.worth.ifs.Builder;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.invite.domain.ApplicationInvite;
 import com.worth.ifs.invite.domain.InviteOrganisation;
+import com.worth.ifs.user.domain.User;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -23,9 +24,17 @@ public class ApplicationInviteBuilder extends BaseBuilder<ApplicationInvite, App
         return new ApplicationInviteBuilder(emptyList()).with(uniqueIds());
     }
 
+    public static ApplicationInviteBuilder newApplicationInvite() {
+        return new ApplicationInviteBuilder(emptyList()).with(uniqueIds());
+    }
+
     @Override
     protected ApplicationInviteBuilder createNewBuilderWithActions(List<BiConsumer<Integer, ApplicationInvite>> actions) {
         return new ApplicationInviteBuilder(actions);
+    }
+
+    public ApplicationInviteBuilder withId(Long... ids) {
+        return withArray((id, invite) -> invite.setId(id), ids);
     }
 
     public ApplicationInviteBuilder withApplication(Builder<Application, ?> application) {
@@ -34,6 +43,10 @@ public class ApplicationInviteBuilder extends BaseBuilder<ApplicationInvite, App
 
     public ApplicationInviteBuilder withApplication(Application... applications) {
         return withArray((application, invite) -> invite.setTarget(application), applications);
+    }
+
+    public ApplicationInviteBuilder withUser(User... users) {
+        return withArray((user, invite) -> invite.setUser(user), users);
     }
 
     public ApplicationInviteBuilder withInviteOrganisation(InviteOrganisation... organisations) {
