@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import static com.worth.ifs.security.SecurityRuleUtil.checkProcessRole;
+import static com.worth.ifs.security.SecurityRuleUtil.isCompAdmin;
 import static com.worth.ifs.user.resource.UserRoleType.COLLABORATOR;
 import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 
@@ -65,6 +66,11 @@ public class FinanceRowPermissionRules extends BasePermissionRules {
     @PermissionRule(value = "READ_ORGANISATION_FUNDING_STATUS", description = "Any partner can check if any of the other partners are seeking funding")
     public boolean projectPartnersCanCheckFundingStatusOfTeam(final ProjectResource project, final UserResource user) {
         return isPartner(project.getId(), user.getId());
+    }
+
+    @PermissionRule(value = "READ_ORGANISATION_FUNDING_STATUS", description = "Comp Admin can see if any partners are seeking funding")
+    public boolean compAdminsCanCheckFundingStatusOfTeam(final ProjectResource project, final UserResource user) {
+        return isCompAdmin(user);
     }
 
     private boolean isCollaborator(final FinanceRow cost, final UserResource user) {

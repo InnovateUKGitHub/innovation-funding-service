@@ -323,6 +323,7 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
                 () -> classUnderTest.organisationSeeksFunding(projectId, applicationId, organisationId),
                 () -> {
                     verify(costPermissionsRules).projectPartnersCanCheckFundingStatusOfTeam(isA(ProjectResource.class), isA(UserResource.class));
+                    verify(costPermissionsRules).projectPartnersCanCheckFundingStatusOfTeam(isA(ProjectResource.class), isA(UserResource.class));
                 });
     }
 
