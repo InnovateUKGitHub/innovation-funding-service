@@ -60,6 +60,8 @@ public class Project implements ProcessActivity {
     @JoinColumn(name="exploitationPlanFileEntryId", referencedColumnName="id")
     private FileEntry exploitationPlan;
 
+    private Boolean otherDocumentsApproved;
+
     public Project() {}
 
     public Project(Long id, Application application, LocalDate targetStartDate, Address address,
@@ -200,5 +202,13 @@ public class Project implements ProcessActivity {
 
     public void setExploitationPlan(FileEntry exploitationPlan) {
         this.exploitationPlan = exploitationPlan;
+    }
+
+    public Boolean getOtherDocumentsApproved() {
+        return otherDocumentsApproved;
+    }
+
+    public void setOtherDocumentsApproved(Boolean otherDocumentsApproved) {
+        this.otherDocumentsApproved = otherDocumentsApproved;
     }
 }

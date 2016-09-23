@@ -185,6 +185,11 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    public ServiceResult<Void> acceptOrRejectOtherDocuments(Long projectId, Boolean approved) {
+        return projectRestService.acceptOrRejectOtherDocuments(projectId, approved).toServiceResult();
+    }
+
+    @Override
     public List<ProjectUserResource> getLeadPartners(Long projectId) {
         List<ProjectUserResource> partnerUsers = getProjectUsersWithPartnerRole(projectId);
         OrganisationResource leadOrganisation = getLeadOrganisation(projectId);

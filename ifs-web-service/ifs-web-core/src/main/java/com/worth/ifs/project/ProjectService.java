@@ -65,6 +65,8 @@ public interface ProjectService {
 
     ServiceResult<Void> removeExploitationPlanDocument(Long projectId);
 
+    ServiceResult<Void> acceptOrRejectOtherDocuments(Long projectId, Boolean approved);
+
     boolean isUserLeadPartner(Long projectId, Long userId);
 
     List<ProjectUserResource> getLeadPartners(Long projectId);

@@ -52,7 +52,7 @@ public class ProjectOtherDocumentsController {
                                                @PathVariable("projectId") Long projectId,
                                                @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        //TODO Needs further work -  INFUND-4621 INFUND-4620
+        projectService.acceptOrRejectOtherDocuments(projectId, form.isApproved());
         return doViewOtherDocumentsPage(model, form, projectId, loggedInUser);
     }
 

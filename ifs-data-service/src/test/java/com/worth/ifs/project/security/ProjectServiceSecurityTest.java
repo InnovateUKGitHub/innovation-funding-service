@@ -602,6 +602,11 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         }
 
         @Override
+        public ServiceResult<Void> acceptOrRejectOtherDocuments(Long projectId, Boolean approved) {
+            return null;
+        }
+
+        @Override
         public List<ServiceResult<FileAndContents>>  retrieveUploadedDocuments(Long projectId) {
             return null;
         }

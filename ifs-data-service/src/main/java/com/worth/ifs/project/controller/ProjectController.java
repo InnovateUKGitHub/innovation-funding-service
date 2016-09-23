@@ -260,6 +260,13 @@ public class ProjectController {
         return projectService.deleteExploitationPlanFile(projectId).toDeleteResponse();
     }
 
+    @RequestMapping(value = "/{projectId}/partner/other-documents/approved/{approved}", method = POST)
+    public RestResult<Void> acceptOrRejectOtherDocuments(@PathVariable("projectId") long projectId, @PathVariable("approved") Boolean approved) {
+
+        return projectService.acceptOrRejectOtherDocuments(projectId, approved).toPostResponse();
+
+    }
+
     @RequestMapping(value = "/{projectId}/partner/documents/ready", method = GET)
     public RestResult<Boolean>isOtherDocumentsSubmitAllowed(@PathVariable("projectId") final Long projectId,
                                                             HttpServletRequest request) {
