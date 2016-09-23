@@ -33,7 +33,7 @@ public class InviteOrganisationServiceSecurityTest extends BaseServiceSecurityTe
 
     @Test
     public void testFindAll() {
-        final ServiceResult<Iterable<InviteOrganisationResource>> all = service.findAll();
+        final ServiceResult<Iterable<InviteOrganisationResource>> all = classUnderTest.findAll();
         assertFalse(all.getSuccessObject().iterator().hasNext());
         verify(inviteOrganisationPermissionRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).leadApplicantCanViewOrganisationInviteToTheApplication(isA(InviteOrganisationResource.class), isA(UserResource.class));
         verify(inviteOrganisationPermissionRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).collaboratorCanViewOrganisationInviteToTheApplication(isA(InviteOrganisationResource.class), isA(UserResource.class));
@@ -44,7 +44,7 @@ public class InviteOrganisationServiceSecurityTest extends BaseServiceSecurityTe
     public void testFindOne() {
         final long inviteId = 1L;
         assertAccessDenied(
-                () -> service.findOne(inviteId),
+                () -> classUnderTest.findOne(inviteId),
                 () -> {
                     verify(inviteOrganisationPermissionRules).collaboratorCanViewOrganisationInviteToTheApplication(isA(InviteOrganisationResource.class), isA(UserResource.class));
                     verify(inviteOrganisationPermissionRules).leadApplicantCanViewOrganisationInviteToTheApplication(isA(InviteOrganisationResource.class), isA(UserResource.class));
@@ -54,14 +54,14 @@ public class InviteOrganisationServiceSecurityTest extends BaseServiceSecurityTe
     @Test
     public void testSave() {
         assertAccessDenied(
-                () -> service.save(newInviteOrganisationResource().build()),
+                () -> classUnderTest.save(newInviteOrganisationResource().build()),
                 () -> verify(inviteOrganisationPermissionRules).leadApplicantCanSaveInviteAnOrganisationToTheApplication(isA(InviteOrganisationResource.class), isA(UserResource.class))
         );
     }
 
 
     @Override
-    protected Class<TestInviteOrganisationService> getServiceClass() {
+    protected Class<TestInviteOrganisationService> getClassUnderTest() {
         return TestInviteOrganisationService.class;
     }
 

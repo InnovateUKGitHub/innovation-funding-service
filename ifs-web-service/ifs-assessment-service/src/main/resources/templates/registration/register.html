@@ -16,111 +16,124 @@
                 <h1 class="heading-xlarge">Create assessor account</h1>
             </div>
 
-            <form>
+            <form th:action="@{/registration/{inviteHash}/register(inviteHash=${model.competitionInviteHash})}" method="post" th:object="${form}">
+                <div class="error-summary" th:if="${#fields.hasErrors('*')}">
+                    <h1 class="heading-medium error-summary-heading">
+                        We were unable to create your account
+                    </h1>
+                    <ul class="error-summary-list">
+                        <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+                    </ul>
+                </div>
+
                 <h2 class="heading-medium">Your details</h2>
-                <div class="form-group">
-                    <label class="form-label" for="title">
+                <div th:class="${#fields.hasErrors('title')}? 'form-group error':'form-group'">
+                    <label class="form-label" th:for="title">
                         <span class="form-label-bold">Title</span>
+                        <span class="error-message" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">
+                            <span class="error-message"  th:each="err : ${#fields.errors('title')}" th:text="${err}" />
+                      </span>
                     </label>
-                    <select class="form-control width-medium" id="title" name="title">
-                        <option value="">Mr</option>
-                        <option value="">Miss</option>
-                        <option value="">Mrs</option>
-                        <option value="">Ms</option>
-                        <option value="">Dr</option>
+                    <select class="form-control width-medium" th:errorclass="field-error" th:field="*{title}">
+                        <option value="Mr">Mr</option>
+                        <option value="Miss">Miss</option>
+                        <option value="Mrs">Mrs</option>
+                        <option value="Ms">Ms</option>
+                        <option value="Dr">Dr</option>
                     </select>
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label" for="first-name">
+                <div th:class="${#fields.hasErrors('firstName')}? 'form-group error':'form-group'">
+                    <label class="form-label" th:for="firstName">
                         <span class="form-label-bold">First name</span>
+                        <span th:if="${#fields.hasErrors('firstName')}" th:remove="tag">
+                              <span class="error-message"  th:each="err : ${#fields.errors('firstName')}" th:text="${err}" />
+                        </span>
                     </label>
-                    <input class="form-control" type="text" />
+                    <input class="form-control" th:errorclass="field-error" type="text" th:field="*{firstName}" />
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label" for="last-name">
+                <div class="form-group" th:classappend="${#fields.hasErrors('lastName')}? error">
+                    <label class="form-label" th:for="lastName">
                         <span class="form-label-bold">Last name</span>
+                        <span th:if="${#fields.hasErrors('lastName')}" th:remove="tag">
+                              <span class="error-message"  th:each="err : ${#fields.errors('lastName')}" th:text="${err}" />
+                        </span>
                     </label>
-                    <input class="form-control" type="text" />
+                    <input class="form-control" th:errorclass="field-error" type="text" th:field="*{lastName}" />
                 </div>
 
-                <div id="manual-company-input" class="extra-margin">
-                    <div class="form-group">
-                        <label class="form-label">
-                            <span class="form-label-bold">Postcode</span>
-                        </label>
-                        <input class="form-control" type="text" />
-                        <button class="button" type="submit">Find UK address</button>
-                    </div>
-
-                    <div class="form-group" id="select-address-block">
-                        <label class="form-label">
-                            <span class="form-label-bold">Select your address</span>
-                        </label>
-                        <select class="form-control">
-                            <option value="">SN1 2BD, 1, Station Road, Swindon </option>
-                        </select>
-                        <button class="button" type="submit">Use selected address</button>
-                    </div>
-                    <button class="buttonlink" type="submit">Enter address manually</button>
-
-                    <fieldset id="address-details" class="extra-margin">
-                        <legend class="visuallyhidden">Address details</legend>
+                <div class="form-group" th:classappend="${#fields.hasErrors('gender')}? error">
+                    <fieldset class="inline">
+                        <legend>
+                            <span class="heading-small">Gender</span>
+                        </legend>
+                        <span th:if="${#fields.hasErrors('gender')}" th:remove="tag">
+                              <span class="error-message"  th:each="err : ${#fields.errors('gender')}" th:text="${err}" />
+                        </span>
                         <div class="form-group">
-                            <label class="form-label">
-                                <span class="form-label-bold">Street</span>
+                            <label class="block-label" th:each="gen : ${T(com.worth.ifs.user.resource.Gender).values()}">
+                                <input th:field="*{gender}" th:value="${gen}" type="radio" />
+                                <span th:text="${gen.displayName}" th:remove="tag" />
                             </label>
-                            <input class="form-control" type="text" />
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label visuallyhidden">
-                                <span class="form-label-bold">Street line 2</span>
-                            </label>
-                            <input class="form-control" type="text" />
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label visuallyhidden">
-                                <span class="form-label-bold">Street line 3</span>
-                            </label>
-                            <input class="form-control" type="text" />
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">
-                                <span class="form-label-bold">Town</span>
-                            </label>
-                            <input class="form-control" type="text" />
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">
-                                <span class="form-label-bold">County</span>
-                            </label>
-                            <input class="form-control" type="text" />
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">
-                                <span class="form-label-bold">Postcode</span>
-                            </label>
-                            <input class="form-control" type="text" />
                         </div>
                     </fieldset>
                 </div>
 
+                <div class="form-group" th:classappend="${#fields.hasErrors('ethnicity')}? error">
+                    <fieldset class="inline">
+                        <legend>
+                            <span class="heading-small">Your ethnic group</span>
+                        </legend>
+                        <span th:if="${#fields.hasErrors('ethnicity')}" th:remove="tag">
+                              <span class="error-message"  th:each="err : ${#fields.errors('ethnicity')}" th:text="${err}" />
+                        </span>
+                        <div class="form-group">
+                            <label class="block-label" th:each="eth : ${ethnicityOptions}">
+                                <input th:field="*{ethnicity}" th:value="${eth.id}" type="radio" />
+                                <span th:text="${eth.description}" th:remove="tag" />
+                            </label>
+                        </div>
+                    </fieldset>
+                </div>
+
+                <div class="form-group" th:classappend="${#fields.hasErrors('disability')}? error">
+                    <fieldset class="inline">
+                        <legend>
+                            <span class="heading-small">Do you consider yourself disabled?</span>
+                        </legend>
+                        <span th:if="${#fields.hasErrors('disability')}" th:remove="tag">
+                              <span class="error-message"  th:each="err : ${#fields.errors('disability')}" th:text="${err}" />
+                        </span>
+                        <div class="form-group">
+                            <label class="block-label" th:each="dis : ${T(com.worth.ifs.user.resource.Disability).values()}">
+                                <input th:field="*{disability}" th:value="${dis}" type="radio" />
+                                <span th:text="${dis.displayName}" th:remove="tag" />
+                            </label>
+                        </div>
+                    </fieldset>
+                </div>
+
+                <div th:include="fragments/addresses :: company-address-details" th:with="form=${form}, legend='Address search'" th:remove="tag"></div>
+
                 <div class="form-group extra-margin">
-                    <label class="form-label" for="phone-number">
+                    <label class="form-label" th:for="phoneNumber">
                         <span class="form-label-bold">Phone number</span>
                         <span class="form-hint">We may use this to contact you about the application</span>
+                        <span th:if="${#fields.hasErrors('phoneNumber')}" th:remove="tag">
+                              <span class="error-message"  th:each="err : ${#fields.errors('phoneNumber')}" th:text="${err}" />
+                        </span>
                     </label>
-                    <input class="form-control" type="text" />
+                    <input class="form-control" th:errorclass="field-error" type="tel" th:field="*{phoneNumber}" />
                 </div>
 
                 <div class="form-group">
                     <h3 class="heading-small">Email</h3>
-                    <p class="form-hint">You will need this to sign into your account, the provided email is:<br /><strong>jsmith@assessor.co.uk</strong></p>
+                    <p class="form-hint">You will need this to sign into your account, the provided email is:<br /><strong th:text="${model.email}"></strong></p>
                 </div>
                 <div class="form-group">
                     <h3 class="heading-small">Password</h3>
-                    <label class="form-label">
+                    <label class="form-label" th:for="password">
                         <span class="visuallyhidden">Password</span>
                         <span class="form-hint">
                             Your password is case-sensitive and needs to:<br />
@@ -130,14 +143,22 @@
                                 <li>contain at least 1 number</li>
                             </ul>
                         </span>
+                        <span th:if="${#fields.hasErrors('password')}" th:remove="tag">
+                              <span class="error-message"  th:each="err : ${#fields.errors('password')}" th:text="${err}" />
+                        </span>
                     </label>
-                    <input class="form-control" type="password" />
+                    <input class="form-control" th:errorclass="field-error" type="password" th:field="*{password}" minlength="10"
+                           maxlength="30" />
                 </div>
                 <div class="form-group">
-                    <label class="form-label">
+                    <label class="form-label" th:for="retypedPassword">
                         <span class="form-label-bold">Re-type password</span>
+                        <span th:if="${#fields.hasErrors('retypedPassword')}" th:remove="tag">
+                              <span class="error-message"  th:each="err : ${#fields.errors('retypedPassword')}" th:text="${err}" />
+                        </span>
                     </label>
-                    <input class="form-control" type="password" />
+                    <input class="form-control" th:errorclass="field-error" type="password"  th:field="*{retypedPassword}" minlength="10"
+                           maxlength="30" />
                 </div>
 
                 <button class="button button-large extra-margin" name="create-account" type="submit">Continue</button>

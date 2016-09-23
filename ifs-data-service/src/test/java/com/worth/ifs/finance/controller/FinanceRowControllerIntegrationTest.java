@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.worth.ifs.commons.error.Error.fieldError;
-import static com.worth.ifs.security.SecuritySetter.swapOutForUser;
+import static com.worth.ifs.commons.security.SecuritySetter.swapOutForUser;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.*;

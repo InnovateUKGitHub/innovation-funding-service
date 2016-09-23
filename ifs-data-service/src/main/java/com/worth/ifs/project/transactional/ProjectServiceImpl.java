@@ -259,7 +259,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
             ProjectUser projectUser = getCurrentlyLoggedInPartner(project);
 
             if (projectDetailsWorkflowHandler.submitProjectDetails(project, projectUser)) {
-                return setSubmittedDate(project, date);
+                return serviceSuccess();
             } else {
                 return serviceFailure(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_SUBMITTED_IF_INCOMPLETE);
             }
@@ -590,7 +590,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     private ServiceResult<Void> validateInMonitoringOfficerAssignableState(final Long projectId) {
 
         return getProject(projectId).andOnSuccess(project -> {
-            if (!project.isProjectDetailsSubmitted()) {
+            if (!projectDetailsWorkflowHandler.isSubmitted(project)) {
                 return serviceFailure(PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED);
             } else {
                 return serviceSuccess();
@@ -634,11 +634,6 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         return find(monitoringOfficerRepository.findOneByProjectId(projectId), notFoundError(MonitoringOfficer.class, projectId));
     }
 
-    private ServiceResult<Void> setSubmittedDate(Project project, LocalDateTime date) {
-        project.setSubmittedDate(date);
-        return serviceSuccess();
-    }
-
     private ServiceResult<Void> addFinanceContactToProject(Project project, ProjectUser financeContact) {
 
         ProjectUser existingUser = project.getExistingProjectUserWithRoleForOrganisation(PROJECT_FINANCE_CONTACT, financeContact.getOrganisation());
@@ -673,14 +668,22 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     }
 
     @Override
-    public ServiceResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId) {
+    public ServiceResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId) {
         Project project = projectRepository.findOne(projectId);
-        List<Organisation> allPartnerOrganisations = getPartnerOrganisations(projectId);
+        Organisation leadOrganisation = project.getApplication().getLeadOrganisation();
 
-        List<ProjectPartnerStatusResource> projectPartnerStatusResources = new ArrayList<>();
-        for (Organisation partnerOrganisation : allPartnerOrganisations) {
-            projectPartnerStatusResources.add(getProjectPartnerStatus(project, partnerOrganisation));
-        }
+        Optional<ProjectUser> partnerUserForFilterUser = filterByUserId.flatMap(
+                userId -> simpleFindFirst(project.getProjectUsers(),
+                        pu -> pu.getUser().getId().equals(userId) && pu.getRole().isPartner()));
+
+        List<Organisation> allPartnerOrganisations = getPartnerOrganisations(projectId);
+        List<Organisation> partnerOrganisationsToInclude =
+                simpleFilter(allPartnerOrganisations, partner ->
+                        partner.getId().equals(leadOrganisation.getId()) ||
+                        (partnerUserForFilterUser.map(pu -> partner.getId().equals(pu.getOrganisation().getId())).orElse(true)));
+
+        List<ProjectPartnerStatusResource> projectPartnerStatusResources =
+                simpleMap(partnerOrganisationsToInclude, partner -> getProjectPartnerStatus(project, partner));
 
         ProjectTeamStatusResource projectTeamStatusResource = new ProjectTeamStatusResource();
         projectTeamStatusResource.setPartnerStatuses(projectPartnerStatusResources);
@@ -707,6 +710,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
         if (partnerOrganisation.equals(leadOrganisation)) {
             projectPartnerStatusResource = new ProjectLeadStatusResource(
+                    partnerOrganisation.getId(),
                     partnerOrganisation.getName(),
                     organisationType,
                     leadProjectDetailsSubmitted,
@@ -718,6 +722,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
                     grantOfferLetterStatus);
         } else {
             projectPartnerStatusResource = new ProjectPartnerStatusResource(
+                    partnerOrganisation.getId(),
                     partnerOrganisation.getName(),
                     organisationType,
                     leadProjectDetailsSubmitted,
@@ -779,7 +784,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
     private ServiceResult<Project> validateIfProjectAlreadySubmitted(final Project project) {
 
-        if (project.isProjectDetailsSubmitted()) {
+        if (projectDetailsWorkflowHandler.isSubmitted(project)) {
             return serviceFailure(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_UPDATED_IF_ALREADY_SUBMITTED);
         }
 
@@ -976,7 +981,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     }
 
     private ProjectActivityStates createProjectDetailsStatus(Project project) {
-        return project.isProjectDetailsSubmitted() ? COMPLETE : ACTION_REQUIRED;
+        return projectDetailsWorkflowHandler.isSubmitted(project) ? COMPLETE : ACTION_REQUIRED;
     }
 
     private ProjectActivityStates createMonitoringOfficerStatus(final Optional<MonitoringOfficer> monitoringOfficer, final ProjectActivityStates leadProjectDetailsSubmitted) {

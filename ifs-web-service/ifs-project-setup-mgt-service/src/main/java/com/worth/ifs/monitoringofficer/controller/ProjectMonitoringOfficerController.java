@@ -14,6 +14,7 @@ import com.worth.ifs.monitoringofficer.viewmodel.ProjectMonitoringOfficerViewMod
 import com.worth.ifs.project.ProjectService;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.project.resource.ProjectTeamStatusResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
@@ -32,6 +33,7 @@ import java.util.function.Supplier;
 
 import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
+import static com.worth.ifs.project.constant.ProjectActivityStates.COMPLETE;
 import static com.worth.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
 import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
@@ -120,9 +122,10 @@ public class ProjectMonitoringOfficerController {
     }
 
     private void checkInCorrectStateToUseMonitoringOfficerPage(Long projectId) {
-        ProjectResource project = projectService.getById(projectId);
 
-        if (!project.isProjectDetailsSubmitted()) {
+        ProjectTeamStatusResource teamStatus = projectService.getProjectTeamStatus(projectId, Optional.empty());
+
+        if (!COMPLETE.equals(teamStatus.getLeadPartnerStatus().getProjectDetailsStatus())) {
             throw new ForbiddenActionException("Unable to assign Monitoring Officers until the Project Details have been submitted");
         }
     }

@@ -1,7 +1,7 @@
 package com.worth.ifs.form.transactional;
 
 import com.worth.ifs.form.domain.FormInputType;
-import com.worth.ifs.security.NotSecured;
+import com.worth.ifs.commons.security.NotSecured;
 
 import java.util.List;
 

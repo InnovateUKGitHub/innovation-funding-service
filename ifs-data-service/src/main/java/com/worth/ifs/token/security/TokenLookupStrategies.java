@@ -1,7 +1,7 @@
 package com.worth.ifs.token.security;
 
-import com.worth.ifs.security.PermissionEntityLookupStrategies;
-import com.worth.ifs.security.PermissionEntityLookupStrategy;
+import com.worth.ifs.commons.security.PermissionEntityLookupStrategies;
+import com.worth.ifs.commons.security.PermissionEntityLookupStrategy;
 import com.worth.ifs.token.domain.Token;
 import com.worth.ifs.token.repository.TokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;

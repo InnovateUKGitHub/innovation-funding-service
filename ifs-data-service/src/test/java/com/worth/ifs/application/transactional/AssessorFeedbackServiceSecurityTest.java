@@ -52,7 +52,7 @@ public class AssessorFeedbackServiceSecurityTest extends BaseServiceSecurityTest
         ApplicationResource application = newApplicationResource().build();
         when(lookupStrategy.getApplicationResource(123L)).thenReturn(application);
 
-        assertAccessDenied(() -> service.createAssessorFeedbackFileEntry(123L, newFileEntryResource().build(), () -> null), () -> {
+        assertAccessDenied(() -> classUnderTest.createAssessorFeedbackFileEntry(123L, newFileEntryResource().build(), () -> null), () -> {
             verify(lookupStrategy).getApplicationResource(123L);
             verify(rules).compAdminCanUploadAssessorFeedbackToApplicationInFundersPanelOrAssessorFeedbackState(application, getLoggedInUser());
         });
@@ -64,7 +64,7 @@ public class AssessorFeedbackServiceSecurityTest extends BaseServiceSecurityTest
         ApplicationResource application = newApplicationResource().build();
         when(lookupStrategy.getApplicationResource(123L)).thenReturn(application);
 
-        assertAccessDenied(() -> service.updateAssessorFeedbackFileEntry(123L, newFileEntryResource().build(), () -> null), () -> {
+        assertAccessDenied(() -> classUnderTest.updateAssessorFeedbackFileEntry(123L, newFileEntryResource().build(), () -> null), () -> {
             verify(lookupStrategy).getApplicationResource(123L);
             verify(rules).compAdminCanUploadAssessorFeedbackToApplicationInFundersPanelOrAssessorFeedbackState(application, getLoggedInUser());
         });
@@ -76,7 +76,7 @@ public class AssessorFeedbackServiceSecurityTest extends BaseServiceSecurityTest
         ApplicationResource application = newApplicationResource().build();
         when(lookupStrategy.getApplicationResource(123L)).thenReturn(application);
 
-        assertAccessDenied(() -> service.deleteAssessorFeedbackFileEntry(123L), () -> {
+        assertAccessDenied(() -> classUnderTest.deleteAssessorFeedbackFileEntry(123L), () -> {
             verify(lookupStrategy).getApplicationResource(123L);
             verify(rules).compAdminCanRemoveAssessorFeedbackThatHasNotYetBeenPublished(application, getLoggedInUser());
         });
@@ -88,7 +88,7 @@ public class AssessorFeedbackServiceSecurityTest extends BaseServiceSecurityTest
         ApplicationResource application = newApplicationResource().build();
         when(lookupStrategy.getApplicationResource(123L)).thenReturn(application);
 
-        assertAccessDenied(() -> service.getAssessorFeedbackFileEntryContents(123L), () -> {
+        assertAccessDenied(() -> classUnderTest.getAssessorFeedbackFileEntryContents(123L), () -> {
             verify(lookupStrategy).getApplicationResource(123L);
             verify(rules).compAdminCanSeeAndDownloadAllAssessorFeedbackAtAnyTime(application, getLoggedInUser());
             verify(rules).applicationTeamCanSeeAndDownloadPublishedAssessorFeedbackForTheirApplications(application, getLoggedInUser());
@@ -101,7 +101,7 @@ public class AssessorFeedbackServiceSecurityTest extends BaseServiceSecurityTest
         ApplicationResource application = newApplicationResource().build();
         when(lookupStrategy.getApplicationResource(123L)).thenReturn(application);
 
-        assertAccessDenied(() -> service.getAssessorFeedbackFileEntryDetails(123L), () -> {
+        assertAccessDenied(() -> classUnderTest.getAssessorFeedbackFileEntryDetails(123L), () -> {
             verify(lookupStrategy).getApplicationResource(123L);
             verify(rules).compAdminCanSeeAndDownloadAllAssessorFeedbackAtAnyTime(application, getLoggedInUser());
             verify(rules).applicationTeamCanSeeAndDownloadPublishedAssessorFeedbackForTheirApplications(application, getLoggedInUser());
@@ -113,7 +113,7 @@ public class AssessorFeedbackServiceSecurityTest extends BaseServiceSecurityTest
 
 		RoleResource compAdminRole = newRoleResource().withType(COMP_ADMIN).build();
 		setLoggedInUser(newUserResource().withRolesGlobal(singletonList(compAdminRole)).build());
-		service.assessorFeedbackUploaded(COMPETITION_ID);
+		classUnderTest.assessorFeedbackUploaded(COMPETITION_ID);
 	}
 
 	@Test
@@ -121,7 +121,7 @@ public class AssessorFeedbackServiceSecurityTest extends BaseServiceSecurityTest
 
 		setLoggedInUser(null);
 		try {
-			service.assessorFeedbackUploaded(COMPETITION_ID);
+			classUnderTest.assessorFeedbackUploaded(COMPETITION_ID);
 			fail("Should not have been able to check if assessor feedback uploaded without first logging in");
 		} catch (AccessDeniedException e) {
 			// expected behaviour
@@ -132,7 +132,7 @@ public class AssessorFeedbackServiceSecurityTest extends BaseServiceSecurityTest
 	public void test_assessorFeedbackUploaded_deniedIfNoGlobalRolesAtAll() {
 
 		try {
-			service.assessorFeedbackUploaded(COMPETITION_ID);
+			classUnderTest.assessorFeedbackUploaded(COMPETITION_ID);
 			fail("Should not have been able to check if assessor feedback uploaded without the global comp admin role");
 		} catch (AccessDeniedException e) {
 			// expected behaviour
@@ -150,7 +150,7 @@ public class AssessorFeedbackServiceSecurityTest extends BaseServiceSecurityTest
 			setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
 
 			try {
-				service.assessorFeedbackUploaded(COMPETITION_ID);
+				classUnderTest.assessorFeedbackUploaded(COMPETITION_ID);
 				fail("Should not have been able to check if assessor feedback uploaded without the global Comp Admin role");
 			} catch (AccessDeniedException e) {
 				// expected behaviour
@@ -163,7 +163,7 @@ public class AssessorFeedbackServiceSecurityTest extends BaseServiceSecurityTest
 
 		RoleResource compAdminRole = newRoleResource().withType(COMP_ADMIN).build();
 		setLoggedInUser(newUserResource().withRolesGlobal(singletonList(compAdminRole)).build());
-		service.submitAssessorFeedback(COMPETITION_ID);
+		classUnderTest.submitAssessorFeedback(COMPETITION_ID);
 	}
 
 	@Test
@@ -171,7 +171,7 @@ public class AssessorFeedbackServiceSecurityTest extends BaseServiceSecurityTest
 
 		setLoggedInUser(null);
 		try {
-			service.submitAssessorFeedback(COMPETITION_ID);
+			classUnderTest.submitAssessorFeedback(COMPETITION_ID);
 			fail("Should not have been able to submit assessor feedback without first logging in");
 		} catch (AccessDeniedException e) {
 			// expected behaviour
@@ -182,7 +182,7 @@ public class AssessorFeedbackServiceSecurityTest extends BaseServiceSecurityTest
 	public void test_submitAssessorFeedback_deniedIfNoGlobalRolesAtAll() {
 
 		try {
-			service.submitAssessorFeedback(COMPETITION_ID);
+			classUnderTest.submitAssessorFeedback(COMPETITION_ID);
 			fail("Should not have been able to submit assessor feedback without the global comp admin role");
 		} catch (AccessDeniedException e) {
 			// expected behaviour
@@ -200,7 +200,7 @@ public class AssessorFeedbackServiceSecurityTest extends BaseServiceSecurityTest
 			setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
 
 			try {
-				service.submitAssessorFeedback(COMPETITION_ID);
+				classUnderTest.submitAssessorFeedback(COMPETITION_ID);
 				fail("Should not have been able to submit assessor feedback without the global Comp Admin role");
 			} catch (AccessDeniedException e) {
 				// expected behaviour
@@ -209,7 +209,7 @@ public class AssessorFeedbackServiceSecurityTest extends BaseServiceSecurityTest
 	}
 	
     @Override
-    protected Class<? extends AssessorFeedbackService> getServiceClass() {
+    protected Class<? extends AssessorFeedbackService> getClassUnderTest() {
         return TestAssessorFeedbackService.class;
     }
 

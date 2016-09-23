@@ -1,7 +1,10 @@
 package com.worth.ifs;
 
 
+import com.worth.ifs.application.service.OrganisationService;
+import com.worth.ifs.project.ProjectService;
 import org.junit.Before;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 /**
@@ -10,6 +13,12 @@ import org.mockito.MockitoAnnotations;
  * annotation.
  */
 public abstract class BaseUnitTestMocksTest{
+
+    @Mock
+    protected ProjectService projectServiceMock;
+
+    @Mock
+    protected OrganisationService organisationServiceMock;
 
     @Before
     public void setUp() {
