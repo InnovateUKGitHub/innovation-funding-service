@@ -16,6 +16,7 @@ import com.worth.ifs.bankdetails.resource.ProjectBankDetailsStatusSummary;
 import com.worth.ifs.commons.error.CommonFailureKeys;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.finance.transactional.FinanceRowService;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
 import com.worth.ifs.organisation.mapper.OrganisationAddressMapper;
 import com.worth.ifs.organisation.repository.OrganisationAddressRepository;
@@ -30,6 +31,7 @@ import com.worth.ifs.sil.experian.resource.SILBankDetails;
 import com.worth.ifs.sil.experian.service.SilExperianEndpoint;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.repository.OrganisationRepository;
+import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -45,6 +47,7 @@ import static com.worth.ifs.commons.error.Error.globalError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.project.constant.ProjectActivityStates.*;
+import static com.worth.ifs.user.resource.OrganisationTypeEnum.isResearch;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static java.lang.Short.parseShort;
 import static java.util.Arrays.asList;
@@ -88,6 +91,9 @@ public class BankDetailsServiceImpl implements BankDetailsService{
 
     @Autowired
     private ProjectUsersHelper projectUsersHelper;
+
+    @Autowired
+    private FinanceRowService financeRowService;
 
     private SILBankDetailsMapper silBankDetailsMapper = new SILBankDetailsMapper();
 
@@ -133,17 +139,19 @@ public class BankDetailsServiceImpl implements BankDetailsService{
         Project project = projectRepository.findOne(projectId);
         Organisation leadOrganisation = project.getApplication().getLeadOrganisation();
         List<BankDetailsStatusResource> bankDetailsStatusResources = new ArrayList<>();
-        bankDetailsStatusResources.add(getBankDetailsStatusForOrg(projectId, leadOrganisation));
+        bankDetailsStatusResources.add(getBankDetailsStatusForOrg(project, leadOrganisation));
         List<Organisation> organisations = projectUsersHelper.getPartnerOrganisations(projectId).stream().filter(org -> !org.getId().equals(leadOrganisation.getId())).collect(Collectors.toList());
-        bankDetailsStatusResources.addAll(organisations.stream().map(org -> getBankDetailsStatusForOrg(projectId, org)).collect(Collectors.toList()));
+        bankDetailsStatusResources.addAll(organisations.stream().map(org -> getBankDetailsStatusForOrg(project, org)).collect(Collectors.toList()));
         ProjectBankDetailsStatusSummary projectBankDetailsStatusSummary = new ProjectBankDetailsStatusSummary(project.getApplication().getCompetition().getId(), project.getApplication().getCompetition().getName(), project.getId(), bankDetailsStatusResources);
         return serviceSuccess(projectBankDetailsStatusSummary);
     }
 
-    private BankDetailsStatusResource getBankDetailsStatusForOrg(Long projectId, Organisation org){
-        return getByProjectAndOrganisation(projectId, org.getId()).handleSuccessOrFailure(
+    private BankDetailsStatusResource getBankDetailsStatusForOrg(Project project, Organisation org){
+        Boolean isSeekingFunding = financeRowService.organisationSeeksFunding(project.getId(), project.getApplication().getId(), org.getId()).getSuccessObject();
+
+        return getByProjectAndOrganisation(project.getId(), org.getId()).handleSuccessOrFailure(
                 failure -> new BankDetailsStatusResource(org.getId(), org.getName(), NOT_STARTED),
-                success -> new BankDetailsStatusResource(org.getId(), org.getName(), success.isApproved() ? COMPLETE : PENDING));
+                success -> new BankDetailsStatusResource(org.getId(), org.getName(), success.isApproved() ? COMPLETE : (isResearch(OrganisationTypeEnum.getFromId(org.getOrganisationType().getId())) || !isSeekingFunding) ? NOT_REQUIRED : PENDING));
     }
 
     @Override
