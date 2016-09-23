@@ -63,11 +63,14 @@
                     <input class="form-control" th:errorclass="field-error" type="text" th:field="*{lastName}" />
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" th:classappend="${#fields.hasErrors('gender')}? error">
                     <fieldset class="inline">
                         <legend>
                             <span class="heading-small">Gender</span>
                         </legend>
+                        <span th:if="${#fields.hasErrors('gender')}" th:remove="tag">
+                              <span class="error-message"  th:each="err : ${#fields.errors('gender')}" th:text="${err}" />
+                        </span>
                         <div class="form-group">
                             <label class="block-label" th:each="gen : ${T(com.worth.ifs.user.resource.Gender).values()}">
                                 <input th:field="*{gender}" th:value="${gen}" type="radio" />
@@ -77,11 +80,14 @@
                     </fieldset>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" th:classappend="${#fields.hasErrors('ethnicity')}? error">
                     <fieldset class="inline">
                         <legend>
                             <span class="heading-small">Your ethnic group</span>
                         </legend>
+                        <span th:if="${#fields.hasErrors('ethnicity')}" th:remove="tag">
+                              <span class="error-message"  th:each="err : ${#fields.errors('ethnicity')}" th:text="${err}" />
+                        </span>
                         <div class="form-group">
                             <label class="block-label" th:each="eth : ${ethnicityOptions}">
                                 <input th:field="*{ethnicity}" th:value="${eth.id}" type="radio" />
@@ -91,11 +97,14 @@
                     </fieldset>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" th:classappend="${#fields.hasErrors('disability')}? error">
                     <fieldset class="inline">
                         <legend>
                             <span class="heading-small">Do you consider yourself disabled?</span>
                         </legend>
+                        <span th:if="${#fields.hasErrors('disability')}" th:remove="tag">
+                              <span class="error-message"  th:each="err : ${#fields.errors('disability')}" th:text="${err}" />
+                        </span>
                         <div class="form-group">
                             <label class="block-label" th:each="dis : ${T(com.worth.ifs.user.resource.Disability).values()}">
                                 <input th:field="*{disability}" th:value="${dis}" type="radio" />

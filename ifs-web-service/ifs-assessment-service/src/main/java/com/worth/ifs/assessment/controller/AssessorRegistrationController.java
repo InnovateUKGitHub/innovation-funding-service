@@ -2,17 +2,17 @@ package com.worth.ifs.assessment.controller;
 
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.service.AddressRestService;
-import com.worth.ifs.assessment.form.AssessorDeclarationForm;
+import com.worth.ifs.assessment.form.AssessorRegistrationDeclarationForm;
 import com.worth.ifs.assessment.form.AssessorRegistrationForm;
-import com.worth.ifs.assessment.form.AssessorSkillsForm;
-import com.worth.ifs.assessment.form.AssessorTermsForm;
+import com.worth.ifs.assessment.form.AssessorRegistrationSkillsForm;
+import com.worth.ifs.assessment.form.AssessorRegistrationTermsForm;
 import com.worth.ifs.assessment.model.*;
-import com.worth.ifs.assessment.service.AssessorRestService;
+import com.worth.ifs.assessment.service.AssessorService;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.form.AddressForm;
 import com.worth.ifs.invite.service.EthnicityRestService;
-import com.worth.ifs.registration.resource.UserRegistrationResource;
 import com.worth.ifs.user.resource.EthnicityResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -45,7 +45,7 @@ public class AssessorRegistrationController {
     private AddressRestService addressRestService;
 
     @Autowired
-    private AssessorRestService assessorRestService;
+    private AssessorService assessorService;
 
     @Autowired
     private EthnicityRestService ethnicityRestService;
@@ -57,13 +57,13 @@ public class AssessorRegistrationController {
     private AssessorRegistrationYourDetailsModelPopulator yourDetailsModelPopulator;
 
     @Autowired
-    private AssessorSkillsModelPopulator assessorSkillsModelPopulator;
+    private AssessorRegistrationSkillsModelPopulator assessorSkillsModelPopulator;
 
     @Autowired
-    private AssessorDeclarationModelPopulator assessorDeclarationModelPopulator;
+    private AssessorRegistrationDeclarationModelPopulator assessorRegistrationDeclarationModelPopulator;
 
     @Autowired
-    private AssessorTermsModelPopulator assessorTermsModelPopulator;
+    private AssessorRegistrationTermsModelPopulator assessorRegistrationTermsModelPopulator;
 
     @RequestMapping(value = "/{inviteHash}/start", method = RequestMethod.GET)
     public String becomeAnAssessor(Model model,
@@ -91,55 +91,43 @@ public class AssessorRegistrationController {
         Supplier<String> failureView = () -> doViewYourDetails(model, inviteHash);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-
-            UserRegistrationResource userRegistrationResource = new UserRegistrationResource();
-            userRegistrationResource.setTitle(registrationForm.getTitle());
-            userRegistrationResource.setFirstName(registrationForm.getFirstName());
-            userRegistrationResource.setLastName(registrationForm.getLastName());
-            userRegistrationResource.setPhoneNumber(registrationForm.getPhoneNumber());
-            userRegistrationResource.setGender(registrationForm.getGender());
-            userRegistrationResource.setDisability(registrationForm.getDisability());
-            userRegistrationResource.setEthnicity(registrationForm.getEthnicity());
-            userRegistrationResource.setPassword(registrationForm.getPassword());
-
-            RestResult<Void> result = assessorRestService.createAssessorByInviteHash(inviteHash, userRegistrationResource);
-
+            ServiceResult<Void> result = assessorService.createAssessorByInviteHash(inviteHash, registrationForm);
             return validationHandler.addAnyErrors(result, fieldErrorsToFieldErrors(), asGlobalErrors()).
                     failNowOrSucceedWith(failureView, () -> "redirect:/registration/skills");
         });
     }
 
     @RequestMapping(value = "skills", method = RequestMethod.GET)
-    public String getSkills(Model model, @ModelAttribute(FORM_ATTR_NAME) AssessorSkillsForm form) {
+    public String getSkills(Model model, @ModelAttribute(FORM_ATTR_NAME) AssessorRegistrationSkillsForm form) {
         model.addAttribute("model", assessorSkillsModelPopulator.populateModel());
         return "registration/innovation-areas";
     }
 
     @RequestMapping(value = "skills", method = RequestMethod.POST)
-    public String submitSkills(Model model, @ModelAttribute(FORM_ATTR_NAME) AssessorSkillsForm form) {
+    public String submitSkills(Model model, @ModelAttribute(FORM_ATTR_NAME) AssessorRegistrationSkillsForm form) {
         return "redirect:/registration/declaration";
     }
 
     @RequestMapping(value = "declaration", method = RequestMethod.GET)
-    public String getDeclaration(Model model, @ModelAttribute(FORM_ATTR_NAME) AssessorDeclarationForm form) {
-        model.addAttribute("model", assessorDeclarationModelPopulator.populateModel());
+    public String getDeclaration(Model model, @ModelAttribute(FORM_ATTR_NAME) AssessorRegistrationDeclarationForm form) {
+        model.addAttribute("model", assessorRegistrationDeclarationModelPopulator.populateModel());
         return "registration/declaration-of-interest";
     }
 
     @RequestMapping(value = "declaration", method = RequestMethod.POST)
-    public String submitDeclaration(Model model, @ModelAttribute(FORM_ATTR_NAME) AssessorDeclarationForm form) {
+    public String submitDeclaration(Model model, @ModelAttribute(FORM_ATTR_NAME) AssessorRegistrationDeclarationForm form) {
         return "redirect:/registration/terms";
     }
 
     @RequestMapping(value = "terms", method = RequestMethod.GET)
-    public String getTerms(Model model, @ModelAttribute(FORM_ATTR_NAME) AssessorTermsForm form) {
-        model.addAttribute("model", assessorTermsModelPopulator.populateModel());
+    public String getTerms(Model model, @ModelAttribute(FORM_ATTR_NAME) AssessorRegistrationTermsForm form) {
+        model.addAttribute("model", assessorRegistrationTermsModelPopulator.populateModel());
         return "registration/terms";
     }
 
     @RequestMapping(value = "terms", method = RequestMethod.POST)
-    public String submitTerms(Model model, @ModelAttribute(FORM_ATTR_NAME) AssessorTermsForm form) {
-        return "registration/terms";
+    public String submitTerms(Model model, @ModelAttribute(FORM_ATTR_NAME) AssessorRegistrationTermsForm form) {
+        return "redirect:/assessor/dashboard";
     }
 
 
