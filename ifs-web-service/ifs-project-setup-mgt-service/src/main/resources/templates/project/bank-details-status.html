@@ -36,7 +36,7 @@
             <span th:if="${partner.bankDetailsStatus.name() == 'NOT_STARTED' || partner.bankDetailsStatus.name() == 'NOT_REQUIRED'}" th:text="${partner.organisationName}" />
           </td>
           <td>
-            <div th:include="project/fragments :: bankDetailsStatus(${partner.bankDetailsStatus.name()})" th:remove="tag" />
+            <th:block th:include="project/fragments :: bankDetailsStatus(${partner.bankDetailsStatus.name()})" />
           </td>
       </tr>
     </tbody>
