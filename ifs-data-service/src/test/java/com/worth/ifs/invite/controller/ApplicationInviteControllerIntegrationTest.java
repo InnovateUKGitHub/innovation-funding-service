@@ -28,12 +28,11 @@ import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import static com.worth.ifs.commons.security.SecuritySetter.swapOutForUser;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @Rollback
 public class ApplicationInviteControllerIntegrationTest extends BaseControllerIntegrationTest<ApplicationInviteController> {
@@ -149,6 +148,43 @@ public class ApplicationInviteControllerIntegrationTest extends BaseControllerIn
         assertEquals(user.getName(), getMatchingInviteResource(invitesResult, testEmail).getNameConfirmed());
     }
 
+    @Test
+    public void testRemovingInvites() throws Exception{
+        String testEmail = "jessica.doe@ludlow.co.uk";
+        String testName = "Jessica Istesting";
+
+        RestResult<Set<InviteOrganisationResource>> invitesResult = this.controller.getInvitesByApplication(APPLICATION_ID);
+        Assert.isTrue(invitesResult.isSuccess());
+
+        // Create and save the new invite.
+        List<ApplicationInviteResource> newInvites = createInviteResource(invitesResult, testName, testEmail, APPLICATION_ID);
+        RestResult<UserResource> userResult = userController.findByEmail(testEmail);
+        Assert.isTrue(userResult.isSuccess());
+        UserResource user = userResult.getSuccessObject();
+        RestResult<InviteResultsResource> inviteResults = controller.saveInvites(newInvites);
+        Assert.isTrue(inviteResults.isSuccess());
+
+        // Needed because test is running in one transaction
+        flushAndClearSession();
+
+        Set<InviteOrganisationResource> invitesBeforeRemove = controller.getInvitesByApplication(APPLICATION_ID).getSuccessObject();
+        List<ApplicationInviteResource> invites = invitesBeforeRemove.iterator().next().getInviteResources();
+
+        Optional<ApplicationInviteResource> inviteToRemove = invites
+                .stream()
+                .filter(applicationInviteResource -> applicationInviteResource.getEmail().equals(testEmail)).findFirst();
+        assertTrue(inviteToRemove.isPresent());
+        RestResult<Void> result = controller.removeApplicationInvite(inviteToRemove.get().getId());
+        Assert.isTrue(result.isSuccess());
+
+        // Needed because test is running in one transaction
+        flushAndClearSession();
+
+        Set<InviteOrganisationResource> invitesAfterRemove = controller.getInvitesByApplication(APPLICATION_ID).getSuccessObject();
+        assertTrue(!invitesAfterRemove.isEmpty());
+        assertEquals(invites.size() - 1, invitesAfterRemove.iterator().next().getInviteResources().size());
+    }
+
     private List<ApplicationInviteResource> createInviteResource(RestResult<Set<InviteOrganisationResource>> invitesResult, String userName, String userMail, long applicationId) {
         Set<InviteOrganisationResource> invitesExisting = invitesResult.getSuccessObject();
         InviteOrganisationResource inviteOrganisation = invitesExisting.iterator().next();
@@ -196,41 +232,4 @@ public class ApplicationInviteControllerIntegrationTest extends BaseControllerIn
     public void tearDown() {
         swapOutForUser(null);
     }
-
-//    @Test
-//    public void addInvites(){
-//        List<ApplicationInviteResource> inviteResources = new ArrayList<>();
-//        ApplicationInviteResource invite1 = new ApplicationInviteResource("Nico", "nico@email.com", APPLICATION_ID);
-//        invite1.setInviteOrganisationName("Worth");
-//        ApplicationInviteResource invite2 = new ApplicationInviteResource("Brent", "brent@email.com", APPLICATION_ID);
-//        invite2.setInviteOrganisationName("Worth");
-//        inviteResources.add(invite1);
-//        inviteResources.add(invite2);
-////        HttpStatus savedStatus = controller.saveInvites(inviteResources).getStatusCode();
-//
-//        InviteOrganisationResource inviteOrganisation = new InviteOrganisationResource();
-//        inviteOrganisation.setId(50L);
-//        inviteOrganisation.setOrganisationName("Worth");
-//        inviteOrganisation.setInviteResources(inviteResources);
-//        inviteOrganisationController.put(inviteOrganisation);
-//
-//        RestResult savedStatus = controller.createApplicationInvites(inviteOrganisation);
-//        LOG.info(String.format("Status of save: %s", savedStatus.getStatusCode().toString()));
-//
-//        RestResult<Iterable<InviteOrganisationResource>> inviteOrganisationResult = inviteOrganisationController.findAll();
-////        RestResult<InviteOrganisationResource> inviteOrganisationResult = inviteOrganisationController.findById(50L);
-//        LOG.info("StatusCode: " + inviteOrganisationResult.getStatusCode());
-//        Iterable<InviteOrganisationResource> tmp1 = inviteOrganisationResult.getSuccessObject();
-//
-//        ArrayList<InviteOrganisationResource> tmp2 = Lists.newArrayList(tmp1);
-//        LOG.info("StatusCode: "+ tmp2.size());
-//
-//        RestResult<Set<InviteOrganisationResource>> savedInviteResult = controller.getInvitesByApplication(APPLICATION_ID);
-//        LOG.info(String.format("Status of get invites: %s", savedInviteResult.getStatusCode().toString()));
-//        assertTrue(savedInviteResult.isSuccess());
-//        Set<InviteOrganisationResource> invitesMap = savedInviteResult.getSuccessObject();
-//        assertEquals(1, invitesMap.size());
-//        assertEquals(2, invitesMap.iterator().next().getInviteResources().size());
-//    }
-
 }

@@ -9,6 +9,7 @@ import org.springframework.validation.Validator;
 
 import java.time.LocalDate;
 
+import static com.worth.ifs.commons.error.Error.fieldError;
 import static com.worth.ifs.commons.rest.ValidationMessages.rejectValue;
 
 /**
@@ -45,5 +46,22 @@ public class ApplicationMarkAsCompleteValidator implements Validator {
             LOG.debug("MarkAsComplete application details validation message for duration in months: " + application.getDurationInMonths());
             rejectValue(errors, "durationInMonths", "validation.project.duration.range.invalid");
         }
+
+        if (application.getResubmission() != null) {
+            if (application.getResubmission()) {
+                if (StringUtils.isEmpty(application.getPreviousApplicationNumber())) {
+                    LOG.debug("MarkAsComplete application details validation message for previous application number: " + application.getPreviousApplicationNumber());
+                    rejectValue(errors, "previousApplicationNumber", "validation.application.previous.application.number.required");
+                }
+                if (StringUtils.isEmpty(application.getPreviousApplicationTitle())) {
+                    LOG.debug("MarkAsComplete application details validation message for previous application title: " + application.getPreviousApplicationTitle());
+                    rejectValue(errors, "previousApplicationTitle", "validation.application.previous.application.title.required");
+                }
+            }
+        } else {
+            LOG.debug("MarkAsComplete application details validation message for resubmission indicator: " + application.getResubmission());
+            rejectValue(errors, "resubmission", "validation.application.must.indicate.resubmission.or.not");
+        }
+
     }
 }

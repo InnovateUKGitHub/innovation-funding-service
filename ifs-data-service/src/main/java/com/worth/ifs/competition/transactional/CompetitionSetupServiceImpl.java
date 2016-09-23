@@ -64,7 +64,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     @Autowired
     private CompetitionTypeRepository competitionTypeRepository;
     @Autowired
-    private CompetitionFunderService competitionCoFunderService;
+    private CompetitionFunderService competitionFunderService;
 	@Autowired
     private CompetitionTemplateRepository competitionTemplateRepository;
     @Autowired
@@ -118,7 +118,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     }
 
     private void saveFunders(CompetitionResource competitionResource) {
-        competitionCoFunderService.reinsertFunders(competitionResource);
+        competitionFunderService.reinsertFunders(competitionResource);
     }
 
     private void saveInnovationSector(CompetitionResource competitionResource) {
