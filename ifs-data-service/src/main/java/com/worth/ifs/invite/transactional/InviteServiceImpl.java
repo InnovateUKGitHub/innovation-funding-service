@@ -3,6 +3,8 @@ package com.worth.ifs.invite.transactional;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.domain.QuestionStatus;
+import com.worth.ifs.application.repository.QuestionStatusRepository;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.BaseEitherBackedResult;
 import com.worth.ifs.commons.service.ServiceFailure;
@@ -39,6 +41,7 @@ import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -69,6 +72,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
     @Autowired
     private UserMapper userMapper;
+
     @Autowired
     private ApplicationInviteMapper applicationInviteMapper;
 
@@ -77,6 +81,10 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
     @Autowired
     private ApplicationInviteRepository applicationInviteRepository;
+
+    @Autowired
+    private QuestionStatusRepository questionStatusRepository;
+
     @Autowired
     private UserRepository userRepository;
 
@@ -116,8 +124,8 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
             );
 
             return inviteResult;
-        }else{
-            if(invite.getId()==null){
+        } else {
+            if (invite.getId() == null) {
                 applicationInviteRepository.save(invite);
             }
             invite.generateHash();
@@ -185,13 +193,11 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
     @Override
     public ServiceResult<InviteResultsResource> createApplicationInvites(InviteOrganisationResource inviteOrganisationResource) {
-
         List<Error> errors = validateUniqueEmails(inviteOrganisationResource.getInviteResources());
         if (errors.size() > 0) {
             LOG.warn("Some double email addresses found");
             return serviceFailure(errors);
         }
-
 
         if (!inviteOrganisationResourceIsValid(inviteOrganisationResource)) {
             return serviceFailure(badRequestError("The Invite is not valid"));
@@ -226,18 +232,15 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         } else {
             return serviceSuccess(new HashSet());
         }
-
     }
 
     @Override
     public ServiceResult<InviteResultsResource> saveInvites(List<ApplicationInviteResource> inviteResources) {
-
         List<Error> errors = validateUniqueEmails(inviteResources);
         if (errors.size() > 0) {
             LOG.warn("Some double email addresses found");
             return serviceFailure(errors);
         }
-
 
         List<ApplicationInvite> invites = simpleMap(inviteResources, invite -> mapInviteResourceToInvite(invite, null));
         applicationInviteRepository.save(invites);
@@ -248,7 +251,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     public ServiceResult<Void> acceptInvite(String inviteHash, Long userId) {
         LOG.error(String.format("acceptInvite %s => %s ", inviteHash, userId));
         return find(invite(inviteHash), user(userId)).andOnSuccess((invite, user) -> {
-            if(invite.getEmail().equalsIgnoreCase(user.getEmail())){
+            if (invite.getEmail().equalsIgnoreCase(user.getEmail())) {
                 invite.open();
                 if (invite.getInviteOrganisation().getOrganisation() == null && !user.getOrganisations().isEmpty()) {
                     invite.getInviteOrganisation().setOrganisation(user.getOrganisations().get(0));
@@ -292,6 +295,28 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
                 .andOnSuccess(u -> u.isPresent() ?
                         serviceSuccess(u.get()) :
                         serviceFailure(notFoundError(UserResource.class)));
+    }
+
+    @Override
+    public ServiceResult<Void> removeApplicationInvite(Long applicationInviteId) {
+        try {
+            ApplicationInvite applicationInvite = applicationInviteMapper.mapIdToDomain(applicationInviteId);
+            if(applicationInvite == null) {
+               return serviceFailure(notFoundError(ApplicationInvite.class));
+            }
+
+            List<ProcessRole> processRoles = processRoleRepository.findByUserAndApplication(applicationInvite.getUser(), applicationInvite.getTarget());
+
+            setMarkedAsCompleteQuestionStatusesToLeadApplicant(applicationInvite, processRoles);
+            setAssignedQuestionStatusesToLeadApplicant(applicationInvite, processRoles);
+            removeProcessRolesOnApplication(processRoles);
+
+            applicationInviteRepository.delete(applicationInvite);
+
+            return serviceSuccess();
+        } catch (IllegalArgumentException e) {
+            return serviceFailure(notFoundError(ApplicationInvite.class));
+        }
     }
 
     protected Supplier<ServiceResult<ApplicationInvite>> invite(final String hash) {
@@ -342,7 +367,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     private List<ApplicationInvite> assembleInvitesFromInviteOrganisationResource(InviteOrganisationResource inviteOrganisationResource, InviteOrganisation newInviteOrganisation) {
         List<ApplicationInvite> invites = new ArrayList<>();
         inviteOrganisationResource.getInviteResources().forEach(inviteResource ->
-                        invites.add(mapInviteResourceToInvite(inviteResource, newInviteOrganisation))
+                invites.add(mapInviteResourceToInvite(inviteResource, newInviteOrganisation))
         );
 
         return invites;
@@ -399,7 +424,6 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     }
 
     private boolean inviteResourceIsValid(ApplicationInviteResource inviteResource) {
-
         if (StringUtils.isEmpty(inviteResource.getEmail()) || StringUtils.isEmpty(inviteResource.getName()) || inviteResource.getApplication() == null) {
             return false;
         }
@@ -423,7 +447,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     }
 
     private Boolean validateUniqueEmail(ApplicationInviteResource inviteResource) {
-        if(inviteResource.getEmail() == null) {
+        if (inviteResource.getEmail() == null) {
             return true;
         }
 
@@ -463,5 +487,38 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
         return result;
 
+    }
+
+    private void setMarkedAsCompleteQuestionStatusesToLeadApplicant(ApplicationInvite applicationInvite, List<ProcessRole> processRoles) {
+        processRoles.forEach(processRole -> {
+            List<QuestionStatus> questionStatuses = questionStatusRepository.findByApplicationIdAndMarkedAsCompleteById(applicationInvite.getTarget().getId(), processRole.getId());
+            if(!questionStatuses.isEmpty()) {
+                questionStatuses.forEach(questionStatus ->
+                        questionStatus.setMarkedAsCompleteBy(applicationInvite.getTarget().getLeadApplicantProcessRole())
+                );
+                questionStatusRepository.save(questionStatuses);
+            }
+        });
+    }
+
+    private void setAssignedQuestionStatusesToLeadApplicant(ApplicationInvite applicationInvite, List<ProcessRole> processRoles) {
+        processRoles.forEach(processRole -> {
+            List<QuestionStatus> questionStatuses = questionStatusRepository.findByApplicationIdAndAssigneeId(applicationInvite.getTarget().getId(), processRole.getId());
+            if (!questionStatuses.isEmpty()) {
+                questionStatuses.forEach(questionStatus ->
+                        questionStatus.setAssignee(
+                                applicationInvite.getTarget().getLeadApplicantProcessRole(),
+                                applicationInvite.getTarget().getLeadApplicantProcessRole(),
+                                LocalDateTime.now())
+                );
+                questionStatusRepository.save(questionStatuses);
+            }
+        });
+    }
+
+    private void removeProcessRolesOnApplication(List<ProcessRole> processRoles) {
+        if(!processRoles.isEmpty()) {
+            processRoleRepository.delete(processRoles);
+        }
     }
 }
