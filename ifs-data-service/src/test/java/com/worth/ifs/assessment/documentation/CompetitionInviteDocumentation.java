@@ -97,7 +97,7 @@ public class CompetitionInviteDocumentation extends BaseControllerMockMVCTest<Co
 
         when(competitionInviteServiceMock.rejectInvite(hash, compRejection.getRejectReason(), ofNullable(compRejection.getRejectComment()))).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/competitioninvite/rejectInvite/{hash}", hash, compRejection)
+        mockMvc.perform(post("/competitioninvite/rejectInvite/{hash}", hash)
                 .contentType(APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(compRejection)))
                 .andExpect(status().isOk())
