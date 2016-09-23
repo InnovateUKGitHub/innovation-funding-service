@@ -1,19 +1,15 @@
 package com.worth.ifs.competitionsetup.service.formpopulator;
 
-import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import com.worth.ifs.competition.resource.CollaborationLevel;
-import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.resource.CompetitionSetupSection;
-import com.worth.ifs.competition.resource.LeadApplicantType;
+import com.worth.ifs.competition.resource.*;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.form.EligibilityForm;
 import com.worth.ifs.util.CollectionFunctions;
+import org.junit.Before;
+import org.junit.Test;
+
+import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class EligibilityFormPopulatorTest {
 
@@ -37,6 +33,7 @@ public class EligibilityFormPopulatorTest {
 				.withMaxResearchRatio(30)
 				.withMultiStream(true)
 				.withStreamName("streamname")
+				.withResubmission(ThreeStateType.UNSET)
 				.withCollaborationLevel(CollaborationLevel.COLLABORATIVE)
 				.withLeadApplicantType(LeadApplicantType.BUSINESS)
 				.build();
