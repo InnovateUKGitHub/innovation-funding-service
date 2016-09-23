@@ -3,33 +3,27 @@ package com.worth.ifs.assessment.transactional;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.invite.resource.CompetitionInviteResource;
 import com.worth.ifs.registration.resource.UserRegistrationResource;
-import com.worth.ifs.user.domain.Role;
-import com.worth.ifs.user.mapper.RoleMapper;
-import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.resource.RoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.transactional.RegistrationService;
+import com.worth.ifs.user.transactional.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.user.resource.UserRoleType.ASSESSOR;
-import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static java.util.Collections.singletonList;
 
 @Service
 public class AssessorServiceImpl implements AssessorService {
-    @Autowired
-    CompetitionInviteService competitionInviteService;
 
     @Autowired
-    RegistrationService userRegistrationService;
+    private CompetitionInviteService competitionInviteService;
 
     @Autowired
-    RoleRepository roleRepository;
+    private RegistrationService userRegistrationService;
 
     @Autowired
-    RoleMapper roleMapper;
+    private RoleService roleService;
 
     @Override
     public ServiceResult<Void> registerAssessorByHash(String inviteHash, UserRegistrationResource userRegistrationResource) {
@@ -61,7 +55,7 @@ public class AssessorServiceImpl implements AssessorService {
     }
 
     private ServiceResult<RoleResource> getAssessorRoleResource() {
-        return find(roleRepository.findOneByName(ASSESSOR.name()), notFoundError(Role.class, ASSESSOR.name())).andOnSuccessReturn(roleMapper::mapToResource);
+        return roleService.findByUserRoleType(ASSESSOR);
     }
 
     private ServiceResult<Void> createUser(UserResource userResource) {

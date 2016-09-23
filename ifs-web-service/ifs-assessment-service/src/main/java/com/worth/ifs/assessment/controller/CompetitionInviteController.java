@@ -59,8 +59,7 @@ public class CompetitionInviteController extends BaseController {
     @RequestMapping(value = "competition/{inviteHash}/accept", method = RequestMethod.POST)
     public String acceptInvite(@PathVariable("inviteHash") String inviteHash,
                                @ModelAttribute("loggedInUser") UserResource loggedInUser,
-                               Model model,
-                               HttpServletResponse response) {
+                               Model model) {
         boolean userIsLoggedIn = loggedInUser != null;
         if (userIsLoggedIn) {
             return format("redirect:/invite-accept/competition/%s/accept", inviteHash);

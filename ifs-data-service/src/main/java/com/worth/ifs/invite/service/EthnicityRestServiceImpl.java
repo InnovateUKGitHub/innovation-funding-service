@@ -11,8 +11,8 @@ import static com.worth.ifs.commons.service.ParameterizedTypeReferences.ethnicit
 import static java.lang.String.format;
 
 /**
- *  Service for CRUD operations on {@link com.worth.ifs.user.domain.Ethnicity}s.
- *
+ * Service for CRUD operations on {@link com.worth.ifs.user.domain.Ethnicity}s.
+ * <p>
  * This class connects to the {@link com.worth.ifs.invite.controller.EthnicityController}
  * through a REST call.
  */
@@ -21,7 +21,7 @@ public class EthnicityRestServiceImpl extends BaseRestService implements Ethnici
 
     private String ethnicityRestUrl = "/ethnicity";
 
-    protected void setRejectionReasonRestUrl(String ethnicityRestUrl) {
+    protected void setEthnicityRestUrl(String ethnicityRestUrl) {
         this.ethnicityRestUrl = ethnicityRestUrl;
     }
 

@@ -54,7 +54,7 @@ public class AssessorRegistrationController {
     private AssessorRegistrationBecomeAnAssessorModelPopulator becomeAnAssessorModelPopulator;
 
     @Autowired
-    private AssessorRegistrationYourDetailsModelPopulator registrationModelPopulator;
+    private AssessorRegistrationYourDetailsModelPopulator yourDetailsModelPopulator;
 
     @Autowired
     private AssessorRegistrationSkillsModelPopulator assessorSkillsModelPopulator;
@@ -150,7 +150,7 @@ public class AssessorRegistrationController {
     }
 
     private String doViewYourDetails(Model model, String inviteHash) {
-        model.addAttribute("model", registrationModelPopulator.populateModel(inviteHash));
+        model.addAttribute("model", yourDetailsModelPopulator.populateModel(inviteHash));
         model.addAttribute("ethnicityOptions", getEthnicityOptions());
         return "registration/register";
     }

@@ -33,7 +33,7 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
 
     @Spy
     @InjectMocks
-    private AssessorRegistrationYourDetailsModelPopulator registrationModelPopulator;
+    private AssessorRegistrationYourDetailsModelPopulator yourDetailsModelPopulator;
 
     @Spy
     @InjectMocks

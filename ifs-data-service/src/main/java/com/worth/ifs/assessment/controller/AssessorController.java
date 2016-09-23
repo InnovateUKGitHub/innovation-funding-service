@@ -24,7 +24,7 @@ public class AssessorController {
     private AssessorService assessorService;
 
     @RequestMapping(value = "/register/{hash}", method = POST)
-    public RestResult<Void> registerAssessorByHash(@PathVariable("hash") final String hash, @Valid @RequestBody UserRegistrationResource userResource) {
+    public RestResult<Void> registerAssessorByHash(@PathVariable("hash") String hash, @Valid @RequestBody UserRegistrationResource userResource) {
         return assessorService.registerAssessorByHash(hash, userResource).toPostResponse();
     }
 }
