@@ -2,7 +2,6 @@ package com.worth.ifs.project.transactional;
 
 import com.worth.ifs.bankdetails.domain.BankDetails;
 import com.worth.ifs.bankdetails.repository.BankDetailsRepository;
-import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.finance.transactional.FinanceRowService;
 import com.worth.ifs.project.constant.ProjectActivityStates;
 import com.worth.ifs.project.domain.MonitoringOfficer;
@@ -15,6 +14,7 @@ import com.worth.ifs.project.mapper.ProjectUserMapper;
 import com.worth.ifs.project.repository.MonitoringOfficerRepository;
 import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.project.repository.ProjectUserRepository;
+import com.worth.ifs.project.workflow.projectdetails.configuration.ProjectDetailsWorkflowHandler;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.Organisation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +22,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Optional;
 
-import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.project.constant.ProjectActivityStates.*;
 import static com.worth.ifs.user.resource.OrganisationTypeEnum.isResearch;
-import static com.worth.ifs.util.EntityLookupCallbacks.find;
 
 class AbstractProjectServiceImpl extends BaseTransactionalService {
     @Autowired
@@ -52,9 +50,8 @@ class AbstractProjectServiceImpl extends BaseTransactionalService {
     @Autowired
     FinanceRowService financeRowService;
 
-    ServiceResult<MonitoringOfficer> getExistingMonitoringOfficerForProject(Long projectId) {
-        return find(monitoringOfficerRepository.findOneByProjectId(projectId), notFoundError(MonitoringOfficer.class, projectId));
-    }
+    @Autowired
+    private ProjectDetailsWorkflowHandler projectDetailsWorkflowHandler;
 
     List<ProjectUser> getProjectUsersByProjectId(Long projectId) {
         return projectUserRepository.findByProjectId(projectId);
@@ -74,7 +71,7 @@ class AbstractProjectServiceImpl extends BaseTransactionalService {
     }
 
     ProjectActivityStates createProjectDetailsStatus(Project project) {
-        return project.isProjectDetailsSubmitted() ? COMPLETE : ACTION_REQUIRED;
+        return projectDetailsWorkflowHandler.isSubmitted(project) ? COMPLETE : ACTION_REQUIRED;
     }
 
     ProjectActivityStates createMonitoringOfficerStatus(final Optional<MonitoringOfficer> monitoringOfficer, final ProjectActivityStates leadProjectDetailsSubmitted) {

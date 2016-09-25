@@ -3,8 +3,8 @@ package com.worth.ifs.project.security;
 import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.security.BasePermissionRules;
-import com.worth.ifs.security.PermissionRule;
-import com.worth.ifs.security.PermissionRules;
+import com.worth.ifs.commons.security.PermissionRule;
+import com.worth.ifs.commons.security.PermissionRules;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
@@ -64,6 +64,13 @@ public class ProjectPermissionRules extends BasePermissionRules {
             description = "Comp admins can view Monitoring Officers on any Project")
     public boolean compAdminsCanViewMonitoringOfficersForAnyProject(ProjectResource project, UserResource user) {
         return isCompAdmin(user);
+    }
+
+    @PermissionRule(
+            value = "VIEW_MONITORING_OFFICER",
+            description = "Project finance managers can view Monitoring Officers on any Project")
+    public boolean projectFinanceUsersCanViewMonitoringOfficersForAnyProject(ProjectResource project, UserResource user) {
+        return isProjectFinanceUser(user);
     }
 
     @PermissionRule(
@@ -150,6 +157,20 @@ public class ProjectPermissionRules extends BasePermissionRules {
             description = "All partners can view team status")
     public boolean partnersCanViewTeamStatus(ProjectResource project, UserResource user){
         return isPartner(project.getId(), user.getId());
+    }
+
+    @PermissionRule(
+            value = "VIEW_TEAM_STATUS",
+            description = "Comp admins can see a team's status")
+    public boolean compAdminsCanViewTeamStatus(ProjectResource project, UserResource user){
+        return isCompAdmin(user);
+    }
+
+    @PermissionRule(
+            value = "VIEW_TEAM_STATUS",
+            description = "Project finance user can see a team's status")
+    public boolean projectFinanceUserCanViewTeamStatus(ProjectResource project, UserResource user){
+        return isProjectFinanceUser(user);
     }
 
 }

@@ -1,5 +1,6 @@
 *** Settings ***
-Documentation     INFUND-3303: As an Assessor I want the ability to reject the application after I have been given access to the full details so I can make Innovate UK aware.
+Documentation     INFUND-3303: As an Assessor I want the ability to reject the application after I have been given access to the full details so I can make Innovate UK aware. \
+...               INFUND-3720 As an Assessor I can see deadlines for the assessment of applications currently in assessment on my dashboard, so that I am reminded to deliver my work on time
 Suite Setup
 Suite Teardown    the user closes the browser
 Force Tags        Assessor
@@ -8,13 +9,6 @@ Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
-
-*** Variables ***
-${NO_OF_DAYS_LEFT}
-${CURRENT_DATE}
-${MILESTONE_DATE}    2016-12-31
-${STARTING_DATE}
-${SCREEN_NO_OF_DAYS_LEFT}
 
 *** Test Cases ***
 Assessment overview should show the expected questions
@@ -25,8 +19,8 @@ Assessment overview should show the expected questions
     Then the user should see four sections
 
 Number of days remaining until assessment submission
-    [Documentation]    INFUND-4857
-    [Tags]    HappyPath    Pending
+    [Documentation]    INFUND-3720
+    [Tags]    HappyPath
     Then The user should see the text in the page    Days left to submit
     And the assessor should see the number of days remaining
     And the days remaining should be correct
@@ -56,7 +50,7 @@ the user should see four sections
 
 the user fills in rejection details
     the user clicks the button/link    jquery=button:contains("Reject")
-    The user should see an error    This field cannot be left blank
+    The user should see an error    Please enter a reason
     Select From List By Index    id=rejectReason    1
     the user should not see an error in the page
     The user enters text to a text field    id=rejectComment    Have conflicts with the area of expertise.

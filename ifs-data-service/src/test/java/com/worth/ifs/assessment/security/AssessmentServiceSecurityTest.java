@@ -27,7 +27,7 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
     private AssessmentLookupStrategy assessmentLookupStrategy;
 
     @Override
-    protected Class<? extends AssessmentService> getServiceClass() {
+    protected Class<? extends AssessmentService> getClassUnderTest() {
         return TestAssessmentService.class;
     }
 
@@ -45,7 +45,7 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
         AssessmentResource assessmentResource = newAssessmentResource().with(id(ID_TO_FIND)).build();
 
         assertAccessDenied(
-                () -> service.findById(ID_TO_FIND),
+                () -> classUnderTest.findById(ID_TO_FIND),
                 () -> verify(assessmentPermissionRules).userCanReadAssessment(eq(assessmentResource), isA(UserResource.class))
         );
     }
@@ -55,7 +55,7 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
         long userId = 3L;
         long competitionId = 1L;
 
-        service.findByUserAndCompetition(userId, competitionId);
+        classUnderTest.findByUserAndCompetition(userId, competitionId);
         verify(assessmentPermissionRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).userCanReadAssessment(isA(AssessmentResource.class), isA(UserResource.class));
     }
 
@@ -65,7 +65,7 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
         ProcessOutcomeResource outcome = newProcessOutcomeResource().build();
         when(assessmentLookupStrategy.getAssessmentResource(assessmentId)).thenReturn(newAssessmentResource().withId(assessmentId).build());
         assertAccessDenied(
-                () -> service.recommend(assessmentId, outcome),
+                () -> classUnderTest.recommend(assessmentId, outcome),
                 () -> verify(assessmentPermissionRules).userCanUpdateAssessment(isA(AssessmentResource.class), isA(UserResource.class))
         );
     }
@@ -76,7 +76,7 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
         ProcessOutcomeResource outcome = newProcessOutcomeResource().build();
         when(assessmentLookupStrategy.getAssessmentResource(assessmentId)).thenReturn(newAssessmentResource().withId(assessmentId).build());
         assertAccessDenied(
-                () -> service.rejectInvitation(assessmentId, outcome),
+                () -> classUnderTest.rejectInvitation(assessmentId, outcome),
                 () -> verify(assessmentPermissionRules).userCanUpdateAssessment(isA(AssessmentResource.class), isA(UserResource.class))
         );
     }

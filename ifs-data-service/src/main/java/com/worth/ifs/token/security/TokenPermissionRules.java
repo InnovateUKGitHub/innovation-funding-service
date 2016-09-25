@@ -1,12 +1,10 @@
 package com.worth.ifs.token.security;
 
-import com.worth.ifs.security.PermissionRule;
-import com.worth.ifs.security.PermissionRules;
+import com.worth.ifs.commons.security.PermissionRule;
+import com.worth.ifs.commons.security.PermissionRules;
 import com.worth.ifs.token.domain.Token;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
-
-import java.util.Optional;
 
 import static com.worth.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
 

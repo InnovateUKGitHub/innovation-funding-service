@@ -5,6 +5,7 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.project.constant.ProjectActivityStates;
+import com.worth.ifs.project.domain.MonitoringOfficer;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.finance.domain.SpendProfile;
 import com.worth.ifs.project.status.resource.CompetitionProjectsStatusResource;
@@ -17,7 +18,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.project.constant.ProjectActivityStates.*;
+import static com.worth.ifs.util.EntityLookupCallbacks.find;
 
 @Service
 public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl implements ProjectStatusService {
@@ -114,6 +117,10 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
 
     private ProjectActivityStates getMonitoringOfficerStatus(Project project, ProjectActivityStates projectDetailsStatus){
         return createMonitoringOfficerStatus(getExistingMonitoringOfficerForProject(project.getId()).getOptionalSuccessObject(), projectDetailsStatus);
+    }
+
+    private ServiceResult<MonitoringOfficer> getExistingMonitoringOfficerForProject(Long projectId) {
+        return find(monitoringOfficerRepository.findOneByProjectId(projectId), notFoundError(MonitoringOfficer.class, projectId));
     }
 
     private ProjectActivityStates getOtherDocumentsStatus(Project project){

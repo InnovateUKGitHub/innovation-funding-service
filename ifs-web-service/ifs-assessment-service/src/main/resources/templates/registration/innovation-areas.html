@@ -22,33 +22,48 @@
 
             <p class="heading-small">High Value Manufacturing</p>
 
-            <form>
+            <form th:action="@{/registration/skills}" method="post" th:object="${form}">
+                <div class="error-summary" th:if="${#fields.hasErrors('global')}">
+                    <h2 class="heading-medium error-summary-heading">We were unable to save your changes</h2>
+                    <ul class="error-summary-list">
+                        <li th:each="err : ${#fields.globalErrors()}" th:text="${err}"></li>
+                    </ul>
+                </div>
+
                 <h2 class="heading-large">Skill areas</h2>
-                <div class="form-group">
-                    <label>
+                <div class="form-group" th:classappend="${#fields.hasErrors('skillAreas')}? error">
+                    <label th:for="${#ids.next('skillAreas')}">
                         Please tell us about your main areas of expertise or any specialist skills you have. This will help us to assign you the most appropriate applications for assessment.
                         <span class="form-hint">For example ‘Solar Power’, ‘Genetics’, ‘Recycling’</span>
+                        <span th:if="${#fields.hasErrors('skillAreas')}" th:remove="tag">
+                            <span class="error-message"  th:each="err : ${#fields.errors('skillAreas')}" th:text="${err}" />
+                        </span>
                     </label>
-                    <textarea class="width-full" cols="30" rows="5"></textarea>
+                    <textarea class="width-full" cols="30" rows="5" th:field="*{skillAreas}" th:errorclass="field-error"></textarea>
                 </div>
 
                 <h2 class="heading-large no-margin-bottom">Assessor type</h2>
-                <div class="form-group">
+                <div class="form-group" th:classappend="${#fields.hasErrors('assessorType')}? error">
                     <fieldset class="inline">
-                        <legend class="visuallyhidden">Assessor type</legend>
+                        <legend class="visuallyhidden">
+                            Assessor type
+                            <span th:if="${#fields.hasErrors('assessorType')}" th:remove="tag">
+                                <span class="error-message"  th:each="err : ${#fields.errors('assessorType')}" th:text="${err}" />
+                            </span>
+                        </legend>
                         <p class="form-hint">Please select your current area of work. If you are working in both please select the most dominant.</p>
                         <label class="block-label">
-                            <input value="Yes" type="radio">
+                            <input value="business" type="radio" th:field="*{assessorType}" />
                             Business
                         </label>
                         <label class="block-label">
-                            <input value="No" type="radio">
+                            <input value="academic" type="radio" th:field="*{assessorType}" />
                             Academic
                         </label>
                     </fieldset>
                 </div>
 
-                <button class="button button-large" type="submit">Continue</button>
+                <button class="button button-large extra-margin" type="submit">Continue</button>
             </form>
 
             <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>

@@ -2,8 +2,8 @@ package com.worth.ifs.competition.security;
 
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.security.BasePermissionRules;
-import com.worth.ifs.security.PermissionRule;
-import com.worth.ifs.security.PermissionRules;
+import com.worth.ifs.commons.security.PermissionRule;
+import com.worth.ifs.commons.security.PermissionRules;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.resource.UserRoleType;
 import org.springframework.stereotype.Component;

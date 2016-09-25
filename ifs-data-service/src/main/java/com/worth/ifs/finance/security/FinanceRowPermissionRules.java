@@ -1,5 +1,7 @@
 package com.worth.ifs.finance.security;
 
+import com.worth.ifs.commons.security.PermissionRule;
+import com.worth.ifs.commons.security.PermissionRules;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.FinanceRow;
 import com.worth.ifs.finance.repository.FinanceRowRepository;
@@ -7,17 +9,13 @@ import com.worth.ifs.finance.resource.FinanceRowMetaValueResource;
 import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.security.BasePermissionRules;
-import com.worth.ifs.security.PermissionRule;
-import com.worth.ifs.security.PermissionRules;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import static com.worth.ifs.security.SecurityRuleUtil.checkProcessRole;
-import static com.worth.ifs.security.SecurityRuleUtil.isCompAdmin;
-import static com.worth.ifs.security.SecurityRuleUtil.isProjectFinanceUser;
+import static com.worth.ifs.security.SecurityRuleUtil.*;
 import static com.worth.ifs.user.resource.UserRoleType.COLLABORATOR;
 import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 

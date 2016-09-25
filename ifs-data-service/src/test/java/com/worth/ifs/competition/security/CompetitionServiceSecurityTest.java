@@ -38,7 +38,7 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
     }
 
     @Override
-    protected Class<? extends CompetitionService> getServiceClass() {
+    protected Class<? extends CompetitionService> getClassUnderTest() {
         return TestCompetitionService.class;
     }
 
@@ -46,7 +46,7 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
     public void testFindAll() {
         setLoggedInUser(null);
 
-        ServiceResult<List<CompetitionResource>> results = service.findAll();
+        ServiceResult<List<CompetitionResource>> results = classUnderTest.findAll();
         assertEquals(0, results.getSuccessObject().size());
 
         verify(rules, times(2)).externalUsersCannotViewCompetitionsInSetup(isA(CompetitionResource.class), isNull(UserResource.class));
@@ -59,7 +59,7 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
     public void testGetCompetitionById() {
         setLoggedInUser(null);
 
-        assertAccessDenied(() -> service.getCompetitionById(1L), () -> {
+        assertAccessDenied(() -> classUnderTest.getCompetitionById(1L), () -> {
             verify(rules).externalUsersCannotViewCompetitionsInSetup(isA(CompetitionResource.class), isNull(UserResource.class));
             verify(rules).compAdminUserCanViewOpenCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
             verify(rules).projectFinanceUserCanViewOpenCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
@@ -71,7 +71,7 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
     public void testFindLiveCompetitions() {
         setLoggedInUser(null);
 
-        ServiceResult<List<CompetitionResource>> results = service.findLiveCompetitions();
+        ServiceResult<List<CompetitionResource>> results = classUnderTest.findLiveCompetitions();
         assertEquals(0, results.getSuccessObject().size());
 
         verify(rules, times(2)).externalUsersCannotViewCompetitionsInSetup(isA(CompetitionResource.class), isNull(UserResource.class));
@@ -84,7 +84,7 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
     public void testFindProjectSetupCompetitions() {
         setLoggedInUser(null);
 
-        ServiceResult<List<CompetitionResource>> results = service.findProjectSetupCompetitions();
+        ServiceResult<List<CompetitionResource>> results = classUnderTest.findProjectSetupCompetitions();
         assertEquals(0, results.getSuccessObject().size());
 
         verify(rules, times(2)).externalUsersCannotViewCompetitionsInSetup(isA(CompetitionResource.class), isNull(UserResource.class));
@@ -97,7 +97,7 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
     public void testFindUpcomingCompetitions() {
         setLoggedInUser(null);
 
-        ServiceResult<List<CompetitionResource>> results = service.findUpcomingCompetitions();
+        ServiceResult<List<CompetitionResource>> results = classUnderTest.findUpcomingCompetitions();
         assertEquals(0, results.getSuccessObject().size());
 
         verify(rules, times(2)).externalUsersCannotViewCompetitionsInSetup(isA(CompetitionResource.class), isNull(UserResource.class));
@@ -110,7 +110,7 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
     public void testCountCompetitions() {
         setLoggedInUser(null);
 
-        assertAccessDenied(() -> service.countCompetitions(), () -> {
+        assertAccessDenied(() -> classUnderTest.countCompetitions(), () -> {
             verifyNoMoreInteractions(rules);
         });
     }
@@ -120,7 +120,7 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
     public void testSearchCompetitions() {
         setLoggedInUser(null);
 
-        assertAccessDenied(() -> service.searchCompetitions("string", 1, 1), () -> {
+        assertAccessDenied(() -> classUnderTest.searchCompetitions("string", 1, 1), () -> {
             verifyNoMoreInteractions(rules);
         });
     }

@@ -426,6 +426,7 @@ include::{snippets}/project/get-team-status/response-fields.adoc[]
 ===== Curl Example
 include::{snippets}/project/get-team-status/curl-request.adoc[]
 
+<<<<<<< HEAD
 === Get current status for all projects in competition
 ==== Success
 ===== Request
@@ -438,3 +439,18 @@ include::{snippets}/project/get-competition-status/response-fields.adoc[]
 
 ===== Curl Example
 include::{snippets}/project/get-competition-status/curl-request.adoc[]
+=======
+
+=== Get Project Team Status (with optional filter by user id)
+==== Success
+===== Request
+include::{snippets}/project/get-team-status-with-filter-by-user-id/http-request.adoc[]
+include::{snippets}/project/get-team-status-with-filter-by-user-id/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/get-team-status-with-filter-by-user-id/http-response.adoc[]
+include::{snippets}/project/get-team-status-with-filter-by-user-id/response-fields.adoc[]
+
+===== Curl Example
+include::{snippets}/project/get-team-status-with-filter-by-user-id/curl-request.adoc[]
+>>>>>>> development

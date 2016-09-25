@@ -68,6 +68,10 @@ public class QuestionStatus {
         return markedAsComplete;
     }
 
+    public void setMarkedAsCompleteBy(ProcessRole markedAsCompleteBy) {
+        this.markedAsCompleteBy = markedAsCompleteBy;
+    }
+
     public ProcessRole getMarkedAsCompleteBy() {
         return markedAsCompleteBy;
     }

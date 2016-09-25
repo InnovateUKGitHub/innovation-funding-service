@@ -3,7 +3,6 @@ package com.worth.ifs.competition.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.application.resource.ApplicationResource;
-import freemarker.template.utility.NumberUtil;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -56,8 +55,8 @@ public class CompetitionResource {
     private String budgetCode;
     private String code;
 
-    private boolean resubmission;
-    private boolean multiStream;
+    private Boolean resubmission;
+    private Boolean multiStream;
     private String streamName;
     private CollaborationLevel collaborationLevel;
     private LeadApplicantType leadApplicantType;
@@ -387,19 +386,19 @@ public class CompetitionResource {
         this.milestones = milestones;
     }
 
-    public boolean isMultiStream() {
+    public Boolean isMultiStream() {
         return multiStream;
     }
 
-    public void setMultiStream(boolean multiStream) {
+    public void setMultiStream(Boolean multiStream) {
         this.multiStream = multiStream;
     }
 
-    public boolean isResubmission() {
+    public Boolean getResubmission() {
         return resubmission;
     }
 
-    public void setResubmission(boolean resubmission) {
+    public void setResubmission(Boolean resubmission) {
         this.resubmission = resubmission;
     }
 

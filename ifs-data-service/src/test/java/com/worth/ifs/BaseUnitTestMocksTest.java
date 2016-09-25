@@ -23,6 +23,7 @@ import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.assessment.repository.AssessorFormInputResponseRepository;
 import com.worth.ifs.assessment.transactional.AssessmentService;
 import com.worth.ifs.assessment.transactional.AssessorFormInputResponseService;
+import com.worth.ifs.assessment.transactional.AssessorService;
 import com.worth.ifs.assessment.transactional.CompetitionInviteService;
 import com.worth.ifs.authentication.service.IdentityProviderService;
 import com.worth.ifs.bankdetails.mapper.BankDetailsMapper;
@@ -34,6 +35,7 @@ import com.worth.ifs.category.repository.CategoryLinkRepository;
 import com.worth.ifs.category.repository.CategoryRepository;
 import com.worth.ifs.category.transactional.CategoryLinkService;
 import com.worth.ifs.category.transactional.CategoryService;
+import com.worth.ifs.commons.BaseTest;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.repository.CompetitionFunderRepository;
 import com.worth.ifs.competition.repository.CompetitionRepository;
@@ -53,6 +55,7 @@ import com.worth.ifs.invite.mapper.CompetitionParticipantRoleMapper;
 import com.worth.ifs.invite.mapper.ParticipantStatusMapper;
 import com.worth.ifs.invite.mapper.RejectionReasonMapper;
 import com.worth.ifs.invite.repository.*;
+import com.worth.ifs.invite.transactional.EthnicityService;
 import com.worth.ifs.invite.transactional.InviteProjectService;
 import com.worth.ifs.invite.transactional.RejectionReasonService;
 import com.worth.ifs.notifications.resource.SystemNotificationSource;
@@ -73,10 +76,13 @@ import com.worth.ifs.project.workflow.projectdetails.configuration.ProjectDetail
 import com.worth.ifs.sil.experian.service.SilExperianEndpoint;
 import com.worth.ifs.token.repository.TokenRepository;
 import com.worth.ifs.token.transactional.TokenService;
+import com.worth.ifs.user.mapper.EthnicityMapper;
+import com.worth.ifs.user.mapper.RoleMapper;
 import com.worth.ifs.user.mapper.UserMapper;
 import com.worth.ifs.user.repository.*;
 import com.worth.ifs.user.transactional.PasswordPolicyValidator;
 import com.worth.ifs.user.transactional.RegistrationService;
+import com.worth.ifs.user.transactional.RoleService;
 import com.worth.ifs.user.transactional.UserService;
 import com.worth.ifs.workflow.mapper.ProcessOutcomeMapper;
 import org.junit.Before;
@@ -140,6 +146,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected RoleRepository roleRepositoryMock;
+
+    @Mock
+    protected RoleService roleServiceMock;
 
     @Mock
     protected ProcessRoleRepository processRoleRepositoryMock;
@@ -256,6 +265,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected IdentityProviderService idpServiceMock;
 
     @Mock
+    protected RoleMapper roleMapperMock;
+
+    @Mock
     protected TokenService tokenServiceMock;
 
     @Mock
@@ -367,7 +379,19 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected FinanceRowService financeRowServiceMock;
 
     @Mock
-    protected ProjectDetailsWorkflowHandler projectDetailsWorkflowServiceMock;
+    protected ProjectDetailsWorkflowHandler projectDetailsWorkflowHandlerMock;
+
+    @Mock
+    protected EthnicityRepository ethnicityRepositoryMock;
+
+    @Mock
+    protected EthnicityMapper ethnicityMapperMock;
+
+    @Mock
+    protected EthnicityService ethnicityServiceMock;
+
+    @Mock
+    protected AssessorService assessorServiceMock;
 
     @Before
     public void setupMockInjection() {

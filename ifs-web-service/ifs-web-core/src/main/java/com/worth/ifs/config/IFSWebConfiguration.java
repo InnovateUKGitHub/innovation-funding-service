@@ -5,6 +5,7 @@ import com.worth.ifs.interceptors.AlertMessageHandlerInterceptor;
 import com.worth.ifs.interceptors.GoogleAnalyticsHandlerInterceptor;
 import com.worth.ifs.interceptors.MenuLinksHandlerInterceptor;
 import com.worth.ifs.invite.formatter.RejectionReasonFormatter;
+import com.worth.ifs.user.formatter.EthnicityFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -76,6 +77,7 @@ public class IFSWebConfiguration extends WebMvcConfigurerAdapter {
     public void addFormatters(FormatterRegistry registry) {
         super.addFormatters(registry);
         registry.addFormatter(new RejectionReasonFormatter());
+        registry.addFormatter(new EthnicityFormatter());
     }
 
     /**

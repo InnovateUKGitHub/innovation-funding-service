@@ -24,12 +24,17 @@ public class ApplicationDocs {
             fieldWithPath("processRoles").description("list of ProcessRole Id's"),
             fieldWithPath("applicationStatus").description("ApplicationStatus Id"),
             fieldWithPath("applicationStatusName").description("ApplicationStatus name"),
+            fieldWithPath("stateAidAgreed").description("Flag indicating if the user has accepted that they are eligible for state aid"),
             fieldWithPath("competition").description("Competition Id"),
             fieldWithPath("competitionName").description("Competition Name"),
             fieldWithPath("competitionStatus").description("Competition Status"),
             fieldWithPath("applicationFinances").description("list of ApplicationFinance Id's"),
             fieldWithPath("assessorFeedbackFileEntry").description("Uploaded Assessor Feedback for the Application"),
-            fieldWithPath("completion").description("percentage of completion of the application")
+            fieldWithPath("completion").description("percentage of completion of the application"),
+            fieldWithPath("resubmission").description("indicator that this application is a resubmission"),
+            fieldWithPath("previousApplicationNumber").description("the application number of the previous submission"),
+            fieldWithPath("previousApplicationTitle").description("the application title of the previous submission")
+
     };
 
     public static final ApplicationResourceBuilder applicationResourceBuilder = newApplicationResource()
@@ -47,5 +52,4 @@ public class ApplicationDocs {
             .withInviteList(asList(1L,2L,3L))
             .withAssessorFeedbackFileEntry(123L)
             .withCompletion(new BigDecimal(30L));
-
 }

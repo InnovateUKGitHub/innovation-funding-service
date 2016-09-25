@@ -181,6 +181,7 @@ task testCommonCode(type: Jar) {
         include "com/worth/ifs/**/*Builder.class"
         include "com/worth/ifs/**/*BuilderAmendFunctions.class"
         include "**/application-web-integration-test.properties"
+        include "com/worth/ifs/commons/**/*.class"
     }
 }
 task testCommonCodeCopy(type: Copy){

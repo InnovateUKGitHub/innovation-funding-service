@@ -67,9 +67,10 @@ import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.service.ServiceResult.*;
 import static com.worth.ifs.invite.domain.ProjectParticipantRole.*;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static com.worth.ifs.project.constant.ProjectActivityStates.NOT_REQUIRED;
+import static com.worth.ifs.project.constant.ProjectActivityStates.*;
 import static com.worth.ifs.project.transactional.ProjectServiceImpl.Notifications.INVITE_FINANCE_CONTACT;
 import static com.worth.ifs.project.transactional.ProjectServiceImpl.Notifications.INVITE_PROJECT_MANAGER;
+import static com.worth.ifs.user.resource.OrganisationTypeEnum.isResearch;
 import static com.worth.ifs.util.CollectionFunctions.*;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static com.worth.ifs.util.EntityLookupCallbacks.getOnlyElementOrFail;
@@ -237,7 +238,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
             ProjectUser projectUser = getCurrentlyLoggedInPartner(project);
 
             if (projectDetailsWorkflowHandler.submitProjectDetails(project, projectUser)) {
-                return setSubmittedDate(project, date);
+                return serviceSuccess();
             } else {
                 return serviceFailure(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_SUBMITTED_IF_INCOMPLETE);
             }
@@ -556,7 +557,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     private ServiceResult<Void> validateInMonitoringOfficerAssignableState(final Long projectId) {
 
         return getProject(projectId).andOnSuccess(project -> {
-            if (!project.isProjectDetailsSubmitted()) {
+            if (!projectDetailsWorkflowHandler.isSubmitted(project)) {
                 return serviceFailure(PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED);
             } else {
                 return serviceSuccess();
@@ -596,9 +597,8 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         }
     }
 
-    private ServiceResult<Void> setSubmittedDate(Project project, LocalDateTime date) {
-        project.setSubmittedDate(date);
-        return serviceSuccess();
+    private ServiceResult<MonitoringOfficer> getExistingMonitoringOfficerForProject(Long projectId) {
+        return find(monitoringOfficerRepository.findOneByProjectId(projectId), notFoundError(MonitoringOfficer.class, projectId));
     }
 
     private ServiceResult<Void> addFinanceContactToProject(Project project, ProjectUser financeContact) {
@@ -635,14 +635,22 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     @Override
-    public ServiceResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId) {
+    public ServiceResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId) {
         Project project = projectRepository.findOne(projectId);
-        List<Organisation> allPartnerOrganisations = getPartnerOrganisations(projectId);
+        Organisation leadOrganisation = project.getApplication().getLeadOrganisation();
 
-        List<ProjectPartnerStatusResource> projectPartnerStatusResources = new ArrayList<>();
-        for (Organisation partnerOrganisation : allPartnerOrganisations) {
-            projectPartnerStatusResources.add(getProjectPartnerStatus(project, partnerOrganisation));
-        }
+        Optional<ProjectUser> partnerUserForFilterUser = filterByUserId.flatMap(
+                userId -> simpleFindFirst(project.getProjectUsers(),
+                        pu -> pu.getUser().getId().equals(userId) && pu.getRole().isPartner()));
+
+        List<Organisation> allPartnerOrganisations = getPartnerOrganisations(projectId);
+        List<Organisation> partnerOrganisationsToInclude =
+                simpleFilter(allPartnerOrganisations, partner ->
+                        partner.getId().equals(leadOrganisation.getId()) ||
+                        (partnerUserForFilterUser.map(pu -> partner.getId().equals(pu.getOrganisation().getId())).orElse(true)));
+
+        List<ProjectPartnerStatusResource> projectPartnerStatusResources =
+                simpleMap(partnerOrganisationsToInclude, partner -> getProjectPartnerStatus(project, partner));
 
         ProjectTeamStatusResource projectTeamStatusResource = new ProjectTeamStatusResource();
         projectTeamStatusResource.setPartnerStatuses(projectPartnerStatusResources);
@@ -669,6 +677,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
         if (partnerOrganisation.equals(leadOrganisation)) {
             projectPartnerStatusResource = new ProjectLeadStatusResource(
+                    partnerOrganisation.getId(),
                     partnerOrganisation.getName(),
                     organisationType,
                     leadProjectDetailsSubmitted,
@@ -680,6 +689,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                     grantOfferLetterStatus);
         } else {
             projectPartnerStatusResource = new ProjectPartnerStatusResource(
+                    partnerOrganisation.getId(),
                     partnerOrganisation.getName(),
                     organisationType,
                     leadProjectDetailsSubmitted,
@@ -741,7 +751,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     private ServiceResult<Project> validateIfProjectAlreadySubmitted(final Project project) {
 
-        if (project.isProjectDetailsSubmitted()) {
+        if (projectDetailsWorkflowHandler.isSubmitted(project)) {
             return serviceFailure(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_UPDATED_IF_ALREADY_SUBMITTED);
         }
 
