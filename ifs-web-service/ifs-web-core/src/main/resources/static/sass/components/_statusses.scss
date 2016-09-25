@@ -272,6 +272,10 @@ span.status {
 		@extend  %icon-timer;
 		background-size: 33px 30px;
 	}
+	a {
+		display: block;
+		height: 70px;
+	}
 }
 td.status,
 th.status {

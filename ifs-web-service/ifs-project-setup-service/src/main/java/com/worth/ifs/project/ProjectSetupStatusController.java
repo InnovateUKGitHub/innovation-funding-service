@@ -81,7 +81,7 @@ public class ProjectSetupStatusController {
         RestResult<BankDetailsResource> existingBankDetails = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisation.getId());
         Optional<BankDetailsResource> bankDetails = existingBankDetails.toOptionalIfNotFound().getSuccessObjectOrThrowException();
 
-        boolean funded = isApplicationFunded(project, organisation, competition);
+        boolean funded = isApplicationFunded(project, organisation);
 
         ProjectTeamStatusResource teamStatus = projectService.getProjectTeamStatus(projectId, Optional.empty());
         ProjectSetupSectionPartnerAccessor statusAccessor = new ProjectSetupSectionPartnerAccessor(teamStatus);
@@ -90,10 +90,10 @@ public class ProjectSetupStatusController {
         return new ProjectSetupStatusViewModel(project, competition, monitoringOfficer, bankDetails, funded, organisation.getId(), projectDetailsSubmitted);
     }
 
-    private boolean isApplicationFunded(ProjectResource project, OrganisationResource organisation, CompetitionResource competition){
+    private boolean isApplicationFunded(ProjectResource project, OrganisationResource organisation){
         Integer grantClaim;
         if(isResearch(organisation.getOrganisationType())){
-            grantClaim = competition.getAcademicGrantPercentage();
+            grantClaim = 100;
         } else {
             ApplicationFinanceResource applicationFinance = financeService.getFinanceDetails(project.getApplication(), organisation.getId()).getSuccessObjectOrThrowException();
             grantClaim = applicationFinance.getGrantClaimPercentage();

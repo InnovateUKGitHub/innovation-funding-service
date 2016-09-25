@@ -1,5 +1,7 @@
 package com.worth.ifs.finance.security;
 
+import com.worth.ifs.commons.security.PermissionRule;
+import com.worth.ifs.commons.security.PermissionRules;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.FinanceRow;
 import com.worth.ifs.finance.repository.FinanceRowRepository;
@@ -7,17 +9,13 @@ import com.worth.ifs.finance.resource.FinanceRowMetaValueResource;
 import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.security.BasePermissionRules;
-import com.worth.ifs.commons.security.PermissionRule;
-import com.worth.ifs.commons.security.PermissionRules;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import static com.worth.ifs.security.SecurityRuleUtil.checkProcessRole;
-import static com.worth.ifs.security.SecurityRuleUtil.isCompAdmin;
-import static com.worth.ifs.security.SecurityRuleUtil.isProjectFinanceUser;
+import static com.worth.ifs.security.SecurityRuleUtil.*;
 import static com.worth.ifs.user.resource.UserRoleType.COLLABORATOR;
 import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 
@@ -69,13 +67,13 @@ public class FinanceRowPermissionRules extends BasePermissionRules {
         return isPartner(project.getId(), user.getId());
     }
 
-    @PermissionRule(value = "READ_ORGANISATION_FUNDING_STATUS", description = "Project finance user can check if any of the other partners are seeking funding")
-    public boolean projectFinanceUserCanCheckFundingStatusOfTeam(final ProjectResource project, final UserResource user) {
+    @PermissionRule(value = "READ_ORGANISATION_FUNDING_STATUS", description = "Any project finance user can check if any of partners are seeking funding")
+    public boolean projectFinanceUsersCanCheckFundingStatusOfTeam(final ProjectResource project, final UserResource user) {
         return isProjectFinanceUser(user);
     }
 
-    @PermissionRule(value = "READ_ORGANISATION_FUNDING_STATUS", description = "Competition administrator can check if any of the other partners are seeking funding")
-    public boolean competitionAdministratorCanCheckFundingStatusOfTeam(final ProjectResource project, final UserResource user) {
+    @PermissionRule(value = "READ_ORGANISATION_FUNDING_STATUS", description = "Any competition administrator can check if any of the partners are seeking funding")
+    public boolean compAdminsCanCheckFundingStatusOfTeam(final ProjectResource project, final UserResource user) {
         return isCompAdmin(user);
     }
 

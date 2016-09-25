@@ -17,3 +17,41 @@
       </th:block>
   </th:block>
 </th:block>
+
+<th:block th:fragment="project-status-table(status)">
+    <th:block th:switch="${status.name()}">
+        <td th:case="'COMPLETE'" class="status ok">
+          <th:block th:if="${url}">
+              <a th:href="${url}"><span class="visuallyhidden">Stage complete</span></a>
+          </th:block>
+          <th:block th:unless="${url}">
+              <span class="visuallyhidden">Stage complete</span>
+          </th:block>
+        </td>
+        <td th:case="'ACTION_REQUIRED'" class="status action">
+            <th:block th:if="${url}">
+                <a th:href="${url}"><span class="visuallyhidden">Requires action</span></a>
+            </th:block>
+            <th:block th:unless="${url}">
+              <span class="visuallyhidden">Requires action</span>
+            </th:block>
+        </td>
+        <td th:case="'NOT_STARTED'" class="status">
+            <span class="visuallyhidden">Stage is not yet available</span>
+        </td>
+        <td th:case="'NOT_REQUIRED'" class="status na">
+            <span class="visuallyhidden">Not required for this partner</span>
+        </td>
+        <td th:case="'PENDING'" class="status waiting">
+          <th:block th:if="${url}">
+              <a th:href="${url}">
+                <span class="visuallyhidden">Awaiting review from Innovate UK</span>
+              </a>
+          </th:block>
+          <th:block th:unless="${url}">
+            <span class="visuallyhidden">Awaiting review from Innovate UK</span>
+          </th:block>
+        </td>
+        <td th:case="*"></td><!--/* just in case there is a different status we put out an empty td to not break the table */-->
+    </th:block>
+</th:block>
