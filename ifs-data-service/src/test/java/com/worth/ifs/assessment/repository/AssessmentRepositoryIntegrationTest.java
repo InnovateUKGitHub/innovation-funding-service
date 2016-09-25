@@ -4,14 +4,10 @@ import com.worth.ifs.BaseRepositoryIntegrationTest;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.assessment.domain.Assessment;
-import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.competition.repository.CompetitionRepository;
-import com.worth.ifs.invite.domain.CompetitionInvite;
-import com.worth.ifs.invite.domain.CompetitionParticipant;
-import com.worth.ifs.invite.repository.CompetitionParticipantRepository;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
+import com.worth.ifs.user.repository.UserRepository;
 import com.worth.ifs.workflow.domain.ActivityState;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
 import com.worth.ifs.workflow.repository.ActivityStateRepository;
@@ -27,9 +23,10 @@ import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static com.worth.ifs.assessment.builder.ProcessOutcomeBuilder.newProcessOutcome;
 import static com.worth.ifs.assessment.resource.AssessmentStates.OPEN;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
-import static com.worth.ifs.user.builder.UserBuilder.newUser;
+import static com.worth.ifs.user.resource.UserRoleType.ASSESSOR;
 import static com.worth.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.assertEquals;
 
 public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<AssessmentRepository> {
@@ -50,10 +47,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
     private ActivityStateRepository activityStateRepository;
 
     @Autowired
-    private CompetitionParticipantRepository competitionParticipantRepository;
-
-    @Autowired
-    private CompetitionRepository competitionRepository;
+    private UserRepository userRepository;
 
     @Autowired
     @Override
@@ -123,7 +117,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
                 .withActivityState(openState)
                 .build(2);
 
-        List<Assessment> saved = assessments.stream().map(assessment -> repository.save(assessment)).collect(Collectors.toList());
+        List<Assessment> saved = assessments.stream().map(assessment -> repository.save(assessment)).collect(toList());
 
         final Assessment found = repository.findOneByParticipantId(processRole1.getId());
         assertEquals(saved.get(0), found);
@@ -132,33 +126,31 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
     @Test
     @Rollback
     public void testFindByUserIdAndCompetitionId() throws Exception {
-        Long userId = 3L;
-        Long competitionId = 1L;
-
         assessorFormInputResponseRepository.deleteAll();
         repository.deleteAll();
 
-        User user = newUser()
-                .withId(3L)
-                .withFirstName("Professor")
-                .build();
+        Long userId = 3L;
 
+        User user = userRepository.findOne(userId);
         Application application = applicationRepository.findOne(1L);
         ActivityState openState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, OPEN.getBackingState());
 
-        Competition competition = competitionRepository.findById(competitionId) ;
-        CompetitionInvite invite = new CompetitionInvite("Professor", "paul.plum@gmail.com", "hash", competition);
-        competitionParticipantRepository.save( new CompetitionParticipant(competition, user, invite));
-        List<ProcessRole> processRoles = processRoleRepository.findByUserId(userId);
+        List<ProcessRole> applicationParticipants = newProcessRole()
+                .withId((Long) null)
+                .withUser(user)
+                .withRole(ASSESSOR)
+                .withApplication(application)
+                .build(2).stream().map(processRole -> processRoleRepository.save(processRole)).collect(toList());
 
         List<Assessment> assessments = newAssessment()
+                .withId((Long) null)
                 .withApplication(application)
-                .withParticipant(processRoles.get(0), processRoles.get(1),processRoles.get(2), processRoles.get(3))
+                .withParticipant(applicationParticipants.get(0), applicationParticipants.get(1))
                 .withActivityState(openState)
-                .build(4);
+                .build(2);
 
-        List<Assessment> saved = assessments.stream().map(assessment -> repository.save(assessment)).collect(Collectors.toList());
-        List<Assessment> found = repository.findByParticipantUserIdAndParticipantApplicationCompetitionId(userId, competitionId);
+        List<Assessment> saved = assessments.stream().map(assessment -> repository.save(assessment)).collect(toList());
+        List<Assessment> found = repository.findByParticipantUserIdAndParticipantApplicationCompetitionId(userId, application.getCompetition().getId());
         assertEquals(saved, found);
     }
 }
