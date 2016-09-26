@@ -464,3 +464,4 @@ include::{snippets}/project/get-team-status-with-filter-by-user-id/response-fiel
 
 ===== Curl Example
 include::{snippets}/project/get-team-status-with-filter-by-user-id/curl-request.adoc[]
+include::{snippets}/project/get-team-status-with-filter-by-user-id/curl-request.adoc[]
