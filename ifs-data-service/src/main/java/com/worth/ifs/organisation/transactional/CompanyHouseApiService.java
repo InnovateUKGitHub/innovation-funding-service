@@ -2,7 +2,7 @@ package com.worth.ifs.organisation.transactional;
 
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.organisation.resource.OrganisationSearchResult;
-import com.worth.ifs.security.SecuredBySpring;
+import com.worth.ifs.commons.security.SecuredBySpring;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 

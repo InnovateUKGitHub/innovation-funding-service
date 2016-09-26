@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.worth.ifs.form.resource.FormInputScope.APPLICATION;
-import static com.worth.ifs.security.SecuritySetter.addBasicSecurityUser;
+import static com.worth.ifs.commons.security.SecuritySetter.addBasicSecurityUser;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.*;

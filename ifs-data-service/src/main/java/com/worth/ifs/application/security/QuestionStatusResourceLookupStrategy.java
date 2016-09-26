@@ -3,8 +3,8 @@ package com.worth.ifs.application.security;
 import com.worth.ifs.application.mapper.QuestionStatusMapper;
 import com.worth.ifs.application.repository.QuestionStatusRepository;
 import com.worth.ifs.application.resource.QuestionStatusResource;
-import com.worth.ifs.security.PermissionEntityLookupStrategies;
-import com.worth.ifs.security.PermissionEntityLookupStrategy;
+import com.worth.ifs.commons.security.PermissionEntityLookupStrategies;
+import com.worth.ifs.commons.security.PermissionEntityLookupStrategy;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

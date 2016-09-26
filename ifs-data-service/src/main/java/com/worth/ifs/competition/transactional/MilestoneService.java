@@ -3,7 +3,7 @@ package com.worth.ifs.competition.transactional;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.MilestoneResource;
 import com.worth.ifs.competition.resource.MilestoneType;
-import com.worth.ifs.security.SecuredBySpring;
+import com.worth.ifs.commons.security.SecuredBySpring;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;

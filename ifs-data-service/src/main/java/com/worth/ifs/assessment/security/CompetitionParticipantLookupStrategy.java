@@ -3,8 +3,8 @@ package com.worth.ifs.assessment.security;
 import com.worth.ifs.invite.mapper.CompetitionParticipantMapper;
 import com.worth.ifs.invite.repository.CompetitionParticipantRepository;
 import com.worth.ifs.invite.resource.CompetitionParticipantResource;
-import com.worth.ifs.security.PermissionEntityLookupStrategies;
-import com.worth.ifs.security.PermissionEntityLookupStrategy;
+import com.worth.ifs.commons.security.PermissionEntityLookupStrategies;
+import com.worth.ifs.commons.security.PermissionEntityLookupStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

@@ -42,6 +42,7 @@ public class EligibilitySectionSaverTest {
 		competitionSetupForm.setLeadApplicantType("business");
 		competitionSetupForm.setMultipleStream("yes");
 		competitionSetupForm.setStreamName("streamname");
+		competitionSetupForm.setResubmission("yes");
 		competitionSetupForm.setResearchCategoryId(CollectionFunctions.asLinkedSet(1L, 2L, 3L));
 		competitionSetupForm.setResearchParticipationAmountId(1);
 		competitionSetupForm.setSingleOrCollaborative("collaborative");
