@@ -110,6 +110,17 @@ public class ProjectSetupSectionPartnerAccessor {
         return true;
     }
 
+    public boolean canAccessOtherDocumentsSection(OrganisationResource organisation) {
+
+        if (projectSetupProgressChecker.isLeadPartnerOrganisation(organisation)) {
+            return true;
+        }
+
+        return (isCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
+                "Non-lead Partners are unable to access Other Documents section until their Companies House information " +
+                        "is complete"));
+    }
+
     public boolean isProjectDetailsSubmitted() {
         return projectSetupProgressChecker.isProjectDetailsSubmitted();
     }
