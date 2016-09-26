@@ -137,16 +137,12 @@ Word count check: Comments for InnovateUK
     And the user enters text to a text field    id=form-textarea-comments    Testing the comments word count.
     Then the word count should be correct    Words remaining: 95
 
-You feedback is not mandatory when "Yes" is selected in funding suitability
+Your Feedback is not mandatory when Yes is selected
     [Documentation]    INFUND-4996
-    [Tags]    Pending
-    Then the user selects the radio button    fundingConfirmation    true
-    And The user clicks the button/link    jQuery=.button:contains(Save assessment)
-    Then The user should not see the text in the page    Please enter your feedback
-    And The user should see the text in the page    Only assessments which are Open can be recommended.
-    And The user navigates to the assessor page    ${Assessment_summary_open_11}
-    Then Clear Element Text    id=form-textarea-feedback
-    And the user selects the radio button    fundingConfirmation    true
+    [Tags]
+    Given The user navigates to the assessor page    ${Assessment_summary_open_11}
+    And The feedback text area is empty
+    When the user selects the radio button    fundingConfirmation    true
     And The user clicks the button/link    jQuery=.button:contains(Save assessment)
     Then The user should not see the text in the page    Please enter your feedback
 
@@ -233,3 +229,6 @@ the days remaining should be correct
     ${NO_OF_DAYS_LEFT}=    Remove String    ${NO_OF_DAYS_LEFT}    days
     ${SCREEN_NO_OF_DAYS_LEFT}=    Get Text    css=.sub-header .pie-overlay .day
     Should Be Equal As Numbers    ${NO_OF_DAYS_LEFT}    ${SCREEN_NO_OF_DAYS_LEFT}
+
+The feedback text area is empty
+    Then Clear Element Text    id=form-textarea-feedback
