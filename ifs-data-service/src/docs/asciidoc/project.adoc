@@ -438,7 +438,6 @@ include::{snippets}/project/get-competition-status/response-fields.adoc[]
 
 ===== Curl Example
 include::{snippets}/project/get-competition-status/curl-request.adoc[]
-=======
 
 === Get Project Team Status (with optional filter by user id)
 ==== Success
@@ -452,4 +451,3 @@ include::{snippets}/project/get-team-status-with-filter-by-user-id/response-fiel
 
 ===== Curl Example
 include::{snippets}/project/get-team-status-with-filter-by-user-id/curl-request.adoc[]
->>>>>>> development
