@@ -49,6 +49,11 @@ public class ApplicationPermissionRules extends BasePermissionRules {
         return isCompAdmin(user);
     }
 
+    @PermissionRule(value = "READ_RESEARCH_PARTICIPATION_PERCENTAGE", description = "The project finance user can see the participation percentage for applications they assess")
+    public boolean projectFinanceUsersCanSeeTheResearchParticipantPercentageInApplications(final ApplicationResource applicationResource, UserResource user) {
+        return isProjectFinanceUser(user);
+    }
+
     @PermissionRule(value = "READ_FINANCE_TOTALS",
             description = "The consortium can see the application finance totals",
             additionalComments = "This rule secures ApplicationResource which can contain more information than this rule should allow. Consider a new cut down object based on ApplicationResource")

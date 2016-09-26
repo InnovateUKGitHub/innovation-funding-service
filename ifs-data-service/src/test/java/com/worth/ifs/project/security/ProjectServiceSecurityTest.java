@@ -244,6 +244,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         assertAccessDenied(() -> classUnderTest.getMonitoringOfficer(123L), () -> {
             verify(projectPermissionRules).compAdminsCanViewMonitoringOfficersForAnyProject(project, getLoggedInUser());
+            verify(projectPermissionRules).projectFinanceUsersCanViewMonitoringOfficersForAnyProject(project, getLoggedInUser());
             verify(projectPermissionRules).partnersCanViewMonitoringOfficersOnTheirProjects(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
         });
@@ -431,6 +432,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         assertAccessDenied(() -> classUnderTest.getProjectTeamStatus(123L, Optional.empty()), () -> {
             verify(projectPermissionRules).partnersCanViewTeamStatus(project, getLoggedInUser());
             verify(projectPermissionRules).compAdminsCanViewTeamStatus(project, getLoggedInUser());
+            verify(projectPermissionRules).projectFinanceUserCanViewTeamStatus(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
         });
     }

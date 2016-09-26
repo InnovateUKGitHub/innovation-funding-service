@@ -262,8 +262,8 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
     @Test
     public void save() throws Exception {
         Boolean fundingConfirmation = TRUE;
-        String feedback = "feedback";
-        String comment = "comment";
+        String feedback = String.join(" ", nCopies(100, "feedback"));
+        String comment = String.join(" ", nCopies(100, "comment"));
 
         when(assessmentService.recommend(assessmentId, fundingConfirmation, feedback, comment)).thenReturn(serviceSuccess());
 
@@ -280,8 +280,8 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
 
     @Test
     public void save_noFundingConfirmation() throws Exception {
-        String feedback = "feedback";
-        String comment = "comment";
+        String feedback = String.join(" ", nCopies(100, "feedback"));
+        String comment = String.join(" ", nCopies(100, "comment"));
 
         MvcResult result = mockMvc.perform(post("/{assessmentId}/summary", assessmentId)
                 .contentType(APPLICATION_FORM_URLENCODED)
@@ -316,7 +316,7 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
     @Test
     public void save_noFeedbackAndFundingConfirmationIsTrue() throws Exception {
         Boolean fundingConfirmation = TRUE;
-        String comment = "comment";
+        String comment = String.join(" ", nCopies(100, "comment"));
 
         when(assessmentService.recommend(assessmentId, fundingConfirmation, null, comment)).thenReturn(serviceSuccess());
 
@@ -333,7 +333,7 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
     @Test
     public void save_noFeedbackAndFundingConfirmationIsFalse() throws Exception {
         Boolean fundingConfirmation = FALSE;
-        String comment = "comment";
+        String comment = String.join(" ", nCopies(100, "comment"));
 
         MvcResult result = mockMvc.perform(post("/{assessmentId}/summary", assessmentId)
                 .contentType(APPLICATION_FORM_URLENCODED)
@@ -368,7 +368,7 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
     @Test
     public void save_noComment() throws Exception {
         Boolean fundingConfirmation = TRUE;
-        String feedback = "feedback";
+        String feedback = String.join(" ", nCopies(100, "feedback"));
 
         when(assessmentService.recommend(assessmentId, fundingConfirmation, feedback, null)).thenReturn(serviceSuccess());
 

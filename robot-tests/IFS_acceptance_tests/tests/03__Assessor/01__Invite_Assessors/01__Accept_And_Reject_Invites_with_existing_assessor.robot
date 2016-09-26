@@ -5,7 +5,11 @@ Documentation     INFUND-228: As an Assessor I can see competitions that I have 
 ...
 ...               INFUND-304: As an assessor I want to be able to accept the invitation for a competition, so that the competition team is aware that I am available for assessment
 ...
-...               INFUND-3716: As an Assessor when I have accepted to assess within a competition and the assessment period is current, I can see the number of competitions and their titles on my dashboard, so that I can plan my work. \ INFUND-3720 As an Assessor I can see deadlines for the assessment of applications currently in assessment on my dashboard, so that I am reminded to deliver my work on time
+...               INFUND-3716: As an Assessor when I have accepted to assess within a competition and the assessment period is current, I can see the number of competitions and their titles on my dashboard, so that I can plan my work. \
+...
+...               INFUND-3720 As an Assessor I can see deadlines for the assessment of applications currently in assessment on my dashboard, so that I am reminded to deliver my work on time
+...
+...               INFUND-5157 Add missing word count validation when rejecting an application for assessment
 Suite Setup       log in as user    &{existing_assessor1_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Assessor
@@ -32,6 +36,8 @@ Assessor dashboard should be empty
 
 Existing assessor: Reject invitation
     [Documentation]    INFUND-4631
+    ...
+    ...    INFUND-5157
     [Tags]
     When the user navigates to the page    ${Invitation_existing_assessor2}
     And the user should see the text in the page    Invitation to assess 'Sarcasm Stupendousness'
