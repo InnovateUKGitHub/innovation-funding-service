@@ -16,7 +16,7 @@
                 <h1 class="heading-xlarge">Create assessor account</h1>
             </div>
 
-            <form th:action="@{/registration/{inviteHash}/register(inviteHash=${model.competitionInviteHash})}" method="post" th:object="${form}">
+            <form th:action="@{/registration/{inviteHash}/register(inviteHash=${model.competitionInviteHash})}" method="post" th:object="${form}" novalidate="novalidate">
                 <div class="error-summary" th:if="${#fields.hasErrors('*')}">
                     <h1 class="heading-medium error-summary-heading">
                         We were unable to create your account
@@ -146,7 +146,7 @@
                            maxlength="20"
                            data-minlength-errormessage="Input for your phone number has a minimum length of 8 characters"
                            data-maxlength-errormessage="Input for your phone number has a maximum length of 20 characters"
-                           data-required-errormessage="Please enter a valid phone number"/>
+                           data-required-errormessage="Please enter a phone number"/>
                 </div>
 
                 <div class="form-group">
@@ -176,7 +176,7 @@
                            required="required"
                            minlength="10"
                            maxlength="30"
-                           data-required-errormessage="Password must contain some text"
+                           data-required-errormessage="Please enter your password"
                            data-minlength-errormessage="Password must at least be 10 characters"
                            data-maxlength-errormessage="Password must not be more than 30 characters"
                     />
@@ -196,7 +196,7 @@
                            required="required"
                            minlength="10"
                            maxlength="30"
-                           data-required-errormessage="Password must contain some text"
+                           data-required-errormessage="Please re-type your password"
                            data-minlength-errormessage="Password must at least be 10 characters"
                            data-maxlength-errormessage="Password must not be more than 30 characters"
                     />
