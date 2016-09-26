@@ -13,7 +13,6 @@ import com.worth.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
 import org.apache.commons.collections4.map.LinkedMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.el.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -65,7 +64,7 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
 
     @Override
     public List<Error> autoSaveSectionField(CompetitionResource competitionResource, String fieldName, String value, Optional<Long> ObjectId) {
-        return updateMilestoneWithValueByFieldname(competitionResource, fieldName, value);
+        return updateMilestoneWithValueByFieldname2(competitionResource, fieldName, value);
     }
 
     private List<Error> returnErrorsFoundOnSave(LinkedMap<String, MilestoneEntry> milestoneEntries, Long competitionId){
@@ -107,6 +106,26 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
         return  errors;
     }
 
+    private List<Error> updateMilestoneWithValueByFieldname2(CompetitionResource competitionResource, String fieldName, String value) {
+        List<Error> errors = new ArrayList<>();
+        try{
+            MilestoneResource milestone = milestoneService.getMilestoneByTypeAndCompetitionId(
+                    MilestoneType.valueOf(getMilestoneTypeFromFieldName(fieldName)), competitionResource.getId());
+
+           //past value
+            Error error = validate2(value, milestone);
+
+            if(!errors.isEmpty()) {
+                return errors;
+            }
+            milestoneService.updateMilestone(milestone);
+        }catch(Exception ex){
+            LOG.error(ex.getMessage());
+            return makeErrorList();
+        }
+        return  errors;
+    }
+
     private LocalDateTime getDateFromFieldValue(String value) {
         try {
             String[] dateParts = value.split("-");
@@ -121,7 +140,26 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
         }
     }
 
-    private List<Error> validateMilestoneDate(MilestoneResource milestone, LocalDateTime milestoneDate) {
+    private Error validate2(String value, MilestoneResource milestone) {
+        Error error = null;
+        String[] dateParts = value.split("-");
+        Integer day = Integer.parseInt(dateParts[0]);
+        Integer month = Integer.parseInt(dateParts[1]);
+        Integer year = Integer.parseInt(dateParts[2]);
+
+        if(day == null || month == null || year == null || !competitionSetupMilestoneService.isMilestoneDateValid(day, month, year)) {
+
+                error = new Error("error.milestone.invalid2", HttpStatus.BAD_REQUEST);
+
+        }
+        else { //catch validate dates
+            milestone.setDate(LocalDateTime.of(year, month, day, 0,0));
+        }
+
+        return error;
+    }
+
+        private List<Error> validateMilestoneDate(MilestoneResource milestone, LocalDateTime milestoneDate) {
         if (milestoneDate.isBefore(LocalDateTime.now())){
             return asList(fieldError("", milestoneDate.toString(), "competition.setup.milestone.date.not.in.future"));
         }
