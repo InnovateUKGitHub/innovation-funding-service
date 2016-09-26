@@ -426,7 +426,6 @@ include::{snippets}/project/get-team-status/response-fields.adoc[]
 ===== Curl Example
 include::{snippets}/project/get-team-status/curl-request.adoc[]
 
-<<<<<<< HEAD
 === Get current status for all projects in competition
 ==== Success
 ===== Request
