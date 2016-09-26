@@ -90,12 +90,10 @@
                               <span class="error-message" th:each="err : ${#fields.errors('gender')}" th:text="${err}"/>
                             </span>
                         </legend>
-                        <label class="block-label"
-                                   th:each="gen : ${T(com.worth.ifs.user.resource.Gender).values()}">
-                                <input th:field="*{gender}" th:value="${gen}" type="radio" required="required"
-                                       data-required-errormessage="Please select a gender"/>
-                                <span th:text="${gen.displayName}" th:remove="tag"/>
-                          </label>
+                        <label class="block-label" th:each="gen : ${T(com.worth.ifs.user.resource.Gender).values()}">
+                            <input th:field="*{gender}" th:value="${gen}" type="radio" required="required" data-required-errormessage="Please select a gender"/>
+                            <span th:text="${gen.displayName}" th:remove="tag"/>
+                        </label>
                     </fieldset>
                 </div>
 
@@ -108,10 +106,9 @@
                             </span>
                         </legend>
                         <label class="block-label" th:each="eth : ${ethnicityOptions}">
-                                <input th:field="*{ethnicity}" th:value="${eth.id}" type="radio" required="required"
-                                       data-required-errormessage="Please select an ethnicity"/>
-                                <span th:text="${eth.description}" th:remove="tag"/>
-                          </label>
+                            <input th:field="*{ethnicity}" th:value="${eth.id}" type="radio" required="required" data-required-errormessage="Please select an ethnicity" />
+                            <span th:text="${eth.description}" th:remove="tag"/>
+                        </label>
                     </fieldset>
                 </div>
 
@@ -120,13 +117,13 @@
                         <legend>
                             <span class="heading-small">Do you consider yourself disabled?</span>
                             <span th:if="${#fields.hasErrors('disability')}" th:remove="tag">
-                              <span class="error-message"  th:each="err : ${#fields.errors('disability')}" th:text="${err}" />
+                                <span class="error-message" th:each="err : ${#fields.errors('disability')}" th:text="${err}" />
                             </span>
                         </legend>
                         <label class="block-label" th:each="dis : ${T(com.worth.ifs.user.resource.Disability).values()}">
-                                <input th:field="*{disability}" th:value="${dis}" type="radio" required="required" data-required-errormessage="Please select a disability" />
-                                <span th:text="${dis.displayName}" th:remove="tag" />
-                          </label>
+                            <input th:field="*{disability}" th:value="${dis}" type="radio" required="required" data-required-errormessage="Please select a disability" />
+                            <span th:text="${dis.displayName}" th:remove="tag" />
+                        </label>
                     </fieldset>
                 </div>
 
@@ -149,7 +146,7 @@
                            maxlength="20"
                            data-minlength-errormessage="Input for your phone number has a minimum length of 8 characters"
                            data-maxlength-errormessage="Input for your phone number has a maximum length of 20 characters"
-                           data-required-errormessage="Please enter a phone number"/>
+                           data-required-errormessage="Please enter a valid phone number"/>
                 </div>
 
                 <div class="form-group">
