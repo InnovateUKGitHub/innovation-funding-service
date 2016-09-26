@@ -78,8 +78,8 @@ public class ProjectGrantOfferControllerDocumentation extends BaseControllerMock
 
         Long projectId = 123L;
 
-        BiFunction<ProjectGrantOfferService, FileEntryResource, ServiceResult<FileEntryResource>> serviceCallToUpload =
-                (service, fileToUpload) -> service.getSignedGrantOfferLetterFileEntryDetails(projectId);
+        Function<ProjectGrantOfferService, ServiceResult<FileEntryResource>> serviceCallToUpload =
+                (service) -> service.getSignedGrantOfferLetterFileEntryDetails(projectId);
 
         assertGetFileDetails("/project/{projectId}/signed-grant-offer/details", new Object[]{projectId}, emptyMap(),
                 projectGrantOfferServiceMock, serviceCallToUpload).
@@ -91,8 +91,8 @@ public class ProjectGrantOfferControllerDocumentation extends BaseControllerMock
 
         Long projectId = 123L;
 
-        BiFunction<ProjectGrantOfferService, FileEntryResource, ServiceResult<FileEntryResource>> serviceCallToUpload =
-                (service, fileToUpload) -> service.getGrantOfferLetterFileEntryDetails(projectId);
+        Function<ProjectGrantOfferService, ServiceResult<FileEntryResource>> serviceCallToUpload =
+                (service) -> service.getGrantOfferLetterFileEntryDetails(projectId);
 
         assertGetFileDetails("/project/{projectId}/grant-offer/details", new Object[]{projectId}, emptyMap(),
                 projectGrantOfferServiceMock, serviceCallToUpload).
@@ -105,8 +105,8 @@ public class ProjectGrantOfferControllerDocumentation extends BaseControllerMock
 
         Long projectId = 123L;
 
-        BiFunction<ProjectGrantOfferService, FileEntryResource, ServiceResult<FileEntryResource>> serviceCallToUpload =
-                (service, fileToUpload) -> service.getAdditionalContractFileEntryDetails(projectId);
+        Function<ProjectGrantOfferService, ServiceResult<FileEntryResource>> serviceCallToUpload =
+                (service) -> service.getAdditionalContractFileEntryDetails(projectId);
 
         assertGetFileDetails("/project/{projectId}/additional-contract/details", new Object[]{projectId}, emptyMap(),
                 projectGrantOfferServiceMock, serviceCallToUpload).

@@ -291,7 +291,7 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
     /**
      * A useful shorthand way of testing a Controller method for simple getting of a file's details (a FileEntryResource)
      */
-    protected <T> ResultActions assertGetFileDetails(String url, Object[] urlParams, Map<String, String> requestParams, T serviceToCall, BiFunction<T, FileEntryResource, ServiceResult<FileEntryResource>> getFileFn) throws Exception {
+    protected <T> ResultActions assertGetFileDetails(String url, Object[] urlParams, Map<String, String> requestParams, T serviceToCall, Function<T, ServiceResult<FileEntryResource>> getFileFn) throws Exception {
 
         FileEntryResource fileToReturn = newFileEntryResource().
                 with(id(456L)).
@@ -300,7 +300,7 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
                 withMediaType("text/plain").
                 build();
 
-        when(getFileFn.apply(serviceToCall, fileToReturn)).thenReturn(serviceSuccess(fileToReturn));
+        when(getFileFn.apply(serviceToCall)).thenReturn(serviceSuccess(fileToReturn));
 
         MockHttpServletRequestBuilder mainRequest = get(url, urlParams).
                 header("IFS_AUTH_TOKEN", "123abc");
@@ -310,7 +310,7 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
                 andExpect(status().isOk()).
                 andExpect(content().json(toJson(fileToReturn)));
 
-        getFileFn.apply(verify(serviceToCall), fileToReturn);
+        getFileFn.apply(verify(serviceToCall));
 
         return resultActions;
     }
