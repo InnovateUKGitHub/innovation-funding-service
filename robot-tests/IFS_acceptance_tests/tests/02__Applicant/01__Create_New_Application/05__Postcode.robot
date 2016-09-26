@@ -44,9 +44,7 @@ Other Postcode values
     And the user clicks the button/link    id=postcode-lookup
     Then the user should see the element    id=addressForm.selectedPostcodeIndex
     When the user enters text to a text field    id=addressForm.postcodeInput    BS14NT\\
-    # TODO Pending due to INFUND- 5135
-    And the user clicks the button/link    id=postcode-lookup
-
+    Then the user clicks the button/link    id=postcode-lookup
     And the backslash doesnt give errors
 
 Same Operating address
