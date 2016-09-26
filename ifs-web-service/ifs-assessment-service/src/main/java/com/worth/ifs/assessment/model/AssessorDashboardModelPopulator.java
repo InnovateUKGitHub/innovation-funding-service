@@ -1,20 +1,18 @@
 package com.worth.ifs.assessment.model;
 
-import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.assessment.service.CompetitionParticipantRestService;
 import com.worth.ifs.assessment.viewmodel.AssessorDashboardActiveCompetitionViewModel;
 import com.worth.ifs.assessment.viewmodel.AssessorDashboardUpcomingCompetitionViewModel;
 import com.worth.ifs.assessment.viewmodel.AssessorDashboardViewModel;
-import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.invite.resource.CompetitionParticipantResource;
 import com.worth.ifs.invite.resource.CompetitionParticipantRoleResource;
 import com.worth.ifs.invite.resource.ParticipantStatusResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * Build the model for the Assessor Dashboard view.
@@ -25,33 +23,39 @@ public class AssessorDashboardModelPopulator {
     @Autowired
     private CompetitionParticipantRestService competitionParticipantRestService;
 
-    @Autowired
-    private CompetitionService competitionService;
-
-    private List<CompetitionResource> activeCompetitions;
-
     public AssessorDashboardViewModel populateModel(Long userId) {
-        return new AssessorDashboardViewModel(getActiveCompetitions(userId), getUpcomingCompetitions());
-    }
-
-    private List<AssessorDashboardActiveCompetitionViewModel> getActiveCompetitions(Long userId) {
         List<CompetitionParticipantResource> participantResourceList = competitionParticipantRestService
                 .getParticipants(userId, CompetitionParticipantRoleResource.ASSESSOR, ParticipantStatusResource.ACCEPTED).getSuccessObject();
 
-        return participantResourceList.stream()
-                .map(cpr -> {
-                    CompetitionResource competition = competitionService.getById(cpr.getCompetitionId());
-                    return new AssessorDashboardActiveCompetitionViewModel(competition.getId(),
-                            competition.getName(),
-                            1,
-                            2,
-                            competition.getAssessmentEndDate().toLocalDate(),
-                            competition.getAssessmentDaysLeft(),
-                            competition.getAssessmentDaysLeftPercentage());
-                }).collect(Collectors.toList());
+        return new AssessorDashboardViewModel(getActiveCompetitions(participantResourceList), getUpcomingCompetitions(participantResourceList));
     }
 
-    private List<AssessorDashboardUpcomingCompetitionViewModel> getUpcomingCompetitions() {
-        return new ArrayList<>();
+
+    private List<AssessorDashboardActiveCompetitionViewModel> getActiveCompetitions(List<CompetitionParticipantResource> participantResourceList) {
+        return participantResourceList.stream()
+                .filter(CompetitionParticipantResource::isInAssessment)
+                .map(cpr ->
+                     new AssessorDashboardActiveCompetitionViewModel(
+                            cpr.getCompetitionId(),
+                            cpr.getCompetitionName(),
+                            1,
+                            2,
+                            cpr.getAssessmentEndDate().toLocalDate(),
+                            cpr.getAssessmentDaysLeft(),
+                            cpr.getAssessmentDaysLeftPercentage())
+                )
+                .collect(toList());
+    }
+
+    private List<AssessorDashboardUpcomingCompetitionViewModel> getUpcomingCompetitions(List<CompetitionParticipantResource> participantResources) {
+        return participantResources.stream()
+                .filter(CompetitionParticipantResource::isAnUpcomingAssessment)
+                .map( p -> new AssessorDashboardUpcomingCompetitionViewModel(
+                        p.getCompetitionId(),
+                        p.getCompetitionName(),
+                        p.getAssessmentStartDate().toLocalDate(),
+                        p.getAssessmentEndDate().toLocalDate())
+                )
+                .collect(toList());
     }
 }

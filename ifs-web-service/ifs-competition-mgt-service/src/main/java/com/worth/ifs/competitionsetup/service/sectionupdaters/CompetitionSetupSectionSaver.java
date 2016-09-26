@@ -6,6 +6,7 @@ import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CompetitionSetupSectionSaver {
 
@@ -15,6 +16,6 @@ public interface CompetitionSetupSectionSaver {
 	
 	List<Error> saveSection(CompetitionResource competitionResource, CompetitionSetupForm competitionSetupForm);
 
-    List<Error> autoSaveSectionField(CompetitionResource competitionResource, String fieldName, String value);
+    List<Error> autoSaveSectionField(CompetitionResource competitionResource, String fieldName, String value, Optional<Long> ObjectId);
 
 }

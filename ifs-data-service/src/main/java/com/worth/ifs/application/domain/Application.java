@@ -51,6 +51,9 @@ public class Application implements ProcessActivity {
     private String name;
     private LocalDate startDate;
     private LocalDateTime submittedDate;
+    private Boolean resubmission;
+    private String previousApplicationNumber;
+    private String previousApplicationTitle;
     @Min(0)
     private Long durationInMonths; // in months
     @Min(0)
@@ -83,6 +86,8 @@ public class Application implements ProcessActivity {
     
     @OneToMany(mappedBy="application", fetch=FetchType.LAZY, cascade={CascadeType.REMOVE, CascadeType.PERSIST})
     private List<FormInputResponse> formInputResponses = new ArrayList<>();
+
+    private Boolean stateAidAgreed;
 
     public Application() {
         /*default constructor*/}
@@ -120,6 +125,25 @@ public class Application implements ProcessActivity {
     public String getName() {
         return name;
     }
+
+    public Boolean getResubmission() {
+        return resubmission;
+    }
+
+    public void setResubmission(Boolean resubmission) { this.resubmission = resubmission; }
+
+    public String getPreviousApplicationNumber() {
+        return previousApplicationNumber;
+    }
+
+    public void setPreviousApplicationNumber(String previousApplicationNumber) { this.previousApplicationNumber = previousApplicationNumber; }
+
+    public String getPreviousApplicationTitle() {
+        return previousApplicationTitle;
+    }
+
+    public void setPreviousApplicationTitle(String previousApplicationTitle) { this.previousApplicationTitle = previousApplicationTitle; }
+
 
     public void setName(String name) {
         this.name = name;
@@ -269,5 +293,13 @@ public class Application implements ProcessActivity {
 
     public void setCompletion(final BigDecimal completion) {
         this.completion = completion;
+    }
+
+    public Boolean getStateAidAgreed() {
+        return stateAidAgreed;
+    }
+
+    public void setStateAidAgreed(Boolean stateAidAgreed) {
+        this.stateAidAgreed = stateAidAgreed;
     }
 }

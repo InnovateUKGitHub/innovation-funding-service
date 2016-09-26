@@ -1,9 +1,10 @@
 package com.worth.ifs.assessment.form;
 
+import com.worth.ifs.commons.validation.constraints.WordCount;
 import com.worth.ifs.controller.BindingResultTarget;
+import com.worth.ifs.validator.constraints.FieldRequiredIf;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 
@@ -14,14 +15,16 @@ import java.util.List;
 /**
  * Form field model for the decision made by an assessor about an application while reviewing the assessment summary.
  */
+@FieldRequiredIf(required = "feedback", argument = "fundingConfirmation", predicate = false, message = "{validation.assessmentsummaryform.feedback.required}")
 public class AssessmentSummaryForm implements BindingResultTarget {
 
     @NotNull(message = "{validation.assessmentsummaryform.fundingConfirmation.required}")
     private Boolean fundingConfirmation;
-    @NotEmpty(message = "{validation.assessmentsummaryform.feedback.required}")
-    @Size(max = 255, message = "{validation.field.too.many.characters}")
+    @Size(max = 5000, message = "{validation.field.too.many.characters}")
+    @WordCount(max = 100, message = "{validation.field.max.word.count}")
     private String feedback;
-    @Size(max = 255, message = "{validation.field.too.many.characters}")
+    @Size(max = 5000, message = "{validation.field.too.many.characters}")
+    @WordCount(max = 100, message = "{validation.field.max.word.count}")
     private String comment;
     private BindingResult bindingResult;
     private List<ObjectError> objectErrors;

@@ -16,7 +16,7 @@ import java.util.Optional;
 
 import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION;
 import static com.worth.ifs.commons.error.Error.fieldError;
-import static com.worth.ifs.security.SecuritySetter.addBasicSecurityUser;
+import static com.worth.ifs.commons.security.SecuritySetter.addBasicSecurityUser;
 import static java.util.Collections.nCopies;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
@@ -109,7 +109,7 @@ public class FormInputResponseControllerIntegrationTest extends BaseControllerIn
 
         ValidationMessages errors = controller.saveQuestionResponse(jsonObj).getSuccessObject();
         assertThat(errors.getErrors(), hasSize(1));
-        assertThat(errors.getErrors(), hasItem(fieldError("value", value, "validation.field.max.word.count", "400")));
+        assertThat(errors.getErrors(), hasItem(fieldError("value", value, "validation.field.max.word.count", "", "400")));
     }
 
     @Test

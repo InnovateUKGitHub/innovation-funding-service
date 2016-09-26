@@ -2,7 +2,8 @@
 <div th:fragment="company-address-details">
     <div id="manual-company-input" class="extra-margin">
         <fieldset>
-            <legend class="visuallyhidden">Organisation details</legend>
+            <legend th:if="${legend}" class="visuallyhidden" th:text="${legend}" />
+            <legend th:unless="${legend}" class="visuallyhidden">Organisation details</legend>
             <div th:class="${#fields.hasErrors('*{addressForm.postcodeInput}') and form.addressForm.triedToSearch} ? 'form-group error' : 'form-group'">
                 <label class="form-label" for="addressForm.postcodeInput">
                     <span class="form-label-bold">Postcode</span>
@@ -189,7 +190,6 @@
     <div th:class="${#fields.hasErrors('*{organisationName}') and form.addressForm.triedToSave} ? 'form-group error' : 'form-group'">
         <label class="form-label" for="org-name">
             <span class="form-label-bold">Organisation name</span>
-            <span class="form-hint">Please note your business will need to be registered with Companies House before any grant offer is finalised.</span>
             <span class="error-message" th:if="${#fields.hasErrors('*{organisationName}') and form.addressForm.triedToSave}" th:errors="*{organisationName}"></span>
         </label>
         <input class="form-control" id="org-name" th:field="*{organisationName}" type="text" value="" />

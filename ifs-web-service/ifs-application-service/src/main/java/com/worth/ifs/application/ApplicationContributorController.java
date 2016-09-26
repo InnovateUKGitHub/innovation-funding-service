@@ -4,20 +4,21 @@ import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.form.ContributorsForm;
 import com.worth.ifs.application.form.InviteeForm;
 import com.worth.ifs.application.form.OrganisationInviteForm;
+import com.worth.ifs.application.form.RemoveContributorsForm;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.application.service.OrganisationService;
+import com.worth.ifs.commons.security.UserAuthenticationService;
+import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.filter.CookieFlashMessageFilter;
+import com.worth.ifs.invite.resource.ApplicationInviteResource;
+import com.worth.ifs.invite.resource.InviteOrganisationResource;
+import com.worth.ifs.invite.service.InviteRestService;
+import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.UserService;
-import com.worth.ifs.commons.security.UserAuthenticationService;
-import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.invite.resource.InviteOrganisationResource;
-import com.worth.ifs.invite.resource.ApplicationInviteResource;
-import com.worth.ifs.invite.service.InviteRestService;
-import com.worth.ifs.filter.CookieFlashMessageFilter;
-import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.util.CookieUtil;
 import com.worth.ifs.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -44,9 +46,10 @@ import java.util.stream.Collectors;
 public class ApplicationContributorController{
     public static final String APPLICATION_CONTRIBUTORS_DISPLAY = "application-contributors/display";
     public static final String APPLICATION_CONTRIBUTORS_INVITE = "application-contributors/invite";
+    public static final String APPLICATION_CONTRIBUTORS_REMOVE_CONFIRM = "application-contributors/remove-confirm";
     private static final String CONTRIBUTORS_COOKIE = "contributor_invite_state";
-    public static final String INVITES_SEND = "invitesSend";
-    public static final String INVITES_SAVED = "invitesSaved";
+    private static final String INVITES_SEND = "invitesSend";
+    private static final String INVITES_SAVED = "invitesSaved";
 
     @Autowired
     private InviteRestService inviteRestService;
@@ -90,12 +93,33 @@ public class ApplicationContributorController{
         savedInvites.stream().forEachOrdered(a -> organisationInvites.put(a.getId(), a));
 
         model.addAttribute("authenticatedUser", user);
+        model.addAttribute("userIsLead", user.getId().equals(leadApplicant.getId()));
         model.addAttribute("currentApplication", application);
         model.addAttribute("currentCompetition", competition);
         model.addAttribute("leadApplicant", leadApplicant);
         model.addAttribute("leadOrganisation", leadOrganisation);
         model.addAttribute("organisationInvites", organisationInvites.values());
+        model.addAttribute("removeContributorForm", new RemoveContributorsForm());
         return APPLICATION_CONTRIBUTORS_DISPLAY;
+    }
+
+    @RequestMapping(value = "/remove/{inviteId}/confirm", method = RequestMethod.GET)
+    public String deleteContributorConfirmation(@PathVariable("applicationId") final Long applicationId,
+                                                @PathVariable("inviteId") final Long inviteId,
+                                                Model model) {
+        model.addAttribute("currentApplication", applicationService.getById(applicationId));
+        model.addAttribute("inviteId", inviteId);
+        model.addAttribute("removeContributorForm", new RemoveContributorsForm());
+
+        return APPLICATION_CONTRIBUTORS_REMOVE_CONFIRM;
+    }
+
+    @RequestMapping(value = "/remove", method = RequestMethod.POST)
+    public String deleteContributor(@PathVariable("applicationId") final Long applicationId,
+                                    @Valid @ModelAttribute RemoveContributorsForm removeContributorsForm) {
+        applicationService.removeCollaborator(removeContributorsForm.getApplicationInviteId());
+
+        return "redirect:/application/" + applicationId + "/contributors";
     }
 
     @RequestMapping(value = "/invite", method = RequestMethod.GET)

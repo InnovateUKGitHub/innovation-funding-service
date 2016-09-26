@@ -6,7 +6,7 @@ Suite Setup       Run keywords    log in and create new application if there is 
 ...               AND    Applicant navigates to the finances of the Robot application
 ...               AND    The user enters the funding level
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        Finances    Applicant
+Force Tags        Applicant
 Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../../resources/variables/User_credentials.robot
@@ -23,13 +23,14 @@ Mark as complete with empty other funding row should be impossible
     ...    AND    the user moves focus to the element    jQuery=button:contains('Add another source of funding')
     ...    AND    the user clicks the button/link    jQuery=button:contains('Add another source of funding')
     When the user marks the finances as complete
-    Then the user should see the element    css=.error-summary-list
+    Then the user should see the element    css=.error
 
 Other funding client side
     [Tags]
     [Setup]    the user should see the element    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
     When the user enters invalid inputs in the other funding fields    ${EMPTY}    132020    -6565
     Then the user gets the expected validation errors    Invalid secured date    Funding source cannot be blank
+    And the user moves focus to the element    jQuery=label:contains(Yes) input
     And the user should see an error    This field should be 1 or higher
 
 Other funding server side
@@ -64,7 +65,7 @@ Labour client side
     Given the user clicks the button/link    jQuery=button:contains("Labour")
     When the user enters text to a text field    css=[name^="labour-labourDaysYearly"]    -1
     And the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input    ${EMPTY}
-    Then the user gets the expected validation errors    This field should be 1 or higher    This field cannot be left blank
+    Then the user should see an error           This field should be 1 or higher
     When the user enters text to a text field    css=[name^="labour-labourDaysYearly"]    366
     And the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input    12121212121212121212121212
     And the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(4) input    123456789101112

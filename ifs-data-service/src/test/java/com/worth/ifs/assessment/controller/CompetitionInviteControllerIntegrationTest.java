@@ -7,7 +7,6 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.invite.domain.CompetitionInvite;
-import com.worth.ifs.invite.domain.CompetitionParticipant;
 import com.worth.ifs.invite.domain.RejectionReason;
 import com.worth.ifs.invite.repository.CompetitionInviteRepository;
 import com.worth.ifs.invite.repository.CompetitionParticipantRepository;
@@ -16,7 +15,6 @@ import com.worth.ifs.invite.resource.CompetitionRejectionResource;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.repository.UserRepository;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -199,11 +197,11 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
                         .with(id(null))
                         .withName("name")
                         .withEmail("no-user-exists@for-this.address")
-                        .withUser(newUser().withid(1L))
+                        .withUser(newUser().withId(1L))
                         .withHash("hash")
                         .withCompetition(competition)
                         .build())
-                .withUser(newUser().withid(1L))
+                .withUser(newUser().withId(1L))
                 .build());
         assertTrue(controller.openInvite("hash").isSuccess());
         setLoggedInUser(getPaulPlum());
@@ -277,11 +275,11 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
                         .with(id(null))
                         .withName("name")
                         .withEmail("paul.plum@gmail.com")
-                        .withUser(newUser().withid(getPaulPlum().getId()).build())
+                        .withUser(newUser().withId(getPaulPlum().getId()).build())
                         .withHash("hash")
                         .withCompetition(competition)
                         .build())
-                .withUser(newUser().withid(getPaulPlum().getId()))
+                .withUser(newUser().withId(getPaulPlum().getId()))
                 .build());
 
         assertTrue(controller.openInvite("hash").isSuccess());

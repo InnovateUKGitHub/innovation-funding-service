@@ -3,8 +3,8 @@ package com.worth.ifs.project.security;
 import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.security.BasePermissionRules;
-import com.worth.ifs.security.PermissionRule;
-import com.worth.ifs.security.PermissionRules;
+import com.worth.ifs.commons.security.PermissionRule;
+import com.worth.ifs.commons.security.PermissionRules;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
@@ -89,10 +89,25 @@ public class ProjectPermissionRules extends BasePermissionRules {
 
     @PermissionRule(
             value = "DOWNLOAD_OTHER_DOCUMENTS",
-            description = "Partners can download Other Documents (Collaboration Agreement, Exploitation Plan) that their lead partners have uploaded")
+            description = "Partners can download Other Documents (Collaboration Agreement, Exploitation Plan)")
     public boolean partnersCanDownloadOtherDocuments(ProjectResource project, UserResource user) {
         return isPartner(project.getId(), user.getId());
     }
+
+    @PermissionRule(
+            value = "DOWNLOAD_OTHER_DOCUMENTS",
+            description = "Competition Admin can download Other Documents (Collaboration Agreement, Exploitation Plan)")
+    public boolean competitionAdminCanDownloadOtherDocuments(ProjectResource project, UserResource user) {
+        return isCompAdmin(user);
+    }
+
+    @PermissionRule(
+            value = "DOWNLOAD_OTHER_DOCUMENTS",
+            description = "Project finance users can download Other Documents (Collaboration Agreement, Exploitation Plan)")
+    public boolean projectFinanceUserCanDownloadOtherDocuments(ProjectResource project, UserResource user) {
+        return isProjectFinanceUser(user);
+    }
+
 
     @PermissionRule(
             value = "VIEW_OTHER_DOCUMENTS_DETAILS",
@@ -128,6 +143,20 @@ public class ProjectPermissionRules extends BasePermissionRules {
                 description = "Only a project manager can submit completed partner documents")
     public boolean onlyProjectManagerCanMarkDocumentsAsSubmit(ProjectResource project, UserResource user) {
         return isProjectManager(project.getId(), user.getId());
+    }
+
+    @PermissionRule(
+            value = "VIEW_TEAM_STATUS",
+            description = "All partners can view team status")
+    public boolean partnersCanViewTeamStatus(ProjectResource project, UserResource user){
+        return isPartner(project.getId(), user.getId());
+    }
+
+    @PermissionRule(
+            value = "VIEW_TEAM_STATUS",
+            description = "Comp admins can see a team's status")
+    public boolean compAdminsCanViewTeamStatus(ProjectResource project, UserResource user){
+        return isCompAdmin(user);
     }
 
 }

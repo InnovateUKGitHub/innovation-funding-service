@@ -12,10 +12,14 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
+
 import static com.worth.ifs.assessment.builder.ProcessOutcomeResourceBuilder.newProcessOutcomeResource;
 import static com.worth.ifs.commons.error.CommonErrors.forbiddenError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION;
+import static com.worth.ifs.commons.error.Error.fieldError;
+import static java.util.Collections.nCopies;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -66,13 +70,25 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
     }
 
     @Test
+    public void findByUserAndCompetition() throws Exception {
+        Long userId = 3L;
+        Long competitionId = 1L;
+
+        loginPaulPlum();
+        RestResult<List<AssessmentResource>> result = controller.findByUserAndCompetition(userId, competitionId);
+        assertTrue(result.isSuccess());
+        List<AssessmentResource> assessmentResources = result.getSuccessObjectOrThrowException();
+        assertEquals(4, assessmentResources.size());
+    }
+
+    @Test
     public void recommend() throws Exception {
         Long assessmentId = 2L;
         Long processRole = 8L;
 
         loginPaulPlum();
         AssessmentResource assessmentResource = controller.findById(assessmentId).getSuccessObject();
-        assertEquals(AssessmentStates.OPEN.getState(), assessmentResource.getStatus());
+        assertEquals(AssessmentStates.OPEN, assessmentResource.getAssessmentState());
         assertEquals(processRole, assessmentResource.getProcessRole());
 
         ProcessOutcomeResource processOutcome = newProcessOutcomeResource()
@@ -82,7 +98,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         assertTrue(result.isSuccess());
 
         AssessmentResource assessmentResult = controller.findById(assessmentId).getSuccessObject();
-        assertEquals(AssessmentStates.ASSESSED.getState(), assessmentResult.getStatus());
+        assertEquals(AssessmentStates.ASSESSED, assessmentResult.getAssessmentState());
     }
 
     @Ignore("TODO - should this be open -> open")
@@ -93,7 +109,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
 
         loginPaulPlum();
         AssessmentResource assessmentResource = controller.findById(assessmentId).getSuccessObject();
-        assertEquals(AssessmentStates.OPEN.getState(), assessmentResource.getStatus());
+        assertEquals(AssessmentStates.OPEN, assessmentResource.getAssessmentState());
         assertEquals(processRole, assessmentResource.getProcessRole());
 
         ProcessOutcomeResource processOutcome = newProcessOutcomeResource()
@@ -103,7 +119,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         assertTrue(result.isSuccess());
 
         AssessmentResource assessmentResult = controller.findById(assessmentId).getSuccessObject();
-        assertEquals(AssessmentStates.ASSESSED.getState(), assessmentResult.getStatus());
+        assertEquals(AssessmentStates.ASSESSED, assessmentResult.getAssessmentState());
 
         // Now recommend the assessment again
         assertTrue(controller.recommend(assessmentResource.getId(), processOutcome).isFailure());
@@ -116,7 +132,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
 
         loginPaulPlum();
         AssessmentResource assessmentResource = controller.findById(assessmentId).getSuccessObject();
-        assertEquals(AssessmentStates.OPEN.getState(), assessmentResource.getStatus());
+        assertEquals(AssessmentStates.OPEN, assessmentResource.getAssessmentState());
         assertEquals(processRole, assessmentResource.getProcessRole());
 
         ProcessOutcomeResource processOutcome = newProcessOutcomeResource()
@@ -126,7 +142,30 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         assertTrue(result.isSuccess());
 
         AssessmentResource assessmentResult = controller.findById(assessmentId).getSuccessObject();
-        assertEquals(AssessmentStates.REJECTED.getState(), assessmentResult.getStatus());
+        assertEquals(AssessmentStates.REJECTED, assessmentResult.getAssessmentState());
+    }
+
+    @Test
+    public void rejectInvitation_exceedsWordLimit() {
+        Long assessmentId = 2L;
+        Long processRole = 8L;
+
+        String reason = "reason";
+        String comment = String.join(" ", nCopies(101, "comment"));
+
+        loginPaulPlum();
+        AssessmentResource assessmentResource = controller.findById(assessmentId).getSuccessObject();
+        assertEquals(AssessmentStates.OPEN, assessmentResource.getAssessmentState());
+        assertEquals(processRole, assessmentResource.getProcessRole());
+
+        ProcessOutcomeResource processOutcome = newProcessOutcomeResource()
+                .withComment(comment)
+                .withDescription(reason)
+                .withOutcomeType(AssessmentOutcomes.REJECT.getType())
+                .build();
+        RestResult<Void> result = controller.rejectInvitation(assessmentResource.getId(), processOutcome);
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(fieldError("comment", comment, "validation.field.max.word.count", "", "100")));
     }
 
     @Test
@@ -136,7 +175,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
 
         loginPaulPlum();
         AssessmentResource assessmentResource = controller.findById(assessmentId).getSuccessObject();
-        assertEquals(AssessmentStates.OPEN.getState(), assessmentResource.getStatus());
+        assertEquals(AssessmentStates.OPEN, assessmentResource.getAssessmentState());
         assertEquals(processRole, assessmentResource.getProcessRole());
 
         ProcessOutcomeResource processOutcome = newProcessOutcomeResource()
@@ -146,7 +185,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         assertTrue(result.isSuccess());
 
         AssessmentResource assessmentResult = controller.findById(assessmentId).getSuccessObject();
-        assertEquals(AssessmentStates.REJECTED.getState(), assessmentResult.getStatus());
+        assertEquals(AssessmentStates.REJECTED, assessmentResult.getAssessmentState());
 
         // Now reject the assessment again
         assertTrue(controller.rejectInvitation(assessmentResource.getId(), processOutcome).isFailure());

@@ -1,30 +1,23 @@
 package com.worth.ifs.finance.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.worth.ifs.BaseControllerMockMVCTest;
+import com.worth.ifs.finance.domain.FinanceRowMetaField;
+import com.worth.ifs.finance.resource.cost.FinanceRowItem;
+import com.worth.ifs.finance.resource.cost.GrantClaim;
+import com.worth.ifs.validator.util.ValidationUtil;
+import org.junit.Test;
+import org.mockito.Mock;
+import org.springframework.http.MediaType;
+
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import com.worth.ifs.finance.domain.FinanceRowMetaField;
-import com.worth.ifs.finance.resource.cost.FinanceRowItem;
-import org.junit.Test;
-import org.mockito.Mock;
-import org.springframework.http.MediaType;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.worth.ifs.BaseControllerMockMVCTest;
-import com.worth.ifs.finance.resource.cost.GrantClaim;
-import com.worth.ifs.finance.transactional.FinanceRowService;
-import com.worth.ifs.validator.util.ValidationUtil;
 
 public class FinanceRowControllerTest extends BaseControllerMockMVCTest<FinanceRowController> {
 
@@ -32,9 +25,6 @@ public class FinanceRowControllerTest extends BaseControllerMockMVCTest<FinanceR
     protected FinanceRowController supplyControllerUnderTest() {
         return new FinanceRowController();
     }
-
-    @Mock
-    private FinanceRowService financeRowServiceMock;
 
     @Mock
     private ValidationUtil validationUtil;

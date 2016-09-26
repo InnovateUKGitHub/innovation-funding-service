@@ -23,10 +23,10 @@
             <li id="section-2" th:class="${(param.section != null and param.section[0] == 'funding' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="@{'?section=funding'}">Funding information</a></h3></li>
             <li id="section-3" th:class="${(param.section != null and param.section[0] == 'eligibility' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="@{'?section=eligibility'}">Eligibility</a></h3></li>
             <li id="section-4" th:class="${(param.section != null and param.section[0] == 'milestones' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="@{'?section=milestones'}">Milestones</a></h3></li>
-            <li id="section-6" th:class="${(param.section != null and param.section[0] == 'application' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="@{'?section=application'}">Application questions</a></h3></li>
-            <li id="section-7" th:class="${(param.section != null and param.section[0] == 'finance' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="@{'?section=finance'}">Application finances</a></h3></li>
-            <li id="section-5" th:class="${(param.section != null and param.section[0] == 'assessors' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="@{'?section=assessors'}">Assessors</a></h3></li>
-            <li id="section-8" th:class="${(param.section != null and param.section[0] == 'description' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="@{'?section=description'}">Description &#38; brief</a></h3></li>
+            <li id="section-6" th:class="${(param.section != null and param.section[0] == 'application' ? 'selected' : '')}"><h3 class="heading-small"><a href="/prototypes/5085-application-process">Application questions</a></h3></li>
+            <!--<li id="section-7" th:class="${(param.section != null and param.section[0] == 'finance' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="@{'?section=finance'}">Application finances</a></h3></li>-->
+            <li id="section-5" th:class="${(param.section != null and param.section[0] == 'assessors' ? 'selected' : '')}"><h3 class="heading-small"><a href="/prototypes/5090-assessors-required">Assessors</a></h3></li>
+            <!--<li id="section-8" th:class="${(param.section != null and param.section[0] == 'description' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="@{'?section=description'}">Description &#38; brief</a></h3></li>-->
         
         </ul>
 
@@ -193,7 +193,7 @@
                     th:with="rowTitle=${'Solving problems with data'}, 
                     rowType=${'Programme'},
                     rowSector=${'Manufacturing &#38; materials'},
-                    rowUrl=${'#'},
+                    rowUrl=${'/prototypes/4151-admin-competition-dash'},
                     rowStatus=${'12 projects'}">
                 </th:block>
                 <th:block 
@@ -201,7 +201,7 @@
                     th:with="rowTitle=${'Connected digital additive manufacturing'}, 
                     rowType=${'Managed service'},
                     rowSector=${'Open'},
-                    rowUrl=${'#'},
+                    rowUrl=${'/prototypes/4151-admin-competition-dash'},
                     rowStatus=${'23 projects'}">
                 </th:block>
             </ul>
@@ -1164,7 +1164,7 @@
         <li class="next">
             <a rel="next" title="Navigate to next part" th:href="@{'?section=application'}">
                 <span class="pagination-label">Next</span>
-                <span class="pagination-part-title">Application questions</span>
+                <span class="pagination-part-title">Application</span>
             </a>
         </li>
     </ul>
@@ -1531,6 +1531,76 @@
         </th:block>
 
     </li>
+
+</div>
+
+
+<!-- =============Section: Guidance table rows==================== -->
+
+<div th:fragment="prototype-section-guidance-row">
+
+    <tr>
+        <td>
+            <label class="visuallyhidden" th:for="${'group' + rowNo + '-score-from'}">Score from</label>
+            <input class="form-control width-small" th:id="${'group' + rowNo + '-score-from'}" th:name="${'group' + rowNo + '-score-from'}" th:value="${scoreFrom}" type="number" />
+        </td>
+        <td>
+            <label class="visuallyhidden" th:for="${'group' + rowNo + '-score-to'}">Score to</label>
+            <input class="form-control width-small" th:id="${'group' + rowNo + '-score-to'}" th:name="${'group' + rowNo + '-score-to'}" th:value="${scoreTo}" type="number" />
+        </td>
+        <td>
+            <label class="visuallyhidden" th:for="${'group' + rowNo + '-justification'}">Justification</label>
+            <input class="form-control width-full" th:id="${'group' + rowNo + '-justification'}" th:name="${'group' + rowNo + '-justification'}" th:value="${justification}" type="text" />
+        </td>
+        <td>
+            <a href="#" title="Remove this group of scoring guidance">Remove</a>
+        </td>
+    </tr>
+
+</div>
+
+
+<!-- =============Section: Guidance table rows==================== -->
+
+<div th:fragment="prototype-section-guidance-row">
+
+    <tr>
+        <td>
+            <label class="visuallyhidden" th:for="${'group' + rowNo + '-score-from'}">Score from</label>
+            <input class="form-control width-small" th:id="${'group' + rowNo + '-score-from'}" th:name="${'group' + rowNo + '-score-from'}" th:value="${scoreFrom}" type="number" />
+        </td>
+        <td>
+            <label class="visuallyhidden" th:for="${'group' + rowNo + '-score-to'}">Score to</label>
+            <input class="form-control width-small" th:id="${'group' + rowNo + '-score-to'}" th:name="${'group' + rowNo + '-score-to'}" th:value="${scoreTo}" type="number" />
+        </td>
+        <td>
+            <label class="visuallyhidden" th:for="${'group' + rowNo + '-justification'}">Justification</label>
+            <input class="form-control width-full" th:id="${'group' + rowNo + '-justification'}" th:name="${'group' + rowNo + '-justification'}" th:value="${justification}" type="text" />
+        </td>
+        <td>
+            <a href="#" title="Remove this group of scoring guidance">Remove</a>
+        </td>
+    </tr>
+
+</div>
+
+<!-- =============Section: Assessment Guidance table rows==================== -->
+
+<div th:fragment="prototype-section-assessment-guidance-row">
+
+    <tr>
+        <td>
+            <label class="visuallyhidden" th:for="${'group' + rowNo + '-score'}">Score</label>
+            <input class="form-control width-small" th:id="${'group' + rowNo + '-score'}" th:name="${'group' + rowNo + '-score'}" th:value="${score}" type="text" />
+        </td>
+        <td>
+            <label class="visuallyhidden" th:for="${'group' + rowNo + '-justification'}">Justification</label>
+            <input class="form-control width-full" th:id="${'group' + rowNo + '-justification'}" th:name="${'group' + rowNo + '-justification'}" th:value="${justification}" type="text" />
+        </td>
+        <td>
+            <a href="#" title="Remove this group of scoring guidance">Remove</a>
+        </td>
+    </tr>
 
 </div>
 

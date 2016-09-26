@@ -52,20 +52,16 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
         return with(competition -> setField("fundersPanelEndDate", endDate, competition));
     }
 
+    public CompetitionBuilder withResubmission(Boolean resubmission) {
+        return with(competition -> setField("resubmission", resubmission, competition));
+    }
+
     public CompetitionBuilder withActitiyCode(String activityCode) {
         return with(competition -> setField("activitiyCode", activityCode, competition));
     }
 
     public CompetitionBuilder withInnovateBudget(String innovateBudget) {
         return with(competition -> setField("innovateBudget", innovateBudget, competition));
-    }
-
-    public CompetitionBuilder withFunder(String funder) {
-        return with(competition -> setField("funder", funder, competition));
-    }
-
-    public CompetitionBuilder withFunderBudget(Double funderBudget) {
-        return with(competition -> setField("funderBudget", funderBudget, competition));
     }
 
     public CompetitionBuilder withMilestones(List<Milestone> milestones){

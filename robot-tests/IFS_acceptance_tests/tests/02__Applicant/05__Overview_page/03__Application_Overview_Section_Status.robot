@@ -39,8 +39,8 @@ Blue flag shows after marking a question as incomplete
 
 Green check shows when finances are marked as complete
     [Documentation]    INFUND-1733
-    [Tags]    Finances
-    [Setup]    Run keywords     Make the finances ready for mark as complete
+    [Tags]
+    [Setup]    Run keywords    Make the finances ready for mark as complete
     When the user marks the finances as complete
     Then the user should see the element    jQuery=#section-6 .section:nth-child(1) img[src*="/images/field/field-done-right"]
     [Teardown]    Run keywords    Applicant navigates to the finances of the Robot application
@@ -62,4 +62,4 @@ the applicant can see that the economics benefit section is marked as complete
 the user makes sure that the finances section is not marked as complete
     the user navigates to the overview page of the Robot test application
     the user clicks the button/link    link=Your finances
-    run keyword and ignore error     the user clicks the button/link       jQuery=button:contains("Edit")
+    run keyword and ignore error    the user clicks the button/link    jQuery=button:contains("Edit")

@@ -24,7 +24,7 @@ public class CostCategoryGroup {
     @Column(nullable = false)
     private String description;
 
-    CostCategoryGroup() {
+    public CostCategoryGroup() {
         // for ORM use
     }
 

@@ -11,6 +11,7 @@ import com.worth.ifs.file.transactional.FileHttpHeadersValidator;
 import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.project.resource.ProjectTeamStatusResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.user.resource.OrganisationResource;
@@ -29,6 +30,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.worth.ifs.file.controller.FileControllerUtils.*;
+import static java.util.Optional.ofNullable;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 /**
@@ -117,7 +119,7 @@ public class ProjectController {
 
     @RequestMapping(value = "/{projectId}/setApplicationDetailsSubmitted", method = POST)
     public RestResult<Void> setApplicationDetailsSubmitted(@PathVariable("projectId") final Long projectId){
-        return projectService.saveProjectSubmitDateTime(projectId, LocalDateTime.now()).toPostResponse();
+        return projectService.submitProjectDetails(projectId, LocalDateTime.now()).toPostResponse();
     }
 
     @RequestMapping(value = "/{projectId}/isSubmitAllowed", method = GET)
@@ -277,5 +279,11 @@ public class ProjectController {
                                        @RequestParam(value = "userId", required = true) Long userId,
                                        @RequestParam(value = "organisationId", required = true) Long organisationId) {
         return projectService.addPartner(projectId, userId, organisationId).toPostResponse();
+    }
+
+    @RequestMapping(value = "/{projectId}/team-status", method = GET)
+    public RestResult<ProjectTeamStatusResource> getTeamStatus(@PathVariable(value = "projectId") Long projectId,
+                                                               @RequestParam(value = "filterByUserId", required = false) Long filterByUserId){
+        return projectService.getProjectTeamStatus(projectId, ofNullable(filterByUserId)).toGetResponse();
     }
 }

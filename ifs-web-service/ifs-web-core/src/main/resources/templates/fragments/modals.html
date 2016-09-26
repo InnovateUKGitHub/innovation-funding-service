@@ -32,7 +32,6 @@
             <div th:include="fragments/modals :: close-button" th:remove="tag"/>
             <h2 th:text="${messageTitle}" class="heading-medium no-margin"></h2>
             <p th:text="${message}"></p>
-            <input id="agree-terms" name="agreeTerms" type="hidden" value="yes"/>
             <div>
                 <input type="submit" tabindex="0" class="button large" th:value="${submitText}"/>
                 <button type="button" tabindex="1" class="js-close button buttonlink large"
@@ -209,11 +208,32 @@
         <div th:include="fragments/modals :: close-button" th:remove="tag"/>
         <h2 class="heading-medium no-margin">Update bank account details</h2>
         <p>Please confirm that any updates match the information supplied by the finance contact. After this update has been completed, previously supplied details will be overwritten.</p>
-        <div class="column-half alignright-button" method="post">
+        <hr/>
+        <div class="alignright-button">
+            <button type="button" class="js-close button buttonlink large">Cancel</button>
             <button class="button large" name="submit-change-bank-details">Update bank account details</button>
         </div>
     </div>
 </div>
+<div th:fragment="modal-partner-confirm-bank-details">
+    <div class="modal-partner-confirm-bank-details" role="dialog" aria-hidden="true">
+        <div th:include="fragments/modals :: close-button" th:remove="tag"/>
+        <h2 class="heading-medium no-margin">Update bank account details</h2>
+        <p>You must confirm that updates match the information supplied by the finance contact. This action will overwrite your previous bank account details.</p>
+        <p>Experian checks will be made on updated account details.</p>
+        <hr/>
+        <div class="alignright-button">
+          <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post">
+            <button type="button" class="js-close button buttonlink large">Cancel</button>
+            <button class="button large" name="submit-change-bank-details">Update bank account details</button>
+          </form>
+        </div>
+    </div>
+</div>
+
+
+
+
 
 <!-- Accept Documents On Review -->
 <div th:fragment="modal-accept-docs">
@@ -265,5 +285,30 @@
 
         </form>
 
+    </div>
+</div>
+
+<!-- Confirmation on removing collaborators -->
+<div th:fragment="modal-submit-remove-collaborator" th:if="${userIsLead}">
+    <div class="modal-submit-remove-collaborator" role="dialog" aria-hidden="true">
+        <div th:include="fragments/modals :: close-button" th:remove="tag"/>
+
+        <h2 class="heading-medium no-margin">Removing collaborator</h2>
+        <p>Are you sure you wish to remove this collaborator form this application.</p>
+        <p>This step cannot be undone.</p>
+        <hr/>
+        <div class="grid-row extra-margin">
+            <form method="post"
+                  th:action="@{/application/{appId}/contributors/remove(appId = ${currentApplication.getId()})}"
+                  th:object="${removeContributorForm}" id="submit-remove-collaborator-form">
+                <input type="hidden" value="" name="applicationInviteId"/>
+                <div class="column-half">
+                    <button type="button" class="js-close buttonlink large">Cancel</button>
+                </div>
+                <div class="column-half alignright-button">
+                    <button class="button large" name="publish" value="publish" type="submit">Remove</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>

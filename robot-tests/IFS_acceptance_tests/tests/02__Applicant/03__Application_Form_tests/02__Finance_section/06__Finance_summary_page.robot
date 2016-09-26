@@ -17,7 +17,7 @@ Documentation     INFUND-524 As an applicant I want to see the finance summary u
 ...               INFUND-1436 As a lead applicant I want to be able to view the ratio of research participation costs in my consortium so I know my application is within the required range
 Suite Setup       log in and create new application if there is not one already
 Suite Teardown    the user closes the browser
-Force Tags        Finances    Applicant
+Force Tags        Applicant
 Default Tags
 Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
@@ -123,7 +123,6 @@ the finance Project cost breakdown calculations should be correct
     the user sees the text in the element    css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(1)    £60,000
     the user sees the text in the element    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(1)    £9,000
 
-
 the finance summary calculations should be correct
     the user sees the text in the element    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(1)    £129,000
     the user sees the text in the element    css=.finance-summary tr:nth-of-type(1) td:nth-of-type(2)    50%
@@ -132,7 +131,6 @@ the finance summary calculations should be correct
     the user sees the text in the element    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(3)    £61,000
     the user sees the text in the element    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(4)    £20,000
     the user sees the text in the element    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(5)    £48,000
-
 
 the applicant enters a bigger funding amount
     [Documentation]    Check if the Contribution to project and the Funding sought remain £0 and not minus
@@ -164,4 +162,5 @@ Lead enters a valid research participation value
     the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input    1200000000
     the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(4) input    1000
     the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input    Test
+    Focus    jQuery= button:contains('Save and return')
     sleep    500ms

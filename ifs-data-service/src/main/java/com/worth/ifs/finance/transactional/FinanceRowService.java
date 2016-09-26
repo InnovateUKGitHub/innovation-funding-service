@@ -10,7 +10,7 @@ import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.ApplicationFinanceResourceId;
 import com.worth.ifs.finance.resource.FinanceRowMetaFieldResource;
 import com.worth.ifs.finance.resource.cost.FinanceRowItem;
-import com.worth.ifs.security.NotSecured;
+import com.worth.ifs.commons.security.NotSecured;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
@@ -91,4 +91,9 @@ public interface FinanceRowService {
     @PreAuthorize("hasPermission(#applicationFinanceId, 'com.worth.ifs.finance.resource.ApplicationFinanceResource', 'READ_FILE_ENTRY')")
     ServiceResult<FileAndContents> getFileContents(@P("applicationFinanceId")long applicationFinanceId);
 
+    /**
+     * Not included in REST API classes as only meant to be used within data layer
+     */
+    @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource','READ_ORGANISATION_FUNDING_STATUS')")
+    ServiceResult<Boolean> organisationSeeksFunding(Long projectId, Long applicationId, Long organisationId);
 }

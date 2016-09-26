@@ -40,26 +40,26 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
 
     @Test
     public void testFindAll() {
-        service.findAll();
+        classUnderTest.findAll();
         assertViewMultipleUsersExpectations();
     }
 
     @Test
     public void testFindAssignableUsers() {
-        service.findAssignableUsers(123L);
+        classUnderTest.findAssignableUsers(123L);
         assertViewMultipleUsersExpectations();
     }
 
     @Test
     public void testFindByEmail() {
-        assertAccessDenied(() -> service.findByEmail("asdf@example.com"), () -> {
+        assertAccessDenied(() -> classUnderTest.findByEmail("asdf@example.com"), () -> {
             assertViewSingleUserExpectations();
         });
     }
 
     @Test
     public void testGetUserById() {
-        assertAccessDenied(() -> service.getUserById(123L), () -> {
+        assertAccessDenied(() -> classUnderTest.getUserById(123L), () -> {
             assertViewSingleUserExpectations();
         });
     }
@@ -69,7 +69,7 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
 
         // this method must remain unsecured because it is the way in which we get a user onto the
         // SecurityContext in the first place for permission checking
-        service.getUserResourceByUid("asdf");
+        classUnderTest.getUserResourceByUid("asdf");
         verifyNoMoreInteractionsWithRules();
     }
 
@@ -79,7 +79,7 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
         Token token = new Token();
         when(tokenLookupStrategies.getTokenByHash("hash")).thenReturn(token);
 
-        assertAccessDenied(() -> service.changePassword("hash", "newpassword"), () -> {
+        assertAccessDenied(() -> classUnderTest.changePassword("hash", "newpassword"), () -> {
             verify(tokenRules).systemRegistrationUserCanUseTokensToResetPaswords(token, getLoggedInUser());
             verifyNoMoreInteractionsWithRules();
         });
@@ -89,7 +89,7 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
     public void testSendPasswordResetNotification() {
 
         UserResource user = newUserResource().build();
-        assertAccessDenied(() -> service.sendPasswordResetNotification(user), () -> {
+        assertAccessDenied(() -> classUnderTest.sendPasswordResetNotification(user), () -> {
             verify(userRules).usersCanChangeTheirOwnPassword(user, getLoggedInUser());
             verify(userRules).systemRegistrationUserCanChangePasswordsForUsers(user, getLoggedInUser());
             verifyNoMoreInteractionsWithRules();
@@ -98,7 +98,7 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
 
     @Test
     public void testFindRelatedUsers() {
-        service.findRelatedUsers(123L);
+        classUnderTest.findRelatedUsers(123L);
         assertViewMultipleUsersExpectations();
     }
 
@@ -125,7 +125,7 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
     }
 
     @Override
-    protected Class<? extends UserService> getServiceClass() {
+    protected Class<? extends UserService> getClassUnderTest() {
         return TestUserService.class;
     }
 

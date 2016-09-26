@@ -6,10 +6,7 @@ import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
-import com.worth.ifs.project.resource.MonitoringOfficerResource;
-import com.worth.ifs.project.resource.ProjectResource;
-import com.worth.ifs.project.resource.ProjectUserResource;
-import com.worth.ifs.project.resource.SpendProfileResource;
+import com.worth.ifs.project.resource.*;
 import com.worth.ifs.project.service.ProjectRestService;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.service.OrganisationRestService;
@@ -52,16 +49,6 @@ public class ProjectServiceImpl implements ProjectService {
         }
 
         return projectRestService.getProjectById(projectId).getSuccessObjectOrThrowException();
-    }
-
-    @Override
-    public SpendProfileResource getSpendProfile(final Long projectId, final Long organisationId) {
-
-        if (projectId == null || organisationId == null) {
-            return null;
-        }
-
-        return projectRestService.getSpendProfile(projectId, organisationId).getSuccessObjectOrThrowException();
     }
 
     @Override
@@ -221,8 +208,8 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public boolean isUserPartner(Long projectId, Long userId) {
-        return !simpleFilter(getPartners(projectId), projectUser -> projectUser.getUser().equals(userId)).isEmpty();
+    public ProjectTeamStatusResource getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId){
+        return projectRestService.getProjectTeamStatus(projectId, filterByUserId).getSuccessObjectOrThrowException();
     }
 
     private List<ProjectUserResource> getProjectUsersWithPartnerRole(Long projectId) {

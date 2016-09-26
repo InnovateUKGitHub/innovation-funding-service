@@ -1,6 +1,7 @@
 package com.worth.ifs.assessment.form;
 
 
+import com.worth.ifs.commons.validation.constraints.WordCount;
 import com.worth.ifs.controller.BaseBindingResultTarget;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -15,7 +16,8 @@ public class AssessmentOverviewForm extends BaseBindingResultTarget {
 
     @NotEmpty(message = "{validation.assessmentoverviewform.rejectReason.required}")
     private String rejectReason;
-    @Size(max = 255, message = "{validation.field.too.many.characters}")
+    @Size(max = 5000, message = "{validation.field.too.many.characters}")
+    @WordCount(max = 100, message = "{validation.field.max.word.count}")
     private String rejectComment;
 
     public String getRejectReason() {

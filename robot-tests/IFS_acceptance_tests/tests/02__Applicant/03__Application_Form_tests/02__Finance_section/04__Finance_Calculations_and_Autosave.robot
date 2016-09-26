@@ -7,7 +7,7 @@ Documentation     INFUND-736: As an applicant I want to be able to add all the f
 Suite Setup       Run keywords    log in and create new application if there is not one already
 ...               AND    Applicant navigates to the finances of the Robot application
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        HappyPath    Finances
+Force Tags        HappyPath    Applicant
 Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../../resources/variables/User_credentials.robot
@@ -289,14 +289,15 @@ the grant value should be correct in the finance summary page
 
 auto-save should work for the "Grant" field
     the user clears the text from the element    id=cost-financegrantclaim
-    the user moves focus to the element    jQuery= button:contains('complete')
+    the user moves focus to the element    jQuery= button:contains('Save and return')
     Sleep    500ms
     the user enters text to a text field    id=cost-financegrantclaim    25
-    the user moves focus to the element    jQuery= button:contains('complete')
+    the user moves focus to the element    jQuery= button:contains('Save and return')
     Sleep    300ms
     the user reloads the page
-    the user moves focus to the element    jQuery= button:contains('complete')
-    the user should see the element   id=cost-financegrantclaim
+    Run Keyword And Ignore Error    confirm action
+    the user moves focus to the element    jQuery= button:contains('Save and return')
+    the user should see the element    id=cost-financegrantclaim
     ${input_value} =    Get Value    id=cost-financegrantclaim
     Should Be Equal As Strings    ${input_value}    25
 

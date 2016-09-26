@@ -77,14 +77,14 @@ Bank account postcode lookup
 Bank details experian validations
     [Documentation]    INFUND-3010
     [Tags]    Experian
-    # Please note that the bank details for these Experian tests are dummy data specfically chosen to elicit certain responses from the stub.
+    # Please note that the bank details for these Experian tests are dummy data specifically chosen to elicit certain responses from the stub.
     When the user submits the bank account details    12345673    000003
     Then the user should see the text in the page    Bank account details are incorrect, please check and try again
 
 Bank details submission
     [Documentation]    INFUND-3010, INFUND-2621
     [Tags]    Experian    HappyPath
-    # Please note that the bank details for these Experian tests are dummy data specfically chosen to elicit certain responses from the stub.
+    # Please note that the bank details for these Experian tests are dummy data specifically chosen to elicit certain responses from the stub.
     When the user enters text to a text field    name=accountNumber    51406795
     And the user enters text to a text field    name=sortCode    404745
     When the user clicks the button/link    jQuery=.button:contains("Submit bank account details")
@@ -105,7 +105,7 @@ Bank details submission
 Bank details for non-lead partner
     [Documentation]    INFUND-3010, INFUND-2621
     [Tags]    Experian    HappyPath
-    # Please note that the bank details for these Experian tests are dummy data specfically chosen to elicit certain responses from the stub.
+    # Please note that the bank details for these Experian tests are dummy data specifically chosen to elicit certain responses from the stub.
     Given guest user log-in    pete.tom@egg.com    Passw0rd
     And the user clicks the button/link    link=00000001: best riffs
     And the user clicks the button/link    link=Bank details

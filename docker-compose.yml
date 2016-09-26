@@ -37,6 +37,8 @@ services:
     build:
       context: .
       dockerfile: data-dockerfile
+    volumes:
+      - ./robot-tests/upload_files/:/tmp/ifs-local
     ports:
       - "8090:8080"
       - "12346:12345"
@@ -82,6 +84,8 @@ services:
       - smtp:rw
     expose:
       - 143
+    ports:
+      - "9876:143"
     networks:
       front-tier:
         aliases:

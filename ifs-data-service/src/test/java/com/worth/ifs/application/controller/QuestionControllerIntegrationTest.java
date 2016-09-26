@@ -1,6 +1,5 @@
 package com.worth.ifs.application.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -12,7 +11,7 @@ import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.application.repository.QuestionStatusRepository;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.transactional.QuestionService;
-import com.worth.ifs.security.SecuritySetter;
+import com.worth.ifs.commons.security.SecuritySetter;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -20,7 +19,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 
-import static com.worth.ifs.security.SecuritySetter.addBasicSecurityUser;
+import static com.worth.ifs.commons.security.SecuritySetter.addBasicSecurityUser;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;

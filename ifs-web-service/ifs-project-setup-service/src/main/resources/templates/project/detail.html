@@ -20,8 +20,8 @@
         <h1 class="heading-xlarge">Project details</h1>
     </div>
 
-    <p th:if="${project.submittedDate == null}">Please supply the following details for your project and the team. We need these to set up your project.</p>
-    <div th:unless="${project.submittedDate == null}" class="success-alert extra-margin-bottom">
+    <p th:if="${!model.projectDetailsSubmitted}">Please supply the following details for your project and the team. We need these to set up your project.</p>
+    <div th:unless="${!model.projectDetailsSubmitted}" class="success-alert extra-margin-bottom">
     		<p><strong>The project details have been submitted to Innovate UK</strong></p>
   	</div>
 
@@ -39,8 +39,8 @@
         <tbody>
             <tr>
                 <td>
-                    <a th:if="${model.userLeadPartner and project.submittedDate == null}" th:href="@{/project/{id}/details/start-date(id=${model.project.getId()})}">Start date</a>
-                    <span th:unless="${model.userLeadPartner and project.submittedDate == null}" th:remove="tag">Start date</span>
+                    <a th:if="${model.userLeadPartner and !model.projectDetailsSubmitted}" th:href="@{/project/{id}/details/start-date(id=${model.project.getId()})}">Start date</a>
+                    <span th:unless="${model.userLeadPartner and !model.projectDetailsSubmitted}" th:remove="tag">Start date</span>
                 </td>
                 <td id="start-date">
                     <span th:if="${model.project.targetStartDate == null}" th:remove="tag">-</span>
@@ -53,8 +53,8 @@
             </tr>
             <tr>
                 <td>
-                    <a th:if="${model.userLeadPartner and project.submittedDate == null}" th:href="@{/project/{id}/details/project-address(id=${model.project.getId()})}">Project address</a>
-                    <span th:unless="${model.userLeadPartner and project.submittedDate == null}" th:remove="tag">Project address</span>
+                    <a th:if="${model.userLeadPartner and !model.projectDetailsSubmitted}" th:href="@{/project/{id}/details/project-address(id=${model.project.getId()})}">Project address</a>
+                    <span th:unless="${model.userLeadPartner and !model.projectDetailsSubmitted}" th:remove="tag">Project address</span>
                 </td>
                 <td id="project-address">
                     <span th:if="${model.project.address.id == null}" th:remove="tag">-</span>
@@ -67,19 +67,25 @@
             </tr>
             <tr>
                 <td>
-                    <a th:if="${model.userLeadPartner and project.submittedDate == null}" th:href="@{/project/{id}/details/project-manager(id=${model.project.getId()})}">Project manager</a>
-                    <span th:unless="${model.userLeadPartner and project.submittedDate == null}" th:remove="tag">Project manager</span>
+                    <a th:if="${model.userLeadPartner and !model.projectDetailsSubmitted}" th:href="@{/project/{id}/details/project-manager(id=${model.project.getId()})}">Project manager</a>
+                    <span th:unless="${model.userLeadPartner and !model.projectDetailsSubmitted}" th:remove="tag">Project manager</span>
                 </td>
-                <td id="project-manager" th:if="${projectManager != null}" th:text="${projectManager?.userName}">John Smith</td>
-                <td id="no-project-manager" th:if="${projectManager == null}">-</td>
+                <td id="project-manager" th:if="${model.projectManager != null}" th:text="${model.projectManager?.userName}">John Smith</td>
+                <td id="no-project-manager" th:if="${model.projectManager == null}">-</td>
                 <td>
-                    <span th:if="${projectManager == null}" id="project-manager-status" class="no">No</span>
-                    <span th:unless="${projectManager == null}" id="project-manager-status" class="yes">Yes</span>
+                    <span th:if="${model.projectManager == null}" id="project-manager-status" class="no">No</span>
+                    <span th:unless="${model.projectManager == null}" id="project-manager-status" class="yes">Yes</span>
                 </td>
             </tr>
 
         </tbody>
     </table>
+
+    <a th:if="${model.userLeadPartner and model.submissionAllowed and model.projectDetailsSubmitted == null}" th:href="@{/project/{id}/confirm-project-details(id=${model.project.getId()})}" class="button extra-margin" data-js-modal="modal-project-details">Submit project details</a>
+    <div class="extra-margin"  th:if="${model.userLeadPartner and !model.submissionAllowed and model.projectDetailsSubmitted == null}">
+        <p>You are not able to submit until all sections above are marked as complete.</p>
+        <button disabled="disabled" class="button">Submit project details</button>
+    </div>
 
     <h2 class="heading-medium">Finance contacts</h2>
 
@@ -97,8 +103,8 @@
             <tr th:each="organisation: ${model.partnerOrganisations}">
 
                 <td>
-                    <a th:if="${model.isUserPartnerInOrganisation(organisation.id) and project.submittedDate == null}" th:href="@{/project/{id}/details/finance-contact?organisation={orgId}(id=${model.project.getId()},orgId=${organisation.id})}" th:text="${organisation.name}">organisation name</a>
-                    <span th:unless="${model.isUserPartnerInOrganisation(organisation.id) and project.submittedDate == null}" th:text="${organisation.name}" th:remove="tag">organisation name</span>
+                    <a th:if="${model.isUserPartnerInOrganisation(organisation.id) and !model.projectDetailsSubmitted}" th:href="@{/project/{id}/details/finance-contact?organisation={orgId}(id=${model.project.getId()},orgId=${organisation.id})}" th:text="${organisation.name}">organisation name</a>
+                    <span th:unless="${model.isUserPartnerInOrganisation(organisation.id) and !model.projectDetailsSubmitted}" th:text="${organisation.name}" th:remove="tag">organisation name</span>
                 </td>
                 <td>
                   <span th:unless="${model.getFinanceContactForPartnerOrganisation(organisation.id) == null}" th:remove="tag">
@@ -115,8 +121,8 @@
             </tr>
         </tbody>
     </table>
-    <a th:if="${model.userLeadPartner and isSubmissionAllowed and project.submittedDate == null}" th:href="@{/project/{id}/confirm-project-details(id=${model.project.getId()})}" class="button extra-margin" data-js-modal="modal-project-details">Submit project details</a>
-    <div class="extra-margin"  th:if="${model.userLeadPartner and !isSubmissionAllowed and project.submittedDate == null}">
+    <a th:if="${model.userLeadPartner and model.submissionAllowed and !model.projectDetailsSubmitted}" th:href="@{/project/{id}/confirm-project-details(id=${model.project.getId()})}" class="button extra-margin" data-js-modal="modal-project-details">Submit project details</a>
+    <div class="extra-margin"  th:if="${model.userLeadPartner and !model.submissionAllowed and !model.projectDetailsSubmitted}">
       <p>You are not able to submit until all sections are marked with a tick.</p>
       <button disabled="disabled" class="button">Submit project details</button>
     </div>
