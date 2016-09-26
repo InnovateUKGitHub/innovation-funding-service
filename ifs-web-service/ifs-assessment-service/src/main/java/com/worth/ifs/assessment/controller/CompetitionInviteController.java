@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.function.Supplier;
@@ -61,13 +62,13 @@ public class CompetitionInviteController extends BaseController {
                                Model model) {
         boolean userIsLoggedIn = loggedInUser != null;
         if (userIsLoggedIn) {
-            return format("redirect:/invite-accept/competition/%s/accept",inviteHash);
+            return format("redirect:/invite-accept/competition/%s/accept", inviteHash);
         } else {
             return inviteRestService.checkExistingUser(inviteHash).andOnSuccessReturn(userExists -> {
                 if (userExists) {
                     return doViewAcceptUserExistsButNotLoggedIn(model, inviteHash);
                 } else {
-                    return "redirect:/registration/register";
+                    return format("redirect:/registration/%s/start", inviteHash);
                 }
             }).getSuccessObject();
         }

@@ -7,6 +7,7 @@ import com.worth.ifs.user.security.UserLookupStrategies;
 import com.worth.ifs.user.security.UserPermissionRules;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.security.access.method.P;
 
 import java.util.Optional;
 
@@ -29,7 +30,18 @@ public class RegistrationServiceSecurityTest extends BaseServiceSecurityTest<Reg
     }
 
     @Test
-    public void testCreateApplicantUser() {
+    public void testCreateUser() {
+
+        UserResource userToCreate = newUserResource().build();
+
+        assertAccessDenied(() -> classUnderTest.createUser(userToCreate), () -> {
+            verify(rules).systemRegistrationUserCanCreateUsers(userToCreate, getLoggedInUser());
+            verifyNoMoreInteractions(rules);
+        });
+    }
+
+    @Test
+    public void testCreateOrganisationUser() {
 
         UserResource userToCreate = newUserResource().build();
 
@@ -82,6 +94,11 @@ public class RegistrationServiceSecurityTest extends BaseServiceSecurityTest<Reg
     }
 
     public static class TestRegistrationService implements RegistrationService {
+
+        @Override
+        public ServiceResult<UserResource> createUser(@P("user") UserResource userResource) {
+            return null;
+        }
 
         @Override
         public ServiceResult<UserResource> createOrganisationUser(Long organisationId, UserResource userResource) {

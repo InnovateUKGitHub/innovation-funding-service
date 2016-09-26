@@ -24,7 +24,7 @@
                     </th:block>
                 </h1> 
             </div> 
-            <div class="column-third" th:unless="${subheading == 'createComp'}">
+            <div class="column-third" th:unless="${subheading == 'createComp' or subheading == null}">
                 <h2 class="heading-small comp-status-label">
 
                     <div th:if="${param.status == null}" th:remove="tag">
