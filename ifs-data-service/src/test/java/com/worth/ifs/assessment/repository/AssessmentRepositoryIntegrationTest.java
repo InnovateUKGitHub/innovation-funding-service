@@ -139,7 +139,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
         repository.deleteAll();
 
         User user = newUser()
-                .withid(3L)
+                .withId(3L)
                 .withFirstName("Professor")
                 .build();
 

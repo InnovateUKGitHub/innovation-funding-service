@@ -48,7 +48,7 @@ public class InviteServiceSecurityTest extends BaseServiceSecurityTest<InviteSer
         final int nInvites = 2;
         final String baseUrl = "test";
         final List<ApplicationInvite> invites = newInvite().build(nInvites);
-        service.inviteCollaborators(baseUrl, invites);
+        classUnderTest.inviteCollaborators(baseUrl, invites);
         verify(invitePermissionRules, times(nInvites)).leadApplicantCanInviteToTheApplication(any(ApplicationInvite.class), any(UserResource.class));
         verify(invitePermissionRules, times(nInvites)).collaboratorCanInviteToApplicationForTheirOrganisation(any(ApplicationInvite.class), any(UserResource.class));
     }
@@ -58,7 +58,7 @@ public class InviteServiceSecurityTest extends BaseServiceSecurityTest<InviteSer
         final String baseUrl = "test";
         final ApplicationInvite invite = newInvite().build();
         assertAccessDenied(
-                () -> service.inviteCollaboratorToApplication(baseUrl, invite),
+                () -> classUnderTest.inviteCollaboratorToApplication(baseUrl, invite),
                 () -> {
                     verify(invitePermissionRules).leadApplicantCanInviteToTheApplication(eq(invite), any(UserResource.class));
                     verify(invitePermissionRules).collaboratorCanInviteToApplicationForTheirOrganisation(eq(invite), any(UserResource.class));
@@ -69,7 +69,7 @@ public class InviteServiceSecurityTest extends BaseServiceSecurityTest<InviteSer
     public void testCreateApplicationInvites() {
         final InviteOrganisationResource inviteOrganisation = newInviteOrganisationResource().build();
         assertAccessDenied(
-                () -> service.createApplicationInvites(inviteOrganisation),
+                () -> classUnderTest.createApplicationInvites(inviteOrganisation),
                 () -> {
                     verify(inviteOrganisationPermissionRules).leadApplicantCanInviteAnOrganisationToTheApplication(eq(inviteOrganisation), any(UserResource.class));
                 });
@@ -80,7 +80,7 @@ public class InviteServiceSecurityTest extends BaseServiceSecurityTest<InviteSer
     public void testFindOne() {
         final long inviteId = 1L;
         assertAccessDenied(
-                () -> service.findOne(inviteId),
+                () -> classUnderTest.findOne(inviteId),
                 () -> {
                     verify(invitePermissionRules).collaboratorCanReadInviteForTheirApplicationForTheirOrganisation(any(ApplicationInvite.class), any(UserResource.class));
                     verify(invitePermissionRules).leadApplicantReadInviteToTheApplication(any(ApplicationInvite.class), any(UserResource.class));
@@ -90,7 +90,7 @@ public class InviteServiceSecurityTest extends BaseServiceSecurityTest<InviteSer
     @Test
     public void testGetInvitesByApplication() {
         long applicationId = 1L;
-        final ServiceResult<Set<InviteOrganisationResource>> results = service.getInvitesByApplication(applicationId);
+        final ServiceResult<Set<InviteOrganisationResource>> results = classUnderTest.getInvitesByApplication(applicationId);
         verify(inviteOrganisationPermissionRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).leadApplicantCanViewOrganisationInviteToTheApplication(any(InviteOrganisationResource.class), any(UserResource.class));
         verify(inviteOrganisationPermissionRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).collaboratorCanViewOrganisationInviteToTheApplication(any(InviteOrganisationResource.class), any(UserResource.class));
         assertTrue(results.getSuccessObject().isEmpty());
@@ -100,13 +100,13 @@ public class InviteServiceSecurityTest extends BaseServiceSecurityTest<InviteSer
     public void testSaveInvites() {
         int nInvites = 2;
         final List<ApplicationInviteResource> invites = newInviteResource().build(nInvites);
-        service.saveInvites(invites);
+        classUnderTest.saveInvites(invites);
         verify(invitePermissionRules, times(nInvites)).collaboratorCanSaveInviteToApplicationForTheirOrganisation(any(ApplicationInviteResource.class), any(UserResource.class));
         verify(invitePermissionRules, times(nInvites)).leadApplicantCanSaveInviteToTheApplication(any(ApplicationInviteResource.class), any(UserResource.class));
     }
 
     @Override
-    protected Class<? extends InviteService> getServiceClass() {
+    protected Class<? extends InviteService> getClassUnderTest() {
         return TestInviteService.class;
     }
 

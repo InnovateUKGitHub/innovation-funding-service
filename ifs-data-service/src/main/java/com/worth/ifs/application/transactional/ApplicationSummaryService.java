@@ -2,7 +2,7 @@ package com.worth.ifs.application.transactional;
 
 import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.security.SecuredBySpring;
+import com.worth.ifs.commons.security.SecuredBySpring;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface ApplicationSummaryService {

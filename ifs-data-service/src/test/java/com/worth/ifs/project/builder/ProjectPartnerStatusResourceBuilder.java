@@ -65,4 +65,8 @@ public class ProjectPartnerStatusResourceBuilder extends BaseBuilder<ProjectPart
     public ProjectPartnerStatusResourceBuilder withOrganisationType(OrganisationTypeEnum... organisationTypes){
         return withArray((organisationType, partnerStatus) -> partnerStatus.setOrganisationType(organisationType), organisationTypes);
     }
+
+    public ProjectPartnerStatusResourceBuilder withOrganisationId(Long... organisationIds){
+        return withArray((organisationId, partnerStatus) -> partnerStatus.setOrganisationId(organisationId), organisationIds);
+    }
 }

@@ -7,12 +7,12 @@ import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.project.builder.ProjectResourceBuilder;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.project.resource.ProjectTeamStatusResource;
 import com.worth.ifs.project.viewmodel.ProjectSetupStatusViewModel;
 import com.worth.ifs.user.resource.OrganisationResource;
 import org.junit.Test;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
@@ -23,7 +23,10 @@ import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static com.worth.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
+import static com.worth.ifs.project.builder.ProjectLeadStatusResourceBuilder.newProjectLeadStatusResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+import static com.worth.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
+import static com.worth.ifs.project.constant.ProjectActivityStates.COMPLETE;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
@@ -62,6 +65,12 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId())).thenReturn(
                 restFailure(notFoundError(BankDetailsResource.class, 1L)));
 
+        ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
+                withProjectLeadStatus(newProjectLeadStatusResource().build()).
+                build();
+
+        when(projectService.getProjectTeamStatus(project.getId(), Optional.empty())).thenReturn(teamStatus);
+
         MvcResult result = mockMvc.perform(get("/project/{id}", projectId))
                 .andExpect(status().isOk())
                 .andExpect(view().name("project/setup-status"))
@@ -83,8 +92,16 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
     @Test
     public void testViewProjectSetupStatusWithProjectDetailsSubmitted() throws Exception {
 
-        ProjectResource project = projectBuilder.withSubmittedDate(LocalDateTime.of(2016, 10, 10, 0, 0)).build();
+        ProjectResource project = projectBuilder.
+                build();
+
         OrganisationResource organisationResource = newOrganisationResource().build();
+
+        ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
+                withProjectLeadStatus(newProjectLeadStatusResource().
+                        withProjectDetailsStatus(COMPLETE).
+                        build()).
+                build();
 
         when(applicationService.getById(application.getId())).thenReturn(application);
         when(projectService.getById(projectId)).thenReturn(project);
@@ -97,6 +114,8 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
 
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId())).thenReturn(
                 restFailure(notFoundError(BankDetailsResource.class, 1L)));
+
+        when(projectService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(teamStatus);
 
         MvcResult result = mockMvc.perform(get("/project/{id}", projectId))
                 .andExpect(status().isOk())
@@ -115,15 +134,22 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
         assertNull(viewModel.getBankDetails());
     }
 
-
     @Test
     public void testViewProjectSetupStatusWithMonitoringOfficerAssigned() throws Exception {
 
-        ProjectResource project = projectBuilder.withSubmittedDate(LocalDateTime.of(2016, 10, 10, 0, 0)).build();
+        ProjectResource project = projectBuilder.withId(projectId).build();
         MonitoringOfficerResource monitoringOfficer = newMonitoringOfficerResource().build();
         OrganisationResource organisationResource = newOrganisationResource().build();
         Optional<MonitoringOfficerResource> monitoringOfficerResult = Optional.of(monitoringOfficer);
 
+        ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
+                withProjectLeadStatus(newProjectLeadStatusResource().
+                        withProjectDetailsStatus(COMPLETE).
+                        build()).
+                build();
+
+        when(projectService.getById(projectId)).thenReturn(project);
+        when(projectService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(teamStatus);
         when(applicationService.getById(application.getId())).thenReturn(application);
         when(projectService.getById(projectId)).thenReturn(project);
         when(competitionService.getById(application.getCompetition())).thenReturn(competition);
@@ -156,11 +182,18 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
     @Test
     public void testViewProjectSetupStatusWithBankDetailsEntered() throws Exception {
 
-        ProjectResource project = projectBuilder.withSubmittedDate(LocalDateTime.of(2016, 10, 10, 0, 0)).build();
+        ProjectResource project = projectBuilder.build();
+
         MonitoringOfficerResource monitoringOfficer = newMonitoringOfficerResource().build();
         OrganisationResource organisationResource = newOrganisationResource().build();
         Optional<MonitoringOfficerResource> monitoringOfficerResult = Optional.of(monitoringOfficer);
         BankDetailsResource bankDetailsResource = newBankDetailsResource().build();
+
+        ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
+                withProjectLeadStatus(newProjectLeadStatusResource().
+                        withProjectDetailsStatus(COMPLETE).
+                        build()).
+                build();
 
         when(applicationService.getById(application.getId())).thenReturn(application);
         when(projectService.getById(projectId)).thenReturn(project);
@@ -172,6 +205,8 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
                 thenReturn(restSuccess(newApplicationFinanceResource().withGrantClaimPercentage(0).build()));
 
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId())).thenReturn(restSuccess(bankDetailsResource));
+
+        when(projectService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(teamStatus);
 
         MvcResult result = mockMvc.perform(get("/project/{id}", projectId))
                 .andExpect(status().isOk())
@@ -208,6 +243,12 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId())).thenReturn(
                 restFailure(notFoundError(BankDetailsResource.class, 1L)));
 
+        ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
+                withProjectLeadStatus(newProjectLeadStatusResource().build()).
+                build();
+
+        when(projectService.getProjectTeamStatus(project.getId(), Optional.empty())).thenReturn(teamStatus);
+
         MvcResult result = mockMvc.perform(get("/project/{id}", projectId))
                 .andExpect(status().isOk())
                 .andExpect(view().name("project/setup-status"))
@@ -218,7 +259,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
     }
 
     @Test
-    public void testViewProjectSetupStatusWithNullUnfundedPartnerOrganisation() throws Exception {
+    public void testViewProjectSetupStatusWithUnfundedPartnerOrganisation() throws Exception {
 
         ProjectResource project = projectBuilder.build();
         OrganisationResource organisationResource = newOrganisationResource().build();
@@ -228,6 +269,12 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
         when(competitionService.getById(application.getCompetition())).thenReturn(competition);
         when(projectService.getMonitoringOfficerForProject(projectId)).thenReturn(Optional.empty());
         when(projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId())).thenReturn(organisationResource);
+
+        ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
+                withProjectLeadStatus(newProjectLeadStatusResource().build()).
+                build();
+
+        when(projectService.getProjectTeamStatus(project.getId(), Optional.empty())).thenReturn(teamStatus);
 
         when(applicationFinanceRestService.getFinanceDetails(application.getId(), organisationResource.getId())).
                 thenReturn(restSuccess(newApplicationFinanceResource().build()));
