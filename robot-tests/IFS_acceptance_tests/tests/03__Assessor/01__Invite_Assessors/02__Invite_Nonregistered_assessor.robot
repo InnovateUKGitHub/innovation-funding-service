@@ -22,18 +22,21 @@ ${Invitation_nonregistered_assessor3}    ${server}/assessment/invite/competition
 Non-registered assessor: Accept invitation
     [Documentation]    INFUND-228
     ...
-    ...    INFUND-4631
-    [Tags]    Pending
+    ...    INFUND-4145
+    [Tags]
     Given the user navigates to the page    ${Invitation_nonregistered_assessor3}
-    Then the user should see the text in the page    Invitation to assess 'Juggling Craziness'
+    And the user should see the text in the page    Invitation to assess 'Juggling Craziness'
     And the user should see the text in the page    You are invited to act as an assessor for the competition 'Juggling Craziness'.
-    And the user clicks the button/link    jQuery=.button:contains("Accept")
-
-Create account
-    [Documentation]    INFUND-4913
-    [Tags]    Pending
+    When the user clicks the button/link    jQuery=.button:contains("Accept")
     Then the user should see the text in the page    Become an Assessor for Innovate UK
-    And the user clicks the button/link    jQuery=.button:contains("Create account")
+    And the user should see the element    jQuery=.button:contains("Create account")
+
+Register as an assessor
+    [Documentation]    INFUND-4145
+    When the user clicks the button/link    jQuery=.button:contains("Create account")
+    Then the user should see the text in the page    Create assessor account
+    And the user clicks the button/link    Link=Back
+    And the user should see the text in the page    Become an Assessor for Innovate UK
 
 Non-registered assessor: Reject invitation
     [Documentation]    INFUND-4631, INFUND-4636
