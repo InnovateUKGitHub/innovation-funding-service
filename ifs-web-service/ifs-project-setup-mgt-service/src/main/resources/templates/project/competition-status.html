@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+</head>
+<body th:with="context='project-management'" class="project-management">
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+<main id="content" class="full-width">
+  <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+  <div class="grid-container">
+    <div class="grid-row">
+      <div class="column-two-thirds">
+        <div class="page-title">
+          <p class="subtitle no-margin" th:text="${model.formattedCompetitionNumber+': Innovate UK'}" />
+          <h1 class="heading-xlarge" th:text="${model.competitionName}" />
+        </div>
+      </div>
+        <div class="column-third alignright extra-margin">
+          <h2 class="bold-small blue-block">Projects in setup</h2>
+      </div>
+    </div>
+    <div th:if="${#lists.isEmpty(model.projectStatusResources)}">
+      <hr />
+      <div class="warning-alert"><p>There are currently no active projects in this competition.</p></div>
+    </div>
+  </div>
+  <div class="grid-container constrain-width">
+    <div class="table-overflow" th:unless="${#lists.isEmpty(model.projectStatusResources)}">
+      <table id="table-project-status">
+        <thead>
+          <tr>
+            <th scope="col">Project</th>
+            <th class="status" scope="col">Project details</th>
+            <th class="status" scope="col">MO</th>
+            <th class="status" scope="col">Bank details</th>
+            <th class="status" scope="col">Finance checks</th>
+            <th class="status" scope="col">Spend profile</th>
+            <th class="status" scope="col">Other docs</th>
+            <th class="status" scope="col">GOL</th>
+          </tr>
+        </thead>
+        <tbody class="cell-border-right">
+          <tr th:each="project : ${model.projectStatusResources}">
+              <th scope="row">
+                <div class="heading-small no-margin" th:text="${project.projectTitle}" />
+                <a th:text="${project.formattedApplicationNumber}" th:href="${'/management/competition/'+model.competitionNumber+'/application/'+project.applicationNumber}" />
+                <small>
+                  <th:block th:text="${project.numberOfPartners > 1 ? project.numberOfPartners+' partners' : project.numberOfPartners+' partner'}" /><br/>
+                  <th:block th:text="${'Lead: '+project.projectLeadOrganisationName}" />
+                </small>
+              </th>
+              <th:block th:include="project/fragments :: project-status-table(${project.projectDetailsStatus})" />
+              <th:block th:include="project/fragments :: project-status-table(${project.monitoringOfficerStatus})" th:with="url=${'/project-setup-management/project/'+ project.projectNumber + '/monitoring-officer'}" />
+              <th:block th:include="project/fragments :: project-status-table(${project.bankDetailsStatus})" th:with="url=${'/project-setup-management/project/'+ project.projectNumber + '/review-all-bank-details'}" />
+              <th:block th:include="project/fragments :: project-status-table(${project.financeChecksStatus})" />
+              <th:block th:include="project/fragments :: project-status-table(${project.spendProfileStatus})" th:with="url=${'/project-setup-management/project/'+project.projectNumber+'/spend-profile/summary'}" />
+              <th:block th:include="project/fragments :: project-status-table(${project.otherDocumentsStatus})" th:with="url=${'/project-setup-management/project/'+project.projectNumber+'/partner/documents'}" />
+              <th:block th:include="project/fragments :: project-status-table(${project.grantOfferLetterStatus})"/>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+  </div>
+</main>
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+</body>
+</html>

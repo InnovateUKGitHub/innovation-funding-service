@@ -72,6 +72,7 @@ import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.project.repository.ProjectUserRepository;
 import com.worth.ifs.project.transactional.ProjectGrantOfferService;
 import com.worth.ifs.project.transactional.ProjectService;
+import com.worth.ifs.project.transactional.ProjectStatusService;
 import com.worth.ifs.project.workflow.projectdetails.configuration.ProjectDetailsWorkflowHandler;
 import com.worth.ifs.sil.experian.service.SilExperianEndpoint;
 import com.worth.ifs.token.repository.TokenRepository;
@@ -311,6 +312,8 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected ProjectGrantOfferService projectGrantOfferServiceMock;
+
+    protected ProjectStatusService projectStatusServiceMock;
 
     @Mock
     protected ProjectMapper projectMapperMock;
