@@ -93,11 +93,11 @@ public class ProjectSetupStatusController {
     private boolean isApplicationFunded(ProjectResource project, OrganisationResource organisation){
         Integer grantClaim;
         if(isResearch(organisation.getOrganisationType())){
-            grantClaim = 100;
+            return true;   // Research organisations always get full 100% of costs funded.
         } else {
             ApplicationFinanceResource applicationFinance = financeService.getFinanceDetails(project.getApplication(), organisation.getId()).getSuccessObjectOrThrowException();
             grantClaim = applicationFinance.getGrantClaimPercentage();
+            return grantClaim != null && grantClaim > 0;
         }
-        return grantClaim != null && grantClaim > 0;
     }
 }

@@ -16,10 +16,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.project.constant.ProjectActivityStates.*;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 
 @Service
@@ -34,7 +34,7 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
 
         List<Project> projects = projectRepository.findByApplicationCompetitionId(competitionId);
 
-        List<ProjectStatusResource> projectStatusResources = projects.stream().map(project -> {
+        List<ProjectStatusResource> projectStatusResources = simpleMap(projects, project -> {
             ProjectActivityStates projectDetailsStatus = getProjectDetailsStatus(project);
             return new ProjectStatusResource(
                     project.getName(),
@@ -51,7 +51,7 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
                     getMonitoringOfficerStatus(project, projectDetailsStatus),
                     getOtherDocumentsStatus(project),
                     getGrantOfferLetterStatus(project));
-        }).collect(Collectors.toList());
+        });
 
         CompetitionProjectsStatusResource competitionProjectsStatusResource = new CompetitionProjectsStatusResource(competition.getId(), competition.getFormattedId(), competition.getName(), projectStatusResources);
 

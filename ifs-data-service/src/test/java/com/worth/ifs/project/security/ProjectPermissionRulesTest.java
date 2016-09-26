@@ -458,7 +458,7 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
     }
 
     @Test
-    public void testProjectFinanceUsersCanViewTeamStatus(){
+    public void testProjectFinanceUserCanViewTeamStatus(){
         ProjectResource project = newProjectResource().build();
         assertTrue(rules.projectFinanceUserCanViewTeamStatus(project, projectFinanceUser()));
     }
