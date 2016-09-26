@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.LongNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.worth.ifs.Application;
 import com.worth.ifs.application.finance.service.FinanceRowService;
 import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.form.ApplicationForm;
@@ -225,7 +226,6 @@ public class ApplicationFormController extends AbstractApplicationController {
             List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
             List<FormInputResource> formInputs = formInputService.findApplicationInputsByQuestion(questionId);
 
-
             if (params.containsKey(ASSIGN_QUESTION_PARAM)) {
                 assignQuestion(applicationId, request);
                 cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
@@ -339,13 +339,21 @@ public class ApplicationFormController extends AbstractApplicationController {
         boolean ignoreEmpty = (!params.containsKey(MARK_AS_COMPLETE)) && (!params.containsKey(MARK_SECTION_AS_COMPLETE));
 
         ValidationMessages errors = new ValidationMessages();
+        SectionResource selectedSection = null;
+        if (sectionId != null) {
+            selectedSection = getSelectedSection(competition.getSections(), sectionId);
+            if (isMarkSectionAsCompleteRequest(params)) {
+                application.setStateAidAgreed(form.isStateAidAgreed());
+            } else if (isMarkSectionAsIncompleteRequest(params) && selectedSection.getType() == SectionType.FINANCE) {
+                application.setStateAidAgreed(Boolean.FALSE);
+            }
+        }
 
         // Prevent saving question when it's a unmark question request (INFUND-2936)
         if(!isMarkQuestionAsInCompleteRequest(params)) {
             if (question != null) {
                 errors.addAll(saveQuestionResponses(request, singletonList(question), user.getId(), processRole.getId(), application.getId(), ignoreEmpty));
             } else {
-                SectionResource selectedSection = getSelectedSection(competition.getSections(), sectionId);
                 List<QuestionResource> questions = simpleMap(selectedSection.getQuestions(), questionService::getById);
                 errors.addAll(saveQuestionResponses(request, questions, user.getId(), processRole.getId(), application.getId(), ignoreEmpty));
             }
@@ -512,6 +520,14 @@ public class ApplicationFormController extends AbstractApplicationController {
         return params.containsKey(MARK_SECTION_AS_INCOMPLETE);
     }
 
+    private boolean isMarkSectionAsCompleteRequest(@NotNull Map<String, String[]> params){
+        return params.containsKey(MARK_SECTION_AS_COMPLETE);
+    }
+
+    private boolean isSubmitSectionRequest(@NotNull Map<String, String[]> params){
+        return params.containsKey(SUBMIT_SECTION);
+    }
+
     private SectionResource getSelectedSection(List<Long> sectionIds, Long sectionId) {
         return sectionIds.stream()
                 .map(sectionService::getById)
@@ -574,6 +590,11 @@ public class ApplicationFormController extends AbstractApplicationController {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
+        SectionResource section = sectionService.getById(sectionId);
+        if (section.getType() == SectionType.FINANCE &&
+                !validFinanceTermsForMarkAsComplete(request, form, bindingResult, section, application, competition, user, model)) {
+            return APPLICATION_FORM;
+        }
 
         Map<String, String[]> params = request.getParameterMap();
 
@@ -588,20 +609,40 @@ public class ApplicationFormController extends AbstractApplicationController {
         model.addAttribute("form", form);
 
         if(saveApplicationErrors.hasErrors()){
-
             validationHandler.addAnyErrors(saveApplicationErrors);
-
-            SectionResource section = sectionService.getById(sectionId);
-            addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), Optional.ofNullable(section), model, form);
-            addOrganisationAndUserFinanceDetails(competition.getId(), application.getId(), user, model, form);
-            addNavigation(section, applicationId, model);
-            List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
-            Optional<OrganisationResource> userOrganisation = getUserOrganisation(user.getId(), userApplicationRoles);
-            addCompletedDetails(model, application, userOrganisation);
+            setReturnToApplicationFormData(section, application, competition, user, model, form, applicationId);
             return APPLICATION_FORM;
         } else {
             return getRedirectUrl(request, applicationId);
         }
+    }
+
+    private void setReturnToApplicationFormData(SectionResource section, ApplicationResource application, CompetitionResource competition,
+                                                UserResource user, Model model, ApplicationForm form, Long applicationId) {
+        addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), Optional.ofNullable(section), model, form);
+        addOrganisationAndUserFinanceDetails(competition.getId(), application.getId(), user, model, form);
+        addNavigation(section, applicationId, model);
+        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
+        Optional<OrganisationResource> userOrganisation = getUserOrganisation(user.getId(), userApplicationRoles);
+        addCompletedDetails(model, application, userOrganisation);
+    }
+
+    private boolean validFinanceTermsForMarkAsComplete(HttpServletRequest request, ApplicationForm form,
+                                       BindingResult bindingResult, SectionResource section, ApplicationResource application,
+                                       CompetitionResource competition, UserResource user, Model model
+                                       ) {
+        if (isMarkSectionAsCompleteRequest(request.getParameterMap())) {
+            if (!form.isTermsAgreed()) {
+                bindingResult.rejectValue(TERMS_AGREED_KEY, "APPLICATION_AGREE_TERMS_AND_CONDITIONS");
+                setReturnToApplicationFormData(section, application, competition, user, model, form, application.getId());
+                return false;
+            } else if (!form.isStateAidAgreed()) {
+                bindingResult.rejectValue(STATE_AID_AGREED_KEY, "APPLICATION_AGREE_STATE_AID_CONDITIONS");
+                setReturnToApplicationFormData(section, application, competition, user, model, form, application.getId());
+                return false;
+            }
+        }
+        return true;
     }
 
     private void logSaveApplicationBindingErrors(ValidationHandler validationHandler) {
@@ -615,7 +656,6 @@ public class ApplicationFormController extends AbstractApplicationController {
             bindingResult.getGlobalErrors().forEach(e -> LOG.debug("Remote validation global: " + e.getObjectName()+ " v: " + e.getCode() + " v: " + e.getDefaultMessage()));
         }
     }
-
 
     private ValidationMessages saveQuestionResponses(HttpServletRequest request,
                                                           List<QuestionResource> questions,
@@ -941,7 +981,6 @@ public class ApplicationFormController extends AbstractApplicationController {
         applicationService.save(application);
         return errors;
     }
-
 
     private void assignQuestion(@PathVariable(APPLICATION_ID) final Long applicationId,
                                HttpServletRequest request) {

@@ -24,6 +24,7 @@ public class ApplicationDocs {
             fieldWithPath("processRoles").description("list of ProcessRole Id's"),
             fieldWithPath("applicationStatus").description("ApplicationStatus Id"),
             fieldWithPath("applicationStatusName").description("ApplicationStatus name"),
+            fieldWithPath("stateAidAgreed").description("Flag indicating if the user has accepted that they are eligible for state aid"),
             fieldWithPath("competition").description("Competition Id"),
             fieldWithPath("competitionName").description("Competition Name"),
             fieldWithPath("competitionStatus").description("Competition Status"),
@@ -51,5 +52,4 @@ public class ApplicationDocs {
             .withInviteList(asList(1L,2L,3L))
             .withAssessorFeedbackFileEntry(123L)
             .withCompletion(new BigDecimal(30L));
-
 }
