@@ -73,7 +73,7 @@ Lead partner can edit his spend profile with invalid values
     Then the text box should be editable             css=#row-Labour-0
     When the user enters text to a text field        css=#row-Labour-0    2899
     And the user moves focus to the element          css=#row-Labour-2
-    Then the user should see the text in the page    Unable to save spend profile
+    Then the user should see the text in the page    Unable to submit spend profile
     And the user should see the text in the page     Your total costs are higher than your eligible costs
     Then the field has value                         css=#row-total-Labour    £ 104,364
     And the user should see the element              jQuery=tr:nth-child(1) .cell-error
