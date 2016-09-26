@@ -23,9 +23,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-/**
- * Module: innovation-funding-service-dev
- **/
+
 public class ProjectGrantOfferLetterControllerTest extends BaseControllerMockMVCTest<ProjectGrantOfferLetterController> {
 
     @Test

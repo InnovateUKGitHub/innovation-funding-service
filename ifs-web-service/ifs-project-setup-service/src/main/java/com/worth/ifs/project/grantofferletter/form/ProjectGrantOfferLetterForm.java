@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class ProjectGrantOfferLetterForm extends BaseBindingResultTarget {
 
     private MultipartFile grantOfferLetter;
+    private MultipartFile signedGrantOfferLetter;
     private MultipartFile additionalContract;
 
 
@@ -26,5 +27,13 @@ public class ProjectGrantOfferLetterForm extends BaseBindingResultTarget {
 
     public void setAdditionalContract(MultipartFile additionalContract) {
         this.additionalContract = additionalContract;
+    }
+
+    public MultipartFile getSignedGrantOfferLetter() {
+        return signedGrantOfferLetter;
+    }
+
+    public void setSignedGrantOfferLetter(MultipartFile signedGrantOfferLetter) {
+        this.signedGrantOfferLetter = signedGrantOfferLetter;
     }
 }

@@ -5,8 +5,8 @@ import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.project.ProjectService;
+import com.worth.ifs.project.grantofferletter.form.ProjectGrantOfferLetterForm;
 import com.worth.ifs.project.grantofferletter.viewmodel.ProjectGrantOfferLetterViewModel;
-import com.worth.ifs.project.otherdocuments.form.ProjectOtherDocumentsForm;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +42,7 @@ public class ProjectGrantOfferLetterController {
     @RequestMapping(method = GET)
     public String viewGrantOfferLetterPage(@PathVariable("projectId") Long projectId, Model model,
                                            @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-        ProjectOtherDocumentsForm form = new ProjectOtherDocumentsForm();
+        ProjectGrantOfferLetterForm form = new ProjectGrantOfferLetterForm();
 
         return createGrantOfferLetterPage(projectId, model, loggedInUser, form);
     }
@@ -50,25 +50,25 @@ public class ProjectGrantOfferLetterController {
     @RequestMapping(params = "uploadSignedGrantOfferLetterClicked", method = POST)
     public String uploadGrantOfferLetterFile(
             @PathVariable("projectId") final Long projectId,
-            @ModelAttribute(FORM_ATTR) ProjectOtherDocumentsForm form,
+            @ModelAttribute(FORM_ATTR) ProjectGrantOfferLetterForm form,
             @SuppressWarnings("unused") BindingResult bindingResult,
             ValidationHandler validationHandler,
             Model model,
             @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "exploitationPlan", form, () -> {
+        return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "grantOfferLetter", form, () -> {
 
-            MultipartFile file = form.getExploitationPlan();
+            MultipartFile signedGrantOfferLetter = form.getSignedGrantOfferLetter();
 
-            return projectService.addSignedGrantOfferLetter(projectId, file.getContentType(), file.getSize(),
-                    file.getOriginalFilename(), getMultipartFileBytes(file));
+            return projectService.addSignedGrantOfferLetter(projectId, signedGrantOfferLetter.getContentType(), signedGrantOfferLetter.getSize(),
+                    signedGrantOfferLetter.getOriginalFilename(), getMultipartFileBytes(signedGrantOfferLetter));
         });
     }
 
     @RequestMapping(params = "uploadGeneratedOfferLetterClicked", method = POST)
     public String uploadGeneratedGrantOfferLetterFile(
             @PathVariable("projectId") final Long projectId,
-            @ModelAttribute(FORM_ATTR) ProjectOtherDocumentsForm form,
+            @ModelAttribute(FORM_ATTR) ProjectGrantOfferLetterForm form,
             @SuppressWarnings("unused") BindingResult bindingResult,
             ValidationHandler validationHandler,
             Model model,
@@ -76,14 +76,14 @@ public class ProjectGrantOfferLetterController {
 
         return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "exploitationPlan", form, () -> {
 
-            MultipartFile file = form.getExploitationPlan();
+            MultipartFile grantOfferLetter = form.getGrantOfferLetter();
 
-            return projectService.addGeneratedGrantOfferLetter(projectId, file.getContentType(), file.getSize(),
-                    file.getOriginalFilename(), getMultipartFileBytes(file));
+            return projectService.addGeneratedGrantOfferLetter(projectId, grantOfferLetter.getContentType(), grantOfferLetter.getSize(),
+                    grantOfferLetter.getOriginalFilename(), getMultipartFileBytes(grantOfferLetter));
         });
     }
 
-    private String createGrantOfferLetterPage(Long projectId, Model model, UserResource loggedInUser, ProjectOtherDocumentsForm form) {
+    private String createGrantOfferLetterPage(Long projectId, Model model, UserResource loggedInUser, ProjectGrantOfferLetterForm form) {
         ProjectGrantOfferLetterViewModel viewModel = populateGrantOfferLetterViewModel(projectId, loggedInUser);
         model.addAttribute("model", viewModel);
         model.addAttribute("form", form);
@@ -107,7 +107,7 @@ public class ProjectGrantOfferLetterController {
                 project.getOfferSubmittedDate(), project.isOfferRejected());
     }
 
-    private String performActionOrBindErrorsToField(Long projectId, ValidationHandler validationHandler, Model model, UserResource loggedInUser, String fieldName, ProjectOtherDocumentsForm form, Supplier<FailingOrSucceedingResult<?, ?>> actionFn) {
+    private String performActionOrBindErrorsToField(Long projectId, ValidationHandler validationHandler, Model model, UserResource loggedInUser, String fieldName, ProjectGrantOfferLetterForm form, Supplier<FailingOrSucceedingResult<?, ?>> actionFn) {
 
         Supplier<String> successView = () -> redirectToGrantOfferLetterPage(projectId);
         Supplier<String> failureView = () -> createGrantOfferLetterPage(projectId, model, loggedInUser, form);
