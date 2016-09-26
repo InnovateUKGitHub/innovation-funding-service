@@ -1,10 +1,10 @@
 package com.worth.ifs.project.transactional;
 
+import com.worth.ifs.commons.security.SecuredBySpring;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.FileAndContents;
 import com.worth.ifs.project.resource.ProjectResource;
-import com.worth.ifs.security.SecuredBySpring;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.io.InputStream;

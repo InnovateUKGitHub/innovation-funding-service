@@ -54,7 +54,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         projectManagerRole = newRole(UserRoleType.PROJECT_MANAGER).build();
 
         user = newUser().
-                withid(userId).
+                withId(userId).
                 build();
 
         leadApplicantProcessRole = newProcessRole().

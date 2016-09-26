@@ -37,7 +37,7 @@ public class ProjectGrantOfferServiceSecurityTest extends BaseServiceSecurityTes
         ProjectResource project = newProjectResource().build();
         when(projectLookupStrategy.getProjectResource(projectId)).thenReturn(project);
 
-        assertAccessDenied(() -> service.getSignedGrantOfferLetterFileEntryDetails(projectId), () -> {
+        assertAccessDenied(() -> classUnderTest.getSignedGrantOfferLetterFileEntryDetails(projectId), () -> {
             verify(projectGrantOfferPermissionRules).partnersCanViewGrantOfferLetter(project, getLoggedInUser());
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
@@ -52,7 +52,7 @@ public class ProjectGrantOfferServiceSecurityTest extends BaseServiceSecurityTes
         ProjectResource project = newProjectResource().build();
         when(projectLookupStrategy.getProjectResource(projectId)).thenReturn(project);
 
-        assertAccessDenied(() -> service.getGrantOfferLetterFileEntryDetails(projectId), () -> {
+        assertAccessDenied(() -> classUnderTest.getGrantOfferLetterFileEntryDetails(projectId), () -> {
             verify(projectGrantOfferPermissionRules).partnersCanViewGrantOfferLetter(project, getLoggedInUser());
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
@@ -68,7 +68,7 @@ public class ProjectGrantOfferServiceSecurityTest extends BaseServiceSecurityTes
         ProjectResource project = newProjectResource().build();
         when(projectLookupStrategy.getProjectResource(projectId)).thenReturn(project);
 
-        assertAccessDenied(() -> service.getAdditionalContractFileEntryDetails(projectId), () -> {
+        assertAccessDenied(() -> classUnderTest.getAdditionalContractFileEntryDetails(projectId), () -> {
             verify(projectGrantOfferPermissionRules).partnersCanViewGrantOfferLetter(project, getLoggedInUser());
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
@@ -82,7 +82,7 @@ public class ProjectGrantOfferServiceSecurityTest extends BaseServiceSecurityTes
         ProjectResource project = newProjectResource().build();
         when(projectLookupStrategy.getProjectResource(projectId)).thenReturn(project);
 
-        assertAccessDenied(() -> service.createSignedGrantOfferLetterFileEntry(projectId, null, null), () -> {
+        assertAccessDenied(() -> classUnderTest.createSignedGrantOfferLetterFileEntry(projectId, null, null), () -> {
             verify(projectGrantOfferPermissionRules).leadPartnerCanUploadGrantOfferLetter(project, getLoggedInUser());
             verify(projectGrantOfferPermissionRules).projectManagerCanUploadGrantOfferLetter(project, getLoggedInUser());
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
@@ -97,7 +97,7 @@ public class ProjectGrantOfferServiceSecurityTest extends BaseServiceSecurityTes
         ProjectResource project = newProjectResource().build();
         when(projectLookupStrategy.getProjectResource(projectId)).thenReturn(project);
 
-        assertAccessDenied(() -> service.getGrantOfferLetterFileAndContents(projectId), () -> {
+        assertAccessDenied(() -> classUnderTest.getGrantOfferLetterFileAndContents(projectId), () -> {
             verify(projectGrantOfferPermissionRules).partnersCanDownloadGrantOfferLetter(project, getLoggedInUser());
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
@@ -112,7 +112,7 @@ public class ProjectGrantOfferServiceSecurityTest extends BaseServiceSecurityTes
         ProjectResource project = newProjectResource().build();
         when(projectLookupStrategy.getProjectResource(projectId)).thenReturn(project);
 
-        assertAccessDenied(() -> service.getSignedGrantOfferLetterFileAndContents(projectId), () -> {
+        assertAccessDenied(() -> classUnderTest.getSignedGrantOfferLetterFileAndContents(projectId), () -> {
             verify(projectGrantOfferPermissionRules).partnersCanDownloadGrantOfferLetter(project, getLoggedInUser());
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
@@ -127,16 +127,14 @@ public class ProjectGrantOfferServiceSecurityTest extends BaseServiceSecurityTes
         ProjectResource project = newProjectResource().build();
         when(projectLookupStrategy.getProjectResource(projectId)).thenReturn(project);
 
-        assertAccessDenied(() -> service.getAdditionalContractFileAndContents(projectId), () -> {
+        assertAccessDenied(() -> classUnderTest.getAdditionalContractFileAndContents(projectId), () -> {
             verify(projectGrantOfferPermissionRules).partnersCanDownloadGrantOfferLetter(project, getLoggedInUser());
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
     }
 
-
-
     @Override
-    protected Class<TestProjectGrantOfferService> getServiceClass() {
+    protected Class<? extends ProjectGrantOfferService> getClassUnderTest() {
         return TestProjectGrantOfferService.class;
     }
 

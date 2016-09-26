@@ -89,8 +89,6 @@ public class Project implements ProcessActivity {
         this.durationInMonths = durationInMonths;
         this.name = name;
         this.documentsSubmittedDate = documentsSubmittedDate;
-        this.offerSubmittedDate = offerSubmittedDate;
-        this.offerRejected = offerRejected;
     }
 
     public void addProjectUser(ProjectUser projectUser) {
