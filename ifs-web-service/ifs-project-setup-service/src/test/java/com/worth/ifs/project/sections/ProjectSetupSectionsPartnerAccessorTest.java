@@ -29,7 +29,7 @@ public class ProjectSetupSectionsPartnerAccessorTest extends BaseUnitTest {
 
         when(projectSetupProgressCheckerMock.isBusinessOrganisationType(organisation)).thenReturn(true);
 
-        assertTrue(accessor.checkAccessToCompaniesHouseSection(organisation));
+        assertTrue(accessor.canAccessCompaniesHouseSection(organisation));
 
         verifyInteractions(mock -> mock.isBusinessOrganisationType(organisation));
     }
@@ -38,7 +38,7 @@ public class ProjectSetupSectionsPartnerAccessorTest extends BaseUnitTest {
 
         when(projectSetupProgressCheckerMock.isBusinessOrganisationType(organisation)).thenReturn(false);
 
-        assertFalse(accessor.checkAccessToCompaniesHouseSection(organisation));
+        assertFalse(accessor.canAccessCompaniesHouseSection(organisation));
 
         verifyInteractions(mock -> mock.isBusinessOrganisationType(organisation));
     }
@@ -88,7 +88,7 @@ public class ProjectSetupSectionsPartnerAccessorTest extends BaseUnitTest {
         when(projectSetupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
         when(projectSetupProgressCheckerMock.isProjectDetailsSubmitted()).thenReturn(true);
 
-        assertTrue(accessor.checkAccessToMonitoringOfficerSection(organisation));
+        assertTrue(accessor.canAccessMonitoringOfficerSection(organisation));
 
         verifyInteractions(
                 mock -> mock.isBusinessOrganisationType(organisation),
@@ -100,7 +100,7 @@ public class ProjectSetupSectionsPartnerAccessorTest extends BaseUnitTest {
     @Test
     public void testCheckAccessToMonitoringOfficerSectionButProjectDetailsSectionIncomplete() {
         when(projectSetupProgressCheckerMock.isProjectDetailsSubmitted()).thenReturn(false);
-        assertFalse(accessor.checkAccessToMonitoringOfficerSection(organisation));
+        assertFalse(accessor.canAccessMonitoringOfficerSection(organisation));
     }
 
     @Test
@@ -110,7 +110,7 @@ public class ProjectSetupSectionsPartnerAccessorTest extends BaseUnitTest {
         when(projectSetupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
         when(projectSetupProgressCheckerMock.isFinanceContactSubmitted(organisation)).thenReturn(true);
 
-        assertTrue(accessor.checkAccessToBankDetailsSection(organisation));
+        assertTrue(accessor.canAccessBankDetailsSection(organisation));
 
         verifyInteractions(
                 mock -> mock.isBusinessOrganisationType(organisation),
@@ -125,7 +125,7 @@ public class ProjectSetupSectionsPartnerAccessorTest extends BaseUnitTest {
         when(projectSetupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
         when(projectSetupProgressCheckerMock.isFinanceContactSubmitted(organisation)).thenReturn(false);
 
-        assertFalse(accessor.checkAccessToBankDetailsSection(organisation));
+        assertFalse(accessor.canAccessBankDetailsSection(organisation));
     }
 
     @Test
@@ -136,7 +136,7 @@ public class ProjectSetupSectionsPartnerAccessorTest extends BaseUnitTest {
         when(projectSetupProgressCheckerMock.isProjectDetailsSubmitted()).thenReturn(true);
         when(projectSetupProgressCheckerMock.isBankDetailsApproved(organisation)).thenReturn(true);
 
-        assertTrue(accessor.checkAccessToFinanceChecksSection(organisation));
+        assertTrue(accessor.canAccessFinanceChecksSection(organisation));
 
         verifyInteractions(
                 mock -> mock.isBusinessOrganisationType(organisation),
@@ -155,7 +155,7 @@ public class ProjectSetupSectionsPartnerAccessorTest extends BaseUnitTest {
         when(projectSetupProgressCheckerMock.isBankDetailsApproved(organisation)).thenReturn(false);
         when(projectSetupProgressCheckerMock.isBankDetailsQueried(organisation)).thenReturn(true);
 
-        assertTrue(accessor.checkAccessToFinanceChecksSection(organisation));
+        assertTrue(accessor.canAccessFinanceChecksSection(organisation));
 
         verifyInteractions(
                 mock -> mock.isBusinessOrganisationType(organisation),
@@ -175,14 +175,14 @@ public class ProjectSetupSectionsPartnerAccessorTest extends BaseUnitTest {
         when(projectSetupProgressCheckerMock.isBankDetailsApproved(organisation)).thenReturn(false);
         when(projectSetupProgressCheckerMock.isBankDetailsQueried(organisation)).thenReturn(false);
 
-        assertFalse(accessor.checkAccessToFinanceChecksSection(organisation));
+        assertFalse(accessor.canAccessFinanceChecksSection(organisation));
     }
 
     @Test
     public void testCheckAccessToFinanceChecksSectionButSpendProfileNotYetGenerated() {
 
         when(projectSetupProgressCheckerMock.isSpendProfileGenerated()).thenReturn(false);
-        assertFalse(accessor.checkAccessToFinanceChecksSection(organisation));
+        assertFalse(accessor.canAccessFinanceChecksSection(organisation));
     }
 
     @Test
@@ -194,7 +194,7 @@ public class ProjectSetupSectionsPartnerAccessorTest extends BaseUnitTest {
         when(projectSetupProgressCheckerMock.isBankDetailsApproved(organisation)).thenReturn(true);
         when(projectSetupProgressCheckerMock.isSpendProfileGenerated()).thenReturn(true);
 
-        assertTrue(accessor.checkAccessToSpendProfileSection(organisation));
+        assertTrue(accessor.canAccessSpendProfileSection(organisation));
 
         verifyInteractions(
                 mock -> mock.isBusinessOrganisationType(organisation),

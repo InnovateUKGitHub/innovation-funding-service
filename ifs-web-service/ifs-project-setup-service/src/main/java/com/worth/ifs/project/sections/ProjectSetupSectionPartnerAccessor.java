@@ -18,7 +18,7 @@ public class ProjectSetupSectionPartnerAccessor {
         this.projectSetupProgressChecker = new ProjectSetupProgressChecker(projectTeamStatus);
     }
 
-    public boolean checkAccessToCompaniesHouseSection(OrganisationResource organisation) {
+    public boolean canAccessCompaniesHouseSection(OrganisationResource organisation) {
 
         if (projectSetupProgressChecker.isBusinessOrganisationType(organisation)) {
             return true;
@@ -33,7 +33,7 @@ public class ProjectSetupSectionPartnerAccessor {
                 "Unable to access Project Details section until Companies House details are complete for Organisation");
     }
 
-    public boolean checkAccessToMonitoringOfficerSection(OrganisationResource organisation) {
+    public boolean canAccessMonitoringOfficerSection(OrganisationResource organisation) {
 
         if (!isCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
                 "Unable to access Monitoring Officer section until Companies House details are complete for Organisation")) {
@@ -47,7 +47,7 @@ public class ProjectSetupSectionPartnerAccessor {
         return true;
     }
 
-    public boolean checkAccessToBankDetailsSection(OrganisationResource organisation) {
+    public boolean canAccessBankDetailsSection(OrganisationResource organisation) {
 
         if (!isCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
                 "Unable to access Bank Details section until Companies House information is complete")) {
@@ -63,7 +63,7 @@ public class ProjectSetupSectionPartnerAccessor {
         return true;
     }
 
-    public boolean checkAccessToFinanceChecksSection(OrganisationResource organisation) {
+    public boolean canAccessFinanceChecksSection(OrganisationResource organisation) {
 
         if (!isCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
                 "Unable to access Bank Details section until Companies House information is complete")) {
@@ -83,7 +83,7 @@ public class ProjectSetupSectionPartnerAccessor {
         return true;
     }
 
-    public boolean checkAccessToSpendProfileSection(OrganisationResource organisation) {
+    public boolean canAccessSpendProfileSection(OrganisationResource organisation) {
 
         if (!isCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
                 "Unable to access Spend Profile section until Companies House information is complete")) {
