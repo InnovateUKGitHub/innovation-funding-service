@@ -87,6 +87,8 @@ public class Application implements ProcessActivity {
     @OneToMany(mappedBy="application", fetch=FetchType.LAZY, cascade={CascadeType.REMOVE, CascadeType.PERSIST})
     private List<FormInputResponse> formInputResponses = new ArrayList<>();
 
+    private Boolean stateAidAgreed;
+
     public Application() {
         /*default constructor*/}
 
@@ -291,5 +293,13 @@ public class Application implements ProcessActivity {
 
     public void setCompletion(final BigDecimal completion) {
         this.completion = completion;
+    }
+
+    public Boolean getStateAidAgreed() {
+        return stateAidAgreed;
+    }
+
+    public void setStateAidAgreed(Boolean stateAidAgreed) {
+        this.stateAidAgreed = stateAidAgreed;
     }
 }
