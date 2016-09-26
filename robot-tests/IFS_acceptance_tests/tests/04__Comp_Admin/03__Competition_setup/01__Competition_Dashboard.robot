@@ -80,14 +80,11 @@ Competition Opens automatically on date
     [Tags]    MySQL
     [Setup]    Connect to Database    @{database}
     Given the user should see the text in the page    Ready to open
-    Then element should contain    jQuery=section:nth-child(4)    Sarcasm Stupendousness
-    ${yesterday} =    get yesterday
-    When execute sql string    UPDATE `ifs`.`milestone` SET `DATE`='${yesterday}' WHERE `id`='9';
-    And the user reloads the page
-    Then element should not contain    jQuery=section:nth-child(4)    Sarcasm Stupendousness
-    When the user navigates to the page    ${SERVER}/management/dashboard/live
+    And The competition is ready to open
+    When the Open date changes in the database to one day before
+    And the user navigates to the page    ${SERVER}/management/dashboard/live
     Then the user should see the text in the page    Open
-    And element should contain    jQuery=section:nth-child(3)    Sarcasm Stupendousness
+    And The competition should be open
     [Teardown]    execute sql string    UPDATE `ifs`.`milestone` SET `DATE`='2018-02-24 00:00:00' WHERE `id`='9';
 
 Search existing applications
@@ -142,3 +139,15 @@ get yesterday
     ${today} =    get time
     ${yesterday} =    Subtract Time From Date    ${today}    1 day
     [Return]    ${yesterday}
+
+The competition is ready to open
+    Then element should contain    jQuery=section:nth-child(4)    Sarcasm Stupendousness
+
+The Open date changes in the database to one day before
+    ${yesterday} =    get yesterday
+    When execute sql string    UPDATE `ifs`.`milestone` SET `DATE`='${yesterday}' WHERE `id`='9';
+    And the user reloads the page
+    Then element should not contain    jQuery=section:nth-child(4)    Sarcasm Stupendousness
+
+The competition should be open
+    And element should contain    jQuery=section:nth-child(3)    Sarcasm Stupendousness
