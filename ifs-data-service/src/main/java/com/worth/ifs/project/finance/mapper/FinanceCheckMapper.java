@@ -15,9 +15,16 @@ import org.mapstruct.Mapper;
         }
 )
 public abstract class FinanceCheckMapper extends BaseMapper<FinanceCheck, FinanceCheckResource, Long>{
-        @Override
-        public abstract FinanceCheckResource mapToResource(FinanceCheck domain);
+    @Override
+    public abstract FinanceCheckResource mapToResource(FinanceCheck domain);
 
-        @Override
-        public abstract FinanceCheck mapToDomain(FinanceCheckResource resource);
+    @Override
+    public abstract FinanceCheck mapToDomain(FinanceCheckResource resource);
+
+    public Long mapFinanceCheckToId(FinanceCheck object) {
+        if (object == null) {
+            return null;
+        }
+        return object.getId();
+    }
 }
