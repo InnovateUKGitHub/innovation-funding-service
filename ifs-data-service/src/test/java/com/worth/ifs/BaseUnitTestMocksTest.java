@@ -313,6 +313,7 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     @Mock
     protected ProjectGrantOfferService projectGrantOfferServiceMock;
 
+    @Mock
     protected ProjectStatusService projectStatusServiceMock;
 
     @Mock
