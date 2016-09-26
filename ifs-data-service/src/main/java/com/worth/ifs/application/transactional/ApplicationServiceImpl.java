@@ -333,6 +333,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             existingApplication.setName(application.getName());
             existingApplication.setDurationInMonths(application.getDurationInMonths());
             existingApplication.setStartDate(application.getStartDate());
+            existingApplication.setStateAidAgreed(application.getStateAidAgreed());
             existingApplication.setResubmission(application.getResubmission());
             existingApplication.setPreviousApplicationNumber(application.getPreviousApplicationNumber());
             existingApplication.setPreviousApplicationTitle(application.getPreviousApplicationTitle());
@@ -349,7 +350,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             return applicationMapper.mapToResource(savedApplication);
         });
     }
-
 
     @Override
     public ServiceResult<CompletedPercentageResource> getProgressPercentageByApplicationId(final Long applicationId) {
@@ -445,7 +445,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         );
     }
 
-
     @Override
     public ServiceResult<List<Application>> getApplicationsByCompetitionIdAndStatus(Long competitionId, Collection<Long> applicationStatusId) {
         List<Application> applicationResults = applicationRepository.findByCompetitionIdAndApplicationStatusIdIn(competitionId, applicationStatusId);
@@ -495,8 +494,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
         return percentage(countCompleted, totalQuestions);
     }
-
-
 
     private List<ApplicationResource> applicationsToResources(List<Application> filtered) {
         return simpleMap(filtered, application -> applicationMapper.mapToResource(application));

@@ -293,7 +293,7 @@ Eligibility page should contain the correct options
     [Tags]    HappyPath
     [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
     Given the user clicks the button/link    link=Eligibility
-    And the user should see the text in the page    Does the competition have multiple stream?
+    And the user should see the text in the page    Does the competition have multiple streams?
     Then the user should see the element    jQuery=label:contains(Single or Collaborative)
     When the user should see the element    jQuery=label:contains(Collaborative)
     And the user should see the element    jQuery=label:contains(Business)
