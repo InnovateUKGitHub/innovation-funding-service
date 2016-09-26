@@ -68,15 +68,15 @@
 			<button class="js-close close" aria-label="Close Popup">X</button>
 			<div>
 
-				<h2 class="heading-medium no-margin">Assign Project Manager</h2>
+				<h2 class="heading-medium no-margin">Assign project manager</h2>
 
-				<p>This will assign <span id="project-manager">[name]</span> as the Project Manager for this project.</p>
+				<p>This will make <span id="project-manager">[name]</span> as the project manager for this project.</p>
 
 				<hr />
 
 				<div class="alignright-button">
 					<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
-					<a href="/prototypes/1575-project-details" class="button">Assign</a>
+					<a href="/prototypes/1575-project-details" class="button">Submit project manager</a>
 				</div>
 
 			</div>
@@ -86,9 +86,9 @@
 			<button class="js-close close" aria-label="Close Popup">X</button>
 			<div>
 
-				<h2 class="heading-medium no-margin">Project Manager cannot be assigned</h2>
+				<h2 class="heading-medium no-margin">Project manager cannot be assigned</h2>
 
-				<p><span id="project-manager-pending">[name]</span> has been invited to create an account. This must be completed before they can be assigned as your Project Manager.</p>
+				<p><span id="project-manager-pending">[name]</span> has been invited to create an account. This must be completed before they can be assigned as your project manager.</p>
 
 				<hr />
 
@@ -118,13 +118,13 @@
 
 
 		jQuery('#add-pm').on('click',function(e){
-			jQuery('#pm-table').show();
-			jQuery('#pm-cta').hide();
-//			if(jQuery(this).is(':checked')){
-//				jQuery('#pm-table').show();
-//			}else{
-//				jQuery('#pm-table').hide();
-//			}
+//			jQuery('#pm-table').show();
+//			jQuery('#pm-cta').hide();
+			if(jQuery(this).is(':checked')){
+				jQuery('#pm-table').show();
+			}else{
+				jQuery('#pm-table').hide();
+			}
 		});
 
 		jQuery('#invite-pm').on('click',function(e){ 
@@ -133,12 +133,12 @@
 			var pmContact = jQuery('#name-pm1').val();
 
 			jQuery('#pm-name').text(pmContact + ' (Pending)')
-			jQuery("#pm-name-invite").attr('checked', 'checked');
+//			jQuery("#pm-name-invite").attr('checked', 'checked');
 			jQuery('#pm-table').hide();
 			jQuery('#invited-pm').show();
 //			jQuery('#pm-cta').text('Send invitation');
 			jQuery('#pm-cta').show();
-//			jQuery('#add-pm').text('Change team member');
+			jQuery('#add-pm').text('Change team member');
 		});
 
 		jQuery('#project-manager').text(jQuery('input:radio[name="pm-name-group"]:checked').val());
@@ -157,22 +157,22 @@
 
 		});
 
-		jQuery('input').on('click',function(e){ 
-			if(jQuery(this).is(':checked')){
-
-//				if(jQuery(this).attr('id') != 'pm-name-invite'){
-//					jQuery('#pm-cta').text('Save');
-//				}else{
-//					jQuery('#pm-cta').text('Send invitation');
+//		jQuery('input').on('click',function(e){
+//			if(jQuery(this).is(':checked')){
+//
+////				if(jQuery(this).attr('id') != 'pm-name-invite'){
+////					jQuery('#pm-cta').text('Save');
+////				}else{
+////					jQuery('#pm-cta').text('Send invitation');
+////				}
+//
+//				if(jQuery(this).attr('id') != 'add-pm'){
+//					jQuery('#pm-table').hide();
 //				}
-
-				if(jQuery(this).attr('id') != 'add-pm'){
-					jQuery('#pm-table').hide();
-				}
-				
-				jQuery('#pm-cta').show();
-			}
-		});
+//
+//				jQuery('#pm-cta').show();
+//			}
+//		});
 
 
 	});
