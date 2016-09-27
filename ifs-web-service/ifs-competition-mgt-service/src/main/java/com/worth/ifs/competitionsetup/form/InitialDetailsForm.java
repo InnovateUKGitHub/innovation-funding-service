@@ -21,11 +21,11 @@ public class InitialDetailsForm extends CompetitionSetupForm {
     private Integer openingDateDay;
 
     @NotNull(message = "{validation.initialdetailsform.openingdatemonth.required}")
-    @Range(min=1, max=12, message= "{validation.InitialDetailsForm.openingdatemonth.range}")
+    @Range(min=1, max=12, message= "{validation.initialdetailsform.openingdatemonth.range}")
     private Integer openingDateMonth;
 
     @NotNull(message = "{validation.initialdetailsform.openingdateyear.required}")
-    @Range(min=1900, max=9000, message= "{validation.InitialDetailsForm.openingdateyear.range}")
+    @Range(min=1900, max=9999, message= "{validation.initialdetailsform.openingdateyear.range}")
     private Integer openingDateYear;
 
     @NotEmpty(message = "{validation.standard.title.required}")
