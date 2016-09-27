@@ -6,6 +6,7 @@ import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.OrganisationTypeEnum;
 
 import static com.worth.ifs.project.constant.ProjectActivityStates.COMPLETE;
+import static com.worth.ifs.project.constant.ProjectActivityStates.NOT_REQUIRED;
 import static com.worth.ifs.project.constant.ProjectActivityStates.PENDING;
 import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
 
@@ -55,5 +56,13 @@ class ProjectSetupProgressChecker {
 
     public boolean isLeadPartnerOrganisation(OrganisationResource organisation) {
         return projectTeamStatus.getLeadPartnerStatus().getOrganisationId().equals(organisation.getId());
+    }
+
+    public boolean isCompaniesHouseSectionRequired(OrganisationResource organisation) {
+        return !NOT_REQUIRED.equals(getMatchingPartnerStatus(organisation).getCompaniesHouseStatus());
+    }
+
+    public boolean isOrganisationRequiringFunding(OrganisationResource organisation) {
+        return !NOT_REQUIRED.equals(getMatchingPartnerStatus(organisation).getBankDetailsStatus());
     }
 }

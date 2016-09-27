@@ -5,6 +5,10 @@ import com.worth.ifs.user.resource.OrganisationResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import static com.worth.ifs.project.sections.SectionAccess.ACCESSIBLE;
+import static com.worth.ifs.project.sections.SectionAccess.NOT_ACCESSIBLE;
+import static com.worth.ifs.project.sections.SectionAccess.NOT_REQUIRED;
+
 /**
  * This is a helper class for determining whether or not a given Project Setup section is available to access
  */
@@ -18,40 +22,49 @@ public class ProjectSetupSectionPartnerAccessor {
         this.projectSetupProgressChecker = new ProjectSetupProgressChecker(projectTeamStatus);
     }
 
-    public boolean canAccessCompaniesHouseSection(OrganisationResource organisation) {
+    public SectionAccess canAccessCompaniesHouseSection(OrganisationResource organisation) {
 
         if (projectSetupProgressChecker.isBusinessOrganisationType(organisation)) {
-            return true;
+            return ACCESSIBLE;
         }
 
-        return fail("Unable to access Companies House section if not a Business Organisation");
+        LOG.debug("No need to access Companies House section if not a Business Organisation");
+        return NOT_REQUIRED;
     }
 
-    public boolean canAccessProjectDetailsSection(OrganisationResource organisation) {
+    public SectionAccess canAccessProjectDetailsSection(OrganisationResource organisation) {
 
-        return isCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
-                "Unable to access Project Details section until Companies House details are complete for Organisation");
+        if (isCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
+                "Unable to access Project Details section until Companies House details are complete for Organisation")) {
+            return ACCESSIBLE;
+        }
+
+        return NOT_ACCESSIBLE;
     }
 
-    public boolean canAccessMonitoringOfficerSection(OrganisationResource organisation) {
+    public SectionAccess canAccessMonitoringOfficerSection(OrganisationResource organisation) {
 
         if (!isCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
                 "Unable to access Monitoring Officer section until Companies House details are complete for Organisation")) {
-            return false;
+            return NOT_ACCESSIBLE;
         }
 
         if (!projectSetupProgressChecker.isProjectDetailsSubmitted()) {
             return fail("Unable to access Monitoring Officer section until Project Details are submitted");
         }
 
-        return true;
+        return ACCESSIBLE;
     }
 
-    public boolean canAccessBankDetailsSection(OrganisationResource organisation) {
+    public SectionAccess canAccessBankDetailsSection(OrganisationResource organisation) {
+
+        if (!projectSetupProgressChecker.isOrganisationRequiringFunding(organisation)) {
+            return NOT_REQUIRED;
+        }
 
         if (!isCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
                 "Unable to access Bank Details section until Companies House information is complete")) {
-            return false;
+            return NOT_ACCESSIBLE;
         }
 
         if (!projectSetupProgressChecker.isFinanceContactSubmitted(organisation)) {
@@ -60,14 +73,14 @@ public class ProjectSetupSectionPartnerAccessor {
                     "its Finance Contact");
         }
 
-        return true;
+        return ACCESSIBLE;
     }
 
-    public boolean canAccessFinanceChecksSection(OrganisationResource organisation) {
+    public SectionAccess canAccessFinanceChecksSection(OrganisationResource organisation) {
 
         if (!isCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
                 "Unable to access Bank Details section until Companies House information is complete")) {
-            return false;
+            return NOT_ACCESSIBLE;
         }
 
         if (!projectSetupProgressChecker.isProjectDetailsSubmitted()) {
@@ -80,14 +93,14 @@ public class ProjectSetupSectionPartnerAccessor {
                     "Bank Details approved or queried");
         }
 
-        return true;
+        return ACCESSIBLE;
     }
 
-    public boolean canAccessSpendProfileSection(OrganisationResource organisation) {
+    public SectionAccess canAccessSpendProfileSection(OrganisationResource organisation) {
 
         if (!isCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
                 "Unable to access Spend Profile section until Companies House information is complete")) {
-            return false;
+            return NOT_ACCESSIBLE;
         }
 
         if (!projectSetupProgressChecker.isProjectDetailsSubmitted()) {
@@ -107,18 +120,22 @@ public class ProjectSetupSectionPartnerAccessor {
                     "Spend Profile generated");
         }
 
-        return true;
+        return ACCESSIBLE;
     }
 
-    public boolean canAccessOtherDocumentsSection(OrganisationResource organisation) {
+    public SectionAccess canAccessOtherDocumentsSection(OrganisationResource organisation) {
 
         if (projectSetupProgressChecker.isLeadPartnerOrganisation(organisation)) {
-            return true;
+            return ACCESSIBLE;
         }
 
-        return (isCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
+        if (isCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
                 "Non-lead Partners are unable to access Other Documents section until their Companies House information " +
-                        "is complete"));
+                        "is complete")) {
+            return ACCESSIBLE;
+        }
+
+        return NOT_ACCESSIBLE;
     }
 
     public boolean isProjectDetailsSubmitted() {
@@ -130,14 +147,14 @@ public class ProjectSetupSectionPartnerAccessor {
                 projectSetupProgressChecker.isBankDetailsQueried(organisation);
     }
 
-    private boolean fail(String message) {
+    private SectionAccess fail(String message) {
         LOG.info(message);
-        return false;
+        return NOT_ACCESSIBLE;
     }
 
     private boolean isCompaniesHouseSectionIsUnnecessaryOrComplete(OrganisationResource organisation, String failureMessage) {
 
-        if (!projectSetupProgressChecker.isBusinessOrganisationType(organisation)) {
+        if (!projectSetupProgressChecker.isCompaniesHouseSectionRequired(organisation)) {
             return true;
         }
 

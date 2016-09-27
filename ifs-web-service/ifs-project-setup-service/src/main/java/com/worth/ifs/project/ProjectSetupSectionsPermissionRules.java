@@ -6,6 +6,7 @@ import com.worth.ifs.commons.security.PermissionRules;
 import com.worth.ifs.project.resource.ProjectPartnerStatusResource;
 import com.worth.ifs.project.resource.ProjectTeamStatusResource;
 import com.worth.ifs.project.sections.ProjectSetupSectionPartnerAccessor;
+import com.worth.ifs.project.sections.SectionAccess;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.logging.Log;
@@ -15,6 +16,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 import java.util.function.BiFunction;
+
+import static com.worth.ifs.project.sections.SectionAccess.ACCESSIBLE;
 
 /**
  * Permission checker around the access to various sections within the Project Setup process
@@ -71,7 +74,7 @@ public class ProjectSetupSectionsPermissionRules {
         return doSectionCheck(projectId, user, ProjectSetupSectionPartnerAccessor::canAccessOtherDocumentsSection);
     }
 
-    private boolean doSectionCheck(Long projectId, UserResource user, BiFunction<ProjectSetupSectionPartnerAccessor, OrganisationResource, Boolean> sectionCheckFn) {
+    private boolean doSectionCheck(Long projectId, UserResource user, BiFunction<ProjectSetupSectionPartnerAccessor, OrganisationResource, SectionAccess> sectionCheckFn) {
         ProjectTeamStatusResource teamStatus;
 
         try {
@@ -91,6 +94,6 @@ public class ProjectSetupSectionsPermissionRules {
         organisation.setId(partnerStatusForUser.getOrganisationId());
         organisation.setOrganisationType(partnerStatusForUser.getOrganisationType().getOrganisationTypeId());
 
-        return sectionCheckFn.apply(sectionAccessor, organisation);
+        return sectionCheckFn.apply(sectionAccessor, organisation) == ACCESSIBLE;
     }
 }

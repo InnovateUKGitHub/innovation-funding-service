@@ -102,6 +102,14 @@ public abstract class BaseBuilder<T, S> implements Builder<T, S> {
         return build(numberToBuild).toArray((T[]) Array.newInstance(clazz, numberToBuild));
     }
 
+    protected <T> T newInstance(Class<T> clazz) {
+        try {
+            return clazz.newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new RuntimeException("Unable to instantiate new instance of class " + clazz);
+        }
+    }
+
     /**
      * Give subclasses of this BaseBuilder the chance to post-process any built instances prior to returning them.
      * An example of post-processing them could be adding Hibernate-style backlinks to objects within the new instance
