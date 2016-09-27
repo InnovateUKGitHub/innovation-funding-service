@@ -3,11 +3,10 @@ package com.worth.ifs.project.sections;
 import com.worth.ifs.project.resource.ProjectPartnerStatusResource;
 import com.worth.ifs.project.resource.ProjectTeamStatusResource;
 import com.worth.ifs.user.resource.OrganisationResource;
-import com.worth.ifs.user.resource.OrganisationTypeEnum;
 
-import static com.worth.ifs.project.constant.ProjectActivityStates.COMPLETE;
-import static com.worth.ifs.project.constant.ProjectActivityStates.PENDING;
+import static com.worth.ifs.project.constant.ProjectActivityStates.*;
 import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
+import static java.util.Arrays.asList;
 
 /**
  * Component to check the progress of Project Setup.  This is used by the {@link ProjectSetupSectionPartnerAccessor} to
@@ -23,10 +22,6 @@ class ProjectSetupProgressChecker {
 
     public boolean isCompaniesHouseDetailsComplete(OrganisationResource organisation) {
         return COMPLETE.equals(getMatchingPartnerStatus(organisation).getCompaniesHouseStatus());
-    }
-
-    public boolean isBusinessOrganisationType(OrganisationResource organisation) {
-        return !OrganisationTypeEnum.isResearch(organisation.getOrganisationType());
     }
 
     public boolean isProjectDetailsSubmitted() {
@@ -46,10 +41,22 @@ class ProjectSetupProgressChecker {
     }
 
     public boolean isSpendProfileGenerated() {
-        return COMPLETE.equals(projectTeamStatus.getLeadPartnerStatus().getSpendProfileStatus());
+        return asList(COMPLETE, ACTION_REQUIRED).contains(projectTeamStatus.getLeadPartnerStatus().getSpendProfileStatus());
     }
 
     private ProjectPartnerStatusResource getMatchingPartnerStatus(OrganisationResource organisation) {
         return simpleFindFirst(projectTeamStatus.getPartnerStatuses(), status -> status.getOrganisationId().equals(organisation.getId())).get();
+    }
+
+    public boolean isLeadPartnerOrganisation(OrganisationResource organisation) {
+        return projectTeamStatus.getLeadPartnerStatus().getOrganisationId().equals(organisation.getId());
+    }
+
+    public boolean isCompaniesHouseSectionRequired(OrganisationResource organisation) {
+        return !NOT_REQUIRED.equals(getMatchingPartnerStatus(organisation).getCompaniesHouseStatus());
+    }
+
+    public boolean isOrganisationRequiringFunding(OrganisationResource organisation) {
+        return !NOT_REQUIRED.equals(getMatchingPartnerStatus(organisation).getBankDetailsStatus());
     }
 }
