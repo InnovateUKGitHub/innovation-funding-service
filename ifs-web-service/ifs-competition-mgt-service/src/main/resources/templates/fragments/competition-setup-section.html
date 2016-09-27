@@ -27,7 +27,6 @@
                        th:field="${competitionSetupForm.title}"
                        required="required"
                        data-required-errormessage="Please enter a title" />
-                <span class="autosave-info" />
             </div>
 
             <div th:class="${#fields.hasErrors('competitionTypeId')}? 'form-group error':'form-group'">
@@ -42,7 +41,7 @@
                     <option th:each="(competitionType : ${competitionTypes})" th:if="${competitionType.active}" th:attr="data-stateaid=${competitionType.stateAid}" th:text="${competitionType.name}"  th:value="${competitionType.id}" th:selected="${competitionSetupForm.competitionTypeId == competitionType.id}">Competition Type</option>
                 </select>
                 <input th:if="${!#strings.isEmpty(restrictInitialDetailsEdit)}" type="hidden" th:field="${competitionSetupForm.competitionTypeId}" />
-                <span class="autosave-info" />
+
             </div>
 
 
@@ -60,7 +59,6 @@
                     <option value="" disabled="disabled" th:selected="${competitionSetupForm.innovationSectorCategoryId == null}">Please select &hellip;</option>
                     <option th:each="(innovationSector : ${innovationSectors})" th:text="${innovationSector.name}" th:value="${innovationSector.id}" th:selected="${competitionSetupForm.innovationSectorCategoryId == innovationSector.id}">Innovation Sector</option>
                 </select>
-                <span class="autosave-info" />
             </div>
 
             <div th:class="${#fields.hasErrors('innovationAreaCategoryId')}? 'form-group error':'form-group'">
@@ -74,7 +72,6 @@
                     <option th:if="${competitionSetupForm.innovationAreaCategoryId == null}" value="" disabled="disabled" th:selected="${competitionSetupForm.innovationAreaCategoryId == null}">Please select &hellip;</option>
                     <option th:each="(innovationArea : ${innovationAreas})" th:text="${innovationArea.name}" th:value="${innovationArea.id}" th:selected="${competitionSetupForm.innovationAreaCategoryId == innovationArea.id}">Innovation Area</option>
                 </select>
-                <span class="autosave-info" />
             </div>
 
 
@@ -130,7 +127,6 @@
                                  th:field="${competitionSetupForm.openingDateYear}" />
                           <input th:if="${!#strings.isEmpty(restrictInitialDetailsEdit)}" type="hidden" th:field="${competitionSetupForm.openingDateYear}" />
                       </div>
-                      <span class="autosave-info" />
                   </div>
                 </div>
             </fieldset>
@@ -146,7 +142,6 @@
                     <option value="" th:selected="${competitionSetupForm.leadTechnologistUserId == null}" disabled="disabled">Please select &hellip;</option>
                     <option th:each="(competitionLeadTechUser : ${competitionLeadTechUsers})" th:text="${competitionLeadTechUser.name}" th:value="${competitionLeadTechUser.id}" th:selected="${competitionSetupForm.leadTechnologistUserId == competitionLeadTechUser.id}">Lead technologist</option>
                 </select>
-                <span class="autosave-info" />
             </div>
 
             <div th:class="${#fields.hasErrors('executiveUserId')}? 'form-group error':'form-group'">
@@ -160,7 +155,6 @@
                     <option value="" disabled="disabled" th:selected="${competitionSetupForm.executiveUserId == null}">Please select &hellip;</option>
                     <option th:each="(competitionExecutiveUser : ${competitionExecutiveUsers})" th:text="${competitionExecutiveUser.name}" th:value="${competitionExecutiveUser.id}" th:selected="${competitionSetupForm.executiveUserId == competitionExecutiveUser.id}">User</option>
                 </select>
-                <span class="autosave-info" />
             </div>
 
 
@@ -278,7 +272,6 @@
                                th:field="${competitionSetupForm.funders[__${iteration.index}__].funder}"
                                data-maxlength-errormessage="Funder has a maximum length of 255 characters"
                                data-required-errormessage="Please enter a funder name" />
-                        <span class="autosave-info" />
                     </div>
                 </div>
 
@@ -294,8 +287,6 @@
                                th:id="${iteration.index}+'-funderBudget'"
                                th:field="${competitionSetupForm.funders[__${iteration.index}__].funderBudget}" value=""
                                data-required-errormessage="Please enter a budget" />
-                        <span class="autosave-info" />
-
                         <input type="hidden"
                                th:field="${competitionSetupForm.funders[__${iteration.index}__].coFunder}"
                                th:value="${iteration.index != 0}"/>
@@ -339,7 +330,6 @@
                            th:field="${competitionSetupForm.pafNumber}"
                            required="required"
                            data-required-errormessage="Please enter a PAF number" />
-                    <span class="autosave-info" />
                 </div>
 
                 <div th:class="${#fields.hasErrors('budgetCode')}? 'form-group error':'form-group'">
@@ -354,7 +344,6 @@
                            th:field="${competitionSetupForm.budgetCode}"
                            required="required"
                            data-required-errormessage="Please enter a budget code" />
-                    <span class="autosave-info" />
                 </div>
 
 
@@ -371,7 +360,7 @@
                     maxlength="255"
                     data-maxlength-errormessage="Activity code has a maximum length of 255 characters"
                            data-required-errormessage="Please enter an activity code" />
-                    <span class="autosave-info" />
+
                 </div>
 
                 <div th:class="${#fields.hasErrors('competitionCode')}? 'form-group error':'form-group'">
@@ -485,7 +474,6 @@
 	                    <input id="comp-stream-no" value="no" type="radio" th:field="*{multipleStream}" required="required" data-required-errormessage="Please select a stream option"></input>
 	                No
 	                </label>
-                    <span class="autosave-info" />
                 </fieldset>
             </div>
 
@@ -507,7 +495,6 @@
                            required="required"
                            data-required-errormessage="A stream name is required"
                            data-maxlength-errormessage="Stream name has a maximum length of 255 characters" />
-                    <span class="autosave-info" />
                 </fieldset>
             </div>
 
@@ -525,7 +512,6 @@
                         <input th:id="${'single-or-collaborative-' + collaborationLevel.code}" name="singleOrCollaborative" th:value="${collaborationLevel.code}" type="radio" th:checked="${competitionSetupForm.singleOrCollaborative == collaborationLevel.code}" required="required" data-required-errormessage="Please select a collaboration level"></input>
                         <span th:text="${collaborationLevel.name}" th:remove="tag" />
                     </label>
-                    <span class="autosave-info" />
                 </fieldset>
             </div>
 
@@ -544,7 +530,6 @@
 		                <input th:value="${researchCategory.id}" type="checkbox" name="researchCategoryId" th:id="${'research-categories-' + researchCategory.id}" th:checked="${competitionSetupForm.includesResearchCategory(researchCategory.id)}" required="required" data-required-errormessage="Please select at least one research category" />
 		                <span th:text="${researchCategory.name}" th:remove="tag" />
 		            </label>
-                    <span class="autosave-info" />
 		        </fieldset>
 		    </div>
 
@@ -564,7 +549,6 @@
 					    <input th:id="${'lead-applicant-type-' + leadApplicantType.code}" name="leadApplicantType" th:value="${leadApplicantType.code}" type="radio" th:checked="${competitionSetupForm.leadApplicantType == leadApplicantType.code}" required="required" data-required-errormessage="Please select a lead applicant type" />
 					    <span th:text="${leadApplicantType.name}" th:remove="tag" />
 					 </label>
-                   <span class="autosave-info" />
 				</fieldset>
             </div>
 
@@ -580,7 +564,6 @@
 	                <select class="form-control width-large" name="researchParticipationAmountId" id="researchParticipation" required="required" data-required-errormessage="Please select a research participation percentage" >
 	                    <option th:each="researchParticipationAmount : ${researchParticipationAmounts}" th:text="${researchParticipationAmount.name}" th:value="${researchParticipationAmount.id}" th:selected="${competitionSetupForm.researchParticipationAmountId == researchParticipationAmount.id}">Research participation</option>
 	                </select>
-                    <span class="autosave-info" />
                 </fieldset>
             </div>
 
@@ -601,7 +584,6 @@
                         <input id="comp-resubmissions-no" value="no" type="radio" th:field="*{resubmission}" required="required" data-required-errormessage="Please select a resubmissions option"></input>
                         No
                     </label>
-                    <span class="autosave-info" />
                 </fieldset>
             </div>
 

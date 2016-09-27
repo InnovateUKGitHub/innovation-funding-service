@@ -122,7 +122,6 @@ public class ProjectMonitoringOfficerController {
     }
 
     private void checkInCorrectStateToUseMonitoringOfficerPage(Long projectId) {
-
         ProjectTeamStatusResource teamStatus = projectService.getProjectTeamStatus(projectId, Optional.empty());
 
         if (!COMPLETE.equals(teamStatus.getLeadPartnerStatus().getProjectDetailsStatus())) {

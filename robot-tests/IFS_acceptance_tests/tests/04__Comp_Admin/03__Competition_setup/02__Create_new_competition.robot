@@ -304,7 +304,7 @@ Eligibility page should contain the correct options
     And the user should see the element    jQuery=label:contains(Technical feasibility)
     And the user should see the element    jQuery=label:contains(Industrial research)
     And the user should see the element    jQuery=label:contains(Experimental development)
-    And the resubmition should not have a default selection
+    And the resubmission should not have a default selection
 
 Eligibility server-side validations
     [Documentation]    INFUND-2986
@@ -709,13 +709,13 @@ the user should see the correct details in the eligibility form
     Radio Button Should Be Set To    multipleStream    yes
     ${input_value} =    Get Value    id=streamName
     Should Be Equal    ${input_value}    Test stream name
-    Radio Button Should Be Set To    singleOrCollaborative    single
+    the user sees that the radio button is selected    singleOrCollaborative    single
     Checkbox Should Be Selected    id=research-categories-33
     Checkbox Should Be Selected    id=research-categories-34
     Checkbox Should Be Selected    id=research-categories-35
-    Radio Button Should Be Set To    leadApplicantType    business
+    the user sees that the radio button is selected    leadApplicantType    business
     Page Should Contain    50%
-    Radio Button Should Be Set To    resubmission    no
+    the user sees that the radio button is selected    resubmission    no
 
 The user should not see the error text in the page
     [Arguments]    ${ERROR_TEXT}
@@ -723,8 +723,8 @@ The user should not see the error text in the page
     Focus    jQuery=.button:contains("Done")
     Wait Until Page Does Not Contain    ${ERROR_TEXT}
 
-And the resubmition should not have a default selection
-    Radio Button Should Not Be Selected    resubmission
+the resubmission should not have a default selection
+    the user sees that the radio button is not selected    resubmission
 
 the users waits until the page is autosaved
     Focus    jQuery=button:contains(Done)
