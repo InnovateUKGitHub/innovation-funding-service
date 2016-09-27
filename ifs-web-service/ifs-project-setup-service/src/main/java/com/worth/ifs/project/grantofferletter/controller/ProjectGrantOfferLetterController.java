@@ -62,7 +62,7 @@ public class ProjectGrantOfferLetterController {
             Model model,
             @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "grantOfferLetter", form, () -> {
+        return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "signedGrantOfferLetter", form, () -> {
 
             MultipartFile signedGrantOfferLetter = form.getSignedGrantOfferLetter();
 
@@ -80,7 +80,7 @@ public class ProjectGrantOfferLetterController {
             Model model,
             @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "exploitationPlan", form, () -> {
+        return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "grantOfferLetter", form, () -> {
 
             MultipartFile grantOfferLetter = form.getGrantOfferLetter();
 
@@ -98,7 +98,7 @@ public class ProjectGrantOfferLetterController {
             Model model,
             @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "exploitationPlan", form, () -> {
+        return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "additionalContractFile", form, () -> {
 
             MultipartFile additionalContract = form.getAdditionalContract();
 
