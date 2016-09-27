@@ -10,6 +10,7 @@ import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.finance.domain.SpendProfile;
 import com.worth.ifs.project.status.resource.CompetitionProjectsStatusResource;
 import com.worth.ifs.project.status.resource.ProjectStatusResource;
+import com.worth.ifs.project.users.ProjectUsersHelper;
 import com.worth.ifs.user.domain.Organisation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,9 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
 
     @Autowired
     private CompetitionRepository competitionRepository;
+
+    @Autowired
+    private ProjectUsersHelper projectUsersHelper;
 
     @Override
     public ServiceResult<CompetitionProjectsStatusResource> getCompetitionStatus(Long competitionId) {
@@ -59,7 +63,7 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
     }
 
     private Integer getProjectPartnerCount(Long projectId){
-        return getProjectUsersByProjectId(projectId).size();
+        return projectUsersHelper.getPartnerOrganisations(projectId).size();
     }
 
     private ProjectActivityStates getProjectDetailsStatus(Project project){
