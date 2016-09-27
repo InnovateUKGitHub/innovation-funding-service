@@ -1559,31 +1559,6 @@
 
 </div>
 
-
-<!-- =============Section: Guidance table rows==================== -->
-
-<div th:fragment="prototype-section-guidance-row">
-
-    <tr>
-        <td>
-            <label class="visuallyhidden" th:for="${'group' + rowNo + '-score-from'}">Score from</label>
-            <input class="form-control width-small" th:id="${'group' + rowNo + '-score-from'}" th:name="${'group' + rowNo + '-score-from'}" th:value="${scoreFrom}" type="number" />
-        </td>
-        <td>
-            <label class="visuallyhidden" th:for="${'group' + rowNo + '-score-to'}">Score to</label>
-            <input class="form-control width-small" th:id="${'group' + rowNo + '-score-to'}" th:name="${'group' + rowNo + '-score-to'}" th:value="${scoreTo}" type="number" />
-        </td>
-        <td>
-            <label class="visuallyhidden" th:for="${'group' + rowNo + '-justification'}">Justification</label>
-            <input class="form-control width-full" th:id="${'group' + rowNo + '-justification'}" th:name="${'group' + rowNo + '-justification'}" th:value="${justification}" type="text" />
-        </td>
-        <td>
-            <a href="#" title="Remove this group of scoring guidance">Remove</a>
-        </td>
-    </tr>
-
-</div>
-
 <!-- =============Section: Assessment Guidance table rows==================== -->
 
 <div th:fragment="prototype-section-assessment-guidance-row">

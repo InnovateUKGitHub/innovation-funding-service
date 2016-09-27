@@ -64,10 +64,11 @@ Year field client side
     [Tags]    HappyPath
     [Setup]    Run keywords    the user enters text to a text field    id=application_details-title    Robot test application
     ...    AND    the user enters text to a text field    id=application_details-duration    15
-    When the applicant inserts an invalid date
-    Then the user should see an error    Please enter a future date
-    When the user enters text to a text field    id=application_details-startdate_year    ${EMPTY}
-    Then the user should see an error    Please enter a future date
+#    The following steps are Pending due to INFUND-5283
+#    When the applicant inserts an invalid date
+#    Then the user should see an error    Please enter a future date
+#    When the user enters text to a text field    id=application_details-startdate_year    ${EMPTY}
+#    Then the user should see an error    Please enter a future date
     When the applicant inserts a valid date
     Then the applicant should not see the validation error any more
 
@@ -78,12 +79,13 @@ Duration field client side
     [Tags]
     [Setup]    Run keywords    the user enters text to a text field    id=application_details-title    Robot test application
     ...    AND    the applicant inserts a valid date
-    When the user enters text to a text field    id=application_details-duration    0
-    Then the user should see an error    Your project should last between 1 and 36 months
-    When the user enters text to a text field    id=application_details-duration    -1
-    Then the user should see an error    Your project should last between 1 and 36 months
-    When the user enters text to a text field    id=application_details-duration    ${EMPTY}
-    Then the user should see an error    Please enter a valid value
+#    The following steps are Pending due to INFUND-5283
+#    When the user enters text to a text field    id=application_details-duration    0
+#    Then the user should see an error    Your project should last between 1 and 36 months
+#    When the user enters text to a text field    id=application_details-duration    -1
+#    Then the user should see an error    Your project should last between 1 and 36 months
+#    When the user enters text to a text field    id=application_details-duration    ${EMPTY}
+#    Then the user should see an error    Please enter a valid value
     And the user enters text to a text field    id=application_details-duration    15
     And the applicant should not see the validation error of the duration any more
 
