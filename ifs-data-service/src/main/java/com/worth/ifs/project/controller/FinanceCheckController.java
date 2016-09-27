@@ -15,18 +15,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
-
+import static com.worth.ifs.project.controller.FinanceCheckController.FINANCE_CHECK_BASE_URL;
 /**
  * FinanceCheckController exposes {@link com.worth.ifs.project.finance.domain.FinanceCheck} data and operations through a REST API.
  */
 @RestController
-@RequestMapping("/project")
+@RequestMapping(FINANCE_CHECK_BASE_URL)
 public class FinanceCheckController {
+
+    public static final String FINANCE_CHECK_PATH = "/finance-check";
+    public static final String FINANCE_CHECK_BASE_URL = "/project";
+    public static final String FINANCE_CHECK_ORGANISATION_PATH = "/partner-organisation";
 
     @Autowired
     private FinanceCheckService financeCheckService;
 
-    @RequestMapping("/{projectId}/partner-organisation/{organisationId}/finance-check")
+    @RequestMapping("/{projectId}" + FINANCE_CHECK_ORGANISATION_PATH + "/{organisationId}" + FINANCE_CHECK_PATH)
     public RestResult<FinanceCheckResource> getFinanceCheck(@PathVariable("projectId") final Long projectId,
                                                             @PathVariable("organisationId") final Long organisationId) {
 
@@ -34,7 +38,7 @@ public class FinanceCheckController {
         return financeCheckService.getByProjectAndOrganisation(projectOrganisationCompositeId).toGetResponse();
     }
 
-    @RequestMapping(value = "/finance-check", method = POST)
+    @RequestMapping(value = FINANCE_CHECK_PATH, method = POST)
     public RestResult<FinanceCheckResource> updateSpendProfile(@RequestBody FinanceCheckResource financeCheckResource) {
         return financeCheckService.save(financeCheckResource).toPostCreateResponse();
     }
