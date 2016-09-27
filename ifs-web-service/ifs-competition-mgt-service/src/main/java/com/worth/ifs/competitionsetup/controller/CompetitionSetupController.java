@@ -14,8 +14,8 @@ import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionResource.Status;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competitionsetup.form.*;
-import com.worth.ifs.competitionsetup.model.Question;
 import com.worth.ifs.competitionsetup.model.Funder;
+import com.worth.ifs.competitionsetup.model.Question;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupService;
@@ -23,6 +23,7 @@ import com.worth.ifs.profiling.ProfileExecution;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -31,14 +32,16 @@ import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+
+import static com.worth.ifs.controller.ErrorLookupHelper.lookupErrorMessageResourceBundleEntry;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Controller for showing and handling the different competition setup sections
@@ -66,6 +69,9 @@ public class CompetitionSetupController {
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private MessageSource messageSource;
 
     @Autowired
     private CompetitionSetupMilestoneService competitionSetupMilestoneService;
@@ -193,9 +199,15 @@ public class CompetitionSetupController {
     }
 
     private List<String> toStringList(List<Error> errors) {
-        List<String> returnList = new ArrayList<>();
-        errors.forEach(error -> returnList.add(error.getErrorKey()));
-        return returnList;
+        List<String> stringErrors = errors
+                .stream()
+                .map(this::lookupErrorMessage)
+                .collect(toList());
+        return stringErrors;
+    }
+
+    private String lookupErrorMessage(Error e) {
+        return lookupErrorMessageResourceBundleEntry(messageSource, e);
     }
 
     @RequestMapping(value = "/{competitionId}/section/initial", method = RequestMethod.POST)

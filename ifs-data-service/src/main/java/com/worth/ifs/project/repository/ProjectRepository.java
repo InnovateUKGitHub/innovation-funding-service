@@ -9,4 +9,5 @@ public interface ProjectRepository extends PagingAndSortingRepository<Project, L
     @Override
     List<Project> findAll();
     Project findOneByApplicationId(final Long applicationId);
+    List<Project> findByApplicationCompetitionId(final Long competitionId);
 }
