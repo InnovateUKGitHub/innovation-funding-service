@@ -128,13 +128,10 @@ public class AdditionalInfoSectionSaver extends AbstractSectionSaver implements 
                 funder.setFunder(value);
             } else if(fieldName.endsWith("funderBudget")) {
 				BigDecimal funderBudget = new BigDecimal(value);
-				if (funderBudget.scale() > 2) {
-					funderBudget = funderBudget.setScale(2, BigDecimal.ROUND_HALF_EVEN);
-				}
-				if (new BigDecimal("99999999.99").compareTo(funderBudget) > 0) {
+				if (new BigDecimal("99999999.99").compareTo(funderBudget) > 0 && funderBudget.scale() <= 2) {
 					funder.setFunderBudget(funderBudget);
 				} else {
-					return asList(new Error("competition.setup.autosave.funder.budget.invalid", HttpStatus.BAD_REQUEST));
+					return asList(new Error("validation.additionalinfoform.funderbudget.invalid", HttpStatus.BAD_REQUEST));
 				}
 			} else {
                return asList(new Error("Field not found", HttpStatus.BAD_REQUEST));

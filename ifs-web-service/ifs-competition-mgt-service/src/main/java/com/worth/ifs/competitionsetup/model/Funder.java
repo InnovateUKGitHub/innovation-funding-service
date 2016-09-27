@@ -14,7 +14,7 @@ public class Funder {
 
     @Min(value=0, message = "Please a valid number.")
     @NotNull(message = "Please enter a budget")
-    @Digits(integer = 8, fraction = 2, message = "Please enter less than 8 digits and 2 decimal places.")
+    @Digits(integer = 8, fraction = 2, message = "{validation.additionalinfoform.funderbudget.invalid}")
     private BigDecimal funderBudget;
 
     @NotNull
