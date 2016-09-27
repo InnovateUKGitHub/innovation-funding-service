@@ -587,7 +587,7 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
     public void acceptOrRejectOtherDocuments() throws Exception {
         when(projectServiceMock.acceptOrRejectOtherDocuments(1L, true)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/project/1/partner/other-documents/approved/{approved}", true).
+        mockMvc.perform(post("/project/1/partner/documents/approved/{approved}", true).
                 contentType(APPLICATION_JSON).accept(APPLICATION_JSON))
                 .andExpect(status().isOk());
 

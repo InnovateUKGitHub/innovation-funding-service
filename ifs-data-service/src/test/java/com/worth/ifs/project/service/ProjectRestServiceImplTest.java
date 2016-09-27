@@ -410,7 +410,7 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
     @Test
     public void testAcceptOrRejectOtherDocuments() {
 
-        setupPostWithRestResultExpectations(projectRestURL + "/" + 123L + "/partner/other-documents/approved/" + true, OK);
+        setupPostWithRestResultExpectations(projectRestURL + "/" + 123L + "/partner/documents/approved/" + true, OK);
 
         // now run the method under test
         RestResult<Void> result = service.acceptOrRejectOtherDocuments(123L, true);

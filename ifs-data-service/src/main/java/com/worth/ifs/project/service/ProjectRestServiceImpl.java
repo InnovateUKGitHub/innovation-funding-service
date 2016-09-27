@@ -146,7 +146,7 @@ public class ProjectRestServiceImpl extends BaseRestService implements ProjectRe
 
     @Override
     public RestResult<Void> acceptOrRejectOtherDocuments(Long projectId, Boolean approved) {
-        return postWithRestResult(projectRestURL + "/" + projectId + "/partner/other-documents/approved/" + approved, Void.class);
+        return postWithRestResult(projectRestURL + "/" + projectId + "/partner/documents/approved/" + approved, Void.class);
     }
 
     @Override
