@@ -6,6 +6,7 @@ import com.worth.ifs.user.resource.OrganisationResource;
 
 import static com.worth.ifs.project.constant.ProjectActivityStates.*;
 import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
+import static java.util.Arrays.asList;
 
 /**
  * Component to check the progress of Project Setup.  This is used by the {@link ProjectSetupSectionPartnerAccessor} to
@@ -40,7 +41,7 @@ class ProjectSetupProgressChecker {
     }
 
     public boolean isSpendProfileGenerated() {
-        return COMPLETE.equals(projectTeamStatus.getLeadPartnerStatus().getSpendProfileStatus());
+        return asList(COMPLETE, ACTION_REQUIRED).contains(projectTeamStatus.getLeadPartnerStatus().getSpendProfileStatus());
     }
 
     private ProjectPartnerStatusResource getMatchingPartnerStatus(OrganisationResource organisation) {
