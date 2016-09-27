@@ -35,10 +35,10 @@
         <p>The grant offer letter is provided by innovate UK. It has been created using the information provided by your organisation and partner during the application and project setup stages. Please review the information below to complete the project setup stage.</p>
         <h2 class="heading-medium">Grant offer letter</h2>
         <p>The grant offer should be read and approved by all project member. It needs to be signed by your Project Manager and returned to Innovate UK.</p>
-        <p><a href="#" th:text="${model.grantOfferLetterFile.filename}">Grant offer letter 2016-07-28a.PDF</a></p>
+        <p><a href="#" th:text="${model.grantOfferLetterFile}">Grant offer letter 2016-07-28a.PDF</a></p>
         <h2 class="heading-medium">Annex 2</h2>
         <p>Annex 2 contains any additional contracts that were agreed upon during the application. By signing the grant offer letter you also agree to the condition stated in Annex 2.</p>
-        <p><a href="#" th:text="${model.additionalContractFile.filename}">Grant offer letter 2016-07-28a.PDF</a></p>
+        <p><a href="#" th:text="${model.additionalContractFile}">Grant offer letter 2016-07-28a.PDF</a></p>
 
         <div class="upload-section unstyled-view">
             <h2 class="heading-small no-margin">Upload signed grant offer letter</h2>
@@ -69,10 +69,10 @@
 
         <h2 class="heading-medium">Grant offer letter</h2>
         <p  th:unless="${model.submitted}">This document is awaiting signature by the Project Manager.</p>
-        <p><a href="#" th:text="${model.grantOfferLetterFile.filename}">Grant offer letter 2016-07-28a.PDF</a></p>
+        <p><a href="#" th:text="${model.grantOfferLetterFile}">Grant offer letter 2016-07-28a.PDF</a></p>
         <h2 class="heading-medium">Annex 2</h2>
         <p>Annex 2 contains any additional contracts agreed upon during the application process. The signed grant offer letter agrees to the conditions set out in this appendix. </p>
-        <p><a href="#" th:text="${model.additionalContractFile.filename}">Grant offer letter 2016-07-28a.PDF</a></p>
+        <p><a href="#" th:text="${model.additionalContractFile}">Grant offer letter 2016-07-28a.PDF</a></p>
     </th:block>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
