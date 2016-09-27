@@ -7,6 +7,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 public class FinanceCheckResource {
     private Long id;
     private Long project;
+    private Long organisation;
     private CostGroupResource costGroup;
 
     public FinanceCheckResource() {
@@ -36,36 +37,46 @@ public class FinanceCheckResource {
         this.costGroup = costGroup;
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-
         if (o == null || getClass() != o.getClass()) return false;
 
         FinanceCheckResource that = (FinanceCheckResource) o;
 
-        return new EqualsBuilder()
-                .append(id, that.id)
-                .append(project, that.project)
-                .append(costGroup, that.costGroup)
-                .isEquals();
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        if (project != null ? !project.equals(that.project) : that.project != null) return false;
+        if (organisation != null ? !organisation.equals(that.organisation) : that.organisation != null) return false;
+        return costGroup != null ? costGroup.equals(that.costGroup) : that.costGroup == null;
+
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(id)
-                .append(project)
-                .append(costGroup)
-                .toHashCode();
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (project != null ? project.hashCode() : 0);
+        result = 31 * result + (organisation != null ? organisation.hashCode() : 0);
+        result = 31 * result + (costGroup != null ? costGroup.hashCode() : 0);
+        return result;
+    }
+
+    public Long getOrganisation() {
+
+        return organisation;
+    }
+
+    public void setOrganisation(Long organisation) {
+        this.organisation = organisation;
     }
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
-                .append("id", id)
-                .append("project", project)
-                .append("costGroup", costGroup)
-                .toString();
+        return "FinanceCheckResource{" +
+                "id=" + id +
+                ", project=" + project +
+                ", organisation=" + organisation +
+                ", costGroup=" + costGroup +
+                '}';
     }
 }

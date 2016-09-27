@@ -4,6 +4,7 @@ import com.worth.ifs.BaseServiceSecurityTest;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.project.finance.resource.FinanceCheckResource;
 import com.worth.ifs.project.finance.transactional.FinanceCheckService;
+import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
 import com.worth.ifs.user.resource.RoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.resource.UserRoleType;
@@ -29,10 +30,10 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
             UserResource userWithRole = newUserResource().withRolesGlobal(singletonList(roleResource)).build();
             setLoggedInUser(userWithRole);
             if (PROJECT_FINANCE.equals(role)) {
-                classUnderTest.getById(1L);
+                classUnderTest.getByProjectAndOrganisation(new ProjectOrganisationCompositeId(1L, 2L));
             } else {
                 try {
-                    classUnderTest.getById(1L);
+                    classUnderTest.getByProjectAndOrganisation(new ProjectOrganisationCompositeId(1L, 2L));
                     fail("Should have thrown an AccessDeniedException for any non project finance users");
                 } catch (AccessDeniedException e) {
                     // expected behaviour
@@ -68,10 +69,10 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
             UserResource userWithRole = newUserResource().withRolesGlobal(singletonList(roleResource)).build();
             setLoggedInUser(userWithRole);
             if (PROJECT_FINANCE.equals(role) || COMP_ADMIN.equals(role)) {
-                classUnderTest.generate(1L);
+                classUnderTest.generate(new ProjectOrganisationCompositeId(1L, 2L));
             } else {
                 try {
-                    classUnderTest.generate(1L);
+                    classUnderTest.generate(new ProjectOrganisationCompositeId(1L, 2L));
                     fail("Should have thrown an AccessDeniedException for any non project finance or comp admin users");
                 } catch (AccessDeniedException e) {
                     // expected behaviour
@@ -86,8 +87,9 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
     }
 
     public static class TestFinanceCheckService implements FinanceCheckService {
+
         @Override
-        public ServiceResult<FinanceCheckResource> getById(Long id) {
+        public ServiceResult<FinanceCheckResource> getByProjectAndOrganisation(ProjectOrganisationCompositeId key) {
             return null;
         }
 
@@ -97,7 +99,7 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
         }
 
         @Override
-        public ServiceResult<FinanceCheckResource> generate(Long projectId) {
+        public ServiceResult<FinanceCheckResource> generate(ProjectOrganisationCompositeId key) {
             return null;
         }
     }

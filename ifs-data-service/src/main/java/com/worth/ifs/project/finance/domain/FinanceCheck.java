@@ -1,6 +1,7 @@
 package com.worth.ifs.project.finance.domain;
 
 import com.worth.ifs.project.domain.Project;
+import com.worth.ifs.user.domain.Organisation;
 
 import javax.persistence.*;
 
@@ -12,9 +13,13 @@ public class FinanceCheck {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "projectId", referencedColumnName = "id")
     private Project project;
+
+    @OneToOne
+    @JoinColumn(name = "organisationId", referencedColumnName = "id")
+    private Organisation organisation;
 
     @OneToOne
     @JoinColumn(name = "costGroupId", referencedColumnName = "id")
@@ -50,5 +55,13 @@ public class FinanceCheck {
 
     public void setCostGroup(CostGroup costGroup) {
         this.costGroup = costGroup;
+    }
+
+    public Organisation getOrganisation() {
+        return organisation;
+    }
+
+    public void setOrganisation(Organisation organisation) {
+        this.organisation = organisation;
     }
 }

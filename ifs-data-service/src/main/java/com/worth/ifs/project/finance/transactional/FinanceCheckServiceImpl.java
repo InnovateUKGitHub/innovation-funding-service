@@ -5,11 +5,13 @@ import com.worth.ifs.project.finance.domain.FinanceCheck;
 import com.worth.ifs.project.finance.mapper.FinanceCheckMapper;
 import com.worth.ifs.project.finance.repository.FinanceCheckRepository;
 import com.worth.ifs.project.finance.resource.FinanceCheckResource;
+import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 /**
  * A service for finance check functionality
@@ -23,8 +25,8 @@ public class FinanceCheckServiceImpl implements FinanceCheckService {
     private FinanceCheckMapper financeCheckMapper;
 
     @Override
-    public ServiceResult<FinanceCheckResource> getById(Long id){
-        return find(financeCheckRepository.findOne(id), notFoundError(FinanceCheck.class, id)).andOnSuccessReturn(financeCheckMapper::mapToResource);
+    public ServiceResult<FinanceCheckResource> getByProjectAndOrganisation(ProjectOrganisationCompositeId key){
+        return find(financeCheckRepository.findByProjectAndOrganisation(key.getProjectId(), key.getOrganisationId()), notFoundError(FinanceCheck.class, id)).andOnSuccessReturn(financeCheckMapper::mapToResource);
     }
 
     @Override
@@ -33,7 +35,7 @@ public class FinanceCheckServiceImpl implements FinanceCheckService {
     }
 
     @Override
-    public ServiceResult<FinanceCheckResource> generate(Long projectId) {
+    public ServiceResult<FinanceCheckResource> generate(ProjectOrganisationCompositeId key) {
         throw new UnsupportedOperationException();
     }
 
