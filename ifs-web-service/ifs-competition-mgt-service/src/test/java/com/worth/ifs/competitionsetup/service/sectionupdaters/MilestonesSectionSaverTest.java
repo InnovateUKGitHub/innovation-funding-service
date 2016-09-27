@@ -27,8 +27,6 @@ import static com.worth.ifs.competition.builder.MilestoneResourceBuilder.newMile
 import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyLong;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -118,7 +116,7 @@ public class MilestonesSectionSaverTest {
         List<Error> errors = service.autoSaveSectionField(competition, fieldName, "20-10-2015", null);
 
         assertTrue(!errors.isEmpty());
-        assertEquals(errors.get(0).getErrorKey(), "competition.setup.milestone.date.not.in.future");
+        assertEquals(errors.get(0).getErrorKey(), "error.milestone.invalid");
     }
 
     private MilestoneResource getBriefingEventMilestone(){
