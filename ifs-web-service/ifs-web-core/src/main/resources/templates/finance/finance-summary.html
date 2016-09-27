@@ -50,7 +50,11 @@
     <div th:fragment="financial_summary_table" th:if="${financeTotalPerType}">
         <div class="form-group project-cost-breakdown">
             <div style="overflow: auto;">
-
+                <th:block th:unless="${applicationOrganisations != null}">
+                    <div class="warning-alert">
+                        This competition has already closed, you are no longer able to submit your application.
+                    </div>
+                </th:block>
                 <table>
                     <thead>
                     <tr>

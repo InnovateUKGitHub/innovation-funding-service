@@ -38,6 +38,11 @@
 
             <div th:if="${currentSection}" th:remove="tag">
                 <p class="subtitle" th:if="${currentSection.getDescription()}" th:text="${currentSection.getDescription()}" />
+                <th:block th:unless="${financeView != null}">
+                    <div class="warning-alert">
+                        This competition has already closed, you are no longer able to submit your application.
+                    </div>
+                </th:block>
                 <div th:each="question : ${sectionQuestions.get(currentSection.id)}" th:remove="tag">
                     <th:block th:if="${financeView != null}">
                         <div class="question" th:each="formInput, status : ${questionFormInputs?.get(question?.id)}" th:id="'form-input-'+${formInput.getId()}"
