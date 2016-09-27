@@ -27,7 +27,7 @@ public class ProjectLeadStatusResourceBuilder extends BaseBuilder<ProjectLeadSta
 
     @Override
     protected ProjectLeadStatusResource createInitial() {
-        return new ProjectLeadStatusResource();
+        return newInstance(ProjectLeadStatusResource.class);
     }
 
     public ProjectLeadStatusResourceBuilder withName(String... names){

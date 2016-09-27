@@ -11,24 +11,33 @@ import com.worth.ifs.bankdetails.mapper.BankDetailsMapper;
 import com.worth.ifs.bankdetails.mapper.SILBankDetailsMapper;
 import com.worth.ifs.bankdetails.repository.BankDetailsRepository;
 import com.worth.ifs.bankdetails.resource.BankDetailsResource;
+import com.worth.ifs.bankdetails.resource.BankDetailsStatusResource;
+import com.worth.ifs.bankdetails.resource.ProjectBankDetailsStatusSummary;
 import com.worth.ifs.commons.error.CommonFailureKeys;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.finance.transactional.FinanceRowService;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
 import com.worth.ifs.organisation.mapper.OrganisationAddressMapper;
 import com.worth.ifs.organisation.repository.OrganisationAddressRepository;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
+import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.repository.ProjectRepository;
+import com.worth.ifs.project.users.ProjectUsersHelper;
 import com.worth.ifs.project.workflow.projectdetails.configuration.ProjectDetailsWorkflowHandler;
 import com.worth.ifs.sil.experian.resource.AccountDetails;
 import com.worth.ifs.sil.experian.resource.Address;
 import com.worth.ifs.sil.experian.resource.Condition;
 import com.worth.ifs.sil.experian.resource.SILBankDetails;
 import com.worth.ifs.sil.experian.service.SilExperianEndpoint;
+import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.repository.OrganisationRepository;
+import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,6 +47,10 @@ import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.error.Error.globalError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.project.constant.ProjectActivityStates.*;
+import static com.worth.ifs.user.resource.OrganisationTypeEnum.isResearch;
+import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static java.lang.Short.parseShort;
 import static java.util.Arrays.asList;
@@ -48,6 +61,9 @@ public class BankDetailsServiceImpl implements BankDetailsService{
 
     private final int EXPERIAN_INVALID_ACC_NO_ERROR_ID = 4;
     private final int EXPERIAN_MODULUS_CHECK_FAILURE_ID = 7;
+
+    @Autowired
+    protected OrganisationRepository organisationRepository;
 
     @Autowired
     private BankDetailsMapper bankDetailsMapper;
@@ -75,6 +91,12 @@ public class BankDetailsServiceImpl implements BankDetailsService{
 
     @Autowired
     private SilExperianEndpoint silExperianEndpoint;
+
+    @Autowired
+    private ProjectUsersHelper projectUsersHelper;
+
+    @Autowired
+    private FinanceRowService financeRowService;
 
     @Autowired
     private ProjectDetailsWorkflowHandler projectDetailsWorkflowHandler;
@@ -116,6 +138,30 @@ public class BankDetailsServiceImpl implements BankDetailsService{
                             );
                         }
                 );
+    }
+
+    @Override
+    public ServiceResult<ProjectBankDetailsStatusSummary> getProjectBankDetailsStatusSummary(Long projectId) {
+        Project project = projectRepository.findOne(projectId);
+        Organisation leadOrganisation = project.getApplication().getLeadOrganisation();
+        List<BankDetailsStatusResource> bankDetailsStatusResources = new ArrayList<>();
+        bankDetailsStatusResources.add(getBankDetailsStatusForOrg(project, leadOrganisation));
+        List<Organisation> organisations = simpleFilter(projectUsersHelper.getPartnerOrganisations(projectId), org -> !org.getId().equals(leadOrganisation.getId()));
+        bankDetailsStatusResources.addAll(simpleMap(organisations,org -> getBankDetailsStatusForOrg(project, org)));
+        ProjectBankDetailsStatusSummary projectBankDetailsStatusSummary = new ProjectBankDetailsStatusSummary(project.getApplication().getCompetition().getId(), project.getApplication().getCompetition().getName(), project.getId(), bankDetailsStatusResources);
+        return serviceSuccess(projectBankDetailsStatusSummary);
+    }
+
+    private BankDetailsStatusResource getBankDetailsStatusForOrg(Project project, Organisation org){
+        Boolean isSeekingFunding = financeRowService.organisationSeeksFunding(project.getId(), project.getApplication().getId(), org.getId()).getSuccessObject();
+
+        if(isResearch(OrganisationTypeEnum.getFromId(org.getOrganisationType().getId())) || !isSeekingFunding){
+            return new BankDetailsStatusResource(org.getId(), org.getName(), NOT_REQUIRED);
+        }
+
+        return getByProjectAndOrganisation(project.getId(), org.getId()).handleSuccessOrFailure(
+                failure -> new BankDetailsStatusResource(org.getId(), org.getName(), NOT_STARTED),
+                success -> new BankDetailsStatusResource(org.getId(), org.getName(), success.isApproved() ? COMPLETE : PENDING));
     }
 
     @Override
