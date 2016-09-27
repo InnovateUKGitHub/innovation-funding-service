@@ -9,7 +9,7 @@ import com.worth.ifs.user.resource.OrganisationTypeEnum;
  */
 public class ProjectLeadStatusResource extends ProjectPartnerStatusResource {
     //Required for Json Mapping.
-    public ProjectLeadStatusResource() {}
+    ProjectLeadStatusResource() {}
 
     public ProjectLeadStatusResource(
             Long organisationId,
@@ -21,7 +21,8 @@ public class ProjectLeadStatusResource extends ProjectPartnerStatusResource {
             ProjectActivityStates financeChecksStatus,
             ProjectActivityStates spendProfileStatus,
             ProjectActivityStates otherDocumentsStatus,
-            ProjectActivityStates grantOfferLetterStatus) {
-        super(organisationId, name, organisationType, projectDetailsStatus, monitoringOfficerStatus, bankDetailsStatus, financeChecksStatus, spendProfileStatus, otherDocumentsStatus, grantOfferLetterStatus);
+            ProjectActivityStates grantOfferLetterStatus,
+            ProjectActivityStates financeContactStatus) {
+        super(organisationId, name, organisationType, projectDetailsStatus, monitoringOfficerStatus, bankDetailsStatus, financeChecksStatus, spendProfileStatus, otherDocumentsStatus, grantOfferLetterStatus, financeContactStatus);
     }
 }

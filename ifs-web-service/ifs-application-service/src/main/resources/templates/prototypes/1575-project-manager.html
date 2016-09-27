@@ -68,15 +68,15 @@
 			<button class="js-close close" aria-label="Close Popup">X</button>
 			<div>
 
-				<h2 class="heading-medium no-margin">Assign project manager</h2>
+				<h2 class="heading-medium no-margin">Assign Project Manager</h2>
 
-				<p>This will make <span id="project-manager">[name]</span> as the project manager for this project.</p>
+				<p>This will assign <span id="project-manager">[name]</span> as the Project Manager for this project.</p>
 
 				<hr />
 
 				<div class="alignright-button">
 					<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
-					<a href="/prototypes/1575-project-details" class="button">Submit project manager</a>
+					<a href="/prototypes/1575-project-details" class="button">Assign Project Manager</a>
 				</div>
 
 			</div>
@@ -86,9 +86,9 @@
 			<button class="js-close close" aria-label="Close Popup">X</button>
 			<div>
 
-				<h2 class="heading-medium no-margin">Project manager cannot be assigned</h2>
+				<h2 class="heading-medium no-margin">Project Manager cannot be assigned</h2>
 
-				<p><span id="project-manager-pending">[name]</span> has been invited to create an account. This must be completed before they can be assigned as your project manager.</p>
+				<p><span id="project-manager-pending">[name]</span> has been invited to create an account. This must be completed before they can be assigned as your Project Manager.</p>
 
 				<hr />
 
@@ -132,8 +132,9 @@
 
 			var pmContact = jQuery('#name-pm1').val();
 
-			jQuery('#pm-name').text(pmContact + ' (Pending)')
-//			jQuery("#pm-name-invite").attr('checked', 'checked');
+			jQuery('#pm-name').text(pmContact + ' (Pending)');
+			jQuery('#pm-name-invite').val(pmContact + ' (Pending)');
+			jQuery('#pm-name-invite').prop('checked', true).trigger('click');
 			jQuery('#pm-table').hide();
 			jQuery('#invited-pm').show();
 //			jQuery('#pm-cta').text('Send invitation');
