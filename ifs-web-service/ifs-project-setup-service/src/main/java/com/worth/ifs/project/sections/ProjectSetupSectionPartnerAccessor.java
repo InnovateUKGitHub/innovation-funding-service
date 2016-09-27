@@ -24,7 +24,7 @@ public class ProjectSetupSectionPartnerAccessor {
 
     public SectionAccess canAccessCompaniesHouseSection(OrganisationResource organisation) {
 
-        if (projectSetupProgressChecker.isBusinessOrganisationType(organisation)) {
+        if (projectSetupProgressChecker.isCompaniesHouseSectionRequired(organisation)) {
             return ACCESSIBLE;
         }
 

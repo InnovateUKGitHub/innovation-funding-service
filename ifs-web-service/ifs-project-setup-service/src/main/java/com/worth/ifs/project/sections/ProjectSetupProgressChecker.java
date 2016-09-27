@@ -3,11 +3,8 @@ package com.worth.ifs.project.sections;
 import com.worth.ifs.project.resource.ProjectPartnerStatusResource;
 import com.worth.ifs.project.resource.ProjectTeamStatusResource;
 import com.worth.ifs.user.resource.OrganisationResource;
-import com.worth.ifs.user.resource.OrganisationTypeEnum;
 
-import static com.worth.ifs.project.constant.ProjectActivityStates.COMPLETE;
-import static com.worth.ifs.project.constant.ProjectActivityStates.NOT_REQUIRED;
-import static com.worth.ifs.project.constant.ProjectActivityStates.PENDING;
+import static com.worth.ifs.project.constant.ProjectActivityStates.*;
 import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
@@ -24,10 +21,6 @@ class ProjectSetupProgressChecker {
 
     public boolean isCompaniesHouseDetailsComplete(OrganisationResource organisation) {
         return COMPLETE.equals(getMatchingPartnerStatus(organisation).getCompaniesHouseStatus());
-    }
-
-    public boolean isBusinessOrganisationType(OrganisationResource organisation) {
-        return !OrganisationTypeEnum.isResearch(organisation.getOrganisationType());
     }
 
     public boolean isProjectDetailsSubmitted() {

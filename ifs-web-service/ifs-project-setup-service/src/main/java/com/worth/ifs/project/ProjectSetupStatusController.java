@@ -80,9 +80,12 @@ public class ProjectSetupStatusController {
         ApplicationResource applicationResource = applicationService.getById(project.getApplication());
         CompetitionResource competition = competitionService.getById(applicationResource.getCompetition());
 
+        // TODO - INFUND-5285 - can we do away with getting monitoring officer here, if we are getting a ProjectTeamStatusResource anyway?
         Optional<MonitoringOfficerResource> monitoringOfficer = projectService.getMonitoringOfficerForProject(projectId);
 
         OrganisationResource organisation = projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId());
+
+        // TODO - INFUND-5285 - can we do away with getting bank details here, if we are getting a ProjectTeamStatusResource anyway?
         RestResult<BankDetailsResource> existingBankDetails = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisation.getId());
         Optional<BankDetailsResource> bankDetails = existingBankDetails.toOptionalIfNotFound().getSuccessObjectOrThrowException();
 

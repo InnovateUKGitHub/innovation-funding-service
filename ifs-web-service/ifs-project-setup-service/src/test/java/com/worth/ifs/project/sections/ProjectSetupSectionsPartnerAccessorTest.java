@@ -10,6 +10,7 @@ import java.util.function.Consumer;
 
 import static com.worth.ifs.project.sections.SectionAccess.ACCESSIBLE;
 import static com.worth.ifs.project.sections.SectionAccess.NOT_ACCESSIBLE;
+import static com.worth.ifs.project.sections.SectionAccess.NOT_REQUIRED;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
@@ -28,33 +29,33 @@ public class ProjectSetupSectionsPartnerAccessorTest extends BaseUnitTest {
     @Test
     public void testCheckAccessToCompaniesHouseSectionHappyPath() {
 
-        when(projectSetupProgressCheckerMock.isBusinessOrganisationType(organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
 
         assertEquals(ACCESSIBLE, accessor.canAccessCompaniesHouseSection(organisation));
 
-        verifyInteractions(mock -> mock.isBusinessOrganisationType(organisation));
+        verifyInteractions(mock -> mock.isCompaniesHouseSectionRequired(organisation));
     }
 
     @Test
     public void testCheckAccessToCompaniesHouseSectionButOrganisationIsNotBusiness() {
 
-        when(projectSetupProgressCheckerMock.isBusinessOrganisationType(organisation)).thenReturn(false);
+        when(projectSetupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(false);
 
-        assertEquals(NOT_ACCESSIBLE, accessor.canAccessCompaniesHouseSection(organisation));
+        assertEquals(NOT_REQUIRED, accessor.canAccessCompaniesHouseSection(organisation));
 
-        verifyInteractions(mock -> mock.isBusinessOrganisationType(organisation));
+        verifyInteractions(mock -> mock.isCompaniesHouseSectionRequired(organisation));
     }
 
     @Test
     public void testCheckAccessToProjectDetailsSectionHappyPathForBusinessOrganisation() {
 
-        when(projectSetupProgressCheckerMock.isBusinessOrganisationType(organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
         when(projectSetupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
 
         assertEquals(ACCESSIBLE, accessor.canAccessProjectDetailsSection(organisation));
 
         verifyInteractions(
-                mock -> mock.isBusinessOrganisationType(organisation),
+                mock -> mock.isCompaniesHouseSectionRequired(organisation),
                 mock -> mock.isCompaniesHouseDetailsComplete(organisation)
         );
     }
@@ -62,23 +63,23 @@ public class ProjectSetupSectionsPartnerAccessorTest extends BaseUnitTest {
     @Test
     public void testCheckAccessToProjectDetailsSectionHappyPathForNonBusinessTypeOrganisation() {
 
-        when(projectSetupProgressCheckerMock.isBusinessOrganisationType(organisation)).thenReturn(false);
+        when(projectSetupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(false);
 
         assertEquals(ACCESSIBLE, accessor.canAccessProjectDetailsSection(organisation));
 
-        verifyInteractions(mock -> mock.isBusinessOrganisationType(organisation));
+        verifyInteractions(mock -> mock.isCompaniesHouseSectionRequired(organisation));
     }
 
     @Test
     public void testCheckAccessToProjectDetailsSectionButCompaniesHouseSectionIncomplete() {
 
-        when(projectSetupProgressCheckerMock.isBusinessOrganisationType(organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
         when(projectSetupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(false);
 
         assertEquals(NOT_ACCESSIBLE, accessor.canAccessProjectDetailsSection(organisation));
 
         verifyInteractions(
-                mock -> mock.isBusinessOrganisationType(organisation),
+                mock -> mock.isCompaniesHouseSectionRequired(organisation),
                 mock -> mock.isCompaniesHouseDetailsComplete(organisation)
         );
     }
@@ -86,14 +87,14 @@ public class ProjectSetupSectionsPartnerAccessorTest extends BaseUnitTest {
     @Test
     public void testCheckAccessToMonitoringOfficerSectionHappyPath() {
 
-        when(projectSetupProgressCheckerMock.isBusinessOrganisationType(organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
         when(projectSetupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
         when(projectSetupProgressCheckerMock.isProjectDetailsSubmitted()).thenReturn(true);
 
         assertEquals(ACCESSIBLE, accessor.canAccessMonitoringOfficerSection(organisation));
 
         verifyInteractions(
-                mock -> mock.isBusinessOrganisationType(organisation),
+                mock -> mock.isCompaniesHouseSectionRequired(organisation),
                 mock -> mock.isCompaniesHouseDetailsComplete(organisation),
                 mock -> mock.isProjectDetailsSubmitted()
         );
@@ -108,14 +109,16 @@ public class ProjectSetupSectionsPartnerAccessorTest extends BaseUnitTest {
     @Test
     public void testCheckAccessToBankDetailsSectionHappyPath() {
 
-        when(projectSetupProgressCheckerMock.isBusinessOrganisationType(organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isOrganisationRequiringFunding(organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
         when(projectSetupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
         when(projectSetupProgressCheckerMock.isFinanceContactSubmitted(organisation)).thenReturn(true);
 
         assertEquals(ACCESSIBLE, accessor.canAccessBankDetailsSection(organisation));
 
         verifyInteractions(
-                mock -> mock.isBusinessOrganisationType(organisation),
+                mock -> mock.isOrganisationRequiringFunding(organisation),
+                mock -> mock.isCompaniesHouseSectionRequired(organisation),
                 mock -> mock.isCompaniesHouseDetailsComplete(organisation),
                 mock -> mock.isFinanceContactSubmitted(organisation)
         );
@@ -124,17 +127,25 @@ public class ProjectSetupSectionsPartnerAccessorTest extends BaseUnitTest {
     @Test
     public void testCheckAccessToBankDetailsSectionButFinanceContactNotYetSubmitted() {
 
-        when(projectSetupProgressCheckerMock.isBusinessOrganisationType(organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isOrganisationRequiringFunding(organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
         when(projectSetupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
         when(projectSetupProgressCheckerMock.isFinanceContactSubmitted(organisation)).thenReturn(false);
 
         assertEquals(NOT_ACCESSIBLE, accessor.canAccessBankDetailsSection(organisation));
+
+        verifyInteractions(
+                mock -> mock.isOrganisationRequiringFunding(organisation),
+                mock -> mock.isCompaniesHouseSectionRequired(organisation),
+                mock -> mock.isCompaniesHouseDetailsComplete(organisation),
+                mock -> mock.isFinanceContactSubmitted(organisation)
+        );
     }
 
     @Test
     public void testCheckAccessToFinanceChecksSectionHappyPathWhenBankDetailsApproved() {
 
-        when(projectSetupProgressCheckerMock.isBusinessOrganisationType(organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
         when(projectSetupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
         when(projectSetupProgressCheckerMock.isProjectDetailsSubmitted()).thenReturn(true);
         when(projectSetupProgressCheckerMock.isBankDetailsApproved(organisation)).thenReturn(true);
@@ -142,7 +153,7 @@ public class ProjectSetupSectionsPartnerAccessorTest extends BaseUnitTest {
         assertEquals(ACCESSIBLE, accessor.canAccessFinanceChecksSection(organisation));
 
         verifyInteractions(
-                mock -> mock.isBusinessOrganisationType(organisation),
+                mock -> mock.isCompaniesHouseSectionRequired(organisation),
                 mock -> mock.isCompaniesHouseDetailsComplete(organisation),
                 mock -> mock.isProjectDetailsSubmitted(),
                 mock -> mock.isBankDetailsApproved(organisation)
@@ -152,7 +163,7 @@ public class ProjectSetupSectionsPartnerAccessorTest extends BaseUnitTest {
     @Test
     public void testCheckAccessToFinanceChecksSectionHappyPathWhenBankDetailsQueried() {
 
-        when(projectSetupProgressCheckerMock.isBusinessOrganisationType(organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
         when(projectSetupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
         when(projectSetupProgressCheckerMock.isProjectDetailsSubmitted()).thenReturn(true);
         when(projectSetupProgressCheckerMock.isBankDetailsApproved(organisation)).thenReturn(false);
@@ -161,7 +172,7 @@ public class ProjectSetupSectionsPartnerAccessorTest extends BaseUnitTest {
         assertEquals(ACCESSIBLE, accessor.canAccessFinanceChecksSection(organisation));
 
         verifyInteractions(
-                mock -> mock.isBusinessOrganisationType(organisation),
+                mock -> mock.isCompaniesHouseSectionRequired(organisation),
                 mock -> mock.isCompaniesHouseDetailsComplete(organisation),
                 mock -> mock.isProjectDetailsSubmitted(),
                 mock -> mock.isBankDetailsApproved(organisation),
@@ -172,7 +183,7 @@ public class ProjectSetupSectionsPartnerAccessorTest extends BaseUnitTest {
     @Test
     public void testCheckAccessToFinanceChecksSectionButBankDetailsNotApprovedOrQueried() {
 
-        when(projectSetupProgressCheckerMock.isBusinessOrganisationType(organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
         when(projectSetupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
         when(projectSetupProgressCheckerMock.isProjectDetailsSubmitted()).thenReturn(true);
         when(projectSetupProgressCheckerMock.isBankDetailsApproved(organisation)).thenReturn(false);
@@ -191,7 +202,7 @@ public class ProjectSetupSectionsPartnerAccessorTest extends BaseUnitTest {
     @Test
     public void testCheckAccessToSpendProfileSectionHappyPath() {
 
-        when(projectSetupProgressCheckerMock.isBusinessOrganisationType(organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
         when(projectSetupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
         when(projectSetupProgressCheckerMock.isProjectDetailsSubmitted()).thenReturn(true);
         when(projectSetupProgressCheckerMock.isBankDetailsApproved(organisation)).thenReturn(true);
@@ -200,7 +211,7 @@ public class ProjectSetupSectionsPartnerAccessorTest extends BaseUnitTest {
         assertEquals(ACCESSIBLE, accessor.canAccessSpendProfileSection(organisation));
 
         verifyInteractions(
-                mock -> mock.isBusinessOrganisationType(organisation),
+                mock -> mock.isCompaniesHouseSectionRequired(organisation),
                 mock -> mock.isCompaniesHouseDetailsComplete(organisation),
                 mock -> mock.isProjectDetailsSubmitted(),
                 mock -> mock.isBankDetailsApproved(organisation),
@@ -222,14 +233,14 @@ public class ProjectSetupSectionsPartnerAccessorTest extends BaseUnitTest {
     public void testCheckAccessToOtherDocumentsSectionHappyPathForNonLeadPartner() {
 
         when(projectSetupProgressCheckerMock.isLeadPartnerOrganisation(organisation)).thenReturn(false);
-        when(projectSetupProgressCheckerMock.isBusinessOrganisationType(organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
         when(projectSetupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
 
         assertEquals(ACCESSIBLE, accessor.canAccessOtherDocumentsSection(organisation));
 
         verifyInteractions(
                 mock -> mock.isLeadPartnerOrganisation(organisation),
-                mock -> mock.isBusinessOrganisationType(organisation),
+                mock -> mock.isCompaniesHouseSectionRequired(organisation),
                 mock -> mock.isCompaniesHouseDetailsComplete(organisation)
         );
     }
@@ -238,13 +249,13 @@ public class ProjectSetupSectionsPartnerAccessorTest extends BaseUnitTest {
     public void testCheckAccessToOtherDocumentsSectionHappyPathForNonLeadPartnerNonBusinessType() {
 
         when(projectSetupProgressCheckerMock.isLeadPartnerOrganisation(organisation)).thenReturn(false);
-        when(projectSetupProgressCheckerMock.isBusinessOrganisationType(organisation)).thenReturn(false);
+        when(projectSetupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(false);
 
         assertEquals(ACCESSIBLE, accessor.canAccessOtherDocumentsSection(organisation));
 
         verifyInteractions(
                 mock -> mock.isLeadPartnerOrganisation(organisation),
-                mock -> mock.isBusinessOrganisationType(organisation)
+                mock -> mock.isCompaniesHouseSectionRequired(organisation)
         );
     }
 
@@ -252,14 +263,14 @@ public class ProjectSetupSectionsPartnerAccessorTest extends BaseUnitTest {
     public void testCheckAccessToOtherDocumentsSectionButNonLeadPartnerNotCompletedCompaniesHouseInformation() {
 
         when(projectSetupProgressCheckerMock.isLeadPartnerOrganisation(organisation)).thenReturn(false);
-        when(projectSetupProgressCheckerMock.isBusinessOrganisationType(organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
         when(projectSetupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(false);
 
         assertEquals(NOT_ACCESSIBLE, accessor.canAccessOtherDocumentsSection(organisation));
 
         verifyInteractions(
                 mock -> mock.isLeadPartnerOrganisation(organisation),
-                mock -> mock.isBusinessOrganisationType(organisation),
+                mock -> mock.isCompaniesHouseSectionRequired(organisation),
                 mock -> mock.isCompaniesHouseDetailsComplete(organisation)
         );
     }

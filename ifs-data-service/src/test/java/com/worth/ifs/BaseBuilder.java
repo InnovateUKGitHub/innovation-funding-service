@@ -1,13 +1,18 @@
 package com.worth.ifs;
 
+import org.springframework.util.ReflectionUtils;
+
 import java.lang.reflect.Array;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
-import static java.util.stream.Collectors.toList;
 import static com.worth.ifs.BaseBuilderAmendFunctions.getId;
+import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.toList;
 
 /**
  * A base class from which concrete builders can extend
@@ -104,9 +109,18 @@ public abstract class BaseBuilder<T, S> implements Builder<T, S> {
 
     protected <T> T newInstance(Class<T> clazz) {
         try {
-            return clazz.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
-            throw new RuntimeException("Unable to instantiate new instance of class " + clazz);
+            Optional<? extends Constructor<?>> ctor =
+                    stream(clazz.getDeclaredConstructors()).filter(c -> c.getParameters().length == 0).findFirst();
+
+            if (!ctor.isPresent()) {
+                throw new RuntimeException("No zero-args constructor for class " + clazz);
+            }
+
+            Constructor<T> accessibleConstructor = (Constructor<T>) ctor.get();
+            ReflectionUtils.makeAccessible(accessibleConstructor);
+            return accessibleConstructor.newInstance();
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException("Unable to instantiate new instance of class " + clazz, e);
         }
     }
 
