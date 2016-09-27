@@ -143,8 +143,11 @@ public class ProjectSetupSectionPartnerAccessor {
     }
 
     private boolean isBankDetailsApprovedOrQueried(OrganisationResource organisation) {
-        return projectSetupProgressChecker.isBankDetailsApproved(organisation) ||
-                projectSetupProgressChecker.isBankDetailsQueried(organisation);
+
+        // TODO DW - INFUND-4428 - reinstate when bank details are approvable or queryable
+        return true;
+//        return projectSetupProgressChecker.isBankDetailsApproved(organisation) ||
+//                projectSetupProgressChecker.isBankDetailsQueried(organisation);
     }
 
     private SectionAccess fail(String message) {
