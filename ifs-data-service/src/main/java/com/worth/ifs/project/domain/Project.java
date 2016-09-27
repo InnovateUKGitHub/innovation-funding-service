@@ -2,6 +2,7 @@ package com.worth.ifs.project.domain;
 
 import com.worth.ifs.address.domain.Address;
 import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.invite.domain.ProcessActivity;
 import com.worth.ifs.invite.domain.ProjectParticipantRole;
@@ -93,6 +94,10 @@ public class Project implements ProcessActivity {
 
     public Long getId() {
         return id;
+    }
+
+    public String getFormattedId() {
+        return ApplicationResource.formatter.format(id);
     }
 
     public void setId(Long id) {

@@ -6,6 +6,7 @@ import com.worth.ifs.commons.security.PermissionRules;
 import com.worth.ifs.project.resource.ProjectPartnerStatusResource;
 import com.worth.ifs.project.resource.ProjectTeamStatusResource;
 import com.worth.ifs.project.sections.ProjectSetupSectionPartnerAccessor;
+import com.worth.ifs.project.sections.SectionAccess;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.logging.Log;
@@ -14,6 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
+import java.util.function.BiFunction;
+
+import static com.worth.ifs.project.sections.SectionAccess.ACCESSIBLE;
 
 /**
  * Permission checker around the access to various sections within the Project Setup process
@@ -29,7 +33,48 @@ public class ProjectSetupSectionsPermissionRules {
 
     @PermissionRule(value = "ACCESS_PROJECT_DETAILS_SECTION", description = "A partner can access the Project Details section when their Companies House data is complete or not required")
     public boolean partnerCanAccessProjectDetailsSection(Long projectId, UserResource user) {
+        return doSectionCheck(projectId, user, ProjectSetupSectionPartnerAccessor::canAccessProjectDetailsSection);
+    }
 
+    @PermissionRule(value = "ACCESS_MONITORING_OFFICER_SECTION", description = "A partner can access the Monitoring Officer " +
+            "section when their Companies House details are complete or not required, and the Project Details have been submitted")
+    public boolean partnerCanAccessMonitoringOfficerSection(Long projectId, UserResource user) {
+        return doSectionCheck(projectId, user, ProjectSetupSectionPartnerAccessor::canAccessMonitoringOfficerSection);
+    }
+
+    @PermissionRule(value = "ACCESS_BANK_DETAILS_SECTION", description = "A partner can access the Bank Details " +
+            "section when their Companies House details are complete or not required, and they have a Finance Contact " +
+            "available for their Organisation")
+    public boolean partnerCanAccessBankDetailsSection(Long projectId, UserResource user) {
+        return doSectionCheck(projectId, user, ProjectSetupSectionPartnerAccessor::canAccessBankDetailsSection);
+    }
+
+    @PermissionRule(value = "ACCESS_FINANCE_CHECKS_SECTION", description = "A partner can access the Bank Details " +
+            "section when their Companies House details are complete or not required, and the Project Details have been submitted")
+    public boolean partnerCanAccessFinanceChecksSection(Long projectId, UserResource user) {
+        return doSectionCheck(projectId, user, ProjectSetupSectionPartnerAccessor::canAccessFinanceChecksSection);
+    }
+
+    @PermissionRule(value = "ACCESS_SPEND_PROFILE_SECTION", description = "A partner can access the Spend Profile " +
+            "section when their Companies House details are complete or not required, the Project Details have been submitted, " +
+            "and the Organisation's Bank Details have been approved or queried")
+    public boolean partnerCanAccessSpendProfileSection(Long projectId, UserResource user) {
+        return doSectionCheck(projectId, user, ProjectSetupSectionPartnerAccessor::canAccessSpendProfileSection);
+    }
+
+    @PermissionRule(value = "ACCESS_COMPANIES_HOUSE_SECTION", description = "A partner can access the Companies House " +
+            "section if their Organisation is a business type (i.e. if Companies House details are required)")
+    public boolean partnerCanAccessCompaniesHouseSection(Long projectId, UserResource user) {
+        return doSectionCheck(projectId, user, ProjectSetupSectionPartnerAccessor::canAccessCompaniesHouseSection);
+    }
+
+    @PermissionRule(value = "ACCESS_OTHER_DOCUMENTS_SECTION", description = "A partner can access the Other Documents " +
+            "section if their Organisation is a business type (i.e. if Companies House details are required)")
+    public boolean partnerCanAccessOtherDocumentsSection(Long projectId, UserResource user) {
+        return doSectionCheck(projectId, user, ProjectSetupSectionPartnerAccessor::canAccessOtherDocumentsSection);
+    }
+
+    private boolean doSectionCheck(Long projectId, UserResource user, BiFunction<ProjectSetupSectionPartnerAccessor, OrganisationResource, SectionAccess> sectionCheckFn) {
         ProjectTeamStatusResource teamStatus;
 
         try {
@@ -49,6 +94,6 @@ public class ProjectSetupSectionsPermissionRules {
         organisation.setId(partnerStatusForUser.getOrganisationId());
         organisation.setOrganisationType(partnerStatusForUser.getOrganisationType().getOrganisationTypeId());
 
-        return sectionAccessor.canAccessProjectDetailsSection(organisation);
+        return sectionCheckFn.apply(sectionAccessor, organisation) == ACCESSIBLE;
     }
 }

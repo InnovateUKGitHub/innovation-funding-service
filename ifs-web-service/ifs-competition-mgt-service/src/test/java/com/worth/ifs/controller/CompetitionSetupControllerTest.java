@@ -28,16 +28,15 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.context.MessageSource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static com.worth.ifs.competitionsetup.service.sectionupdaters.InitialDetailsSectionSaver.OPENINGDATE_FIELDNAME;
 import static org.codehaus.groovy.runtime.InvokerHelper.asList;
@@ -76,6 +75,9 @@ public class CompetitionSetupControllerTest {
 
     @Mock
     private CompetitionSetupQuestionService competitionSetupQuestionService;
+
+    @Mock
+    private MessageSource messageSource;
 
     @Mock
     private Validator validator;
@@ -200,6 +202,7 @@ public class CompetitionSetupControllerTest {
 
         String fieldName = "openingDate";
         String value = "20-02-2002";
+        String errorKey = "competition.setup.opening.date.not.in.future";
         Long objectId = 2L;
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
@@ -209,7 +212,9 @@ public class CompetitionSetupControllerTest {
                 eq(fieldName),
                 eq(value),
                 eq(Optional.of(objectId)))
-        ).thenReturn(asList(Error.fieldError(OPENINGDATE_FIELDNAME, value, "Please enter a future date")));
+        ).thenReturn(asList(Error.fieldError(OPENINGDATE_FIELDNAME, value, errorKey)));
+
+        when(messageSource.getMessage(anyString(), anyObject(), any(Locale.class))).thenReturn("Please enter a future date");
 
         mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/initial/saveFormElement")
                 .param("fieldName", fieldName)

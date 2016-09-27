@@ -56,78 +56,7 @@
 				<input class="form-control" id="last-name" name="last-name" type="text" />
 			</div>
 
-			<h3 class="heading-small">Gender</h3>
-			<fieldset class="inline">
-				<legend class="visuallyhidden">Gender</legend>
-				<div class="form-group">
-					<label class="block-label" for="gender-female">
-						<input id="gender-female" type="radio" name="gender-group" value="Female" />
-						Female
-					</label>
-					<label class="block-label" for="gender-male">
-						<input id="gender-male" type="radio" name="gender-group" value="Male" />
-						Male
-					</label>
-					<label class="block-label" for="gender-no-answer">
-						<input id="gender-no-answer" type="radio" name="gender-group" value="Prefer not to say" />
-						Prefer not to say
-					</label>
-				</div>
-			</fieldset>
-
-			<h3 class="heading-small">Your ethnic group</h3>
-			<fieldset class="inline">
-				<legend class="visuallyhidden">Your ethnic group</legend>
-				<div class="form-group">
-					<label class="block-label" for="ethnic-white">
-						<input id="ethnic-white" type="radio" name="ethnic-group" value="White" />
-						White
-					</label>
-					<label class="block-label" for="ethnic-mixed">
-						<input id="ethnic-mixed" type="radio" name="ethnic-group" value="Mixed / multiple ethnic groups" />
-						Mixed / multiple ethnic groups
-					</label>
-					<label class="block-label" for="ethnic-asian">
-						<input id="ethnic-asian" type="radio" name="ethnic-group" value="Asian / Asian British" />
-						Asian / Asian British
-					</label>
-					<label class="block-label" for="ethnic-black">
-						<input id="ethnic-black" type="radio" name="ethnic-group" value="Black / African / Caribbean" />
-						Black / African / Caribbean
-					</label>
-					<label class="block-label" for="ethnic-black-british">
-						<input id="ethnic-black-british" type="radio" name="ethnic-group" value="Black British" />
-						Black British
-					</label>
-					<label class="block-label" for="ethnic-other">
-						<input id="ethnic-other" type="radio" name="ethnic-group" value="Other ethnic group" />
-						Other ethnic group
-					</label>
-					<label class="block-label" for="ethnic-no-answer">
-						<input id="ethnic-no-answer" type="radio" name="ethnic-group" value="Prefer not to say" />
-						Prefer not to say
-					</label>
-				</div>
-			</fieldset>
-
-			<h3 class="heading-small">Do you consider yourself disabled?</h3>
-			<fieldset class="inline">
-				<legend class="visuallyhidden">Do you consider yourself disabled?</legend>
-				<div class="form-group">
-					<label class="block-label" for="disabled-yes">
-						<input id="disabled-yes" type="radio" name="disabled-group" value="Yes" />
-						Yes
-					</label>
-					<label class="block-label" for="disabled-no">
-						<input id="disabled-no" type="radio" name="disabled-group" value="No" />
-						No
-					</label>
-					<label class="block-label" for="disabled-no-answer">
-						<input id="disabled-no-answer" type="radio" name="disabled-group" value="Prefer not to say" />
-						Prefer not to say
-					</label>
-				</div>
-			</fieldset>
+			<div th:include="prototypes/fragments/diversity :: diversity-questions" th:remove="tag" />
 
 			<div class="form-group">
 				<label class="form-label" for="phone-number">

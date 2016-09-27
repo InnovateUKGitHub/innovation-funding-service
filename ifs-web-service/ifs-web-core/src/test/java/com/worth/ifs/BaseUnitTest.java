@@ -36,6 +36,7 @@ import com.worth.ifs.organisation.service.OrganisationAddressRestService;
 import com.worth.ifs.project.ProjectService;
 import com.worth.ifs.project.finance.ProjectFinanceService;
 import com.worth.ifs.project.service.ProjectRestService;
+import com.worth.ifs.project.status.ProjectStatusService;
 import com.worth.ifs.user.resource.*;
 import com.worth.ifs.user.service.OrganisationRestService;
 import com.worth.ifs.user.service.OrganisationTypeRestService;
@@ -180,6 +181,8 @@ public class BaseUnitTest {
     public ApplicationSummaryService applicationSummaryService;
     @Mock
     public RejectionReasonRestService rejectionReasonRestService;
+    @Mock
+    public ProjectStatusService projectStatusServiceMock;
 
     @Spy
     @InjectMocks
