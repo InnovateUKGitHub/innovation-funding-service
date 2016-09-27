@@ -132,8 +132,9 @@
 
 			var pmContact = jQuery('#name-pm1').val();
 
-			jQuery('#pm-name').text(pmContact + ' (Pending)')
-//			jQuery("#pm-name-invite").attr('checked', 'checked');
+			jQuery('#pm-name').text(pmContact + ' (Pending)');
+			jQuery('#pm-name-invite').val(pmContact + ' (Pending)');
+			jQuery('#pm-name-invite').prop('checked', true).trigger('click');
 			jQuery('#pm-table').hide();
 			jQuery('#invited-pm').show();
 //			jQuery('#pm-cta').text('Send invitation');
