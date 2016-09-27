@@ -633,11 +633,11 @@
 	                <input type="text"
 	                       class="form-control"
 	                       th:attr="data-calculation-fields=${'#cost-capital_usage-'+costIdentifier+'-npv,#cost-capital_usage-'+costIdentifier+'-residual_value,#cost-capital_usage-'+costIdentifier+'-utilisation,100'}"
-	                       data-calculation-operations="-,*,/"
+	                       data-calculation-operations="-,*,/,negativeRoundUp"
 	                       readonly="readonly"
 	                       th:id="${'cost-capital_usage-'+costIdentifier+'-netCost'}"
 	                       th:name="${type + '-netCost-' + question.id + '-' + costIdentifier}"
-	                       th:value="'£ ' + ${#numbers.formatDecimal(cost.total, 0, 0)}"
+	                       th:value="'£ ' + ${cost.total &lt; 0 ? 0 : #numbers.formatDecimal(cost.total, 0, 0)}"
 	                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-netCost]}')} ? 'error' : ''"
 	                       />
 	            </div>
