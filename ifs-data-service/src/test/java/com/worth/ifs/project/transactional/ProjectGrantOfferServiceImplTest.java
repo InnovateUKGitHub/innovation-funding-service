@@ -25,9 +25,6 @@ import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static java.util.Collections.singletonList;
 import static org.mockito.Mockito.when;
 
-/**
- * Module: innovation-funding-service-dev
- **/
 public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<ProjectGrantOfferService> {
 
     private Long projectId = 123L;
