@@ -12,6 +12,7 @@ import org.springframework.security.access.AccessDeniedException;
 
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static com.worth.ifs.user.resource.UserRoleType.COMP_ADMIN;
 import static com.worth.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -40,6 +41,45 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
         });
     }
 
+
+    @Test
+    public void testSaveFinanceCheck() {
+        asList(UserRoleType.values()).forEach(role -> {
+            RoleResource roleResource = newRoleResource().withType(role).build();
+            UserResource userWithRole = newUserResource().withRolesGlobal(singletonList(roleResource)).build();
+            setLoggedInUser(userWithRole);
+            if (PROJECT_FINANCE.equals(role)) {
+                classUnderTest.save(null);
+            } else {
+                try {
+                    classUnderTest.save(null);
+                    fail("Should have thrown an AccessDeniedException for any non project finance users");
+                } catch (AccessDeniedException e) {
+                    // expected behaviour
+                }
+            }
+        });
+    }
+
+    @Test
+    public void testGenerateFinanceCheck() {
+        asList(UserRoleType.values()).forEach(role -> {
+            RoleResource roleResource = newRoleResource().withType(role).build();
+            UserResource userWithRole = newUserResource().withRolesGlobal(singletonList(roleResource)).build();
+            setLoggedInUser(userWithRole);
+            if (PROJECT_FINANCE.equals(role) || COMP_ADMIN.equals(role)) {
+                classUnderTest.generate(1L);
+            } else {
+                try {
+                    classUnderTest.generate(1L);
+                    fail("Should have thrown an AccessDeniedException for any non project finance or comp admin users");
+                } catch (AccessDeniedException e) {
+                    // expected behaviour
+                }
+            }
+        });
+    }
+
     @Override
     protected Class<TestFinanceCheckService> getClassUnderTest() {
         return TestFinanceCheckService.class;
@@ -48,6 +88,16 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
     public static class TestFinanceCheckService implements FinanceCheckService {
         @Override
         public ServiceResult<FinanceCheckResource> getById(Long id) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<FinanceCheckResource> save(FinanceCheckResource toUpdate) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<FinanceCheckResource> generate(Long projectId) {
             return null;
         }
     }

@@ -113,7 +113,8 @@ public class POJOTest {
             ProjectPartnerStatusResource.class,
             ProjectTeamStatusResource.class,
             EthnicityResource.class,
-            UserRegistrationResource.class
+            UserRegistrationResource.class,
+            FinanceCheckResource.class
     );
 
     @Before

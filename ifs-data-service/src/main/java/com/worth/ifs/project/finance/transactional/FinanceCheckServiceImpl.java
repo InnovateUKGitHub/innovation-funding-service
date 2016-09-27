@@ -27,4 +27,14 @@ public class FinanceCheckServiceImpl implements FinanceCheckService {
         return find(financeCheckRepository.findOne(id), notFoundError(FinanceCheck.class, id)).andOnSuccessReturn(financeCheckMapper::mapToResource);
     }
 
+    @Override
+    public ServiceResult<FinanceCheckResource> save(FinanceCheckResource toUpdate) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public ServiceResult<FinanceCheckResource> generate(Long projectId) {
+        throw new UnsupportedOperationException();
+    }
+
 }

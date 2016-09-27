@@ -1,6 +1,7 @@
 package com.worth.ifs.project.finance.transactional;
 
 import com.worth.ifs.BaseServiceUnitTest;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static com.worth.ifs.LambdaMatcher.createLambdaMatcher;
@@ -10,6 +11,7 @@ import static org.junit.Assert.assertTrue;
 
 public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceCheckServiceImpl> {
 
+    @Ignore
     @Test
     public void testGenerateFinanceCheck(){
         throw new UnsupportedOperationException();

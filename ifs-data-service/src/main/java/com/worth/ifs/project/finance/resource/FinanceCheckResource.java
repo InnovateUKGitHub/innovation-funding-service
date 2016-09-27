@@ -6,7 +6,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class FinanceCheckResource {
     private Long id;
-    private Long projectId;
+    private Long project;
     private CostGroupResource costGroup;
 
     public FinanceCheckResource() {
@@ -20,12 +20,12 @@ public class FinanceCheckResource {
         this.id = id;
     }
 
-    public Long getProjectId() {
-        return projectId;
+    public Long getProject() {
+        return project;
     }
 
-    public void setProjectId(Long projectId) {
-        this.projectId = projectId;
+    public void setProject(Long project) {
+        this.project = project;
     }
 
     public CostGroupResource getCostGroup() {
@@ -46,7 +46,7 @@ public class FinanceCheckResource {
 
         return new EqualsBuilder()
                 .append(id, that.id)
-                .append(projectId, that.projectId)
+                .append(project, that.project)
                 .append(costGroup, that.costGroup)
                 .isEquals();
     }
@@ -55,7 +55,7 @@ public class FinanceCheckResource {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(id)
-                .append(projectId)
+                .append(project)
                 .append(costGroup)
                 .toHashCode();
     }
@@ -64,7 +64,7 @@ public class FinanceCheckResource {
     public String toString() {
         return new ToStringBuilder(this)
                 .append("id", id)
-                .append("projectId", projectId)
+                .append("project", project)
                 .append("costGroup", costGroup)
                 .toString();
     }
