@@ -73,9 +73,9 @@ public interface ProjectService {
 
     ServiceResult<Void> setPartnerDocumentsSubmitted(Long projectId);
 
-    Optional<ByteArrayResource> getGrantOfferLetterFile(Long projectId);
+    Optional<ByteArrayResource> getSignedGrantOfferLetterFile(Long projectId);
 
-    Optional<FileEntryResource> getGrantOfferLetterFileDetails(Long projectId);
+    Optional<FileEntryResource> getSignedGrantOfferLetterFileDetails(Long projectId);
 
     Optional<ByteArrayResource> getAdditionalContractFile(Long projectId);
 

@@ -366,9 +366,9 @@ public class ProjectServiceImplTest {
     public void testGetGrantOfferLetterFile() {
 
         Optional<ByteArrayResource> content = Optional.of(new ByteArrayResource("My content!".getBytes()));
-        when(projectRestService.getSignedGrantOfferLetterFile(123L)).thenReturn(restSuccess(content));
+        when(projectRestService.getGrantOfferFile(123L)).thenReturn(restSuccess(content));
 
-        Optional<ByteArrayResource> result = service.getGrantOfferLetterFile(123L);
+        Optional<ByteArrayResource> result = service.getGeneratedGrantOfferFile(123L);
         assertEquals(content, result);
     }
 
@@ -378,9 +378,9 @@ public class ProjectServiceImplTest {
         FileEntryResource returnedFile = newFileEntryResource().build();
 
         Optional<FileEntryResource> response = Optional.of(returnedFile);
-        when(projectRestService.getSignedGrantOfferLetterFileDetails(123L)).thenReturn(restSuccess(response));
+        when(projectRestService.getGrantOfferFileDetails(123L)).thenReturn(restSuccess(response));
 
-        Optional<FileEntryResource> result = service.getGrantOfferLetterFileDetails(123L);
+        Optional<FileEntryResource> result = service.getGeneratedGrantOfferFileDetails(123L);
         assertEquals(response, result);
     }
 

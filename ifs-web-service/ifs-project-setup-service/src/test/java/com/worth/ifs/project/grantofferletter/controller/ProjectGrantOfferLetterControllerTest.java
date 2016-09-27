@@ -40,7 +40,7 @@ public class ProjectGrantOfferLetterControllerTest extends BaseControllerMockMVC
 
         when(projectService.getById(projectId)).thenReturn(project);
         when(projectService.isUserLeadPartner(projectId, userId)).thenReturn(true);
-        when(projectService.getGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.of(signedGrantOfferLetter));
+        when(projectService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.of(signedGrantOfferLetter));
         when(projectService.getGeneratedGrantOfferFileDetails(projectId)).thenReturn(Optional.of(grantOfferLetter));
         when(projectService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.of(additionalContractFile));
 
