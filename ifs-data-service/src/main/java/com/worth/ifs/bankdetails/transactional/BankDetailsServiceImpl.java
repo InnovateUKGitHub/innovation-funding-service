@@ -49,6 +49,8 @@ import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.project.constant.ProjectActivityStates.*;
 import static com.worth.ifs.user.resource.OrganisationTypeEnum.isResearch;
+import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static java.lang.Short.parseShort;
 import static java.util.Arrays.asList;
@@ -144,8 +146,8 @@ public class BankDetailsServiceImpl implements BankDetailsService{
         Organisation leadOrganisation = project.getApplication().getLeadOrganisation();
         List<BankDetailsStatusResource> bankDetailsStatusResources = new ArrayList<>();
         bankDetailsStatusResources.add(getBankDetailsStatusForOrg(project, leadOrganisation));
-        List<Organisation> organisations = projectUsersHelper.getPartnerOrganisations(projectId).stream().filter(org -> !org.getId().equals(leadOrganisation.getId())).collect(Collectors.toList());
-        bankDetailsStatusResources.addAll(organisations.stream().map(org -> getBankDetailsStatusForOrg(project, org)).collect(Collectors.toList()));
+        List<Organisation> organisations = simpleFilter(projectUsersHelper.getPartnerOrganisations(projectId), org -> !org.getId().equals(leadOrganisation.getId()));
+        bankDetailsStatusResources.addAll(simpleMap(organisations,org -> getBankDetailsStatusForOrg(project, org)));
         ProjectBankDetailsStatusSummary projectBankDetailsStatusSummary = new ProjectBankDetailsStatusSummary(project.getApplication().getCompetition().getId(), project.getApplication().getCompetition().getName(), project.getId(), bankDetailsStatusResources);
         return serviceSuccess(projectBankDetailsStatusSummary);
     }

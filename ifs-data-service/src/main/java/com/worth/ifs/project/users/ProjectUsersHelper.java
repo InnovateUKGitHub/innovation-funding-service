@@ -16,16 +16,20 @@ import java.util.stream.Collectors;
 import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
+/**
+ * A helper component that can be wired into any service or controllers in data layers that requires getting partner organistions
+ * Please keep extending this with any other useful methods so we avoid reinventing.
+ */
 @Component
 public class ProjectUsersHelper {
     @Autowired
-    ProjectUserRepository projectUserRepository;
+    private ProjectUserRepository projectUserRepository;
 
     @Autowired
-    ProjectUserMapper projectUserMapper;
+    private ProjectUserMapper projectUserMapper;
 
     @Autowired
-    OrganisationRepository organisationRepository;
+    private OrganisationRepository organisationRepository;
 
     public List<Organisation> getPartnerOrganisations(Long projectId) {
         List<ProjectUser> projectUserObjs = getProjectUsersByProjectId(projectId);

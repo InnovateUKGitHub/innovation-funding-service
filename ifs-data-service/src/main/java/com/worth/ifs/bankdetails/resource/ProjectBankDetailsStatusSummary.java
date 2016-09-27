@@ -9,6 +9,9 @@ import java.util.List;
 
 import static com.worth.ifs.application.resource.ApplicationResource.formatter;
 
+/**
+ * A resource object wrapping bank detail statuses for all partners
+ */
 public class ProjectBankDetailsStatusSummary {
     private Long competitionId;
     private String competitionName;

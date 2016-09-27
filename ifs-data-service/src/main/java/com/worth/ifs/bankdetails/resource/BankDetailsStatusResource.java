@@ -8,6 +8,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import static com.worth.ifs.application.resource.ApplicationResource.formatter;
 
+/**
+ * A resource object for returning bank details status for individual partner organisation.  Usually wrapped within ProjectBankDetailsStatusSummary.
+ */
 public class BankDetailsStatusResource {
     private Long organisationId;
     private String organisationName;
