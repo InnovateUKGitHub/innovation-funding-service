@@ -106,8 +106,8 @@ IFS.competition_management.setup = (function(){
     handleAddCoFunder: function() {
       jQuery(document).on('click','#add-cofunder',function() {
           var count = parseInt(jQuery('#co-funder-count').val(),10);
-          jQuery('<div class="grid-row funder-row" id="funder-row-'+ count +'"><div class="column-half"><div class="form-group"><input type="text" maxlength="255" data-maxlength-errormessage="Funders has a maximum length of 255 characters" class="form-control width-x-large" id="' + count +'-funder" name="funders['+ count +'].funder" value=""><span class="autosave-info" /></div></div>' +
-              '<div class="column-half"><div class="form-group"><input type="number" min="0" class="form-control width-x-large" id="' + count +'-funderBudget" name="funders['+ count +'].funderBudget" value=""><span class="autosave-info" /><input required="required" type="hidden" id="' + count +'-coFunder" name="funders['+ count +'].coFunder" value="true">' +
+          jQuery('<div class="grid-row funder-row" id="funder-row-'+ count +'"><div class="column-half"><div class="form-group"><input type="text" maxlength="255" data-maxlength-errormessage="Funders has a maximum length of 255 characters" class="form-control width-x-large" id="' + count +'-funder" name="funders['+ count +'].funder" value=""></div></div>' +
+              '<div class="column-half"><div class="form-group"><input type="number" min="0" class="form-control width-x-large" id="' + count +'-funderBudget" name="funders['+ count +'].funderBudget" value=""><input required="required" type="hidden" id="' + count +'-coFunder" name="funders['+ count +'].coFunder" value="true">' +
               '<button class="buttonlink remove-funder" name="remove-funder" value="'+ count +'" id="remove-funder-'+ count +'">Remove</button></div></div></div>')
               .insertBefore('#dynamic-row-pointer');
 

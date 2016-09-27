@@ -25,6 +25,8 @@ import com.worth.ifs.authentication.resource.CreateUserResource;
 import com.worth.ifs.authentication.resource.UpdateUserResource;
 import com.worth.ifs.bankdetails.domain.BankDetails;
 import com.worth.ifs.bankdetails.resource.BankDetailsResource;
+import com.worth.ifs.bankdetails.resource.BankDetailsStatusResource;
+import com.worth.ifs.bankdetails.resource.ProjectBankDetailsStatusSummary;
 import com.worth.ifs.commons.rest.LocalDateResource;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.resource.CompetitionCountResource;
@@ -42,6 +44,8 @@ import com.worth.ifs.organisation.domain.OrganisationAddress;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.finance.resource.*;
 import com.worth.ifs.project.resource.*;
+import com.worth.ifs.project.status.resource.CompetitionProjectsStatusResource;
+import com.worth.ifs.project.status.resource.ProjectStatusResource;
 import com.worth.ifs.registration.resource.UserRegistrationResource;
 import com.worth.ifs.token.domain.Token;
 import com.worth.ifs.token.resource.TokenResource;
@@ -112,6 +116,10 @@ public class POJOTest {
             ProjectLeadStatusResource.class,
             ProjectPartnerStatusResource.class,
             ProjectTeamStatusResource.class,
+            ProjectBankDetailsStatusSummary.class,
+            BankDetailsStatusResource.class,
+            ProjectStatusResource.class,
+            CompetitionProjectsStatusResource.class,
             EthnicityResource.class,
             UserRegistrationResource.class
     );

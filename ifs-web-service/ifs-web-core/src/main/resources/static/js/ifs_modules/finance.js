@@ -11,7 +11,8 @@ IFS.core.finance = (function(){
                         return 0;
                     }
                     return x / y;
-                }
+                },
+                'negativeRoundUp': function(x, y) { return x < 0 ? 0 : x; }
             },
             init : function(){
                 IFS.core.finance.bindCalculationActionToFields(); // Bind calculations

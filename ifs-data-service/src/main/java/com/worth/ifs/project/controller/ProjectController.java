@@ -3,6 +3,7 @@ package com.worth.ifs.project.controller;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.bankdetails.resource.BankDetailsResource;
+import com.worth.ifs.bankdetails.resource.ProjectBankDetailsStatusSummary;
 import com.worth.ifs.bankdetails.transactional.BankDetailsService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.UserAuthenticationService;
@@ -165,6 +166,11 @@ public class ProjectController {
     public RestResult<BankDetailsResource> getBankDetailsByOrganisationId(@PathVariable("projectId") final Long projectId,
                                                                           @RequestParam("organisationId") final Long organisationId){
         return bankDetailsService.getByProjectAndOrganisation(projectId, organisationId).toGetResponse();
+    }
+
+    @RequestMapping(value = "/{projectId}/bank-details/status-summary", method = GET)
+    public RestResult<ProjectBankDetailsStatusSummary> getBankDetailsProjectSummary(@PathVariable("projectId") final Long projectId) {
+        return bankDetailsService.getProjectBankDetailsStatusSummary(projectId).toGetResponse();
     }
 
     @RequestMapping(value = "/{projectId}/collaboration-agreement", method = POST, produces = "application/json")

@@ -3,6 +3,8 @@ package com.worth.ifs.project.documentation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.bankdetails.resource.BankDetailsResource;
+import com.worth.ifs.bankdetails.resource.BankDetailsStatusResource;
+import com.worth.ifs.bankdetails.resource.ProjectBankDetailsStatusSummary;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestErrorResponse;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
@@ -24,11 +26,14 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.worth.ifs.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
+import static com.worth.ifs.bankdetails.builder.BankDetailsStatusResourceBuilder.newBankDetailsStatusResource;
+import static com.worth.ifs.bankdetails.builder.ProjectBankDetailsStatusSummaryBuilder.newProjectBankDetailsStatusSummary;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.error.Error.fieldError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.documentation.BankDetailsDocs.bankDetailsResourceFields;
+import static com.worth.ifs.documentation.BankDetailsDocs.projectBankDetailsStatusSummaryFields;
 import static com.worth.ifs.documentation.MonitoringOfficerDocs.monitoringOfficerResourceFields;
 import static com.worth.ifs.documentation.ProjectDocs.projectResourceBuilder;
 import static com.worth.ifs.documentation.ProjectDocs.projectResourceFields;
@@ -38,6 +43,8 @@ import static com.worth.ifs.project.builder.ProjectLeadStatusResourceBuilder.new
 import static com.worth.ifs.project.builder.ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource;
 import static com.worth.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
+import static com.worth.ifs.project.constant.ProjectActivityStates.COMPLETE;
+import static com.worth.ifs.project.constant.ProjectActivityStates.PENDING;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.util.JsonMappingUtil.toJson;
 import static java.util.Arrays.asList;
@@ -527,6 +534,21 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
     }
 
     @Test
+    public void getBankDetailsProjectSummary() throws  Exception {
+        Long projectId = 123L;
+        List<BankDetailsStatusResource> bankDetailsStatusResources = newBankDetailsStatusResource().withOrganisationId(1L, 2L, 3L).withOrganisationName("ABC Ltd.", "XYZ Ltd.", "University of Sheffield").withBankDetailsStatus(PENDING, COMPLETE, COMPLETE).build(3);
+        final ProjectBankDetailsStatusSummary bankDetailsStatusSummary = newProjectBankDetailsStatusSummary().withCompetitionId(1L).withProjectId(2L).withBankDetailsStatusResources(bankDetailsStatusResources).build();
+        when(bankDetailsServiceMock.getProjectBankDetailsStatusSummary(projectId)).thenReturn(serviceSuccess(bankDetailsStatusSummary));
+        mockMvc.perform(get("/project/{projectId}/bank-details/status-summary", projectId)).
+                andExpect(status().isOk()).
+                andExpect(content().json(toJson(bankDetailsStatusSummary))).
+                andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of project that bank details status summary is requested for")
+                        ),
+                        responseFields(projectBankDetailsStatusSummaryFields)
+                ));
+    }
     public void getTeamStatusWithFilterByUserId() throws Exception {
         ProjectTeamStatusResource projectTeamStatusResource = buildTeamStatus();
         when(projectServiceMock.getProjectTeamStatus(123L, Optional.of(456L))).thenReturn(serviceSuccess(projectTeamStatusResource));
@@ -558,16 +580,16 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
         projectLeadStatusResource.setSpendProfileStatus(ProjectActivityStates.COMPLETE);
         partnerStatuses.get(0).setSpendProfileStatus(ProjectActivityStates.COMPLETE);
         partnerStatuses.get(1).setSpendProfileStatus(ProjectActivityStates.NOT_STARTED);
-        partnerStatuses.get(2).setSpendProfileStatus(ProjectActivityStates.PENDING);
+        partnerStatuses.get(2).setSpendProfileStatus(PENDING);
 
         projectLeadStatusResource.setBankDetailsStatus(ProjectActivityStates.COMPLETE);
-        partnerStatuses.get(0).setBankDetailsStatus(ProjectActivityStates.PENDING);
+        partnerStatuses.get(0).setBankDetailsStatus(PENDING);
         partnerStatuses.get(1).setBankDetailsStatus(ProjectActivityStates.NOT_REQUIRED);
         partnerStatuses.get(2).setBankDetailsStatus(ProjectActivityStates.NOT_STARTED);
 
         projectLeadStatusResource.setOtherDocumentsStatus(ProjectActivityStates.COMPLETE);
-        partnerStatuses.get(0).setOtherDocumentsStatus(ProjectActivityStates.PENDING);
-        partnerStatuses.get(1).setOtherDocumentsStatus(ProjectActivityStates.PENDING);
+        partnerStatuses.get(0).setOtherDocumentsStatus(PENDING);
+        partnerStatuses.get(1).setOtherDocumentsStatus(PENDING);
         partnerStatuses.get(2).setOtherDocumentsStatus(ProjectActivityStates.COMPLETE);
 
         projectLeadStatusResource.setProjectDetailsStatus(ProjectActivityStates.COMPLETE);
@@ -575,20 +597,20 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
         partnerStatuses.get(1).setProjectDetailsStatus(ProjectActivityStates.COMPLETE);
         partnerStatuses.get(2).setProjectDetailsStatus(ProjectActivityStates.COMPLETE);
 
-        projectLeadStatusResource.setFinanceChecksStatus(ProjectActivityStates.PENDING);
-        partnerStatuses.get(0).setFinanceChecksStatus(ProjectActivityStates.PENDING);
-        partnerStatuses.get(1).setFinanceChecksStatus(ProjectActivityStates.PENDING);
-        partnerStatuses.get(2).setFinanceChecksStatus(ProjectActivityStates.PENDING);
+        projectLeadStatusResource.setFinanceChecksStatus(PENDING);
+        partnerStatuses.get(0).setFinanceChecksStatus(PENDING);
+        partnerStatuses.get(1).setFinanceChecksStatus(PENDING);
+        partnerStatuses.get(2).setFinanceChecksStatus(PENDING);
 
-        projectLeadStatusResource.setMonitoringOfficerStatus(ProjectActivityStates.PENDING);
+        projectLeadStatusResource.setMonitoringOfficerStatus(PENDING);
         partnerStatuses.get(0).setMonitoringOfficerStatus(ProjectActivityStates.COMPLETE);
-        partnerStatuses.get(1).setMonitoringOfficerStatus(ProjectActivityStates.PENDING);
+        partnerStatuses.get(1).setMonitoringOfficerStatus(PENDING);
         partnerStatuses.get(2).setMonitoringOfficerStatus(ProjectActivityStates.COMPLETE);
 
-        projectLeadStatusResource.setGrantOfferLetterStatus(ProjectActivityStates.PENDING);
-        partnerStatuses.get(0).setGrantOfferLetterStatus(ProjectActivityStates.PENDING);
-        partnerStatuses.get(1).setGrantOfferLetterStatus(ProjectActivityStates.PENDING);
-        partnerStatuses.get(2).setGrantOfferLetterStatus(ProjectActivityStates.PENDING);
+        projectLeadStatusResource.setGrantOfferLetterStatus(PENDING);
+        partnerStatuses.get(0).setGrantOfferLetterStatus(PENDING);
+        partnerStatuses.get(1).setGrantOfferLetterStatus(PENDING);
+        partnerStatuses.get(2).setGrantOfferLetterStatus(PENDING);
 
         return newProjectTeamStatusResource().withPartnerStatuses(partnerStatuses).build();
     }

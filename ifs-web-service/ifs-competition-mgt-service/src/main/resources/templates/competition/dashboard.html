@@ -29,16 +29,26 @@
     <div class="column-third">
         <h3 class="heading-small">
             <a th:href="@{'/competition/setup/'+${competition.id}}" th:if="${
-                (competition.competitionStatus == T(com.worth.ifs.competition.resource.CompetitionResource.Status).COMPETITION_SETUP)
-                || (competition.competitionStatus == T(com.worth.ifs.competition.resource.CompetitionResource.Status).READY_TO_OPEN)}">
-                <span th:unless="${#strings.isEmpty(competition.name)}" th:text="${competition.name}" th:remove="tag" />
-                <span th:if="${#strings.isEmpty(competition.name)}" th:text="#{ifs.competition.no_title}" th:remove="tag" />
+                (competition.competitionStatus.name() == 'COMPETITION_SETUP') or
+                (competition.competitionStatus.name() == 'READY_TO_OPEN')}">
+                <th:block th:unless="${#strings.isEmpty(competition.name)}" th:text="${competition.name}" />
+                <th:block th:if="${#strings.isEmpty(competition.name)}" th:text="#{ifs.competition.no_title}" />
             </a>
-            <a th:href="@{'/competition/'+${competition.id}}" th:unless="${
-                (competition.competitionStatus == T(com.worth.ifs.competition.resource.CompetitionResource.Status).COMPETITION_SETUP)
-                || (competition.competitionStatus == T(com.worth.ifs.competition.resource.CompetitionResource.Status).READY_TO_OPEN)}">
-                <span th:unless="${#strings.isEmpty(competition.name)}" th:text="${competition.name}" th:remove="tag" />
-                <span th:if="${#strings.isEmpty(competition.name)}" th:text="#{ifs.competition.no_title}" th:remove="tag" />
+            <a th:href="@{'/competition/'+${competition.id}}" th:if="${
+                (competition.competitionStatus.name() == 'OPEN') or
+                (competition.competitionStatus.name() == 'IN_ASSESSMENT') or
+                (competition.competitionStatus.name() == 'FUNDERS_PANEL') or
+                (competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK')
+              }">
+                <th:block th:unless="${#strings.isEmpty(competition.name)}" th:text="${competition.name}" />
+                <th:block th:if="${#strings.isEmpty(competition.name)}" th:text="#{ifs.competition.no_title}" />
+            </a>
+            <a th:href="${'/project-setup-management/competition/'+competition.id+'/status'}" th:if="${
+                (competition.competitionStatus.name() == 'PROJECT_SETUP') or
+                (competition.competitionStatus.name() == 'CLOSED')
+              }">
+                <th:block th:unless="${#strings.isEmpty(competition.name)}" th:text="${competition.name}" />
+                <th:block th:if="${#strings.isEmpty(competition.name)}" th:text="#{ifs.competition.no_title}" />
             </a>
         </h3>
     </div>

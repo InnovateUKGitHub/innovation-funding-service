@@ -31,4 +31,8 @@ table {
     @include core-16($tabular-numbers: true);
     text-align: right;
   }
+
+}
+.border-right {
+    border-right: 1px solid $border-colour;
 }
