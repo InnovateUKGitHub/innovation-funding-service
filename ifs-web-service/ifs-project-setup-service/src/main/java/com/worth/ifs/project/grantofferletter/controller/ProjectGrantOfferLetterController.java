@@ -178,7 +178,7 @@ public class ProjectGrantOfferLetterController {
     }
 
     private String redirectToGrantOfferLetterPage(Long projectId) {
-        return "redirect:/project/" + projectId + "/grant-offer";
+        return "redirect:/project/" + projectId + "/offer";
     }
 
     private ResponseEntity<ByteArrayResource> returnFileIfFoundOrThrowNotFoundException(Long projectId, Optional<ByteArrayResource> content, Optional<FileEntryResource> fileDetails) {

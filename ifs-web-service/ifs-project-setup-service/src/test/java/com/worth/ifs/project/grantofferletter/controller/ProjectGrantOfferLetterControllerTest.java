@@ -6,11 +6,14 @@ import com.worth.ifs.project.grantofferletter.viewmodel.ProjectGrantOfferLetterV
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 import org.junit.Test;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.List;
 import java.util.Optional;
 
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
@@ -19,6 +22,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
@@ -51,7 +55,6 @@ public class ProjectGrantOfferLetterControllerTest extends BaseControllerMockMVC
 
         ProjectGrantOfferLetterViewModel model = (ProjectGrantOfferLetterViewModel) result.getModelAndView().getModel().get("model");
 
-
         // test the view model
         assertEquals(project.getId(), model.getProjectId());
         assertEquals(project.getName(), model.getProjectName());
@@ -60,6 +63,86 @@ public class ProjectGrantOfferLetterControllerTest extends BaseControllerMockMVC
         assertTrue(model.isShowSubmitButton());
         assertNull(model.getSubmitDate());
         assertFalse(model.isSubmitted());
+    }
+
+    @Test
+    public void testDownloadUnsignedGrantOfferLetter() throws Exception {
+
+        FileEntryResource fileDetails = newFileEntryResource().withName("A name").build();
+        ByteArrayResource fileContents = new ByteArrayResource("My content!".getBytes());
+
+        when(projectService.getGeneratedGrantOfferFile(123L)).
+                thenReturn(Optional.of(fileContents));
+
+        when(projectService.getGeneratedGrantOfferFileDetails(123L)).
+                thenReturn(Optional.of(fileDetails));
+
+        MvcResult result = mockMvc.perform(get("/project/{projectId}/offer/grant-offer-letter", 123L)).
+                andExpect(status().isOk()).
+                andReturn();
+
+        assertEquals("My content!", result.getResponse().getContentAsString());
+        assertEquals("inline; filename=\"" + fileDetails.getName() + "\"",
+                result.getResponse().getHeader("Content-Disposition"));
+    }
+
+    @Test
+    public void testDownloadSignedGrantOfferLetter() throws Exception {
+
+        FileEntryResource fileDetails = newFileEntryResource().withName("A name").build();
+        ByteArrayResource fileContents = new ByteArrayResource("My content!".getBytes());
+
+        when(projectService.getSignedGrantOfferLetterFile(123L)).
+                thenReturn(Optional.of(fileContents));
+
+        when(projectService.getSignedGrantOfferLetterFileDetails(123L)).
+                thenReturn(Optional.of(fileDetails));
+
+        MvcResult result = mockMvc.perform(get("/project/{projectId}/offer/signed-grant-offer-letter", 123L)).
+                andExpect(status().isOk()).
+                andReturn();
+
+        assertEquals("My content!", result.getResponse().getContentAsString());
+        assertEquals("inline; filename=\"" + fileDetails.getName() + "\"",
+                result.getResponse().getHeader("Content-Disposition"));
+    }
+
+    @Test
+    public void testDownloadAdditionalContract() throws Exception {
+
+        FileEntryResource fileDetails = newFileEntryResource().withName("A name").build();
+        ByteArrayResource fileContents = new ByteArrayResource("My content!".getBytes());
+
+        when(projectService.getAdditionalContractFile(123L)).
+                thenReturn(Optional.of(fileContents));
+
+        when(projectService.getAdditionalContractFileDetails(123L)).
+                thenReturn(Optional.of(fileDetails));
+
+        MvcResult result = mockMvc.perform(get("/project/{projectId}/offer/additional-contract", 123L)).
+                andExpect(status().isOk()).
+                andReturn();
+
+        assertEquals("My content!", result.getResponse().getContentAsString());
+        assertEquals("inline; filename=\"" + fileDetails.getName() + "\"",
+                result.getResponse().getHeader("Content-Disposition"));
+    }
+    @Test
+    public void testUploadGrantOfferLetter() throws Exception {
+
+        FileEntryResource createdFileDetails = newFileEntryResource().withName("A name").build();
+
+        MockMultipartFile uploadedFile = new MockMultipartFile("grantOfferLetterFile", "filename.txt", "text/plain", "My content!".getBytes());
+
+        when(projectService.addGrantOfferLetter(123L, "text/plain", 11, "filename.txt", "My content!".getBytes())).
+                thenReturn(serviceSuccess(createdFileDetails));
+
+        mockMvc.perform(
+                fileUpload("/project/123/offer").
+                        file(uploadedFile).
+                        param("uploadGeneratedOfferLetterClicked", "")).
+                andExpect(status().is3xxRedirection()).
+                andExpect(view().name("redirect:/project/123/offer"));
     }
 
 
