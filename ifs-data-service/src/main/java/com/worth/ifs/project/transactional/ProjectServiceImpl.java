@@ -413,6 +413,13 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                                 removeExploitationPlanFileFromProject(project))));
     }
 
+    @Override
+    public ServiceResult<Void> acceptOrRejectOtherDocuments(Long projectId, Boolean approved) {
+
+        return getProject(projectId)
+                .andOnSuccessReturnVoid(project -> project.setOtherDocumentsApproved(approved));
+    }
+
     private ServiceResult<List<FileEntryResource>> retrieveUploadedDocuments(Long projectId) {
 
         ServiceResult<FileEntryResource> collaborationAgreementFile = getCollaborationAgreementFileEntryDetails(projectId);
@@ -660,6 +667,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         ProjectActivityStates spendProfileStatus = createSpendProfileStatus(financeChecksStatus, spendProfile);
         ProjectActivityStates otherDocumentsStatus = createOtherDocumentStatus(project);
         ProjectActivityStates grantOfferLetterStatus = createGrantOfferLetterStatus();
+        ProjectActivityStates financeContactStatus = createFinanceContactStatus(project, partnerOrganisation);
 
         ProjectPartnerStatusResource projectPartnerStatusResource;
 
@@ -674,7 +682,8 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                     financeChecksStatus,
                     spendProfileStatus,
                     otherDocumentsStatus,
-                    grantOfferLetterStatus);
+                    grantOfferLetterStatus,
+                    financeContactStatus);
         } else {
             projectPartnerStatusResource = new ProjectPartnerStatusResource(
                     partnerOrganisation.getId(),
@@ -686,7 +695,8 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                     financeChecksStatus,
                     spendProfileStatus,
                     NOT_REQUIRED,
-                    NOT_REQUIRED);
+                    NOT_REQUIRED,
+                    financeContactStatus);
         }
 
         return projectPartnerStatusResource;

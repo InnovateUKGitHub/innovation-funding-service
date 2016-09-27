@@ -21,6 +21,7 @@ import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.util.CollectionFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -64,6 +65,7 @@ public class ProjectSpendProfileController {
     @Qualifier("spendProfileCostValidator")
     private SpendProfileCostValidator spendProfileCostValidator;
 
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION')")
     @RequestMapping(method = GET)
     public String viewSpendProfile(Model model,
                                    @PathVariable("projectId") final Long projectId,
@@ -76,6 +78,7 @@ public class ProjectSpendProfileController {
         return reviewSpendProfilePage(model, projectId, organisationId, loggedInUser);
     }
 
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION')")
     @RequestMapping(value = "/review", method = GET)
     public String reviewSpendProfilePage(Model model,
                                                  @PathVariable("projectId") final Long projectId,
@@ -86,6 +89,7 @@ public class ProjectSpendProfileController {
         return BASE_DIR + "/spend-profile";
     }
 
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION')")
     @RequestMapping(value = "/edit", method = GET)
     public String editSpendProfile(Model model,
                                    HttpServletRequest request,
@@ -105,6 +109,8 @@ public class ProjectSpendProfileController {
 
         return BASE_DIR + "/spend-profile";
     }
+
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION')")
     @RequestMapping(value = "/edit", method = POST)
     public String saveSpendProfile(@ModelAttribute(FORM_ATTR_NAME) SpendProfileForm form,
                                    @SuppressWarnings("unused") BindingResult bindingResult,
@@ -130,6 +136,15 @@ public class ProjectSpendProfileController {
         return validationHandler.addAnyErrors(result).failNowOrSucceedWith(() -> failureView, () -> successView);
     }
 
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION')")
+    @RequestMapping(value = "/complete", method = POST)
+    public String markAsCompleteSpendProfile(Model model,
+                                             @PathVariable("projectId") final Long projectId,
+                                             @PathVariable("organisationId") final Long organisationId,
+                                             @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+        return markSpendProfileComplete(model, projectId, organisationId, "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile");
+    }
+
     private String viewProjectManagerSpendProfile(Model model, Long projectId) {
         model.addAttribute("model", populateSpendProfileProjectManagerViewModel(projectId));
         return BASE_DIR + "/" + REVIEW_TEMPLATE_NAME;
@@ -142,14 +157,6 @@ public class ProjectSpendProfileController {
             partnerProgressMap.put(organisation.getName(),spendProfile.get().isMarkedAsComplete());
         });
         return partnerProgressMap;
-    }
-
-    @RequestMapping(value = "/complete", method = POST)
-    public String markAsCompleteSpendProfile(Model model,
-                                             @PathVariable("projectId") final Long projectId,
-                                             @PathVariable("organisationId") final Long organisationId,
-                                             @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-        return markSpendProfileComplete(model, projectId, organisationId, "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile");
     }
 
     private String markSpendProfileComplete(Model model,

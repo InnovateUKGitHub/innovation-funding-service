@@ -27,7 +27,7 @@ public class ProjectPartnerStatusResourceBuilder extends BaseBuilder<ProjectPart
 
     @Override
     protected ProjectPartnerStatusResource createInitial() {
-        return new ProjectPartnerStatusResource();
+        return newInstance(ProjectPartnerStatusResource.class);
     }
 
     public ProjectPartnerStatusResourceBuilder withBankDetailsStatus(ProjectActivityStates... bankDetailsStatuses){
