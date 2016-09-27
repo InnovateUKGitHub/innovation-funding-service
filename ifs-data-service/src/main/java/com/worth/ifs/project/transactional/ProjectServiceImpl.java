@@ -67,10 +67,9 @@ import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.service.ServiceResult.*;
 import static com.worth.ifs.invite.domain.ProjectParticipantRole.*;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static com.worth.ifs.project.constant.ProjectActivityStates.*;
+import static com.worth.ifs.project.constant.ProjectActivityStates.NOT_REQUIRED;
 import static com.worth.ifs.project.transactional.ProjectServiceImpl.Notifications.INVITE_FINANCE_CONTACT;
 import static com.worth.ifs.project.transactional.ProjectServiceImpl.Notifications.INVITE_PROJECT_MANAGER;
-import static com.worth.ifs.user.resource.OrganisationTypeEnum.isResearch;
 import static com.worth.ifs.util.CollectionFunctions.*;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static com.worth.ifs.util.EntityLookupCallbacks.getOnlyElementOrFail;
@@ -256,16 +255,11 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     @Override
     public ServiceResult<Void> saveDocumentsSubmitDateTime(Long projectId, LocalDateTime date) {
-        return getProject(projectId).
-                andOnSuccess(
-                        project -> {
-                            if (validateDocumentsUploaded(project)) {
-                                return setDocumentsSubmittedDate(project, date);
-                            } else {
-                                return serviceFailure(PROJECT_SETUP_OTHER_DOCUMENTS_MUST_BE_UPLOADED_BEFORE_SUBMIT);
-                            }
-                        }
-                ).andOnSuccessReturnVoid();
+
+        return getProject(projectId).andOnSuccess(project ->
+                retrieveUploadedDocuments(projectId).handleSuccessOrFailure(
+                    failure -> serviceFailure(PROJECT_SETUP_OTHER_DOCUMENTS_MUST_BE_UPLOADED_BEFORE_SUBMIT),
+                    success -> setDocumentsSubmittedDate(project, date)));
     }
 
     private ServiceResult<Void> setDocumentsSubmittedDate(Project project, LocalDateTime date) {
@@ -275,18 +269,15 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     @Override
     public ServiceResult<Boolean> isOtherDocumentsSubmitAllowed(Long projectId, Long userId) {
+
         ServiceResult<Project> project = getProject(projectId);
         Optional<ProjectUser> projectManager = getExistingProjectManager(project.getSuccessObject());
-        boolean allMatch = retrieveUploadedDocuments(projectId).stream()
-                .allMatch(serviceResult -> (serviceResult.isSuccess()) && (serviceResult.getSuccessObject().getFileEntry().getFilesizeBytes() > 0));
 
-        if (!allMatch) {
-            return serviceFailure(PROJECT_SETUP_OTHER_DOCUMENTS_MUST_BE_UPLOADED_BEFORE_SUBMIT);
-        }
-        return projectManager.isPresent()
-                && projectManager.get().getUser().getId().equals(userId) ? serviceSuccess(true)
-                : serviceFailure(PROJECT_SETUP_OTHER_DOCUMENTS_CAN_ONLY_SUBMITTED_BY_PROJECT_MANAGER);
-
+        return retrieveUploadedDocuments(projectId).handleSuccessOrFailure(
+                failure -> serviceSuccess(false),
+                success -> projectManager.isPresent() && projectManager.get().getUser().getId().equals(userId) ?
+                            serviceSuccess(true) :
+                            serviceSuccess(false));
     }
 
     @Override
@@ -422,15 +413,12 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                                 removeExploitationPlanFileFromProject(project))));
     }
 
-    @Override
-    public List<ServiceResult<FileAndContents>> retrieveUploadedDocuments(Long projectId) {
-        ServiceResult<FileAndContents> collaborationAgreementFileContents = getCollaborationAgreementFileContents(projectId);
-        ServiceResult<FileAndContents> exploitationPlanFileContents = getExploitationPlanFileContents(projectId);
+    private ServiceResult<List<FileEntryResource>> retrieveUploadedDocuments(Long projectId) {
 
-        List<ServiceResult<FileAndContents>> serviceResults = new ArrayList<>();
-        serviceResults.add(collaborationAgreementFileContents);
-        serviceResults.add(exploitationPlanFileContents);
-        return serviceResults;
+        ServiceResult<FileEntryResource> collaborationAgreementFile = getCollaborationAgreementFileEntryDetails(projectId);
+        ServiceResult<FileEntryResource> exploitationPlanFile = getExploitationPlanFileEntryDetails(projectId);
+
+        return aggregate(asList(collaborationAgreementFile, exploitationPlanFile));
     }
 
     @Override

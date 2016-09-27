@@ -3,7 +3,6 @@ package com.worth.ifs.project.service;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.service.ApplicationService;
-import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.project.ProjectServiceImpl;
@@ -25,8 +24,6 @@ import java.util.Optional;
 import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static com.worth.ifs.address.resource.OrganisationAddressType.REGISTERED;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_OTHER_DOCUMENTS_MUST_BE_UPLOADED_BEFORE_SUBMIT;
-import static com.worth.ifs.commons.rest.RestResult.restFailure;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
@@ -34,6 +31,7 @@ import static com.worth.ifs.project.builder.ProjectTeamStatusResourceBuilder.new
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static junit.framework.TestCase.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -303,9 +301,9 @@ public class ProjectServiceImplTest {
 
         when(projectRestService.isOtherDocumentsSubmitAllowed(123L)).thenReturn(restSuccess(true));
 
-        ServiceResult<Boolean> submitAllowed = service.isOtherDocumentSubmitAllowed(123L);
+        Boolean submitAllowed = service.isOtherDocumentSubmitAllowed(123L);
 
-        assertTrue(submitAllowed.isSuccess());
+        assertTrue(submitAllowed);
 
         verify(projectRestService).isOtherDocumentsSubmitAllowed(123L);
     }
@@ -313,14 +311,11 @@ public class ProjectServiceImplTest {
     @Test
     public void testOtherDocumentsSubmitAllowedWhenNotAllFilesUploaded() throws Exception {
 
-        when(projectRestService.isOtherDocumentsSubmitAllowed(123L)).thenReturn(restFailure(new Error(PROJECT_SETUP_OTHER_DOCUMENTS_MUST_BE_UPLOADED_BEFORE_SUBMIT)));
+        when(projectRestService.isOtherDocumentsSubmitAllowed(123L)).thenReturn(restSuccess(false));
 
-        ServiceResult<Boolean> submitAllowed = null;
+        Boolean submitAllowed = service.isOtherDocumentSubmitAllowed(123L);
 
-        submitAllowed = service.isOtherDocumentSubmitAllowed(123L);
-
-        assertTrue(submitAllowed
-                .getFailure().is(new Error(PROJECT_SETUP_OTHER_DOCUMENTS_MUST_BE_UPLOADED_BEFORE_SUBMIT)));
+        assertFalse(submitAllowed);
 
         verify(projectRestService).isOtherDocumentsSubmitAllowed(123L);
     }
