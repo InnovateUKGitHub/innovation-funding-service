@@ -356,17 +356,6 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     }
 
     @Test
-    public void testApplicationSubmitWithoutAgreeingToTerms() throws Exception {
-
-        mockMvc.perform(post("/application/1/submit"))
-                .andExpect(redirectedUrl("/application/1/confirm-submit"));
-          
-        verify(cookieFlashMessageFilter).setFlashMessage(isA(HttpServletResponse.class), eq("agreeToTerms"));
-        verifyNoMoreInteractions(userAuthenticationService, applicationService);
-        verify(applicationService, never()).updateStatus(any(Long.class), any(Long.class));
-    }
-    
-    @Test
     public void testApplicationSubmitAgreeingToTerms() throws Exception {
         ApplicationResource app = newApplicationResource().withId(1L).withCompetitionStatus(Status.OPEN).build();
         when(userService.isLeadApplicant(users.get(0).getId(), app)).thenReturn(true);

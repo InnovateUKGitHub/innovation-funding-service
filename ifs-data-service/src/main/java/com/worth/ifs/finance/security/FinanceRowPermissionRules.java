@@ -1,5 +1,7 @@
 package com.worth.ifs.finance.security;
 
+import com.worth.ifs.commons.security.PermissionRule;
+import com.worth.ifs.commons.security.PermissionRules;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.FinanceRow;
 import com.worth.ifs.finance.repository.FinanceRowRepository;
@@ -7,15 +9,13 @@ import com.worth.ifs.finance.resource.FinanceRowMetaValueResource;
 import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.security.BasePermissionRules;
-import com.worth.ifs.security.PermissionRule;
-import com.worth.ifs.security.PermissionRules;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import static com.worth.ifs.security.SecurityRuleUtil.checkProcessRole;
+import static com.worth.ifs.security.SecurityRuleUtil.*;
 import static com.worth.ifs.user.resource.UserRoleType.COLLABORATOR;
 import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 
@@ -65,6 +65,16 @@ public class FinanceRowPermissionRules extends BasePermissionRules {
     @PermissionRule(value = "READ_ORGANISATION_FUNDING_STATUS", description = "Any partner can check if any of the other partners are seeking funding")
     public boolean projectPartnersCanCheckFundingStatusOfTeam(final ProjectResource project, final UserResource user) {
         return isPartner(project.getId(), user.getId());
+    }
+
+    @PermissionRule(value = "READ_ORGANISATION_FUNDING_STATUS", description = "Any project finance user can check if any of partners are seeking funding")
+    public boolean projectFinanceUsersCanCheckFundingStatusOfTeam(final ProjectResource project, final UserResource user) {
+        return isProjectFinanceUser(user);
+    }
+
+    @PermissionRule(value = "READ_ORGANISATION_FUNDING_STATUS", description = "Any competition administrator can check if any of the partners are seeking funding")
+    public boolean compAdminsCanCheckFundingStatusOfTeam(final ProjectResource project, final UserResource user) {
+        return isCompAdmin(user);
     }
 
     private boolean isCollaborator(final FinanceRow cost, final UserResource user) {

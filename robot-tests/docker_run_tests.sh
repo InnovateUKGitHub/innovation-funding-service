@@ -272,7 +272,11 @@ done
 
 startSeleniumGrid
 
+
+if [[ $rerunFailed -eq 0 ]]
+then
 clearOldReports
+fi
 
 if [[ $quickTest -eq 1 ]]
 then
@@ -296,9 +300,9 @@ then
 fi
 if [[ $(which google-chrome) ]]
 then
-  google-chrome target/${targetDir}/report.html &
+  google-chrome target/${targetDir}/log.html &
 else
   wd=$(pwd)
-  report="target/${targetDir}/report.html" 
-  open "file://${wd}/${report}"
+  logs="target/${targetDir}/log.html"
+  open "file://${wd}/${logs}"
 fi

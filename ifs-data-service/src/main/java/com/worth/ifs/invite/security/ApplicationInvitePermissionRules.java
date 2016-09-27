@@ -4,8 +4,8 @@ import com.worth.ifs.invite.domain.ApplicationInvite;
 import com.worth.ifs.invite.domain.InviteOrganisation;
 import com.worth.ifs.invite.repository.InviteOrganisationRepository;
 import com.worth.ifs.invite.resource.ApplicationInviteResource;
-import com.worth.ifs.security.PermissionRule;
-import com.worth.ifs.security.PermissionRules;
+import com.worth.ifs.commons.security.PermissionRule;
+import com.worth.ifs.commons.security.PermissionRules;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.resource.UserResource;
@@ -40,7 +40,6 @@ public class ApplicationInvitePermissionRules {
         return isCollaboratorOnInvite(invite, user);
     }
 
-
     @PermissionRule(value = "SAVE", description = "lead applicant can save invite to the application")
     public boolean leadApplicantCanSaveInviteToTheApplication(final ApplicationInviteResource invite, final UserResource user) {
         return isLeadForInvite(invite, user);
@@ -59,6 +58,18 @@ public class ApplicationInvitePermissionRules {
     @PermissionRule(value = "READ", description = "lead applicant can view an invite to the application")
     public boolean leadApplicantReadInviteToTheApplication(final ApplicationInvite invite, final UserResource user) {
         return isLeadForInvite(invite, user);
+    }
+
+    @PermissionRule(value = "DELETE", description = "lead applicant can delete an invite from the application and applicant can not delete his own invite from the application")
+    public boolean leadApplicantAndNotDeleteOwnInviteToTheApplication(final ApplicationInviteResource invite, final UserResource user) {
+        return isNotOwnInvite(invite, user) && isLeadForInvite(invite, user);
+    }
+
+    private boolean isNotOwnInvite(final ApplicationInviteResource invite, final UserResource user) {
+        if (invite.getUser() == null) {
+           return true;
+        }
+        return !invite.getUser().equals(user.getId());
     }
 
     private boolean isCollaboratorOnInvite(final ApplicationInvite invite, final UserResource user) {
@@ -83,7 +94,6 @@ public class ApplicationInvitePermissionRules {
     }
 
     private boolean isLeadForInvite(final ApplicationInvite invite, final UserResource user) {
-        final long applicationId = invite.getTarget().getId();
         return checkProcessRole(user, invite.getTarget().getId(), UserRoleType.LEADAPPLICANT, processRoleRepository);
     }
 

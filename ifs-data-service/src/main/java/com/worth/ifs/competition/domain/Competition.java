@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.category.domain.Category;
 import com.worth.ifs.competition.resource.*;
 import com.worth.ifs.invite.domain.ProcessActivity;
@@ -78,7 +79,8 @@ public class Competition implements ProcessActivity {
     private String innovateBudget;
 
     private boolean multiStream;
-    private boolean resubmission;
+    private Boolean resubmission;
+
     private String streamName;
     @Enumerated(EnumType.STRING)
     private CollaborationLevel collaborationLevel;
@@ -161,6 +163,10 @@ public class Competition implements ProcessActivity {
 
     public Long getId() {
         return id;
+    }
+
+    public String getFormattedId() {
+        return ApplicationResource.formatter.format(id);
     }
 
     public String getName() {
@@ -426,11 +432,11 @@ public class Competition implements ProcessActivity {
 		this.multiStream = multiStream;
 	}
 
-    public boolean isResubmission() {
+    public Boolean getResubmission() {
         return resubmission;
     }
 
-    public void setResubmission(boolean resubmission) {
+    public void setResubmission(Boolean resubmission) {
         this.resubmission = resubmission;
     }
 

@@ -3,7 +3,7 @@ package com.worth.ifs.assessment.transactional;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.invite.resource.CompetitionInviteResource;
 import com.worth.ifs.invite.resource.RejectionReasonResource;
-import com.worth.ifs.security.SecuredBySpring;
+import com.worth.ifs.commons.security.SecuredBySpring;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 

@@ -1,8 +1,8 @@
 package com.worth.ifs.user.security;
 
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.security.PermissionRule;
-import com.worth.ifs.security.PermissionRules;
+import com.worth.ifs.commons.security.PermissionRule;
+import com.worth.ifs.commons.security.PermissionRules;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
@@ -13,6 +13,8 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.function.Predicate;
 
+import static com.worth.ifs.security.SecurityRuleUtil.isCompAdmin;
+import static com.worth.ifs.security.SecurityRuleUtil.isProjectFinanceUser;
 import static com.worth.ifs.security.SecurityRuleUtil.isSystemRegistrationUser;
 import static com.worth.ifs.user.resource.UserRoleType.*;
 import static com.worth.ifs.util.CollectionFunctions.*;
@@ -51,7 +53,12 @@ public class UserPermissionRules {
 
     @PermissionRule(value = "READ", description = "Comp Admins can view everyone")
     public boolean compAdminsCanViewEveryone(UserResource userToView, UserResource user) {
-        return user.hasRole(COMP_ADMIN);
+        return isCompAdmin(user);
+    }
+
+    @PermissionRule(value = "READ", description = "Project finance users can view everyone")
+    public boolean projectFinanceUsersCanViewEveryone(UserResource userToView, UserResource user) {
+        return isProjectFinanceUser(user);
     }
 
     @PermissionRule(value = "READ", description = "The System Registration user can view everyone")

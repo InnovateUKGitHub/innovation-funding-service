@@ -38,7 +38,7 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
     }
 
     @Override
-    protected Class<? extends CompetitionSetupService> getServiceClass() {
+    protected Class<? extends CompetitionSetupService> getClassUnderTest() {
         return TestCompetitionSetupService.class;
     }
 
@@ -47,17 +47,17 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
         setLoggedInUser(null);
         Long competitionId = 2L;
 
-        assertAccessDenied(() -> service.create(), () -> {
+        assertAccessDenied(() -> classUnderTest.create(), () -> {
             verifyNoMoreInteractions(rules);
         });
         Long sectionId = 3L;
-        assertAccessDenied(() -> service.markSectionComplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS), () -> {
+        assertAccessDenied(() -> classUnderTest.markSectionComplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS), () -> {
             verifyNoMoreInteractions(rules);
         });
-        assertAccessDenied(() -> service.markSectionInComplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS), () -> {
+        assertAccessDenied(() -> classUnderTest.markSectionInComplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS), () -> {
             verifyNoMoreInteractions(rules);
         });
-        assertAccessDenied(() -> service.findAllTypes(), () -> {
+        assertAccessDenied(() -> classUnderTest.findAllTypes(), () -> {
             verifyNoMoreInteractions(rules);
         });
     }
@@ -66,12 +66,12 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
     public void testAllAccessAllowed() {
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(COMP_ADMIN).build())).build());
 
-        service.findAllTypes();
+        classUnderTest.findAllTypes();
         Long competitionId = 2L;
-        service.create();
+        classUnderTest.create();
         Long sectionId = 3L;
-        service.markSectionComplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS);
-        service.markSectionInComplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS);
+        classUnderTest.markSectionComplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS);
+        classUnderTest.markSectionInComplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS);
     }
 
     @Test

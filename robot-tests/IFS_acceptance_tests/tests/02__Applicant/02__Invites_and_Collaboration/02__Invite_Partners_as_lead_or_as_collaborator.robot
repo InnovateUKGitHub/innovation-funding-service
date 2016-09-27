@@ -16,7 +16,7 @@ Documentation     INFUND-901: As a lead applicant I want to invite application c
 ...               INFUND-3742: The overview with contributors is not matching with actual invites
 Suite Setup       log in and create new application for collaboration if there is not one already
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        Appllicant
+Force Tags        Applicant
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -277,4 +277,4 @@ log into smoke test application
     the user clicks the button/link    link=view team members and add collaborators
 
 The Lead organisation should show only one time
-    Xpath Should Match X Times    //div/h2    2
+    Element Should not Contain    css=div:nth-child(7)    Steve Smith

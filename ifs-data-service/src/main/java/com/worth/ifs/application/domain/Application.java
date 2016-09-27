@@ -1,28 +1,5 @@
 package com.worth.ifs.application.domain;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.resource.ApplicationResource;
@@ -38,6 +15,14 @@ import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserRoleType;
 
+import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.*;
+
 /**
  * Application defines database relations and a model to use client side and server side.
  */
@@ -51,6 +36,9 @@ public class Application implements ProcessActivity {
     private String name;
     private LocalDate startDate;
     private LocalDateTime submittedDate;
+    private Boolean resubmission;
+    private String previousApplicationNumber;
+    private String previousApplicationTitle;
     @Min(0)
     private Long durationInMonths; // in months
     @Min(0)
@@ -83,6 +71,8 @@ public class Application implements ProcessActivity {
     
     @OneToMany(mappedBy="application", fetch=FetchType.LAZY, cascade={CascadeType.REMOVE, CascadeType.PERSIST})
     private List<FormInputResponse> formInputResponses = new ArrayList<>();
+
+    private Boolean stateAidAgreed;
 
     public Application() {
         /*default constructor*/}
@@ -120,6 +110,25 @@ public class Application implements ProcessActivity {
     public String getName() {
         return name;
     }
+
+    public Boolean getResubmission() {
+        return resubmission;
+    }
+
+    public void setResubmission(Boolean resubmission) { this.resubmission = resubmission; }
+
+    public String getPreviousApplicationNumber() {
+        return previousApplicationNumber;
+    }
+
+    public void setPreviousApplicationNumber(String previousApplicationNumber) { this.previousApplicationNumber = previousApplicationNumber; }
+
+    public String getPreviousApplicationTitle() {
+        return previousApplicationTitle;
+    }
+
+    public void setPreviousApplicationTitle(String previousApplicationTitle) { this.previousApplicationTitle = previousApplicationTitle; }
+
 
     public void setName(String name) {
         this.name = name;
@@ -269,5 +278,13 @@ public class Application implements ProcessActivity {
 
     public void setCompletion(final BigDecimal completion) {
         this.completion = completion;
+    }
+
+    public Boolean getStateAidAgreed() {
+        return stateAidAgreed;
+    }
+
+    public void setStateAidAgreed(Boolean stateAidAgreed) {
+        this.stateAidAgreed = stateAidAgreed;
     }
 }

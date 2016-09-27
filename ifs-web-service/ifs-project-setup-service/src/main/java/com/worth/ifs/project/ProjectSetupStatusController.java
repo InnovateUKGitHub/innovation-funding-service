@@ -11,6 +11,8 @@ import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.service.ApplicationFinanceRestService;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.project.resource.ProjectTeamStatusResource;
+import com.worth.ifs.project.sections.ProjectSetupSectionPartnerAccessor;
 import com.worth.ifs.project.viewmodel.ProjectSetupStatusViewModel;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
@@ -79,19 +81,23 @@ public class ProjectSetupStatusController {
         RestResult<BankDetailsResource> existingBankDetails = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisation.getId());
         Optional<BankDetailsResource> bankDetails = existingBankDetails.toOptionalIfNotFound().getSuccessObjectOrThrowException();
 
-        boolean funded = isApplicationFunded(project, organisation, competition);
+        boolean funded = isApplicationFunded(project, organisation);
 
-        return new ProjectSetupStatusViewModel(project, competition, monitoringOfficer, bankDetails, funded, organisation.getId());
+        ProjectTeamStatusResource teamStatus = projectService.getProjectTeamStatus(projectId, Optional.empty());
+        ProjectSetupSectionPartnerAccessor statusAccessor = new ProjectSetupSectionPartnerAccessor(teamStatus);
+        boolean projectDetailsSubmitted = statusAccessor.isProjectDetailsSubmitted();
+
+        return new ProjectSetupStatusViewModel(project, competition, monitoringOfficer, bankDetails, funded, organisation.getId(), projectDetailsSubmitted);
     }
 
-    private boolean isApplicationFunded(ProjectResource project, OrganisationResource organisation, CompetitionResource competition){
+    private boolean isApplicationFunded(ProjectResource project, OrganisationResource organisation){
         Integer grantClaim;
         if(isResearch(organisation.getOrganisationType())){
-            grantClaim = competition.getAcademicGrantPercentage();
+            return true;   // Research organisations always get full 100% of costs funded.
         } else {
             ApplicationFinanceResource applicationFinance = financeService.getFinanceDetails(project.getApplication(), organisation.getId()).getSuccessObjectOrThrowException();
             grantClaim = applicationFinance.getGrantClaimPercentage();
+            return grantClaim != null && grantClaim > 0;
         }
-        return grantClaim != null && grantClaim > 0;
     }
 }

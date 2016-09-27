@@ -34,8 +34,6 @@ import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAsse
 import static com.worth.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
 import static com.worth.ifs.assessment.builder.ProcessOutcomeResourceBuilder.newProcessOutcomeResource;
 import static com.worth.ifs.assessment.resource.AssessorFormInputType.*;
-import static com.worth.ifs.commons.error.Error.fieldError;
-import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static com.worth.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
@@ -43,6 +41,7 @@ import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.time.LocalDateTime.now;
 import static java.util.Arrays.asList;
+import static java.util.Collections.nCopies;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Stream.concat;
 import static org.junit.Assert.*;
@@ -263,8 +262,8 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
     @Test
     public void save() throws Exception {
         Boolean fundingConfirmation = TRUE;
-        String feedback = "feedback";
-        String comment = "comment";
+        String feedback = String.join(" ", nCopies(100, "feedback"));
+        String comment = String.join(" ", nCopies(100, "comment"));
 
         when(assessmentService.recommend(assessmentId, fundingConfirmation, feedback, comment)).thenReturn(serviceSuccess());
 
@@ -281,8 +280,8 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
 
     @Test
     public void save_noFundingConfirmation() throws Exception {
-        String feedback = "feedback";
-        String comment = "comment";
+        String feedback = String.join(" ", nCopies(100, "feedback"));
+        String comment = String.join(" ", nCopies(100, "comment"));
 
         MvcResult result = mockMvc.perform(post("/{assessmentId}/summary", assessmentId)
                 .contentType(APPLICATION_FORM_URLENCODED)
@@ -317,7 +316,7 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
     @Test
     public void save_noFeedbackAndFundingConfirmationIsTrue() throws Exception {
         Boolean fundingConfirmation = TRUE;
-        String comment = "comment";
+        String comment = String.join(" ", nCopies(100, "comment"));
 
         when(assessmentService.recommend(assessmentId, fundingConfirmation, null, comment)).thenReturn(serviceSuccess());
 
@@ -334,7 +333,7 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
     @Test
     public void save_noFeedbackAndFundingConfirmationIsFalse() throws Exception {
         Boolean fundingConfirmation = FALSE;
-        String comment = "comment";
+        String comment = String.join(" ", nCopies(100, "comment"));
 
         MvcResult result = mockMvc.perform(post("/{assessmentId}/summary", assessmentId)
                 .contentType(APPLICATION_FORM_URLENCODED)
@@ -369,7 +368,7 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
     @Test
     public void save_noComment() throws Exception {
         Boolean fundingConfirmation = TRUE;
-        String feedback = "feedback";
+        String feedback = String.join(" ", nCopies(100, "feedback"));
 
         when(assessmentService.recommend(assessmentId, fundingConfirmation, feedback, null)).thenReturn(serviceSuccess());
 
@@ -428,14 +427,8 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
     @Test
     public void save_exceedsWordLimit() throws Exception {
         Boolean fundingConfirmation = TRUE;
-        String feedback = "feedback";
-        String comment = "comment";
-
-        when(assessmentService.recommend(assessmentId, fundingConfirmation, feedback, comment))
-                .thenReturn(serviceFailure(asList(
-                        fieldError("feedback", feedback, "validation.field.max.word.count", "", 100),
-                        fieldError("comment", comment, "validation.field.max.word.count", "", 100)))
-                );
+        String feedback = String.join(" ", nCopies(101, "feedback"));
+        String comment = String.join(" ", nCopies(101, "comment"));
 
         MvcResult result = mockMvc.perform(post("/{assessmentId}/summary", assessmentId)
                 .contentType(APPLICATION_FORM_URLENCODED)
@@ -451,8 +444,6 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
                 .andExpect(view().name("assessment/application-summary"))
                 .andReturn();
 
-        verify(assessmentService, times(1)).recommend(assessmentId, fundingConfirmation, feedback, comment);
-
         AssessmentSummaryForm form = (AssessmentSummaryForm) result.getModelAndView().getModel().get("form");
 
         assertEquals(fundingConfirmation, form.getFundingConfirmation());
@@ -464,10 +455,10 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
         assertEquals(2, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("feedback"));
         assertTrue(bindingResult.hasFieldErrors("comment"));
-        assertEquals("validation.field.max.word.count", bindingResult.getFieldError("feedback").getCode());
-        assertEquals("100", bindingResult.getFieldError("feedback").getArguments()[1]);
-        assertEquals("validation.field.max.word.count", bindingResult.getFieldError("comment").getCode());
-        assertEquals("100", bindingResult.getFieldError("comment").getArguments()[1]);
+        assertEquals("Maximum word count exceeded. Please reduce your word count to {1}.", bindingResult.getFieldError("feedback").getDefaultMessage());
+        assertEquals(100, bindingResult.getFieldError("feedback").getArguments()[1]);
+        assertEquals("Maximum word count exceeded. Please reduce your word count to {1}.", bindingResult.getFieldError("comment").getDefaultMessage());
+        assertEquals(100, bindingResult.getFieldError("comment").getArguments()[1]);
 
         verify(assessmentService).getById(assessmentId);
         verifyNoMoreInteractions(assessmentService);

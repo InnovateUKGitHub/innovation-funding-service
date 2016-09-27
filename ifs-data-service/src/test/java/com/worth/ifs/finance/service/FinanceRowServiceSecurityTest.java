@@ -73,7 +73,7 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
 
     @Test
     public void testFindAllCostFields() {
-        service.findAllCostFields();
+        classUnderTest.findAllCostFields();
         verify(financeRowMetaFieldPermissionsRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).loggedInUsersCanReadCostFieldReferenceData(isA(FinanceRowMetaFieldResource.class), isA(UserResource.class));
         verifyNoMoreInteractions(financeRowMetaFieldPermissionsRules);
     }
@@ -83,7 +83,7 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
         final Long applicationId = 1L;
         final Long organisationId = 2L;
         assertAccessDenied(
-                () -> service.findApplicationFinanceByApplicationIdAndOrganisation(applicationId, organisationId),
+                () -> classUnderTest.findApplicationFinanceByApplicationIdAndOrganisation(applicationId, organisationId),
                 () -> verifyApplicationFinanceResourceReadRulesCalled()
         );
     }
@@ -91,7 +91,7 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
     @Test
     public void testFindApplicationFinanceByApplication() {
         final Long applicationId = 1L;
-        ServiceResult<List<ApplicationFinanceResource>> applicationFinanceByApplication = service.findApplicationFinanceByApplication(applicationId);
+        ServiceResult<List<ApplicationFinanceResource>> applicationFinanceByApplication = classUnderTest.findApplicationFinanceByApplication(applicationId);
         assertTrue(applicationFinanceByApplication.getSuccessObject().isEmpty());
         verifyApplicationFinanceResourceReadRulesCalled(ARRAY_SIZE_FOR_POST_FILTER_TESTS);
     }
@@ -101,7 +101,7 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
     public void testGetApplicationFinanceById() {
         final Long applicationId = 1L;
         assertAccessDenied(
-                () -> service.getApplicationFinanceById(applicationId),
+                () -> classUnderTest.getApplicationFinanceById(applicationId),
                 () -> verifyApplicationFinanceResourceReadRulesCalled()
         );
     }
@@ -111,7 +111,7 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
         final Long applicationId = 1L;
         final Long organisationId = 1L;
         assertAccessDenied(
-                () -> service.financeDetails(applicationId, organisationId),
+                () -> classUnderTest.financeDetails(applicationId, organisationId),
                 () -> verifyApplicationFinanceResourceReadRulesCalled()
         );
     }
@@ -121,7 +121,7 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
         final Long applicationId = 1L;
         when(applicationLookupStrategy.getApplicationResource(applicationId)).thenReturn(newApplicationResource().with(id(applicationId)).build());
         assertAccessDenied(
-                () -> service.financeTotals(applicationId),
+                () -> classUnderTest.financeTotals(applicationId),
                 () -> {
                     verify(applicationRules).compAdminCanSeeApplicationFinancesTotals(isA(ApplicationResource.class), isA(UserResource.class));
                     verify(applicationRules).consortiumCanSeeTheApplicationFinanceTotals(isA(ApplicationResource.class), isA(UserResource.class));
@@ -134,7 +134,7 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
         final Long applicationId = 1L;
         when(applicationLookupStrategy.getApplicationResource(applicationId)).thenReturn(newApplicationResource().with(id(applicationId)).build());
         assertAccessDenied(
-                () -> service.getResearchParticipationPercentage(applicationId),
+                () -> classUnderTest.getResearchParticipationPercentage(applicationId),
                 () -> {
                     verify(applicationRules).assessorCanSeeTheResearchParticipantPercentageInApplicationsTheyAssess(isA(ApplicationResource.class), isA(UserResource.class));
                     verify(applicationRules).compAdminCanSeeTheResearchParticipantPercentageInApplications(isA(ApplicationResource.class), isA(UserResource.class));
@@ -147,7 +147,7 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
         final Long costId = 1L;
         when(financeRowLookupStrategy.getFinanceRow(costId)).thenReturn(newFinanceRow().with(id(costId)).build());
         assertAccessDenied(
-                () -> service.updateCost(costId, new AcademicCost()),
+                () -> classUnderTest.updateCost(costId, new AcademicCost()),
                 () -> {
                     verify(costPermissionsRules).consortiumCanUpdateACostForTheirApplicationAndOrganisation(isA(FinanceRow.class), isA(UserResource.class));
                 });
@@ -158,7 +158,7 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
         final Long costFieldId = 1L;
         when(financeRowMetaFieldLookupStrategy.getCostField(costFieldId)).thenReturn(newFinanceRowMetaFieldResource().with(id(costFieldId)).build());
         assertAccessDenied(
-                () -> service.getCostFieldById(costFieldId),
+                () -> classUnderTest.getCostFieldById(costFieldId),
                 () -> {
                     verify(financeRowMetaFieldPermissionsRules).loggedInUsersCanReadCostFieldReferenceData(isA(FinanceRowMetaFieldResource.class), isA(UserResource.class));
                 });
@@ -169,7 +169,7 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
         final Long costId = 1L;
         when(financeRowLookupStrategy.getFinanceRow(costId)).thenReturn(newFinanceRow().with(id(costId)).build());
         assertAccessDenied(
-                () -> service.deleteCost(costId),
+                () -> classUnderTest.deleteCost(costId),
                 () -> {
                     verify(costPermissionsRules).consortiumCanDeleteACostForTheirApplicationAndOrganisation(isA(FinanceRow.class), isA(UserResource.class));
                 });
@@ -182,7 +182,7 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
         final Long questionId = 2L;
         when(applicationFinanceLookupStrategy.getApplicationFinance(applicationFinanceId)).thenReturn(newApplicationFinanceResource().build());
         assertAccessDenied(
-                () -> service.addCost(applicationFinanceId, questionId, new AcademicCost()),
+                () -> classUnderTest.addCost(applicationFinanceId, questionId, new AcademicCost()),
                 () -> {
                     verify(applicationFinanceRules).consortiumCanAddACostToApplicationFinanceForTheirOrganisation(isA(ApplicationFinanceResource.class), isA(UserResource.class));
                 });
@@ -196,7 +196,7 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
         final ApplicationFinanceResourceId applicationFinanceId = new ApplicationFinanceResourceId(applicationId, organisationId);
         when(applicationFinanceLookupStrategy.getApplicationFinance(applicationFinanceId)).thenReturn(newApplicationFinanceResource().build());
         assertAccessDenied(
-                () -> service.addCost(applicationFinanceId),
+                () -> classUnderTest.addCost(applicationFinanceId),
                 () -> {
                     verify(applicationFinanceRules).consortiumCanAddACostToApplicationFinanceForTheirOrganisation(isA(ApplicationFinanceResource.class), isA(UserResource.class));
                 });
@@ -209,7 +209,7 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
         final ApplicationFinanceResource applicationFinanceResource = new ApplicationFinanceResource();
         when(applicationFinanceLookupStrategy.getApplicationFinance(applicationFinanceId)).thenReturn(newApplicationFinanceResource().build());
         assertAccessDenied(
-                () -> service.updateCost(applicationFinanceId, applicationFinanceResource),
+                () -> classUnderTest.updateCost(applicationFinanceId, applicationFinanceResource),
                 () -> {
                     verify(applicationFinanceRules).consortiumCanUpdateACostToApplicationFinanceForTheirOrganisation(isA(ApplicationFinanceResource.class), isA(UserResource.class));
                 });
@@ -220,7 +220,7 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
     public void testGetCostItem() {
         final Long costId = 1L;
         assertAccessDenied(
-                () -> service.getCostItem(costId),
+                () -> classUnderTest.getCostItem(costId),
                 () -> {
                     verify(costPermissionsRules).consortiumCanReadACostItemForTheirApplicationAndOrganisation(isA(FinanceRowItem.class), isA(UserResource.class));
                 });
@@ -231,7 +231,7 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
         final Long applicationFinanceId = 1L;
         when(applicationFinanceLookupStrategy.getApplicationFinance(applicationFinanceId)).thenReturn(newApplicationFinanceResource().build());
         assertAccessDenied(
-                () -> service.deleteFinanceFileEntry(applicationFinanceId),
+                () -> classUnderTest.deleteFinanceFileEntry(applicationFinanceId),
                 () -> {
                     verify(applicationFinanceRules).consortiumMemberCanDeleteAFileForTheApplicationFinanceForTheirOrganisation(isA(ApplicationFinanceResource.class), isA(UserResource.class));
                 });
@@ -243,7 +243,7 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
         final Long applicationFinanceId = 1L;
         when(applicationFinanceLookupStrategy.getApplicationFinance(applicationFinanceId)).thenReturn(newApplicationFinanceResource().build());
         assertAccessDenied(
-                () -> service.createFinanceFileEntry(applicationFinanceId, null, null),
+                () -> classUnderTest.createFinanceFileEntry(applicationFinanceId, null, null),
                 () -> {
                     verify(applicationFinanceRules).consortiumMemberCanCreateAFileForTheApplicationFinanceForTheirOrganisation(isA(ApplicationFinanceResource.class), isA(UserResource.class));
                 });
@@ -255,7 +255,7 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
         final Long applicationFinanceId = 1L;
         when(applicationFinanceLookupStrategy.getApplicationFinance(applicationFinanceId)).thenReturn(newApplicationFinanceResource().build());
         assertAccessDenied(
-                () -> service.updateFinanceFileEntry(applicationFinanceId, null, null),
+                () -> classUnderTest.updateFinanceFileEntry(applicationFinanceId, null, null),
                 () -> {
                     verify(applicationFinanceRules).consortiumMemberCanUpdateAFileForTheApplicationFinanceForTheirOrganisation(isA(ApplicationFinanceResource.class), isA(UserResource.class));
                 });
@@ -266,7 +266,7 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
         final Long applicationFinanceId = 1L;
         when(applicationFinanceLookupStrategy.getApplicationFinance(applicationFinanceId)).thenReturn(newApplicationFinanceResource().build());
         assertAccessDenied(
-                () -> service.getFileContents(applicationFinanceId),
+                () -> classUnderTest.getFileContents(applicationFinanceId),
                 () -> {
                     verify(applicationFinanceRules).consortiumMemberCanGetFileEntryResourceByFinanceIdOfACollaborator(isA(ApplicationFinanceResource.class), isA(UserResource.class));
                 });
@@ -279,7 +279,7 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
         final String costTypeName = "academic";
         final Long questionId = 2L;
 
-        service.getCosts(costId, costTypeName, questionId);
+        classUnderTest.getCosts(costId, costTypeName, questionId);
         verify(costPermissionsRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).consortiumCanReadACostForTheirApplicationAndOrganisation(isA(FinanceRow.class), isA(UserResource.class));
     }
 
@@ -289,7 +289,7 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
         final String costTypeName = "academic";
         final Long questionId = 2L;
 
-        service.getCostItems(costId, costTypeName, questionId);
+        classUnderTest.getCostItems(costId, costTypeName, questionId);
         verify(costPermissionsRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).consortiumCanReadACostItemForTheirApplicationAndOrganisation(isA(FinanceRowItem.class), isA(UserResource.class));
     }
 
@@ -297,7 +297,7 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
     public void testGetCostItems2() {
         final Long applicationFinanceId = 1L;
         final Long questionId = 2L;
-        service.getCostItems(applicationFinanceId, questionId);
+        classUnderTest.getCostItems(applicationFinanceId, questionId);
         verify(costPermissionsRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).consortiumCanReadACostItemForTheirApplicationAndOrganisation(isA(FinanceRowItem.class), isA(UserResource.class));
     }
 
@@ -320,14 +320,15 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
         when(projectLookupStrategy.getProjectResource(projectId)).thenReturn(newProjectResource().with(id(projectId)).build());
 
         assertAccessDenied(
-                () -> service.organisationSeeksFunding(projectId, applicationId, organisationId),
+                () -> classUnderTest.organisationSeeksFunding(projectId, applicationId, organisationId),
                 () -> {
+                    verify(costPermissionsRules).projectPartnersCanCheckFundingStatusOfTeam(isA(ProjectResource.class), isA(UserResource.class));
                     verify(costPermissionsRules).projectPartnersCanCheckFundingStatusOfTeam(isA(ProjectResource.class), isA(UserResource.class));
                 });
     }
 
     @Override
-    protected Class<TestFinanceRowService> getServiceClass() {
+    protected Class<TestFinanceRowService> getClassUnderTest() {
         return TestFinanceRowService.class;
     }
 

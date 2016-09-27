@@ -141,16 +141,18 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
 
     @Test
     public void rejectInvite() throws Exception {
+        String comment = String.join(" ", nCopies(100, "comment"));
+
         CompetitionRejectionResource competitionRejectionResource = new CompetitionRejectionResource(newRejectionReasonResource()
                 .with(id(1L))
-                .build(), "comment");
+                .build(), comment);
 
         when(competitionInviteRestService.rejectInvite("hash", competitionRejectionResource)).thenReturn(restSuccess());
 
         mockMvc.perform(post(restUrl + "{inviteHash}/reject", "hash")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("rejectReason", "1")
-                .param("rejectComment", "comment"))
+                .param("rejectComment", comment))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/invite/competition/hash/reject/thank-you"));
 
@@ -164,12 +166,14 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
 
         when(competitionInviteRestService.getInvite("hash")).thenReturn(restSuccess(inviteResource));
 
+        String comment = String.join(" ", nCopies(100, "comment"));
+
         RejectCompetitionForm expectedForm = new RejectCompetitionForm();
-        expectedForm.setRejectComment("comment");
+        expectedForm.setRejectComment(comment);
 
         MvcResult result = mockMvc.perform(post(restUrl + "{inviteHash}/reject", "hash")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("rejectComment", "comment"))
+                .param("rejectComment", comment))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("form", expectedForm))
                 .andExpect(model().attribute("rejectionReasons", rejectionReasons))
@@ -293,9 +297,11 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
 
     @Test
     public void rejectInvite_hashNotExists() throws Exception {
+        String comment = String.join(" ", nCopies(100, "comment"));
+
         CompetitionRejectionResource competitionRejectionResource = new CompetitionRejectionResource(newRejectionReasonResource()
                 .with(id(1L))
-                .build(), "comment");
+                .build(), comment);
 
         when(competitionInviteRestService.rejectInvite("notExistHash", competitionRejectionResource)).thenReturn(restFailure(notFoundError(CompetitionInviteResource.class, "notExistHash")));
         when(competitionInviteRestService.getInvite("notExistHash")).thenReturn(restFailure(notFoundError(CompetitionInviteResource.class, "notExistHash")));
@@ -303,7 +309,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
         mockMvc.perform(post(restUrl + "{inviteHash}/reject", "notExistHash")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("rejectReason", "1")
-                .param("rejectComment", "comment"))
+                .param("rejectComment", comment))
                 .andExpect(status().isNotFound());
 
         InOrder inOrder = inOrder(competitionInviteRestService);

@@ -76,6 +76,11 @@ public class ProjectDetailsWorkflowHandler extends BaseWorkflowEventHandler<Proj
         return new ProjectDetailsProcess(participant, target, null);
     }
 
+    public boolean isSubmitted(Project project) {
+        ProjectDetailsProcess process = getCurrentProcess(project);
+        return process != null && ProjectDetailsState.SUBMITTED.equals(process.getActivityState());
+    }
+
     @Override
     protected ActivityType getActivityType() {
         return PROJECT_SETUP_PROJECT_DETAILS;

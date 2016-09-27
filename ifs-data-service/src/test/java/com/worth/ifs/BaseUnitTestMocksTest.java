@@ -35,6 +35,7 @@ import com.worth.ifs.category.repository.CategoryLinkRepository;
 import com.worth.ifs.category.repository.CategoryRepository;
 import com.worth.ifs.category.transactional.CategoryLinkService;
 import com.worth.ifs.category.transactional.CategoryService;
+import com.worth.ifs.commons.BaseTest;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.repository.CompetitionFunderRepository;
 import com.worth.ifs.competition.repository.CompetitionRepository;
@@ -70,6 +71,7 @@ import com.worth.ifs.project.repository.MonitoringOfficerRepository;
 import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.project.repository.ProjectUserRepository;
 import com.worth.ifs.project.transactional.ProjectService;
+import com.worth.ifs.project.transactional.ProjectStatusService;
 import com.worth.ifs.project.workflow.projectdetails.configuration.ProjectDetailsWorkflowHandler;
 import com.worth.ifs.sil.experian.service.SilExperianEndpoint;
 import com.worth.ifs.token.repository.TokenRepository;
@@ -308,6 +310,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected ProjectService projectServiceMock;
 
     @Mock
+    protected ProjectStatusService projectStatusServiceMock;
+
+    @Mock
     protected ProjectMapper projectMapperMock;
 
     @Mock
@@ -374,7 +379,7 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected FinanceRowService financeRowServiceMock;
 
     @Mock
-    protected ProjectDetailsWorkflowHandler projectDetailsWorkflowServiceMock;
+    protected ProjectDetailsWorkflowHandler projectDetailsWorkflowHandlerMock;
 
     @Mock
     protected EthnicityRepository ethnicityRepositoryMock;

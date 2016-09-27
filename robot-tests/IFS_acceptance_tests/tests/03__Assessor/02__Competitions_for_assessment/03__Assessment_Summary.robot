@@ -19,7 +19,7 @@ Resource          ../../../resources/keywords/User_actions.robot
 All the sections are present in the summary
     [Documentation]    INFUND-4648
     [Tags]    HappyPath
-    When The user navigates to the assessor page    ${Assessment_summary_incomplete_12}
+    When The user navigates to the assessor page    ${Assessment_summary_Pending_12}
     Then The user should see the element    jQuery=h2:contains("Overall scores")
     And The user should see the element    jQuery=h2:contains("Review assessment")
     And The user should see the element    jQuery=span:contains("Do you believe that this application is suitable for funding?")
@@ -119,9 +119,7 @@ Word count check: Your feedback
     ...
     ...    INFUND-4217
     [Tags]    HappyPath
-    # TODO Temporarily setting the decision here since the word count is only validated after the required decision field is checked. This should be addressed by INFUND-4993.
-    When the user selects the radio button    fundingConfirmation    true
-    And the user enters text to a text field    id=form-textarea-feedback    Testing the feedback word count. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco
+    When the user enters text to a text field    id=form-textarea-feedback    Testing the feedback word count. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco
     Then the word count should be correct    Words remaining: -4
     And the user clicks the button/link    jQuery=.button:contains(Save assessment)
     Then the user should see an error    Maximum word count exceeded. Please reduce your word count to 100.
@@ -132,14 +130,21 @@ Word count check: Comments for InnovateUK
     [Documentation]    INFUND-1485
     ...
     ...    INFUND-4217
-    # TODO Temporarily setting the decision here since the word count is only validated after the required decision field is checked. This should be addressed by INFUND-4993.
-    When the user selects the radio button    fundingConfirmation    true
-    And the user enters text to a text field    id=form-textarea-comments    Testing the comments word count. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco
+    When the user enters text to a text field    id=form-textarea-comments    Testing the comments word count. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco
     Then the word count should be correct    Words remaining: -4
     And the user clicks the button/link    jQuery=.button:contains(Save assessment)
     Then the user should see an error    Maximum word count exceeded. Please reduce your word count to 100.
     And the user enters text to a text field    id=form-textarea-comments    Testing the comments word count.
     Then the word count should be correct    Words remaining: 95
+
+Your Feedback is not mandatory when Yes is selected
+    [Documentation]    INFUND-4996
+    [Tags]
+    Given The user navigates to the assessor page    ${Assessment_summary_open_11}
+    And The feedback text area is empty
+    When the user selects the radio button    fundingConfirmation    true
+    And The user clicks the button/link    jQuery=.button:contains(Save assessment)
+    Then The user should not see the text in the page    Please enter your feedback
 
 *** Keywords ***
 The assessor navigates to the summary page
@@ -185,19 +190,19 @@ each question will contain links to respective questions
     The user should see the element    link=Q1
     the user clicks the button/link    link=Q1
     The user should be redirected to the correct page    /question/47
-    The user navigates to the page    ${Assessment_summary_incomplete_12}
+    The user navigates to the page    ${Assessment_summary_Pending_12}
     The user should see the element    link=Q2
     the user clicks the button/link    link=Q2
     The user should be redirected to the correct page    /question/168
-    The user navigates to the page    ${Assessment_summary_incomplete_12}
+    The user navigates to the page    ${Assessment_summary_Pending_12}
     The user should see the element    link=Q3
     the user clicks the button/link    link=Q3
     The user should be redirected to the correct page    /question/169
-    The user navigates to the page    ${Assessment_summary_incomplete_12}
+    The user navigates to the page    ${Assessment_summary_Pending_12}
     The user should see the element    link=Q4
     the user clicks the button/link    link=Q4
     The user should be redirected to the correct page    /question/170
-    The user navigates to the page    ${Assessment_summary_incomplete_12}
+    The user navigates to the page    ${Assessment_summary_Pending_12}
 
 the scores under each question should be correct
     Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(1)    20
@@ -224,3 +229,6 @@ the days remaining should be correct
     ${NO_OF_DAYS_LEFT}=    Remove String    ${NO_OF_DAYS_LEFT}    days
     ${SCREEN_NO_OF_DAYS_LEFT}=    Get Text    css=.sub-header .pie-overlay .day
     Should Be Equal As Numbers    ${NO_OF_DAYS_LEFT}    ${SCREEN_NO_OF_DAYS_LEFT}
+
+The feedback text area is empty
+    Then Clear Element Text    id=form-textarea-feedback

@@ -3,8 +3,8 @@ package com.worth.ifs.application.security;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.security.BasePermissionRules;
-import com.worth.ifs.security.PermissionRule;
-import com.worth.ifs.security.PermissionRules;
+import com.worth.ifs.commons.security.PermissionRule;
+import com.worth.ifs.commons.security.PermissionRules;
 import com.worth.ifs.security.SecurityRuleUtil;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
@@ -47,6 +47,11 @@ public class ApplicationPermissionRules extends BasePermissionRules {
     @PermissionRule(value = "READ_RESEARCH_PARTICIPATION_PERCENTAGE", description = "The assessor can see the participation percentage for applications they assess")
     public boolean compAdminCanSeeTheResearchParticipantPercentageInApplications(final ApplicationResource applicationResource, UserResource user) {
         return isCompAdmin(user);
+    }
+
+    @PermissionRule(value = "READ_RESEARCH_PARTICIPATION_PERCENTAGE", description = "The project finance user can see the participation percentage for applications they assess")
+    public boolean projectFinanceUsersCanSeeTheResearchParticipantPercentageInApplications(final ApplicationResource applicationResource, UserResource user) {
+        return isProjectFinanceUser(user);
     }
 
     @PermissionRule(value = "READ_FINANCE_TOTALS",
