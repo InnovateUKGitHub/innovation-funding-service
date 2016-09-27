@@ -64,7 +64,7 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
 
     @Override
     public List<Error> autoSaveSectionField(CompetitionResource competitionResource, String fieldName, String value, Optional<Long> ObjectId) {
-        return updateMilestoneWithValueByFieldname2(competitionResource, fieldName, value);
+        return updateMilestoneWithValueByFieldname(competitionResource, fieldName, value);
     }
 
     private List<Error> returnErrorsFoundOnSave(LinkedMap<String, MilestoneEntry> milestoneEntries, Long competitionId){
@@ -93,7 +93,7 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
             MilestoneResource milestone = milestoneService.getMilestoneByTypeAndCompetitionId(
                     MilestoneType.valueOf(getMilestoneTypeFromFieldName(fieldName)), competitionResource.getId());
 
-            errors.addAll(validateMilestoneDate(milestone, getDateFromFieldValue(value)));
+            errors.addAll(validateMilestoneDateOnAutosave(milestone, fieldName, value));
 
             if(!errors.isEmpty()) {
                 return errors;
@@ -106,42 +106,7 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
         return  errors;
     }
 
-    private List<Error> updateMilestoneWithValueByFieldname2(CompetitionResource competitionResource, String fieldName, String value) {
-        List<Error> errors = new ArrayList<>();
-        try{
-            MilestoneResource milestone = milestoneService.getMilestoneByTypeAndCompetitionId(
-                    MilestoneType.valueOf(getMilestoneTypeFromFieldName(fieldName)), competitionResource.getId());
-
-           //past value
-            Error error = validate2(value, milestone);
-
-            if(!errors.isEmpty()) {
-                return errors;
-            }
-            milestoneService.updateMilestone(milestone);
-        }catch(Exception ex){
-            LOG.error(ex.getMessage());
-            return makeErrorList();
-        }
-        return  errors;
-    }
-
-    private LocalDateTime getDateFromFieldValue(String value) {
-        try {
-            String[] dateParts = value.split("-");
-            return LocalDateTime.of(
-                    Integer.parseInt(dateParts[2]),
-                    Integer.parseInt(dateParts[1]),
-                    Integer.parseInt(dateParts[0]),
-                    0, 0, 0);
-        } catch (Exception e) {
-            LOG.error("Invalid milestone on autosave " + e.getMessage());
-            return null;
-        }
-    }
-
-    private Error validate2(String value, MilestoneResource milestone) {
-        Error error = null;
+    private List<Error> validateMilestoneDateOnAutosave(MilestoneResource milestone, String fieldName, String value) {
         String[] dateParts = value.split("-");
         Integer day = Integer.parseInt(dateParts[0]);
         Integer month = Integer.parseInt(dateParts[1]);
@@ -149,27 +114,17 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
 
         if(day == null || month == null || year == null || !competitionSetupMilestoneService.isMilestoneDateValid(day, month, year)) {
 
-                error = new Error("error.milestone.invalid2", HttpStatus.BAD_REQUEST);
-
+            return asList(fieldError(fieldName, fieldName.toString(), "error.milestone.invalid"));
         }
-        else { //catch validate dates
+        else {
             milestone.setDate(LocalDateTime.of(year, month, day, 0,0));
         }
-
-        return error;
-    }
-
-        private List<Error> validateMilestoneDate(MilestoneResource milestone, LocalDateTime milestoneDate) {
-        if (milestoneDate.isBefore(LocalDateTime.now())){
-            return asList(fieldError("", milestoneDate.toString(), "competition.setup.milestone.date.not.in.future"));
-        }
-        milestone.setDate(milestoneDate);
 
         return Collections.emptyList();
     }
 
     private List<Error> makeErrorList()  {
-        return asList(fieldError("", null, "competition.setup.milestone.date.not.able.to.save"));
+        return asList(fieldError("", null, "error.milestone.autosave.unable"));
     }
 
     private String getMilestoneTypeFromFieldName(String fieldName) {

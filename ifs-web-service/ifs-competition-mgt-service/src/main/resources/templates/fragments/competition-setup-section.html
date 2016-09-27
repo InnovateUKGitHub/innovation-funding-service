@@ -718,11 +718,14 @@
                           <input type="number"
                                  placeholder="DD"
                                  min="1"
-                                 max="31" maxlength="2"
+                                 max="31"
+                                 maxlength="2"
+                                 data-maxlength-errormessage=""
                                  required="required"
                                  class="form-control width-small"
                                  data-date-in-table=""
-                                 th:attr="aria-labelledby=${'milestone-' + milestoneEntry.key}"
+                                 th:attr="aria-labelledby=${'milestone-' + milestoneEntry.key},
+                                           data-date=${milestoneEntry.value.day+'-'+milestoneEntry.value.month+'-'+milestoneEntry.value.year}"
                                  th:value="${milestoneEntry.value.day}"
                                  th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].day'"/>
                       </td>
@@ -734,14 +737,16 @@
                                 required="required"
                                 class="form-control width-small"
                                 data-date-in-table=""
-                                th:attr="aria-labelledby=${'milestone-' + milestoneEntry.key}"
+                                th:attr="aria-labelledby=${'milestone-' + milestoneEntry.key},data-date=${milestoneEntry.value.day+'-'+milestoneEntry.value.month+'-'+milestoneEntry.value.year}"
                                 th:value="${milestoneEntry.value.month}"
                                 th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].month'" />
                       </td>
                       <td class="year" >
                           <input type="number"
                                  placeholder="YYYY"
-                                 th:attr="aria-labelledby=${'milestone-' + milestoneEntry.key}"
+                                 th:attr="aria-labelledby=${'milestone-' + milestoneEntry.key},
+                                 data-date=${milestoneEntry.value.day+'-'+milestoneEntry.value.month+'-'+milestoneEntry.value.year},
+                                    data-maxlength-errormessage=${milestoneEntry.value.milestoneType.milestoneDescription+': the year field cannot contain more than %maxlength% characters'}"
                                  required="required"
                                  maxlength="4"
                                  class="form-control width-small"
