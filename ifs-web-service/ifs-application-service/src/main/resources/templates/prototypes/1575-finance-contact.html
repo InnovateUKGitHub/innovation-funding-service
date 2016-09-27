@@ -197,13 +197,12 @@
 			var financeContact = jQuery('#name-finance-contact1').val();
 
 			jQuery('#finance-name').text(financeContact + ' (Pending)');
-//			jQuery('#finances-name-invite').prop('checked', true);
+			jQuery('#finances-name-invite').val(financeContact + ' (Pending)');
+			jQuery('#finances-name-invite').prop('checked', true).trigger('click');
 			jQuery('#finance-contact-table').hide();
 			jQuery('#invited-finance-contact').show();
-//			jQuery('#finance-cta').text('Submit and send invitation');
 			jQuery('#finance-cta').show();
 			jQuery('#add-finance-contact').text('Change team member');
-
 		});
 
 		jQuery('#finance-contact').text(jQuery('input:radio[name="finances-name-group"]:checked').val());
