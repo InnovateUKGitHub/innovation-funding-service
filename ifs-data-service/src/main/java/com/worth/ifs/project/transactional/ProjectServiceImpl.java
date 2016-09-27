@@ -26,7 +26,6 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.bankdetails.domain.BankDetails;
-import com.worth.ifs.bankdetails.repository.BankDetailsRepository;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.domain.FileEntry;
@@ -35,7 +34,6 @@ import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.BasicFileAndContents;
 import com.worth.ifs.file.service.FileAndContents;
 import com.worth.ifs.file.transactional.FileService;
-import com.worth.ifs.finance.transactional.FinanceRowService;
 import com.worth.ifs.invite.domain.ProjectParticipantRole;
 import com.worth.ifs.invite.mapper.InviteProjectMapper;
 import com.worth.ifs.invite.repository.InviteProjectRepository;
@@ -66,8 +64,8 @@ import com.worth.ifs.project.resource.ProjectPartnerStatusResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectTeamStatusResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.project.resource.*;
 import com.worth.ifs.project.workflow.projectdetails.configuration.ProjectDetailsWorkflowHandler;
-import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
@@ -128,7 +126,7 @@ import static java.util.stream.Collectors.toList;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
-public class ProjectServiceImpl extends BaseTransactionalService implements ProjectService {
+public class ProjectServiceImpl extends AbstractProjectServiceImpl implements ProjectService {
 
     @Autowired
     private ApplicationRepository applicationService;
@@ -162,9 +160,6 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
     @Autowired
     private MonitoringOfficerRepository monitoringOfficerRepository;
-
-    @Autowired
-    private BankDetailsRepository bankDetailsRepository;
 
     @Autowired
     private OrganisationMapper organisationMapper;
@@ -297,10 +292,6 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
     public ServiceResult<List<ProjectUserResource>> getProjectUsers(Long projectId) {
         List<ProjectUser> projectUsers = getProjectUsersByProjectId(projectId);
         return serviceSuccess(simpleMap(projectUsers, projectUserMapper::mapToResource));
-    }
-
-    private List<ProjectUser> getProjectUsersByProjectId(Long projectId) {
-        return projectUserRepository.findByProjectId(projectId);
     }
 
     @Override
@@ -525,18 +516,6 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
                     }
                 });
     }
-
-    /*private Boolean isOrganisationClaimingGrant(Long applicationId, Long organisationId) {
-        ApplicationFinance applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId);
-
-        ApplicationFinanceResource applicationFinanceResource = null;
-        if(applicationFinance!=null) {
-            applicationFinanceResource = applicationFinanceMapper.mapToResource(applicationFinance);
-            setFinanceDetails(applicationFinanceResource);
-        }
-
-        return applicationFinanceResource.getGrantClaimPercentage() != null && applicationFinanceResource.getGrantClaimPercentage() > 0;
-    }*/
 
     private ServiceResult<FileEntry> getCollaborationAgreement(Project project) {
         if (project.getCollaborationAgreement() == null) {
@@ -978,70 +957,6 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
                 return serviceFailure(PROJECT_SETUP_CANNOT_PROGRESS_WORKFLOW);
             }
         });
-    }
-
-    private ProjectActivityStates createFinanceCheckStatus(final ProjectActivityStates bankDetailsStatus) {
-        if(bankDetailsStatus.equals(COMPLETE) || bankDetailsStatus.equals(PENDING) || bankDetailsStatus.equals(NOT_REQUIRED)){
-            return ACTION_REQUIRED;
-        } else {
-            //TODO update logic when Finance checks are implemented
-            return NOT_STARTED;
-        }
-    }
-
-    private ProjectActivityStates createSpendProfileStatus(final ProjectActivityStates financeCheckStatus, final Optional<SpendProfile> spendProfile) {
-        if (spendProfile.isPresent()) {
-            if (spendProfile.get().isMarkedAsComplete()) {
-                return COMPLETE;
-            } else {
-                return ACTION_REQUIRED;
-            }
-        } else {
-            if(financeCheckStatus.equals(COMPLETE)){
-                return PENDING;
-            } else {
-                return NOT_STARTED;
-            }
-        }
-    }
-
-    private ProjectActivityStates createOtherDocumentStatus(final Project project) {
-        if (project.getCollaborationAgreement() != null && project.getExploitationPlan() != null) {
-            return COMPLETE;
-        } else {
-            return ACTION_REQUIRED;
-        }
-    }
-
-    private ProjectActivityStates createGrantOfferLetterStatus() {
-        //TODO update logic when GrantOfferLetter is implemented
-        return NOT_STARTED;
-    }
-
-    private ProjectActivityStates createBankDetailStatus(final Project project, final Optional<BankDetails> bankDetails, final Organisation partnerOrganisation) {
-        if (bankDetails.isPresent()) {
-            return bankDetails.get().isApproved() ? COMPLETE : PENDING;
-        } else {
-            Boolean isSeekingFunding = financeRowService.organisationSeeksFunding(project.getId(), project.getApplication().getId(), partnerOrganisation.getId()).getSuccessObject();
-            if (isResearch(partnerOrganisation.getOrganisationType().getId()) || !isSeekingFunding) {
-                return NOT_REQUIRED;
-            } else {
-                return ACTION_REQUIRED;
-            }
-        }
-    }
-
-    private ProjectActivityStates createProjectDetailsStatus(Project project) {
-        return projectDetailsWorkflowHandler.isSubmitted(project) ? COMPLETE : ACTION_REQUIRED;
-    }
-
-    private ProjectActivityStates createMonitoringOfficerStatus(final Optional<MonitoringOfficer> monitoringOfficer, final ProjectActivityStates leadProjectDetailsSubmitted) {
-        if (leadProjectDetailsSubmitted.equals(COMPLETE)) {
-            return monitoringOfficer.isPresent() ? COMPLETE : PENDING;
-        } else {
-            return NOT_STARTED;
-        }
-
     }
 
     private ProjectUser getCurrentlyLoggedInPartner(Project project) {

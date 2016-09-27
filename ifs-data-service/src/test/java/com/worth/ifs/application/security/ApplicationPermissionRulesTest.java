@@ -170,6 +170,12 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     }
 
     @Test
+    public void projectFinanceUsersCanSeeTheResearchParticipantPercentageInApplications() {
+        assertTrue(rules.projectFinanceUsersCanSeeTheResearchParticipantPercentageInApplications(applicationResource1, projectFinanceUser()));
+        assertFalse(rules.projectFinanceUsersCanSeeTheResearchParticipantPercentageInApplications(applicationResource1, leadOnApplication1));
+    }
+
+    @Test
     public void sendNotificationApplicationSubmitted() {
         assertTrue(rules.aLeadApplicantCanSendApplicationSubmittedNotification(applicationResource1, leadOnApplication1));
         assertFalse(rules.aLeadApplicantCanSendApplicationSubmittedNotification(applicationResource1, user2));

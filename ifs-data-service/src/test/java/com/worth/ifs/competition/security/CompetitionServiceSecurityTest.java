@@ -49,7 +49,9 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         ServiceResult<List<CompetitionResource>> results = classUnderTest.findAll();
         assertEquals(0, results.getSuccessObject().size());
 
-        verify(rules, times(2)).anyoneCanViewOpenCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
+        verify(rules, times(2)).externalUsersCannotViewCompetitionsInSetup(isA(CompetitionResource.class), isNull(UserResource.class));
+        verify(rules, times(2)).compAdminUserCanViewOpenCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
+        verify(rules, times(2)).projectFinanceUserCanViewOpenCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
         verifyNoMoreInteractions(rules);
     }
 
@@ -58,7 +60,9 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         setLoggedInUser(null);
 
         assertAccessDenied(() -> classUnderTest.getCompetitionById(1L), () -> {
-            verify(rules).anyoneCanViewOpenCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
+            verify(rules).externalUsersCannotViewCompetitionsInSetup(isA(CompetitionResource.class), isNull(UserResource.class));
+            verify(rules).compAdminUserCanViewOpenCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
+            verify(rules).projectFinanceUserCanViewOpenCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
             verifyNoMoreInteractions(rules);
         });
     }
@@ -70,7 +74,9 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         ServiceResult<List<CompetitionResource>> results = classUnderTest.findLiveCompetitions();
         assertEquals(0, results.getSuccessObject().size());
 
-        verify(rules, times(2)).anyoneCanViewOpenCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
+        verify(rules, times(2)).externalUsersCannotViewCompetitionsInSetup(isA(CompetitionResource.class), isNull(UserResource.class));
+        verify(rules, times(2)).compAdminUserCanViewOpenCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
+        verify(rules, times(2)).projectFinanceUserCanViewOpenCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
         verifyNoMoreInteractions(rules);
     }
 
@@ -81,7 +87,9 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         ServiceResult<List<CompetitionResource>> results = classUnderTest.findProjectSetupCompetitions();
         assertEquals(0, results.getSuccessObject().size());
 
-        verify(rules, times(2)).anyoneCanViewOpenCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
+        verify(rules, times(2)).externalUsersCannotViewCompetitionsInSetup(isA(CompetitionResource.class), isNull(UserResource.class));
+        verify(rules, times(2)).compAdminUserCanViewOpenCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
+        verify(rules, times(2)).projectFinanceUserCanViewOpenCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
         verifyNoMoreInteractions(rules);
     }
 
@@ -92,7 +100,9 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         ServiceResult<List<CompetitionResource>> results = classUnderTest.findUpcomingCompetitions();
         assertEquals(0, results.getSuccessObject().size());
 
-        verify(rules, times(2)).anyoneCanViewOpenCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
+        verify(rules, times(2)).externalUsersCannotViewCompetitionsInSetup(isA(CompetitionResource.class), isNull(UserResource.class));
+        verify(rules, times(2)).compAdminUserCanViewOpenCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
+        verify(rules, times(2)).projectFinanceUserCanViewOpenCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
         verifyNoMoreInteractions(rules);
     }
 

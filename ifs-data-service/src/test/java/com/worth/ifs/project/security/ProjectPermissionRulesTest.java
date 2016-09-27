@@ -195,6 +195,20 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
     }
 
     @Test
+    public void testProjectFinanceUsersCanViewMonitoringOfficersOnProjects() {
+
+        ProjectResource project = newProjectResource().build();
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.equals(projectFinanceUser())) {
+                assertTrue(rules.projectFinanceUsersCanViewMonitoringOfficersForAnyProject(project, user));
+            } else {
+                assertFalse(rules.projectFinanceUsersCanViewMonitoringOfficersForAnyProject(project, user));
+            }
+        });
+    }
+
+    @Test
     public void testPartnersCanViewMonitoringOfficersOnTheirOwnProjects() {
 
         UserResource user = newUserResource().build();
@@ -444,9 +458,9 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
     }
 
     @Test
-    public void testNonCompAdminsCannotViewTeamStatus(){
+    public void testProjectFinanceUserCanViewTeamStatus(){
         ProjectResource project = newProjectResource().build();
-        assertFalse(rules.compAdminsCanViewTeamStatus(project, projectFinanceUser()));
+        assertTrue(rules.projectFinanceUserCanViewTeamStatus(project, projectFinanceUser()));
     }
 
     private void setUpUserAsProjectManager(ProjectResource projectResource, UserResource user) {

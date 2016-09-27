@@ -148,7 +148,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         projectManagerRole = newRole(UserRoleType.PROJECT_MANAGER).build();
 
         user = newUser().
-                withid(userId).
+                withId(userId).
                 build();
 
         leadApplicantProcessRole = newProcessRole().
@@ -395,7 +395,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         Project project = newProject().withId(123L).build();
         Organisation organisation = newOrganisation().withId(5L).build();
-        User user = newUser().withid(7L).build();
+        User user = newUser().withId(7L).build();
 
         newProjectUser().withOrganisation(organisation).withUser(user).withProject(project).withRole(PROJECT_PARTNER).build();
 
@@ -422,10 +422,10 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         Project project = newProject().withId(123L).build();
         Organisation organisation = newOrganisation().withId(5L).build();
 
-        User newFinanceContactUser = newUser().withid(7L).build();
+        User newFinanceContactUser = newUser().withId(7L).build();
         newProjectUser().withOrganisation(organisation).withUser(newFinanceContactUser).withProject(project).withRole(PROJECT_PARTNER).build();
 
-        User existingFinanceContactUser = newUser().withid(9999L).build();
+        User existingFinanceContactUser = newUser().withId(9999L).build();
         newProjectUser().withOrganisation(organisation).withUser(existingFinanceContactUser).withProject(project).withRole(PROJECT_PARTNER).build();
         newProjectUser().withOrganisation(organisation).withUser(existingFinanceContactUser).withProject(project).withRole(PROJECT_FINANCE_CONTACT).build();
 
@@ -458,7 +458,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         Project project = newProject().withId(123L).build();
         Organisation organisation = newOrganisation().withId(5L).build();
-        User user = newUser().withid(7L).build();
+        User user = newUser().withId(7L).build();
         newProjectUser().withOrganisation(organisation).withUser(user).withProject(project).withRole(PROJECT_MANAGER).build();
 
         when(projectRepositoryMock.findOne(123L)).thenReturn(project);
@@ -482,7 +482,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(projectRepositoryMock.findOne(123L)).thenReturn(existingProject);
 
         Organisation organisation = newOrganisation().withId(5L).build();
-        User user = newUser().withid(7L).build();
+        User user = newUser().withId(7L).build();
         newProjectUser().withOrganisation(organisation).withUser(user).withProject(anotherProject).withRole(PROJECT_PARTNER).build();
 
         ServiceResult<Void> updateResult = service.updateFinanceContact(123L, 5L, userIdForUserNotOnProject);
@@ -634,7 +634,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         Project project = newProject().withId(123L).build();
         Organisation organisation = newOrganisation().withId(5L).build();
-        User user = newUser().withid(7L).build();
+        User user = newUser().withId(7L).build();
 
         ProjectUser projectUserWithPartnerRole = newProjectUser().withOrganisation(organisation).withUser(user).withProject(project).withRole(PROJECT_PARTNER).build();
         ProjectUser projectUserWithFinanceRole = newProjectUser().withOrganisation(organisation).withUser(user).withProject(project).withRole(PROJECT_FINANCE_CONTACT).build();
@@ -962,7 +962,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     public void testSaveDocumentsSubmitDateTimeIsSuccessfulWhenUploadsComplete() {
         ProjectUser projectUserToSet = newProjectUser()
                 .withId(1L)
-                .withUser(newUser().withid(1L).build())
+                .withUser(newUser().withId(1L).build())
                 .withRole(ProjectParticipantRole.PROJECT_MANAGER)
                 .build();
         List<ProjectUser> projectUsers = new ArrayList<>();
@@ -989,7 +989,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     public void testSaveDocumentsSubmitDateTimeFailsWhenUploadsImcomplete() {
         ProjectUser projectUserToSet = newProjectUser()
                 .withId(1L)
-                .withUser(newUser().withid(1L).build())
+                .withUser(newUser().withId(1L).build())
                 .withRole(ProjectParticipantRole.PROJECT_MANAGER)
                 .build();
         List<ProjectUser> projectUsers = new ArrayList<>();
@@ -1265,7 +1265,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                                                                         Supplier<ServiceResult<Boolean>> getConditionFn) {
         ProjectUser projectUserToSet = newProjectUser()
                 .withId(1L)
-                .withUser(newUser().withid(1L).build())
+                .withUser(newUser().withId(1L).build())
                 .withRole(PROJECT_MANAGER)
                 .build();
 

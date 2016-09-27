@@ -13,7 +13,8 @@ public class CompetitionInviteDocs {
     public static final FieldDescriptor[] competitionInviteFields = {
             fieldWithPath("id").description("Id of the competition invite"),
             fieldWithPath("competitionName").description("Name of the competition"),
-            fieldWithPath("email").description("Email of the competition invitee")
+            fieldWithPath("email").description("Email of the competition invitee"),
+            fieldWithPath("status").description("Status of the competition invite")
     };
 
     public static final FieldDescriptor[] competitionRejectionFields = {
