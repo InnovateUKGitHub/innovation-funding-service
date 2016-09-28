@@ -5,6 +5,7 @@ import com.worth.ifs.project.financecheck.FinanceCheckService;
 import com.worth.ifs.project.financecheck.form.FinanceCheckForm;
 import com.worth.ifs.project.financecheck.viewmodel.FinanceCheckViewModel;
 import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
+import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,7 +28,7 @@ public class FinanceCheckController {
     private FinanceCheckService financeCheckService;
 
     @RequestMapping(method = GET)
-    public String view(@PathVariable Long projectId, @PathVariable Long organisationId, Model model, @ModelAttribute FinanceCheckForm form){
+    public String view(@PathVariable("projectId") final Long projectId, @PathVariable("organisationId") Long organisationId, @ModelAttribute(FORM_ATTR_NAME) FinanceCheckForm form, @ModelAttribute("loggedInUser") UserResource loggedInUser, Model model){
         ProjectOrganisationCompositeId key = new ProjectOrganisationCompositeId(projectId, organisationId);
         FinanceCheckResource financeCheckResource = financeCheckService.getByProjectAndOrganisation(key);
         populateExitingFinanceCheckDetailsInForm(financeCheckResource, form);
@@ -35,7 +36,7 @@ public class FinanceCheckController {
     }
 
     @RequestMapping(method = POST)
-    public String update(@PathVariable Long projectId, @PathVariable Long organisationId,  Model model, @ModelAttribute FinanceCheckForm form){
+    public String update(@PathVariable("projectId") Long projectId, @PathVariable("organisationId") Long organisationId,  Model model, @ModelAttribute(FORM_ATTR_NAME) FinanceCheckForm form){
         financeCheckService.update(form.getFinanceCheckResource());
         return "redirect:/project/" + projectId + "/organisation/" + organisationId + "/finance-check";
     }
