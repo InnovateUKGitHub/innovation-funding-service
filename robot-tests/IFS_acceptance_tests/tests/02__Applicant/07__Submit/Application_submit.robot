@@ -29,12 +29,6 @@ Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
 *** Variables ***
 
 *** Test Cases ***
-Set up an application to submit
-    [Documentation]    INFUND-205
-    [Tags]    HappyPath    Email    Pending
-    new account complete all but one
-    # please note that this test case has been moved out of suite setup as it isn't required for smoke testing, but should still run for HappyPath and full test runs
-
 Submit button disabled when the application is incomplete
     [Documentation]    INFUND-195
     [Tags]    Email    HappyPath
@@ -129,10 +123,12 @@ The user can check that the sections are read only
 
 the submit button should be disabled
     the user selects the checkbox    id=agree-terms-page
+    the user selects the checkbox    id=agree-state-aid-page
     Element Should Be Disabled    jQuery=button:contains("Submit application")
 
 the applicant accepts the terms and conditions
     the user selects the checkbox    id=agree-terms-page
+    the user selects the checkbox    id=agree-state-aid-page
 
 The user marks the finances as complete
     Given the user navigates to the page    ${DASHBOARD_URL}

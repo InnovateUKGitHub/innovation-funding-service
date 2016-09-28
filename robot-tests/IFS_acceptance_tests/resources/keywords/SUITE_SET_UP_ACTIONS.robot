@@ -44,7 +44,7 @@ create new account for submitting
     And the user clicks the button/link    jQuery=.button:contains("Save")
     And the user enters text to a text field    name=email    ${test_mailbox_one}+submittest@gmail.com
     And the user fills the create account form    Temur    Ketsbaia
-    When the user opens the mailbox and verifies the email from
+    When the user opens the mailbox and verifies the email from    ${test_mailbox_one}+submittest@gmail.com    sign into your account and start your application
     And the user clicks the button/link    jQuery=.button:contains("Sign in")
 
 
