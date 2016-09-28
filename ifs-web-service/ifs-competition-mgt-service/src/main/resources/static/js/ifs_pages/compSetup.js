@@ -123,12 +123,12 @@ IFS.competition_management.setup = (function(){
                 count = parseInt(jQuery('#co-funder-count').val(),10);
 
             jQuery('[name="removeFunder"]').val(index);
-            IFS.core.autoSave.fieldChanged('[name="removeFunder"]')
+            IFS.core.autoSave.fieldChanged('[name="removeFunder"]');
             funderRow.remove();
             jQuery('#co-funder-count').val(count - 1);
             IFS.competition_management.setup.reindexFunderRows();
             //Force recalculation of the total.
-            jQuery('body').trigger('recalculateAllFinances')
+            jQuery('body').trigger('recalculateAllFinances');
             return false;
         });
     },
