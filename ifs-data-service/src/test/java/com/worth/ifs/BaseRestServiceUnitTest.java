@@ -11,6 +11,7 @@ import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.AsyncRestTemplate;
 import org.springframework.web.client.RestTemplate;
 
@@ -229,6 +230,14 @@ public abstract class BaseRestServiceUnitTest<ServiceType extends BaseRestServic
         ResponseEntity<T> response = new ResponseEntity<>(responseBody, responseCode);
         when(mockRestTemplate.exchange(dataServicesUrl + nonBaseUrl, PUT, httpEntityForRestCall(requestBody), responseType)).thenReturn(response);
         return response;
+    }
+
+    protected <T> void setupPutWithRestResultVerifications(String nonBaseUrl, Class<T> responseType, Object requestBody) {
+        verify(mockRestTemplate).exchange(dataServicesUrl + nonBaseUrl, PUT, httpEntityForRestCall(requestBody), responseType);
+    }
+
+    protected <T> void setupPutWithRestResultVerifications(String nonBaseUrl, ParameterizedTypeReference<T> responseType, Object requestBody) {
+        verify(mockRestTemplate).exchange(dataServicesUrl + nonBaseUrl, PUT, httpEntityForRestCall(requestBody), responseType);
     }
 
     protected void setupDeleteWithRestResultVerifications(String nonBaseUrl) {

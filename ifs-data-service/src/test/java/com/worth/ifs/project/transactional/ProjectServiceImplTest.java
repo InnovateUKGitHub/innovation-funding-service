@@ -18,6 +18,7 @@ import com.worth.ifs.address.domain.AddressType;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.bankdetails.domain.BankDetails;
+import com.worth.ifs.commons.error.CommonErrors;
 import com.worth.ifs.commons.error.CommonFailureKeys;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -857,6 +858,38 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     }
 
     @Test
+    public void testAcceptOrRejectOtherDocumentsWhenProjectNotInDB() {
+
+        Long projectId = 1L;
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(null);
+
+        ServiceResult<Void> result = service.acceptOrRejectOtherDocuments(projectId, true);
+
+        assertTrue(result.isFailure());
+
+        assertTrue(result.getFailure().is(CommonErrors.notFoundError(Project.class, projectId)));
+
+    }
+
+    @Test
+    public void testAcceptOrRejectOtherDocumentsSuccess() {
+
+        Long projectId = 1L;
+
+        Project projectInDB = newProject().withId(projectId).build();
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
+
+        ServiceResult<Void> result = service.acceptOrRejectOtherDocuments(projectId, true);
+
+        assertTrue(result.isSuccess());
+
+        assertEquals(true, projectInDB.getOtherDocumentsApproved());
+
+    }
+
+    @Test
     public void testCreateCollaborationAgreementFileEntry() {
         assertCreateFile(
                 project::getCollaborationAgreement,
@@ -930,14 +963,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 project::getExploitationPlan,
                 project::setExploitationPlan,
                 () -> service.deleteExploitationPlanFile(123L));
-    }
-
-    @Test
-    public void testRetrieveUploadedFilesExist() {
-        assertUploadedFilesExist(
-                project::setCollaborationAgreement,
-                project::setExploitationPlan,
-                () -> service.retrieveUploadedDocuments(123L));
     }
 
     @Test
@@ -1254,8 +1279,8 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         getFileEntryResources(fileSetter1, fileSetter2, inputStreamSupplier1, inputStreamSupplier2);
         ServiceResult<Boolean> result = getConditionFn.get();
 
-        assertFalse(result.isSuccess());
-        assertTrue(result.isFailure());
+        assertTrue(result.isSuccess());
+        assertFalse(result.getSuccessObject());
 
     }
 

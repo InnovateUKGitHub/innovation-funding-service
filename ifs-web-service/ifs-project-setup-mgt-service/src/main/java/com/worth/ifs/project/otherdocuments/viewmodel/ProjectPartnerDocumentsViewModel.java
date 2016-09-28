@@ -21,15 +21,11 @@ public class ProjectPartnerDocumentsViewModel implements BasicProjectDetailsView
     private String projectManagerTelephone;
     private String projectManagerEmail;
 
-    //TODO: Probably a new projectDocuments object
-    private String rejectionReason;
-    private boolean approved;
-    private boolean rejected;
+    private Boolean approved;
 
     public ProjectPartnerDocumentsViewModel(Long projectId, String projectName, String leadPartnerOrganisationName, String projectManagerName,
                                             String projectManagerTelephone, String projectManagerEmail, FileDetailsViewModel collaborationAgreementFileDetails,
-                                            FileDetailsViewModel exploitationPlanFileDetails, List<String> partnerOrganisationNames, boolean approved,
-                                            boolean rejected, String rejectionReason
+                                            FileDetailsViewModel exploitationPlanFileDetails, List<String> partnerOrganisationNames, Boolean approved
                                           ) {
         this.projectId = projectId;
         this.projectName = projectName;
@@ -41,8 +37,6 @@ public class ProjectPartnerDocumentsViewModel implements BasicProjectDetailsView
         this.exploitationPlanFileDetails = exploitationPlanFileDetails;
         this.partnerOrganisationNames = partnerOrganisationNames;
         this.approved = approved;
-        this.rejected = rejected;
-        this.rejectionReason = rejectionReason;
     }
 
     @Override
@@ -75,23 +69,7 @@ public class ProjectPartnerDocumentsViewModel implements BasicProjectDetailsView
 
     public String getProjectManagerEmail() { return projectManagerEmail;}
 
-    public boolean isShowRejectionMessage() {
-        return rejectionReason != null;
-    }
-
-    public boolean isRejected() {
-        return rejected;
-    }
-
-    public String getRejectionReason() {
-        return rejectionReason;
-    }
-
-    public void setRejectionReason(String rejectionReason) {
-        this.rejectionReason = rejectionReason;
-    }
-
-    public boolean isApproved() {
+    public Boolean isApproved() {
         return approved;
     }
 

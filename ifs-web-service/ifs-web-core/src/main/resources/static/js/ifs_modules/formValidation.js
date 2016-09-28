@@ -40,7 +40,7 @@ IFS.core.formValidation = (function(){
                 messageInvalid : "Please enter a valid email address"
             },
             required : {
-                fields: '[required]:not([data-date-in-table])',
+                fields: '[required]:not([data-date])',
                 messageInvalid : "This field cannot be left blank"
             },
             minlength : {
@@ -569,7 +569,7 @@ IFS.core.formValidation = (function(){
               if(formGroup.find('[data-errorfield="'+name+'"]').length === 0) {
                 field.removeClass('field-error');
                 if(s.html5validationMode){
-                  jQuery('[name='+name+']').each(function(){
+                  jQuery('[name="'+name+'"]').each(function(){
                     this.setCustomValidity('');
                   });
                 }

@@ -40,6 +40,7 @@ public interface ProjectRestService {
     RestResult<Void> removeCollaborationAgreementDocument(Long projectId);
     RestResult<FileEntryResource> addCollaborationAgreementDocument(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes);
     RestResult<Void> removeExploitationPlanDocument(Long projectId);
+    RestResult<Void> acceptOrRejectOtherDocuments(Long projectId, Boolean approved);
     RestResult<FileEntryResource> addExploitationPlanDocument(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes);
     RestResult<Boolean> isOtherDocumentsSubmitAllowed(Long projectId);
     RestResult<Void> setPartnerDocumentsSubmitted(Long projectId);

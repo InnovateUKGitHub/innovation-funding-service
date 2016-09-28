@@ -52,7 +52,7 @@ public class ProjectOtherDocumentsController {
                                                @PathVariable("projectId") Long projectId,
                                                @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        //TODO Needs further work -  INFUND-4621 INFUND-4620
+        projectService.acceptOrRejectOtherDocuments(projectId, form.isApproved());
         return doViewOtherDocumentsPage(model, form, projectId, loggedInUser);
     }
 
@@ -108,8 +108,7 @@ public class ProjectOtherDocumentsController {
                 projectManagerName, projectManagerTelephone, projectManagerEmail,
                 collaborationAgreement.map(FileDetailsViewModel::new).orElse(null),
                 exploitationPlan.map(FileDetailsViewModel::new).orElse(null),
-                partnerOrganisationNames, form != null && form.isApproved(),
-                form != null && form.isRejected(), form != null ? form.getRejectionReason() : null);
+                partnerOrganisationNames, project.getOtherDocumentsApproved());
     }
 
     private ResponseEntity<ByteArrayResource> returnFileIfFoundOrThrowNotFoundException(Long projectId, Optional<ByteArrayResource> content, Optional<FileEntryResource> fileDetails) {

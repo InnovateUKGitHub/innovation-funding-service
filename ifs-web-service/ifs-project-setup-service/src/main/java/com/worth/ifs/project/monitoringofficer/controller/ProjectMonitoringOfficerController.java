@@ -5,6 +5,7 @@ import com.worth.ifs.project.monitoringofficer.viewmodel.ProjectMonitoringOffice
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,6 +25,7 @@ public class ProjectMonitoringOfficerController {
     @Autowired
     private ProjectService projectService;
 
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_MONITORING_OFFICER_SECTION')")
     @RequestMapping(method = GET)
     public String viewMonitoringOfficer(@PathVariable("projectId") Long projectId, Model model) {
 

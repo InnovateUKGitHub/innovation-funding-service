@@ -4,7 +4,6 @@ import com.worth.ifs.application.service.MilestoneService;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.competition.resource.MilestoneResource;
 import com.worth.ifs.competition.resource.MilestoneType;
-import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.form.MilestonesForm;
 import com.worth.ifs.competitionsetup.model.MilestoneEntry;
 import org.apache.commons.collections4.map.LinkedMap;
@@ -53,7 +52,7 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
             }
         });
 
-        return milestoneService.update(updatedMilestones, competitionId);
+        return milestoneService.updateMilestones(updatedMilestones, competitionId);
     }
 
     private LocalDateTime getMilestoneDate(Integer day, Integer month, Integer year){
@@ -82,9 +81,13 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
         return errors;
     }
 
-    private Boolean isMilestoneDateValid(Integer day, Integer month, Integer year) {
+    @Override
+    public Boolean isMilestoneDateValid(Integer day, Integer month, Integer year) {
         try{
             LocalDateTime.of(year, month, day, 0,0);
+            if (year > 9999) {
+                    return false;
+            }
             return true;
         }
         catch(DateTimeException dte){

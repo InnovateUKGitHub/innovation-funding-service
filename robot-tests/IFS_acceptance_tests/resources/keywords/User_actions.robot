@@ -584,9 +584,9 @@ delete the emails from both main remote test mailboxes
     close mailbox
 
 the user should get a confirmation email
-    [Arguments]    ${user}    ${password}    ${content}
-    run keyword if    ${docker}==1    the user should get a local confirmation email     ${content}
-    run keyword if    ${docker}!=1    the user should get a remote confirmation email    ${user}    ${password}    ${content}
+    [Arguments]    ${receiver}    ${password}    ${content}    ${subject}
+    run keyword if    ${docker}==1    the user should get a local confirmation email     ${receiver}    ${content}    ${subject}
+    run keyword if    ${docker}!=1    the user should get a remote confirmation email    ${receiver}    ${password}    ${content}
 
 the user should get a remote confirmation email
     [Arguments]    ${user}    ${password}    ${content}
@@ -601,12 +601,12 @@ the user should get a remote confirmation email
     close mailbox
 
 the user should get a local confirmation email
-    [Arguments]    ${content}
+    [Arguments]    ${receiver}    ${content}    ${subject}
     Open Mailbox    server=ifs-local-dev    port=9876    user=smtp    password=smtp    is_secure=False
-    ${LATEST} =    wait for email
-    ${HTML}=    get email body    ${LATEST}
+    ${WHICH EMAIL} =  wait for email  toemail=${receiver}    subject=${subject}
+    ${HTML}=    get email body    ${WHICH EMAIL}
     log    ${HTML}
-    ${MATCHES1}=    Get Matches From Email    ${LATEST}    ${content}
+    ${MATCHES1}=    Get Matches From Email    ${WHICH EMAIL}    ${content}
     log    ${MATCHES1}
     Should Not Be Empty    ${MATCHES1}
     Delete All Emails
