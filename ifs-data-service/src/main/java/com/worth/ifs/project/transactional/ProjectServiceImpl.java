@@ -34,8 +34,10 @@ import com.worth.ifs.project.constant.ProjectActivityStates;
 import com.worth.ifs.project.domain.MonitoringOfficer;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
-import com.worth.ifs.project.finance.domain.SpendProfile;
+import com.worth.ifs.project.finance.domain.*;
+import com.worth.ifs.project.finance.repository.FinanceCheckRepository;
 import com.worth.ifs.project.finance.repository.SpendProfileRepository;
+import com.worth.ifs.project.finance.transactional.CostCategoryTypeStrategy;
 import com.worth.ifs.project.mapper.MonitoringOfficerMapper;
 import com.worth.ifs.project.mapper.ProjectMapper;
 import com.worth.ifs.project.mapper.ProjectUserMapper;
@@ -144,6 +146,12 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
     @Autowired
     private FinanceRowService financeRowService;
+
+    @Autowired
+    private FinanceCheckRepository financeCheckRepository;
+
+    @Autowired
+    private CostCategoryTypeStrategy costCategoryTypeStrategy;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -473,18 +481,6 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
                     }
                 });
     }
-
-    /*private Boolean isOrganisationClaimingGrant(Long applicationId, Long organisationId) {
-        ApplicationFinance applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId);
-
-        ApplicationFinanceResource applicationFinanceResource = null;
-        if(applicationFinance!=null) {
-            applicationFinanceResource = applicationFinanceMapper.mapToResource(applicationFinance);
-            setFinanceDetails(applicationFinanceResource);
-        }
-
-        return applicationFinanceResource.getGrantClaimPercentage() != null && applicationFinanceResource.getGrantClaimPercentage() > 0;
-    }*/
 
     private ServiceResult<FileEntry> getCollaborationAgreement(Project project) {
         if (project.getCollaborationAgreement() == null) {
@@ -860,6 +856,7 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
             return saveProjectResult.
                     andOnSuccess(newProject -> createProcessEntriesForNewProject(newProject).
+                    andOnSuccess(() -> generateFinanceCheckEntitiesForNewProject(newProject)).
                     andOnSuccessReturn(() -> projectMapper.mapToResource(newProject)));
         });
     }
@@ -873,6 +870,36 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         } else {
             return serviceFailure(PROJECT_SETUP_UNABLE_TO_CREATE_PROJECT_PROCESSES);
         }
+    }
+
+    private ServiceResult<Void> generateFinanceCheckEntitiesForNewProject(Project newProject) {
+        List<Organisation> organisations = getPartnerOrganisations(newProject.getId());
+
+        organisations.forEach(organisation -> {
+            costCategoryTypeStrategy.getOrCreateCostCategoryTypeForSpendProfile(newProject.getId(), organisation.getId()).
+                    andOnSuccess(costCategoryType -> {
+                        createFinanceCheckFrom(newProject, organisation, costCategoryType);
+                        return serviceSuccess();
+                    });
+        });
+        return serviceSuccess();
+    }
+
+    private void createFinanceCheckFrom(Project newProject, Organisation organisation, CostCategoryType costCategoryType){
+        List<Cost> costs = new ArrayList<>();
+        List<CostCategory> costCategories = costCategoryType.getCostCategories();
+        CostGroup costGroup = new CostGroup("finance-check", costs);
+        costCategories.forEach(costCategory -> {
+            Cost cost = new Cost();
+            cost.setCostCategory(costCategory);
+            cost.setCostGroup(costGroup);
+            costs.add(cost);
+        });
+
+        FinanceCheck financeCheck = new FinanceCheck(newProject, costGroup);
+        financeCheck.setOrganisation(organisation);
+        financeCheck.setProject(newProject);
+        financeCheckRepository.save(financeCheck);
     }
 
     private ServiceResult<ProjectUser> createPartnerProjectUser(Project project, User user, Organisation organisation) {
