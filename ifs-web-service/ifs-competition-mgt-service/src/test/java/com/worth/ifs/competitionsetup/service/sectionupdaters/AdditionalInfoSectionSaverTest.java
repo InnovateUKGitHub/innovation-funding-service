@@ -74,6 +74,11 @@ public class AdditionalInfoSectionSaverTest {
 		errors = service.autoSaveSectionField(competition,
 				"funder["+ lastIndex +"].funderBudget", "123.001", Optional.empty());
 		assertFalse(errors.isEmpty());
+
+		//Test funder budget with a negative number.
+		errors = service.autoSaveSectionField(competition,
+				"funder["+ lastIndex +"].funderBudget", "-1", Optional.empty());
+		assertFalse(errors.isEmpty());
 	}
 
 
@@ -93,8 +98,7 @@ public class AdditionalInfoSectionSaverTest {
 
 		assertThat(competition.getFunders().size(), CoreMatchers.equalTo(3));
 		assertTrue(errors.isEmpty());
-
-
+		
 		//Test that a valid index can be removed.
 		errors = service.autoSaveSectionField(competition,
 				"removeFunder", "2", Optional.empty());

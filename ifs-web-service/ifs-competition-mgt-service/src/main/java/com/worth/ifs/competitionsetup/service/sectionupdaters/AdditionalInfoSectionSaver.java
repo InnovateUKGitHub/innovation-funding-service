@@ -128,6 +128,9 @@ public class AdditionalInfoSectionSaver extends AbstractSectionSaver implements 
                 funder.setFunder(value);
             } else if(fieldName.endsWith("funderBudget")) {
 				BigDecimal funderBudget = new BigDecimal(value);
+				if (funderBudget.compareTo(BigDecimal.ZERO) < 0) {
+					return asList(new Error("validation.additionalinfoform.funderbudget.min", HttpStatus.BAD_REQUEST));
+				}
 				if (new BigDecimal("99999999.99").compareTo(funderBudget) > 0 && funderBudget.scale() <= 2) {
 					funder.setFunderBudget(funderBudget);
 				} else {
