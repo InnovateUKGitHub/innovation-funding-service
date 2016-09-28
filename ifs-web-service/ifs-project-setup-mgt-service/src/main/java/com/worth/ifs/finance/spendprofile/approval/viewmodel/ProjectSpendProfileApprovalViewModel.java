@@ -11,12 +11,14 @@ public class ProjectSpendProfileApprovalViewModel {
     private String leadTechnologist;
     private Boolean isApproved;
     private Boolean isRejected;
+    private Boolean isNotApprovedOrRejected;
 
-    public ProjectSpendProfileApprovalViewModel(CompetitionSummaryResource competitionSummary, String leadTechnologist, Boolean isApproved, Boolean isRejected) {
+    public ProjectSpendProfileApprovalViewModel(CompetitionSummaryResource competitionSummary, String leadTechnologist, Boolean isApproved, Boolean isRejected, Boolean isNotApprovedOrRejected) {
         this.competitionSummary = competitionSummary;
         this.leadTechnologist = leadTechnologist;
         this.isApproved = isApproved;
         this.isRejected = isRejected;
+        this.isNotApprovedOrRejected = isNotApprovedOrRejected;
     }
 
     public CompetitionSummaryResource getCompetitionSummary() {
@@ -33,5 +35,9 @@ public class ProjectSpendProfileApprovalViewModel {
 
     public Boolean getRejected() {
         return isRejected;
+    }
+
+    public Boolean getNotApprovedOrRejected() {
+        return isNotApprovedOrRejected;
     }
 }

@@ -25,13 +25,13 @@
     </div>
     <hr/>
 
-    <th:block th:if="${model.isApproved}">
+    <th:block th:if="${model.approved}">
         <div class="success-alert extra-margin-bottom">
             <h2 class="heading-small no-margin-top">The spend profile has been approved.</h2>
         </div>
     </th:block>
 
-    <th:block th:if="${model.isRejected}">
+    <th:block th:if="${model.rejected}">
         <div class="warning-alert extra-margin-bottom">
             <h3 class="heading-small">REJECT TEXT REQUIRED</h3>
             <ul class="list-bullet">
@@ -48,7 +48,7 @@
 
     <a href="#">Competition-spend-profile.csv</a>
 
-    <div th:if="${param.status == null}" th:remove="tag">
+    <div th:if="${model.notApprovedOrRejected}" th:remove="tag">
         <h2 class="heading-medium">Approved by Lead technologist</h2>
         <p>The spend profile must be sent to the lead technologist for their review and approval.</p>
         <div class="form-group">

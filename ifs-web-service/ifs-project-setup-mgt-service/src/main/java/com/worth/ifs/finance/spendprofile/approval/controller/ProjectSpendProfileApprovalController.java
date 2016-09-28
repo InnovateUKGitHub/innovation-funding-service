@@ -66,8 +66,9 @@ public class ProjectSpendProfileApprovalController {
 
         Boolean isApproved = false;
         Boolean isRejected = false;
+        Boolean isNotApprovedOrRejected = !isApproved && !isRejected;
 
-        return new ProjectSpendProfileApprovalViewModel(competitionSummary, leadTechnologist, isApproved, isRejected);
+        return new ProjectSpendProfileApprovalViewModel(competitionSummary, leadTechnologist, isApproved, isRejected, isNotApprovedOrRejected);
     }
 
     private String redirectToViewSpendProfileApproval(Long projectId) {
