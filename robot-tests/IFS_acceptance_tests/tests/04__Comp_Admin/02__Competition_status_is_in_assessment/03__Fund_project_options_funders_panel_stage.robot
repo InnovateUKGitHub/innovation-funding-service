@@ -80,15 +80,13 @@ Once applicants are notified, the whole state of the competition changes to Asse
 
 Successful applicants are notified of the funding decision
     [Documentation]    INFUND-2603
-    [Tags]    Pending    Email
-    #TODO INFUND-5147
-    Then the user should get a confirmation email    worth.email.test+fundsuccess@gmail.com    testtest1    ${email_success_message}
+    [Tags]    Email
+    Then the user should get a confirmation email    worth.email.test+fundsuccess@gmail.com    testtest1    ${email_success_message}    Your application was successful
 
 Unsuccessful applicants are notified of the funding decision
     [Documentation]    INFUND-2603
-    [Tags]    Pending    Email
-    #TODO INFUND-5147
-    Then the user should get a confirmation email    worth.email.test.two+fundfailure@gmail.com    testtest1    ${email_failure_message}
+    [Tags]    Email
+    Then the user should get a confirmation email    worth.email.test.two+fundfailure@gmail.com    testtest1    ${email_failure_message}    Your application was unsuccessful
 
 Successful applicants can see the assessment outcome on the dashboard page
     [Documentation]    INFUND-2604
