@@ -125,6 +125,7 @@ the submit button should be disabled
 
 the applicant accepts the terms and conditions
     the user selects the checkbox    id=agree-terms-page
+    the user selects the checkbox    id=agree-state-aid-page
 
 The user marks the finances as complete
     the user navigates to the page    ${DASHBOARD_URL}

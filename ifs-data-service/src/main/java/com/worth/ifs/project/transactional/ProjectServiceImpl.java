@@ -422,6 +422,13 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     @Override
+    public ServiceResult<Void> acceptOrRejectOtherDocuments(Long projectId, Boolean approved) {
+
+        return getProject(projectId)
+                .andOnSuccessReturnVoid(project -> project.setOtherDocumentsApproved(approved));
+    }
+
+    @Override
     public List<ServiceResult<FileAndContents>> retrieveUploadedDocuments(Long projectId) {
         ServiceResult<FileAndContents> collaborationAgreementFileContents = getCollaborationAgreementFileContents(projectId);
         ServiceResult<FileAndContents> exploitationPlanFileContents = getExploitationPlanFileContents(projectId);
