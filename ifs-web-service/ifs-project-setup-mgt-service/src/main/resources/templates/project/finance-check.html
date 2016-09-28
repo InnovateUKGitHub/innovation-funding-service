@@ -1,134 +1,91 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
-    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
-
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Finance Checks'" th:remove="tag" />
 </head>
-
 <body>
-
-<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
 <div th:include="fragments/layout :: global-header" th:remove="tag" />
 
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Finance checks'}, ${'/prototypes/5163-project-finances'})" th:remove="tag" />
-
-    <!-- HARDCODED PROTOTYPE HTML -->
-
-    <div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Aptrans Ltd'}, ${'Eligibility'})" th:with="partner=lead" th:remove="tag" />
-
-    <!-- <div th:include="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:with="page='project-setup', status='closed'" th:remove="tag" /> -->
-
     <hr />
+    <div class="success-alert">
+        The partner finance eligibility has been approved by Paul Davidson, 27 July 2016
+    </div>
 
-    <th:block th:if="${param.status != null and param.status[0] == 'approved'}">
-        <div class="success-alert">
-            The partner finance eligibility has been approved by Paul Davidson, 27 July 2016
-        </div>
-    </th:block>
+    <form th:object="${form}">
+      <h3 class="heading-medium">Finance contact</h3>
+      <p>Dave Norman <br /><a href="mailto:#">dave@norman.com</a></p>
+      <h3 class="heading-medium">Project costs</h3>
+      <p>Please enter final project costs below</p>
 
-
-    <th:block th:if="${param.status != null and param.status[0] == 'grantChanged' or param.action != null and param.action[0] == 'grantChanged'}">
-        <div class="panel-indent">
-            <h3 class="heading-medium no-margin-top">% Grant has been reduced from 55% to 40% </h3>
-            <dl class="standard-definition-list">
-                <dt>Funding sought</dt>
-                <dd>&pound;180,399</dd>
-
-                <dt>Funding granted</dt>
-                <dd>&pound;160,000</dd>
-            </dl>
-        </div>
-    </th:block>
-
-    <form>
-
-        <h3 class="heading-medium">Project finances</h3>
-
-        <p>These finances where originally submitted at the application stage. All saved changes to the finances will be viewable by the applicants.</p>
-
-        <p><a href="#">project-costs.csv</a></p>
-
-        <h3 class="heading-medium">Finance contact</h3>
-
-        <p>Dave Norman <br /><a href="mailto:#">dave@norman.com</a></p>
-
-        <!-- <a href="/prototypes/1581-changes-finances">Review all changes to project finances</a> -->
-
-        <h3 class="heading-medium">Project costs</h3>
-
-        <p>Please enter final project costs below</p>
-
-        <table>
+      <table class="finance-check-form">
             <thead>
             <tr>
                 <th scope="col" class="heading-small">Section</th>
                 <th scope="col" class="heading-small alignright" id="project-cost">Project costs</th>
             </tr>
             </thead>
+            <tbody>
+            <tr>
+                <th scope="col" id="labour">Labour</th>
+                <td class="alignright">
+                  <input type="text" class="form-control alignright" value="" aria-labelledby="project-cost labour"/>
+                </td>
+            </tr>
+            <tr>
+                <th scope="col" id="admin-support-costs">Administration support costs</th>
+                <td class="alignright">
+                  <input type="text" class="form-control alignright" aria-labelledby="project-cost admin-support-costs" />
+                </td>
+            </tr>
+            <tr>
+                <th scope="col" id="materials">Materials</th>
+                <td class="alignright">
+                  <input type="text" class="form-control alignright" aria-labelledby="project-cost materials" />
+                </td>
+            </tr>
+            <tr>
+                <th scope="col" id="capital-usage">Capital usage</th>
+                <td class="alignright">
+                  <input type="text" class="form-control alignright" aria-labelledby="project-cost capital-usage" />
+                </td>
+            </tr>
+            <tr>
+                <th scope="col" id="subcontracting-costs">Subcontracting costs</th>
+                <td class="alignright">
+                  <input type="text" class="form-control alignright" aria-labelledby="project-cost subcontracting-costs" />
+                </td>
+            </tr>
+            <tr>
+                <th scope="col" id="travel-subsistence">Travel and subsistence</th>
+                <td class="alignright">
+                  <input type="text" class="form-control alignright" aria-labelledby="project-cost travel-subsistence" />
+                </td>
+            </tr>
+            <tr>
+                <th scope="col" id="other-costs">Other costs</th>
+                <td class="alignright">
+                  <input type="text" class="form-control alignright" aria-labelledby="project-cost other-costs" />
+                </td>
+            </tr>
+            </tbody>
             <tfoot>
             <tr>
                 <th scope="col" class="heading-small">
                     Total project costs
                 </th>
-                <td class="heading-small alignright" th:unless="${param.status != null and param.status[0] == 'approved'}">
-                    &pound;20,0000
-                </td>
-                <td class="heading-small alignright" th:unless="${param.status == null or param.status[0] != 'approved'}">
-                    &pound;70,000
+                <td class="heading-small alignright"  data-calculation-operations="+" data-calculation-fields=".finance-check-form tbody td:nth-child(2) input" >
+                    &pound;0
                 </td>
             </tr>
             </tfoot>
-            <tbody>
-            <tr>
-                <th scope="col" id="labour">Labour</th>
-                <td class="alignright" th:unless="${param.status != null and param.status[0] == 'approved'}"><input type="text" class="form-control alignright" value="&pound;20,000" aria-labelledby="project-cost labour"/></td>
-                <td class="alignright" th:unless="${param.status == null or param.status[0] != 'approved'}">&pound;8,000</td>
-            </tr>
-            <tr>
-                <th scope="col" id="admin-support-costs">Administration support costs</th>
-                <td class="alignright" th:unless="${param.status != null and param.status[0] == 'approved'}"><input type="text" class="form-control alignright" aria-labelledby="project-cost admin-support-costs" /></td>
-                <td class="alignright" th:unless="${param.status == null or param.status[0] != 'approved'}">&pound;2,000</td>
-            </tr>
-            <tr>
-                <th scope="col" id="materials">Materials</th>
-                <td class="alignright" th:unless="${param.status != null and param.status[0] == 'approved'}"><input type="text" class="form-control alignright" aria-labelledby="project-cost materials" /></td>
-                <td class="alignright" th:unless="${param.status == null or param.status[0] != 'approved'}">&pound;10,000</td>
-            </tr>
-            <tr>
-                <th scope="col" id="capital-usage">Capital usage</th>
-                <td class="alignright" th:unless="${param.status != null and param.status[0] == 'approved'}"><input type="text" class="form-control alignright" aria-labelledby="project-cost capital-usage" /></td>
-                <td class="alignright" th:unless="${param.status == null or param.status[0] != 'approved'}">&pound;10,000</td>
-            </tr>
-            <tr>
-                <th scope="col" id="subcontracting-costs">Subcontracting costs</th>
-                <td class="alignright" th:unless="${param.status != null and param.status[0] == 'approved'}"><input type="text" class="form-control alignright" aria-labelledby="project-cost subcontracting-costs" /></td>
-                <td class="alignright" th:unless="${param.status == null or param.status[0] != 'approved'}">&pound;10,000</td>
-            </tr>
-            <tr>
-                <th scope="col" id="travel-subsistence">Travel and subsistence</th>
-                <td class="alignright" th:unless="${param.status != null and param.status[0] == 'approved'}"><input type="text" class="form-control alignright" aria-labelledby="project-cost travel-subsistence" /></td>
-                <td class="alignright" th:unless="${param.status == null or param.status[0] != 'approved'}">&pound;10,000</td>
-            </tr>
-            <tr>
-                <th scope="col" id="other-costs">Other costs</th>
-                <td class="alignright" th:unless="${param.status != null and param.status[0] == 'approved'}"><input type="text" class="form-control alignright" aria-labelledby="project-cost other-costs" /></td>
-                <td class="alignright" th:unless="${param.status == null or param.status[0] != 'approved'}">&pound;10,000</td>
-            </tr>
-            </tbody>
         </table>
 
-        <!--   <div class="extra-margin">
-              <a href="/prototypes/3807-finance-queries" class="button button-secondary">Queries</a>
-              <a href="/prototypes/3990-finance-notes" class="button button-secondary">Notes</a>
-          </div> -->
+        <th:block>
 
-
-        <th:block th:unless="${param.status != null and param.status[0] == 'approved'}">
 
             <h3 class="heading-medium">Approve eligible costs</h3>
             <p>After any required alterations have been made, eligible costs should be approved.</p>
