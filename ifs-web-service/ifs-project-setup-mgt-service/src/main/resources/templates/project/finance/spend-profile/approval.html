@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Spend Profile Summary'" th:remove="tag" />
+</head>
+<body th:with="context='comp-management'" class="competition-management finance-checks-overview">
+<div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
+
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+    <div class="grid-row">
+        <div class="column-two-thirds">
+            <div class="page-title">
+                <div th:include="fragments/competition-management :: competition-id(competition=${model.competitionSummary})" th:remove="tag" />
+                <h1 class="heading-xlarge" th:text="${model.competitionSummary.competitionName}" />
+            </div>
+        </div>
+        <div class="column-third alignright extra-margin">
+            <h2 class="bold-small blue-block">Spend profile</h2>
+        </div>
+    </div>
+    <hr/>
+
+    <th:block th:if="${model.isApproved}">
+        <div class="success-alert extra-margin-bottom">
+            <h2 class="heading-small no-margin-top">The spend profile has been approved.</h2>
+        </div>
+    </th:block>
+
+    <th:block th:if="${model.isRejected}">
+        <div class="warning-alert extra-margin-bottom">
+            <h3 class="heading-small">REJECT TEXT REQUIRED</h3>
+            <ul class="list-bullet">
+                <li>TEXT REQUIRED</li>
+            </ul>
+        </div>
+    </th:block>
+    <p>This overview details the profile spend for each partner for the project, it also enables the download of the Spend profile so it can be shared with the Monitoring officer.</p>
+    <h2 class="heading-medium">Lead technologist</h2>
+    <p th:text="${model.leadTechnologist}">
+        Lead technologist
+    </p>
+    <h2 class="heading-medium">Project spend profile</h2>
+
+    <a href="#">Competition-spend-profile.csv</a>
+
+    <div th:if="${param.status == null}" th:remove="tag">
+        <h2 class="heading-medium">Approved by Lead technologist</h2>
+        <p>The spend profile must be sent to the lead technologist for their review and approval.</p>
+        <div class="form-group">
+            <label class="block-label" for="approved-by-lead-technologist">
+                <input id="approved-by-lead-technologist" value="yes" type="checkbox" data-disable-button-until-checked="#accept-profile"/>
+                The spend profile has been approved by the lead technologist
+            </label>
+        </div>
+        <button data-js-modal="modal-accept-profile" id="accept-profile" class="button large" disabled="disabled">Approve</button>
+        <button data-js-modal="modal-reject-profile" id="reject-profile" class="button button-warning large" >Reject spend profile</button>
+    </div>
+
+    <div class="modal-accept-profile" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+        <button class="js-close close" aria-label="Close Popup">X</button>
+        <div>
+            <h2 class="heading-medium no-margin">Approved by Lead technologist</h2>
+            <p>The project spend profile has been appoved and accepted by the Lead technologist, by confirming the project manager will be notified of this decision via email.</p>
+            <hr />
+            <div class="alignright-button">
+                <a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
+                <a th:href="@{'?status=accepted'}" class="button">Accept documents</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-reject-profile" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+        <button class="js-close close" aria-label="Close Popup">X</button>
+        <div>
+            <h2 class="heading-medium no-margin">Reject spend profile</h2>
+            <p>Rejecting will return access to this section to all project partners.</p>
+            <p>Before taking this action please contact the project manager to explain why the the Spend Profile is being returned to them.</p>
+            <form >
+                <hr />
+                <div class="alignright-button">
+                    <a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
+                    <a th:href="@{'?status=reject'}" class="button button-warning">Reject spend profile</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+
+</body>
+</html>
