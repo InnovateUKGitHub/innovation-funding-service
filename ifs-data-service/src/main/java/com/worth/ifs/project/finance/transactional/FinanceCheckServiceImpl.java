@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
@@ -26,12 +27,16 @@ public class FinanceCheckServiceImpl implements FinanceCheckService {
 
     @Override
     public ServiceResult<FinanceCheckResource> getByProjectAndOrganisation(ProjectOrganisationCompositeId key){
-        return find(financeCheckRepository.findByProjectAndOrganisation(key.getProjectId(), key.getOrganisationId()), notFoundError(FinanceCheck.class, id)).andOnSuccessReturn(financeCheckMapper::mapToResource);
+        return find(financeCheckRepository.findByProjectAndOrganisation(key.getProjectId(), key.getOrganisationId()), notFoundError(FinanceCheck.class, id)).
+                andOnSuccessReturn(financeCheckMapper::mapToResource);
     }
 
     @Override
-    public ServiceResult<FinanceCheckResource> save(FinanceCheckResource toUpdate) {
-        throw new UnsupportedOperationException();
+    public ServiceResult<FinanceCheckResource> save(FinanceCheckResource financeCheckResource) {
+        FinanceCheck toSave = financeCheckMapper.mapToDomain(financeCheckResource);
+        FinanceCheck saved = financeCheckRepository.save(toSave);
+        return serviceSuccess(saved).andOnSuccessReturn(financeCheckMapper::mapToResource);
+
     }
 
     @Override

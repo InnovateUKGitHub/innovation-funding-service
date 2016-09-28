@@ -40,14 +40,18 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
     @Test
     public void testGenerateFinanceCheck(){
-        // TODO
+        // TODO RP
     }
 
     @Test
-    public void testUpdateFinanceCheck() {
-        // TODO
+    public void testSaveFinanceCheck() {
+        // TODO RP
     }
 
+    @Test
+    public void testGetFinanceCheck() {
+        // TODO RP
+    }
 
 
     @Override
