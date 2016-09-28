@@ -1,14 +1,10 @@
 package com.worth.ifs.project.finance.resource;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
 public class FinanceCheckResource {
     private Long id;
     private Long project;
     private Long organisation;
-    private CostGroupResource costGroup;
+    private CostGroupResource costGroup = new CostGroupResource();
 
     public FinanceCheckResource() {
     }
