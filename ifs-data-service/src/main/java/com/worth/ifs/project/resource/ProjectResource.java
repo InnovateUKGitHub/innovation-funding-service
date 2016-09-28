@@ -22,6 +22,7 @@ public class ProjectResource {
     private List<Long> projectUsers;
     private Long collaborationAgreement;
     private Long exploitationPlan;
+    private Boolean otherDocumentsApproved;
 
     @Digits(integer = MAX_DURATION_IN_MONTHS_DIGITS, fraction = 0, message="{validation.application.details.duration.in.months.max.digits}")
     private Long durationInMonths;
@@ -114,5 +115,13 @@ public class ProjectResource {
 
     public void setExploitationPlan(Long exploitationPlan) {
         this.exploitationPlan = exploitationPlan;
+    }
+
+    public Boolean getOtherDocumentsApproved() {
+        return otherDocumentsApproved;
+    }
+
+    public void setOtherDocumentsApproved(Boolean otherDocumentsApproved) {
+        this.otherDocumentsApproved = otherDocumentsApproved;
     }
 }

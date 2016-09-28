@@ -299,6 +299,18 @@ public class ProjectServiceImplTest {
     }
 
     @Test
+    public void testAcceptOrRejectOtherDocuments() {
+
+        when(projectRestService.acceptOrRejectOtherDocuments(123L, true)).thenReturn(restSuccess());
+
+        ServiceResult<Void> result = service.acceptOrRejectOtherDocuments(123L, true);
+
+        assertTrue(result.isSuccess());
+
+        verify(projectRestService).acceptOrRejectOtherDocuments(123L, true);
+    }
+
+    @Test
     public void testOtherDocumentsSubmitAllowedWhenAllFilesUploaded() throws Exception {
 
         when(projectRestService.isOtherDocumentsSubmitAllowed(123L)).thenReturn(restSuccess(true));

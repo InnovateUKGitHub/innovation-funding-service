@@ -67,10 +67,9 @@ import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.service.ServiceResult.*;
 import static com.worth.ifs.invite.domain.ProjectParticipantRole.*;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static com.worth.ifs.project.constant.ProjectActivityStates.*;
+import static com.worth.ifs.project.constant.ProjectActivityStates.NOT_REQUIRED;
 import static com.worth.ifs.project.transactional.ProjectServiceImpl.Notifications.INVITE_FINANCE_CONTACT;
 import static com.worth.ifs.project.transactional.ProjectServiceImpl.Notifications.INVITE_PROJECT_MANAGER;
-import static com.worth.ifs.user.resource.OrganisationTypeEnum.isResearch;
 import static com.worth.ifs.util.CollectionFunctions.*;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static com.worth.ifs.util.EntityLookupCallbacks.getOnlyElementOrFail;
@@ -423,6 +422,13 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     @Override
+    public ServiceResult<Void> acceptOrRejectOtherDocuments(Long projectId, Boolean approved) {
+
+        return getProject(projectId)
+                .andOnSuccessReturnVoid(project -> project.setOtherDocumentsApproved(approved));
+    }
+
+    @Override
     public List<ServiceResult<FileAndContents>> retrieveUploadedDocuments(Long projectId) {
         ServiceResult<FileAndContents> collaborationAgreementFileContents = getCollaborationAgreementFileContents(projectId);
         ServiceResult<FileAndContents> exploitationPlanFileContents = getExploitationPlanFileContents(projectId);
@@ -672,6 +678,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         ProjectActivityStates spendProfileStatus = createSpendProfileStatus(financeChecksStatus, spendProfile);
         ProjectActivityStates otherDocumentsStatus = createOtherDocumentStatus(project);
         ProjectActivityStates grantOfferLetterStatus = createGrantOfferLetterStatus();
+        ProjectActivityStates financeContactStatus = createFinanceContactStatus(project, partnerOrganisation);
 
         ProjectPartnerStatusResource projectPartnerStatusResource;
 
@@ -686,7 +693,8 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                     financeChecksStatus,
                     spendProfileStatus,
                     otherDocumentsStatus,
-                    grantOfferLetterStatus);
+                    grantOfferLetterStatus,
+                    financeContactStatus);
         } else {
             projectPartnerStatusResource = new ProjectPartnerStatusResource(
                     partnerOrganisation.getId(),
@@ -698,7 +706,8 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                     financeChecksStatus,
                     spendProfileStatus,
                     NOT_REQUIRED,
-                    NOT_REQUIRED);
+                    NOT_REQUIRED,
+                    financeContactStatus);
         }
 
         return projectPartnerStatusResource;
