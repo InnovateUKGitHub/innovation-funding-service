@@ -16,7 +16,6 @@ import com.worth.ifs.organisation.domain.OrganisationAddress;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.project.constant.ProjectActivityStates;
 import com.worth.ifs.project.domain.Project;
-import com.worth.ifs.project.users.ProjectUsersHelper;
 import com.worth.ifs.sil.experian.resource.AccountDetails;
 import com.worth.ifs.sil.experian.resource.SILBankDetails;
 import com.worth.ifs.sil.experian.resource.ValidationResult;
@@ -27,7 +26,6 @@ import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import com.worth.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
 
 import java.util.List;
 
@@ -64,8 +62,6 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
     private AccountDetails accountDetails;
     private SILBankDetailsMapper silBankDetailsMapper = new SILBankDetailsMapper();
 
-    @Mock
-    private ProjectUsersHelper projectUsersHelperMock;
 
     @Before
     public void setUp(){

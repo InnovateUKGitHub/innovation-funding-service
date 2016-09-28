@@ -388,6 +388,19 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         });
     }
 
+    @Test
+    public void testAcceptOrRejectOtherDocuments() {
+
+        ProjectResource project = newProjectResource().build();
+
+        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
+
+        assertAccessDenied(() -> classUnderTest.acceptOrRejectOtherDocuments(123L, true), () -> {
+            verify(projectPermissionRules).competitionAdminCanAcceptOrRejectOtherDocuments(project, getLoggedInUser());
+            verifyNoMoreInteractions(projectPermissionRules);
+        });
+    }
+
 
     @Test
     public void testAddPartnerDeniedIfNotSystemRegistrar() {
@@ -598,6 +611,11 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         @Override
         public ServiceResult<Void> deleteExploitationPlanFile(Long projectId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> acceptOrRejectOtherDocuments(Long projectId, Boolean approved) {
             return null;
         }
 
