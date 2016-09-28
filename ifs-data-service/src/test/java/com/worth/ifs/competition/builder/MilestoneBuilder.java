@@ -9,9 +9,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static com.worth.ifs.BaseBuilderAmendFunctions.idBasedNames;
-import static com.worth.ifs.BaseBuilderAmendFunctions.setField;
-import static com.worth.ifs.BaseBuilderAmendFunctions.uniqueIds;
+import static com.worth.ifs.BaseBuilderAmendFunctions.*;
 import static java.util.Collections.emptyList;
 
 public class MilestoneBuilder extends BaseBuilder<Milestone, MilestoneBuilder> {
@@ -21,7 +19,7 @@ public class MilestoneBuilder extends BaseBuilder<Milestone, MilestoneBuilder> {
     }
 
     public static MilestoneBuilder newCompetition() {
-        return new MilestoneBuilder(emptyList()).with(uniqueIds()).with(idBasedNames("Milestone "));
+        return new MilestoneBuilder(emptyList()).with(uniqueIds()).with(idBasedNames("Milestone"));
     }
 
     public MilestoneBuilder withId(Long... ids) {
