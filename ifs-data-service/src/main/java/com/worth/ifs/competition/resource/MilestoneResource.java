@@ -40,6 +40,4 @@ public class MilestoneResource {
     public void setCompetition(Long competition) {
         this.competition = competition;
     }
-    
-
 }
