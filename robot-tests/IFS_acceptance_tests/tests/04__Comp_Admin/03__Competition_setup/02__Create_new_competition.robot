@@ -138,11 +138,11 @@ Initial details client-side validations
     When the user selects the option from the drop-down menu    Competition Executive Two    id=executiveUserId
     Then The user should not see the text in the page    Please select a competition executive    #Couldn't use this keyword : "Then the user should not see the error any more" . Because there is not any error in the page
     ##    State aid value is tested in 'Initial details correct state aid status'
-    [Teardown]    Wait for autosave
 
 Initial details: Autosave
     [Documentation]    INFUND-3001
-    [Tags]
+    [Tags]    Pending
+    # TODO pending due Ito NFUND-5367
     When the user clicks the button/link    link=Competition set up
     and the user clicks the button/link    link=Initial Details
     Then the user should see the correct values in the initial details form
