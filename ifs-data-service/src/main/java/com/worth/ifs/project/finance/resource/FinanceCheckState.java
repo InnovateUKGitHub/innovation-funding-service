@@ -1,24 +1,24 @@
-package com.worth.ifs.project.resource;
+package com.worth.ifs.project.finance.resource;
 
 import com.worth.ifs.workflow.resource.ProcessStates;
 import com.worth.ifs.workflow.resource.State;
 
-import java.util.*;
+import java.util.List;
 
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
-public enum ProjectDetailsState implements ProcessStates {
+public enum FinanceCheckState implements ProcessStates {
 
     PENDING(State.PENDING),
     DECIDE_IF_READY_TO_SUBMIT(State.PENDING),
     READY_TO_SUBMIT(State.READY_TO_SUBMIT),
-    SUBMITTED(State.SUBMITTED);
+    APPROVED(State.ACCEPTED);
 
     //the status string value
     private State backingState;
 
     // creates the enum with the chosen type.
-    ProjectDetailsState(State backingState) {
+    FinanceCheckState(State backingState) {
         this.backingState = backingState;
     }
 
@@ -33,10 +33,10 @@ public enum ProjectDetailsState implements ProcessStates {
     }
 
     public static List<State> getBackingStates() {
-        return simpleMap(ProjectDetailsState.values(), ProcessStates::getBackingState);
+        return simpleMap(FinanceCheckState.values(), ProcessStates::getBackingState);
     }
 
-    public static ProjectDetailsState fromState(State state) {
-        return ProcessStates.fromState(ProjectDetailsState.values(), state);
+    public static FinanceCheckState fromState(State state) {
+        return ProcessStates.fromState(FinanceCheckState.values(), state);
     }
 }
