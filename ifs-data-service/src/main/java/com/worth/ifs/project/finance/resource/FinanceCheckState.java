@@ -10,7 +10,7 @@ import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 public enum FinanceCheckState implements ProcessStates {
 
     PENDING(State.PENDING),
-    DECIDE_IF_READY_TO_SUBMIT(State.PENDING),
+    DECIDE_IF_READY_TO_APPROVE(State.PENDING),
     READY_TO_SUBMIT(State.READY_TO_SUBMIT),
     APPROVED(State.ACCEPTED);
 

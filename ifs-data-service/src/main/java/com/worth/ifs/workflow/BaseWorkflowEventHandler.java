@@ -13,6 +13,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.messaging.Message;
+import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.state.State;
 import org.springframework.statemachine.transition.Transition;
@@ -69,6 +70,30 @@ public abstract class BaseWorkflowEventHandler<ProcessType extends Process<Parti
 
             getProcessRepository().save(processToUpdate);
         }
+    }
+
+    protected boolean fireEvent(MessageBuilder<EventType> event, TargetType target) {
+        return fireEvent(event, getCurrentProcess(target));
+    }
+
+    protected boolean fireEvent(MessageBuilder<EventType> event, ProcessType process) {
+        return fireEvent(event, process.getActivityState());
+    }
+
+    protected boolean fireEvent(MessageBuilder<EventType> event, StateType currentState) {
+        return stateHandler.handleEventWithState(event.build(), currentState);
+    }
+
+    protected boolean testEvent(MessageBuilder<EventType> event, TargetType target) {
+        return testEvent(event, getCurrentProcess(target).getActivityState());
+    }
+
+    protected boolean testEvent(MessageBuilder<EventType> event, StateType currentState) {
+        return fireEvent(event.setHeader(TestableTransitionWorkflowAction.TESTING_GUARD_KEY, true), currentState);
+    }
+
+    protected ProcessType getCurrentProcess(TargetType target) {
+        return getProcessByTargetId(target.getId());
     }
 
     private ProcessType getOrCreateProcess(Message<EventType> message) {

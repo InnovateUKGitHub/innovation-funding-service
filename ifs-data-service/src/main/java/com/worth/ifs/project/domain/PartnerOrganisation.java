@@ -1,5 +1,6 @@
 package com.worth.ifs.project.domain;
 
+import com.worth.ifs.invite.domain.ProcessActivity;
 import com.worth.ifs.user.domain.Organisation;
 
 import javax.persistence.*;
@@ -9,7 +10,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(uniqueConstraints = { @UniqueConstraint( columnNames = { "project_id", "organisation_id" } ) } )
-public class PartnerOrganisation {
+public class PartnerOrganisation implements ProcessActivity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
