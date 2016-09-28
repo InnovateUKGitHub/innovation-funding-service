@@ -9,6 +9,9 @@ import org.hibernate.validator.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
+/**
+ * A resource object used for display and update of bank details
+ */
 public class BankDetailsResource {
 
     private Long id;

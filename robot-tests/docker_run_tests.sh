@@ -272,7 +272,11 @@ done
 
 startSeleniumGrid
 
+
+if [[ $rerunFailed -eq 0 ]]
+then
 clearOldReports
+fi
 
 if [[ $quickTest -eq 1 ]]
 then

@@ -1,27 +1,18 @@
 package com.worth.ifs.project;
 
-import com.worth.ifs.security.BaseControllerSecurityTest;
 import com.worth.ifs.user.resource.UserResource;
-import org.junit.Before;
 import org.junit.Test;
+
+import java.util.function.Consumer;
 
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
-public class ProjectDetailsControllerSecurityTest extends BaseControllerSecurityTest<ProjectDetailsController> {
+public class ProjectDetailsControllerSecurityTest extends BaseProjectSetupControllerSecurityTest<ProjectDetailsController> {
 
     @Override
     protected Class<? extends ProjectDetailsController> getClassUnderTest() {
         return ProjectDetailsController.class;
-    }
-
-    private ProjectSetupSectionsPermissionRules permissionRules;
-
-    @Before
-    public void lookupPermissionRules() {
-        permissionRules = getMockPermissionRulesBean(ProjectSetupSectionsPermissionRules.class);
     }
 
     @Test
@@ -94,10 +85,8 @@ public class ProjectDetailsControllerSecurityTest extends BaseControllerSecurity
         assertSecured(() -> classUnderTest.submitProjectDetails(123L));
     }
 
-    private void assertSecured(Runnable invokeControllerFn) {
-        assertAccessDenied(
-                invokeControllerFn::run,
-                () -> verify(permissionRules, times(1)).partnerCanAccessProjectDetailsSection(eq(123L), isA(UserResource.class))
-        );
+    @Override
+    protected Consumer<ProjectSetupSectionsPermissionRules> getVerification() {
+        return permissionRules -> permissionRules.partnerCanAccessProjectDetailsSection(eq(123L), isA(UserResource.class));
     }
 }
