@@ -32,10 +32,12 @@ import com.worth.ifs.organisation.mapper.OrganisationMapper;
 import com.worth.ifs.organisation.repository.OrganisationAddressRepository;
 import com.worth.ifs.project.constant.ProjectActivityStates;
 import com.worth.ifs.project.domain.MonitoringOfficer;
+import com.worth.ifs.project.domain.PartnerOrganisation;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
 import com.worth.ifs.project.finance.domain.SpendProfile;
 import com.worth.ifs.project.finance.repository.SpendProfileRepository;
+import com.worth.ifs.project.finance.workflow.financechecks.configuration.FinanceCheckWorkflowHandler;
 import com.worth.ifs.project.mapper.MonitoringOfficerMapper;
 import com.worth.ifs.project.mapper.ProjectMapper;
 import com.worth.ifs.project.mapper.ProjectUserMapper;
@@ -141,6 +143,9 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
     @Autowired
     private ProjectDetailsWorkflowHandler projectDetailsWorkflowHandler;
+
+    @Autowired
+    private FinanceCheckWorkflowHandler financeCheckWorkflowHandler;
 
     @Autowired
     private FinanceRowService financeRowService;
@@ -854,7 +859,15 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
             ServiceResult<List<ProjectUser>> projectUserCollection = aggregate(correspondingProjectUsers);
 
             ServiceResult<Project> saveProjectResult = projectUserCollection.andOnSuccessReturn(projectUsers -> {
-                projectUsers.forEach(project::addProjectUser);
+
+                List<Organisation> uniqueOrganisations =
+                        removeDuplicates(simpleMap(projectUsers, ProjectUser::getOrganisation));
+
+                List<PartnerOrganisation> partnerOrganisations = simpleMap(uniqueOrganisations,
+                        org -> new PartnerOrganisation(project, org));
+
+                project.setProjectUsers(projectUsers);
+                project.setPartnerOrganisations(partnerOrganisations);
                 return projectRepository.save(project);
             });
 
@@ -868,6 +881,23 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
 
         ProjectUser originalLeadApplicantProjectUser = newProject.getProjectUsers().get(0);
 
+        ServiceResult<Void> projectDetailsProcess = createProjectDetailsProcess(newProject, originalLeadApplicantProjectUser);
+        ServiceResult<Void> financeCheckProcesses = createFinanceCheckProcesses(newProject.getPartnerOrganisations(), originalLeadApplicantProjectUser);
+
+        return processAnyFailuresOrSucceed(projectDetailsProcess, financeCheckProcesses);
+    }
+
+    private ServiceResult<Void> createFinanceCheckProcesses(List<PartnerOrganisation> partnerOrganisations, ProjectUser originalLeadApplicantProjectUser) {
+
+        List<ServiceResult<Void>> results = simpleMap(partnerOrganisations, partnerOrganisation ->
+                financeCheckWorkflowHandler.projectCreated(partnerOrganisation, originalLeadApplicantProjectUser) ?
+                        serviceSuccess() :
+                        serviceFailure(PROJECT_SETUP_UNABLE_TO_CREATE_PROJECT_PROCESSES));
+
+        return aggregate(results).andOnSuccessReturnVoid();
+    }
+
+    private ServiceResult<Void> createProjectDetailsProcess(Project newProject, ProjectUser originalLeadApplicantProjectUser) {
         if (projectDetailsWorkflowHandler.projectCreated(newProject, originalLeadApplicantProjectUser)) {
             return serviceSuccess();
         } else {
