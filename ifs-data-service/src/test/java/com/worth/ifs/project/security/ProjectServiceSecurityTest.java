@@ -620,11 +620,6 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         }
 
         @Override
-        public List<ServiceResult<FileAndContents>>  retrieveUploadedDocuments(Long projectId) {
-            return null;
-        }
-
-        @Override
         public ServiceResult<Void> addPartner(Long projectId, Long userId, Long organisationId) {
             return null;
         }
