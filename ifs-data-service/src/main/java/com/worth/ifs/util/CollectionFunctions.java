@@ -491,7 +491,7 @@ public final class CollectionFunctions {
      * @param <T>
      * @return
      */
-    public static <T> List<T> simpleFilter(Collection<T> list, Predicate<T> filterFn) {
+    public static <T> List<T> simpleFilter(Collection<? extends T> list, Predicate<T> filterFn) {
         if (list == null || list.isEmpty()) {
             return emptyList();
         }
@@ -506,7 +506,7 @@ public final class CollectionFunctions {
      * @param <T>
      * @return
      */
-    public static <T> List<T> simpleFilterNot(List<T> list, Predicate<T> filterFn) {
+    public static <T> List<T> simpleFilterNot(List<? extends T> list, Predicate<T> filterFn) {
         return simpleFilter(list, element -> !filterFn.test(element));
     }
 
@@ -536,6 +536,13 @@ public final class CollectionFunctions {
             return "";
         }
         return list.stream().map(element -> element != null ? element.toString() : "").collect(joining(joinString));
+    }
+
+    public static <T> String simpleJoiner(List<T> list, Function<T,String> transformer, String joinString) {
+        if (list == null || list.isEmpty()) {
+            return "";
+        }
+        return simpleJoiner(list.stream().map(transformer).collect(toList()), joinString);
     }
 
     /**
@@ -684,6 +691,12 @@ public final class CollectionFunctions {
 
         List<List<List<T>>> furtherPermutations = mapWithIndex(remainingWords, (i, remainingWord) -> findPermutations(newPermutationStringSoFar, remainingWord, removeElement(remainingWords, i)));
         return flattenLists(furtherPermutations);
+    }
+
+    public static final <R,S,T> boolean containsAll(Collection<T> containing, Function<T, S> transformer1, Collection<R> contained, Function<R,S> transformer2 ){
+        List<S> transformedContaining = containing.stream().map(transformer1).collect(toList());
+        List<S> transformedContained = contained.stream().map(transformer2).collect(toList());
+        return transformedContained.containsAll(transformedContained);
     }
 
 }
