@@ -6,6 +6,7 @@ import com.worth.ifs.address.domain.AddressType;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.bankdetails.domain.BankDetails;
+import com.worth.ifs.commons.error.CommonErrors;
 import com.worth.ifs.commons.error.CommonFailureKeys;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -815,6 +816,38 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         ServiceResult<MonitoringOfficerResource> result = service.getMonitoringOfficer(projectid);
 
         assertTrue(result.isSuccess());
+
+    }
+
+    @Test
+    public void testAcceptOrRejectOtherDocumentsWhenProjectNotInDB() {
+
+        Long projectId = 1L;
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(null);
+
+        ServiceResult<Void> result = service.acceptOrRejectOtherDocuments(projectId, true);
+
+        assertTrue(result.isFailure());
+
+        assertTrue(result.getFailure().is(CommonErrors.notFoundError(Project.class, projectId)));
+
+    }
+
+    @Test
+    public void testAcceptOrRejectOtherDocumentsSuccess() {
+
+        Long projectId = 1L;
+
+        Project projectInDB = newProject().withId(projectId).build();
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
+
+        ServiceResult<Void> result = service.acceptOrRejectOtherDocuments(projectId, true);
+
+        assertTrue(result.isSuccess());
+
+        assertEquals(true, projectInDB.getOtherDocumentsApproved());
 
     }
 

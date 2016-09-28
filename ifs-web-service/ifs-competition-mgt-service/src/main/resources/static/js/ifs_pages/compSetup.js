@@ -40,8 +40,7 @@ IFS.competition_management.setup = (function(){
               success: function(data) {
                 if(typeof(data) !== 'undefined'){
                   if(data.success === "true"){
-                    //Code is now valid, remove all error messages.
-                    IFS.core.formValidation.setValid(field,"");
+                    IFS.core.formValidation.setValid(field,IFS.core.formValidation.getErrorMessage(field,'required'));
                     field.val(data.message);
                     jQuery('body').trigger('updateSerializedFormState');
                   }
