@@ -63,7 +63,6 @@ Submit flow (complete application)
     And the user clicks the button/link    link=${application_name}
     When the user clicks the button/link    link=Review & submit
     And the user should be redirected to the correct page    summary
-    Then the applicant accepts the terms and conditions
     And the applicant clicks the submit button and the clicks cancel in the submit modal
     And the applicant clicks the submit and then clicks the "close button" in the modal
     And the applicant clicks Yes in the submit modal
@@ -122,8 +121,6 @@ The user can check that the sections are read only
     the user should not see the element    jQuery=.button:contains("Edit")
 
 the submit button should be disabled
-    the user selects the checkbox    id=agree-terms-page
-    the user selects the checkbox    id=agree-state-aid-page
     Element Should Be Disabled    jQuery=button:contains("Submit application")
 
 the applicant accepts the terms and conditions
@@ -131,10 +128,14 @@ the applicant accepts the terms and conditions
     the user selects the checkbox    id=agree-state-aid-page
 
 The user marks the finances as complete
-    Given the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link=${application_name}
-    Given the user clicks the button/link    link=Your finances
-    When the user clicks the button/link    jQuery=button:contains("Mark all as complete")
+    the user navigates to the page    ${DASHBOARD_URL}
+    the user clicks the button/link    link=${application_name}
+    the user clicks the button/link    link=Your finances
+    the user selects the checkbox          id=agree-terms-page
+    the user selects the checkbox          id=agree-state-aid-page
+    the user moves focus to the element    jQuery=button:contains("Mark all as complete")
+    the user clicks the button/link    jQuery=button:contains("Mark all as complete")
+    Sleep    1s
 
 the applicant marks the first section as complete
     the user clicks the button/link    link=Application Overview
