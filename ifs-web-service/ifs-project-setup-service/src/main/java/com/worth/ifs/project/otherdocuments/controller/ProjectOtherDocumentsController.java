@@ -193,7 +193,7 @@ public class ProjectOtherDocumentsController {
 
         boolean leadPartner = projectService.isUserLeadPartner(projectId, loggedInUser.getId());
 
-        boolean isSubmitAllowed = projectService.isOtherDocumentSubmitAllowed(projectId).isSuccess();
+        boolean isSubmitAllowed = projectService.isOtherDocumentSubmitAllowed(projectId);
 
         // TODO DW - these rejection messages to be covered in other stories
         List<String> rejectionReasons = emptyList();

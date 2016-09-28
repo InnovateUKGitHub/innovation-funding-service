@@ -928,14 +928,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     }
 
     @Test
-    public void testRetrieveUploadedFilesExist() {
-        assertUploadedFilesExist(
-                project::setCollaborationAgreement,
-                project::setExploitationPlan,
-                () -> service.retrieveUploadedDocuments(123L));
-    }
-
-    @Test
     public void testFilesCanBeSubmitted() {
         assertFilesCanBeSubmittedByProjectManagerAndFilesExist(
                 project::setCollaborationAgreement,
@@ -1249,8 +1241,8 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         getFileEntryResources(fileSetter1, fileSetter2, inputStreamSupplier1, inputStreamSupplier2);
         ServiceResult<Boolean> result = getConditionFn.get();
 
-        assertFalse(result.isSuccess());
-        assertTrue(result.isFailure());
+        assertTrue(result.isSuccess());
+        assertFalse(result.getSuccessObject());
 
     }
 
