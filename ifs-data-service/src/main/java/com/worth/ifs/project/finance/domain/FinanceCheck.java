@@ -5,6 +5,8 @@ import com.worth.ifs.user.domain.Organisation;
 
 import javax.persistence.*;
 
+import static javax.persistence.CascadeType.ALL;
+
 @Entity
 public class FinanceCheck {
     public static final String FINANCE_CHECK_COSTS_DESCRIPTION = "Finance check costs for partner for a project";
@@ -21,7 +23,7 @@ public class FinanceCheck {
     @JoinColumn(name = "organisationId", referencedColumnName = "id")
     private Organisation organisation;
 
-    @OneToOne
+    @OneToOne(cascade = ALL)
     @JoinColumn(name = "costGroupId", referencedColumnName = "id")
     private CostGroup costGroup;
 
