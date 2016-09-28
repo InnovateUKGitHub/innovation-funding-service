@@ -21,6 +21,7 @@ import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
@@ -99,6 +100,28 @@ public class ProjectOtherDocumentsControllerMockMvcTest extends BaseControllerMo
         // assert the project details are correct
         assertProjectDetailsPrepopulatedOk(model);
    }
+
+    @Test
+    public void acceptOrRejectOtherDocuments() throws Exception {
+
+        ProjectResource project = newProjectResource()
+                .withId(projectId)
+                .withName("My Project")
+                .withOtherDocumentsApproved(true)
+                .build();
+
+        setupViewOtherDocumentsTestExpectations (project);
+
+        MvcResult result = mockMvc.perform(post("/project/123/partner/documents")).
+                andExpect(view().name("project/other-documents")).
+                andReturn();
+
+        ProjectPartnerDocumentsViewModel model = (ProjectPartnerDocumentsViewModel) result.getModelAndView().getModel().get("model");
+
+        assertProjectDetailsPrepopulatedOk(model);
+        assertEquals(true, model.isApproved());
+
+    }
 
     @Test
     public void testDownloadCollaborationAgreementButFileDoesntExist() throws Exception {
