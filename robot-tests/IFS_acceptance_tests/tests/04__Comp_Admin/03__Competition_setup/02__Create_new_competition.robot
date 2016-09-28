@@ -518,8 +518,8 @@ the user should not see the error any more
     [Arguments]    ${ERROR_TEXT}
     run keyword and ignore error    mouse out    css=input
     Focus    jQuery=.button:contains("Done")
-    sleep    200ms
     Wait Until Element Does Not Contain    css=.error-message    ${ERROR_TEXT}
+    sleep    500ms
     Wait for autosave
 
 the total should be correct
