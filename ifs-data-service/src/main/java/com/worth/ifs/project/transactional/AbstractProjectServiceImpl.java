@@ -60,7 +60,11 @@ class AbstractProjectServiceImpl extends BaseTransactionalService {
 
     ProjectActivityStates createOtherDocumentStatus(final Project project) {
         if (project.getCollaborationAgreement() != null && project.getExploitationPlan() != null) {
-            return COMPLETE;
+            if (project.getDocumentsSubmittedDate() != null) {
+                return COMPLETE;
+            } else {
+                return PENDING;
+            }
         } else {
             return ACTION_REQUIRED;
         }

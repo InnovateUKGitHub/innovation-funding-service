@@ -56,7 +56,7 @@ public class MilestoneFormPopulatorTest extends BaseUnitTestMocksTest {
                 .withMilestones(milestoneList)
                 .build();
 
-        when(milestoneService.getAllDatesByCompetitionId(anyLong())).thenReturn(milestones);
+        when(milestoneService.getAllMilestonesByCompetitionId(anyLong())).thenReturn(milestones);
 
         CompetitionSetupForm result = service.populateForm(competition);
 
