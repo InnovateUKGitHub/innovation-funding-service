@@ -407,37 +407,45 @@ The element should be disabled
     Element Should Be Disabled    ${ELEMENT}
 
 the user opens the mailbox and verifies the email from
-    run keyword if    ${docker}==1    the user opens the mailbox and verifies the local email from
-    run keyword if    ${docker}!=1    the user opens the mailbox and verifies the remote email from
+    [Arguments]    ${receiver}    ${PATTERN}
+    run keyword if    ${docker}==1    the user opens the mailbox and verifies the local email from    ${receiver}    ${PATTERN}
+    run keyword if    ${docker}!=1    the user opens the mailbox and verifies the remote email from    ${receiver}    ${PATTERN}
 
 the user opens the mailbox and verifies the remote email from
+    [Arguments]    ${receiver}    ${PATTERN}
     Open Mailbox    server=imap.googlemail.com    user=${test_mailbox_one}@gmail.com    password=${test_mailbox_one_password}
-    ${LATEST} =    wait for email
-    ${HTML}=    get email body    ${LATEST}
-    log    ${HTML}
-    ${LINK}=    Get Links From Email    ${LATEST}
-    log    ${LINK}
-    ${VERIFY_EMAIL}=    Get From List    ${LINK}    1
-    log    ${VERIFY_EMAIL}
+    ${WHICH EMAIL} =  wait for email  toemail=${receiver}    subject=Please verify your email address
+    ${EMAIL_MATCH} =    Get Matches From Email    ${WHICH_EMAIL}    ${PATTERN}
+    log      ${EMAIL_MATCH}
+    Should Not Be Empty    ${EMAIL_MATCH}
+    ${HTML}=    get email body    ${WHICH EMAIL}
+    log      ${HTML}
+    ${LINK}=  Get Links From Email    ${WHICH EMAIL}
+    log      ${LINK}
+    ${VERIFY_EMAIL} =  Get From List    ${LINK}    1
+    log      ${VERIFY_EMAIL}
     go to    ${VERIFY_EMAIL}
     Capture Page Screenshot
     Delete All Emails
     close mailbox
 
 the user opens the mailbox and verifies the local email from
+    [Arguments]    ${receiver}    ${PATTERN}
     Open Mailbox    server=ifs-local-dev    port=9876    user=smtp    password=smtp    is_secure=False
-    ${LATEST} =    wait for email
-    ${HTML}=    get email body    ${LATEST}
-    log    ${HTML}
-    ${LINK}=    Get Links From Email    ${LATEST}
-    log    ${LINK}
-    ${VERIFY_EMAIL}=    Get From List    ${LINK}    1
-    log    ${VERIFY_EMAIL}
+    ${WHICH EMAIL} =  wait for email  toemail=${receiver}    subject=Please verify your email address
+    ${EMAIL_MATCH} =    Get Matches From Email    ${WHICH_EMAIL}    ${PATTERN}
+    log      ${EMAIL_MATCH}
+    Should Not Be Empty    ${EMAIL_MATCH}
+    ${HTML}=    get email body    ${WHICH EMAIL}
+    log      ${HTML}
+    ${LINK}=  Get Links From Email    ${WHICH EMAIL}
+    log      ${LINK}
+    ${VERIFY_EMAIL} =  Get From List    ${LINK}    1
+    log      ${VERIFY_EMAIL}
     go to    ${VERIFY_EMAIL}
     Capture Page Screenshot
     Delete All Emails
     close mailbox
-
 
 the user opens the mailbox and verifies the email
     run keyword if    ${docker}==1    the user opens the local mailbox and verifies the email
