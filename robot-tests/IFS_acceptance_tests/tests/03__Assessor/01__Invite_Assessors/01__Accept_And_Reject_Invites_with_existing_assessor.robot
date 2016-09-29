@@ -8,7 +8,6 @@ Documentation     INFUND-228: As an Assessor I can see competitions that I have 
 ...               INFUND-3716: As an Assessor when I have accepted to assess within a competition and the assessment period is current, I can see the number of competitions and their titles on my dashboard, so that I can plan my work. \ INFUND-3720 As an Assessor I can see deadlines for the assessment of applications currently in assessment on my dashboard, so that I am reminded to deliver my work on time
 ...
 ...               INFUND-5157 Add missing word count validation when rejecting an application for assessment \
-...
 ...               INFUND-3718 As an Assessor I can see all the upcoming competitions that I have accepted to assess so that I can make informed decisions about other invitations
 Suite Setup       log in as user    &{existing_assessor1_credentials}
 Suite Teardown    TestTeardown User closes the browser
@@ -29,7 +28,9 @@ ${Invitation_nonexisting_assessor2}    ${server}/assessment/invite/competition/2
 
 *** Test Cases ***
 Assessor dashboard should be empty
-    [Documentation]    INFUND-3716
+    [Documentation]    INFUND-3716 \
+    ...
+    ...    INFUND-4950
     [Tags]    HappyPath
     [Setup]
     Given the user should see the text in the page    Assessor Dashboard
@@ -75,8 +76,8 @@ Upcoming competition should be visible
     And the user should see the text in the page    Upcoming competitions to assess
     And The user should see the text in the page    Assessment period:
 
-If assessment period starts the upcoming comp moves to the comp for assessment section
-    [Tags]    MySQL
+When the assessment period starts the comp moves to the comp for assessment
+    [Tags]    MySQL    HappyPath
     [Setup]    Connect to Database    @{database}
     Given Change the assessment start period in the db
     Then The user should not see the text in the page    Upcoming competitions to assess
@@ -148,10 +149,6 @@ the days remaining should be correct
     ${NO_OF_DAYS_LEFT}=    Remove String    ${NO_OF_DAYS_LEFT}    days
     ${SCREEN_NO_OF_DAYS_LEFT}=    Get Text    css=.my-applications div:nth-child(2) .pie-container .pie-overlay .day
     Should Be Equal As Numbers    ${NO_OF_DAYS_LEFT}    ${SCREEN_NO_OF_DAYS_LEFT}
-
-The user accepts the upcoming competition
-    Given the user navigates to the page    ${Invitation_for_upcoming_comp_assessor1}
-    And the user clicks the button/link    jQuery=.button:contains("Accept")
 
 Change the assessment start period in the db
     ${today}=    get time
