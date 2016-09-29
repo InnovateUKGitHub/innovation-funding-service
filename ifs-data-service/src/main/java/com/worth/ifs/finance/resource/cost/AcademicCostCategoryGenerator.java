@@ -6,19 +6,19 @@ package com.worth.ifs.finance.resource.cost;
  * This will need to be addressed, but in the meantime this enum hard codes the information.
  */
 public enum AcademicCostCategoryGenerator implements CostCategoryGenerator {
-    DIRECTLY_INCURRED_STAFF("Directly Incurred", "Staff"),
-    DIRECTLY_INCURRED_TRAVEL_AND_SUBSISTENCE("Directly Incurred", "Staff"),
-    DIRECTLY_INCURRED_OTHER_COSTS("Directly Incurred", "Other Costs"),
-    DIRECTLY_ALLOCATED_INVESTIGATORS("Directly Allocated", "investigators"),
-    DIRECTLY_ALLOCATED_ESTATES_COSTS("Directly Allocated", "Estates Costs"),
-    DIRECTLY_ALLOCATED_OTHER_COSTS("directly_allocated", "Other Costs"),
-    INDIRECT_COSTS_STAFF("Indirect Costs", "Staff"),
-    INDIRECT_COSTS_OTHER_COSTS("Indirect Costs", "Other Costs");
+    DIRECTLY_INCURRED_STAFF("Directly incurred", "Staff"),
+    DIRECTLY_INCURRED_TRAVEL_AND_SUBSISTENCE("Directly incurred", "Staff"),
+    DIRECTLY_INCURRED_OTHER_COSTS("Directly incurred", "Other costs"),
+    DIRECTLY_ALLOCATED_INVESTIGATORS("Directly allocated", "Investigators"),
+    DIRECTLY_ALLOCATED_ESTATES_COSTS("Directly allocated", "Estates costs"),
+    DIRECTLY_ALLOCATED_OTHER_COSTS("Directly allocated", "Other costs"),
+    INDIRECT_COSTS_STAFF("Indirect costs", "Staff"),
+    INDIRECT_COSTS_OTHER_COSTS("Indirect Costs", "Other costs");
 
 
     private final String name;
     private final String label;
-    AcademicCostCategoryGenerator(String name, String label){
+    AcademicCostCategoryGenerator(String label, String name){
         this.name = name;
         this.label = label;
     }
@@ -35,7 +35,7 @@ public enum AcademicCostCategoryGenerator implements CostCategoryGenerator {
     }
 
     @Override
-    public String label() {
+    public String getLabel() {
         return label;
     }
 }

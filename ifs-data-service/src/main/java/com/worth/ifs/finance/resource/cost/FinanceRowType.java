@@ -49,7 +49,7 @@ public enum FinanceRowType implements CostCategoryGenerator {
         return spendCostCategory;
     }
 
-    public String label() {
+    public String getLabel() {
         return null;
     }
 

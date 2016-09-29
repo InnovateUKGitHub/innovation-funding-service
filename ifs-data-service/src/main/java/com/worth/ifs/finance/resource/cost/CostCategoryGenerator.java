@@ -6,6 +6,6 @@ public interface CostCategoryGenerator {
 
     String getName();
 
-    String label();
+    String getLabel();
 
 }

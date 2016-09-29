@@ -8,20 +8,14 @@ import com.worth.ifs.finance.resource.cost.CostCategoryGenerator;
 import com.worth.ifs.finance.resource.cost.FinanceRowType;
 import com.worth.ifs.finance.transactional.FinanceRowService;
 import com.worth.ifs.organisation.transactional.OrganisationService;
-import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.finance.domain.CostCategory;
 import com.worth.ifs.project.finance.domain.CostCategoryGroup;
 import com.worth.ifs.project.finance.domain.CostCategoryType;
 import com.worth.ifs.project.finance.repository.CostCategoryTypeRepository;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.transactional.ProjectService;
-import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.OrganisationType;
 import com.worth.ifs.user.resource.OrganisationResource;
-import com.worth.ifs.user.resource.OrganisationTypeEnum;
-import com.worth.ifs.user.resource.OrganisationTypeResource;
 import com.worth.ifs.user.transactional.OrganisationTypeService;
-import com.worth.ifs.util.CollectionFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -58,7 +52,6 @@ public class ByApplicationFinanceCostCategoriesStrategy implements CostCategoryT
 
     @Override
     public ServiceResult<CostCategoryType> getOrCreateCostCategoryTypeForSpendProfile(Long projectId, Long organisationId) {
-
         return find(project(projectId), organisation(organisationId)).
                 andOnSuccess((project, organisation) ->
                         find(applicationFinanceResource(project.getApplication(), organisation.getId())).
@@ -102,7 +95,7 @@ public class ByApplicationFinanceCostCategoriesStrategy implements CostCategoryT
 
     private CostCategory newCostCategory(CostCategoryGenerator costCategoryGenerator){
         CostCategory newCostCategory = new CostCategory(costCategoryGenerator.getName());
-        // TODO more properties
+        newCostCategory.setLabel(costCategoryGenerator.getLabel());
         return newCostCategory;
     }
 

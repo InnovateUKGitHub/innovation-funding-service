@@ -624,8 +624,8 @@ public class CollectionFunctionsTest {
 
     @Test
     public void testToSorted(){
-        String firstLabel = "label 1";
-        String secondLabel = "label 2";
+        String firstLabel = "getLabel 1";
+        String secondLabel = "getLabel 2";
         String firstEntry = "1st entry";
         String secondEntry = "2nd entry";
         String thirdEntry = "3rd entry";
