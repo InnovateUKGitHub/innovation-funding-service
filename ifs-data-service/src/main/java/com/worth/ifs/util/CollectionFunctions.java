@@ -697,10 +697,15 @@ public final class CollectionFunctions {
         return flattenLists(furtherPermutations);
     }
 
-    public static final <R, S, T> boolean containsAll(Collection<T> containing, Function<T, S> transformer1, Collection<R> contained, Function<R, S> transformer2) {
+    public static final <R, S, T> boolean  containsAll(Collection<T> containing, Function<T, S> transformer1, Collection<R> contained, Function<R, S> transformer2) {
+        if (containing == null && contained != null) {
+            return false;
+        } else if (contained == null){
+            return true;
+        }
         List<S> transformedContaining = containing.stream().map(transformer1).collect(toList());
         List<S> transformedContained = contained.stream().map(transformer2).collect(toList());
-        return transformedContained.containsAll(transformedContained);
+        return transformedContaining.containsAll(transformedContained);
     }
 
     public static final <R, S, T> SortedMap<T, List<R>> toSortedMap(List<S> orderedList, Function<S, T> keyTransform, Function<S, R> valueTransform) {
