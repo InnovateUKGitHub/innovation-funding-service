@@ -30,7 +30,7 @@ public class FinanceCheckController {
     @RequestMapping(method = GET)
     public String view(@PathVariable("projectId") final Long projectId, @PathVariable("organisationId") Long organisationId, @ModelAttribute(FORM_ATTR_NAME) FinanceCheckForm form, @ModelAttribute("loggedInUser") UserResource loggedInUser, Model model){
         ProjectOrganisationCompositeId key = new ProjectOrganisationCompositeId(projectId, organisationId);
-        FinanceCheckResource financeCheckResource = new FinanceCheckResource();
+        FinanceCheckResource financeCheckResource = financeCheckService.getByProjectAndOrganisation(key);
         populateExitingFinanceCheckDetailsInForm(financeCheckResource, form);
         return doViewFinanceCheckForm(model);
     }

@@ -62,6 +62,7 @@ import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -890,11 +891,11 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
         List<CostCategory> costCategories = costCategoryType.getCostCategories();
         CostGroup costGroup = new CostGroup("finance-check", costs);
         costCategories.forEach(costCategory -> {
-            Cost cost = new Cost();
-            cost.setCostCategory(costCategory);
-            cost.setCostGroup(costGroup);
+            Cost cost = new Cost(new BigDecimal(0.0));
             costs.add(cost);
+            cost.setCostCategory(costCategory);
         });
+        costGroup.setCosts(costs);
 
         FinanceCheck financeCheck = new FinanceCheck(newProject, costGroup);
         financeCheck.setOrganisation(organisation);
