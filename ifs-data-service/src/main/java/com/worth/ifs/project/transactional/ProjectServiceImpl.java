@@ -18,6 +18,11 @@ import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.BasicFileAndContents;
 import com.worth.ifs.file.service.FileAndContents;
 import com.worth.ifs.file.transactional.FileService;
+import com.worth.ifs.finance.domain.ApplicationFinance;
+import com.worth.ifs.finance.domain.FinanceRow;
+import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
+import com.worth.ifs.finance.repository.FinanceRowRepository;
+import com.worth.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
 import com.worth.ifs.finance.transactional.FinanceRowService;
 import com.worth.ifs.invite.domain.ProjectParticipantRole;
 import com.worth.ifs.invite.resource.InviteProjectResource;
@@ -135,10 +140,16 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     private FinanceRowService financeRowService;
 
     @Autowired
+    private FinanceRowRepository financeRowRepository;
+
+    @Autowired
     private FinanceCheckRepository financeCheckRepository;
 
     @Autowired
     private CostCategoryTypeStrategy costCategoryTypeStrategy;
+
+    @Autowired
+    private ApplicationFinanceRepository applicationFinanceRepository;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -175,7 +186,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         return getProject(projectId).
                 andOnSuccess(this::validateIfProjectAlreadySubmitted).
                 andOnSuccess(project -> validateProjectManager(project, projectManagerUserId).
-                andOnSuccess(leadPartner -> createOrUpdateProjectManagerForProject(project, leadPartner)));
+                        andOnSuccess(leadPartner -> createOrUpdateProjectManagerForProject(project, leadPartner)));
     }
 
     @Override
@@ -191,8 +202,8 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         return getProject(projectId).
                 andOnSuccess(this::validateIfProjectAlreadySubmitted).
                 andOnSuccess(project -> validateProjectOrganisationFinanceContact(project, organisationId, financeContactUserId).
-                andOnSuccess(projectUser -> createFinanceContactProjectUser(projectUser.getUser(), project, projectUser.getOrganisation()).
-                andOnSuccessReturnVoid(financeContact -> addFinanceContactToProject(project, financeContact))));
+                        andOnSuccess(projectUser -> createFinanceContactProjectUser(projectUser.getUser(), project, projectUser.getOrganisation()).
+                                andOnSuccessReturnVoid(financeContact -> addFinanceContactToProject(project, financeContact))));
     }
 
     @Override
@@ -271,8 +282,8 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
         return getProject(projectId).andOnSuccess(project ->
                 retrieveUploadedDocuments(projectId).handleSuccessOrFailure(
-                    failure -> serviceFailure(PROJECT_SETUP_OTHER_DOCUMENTS_MUST_BE_UPLOADED_BEFORE_SUBMIT),
-                    success -> setDocumentsSubmittedDate(project, date)));
+                        failure -> serviceFailure(PROJECT_SETUP_OTHER_DOCUMENTS_MUST_BE_UPLOADED_BEFORE_SUBMIT),
+                        success -> setDocumentsSubmittedDate(project, date)));
     }
 
     private ServiceResult<Void> setDocumentsSubmittedDate(Project project, LocalDateTime date) {
@@ -289,8 +300,8 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         return retrieveUploadedDocuments(projectId).handleSuccessOrFailure(
                 failure -> serviceSuccess(false),
                 success -> projectManager.isPresent() && projectManager.get().getUser().getId().equals(userId) ?
-                            serviceSuccess(true) :
-                            serviceSuccess(false));
+                        serviceSuccess(true) :
+                        serviceSuccess(false));
     }
 
     @Override
@@ -449,7 +460,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                         return serviceFailure(badRequestError("project does not contain organisation"));
                     }
                     List<ProjectUser> partners = project.getProjectUsersWithRole(PROJECT_PARTNER);
-                    if (partners.stream().map(p -> p.getUser().getId()).collect(toList()).contains(userId)){
+                    if (partners.stream().map(p -> p.getUser().getId()).collect(toList()).contains(userId)) {
                         return serviceSuccess(); // Already a partner
                     } else {
                         ProjectUser pu = new ProjectUser(user, project, PROJECT_PARTNER, organisation);
@@ -598,7 +609,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     @Override
     public ServiceResult<OrganisationResource> getOrganisationByProjectAndUser(Long projectId, Long userId) {
         ProjectUser projectUser = projectUserRepository.findByProjectIdAndRoleAndUserId(projectId, PROJECT_PARTNER, userId);
-        if(projectUser != null && projectUser.getOrganisation() != null) {
+        if (projectUser != null && projectUser.getOrganisation() != null) {
             return serviceSuccess(organisationMapper.mapToResource(organisationRepository.findOne(projectUser.getOrganisation().getId())));
         } else {
             return serviceFailure(new Error(CANNOT_FIND_ORG_FOR_GIVEN_PROJECT_AND_USER, NOT_FOUND));
@@ -655,7 +666,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         List<Organisation> partnerOrganisationsToInclude =
                 simpleFilter(allPartnerOrganisations, partner ->
                         partner.getId().equals(leadOrganisation.getId()) ||
-                        (partnerUserForFilterUser.map(pu -> partner.getId().equals(pu.getOrganisation().getId())).orElse(true)));
+                                (partnerUserForFilterUser.map(pu -> partner.getId().equals(pu.getOrganisation().getId())).orElse(true)));
 
         List<ProjectPartnerStatusResource> projectPartnerStatusResources =
                 simpleMap(partnerOrganisationsToInclude, partner -> getProjectPartnerStatus(project, partner));
@@ -838,8 +849,8 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
             return saveProjectResult.
                     andOnSuccess(newProject -> createProcessEntriesForNewProject(newProject).
-                    andOnSuccess(() -> generateFinanceCheckEntitiesForNewProject(newProject)).
-                    andOnSuccessReturn(() -> projectMapper.mapToResource(newProject)));
+                            andOnSuccess(() -> generateFinanceCheckEntitiesForNewProject(newProject)).
+                            andOnSuccessReturn(() -> projectMapper.mapToResource(newProject)));
         });
     }
 
@@ -859,15 +870,13 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
         organisations.forEach(organisation -> {
             costCategoryTypeStrategy.getOrCreateCostCategoryTypeForSpendProfile(newProject.getId(), organisation.getId()).
-                    andOnSuccess(costCategoryType -> {
-                        createFinanceCheckFrom(newProject, organisation, costCategoryType);
-                        return serviceSuccess();
-                    });
+                    andOnSuccessReturn(costCategoryType -> createFinanceCheckFrom(newProject, organisation, costCategoryType)).
+                    andOnSuccessReturn(financeCheck -> populateFinanceCheck(financeCheck));
         });
         return serviceSuccess();
     }
 
-    private void createFinanceCheckFrom(Project newProject, Organisation organisation, CostCategoryType costCategoryType){
+    private FinanceCheck createFinanceCheckFrom(Project newProject, Organisation organisation, CostCategoryType costCategoryType) {
         List<Cost> costs = new ArrayList<>();
         List<CostCategory> costCategories = costCategoryType.getCostCategories();
         CostGroup costGroup = new CostGroup("finance-check", costs);
@@ -881,8 +890,23 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         FinanceCheck financeCheck = new FinanceCheck(newProject, costGroup);
         financeCheck.setOrganisation(organisation);
         financeCheck.setProject(newProject);
-        financeCheckRepository.save(financeCheck);
+        return financeCheckRepository.save(financeCheck);
     }
+
+    private FinanceCheck populateFinanceCheck(FinanceCheck financeCheck) {
+        Organisation organisation = financeCheck.getOrganisation();
+        Application application = financeCheck.getProject().getApplication();
+        if (OrganisationTypeEnum.isResearch(organisation.getOrganisationType().getId())) {
+            ApplicationFinance applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(application.getId(), organisation.getId());
+            List<FinanceRow> financeRows = financeRowRepository.findByApplicationFinanceId(applicationFinance.getId());
+            financeCheck.getCostGroup().getCosts().forEach(
+                    c -> c.setValue(AcademicCostCategoryGenerator.findCost(c.getCostCategory(), financeRows))
+            );
+        }
+        return financeCheckRepository.save(financeCheck);
+    }
+
+
 
     private ServiceResult<ProjectUser> createPartnerProjectUser(Project project, User user, Organisation organisation) {
         return createProjectUserForRole(project, user, organisation, PROJECT_PARTNER);
