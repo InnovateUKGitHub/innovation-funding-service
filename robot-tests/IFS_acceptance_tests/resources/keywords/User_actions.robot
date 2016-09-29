@@ -407,15 +407,15 @@ The element should be disabled
     Element Should Be Disabled    ${ELEMENT}
 
 the user opens the mailbox and verifies the email from
-    [Arguments]    ${receiver}    ${PATTERN}
-    run keyword if    ${docker}==1    the user opens the mailbox and verifies the local email from    ${receiver}    ${PATTERN}
-    run keyword if    ${docker}!=1    the user opens the mailbox and verifies the remote email from    ${receiver}    ${PATTERN}
+    [Arguments]    ${receiver}
+    run keyword if    ${docker}==1    the user opens the mailbox and verifies the local email from    ${receiver}
+    run keyword if    ${docker}!=1    the user opens the mailbox and verifies the remote email from    ${receiver}
 
 the user opens the mailbox and verifies the remote email from
-    [Arguments]    ${receiver}    ${PATTERN}
+    [Arguments]    ${receiver}
     Open Mailbox    server=imap.googlemail.com    user=${test_mailbox_one}@gmail.com    password=${test_mailbox_one_password}
     ${WHICH EMAIL} =  wait for email  toemail=${receiver}    subject=Please verify your email address
-    ${EMAIL_MATCH} =    Get Matches From Email    ${WHICH_EMAIL}    ${PATTERN}
+    ${EMAIL_MATCH} =    Get Matches From Email    ${WHICH_EMAIL}    sign into your account and start your application
     log      ${EMAIL_MATCH}
     Should Not Be Empty    ${EMAIL_MATCH}
     ${HTML}=    get email body    ${WHICH EMAIL}
@@ -430,10 +430,10 @@ the user opens the mailbox and verifies the remote email from
     close mailbox
 
 the user opens the mailbox and verifies the local email from
-    [Arguments]    ${receiver}    ${PATTERN}
+    [Arguments]    ${receiver}
     Open Mailbox    server=ifs-local-dev    port=9876    user=smtp    password=smtp    is_secure=False
     ${WHICH EMAIL} =  wait for email  toemail=${receiver}    subject=Please verify your email address
-    ${EMAIL_MATCH} =    Get Matches From Email    ${WHICH_EMAIL}    ${PATTERN}
+    ${EMAIL_MATCH} =    Get Matches From Email    ${WHICH_EMAIL}    sign into your account and start your application
     log      ${EMAIL_MATCH}
     Should Not Be Empty    ${EMAIL_MATCH}
     ${HTML}=    get email body    ${WHICH EMAIL}
@@ -714,7 +714,7 @@ we create a new user
     The user clicks the button/link    jQuery=.button:contains("Save")
     The user enters the details and clicks the create account    ${EMAIL_INVITED}
     The user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
-    And the user opens the mailbox and verifies the email from
+    And the user opens the mailbox and verifies the email from    ${EMAIL_INVITED}
     The user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     The user clicks the button/link    jQuery=.button:contains("Sign in")
     The guest user inserts user email & password    ${EMAIL_INVITED}    Passw0rd123
@@ -741,7 +741,7 @@ invite a registered user
     the user clicks the button/link    jQuery=.button:contains("Save")
     the user enters the details and clicks the create account    ${EMAIL_LEAD}
     the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
-    the user opens the mailbox and verifies the email from
+    the user opens the mailbox and verifies the email from    ${EMAIL_INVITED}
     the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     the user clicks the button/link    jQuery=.button:contains("Sign in")
     the guest user inserts user email & password    ${EMAIL_LEAD}    Passw0rd123
