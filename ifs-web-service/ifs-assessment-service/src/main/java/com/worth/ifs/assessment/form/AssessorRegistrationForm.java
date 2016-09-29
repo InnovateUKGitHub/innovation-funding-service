@@ -166,7 +166,6 @@ public class AssessorRegistrationForm extends BaseBindingResultTarget {
         AssessorRegistrationForm that = (AssessorRegistrationForm) o;
 
         return new EqualsBuilder()
-                .append(useSearchResultAddress, that.useSearchResultAddress)
                 .append(title, that.title)
                 .append(firstName, that.firstName)
                 .append(lastName, that.lastName)
@@ -193,7 +192,6 @@ public class AssessorRegistrationForm extends BaseBindingResultTarget {
                 .append(disability)
                 .append(addressForm)
                 .append(phoneNumber)
-                .append(useSearchResultAddress)
                 .toHashCode();
     }
 }
