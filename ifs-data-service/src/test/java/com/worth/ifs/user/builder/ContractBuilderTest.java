@@ -15,22 +15,25 @@ public class ContractBuilderTest {
         Long expectedId = 1L;
         boolean expectedCurrent = true;
         String expectedText = "text";
-        String expectedAppendixOne = "appendix1";
-        String expectedAppendixTwo = "appendix2";
+        String expectedAnnexOne = "annex1";
+        String expectedAnnexTwo = "annex2";
+        String expectedAnnexThree = "annex3";
 
         Contract contract = newContract()
                 .withId(expectedId)
                 .withCurrent(expectedCurrent)
                 .withText(expectedText)
-                .withAppendixOne(expectedAppendixOne)
-                .withAppendixTwo(expectedAppendixTwo)
+                .withAnnexOne(expectedAnnexOne)
+                .withAnnexTwo(expectedAnnexTwo)
+                .withAnnexThree(expectedAnnexThree)
                 .build();
 
         assertEquals(expectedId, contract.getId());
         assertEquals(expectedCurrent, contract.isCurrent());
         assertEquals(expectedText, contract.getText());
-        assertEquals(expectedAppendixOne, contract.getAppendixOne());
-        assertEquals(expectedAppendixTwo, contract.getAppendixTwo());
+        assertEquals(expectedAnnexOne, contract.getAnnexOne());
+        assertEquals(expectedAnnexTwo, contract.getAnnexTwo());
+        assertEquals(expectedAnnexThree, contract.getAnnexThree());
     }
 
     @Test
@@ -38,15 +41,17 @@ public class ContractBuilderTest {
         Long[] expectedIds = { 1L, 2L };
         Boolean[] expectedCurrents = { true, false };
         String[] expectedTexts = { "text1", "text2" };
-        String[] expectedAppendixOnes = { "appendix11", "appendix12" };
-        String[] expectedAppendixTwos = { "appendix21", "appendix22" };
+        String[] expectedAnnexOnes = { "annex11", "annex12" };
+        String[] expectedAnnexTwos = { "annex21", "annex22" };
+        String[] expectedAnnexThrees = { "annex31", "annex32" };
 
         List<Contract> contracts = newContract()
                 .withId(expectedIds)
                 .withCurrent(expectedCurrents)
                 .withText(expectedTexts)
-                .withAppendixOne(expectedAppendixOnes)
-                .withAppendixTwo(expectedAppendixTwos)
+                .withAnnexOne(expectedAnnexOnes)
+                .withAnnexTwo(expectedAnnexTwos)
+                .withAnnexThree(expectedAnnexTwos)
                 .build(2);
 
         Contract first = contracts.get(0);
@@ -54,15 +59,17 @@ public class ContractBuilderTest {
         assertEquals(expectedIds[0], first.getId());
         assertEquals(expectedCurrents[0], first.isCurrent());
         assertEquals(expectedTexts[0], first.getText());
-        assertEquals(expectedAppendixOnes[0], first.getAppendixOne());
-        assertEquals(expectedAppendixTwos[0], first.getAppendixTwo());
+        assertEquals(expectedAnnexOnes[0], first.getAnnexOne());
+        assertEquals(expectedAnnexTwos[0], first.getAnnexTwo());
+        assertEquals(expectedAnnexThrees[0], first.getAnnexThree());
 
         Contract second = contracts.get(1);
 
         assertEquals(expectedIds[1], second.getId());
         assertEquals(expectedCurrents[1], second.isCurrent());
         assertEquals(expectedTexts[1], second.getText());
-        assertEquals(expectedAppendixOnes[1], second.getAppendixOne());
-        assertEquals(expectedAppendixTwos[1], second.getAppendixTwo());
+        assertEquals(expectedAnnexOnes[1], second.getAnnexOne());
+        assertEquals(expectedAnnexTwos[1], second.getAnnexTwo());
+        assertEquals(expectedAnnexThrees[1], second.getAnnexThree());
     }
 }

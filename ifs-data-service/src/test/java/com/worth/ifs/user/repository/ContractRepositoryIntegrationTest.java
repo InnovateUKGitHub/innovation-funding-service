@@ -24,8 +24,9 @@ public class ContractRepositoryIntegrationTest extends BaseRepositoryIntegration
 
         List<Contract> contracts = newContract()
                 .withText("foo", "bar")
-                .withAppendixOne("appendix1", "appendix1")
-                .withAppendixTwo("appendix2", "appendix2")
+                .withAnnexOne("annex11", "annex12")
+                .withAnnexTwo("annex21", "annex22")
+                .withAnnexThree("annex31", "annex32")
                 .withCurrent(true, false)
                 .build(2);
         repository.save(contracts);
@@ -34,8 +35,9 @@ public class ContractRepositoryIntegrationTest extends BaseRepositoryIntegration
         Contract currentContract = repository.findByCurrentTrue();
 
         assertEquals(expectedContract.getText(), currentContract.getText());
-        assertEquals(expectedContract.getAppendixOne(), currentContract.getAppendixOne());
-        assertEquals(expectedContract.getAppendixTwo(), currentContract.getAppendixTwo());
+        assertEquals(expectedContract.getAnnexOne(), currentContract.getAnnexOne());
+        assertEquals(expectedContract.getAnnexTwo(), currentContract.getAnnexTwo());
+        assertEquals(expectedContract.getAnnexThree(), currentContract.getAnnexThree());
         assertTrue(currentContract.isCurrent());
 
         assertEquals(getPaulPlum().getId(), currentContract.getCreatedBy().getId());

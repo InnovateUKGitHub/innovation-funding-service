@@ -2,8 +2,9 @@ CREATE TABLE contract (
   id BIGINT(20) AUTO_INCREMENT,
   current BOOLEAN NOT NULL DEFAULT FALSE,
   text LONGTEXT NOT NULL,
-  appendix_1 LONGTEXT NOT NULL,
-  appendix_2 LONGTEXT NOT NULL,
+  annex_1 LONGTEXT NOT NULL,
+  annex_2 LONGTEXT NOT NULL,
+  annex_3 LONGTEXT NOT NULL,
 
   -- auditable fields
   created_by BIGINT(20) NOT NULL,

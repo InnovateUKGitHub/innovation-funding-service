@@ -41,12 +41,16 @@ public class ContractBuilder extends BaseBuilder<Contract, ContractBuilder> {
         return withArray((text, contract) -> setField("text", text, contract), texts);
     }
 
-    public ContractBuilder withAppendixOne(String... appendices) {
-        return withArray((appendixOne, contract) -> setField("appendixOne", appendixOne, contract), appendices);
+    public ContractBuilder withAnnexOne(String... annexOnes) {
+        return withArray((annexOne, contract) -> setField("annexOne", annexOne, contract), annexOnes);
     }
 
-    public ContractBuilder withAppendixTwo(String... appendices) {
-        return withArray((appendixTwo, contract) -> setField("appendixTwo", appendixTwo, contract), appendices);
+    public ContractBuilder withAnnexTwo(String... annexTwos) {
+        return withArray((annexTwo, contract) -> setField("annexTwo", annexTwo, contract), annexTwos);
+    }
+
+    public ContractBuilder withAnnexThree(String... annexThrees) {
+        return withArray((annexThree, contract) -> setField("annexThree", annexThree, contract), annexThrees);
     }
 
     @Override
