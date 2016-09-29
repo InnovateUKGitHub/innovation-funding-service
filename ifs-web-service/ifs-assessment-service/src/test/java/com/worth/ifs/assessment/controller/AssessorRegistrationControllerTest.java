@@ -1,6 +1,8 @@
 package com.worth.ifs.assessment.controller;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
+import com.worth.ifs.address.resource.AddressResource;
+import com.worth.ifs.address.service.AddressRestService;
 import com.worth.ifs.assessment.form.AssessorRegistrationForm;
 import com.worth.ifs.assessment.model.AssessorRegistrationBecomeAnAssessorModelPopulator;
 import com.worth.ifs.assessment.model.AssessorRegistrationYourDetailsModelPopulator;
@@ -23,6 +25,9 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
 
+import java.util.List;
+
+import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static com.worth.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -40,7 +45,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
 public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTest<AssessorRegistrationController> {
-
     @Spy
     @InjectMocks
     private AssessorRegistrationBecomeAnAssessorModelPopulator becomeAnAssessorModelPopulator;
@@ -54,6 +58,9 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
 
     @Mock
     private AssessorService assessorService;
+
+    @Mock
+    private AddressRestService addressRestService;
 
     @Override
     protected AssessorRegistrationController supplyControllerUnderTest() {
@@ -187,5 +194,93 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
         assertTrue(bindingResult.hasFieldErrors("lastName"));
         assertEquals("Please enter a first name", bindingResult.getFieldError("firstName").getDefaultMessage());
         assertEquals("Please enter a last name", bindingResult.getFieldError("lastName").getDefaultMessage());
+    }
+
+    @Test
+    public void manualAddress_showsNoErrorsAndSetsAddressFormToManual() throws Exception {
+        String inviteHash = "hash";
+
+        EthnicityResource ethnicity = newEthnicityResource().withId(1L).build();
+        CompetitionInviteResource competitionInviteResource = newCompetitionInviteResource().withEmail("test@test.com").build();
+
+        when(ethnicityRestService.findAllActive()).thenReturn(RestResult.restSuccess(asList(ethnicity)));
+        when(competitionInviteRestService.getInvite(inviteHash)).thenReturn(RestResult.restSuccess(competitionInviteResource));
+
+        MvcResult result = mockMvc.perform(post("/registration/{inviteHash}/register", inviteHash)
+                .contentType(APPLICATION_FORM_URLENCODED)
+                .param("manual-address", ""))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("form"))
+                .andExpect(model().attributeExists("model"))
+                .andExpect(model().hasNoErrors())
+                .andExpect(view().name("registration/register"))
+                .andReturn();
+
+        AssessorRegistrationForm form = (AssessorRegistrationForm) result.getModelAndView().getModel().get("form");
+
+        assertEquals(form.getAddressForm().isManualAddress(), true);
+    }
+
+    @Test
+    public void searchAddress_showsNoErrorsAndFillsAddressList() throws Exception {
+        String inviteHash = "hash";
+        String postcodeInput = "1234";
+
+        EthnicityResource ethnicity = newEthnicityResource().withId(1L).build();
+        List<AddressResource> addressResourceList = newAddressResource().withAddressLine1("address resource line 1", "address resource line 2").build(2);
+        CompetitionInviteResource competitionInviteResource = newCompetitionInviteResource().withEmail("test@test.com").build();
+
+        when(addressRestService.doLookup(postcodeInput)).thenReturn(RestResult.restSuccess(addressResourceList));
+        when(ethnicityRestService.findAllActive()).thenReturn(RestResult.restSuccess(asList(ethnicity)));
+        when(competitionInviteRestService.getInvite(inviteHash)).thenReturn(RestResult.restSuccess(competitionInviteResource));
+
+        MvcResult result = mockMvc.perform(post("/registration/{inviteHash}/register", inviteHash)
+                .contentType(APPLICATION_FORM_URLENCODED)
+                .param("search-address", "")
+                .param("addressForm.postcodeInput", postcodeInput))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("form"))
+                .andExpect(model().attributeExists("model"))
+                .andExpect(model().hasNoErrors())
+                .andExpect(view().name("registration/register"))
+                .andReturn();
+
+        AssessorRegistrationForm form = (AssessorRegistrationForm) result.getModelAndView().getModel().get("form");
+
+        assertEquals(postcodeInput, form.getAddressForm().getPostcodeInput());
+        assertEquals(addressResourceList.get(0), form.getAddressForm().getPostcodeOptions().get(0));
+        assertEquals(addressResourceList.get(1), form.getAddressForm().getPostcodeOptions().get(1));
+    }
+
+    @Test
+    public void selectAddress_showsNoErrorsAndAddsSelectedAddressToForm() throws Exception {
+        String inviteHash = "hash";
+        String postcodeInput = "1234";
+
+        List<AddressResource> addressResourceList = newAddressResource().withAddressLine1("address resource line 1", "address resource line 2").build(2);
+        CompetitionInviteResource competitionInviteResource = newCompetitionInviteResource().withEmail("test@test.com").build();
+        EthnicityResource ethnicity = newEthnicityResource().withId(1L).build();
+
+
+        when(addressRestService.doLookup(postcodeInput)).thenReturn(RestResult.restSuccess(addressResourceList));
+        when(ethnicityRestService.findAllActive()).thenReturn(RestResult.restSuccess(asList(ethnicity)));
+        when(competitionInviteRestService.getInvite(inviteHash)).thenReturn(RestResult.restSuccess(competitionInviteResource));
+
+
+        MvcResult result = mockMvc.perform(post("/registration/{inviteHash}/register", inviteHash)
+                .contentType(APPLICATION_FORM_URLENCODED)
+                .param("addressForm.postcodeInput", postcodeInput)
+                .param("select-address", "")
+                .param("addressForm.selectedPostcodeIndex", "1"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("form"))
+                .andExpect(model().attributeExists("model"))
+                .andExpect(model().hasNoErrors())
+                .andExpect(view().name("registration/register"))
+                .andReturn();
+
+        AssessorRegistrationForm form = (AssessorRegistrationForm) result.getModelAndView().getModel().get("form");
+
+        assertEquals(form.getAddressForm().getSelectedPostcode(), addressResourceList.get(1));
     }
 }
