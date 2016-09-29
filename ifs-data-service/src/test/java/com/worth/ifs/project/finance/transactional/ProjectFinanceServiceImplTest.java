@@ -6,6 +6,7 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.project.builder.ProjectBuilder;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.finance.domain.*;
+import com.worth.ifs.project.resource.ApprovalType;
 import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.project.resource.SpendProfileTableResource;
@@ -30,6 +31,7 @@ import static com.worth.ifs.finance.resource.cost.FinanceRowType.LABOUR;
 import static com.worth.ifs.finance.resource.cost.FinanceRowType.MATERIALS;
 import static com.worth.ifs.project.builder.ProjectBuilder.newProject;
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
+import static com.worth.ifs.project.builder.SpendProfileBuilder.newSpendProfile;
 import static com.worth.ifs.project.finance.domain.TimeUnit.MONTH;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
@@ -103,7 +105,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
                 new Cost("67").withCategory(type1Cat2).withTimePeriod(2, MONTH, 1, MONTH));
 
         SpendProfile expectedOrganisation1Profile = new SpendProfile(organisation1, project, matchingCostCategoryType1,
-                expectedOrganisation1EligibleCosts, expectedOrganisation1SpendProfileFigures, false);
+                expectedOrganisation1EligibleCosts, expectedOrganisation1SpendProfileFigures, false, ApprovalType.UNSET);
 
         List<Cost> expectedOrganisation2EligibleCosts = singletonList(
                 new Cost("301").withCategory(type2Cat1));
@@ -114,7 +116,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
                 new Cost("100").withCategory(type2Cat1).withTimePeriod(2, MONTH, 1, MONTH));
 
         SpendProfile expectedOrganisation2Profile = new SpendProfile(organisation2, project, matchingCostCategoryType2,
-                expectedOrganisation2EligibleCosts, expectedOrganisation2SpendProfileFigures, false);
+                expectedOrganisation2EligibleCosts, expectedOrganisation2SpendProfileFigures, false, ApprovalType.UNSET);
 
         when(spendProfileRepositoryMock.save(spendProfileExpectations(expectedOrganisation1Profile))).thenReturn(null);
         when(spendProfileRepositoryMock.save(spendProfileExpectations(expectedOrganisation2Profile))).thenReturn(null);
@@ -125,6 +127,63 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         verify(spendProfileRepositoryMock).save(spendProfileExpectations(expectedOrganisation1Profile));
         verify(spendProfileRepositoryMock).save(spendProfileExpectations(expectedOrganisation2Profile));
         verifyNoMoreInteractions(spendProfileRepositoryMock);
+    }
+
+    @Test
+    public void getSpendProfileStatusByProjectIdApproved() {
+        Long projectId = 421L;
+        List<SpendProfile> spendProfileList = newSpendProfile().withApproval(ApprovalType.APPROVED, ApprovalType.APPROVED, ApprovalType.APPROVED).build(3);
+        when(spendProfileRepositoryMock.findByProjectId(projectId)).thenReturn(spendProfileList);
+
+        ServiceResult<ApprovalType> result = service.getSpendProfileStatusByProjectId(projectId);
+        assertTrue(result.isSuccess());
+        assertEquals(ApprovalType.APPROVED, result.getSuccessObject());
+    }
+
+    @Test
+    public void getSpendProfileStatusByProjectIdRejected() {
+        Long projectId = 423L;
+        List<SpendProfile> spendProfileList = newSpendProfile().withApproval(ApprovalType.REJECTED, ApprovalType.APPROVED, ApprovalType.UNSET).build(3);
+        when(spendProfileRepositoryMock.findByProjectId(projectId)).thenReturn(spendProfileList);
+
+        ServiceResult<ApprovalType> result = service.getSpendProfileStatusByProjectId(projectId);
+        assertTrue(result.isSuccess());
+        assertEquals(ApprovalType.REJECTED, result.getSuccessObject());
+    }
+
+    @Test
+    public void getSpendProfileStatusByProjectIdUnset() {
+        Long projectId = 254L;
+        List<SpendProfile> spendProfileList = newSpendProfile().withApproval(ApprovalType.UNSET, ApprovalType.UNSET, ApprovalType.UNSET).build(3);
+        when(spendProfileRepositoryMock.findByProjectId(projectId)).thenReturn(spendProfileList);
+
+        ServiceResult<ApprovalType> result = service.getSpendProfileStatusByProjectId(projectId);
+        assertTrue(result.isSuccess());
+        assertEquals(ApprovalType.UNSET, result.getSuccessObject());
+    }
+
+    @Test
+    public void approveSpendProfile() {
+        Long projectId = 49543L;
+        List<SpendProfile> spendProfileList = getSpendProfilesAndSetWhenSpendProfileRepositoryMock(projectId);
+
+        ServiceResult<Void> result = service.approveOrRejectSpendProfile(projectId, ApprovalType.APPROVED);
+        spendProfileList.forEach(spendProfile -> spendProfile.setApproval(ApprovalType.APPROVED));
+
+        assertTrue(result.isSuccess());
+        verify(spendProfileRepositoryMock).save(spendProfileList);
+    }
+
+    @Test
+    public void rejectSpendProfile() {
+        Long projectId = 4234L;
+        List<SpendProfile> spendProfileList = getSpendProfilesAndSetWhenSpendProfileRepositoryMock(projectId);
+
+        ServiceResult<Void> resultNew = service.approveOrRejectSpendProfile(projectId, ApprovalType.REJECTED);
+        spendProfileList.forEach(spendProfile -> spendProfile.setApproval(ApprovalType.REJECTED));
+
+        assertTrue(resultNew.isSuccess());
+        verify(spendProfileRepositoryMock).save(spendProfileList);
     }
 
     @Test
@@ -282,7 +341,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         List<Cost> spendProfileFigures = buildCostsForCategories(Arrays.asList("Labour", "Materials", "Other costs"), 3);
 
-        SpendProfile spendProfileInDB = new SpendProfile(null, null, null, Collections.emptyList(), spendProfileFigures, false);
+        SpendProfile spendProfileInDB = new SpendProfile(null, null, null, Collections.emptyList(), spendProfileFigures, false, ApprovalType.UNSET);
 
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(spendProfileInDB);
 
@@ -400,7 +459,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         List<Cost> spendProfileFigures = buildCostsForCategoriesWithGivenValues(spendProfileCostsMap, 3, costCategoryType.getCostCategoryGroup());
 
-        SpendProfile spendProfileInDB = new SpendProfile(null, projectInDB, costCategoryType, eligibleCosts, spendProfileFigures, true);
+        SpendProfile spendProfileInDB = new SpendProfile(null, projectInDB, costCategoryType, eligibleCosts, spendProfileFigures, true, ApprovalType.UNSET);
 
         return spendProfileInDB;
 
@@ -579,6 +638,13 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         } catch (AssertionError e) {
             return false;
         }
+    }
+
+    private List<SpendProfile> getSpendProfilesAndSetWhenSpendProfileRepositoryMock(Long projectId) {
+        List<SpendProfile> spendProfileList = newSpendProfile().withApproval(ApprovalType.UNSET, ApprovalType.REJECTED).build(2);
+        when(spendProfileRepositoryMock.findByProjectId(projectId)).thenReturn(spendProfileList);
+
+        return spendProfileList;
     }
 
     @Override
