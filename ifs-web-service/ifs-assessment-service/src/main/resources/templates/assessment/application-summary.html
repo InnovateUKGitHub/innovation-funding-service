@@ -105,7 +105,7 @@
 
                     <div class="question" th:id="form-input-comments">
                         <div class="form-group" th:classappend="${#fields.hasErrors('comment')}? error">
-                            <label class="form-label form-label-bold" th:for="comments">
+                            <label class="form-label form-label-bold" th:for="comment">
                                 Do you have any other comments about this application? Your comments here will only be shared with Innovate UK. (Optional)
                                 <span th:if="${#fields.hasErrors('comment')}" th:remove="tag">
                                     <span class="error-message"  th:each="err : ${#fields.errors('comment')}" th:text="${err}" />
