@@ -17,20 +17,23 @@ public class PartnerOrganisation implements ProcessActivity {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "project_id", referencedColumnName = "id")
+    @JoinColumn(name = "project_id", referencedColumnName = "id", nullable = false)
     private Project project;
 
     @ManyToOne
-    @JoinColumn(name = "organisation_id", referencedColumnName = "id")
+    @JoinColumn(name = "organisation_id", referencedColumnName = "id", nullable = false)
     private Organisation organisation;
+
+    private boolean leadOrganisation;
 
     PartnerOrganisation() {
         // for ORM use
     }
 
-    public PartnerOrganisation(Project project, Organisation organisation) {
+    public PartnerOrganisation(Project project, Organisation organisation, boolean leadOrganisation) {
         this.project = project;
         this.organisation = organisation;
+        this.leadOrganisation = leadOrganisation;
     }
 
     public Long getId() {
@@ -43,5 +46,9 @@ public class PartnerOrganisation implements ProcessActivity {
 
     public Organisation getOrganisation() {
         return organisation;
+    }
+
+    public boolean isLeadOrganisation() {
+        return leadOrganisation;
     }
 }

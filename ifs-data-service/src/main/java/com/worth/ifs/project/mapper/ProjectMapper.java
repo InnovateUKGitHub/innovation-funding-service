@@ -25,7 +25,10 @@ public abstract class ProjectMapper extends BaseMapper<Project, ProjectResource,
     public abstract ProjectResource mapToResource(Project project);
 
     @Mappings({
-            @Mapping(target = "organisations", ignore = true)
+            @Mapping(target = "organisations", ignore = true),
+            // TODO DW - for now, exclude partner organisations from mapper - include later though as will be really
+            // useful
+            @Mapping(target = "partnerOrganisations", ignore = true)
     })
     @Override
     public abstract Project mapToDomain(ProjectResource projectResource);

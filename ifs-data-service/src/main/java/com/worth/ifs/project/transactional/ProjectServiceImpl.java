@@ -863,8 +863,8 @@ public class ProjectServiceImpl extends BaseTransactionalService implements Proj
                 List<Organisation> uniqueOrganisations =
                         removeDuplicates(simpleMap(projectUsers, ProjectUser::getOrganisation));
 
-                List<PartnerOrganisation> partnerOrganisations = simpleMap(uniqueOrganisations,
-                        org -> new PartnerOrganisation(project, org));
+                List<PartnerOrganisation> partnerOrganisations = simpleMap(uniqueOrganisations, org ->
+                        new PartnerOrganisation(project, org, org.getId().equals(leadApplicantRole.getOrganisation().getId())));
 
                 project.setProjectUsers(projectUsers);
                 project.setPartnerOrganisations(partnerOrganisations);
