@@ -150,6 +150,20 @@ the user sees that the radio button is selected
     Element Should Be Visible    id=global-header
     Page Should Contain    BETA
 
+the user sees that the radio button is not selected
+    [Arguments]    ${RADIO_BUTTON}
+    wait until element is visible    ${RADIO_BUTTON}
+    Radio Button Should Not Be Selected    ${RADIO_BUTTON}
+    # Error checking
+    Page Should Not Contain    Error
+    Page Should Not Contain    something went wrong
+    Page Should Not Contain    Page or resource not found
+    Page Should Not Contain    You do not have the necessary permissions for your request
+    # Header checking (INFUND-1892)
+    Element Should Be Visible    id=global-header
+    Page Should Contain    BETA
+
+
 the user selects the option from the drop-down menu
     [Arguments]    ${option}    ${drop-down}
     wait until element is visible    ${drop-down}
@@ -570,29 +584,29 @@ delete the emails from both main remote test mailboxes
     close mailbox
 
 the user should get a confirmation email
-    [Arguments]    ${user}    ${password}    ${content}
-    run keyword if    ${docker}==1    the user should get a local confirmation email     ${content}
-    run keyword if    ${docker}!=1    the user should get a remote confirmation email    ${user}    ${password}    ${content}
+    [Arguments]    ${receiver}    ${password}    ${content}    ${subject}
+    run keyword if    ${docker}==1    the user should get a local confirmation email     ${receiver}    ${content}    ${subject}
+    run keyword if    ${docker}!=1    the user should get a remote confirmation email    ${receiver}    ${password}    ${content}    ${subject}
 
 the user should get a remote confirmation email
-    [Arguments]    ${user}    ${password}    ${content}
-    Open Mailbox    server=imap.googlemail.com    user=${user}    password=${password}
-    ${LATEST} =    wait for email
-    ${HTML}=    get email body    ${LATEST}
+    [Arguments]    ${receiver}    ${password}    ${content}    ${subject}
+    Open Mailbox    server=imap.googlemail.com    user=${receiver}    password=${password}
+    ${WHICH EMAIL} =  wait for email  toemail=${receiver}    subject=${subject}
+    ${HTML}=    get email body    ${WHICH EMAIL}
     log    ${HTML}
-    ${MATCHES1}=    Get Matches From Email    ${LATEST}    ${content}
+    ${MATCHES1}=    Get Matches From Email    ${WHICH EMAIL}    ${content}
     log    ${MATCHES1}
     Should Not Be Empty    ${MATCHES1}
     Delete All Emails
     close mailbox
 
 the user should get a local confirmation email
-    [Arguments]    ${content}
+    [Arguments]    ${receiver}    ${content}    ${subject}
     Open Mailbox    server=ifs-local-dev    port=9876    user=smtp    password=smtp    is_secure=False
-    ${LATEST} =    wait for email
-    ${HTML}=    get email body    ${LATEST}
+    ${WHICH EMAIL} =  wait for email  toemail=${receiver}    subject=${subject}
+    ${HTML}=    get email body    ${WHICH EMAIL}
     log    ${HTML}
-    ${MATCHES1}=    Get Matches From Email    ${LATEST}    ${content}
+    ${MATCHES1}=    Get Matches From Email    ${WHICH EMAIL}    ${content}
     log    ${MATCHES1}
     Should Not Be Empty    ${MATCHES1}
     Delete All Emails

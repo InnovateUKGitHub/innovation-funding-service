@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.category.domain.Category;
 import com.worth.ifs.competition.resource.*;
 import com.worth.ifs.invite.domain.ProcessActivity;
@@ -162,6 +163,10 @@ public class Competition implements ProcessActivity {
 
     public Long getId() {
         return id;
+    }
+
+    public String getFormattedId() {
+        return ApplicationResource.formatter.format(id);
     }
 
     public String getName() {
