@@ -51,7 +51,7 @@ public class ContractBuilderTest {
                 .withText(expectedTexts)
                 .withAnnexOne(expectedAnnexOnes)
                 .withAnnexTwo(expectedAnnexTwos)
-                .withAnnexThree(expectedAnnexTwos)
+                .withAnnexThree(expectedAnnexThrees)
                 .build(2);
 
         Contract first = contracts.get(0);

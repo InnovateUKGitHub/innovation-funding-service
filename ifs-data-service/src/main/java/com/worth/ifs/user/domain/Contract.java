@@ -29,7 +29,7 @@ public class Contract extends AuditableEntity {
     @Column(name = "annex_2")
     private String annexTwo;
 
-    @Column(name = "annex_2")
+    @Column(name = "annex_3")
     private String annexThree;
 
     Contract() {
