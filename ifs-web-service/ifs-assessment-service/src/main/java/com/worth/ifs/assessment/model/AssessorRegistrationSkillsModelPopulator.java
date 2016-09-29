@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class AssessorRegistrationSkillsModelPopulator {
     public AssessorRegistrationSkillsViewModel populateModel() {
-        return new AssessorRegistrationSkillsViewModel();
+        String expertise = "High Value Manufacturing";
+        return new AssessorRegistrationSkillsViewModel(expertise);
     }
 }
