@@ -769,28 +769,30 @@ invite a new academic
     the user clicks the button/link    jQuery=.button:contains("Save Changes")
 
 Open mailbox and confirm received email
-    [Arguments]    ${USER}    ${PASSWORD}    ${PATTERN}
-    run keyword if    ${docker}==1    open local mailbox and confirm received email    ${PATTERN}
-    run keyword if    ${docker}!=1    open remote mailbox and confirm received email    ${USER}    ${PASSWORD}    ${PATTERN}
-
-
+    [Arguments]    ${receiver}    ${PASSWORD}    ${PATTERN}    ${subject}
+    run keyword if    ${docker}==1    open local mailbox and confirm received email    ${receiver}    ${PATTERN}    ${subject}
+    run keyword if    ${docker}!=1    open remote mailbox and confirm received email    ${receiver}    ${PASSWORD}    ${PATTERN}    ${subject}
 
 open remote mailbox and confirm received email
-    [Arguments]    ${USER}    ${PASSWORD}    ${PATTERN}
+    [Arguments]    ${receiver}    ${PASSWORD}    ${PATTERN}    ${subject}
     [Documentation]    This Keyword searches the correct email using regex
-    Open Mailbox    server=imap.googlemail.com    user=${USER}    password=${PASSWORD}
-    ${WHICH_EMAIL}=    wait for email    toEmail=${USER}    timeout=150
-    ${EMAIL_MATCH}=    Get Matches From Email    ${WHICH_EMAIL}    ${PATTERN}
+    Open Mailbox    server=imap.googlemail.com    user=${receiver}    password=${PASSWORD}
+    ${WHICH_EMAIL}=  wait for email    toEmail=${receiver}    subject=${subject}
+    ${HTML}=  get email body    ${WHICH EMAIL}
+    log    ${HTML}
+    ${EMAIL_MATCH}=  Get Matches From Email    ${WHICH_EMAIL}    ${PATTERN}
+    log      ${EMAIL_MATCH}
     Should Not Be Empty    ${EMAIL_MATCH}
-    Delete All Emails
     close mailbox
 
-
 open local mailbox and confirm received email
-    [Arguments]    ${PATTERN}
+    [Arguments]    ${receiver}    ${PATTERN}    ${subject}
     [Documentation]    This Keyword searches the correct email using regex
     Open Mailbox    server=ifs-local-dev    port=9876    user=smtp    password=smtp    is_secure=False
-    ${WHICH_EMAIL}=    wait for email    timeout=150
-    ${EMAIL_MATCH}=    Get Matches From Email    ${WHICH_EMAIL}    ${PATTERN}
+    ${WHICH_EMAIL}=  wait for email    toEmail=${receiver}    subject=${subject}
+    ${HTML}=  get email body    ${WHICH EMAIL}
+    log    ${HTML}
+    ${EMAIL_MATCH} =  Get Matches From Email    ${WHICH_EMAIL}    ${PATTERN}
+    log      ${EMAIL_MATCH}
     Should Not Be Empty    ${EMAIL_MATCH}
     close mailbox
