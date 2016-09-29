@@ -407,37 +407,45 @@ The element should be disabled
     Element Should Be Disabled    ${ELEMENT}
 
 the user opens the mailbox and verifies the email from
-    run keyword if    ${docker}==1    the user opens the mailbox and verifies the local email from
-    run keyword if    ${docker}!=1    the user opens the mailbox and verifies the remote email from
+    [Arguments]    ${receiver}
+    run keyword if    ${docker}==1    the user opens the mailbox and verifies the local email from    ${receiver}
+    run keyword if    ${docker}!=1    the user opens the mailbox and verifies the remote email from    ${receiver}
 
 the user opens the mailbox and verifies the remote email from
+    [Arguments]    ${receiver}
     Open Mailbox    server=imap.googlemail.com    user=${test_mailbox_one}@gmail.com    password=${test_mailbox_one_password}
-    ${LATEST} =    wait for email
-    ${HTML}=    get email body    ${LATEST}
-    log    ${HTML}
-    ${LINK}=    Get Links From Email    ${LATEST}
-    log    ${LINK}
-    ${VERIFY_EMAIL}=    Get From List    ${LINK}    1
-    log    ${VERIFY_EMAIL}
+    ${WHICH EMAIL} =  wait for email  toemail=${receiver}    subject=Please verify your email address
+    ${EMAIL_MATCH} =    Get Matches From Email    ${WHICH_EMAIL}    sign into your account and start your application
+    log      ${EMAIL_MATCH}
+    Should Not Be Empty    ${EMAIL_MATCH}
+    ${HTML}=    get email body    ${WHICH EMAIL}
+    log      ${HTML}
+    ${LINK}=  Get Links From Email    ${WHICH EMAIL}
+    log      ${LINK}
+    ${VERIFY_EMAIL} =  Get From List    ${LINK}    1
+    log      ${VERIFY_EMAIL}
     go to    ${VERIFY_EMAIL}
     Capture Page Screenshot
     Delete All Emails
     close mailbox
 
 the user opens the mailbox and verifies the local email from
+    [Arguments]    ${receiver}
     Open Mailbox    server=ifs-local-dev    port=9876    user=smtp    password=smtp    is_secure=False
-    ${LATEST} =    wait for email
-    ${HTML}=    get email body    ${LATEST}
-    log    ${HTML}
-    ${LINK}=    Get Links From Email    ${LATEST}
-    log    ${LINK}
-    ${VERIFY_EMAIL}=    Get From List    ${LINK}    1
-    log    ${VERIFY_EMAIL}
+    ${WHICH EMAIL} =  wait for email  toemail=${receiver}    subject=Please verify your email address
+    ${EMAIL_MATCH} =    Get Matches From Email    ${WHICH_EMAIL}    sign into your account and start your application
+    log      ${EMAIL_MATCH}
+    Should Not Be Empty    ${EMAIL_MATCH}
+    ${HTML}=    get email body    ${WHICH EMAIL}
+    log      ${HTML}
+    ${LINK}=  Get Links From Email    ${WHICH EMAIL}
+    log      ${LINK}
+    ${VERIFY_EMAIL} =  Get From List    ${LINK}    1
+    log      ${VERIFY_EMAIL}
     go to    ${VERIFY_EMAIL}
     Capture Page Screenshot
     Delete All Emails
     close mailbox
-
 
 the user opens the mailbox and verifies the email
     run keyword if    ${docker}==1    the user opens the local mailbox and verifies the email
@@ -609,7 +617,7 @@ the user should get a local confirmation email
     ${MATCHES1}=    Get Matches From Email    ${WHICH EMAIL}    ${content}
     log    ${MATCHES1}
     Should Not Be Empty    ${MATCHES1}
-    Delete All Emails
+#    Delete All Emails
     close mailbox
 
 
@@ -706,7 +714,7 @@ we create a new user
     The user clicks the button/link    jQuery=.button:contains("Save")
     The user enters the details and clicks the create account    ${EMAIL_INVITED}
     The user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
-    And the user opens the mailbox and verifies the email from
+    And the user opens the mailbox and verifies the email from    ${EMAIL_INVITED}
     The user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     The user clicks the button/link    jQuery=.button:contains("Sign in")
     The guest user inserts user email & password    ${EMAIL_INVITED}    Passw0rd123
@@ -733,7 +741,7 @@ invite a registered user
     the user clicks the button/link    jQuery=.button:contains("Save")
     the user enters the details and clicks the create account    ${EMAIL_LEAD}
     the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
-    the user opens the mailbox and verifies the email from
+    the user opens the mailbox and verifies the email from    ${EMAIL_INVITED}
     the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     the user clicks the button/link    jQuery=.button:contains("Sign in")
     the guest user inserts user email & password    ${EMAIL_LEAD}    Passw0rd123
@@ -761,28 +769,30 @@ invite a new academic
     the user clicks the button/link    jQuery=.button:contains("Save Changes")
 
 Open mailbox and confirm received email
-    [Arguments]    ${USER}    ${PASSWORD}    ${PATTERN}
-    run keyword if    ${docker}==1    open local mailbox and confirm received email    ${PATTERN}
-    run keyword if    ${docker}!=1    open remote mailbox and confirm received email    ${USER}    ${PASSWORD}    ${PATTERN}
-
-
+    [Arguments]    ${receiver}    ${PASSWORD}    ${PATTERN}    ${subject}
+    run keyword if    ${docker}==1    open local mailbox and confirm received email    ${receiver}    ${PATTERN}    ${subject}
+    run keyword if    ${docker}!=1    open remote mailbox and confirm received email    ${receiver}    ${PASSWORD}    ${PATTERN}    ${subject}
 
 open remote mailbox and confirm received email
-    [Arguments]    ${USER}    ${PASSWORD}    ${PATTERN}
+    [Arguments]    ${receiver}    ${PASSWORD}    ${PATTERN}    ${subject}
     [Documentation]    This Keyword searches the correct email using regex
-    Open Mailbox    server=imap.googlemail.com    user=${USER}    password=${PASSWORD}
-    ${WHICH_EMAIL}=    wait for email    toEmail=${USER}    timeout=150
-    ${EMAIL_MATCH}=    Get Matches From Email    ${WHICH_EMAIL}    ${PATTERN}
+    Open Mailbox    server=imap.googlemail.com    user=${receiver}    password=${PASSWORD}
+    ${WHICH_EMAIL}=  wait for email    toEmail=${receiver}    subject=${subject}
+    ${HTML}=  get email body    ${WHICH EMAIL}
+    log    ${HTML}
+    ${EMAIL_MATCH}=  Get Matches From Email    ${WHICH_EMAIL}    ${PATTERN}
+    log      ${EMAIL_MATCH}
     Should Not Be Empty    ${EMAIL_MATCH}
-    Delete All Emails
     close mailbox
 
-
 open local mailbox and confirm received email
-    [Arguments]    ${PATTERN}
+    [Arguments]    ${receiver}    ${PATTERN}    ${subject}
     [Documentation]    This Keyword searches the correct email using regex
     Open Mailbox    server=ifs-local-dev    port=9876    user=smtp    password=smtp    is_secure=False
-    ${WHICH_EMAIL}=    wait for email    timeout=150
-    ${EMAIL_MATCH}=    Get Matches From Email    ${WHICH_EMAIL}    ${PATTERN}
+    ${WHICH_EMAIL}=  wait for email    toEmail=${receiver}    subject=${subject}
+    ${HTML}=  get email body    ${WHICH EMAIL}
+    log    ${HTML}
+    ${EMAIL_MATCH} =  Get Matches From Email    ${WHICH_EMAIL}    ${PATTERN}
+    log      ${EMAIL_MATCH}
     Should Not Be Empty    ${EMAIL_MATCH}
     close mailbox
