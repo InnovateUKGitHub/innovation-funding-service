@@ -11,6 +11,8 @@ public class CostCategoryResource {
 
     private CostCategoryGroupResource costCategoryGroup;
 
+    private String label;
+
     public Long getId() {
         return id;
     }
@@ -33,6 +35,14 @@ public class CostCategoryResource {
 
     public void setCostCategoryGroup(CostCategoryGroupResource costCategoryGroup) {
         this.costCategoryGroup = costCategoryGroup;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.worth.ifs.util;
 
+import com.worth.ifs.project.finance.domain.CostCategory;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -265,7 +266,7 @@ public final class CollectionFunctions {
     public static <S, T, R, U> Map<R, U> simpleMapKeyAndValue(Map<S, T> map, Function<S, R> keyMappingFn, Function<T, U> valueMappingFn) {
 
         List<Pair<R, U>> list = simpleMap(map.entrySet(), entry ->
-            Pair.of(keyMappingFn.apply(entry.getKey()), valueMappingFn.apply(entry.getValue())));
+                Pair.of(keyMappingFn.apply(entry.getKey()), valueMappingFn.apply(entry.getValue())));
 
         return simpleToMap(list, Pair::getKey, Pair::getValue);
     }
@@ -432,7 +433,9 @@ public final class CollectionFunctions {
     }
 
     private static <T> BinaryOperator<T> throwingMerger() {
-        return (u,v) -> { throw new IllegalStateException(String.format("Duplicate key %s", u)); };
+        return (u, v) -> {
+            throw new IllegalStateException(String.format("Duplicate key %s", u));
+        };
     }
 
     /**
@@ -538,7 +541,7 @@ public final class CollectionFunctions {
         return list.stream().map(element -> element != null ? element.toString() : "").collect(joining(joinString));
     }
 
-    public static <T> String simpleJoiner(List<T> list, Function<T,String> transformer, String joinString) {
+    public static <T> String simpleJoiner(List<T> list, Function<T, String> transformer, String joinString) {
         if (list == null || list.isEmpty()) {
             return "";
         }
@@ -633,6 +636,7 @@ public final class CollectionFunctions {
 
     /**
      * Wrap a {@link BinaryOperator} with null checks
+     *
      * @param notNullSafe
      * @param <T>
      * @return
@@ -664,7 +668,7 @@ public final class CollectionFunctions {
         return flattenLists(allPermutations);
     }
 
-    public static <T, R>  List<Pair<T, R>> asListOfPairs(Object... entries) {
+    public static <T, R> List<Pair<T, R>> asListOfPairs(Object... entries) {
 
         if (entries.length % 2 != 0) {
             throw new IllegalArgumentException("Should have an even number of names and values in list");
@@ -693,10 +697,28 @@ public final class CollectionFunctions {
         return flattenLists(furtherPermutations);
     }
 
-    public static final <R,S,T> boolean containsAll(Collection<T> containing, Function<T, S> transformer1, Collection<R> contained, Function<R,S> transformer2 ){
+    public static final <R, S, T> boolean containsAll(Collection<T> containing, Function<T, S> transformer1, Collection<R> contained, Function<R, S> transformer2) {
         List<S> transformedContaining = containing.stream().map(transformer1).collect(toList());
         List<S> transformedContained = contained.stream().map(transformer2).collect(toList());
         return transformedContained.containsAll(transformedContained);
+    }
+
+    public static final <R, S, T> SortedMap<T, List<R>> toSortedMap(List<S> orderedList, Function<S, T> keyTransform, Function<S, R> valueTransform) {
+        SortedMap<T, List<R>> orderedMap = new TreeMap<>();
+        if (orderedList != null) {
+            orderedList.stream().forEachOrdered(s -> {
+                        if (s != null) {
+                            T key = keyTransform.apply(s);
+                            R value = valueTransform.apply(s);
+                            if (!orderedMap.containsKey(key)) {
+                                orderedMap.put(key, new ArrayList<>());
+                            }
+                            orderedMap.get(key).add(value);
+                        }
+                    }
+            );
+        }
+        return orderedMap;
     }
 
 }

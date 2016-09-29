@@ -1,9 +1,11 @@
 package com.worth.ifs.project.finance.domain;
 
+import com.worth.ifs.util.CollectionFunctions;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
+import java.util.SortedMap;
 
 /**
  * Entity representing a Category against which costs can be recorded e.g. Labour, Materials etc
@@ -17,6 +19,9 @@ public class CostCategory {
 
     @Column(nullable = false)
     private String name;
+
+    @Column(nullable = true)
+    private String label;
 
     @ManyToOne
     @JoinColumn(name = "cost_category_group_id", nullable = false)
@@ -45,31 +50,43 @@ public class CostCategory {
         this.name = name;
     }
 
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
     // for ORM back-ref setting
     public void setCostCategoryGroup(CostCategoryGroup costCategoryGroup) {
         this.costCategoryGroup = costCategoryGroup;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-
         if (o == null || getClass() != o.getClass()) return false;
 
         CostCategory that = (CostCategory) o;
 
-        return new EqualsBuilder()
-                .append(id, that.id)
-                .append(name, that.name)
-                .append(costCategoryGroup, that.costCategoryGroup)
-                .isEquals();
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        if (name != null ? !name.equals(that.name) : that.name != null) return false;
+        if (label != null ? !label.equals(that.label) : that.label != null) return false;
+        return costCategoryGroup != null ? costCategoryGroup.equals(that.costCategoryGroup) : that.costCategoryGroup == null;
+
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(id)
-                .append(name)
-                .toHashCode();
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (label != null ? label.hashCode() : 0);
+        result = 31 * result + (costCategoryGroup != null ? costCategoryGroup.hashCode() : 0);
+        return result;
     }
 }
