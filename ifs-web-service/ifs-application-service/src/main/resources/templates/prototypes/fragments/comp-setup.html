@@ -6,7 +6,7 @@
 <div th:fragment="prototype-comp-dashboard-navigation">
     <ul class="inline-nav cf">
         <li id="section-1" th:class="${(param.section == null or param.section[0] == 'live' ? 'selected' : '')}"><a th:href="@{'?section=live'}">Live (18)</a></li>
-        <li id="section-1" th:class="${(param.section != null and param.section[0] == 'setup' ? 'selected' : '')}"><a th:href="@{'?section=setup'}">Project set up (2)</a></li>
+        <li id="section-1" th:class="${(param.section != null and param.section[0] == 'setup' ? 'selected' : '')}"><a th:href="@{'?section=setup'}">Project setup (2)</a></li>
         <li id="section-2" th:class="${(param.section != null and param.section[0] == 'upcoming' ? 'selected' : '')}"><a th:href="@{'?section=upcoming'}">Upcoming (4)</a></li>
         <li id="section-3" th:class="${(param.section != null and param.section[0] == 'complete' ? 'selected' : '')}"><a th:href="@{'?section=complete'}">Complete (27)</a></li>
     </ul>
@@ -184,7 +184,7 @@
     
     <section>
         
-        <h2 class="heading-medium">Project set up (2)</h2>
+        <h2 class="heading-medium">Project setup (2)</h2>
 
         <div class="table-overflow">
             <ul class="list-overview">

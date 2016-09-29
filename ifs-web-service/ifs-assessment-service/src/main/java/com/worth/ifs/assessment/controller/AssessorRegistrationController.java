@@ -185,9 +185,7 @@ public class AssessorRegistrationController {
     public String submitTerms(Model model, @ModelAttribute(FORM_ATTR_NAME) AssessorRegistrationTermsForm form) {
         return "redirect:/assessor/dashboard";
     }
-
-
-
+    
     private void addAddressOptions(AssessorRegistrationForm registrationForm) {
         if (StringUtils.hasText(registrationForm.getAddressForm().getPostcodeInput())) {
             AddressForm addressForm = registrationForm.getAddressForm();

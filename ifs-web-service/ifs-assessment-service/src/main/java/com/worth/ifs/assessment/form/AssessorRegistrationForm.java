@@ -6,6 +6,8 @@ import com.worth.ifs.user.resource.Disability;
 import com.worth.ifs.user.resource.EthnicityResource;
 import com.worth.ifs.user.resource.Gender;
 import com.worth.ifs.validator.constraints.FieldMatch;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.Valid;
@@ -155,4 +157,43 @@ public class AssessorRegistrationForm extends BaseBindingResultTarget {
     }
 
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AssessorRegistrationForm that = (AssessorRegistrationForm) o;
+
+        return new EqualsBuilder()
+                .append(useSearchResultAddress, that.useSearchResultAddress)
+                .append(title, that.title)
+                .append(firstName, that.firstName)
+                .append(lastName, that.lastName)
+                .append(password, that.password)
+                .append(retypedPassword, that.retypedPassword)
+                .append(gender, that.gender)
+                .append(ethnicity, that.ethnicity)
+                .append(disability, that.disability)
+                .append(addressForm, that.addressForm)
+                .append(phoneNumber, that.phoneNumber)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(title)
+                .append(firstName)
+                .append(lastName)
+                .append(password)
+                .append(retypedPassword)
+                .append(gender)
+                .append(ethnicity)
+                .append(disability)
+                .append(addressForm)
+                .append(phoneNumber)
+                .append(useSearchResultAddress)
+                .toHashCode();
+    }
 }
