@@ -2,7 +2,7 @@
 Documentation     INFUND-1231: As a collaborator registering my company as Academic, I want to be able to enter full or partial details of the Academic organisation's name so I can select my Academic organisation from a list
 Suite Setup       The guest user opens the browser
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        Applicant
+Force Tags        Applicant    failing
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
