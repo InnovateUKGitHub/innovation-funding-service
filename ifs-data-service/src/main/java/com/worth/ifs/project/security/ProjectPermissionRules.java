@@ -68,6 +68,13 @@ public class ProjectPermissionRules extends BasePermissionRules {
 
     @PermissionRule(
             value = "VIEW_MONITORING_OFFICER",
+            description = "Project finance managers can view Monitoring Officers on any Project")
+    public boolean projectFinanceUsersCanViewMonitoringOfficersForAnyProject(ProjectResource project, UserResource user) {
+        return isProjectFinanceUser(user);
+    }
+
+    @PermissionRule(
+            value = "VIEW_MONITORING_OFFICER",
             description = "Partners can view monitoring officers on Projects that they are partners on")
     public boolean partnersCanViewMonitoringOfficersOnTheirProjects(ProjectResource project, UserResource user) {
         return isPartner(project.getId(), user.getId());
@@ -146,6 +153,13 @@ public class ProjectPermissionRules extends BasePermissionRules {
     }
 
     @PermissionRule(
+            value = "ACCEPT_REJECT_OTHER_DOCUMENTS",
+            description = "Competition Admin can accept or reject Other Documents (Collaboration Agreement, Exploitation Plan)")
+    public boolean competitionAdminCanAcceptOrRejectOtherDocuments(ProjectResource project, UserResource user) {
+        return isCompAdmin(user);
+    }
+
+    @PermissionRule(
             value = "VIEW_TEAM_STATUS",
             description = "All partners can view team status")
     public boolean partnersCanViewTeamStatus(ProjectResource project, UserResource user){
@@ -157,6 +171,13 @@ public class ProjectPermissionRules extends BasePermissionRules {
             description = "Comp admins can see a team's status")
     public boolean compAdminsCanViewTeamStatus(ProjectResource project, UserResource user){
         return isCompAdmin(user);
+    }
+
+    @PermissionRule(
+            value = "VIEW_TEAM_STATUS",
+            description = "Project finance user can see a team's status")
+    public boolean projectFinanceUserCanViewTeamStatus(ProjectResource project, UserResource user){
+        return isProjectFinanceUser(user);
     }
 
 }

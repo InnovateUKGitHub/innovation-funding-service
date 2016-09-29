@@ -156,6 +156,10 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
     }
 
 	private List<Error> validateOpeningDate(LocalDateTime openingDate) {
+	    if(openingDate.getYear() > 9999) {
+            return asList(fieldError(OPENINGDATE_FIELDNAME, openingDate.toString(), "validation.initialdetailsform.openingdateyear.range"));
+        }
+
         if (openingDate.isBefore(LocalDateTime.now())) {
             return asList(fieldError(OPENINGDATE_FIELDNAME, openingDate.toString(), "competition.setup.opening.date.not.in.future"));
         }
@@ -175,7 +179,7 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
         milestoneEntry.setMonth(openingDate.getMonth().getValue());
         milestoneEntry.setYear(openingDate.getYear());
 
-        List<MilestoneResource> milestones = milestoneService.getAllDatesByCompetitionId(competitionId);
+        List<MilestoneResource> milestones = milestoneService.getAllMilestonesByCompetitionId(competitionId);
         if(milestones.isEmpty()) {
             milestones = competitionSetupMilestoneService.createMilestonesForCompetition(competitionId);
         }
@@ -191,5 +195,4 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
 	public boolean supportsForm(Class<? extends CompetitionSetupForm> clazz) {
 		return InitialDetailsForm.class.equals(clazz);
 	}
-
 }

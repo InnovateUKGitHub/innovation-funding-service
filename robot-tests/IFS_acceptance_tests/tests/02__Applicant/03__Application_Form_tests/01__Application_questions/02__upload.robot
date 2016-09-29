@@ -44,7 +44,8 @@ Large pdf uploads not allowed
 
 Non pdf uploads not allowed
     [Documentation]    INFUND-832
-    [Tags]
+    [Tags]    Pending
+    # TODO Pending due to INFUND-5344
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=5. Technical approach

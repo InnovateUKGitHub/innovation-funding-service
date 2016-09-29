@@ -30,9 +30,10 @@ public class ProjectPartnerStatusResource {
     private ProjectActivityStates financeChecksStatus;
     private ProjectActivityStates spendProfileStatus;
 
-    // TODO DW - INFUND-4915 - implement
-    private ProjectActivityStates companiesHouseStatus = COMPLETE;
     private ProjectActivityStates financeContactStatus = COMPLETE;
+
+    // TODO DW - INFUND-4915 - blocked until Companies House Project Setup work tackled
+    private ProjectActivityStates companiesHouseStatus = COMPLETE;
 
     /* Following properties are only applicable to lead partner */
     private ProjectActivityStates monitoringOfficerStatus;
@@ -41,9 +42,9 @@ public class ProjectPartnerStatusResource {
 
 
     //Required for Json Mapping.
-    public ProjectPartnerStatusResource() {}
+    ProjectPartnerStatusResource() {}
 
-    public ProjectPartnerStatusResource(Long organisationId, String name, OrganisationTypeEnum organisationType, ProjectActivityStates projectDetailsStatus, ProjectActivityStates monitoringOfficerStatus, ProjectActivityStates bankDetailsStatus, ProjectActivityStates financeChecksStatus, ProjectActivityStates spendProfileStatus, ProjectActivityStates otherDocumentsStatus, ProjectActivityStates grantOfferLetterStatus) {
+    public ProjectPartnerStatusResource(Long organisationId, String name, OrganisationTypeEnum organisationType, ProjectActivityStates projectDetailsStatus, ProjectActivityStates monitoringOfficerStatus, ProjectActivityStates bankDetailsStatus, ProjectActivityStates financeChecksStatus, ProjectActivityStates spendProfileStatus, ProjectActivityStates otherDocumentsStatus, ProjectActivityStates grantOfferLetterStatus, ProjectActivityStates financeContactStatus) {
         this.organisationId = organisationId;
         this.name = name;
         this.organisationType = organisationType;
@@ -54,6 +55,7 @@ public class ProjectPartnerStatusResource {
         this.spendProfileStatus = spendProfileStatus;
         this.otherDocumentsStatus = otherDocumentsStatus;
         this.grantOfferLetterStatus = grantOfferLetterStatus;
+        this.financeContactStatus = financeContactStatus;
     }
 
     public Long getOrganisationId() {

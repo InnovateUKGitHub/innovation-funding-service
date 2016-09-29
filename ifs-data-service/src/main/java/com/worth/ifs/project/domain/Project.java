@@ -2,6 +2,7 @@ package com.worth.ifs.project.domain;
 
 import com.worth.ifs.address.domain.Address;
 import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.invite.domain.ProcessActivity;
 import com.worth.ifs.invite.domain.ProjectParticipantRole;
@@ -58,6 +59,8 @@ public class Project implements ProcessActivity {
     @JoinColumn(name="exploitationPlanFileEntryId", referencedColumnName="id")
     private FileEntry exploitationPlan;
 
+    private Boolean otherDocumentsApproved;
+
     public Project() {}
 
     public Project(Long id, Application application, LocalDate targetStartDate, Address address,
@@ -91,6 +94,10 @@ public class Project implements ProcessActivity {
 
     public Long getId() {
         return id;
+    }
+
+    public String getFormattedId() {
+        return ApplicationResource.formatter.format(id);
     }
 
     public void setId(Long id) {
@@ -184,5 +191,13 @@ public class Project implements ProcessActivity {
 
     public void setExploitationPlan(FileEntry exploitationPlan) {
         this.exploitationPlan = exploitationPlan;
+    }
+
+    public Boolean getOtherDocumentsApproved() {
+        return otherDocumentsApproved;
+    }
+
+    public void setOtherDocumentsApproved(Boolean otherDocumentsApproved) {
+        this.otherDocumentsApproved = otherDocumentsApproved;
     }
 }
