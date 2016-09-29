@@ -86,6 +86,7 @@ import static com.worth.ifs.finance.builder.ApplicationFinanceResourceBuilder.ne
 import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
 import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
 import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static com.worth.ifs.organisation.builder.OrganisationAddressBuilder.newOrganisationAddress;
 import static com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
 import static com.worth.ifs.project.builder.ProjectBuilder.newProject;
@@ -106,6 +107,7 @@ import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static java.util.Arrays.asList;
@@ -116,6 +118,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.isA;
 import static org.mockito.Mockito.never;
@@ -145,7 +148,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         organisation = newOrganisation().build();
 
-        leadApplicantRole = newRole(UserRoleType.LEADAPPLICANT).build();
+        leadApplicantRole = newRole(LEADAPPLICANT).build();
         projectManagerRole = newRole(UserRoleType.PROJECT_MANAGER).build();
 
         user = newUser().
@@ -998,7 +1001,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(projectUserRepositoryMock.findByProjectId(project.getId())).thenReturn(projectUsers);
         when(projectRepositoryMock.findOne(project.getId())).thenReturn(project);
 
-        assertSetDocumentsDateimeIfProjectManagerAndFilesExist(
+        assertSetDocumentsDateTimeIfProjectManagerAndFilesExist(
                 project::setCollaborationAgreement,
                 project::setExploitationPlan,
                 () -> service.saveDocumentsSubmitDateTime(project.getId(), LocalDateTime.now()));
@@ -1036,7 +1039,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     }
 
 
-    private void assertSetDocumentsDateimeIfProjectManagerAndFilesExist(Consumer<FileEntry> fileSetter1,
+    private void assertSetDocumentsDateTimeIfProjectManagerAndFilesExist(Consumer<FileEntry> fileSetter1,
                                                                        Consumer<FileEntry> fileSetter2,
                                                                        Supplier<ServiceResult<Void>> getConditionFn) {
         Supplier<InputStream> inputStreamSupplier1 = () -> null;
@@ -1047,6 +1050,23 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         assertTrue(result.isSuccess());
 
+    }
+
+    @Test
+    public void testInviteProjectFinanceUser(){
+        Organisation o = newOrganisation().build();
+        InviteProjectResource invite = ProjectInviteResourceBuilder.newInviteProjectResource().build();
+        ProcessRole[] roles = newProcessRole().withOrganisation(o).withRole(LEADAPPLICANT).build(1).toArray(new ProcessRole[0]);
+        Application a = newApplication().withProcessRoles(roles).build();
+
+        Project project = newProject().withId(projectId).withApplication(a).build();
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(notificationServiceMock.sendNotification(any(), eq(EMAIL))).thenReturn(serviceSuccess());
+
+        ServiceResult<Void> success = service.inviteFinanceContact(project.getId(), invite);
+
+        assertTrue(success.isSuccess());
     }
 
 

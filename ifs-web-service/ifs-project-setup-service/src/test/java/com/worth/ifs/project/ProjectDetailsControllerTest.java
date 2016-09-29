@@ -352,10 +352,8 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 .withLeadOrganisation(leadOrganisation.getName()).build();
 
         createdInvite.setInviteOrganisation(organisationId);
-//        createdInvite.setUser(2L);
         createdInvite.setApplicationId(projectResource.getApplication());
         createdInvite.setApplicationId(applicationId);
-//        createdInvite.setHash("123456789");
 
         List<InviteProjectResource> existingInvites = newInviteProjectResource().withId(2L)
                 .withProject(projectId).withNames("exist test", invitedUserName)

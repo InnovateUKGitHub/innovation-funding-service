@@ -1,5 +1,7 @@
 package com.worth.ifs.project.viewmodel;
 
+// model for selecting finance contacts
+
 public class FinanceContactModel {
     private String name;
     private String status;

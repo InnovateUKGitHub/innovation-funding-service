@@ -1,5 +1,7 @@
 package com.worth.ifs.project.form;
 
+// this class defines the form for inviting new users to the project
+
 import java.io.Serializable;
 
 import com.worth.ifs.commons.validation.ValidationConstants;

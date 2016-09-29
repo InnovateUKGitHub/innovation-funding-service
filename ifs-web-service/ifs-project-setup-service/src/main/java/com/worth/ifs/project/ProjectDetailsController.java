@@ -173,6 +173,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         });
     }
 
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
     @RequestMapping(value = "/{projectId}/details/invite-finance-contact", method = POST)
     public String inviteFinanceContact(Model model, @PathVariable("projectId") final Long projectId,
                                        @Valid @ModelAttribute(INVITE_FORM_ATTR_NAME) InviteeForm form,
