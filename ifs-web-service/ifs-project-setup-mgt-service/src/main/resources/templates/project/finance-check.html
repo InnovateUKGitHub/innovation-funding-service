@@ -15,7 +15,7 @@
         The partner finance eligibility has been approved by Paul Davidson, 27 July 2016
     </div>
 
-    <form th:object="${form}">
+    <form th:object="${form}" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post">
       <h3 class="heading-medium">Finance contact</h3>
       <p>Dave Norman <br /><a href="mailto:#">dave@norman.com</a></p>
       <h3 class="heading-medium">Project costs</h3>
@@ -98,16 +98,6 @@
                 </label>
             </div>
 
-            <div class="form-group hidden" id="add-rag-rating">
-                <label for="rag-rating" class="form-label">Please enter the RAG rating for this eligibility review</label>
-                <select id="rag-rating" name="rag-rating" class="form-control" >
-                    <option value="">--</option>
-                    <option value="Green">Green</option>
-                    <option value="Amber">Amber</option>
-                    <option value="Red">Red</option>
-                </select>
-            </div>
-
             <button data-js-modal="approve-eligibility-modal" id="approve-eligibility" class="button" type="submit" disabled="disabled">Approve eligible costs</button>
 
             <div class="approve-eligibility-modal" role="dialog" aria-hidden="true" style="margin-top: -174px;">
@@ -118,34 +108,25 @@
 
                     <p>This partner will now be marked as eligible for this project.</p>
 
-                    <form>
-
                         <hr />
 
                         <div class="alignright-button">
-
                             <a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
-
-                            <input type="hidden" id="action" name="action" th:value="${(param.status != null and param.status[0] == 'grantChanged' ? 'grantChanged' : '')}" />
-                            <input type="hidden" id="status" name="status" value="approved" />
-
                             <button class="button" th:formaction="@{${#httpServletRequest.requestURI}}">Approve eligible costs</button>
                         </div>
 
-                    </form>
 
                 </div>
             </div>
 
         </th:block>
 
-    </form>
-
     <hr />
 
     <div class="extra-margin">
-        <a href="/prototypes/5163-project-finances" class="button button-secondary" th:text="${(param.status != null and param.status[0] == 'approved'? 'Return to finance checks' : 'Save and return to finance checks')}">RETURN BUTTON TEXT</a>
+        <button class="button button-secondary">Save and return to finance checks</button>
     </div>
+    </form>
 
     <!-- END OFHARDCODED PROTOTYPE HTML -->
 
@@ -156,18 +137,5 @@
 <div th:include="fragments/layout :: body-end" th:remove="tag" />
 <script src="/js/ifs_prototype/jquery.waypoints.min.js" type="text/javascript"></script>
 <script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
-<script type="text/javascript">
-    // <![CDATA[
-    jQuery('input#costs-reviewed').on('click',function(e){
-        if ( jQuery(this).is(':checked') ) {
-            jQuery("#approve-eligibility").removeAttr('disabled');
-        }else{
-            jQuery("#approve-eligibility").addAttr('disabled');
-        }
-    });
-
-
-    // ]]>
-</script>
 </body>
 </html>

@@ -13,7 +13,7 @@ public class FinanceCheckServiceImpl implements FinanceCheckService {
 
     @Override
     public FinanceCheckResource getByProjectAndOrganisation(ProjectOrganisationCompositeId key){
-        return financeCheckRestService.getByProjectAndOrganisation(key.getProjectId(), key.getOrganisationId()).getSuccessObject();
+        return financeCheckRestService.getByProjectAndOrganisation(key.getProjectId(), key.getOrganisationId()).getSuccessObjectOrThrowException();
     }
 
     @Override
