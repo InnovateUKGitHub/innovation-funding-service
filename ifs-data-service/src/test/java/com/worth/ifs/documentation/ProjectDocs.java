@@ -23,6 +23,7 @@ public class ProjectDocs {
             fieldWithPath("documentsSubmittedDate").description("Date that partner documents were submitted by the project manager. Null means the details have not yet been submitted"),
             fieldWithPath("collaborationAgreement").description("Id of the File Entry that contains the Collaboration Agreement of the partner organisations"),
             fieldWithPath("exploitationPlan").description("Id of the File Entry that contains the Exploitation Plan of the partner organisations"),
+            fieldWithPath("otherDocumentsApproved").description("Flag which indicates if Other Documents - Collaboration agreement and Exploitation plan, are approved or not"),
 
     };
 
