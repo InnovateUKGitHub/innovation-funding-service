@@ -100,6 +100,11 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    public ServiceResult<Boolean> isFinanceContactSubmitted(Long projectId, Long userId) {
+        return projectRestService.isFinanceContactSubmitted(projectId, userId).toServiceResult();
+    }
+
+    @Override
     public OrganisationResource getLeadOrganisation(Long projectId) {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccessObjectOrThrowException();
         return applicationService.getLeadOrganisation(project.getApplication());

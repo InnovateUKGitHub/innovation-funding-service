@@ -28,10 +28,12 @@ public class ProjectDetailsViewModel {
     private boolean projectDetailsSubmitted;
     private ProjectUserResource projectManager;
     private boolean submissionAllowed;
+    private boolean isFinanceContactSubmitted;
+
     private Map<Long, ProjectUserResource> financeContactsByOrganisationId;
     private boolean userLeadPartner;
 
-    public ProjectDetailsViewModel(ProjectResource project, UserResource currentUser, List<Long> usersPartnerOrganisations, List<OrganisationResource> partnerOrganisations, ApplicationResource app, List<ProjectUserResource> projectUsers, CompetitionResource competition, boolean userIsLeadPartner, boolean projectDetailsSubmitted, ProjectUserResource projectManager, boolean submissionAllowed) {
+    public ProjectDetailsViewModel(ProjectResource project, UserResource currentUser, List<Long> usersPartnerOrganisations, List<OrganisationResource> partnerOrganisations, ApplicationResource app, List<ProjectUserResource> projectUsers, CompetitionResource competition, boolean userIsLeadPartner, boolean projectDetailsSubmitted, ProjectUserResource projectManager, boolean submissionAllowed, boolean isFinanceContactSubmitted) {
         this.project = project;
         this.currentUser = currentUser;
         this.usersPartnerOrganisations = usersPartnerOrganisations;
@@ -41,6 +43,7 @@ public class ProjectDetailsViewModel {
         this.projectDetailsSubmitted = projectDetailsSubmitted;
         this.projectManager = projectManager;
         this.submissionAllowed = submissionAllowed;
+        this.isFinanceContactSubmitted = isFinanceContactSubmitted;
 
         List<ProjectUserResource> financeRoles = simpleFilter(projectUsers, ProjectUserResource::isFinanceContact);
         this.financeContactsByOrganisationId = simpleToMap(financeRoles, ProjectUserResource::getOrganisation, Function.identity());
@@ -89,5 +92,9 @@ public class ProjectDetailsViewModel {
 
     public boolean isSubmissionAllowed() {
         return submissionAllowed;
+    }
+
+    public boolean isFinanceContactSubmitted() {
+        return isFinanceContactSubmitted;
     }
 }

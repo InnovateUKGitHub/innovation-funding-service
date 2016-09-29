@@ -24,6 +24,7 @@ public interface ProjectRestService {
     RestResult<ProjectResource> getByApplicationId(Long applicationId);
     RestResult<Void> setApplicationDetailsSubmitted(Long projectId);
     RestResult<Boolean> isSubmitAllowed(Long projectId);
+    RestResult<Boolean> isFinanceContactSubmitted(Long projectId, Long userId);
     RestResult<OrganisationResource> getOrganisationByProjectAndUser(Long projectId, Long userId);
     RestResult<MonitoringOfficerResource> getMonitoringOfficerForProject(Long projectId);
     RestResult<Void> updateMonitoringOfficer(Long projectId, String firstName, String lastName, String emailAddress, String phoneNumber);

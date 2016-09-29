@@ -77,6 +77,11 @@ public class ProjectRestServiceImpl extends BaseRestService implements ProjectRe
     }
 
     @Override
+    public RestResult<Boolean> isFinanceContactSubmitted(Long projectId, Long userId) {
+        return getWithRestResult(projectRestURL + "/" + projectId + "/user/" + userId + "/is-finance-contact-submitted", Boolean.class);
+    }
+
+    @Override
     public RestResult<OrganisationResource> getOrganisationByProjectAndUser(Long projectId, Long userId) {
         return getWithRestResult(projectRestURL + "/" + projectId + "/getOrganisationByUser/" + userId, OrganisationResource.class);
     }
