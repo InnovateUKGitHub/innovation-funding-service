@@ -141,7 +141,7 @@ public class OrganisationControllerIntegrationTest extends BaseControllerIntegra
 
         OrganisationResource cleanOrganisation = controller.findById(organisationResource.getId()).getSuccessObject();
         assertEquals(1, cleanOrganisation.getAddresses().size());
-        Long addressId = cleanOrganisation.getAddresses().get(0).getId();
+        Long addressId = cleanOrganisation.getAddresses().get(0).getAddress().getId();
         Address address = addressRepository.findOne(addressId);
 
         assertEquals("Line1", address.getAddressLine1());
