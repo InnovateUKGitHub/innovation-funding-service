@@ -2,6 +2,8 @@ package com.worth.ifs.form;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.address.resource.AddressResource;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.validation.Valid;
 import java.io.Serializable;
@@ -85,5 +87,37 @@ public class AddressForm  implements Serializable {
 
     public void setTriedToSearch(boolean triedToSearch) {
         this.triedToSearch = triedToSearch;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AddressForm that = (AddressForm) o;
+
+        return new EqualsBuilder()
+                .append(triedToSave, that.triedToSave)
+                .append(triedToSearch, that.triedToSearch)
+                .append(manualAddress, that.manualAddress)
+                .append(postcodeInput, that.postcodeInput)
+                .append(selectedPostcodeIndex, that.selectedPostcodeIndex)
+                .append(selectedPostcode, that.selectedPostcode)
+                .append(postcodeOptions, that.postcodeOptions)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(triedToSave)
+                .append(triedToSearch)
+                .append(postcodeInput)
+                .append(selectedPostcodeIndex)
+                .append(selectedPostcode)
+                .append(postcodeOptions)
+                .append(manualAddress)
+                .toHashCode();
     }
 }
