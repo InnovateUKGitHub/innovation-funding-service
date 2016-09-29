@@ -7,7 +7,7 @@ Documentation     INFUND-228: As an Assessor I can see competitions that I have 
 ...
 ...               INFUND-3716: As an Assessor when I have accepted to assess within a competition and the assessment period is current, I can see the number of competitions and their titles on my dashboard, so that I can plan my work. \ INFUND-3720 As an Assessor I can see deadlines for the assessment of applications currently in assessment on my dashboard, so that I am reminded to deliver my work on time
 ...
-...               INFUND-5157 Add missing word count validation when rejecting an application for assessment \
+...               INFUND-5157 Add missing word count validation when rejecting an application for assessment
 ...
 ...               INFUND-3718 As an Assessor I can see all the upcoming competitions that I have accepted to assess so that I can make informed decisions about other invitations
 Suite Setup       log in as user    &{existing_assessor1_credentials}
@@ -30,6 +30,8 @@ ${Invitation_nonexisting_assessor2}    ${server}/assessment/invite/competition/2
 *** Test Cases ***
 Assessor dashboard should be empty
     [Documentation]    INFUND-3716
+    ...
+    ...    INFUND-4950
     [Tags]    HappyPath
     [Setup]
     Given the user should see the text in the page    Assessor Dashboard
@@ -75,36 +77,27 @@ Upcoming competition should be visible
     And the user should see the text in the page    Upcoming competitions to assess
     And The user should see the text in the page    Assessment period:
 
-If assessment period starts the upcoming comp moves to the comp for assessment section
-    [Tags]    MySQL
+When the assessment period starts the comp moves to the comp for assessment
+    [Tags]    MySQL    HappyPath
     [Setup]    Connect to Database    @{database}
-    Given Change the assessment start period in the db
+    Given the assessment start period changes in the db
     Then The user should not see the text in the page    Upcoming competitions to assess
 
 Milestone date for assessment submission is visible
     [Documentation]    INFUND-3720
-    [Tags]
+    [Tags]    MySQL
     Then the assessor should see the date for submission of assessment
 
 Number of days remaining until assessment submission
     [Documentation]    INFUND-3720
-    [Tags]
+    [Tags]    MySQL
     Then the assessor should see the number of days remaining
     And the days remaining should be correct
 
 Calculation of the Competitions for assessment should be correct
     [Documentation]    INFUND-3716
-    [Tags]
+    [Tags]    MySQL
     Then the calculation should be correct    Competitions for assessment    //div[2]/ul/li
-
-Competition link should navigate to the applications
-    [Documentation]    INFUND-3716
-    [Tags]    HappyPath
-    [Setup]    Run Keywords    logout as user
-    ...    AND    Log in as user    email=paul.plum@gmail.com    password=Passw0rd    # Note that for this test we want to check what the application list looks like, so we need to log in as a user that has per-existing applications assigned to them
-    When The user clicks the button/link    link=Juggling Craziness
-    Then The user should see the text in the page    Applications for Assessment
-    And the calculation should be correct    Applications for Assessment    //div/form/ul/li
 
 Existing assessor shouldn't be able to accept other assessor's invitation
     [Documentation]    INFUND-228
@@ -149,11 +142,7 @@ the days remaining should be correct
     ${SCREEN_NO_OF_DAYS_LEFT}=    Get Text    css=.my-applications div:nth-child(2) .pie-container .pie-overlay .day
     Should Be Equal As Numbers    ${NO_OF_DAYS_LEFT}    ${SCREEN_NO_OF_DAYS_LEFT}
 
-The user accepts the upcoming competition
-    Given the user navigates to the page    ${Invitation_for_upcoming_comp_assessor1}
-    And the user clicks the button/link    jQuery=.button:contains("Accept")
-
-Change the assessment start period in the db
+the assessment start period changes in the db
     ${today}=    get time
     ${yesterday} =    Subtract Time From Date    ${today}    1 day
     When execute sql string    UPDATE `ifs`.`milestone` SET `DATE`='${yesterday}' WHERE `id`='30';
