@@ -73,12 +73,12 @@ Choosing to Notify the applicants in the dialogue
 Successful applicant gets feedback email
     [Documentation]    INFUND-2608, INFUND-3476
     [Tags]    Email
-    Then Open mailbox and confirm received email    worth.email.test@gmail.com    testtest1    Following the success of your application
+    Then Open mailbox and confirm received email    worth.email.test@gmail.com    testtest1    Following the success of your application    Your application was successful
 
 Unsuccessful applicant gets feedback email
     [Documentation]    INFUND-2608, INFUND-3476
     [Tags]    Email
-    Then Open mailbox and confirm received email    worth.email.test.two@gmail.com    testtest1    Following the submission of your application
+    Then Open mailbox and confirm received email    worth.email.test.two@gmail.com    testtest1    Following the submission of your application    Your application was unsuccessful
     [Teardown]    Delete the emails from both test mailboxes
 
 The whole state of the competition should change to Project setup
