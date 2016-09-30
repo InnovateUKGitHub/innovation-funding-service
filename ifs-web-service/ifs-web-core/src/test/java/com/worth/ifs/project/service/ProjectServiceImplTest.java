@@ -1,25 +1,29 @@
 package com.worth.ifs.project.service;
 
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
+import com.worth.ifs.invite.builder.ProjectInviteResourceBuilder;
+import com.worth.ifs.invite.resource.InviteProjectResource;
+import com.worth.ifs.invite.service.ProjectInviteRestService;
 import com.worth.ifs.project.ProjectServiceImpl;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectTeamStatusResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.user.resource.OrganisationResource;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.core.io.ByteArrayResource;
-
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
 
 import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static com.worth.ifs.address.resource.OrganisationAddressType.REGISTERED;
@@ -33,6 +37,8 @@ import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisa
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -44,6 +50,9 @@ public class ProjectServiceImplTest {
 
     @Mock
     private ProjectRestService projectRestService;
+
+    @Mock
+    private ProjectInviteRestService projectInviteRestService;
 
     @Mock
     private ApplicationService applicationService;
@@ -367,5 +376,31 @@ public class ProjectServiceImplTest {
         assertEquals(expectedProjectTeamStatusResource, projectTeamStatusResource);
 
         verify(projectRestService).getProjectTeamStatus(1L, Optional.of(456L));
+    }
+
+    @Test
+    public void testInviteProjectFinanceUser()  throws Exception {
+
+        InviteProjectResource invite = ProjectInviteResourceBuilder.newInviteProjectResource().build();
+
+        when(projectRestService.inviteFinanceContact(anyLong(), any())).thenReturn(restSuccess());
+
+        ServiceResult<Void> submitted = service.inviteFinanceContact(1L, invite);
+
+        assertTrue(submitted.isSuccess());
+
+        verify(projectRestService).inviteFinanceContact(1L, invite);
+    }
+
+    @Test
+    public void testSaveProjectInvite()  throws Exception {
+
+        InviteProjectResource invite = ProjectInviteResourceBuilder.newInviteProjectResource().build();
+
+        when(projectInviteRestService.saveProjectInvite(invite)).thenReturn(restSuccess());
+
+        ServiceResult<Void> submitted = service.saveProjectInvite(invite);
+
+        assertTrue(submitted.isSuccess());
     }
 }
