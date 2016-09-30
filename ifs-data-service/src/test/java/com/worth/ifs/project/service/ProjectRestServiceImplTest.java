@@ -141,20 +141,6 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
     }
 
     @Test
-    public void testIsFinanceContactSubmitted() {
-
-        Boolean isFinanceContactSubmitted = true;
-
-        setupGetWithRestResultExpectations(projectRestURL + "/" + 1L + "/user/" + 1L + "/is-finance-contact-submitted", Boolean.class, isFinanceContactSubmitted);
-
-        RestResult<Boolean> result = service.isFinanceContactSubmitted(1L, 1L);
-
-        assertTrue(result.isSuccess());
-
-        assertEquals(isFinanceContactSubmitted, result.getSuccessObject());
-    }
-
-    @Test
     public void testUpdateMonitoringOfficer(){
 
         Long projectId = 1L;

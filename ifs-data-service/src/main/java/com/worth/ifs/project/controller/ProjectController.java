@@ -128,12 +128,6 @@ public class ProjectController {
         return projectService.isSubmitAllowed(projectId).toGetResponse();
     }
 
-    @RequestMapping(value = "/{projectId}/user/{userId}/is-finance-contact-submitted", method = GET)
-    public RestResult<Boolean> isFinanceContactSubmitted(@PathVariable("projectId") final Long projectId,
-                                                         @PathVariable("userId") final Long userId){
-        return projectService.isFinanceContactSubmitted(projectId, userId).toGetResponse();
-    }
-
     @RequestMapping(value = "/{projectId}/monitoring-officer", method = GET)
     public RestResult<MonitoringOfficerResource> getMonitoringOfficer(@PathVariable("projectId") final Long projectId) {
         return projectService.getMonitoringOfficer(projectId).toGetResponse();

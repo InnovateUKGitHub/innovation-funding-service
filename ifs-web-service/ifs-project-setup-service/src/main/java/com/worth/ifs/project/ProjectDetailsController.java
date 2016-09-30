@@ -86,7 +86,6 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 	    List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectResource.getId());
         List<OrganisationResource> partnerOrganisations = getPartnerOrganisations(projectUsers);
         boolean isSubmissionAllowed = projectService.isSubmitAllowed(projectId).getSuccessObject();
-        boolean isFinanceContactSubmitted = projectService.isFinanceContactSubmitted(projectId, loggedInUser.getId()).getSuccessObject();
 
         ProjectTeamStatusResource teamStatus = projectService.getProjectTeamStatus(projectId, Optional.empty());
         ProjectSetupSectionPartnerAccessor statusAccessor = new ProjectSetupSectionPartnerAccessor(teamStatus);
@@ -96,7 +95,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                 getUsersPartnerOrganisations(loggedInUser, projectUsers),
                 partnerOrganisations, applicationResource, projectUsers, competitionResource,
                 projectService.isUserLeadPartner(projectId, loggedInUser.getId()), projectDetailsSubmitted,
-                getProjectManager(projectResource.getId()).orElse(null), isSubmissionAllowed, isFinanceContactSubmitted));
+                getProjectManager(projectResource.getId()).orElse(null), isSubmissionAllowed));
 
         return "project/detail";
     }

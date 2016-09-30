@@ -525,11 +525,6 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         }
 
         @Override
-        public ServiceResult<Boolean> isFinanceContactSubmitted(Long projectId, Long userId) {
-            return null;
-        }
-
-        @Override
         public ServiceResult<Void> saveDocumentsSubmitDateTime(Long projectId, LocalDateTime date) {
             return null;
         }

@@ -253,21 +253,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     @Override
-    public ServiceResult<Boolean> isFinanceContactSubmitted(Long projectId, Long userId) {
-
-        ProjectUser projectUser = projectUserRepository.findByProjectIdAndRoleAndUserId(projectId, PROJECT_PARTNER, userId);
-
-        return getProject(projectId).andOnSuccessReturn(project -> doIsFinanceContactSubmitted(project, projectUser.getOrganisation()));
-    }
-
-    private boolean doIsFinanceContactSubmitted(Project project, Organisation organisation) {
-
-        ProjectUser existingUser = project.getExistingProjectUserWithRoleForOrganisation(PROJECT_FINANCE_CONTACT, organisation);
-
-        return existingUser != null;
-    }
-
-    @Override
     public ServiceResult<Void> saveDocumentsSubmitDateTime(Long projectId, LocalDateTime date) {
 
         return getProject(projectId).andOnSuccess(project ->

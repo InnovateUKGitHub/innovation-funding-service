@@ -178,18 +178,6 @@ public class ProjectServiceImplTest {
     }
 
     @Test
-    public void isFinanceContactSubmitted() {
-        when(projectRestService.isFinanceContactSubmitted(1L, 1L)).thenReturn(restSuccess(true));
-
-        ServiceResult<Boolean> result = service.isFinanceContactSubmitted(1L, 1L);
-
-        assertTrue(result.isSuccess());
-        assertTrue(result.getSuccessObject().equals(true));
-
-        verify(projectRestService).isFinanceContactSubmitted(1L, 1L);
-    }
-
-    @Test
     public void testGetLeadOrganisation() {
         OrganisationResource organisationResource = newOrganisationResource().build();
 

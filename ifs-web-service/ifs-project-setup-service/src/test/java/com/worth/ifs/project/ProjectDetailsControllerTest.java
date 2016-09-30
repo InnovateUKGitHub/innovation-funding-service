@@ -97,7 +97,6 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         when(projectService.isUserLeadPartner(projectId, loggedInUser.getId())).thenReturn(true);
         when(projectService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(teamStatus);
         when(projectService.isSubmitAllowed(projectId)).thenReturn(serviceSuccess(true));
-        when(projectService.isFinanceContactSubmitted(projectId, loggedInUser.getId())).thenReturn(serviceSuccess(true));
 
         when(organisationRestService.getOrganisationById(leadOrganisation.getId())).thenReturn(restSuccess(leadOrganisation));
 
@@ -115,7 +114,6 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         assertFalse(model.isProjectDetailsSubmitted());
         assertTrue(model.isSubmissionAllowed());
         assertTrue(model.isUserLeadPartner());
-        assertTrue(model.isFinanceContactSubmitted());
     }
 
     @Test
