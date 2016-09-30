@@ -128,7 +128,7 @@
 		<a href="/prototypes/1199-project-finances-overview">Project finance overview</a>
 	</div> -->
 
-	<th:block th:unless="${param.status != null and param.status[0] == 'financeChecksComplete'}">
+	<th:block th:unless="${param.status != null and param.status[0] == 'financeChecksComplete' or param.status != null and param.status[0] == 'approved'}">
 
 		<h3 class="heading-medium">Generate spend profile</h3>
 
