@@ -38,6 +38,7 @@ public class ProjectTest {
         address = new Address();
         durationInMonths = 12L;
         name = "My Project";
+
         project = new Project(id, application, startDate, address, durationInMonths, name, documentsSubmittedDate);
     }
 

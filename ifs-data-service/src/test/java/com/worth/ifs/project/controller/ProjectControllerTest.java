@@ -65,7 +65,7 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
 
     private MonitoringOfficerResource monitoringOfficerResource;
 
-    private RestDocumentationResultHandler document;
+        private RestDocumentationResultHandler document;
 
     @Before
     public void setUp() {
@@ -78,15 +78,6 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
                 .withEmail("abc.xyz@gmail.com")
                 .withPhoneNumber("078323455")
                 .build();
-
-//          Fix in task INFUND-4401 - refactor when the InviteResource is completed
-//        inviteResource = InviteResourceBuilder.newInviteResource()
-//                .withId(1L)
-//                .withName("Ben Dishman")
-//                .withEmail("abc.xyz@gmail.com")
-//                .withOrganisation(1L)
-//                .build();
-
     }
 
     @Before
@@ -151,24 +142,6 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
 
         verify(projectServiceMock).updateFinanceContact(123L, 456L, 789L);
     }
-
-//    @Test
-//    public void inviteFinanceContact() throws Exception {
-//
-//        Long projectId = 1L;
-//
-//
-//        when(projectServiceMock.inviteFinanceContact(projectId, inviteResource)).
-//                thenReturn(serviceSuccess());
-//
-//        mockMvc.perform(put("/project/{projectId}/invite-finance-contact", projectId)
-//                .contentType(APPLICATION_JSON)
-//                .content(toJson(inviteResource)))
-//                .andExpect(status().isOk());
-//
-//        verify(projectServiceMock).inviteFinanceContact(projectId, inviteResource);
-//
-//    }
 
     @Test
     public void getProjectUsers() throws Exception {
@@ -486,8 +459,8 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
 
         Long projectId = 123L;
 
-        BiFunction<ProjectService, FileEntryResource, ServiceResult<FileEntryResource>> serviceCallToUpload =
-                (service, fileToUpload) -> service.getCollaborationAgreementFileEntryDetails(projectId);
+        Function<ProjectService, ServiceResult<FileEntryResource>> serviceCallToUpload =
+                (service) -> service.getCollaborationAgreementFileEntryDetails(projectId);
 
         assertGetFileDetails("/project/{projectId}/collaboration-agreement/details", new Object[] {projectId}, emptyMap(),
                 projectServiceMock, serviceCallToUpload).
@@ -499,8 +472,8 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
 
         Long projectId = 123L;
 
-        BiFunction<ProjectService, FileEntryResource, ServiceResult<FileAndContents>> serviceCallToUpload =
-                (service, fileToUpload) -> service.getCollaborationAgreementFileContents(projectId);
+        Function<ProjectService, ServiceResult<FileAndContents>> serviceCallToUpload =
+                (service) -> service.getCollaborationAgreementFileContents(projectId);
 
         assertGetFileContents("/project/{projectId}/collaboration-agreement", new Object[] {projectId},
                 emptyMap(), projectServiceMock, serviceCallToUpload).
@@ -551,8 +524,8 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
 
         Long projectId = 123L;
 
-        BiFunction<ProjectService, FileEntryResource, ServiceResult<FileEntryResource>> serviceCallToUpload =
-                (service, fileToUpload) -> service.getExploitationPlanFileEntryDetails(projectId);
+        Function<ProjectService, ServiceResult<FileEntryResource>> serviceCallToUpload =
+                (service) -> service.getExploitationPlanFileEntryDetails(projectId);
 
         assertGetFileDetails("/project/{projectId}/exploitation-plan/details", new Object[] {projectId}, emptyMap(),
                 projectServiceMock, serviceCallToUpload).
@@ -564,8 +537,8 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
 
         Long projectId = 123L;
 
-        BiFunction<ProjectService, FileEntryResource, ServiceResult<FileAndContents>> serviceCallToUpload =
-                (service, fileToUpload) -> service.getExploitationPlanFileContents(projectId);
+        Function<ProjectService, ServiceResult<FileAndContents>> serviceCallToUpload =
+                (service) -> service.getExploitationPlanFileContents(projectId);
 
         assertGetFileContents("/project/{projectId}/exploitation-plan", new Object[] {projectId},
                 emptyMap(), projectServiceMock, serviceCallToUpload).
