@@ -23,7 +23,6 @@ import com.worth.ifs.finance.domain.FinanceRow;
 import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
 import com.worth.ifs.finance.repository.FinanceRowRepository;
 import com.worth.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
-import com.worth.ifs.finance.transactional.FinanceRowService;
 import com.worth.ifs.invite.domain.ProjectParticipantRole;
 import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.notifications.resource.ExternalUserNotificationTarget;
@@ -46,6 +45,8 @@ import com.worth.ifs.project.mapper.MonitoringOfficerMapper;
 import com.worth.ifs.project.mapper.ProjectMapper;
 import com.worth.ifs.project.mapper.ProjectUserMapper;
 import com.worth.ifs.project.repository.MonitoringOfficerRepository;
+import com.worth.ifs.project.repository.ProjectRepository;
+import com.worth.ifs.project.repository.ProjectUserRepository;
 import com.worth.ifs.project.resource.*;
 import com.worth.ifs.project.workflow.projectdetails.configuration.ProjectDetailsWorkflowHandler;
 import com.worth.ifs.user.domain.Organisation;
@@ -92,6 +93,12 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 public class ProjectServiceImpl extends AbstractProjectServiceImpl implements ProjectService {
 
     @Autowired
+    private ProjectRepository projectRepository;
+
+    @Autowired
+    private ProjectUserRepository projectUserRepository;
+
+    @Autowired
     private ProjectUserMapper projectUserMapper;
 
     @Autowired
@@ -135,9 +142,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     @Autowired
     private ProjectDetailsWorkflowHandler projectDetailsWorkflowHandler;
-
-    @Autowired
-    private FinanceRowService financeRowService;
 
     @Autowired
     private FinanceRowRepository financeRowRepository;
@@ -220,7 +224,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
             if (address.getOrganisations() == null || address.getOrganisations().size() == 0) {
                 AddressType addressType = addressTypeRepository.findOne(organisationAddressType.getOrdinal());
                 List<OrganisationAddress> existingOrgAddresses = organisationAddressRepository.findByOrganisationIdAndAddressType(leadOrganisation.getId(), addressType);
-                existingOrgAddresses.stream().forEach(oA -> organisationAddressRepository.delete(oA));
+                existingOrgAddresses.forEach(oA -> organisationAddressRepository.delete(oA));
                 OrganisationAddress organisationAddress = new OrganisationAddress(leadOrganisation, newAddress, addressType);
                 organisationAddressRepository.save(organisationAddress);
             }
@@ -643,13 +647,11 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     @Override
     public ServiceResult<Void> inviteFinanceContact(Long projectId, InviteProjectResource inviteResource) {
-
         return inviteContact(projectId, inviteResource, INVITE_FINANCE_CONTACT);
     }
 
     @Override
     public ServiceResult<Void> inviteProjectManager(Long projectId, InviteProjectResource inviteResource) {
-
         return inviteContact(projectId, inviteResource, INVITE_PROJECT_MANAGER);
     }
 
@@ -746,9 +748,10 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     private Map<String, Object> createGlobalArgsForInviteContactEmail(Long projectId, InviteProjectResource inviteResource) {
         Project project = projectRepository.findOne(projectId);
+        String leadOrganisationName = project.getApplication().getLeadOrganisation().getName();
         Map<String, Object> globalArguments = new HashMap<>();
         globalArguments.put("projectName", project.getName());
-        globalArguments.put("leadOrganisation", inviteResource.getLeadOrganisation());
+        globalArguments.put("leadOrganisation", leadOrganisationName);
         globalArguments.put("inviteOrganisationName", (StringUtils.isEmpty(inviteResource.getInviteOrganisationName())) ? "No org as yet" : inviteResource.getInviteOrganisationName());
         globalArguments.put("inviteUrl", getInviteUrl(webBaseUrl, inviteResource));
         return globalArguments;
@@ -868,11 +871,9 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     private ServiceResult<Void> generateFinanceCheckEntitiesForNewProject(Project newProject) {
         List<Organisation> organisations = getPartnerOrganisations(newProject.getId());
 
-        organisations.forEach(organisation -> {
-            costCategoryTypeStrategy.getOrCreateCostCategoryTypeForSpendProfile(newProject.getId(), organisation.getId()).
-                    andOnSuccessReturn(costCategoryType -> createFinanceCheckFrom(newProject, organisation, costCategoryType)).
-                    andOnSuccessReturn(financeCheck -> populateFinanceCheck(financeCheck));
-        });
+        organisations.forEach(organisation -> costCategoryTypeStrategy.getOrCreateCostCategoryTypeForSpendProfile(newProject.getId(), organisation.getId()).
+                andOnSuccessReturn(costCategoryType -> createFinanceCheckFrom(newProject, organisation, costCategoryType)).
+                andOnSuccessReturn(this::populateFinanceCheck));
         return serviceSuccess();
     }
 
@@ -926,13 +927,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     private ServiceResult<Project> getProjectByApplication(long applicationId) {
         return find(projectRepository.findOneByApplicationId(applicationId), notFoundError(Project.class, applicationId));
-    }
-
-    private boolean validateDocumentsUploaded(final Project project) {
-        return project.getExploitationPlan() != null
-                && project.getCollaborationAgreement() != null
-                && getExistingProjectManager(project).isPresent()
-                && project.getDocumentsSubmittedDate() == null;
     }
 
     private ServiceResult<Void> createOrUpdateProjectManagerForProject(Project project, ProjectUser leadPartnerUser) {

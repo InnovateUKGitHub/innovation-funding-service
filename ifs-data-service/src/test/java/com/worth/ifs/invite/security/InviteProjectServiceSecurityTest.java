@@ -59,7 +59,7 @@ public class InviteProjectServiceSecurityTest extends BaseServiceSecurityTest<In
     public void testSaveFinanceContact() {
         final InviteProjectResource invite = newInviteProjectResource().build();
         assertAccessDenied(
-                () -> classUnderTest.saveFinanceContactInvite(invite),
+                () -> classUnderTest.saveProjectInvite(invite),
                 () -> {
                     verify(projectInvitePermissionRules).partnersOnProjectCanSaveInvite(any(InviteProjectResource.class), any(UserResource.class));
                 });
@@ -83,7 +83,7 @@ public class InviteProjectServiceSecurityTest extends BaseServiceSecurityTest<In
         static final int ARRAY_SIZE_FOR_POST_FILTER_TESTS = 2;
 
         @Override
-        public ServiceResult<Void> saveFinanceContactInvite(@P("inviteProjectResource") InviteProjectResource inviteProjectResource) {
+        public ServiceResult<Void> saveProjectInvite(@P("inviteProjectResource") InviteProjectResource inviteProjectResource)  {
             return null;
         }
 

@@ -3,6 +3,7 @@ package com.worth.ifs.invite.resource;
 import com.worth.ifs.invite.constant.InviteStatus;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
  * DTO to transfer Project Invite related Entities
@@ -177,8 +178,33 @@ public class InviteProjectResource extends InviteResource {
                 .append(projectName)
                 .append(hash)
                 .append(status)
+                .append(leadOrganisation)
+                .append(inviteOrganisation)
+                .append(inviteOrganisationName)
                 .append(leadApplicant)
                 .append(competitionName)
                 .toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("id", id)
+                .append("user", user)
+                .append("name", name)
+                .append("nameConfirmed", nameConfirmed)
+                .append("email", email)
+                .append("project", project)
+                .append("applicationId", applicationId)
+                .append("organisation", organisation)
+                .append("projectName", projectName)
+                .append("hash", hash)
+                .append("status", status)
+                .append("leadOrganisation", leadOrganisation)
+                .append("inviteOrganisation", inviteOrganisation)
+                .append("inviteOrganisationName", inviteOrganisationName)
+                .append("leadApplicant", leadApplicant)
+                .append("competitionName", competitionName)
+                .toString();
     }
 }
