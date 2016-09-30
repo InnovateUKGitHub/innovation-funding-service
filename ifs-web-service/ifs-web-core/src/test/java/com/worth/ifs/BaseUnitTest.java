@@ -37,6 +37,7 @@ import com.worth.ifs.project.ProjectService;
 import com.worth.ifs.project.finance.ProjectFinanceService;
 import com.worth.ifs.project.financecheck.FinanceCheckService;
 import com.worth.ifs.project.service.ProjectRestService;
+import com.worth.ifs.project.status.ProjectStatusService;
 import com.worth.ifs.user.resource.*;
 import com.worth.ifs.user.service.OrganisationRestService;
 import com.worth.ifs.user.service.OrganisationTypeRestService;

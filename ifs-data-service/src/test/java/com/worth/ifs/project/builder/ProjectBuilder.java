@@ -3,6 +3,7 @@ package com.worth.ifs.project.builder;
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.address.domain.Address;
 import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.project.domain.PartnerOrganisation;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
 
@@ -63,12 +64,20 @@ ProjectBuilder extends BaseBuilder<Project, ProjectBuilder> {
         return withArray((users, project) -> project.setProjectUsers(users), projectUsers);
     }
 
+    public ProjectBuilder withPartnerOrganisations(List<PartnerOrganisation>... partnerOrganisations){
+        return withArray((orgs, project) -> project.setPartnerOrganisations(orgs), partnerOrganisations);
+    }
+
     @Override
     protected void postProcess(int index, Project project) {
 
-        // add Hibernate-style backlinks to the Project Users
+        // add Hibernate-style backlinks
         project.getProjectUsers().forEach(pu -> {
             setField("project", project, pu);
+        });
+
+        project.getPartnerOrganisations().forEach(org -> {
+            setField("project", project, org);
         });
     }
 }

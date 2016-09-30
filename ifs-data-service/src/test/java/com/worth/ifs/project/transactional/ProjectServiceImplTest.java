@@ -65,6 +65,7 @@ import static com.worth.ifs.finance.builder.ApplicationFinanceResourceBuilder.ne
 import static com.worth.ifs.invite.domain.ProjectParticipantRole.*;
 import static com.worth.ifs.organisation.builder.OrganisationAddressBuilder.newOrganisationAddress;
 import static com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
+import static com.worth.ifs.project.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static com.worth.ifs.project.builder.ProjectBuilder.newProject;
 import static com.worth.ifs.project.builder.ProjectLeadStatusResourceBuilder.newProjectLeadStatusResource;
 import static com.worth.ifs.project.builder.ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource;
@@ -1036,7 +1037,10 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         Organisation o = newOrganisation().build();
         User u = newUser().build();
         List<ProjectUser> pu = newProjectUser().withRole(PROJECT_PARTNER).withUser(u).withOrganisation(o).build(1);
-        Project p = newProject().withProjectUsers(pu).build();
+        Project p = newProject().
+                withProjectUsers(pu).
+                withPartnerOrganisations(newPartnerOrganisation().withOrganisation(o).build(1)).
+                build();
         when(projectRepositoryMock.findOne(p.getId())).thenReturn(p);
         when(organisationRepositoryMock.findOne(o.getId())).thenReturn(o);
         when(userRepositoryMock.findOne(u.getId())).thenReturn(u);
@@ -1055,7 +1059,12 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         Organisation o = newOrganisation().build();
         User u = newUser().build();
         List<ProjectUser> pu = newProjectUser().withRole(PROJECT_PARTNER).withUser(u).withOrganisation(o).build(1);
-        Project p = newProject().withProjectUsers(pu).build();
+
+        Project p = newProject().
+                withProjectUsers(pu).
+                withPartnerOrganisations(newPartnerOrganisation().withOrganisation(o).build(1)).
+                build();
+
         User newUser = newUser().build();
         when(projectRepositoryMock.findOne(p.getId())).thenReturn(p);
         when(organisationRepositoryMock.findOne(o.getId())).thenReturn(o);
