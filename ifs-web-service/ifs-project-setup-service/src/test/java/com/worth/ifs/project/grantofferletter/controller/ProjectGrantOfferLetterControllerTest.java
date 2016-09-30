@@ -132,9 +132,9 @@ public class ProjectGrantOfferLetterControllerTest extends BaseControllerMockMVC
 
         FileEntryResource createdFileDetails = newFileEntryResource().withName("A name").build();
 
-        MockMultipartFile uploadedFile = new MockMultipartFile("grantOfferLetterFile", "filename.txt", "text/plain", "My content!".getBytes());
+        MockMultipartFile uploadedFile = new MockMultipartFile("grantOfferLetter", "filename.txt", "text/plain", "My content!".getBytes());
 
-        when(projectService.addGrantOfferLetter(123L, "text/plain", 11, "filename.txt", "My content!".getBytes())).
+        when(projectService.addGeneratedGrantOfferLetter(123L, "text/plain", 11, "filename.txt", "My content!".getBytes())).
                 thenReturn(serviceSuccess(createdFileDetails));
 
         mockMvc.perform(

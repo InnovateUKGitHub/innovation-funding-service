@@ -1,28 +1,29 @@
 package com.worth.ifs.project.service;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.service.ApplicationService;
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.invite.builder.ProjectInviteResourceBuilder;
 import com.worth.ifs.invite.resource.InviteProjectResource;
+import com.worth.ifs.invite.service.ProjectInviteRestService;
 import com.worth.ifs.project.ProjectServiceImpl;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectTeamStatusResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.user.resource.OrganisationResource;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.core.io.ByteArrayResource;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
 
 import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static com.worth.ifs.address.resource.OrganisationAddressType.REGISTERED;
@@ -48,6 +49,9 @@ public class ProjectServiceImplTest {
 
     @Mock
     private ProjectRestService projectRestService;
+
+    @Mock
+    private ProjectInviteRestService projectInviteRestServiceMock;
 
     @Mock
     private ApplicationService applicationService;
@@ -441,7 +445,7 @@ public class ProjectServiceImplTest {
                 thenReturn(restSuccess(createdFile));
 
         ServiceResult<FileEntryResource> result =
-                service.addGrantOfferLetter(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes());
+                service.addGeneratedGrantOfferLetter(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes());
 
         assertTrue(result.isSuccess());
         assertEquals(createdFile, result.getSuccessObject());
@@ -466,12 +470,12 @@ public class ProjectServiceImplTest {
 
         InviteProjectResource invite = ProjectInviteResourceBuilder.newInviteProjectResource().build();
 
-        when(service.saveProjectInvite(invite)).thenReturn(serviceSuccess());
+        when(projectInviteRestServiceMock.saveProjectInvite(invite)).thenReturn(RestResult.restSuccess());
 
         ServiceResult<Void> submitted = service.saveProjectInvite(invite);
 
         assertTrue(submitted.isSuccess());
 
-        verify(projectRestService).setPartnerDocumentsSubmitted(1L);
+        verify(projectInviteRestServiceMock).saveProjectInvite(invite);
     }
 }
