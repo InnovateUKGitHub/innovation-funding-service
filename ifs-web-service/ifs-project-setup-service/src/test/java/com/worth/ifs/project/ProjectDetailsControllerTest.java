@@ -1,5 +1,11 @@
 package com.worth.ifs.project;
 
+import java.time.LocalDate;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.AddressTypeResource;
@@ -7,6 +13,8 @@ import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.bankdetails.form.ProjectDetailsAddressForm;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.invite.constant.InviteStatus;
+import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectTeamStatusResource;
@@ -17,6 +25,8 @@ import com.worth.ifs.project.viewmodel.ProjectDetailsStartDateViewModel;
 import com.worth.ifs.project.viewmodel.ProjectDetailsViewModel;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
+import com.worth.ifs.user.resource.UserResource;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,38 +34,47 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.time.LocalDate;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
 import static com.worth.ifs.BaseBuilderAmendFunctions.name;
 import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static com.worth.ifs.address.builder.AddressTypeResourceBuilder.newAddressTypeResource;
-import static com.worth.ifs.address.resource.OrganisationAddressType.*;
+import static com.worth.ifs.address.resource.OrganisationAddressType.ADD_NEW;
+import static com.worth.ifs.address.resource.OrganisationAddressType.PROJECT;
+import static com.worth.ifs.address.resource.OrganisationAddressType.REGISTERED;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.rest.RestResult.restFailure;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static com.worth.ifs.invite.builder.ProjectInviteResourceBuilder.newInviteProjectResource;
 import static com.worth.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
+import static com.worth.ifs.project.AddressLookupBaseController.FORM_ATTR_NAME;
 import static com.worth.ifs.project.builder.ProjectLeadStatusResourceBuilder.newProjectLeadStatusResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static com.worth.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<ProjectDetailsController> {
-	
+
 	@Before
 	public void setUp() {
 		super.setUp();
@@ -94,6 +113,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         when(projectService.getById(project.getId())).thenReturn(project);
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrganisation);
+        when(organisationService.getOrganisationById(leadOrganisation.getId())).thenReturn(leadOrganisation);
         when(projectService.isUserLeadPartner(projectId, loggedInUser.getId())).thenReturn(true);
         when(projectService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(teamStatus);
         when(projectService.isSubmitAllowed(projectId)).thenReturn(serviceSuccess(true));
@@ -219,7 +239,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         assertEquals(project.getFormattedId(), viewModel.getProjectNumber());
         assertEquals(project.getDurationInMonths(), Long.valueOf(viewModel.getProjectDurationInMonths()));
 
-        ProjectDetailsStartDateForm form = (ProjectDetailsStartDateForm) model.get(ProjectDetailsController.FORM_ATTR_NAME);
+        ProjectDetailsStartDateForm form = (ProjectDetailsStartDateForm) model.get(FORM_ATTR_NAME);
         assertEquals(project.getTargetStartDate().withDayOfMonth(1), form.getProjectStartDate());
     }
 
@@ -247,24 +267,125 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     @Test
     public void testUpdateFinanceContact() throws Exception {
 
+        long competitionId = 1L;
+        long applicationId = 1L;
+        long projectId = 1L;
+        long organisationId = 1L;
+        long loggedInUserId= 1L;
+        long invitedUserId = 2L;
+
+        UserResource financeContactUserResource = newUserResource().withId(invitedUserId).withFirstName("First").withLastName("Last").withEmail("test@test.com").build();
+
+
+        String invitedUserName = "First Last";
+        String invitedUserEmail = "test@test.com";
+
+        CompetitionResource competitionResource = newCompetitionResource().withId(competitionId).build();
+        ApplicationResource applicationResource = newApplicationResource().withId(applicationId).withCompetition(competitionId).build();
+        ProjectResource projectResource = newProjectResource().withId(projectId).withApplication(applicationId).build();
+
         List<ProjectUserResource> availableUsers = newProjectUserResource().
-                withUser(loggedInUser.getId(), 789L).
-                withOrganisation(8L).
+                withUser(loggedInUser.getId(), loggedInUserId).
+                withOrganisation(organisationId).
                 withRoleName(PARTNER).
                 build(2);
 
-        when(projectService.getProjectUsersForProject(123L)).thenReturn(availableUsers);
-        when(projectService.updateFinanceContact(123L, 8L, 789L)).thenReturn(serviceSuccess());
+        OrganisationResource leadOrganisation = newOrganisationResource().withName("Lead Organisation").build();
 
-        mockMvc.perform(post("/project/{id}/details/finance-contact", 123L).
+        InviteProjectResource inviteProjectResource = new InviteProjectResource(invitedUserName, invitedUserEmail, projectId);
+        inviteProjectResource.setUser(invitedUserId);
+        inviteProjectResource.setOrganisation(organisationId);
+        inviteProjectResource.setInviteOrganisation(organisationId);
+        inviteProjectResource.setApplicationId(applicationId);
+        inviteProjectResource.setLeadOrganisation(leadOrganisation.getName());
+
+        when(projectService.getProjectUsersForProject(projectId)).thenReturn(availableUsers);
+        when(projectService.updateFinanceContact(projectId, organisationId, invitedUserId)).thenReturn(serviceSuccess());
+        when(userService.findById(invitedUserId)).thenReturn(financeContactUserResource);
+        when(projectService.getById(projectId)).thenReturn(projectResource);
+        when(projectService.getLeadOrganisation(projectId)).thenReturn(leadOrganisation);
+        when(applicationService.getById(applicationId)).thenReturn(applicationResource);
+        when(competitionService.getById(applicationResource.getCompetition())).thenReturn(competitionResource);
+        when(userService.getOrganisationProcessRoles(applicationResource, organisationId)).thenReturn(emptyList());
+        when(projectService.saveProjectInvite(inviteProjectResource)).thenReturn(serviceSuccess());
+        when(projectService.inviteFinanceContact(projectId, inviteProjectResource)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{id}/details/finance-contact", projectId).
                     contentType(MediaType.APPLICATION_FORM_URLENCODED).
-                    param("organisation", "8").
-                    param("financeContact", "789")).
+                    param("organisation", "1").
+                    param("financeContact", "2")).
                 andExpect(status().is3xxRedirection()).
-                andExpect(view().name("redirect:/project/123/details")).
+                andExpect(view().name("redirect:/project/" + projectId  + "/details")).
                 andReturn();
 
-        verify(projectService).updateFinanceContact(123L, 8L, 789L);
+        verify(projectService).updateFinanceContact(projectId, organisationId, invitedUserId);
+    }
+
+    @Test
+    public void testInviteFinanceContact() throws Exception {
+        long competitionId = 1L;
+        long applicationId = 16L;
+        long projectId = 4L;
+        long organisationId = 21L;
+        long loggedInUserId= 1L;
+        long invitedUserId = 2L;
+
+        String invitedUserName = "test";
+        String invitedUserEmail = "test@test.com";
+
+        ProjectResource projectResource = newProjectResource().withId(projectId).withApplication(applicationId).build();
+        OrganisationResource leadOrganisation = newOrganisationResource().withName("Lead Organisation").build();
+        UserResource financeContactUserResource = newUserResource().withId(invitedUserId).withFirstName("First").withLastName("Last").withEmail("test@test.com").build();
+        CompetitionResource competitionResource = newCompetitionResource().withId(competitionId).build();
+        ApplicationResource applicationResource = newApplicationResource().withId(applicationId).withCompetition(competitionId).build();
+
+        List<ProjectUserResource> availableUsers = newProjectUserResource().
+                withUser(loggedInUser.getId(), loggedInUserId).
+                withOrganisation(organisationId).
+                withRoleName(PARTNER).
+                build(2);
+
+        InviteProjectResource createdInvite = newInviteProjectResource().withId(null)
+                .withProject(projectId).withName(invitedUserName)
+                .withEmail(invitedUserEmail)
+                .withOrganisation(organisationId)
+                .withLeadOrganisation(leadOrganisation.getName()).build();
+
+        createdInvite.setInviteOrganisation(organisationId);
+        createdInvite.setApplicationId(projectResource.getApplication());
+        createdInvite.setApplicationId(applicationId);
+
+        List<InviteProjectResource> existingInvites = newInviteProjectResource().withId(2L)
+                .withProject(projectId).withNames("exist test", invitedUserName)
+                .withEmails("existing@test.com", invitedUserEmail)
+                .withOrganisation(organisationId)
+                .withLeadOrganisation(leadOrganisation.getName()).build(2);
+
+        when(userService.findUserByEmail(invitedUserEmail)).thenReturn(restFailure(notFoundError(UserResource.class, invitedUserEmail)));
+        when(projectService.getById(projectId)).thenReturn(projectResource);
+        when(projectService.getLeadOrganisation(projectId)).thenReturn(leadOrganisation);
+        when(projectService.saveProjectInvite(createdInvite)).thenReturn(serviceSuccess());
+        when(projectService.inviteFinanceContact(projectId, createdInvite)).thenReturn(serviceSuccess());
+        when(projectService.updateFinanceContact(projectId, organisationId, invitedUserId)).thenReturn(serviceSuccess());
+        when(userService.findById(invitedUserId)).thenReturn(financeContactUserResource);
+        when(projectService.getProjectUsersForProject(projectId)).thenReturn(availableUsers);
+        when(projectService.getInvitesByProject(projectId)).thenReturn(serviceSuccess(existingInvites));
+        when(projectService.inviteFinanceContact(projectId, existingInvites.get(1))).thenReturn(serviceSuccess());
+        when(organisationService.getOrganisationById(organisationId)).thenReturn(leadOrganisation);
+        when(projectService.saveProjectInvite(any())).thenReturn(serviceSuccess());
+
+        InviteStatus testStatus = InviteStatus.CREATED;
+
+        mockMvc.perform(post("/project/{id}/details/invite-finance-contact", projectId).
+                contentType(MediaType.APPLICATION_FORM_URLENCODED).
+                param("userId", invitedUserId + "").
+                param("name", invitedUserName).
+                param("email", invitedUserEmail).
+                param("inviteStatus", testStatus.toString()).
+                param("organisation", organisationId + "")).
+                andExpect(status().is3xxRedirection()).
+                andExpect(view().name("redirect:/project/" + projectId  + "/details")).
+                andReturn();
     }
 
     @Test
@@ -318,7 +439,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         assertEquals(addressResource, viewModel.getRegisteredAddress());
         assertNull(viewModel.getProjectAddress());
 
-        ProjectDetailsAddressForm form = (ProjectDetailsAddressForm) model.get(ProjectDetailsController.FORM_ATTR_NAME);
+        ProjectDetailsAddressForm form = (ProjectDetailsAddressForm) model.get(FORM_ATTR_NAME);
         assertEquals(OrganisationAddressType.valueOf(organisationAddressResource.getAddressType().getName()), form.getAddressType());
     }
 
@@ -381,3 +502,4 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         andExpect(redirectedUrl("/project/1/details"));
     }
  }
+

@@ -1,6 +1,10 @@
 *** Settings ***
-Documentation     INFUND-3303: As an Assessor I want the ability to reject the application after I have been given access to the full details so I can make Innovate UK aware. \
-...               INFUND-3720 As an Assessor I can see deadlines for the assessment of applications currently in assessment on my dashboard, so that I am reminded to deliver my work on time
+Documentation     INFUND-3303: As an Assessor I want the ability to reject the application after I have been given access to the full details so I can make Innovate UK aware.
+...
+...
+...               INFUND-3720 As an Assessor I can see deadlines for the assessment of applications currently in assessment on my dashboard, so that I am reminded to deliver my work on time \
+...
+...               INFUND-1188 As an assessor I want to be able to review my assessments from one place so that I can work in my favoured style when reviewing
 Suite Setup
 Suite Teardown    the user closes the browser
 Force Tags        Assessor
@@ -13,10 +17,14 @@ Resource          ../../../resources/keywords/User_actions.robot
 *** Test Cases ***
 Assessment overview should show the expected questions
     [Documentation]    INFUND-3400
+    ...
+    ...    INFUND-1188
     [Tags]    HappyPath
     [Setup]    guest user log-in    paul.plum@gmail.com    Passw0rd
-    When the user navigates to the page    ${Assessment_overview_9}
-    Then the user should see four sections
+    Given The user clicks the button/link    link=Juggling Craziness
+    when the user clicks the button/link    link=Juggling is fun
+    Then The user should be redirected to the correct page    /assessment/9
+    And the user should see four sections
 
 Number of days remaining until assessment submission
     [Documentation]    INFUND-3720

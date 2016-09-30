@@ -23,8 +23,8 @@ All the sections are present in the summary
     Then The user should see the element    jQuery=h2:contains("Overall scores")
     And The user should see the element    jQuery=h2:contains("Review assessment")
     And The user should see the element    jQuery=span:contains("Do you believe that this application is suitable for funding?")
-    And The user should see the element    id=form-label-feedback
-    And The user should see the element    id=form-label-comments
+    And The user should see the element    id=form-input-feedback
+    And The user should see the element    id=form-input-comments
 
 Number of days remaining until assessment submission
     [Documentation]    INFUND-3720
@@ -110,7 +110,7 @@ Feedback validations
     When the user selects the radio button    fundingConfirmation    false
     And The user clicks the button/link    jQuery=.button:contains(Save assessment)
     Then The user should see an error    Please enter your feedback
-    And The user enters text to a text field    id=form-textarea-feedback    Testing the required feedback textarea when the decision is "No".
+    And The user enters text to a text field    id=feedback    Testing the required feedback textarea when the decision is "No".
     And The user clicks the button/link    jQuery=.button:contains(Save assessment)
     Then The user should not see the text in the page    Please enter your feedback
 
@@ -119,22 +119,22 @@ Word count check: Your feedback
     ...
     ...    INFUND-4217
     [Tags]    HappyPath
-    When the user enters text to a text field    id=form-textarea-feedback    Testing the feedback word count. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco
+    When the user enters text to a text field    id=feedback    Testing the feedback word count. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco
     Then the word count should be correct    Words remaining: -4
     And the user clicks the button/link    jQuery=.button:contains(Save assessment)
     Then the user should see an error    Maximum word count exceeded. Please reduce your word count to 100.
-    And the user enters text to a text field    id=form-textarea-feedback    Testing the feedback word count.
+    And the user enters text to a text field    id=feedback    Testing the feedback word count.
     Then the word count should be correct    Words remaining: 95
 
 Word count check: Comments for InnovateUK
     [Documentation]    INFUND-1485
     ...
     ...    INFUND-4217
-    When the user enters text to a text field    id=form-textarea-comments    Testing the comments word count. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco
+    When the user enters text to a text field    id=comment    Testing the comments word count. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco
     Then the word count should be correct    Words remaining: -4
     And the user clicks the button/link    jQuery=.button:contains(Save assessment)
     Then the user should see an error    Maximum word count exceeded. Please reduce your word count to 100.
-    And the user enters text to a text field    id=form-textarea-comments    Testing the comments word count.
+    And the user enters text to a text field    id=comment    Testing the comments word count.
     Then the word count should be correct    Words remaining: 95
 
 Your Feedback is not mandatory when Yes is selected
@@ -214,7 +214,7 @@ the word count should be correct
     [Arguments]    ${wordCount}
     the user should see the text in the page    ${wordCount}
 
-And the total scores should be correct
+the total scores should be correct
     And Element should contain    css=div:nth-child(5) p.no-margin strong    Total: 50/50
     And Element should contain    css=div:nth-child(5) p:nth-child(2) strong    100%
 
@@ -231,4 +231,4 @@ the days remaining should be correct
     Should Be Equal As Numbers    ${NO_OF_DAYS_LEFT}    ${SCREEN_NO_OF_DAYS_LEFT}
 
 The feedback text area is empty
-    Then Clear Element Text    id=form-textarea-feedback
+    Then Clear Element Text    id=feedback
