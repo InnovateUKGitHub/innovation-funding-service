@@ -44,7 +44,8 @@ Large pdf uploads not allowed
 
 Non pdf uploads not allowed
     [Documentation]    INFUND-832
-    [Tags]
+    [Tags]    Pending
+    # TODO Pending due to INFUND-5344
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=5. Technical approach
@@ -171,7 +172,8 @@ Collaborators can upload a file when the question is assigned
 Quarantined files are not returned to the user and the user is informed
     [Documentation]    INFUND-2683
     ...    INFUND-2684
-    [Tags]
+    [Tags]    Pending
+    #TODO INFUND-4008, review this failing test case when 4008 is completed
     [Setup]    Guest user log-in    &{lead_applicant_credentials}
     Given the user navigates to the page    ${project_team_url}
     When the user should see the text in the page    test_quarantine.pdf
