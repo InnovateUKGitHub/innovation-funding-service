@@ -192,7 +192,7 @@ Lead partner can change the project address
     Then the user should see the text in the page    1, Bath, BA1 5LR
 
 
-Porject details can be submitted with PM, project address and start date
+Project details can be submitted with PM, project address and start date
     [Documentation]    INFUND-4583
     [Tags]    HappyPath
     Given the user should see the element    css=#start-date-status.yes
@@ -201,7 +201,7 @@ Porject details can be submitted with PM, project address and start date
     Then Wait Until Element Is Enabled    jQuery=.button:contains("Submit project details")
 
 
-Partner nominates a finance contact
+Partners nominate finance contacts
     [Documentation]    INFUND-2620
     [Tags]    HappyPath
     [Setup]    Logout as user
@@ -226,18 +226,78 @@ Partner nominates a finance contact
     And the user clicks the button/link    jQuery=.button:contains("Save")
     Then the user should be redirected to the correct page    ${project_in_setup_page}
     And the matching status checkbox is updated    project-details-finance    2    yes
-    Then Logout as user
-    When Log in as user    steve.smith@empire.com    Passw0rd
-    Then the user navigates to the page    ${project_in_setup_page}
+    [Teardown]    logout as user
+
+
+
+
+Option to invite a finance contact
+    [Documentation]    INFUND-3579
+    [Tags]
+    [Setup]    Log in as user    steve.smith@empire.com    Passw0rd
+    Given the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Project details
-    Then the user should see the text in the page    Finance contacts
+    And the user should see the text in the page    Finance contacts
     And the user should see the text in the page    Partner
     And the user clicks the button/link    link=Vitruvius Stonework Limited
-    Then the user should see the text in the page    Finance contact
-    And the user selects the radio button    financeContact    financeContact2
-    And the user clicks the button/link    jQuery=.button:contains("Save")
+    When the user selects the radio button    financeContact    new
+    Then the user should see the element    id=invite-finance-contact
+    When the user selects the radio button    financeContact    financeContact1
+    Then the user should not see the element    id=invite-finance-contact    # testing that the element disappears when the option is deselected
+    [Teardown]    the user selects the radio button    financeContact    new
+
+
+Inviting finance contact server side validations
+    [Documentation]    INFUND-3579
+    [Tags]    Pending
+    # TODO Pending due to INFUND-5408
+    When the user clicks the button/link    id=invite-finance-contact
+    Then the user should see the text in the page    Please enter a contact name
+    And the user should see the text in the page    Please enter an email address
+
+
+Inviting finance contact client side validations
+    [Documentation]    INFUND-3579
+    [Tags]    Pending
+    # TODO Pending due to INFUND-5409
+    When the user enters text to a text field    id=name-finance-contact1    John Smith
+    Then the user should not see the text in the page    Please enter a contact name
+    When the user enters text to a text field    id=email-finance-contact1    test
+    Then the user should not see the text in the page    Please enter an email address
+    And the user should see the text in the page    Please enter a valid email address
+    When the user enters text to a text field    id=email-finance-contact1    test@example.com
+    Then the user should not see the text in the page    Please enter a valid email address
+    And the user should not see an error in the page
+
+
+Partner invites a finance contact
+    [Documentation]    INFUND-3579
+    [Tags]    HappyPath
+    When the user enters text to a text field    id=name-finance-contact1    John Smith
+    And the user enters text to a text field    id=email-finance-contact1    ${test_mailbox_one}+invitedfinancecontact@gmail.com
+    And the user clicks the button/link    id=invite-finance-contact
     Then the user should be redirected to the correct page    ${project_in_setup_page}
-    And the matching status checkbox is updated    project-details-finance    3    yes
+
+
+Invited finance contact receives an email
+    [Documentation]    INFUND-3524
+    [Tags]    HappyPath    Email
+    When Open mailbox and confirm received email    ${test_mailbox_one}@gmail.com    ${test_mailbox_one_password}    You will be providing finance details on behalf    Finance contact invitation
+    # note that currently the link in the email isn't functional, as that is covered by an upcoming story
+
+Lead partner chooses an existing finance contact
+    [Documentation]    INFUND-2620
+    [Tags]    HappyPath
+    # note that this test is still necessary until we are able to accept the invite, in an upcoming story
+     Then the user navigates to the page    ${project_in_setup_page}
+     And the user clicks the button/link    link=Project details
+     Then the user should see the text in the page    Finance contacts
+     And the user should see the text in the page    Partner
+     And the user clicks the button/link    link=Vitruvius Stonework Limited
+     And the user selects the radio button    financeContact    financeContact1
+     And the user clicks the button/link    jQuery=.button:contains("Save")
+     Then the user should be redirected to the correct page    ${project_in_setup_page}
+     And the matching status checkbox is updated    project-details-finance    3    yes
 
 
 Non-lead partner cannot change start date, project manager or project address
