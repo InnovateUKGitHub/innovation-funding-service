@@ -18,7 +18,6 @@ import static com.worth.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static junit.framework.TestCase.fail;
-import static org.mockito.Mockito.verify;
 
 public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<FinanceCheckService> {
 
@@ -94,7 +93,7 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
         }
 
         @Override
-        public ServiceResult<FinanceCheckResource> save(FinanceCheckResource toUpdate) {
+        public ServiceResult<Void> save(FinanceCheckResource toUpdate) {
             return null;
         }
 

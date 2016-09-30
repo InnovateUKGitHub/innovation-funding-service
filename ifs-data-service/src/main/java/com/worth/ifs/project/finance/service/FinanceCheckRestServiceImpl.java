@@ -22,6 +22,6 @@ public class FinanceCheckRestServiceImpl extends BaseRestService implements Fina
     @Override
     public RestResult<FinanceCheckResource> update(FinanceCheckResource financeCheckResource) {
         String url = FINANCE_CHECK_BASE_URL + FINANCE_CHECK_PATH;
-        return postWithRestResult(url, FinanceCheckResource.class);
+        return postWithRestResult(url, financeCheckResource, FinanceCheckResource.class);
     }
 }

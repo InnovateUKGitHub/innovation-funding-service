@@ -1,7 +1,5 @@
 package com.worth.ifs.project.finance.transactional;
 
-import com.worth.ifs.application.resource.FundingDecision;
-import com.worth.ifs.commons.security.NotSecured;
 import com.worth.ifs.commons.security.SecuredBySpring;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.project.finance.domain.FinanceCheck;
@@ -20,7 +18,7 @@ public interface FinanceCheckService {
 
     @PreAuthorize("hasAuthority('project_finance')")
     @SecuredBySpring(value = "EDIT", securedType = FinanceCheck.class, description = "Project finance user should be able to edit any finance check")
-    ServiceResult<FinanceCheckResource> save(FinanceCheckResource toUpdate);
+    ServiceResult<Void> save(FinanceCheckResource toUpdate);
 
     @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('project_finance')")
     @SecuredBySpring(value = "GENERATE", securedType = FinanceCheck.class, description = "Comp admins and project finance users can generate finance checks" )

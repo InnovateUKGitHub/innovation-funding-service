@@ -16,12 +16,12 @@
     </div>
 
     <form th:object="${form}" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post">
-      <h3 class="heading-medium">Finance contact</h3>
-      <p>Dave Norman <br /><a href="mailto:#">dave@norman.com</a></p>
-      <h3 class="heading-medium">Project costs</h3>
-      <p>Please enter final project costs below</p>
+        <h3 class="heading-medium">Finance contact</h3>
+        <p>Dave Norman <br /><a href="mailto:#">dave@norman.com</a></p>
+        <h3 class="heading-medium">Project costs</h3>
+        <p>Please enter final project costs below</p>
 
-      <table class="finance-check-form">
+        <table class="finance-check-form">
             <thead>
             <tr>
                 <th scope="col" class="heading-small">Section</th>
@@ -32,43 +32,43 @@
             <tr>
                 <th scope="col" id="labour">Labour</th>
                 <td class="alignright">
-                  <input type="text" class="form-control alignright" value="" aria-labelledby="project-cost labour"/>
+                    <input type="text" class="form-control alignright" value="" aria-labelledby="project-cost labour" data-required-errormessage="Please enter a labour cost" th:errorclass="field-error" required="required" name="labour-cost" th:field="*{costs[__0__].value}"/>
                 </td>
             </tr>
             <tr>
                 <th scope="col" id="admin-support-costs">Administration support costs</th>
                 <td class="alignright">
-                  <input type="text" class="form-control alignright" aria-labelledby="project-cost admin-support-costs" />
+                    <input type="text" class="form-control alignright" aria-labelledby="project-cost admin-support-costs" data-required-errormessage="Please enter a admin support cost" th:errorclass="field-error" required="required" name="admin-support-costs" th:field="*{costs[__1__].value}"/>
                 </td>
             </tr>
             <tr>
                 <th scope="col" id="materials">Materials</th>
                 <td class="alignright">
-                  <input type="text" class="form-control alignright" aria-labelledby="project-cost materials" />
+                    <input type="text" class="form-control alignright" aria-labelledby="project-cost materials" data-required-errormessage="Please enter a materials cost" th:errorclass="field-error" required="required" name="materials" th:field="*{costs[__2__].value}"/>
                 </td>
             </tr>
             <tr>
                 <th scope="col" id="capital-usage">Capital usage</th>
                 <td class="alignright">
-                  <input type="text" class="form-control alignright" aria-labelledby="project-cost capital-usage" />
+                    <input type="text" class="form-control alignright" aria-labelledby="project-cost capital-usage" data-required-errormessage="Please enter a capital usage cost" th:errorclass="field-error" required="required" name="capital-usage" th:field="*{costs[__3__].value}"/>
                 </td>
             </tr>
             <tr>
                 <th scope="col" id="subcontracting-costs">Subcontracting costs</th>
                 <td class="alignright">
-                  <input type="text" class="form-control alignright" aria-labelledby="project-cost subcontracting-costs" />
+                    <input type="text" class="form-control alignright" aria-labelledby="project-cost subcontracting-costs" data-required-errormessage="Please enter subcontracting cost" th:errorclass="field-error" required="required" name="subcontracting-costs" th:field="*{costs[__4__].value}"/>
                 </td>
             </tr>
             <tr>
                 <th scope="col" id="travel-subsistence">Travel and subsistence</th>
                 <td class="alignright">
-                  <input type="text" class="form-control alignright" aria-labelledby="project-cost travel-subsistence" />
+                    <input type="text" class="form-control alignright" aria-labelledby="project-cost travel-subsistence" data-required-errormessage="Please enter a travel and subsistence cost" th:errorclass="field-error" required="required" name="travel-subsistence" th:field="*{costs[__5__].value}"/>
                 </td>
             </tr>
             <tr>
                 <th scope="col" id="other-costs">Other costs</th>
                 <td class="alignright">
-                  <input type="text" class="form-control alignright" aria-labelledby="project-cost other-costs" />
+                    <input type="text" class="form-control alignright" aria-labelledby="project-cost other-costs" data-required-errormessage="Please enter any other cost" th:errorclass="field-error" required="required" name="other-costs" th:field="*{costs[__6__].value}"/>
                 </td>
             </tr>
             </tbody>
@@ -108,24 +108,22 @@
 
                     <p>This partner will now be marked as eligible for this project.</p>
 
-                        <hr />
+                    <hr />
 
-                        <div class="alignright-button">
-                            <a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
-                            <button class="button" th:formaction="@{${#httpServletRequest.requestURI}}">Approve eligible costs</button>
-                        </div>
-
-
+                    <div class="alignright-button">
+                        <a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
+                        <button class="button" th:formaction="@{${#httpServletRequest.requestURI}}">Approve eligible costs</button>
+                    </div>
                 </div>
             </div>
 
         </th:block>
 
-    <hr />
+        <hr />
 
-    <div class="extra-margin">
-        <button class="button button-secondary">Save and return to finance checks</button>
-    </div>
+        <div class="extra-margin">
+            <button class="button button-secondary">Save and return to finance checks</button>
+        </div>
     </form>
 
     <!-- END OFHARDCODED PROTOTYPE HTML -->
