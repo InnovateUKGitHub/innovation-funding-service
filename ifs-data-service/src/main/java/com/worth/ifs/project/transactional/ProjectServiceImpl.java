@@ -8,6 +8,7 @@ import com.worth.ifs.address.repository.AddressTypeRepository;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.bankdetails.domain.BankDetails;
 import com.worth.ifs.commons.error.Error;
@@ -20,6 +21,8 @@ import com.worth.ifs.file.service.FileAndContents;
 import com.worth.ifs.file.transactional.FileService;
 import com.worth.ifs.finance.transactional.FinanceRowService;
 import com.worth.ifs.invite.domain.ProjectParticipantRole;
+import com.worth.ifs.invite.mapper.InviteProjectMapper;
+import com.worth.ifs.invite.repository.InviteProjectRepository;
 import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.notifications.resource.ExternalUserNotificationTarget;
 import com.worth.ifs.notifications.resource.Notification;
@@ -41,6 +44,8 @@ import com.worth.ifs.project.mapper.MonitoringOfficerMapper;
 import com.worth.ifs.project.mapper.ProjectMapper;
 import com.worth.ifs.project.mapper.ProjectUserMapper;
 import com.worth.ifs.project.repository.MonitoringOfficerRepository;
+import com.worth.ifs.project.repository.ProjectRepository;
+import com.worth.ifs.project.repository.ProjectUserRepository;
 import com.worth.ifs.project.resource.*;
 import com.worth.ifs.project.workflow.projectdetails.configuration.ProjectDetailsWorkflowHandler;
 import com.worth.ifs.user.domain.Organisation;
@@ -84,6 +89,15 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
 public class ProjectServiceImpl extends AbstractProjectServiceImpl implements ProjectService {
+
+    @Autowired
+    private ApplicationRepository applicationService;
+
+    @Autowired
+    private ProjectRepository projectRepository;
+
+    @Autowired
+    private ProjectUserRepository projectUserRepository;
 
     @Autowired
     private ProjectUserMapper projectUserMapper;
@@ -135,6 +149,12 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     @Autowired
     private FinanceRowService financeRowService;
+
+    @Autowired
+    private InviteProjectRepository inviteProjectRepository;
+
+    @Autowired
+    private InviteProjectMapper inviteProjectMapper;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -731,9 +751,10 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     private Map<String, Object> createGlobalArgsForInviteContactEmail(Long projectId, InviteProjectResource inviteResource) {
         Project project = projectRepository.findOne(projectId);
+        String leadOrganisationName = project.getApplication().getLeadOrganisation().getName();
         Map<String, Object> globalArguments = new HashMap<>();
         globalArguments.put("projectName", project.getName());
-        globalArguments.put("leadOrganisation", inviteResource.getLeadOrganisation());
+        globalArguments.put("leadOrganisation", leadOrganisationName);
         globalArguments.put("inviteOrganisationName", (StringUtils.isEmpty(inviteResource.getInviteOrganisationName())) ? "No org as yet" : inviteResource.getInviteOrganisationName());
         globalArguments.put("inviteUrl", getInviteUrl(webBaseUrl, inviteResource));
         return globalArguments;

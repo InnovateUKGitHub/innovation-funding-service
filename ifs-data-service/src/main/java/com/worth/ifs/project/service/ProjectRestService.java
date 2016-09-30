@@ -1,16 +1,22 @@
 package com.worth.ifs.project.service;
 
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.file.resource.FileEntryResource;
-import com.worth.ifs.project.resource.*;
+import com.worth.ifs.invite.resource.InviteProjectResource;
+import com.worth.ifs.project.resource.MonitoringOfficerResource;
+import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.project.resource.ProjectTeamStatusResource;
+import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.user.resource.OrganisationResource;
-import org.springframework.core.io.ByteArrayResource;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
+import org.springframework.core.io.ByteArrayResource;
 
 public interface ProjectRestService {
     RestResult<ProjectResource> getProjectById(Long projectId);
@@ -39,5 +45,6 @@ public interface ProjectRestService {
     RestResult<Boolean> isOtherDocumentsSubmitAllowed(Long projectId);
     RestResult<Void> setPartnerDocumentsSubmitted(Long projectId);
     RestResult<Void> addPartner(Long projectId, Long userId, Long organisationId);
+    RestResult<Void> inviteFinanceContact(Long projectId, InviteProjectResource inviteResource);
     RestResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId);
 }
