@@ -3,7 +3,7 @@ IFS.competition_management.setup = (function(){
   var s;
   return {
     settings: {
-
+        milestonesForm : '[data-section="milestones"]'
     },
     init: function(){
         s = this.settings;
@@ -20,7 +20,7 @@ IFS.competition_management.setup = (function(){
         });
         IFS.competition_management.setup.innovationSectorOnPageLoad();
 
-        jQuery("form#milestones").on('change','input[data-date]',function(){
+        jQuery(s.milestonesForm).on('change','input[data-date]',function(){
           IFS.competition_management.setup.milestonesExtraValidation();
           IFS.competition_management.setup.milestonesSetFutureDate(jQuery(this));
         });
@@ -40,8 +40,7 @@ IFS.competition_management.setup = (function(){
               success: function(data) {
                 if(typeof(data) !== 'undefined'){
                   if(data.success === "true"){
-                    //Code is now valid, remove all error messages.
-                    IFS.core.formValidation.setValid(field,"");
+                    IFS.core.formValidation.setValid(field,IFS.core.formValidation.getErrorMessage(field,'required'));
                     field.val(data.message);
                     jQuery('body').trigger('updateSerializedFormState');
                   }
@@ -150,14 +149,14 @@ IFS.competition_management.setup = (function(){
     },
     milestonesExtraValidation : function(){
       //some extra javascript to hide the server side messages when the field is valid
-      var fieldErrors = jQuery('#milestones .field-error');
-      var emptyInputs = jQuery("#milestones input").filter(function() { return !this.value; });
+      var fieldErrors = jQuery(s.milestonesForm+' .field-error');
+      var emptyInputs = jQuery(s.milestonesForm+' input').filter(function() { return !this.value; });
       if(fieldErrors.length === 0 && emptyInputs.length === 0){
-        jQuery('#milestones .error-summary').attr('aria-hidden','true');
+        jQuery(s.milestonesForm+' .error-summary').attr('aria-hidden','true');
       }
     },
     mileStoneValidateOnPageLoad : function(){
-        jQuery('#milestones .day input').each(function(index,value){
+        jQuery(s.milestonesForm+' .day input').each(function(index,value){
           var field = jQuery(value);
           if(index===0){
             IFS.core.formValidation.checkDate(field,true);
@@ -169,7 +168,6 @@ IFS.competition_management.setup = (function(){
       setTimeout(function(){
         var nextRow = field.closest('tr').next('tr');
         var date = field.attr('data-date');
-
         if(nextRow.length){
             nextRow.attr({'data-future-date':date});
             if(jQuery.trim(date.length) !== 0){

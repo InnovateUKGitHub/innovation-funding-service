@@ -2,10 +2,17 @@ package com.worth.ifs.invite.service;
 
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
+import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteProjectResource;
+import com.worth.ifs.invite.resource.InviteResultsResource;
+import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.inviteOrganisationResourceListType;
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.inviteProjectResourceListType;
 import static com.worth.ifs.invite.controller.InviteProjectController.*;
 
 /**
@@ -37,4 +44,18 @@ public class ProjectInviteRestServiceImpl extends BaseRestService implements Pro
         String url = PROJECT_INVITE_BASE_URL + ACCEPT_INVITE + inviteHash + "/" + userId;
         return putWithRestResultAnonymous(url, Void.class);
     }
+
+    @Override
+    public RestResult<Void> saveProjectInvite(InviteProjectResource inviteProjectResource) {
+
+        String url = PROJECT_INVITE_BASE_URL + PROJECT_INVITE_SAVE;
+        return postWithRestResult(url, inviteProjectResource, Void.class);
+    }
+
+    @Override
+    public RestResult<List<InviteProjectResource>> getInvitesByProject (Long projectId){
+        String url = PROJECT_INVITE_BASE_URL + GET_PROJECT_INVITE_LIST + projectId;
+        return getWithRestResult(url, inviteProjectResourceListType());
+    }
+
 }

@@ -1,26 +1,35 @@
 package com.worth.ifs.project;
 
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
-import com.worth.ifs.project.resource.*;
+import com.worth.ifs.invite.resource.InviteProjectResource;
+import com.worth.ifs.invite.service.ProjectInviteRestService;
+import com.worth.ifs.project.resource.MonitoringOfficerResource;
+import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.project.resource.ProjectTeamStatusResource;
+import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.project.service.ProjectRestService;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.service.OrganisationRestService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-
 import static com.worth.ifs.commons.rest.RestResult.aggregate;
 import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
-import static com.worth.ifs.util.CollectionFunctions.*;
+import static com.worth.ifs.util.CollectionFunctions.removeDuplicates;
+import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
 /**
  * A service for dealing with ProjectResources via the appropriate Rest services
@@ -30,6 +39,9 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Autowired
     private ProjectRestService projectRestService;
+
+    @Autowired
+    private ProjectInviteRestService projectInviteRestService;
 
     @Autowired
     private ApplicationService applicationService;
@@ -175,6 +187,11 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    public ServiceResult<Void> acceptOrRejectOtherDocuments(Long projectId, Boolean approved) {
+        return projectRestService.acceptOrRejectOtherDocuments(projectId, approved).toServiceResult();
+    }
+
+    @Override
     public List<ProjectUserResource> getLeadPartners(Long projectId) {
         List<ProjectUserResource> partnerUsers = getProjectUsersWithPartnerRole(projectId);
         OrganisationResource leadOrganisation = getLeadOrganisation(projectId);
@@ -189,12 +206,8 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ServiceResult<Boolean> isOtherDocumentSubmitAllowed(Long projectId) {
-        RestResult<Boolean> restResult = projectRestService.isOtherDocumentsSubmitAllowed(projectId);
-
-        return restResult.isSuccess() ?
-                restResult.toServiceResult() :
-                ServiceResult.serviceFailure(restResult.getErrors());
+    public Boolean isOtherDocumentSubmitAllowed(Long projectId) {
+        return projectRestService.isOtherDocumentsSubmitAllowed(projectId).getSuccessObjectOrThrowException();
     }
 
     @Override
@@ -262,4 +275,20 @@ public class ProjectServiceImpl implements ProjectService {
         List<ProjectUserResource> projectUsers = getProjectUsersForProject(projectId);
         return simpleFilter(projectUsers, pu -> PARTNER.getName().equals(pu.getRoleName()));
     }
+
+    @Override
+    public ServiceResult<Void> saveProjectInvite (InviteProjectResource inviteProjectResource) {
+        return projectInviteRestService.saveProjectInvite (inviteProjectResource).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<Void> inviteFinanceContact (Long projectId, InviteProjectResource inviteProjectResource) {
+        return projectRestService.inviteFinanceContact (projectId, inviteProjectResource).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<List<InviteProjectResource>>  getInvitesByProject (Long projectId) {
+        return projectInviteRestService.getInvitesByProject (projectId).toServiceResult();
+    }
+
 }

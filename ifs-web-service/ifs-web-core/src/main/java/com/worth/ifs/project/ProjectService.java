@@ -1,16 +1,22 @@
 package com.worth.ifs.project;
 
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
-import com.worth.ifs.project.resource.*;
+import com.worth.ifs.invite.resource.InviteProjectResource;
+import com.worth.ifs.project.resource.MonitoringOfficerResource;
+import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.project.resource.ProjectTeamStatusResource;
+import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.user.resource.OrganisationResource;
-import org.springframework.core.io.ByteArrayResource;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
+import org.springframework.core.io.ByteArrayResource;
 
 /**
  * A service for dealing with ProjectResources via the appropriate Rest services
@@ -63,13 +69,15 @@ public interface ProjectService {
 
     ServiceResult<Void> removeExploitationPlanDocument(Long projectId);
 
+    ServiceResult<Void> acceptOrRejectOtherDocuments(Long projectId, Boolean approved);
+
     boolean isUserLeadPartner(Long projectId, Long userId);
 
     List<ProjectUserResource> getLeadPartners(Long projectId);
 
     List<ProjectUserResource> getPartners(Long projectId);
 
-    ServiceResult<Boolean> isOtherDocumentSubmitAllowed(Long projectId);
+    Boolean isOtherDocumentSubmitAllowed(Long projectId);
 
     ServiceResult<Void> setPartnerDocumentsSubmitted(Long projectId);
 
@@ -92,5 +100,11 @@ public interface ProjectService {
     ServiceResult<FileEntryResource> addGeneratedGrantOfferLetter(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes);
 
     ProjectTeamStatusResource getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId);
+
+    ServiceResult<Void> inviteFinanceContact (Long projectId, InviteProjectResource inviteProjectResource);
+
+    ServiceResult<Void> saveProjectInvite(InviteProjectResource inviteProjectResource);
+
+    ServiceResult<List<InviteProjectResource>> getInvitesByProject (Long projectId);
 
 }

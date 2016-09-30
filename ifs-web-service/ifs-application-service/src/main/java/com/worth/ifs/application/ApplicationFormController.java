@@ -242,7 +242,7 @@ public class ApplicationFormController extends AbstractApplicationController {
 
             /* End save action */
 
-            if (errors.hasErrors()) {
+            if (errors.hasErrors() && isMarkQuestionRequest(params)) {
 
                 validationHandler.addAnyErrors(errors);
 

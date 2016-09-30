@@ -77,6 +77,9 @@ public class Project implements ProcessActivity {
     @NotNull
     private boolean offerRejected;
 
+    private Boolean otherDocumentsApproved;
+
+
     public Project() {}
 
     public Project(Long id, Application application, LocalDate targetStartDate, Address address,
@@ -249,5 +252,13 @@ public class Project implements ProcessActivity {
 
     public void setGrantOfferLetter(FileEntry grantOfferLetter) {
         this.grantOfferLetter = grantOfferLetter;
+    }
+
+    public Boolean getOtherDocumentsApproved() {
+        return otherDocumentsApproved;
+    }
+
+    public void setOtherDocumentsApproved(Boolean otherDocumentsApproved) {
+        this.otherDocumentsApproved = otherDocumentsApproved;
     }
 }

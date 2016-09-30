@@ -2,16 +2,13 @@
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <div th:include="fragments/layout :: head" th:with="pageTitle='Other documents'" th:remove="tag"/>
+    <div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
     <div th:include="fragments/modals :: modal-accept-docs" th:remove="tag"/>
     <div th:include="fragments/modals :: modal-reject-docs" th:remove="tag"/>
 </head>
-
 <body>
-
 <div th:include="fragments/layout :: body-start" th:remove="tag"/>
 <div th:include="fragments/layout :: global-header" th:remove="tag"/>
-
-
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag"/>
     <div th:include="fragments/layout :: header-sub"
@@ -22,73 +19,51 @@
         <div th:include="fragments/elements :: project-title (projectId=${model.projectId}, projectName=${model.projectName})"
              th:remove="tag"/>
         <h1 class="heading-xlarge">Other documents</h1>
-
-        <span th:text="${model.leadPartnerOrganisationName}"/>
-
-        <ul class="list-bullet" th:unless="${#lists.isEmpty(model.partnerOrganisationNames)}">
-            <li th:each="partner : ${model.partnerOrganisationNames}" th:text="${partner}"/>
-        </ul>
-
-        <div>
-            <h3 class="heading-medium">Project manager Details</h3>
-            <ul class="list-bullet">
-                <li th:text="${model.projectManagerName}"/>
-                <li th:text="${model.projectManagerTelephone}"/>
-                <li th:text="${model.projectManagerEmail}"/>
-            </ul>
-        </div>
-
     </div>
-
     <hr/>
 
-    <th:block th:if="${model.approved}">
-        <div class="success-alert">
-            <h2 class="heading-small no-margin-top">The documents provided have been approved.</h2>
-        </div>
-    </th:block>
-
-    <th:block th:if="${model.rejected}">
-        <div class="warning-alert">
-            <h3 class="heading-small">These documents have been returned to the project team, the following reason was
-                given;</h3>
-            <ul class="list-bullet">
-                <li>the collaboration agreement only has 2 signatures when there are 3 partners</li>
-            </ul>
-        </div>
-    </th:block>
-
-    <h2 class="heading-medium">Collaboration Agreement</h2>
-    <th:block th:if="${model.collaborationAgreementFileDetails}">
-        <a th:href="@{/project/{id}/partner/documents/collaboration-agreement(id=${model.projectId})}"
-           class="uploaded-file" th:text="${model.collaborationAgreementFileDetails.filename}">The-uploaded-file-example.pdf</a>
-    </th:block>
-
-    <h2 class="heading-medium">Exploitation plan</h2>
-    <th:block th:if="${model.exploitationPlanFileDetails}">
-        <a th:href="@{/project/{id}/partner/documents/exploitation-plan(id=${model.projectId})}"
-           class="uploaded-file"
-           th:text="${model.exploitationPlanFileDetails.filename}">The-uploaded-file-example.pdf</a>
-    </th:block>
-
-
-    <div th:if="${param.status == null}" th:remove="tag">
-
-        <h2 class="heading-medium">Review documents</h2>
-        <p>Please review the content of the documents to ensure they meet Innovate UK's requirements.</p>
-
-        <a href="#" data-js-modal="modal-accept-docs" class="button large">Accept documents</a>
-
-        <a href="#" data-js-modal="modal-reject-docs" class="button button-warning large">Reject documents</a>
-
+    <div class="success-alert" th:if="${model.approved == true}">
+        <p class="heading-small no-margin-top">The documents provided have been approved.</p>
     </div>
 
+    <div class="warning-alert" th:if="${model.approved == false}">
+        <p class="heading-small no-margin-top">These documents after review have been rejected and returned to the project team.</p>
+    </div>
+
+    <h2 class="heading-medium" th:text="${#numbers.formatInteger(model.projectId,8)} + ': ' + ${model.projectName} "/>
+    <ul class="list-bullet">
+        <li th:text="${model.leadPartnerOrganisationName}" />
+        <th:block th:unless="${#lists.isEmpty(model.partnerOrganisationNames)}">
+          <li th:each="partner : ${model.partnerOrganisationNames}" th:text="${partner}"/>
+        </th:block>
+    </ul>
+    <p>
+        <th:block th:text="${model.projectManagerName}"/><th:block th:unless="${#strings.isEmpty(model.projectManagerName)}"><br/></th:block>
+        <th:block th:text="${model.projectManagerEmail}"/><th:block th:unless="${#strings.isEmpty(model.projectManagerEmail)}"><br/></th:block>
+        <th:block th:text="${model.projectManagerTelephone}"/>
+    </p>
+
+    <th:block th:if="${(model.collaborationAgreementFileDetails != null) and (model.exploitationPlanFileDetails != null)}">
+
+      <h2 class="heading-medium">Collaboration Agreement</h2>
+      <a th:href="@{/project/{id}/partner/documents/collaboration-agreement(id=${model.projectId})}"
+         class="uploaded-file" th:text="${model.collaborationAgreementFileDetails.filename}">The-uploaded-file-example.pdf</a>
+
+      <h2 class="heading-medium">Exploitation plan</h2>
+      <a th:href="@{/project/{id}/partner/documents/exploitation-plan(id=${model.projectId})}"
+         class="uploaded-file"
+         th:text="${model.exploitationPlanFileDetails.filename}">The-uploaded-file-example.pdf</a>
+
+      <h2 class="heading-medium">Review documents</h2>
+      <p>Please review the content of the documents to ensure they meet Innovate UK's requirements.</p>
+      <button data-js-modal="modal-accept-docs" class="button large">Accept documents</button>
+      <button data-js-modal="modal-reject-docs" class="button button-warning large">Reject documents</button>
+
+    </th:block>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag"/>
 </main>
-
 <div th:include="fragments/layout :: footer" th:remove="tag"/>
 <div th:include="fragments/layout :: body-end" th:remove="tag"/>
-
 </body>
 </html>

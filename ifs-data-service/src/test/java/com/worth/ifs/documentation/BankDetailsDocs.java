@@ -33,4 +33,11 @@ public class BankDetailsDocs {
             .withSortCode("123456")
             .withAccountNumber("12345678")
             .withOrganiationAddress(newOrganisationAddressResource().build());
+
+    public static final FieldDescriptor[] projectBankDetailsStatusSummaryFields = {
+            fieldWithPath("competitionId").description("Competition Id"),
+            fieldWithPath("competitionName").description("Competition name"),
+            fieldWithPath("projectId").description("Project id to which the "),
+            fieldWithPath("bankDetailsStatusResources").description("Bank details status")
+    };
 }

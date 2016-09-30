@@ -74,7 +74,7 @@ public class InitialDetailsSectionSaverTest {
                 .withCompetitionCode("compcode").build();
         competition.setMilestones(milestonesIds);
 
-        when(milestoneService.getAllDatesByCompetitionId(1L)).thenReturn(milestones);
+        when(milestoneService.getAllMilestonesByCompetitionId(1L)).thenReturn(milestones);
         when(categoryService.getCategoryByParentId(innovationSectorId)).thenReturn(Lists.newArrayList(innovationArea));
 
         service.saveSection(competition, competitionSetupForm);
@@ -92,7 +92,7 @@ public class InitialDetailsSectionSaverTest {
 
     @Test
     public void testAutoSaveCompetitionSetupSection() {
-        when(milestoneService.getAllDatesByCompetitionId(1L)).thenReturn(asList(getMilestone()));
+        when(milestoneService.getAllMilestonesByCompetitionId(1L)).thenReturn(asList(getMilestone()));
 
         CompetitionResource competition = newCompetitionResource().build();
         competition.setMilestones(asList(10L));
@@ -105,7 +105,7 @@ public class InitialDetailsSectionSaverTest {
 
     @Test
     public void testAutoSaveCompetitionSetupSectionErrors() {
-        when(milestoneService.getAllDatesByCompetitionId(1L)).thenReturn(asList(getMilestone()));
+        when(milestoneService.getAllMilestonesByCompetitionId(1L)).thenReturn(asList(getMilestone()));
 
         CompetitionResource competition = newCompetitionResource().build();
         competition.setMilestones(asList(10L));

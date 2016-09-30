@@ -85,5 +85,4 @@ public class FinanceRowPermissionRules extends BasePermissionRules {
         final boolean isCollaborator = checkProcessRole(user, applicationId, organisationId, COLLABORATOR, roleRepository, processRoleRepository);
         return isLead || isCollaborator;
     }
-
 }
