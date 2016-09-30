@@ -70,6 +70,7 @@ import com.worth.ifs.project.mapper.ProjectUserMapper;
 import com.worth.ifs.project.repository.MonitoringOfficerRepository;
 import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.project.repository.ProjectUserRepository;
+import com.worth.ifs.project.transactional.ProjectGrantOfferService;
 import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.project.transactional.ProjectStatusService;
 import com.worth.ifs.project.users.ProjectUsersHelper;
@@ -309,6 +310,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected ProjectService projectServiceMock;
+
+    @Mock
+    protected ProjectGrantOfferService projectGrantOfferServiceMock;
 
     @Mock
     protected ProjectStatusService projectStatusServiceMock;
