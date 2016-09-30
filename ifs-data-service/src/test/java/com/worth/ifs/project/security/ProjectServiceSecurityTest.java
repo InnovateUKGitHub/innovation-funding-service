@@ -244,6 +244,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         assertAccessDenied(() -> classUnderTest.getMonitoringOfficer(123L), () -> {
             verify(projectPermissionRules).compAdminsCanViewMonitoringOfficersForAnyProject(project, getLoggedInUser());
+            verify(projectPermissionRules).projectFinanceUsersCanViewMonitoringOfficersForAnyProject(project, getLoggedInUser());
             verify(projectPermissionRules).partnersCanViewMonitoringOfficersOnTheirProjects(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
         });
@@ -387,6 +388,19 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         });
     }
 
+    @Test
+    public void testAcceptOrRejectOtherDocuments() {
+
+        ProjectResource project = newProjectResource().build();
+
+        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
+
+        assertAccessDenied(() -> classUnderTest.acceptOrRejectOtherDocuments(123L, true), () -> {
+            verify(projectPermissionRules).competitionAdminCanAcceptOrRejectOtherDocuments(project, getLoggedInUser());
+            verifyNoMoreInteractions(projectPermissionRules);
+        });
+    }
+
 
     @Test
     public void testAddPartnerDeniedIfNotSystemRegistrar() {
@@ -431,6 +445,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         assertAccessDenied(() -> classUnderTest.getProjectTeamStatus(123L, Optional.empty()), () -> {
             verify(projectPermissionRules).partnersCanViewTeamStatus(project, getLoggedInUser());
             verify(projectPermissionRules).compAdminsCanViewTeamStatus(project, getLoggedInUser());
+            verify(projectPermissionRules).projectFinanceUserCanViewTeamStatus(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
         });
     }
@@ -600,7 +615,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         }
 
         @Override
-        public List<ServiceResult<FileAndContents>>  retrieveUploadedDocuments(Long projectId) {
+        public ServiceResult<Void> acceptOrRejectOtherDocuments(Long projectId, Boolean approved) {
             return null;
         }
 

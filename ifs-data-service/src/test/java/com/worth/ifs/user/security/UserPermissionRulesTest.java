@@ -58,6 +58,19 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
+    public void testProjectFinanceUserCanViewEveryone() {
+        allGlobalRoleUsers.forEach(user -> {
+            allGlobalRoleUsers.forEach(otherUser -> {
+                if (user.equals(projectFinanceUser())) {
+                    assertTrue(rules.projectFinanceUsersCanViewEveryone(otherUser, user));
+                } else {
+                    assertFalse(rules.projectFinanceUsersCanViewEveryone(otherUser, user));
+                }
+            });
+        });
+    }
+
+    @Test
     public void testSystemRegistrationUserCanViewEveryone() {
         allGlobalRoleUsers.forEach(user -> {
             allGlobalRoleUsers.forEach(otherUser -> {

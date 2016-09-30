@@ -40,6 +40,7 @@ public class FinanceRowPermissionRulesTest extends BasePermissionRulesTest<Finan
     private UserResource leadApplicant;
     private UserResource collaborator;
     private UserResource compAdmin;
+    private UserResource projectFinance;
     private UserResource assessor;
     private UserResource otherLeadApplicant;
 
@@ -108,6 +109,8 @@ public class FinanceRowPermissionRulesTest extends BasePermissionRulesTest<Finan
 
             when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(otherProjectProjectId, otherProjectUserId, PROJECT_PARTNER)).thenReturn(Collections.singletonList(newProjectUser().withId(otherProjectUserId).build()));
         }
+
+        projectFinance = projectFinanceUser();
     }
 
     @Test
@@ -158,5 +161,10 @@ public class FinanceRowPermissionRulesTest extends BasePermissionRulesTest<Finan
     @Test
     public void testCompAdminsCanCheckFundingStatusOfTeam(){
         assertTrue(rules.compAdminsCanCheckFundingStatusOfTeam(project, compAdmin));
+    }
+
+    @Test
+    public void testProjectFinanceUserCanCheckFundingStatusOfTeam(){
+        assertTrue(rules.projectFinanceUsersCanCheckFundingStatusOfTeam(project, projectFinance));
     }
 }

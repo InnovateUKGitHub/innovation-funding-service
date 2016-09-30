@@ -16,7 +16,7 @@ Documentation     INFUND-901: As a lead applicant I want to invite application c
 ...               INFUND-3742: The overview with contributors is not matching with actual invites
 Suite Setup       log in and create new application for collaboration if there is not one already
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        Appllicant
+Force Tags        Applicant
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -108,7 +108,7 @@ Business organisation (partner accepts invitation)
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
     And the user clicks the button/link    jQuery=.button:contains("Save")
     And the user fills the create account form    Adrian    Booth
-    And the user opens the mailbox and verifies the email from
+    And the user opens the mailbox and verifies the email from    ${TEST_MAILBOX_ONE}+inviteorg2@gmail.com
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
 
 Partner should be able to log-in and see the new company name
@@ -191,7 +191,7 @@ Registered partner should not create new org but should follow the create accoun
     And the user should see the element    link=email the application lead
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     And the user fills the create account form    Roger    Axe
-    And the user opens the mailbox and verifies the email from
+    And the user opens the mailbox and verifies the email from    ${TEST_MAILBOX_ONE}+inviteorg2@gmail.com
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
 
 *** Keywords ***

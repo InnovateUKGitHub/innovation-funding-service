@@ -3,6 +3,7 @@ package com.worth.ifs.project.controller;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.bankdetails.resource.BankDetailsResource;
+import com.worth.ifs.bankdetails.resource.ProjectBankDetailsStatusSummary;
 import com.worth.ifs.bankdetails.transactional.BankDetailsService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.UserAuthenticationService;
@@ -167,6 +168,11 @@ public class ProjectController {
         return bankDetailsService.getByProjectAndOrganisation(projectId, organisationId).toGetResponse();
     }
 
+    @RequestMapping(value = "/{projectId}/bank-details/status-summary", method = GET)
+    public RestResult<ProjectBankDetailsStatusSummary> getBankDetailsProjectSummary(@PathVariable("projectId") final Long projectId) {
+        return bankDetailsService.getProjectBankDetailsStatusSummary(projectId).toGetResponse();
+    }
+
     @RequestMapping(value = "/{projectId}/collaboration-agreement", method = POST, produces = "application/json")
     public RestResult<FileEntryResource> addCollaborationAgreementDocument(
             @RequestHeader(value = "Content-Type", required = false) String contentType,
@@ -259,6 +265,13 @@ public class ProjectController {
             @PathVariable("projectId") long projectId) throws IOException {
 
         return projectService.deleteExploitationPlanFile(projectId).toDeleteResponse();
+    }
+
+    @RequestMapping(value = "/{projectId}/partner/documents/approved/{approved}", method = POST)
+    public RestResult<Void> acceptOrRejectOtherDocuments(@PathVariable("projectId") long projectId, @PathVariable("approved") Boolean approved) {
+
+        return projectService.acceptOrRejectOtherDocuments(projectId, approved).toPostResponse();
+
     }
 
     @RequestMapping(value = "/{projectId}/partner/documents/ready", method = GET)

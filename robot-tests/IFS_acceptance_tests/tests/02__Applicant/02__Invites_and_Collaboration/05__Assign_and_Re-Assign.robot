@@ -75,7 +75,7 @@ Collaborator should see the review button instead of the review and submit
     ...    This test depends on the previous test suite to run first
     [Tags]    Email    HappyPath
     Given the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link= Assign test
+    And the user clicks the button/link    link=Assign test
     Then the user should not see the element    jQuery=.button:contains("Review & submit")
     And the user clicks the button/link    jQuery=.button:contains("Review")
     And the user should see the text in the page    All sections must be marked as complete before the application can be submitted. Only the lead applicant is able to submit the application
@@ -187,6 +187,8 @@ Lead marks finances as complete and collaborator should be able to edit them
     Given the user clicks the button/link    link= Assign test
     And the user clicks the button/link    link=Your finances
     And the user enters the funding level
+    And the user selects the checkbox       id=agree-terms-page
+    And the user selects the checkbox       id=agree-state-aid-page
     When the user clicks the button/link    jQuery=.button:contains("Mark all as complete")
     And the user should see the text in the page    Project details
     Then Collaborator should be able to edit finances again

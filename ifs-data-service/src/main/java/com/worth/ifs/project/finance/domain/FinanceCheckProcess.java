@@ -6,12 +6,14 @@ import com.worth.ifs.project.finance.resource.FinanceCheckState;
 import com.worth.ifs.workflow.domain.ActivityState;
 import com.worth.ifs.workflow.domain.Process;
 
+import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 /**
  * The process of submitting and approving Finance Checks for individual Organisations on Projects
  */
+@Entity
 public class FinanceCheckProcess extends Process<ProjectUser, PartnerOrganisation, FinanceCheckState> {
 
     @ManyToOne

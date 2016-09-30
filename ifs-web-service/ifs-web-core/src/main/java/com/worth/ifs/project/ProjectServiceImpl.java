@@ -175,6 +175,11 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    public ServiceResult<Void> acceptOrRejectOtherDocuments(Long projectId, Boolean approved) {
+        return projectRestService.acceptOrRejectOtherDocuments(projectId, approved).toServiceResult();
+    }
+
+    @Override
     public List<ProjectUserResource> getLeadPartners(Long projectId) {
         List<ProjectUserResource> partnerUsers = getProjectUsersWithPartnerRole(projectId);
         OrganisationResource leadOrganisation = getLeadOrganisation(projectId);
@@ -189,12 +194,8 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ServiceResult<Boolean> isOtherDocumentSubmitAllowed(Long projectId) {
-        RestResult<Boolean> restResult = projectRestService.isOtherDocumentsSubmitAllowed(projectId);
-
-        return restResult.isSuccess() ?
-                restResult.toServiceResult() :
-                ServiceResult.serviceFailure(restResult.getErrors());
+    public Boolean isOtherDocumentSubmitAllowed(Long projectId) {
+        return projectRestService.isOtherDocumentsSubmitAllowed(projectId).getSuccessObjectOrThrowException();
     }
 
     @Override
