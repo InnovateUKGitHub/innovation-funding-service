@@ -29,7 +29,6 @@ import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressRes
 import static com.worth.ifs.address.resource.OrganisationAddressType.REGISTERED;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
-import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static com.worth.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
@@ -38,6 +37,8 @@ import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisa
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -51,7 +52,7 @@ public class ProjectServiceImplTest {
     private ProjectRestService projectRestService;
 
     @Mock
-    private ProjectInviteRestService projectInviteRestServiceMock;
+    private ProjectInviteRestService projectInviteRestService;
 
     @Mock
     private ApplicationService applicationService;
@@ -456,7 +457,7 @@ public class ProjectServiceImplTest {
 
         InviteProjectResource invite = ProjectInviteResourceBuilder.newInviteProjectResource().build();
 
-        when(service.inviteFinanceContact(1L, invite)).thenReturn(serviceSuccess());
+        when(projectRestService.inviteFinanceContact(anyLong(), any())).thenReturn(restSuccess());
 
         ServiceResult<Void> submitted = service.inviteFinanceContact(1L, invite);
 
@@ -470,12 +471,13 @@ public class ProjectServiceImplTest {
 
         InviteProjectResource invite = ProjectInviteResourceBuilder.newInviteProjectResource().build();
 
-        when(projectInviteRestServiceMock.saveProjectInvite(invite)).thenReturn(RestResult.restSuccess());
+        when(projectInviteRestService.saveProjectInvite(invite)).thenReturn(restSuccess());
 
         ServiceResult<Void> submitted = service.saveProjectInvite(invite);
 
         assertTrue(submitted.isSuccess());
 
-        verify(projectInviteRestServiceMock).saveProjectInvite(invite);
+        verify(projectInviteRestService).saveProjectInvite(invite);
+
     }
 }
