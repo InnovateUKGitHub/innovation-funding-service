@@ -176,7 +176,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     @Override
     public ServiceResult<Void> updateFinanceContact(Long projectId, Long organisationId, Long financeContactUserId) {
         return getProject(projectId).
-                //andOnSuccess(this::validateIfProjectAlreadySubmitted).
                 andOnSuccess(project -> validateProjectOrganisationFinanceContact(project, organisationId, financeContactUserId).
                 andOnSuccess(projectUser -> createFinanceContactProjectUser(projectUser.getUser(), project, projectUser.getOrganisation()).
                 andOnSuccessReturnVoid(financeContact -> addFinanceContactToProject(project, financeContact))));
@@ -256,11 +255,9 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     @Override
     public ServiceResult<Boolean> isFinanceContactSubmitted(Long projectId, Long userId) {
 
-        Organisation organisation = getOrganisationByProjectAndUser(projectId, userId)
-                .andOnSuccessReturn(organisationResource -> organisationMapper.mapIdToDomain(organisationResource.getId()))
-                .getSuccessObjectOrThrowException();
+        ProjectUser projectUser = projectUserRepository.findByProjectIdAndRoleAndUserId(projectId, PROJECT_PARTNER, userId);
 
-        return getProject(projectId).andOnSuccessReturn(project -> doIsFinanceContactSubmitted(project, organisation));
+        return getProject(projectId).andOnSuccessReturn(project -> doIsFinanceContactSubmitted(project, projectUser.getOrganisation()));
     }
 
     private boolean doIsFinanceContactSubmitted(Project project, Organisation organisation) {

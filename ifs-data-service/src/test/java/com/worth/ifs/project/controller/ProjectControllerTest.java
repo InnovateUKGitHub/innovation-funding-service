@@ -232,6 +232,16 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
     }
 
     @Test
+    public void isFinanceContactSubmitted() throws Exception {
+        when(projectServiceMock.isFinanceContactSubmitted(1L, 1L)).thenReturn(serviceSuccess(true));
+
+        mockMvc.perform(get("/project/{projectId}/user/{userId}/is-finance-contact-submitted", 1L, 1L))
+                .andExpect(status().isOk())
+                .andExpect(content().string("true"))
+                .andReturn();
+    }
+
+    @Test
     public void setApplicationDetailsSubmitted() throws Exception {
         when(projectServiceMock.submitProjectDetails(isA(Long.class), isA(LocalDateTime.class))).thenReturn(serviceSuccess());
 

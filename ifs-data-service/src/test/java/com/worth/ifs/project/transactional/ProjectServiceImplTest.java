@@ -458,25 +458,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     }
 
     @Test
-    public void testUpdateFinanceContactWhenProjectDetailsAlreadySubmitted() {
-
-        Project project = newProject().withId(123L).build();
-
-        assertTrue(project.getProjectUsers().isEmpty());
-
-        when(projectRepositoryMock.findOne(123L)).thenReturn(project);
-        when(projectDetailsWorkflowHandlerMock.isSubmitted(project)).thenReturn(true);
-
-        ServiceResult<Void> updateResult = service.updateFinanceContact(123L, 5L, 7L);
-
-        assertTrue(updateResult.isFailure());
-        assertTrue(updateResult.getFailure().is(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_UPDATED_IF_ALREADY_SUBMITTED));
-
-        verify(projectRepositoryMock).findOne(123L);
-        assertTrue(project.getProjectUsers().isEmpty());
-    }
-
-    @Test
     public void testInviteProjectManagerWhenProjectNotInDB() {
 
         Long projectId = 1L;
@@ -849,6 +830,71 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         assertEquals(true, projectInDB.getOtherDocumentsApproved());
 
+    }
+
+    @Test
+    public void testIsFinanceContactSubmittedWhenFinanceContactNotAssignedToOrganisation() {
+
+        Long projectId = 1L;
+        Long userId = 1L;
+
+        Organisation organisation = newOrganisation()
+                .build();
+
+        ProjectUser loggedInProjectUser = newProjectUser()
+                .withOrganisation(organisation)
+                .build();
+
+        Project project = newProject().build();
+
+        ProjectUser projectUserForProject = newProjectUser()
+                .withRole(PROJECT_MANAGER)
+                .withOrganisation(organisation)
+                .build();
+        List<ProjectUser> projectUsers = new ArrayList<>();
+        projectUsers.add(projectUserForProject);
+        project.setProjectUsers(projectUsers);
+
+        when(projectUserRepositoryMock.findByProjectIdAndRoleAndUserId(projectId, PROJECT_PARTNER, userId)).thenReturn(loggedInProjectUser);
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+
+        ServiceResult<Boolean> result = service.isFinanceContactSubmitted(projectId, userId);
+
+        assertTrue(result.isSuccess());
+        assertTrue(result.getSuccessObject().equals(false));
+    }
+
+
+    @Test
+    public void testIsFinanceContactSubmittedWhenFinanceContactAssignedToOrganisation() {
+
+        Long projectId = 1L;
+        Long userId = 1L;
+
+        Organisation organisation = newOrganisation()
+                .build();
+
+        ProjectUser loggedInProjectUser = newProjectUser()
+                .withOrganisation(organisation)
+                .build();
+
+        Project project = newProject().build();
+
+        ProjectUser projectUserForProject = newProjectUser()
+                .withRole(PROJECT_FINANCE_CONTACT)
+                .withOrganisation(organisation)
+                .build();
+        List<ProjectUser> projectUsers = new ArrayList<>();
+        projectUsers.add(projectUserForProject);
+        project.setProjectUsers(projectUsers);
+
+        when(projectUserRepositoryMock.findByProjectIdAndRoleAndUserId(projectId, PROJECT_PARTNER, userId)).thenReturn(loggedInProjectUser);
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+
+        ServiceResult<Boolean> result = service.isFinanceContactSubmitted(projectId, userId);
+
+        assertTrue(result.isSuccess());
+        assertTrue(result.getSuccessObject().equals(true));
     }
 
     @Test
