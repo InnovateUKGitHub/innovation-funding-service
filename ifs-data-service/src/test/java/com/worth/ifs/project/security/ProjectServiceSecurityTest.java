@@ -1,5 +1,15 @@
 package com.worth.ifs.project.security;
 
+import java.io.InputStream;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Supplier;
+
 import com.worth.ifs.BaseServiceSecurityTest;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
@@ -7,7 +17,6 @@ import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.FileAndContents;
-import com.worth.ifs.invite.builder.ProjectInviteResourceBuilder;
 import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
@@ -18,17 +27,12 @@ import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.RoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.resource.UserRoleType;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.method.P;
-
-import java.io.InputStream;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.*;
-import java.util.function.Supplier;
 
 import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -37,7 +41,9 @@ import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectRes
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static com.worth.ifs.user.resource.UserRoleType.*;
+import static com.worth.ifs.user.resource.UserRoleType.APPLICANT;
+import static com.worth.ifs.user.resource.UserRoleType.COMP_ADMIN;
+import static com.worth.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.EnumSet.complementOf;
@@ -45,7 +51,10 @@ import static java.util.EnumSet.of;
 import static java.util.stream.Collectors.toList;
 import static junit.framework.TestCase.fail;
 import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 /**
  * Testing how the secured methods in ProjectService interact with Spring Security
@@ -166,46 +175,6 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
             verify(projectPermissionRules).partnersCanUpdateTheirOwnOrganisationsFinanceContacts(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
         });
-    }
-
-    @Test
-    public void testInviteProjectManager() {
-
-        Long projectId = 1L;
-
-        InviteProjectResource inviteResource = ProjectInviteResourceBuilder.newInviteProjectResource()
-                .withName("Abc Xyz")
-                .withEmail("Abc.xyz@gmail.com")
-                .withLeadOrganisation("Lead Organisation 1")
-                .withInviteOrganisationName("Invite Organisation 1")
-                .withHash("sample/url")
-                .build();
-
-        assertAccessDenied(() -> classUnderTest.inviteProjectManager(projectId, inviteResource),
-                () -> {
-                    verify(projectPermissionRules).partnersCanInviteTheirOwnOrganisationsProjectManager(inviteResource, getLoggedInUser());
-                    verifyNoMoreInteractions(projectPermissionRules);
-                });
-    }
-
-    @Test
-    public void testInviteFinanceContact() {
-
-        Long projectId = 1L;
-
-        InviteProjectResource inviteResource = ProjectInviteResourceBuilder.newInviteProjectResource()
-                .withName("Abc Xyz")
-                .withEmail("Abc.xyz@gmail.com")
-                .withLeadOrganisation("Lead Organisation 1")
-                .withInviteOrganisationName("Invite Organisation 1")
-                .withHash("sample/url")
-                .build();
-
-        assertAccessDenied(() -> classUnderTest.inviteFinanceContact(projectId, inviteResource),
-                () -> {
-                    verify(projectPermissionRules).partnersCanInviteTheirOwnOrganisationsFinanceContacts(inviteResource, getLoggedInUser());
-                    verifyNoMoreInteractions(projectPermissionRules);
-                });
     }
 
     @Test
