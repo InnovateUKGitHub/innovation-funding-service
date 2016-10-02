@@ -76,7 +76,7 @@
                 <td>
                     <input type="email" class="form-control width-full" aria-labelledby="user-email" value="" name="email" id="email-finance-contact1"/>
                 </td>
-                <td th:unless="#strings.isEmpty(inviteForm.emailExistsError)">
+                <td th:unless="${#strings.isEmpty(inviteForm.emailExistsError)}">
                     <span th:text="${inviteForm.emailExistsError}" th:remove="tag"></span>
                 </td>
                 <td class="alignright">
