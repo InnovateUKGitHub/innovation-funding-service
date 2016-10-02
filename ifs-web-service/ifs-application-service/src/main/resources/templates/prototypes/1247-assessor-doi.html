@@ -14,8 +14,9 @@
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
 
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${(param.edit == null ? '/prototypes/1177-assessor-skills' : '/prototypes/1247-assessor-view-doi')})" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${(param.edit == null ? '/prototypes/1177-assessor-skills' : '/prototypes/1247-assessor-view-doi')})" th:unless="${param.version != null and param.version[0] == 'v2'}" th:remove="tag" />
 
+    <th:block th:if="${param.version != null and param.version[0] == 'v2'}" th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'/prototypes/865-assessor-dashboard-invites?accepted=yes&#38;user=assessor&#38;version=v2'})"/>
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
@@ -207,7 +208,13 @@
 
 		<div th:if="${param.edit == null}" th:remove="tag">
 
-			<button class="button button-large extra-margin" formaction="/prototypes/1176-assessor-contracts">Continue</button>
+			<th:block th:if="${param.version != null and param.version[0] == 'v2'}">
+				<input type="hidden" name="version" value="v2" />
+				<input type="hidden" name="accepted" value="yes" />
+				<input type="hidden" name="user" value="assessor" />
+			</th:block>
+
+			<button class="button button-large extra-margin" th:formaction="${(param.version != null and param.version[0] == 'v2' ? '/prototypes/865-assessor-dashboard-invites':'/prototypes/1176-assessor-contracts')}">Save and continue</button>
 
 		</div>
 
