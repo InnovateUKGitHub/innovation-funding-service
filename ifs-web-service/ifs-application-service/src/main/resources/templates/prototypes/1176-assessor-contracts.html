@@ -13,7 +13,9 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'/prototypes/1247-assessor-doi'})" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'/prototypes/1247-assessor-doi'})" th:unless="${param.version != null and param.version[0] == 'v2'}" th:remove="tag" />
+
+    <th:block th:if="${param.version != null and param.version[0] == 'v2'}" th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'/prototypes/865-assessor-dashboard-invites?accepted=yes&#38;user=assessor&#38;version=v2'})"/>
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
@@ -47,7 +49,7 @@
 			</div>
 			
 			<div class="form-block extra-margin">
-				<a class="button button-large disabled" href="/prototypes/865-assessor-dashboard-invites?accepted=yes" id="continue">Continue</a>
+				<a class="button button-large disabled" th:href="${(param.version != null and param.version[0] == 'v2' ? '/prototypes/865-assessor-dashboard-invites?accepted=yes&#38;user=assessor&#38;version=v2':'/prototypes/865-assessor-dashboard-invites?accepted=yes')}" id="continue">Save and continue</a>
 			</div>
 		</fieldset>
 

@@ -1,17 +1,5 @@
 package com.worth.ifs.project.transactional;
 
-import java.io.File;
-import java.io.InputStream;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-
 import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.address.domain.Address;
 import com.worth.ifs.address.domain.AddressType;
@@ -37,55 +25,41 @@ import com.worth.ifs.project.domain.MonitoringOfficer;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
 import com.worth.ifs.project.finance.domain.SpendProfile;
-import com.worth.ifs.project.resource.MonitoringOfficerResource;
-import com.worth.ifs.project.resource.ProjectLeadStatusResource;
-import com.worth.ifs.project.resource.ProjectPartnerStatusResource;
-import com.worth.ifs.project.resource.ProjectResource;
-import com.worth.ifs.project.resource.ProjectTeamStatusResource;
-import com.worth.ifs.project.resource.ProjectUserResource;
-import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.OrganisationType;
-import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.user.domain.Role;
-import com.worth.ifs.user.domain.User;
+import com.worth.ifs.project.resource.*;
+import com.worth.ifs.user.domain.*;
 import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import com.worth.ifs.user.resource.UserRoleType;
-
-import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.InputStream;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import static com.worth.ifs.LambdaMatcher.createLambdaMatcher;
 import static com.worth.ifs.address.builder.AddressBuilder.newAddress;
 import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static com.worth.ifs.address.builder.AddressTypeBuilder.newAddressType;
-import static com.worth.ifs.address.resource.OrganisationAddressType.OPERATING;
-import static com.worth.ifs.address.resource.OrganisationAddressType.PROJECT;
-import static com.worth.ifs.address.resource.OrganisationAddressType.REGISTERED;
+import static com.worth.ifs.address.resource.OrganisationAddressType.*;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.bankdetails.builder.BankDetailsBuilder.newBankDetails;
 import static com.worth.ifs.commons.error.CommonErrors.badRequestError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
-import static com.worth.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE;
-import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_DATE_MUST_BE_IN_THE_FUTURE;
-import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_DATE_MUST_START_ON_FIRST_DAY_OF_MONTH;
-import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_PARTNER_ON_THE_PROJECT_FOR_THE_ORGANISATION;
-import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_USER_ON_THE_PROJECT_FOR_THE_ORGANISATION;
-import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED;
-import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_SUBMITTED_IF_INCOMPLETE;
-import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_UPDATED_IF_ALREADY_SUBMITTED;
-import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_ID_IN_URL_MUST_MATCH_PROJECT_ID_IN_MONITORING_OFFICER_RESOURCE;
-import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_LEAD_PARTNER;
+import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.file.domain.builders.FileEntryBuilder.newFileEntry;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
 import static com.worth.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
-import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
-import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
-import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static com.worth.ifs.invite.domain.ProjectParticipantRole.*;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static com.worth.ifs.organisation.builder.OrganisationAddressBuilder.newOrganisationAddress;
 import static com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
@@ -97,10 +71,7 @@ import static com.worth.ifs.project.builder.ProjectTeamStatusResourceBuilder.new
 import static com.worth.ifs.project.builder.ProjectUserBuilder.newProjectUser;
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static com.worth.ifs.project.builder.SpendProfileBuilder.newSpendProfile;
-import static com.worth.ifs.project.constant.ProjectActivityStates.ACTION_REQUIRED;
-import static com.worth.ifs.project.constant.ProjectActivityStates.NOT_REQUIRED;
-import static com.worth.ifs.project.constant.ProjectActivityStates.NOT_STARTED;
-import static com.worth.ifs.project.constant.ProjectActivityStates.PENDING;
+import static com.worth.ifs.project.constant.ProjectActivityStates.*;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static com.worth.ifs.user.builder.OrganisationTypeBuilder.newOrganisationType;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
@@ -113,18 +84,9 @@ import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.isA;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> {
 
@@ -1366,53 +1328,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         return fileEntryResourcesToGet;
     }
 
-    private void assertGetFileContents(Consumer<FileEntry> fileSetter, Supplier<ServiceResult<FileAndContents>> getFileContentsFn) {
-
-        FileEntry fileToGet = newFileEntry().build();
-        Supplier<InputStream> inputStreamSupplier = () -> null;
-
-        FileEntryResource fileResourceToGet = newFileEntryResource().build();
-
-        fileSetter.accept(fileToGet);
-        when(fileServiceMock.getFileByFileEntryId(fileToGet.getId())).thenReturn(serviceSuccess(inputStreamSupplier));
-        when(fileEntryMapperMock.mapToResource(fileToGet)).thenReturn(fileResourceToGet);
-
-        ServiceResult<FileAndContents> result = getFileContentsFn.get();
-        assertTrue(result.isSuccess());
-        assertEquals(fileResourceToGet, result.getSuccessObject().getFileEntry());
-        assertEquals(inputStreamSupplier, result.getSuccessObject().getContentsSupplier());
-    }
-
-    private void assertCreateFile(Supplier<FileEntry> fileGetter, BiFunction<FileEntryResource, Supplier<InputStream>, ServiceResult<FileEntryResource>> createFileFn) {
-
-        FileEntryResource fileToCreate = newFileEntryResource().build();
-        Supplier<InputStream> inputStreamSupplier = () -> null;
-
-        FileEntry createdFile = newFileEntry().build();
-        FileEntryResource createdFileResource = newFileEntryResource().build();
-
-        when(fileServiceMock.createFile(fileToCreate, inputStreamSupplier)).thenReturn(serviceSuccess(Pair.of(new File("blah"), createdFile)));
-        when(fileEntryMapperMock.mapToResource(createdFile)).thenReturn(createdFileResource);
-
-        ServiceResult<FileEntryResource> result = createFileFn.apply(fileToCreate, inputStreamSupplier);
-        assertTrue(result.isSuccess());
-        assertEquals(createdFileResource, result.getSuccessObject());
-        assertEquals(createdFile, fileGetter.get());
-    }
-
-    private void assertGetFileDetails(Consumer<FileEntry> fileSetter, Supplier<ServiceResult<FileEntryResource>> getFileDetailsFn) {
-        FileEntry fileToGet = newFileEntry().build();
-
-        FileEntryResource fileResourceToGet = newFileEntryResource().build();
-
-        fileSetter.accept(fileToGet);
-        when(fileEntryMapperMock.mapToResource(fileToGet)).thenReturn(fileResourceToGet);
-
-        ServiceResult<FileEntryResource> result = getFileDetailsFn.get();
-        assertTrue(result.isSuccess());
-        assertEquals(fileResourceToGet, result.getSuccessObject());
-    }
-
     private void assertDeleteFile(Supplier<FileEntry> fileGetter, Consumer<FileEntry> fileSetter, Supplier<ServiceResult<Void>> deleteFileFn) {
         FileEntry fileToDelete = newFileEntry().build();
 
@@ -1424,23 +1339,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         assertNull(fileGetter.get());
 
         verify(fileServiceMock).deleteFile(fileToDelete.getId());
-    }
-
-    private void assertUpdateFile(Supplier<FileEntry> fileGetter, BiFunction<FileEntryResource, Supplier<InputStream>, ServiceResult<Void>> updateFileFn) {
-        FileEntryResource fileToUpdate = newFileEntryResource().build();
-        Supplier<InputStream> inputStreamSupplier = () -> null;
-
-        FileEntry updatedFile = newFileEntry().build();
-        FileEntryResource updatedFileResource = newFileEntryResource().build();
-
-        when(fileServiceMock.updateFile(fileToUpdate, inputStreamSupplier)).thenReturn(serviceSuccess(Pair.of(new File("blah"), updatedFile)));
-        when(fileEntryMapperMock.mapToResource(updatedFile)).thenReturn(updatedFileResource);
-
-        ServiceResult<Void> result = updateFileFn.apply(fileToUpdate, inputStreamSupplier);
-        assertTrue(result.isSuccess());
-        assertEquals(updatedFile, fileGetter.get());
-
-        verify(fileServiceMock).updateFile(fileToUpdate, inputStreamSupplier);
     }
 
     private Project createProjectExpectationsFromOriginalApplication(Application application) {

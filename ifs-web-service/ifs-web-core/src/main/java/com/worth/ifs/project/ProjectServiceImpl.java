@@ -1,9 +1,5 @@
 package com.worth.ifs.project;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.application.service.ApplicationService;
@@ -16,20 +12,20 @@ import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectTeamStatusResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
-import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.project.service.ProjectRestService;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.service.OrganisationRestService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+
 import static com.worth.ifs.commons.rest.RestResult.aggregate;
 import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
-import static com.worth.ifs.util.CollectionFunctions.removeDuplicates;
-import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static com.worth.ifs.util.CollectionFunctions.*;
 
 /**
  * A service for dealing with ProjectResources via the appropriate Rest services
@@ -223,6 +219,46 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public ProjectTeamStatusResource getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId){
         return projectRestService.getProjectTeamStatus(projectId, filterByUserId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public Optional<ByteArrayResource> getSignedGrantOfferLetterFile(Long projectId) {
+        return projectRestService.getSignedGrantOfferLetterFile(projectId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public Optional<FileEntryResource> getSignedGrantOfferLetterFileDetails(Long projectId) {
+        return projectRestService.getSignedGrantOfferLetterFileDetails(projectId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public Optional<ByteArrayResource> getAdditionalContractFile(Long projectId) {
+        return projectRestService.getAdditionalContractFile(projectId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public Optional<FileEntryResource> getAdditionalContractFileDetails(Long projectId) {
+        return projectRestService.getAdditionalContractFileDetails(projectId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public Optional<ByteArrayResource> getGeneratedGrantOfferFile(Long projectId) {
+        return projectRestService.getGrantOfferFile(projectId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public Optional<FileEntryResource> getGeneratedGrantOfferFileDetails(Long projectId) {
+        return projectRestService.getGrantOfferFileDetails(projectId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public ServiceResult<FileEntryResource> addSignedGrantOfferLetter(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes) {
+        return projectRestService.addSignedGrantOfferLetterFile(projectId, contentType, fileSize, originalFilename, bytes).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<FileEntryResource> addGeneratedGrantOfferLetter(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes) {
+        return projectRestService.addGrantOfferLetterFile(projectId, contentType, fileSize, originalFilename, bytes).toServiceResult();
     }
 
     private List<ProjectUserResource> getProjectUsersWithPartnerRole(Long projectId) {
