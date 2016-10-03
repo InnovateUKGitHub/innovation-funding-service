@@ -38,20 +38,17 @@ public class TotalProjectSpendProfileController {
     @Autowired
     private SpendProfileTableCalculator spendProfileTableCalculator;
 
-    @PreAuthorize("hasPermission(#projectId, 'PROJECT_MANAGER_PERMISSIONS')")
     @RequestMapping(method = GET)
     public String totals(Model model, @PathVariable("projectId") final Long projectId) {
         model.addAttribute("model", buildTotalViewModel(projectId));
         return BASE_DIR + "/spend-profile-totals";
     }
 
-    //TODO permissions
     @RequestMapping(value="confirmation", method = GET)
     public String confirmation(@PathVariable("projectId") final Long projectId) {
         return BASE_DIR + "/spend-profile-total-confirmation";
     }
 
-    //TODO permissions
     @RequestMapping(method = POST)
     public String submitForReview(@PathVariable("projectId") final Long projectId) {
         projectFinanceService.completeSpendProfilesReview(projectId);
