@@ -17,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -115,6 +116,7 @@ public class AssessorRegistrationController {
                                 @PathVariable("inviteHash") String inviteHash,
                                 HttpServletRequest request, HttpServletResponse response) {
         addAddressOptions(registrationForm);
+        registrationForm.getAddressForm().setTriedToSearch(true);
 
         return doViewYourDetails(model, inviteHash);
     }
@@ -130,10 +132,15 @@ public class AssessorRegistrationController {
         return doViewYourDetails(model, inviteHash);
     }
 
-    private void validateAddressForm(AssessorRegistrationForm assessorRegistrationForm, BindingResult addressBindingResult) {
+    private void validateAddressForm(AssessorRegistrationForm assessorRegistrationForm, BindingResult bindingResult) {
         if(postcodeIsSelected(assessorRegistrationForm)) {
-            validator.validate(assessorRegistrationForm.getAddressForm().getSelectedPostcode(), addressBindingResult);
+            validator.validate(assessorRegistrationForm.getAddressForm().getSelectedPostcode(), bindingResult);
         }
+        else {
+            FieldError fieldError = new FieldError("address","address","Please enter your address details");
+            bindingResult.addError(fieldError);
+        }
+        assessorRegistrationForm.getAddressForm().setTriedToSave(true);
     }
 
     private boolean postcodeIsSelected(AssessorRegistrationForm assessorRegistrationForm) {
@@ -164,6 +171,7 @@ public class AssessorRegistrationController {
             }
             catch(IndexOutOfBoundsException e) { }
         }
+
     }
 
     private List<AddressResource> searchPostcode(String postcodeInput) {

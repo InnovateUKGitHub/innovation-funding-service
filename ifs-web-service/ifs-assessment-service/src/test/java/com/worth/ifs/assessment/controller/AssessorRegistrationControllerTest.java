@@ -10,6 +10,7 @@ import com.worth.ifs.assessment.service.AssessorService;
 import com.worth.ifs.assessment.viewmodel.AssessorRegistrationBecomeAnAssessorViewModel;
 import com.worth.ifs.assessment.viewmodel.AssessorRegistrationYourDetailsViewModel;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.form.AddressForm;
 import com.worth.ifs.invite.resource.CompetitionInviteResource;
 import com.worth.ifs.invite.service.EthnicityRestService;
 import com.worth.ifs.user.resource.Disability;
@@ -36,6 +37,7 @@ import static com.worth.ifs.user.builder.EthnicityResourceBuilder.newEthnicityRe
 import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
@@ -110,6 +112,10 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
         Disability disability = Disability.NO;
         String password = "P@ssword1234";
 
+        String addressLine1 = "address1";
+        String town = "town";
+        String postcode = "postcode";
+
         AssessorRegistrationForm expectedForm = new AssessorRegistrationForm();
         expectedForm.setTitle(title);
         expectedForm.setFirstName(firstName);
@@ -121,7 +127,19 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
         expectedForm.setPassword(password);
         expectedForm.setRetypedPassword(password);
 
+        AddressForm addressForm = expectedForm.getAddressForm();
+
+        AddressResource addressResource = new AddressResource();
+
+        addressResource.setAddressLine1(addressLine1);
+        addressResource.setPostcode(postcode);
+        addressResource.setTown(town);
+
+        addressForm.setSelectedPostcode(addressResource);
+        addressForm.setTriedToSave(true);
+
         String inviteHash = "hash";
+
         CompetitionInviteResource competitionInviteResource = newCompetitionInviteResource().withEmail("test@test.com").build();
 
         when(competitionInviteRestService.getInvite(inviteHash)).thenReturn(RestResult.restSuccess(competitionInviteResource));
@@ -138,7 +156,10 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
                 .param("ethnicity", ethnicity.getId().toString())
                 .param("disability", disability.name())
                 .param("password", password)
-                .param("retypedPassword", password))
+                .param("retypedPassword", password)
+                .param("addressForm.selectedPostcode.addressLine1", addressLine1)
+                .param("addressForm.selectedPostcode.town", town)
+                .param("addressForm.selectedPostcode.postcode", postcode))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(model().attribute("form", expectedForm))
                 .andExpect(redirectedUrl("/registration/skills"));
@@ -193,11 +214,12 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
 
         assertTrue(bindingResult.hasErrors());
         assertEquals(0, bindingResult.getGlobalErrorCount());
-        assertEquals(2, bindingResult.getFieldErrorCount());
+        assertEquals(3, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("firstName"));
         assertTrue(bindingResult.hasFieldErrors("lastName"));
         assertEquals("Please enter a first name", bindingResult.getFieldError("firstName").getDefaultMessage());
         assertEquals("Please enter a last name", bindingResult.getFieldError("lastName").getDefaultMessage());
+        assertEquals("Please enter your address details", bindingResult.getFieldError("address").getDefaultMessage());
     }
 
     @Test
