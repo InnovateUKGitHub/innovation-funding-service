@@ -7,7 +7,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import java.util.List;
 
 /**
- * TODO
+ * View model backing the internal members view of the Spend Profile approval page
  */
 public class ProjectSpendProfileApprovalViewModel {
 

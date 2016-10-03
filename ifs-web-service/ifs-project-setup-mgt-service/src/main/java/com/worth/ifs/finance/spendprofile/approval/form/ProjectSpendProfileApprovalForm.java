@@ -3,7 +3,7 @@ package com.worth.ifs.finance.spendprofile.approval.form;
 import com.worth.ifs.controller.BaseBindingResultTarget;
 
 /**
- * TODO
+ * Empty form to handle validation errors
  */
 public class ProjectSpendProfileApprovalForm extends BaseBindingResultTarget {
 
