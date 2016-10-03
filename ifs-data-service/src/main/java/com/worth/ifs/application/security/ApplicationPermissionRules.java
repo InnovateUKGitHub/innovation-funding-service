@@ -70,6 +70,13 @@ public class ApplicationPermissionRules extends BasePermissionRules {
         return isAssessor(applicationResource.getId(), user);
     }
 
+    @PermissionRule(value = "READ_FINANCE_TOTALS",
+            description = "A project finance user can see application finances for organisations",
+            additionalComments = "This rule secures ApplicationResource which can contain more information than this rule should allow. Consider a new cut down object based on ApplicationResource")
+    public boolean projectFinanceUserCanSeeApplicationFinancesTotals(final ApplicationResource applicationResource, final UserResource user) {
+        return isProjectFinanceUser(user);
+    }
+
     @PermissionRule(value = "APPLICATION_SUBMITTED_NOTIFICATION", description = "A lead applicant can send the notification of a submitted application")
     public boolean aLeadApplicantCanSendApplicationSubmittedNotification(final ApplicationResource applicationResource, final UserResource user) {
         final boolean isLeadApplicant = isLeadApplicant(applicationResource.getId(), user);

@@ -158,7 +158,7 @@ public class FinanceCheckController {
         }
         financeCheckService.update(currentFinanceCheckResource);
 
-        return redirectToFinanceCheckForm(projectId, organisationId);
+        return redirectToViewSpendProfile(projectId);
     }
 
     private String doViewSpendProfileSummary(Long projectId, Model model, ProjectSpendProfileForm form) {
@@ -233,6 +233,6 @@ public class FinanceCheckController {
     }
 
     private String redirectToViewSpendProfile(Long projectId) {
-        return "redirect:/project/" + projectId + "/financecheck/summary";
+        return "redirect:/project/" + projectId + "/finance-check";
     }
 }
