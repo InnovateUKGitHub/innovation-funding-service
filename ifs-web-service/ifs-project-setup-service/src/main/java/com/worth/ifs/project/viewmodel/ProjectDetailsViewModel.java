@@ -101,4 +101,12 @@ public class ProjectDetailsViewModel {
     public boolean isFinanceContactSubmitted() {
         return isFinanceContactSubmitted;
     }
+
+    public boolean isSubmitProjectDetailsAllowed() {
+        return userLeadPartner && submissionAllowed && !projectDetailsSubmitted;
+    }
+
+    public boolean isAnySectionIncomplete() {
+        return userLeadPartner && !submissionAllowed && !projectDetailsSubmitted;
+    }
 }
