@@ -153,6 +153,11 @@ public class ProjectFinanceServiceSecurityTest extends BaseServiceSecurityTest<P
         public ServiceResult<Void> markSpendProfile(ProjectOrganisationCompositeId projectOrganisationCompositeId, Boolean complete) {
             return null;
         }
+
+        @Override
+        public ServiceResult<Void> completeSpendProfilesReview(Long projectId) {
+            return null;
+        }
     }
 }
 

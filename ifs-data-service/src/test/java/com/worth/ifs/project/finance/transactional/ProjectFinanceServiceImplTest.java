@@ -282,7 +282,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         List<Cost> spendProfileFigures = buildCostsForCategories(Arrays.asList("Labour", "Materials", "Other costs"), 3);
 
-        SpendProfile spendProfileInDB = new SpendProfile(null, null, null, Collections.emptyList(), spendProfileFigures, false);
+        SpendProfile spendProfileInDB = new SpendProfile(null, new Project(), null, Collections.emptyList(), spendProfileFigures, false);
 
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(spendProfileInDB);
 
@@ -390,6 +390,19 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         assertTrue(result.isSuccess());
 
+    }
+
+    @Test
+    public void testCompleteSpendProfilesReview() {
+        Long projectId = 1L;
+        Project projectInDb = new Project();
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDb);
+
+        ServiceResult<Void> result = service.completeSpendProfilesReview(projectId);
+
+        verify(projectRepositoryMock).save(projectInDb);
+        assertTrue(result.isSuccess());
+        assertTrue(projectInDb.getSpendProfileSubmittedDate() != null);
     }
 
     private SpendProfile createSpendProfile(Project projectInDB, Map<String, BigDecimal> eligibleCostsMap, Map<String, List<BigDecimal>> spendProfileCostsMap) {

@@ -8,10 +8,7 @@ import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.finance.domain.*;
 import com.worth.ifs.project.finance.repository.SpendProfileRepository;
 import com.worth.ifs.project.repository.ProjectRepository;
-import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
-import com.worth.ifs.project.resource.ProjectUserResource;
-import com.worth.ifs.project.resource.SpendProfileResource;
-import com.worth.ifs.project.resource.SpendProfileTableResource;
+import com.worth.ifs.project.resource.*;
 import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.Organisation;
@@ -21,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -125,6 +123,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
                 .andOnSuccessReturn(profile -> {
             SpendProfileResource resource = new SpendProfileResource();
             resource.setId(profile.getId());
+            resource.setMarkedAsComplete(profile.isMarkedAsComplete());
             return resource;
         });
     }
@@ -143,6 +142,15 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         } else {
             return saveSpendProfileData(projectOrganisationCompositeId, table, complete);
         }
+    }
+
+    @Override
+    public ServiceResult<Void> completeSpendProfilesReview(Long projectId) {
+        return getProject(projectId).andOnSuccess(project -> {
+            project.setSpendProfileSubmittedDate(LocalDateTime.now());
+            projectRepository.save(project);
+            return serviceSuccess();
+        });
     }
 
     private ServiceResult<Void> validateSpendProfileCosts(SpendProfileTableResource table) {
@@ -211,6 +219,10 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
         SpendProfile spendProfile = spendProfileRepository.findOneByProjectIdAndOrganisationId(
                 projectOrganisationCompositeId.getProjectId(), projectOrganisationCompositeId.getOrganisationId());
+
+        if(spendProfile.getProject().getSpendProfileSubmittedDate() != null) {
+            return serviceFailure(new Error(SPEND_PROFILE_HAS_BEEN_SUBMITTED_AND_CANNOT_BE_EDITED, HttpStatus.BAD_REQUEST));
+        }
 
         spendProfile.setMarkedAsComplete(markAsComplete);
 

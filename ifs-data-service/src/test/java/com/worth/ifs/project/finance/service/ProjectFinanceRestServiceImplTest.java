@@ -58,4 +58,18 @@ public class ProjectFinanceRestServiceImplTest extends BaseRestServiceUnitTest<P
 
         assertTrue(result.isSuccess());
     }
+
+
+    @Test
+    public void testCompleteSpendProfilesReview() {
+
+        Long projectId = 1L;
+
+        setupPostWithRestResultExpectations(projectFinanceRestURL + "/" + projectId + "/complete-spend-profiles-review/",
+                OK);
+
+        RestResult<Void> result = service.completeSpendProfilesReview(projectId);
+
+        assertTrue(result.isSuccess());
+    }
 }

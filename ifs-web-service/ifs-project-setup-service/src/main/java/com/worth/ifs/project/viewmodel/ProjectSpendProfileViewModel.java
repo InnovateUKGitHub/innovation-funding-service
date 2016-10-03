@@ -29,11 +29,12 @@ public class ProjectSpendProfileViewModel {
     private List<BigDecimal> totalForEachMonth;
     private BigDecimal totalOfAllActualTotals;
     private BigDecimal totalOfAllEligibleTotals;
+    private boolean submitted;
 
     public ProjectSpendProfileViewModel(ProjectResource project, Long organisationId, SpendProfileTableResource table,
                                         SpendProfileSummaryModel summary, Boolean markedAsComplete,
                                         Map<String, BigDecimal> categoryToActualTotal, List<BigDecimal> totalForEachMonth,
-                                        BigDecimal totalOfAllActualTotals, BigDecimal totalOfAllEligibleTotals) {
+                                        BigDecimal totalOfAllActualTotals, BigDecimal totalOfAllEligibleTotals, boolean submitted) {
         this.projectId = project.getId();
         this.organisationId = organisationId;
         this.projectName = project.getName();
@@ -46,6 +47,7 @@ public class ProjectSpendProfileViewModel {
         this.totalForEachMonth = totalForEachMonth;
         this.totalOfAllActualTotals = totalOfAllActualTotals;
         this.totalOfAllEligibleTotals = totalOfAllEligibleTotals;
+        this.submitted = submitted;
     }
 
     public Long getProjectId() {
@@ -156,66 +158,77 @@ public class ProjectSpendProfileViewModel {
         this.totalOfAllEligibleTotals = totalOfAllEligibleTotals;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-
-        if (o == null || getClass() != o.getClass()) return false;
-
-        ProjectSpendProfileViewModel viewModel = (ProjectSpendProfileViewModel) o;
-
-        return new EqualsBuilder()
-                .append(objectErrors, viewModel.objectErrors)
-                .append(projectId, viewModel.projectId)
-                .append(organisationId, viewModel.organisationId)
-                .append(projectName, viewModel.projectName)
-                .append(targetProjectStartDate, viewModel.targetProjectStartDate)
-                .append(durationInMonths, viewModel.durationInMonths)
-                .append(summary, viewModel.summary)
-                .append(table, viewModel.table)
-                .append(markedAsComplete, viewModel.markedAsComplete)
-                .append(categoryToActualTotal, viewModel.categoryToActualTotal)
-                .append(totalForEachMonth, viewModel.totalForEachMonth)
-                .append(totalOfAllActualTotals, viewModel.totalOfAllActualTotals)
-                .append(totalOfAllEligibleTotals, viewModel.totalOfAllEligibleTotals)
-                .isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(objectErrors)
-                .append(projectId)
-                .append(organisationId)
-                .append(projectName)
-                .append(targetProjectStartDate)
-                .append(durationInMonths)
-                .append(summary)
-                .append(table)
-                .append(markedAsComplete)
-                .append(categoryToActualTotal)
-                .append(totalForEachMonth)
-                .append(totalOfAllActualTotals)
-                .append(totalOfAllEligibleTotals)
-                .toHashCode();
+    public boolean isSubmitted() {
+        return submitted;
     }
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
-                .append("objectErrors", objectErrors)
-                .append("projectId", projectId)
-                .append("organisationId", organisationId)
-                .append("projectName", projectName)
-                .append("targetProjectStartDate", targetProjectStartDate)
-                .append("durationInMonths", durationInMonths)
-                .append("summary", summary)
-                .append("table", table)
-                .append("markedAsComplete", markedAsComplete)
-                .append("categoryToActualTotal", categoryToActualTotal)
-                .append("totalForEachMonth", totalForEachMonth)
-                .append("totalOfAllActualTotals", totalOfAllActualTotals)
-                .append("totalOfAllEligibleTotals", totalOfAllEligibleTotals)
-                .toString();
+        return "ProjectSpendProfileViewModel{" +
+                "objectErrors=" + objectErrors +
+                ", projectId=" + projectId +
+                ", organisationId=" + organisationId +
+                ", projectName='" + projectName + '\'' +
+                ", targetProjectStartDate=" + targetProjectStartDate +
+                ", durationInMonths=" + durationInMonths +
+                ", summary=" + summary +
+                ", table=" + table +
+                ", markedAsComplete=" + markedAsComplete +
+                ", categoryToActualTotal=" + categoryToActualTotal +
+                ", totalForEachMonth=" + totalForEachMonth +
+                ", totalOfAllActualTotals=" + totalOfAllActualTotals +
+                ", totalOfAllEligibleTotals=" + totalOfAllEligibleTotals +
+                ", submitted=" + submitted +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ProjectSpendProfileViewModel that = (ProjectSpendProfileViewModel) o;
+
+        if (submitted != that.submitted) return false;
+        if (objectErrors != null ? !objectErrors.equals(that.objectErrors) : that.objectErrors != null) return false;
+        if (projectId != null ? !projectId.equals(that.projectId) : that.projectId != null) return false;
+        if (organisationId != null ? !organisationId.equals(that.organisationId) : that.organisationId != null)
+            return false;
+        if (projectName != null ? !projectName.equals(that.projectName) : that.projectName != null) return false;
+        if (targetProjectStartDate != null ? !targetProjectStartDate.equals(that.targetProjectStartDate) : that.targetProjectStartDate != null)
+            return false;
+        if (durationInMonths != null ? !durationInMonths.equals(that.durationInMonths) : that.durationInMonths != null)
+            return false;
+        if (summary != null ? !summary.equals(that.summary) : that.summary != null) return false;
+        if (table != null ? !table.equals(that.table) : that.table != null) return false;
+        if (markedAsComplete != null ? !markedAsComplete.equals(that.markedAsComplete) : that.markedAsComplete != null)
+            return false;
+        if (categoryToActualTotal != null ? !categoryToActualTotal.equals(that.categoryToActualTotal) : that.categoryToActualTotal != null)
+            return false;
+        if (totalForEachMonth != null ? !totalForEachMonth.equals(that.totalForEachMonth) : that.totalForEachMonth != null)
+            return false;
+        if (totalOfAllActualTotals != null ? !totalOfAllActualTotals.equals(that.totalOfAllActualTotals) : that.totalOfAllActualTotals != null)
+            return false;
+        return totalOfAllEligibleTotals != null ? totalOfAllEligibleTotals.equals(that.totalOfAllEligibleTotals) : that.totalOfAllEligibleTotals == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = objectErrors != null ? objectErrors.hashCode() : 0;
+        result = 31 * result + (projectId != null ? projectId.hashCode() : 0);
+        result = 31 * result + (organisationId != null ? organisationId.hashCode() : 0);
+        result = 31 * result + (projectName != null ? projectName.hashCode() : 0);
+        result = 31 * result + (targetProjectStartDate != null ? targetProjectStartDate.hashCode() : 0);
+        result = 31 * result + (durationInMonths != null ? durationInMonths.hashCode() : 0);
+        result = 31 * result + (summary != null ? summary.hashCode() : 0);
+        result = 31 * result + (table != null ? table.hashCode() : 0);
+        result = 31 * result + (markedAsComplete != null ? markedAsComplete.hashCode() : 0);
+        result = 31 * result + (categoryToActualTotal != null ? categoryToActualTotal.hashCode() : 0);
+        result = 31 * result + (totalForEachMonth != null ? totalForEachMonth.hashCode() : 0);
+        result = 31 * result + (totalOfAllActualTotals != null ? totalOfAllActualTotals.hashCode() : 0);
+        result = 31 * result + (totalOfAllEligibleTotals != null ? totalOfAllEligibleTotals.hashCode() : 0);
+        result = 31 * result + (submitted ? 1 : 0);
+        return result;
     }
 }

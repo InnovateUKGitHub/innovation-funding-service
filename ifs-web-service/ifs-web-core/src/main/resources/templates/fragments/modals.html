@@ -301,3 +301,18 @@
         </div>
     </div>
 </div>
+
+<!-- Confirm submit of all spend profiles. -->
+<div th:fragment="modal-confirm-spend-profile-totals (projectId)">
+    <form  th:action="@{/project/{id}/spend-profile/total(id=${projectId})}" method="POST" >
+        <div class="modal-confirm-spend-profile-totals" role="dialog" aria-hidden="true">
+            <div th:include="fragments/modals :: close-button" th:remove="tag"/>
+            <h2 class="heading-medium no-margin">Submit project spend profile</h2>
+            <p>The project spend profile will be submitted to both Innovate UK and the Monitoring Officer assigned to this project. This will be used for reference and the base for progress.</p>
+            <div>
+                <input type="submit" tabindex="0" class="button large" value="Submit"/>
+                <button type="button" tabindex="1" class="js-close button buttonlink large">Cancel</button>
+            </div>
+        </div>
+    </form>
+</div>
