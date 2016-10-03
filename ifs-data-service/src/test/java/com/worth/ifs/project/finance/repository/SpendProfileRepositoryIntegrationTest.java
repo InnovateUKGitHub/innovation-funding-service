@@ -58,6 +58,7 @@ public class SpendProfileRepositoryIntegrationTest extends BaseRepositoryIntegra
         Application application = applicationRepository.findOne(1L);
 
         Project project = new Project(null, application, null, null, null, "A name", null);
+
         projectRepository.save(project);
 
         Organisation organisation = organisationRepository.findOne(1L);
@@ -101,6 +102,7 @@ public class SpendProfileRepositoryIntegrationTest extends BaseRepositoryIntegra
         Application application = applicationRepository.findOne(1L);
 
         Project project = new Project(null, application, null, null, null, "A name", null);
+
         projectRepository.save(project);
 
         Organisation organisation = organisationRepository.findOne(1L);
@@ -169,6 +171,7 @@ public class SpendProfileRepositoryIntegrationTest extends BaseRepositoryIntegra
         Application application = applicationRepository.findOne(1L);
 
         Project project = new Project(null, application, null, null, null, "A name", null);
+
         projectRepository.save(project);
 
         Organisation organisation = organisationRepository.findOne(1L);
@@ -236,6 +239,7 @@ public class SpendProfileRepositoryIntegrationTest extends BaseRepositoryIntegra
         Application application = applicationRepository.findOne(1L);
 
         Project project = new Project(null, application, null, null, null, "A name", null);
+
         projectRepository.save(project);
 
         Organisation organisation = organisationRepository.findOne(1L);

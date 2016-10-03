@@ -32,7 +32,9 @@
         <li>to accept the terms and conditions for assessing Innovate UK</li>
     </ul>
 
-	<a href="/prototypes/1176-assessor-create-acc" class="button button-large">Create account</a>
+	<a th:href="${(param.version != null and param.version[0] == 'v2' ? '/prototypes/1176-assessor-create-acc?version=v2': '/prototypes/1176-assessor-create-acc')}" class="button button-large">Create account</a>
+
+
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />

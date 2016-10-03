@@ -138,11 +138,11 @@ Initial details client-side validations
     When the user selects the option from the drop-down menu    Competition Executive Two    id=executiveUserId
     Then The user should not see the text in the page    Please select a competition executive    #Couldn't use this keyword : "Then the user should not see the error any more" . Because there is not any error in the page
     ##    State aid value is tested in 'Initial details correct state aid status'
-    [Teardown]    Wait for autosave
 
 Initial details: Autosave
     [Documentation]    INFUND-3001
-    [Tags]
+    [Tags]    Pending
+    # TODO pending due Ito NFUND-5367
     When the user clicks the button/link    link=Competition set up
     and the user clicks the button/link    link=Initial Details
     Then the user should see the correct values in the initial details form
@@ -402,6 +402,8 @@ Milestones: Page should contain the correct fields
 
 Milestones: Server side validations
     [Documentation]    INFUND-2993
+    [Tags]    Pending
+    #TODO INFUND-3873
     When the user fills the milestones with invalid data
     And the users waits until the page is autosaved
     And the user clicks the button/link    jQuery=button:contains(Done)
@@ -518,8 +520,8 @@ the user should not see the error any more
     [Arguments]    ${ERROR_TEXT}
     run keyword and ignore error    mouse out    css=input
     Focus    jQuery=.button:contains("Done")
-    sleep    200ms
     Wait Until Element Does Not Contain    css=.error-message    ${ERROR_TEXT}
+    sleep    500ms
     Wait for autosave
 
 the total should be correct
@@ -652,7 +654,7 @@ the user fills the milestones with valid data
     input text    name=milestoneEntries[NOTIFICATIONS].year    2019
     input text    name=milestoneEntries[RELEASE_FEEDBACK].day    22
     input text    name=milestoneEntries[RELEASE_FEEDBACK].month    1
-    input text    name=milestoneEntries[RELEASE_FEEDBACK].year    2020
+    input text    name=milestoneEntries[RELEASE_FEEDBACK].year    2019
     Focus    jQuery=button:contains(Done)
     sleep    500ms
 
@@ -730,4 +732,5 @@ the resubmission should not have a default selection
 
 the users waits until the page is autosaved
     Focus    jQuery=button:contains(Done)
+    sleep    1s
     Wait For Autosave
