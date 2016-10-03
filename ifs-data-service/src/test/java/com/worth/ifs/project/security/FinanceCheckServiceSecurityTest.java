@@ -24,55 +24,40 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
 
     @Test
     public void testGetFinanceCheck() {
-        asList(UserRoleType.values()).forEach(role -> {
-            RoleResource roleResource = newRoleResource().withType(role).build();
-            UserResource userWithRole = newUserResource().withRolesGlobal(singletonList(roleResource)).build();
-            setLoggedInUser(userWithRole);
-            if (PROJECT_FINANCE.equals(role)) {
-                classUnderTest.getByProjectAndOrganisation(new ProjectOrganisationCompositeId(1L, 2L));
-            } else {
-                try {
-                    classUnderTest.getByProjectAndOrganisation(new ProjectOrganisationCompositeId(1L, 2L));
-                    fail("Should have thrown an AccessDeniedException for any non project finance users");
-                } catch (AccessDeniedException e) {
-                    // expected behaviour
-                }
-            }
-        });
+        assertRolesCanPerform(() -> classUnderTest.getByProjectAndOrganisation(new ProjectOrganisationCompositeId(1L, 2L)), PROJECT_FINANCE);
     }
 
 
     @Test
     public void testSaveFinanceCheck() {
-        asList(UserRoleType.values()).forEach(role -> {
-            RoleResource roleResource = newRoleResource().withType(role).build();
-            UserResource userWithRole = newUserResource().withRolesGlobal(singletonList(roleResource)).build();
-            setLoggedInUser(userWithRole);
-            if (PROJECT_FINANCE.equals(role)) {
-                classUnderTest.save(null);
-            } else {
-                try {
-                    classUnderTest.save(null);
-                    fail("Should have thrown an AccessDeniedException for any non project finance users");
-                } catch (AccessDeniedException e) {
-                    // expected behaviour
-                }
-            }
-        });
+        assertRolesCanPerform(() -> classUnderTest.save(null), PROJECT_FINANCE);
     }
 
     @Test
     public void testGenerateFinanceCheck() {
+        assertInternalRolesCanPerform(() -> classUnderTest.generate(new ProjectOrganisationCompositeId(1L, 2L)));
+    }
+
+    @Test
+    public void testApproveFinanceCheck() {
+        assertRolesCanPerform(() -> classUnderTest.approve(1L, 2L), PROJECT_FINANCE);
+    }
+
+    private void assertInternalRolesCanPerform(Runnable actionFn) {
+        assertRolesCanPerform(actionFn, COMP_ADMIN, PROJECT_FINANCE);
+    }
+
+    private void assertRolesCanPerform(Runnable actionFn, UserRoleType... supportedRoles) {
         asList(UserRoleType.values()).forEach(role -> {
             RoleResource roleResource = newRoleResource().withType(role).build();
             UserResource userWithRole = newUserResource().withRolesGlobal(singletonList(roleResource)).build();
             setLoggedInUser(userWithRole);
-            if (PROJECT_FINANCE.equals(role) || COMP_ADMIN.equals(role)) {
-                classUnderTest.generate(new ProjectOrganisationCompositeId(1L, 2L));
+            if (asList(supportedRoles).contains(role)) {
+                actionFn.run();
             } else {
                 try {
-                    classUnderTest.generate(new ProjectOrganisationCompositeId(1L, 2L));
-                    fail("Should have thrown an AccessDeniedException for any non project finance or comp admin users");
+                    actionFn.run();
+                    fail("Should have thrown an AccessDeniedException for any non " + supportedRoles + " users");
                 } catch (AccessDeniedException e) {
                     // expected behaviour
                 }

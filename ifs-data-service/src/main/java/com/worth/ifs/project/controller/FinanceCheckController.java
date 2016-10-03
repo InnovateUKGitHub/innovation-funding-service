@@ -38,7 +38,7 @@ public class FinanceCheckController {
         return financeCheckService.save(financeCheckResource).toPostResponse();
     }
 
-    @RequestMapping(value = "/{projectId}" + FINANCE_CHECK_ORGANISATION_PATH + "/{organisationId}" + FINANCE_CHECK_PATH, method = POST)
+    @RequestMapping(value = "/{projectId}" + FINANCE_CHECK_ORGANISATION_PATH + "/{organisationId}" + FINANCE_CHECK_PATH + "/approve", method = POST)
     public RestResult<Void> approveFinanceCheck(Long projectId, Long organisationId) {
         return financeCheckService.approve(projectId, organisationId).toPostResponse();
     }
