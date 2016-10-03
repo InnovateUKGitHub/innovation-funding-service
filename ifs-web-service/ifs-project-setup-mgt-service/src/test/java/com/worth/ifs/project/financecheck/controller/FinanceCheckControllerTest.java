@@ -130,9 +130,9 @@ public class FinanceCheckControllerTest extends BaseControllerMockMVCTest<Financ
                 thenReturn(applicationFinanceResourceList);
 
         // Expected Results
-        List<ProjectFinanceCheckSummaryViewModel.SpendProfileOrganisationRow> expectedOrganisationRows = mapWithIndex(organisationResourceList, (i, org) ->
+        List<ProjectFinanceCheckSummaryViewModel.FinanceCheckOrganisationRow> expectedOrganisationRows = mapWithIndex(organisationResourceList, (i, org) ->
 
-                new ProjectFinanceCheckSummaryViewModel.SpendProfileOrganisationRow(
+                new ProjectFinanceCheckSummaryViewModel.FinanceCheckOrganisationRow(
                         org.getId(), org.getName(),
                         getEnumForIndex(ProjectFinanceCheckSummaryViewModel.Viability.class, i),
                         getEnumForIndex(ProjectFinanceCheckSummaryViewModel.RagStatus.class, i),

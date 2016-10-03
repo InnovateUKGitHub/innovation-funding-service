@@ -184,9 +184,9 @@ public class FinanceCheckController {
 
         List<ApplicationFinanceResource> applicationFinanceResourceList = financeService.getApplicationFinanceTotals(application.getId());
 
-        List<ProjectFinanceCheckSummaryViewModel.SpendProfileOrganisationRow> organisationRows = mapWithIndex(partnerOrganisations, (i, org) ->
+        List<ProjectFinanceCheckSummaryViewModel.FinanceCheckOrganisationRow> organisationRows = mapWithIndex(partnerOrganisations, (i, org) ->
 
-                new ProjectFinanceCheckSummaryViewModel.SpendProfileOrganisationRow(
+                new ProjectFinanceCheckSummaryViewModel.FinanceCheckOrganisationRow(
                         org.getId(), org.getName(),
                         getEnumForIndex(ProjectFinanceCheckSummaryViewModel.Viability.class, i),
                         getEnumForIndex(ProjectFinanceCheckSummaryViewModel.RagStatus.class, i),

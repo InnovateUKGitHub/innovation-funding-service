@@ -34,7 +34,7 @@ public class ProjectFinanceCheckSummaryViewModel {
         GREEN
     }
 
-    public static class SpendProfileOrganisationRow {
+    public static class FinanceCheckOrganisationRow {
 
         private Long id;
         private String name;
@@ -44,7 +44,7 @@ public class ProjectFinanceCheckSummaryViewModel {
         private RagStatus eligibilityRagStatus;
         private QueriesRaised queriesRaised;
 
-        public SpendProfileOrganisationRow(Long id, String name, Viability viability, RagStatus viabilityRagStatus, Eligibility eligibility, RagStatus eligibilityRagStatus, QueriesRaised queriesRaised) {
+        public FinanceCheckOrganisationRow(Long id, String name, Viability viability, RagStatus viabilityRagStatus, Eligibility eligibility, RagStatus eligibilityRagStatus, QueriesRaised queriesRaised) {
             this.id = id;
             this.name = name;
             this.viability = viability;
@@ -88,7 +88,7 @@ public class ProjectFinanceCheckSummaryViewModel {
 
             if (o == null || getClass() != o.getClass()) return false;
 
-            SpendProfileOrganisationRow that = (SpendProfileOrganisationRow) o;
+            FinanceCheckOrganisationRow that = (FinanceCheckOrganisationRow) o;
 
             return new EqualsBuilder()
                     .append(id, that.id)
@@ -112,7 +112,7 @@ public class ProjectFinanceCheckSummaryViewModel {
 
     private Long projectId;
     private CompetitionSummaryResource competitionSummary;
-    private List<SpendProfileOrganisationRow> partnerOrganisationDetails;
+    private List<FinanceCheckOrganisationRow> partnerOrganisationDetails;
     private LocalDate projectStartDate;
     private int durationInMonths;
     private BigDecimal totalProjectCost;
@@ -123,7 +123,7 @@ public class ProjectFinanceCheckSummaryViewModel {
 
     public ProjectFinanceCheckSummaryViewModel(
             Long projectId, CompetitionSummaryResource competitionSummary,
-            List<SpendProfileOrganisationRow> partnerOrganisationDetails,
+            List<FinanceCheckOrganisationRow> partnerOrganisationDetails,
             LocalDate projectStartDate, int durationInMonths, BigDecimal totalProjectCost, BigDecimal grantAppliedFor,
             BigDecimal otherPublicSectorFunding, BigDecimal totalPercentageGrant, boolean spendProfilesGenerated) {
 
@@ -147,7 +147,7 @@ public class ProjectFinanceCheckSummaryViewModel {
         return competitionSummary;
     }
 
-    public List<SpendProfileOrganisationRow> getPartnerOrganisationDetails() {
+    public List<FinanceCheckOrganisationRow> getPartnerOrganisationDetails() {
         return partnerOrganisationDetails;
     }
 
