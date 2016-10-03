@@ -4,23 +4,48 @@
     <div th:include="fragments/layout :: head" th:with="pageTitle='Finance Checks'" th:remove="tag" />
 </head>
 <body>
+<div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
+
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
 <div th:include="fragments/layout :: global-header" th:remove="tag" />
 
-
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <hr />
-    <div class="success-alert" th:if="${model.approved}" th:text="|The partner finance eligibility has been approved by ${model.approverName}, ${approvalDate}|">
+
+    <div class="success-alert" th:if="${model.approved}" th:text="|The partner finance eligibility has been approved by ${model.approverName}, ${approvalDate}|" />
+
+    <div class="grid-row">
+      <div class="column-two-thirds">
+        <div class="page-title">
+          <p class="subtitle no-margin" th:text="'competitionId : competitionName'" />
+          <h1 class="heading-xlarge">Partner Org Name <small>(Lead Partner status)</small></h1>
+        </div>
+      </div>
+      <div class="column-third alignright extra-margin">
+        <h2 class="bold-small blue-block">Eligibility</h2>
+      </div>
     </div>
+
+    <hr class="no-margin"/>
+
+    <div class="error-summary" aria-hidden="true">
+       <h2 class="heading-medium error-summary-heading">
+          Some of your fields are invalid.
+       </h2>
+       Please review
+       <ul class="error-summary-list">
+           <li th:each="err : ${#fields.allErrors()}" th:text="${err}"></li>
+       </ul>
+   </div>
 
     <form th:object="${form}" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post">
         <h3 class="heading-medium">Finance contact</h3>
-        <p th:text="${model.financeContactName}">Dave Norman <br /><a href="|mailto:${model.financeContactEmail}|" th:text="${model.financeContactEmail}">dave@norman.com</a></p>
+        <p th:text="${model.financeContactName}">Dave Norman <br />
+        <a href="|mailto:${model.financeContactEmail}|" th:text="${model.financeContactEmail}">dave@norman.com</a>
+        </p>
         <th:block th:unless="${model.research}">
             <h3 class="heading-medium">Project costs</h3>
             <p>Please enter final project costs below</p>
-
             <table class="finance-check-form">
                 <thead>
                 <tr>
@@ -29,102 +54,76 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <th scope="col" id="labour">Labour</th>
+                <tr class="form-group-row">
+                    <th scope="row" id="labour">Labour</th>
                     <td class="alignright">
-                        <input type="text" class="form-control alignright" value="" aria-labelledby="project-cost labour" data-required-errormessage="Please enter a labour cost" th:errorclass="field-error" required="required" name="labour-cost" th:field="*{costs[__0__].value}"/>
+                        <input type="number" class="form-control alignright" min="0" aria-labelledby="project-cost labour" data-required-errormessage="Please enter a labour cost" th:errorclass="field-error" required="required" name="costs[0].value" th:value="*{#numbers.formatInteger(costs[__0__].value,1,'NONE')}"/>
                     </td>
                 </tr>
-                <tr>
-                    <th scope="col" id="admin-support-costs">Administration support costs</th>
+                <tr class="form-group-row">
+                    <th scope="row" id="admin-support-costs">Administration support costs</th>
                     <td class="alignright">
-                        <input type="text" class="form-control alignright" aria-labelledby="project-cost admin-support-costs" data-required-errormessage="Please enter a admin support cost" th:errorclass="field-error" required="required" name="admin-support-costs" th:field="*{costs[__1__].value}"/>
+                        <input type="number" class="form-control alignright" min="0" aria-labelledby="project-cost admin-support-costs" data-required-errormessage="Please enter an admin support cost" th:errorclass="field-error" required="required" name="costs[1].value" th:value="*{#numbers.formatInteger(costs[__1__].value,1,'NONE')}"/>
                     </td>
                 </tr>
-                <tr>
-                    <th scope="col" id="materials">Materials</th>
+                <tr class="form-group-row">
+                    <th scope="row" id="materials">Materials</th>
                     <td class="alignright">
-                        <input type="text" class="form-control alignright" aria-labelledby="project-cost materials" data-required-errormessage="Please enter a materials cost" th:errorclass="field-error" required="required" name="materials" th:field="*{costs[__2__].value}"/>
+                        <input type="number" class="form-control alignright" min="0" aria-labelledby="project-cost materials" data-required-errormessage="Please enter a materials cost" th:errorclass="field-error" required="required" name="costs[2].value" th:value="*{#numbers.formatInteger(costs[__2__].value,1,'NONE')}"/>
                     </td>
                 </tr>
-                <tr>
-                    <th scope="col" id="capital-usage">Capital usage</th>
+                <tr class="form-group-row">
+                    <th scope="row" id="capital-usage">Capital usage</th>
                     <td class="alignright">
-                        <input type="text" class="form-control alignright" aria-labelledby="project-cost capital-usage" data-required-errormessage="Please enter a capital usage cost" th:errorclass="field-error" required="required" name="capital-usage" th:field="*{costs[__3__].value}"/>
+                        <input type="number" class="form-control alignright" min="0" aria-labelledby="project-cost capital-usage" data-required-errormessage="Please enter a capital usage cost" th:errorclass="field-error" required="required"  name="costs[3].value" th:value="*{#numbers.formatInteger(costs[__3__].value,1,'NONE')}"/>
                     </td>
                 </tr>
-                <tr>
-                    <th scope="col" id="subcontracting-costs">Subcontracting costs</th>
+                <tr class="form-group-row">
+                    <th scope="row" id="subcontracting-costs">Subcontracting costs</th>
                     <td class="alignright">
-                        <input type="text" class="form-control alignright" aria-labelledby="project-cost subcontracting-costs" data-required-errormessage="Please enter subcontracting cost" th:errorclass="field-error" required="required" name="subcontracting-costs" th:field="*{costs[__4__].value}"/>
+                        <input type="number" class="form-control alignright" min="0" aria-labelledby="project-cost subcontracting-costs" data-required-errormessage="Please enter subcontracting cost" th:errorclass="field-error" required="required"  name="costs[4].value" th:value="*{#numbers.formatInteger(costs[__4__].value,1,'NONE')}" />
                     </td>
                 </tr>
-                <tr>
-                    <th scope="col" id="travel-subsistence">Travel and subsistence</th>
+                <tr class="form-group-row">
+                    <th scope="row" id="travel-subsistence">Travel and subsistence</th>
                     <td class="alignright">
-                        <input type="text" class="form-control alignright" aria-labelledby="project-cost travel-subsistence" data-required-errormessage="Please enter a travel and subsistence cost" th:errorclass="field-error" required="required" name="travel-subsistence" th:field="*{costs[__5__].value}"/>
+                        <input type="number" class="form-control alignright" min="0" aria-labelledby="project-cost travel-subsistence" data-required-errormessage="Please enter a travel and subsistence cost" th:errorclass="field-error" required="required"  name="costs[5].value" th:value="*{#numbers.formatInteger(costs[__5__].value,1,'NONE')}"/>
                     </td>
                 </tr>
-                <tr>
-                    <th scope="col" id="other-costs">Other costs</th>
+                <tr class="form-group-row">
+                    <th scope="row" id="other-costs">Other costs</th>
                     <td class="alignright">
-                        <input type="text" class="form-control alignright" aria-labelledby="project-cost other-costs" data-required-errormessage="Please enter any other cost" th:errorclass="field-error" required="required" name="other-costs" th:field="*{costs[__6__].value}"/>
+                        <input type="number" class="form-control alignright" min="0" aria-labelledby="project-cost other-costs" data-required-errormessage="Please enter any other cost" th:errorclass="field-error" required="required" name="costs[6].value" th:value="*{#numbers.formatInteger(costs[__6__].value,1,'NONE')}"/>
                     </td>
                 </tr>
                 </tbody>
                 <tfoot>
                 <tr>
-                    <th scope="col" class="heading-small">
+                    <th scope="row" class="heading-small">
                         Total project costs
                     </th>
-                    <td class="heading-small alignright"  data-calculation-operations="+" data-calculation-fields=".finance-check-form tbody td:nth-child(2) input" >
-                        &pound;0
+                    <td class="heading-small alignright" data-calculation-operations="+" data-calculation-fields=".finance-check-form tbody input[type='number']" >
+                        &pound; <th:block th:text="${#numbers.formatInteger(form.getTotalCost(),1,'COMMA')}"/>
                     </td>
                 </tr>
                 </tfoot>
             </table>
         </th:block>
 
-        <th:block>
-            <h3 class="heading-medium">Approve eligible costs</h3>
-            <p>After any required alterations have been made, eligible costs should be approved.</p>
-            <p>If changes are made ensure that the applicant has reviewed and understand the changes to their finances before approval.</p>
-
-            <div class="form-group">
-                <label class="block-label" for="costs-reviewed">
-                    <input id="costs-reviewed" value="costs-reviewed" type="checkbox" />
-                    These finances have been reviewed and are eligible for this project
-                </label>
-            </div>
-
-            <button data-js-modal="approve-eligibility-modal" name="approve" id="approve-eligibility" class="button" type="submit" disabled="disabled">Approve eligible costs</button>
-
-            <button data-js-modal="approve-eligibility-modal" name="approve" id="approve-eligibility-2" class="button" type="submit">Approve eligible costs (not disabled)</button>
-
-            <div class="approve-eligibility-modal" role="dialog" aria-hidden="true" style="margin-top: -174px;">
-                <button class="js-close close" aria-label="Close Popup">X</button>
-                <div>
-
-                    <h2 class="heading-medium no-margin">Approve eligible costs</h2>
-
-                    <p>This partner will now be marked as eligible for this project.</p>
-
-                    <hr />
-
-                    <div class="alignright-button">
-                        <a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
-                        <button name="approve" class="button">Approve eligible costs</button>
-                    </div>
-                </div>
-            </div>
-
-        </th:block>
-
-        <hr />
-
-        <div class="extra-margin">
-            <button class="button button-secondary">Save and return to finance checks</button>
+        <h3 class="heading-medium">
+            eligible costs</h3>
+        <p>After any required alterations have been made, eligible costs should be approved.</p>
+        <p>If changes are made ensure that the applicant has reviewed and understand the changes to their finances before approval.</p>
+        <div class="form-group">
+            <label class="block-label" for="costs-reviewed">
+                <input id="costs-reviewed" value="costs-reviewed" type="checkbox" data-disable-button-until-checked="#approve-eligibility" />
+                These finances have been reviewed and are eligible for this project
+            </label>
         </div>
+        <button data-js-modal="approve-eligibility-modal" id="approve-eligibility" name="approve" class="button" type="button">Approve eligible costs</button>
+        <th:block th:include="fragments/modals :: approve-eligibility-modal" />
+        <hr />
+        <button class="button button-secondary extra-margin">Save and return to finance checks</button>
     </form>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
@@ -132,7 +131,5 @@
 
 <div th:include="fragments/layout :: footer" th:remove="tag" />
 <div th:include="fragments/layout :: body-end" th:remove="tag" />
-<script src="/js/ifs_prototype/jquery.waypoints.min.js" type="text/javascript"></script>
-<script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
 </body>
 </html>

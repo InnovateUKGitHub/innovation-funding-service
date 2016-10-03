@@ -1,4 +1,4 @@
-package com.worth.ifs.finance.spendprofile.summary.viewmodel;
+package com.worth.ifs.project.financecheck.viewmodel;
 
 import com.worth.ifs.application.resource.CompetitionSummaryResource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * View model backing the internal Finance Team members view of the Spend Profile summary page
  */
-public class ProjectSpendProfileSummaryViewModel {
+public class ProjectFinanceCheckSummaryViewModel {
 
     public enum Viability {
         REVIEW,
@@ -34,7 +34,7 @@ public class ProjectSpendProfileSummaryViewModel {
         GREEN
     }
 
-    public static class SpendProfileOrganisationRow {
+    public static class FinanceCheckOrganisationRow {
 
         private Long id;
         private String name;
@@ -44,7 +44,7 @@ public class ProjectSpendProfileSummaryViewModel {
         private RagStatus eligibilityRagStatus;
         private QueriesRaised queriesRaised;
 
-        public SpendProfileOrganisationRow(Long id, String name, Viability viability, RagStatus viabilityRagStatus, Eligibility eligibility, RagStatus eligibilityRagStatus, QueriesRaised queriesRaised) {
+        public FinanceCheckOrganisationRow(Long id, String name, Viability viability, RagStatus viabilityRagStatus, Eligibility eligibility, RagStatus eligibilityRagStatus, QueriesRaised queriesRaised) {
             this.id = id;
             this.name = name;
             this.viability = viability;
@@ -88,7 +88,7 @@ public class ProjectSpendProfileSummaryViewModel {
 
             if (o == null || getClass() != o.getClass()) return false;
 
-            SpendProfileOrganisationRow that = (SpendProfileOrganisationRow) o;
+            FinanceCheckOrganisationRow that = (FinanceCheckOrganisationRow) o;
 
             return new EqualsBuilder()
                     .append(id, that.id)
@@ -112,7 +112,7 @@ public class ProjectSpendProfileSummaryViewModel {
 
     private Long projectId;
     private CompetitionSummaryResource competitionSummary;
-    private List<SpendProfileOrganisationRow> partnerOrganisationDetails;
+    private List<FinanceCheckOrganisationRow> partnerOrganisationDetails;
     private LocalDate projectStartDate;
     private int durationInMonths;
     private BigDecimal totalProjectCost;
@@ -121,9 +121,9 @@ public class ProjectSpendProfileSummaryViewModel {
     private BigDecimal totalPercentageGrant;
     private boolean spendProfilesGenerated;
 
-    public ProjectSpendProfileSummaryViewModel(
+    public ProjectFinanceCheckSummaryViewModel(
             Long projectId, CompetitionSummaryResource competitionSummary,
-            List<SpendProfileOrganisationRow> partnerOrganisationDetails,
+            List<FinanceCheckOrganisationRow> partnerOrganisationDetails,
             LocalDate projectStartDate, int durationInMonths, BigDecimal totalProjectCost, BigDecimal grantAppliedFor,
             BigDecimal otherPublicSectorFunding, BigDecimal totalPercentageGrant, boolean spendProfilesGenerated) {
 
@@ -147,7 +147,7 @@ public class ProjectSpendProfileSummaryViewModel {
         return competitionSummary;
     }
 
-    public List<SpendProfileOrganisationRow> getPartnerOrganisationDetails() {
+    public List<FinanceCheckOrganisationRow> getPartnerOrganisationDetails() {
         return partnerOrganisationDetails;
     }
 
@@ -189,7 +189,7 @@ public class ProjectSpendProfileSummaryViewModel {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        ProjectSpendProfileSummaryViewModel that = (ProjectSpendProfileSummaryViewModel) o;
+        ProjectFinanceCheckSummaryViewModel that = (ProjectFinanceCheckSummaryViewModel) o;
 
         return new EqualsBuilder()
                 .append(durationInMonths, that.durationInMonths)

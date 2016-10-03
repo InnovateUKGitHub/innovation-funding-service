@@ -9,8 +9,8 @@ import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
-import com.worth.ifs.finance.spendprofile.summary.form.ProjectSpendProfileForm;
-import com.worth.ifs.finance.spendprofile.summary.viewmodel.ProjectSpendProfileSummaryViewModel;
+import com.worth.ifs.project.financecheck.form.FinanceCheckSummaryForm;
+import com.worth.ifs.project.financecheck.viewmodel.ProjectFinanceCheckSummaryViewModel;
 import com.worth.ifs.project.ProjectService;
 import com.worth.ifs.project.finance.ProjectFinanceService;
 import com.worth.ifs.project.finance.resource.FinanceCheckResource;
@@ -96,21 +96,21 @@ public class FinanceCheckController {
     }
 
     @RequestMapping(method = GET)
-    public String viewSpendProfileSummary(@PathVariable Long projectId, Model model) {
-        return doViewSpendProfileSummary(projectId, model, new ProjectSpendProfileForm());
+    public String viewFinanceCheckSummary(@PathVariable Long projectId, Model model) {
+        return doViewFinanceCheckSummary(projectId, model, new FinanceCheckSummaryForm());
     }
 
     @RequestMapping(value = "/generate", method = POST)
     public String generateSpendProfile(@PathVariable Long projectId, Model model,
-                                       @ModelAttribute ProjectSpendProfileForm form,
+                                       @ModelAttribute FinanceCheckSummaryForm form,
                                        @SuppressWarnings("unused") BindingResult bindingResult,
                                        ValidationHandler validationHandler) {
 
-        Supplier<String> failureView = () -> doViewSpendProfileSummary(projectId, model, form);
+        Supplier<String> failureView = () -> doViewFinanceCheckSummary(projectId, model, form);
         ServiceResult<Void> generateResult = projectFinanceService.generateSpendProfile(projectId);
 
         return validationHandler.addAnyErrors(generateResult).failNowOrSucceedWith(failureView, () ->
-                redirectToViewSpendProfile(projectId)
+                redirectToViewFinanceCheckSummary(projectId)
         );
     }
 
@@ -173,12 +173,12 @@ public class FinanceCheckController {
         }
         financeCheckService.update(currentFinanceCheckResource);
 
-        return redirectToFinanceCheckForm(projectId, organisationId);
+        return redirectToViewFinanceCheckSummary(projectId);
     }
 
-    private String doViewSpendProfileSummary(Long projectId, Model model, ProjectSpendProfileForm form) {
+    private String doViewFinanceCheckSummary(Long projectId, Model model, FinanceCheckSummaryForm form) {
 
-        ProjectSpendProfileSummaryViewModel viewModel = populateSpendProfileViewModel(projectId);
+        ProjectFinanceCheckSummaryViewModel viewModel = populateFinanceCheckSummaryViewModel(projectId);
 
         model.addAttribute("model", viewModel);
         model.addAttribute("form", form);
@@ -188,7 +188,7 @@ public class FinanceCheckController {
 
     // TODO DW - a lot of this information will not be available in reality until the Finance Checks story is available,
     // so supporting the page with dummy data until then in order to unblock development on other Spend Profile stories
-    private ProjectSpendProfileSummaryViewModel populateSpendProfileViewModel(Long projectId) {
+    private ProjectFinanceCheckSummaryViewModel populateFinanceCheckSummaryViewModel(Long projectId) {
 
         ProjectResource project = projectService.getById(projectId);
         ApplicationResource application = applicationService.getById(project.getApplication());
@@ -199,15 +199,15 @@ public class FinanceCheckController {
 
         List<ApplicationFinanceResource> applicationFinanceResourceList = financeService.getApplicationFinanceTotals(application.getId());
 
-        List<ProjectSpendProfileSummaryViewModel.SpendProfileOrganisationRow> organisationRows = mapWithIndex(partnerOrganisations, (i, org) ->
+        List<ProjectFinanceCheckSummaryViewModel.FinanceCheckOrganisationRow> organisationRows = mapWithIndex(partnerOrganisations, (i, org) ->
 
-                new ProjectSpendProfileSummaryViewModel.SpendProfileOrganisationRow(
+                new ProjectFinanceCheckSummaryViewModel.FinanceCheckOrganisationRow(
                         org.getId(), org.getName(),
-                        getEnumForIndex(ProjectSpendProfileSummaryViewModel.Viability.class, i),
-                        getEnumForIndex(ProjectSpendProfileSummaryViewModel.RagStatus.class, i),
-                        getEnumForIndex(ProjectSpendProfileSummaryViewModel.Eligibility.class, i),
-                        getEnumForIndex(ProjectSpendProfileSummaryViewModel.RagStatus.class, i + 1),
-                        getEnumForIndex(ProjectSpendProfileSummaryViewModel.QueriesRaised.class, i))
+                        getEnumForIndex(ProjectFinanceCheckSummaryViewModel.Viability.class, i),
+                        getEnumForIndex(ProjectFinanceCheckSummaryViewModel.RagStatus.class, i),
+                        getEnumForIndex(ProjectFinanceCheckSummaryViewModel.Eligibility.class, i),
+                        getEnumForIndex(ProjectFinanceCheckSummaryViewModel.RagStatus.class, i + 1),
+                        getEnumForIndex(ProjectFinanceCheckSummaryViewModel.QueriesRaised.class, i))
         );
 
         BigDecimal projectTotal = calculateTotalForAllOrganisations(applicationFinanceResourceList,
@@ -215,7 +215,7 @@ public class FinanceCheckController {
         BigDecimal totalFundingSought =  calculateTotalForAllOrganisations(applicationFinanceResourceList,
                 applicationFinanceResource -> applicationFinanceResource.getTotalFundingSought());
 
-        return new ProjectSpendProfileSummaryViewModel(
+        return new ProjectFinanceCheckSummaryViewModel(
                 projectId, competitionSummary, organisationRows,
                 project.getTargetStartDate(), project.getDurationInMonths().intValue(),
                 projectTotal,
@@ -247,7 +247,7 @@ public class FinanceCheckController {
         return enumConstants[index % enumConstants.length];
     }
 
-    private String redirectToViewSpendProfile(Long projectId) {
-        return "redirect:/project/" + projectId + "/financecheck/summary";
+    private String redirectToViewFinanceCheckSummary(Long projectId) {
+        return "redirect:/project/" + projectId + "/finance-check";
     }
 }

@@ -6,7 +6,11 @@ import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.finance.domain.*;
+import com.worth.ifs.project.finance.mapper.CostCategoryTypeMapper;
+import com.worth.ifs.project.finance.repository.CostCategoryRepository;
+import com.worth.ifs.project.finance.repository.CostCategoryTypeRepository;
 import com.worth.ifs.project.finance.repository.SpendProfileRepository;
+import com.worth.ifs.project.finance.resource.CostCategoryTypeResource;
 import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
 import com.worth.ifs.project.resource.ProjectUserResource;
@@ -53,7 +57,14 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     private SpendProfileRepository spendProfileRepository;
 
     @Autowired
-    private CostCategoryTypeStrategy costCategoryTypeStrategy;
+    private CostCategoryTypeRepository costCategoryTypeRepository;
+
+    @Autowired
+    private CostCategoryTypeMapper costCategoryTypeMapper;
+
+    @Autowired
+    private CostCategoryRepository costCategoryRepository;
+
 
     @Autowired
     private SpendProfileCostCategorySummaryStrategy spendProfileCostCategorySummaryStrategy;
@@ -143,6 +154,12 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         } else {
             return saveSpendProfileData(projectOrganisationCompositeId, table, complete);
         }
+    }
+
+    @Override
+    public ServiceResult<CostCategoryTypeResource> findByCostCategoryGroupId(Long costCategoryGroupId) {
+        return find(costCategoryTypeRepository.findByCostCategoryGroupId(costCategoryGroupId), notFoundError(CostCategoryType.class, costCategoryGroupId)).
+                andOnSuccessReturn(costCategoryTypeMapper::mapToResource);
     }
 
     private ServiceResult<Void> validateSpendProfileCosts(SpendProfileTableResource table) {
@@ -293,8 +310,8 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     private ServiceResult<Void> generateSpendProfileForPartnerOrganisations(Project project, List<Long> organisationIds) {
 
         List<ServiceResult<Void>> generationResults = simpleMap(organisationIds, organisationId -> spendProfileCostCategorySummaryStrategy.getCostCategorySummaries(project.getId(), organisationId).
-                andOnSuccess(summaryPerCategory ->
-                        generateSpendProfileForOrganisation(project.getId(), organisationId, summaryPerCategory)));
+                andOnSuccess( spendProfileCostCategorySummaries ->
+                        generateSpendProfileForOrganisation(project.getId(), organisationId, spendProfileCostCategorySummaries )));
 
         return processAnyFailuresOrSucceed(generationResults);
     }
@@ -302,37 +319,32 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     private ServiceResult<Void> generateSpendProfileForOrganisation(
             Long projectId,
             Long organisationId,
-            List<SpendProfileCostCategorySummary> summaryPerCategory) {
+            SpendProfileCostCategorySummaries spendProfileCostCategorySummaries ) {
 
         return find(project(projectId), organisation(organisationId)).andOnSuccess(
-                (project, organisation) -> generateSpendProfileForOrganisation(summaryPerCategory, project, organisation));
+                (project, organisation) -> generateSpendProfileForOrganisation(spendProfileCostCategorySummaries , project, organisation));
     }
 
-    private ServiceResult<Void> generateSpendProfileForOrganisation(List<SpendProfileCostCategorySummary> summaryPerCategory, Project project, Organisation organisation) {
-
-        return costCategoryTypeStrategy.getOrCreateCostCategoryTypeForSpendProfile(project.getId(), organisation.getId()).
-                andOnSuccessReturnVoid(costCategoryType -> {
-
-            List<Cost> eligibleCosts = generateEligibleCosts(summaryPerCategory, costCategoryType);
-            List<Cost> spendProfileCosts = generateSpendProfileFigures(summaryPerCategory, project, costCategoryType);
-
-            SpendProfile spendProfile = new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileCosts, false);
+    private ServiceResult<Void> generateSpendProfileForOrganisation(SpendProfileCostCategorySummaries spendProfileCostCategorySummaries, Project project, Organisation organisation) {
+            List<Cost> eligibleCosts = generateEligibleCosts(spendProfileCostCategorySummaries);
+            List<Cost> spendProfileCosts = generateSpendProfileFigures(spendProfileCostCategorySummaries, project);
+            CostCategoryType costCategoryType = costCategoryTypeRepository.findOne(spendProfileCostCategorySummaries.getCostCategoryType().getId());
+            SpendProfile spendProfile = new SpendProfile(organisation, project,  costCategoryType, eligibleCosts, spendProfileCosts, false);
             spendProfileRepository.save(spendProfile);
-        });
+            return serviceSuccess();
     }
 
-    private List<Cost> generateSpendProfileFigures(List<SpendProfileCostCategorySummary> summaryPerCategory, Project project, CostCategoryType costCategoryType) {
+    private List<Cost> generateSpendProfileFigures(SpendProfileCostCategorySummaries summaryPerCategory, Project project) {
 
-        List<List<Cost>> spendProfileCostsPerCategory = simpleMap(summaryPerCategory, summary -> {
-
-            CostCategory matchingCategory = findMatchingCostCategory(costCategoryType, summary);
+        List<List<Cost>> spendProfileCostsPerCategory = simpleMap(summaryPerCategory.getCosts(), summary -> {
+            CostCategory cc = costCategoryRepository.findOne(summary.getCategory().getId());
 
             return IntStream.range(0, project.getDurationInMonths().intValue()).mapToObj(i -> {
 
                 BigDecimal costValueForThisMonth = i == 0 ? summary.getFirstMonthSpend() : summary.getOtherMonthsSpend();
 
                 return new Cost(costValueForThisMonth).
-                           withCategory(matchingCategory).
+                           withCategory(cc).
                            withTimePeriod(i, MONTH, 1, MONTH);
 
             }).collect(toList());
@@ -341,17 +353,11 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         return flattenLists(spendProfileCostsPerCategory);
     }
 
-    private List<Cost> generateEligibleCosts(List<SpendProfileCostCategorySummary> summaryPerCategory, CostCategoryType costCategoryType) {
-
-        return simpleMap(summaryPerCategory, summary -> {
-
-            CostCategory matchingCategory = findMatchingCostCategory(costCategoryType, summary);
-            return new Cost(summary.getTotal().setScale(0, ROUND_HALF_UP)).withCategory(matchingCategory);
+    private List<Cost> generateEligibleCosts(SpendProfileCostCategorySummaries spendProfileCostCategorySummaries) {
+        return simpleMap(spendProfileCostCategorySummaries.getCosts(), cost -> {
+            CostCategory cc = costCategoryRepository.findOne(cost.getCategory().getId());
+            return new Cost(cost.getTotal().setScale(0, ROUND_HALF_UP)).withCategory(cc);
         });
-    }
-
-    private CostCategory findMatchingCostCategory(CostCategoryType costCategoryType, SpendProfileCostCategorySummary summary) {
-        return simpleFindFirst(costCategoryType.getCostCategories(), cat -> cat.getName().equals(summary.getCategory().getName())).get();
     }
 
     private Supplier<ServiceResult<Project>> project(Long id) {

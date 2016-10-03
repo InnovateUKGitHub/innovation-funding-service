@@ -27,7 +27,6 @@ IFS.core.loadOrder = {
       IFS.core.autoSave.init();
       IFS.core.formValidation.init();
       IFS.core.wordCount.init();
-      IFS.core.disableSubmitUntilChecked.init();
     },
     finalize : function(){
       IFS.core.modal.init();
@@ -35,13 +34,13 @@ IFS.core.loadOrder = {
       IFS.core.autoSubmitForm.init();
       IFS.core.pieChart.init();
       IFS.core.unsavedChanges.init();
+      IFS.core.finance.init();
     }
   },
   'app-form' : {
     init : function(){
       IFS.core.mirrorElements.init();
       IFS.core.unsavedChanges.init();
-      IFS.core.finance.init();
     }
   }
 };

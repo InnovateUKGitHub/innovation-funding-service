@@ -697,10 +697,10 @@ public final class CollectionFunctions {
         return flattenLists(furtherPermutations);
     }
 
-    public static final <R, S, T> boolean  containsAll(Collection<T> containing, Function<T, S> transformer1, Collection<R> contained, Function<R, S> transformer2) {
+    public static final <R, S, T> boolean containsAll(Collection<T> containing, Function<T, S> transformer1, Collection<R> contained, Function<R, S> transformer2) {
         if (containing == null && contained != null) {
             return false;
-        } else if (contained == null){
+        } else if (contained == null) {
             return true;
         }
         List<S> transformedContaining = containing.stream().map(transformer1).collect(toList());
@@ -724,6 +724,15 @@ public final class CollectionFunctions {
             );
         }
         return orderedMap;
+    }
+
+    public static <S, T> T unique(Collection<S> collectionToSearch, Function<S, T> property) {
+        List<T> distinct = collectionToSearch.stream().map(property).distinct().collect(toList());
+        if (distinct.size() != 0) {
+            throw new IllegalArgumentException("Collection to search:" + collectionToSearch + " does not have a unique property:" + property);
+        } else {
+            return distinct.get(0);
+        }
     }
 
 }
