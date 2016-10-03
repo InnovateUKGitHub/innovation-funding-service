@@ -27,12 +27,11 @@ public class FinanceCheckViewModel {
     }
 
     public FinanceCheckViewModel(String financeContactName, String financeContactEmail, boolean isResearch) {
-        this.financeContactName = financeContactName;
-        this.financeContactEmail = financeContactEmail;
-        this.isResearch = isResearch;
-        this.isApproved = false;
-        this.approverName = null;
-        this.approvalDate = null;
+        this(financeContactName, financeContactEmail, isResearch, false, null, null);
+    }
+
+    public FinanceCheckViewModel(boolean isResearch) {
+        this(null, null, isResearch, false, null, null);
     }
 
     public String getFinanceContactName() {

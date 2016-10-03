@@ -150,7 +150,7 @@ Non-lead partner can see correct project start date and duration
 *** Keywords ***
 the project finance user generates the spend profile table
     log in as user    project.finance1@innovateuk.test    Passw0rd
-    the user navigates to the page    ${server}/project-setup-management/project/1/spend-profile/summary    # For now we need to go to the url directly, as the project finance dashboard doesn't exist yet.
+    the user navigates to the page    ${server}/project-setup-management/project/1/finance-check/summary    # For now we need to go to the url directly, as the project finance dashboard doesn't exist yet.
     the user clicks the button/link    jQuery=.button:contains("Generate Spend Profile")
     the user clicks the button/link    name=submit-app-details    # this second click is confirming the decision on the modal
     logout as user

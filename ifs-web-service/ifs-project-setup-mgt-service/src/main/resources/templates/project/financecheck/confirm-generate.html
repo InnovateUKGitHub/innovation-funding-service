@@ -25,7 +25,7 @@
   </div>
   <hr/>
 
-    <form method="POST" th:action="@{/project/{projectId}/spend-profile/generate(projectId=${model.projectId})}">
+    <form method="POST" th:action="@{/project/{projectId}/finance-check/generate(projectId=${model.projectId})}">
       <h2 class="heading-medium no-margin">Generate spend profile</h2>
   		<p>This will generate a flat profile spend for all project partners. This assumes that finance checks have been completed for all partners and this section will be locked.</p>
   		<p>Partners will be notified that they can now create their spend profile.</p>
