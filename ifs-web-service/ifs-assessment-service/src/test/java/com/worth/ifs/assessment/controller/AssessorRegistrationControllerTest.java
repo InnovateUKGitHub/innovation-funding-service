@@ -24,6 +24,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
 
 import java.util.List;
 
@@ -61,6 +62,9 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
 
     @Mock
     private AddressRestService addressRestService;
+
+    @Mock
+    private Validator validator;
 
     @Override
     protected AssessorRegistrationController supplyControllerUnderTest() {
@@ -135,8 +139,8 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
                 .param("disability", disability.name())
                 .param("password", password)
                 .param("retypedPassword", password))
-                .andExpect(model().attribute("form", expectedForm))
                 .andExpect(status().is3xxRedirection())
+                .andExpect(model().attribute("form", expectedForm))
                 .andExpect(redirectedUrl("/registration/skills"));
 
         verify(assessorService).createAssessorByInviteHash(inviteHash, expectedForm);

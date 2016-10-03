@@ -137,6 +137,9 @@ public class AssessorRegistrationController {
     }
 
     private boolean postcodeIsSelected(AssessorRegistrationForm assessorRegistrationForm) {
+        if(assessorRegistrationForm.getAddressForm() == null) {
+            return false;
+        }
         return assessorRegistrationForm.getAddressForm().getSelectedPostcode() != null;
     }
     
@@ -151,16 +154,16 @@ public class AssessorRegistrationController {
 
     private void addSelectedAddress(AssessorRegistrationForm registrationForm) {
         AddressForm addressForm = registrationForm.getAddressForm();
-        AddressResource selectedAddress = new AddressResource();
         if (StringUtils.hasText(addressForm.getSelectedPostcodeIndex())) {
             try {
+                AddressResource selectedAddress = new AddressResource();
                 selectedAddress = addressForm.getPostcodeOptions().get(
                         Integer.parseInt(
                                 addressForm.getSelectedPostcodeIndex()));
+                addressForm.setSelectedPostcode(selectedAddress);
             }
             catch(IndexOutOfBoundsException e) { }
         }
-        addressForm.setSelectedPostcode(selectedAddress);
     }
 
     private List<AddressResource> searchPostcode(String postcodeInput) {
