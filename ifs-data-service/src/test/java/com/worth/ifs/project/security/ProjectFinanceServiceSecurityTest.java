@@ -2,6 +2,7 @@ package com.worth.ifs.project.security;
 
 import com.worth.ifs.BaseServiceSecurityTest;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.project.finance.resource.CostCategoryTypeResource;
 import com.worth.ifs.project.finance.transactional.ProjectFinanceService;
 import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
 import com.worth.ifs.project.resource.SpendProfileResource;
@@ -151,6 +152,11 @@ public class ProjectFinanceServiceSecurityTest extends BaseServiceSecurityTest<P
 
         @Override
         public ServiceResult<Void> markSpendProfile(ProjectOrganisationCompositeId projectOrganisationCompositeId, Boolean complete) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<CostCategoryTypeResource> findByCostCategoryGroupId(Long costCategoryGroupId) {
             return null;
         }
     }
