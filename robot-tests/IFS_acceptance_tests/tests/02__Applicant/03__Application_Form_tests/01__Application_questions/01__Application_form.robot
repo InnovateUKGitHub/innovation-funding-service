@@ -1,14 +1,15 @@
 *** Settings ***
-Documentation     -INFUND-184: As an applicant and on the over view of the application, I am able to see the character count and status of the questions, so I am able to see if my questions are valid    #Suite Setup    Run Keywords    Guest user log-in    &{lead_applicant_credentials}
+Documentation     INFUND-184: As an applicant and on the over view of the application, I am able to see the character count and status of the questions, so I am able to see if my questions are valid    #Suite Setup    Run Keywords    Guest user log-in    &{lead_applicant_credentials}
 ...
-...               -INFUND-186: As an applicant and in the application form, I should be able to change the state of a question to mark as complete, so I don't have to revisit the question.
+...               INFUND-186: As an applicant and in the application form, I should be able to change the state of a question to mark as complete, so I don't have to revisit the question.
 ...
-...               -INFUND-66: As an applicant and I am on the application form, I can fill in the questions belonging to the application, so I can apply for the competition
+...               INFUND-66: As an applicant and I am on the application form, I can fill in the questions belonging to the application, so I can apply for the competition
 ...
-...               -INFUND-42: As an applicant and I am on the application form, I get guidance for questions, so I know what I need to fill in.
+...               INFUND-42: As an applicant and I am on the application form, I get guidance for questions, so I know what I need to fill in.
 ...
-...               -INFUND-183: As a an applicant and I am in the application form, I can see the character count that I have left, so I comply to the rules of the question
-...               AND Create new application
+...               INFUND-183: As a an applicant and I am in the application form, I can see the character count that I have left, so I comply to the rules of the question
+...
+...               INFUND-4694 As an applicant I want to be able to provide details of my previous submission if I am allowed to resubmit my project in the current competition so that I comply with Innovate UK competition eligibility criteria
 Suite Setup       log in and create new application if there is not one already
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Applicant
@@ -20,6 +21,18 @@ Resource          ../../../../resources/keywords/User_actions.robot
 Resource          ../../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
 
 *** Test Cases ***
+Application details: Previous submission
+    [Documentation]    INFUND-4694
+    Given the user navigates to the page    ${DASHBOARD_URL}
+    And the user clicks the button/link    link=Robot test application
+    And the user clicks the button/link    link=Application details
+    When the user clicks the button/link    jQuery=label:contains(Yes) input
+    Then the user should see the text in the page    Please provide the details of this previous application
+    And the user should see the text in the page    Previous application number
+    And the user should see the text in the page    Previous application title
+    When the user clicks the button/link    jQuery=label:contains(No) input
+    Then The user should not see the element    id=application_details-previousapplicationnumber
+
 Autosave in the form questions
     [Documentation]    INFUND-189
     [Tags]    HappyPath

@@ -147,6 +147,7 @@ PM can view both documents
     And the user navigates to the page    ${project_in_setup_page}
     When the user clicks the button/link    link=What's the status of each of my partners?
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(6)
+    And the user goes back to the previous page
 
 PM can remove the second document
     [Documentation]    INFUND-3011
@@ -180,6 +181,10 @@ Non-lead partner cannot view either document once removed
     When the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    ${valid_pdf}
+    When the user navigates to the page    ${project_in_setup_page}
+    And the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
+    And the user goes back to the previous page
     [Teardown]    logout as user
 
 PM can upload both documents
@@ -198,6 +203,8 @@ Status in the dashboard remains pending after uploads
     [Tags]
     When the user clicks the button/link    link=Project setup status
     Then the user should not see the element    jQuery=ul li.complete:nth-child(7)
+    When the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(6)
     [Teardown]    logout as user
 
 Mandatory document submission
@@ -218,8 +225,9 @@ Mandatory document submission
     Then the user should be redirected to the correct page    ${project_in_setup_page}
     And the user should see the element    jQuery=ul li.complete:nth-child(7)
     When the user navigates to the page    ${project_in_setup_page}
-    And the user clicks the button/link    link=What's the status of each of my partners?
-
+    And the user clicks the button/link     link=What's the status of each of my partners?
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(6)
+    And the user goes back to the previous page
 
 PM can still view both documents after submitting
     [Documentation]    INFUND-3012
@@ -279,7 +287,9 @@ Non-lead partner can still view both documents after submitting
     And the user goes back to the previous page
     Then the user clicks the button/link    link=${valid_pdf}
     And the user should not see an error in the page
-    And the user goes back to the previous page
+    When the user navigates to the page    ${project_in_setup_page}
+    And the user clicks the button/link     link=What's the status of each of my partners?
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(6)
     [Teardown]    logout as user
 
 *** Keywords ***
