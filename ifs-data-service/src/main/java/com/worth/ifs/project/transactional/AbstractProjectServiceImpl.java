@@ -7,13 +7,16 @@ import com.worth.ifs.finance.transactional.FinanceRowService;
 import com.worth.ifs.invite.domain.ProjectParticipantRole;
 import com.worth.ifs.project.constant.ProjectActivityStates;
 import com.worth.ifs.project.domain.MonitoringOfficer;
+import com.worth.ifs.project.domain.PartnerOrganisation;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
 import com.worth.ifs.project.finance.domain.SpendProfile;
 import com.worth.ifs.project.finance.repository.SpendProfileRepository;
+import com.worth.ifs.project.finance.workflow.financechecks.configuration.FinanceCheckWorkflowHandler;
 import com.worth.ifs.project.mapper.ProjectMapper;
 import com.worth.ifs.project.mapper.ProjectUserMapper;
 import com.worth.ifs.project.repository.MonitoringOfficerRepository;
+import com.worth.ifs.project.repository.PartnerOrganisationRepository;
 import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.project.repository.ProjectUserRepository;
 import com.worth.ifs.project.workflow.projectdetails.configuration.ProjectDetailsWorkflowHandler;
@@ -26,12 +29,15 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.worth.ifs.commons.error.CommonErrors.forbiddenError;
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static com.worth.ifs.project.constant.ProjectActivityStates.*;
 import static com.worth.ifs.user.resource.OrganisationTypeEnum.isResearch;
 import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
+import static com.worth.ifs.util.EntityLookupCallbacks.find;
+import static java.util.Arrays.asList;
 
 public class AbstractProjectServiceImpl extends BaseTransactionalService {
 
@@ -61,6 +67,12 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
 
     @Autowired
     private ProjectDetailsWorkflowHandler projectDetailsWorkflowHandler;
+
+    @Autowired
+    private FinanceCheckWorkflowHandler financeCheckWorkflowHandler;
+
+    @Autowired
+    protected PartnerOrganisationRepository partnerOrganisationRepository;
 
     List<ProjectUser> getProjectUsersByProjectId(Long projectId) {
         return projectUserRepository.findByProjectId(projectId);
@@ -118,11 +130,17 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
         }
     }
 
-    protected ProjectActivityStates createFinanceCheckStatus(final ProjectActivityStates bankDetailsStatus) {
-        if(bankDetailsStatus.equals(COMPLETE) || bankDetailsStatus.equals(PENDING) || bankDetailsStatus.equals(NOT_REQUIRED)){
+    protected ProjectActivityStates createFinanceCheckStatus(final Project project, final Organisation organisation, ProjectActivityStates bankDetailsStatus) {
+
+        PartnerOrganisation partnerOrg = partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(project.getId(), organisation.getId());
+
+        if (financeCheckWorkflowHandler.isApproved(partnerOrg)) {
+            return COMPLETE;
+        }
+
+        if (asList(COMPLETE, PENDING, NOT_REQUIRED).contains(bankDetailsStatus)) {
             return ACTION_REQUIRED;
         } else {
-            //TODO update logic when Finance checks are implemented
             return NOT_STARTED;
         }
     }
@@ -154,6 +172,11 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
                 simpleFindFirst(project.getProjectUsers(), pu -> findUserAndRole(role, currentUser, pu)).
                 map(user -> serviceSuccess(user)).
                 orElse(serviceFailure(forbiddenError())));
+    }
+
+    protected ServiceResult<PartnerOrganisation> getPartnerOrganisation(Long projectId, Long organisationId) {
+        return find(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId),
+                notFoundError(PartnerOrganisation.class, projectId, organisationId));
     }
 
     private boolean findUserAndRole(ProjectParticipantRole role, User currentUser, ProjectUser pu) {

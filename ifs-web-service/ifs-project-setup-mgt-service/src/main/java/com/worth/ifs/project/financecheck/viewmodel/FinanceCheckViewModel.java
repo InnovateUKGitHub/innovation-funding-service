@@ -7,6 +7,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import java.time.LocalDate;
 
 public class FinanceCheckViewModel {
+
+    private Long projectId;
+    private Long organisationId;
     private String financeContactName;
     private String financeContactEmail;
     private boolean isResearch;
@@ -17,7 +20,9 @@ public class FinanceCheckViewModel {
     public FinanceCheckViewModel() {
     }
 
-    public FinanceCheckViewModel(String financeContactName, String financeContactEmail, boolean isResearch, boolean isApproved, String approverName, LocalDate approvalDate) {
+    public FinanceCheckViewModel(Long projectId, Long organisationId, String financeContactName, String financeContactEmail, boolean isResearch, boolean isApproved, String approverName, LocalDate approvalDate) {
+        this.projectId = projectId;
+        this.organisationId = organisationId;
         this.financeContactName = financeContactName;
         this.financeContactEmail = financeContactEmail;
         this.isResearch = isResearch;
@@ -26,36 +31,24 @@ public class FinanceCheckViewModel {
         this.approvalDate = approvalDate;
     }
 
-    public FinanceCheckViewModel(String financeContactName, String financeContactEmail, boolean isResearch) {
-        this(financeContactName, financeContactEmail, isResearch, false, null, null);
+    public FinanceCheckViewModel(Long projectId, Long organisationId, String financeContactName, String financeContactEmail, boolean isResearch) {
+        this(projectId, organisationId, financeContactName, financeContactEmail, isResearch, false, null, null);
     }
 
-    public FinanceCheckViewModel(boolean isResearch) {
-        this(null, null, isResearch, false, null, null);
+    public FinanceCheckViewModel(Long projectId, Long organisationId, boolean isResearch) {
+        this(projectId, organisationId, null, null, isResearch, false, null, null);
     }
 
     public String getFinanceContactName() {
         return financeContactName;
     }
 
-    public void setFinanceContactName(String financeContactName) {
-        this.financeContactName = financeContactName;
-    }
-
     public String getFinanceContactEmail() {
         return financeContactEmail;
     }
 
-    public void setFinanceContactEmail(String financeContactEmail) {
-        this.financeContactEmail = financeContactEmail;
-    }
-
     public boolean isResearch() {
         return isResearch;
-    }
-
-    public void setResearch(boolean research) {
-        this.isResearch = research;
     }
 
     public boolean isApproved() {
@@ -70,16 +63,16 @@ public class FinanceCheckViewModel {
         return approverName;
     }
 
-    public void setApproverName(String approverName) {
-        this.approverName = approverName;
-    }
-
     public LocalDate getApprovalDate() {
         return approvalDate;
     }
 
-    public void setApprovalDate(LocalDate approvalDate) {
-        this.approvalDate = approvalDate;
+    public Long getProjectId() {
+        return projectId;
+    }
+
+    public Long getOrganisationId() {
+        return organisationId;
     }
 
     @Override

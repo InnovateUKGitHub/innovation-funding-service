@@ -1,19 +1,17 @@
 package com.worth.ifs.project.finance.transactional;
 
+import com.worth.ifs.commons.error.CommonFailureKeys;
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.project.domain.PartnerOrganisation;
 import com.worth.ifs.project.finance.domain.Cost;
 import com.worth.ifs.project.finance.domain.CostGroup;
 import com.worth.ifs.project.finance.domain.FinanceCheck;
-import com.worth.ifs.project.finance.mapper.FinanceCheckMapper;
 import com.worth.ifs.project.finance.repository.FinanceCheckRepository;
 import com.worth.ifs.project.finance.resource.CostGroupResource;
 import com.worth.ifs.project.finance.resource.CostResource;
 import com.worth.ifs.project.finance.resource.FinanceCheckResource;
 import com.worth.ifs.project.finance.workflow.financechecks.configuration.FinanceCheckWorkflowHandler;
-import com.worth.ifs.project.repository.PartnerOrganisationRepository;
 import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
-import com.worth.ifs.transactional.BaseTransactionalService;
+import com.worth.ifs.project.transactional.AbstractProjectServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,19 +31,13 @@ import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
  * A transactional service for finance check functionality
  */
 @Service
-public class FinanceCheckServiceImpl extends BaseTransactionalService implements FinanceCheckService {
+public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implements FinanceCheckService {
 
     @Autowired
     private FinanceCheckRepository financeCheckRepository;
 
     @Autowired
-    private FinanceCheckMapper financeCheckMapper;
-
-    @Autowired
     private FinanceCheckWorkflowHandler financeCheckWorkflowHandler;
-
-    @Autowired
-    private PartnerOrganisationRepository partnerOrganisationRepository;
 
     @Override
     public ServiceResult<FinanceCheckResource> getByProjectAndOrganisation(ProjectOrganisationCompositeId key) {
@@ -56,9 +48,14 @@ public class FinanceCheckServiceImpl extends BaseTransactionalService implements
 
     @Override
     public ServiceResult<Void> save(FinanceCheckResource financeCheckResource) {
+
         FinanceCheck toSave = mapToDomain(financeCheckResource);
         financeCheckRepository.save(toSave);
-        return serviceSuccess();
+
+        return getCurrentlyLoggedInUser().andOnSuccess(user ->
+               getPartnerOrganisation(toSave.getProject().getId(), toSave.getOrganisation().getId()).andOnSuccessReturn(partnerOrganisation ->
+               financeCheckWorkflowHandler.financeCheckFiguresEdited(partnerOrganisation, user))).andOnSuccess(workflowResult ->
+               workflowResult ? serviceSuccess() : serviceFailure(CommonFailureKeys.FINANCE_CHECKS_CANNOT_PROGRESS_WORKFLOW));
     }
 
     @Override
@@ -116,9 +113,5 @@ public class FinanceCheckServiceImpl extends BaseTransactionalService implements
             cr.setValue(c.getValue());
             return cr;
         });
-    }
-
-    private ServiceResult<PartnerOrganisation> getPartnerOrganisation(Long projectId, Long organisationId) {
-        return find(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId), notFoundError(PartnerOrganisation.class, projectId, organisationId));
     }
 }

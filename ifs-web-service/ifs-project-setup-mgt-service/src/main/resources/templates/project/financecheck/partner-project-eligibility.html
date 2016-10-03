@@ -97,7 +97,9 @@
                 </label>
             </div>
 
-            <button data-js-modal="approve-eligibility-modal" id="approve-eligibility" class="button" type="submit" disabled="disabled">Approve eligible costs</button>
+            <button data-js-modal="approve-eligibility-modal" name="approve" id="approve-eligibility" class="button" type="submit" disabled="disabled">Approve eligible costs</button>
+
+            <button data-js-modal="approve-eligibility-modal" name="approve" id="approve-eligibility-2" class="button" type="submit">Approve eligible costs (not disabled)</button>
 
             <div class="approve-eligibility-modal" role="dialog" aria-hidden="true" style="margin-top: -174px;">
                 <button class="js-close close" aria-label="Close Popup">X</button>
@@ -111,7 +113,7 @@
 
                     <div class="alignright-button">
                         <a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
-                        <button class="button" th:formaction="@{${#httpServletRequest.requestURI}}">Approve eligible costs</button>
+                        <button name="approve" class="button">Approve eligible costs</button>
                     </div>
                 </div>
             </div>
@@ -124,8 +126,6 @@
             <button class="button button-secondary">Save and return to finance checks</button>
         </div>
     </form>
-
-    <!-- END OFHARDCODED PROTOTYPE HTML -->
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
 </main>

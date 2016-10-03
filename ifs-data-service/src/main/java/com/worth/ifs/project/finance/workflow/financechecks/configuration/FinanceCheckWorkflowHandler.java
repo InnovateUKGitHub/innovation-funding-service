@@ -48,8 +48,8 @@ public class FinanceCheckWorkflowHandler extends BaseWorkflowEventHandler<Financ
         return fireEvent(projectCreatedEvent(partnerOrganisation, originalLeadApplicantProjectUser), FinanceCheckState.PENDING);
     }
 
-    public boolean financeCheckFiguresEdited(PartnerOrganisation partnerOrganisation, ProjectUser projectUser) {
-        return fireEvent(financeCheckFiguresEditedEvent(partnerOrganisation, projectUser, FINANCE_CHECK_FIGURES_EDITED), partnerOrganisation);
+    public boolean financeCheckFiguresEdited(PartnerOrganisation partnerOrganisation, User internalUser) {
+        return fireEvent(financeCheckFiguresEditedEvent(partnerOrganisation, internalUser, FINANCE_CHECK_FIGURES_EDITED), partnerOrganisation);
     }
 
     public boolean approveFinanceCheckFigures(PartnerOrganisation partnerOrganisation, User financeTeamUser) {
@@ -102,18 +102,18 @@ public class FinanceCheckWorkflowHandler extends BaseWorkflowEventHandler<Financ
                 .setHeader("participant", originalLeadApplicantProjectUser);
     }
 
-    private MessageBuilder<FinanceCheckOutcomes> financeCheckFiguresEditedEvent(PartnerOrganisation partnerOrganisation, ProjectUser projectUser,
+    private MessageBuilder<FinanceCheckOutcomes> financeCheckFiguresEditedEvent(PartnerOrganisation partnerOrganisation, User internalUser,
                                                                                 FinanceCheckOutcomes event) {
         return MessageBuilder
                 .withPayload(event)
                 .setHeader("target", partnerOrganisation)
-                .setHeader("participant", projectUser);
+                .setHeader("internalParticipant", internalUser);
     }
 
     private MessageBuilder<FinanceCheckOutcomes> approveFinanceCheckMessage(User financeTeamMember, PartnerOrganisation partnerOrganisation) {
         return MessageBuilder
                 .withPayload(APPROVE)
                 .setHeader("target", partnerOrganisation)
-                .setHeader("participant", financeTeamMember);
+                .setHeader("internalParticipant", financeTeamMember);
     }
 }

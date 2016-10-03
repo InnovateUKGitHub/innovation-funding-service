@@ -114,6 +114,21 @@ public class FinanceCheckController {
         );
     }
 
+    @RequestMapping(value = "/organisation/{organisationId}", params = "approve", method = POST)
+    public String approveFinanceCheck(@PathVariable Long projectId, @PathVariable Long organisationId, Model model,
+                                       @ModelAttribute FinanceCheckForm form,
+                                       @SuppressWarnings("unused") BindingResult bindingResult,
+                                       ValidationHandler validationHandler) {
+
+        Supplier<String> failureView = () -> doViewFinanceCheckForm(projectId, organisationId, model);
+        ServiceResult<Void> approveResult = projectFinanceService.approveFinanceCheck(projectId, organisationId);
+
+        return validationHandler.addAnyErrors(approveResult).failNowOrSucceedWith(failureView, () ->
+                redirectToFinanceCheckForm(projectId, organisationId)
+        );
+    }
+
+
     private String redirectToFinanceCheckForm(Long projectId, Long organisationId){
         return "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId;
     }
@@ -133,9 +148,9 @@ public class FinanceCheckController {
         Optional<ProjectUserResource> financeContact = getFinanceContact(projectId, organisationId);
         FinanceCheckViewModel financeCheckViewModel;
         if(financeContact.isPresent()){
-            financeCheckViewModel = new FinanceCheckViewModel(financeContact.get().getUserName(), financeContact.get().getEmail(), isResearch);
+            financeCheckViewModel = new FinanceCheckViewModel(projectId, organisationId, financeContact.get().getUserName(), financeContact.get().getEmail(), isResearch);
         } else {
-            financeCheckViewModel = new FinanceCheckViewModel(isResearch);
+            financeCheckViewModel = new FinanceCheckViewModel(projectId, organisationId, isResearch);
         }
         model.addAttribute("model", financeCheckViewModel);
         return "project/financecheck/partner-project-eligibility";
