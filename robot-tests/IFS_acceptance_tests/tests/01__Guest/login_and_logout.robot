@@ -72,9 +72,9 @@ Valid login as Project Finance role
     Given the user is not logged-in
     When the guest user enters the log in credentials    project.finance1@innovateuk.test    Passw0rd
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
-    Then the user should be redirected to the correct page without error checking    ${PROJECT_FINANCE_DASHBOARD_URL}
-    # note that I haven't used error checking on this redirect as this page will currently produce an error
-    # at that point this can be changed to include error checking
+    Then the user should be redirected to the correct page    ${COMP_ADMINISTRATOR_DASHBOARD}
+    # note that this has been updated as per the most recent requirements.
+    # project finance users now use the same dashboard as other internal users
     [Teardown]    the user closes the browser
 
 Reset password

@@ -6,9 +6,13 @@ Documentation     INFUND-3013 As a partner I want to be able to download mandato
 ...               INFUND-3012: As a project manager I want to be able to submit all mandatory documents on behalf of all partners so that Innovate UK can review additional information to support our project setup
 ...
 ...               INFUND-2621 As a contributor I want to be able to review the current Project Setup status of all partners in my project so I can get an indication of the overall status of the consortium
+...
+...               INFUND-4621: As a competitions team member I want to be able to accept partner documents uploaded to the Other Documents section so that they can be used to support the Project Setup stage
+...
+...               INFUND-4620: As a competitions team member I want to be able to reject partner documents uploaded to the Other Documents section so that they can be informed they are unsuitable
 Suite Setup       Log in as user    jessica.doe@ludlow.co.uk    Passw0rd
 Suite Teardown    the user closes the browser
-Force Tags        Project Setup    Pending    # TODO due to docker file script
+Force Tags        Project Setup
 Resource          ../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../resources/variables/User_credentials.robot
@@ -27,9 +31,8 @@ Non-lead partner cannot upload either document
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Upload
     When the user navigates to the page    ${project_in_setup_page}
-    #TODO update after INFUND-4735
-#    And the user clicks the button/link    link=What's the status of each of my partners?
-#    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
+    And the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
     [Teardown]    Logout as user
 
 PM cannot submit when both documents are not uploaded
@@ -92,9 +95,8 @@ Lead partner can view both documents
     Then the user should not see an error in the page
     And the user navigates to the page    ${project_in_setup_page}
     And the user should see the element    link=What's the status of each of my partners?
-    #TODO  INFUND-4744(status should be waiting)
     When the user clicks the button/link    link=What's the status of each of my partners?
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(6)
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(6)
     [Teardown]  the user navigates to the page    ${project_in_setup_page}
 
 Lead partner does not have the option to submit the mandatory documents
@@ -121,7 +123,7 @@ Non-lead partner can view both documents
     Then the user should not see an error in the page
     And the user navigates to the page    ${project_in_setup_page}
     When the user clicks the button/link    link=What's the status of each of my partners?
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(6)
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(6)
     And the user goes back to the previous page
 
 Non-lead partner cannot remove or submit right
@@ -146,7 +148,8 @@ PM can view both documents
     Then the user should not see an error in the page
     And the user navigates to the page    ${project_in_setup_page}
     When the user clicks the button/link    link=What's the status of each of my partners?
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(6)
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(6)
+    And the user goes back to the previous page
 
 PM can remove the second document
     [Documentation]    INFUND-3011
@@ -180,6 +183,10 @@ Non-lead partner cannot view either document once removed
     When the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    ${valid_pdf}
+    When the user navigates to the page    ${project_in_setup_page}
+    And the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
+    And the user goes back to the previous page
     [Teardown]    logout as user
 
 PM can upload both documents
@@ -198,6 +205,8 @@ Status in the dashboard remains pending after uploads
     [Tags]
     When the user clicks the button/link    link=Project setup status
     Then the user should not see the element    jQuery=ul li.complete:nth-child(7)
+    When the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(6)
     [Teardown]    logout as user
 
 Mandatory document submission
@@ -217,12 +226,16 @@ Mandatory document submission
     And the user clicks the button/link    link=Project setup status
     Then the user should be redirected to the correct page    ${project_in_setup_page}
     And the user should see the element    jQuery=ul li.complete:nth-child(7)
-
+    When the user navigates to the page    ${project_in_setup_page}
+    And the user clicks the button/link     link=What's the status of each of my partners?
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(6)
+    And the user goes back to the previous page
 
 PM can still view both documents after submitting
     [Documentation]    INFUND-3012
     [Tags]    HappyPath
-    Given the user clicks the button/link    link=Other documents
+    Given the user navigates to the page    ${project_in_setup_page}
+    And the user clicks the button/link    link=Other documents
     When the user should see the text in the page    ${valid_pdf}
     And the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
@@ -276,8 +289,52 @@ Non-lead partner can still view both documents after submitting
     And the user goes back to the previous page
     Then the user clicks the button/link    link=${valid_pdf}
     And the user should not see an error in the page
-    And the user goes back to the previous page
+    When the user navigates to the page    ${project_in_setup_page}
+    And the user clicks the button/link     link=What's the status of each of my partners?
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(6)
     [Teardown]    logout as user
+
+CompAdmin can see uploaded files
+    [Documentation]    INFUND-4621
+    [Setup]    Log in as user    john.doe@innovateuk.test    Passw0rd
+    When the user navigates to the page              ${COMP_MANAGEMENT_PROJECT_SETUP}
+    And the user clicks the button/link              link=Killer Riffs
+    Then the user should see the element             jQuery=h2:contains("Projects in setup")
+    When the user clicks the button/link             jQuery=#table-project-status tr:nth-child(1) td:nth-child(7) a
+    Then the user should see the text in the page    Collaboration Agreement
+    When the user clicks the button/link             jQuery=a:nth-child(8)
+    Then the user should see the file without error
+    When the user clicks the button/link             jQuery=a:nth-child(10)
+    Then the user should see the file without error
+
+CompAdmin approves other documents
+    [Documentation]    INFUND-4621
+    Given the user navigates to the page              ${SERVER}/project-setup-management/project/1/partner/documents
+    And the user should see the text in the page      Other documents
+    Then the user should see the element              jQuery=button:contains("Accept documents")
+    And the user should see the element               jQuery=button:contains("Reject documents")
+    When the user clicks the button/link              jQuery=button:contains("Accept documents")
+    And the user clicks the button/link               jQuery=button:contains("Cancel")
+    Then the user should not see an error in the page
+    When the user clicks the button/link              jQuery=button:contains("Accept documents")
+    And the user clicks the button/link               jQuery=.modal-accept-docs .button:contains("Accept Documents")
+    Then the user should see the text in the page     The documents provided have been approved.
+
+#TODO INFUND-5424 Partners should be able to see documents approved
+
+CompAdmin rejects other documents
+    [Documentation]    INFUND-4620
+    Given the user navigates to the page              ${SERVER}/project-setup-management/project/1/partner/documents
+    And the user should see the text in the page      Other documents
+    When the user clicks the button/link              jQuery=button:contains("Reject documents")
+    And the user clicks the button/link               jQuery=button:contains("Cancel")
+    Then the user should not see an error in the page
+    When the user clicks the button/link              jQuery=button:contains("Reject documents")
+    And the user clicks the button/link               jQuery=.modal-reject-docs .button:contains("Reject Documents")
+    Then the user should see the text in the page     These documents after review have been rejected and returned to the project team.
+    [Teardown]    logout as user
+
+#TODO INFUND-5424 Partners should be able to see documents rejected
 
 *** Keywords ***
 the user uploads to the collaboration agreement question
@@ -287,3 +344,7 @@ the user uploads to the collaboration agreement question
 the user uploads to the exploitation plan question
     [Arguments]    ${file_name}
     choose file    name=exploitationPlan    ${upload_folder}/${file_name}
+
+the user should see the file without error
+    the user should not see an error in the page
+    the user goes back to the previous page
