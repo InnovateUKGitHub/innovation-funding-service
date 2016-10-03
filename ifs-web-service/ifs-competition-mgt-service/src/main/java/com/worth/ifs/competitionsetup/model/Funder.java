@@ -2,17 +2,19 @@ package com.worth.ifs.competitionsetup.model;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 public class Funder {
 
-    @NotEmpty(message = "Please enter a funder name")
+    @NotEmpty(message = "{validation.additionalinfoform.fundername.required}")
     private String funder;
 
-    @Min(value=0, message = "Please a valid number.")
-    @NotNull(message = "Please enter a budget")
+    @Min(value=0, message = "{validation.additionalinfoform.funderbudget.min}")
+    @NotNull(message = "{validation.additionalinfoform.funderbudget.required}")
+    @Digits(integer = 8, fraction = 2, message = "{validation.additionalinfoform.funderbudget.invalid}")
     private BigDecimal funderBudget;
 
     @NotNull
