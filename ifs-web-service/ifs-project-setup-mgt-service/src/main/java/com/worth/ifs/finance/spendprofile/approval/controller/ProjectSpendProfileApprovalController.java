@@ -14,16 +14,17 @@ import com.worth.ifs.project.ProjectService;
 import com.worth.ifs.project.finance.ProjectFinanceService;
 import com.worth.ifs.project.resource.ApprovalType;
 import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.List;
 import java.util.function.Supplier;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -56,7 +57,7 @@ public class ProjectSpendProfileApprovalController {
 
     @RequestMapping(value = "/approval", method = GET)
     public String viewSpendProfileApproval(@PathVariable Long projectId, Model model) {
-        return doViewSpendProfileApproval(projectId, model, new ProjectSpendProfileApprovalForm());
+        return doViewSpendProfileApproval(projectId, model);
     }
 
     @RequestMapping(value = "/approval/{approvalType}", method = POST)
@@ -64,16 +65,10 @@ public class ProjectSpendProfileApprovalController {
                                            @PathVariable ApprovalType approvalType,
                                            @ModelAttribute ProjectSpendProfileApprovalForm form,
                                            Model model,
-                                           BindingResult bindingResult,
+                                           @SuppressWarnings("unused") BindingResult bindingResult,
                                            ValidationHandler validationHandler) {
 
-        Supplier<String> failureView = () -> doViewSpendProfileApproval(projectId, model, form);
-
-        if(form.getApprovedByLeadTechnologist() != true && approvalType.equals(ApprovalType.APPROVED)) {
-            bindingResult.addError(new ObjectError("approvedByLeadTechnologist", "validation.project.approved.by.lead.technologist"));
-            return doViewSpendProfileApproval(projectId, model, form);
-        }
-
+        Supplier<String> failureView = () -> doViewSpendProfileApproval(projectId, model);
         ServiceResult<Void> generateResult = projectFinanceService.approveOrRejectSpendProfile(projectId, approvalType);
 
         return validationHandler.addAnyErrors(generateResult).failNowOrSucceedWith(failureView, () ->
@@ -81,12 +76,11 @@ public class ProjectSpendProfileApprovalController {
         );
     }
 
-    private String doViewSpendProfileApproval(Long projectId, Model model, ProjectSpendProfileApprovalForm form) {
+    private String doViewSpendProfileApproval(Long projectId, Model model) {
 
         ProjectSpendProfileApprovalViewModel viewModel = populateSpendProfileApprovalViewModel(projectId);
 
         model.addAttribute("model", viewModel);
-        model.addAttribute("form", form);
 
         return "project/finance/spend-profile/approval";
     }
@@ -104,7 +98,12 @@ public class ProjectSpendProfileApprovalController {
         Boolean isRejected = approvalType.equals(ApprovalType.REJECTED);
         Boolean isNotApprovedOrRejected = approvalType.equals(ApprovalType.UNSET);
 
-        return new ProjectSpendProfileApprovalViewModel(competitionSummary, leadTechnologist, isApproved, isRejected, isNotApprovedOrRejected);
+        OrganisationResource organisationResource = new OrganisationResource();
+        organisationResource.setName("Test");
+        organisationResource.setId(23L);
+        List<OrganisationResource> organisationResources = projectService.getPartnerOrganisationsForProject(projectId);
+
+        return new ProjectSpendProfileApprovalViewModel(competitionSummary, leadTechnologist, isApproved, isRejected, isNotApprovedOrRejected, organisationResources);
     }
 
     private String redirectToViewSpendProfileApproval(Long projectId) {

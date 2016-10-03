@@ -301,3 +301,40 @@
         </div>
     </div>
 </div>
+
+<!-- Confirmation on approving spend profiles -->
+<th:block th:fragment="modal-accept-profile">
+    <div class="modal-accept-profile" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+        <button class="js-close close" aria-label="Close Popup">X</button>
+        <div>
+            <h2 class="heading-medium no-margin">Approved by Lead technologist</h2>
+            <p>The project spend profile has been approved and accepted by the Lead technologist, by confirming the project manager will be notified of this decision via email.</p>
+            <hr />
+            <form th:action="@{'/project/' + ${projectId} + '/spend-profile/approval/APPROVED'}" method="post">
+                <div class="alignright-button">
+                    <a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
+                    <input type="submit" class="button" value="Accept documents"/>
+                </div>
+            </form>
+        </div>
+    </div>
+</th:block>
+
+<!-- Confirmation on rejecting spend profiles -->
+<th:block th:fragment="modal-reject-profile">
+    <div class="modal-reject-profile" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+        <button class="js-close close" aria-label="Close Popup">X</button>
+        <div>
+            <h2 class="heading-medium no-margin">Reject spend profile</h2>
+            <p>Rejecting will return access to this section to all project partners.</p>
+            <p>Before taking this action please contact the project manager to explain why the the Spend Profile is being returned to them.</p>
+            <form th:action="@{'/project/' + ${projectId} + '/spend-profile/approval/REJECTED'}" method="post">
+                <hr />
+                <div class="alignright-button">
+                    <a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
+                    <input type="submit" class="button button-warning" value="Reject spend profile"/>
+                </div>
+            </form>
+        </div>
+    </div>
+</th:block>
