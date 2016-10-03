@@ -1,4 +1,4 @@
-package com.worth.ifs.assessment.form;
+package com.worth.ifs.assessment.form.profile;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -6,32 +6,32 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import java.util.List;
 
 /**
- * Form field model for the Assessor Registration -Declaration of Interest
+ * Form field model for the Assessor Profile Declaration of Interest page
  */
-public class AssessorRegistrationDeclarationForm {
+public class AssessorProfileDeclarationForm {
 
     private String principalEmployer;
     private String role;
     private String professionalAffiliations;
 
     private Boolean hasAppointments;
-    private List<AppointmentForm> appointments;
+    private List<AssessorProfileAppointmentForm> appointments;
 
     private Boolean hasFinancialInterests;
     private String financialInterests;
 
     private Boolean hasFamilyAffiliations;
-    private List<FamilyAffiliationForm> familyAffiliations;
+    private List<AssessorProfileFamilyAffiliationForm> familyAffiliations;
 
     private Boolean hasFamilyFinancialInterests;
     private String familyInterests;
 
     private Boolean isAccurateAccount;
 
-    public AssessorRegistrationDeclarationForm() {
+    public AssessorProfileDeclarationForm() {
     }
 
-    public AssessorRegistrationDeclarationForm(String principalEmployer, String role, String professionalAffiliations, Boolean hasAppointments, List<AppointmentForm> appointments, Boolean hasFinancialInterests, String financialInterests, Boolean hasFamilyAffiliations, List<FamilyAffiliationForm> familyAffiliations, Boolean hasFamilyFinancialInterests, String familyInterests, Boolean isAccurateAccount) {
+    public AssessorProfileDeclarationForm(String principalEmployer, String role, String professionalAffiliations, Boolean hasAppointments, List<AssessorProfileAppointmentForm> appointments, Boolean hasFinancialInterests, String financialInterests, Boolean hasFamilyAffiliations, List<AssessorProfileFamilyAffiliationForm> familyAffiliations, Boolean hasFamilyFinancialInterests, String familyInterests, Boolean isAccurateAccount) {
         this.principalEmployer = principalEmployer;
         this.role = role;
         this.professionalAffiliations = professionalAffiliations;
@@ -78,11 +78,11 @@ public class AssessorRegistrationDeclarationForm {
         this.hasAppointments = hasAppointments;
     }
 
-    public List<AppointmentForm> getAppointments() {
+    public List<AssessorProfileAppointmentForm> getAppointments() {
         return appointments;
     }
 
-    public void setAppointments(List<AppointmentForm> appointments) {
+    public void setAppointments(List<AssessorProfileAppointmentForm> appointments) {
         this.appointments = appointments;
     }
 
@@ -110,11 +110,11 @@ public class AssessorRegistrationDeclarationForm {
         this.hasFamilyAffiliations = hasFamilyAffiliations;
     }
 
-    public List<FamilyAffiliationForm> getFamilyAffiliations() {
+    public List<AssessorProfileFamilyAffiliationForm> getFamilyAffiliations() {
         return familyAffiliations;
     }
 
-    public void setFamilyAffiliations(List<FamilyAffiliationForm> familyAffiliations) {
+    public void setFamilyAffiliations(List<AssessorProfileFamilyAffiliationForm> familyAffiliations) {
         this.familyAffiliations = familyAffiliations;
     }
 
@@ -148,7 +148,7 @@ public class AssessorRegistrationDeclarationForm {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        AssessorRegistrationDeclarationForm that = (AssessorRegistrationDeclarationForm) o;
+        AssessorProfileDeclarationForm that = (AssessorProfileDeclarationForm) o;
 
         return new EqualsBuilder()
                 .append(principalEmployer, that.principalEmployer)

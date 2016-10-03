@@ -1,12 +1,12 @@
-package com.worth.ifs.assessment.form;
+package com.worth.ifs.assessment.form.profile;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
- * Form field model for the Assessor Registration/Declaration of Interest/Appointments, directorships or consultancies
+ * Form field model for the Assessor Profile Declaration of Interest Appointments, directorships or consultancies
  */
-public class AppointmentForm {
+public class AssessorProfileAppointmentForm {
     private String organisation;
     private String position;
 
@@ -32,7 +32,7 @@ public class AppointmentForm {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        AppointmentForm that = (AppointmentForm) o;
+        AssessorProfileAppointmentForm that = (AssessorProfileAppointmentForm) o;
 
         return new EqualsBuilder()
                 .append(organisation, that.organisation)

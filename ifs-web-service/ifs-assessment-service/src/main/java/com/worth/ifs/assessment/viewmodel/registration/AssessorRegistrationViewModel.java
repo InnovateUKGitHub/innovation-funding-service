@@ -1,4 +1,4 @@
-package com.worth.ifs.assessment.viewmodel;
+package com.worth.ifs.assessment.viewmodel.registration;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -6,11 +6,11 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 /**
  * Holder of model attributes for the Assessor Registration.
  */
-public class AssessorRegistrationYourDetailsViewModel {
+public class AssessorRegistrationViewModel {
     private String competitionInviteHash;
     private String email;
 
-    public AssessorRegistrationYourDetailsViewModel(String competitionInviteHash, String email) {
+    public AssessorRegistrationViewModel(String competitionInviteHash, String email) {
         this.email = email;
         this.competitionInviteHash = competitionInviteHash;
     }
@@ -33,11 +33,15 @@ public class AssessorRegistrationYourDetailsViewModel {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
+        if (this == o) {
+            return true;
+        }
 
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-        AssessorRegistrationYourDetailsViewModel that = (AssessorRegistrationYourDetailsViewModel) o;
+        AssessorRegistrationViewModel that = (AssessorRegistrationViewModel) o;
 
         return new EqualsBuilder()
                 .append(competitionInviteHash, that.competitionInviteHash)

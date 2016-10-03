@@ -1,12 +1,16 @@
-package com.worth.ifs.assessment.form;
+package com.worth.ifs.assessment.form.profile;
 
-public class AssessorRegistrationTermsForm {
+/**
+ * Form field model for the Assessor Profile Terms of Contract page
+ */
+public class AssessorProfileTermsForm {
+
     private Boolean agreesToTerms;
 
-    public AssessorRegistrationTermsForm() {
+    public AssessorProfileTermsForm() {
     }
 
-    public AssessorRegistrationTermsForm(Boolean agreesToTerms) {
+    public AssessorProfileTermsForm(Boolean agreesToTerms) {
         this.agreesToTerms = agreesToTerms;
     }
 

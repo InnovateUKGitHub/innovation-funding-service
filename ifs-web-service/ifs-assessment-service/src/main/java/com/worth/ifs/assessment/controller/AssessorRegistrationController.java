@@ -2,8 +2,9 @@ package com.worth.ifs.assessment.controller;
 
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.service.AddressRestService;
-import com.worth.ifs.assessment.form.AssessorRegistrationForm;
-import com.worth.ifs.assessment.model.*;
+import com.worth.ifs.assessment.form.registration.AssessorRegistrationForm;
+import com.worth.ifs.assessment.model.registration.AssessorRegistrationBecomeAnAssessorModelPopulator;
+import com.worth.ifs.assessment.model.registration.AssessorRegistrationModelPopulator;
 import com.worth.ifs.assessment.service.AssessorService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -51,7 +52,7 @@ public class AssessorRegistrationController {
     private AssessorRegistrationBecomeAnAssessorModelPopulator becomeAnAssessorModelPopulator;
 
     @Autowired
-    private AssessorRegistrationYourDetailsModelPopulator yourDetailsModelPopulator;
+    private AssessorRegistrationModelPopulator yourDetailsModelPopulator;
 
     @RequestMapping(value = "/{inviteHash}/start", method = RequestMethod.GET)
     public String becomeAnAssessor(Model model,
@@ -81,7 +82,7 @@ public class AssessorRegistrationController {
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             ServiceResult<Void> result = assessorService.createAssessorByInviteHash(inviteHash, registrationForm);
             return validationHandler.addAnyErrors(result, fieldErrorsToFieldErrors(), asGlobalErrors()).
-                    failNowOrSucceedWith(failureView, () -> "redirect:/registration/skills");
+                    failNowOrSucceedWith(failureView, () -> "redirect:/assessor/dashboard");
         });
     }
 

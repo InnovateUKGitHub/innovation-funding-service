@@ -1,4 +1,4 @@
-package com.worth.ifs.assessment.form;
+package com.worth.ifs.assessment.form.registration;
 
 import com.worth.ifs.controller.BaseBindingResultTarget;
 import com.worth.ifs.form.AddressForm;

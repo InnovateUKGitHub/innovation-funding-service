@@ -1,12 +1,12 @@
-package com.worth.ifs.assessment.form;
+package com.worth.ifs.assessment.form.profile;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
- * Form field model for the Assessor Registration -Declaration of Interest/Family affiliations/Appointments, directorships or consultancies
+ * Form field model for the Assessor Profile Declaration of Interest Family affiliations/Appointments, directorships or consultancies
  */
-public class FamilyAffiliationForm {
+public class AssessorProfileFamilyAffiliationForm {
 
     private String relation;
     private String organisation;
@@ -42,7 +42,7 @@ public class FamilyAffiliationForm {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        FamilyAffiliationForm that = (FamilyAffiliationForm) o;
+        AssessorProfileFamilyAffiliationForm that = (AssessorProfileFamilyAffiliationForm) o;
 
         return new EqualsBuilder()
                 .append(relation, that.relation)
