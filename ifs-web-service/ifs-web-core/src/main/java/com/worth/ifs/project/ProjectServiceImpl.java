@@ -6,7 +6,12 @@ import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
-import com.worth.ifs.project.resource.*;
+import com.worth.ifs.invite.resource.InviteProjectResource;
+import com.worth.ifs.invite.service.ProjectInviteRestService;
+import com.worth.ifs.project.resource.MonitoringOfficerResource;
+import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.project.resource.ProjectTeamStatusResource;
+import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.project.service.ProjectRestService;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.service.OrganisationRestService;
@@ -30,6 +35,9 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Autowired
     private ProjectRestService projectRestService;
+
+    @Autowired
+    private ProjectInviteRestService projectInviteRestService;
 
     @Autowired
     private ApplicationService applicationService;
@@ -175,6 +183,11 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    public ServiceResult<Void> acceptOrRejectOtherDocuments(Long projectId, Boolean approved) {
+        return projectRestService.acceptOrRejectOtherDocuments(projectId, approved).toServiceResult();
+    }
+
+    @Override
     public List<ProjectUserResource> getLeadPartners(Long projectId) {
         List<ProjectUserResource> partnerUsers = getProjectUsersWithPartnerRole(projectId);
         OrganisationResource leadOrganisation = getLeadOrganisation(projectId);
@@ -189,12 +202,8 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ServiceResult<Boolean> isOtherDocumentSubmitAllowed(Long projectId) {
-        RestResult<Boolean> restResult = projectRestService.isOtherDocumentsSubmitAllowed(projectId);
-
-        return restResult.isSuccess() ?
-                restResult.toServiceResult() :
-                ServiceResult.serviceFailure(restResult.getErrors());
+    public Boolean isOtherDocumentSubmitAllowed(Long projectId) {
+        return projectRestService.isOtherDocumentsSubmitAllowed(projectId).getSuccessObjectOrThrowException();
     }
 
     @Override
@@ -212,8 +221,64 @@ public class ProjectServiceImpl implements ProjectService {
         return projectRestService.getProjectTeamStatus(projectId, filterByUserId).getSuccessObjectOrThrowException();
     }
 
+    @Override
+    public Optional<ByteArrayResource> getSignedGrantOfferLetterFile(Long projectId) {
+        return projectRestService.getSignedGrantOfferLetterFile(projectId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public Optional<FileEntryResource> getSignedGrantOfferLetterFileDetails(Long projectId) {
+        return projectRestService.getSignedGrantOfferLetterFileDetails(projectId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public Optional<ByteArrayResource> getAdditionalContractFile(Long projectId) {
+        return projectRestService.getAdditionalContractFile(projectId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public Optional<FileEntryResource> getAdditionalContractFileDetails(Long projectId) {
+        return projectRestService.getAdditionalContractFileDetails(projectId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public Optional<ByteArrayResource> getGeneratedGrantOfferFile(Long projectId) {
+        return projectRestService.getGrantOfferFile(projectId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public Optional<FileEntryResource> getGeneratedGrantOfferFileDetails(Long projectId) {
+        return projectRestService.getGrantOfferFileDetails(projectId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public ServiceResult<FileEntryResource> addSignedGrantOfferLetter(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes) {
+        return projectRestService.addSignedGrantOfferLetterFile(projectId, contentType, fileSize, originalFilename, bytes).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<FileEntryResource> addGeneratedGrantOfferLetter(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes) {
+        return projectRestService.addGrantOfferLetterFile(projectId, contentType, fileSize, originalFilename, bytes).toServiceResult();
+    }
+
     private List<ProjectUserResource> getProjectUsersWithPartnerRole(Long projectId) {
         List<ProjectUserResource> projectUsers = getProjectUsersForProject(projectId);
         return simpleFilter(projectUsers, pu -> PARTNER.getName().equals(pu.getRoleName()));
     }
+
+    @Override
+    public ServiceResult<Void> saveProjectInvite (InviteProjectResource inviteProjectResource) {
+        return projectInviteRestService.saveProjectInvite (inviteProjectResource).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<Void> inviteFinanceContact (Long projectId, InviteProjectResource inviteProjectResource) {
+        return projectRestService.inviteFinanceContact (projectId, inviteProjectResource).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<List<InviteProjectResource>>  getInvitesByProject (Long projectId) {
+        return projectInviteRestService.getInvitesByProject (projectId).toServiceResult();
+    }
+
 }

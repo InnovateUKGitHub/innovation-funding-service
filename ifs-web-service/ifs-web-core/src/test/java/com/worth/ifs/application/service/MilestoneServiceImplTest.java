@@ -30,16 +30,15 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
     }
 
     @Test
-    public void test_getAllDatesByCompetitionId() {
-
+    public void test_getAllMilestonesByCompetitionId() {
         LocalDateTime milestoneDate = LocalDateTime.now();
 
         List<MilestoneResource> milestonesList = new ArrayList<>();
-        milestonesList.add(getNewMilestoneResource(milestoneDate));
+        milestonesList.add(getNewOpenDateMilestone(milestoneDate));
 
-        when(milestoneRestService.getAllDatesByCompetitionId(1L)).thenReturn(restSuccess(milestonesList));
+        when(milestoneRestService.getAllMilestonesByCompetitionId(1L)).thenReturn(restSuccess(milestonesList));
 
-        List<MilestoneResource> found = service.getAllDatesByCompetitionId(1L);
+        List<MilestoneResource> found = service.getAllMilestonesByCompetitionId(1L);
 
         MilestoneResource foundMilestone = found.get(0);
         assertEquals(Long.valueOf(1L), foundMilestone.getId());
@@ -49,10 +48,25 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
     }
 
     @Test
+    public void test_getMilestoneByTypeAndCompetitionId() {
+
+        LocalDateTime milestoneDate = LocalDateTime.now();
+        MilestoneResource milestoneResource = getNewBriefingEventMilestone(milestoneDate);
+
+        when(milestoneRestService.getMilestoneByTypeAndCompetitionId(MilestoneType.BRIEFING_EVENT, 1L)).thenReturn(restSuccess(milestoneResource));
+
+        MilestoneResource foundMilestone = service.getMilestoneByTypeAndCompetitionId(MilestoneType.BRIEFING_EVENT, 1L);
+        assertEquals(Long.valueOf(2L), foundMilestone.getId());
+        assertEquals(MilestoneType.BRIEFING_EVENT, foundMilestone.getType());
+        assertEquals(milestoneDate, foundMilestone.getDate());
+        assertEquals(Long.valueOf(1L), foundMilestone.getCompetition());
+    }
+
+    @Test
     public void test_create() {
         LocalDateTime milestoneDate = LocalDateTime.now();
 
-        when(milestoneRestService.create(MilestoneType.OPEN_DATE, 1L)).thenReturn(restSuccess(getNewMilestoneResource(milestoneDate)));
+        when(milestoneRestService.create(MilestoneType.OPEN_DATE, 1L)).thenReturn(restSuccess(getNewOpenDateMilestone(milestoneDate)));
 
         MilestoneResource foundMilestone = service.create(MilestoneType.OPEN_DATE, 1L);
 
@@ -63,24 +77,46 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
     }
 
     @Test
-    public void test_update() {
+    public void test_updateMilestones() {
         LocalDateTime milestoneDate = LocalDateTime.now();
 
         List<MilestoneResource> milestonesList = new ArrayList<>();
-        milestonesList.add(getNewMilestoneResource(milestoneDate));
+        milestonesList.add(getNewOpenDateMilestone(milestoneDate));
         milestonesList.get(0).setId(2L);
 
-        when(milestoneRestService.update(milestonesList, 1L)).thenReturn(restSuccess());
+        when(milestoneRestService.updateMilestones(milestonesList, 1L)).thenReturn(restSuccess());
 
-        List<Error> errorList = service.update(milestonesList, 1L);
-        assertTrue(errorList.size() == 0);
+        List<Error> errorList = service.updateMilestones(milestonesList, 1L);
+        assertTrue(errorList.isEmpty());
     }
 
-    private MilestoneResource getNewMilestoneResource(LocalDateTime milestoneDate) {
+    @Test
+    public void test_updateMilestone() {
+        LocalDateTime milestoneDate = LocalDateTime.now();
+        MilestoneResource milestone = getNewBriefingEventMilestone(milestoneDate);
+
+        when(milestoneRestService.updateMilestone(milestone)).thenReturn(restSuccess());
+
+        List<Error> errors = service.updateMilestone(milestone);
+        assertTrue(errors.isEmpty());
+    }
+
+    private MilestoneResource getNewOpenDateMilestone(LocalDateTime milestoneDate) {
 
         MilestoneResource milestoneResource = newMilestoneResource()
                 .withId(1L)
                 .withName(MilestoneType.OPEN_DATE)
+                .withDate(milestoneDate)
+                .withCompetitionId(1L).build();
+
+        return milestoneResource;
+    }
+
+    private MilestoneResource getNewBriefingEventMilestone(LocalDateTime milestoneDate) {
+
+        MilestoneResource milestoneResource = newMilestoneResource()
+                .withId(2L)
+                .withName(MilestoneType.BRIEFING_EVENT)
                 .withDate(milestoneDate)
                 .withCompetitionId(1L).build();
 

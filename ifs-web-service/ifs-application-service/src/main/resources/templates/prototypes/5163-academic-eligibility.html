@@ -33,15 +33,18 @@
 
 	<h2 class="heading-medium">Academic finances</h2>
 
-		<p>These finances were originally submitted at the application stage in Je-S.</p>
+	<p>These finances were originally submitted at the application stage in Je-S.</p>
 
-		<div class="upload-section">
-			<h3 class="heading-small no-margin">Download Je-S form:</h3>
-			<div class="uploaded-file"><a href="#">jes-1601603.pdf</a> (161.96kb)</div>
-		</div>
+	<div class="upload-section extra-margin-bottom">
+		<h3 class="heading-small no-margin">Download Je-S form:</h3>
+		<div class="uploaded-file"><a href="#">jes-1601603.pdf</a> (161.96kb)</div>
+	</div>
 
-		<!-- <div th:include="prototypes/fragments/academic-view :: prototype-academic-form" th:with="user=internal" th:remove="tag" /> -->
-	    
+	<!-- <div th:include="prototypes/fragments/academic-view :: prototype-academic-form" th:with="user=internal" th:remove="tag" /> -->
+	
+	
+	<!-- <div th:include="prototypes/fragments/academic-view :: prototype-academic-form" th:with="user=internal, type=checks" th:remove="tag" /> -->
+
 
 	<th:block th:unless="${param.status != null and param.status[0] == 'approved'}">
 

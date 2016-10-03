@@ -24,6 +24,7 @@ import java.util.Optional;
 
 import static com.worth.ifs.project.constant.ProjectActivityStates.*;
 import static com.worth.ifs.user.resource.OrganisationTypeEnum.isResearch;
+import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
 
 class AbstractProjectServiceImpl extends BaseTransactionalService {
     @Autowired
@@ -59,7 +60,11 @@ class AbstractProjectServiceImpl extends BaseTransactionalService {
 
     ProjectActivityStates createOtherDocumentStatus(final Project project) {
         if (project.getCollaborationAgreement() != null && project.getExploitationPlan() != null) {
-            return COMPLETE;
+            if (project.getDocumentsSubmittedDate() != null) {
+                return COMPLETE;
+            } else {
+                return PENDING;
+            }
         } else {
             return ACTION_REQUIRED;
         }
@@ -68,6 +73,15 @@ class AbstractProjectServiceImpl extends BaseTransactionalService {
     ProjectActivityStates createGrantOfferLetterStatus() {
         //TODO update logic when GrantOfferLetter is implemented
         return NOT_STARTED;
+    }
+
+    protected ProjectActivityStates createFinanceContactStatus(Project project, Organisation partnerOrganisation) {
+
+        Optional<ProjectUser> financeContactForOrganisation = simpleFindFirst(project.getProjectUsers(), pu ->
+                pu.getRole().isFinanceContact() &&
+                        pu.getOrganisation().getId().equals(partnerOrganisation.getId()));
+
+        return financeContactForOrganisation.map(existing -> COMPLETE).orElse(ACTION_REQUIRED);
     }
 
     ProjectActivityStates createProjectDetailsStatus(Project project) {

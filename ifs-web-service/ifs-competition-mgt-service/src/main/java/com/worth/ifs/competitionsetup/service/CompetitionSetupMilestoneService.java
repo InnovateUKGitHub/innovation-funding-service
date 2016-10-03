@@ -2,7 +2,6 @@ package com.worth.ifs.competitionsetup.service;
 
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.competition.resource.MilestoneResource;
-import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.form.MilestonesForm;
 import com.worth.ifs.competitionsetup.model.MilestoneEntry;
 import org.apache.commons.collections4.map.LinkedMap;
@@ -21,4 +20,6 @@ public interface CompetitionSetupMilestoneService {
 	List<Error> validateMilestoneDates(LinkedMap<String, MilestoneEntry> milestonesFormEntries);
 
 	void sortMilestones(MilestonesForm MilestoneForm);
+
+	Boolean isMilestoneDateValid(Integer day, Integer month, Integer year);
 }

@@ -6,6 +6,7 @@ import com.worth.ifs.address.domain.AddressType;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.bankdetails.domain.BankDetails;
+import com.worth.ifs.commons.error.CommonErrors;
 import com.worth.ifs.commons.error.CommonFailureKeys;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -28,12 +29,10 @@ import com.worth.ifs.project.resource.*;
 import com.worth.ifs.user.domain.*;
 import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import com.worth.ifs.user.resource.UserRoleType;
-import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.File;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -41,7 +40,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -62,6 +60,7 @@ import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newF
 import static com.worth.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
 import static com.worth.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static com.worth.ifs.invite.domain.ProjectParticipantRole.*;
+import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static com.worth.ifs.organisation.builder.OrganisationAddressBuilder.newOrganisationAddress;
 import static com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
 import static com.worth.ifs.project.builder.ProjectBuilder.newProject;
@@ -79,12 +78,14 @@ import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
 public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> {
@@ -109,7 +110,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         organisation = newOrganisation().build();
 
-        leadApplicantRole = newRole(UserRoleType.LEADAPPLICANT).build();
+        leadApplicantRole = newRole(LEADAPPLICANT).build();
         projectManagerRole = newRole(UserRoleType.PROJECT_MANAGER).build();
 
         user = newUser().
@@ -526,6 +527,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         Project projectInDB = ProjectBuilder.newProject()
                 .withName("Project 1")
+                .withApplication(application)
                 .build();
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
@@ -554,6 +556,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         Project projectInDB = ProjectBuilder.newProject()
                 .withName("Project 1")
+                .withApplication(application)
                 .build();
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
@@ -580,6 +583,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         Project projectInDB = ProjectBuilder.newProject()
                 .withName("Project 1")
+                .withApplication(application)
                 .build();
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
@@ -819,6 +823,38 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     }
 
     @Test
+    public void testAcceptOrRejectOtherDocumentsWhenProjectNotInDB() {
+
+        Long projectId = 1L;
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(null);
+
+        ServiceResult<Void> result = service.acceptOrRejectOtherDocuments(projectId, true);
+
+        assertTrue(result.isFailure());
+
+        assertTrue(result.getFailure().is(CommonErrors.notFoundError(Project.class, projectId)));
+
+    }
+
+    @Test
+    public void testAcceptOrRejectOtherDocumentsSuccess() {
+
+        Long projectId = 1L;
+
+        Project projectInDB = newProject().withId(projectId).build();
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
+
+        ServiceResult<Void> result = service.acceptOrRejectOtherDocuments(projectId, true);
+
+        assertTrue(result.isSuccess());
+
+        assertEquals(true, projectInDB.getOtherDocumentsApproved());
+
+    }
+
+    @Test
     public void testCreateCollaborationAgreementFileEntry() {
         assertCreateFile(
                 project::getCollaborationAgreement,
@@ -895,14 +931,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     }
 
     @Test
-    public void testRetrieveUploadedFilesExist() {
-        assertUploadedFilesExist(
-                project::setCollaborationAgreement,
-                project::setExploitationPlan,
-                () -> service.retrieveUploadedDocuments(123L));
-    }
-
-    @Test
     public void testFilesCanBeSubmitted() {
         assertFilesCanBeSubmittedByProjectManagerAndFilesExist(
                 project::setCollaborationAgreement,
@@ -935,7 +963,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(projectUserRepositoryMock.findByProjectId(project.getId())).thenReturn(projectUsers);
         when(projectRepositoryMock.findOne(project.getId())).thenReturn(project);
 
-        assertSetDocumentsDateimeIfProjectManagerAndFilesExist(
+        assertSetDocumentsDateTimeIfProjectManagerAndFilesExist(
                 project::setCollaborationAgreement,
                 project::setExploitationPlan,
                 () -> service.saveDocumentsSubmitDateTime(project.getId(), LocalDateTime.now()));
@@ -973,7 +1001,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     }
 
 
-    private void assertSetDocumentsDateimeIfProjectManagerAndFilesExist(Consumer<FileEntry> fileSetter1,
+    private void assertSetDocumentsDateTimeIfProjectManagerAndFilesExist(Consumer<FileEntry> fileSetter1,
                                                                        Consumer<FileEntry> fileSetter2,
                                                                        Supplier<ServiceResult<Void>> getConditionFn) {
         Supplier<InputStream> inputStreamSupplier1 = () -> null;
@@ -984,6 +1012,23 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         assertTrue(result.isSuccess());
 
+    }
+
+    @Test
+    public void testInviteProjectFinanceUser(){
+        Organisation o = newOrganisation().build();
+        InviteProjectResource invite = ProjectInviteResourceBuilder.newInviteProjectResource().build();
+        ProcessRole[] roles = newProcessRole().withOrganisation(o).withRole(LEADAPPLICANT).build(1).toArray(new ProcessRole[0]);
+        Application a = newApplication().withProcessRoles(roles).build();
+
+        Project project = newProject().withId(projectId).withApplication(a).build();
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(notificationServiceMock.sendNotification(any(), eq(EMAIL))).thenReturn(serviceSuccess());
+
+        ServiceResult<Void> success = service.inviteFinanceContact(project.getId(), invite);
+
+        assertTrue(success.isSuccess());
     }
 
 
@@ -1216,8 +1261,8 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         getFileEntryResources(fileSetter1, fileSetter2, inputStreamSupplier1, inputStreamSupplier2);
         ServiceResult<Boolean> result = getConditionFn.get();
 
-        assertFalse(result.isSuccess());
-        assertTrue(result.isFailure());
+        assertTrue(result.isSuccess());
+        assertFalse(result.getSuccessObject());
 
     }
 
@@ -1283,53 +1328,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         return fileEntryResourcesToGet;
     }
 
-    private void assertGetFileContents(Consumer<FileEntry> fileSetter, Supplier<ServiceResult<FileAndContents>> getFileContentsFn) {
-
-        FileEntry fileToGet = newFileEntry().build();
-        Supplier<InputStream> inputStreamSupplier = () -> null;
-
-        FileEntryResource fileResourceToGet = newFileEntryResource().build();
-
-        fileSetter.accept(fileToGet);
-        when(fileServiceMock.getFileByFileEntryId(fileToGet.getId())).thenReturn(serviceSuccess(inputStreamSupplier));
-        when(fileEntryMapperMock.mapToResource(fileToGet)).thenReturn(fileResourceToGet);
-
-        ServiceResult<FileAndContents> result = getFileContentsFn.get();
-        assertTrue(result.isSuccess());
-        assertEquals(fileResourceToGet, result.getSuccessObject().getFileEntry());
-        assertEquals(inputStreamSupplier, result.getSuccessObject().getContentsSupplier());
-    }
-
-    private void assertCreateFile(Supplier<FileEntry> fileGetter, BiFunction<FileEntryResource, Supplier<InputStream>, ServiceResult<FileEntryResource>> createFileFn) {
-
-        FileEntryResource fileToCreate = newFileEntryResource().build();
-        Supplier<InputStream> inputStreamSupplier = () -> null;
-
-        FileEntry createdFile = newFileEntry().build();
-        FileEntryResource createdFileResource = newFileEntryResource().build();
-
-        when(fileServiceMock.createFile(fileToCreate, inputStreamSupplier)).thenReturn(serviceSuccess(Pair.of(new File("blah"), createdFile)));
-        when(fileEntryMapperMock.mapToResource(createdFile)).thenReturn(createdFileResource);
-
-        ServiceResult<FileEntryResource> result = createFileFn.apply(fileToCreate, inputStreamSupplier);
-        assertTrue(result.isSuccess());
-        assertEquals(createdFileResource, result.getSuccessObject());
-        assertEquals(createdFile, fileGetter.get());
-    }
-
-    private void assertGetFileDetails(Consumer<FileEntry> fileSetter, Supplier<ServiceResult<FileEntryResource>> getFileDetailsFn) {
-        FileEntry fileToGet = newFileEntry().build();
-
-        FileEntryResource fileResourceToGet = newFileEntryResource().build();
-
-        fileSetter.accept(fileToGet);
-        when(fileEntryMapperMock.mapToResource(fileToGet)).thenReturn(fileResourceToGet);
-
-        ServiceResult<FileEntryResource> result = getFileDetailsFn.get();
-        assertTrue(result.isSuccess());
-        assertEquals(fileResourceToGet, result.getSuccessObject());
-    }
-
     private void assertDeleteFile(Supplier<FileEntry> fileGetter, Consumer<FileEntry> fileSetter, Supplier<ServiceResult<Void>> deleteFileFn) {
         FileEntry fileToDelete = newFileEntry().build();
 
@@ -1341,23 +1339,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         assertNull(fileGetter.get());
 
         verify(fileServiceMock).deleteFile(fileToDelete.getId());
-    }
-
-    private void assertUpdateFile(Supplier<FileEntry> fileGetter, BiFunction<FileEntryResource, Supplier<InputStream>, ServiceResult<Void>> updateFileFn) {
-        FileEntryResource fileToUpdate = newFileEntryResource().build();
-        Supplier<InputStream> inputStreamSupplier = () -> null;
-
-        FileEntry updatedFile = newFileEntry().build();
-        FileEntryResource updatedFileResource = newFileEntryResource().build();
-
-        when(fileServiceMock.updateFile(fileToUpdate, inputStreamSupplier)).thenReturn(serviceSuccess(Pair.of(new File("blah"), updatedFile)));
-        when(fileEntryMapperMock.mapToResource(updatedFile)).thenReturn(updatedFileResource);
-
-        ServiceResult<Void> result = updateFileFn.apply(fileToUpdate, inputStreamSupplier);
-        assertTrue(result.isSuccess());
-        assertEquals(updatedFile, fileGetter.get());
-
-        verify(fileServiceMock).updateFile(fileToUpdate, inputStreamSupplier);
     }
 
     private Project createProjectExpectationsFromOriginalApplication(Application application) {

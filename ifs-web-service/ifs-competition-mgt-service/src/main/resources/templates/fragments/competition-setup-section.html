@@ -653,7 +653,9 @@
         Here you can define the Competiton milestones. Submission date will generate other dates. You will be able to edit those, but it will override the dates calculated if you do.
     </div>
 
-    <form th:action="@{(${editable} ? '' : 'milestones/edit')}" id="milestones" method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
+    <form th:action="@{(${editable} ? '' : 'milestones/edit')}"
+          data-autosave="compSetup" th:attr="data-competition=${competition.id}" data-section="milestones"
+          method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
 
         <div class="error-summary" th:attr="aria-hidden=${!#fields.hasAnyErrors()}">
            <h2 class="heading-medium error-summary-heading">
@@ -697,41 +699,40 @@
                       <td class="js-addWeekDay" th:text="${milestoneEntry.value.dayOfWeek}"></td>
                       <td class="day">
                           <input type="number"
-                                placeholder="DD"
-                                min="1"
-                                max="31" maxlength="2"
-                                required="required"
-                                class="form-control width-small"
-                                data-date-in-table=""
-                                th:attr="aria-labelledby=${'milestone-' + milestoneEntry.key}"
-                                th:value="${milestoneEntry.value.day}"
-                                th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].day'"
-                          />
+                                 placeholder="DD"
+                                 min="1"
+                                 max="31"
+                                 data-maxlength-errormessage=""
+                                 required="required"
+                                 class="form-control width-small"
+                                 th:attr="aria-labelledby=${'milestone-' + milestoneEntry.key},
+                                           data-date=${milestoneEntry.value.day+'-'+milestoneEntry.value.month+'-'+milestoneEntry.value.year}"
+                                 th:value="${milestoneEntry.value.day}"
+                                 th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].day'"/>
                       </td>
                       <td class="month">
                           <input type="number"
                                 placeholder="MM"
                                 min="1"
-                                max="12" maxlength="2"
+                                max="12"
                                 required="required"
                                 class="form-control width-small"
-                                data-date-in-table=""
-                                th:attr="aria-labelledby=${'milestone-' + milestoneEntry.key}"
+                                th:attr="aria-labelledby=${'milestone-' + milestoneEntry.key},data-date=${milestoneEntry.value.day+'-'+milestoneEntry.value.month+'-'+milestoneEntry.value.year}"
                                 th:value="${milestoneEntry.value.month}"
                                 th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].month'" />
                       </td>
                       <td class="year" >
                           <input type="number"
                                  placeholder="YYYY"
-                                 th:attr="aria-labelledby=${'milestone-' + milestoneEntry.key}"
+                                 th:attr="aria-labelledby=${'milestone-' + milestoneEntry.key},
+                                 data-date=${milestoneEntry.value.day+'-'+milestoneEntry.value.month+'-'+milestoneEntry.value.year},
+                                 min=${#dates.format(#dates.createNow(), 'yyyy')}"
                                  required="required"
-                                 maxlength="4"
                                  class="form-control width-small"
-                                 data-date-in-table=""
                                  th:value="${milestoneEntry.value.year}"
                                  th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].year'"/>
-                      </td>
-                  </tr>
+                          </td>
+                    </tr>
                 </tbody>
             </table>
             <button class="button extra-margin">Done</button>

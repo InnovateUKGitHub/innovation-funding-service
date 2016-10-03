@@ -67,7 +67,7 @@ public class InviteProjectServiceImpl extends BaseTransactionalService implement
     }
 
     @Override
-    public ServiceResult<Void> saveFinanceContactInvite(@P("inviteProjectResource") InviteProjectResource inviteProjectResource) {
+    public ServiceResult<Void> saveProjectInvite(@P("inviteProjectResource") InviteProjectResource inviteProjectResource) {
 
         if (inviteProjectResourceIsValid(inviteProjectResource)) {
             ProjectInvite projectInvite = inviteMapper.mapToDomain(inviteProjectResource);
@@ -77,7 +77,7 @@ public class InviteProjectServiceImpl extends BaseTransactionalService implement
                 errors.getFieldErrors().stream().peek(e -> LOG.debug(format("Field error: %s ", e.getField())));
                 return serviceFailure(badRequestError(errors.toString()));
             } else {
-                projectInvite.getHash();
+                projectInvite.generateHash();
                 inviteProjectRepository.save(projectInvite);
                 return serviceSuccess();
             }
@@ -85,7 +85,6 @@ public class InviteProjectServiceImpl extends BaseTransactionalService implement
         return serviceFailure(badRequestError("The Invite is not valid"));
 
     }
-
 
     @Override
     public ServiceResult<InviteProjectResource> getInviteByHash(String hash) {
