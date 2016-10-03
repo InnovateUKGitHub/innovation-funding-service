@@ -27,6 +27,7 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -440,14 +441,18 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     private List<BigDecimal> buildTotalForEachMonth(SpendProfileTableResource table) {
         Map<String, List<BigDecimal>> monthlyCostsPerCategoryMap = table.getMonthlyCostsPerCategoryMap();
         List<BigDecimal> totalForEachMonth = Stream.generate(() -> BigDecimal.ZERO).limit(table.getMonths().size()).collect(Collectors.toList());
-        for (int index = 0; index < totalForEachMonth.size(); index++) {
-            BigDecimal totalForThisMonth = totalForEachMonth.get(index);
-            for (Map.Entry<String, List<BigDecimal>> entry : monthlyCostsPerCategoryMap.entrySet()) {
-                BigDecimal costForThisMonthForCategory = entry.getValue().get(index);
-                totalForThisMonth = totalForThisMonth.add(costForThisMonthForCategory);
-            }
-            totalForEachMonth.set(index, totalForThisMonth);
-        }
+        AtomicInteger atomicInteger = new AtomicInteger(0);
+        totalForEachMonth.forEach(totalForThisMonth -> {
+            int index = atomicInteger.getAndIncrement();
+            monthlyCostsPerCategoryMap.forEach((category, value) -> {
+                BigDecimal costForThisMonthForCategory = value.get(index);
+                if (totalForEachMonth.get(index) != null) {
+                    totalForEachMonth.set(index, totalForEachMonth.get(index).add(costForThisMonthForCategory));
+                } else {
+                    totalForEachMonth.set(index, costForThisMonthForCategory);
+                }
+            });
+        });
         return totalForEachMonth;
     }
 

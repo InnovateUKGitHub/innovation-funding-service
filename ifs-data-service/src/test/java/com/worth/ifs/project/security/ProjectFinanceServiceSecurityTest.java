@@ -72,6 +72,23 @@ public class ProjectFinanceServiceSecurityTest extends BaseServiceSecurityTest<P
     }
 
     @Test
+    public void testGetSpendProfileCSV() {
+
+        Long projectId = 1L;
+        Long organisationId = 1L;
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        assertAccessDenied(() -> classUnderTest.getSpendProfileCSV(projectOrganisationCompositeId),
+                () -> {
+                    verify(projectFinancePermissionRules).partnersCanViewTheirOwnSpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
+                    verify(projectFinancePermissionRules).projectFinanceUserCanViewAnySpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
+                    verify(projectFinancePermissionRules).projectManagerCanViewAnySpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
+                    verifyNoMoreInteractions(projectFinancePermissionRules);
+                });
+    }
+
+    @Test
     public void testGetSpendProfile() {
 
         Long projectId = 1L;

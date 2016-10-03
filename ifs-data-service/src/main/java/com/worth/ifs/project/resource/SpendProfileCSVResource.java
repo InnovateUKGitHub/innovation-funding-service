@@ -9,6 +9,9 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+/*
+ * Resource object to wrap the spend profile CSV data and information for the export.
+ */
 public class SpendProfileCSVResource {
 
     private String csvData;
