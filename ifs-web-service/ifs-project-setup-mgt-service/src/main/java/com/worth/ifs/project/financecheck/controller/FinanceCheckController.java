@@ -9,15 +9,15 @@ import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
-import com.worth.ifs.project.financecheck.form.FinanceCheckSummaryForm;
-import com.worth.ifs.project.financecheck.viewmodel.ProjectFinanceCheckSummaryViewModel;
 import com.worth.ifs.project.ProjectService;
 import com.worth.ifs.project.finance.ProjectFinanceService;
 import com.worth.ifs.project.finance.resource.FinanceCheckResource;
 import com.worth.ifs.project.financecheck.FinanceCheckService;
 import com.worth.ifs.project.financecheck.form.CostFormField;
 import com.worth.ifs.project.financecheck.form.FinanceCheckForm;
+import com.worth.ifs.project.financecheck.form.FinanceCheckSummaryForm;
 import com.worth.ifs.project.financecheck.viewmodel.FinanceCheckViewModel;
+import com.worth.ifs.project.financecheck.viewmodel.ProjectFinanceCheckSummaryViewModel;
 import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
@@ -40,6 +40,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import static com.worth.ifs.application.resource.ApplicationResource.formatter;
 import static com.worth.ifs.util.CollectionFunctions.*;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -128,14 +129,18 @@ public class FinanceCheckController {
     }
 
     private String doViewFinanceCheckForm(Long projectId, Long organisationId, Model model){
+        ProjectResource project = projectService.getById(projectId);
+        ApplicationResource application = applicationService.getById(project.getApplication());
+        String competitionName = application.getCompetitionName();
+        String formattedCompId = formatter.format(application.getCompetition());
         OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
         boolean isResearch = OrganisationTypeEnum.isResearch(organisationResource.getOrganisationType());
         Optional<ProjectUserResource> financeContact = getFinanceContact(projectId, organisationId);
         FinanceCheckViewModel financeCheckViewModel;
         if(financeContact.isPresent()){
-            financeCheckViewModel = new FinanceCheckViewModel(financeContact.get().getUserName(), financeContact.get().getEmail(), isResearch);
+            financeCheckViewModel = new FinanceCheckViewModel(formattedCompId, competitionName, financeContact.get().getUserName(), financeContact.get().getEmail(), isResearch);
         } else {
-            financeCheckViewModel = new FinanceCheckViewModel(isResearch);
+            financeCheckViewModel = new FinanceCheckViewModel(formattedCompId, competitionName, isResearch);
         }
         model.addAttribute("model", financeCheckViewModel);
         return "project/financecheck/partner-project-eligibility";

@@ -7,6 +7,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import java.time.LocalDate;
 
 public class FinanceCheckViewModel {
+    private String formattedCompetitionNumber;
+    private String competitionName;
     private String financeContactName;
     private String financeContactEmail;
     private boolean isResearch;
@@ -17,7 +19,9 @@ public class FinanceCheckViewModel {
     public FinanceCheckViewModel() {
     }
 
-    public FinanceCheckViewModel(String financeContactName, String financeContactEmail, boolean isResearch, boolean isApproved, String approverName, LocalDate approvalDate) {
+    public FinanceCheckViewModel(String formattedCompetitionNumber, String competitionName, String financeContactName, String financeContactEmail, boolean isResearch, boolean isApproved, String approverName, LocalDate approvalDate) {
+        this.formattedCompetitionNumber = formattedCompetitionNumber;
+        this.competitionName = competitionName;
         this.financeContactName = financeContactName;
         this.financeContactEmail = financeContactEmail;
         this.isResearch = isResearch;
@@ -26,12 +30,12 @@ public class FinanceCheckViewModel {
         this.approvalDate = approvalDate;
     }
 
-    public FinanceCheckViewModel(String financeContactName, String financeContactEmail, boolean isResearch) {
-        this(financeContactName, financeContactEmail, isResearch, false, null, null);
+    public FinanceCheckViewModel(String formattedCompetitionNumber, String competitionName, String financeContactName, String financeContactEmail, boolean isResearch) {
+        this(formattedCompetitionNumber, competitionName, financeContactName, financeContactEmail, isResearch, false, null, null);
     }
 
-    public FinanceCheckViewModel(boolean isResearch) {
-        this(null, null, isResearch, false, null, null);
+    public FinanceCheckViewModel(String formattedCompetitionNumber, String competitionName, boolean isResearch) {
+        this(formattedCompetitionNumber, competitionName, null, null, isResearch, false, null, null);
     }
 
     public String getFinanceContactName() {
@@ -82,6 +86,22 @@ public class FinanceCheckViewModel {
         this.approvalDate = approvalDate;
     }
 
+    public String getFormattedCompetitionNumber() {
+        return formattedCompetitionNumber;
+    }
+
+    public void setFormattedCompetitionNumber(String formattedCompetitionNumber) {
+        this.formattedCompetitionNumber = formattedCompetitionNumber;
+    }
+
+    public String getCompetitionName() {
+        return competitionName;
+    }
+
+    public void setCompetitionName(String competitionName) {
+        this.competitionName = competitionName;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -93,6 +113,8 @@ public class FinanceCheckViewModel {
         return new EqualsBuilder()
                 .append(isResearch, that.isResearch)
                 .append(isApproved, that.isApproved)
+                .append(formattedCompetitionNumber, that.formattedCompetitionNumber)
+                .append(competitionName, that.competitionName)
                 .append(financeContactName, that.financeContactName)
                 .append(financeContactEmail, that.financeContactEmail)
                 .append(approverName, that.approverName)
@@ -103,6 +125,8 @@ public class FinanceCheckViewModel {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
+                .append(formattedCompetitionNumber)
+                .append(competitionName)
                 .append(financeContactName)
                 .append(financeContactEmail)
                 .append(isResearch)
@@ -115,6 +139,8 @@ public class FinanceCheckViewModel {
     @Override
     public String toString() {
         return new ToStringBuilder(this)
+                .append("formattedCompetitionNumber", formattedCompetitionNumber)
+                .append("competitionName", competitionName)
                 .append("financeContactName", financeContactName)
                 .append("financeContactEmail", financeContactEmail)
                 .append("isResearch", isResearch)
