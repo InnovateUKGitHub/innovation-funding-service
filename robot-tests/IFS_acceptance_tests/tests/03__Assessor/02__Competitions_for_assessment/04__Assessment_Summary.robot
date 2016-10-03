@@ -124,24 +124,30 @@ Word count check: Your feedback
     [Documentation]    INFUND-1485
     ...
     ...    INFUND-4217
+    ...
+    ...    INFUND-5178
     [Tags]    HappyPath
     When the user enters text to a text field    id=feedback    Testing the feedback word count. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco
     Then the word count should be correct    Words remaining: -4
     And the user clicks the button/link    jQuery=.button:contains(Save assessment)
     Then the user should see an error    Maximum word count exceeded. Please reduce your word count to 100.
     And the user enters text to a text field    id=feedback    Testing the feedback word count.
-    Then the word count should be correct    Words remaining: 95
+    Then The user should not see the text in the page    Maximum word count exceeded. Please reduce your word count to 100.
+    And the word count should be correct    Words remaining: 95
 
 Word count check: Comments for InnovateUK
     [Documentation]    INFUND-1485
     ...
     ...    INFUND-4217
+    ...
+    ...    INFUND-5178
     When the user enters text to a text field    id=comment    Testing the comments word count. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco
     Then the word count should be correct    Words remaining: -4
     And the user clicks the button/link    jQuery=.button:contains(Save assessment)
     Then the user should see an error    Maximum word count exceeded. Please reduce your word count to 100.
     And the user enters text to a text field    id=comment    Testing the comments word count.
-    Then the word count should be correct    Words remaining: 95
+    Then The user should not see the text in the page    Maximum word count exceeded. Please reduce your word count to 100.
+    And the word count should be correct    Words remaining: 95
 
 Your Feedback is not mandatory when Yes is selected
     [Documentation]    INFUND-4996
