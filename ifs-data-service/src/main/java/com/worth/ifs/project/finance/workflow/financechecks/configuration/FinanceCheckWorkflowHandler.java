@@ -8,6 +8,7 @@ import com.worth.ifs.project.finance.resource.FinanceCheckOutcomes;
 import com.worth.ifs.project.finance.resource.FinanceCheckState;
 import com.worth.ifs.project.repository.PartnerOrganisationRepository;
 import com.worth.ifs.project.repository.ProjectUserRepository;
+import com.worth.ifs.user.domain.User;
 import com.worth.ifs.workflow.BaseWorkflowEventHandler;
 import com.worth.ifs.workflow.domain.ActivityType;
 import com.worth.ifs.workflow.repository.ProcessRepository;
@@ -51,8 +52,8 @@ public class FinanceCheckWorkflowHandler extends BaseWorkflowEventHandler<Financ
         return fireEvent(financeCheckFiguresEditedEvent(partnerOrganisation, projectUser, FINANCE_CHECK_FIGURES_EDITED), partnerOrganisation);
     }
 
-    public boolean approveFinanceCheckFigures(PartnerOrganisation partnerOrganisation, ProjectUser projectUser) {
-        return fireEvent(approveFinanceCheckMessage(projectUser, partnerOrganisation), partnerOrganisation);
+    public boolean approveFinanceCheckFigures(PartnerOrganisation partnerOrganisation, User financeTeamUser) {
+        return fireEvent(approveFinanceCheckMessage(financeTeamUser, partnerOrganisation), partnerOrganisation);
     }
 
     public boolean isApprovalAllowed(PartnerOrganisation partnerOrganisation) {
@@ -109,10 +110,10 @@ public class FinanceCheckWorkflowHandler extends BaseWorkflowEventHandler<Financ
                 .setHeader("participant", projectUser);
     }
 
-    private MessageBuilder<FinanceCheckOutcomes> approveFinanceCheckMessage(ProjectUser projectUser, PartnerOrganisation partnerOrganisation) {
+    private MessageBuilder<FinanceCheckOutcomes> approveFinanceCheckMessage(User financeTeamMember, PartnerOrganisation partnerOrganisation) {
         return MessageBuilder
                 .withPayload(APPROVE)
                 .setHeader("target", partnerOrganisation)
-                .setHeader("participant", projectUser);
+                .setHeader("participant", financeTeamMember);
     }
 }

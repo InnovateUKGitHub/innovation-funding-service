@@ -18,7 +18,6 @@ import static com.worth.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static junit.framework.TestCase.fail;
-import static org.mockito.Mockito.verify;
 
 public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<FinanceCheckService> {
 
@@ -100,6 +99,11 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
 
         @Override
         public ServiceResult<FinanceCheckResource> generate(ProjectOrganisationCompositeId key) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> approve(Long projectId, Long organisationId) {
             return null;
         }
     }
