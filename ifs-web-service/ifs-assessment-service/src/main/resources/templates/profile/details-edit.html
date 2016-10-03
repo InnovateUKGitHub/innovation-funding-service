@@ -16,10 +16,10 @@
                 <h1 class="heading-xlarge">Edit your details</h1>
             </div>
 
-            <form th:action="@{/registration/{inviteHash}/register(inviteHash=${model.competitionInviteHash})}" method="post" th:object="${form}" novalidate="novalidate">
+            <form action="" method="post" novalidate="novalidate">
                 <div class="error-summary" th:if="${#fields.hasErrors('*')}">
                     <h1 class="heading-medium error-summary-heading">
-                        We were unable to create your account
+                        We were unable to update your account
                     </h1>
                     <ul class="error-summary-list">
                         <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
@@ -151,12 +151,12 @@
 
                 <div class="form-group">
                     <h3 class="heading-small">Email</h3>
-                    <p class="form-hint">You will need this to sign into your account, the provided email is:<br /><strong th:text="${model.email}"></strong></p>
+                    <p class="form-hint">Your email address cannot be changed in the system<br><strong>jsmith@assessor.co.uk</strong></p>
                 </div>
 
                 <p>To change your email address please contact Innovate UK: phone <strong>0300 321 4357</strong></p>
 
-                <button class="button button-large extra-margin" name="create-account" type="submit">Continue</button>
+                <button class="button button-large extra-margin" type="submit">Save changes</button>
             </form>
 
             <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>
