@@ -39,9 +39,6 @@ public class ByApplicationFinanceCostCategoriesStrategy implements CostCategoryT
     private OrganisationService organisationService;
 
     @Autowired
-    private OrganisationTypeService organisationTypeService;
-
-    @Autowired
     private ProjectService projectService;
 
     @Autowired

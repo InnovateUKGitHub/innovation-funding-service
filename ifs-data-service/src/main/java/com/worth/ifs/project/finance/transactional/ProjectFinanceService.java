@@ -1,6 +1,9 @@
 package com.worth.ifs.project.finance.transactional;
 
+import com.worth.ifs.commons.security.NotSecured;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.project.finance.domain.CostCategoryType;
+import com.worth.ifs.project.finance.resource.CostCategoryTypeResource;
 import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.SpendProfileResource;
@@ -28,4 +31,7 @@ public interface ProjectFinanceService {
 
     @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'MARK_SPEND_PROFILE_COMPLETE')")
     ServiceResult<Void> markSpendProfile(ProjectOrganisationCompositeId projectOrganisationCompositeId, Boolean complete);
+
+    @NotSecured(value = "This Service is to be used within other secured services", mustBeSecuredByOtherServices = true)
+    ServiceResult<CostCategoryTypeResource> findByCostCategoryGroupId(Long costCategoryGroupId);
 }
