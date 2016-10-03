@@ -1,4 +1,4 @@
-package com.worth.ifs.finance.spendprofile.summary.viewmodel;
+package com.worth.ifs.project.financecheck.viewmodel;
 
 import com.worth.ifs.application.resource.CompetitionSummaryResource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * View model backing the internal Finance Team members view of the Spend Profile summary page
  */
-public class ProjectSpendProfileSummaryViewModel {
+public class ProjectFinanceCheckSummaryViewModel {
 
     public enum Viability {
         REVIEW,
@@ -121,7 +121,7 @@ public class ProjectSpendProfileSummaryViewModel {
     private BigDecimal totalPercentageGrant;
     private boolean spendProfilesGenerated;
 
-    public ProjectSpendProfileSummaryViewModel(
+    public ProjectFinanceCheckSummaryViewModel(
             Long projectId, CompetitionSummaryResource competitionSummary,
             List<SpendProfileOrganisationRow> partnerOrganisationDetails,
             LocalDate projectStartDate, int durationInMonths, BigDecimal totalProjectCost, BigDecimal grantAppliedFor,
@@ -189,7 +189,7 @@ public class ProjectSpendProfileSummaryViewModel {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        ProjectSpendProfileSummaryViewModel that = (ProjectSpendProfileSummaryViewModel) o;
+        ProjectFinanceCheckSummaryViewModel that = (ProjectFinanceCheckSummaryViewModel) o;
 
         return new EqualsBuilder()
                 .append(durationInMonths, that.durationInMonths)

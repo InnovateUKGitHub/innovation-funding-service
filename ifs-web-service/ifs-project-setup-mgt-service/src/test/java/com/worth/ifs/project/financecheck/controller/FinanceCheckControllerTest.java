@@ -5,7 +5,7 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.CompetitionSummaryResource;
 import com.worth.ifs.finance.builder.ApplicationFinanceResourceBuilder;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
-import com.worth.ifs.finance.spendprofile.summary.viewmodel.ProjectSpendProfileSummaryViewModel;
+import com.worth.ifs.project.financecheck.viewmodel.ProjectFinanceCheckSummaryViewModel;
 import com.worth.ifs.project.builder.SpendProfileResourceBuilder;
 import com.worth.ifs.project.finance.resource.FinanceCheckResource;
 import com.worth.ifs.project.financecheck.form.FinanceCheckForm;
@@ -130,18 +130,18 @@ public class FinanceCheckControllerTest extends BaseControllerMockMVCTest<Financ
                 thenReturn(applicationFinanceResourceList);
 
         // Expected Results
-        List<ProjectSpendProfileSummaryViewModel.SpendProfileOrganisationRow> expectedOrganisationRows = mapWithIndex(organisationResourceList, (i, org) ->
+        List<ProjectFinanceCheckSummaryViewModel.SpendProfileOrganisationRow> expectedOrganisationRows = mapWithIndex(organisationResourceList, (i, org) ->
 
-                new ProjectSpendProfileSummaryViewModel.SpendProfileOrganisationRow(
+                new ProjectFinanceCheckSummaryViewModel.SpendProfileOrganisationRow(
                         org.getId(), org.getName(),
-                        getEnumForIndex(ProjectSpendProfileSummaryViewModel.Viability.class, i),
-                        getEnumForIndex(ProjectSpendProfileSummaryViewModel.RagStatus.class, i),
-                        getEnumForIndex(ProjectSpendProfileSummaryViewModel.Eligibility.class, i),
-                        getEnumForIndex(ProjectSpendProfileSummaryViewModel.RagStatus.class, i + 1),
-                        getEnumForIndex(ProjectSpendProfileSummaryViewModel.QueriesRaised.class, i))
+                        getEnumForIndex(ProjectFinanceCheckSummaryViewModel.Viability.class, i),
+                        getEnumForIndex(ProjectFinanceCheckSummaryViewModel.RagStatus.class, i),
+                        getEnumForIndex(ProjectFinanceCheckSummaryViewModel.Eligibility.class, i),
+                        getEnumForIndex(ProjectFinanceCheckSummaryViewModel.RagStatus.class, i + 1),
+                        getEnumForIndex(ProjectFinanceCheckSummaryViewModel.QueriesRaised.class, i))
         );
 
-        ProjectSpendProfileSummaryViewModel expectedProjectSpendProfileSummaryViewModel =  new ProjectSpendProfileSummaryViewModel(
+        ProjectFinanceCheckSummaryViewModel expectedProjectSpendProfileSummaryViewModel =  new ProjectFinanceCheckSummaryViewModel(
                 projectResource.getId(), competitionSummaryResource, expectedOrganisationRows,
                 projectResource.getTargetStartDate(), projectResource.getDurationInMonths().intValue(),
                 BigDecimal.ZERO,
