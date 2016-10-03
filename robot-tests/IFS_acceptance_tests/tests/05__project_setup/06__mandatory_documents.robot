@@ -332,6 +332,7 @@ CompAdmin rejects other documents
     When the user clicks the button/link              jQuery=button:contains("Reject documents")
     And the user clicks the button/link               jQuery=.modal-reject-docs .button:contains("Reject Documents")
     Then the user should see the text in the page     These documents after review have been rejected and returned to the project team.
+    [Teardown]    logout as user
 
 #TODO INFUND-5424 Partners should be able to see documents rejected
 
