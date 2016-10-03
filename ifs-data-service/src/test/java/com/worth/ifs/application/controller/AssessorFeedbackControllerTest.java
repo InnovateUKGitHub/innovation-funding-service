@@ -84,8 +84,8 @@ public class AssessorFeedbackControllerTest extends BaseControllerMockMVCTest<As
     @Test
     public void testGetAssessorFeedbackFileContents() throws Exception {
 
-        BiFunction<AssessorFeedbackService, FileEntryResource, ServiceResult<FileAndContents>> getFileAction =
-                (service, fileToGet) -> service.getAssessorFeedbackFileEntryContents(123L);
+        Function<AssessorFeedbackService, ServiceResult<FileAndContents>> getFileAction =
+                (service) -> service.getAssessorFeedbackFileEntryContents(123L);
 
         assertGetFileContents("/assessorfeedback/assessorFeedbackDocument", new Object[] {},
                 asMap("applicationId", "123"),
@@ -96,8 +96,8 @@ public class AssessorFeedbackControllerTest extends BaseControllerMockMVCTest<As
     @Test
     public void testGetAssessorFeedbackFileEntry() throws Exception {
 
-        BiFunction<AssessorFeedbackService, FileEntryResource, ServiceResult<FileEntryResource>> getFileAction =
-                (service, fileToGet) -> service.getAssessorFeedbackFileEntryDetails(123L);
+        Function<AssessorFeedbackService, ServiceResult<FileEntryResource>> getFileAction =
+                (service    ) -> service.getAssessorFeedbackFileEntryDetails(123L);
 
         assertGetFileDetails("/assessorfeedback/assessorFeedbackDocument/fileentry", new Object[] {},
                 asMap("applicationId", "123"),

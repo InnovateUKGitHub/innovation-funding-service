@@ -60,10 +60,29 @@ public class ProjectResourceBuilder extends BaseBuilder<ProjectResource, Project
         return with(project -> project.setAddress(address));
     }
 
+    public ProjectResourceBuilder withCollaborationAgreement(Long collaborationAgreement) {
+        return with (project -> project.setCollaborationAgreement(collaborationAgreement));
+    }
+
+    public ProjectResourceBuilder withExploitationPlan(Long exploitationPlan) {
+        return with (project -> project.setExploitationPlan(exploitationPlan));
+    }
+
+    public ProjectResourceBuilder withSignedGrantOfferLetter(Long grantOfferLetter) {
+        return with (project -> project.setSignedGrantOfferLetter(grantOfferLetter));
+    }
+
+    public ProjectResourceBuilder withGrantOfferLetter(Long grantOfferLetter) {
+        return with (project -> project.setGrantOfferLetter(grantOfferLetter));
+    }
+
+    public ProjectResourceBuilder withAdditionalContractFile(Long additionalContractFile) {
+        return with (project -> project.setAdditionalContractFile(additionalContractFile));
+    }
+
     public ProjectResourceBuilder withOtherDocumentsApproved(Boolean otherDocumentsApproved) {
         return with(project -> project.setOtherDocumentsApproved(otherDocumentsApproved));
     }
-
 
     public ProjectResourceBuilder withProjectUsers(List<Long>... projectUsers) {
         return withArray((userList, project) -> project.setProjectUsers(userList), projectUsers);

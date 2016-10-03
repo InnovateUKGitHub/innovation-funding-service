@@ -39,6 +39,11 @@ public class ProjectInvite extends Invite<Project, ProjectInvite> {
         this.organisation = organisation;
     }
 
+    public void setProject(final Project project) {
+        this.project = project;
+    }
+
+
     @Override
     public Project getTarget() {
         return project;
@@ -48,4 +53,5 @@ public class ProjectInvite extends Invite<Project, ProjectInvite> {
     public void setTarget(final Project project) {
         this.project = project;
     }
+
 }

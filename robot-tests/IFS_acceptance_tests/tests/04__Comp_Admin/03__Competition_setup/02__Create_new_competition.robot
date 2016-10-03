@@ -402,6 +402,8 @@ Milestones: Page should contain the correct fields
 
 Milestones: Server side validations
     [Documentation]    INFUND-2993
+    [Tags]    Pending
+    #TODO INFUND-3873
     When the user fills the milestones with invalid data
     And the users waits until the page is autosaved
     And the user clicks the button/link    jQuery=button:contains(Done)
@@ -652,7 +654,7 @@ the user fills the milestones with valid data
     input text    name=milestoneEntries[NOTIFICATIONS].year    2019
     input text    name=milestoneEntries[RELEASE_FEEDBACK].day    22
     input text    name=milestoneEntries[RELEASE_FEEDBACK].month    1
-    input text    name=milestoneEntries[RELEASE_FEEDBACK].year    2020
+    input text    name=milestoneEntries[RELEASE_FEEDBACK].year    2019
     Focus    jQuery=button:contains(Done)
     sleep    500ms
 
@@ -730,4 +732,5 @@ the resubmission should not have a default selection
 
 the users waits until the page is autosaved
     Focus    jQuery=button:contains(Done)
+    sleep    1s
     Wait For Autosave

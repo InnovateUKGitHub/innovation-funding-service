@@ -1,0 +1,83 @@
+=== Upload Grant Offer Letter during Project Setup
+For failure cases, please refer to the documentation for Form Input Response File Uploads.
+
+==== Request
+include::{snippets}/project/add-grant-offer-letter/http-request.adoc[]
+include::{snippets}/project/add-grant-offer-letter/request-parameters.adoc[]
+include::{snippets}/project/add-grant-offer-letter/request-fields.adoc[]
+
+==== Response
+include::{snippets}/project/add-grant-offer-letter/http-response.adoc[]
+include::{snippets}/project/add-grant-offer-letter/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/project/add-grant-offer-letter/curl-request.adoc[]
+
+=== Upload Additional Contract File during Project Setup
+For failure cases, please refer to the documentation for Form Input Response File Uploads.
+
+==== Request
+include::{snippets}/project/add-additional-contract-file/http-request.adoc[]
+include::{snippets}/project/add-additional-contract-file/request-parameters.adoc[]
+include::{snippets}/project/add-additional-contract-file/request-fields.adoc[]
+
+==== Response
+include::{snippets}/project/add-additional-contract-file/http-response.adoc[]
+include::{snippets}/project/add-additional-contract-file/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/project/add-additional-contract-file/curl-request.adoc[]
+
+
+=== Get Grant Offer Letter file contents for a Project
+For failure cases, please refer to the documentation for Form Input Response File Uploads.
+
+==== Request
+include::{snippets}/project/get-grant-offer-letter-file-contents/http-request.adoc[]
+include::{snippets}/project/get-grant-offer-letter-file-contents/request-parameters.adoc[]
+
+==== Response
+include::{snippets}/project/get-grant-offer-letter-file-contents/http-response.adoc[]
+include::{snippets}/project/get-grant-offer-letter-file-contents/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/project/get-grant-offer-letter-file-contents/curl-request.adoc[]
+
+=== Get Additional Contract file contents for a Project
+For failure cases, please refer to the documentation for Form Input Response File Uploads.
+
+==== Request
+include::{snippets}/project/get-additional-contract-file-contents/http-request.adoc[]
+include::{snippets}/project/get-additional-contract-file-contents/request-parameters.adoc[]
+
+==== Response
+include::{snippets}/project/get-additional-contract-file-contents/http-response.adoc[]
+include::{snippets}/project/get-additional-contract-file-contents/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/project/get-additional-contract-file-contents/curl-request.adoc[]
+
+
+=== Get Grant Offer Letter file details for a Project
+For failure cases, please refer to the documentation for Form Input Response File Uploads.
+
+==== Request
+include::{snippets}/project/get-grant-offer-letter-file-entry-details/http-request.adoc[]
+
+==== Response
+include::{snippets}/project/get-grant-offer-letter-file-entry-details/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/project/get-grant-offer-letter-file-entry-details/curl-request.adoc[]
+
+=== Get Additional Contract file details for a Project
+For failure cases, please refer to the documentation for Form Input Response File Uploads.
+
+==== Request
+include::{snippets}/project/get-additional-contract-file-entry-details/http-request.adoc[]
+
+==== Response
+include::{snippets}/project/get-additional-contract-file-entry-details/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/project/get-additional-contract-file-entry-details/curl-request.adoc[]
