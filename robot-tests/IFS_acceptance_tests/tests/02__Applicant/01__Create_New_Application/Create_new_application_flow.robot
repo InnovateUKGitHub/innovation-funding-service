@@ -55,10 +55,10 @@ Non registered users CH route (email step)
     ...    INFUND-1785
     [Tags]    HappyPath    Email    SmokeTest
     [Setup]    The guest user opens the browser
-    Given the user opens the mailbox and verifies the email from
+    Given the user opens the mailbox and verifies the email from    ${test_mailbox_one}+${unique_email_number}@gmail.com
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     When the user clicks the button/link    jQuery=.button:contains("Sign in")
-    And the guest user inserts user email & password    ${test_mailbox_one}+1@gmail.com    Passw0rd123
+    And the guest user inserts user email & password    ${test_mailbox_one}+${unique_email_number}@gmail.com    Passw0rd123
     And the guest user clicks the log-in button
     Then the user should see the text in the page    Your dashboard
     And the user clicks the button/link    link=${OPEN_COMPETITION_LINK}
@@ -106,7 +106,7 @@ Non registered users non CH route (email step)
     ...    INFUND-1920
     [Tags]    Email    HappyPath
     [Setup]    The guest user opens the browser
-    Given the user opens the mailbox and verifies the email from
+    Given the user opens the mailbox and verifies the email from    ${test_mailbox_one}+2@gmail.com
     When the user clicks the button/link    jQuery=.button:contains("Sign in")
     And the guest user inserts user email & password    ${test_mailbox_one}+2@gmail.com    Passw0rd123
     And the guest user clicks the log-in button
@@ -121,11 +121,11 @@ Verify the name of the new application
     ...    INFUND-1163
     [Tags]    HappyPath    Email    SmokeTest
     [Setup]    The guest user opens the browser
-    When guest user log-in    ${test_mailbox_one}+1@gmail.com    Passw0rd123
+    When guest user log-in    ${test_mailbox_one}+${unique_email_number}@gmail.com    Passw0rd123
     And the user edits the competition title
     Then the user should see the text in the page    ${test_title}
     And the progress indicator should show 0
-    And the user clicks the button/link    link=View team members and add collaborators
+    And the user clicks the button/link    link=view team members and add collaborators
     And the user should see the text in the page    Application team
     And the user should see the text in the page    View and manage your contributors and partners
     And the new application should be visible in the dashboard page
@@ -150,7 +150,7 @@ Special Project Finance role (email step)
     [Tags]    Email    Pending
     [Setup]    The guest user opens the browser
     # TODO Pending ongoing work on the project finance role
-    Given the user opens the mailbox and verifies the email from
+    Given the user opens the mailbox and verifies the email from    ${test_mailbox_one}+project.finance1@gmail.com
     When the user clicks the button/link    jQuery=.button:contains("Sign in")
     And the guest user inserts user email & password    ${test_mailbox_one}+project.finance1@gmail.com    Passw0rd123
     And the guest user clicks the log-in button

@@ -6,15 +6,20 @@ Documentation     INFUND-3830: As a Competitions team member I want to view all 
 ...               INFUND-3832 As a Competitions team member I want to view all competitions that are ‘upcoming’ so I can keep track of them and access further details for each competition in that state
 ...
 ...               INFUND-3829 As a Competitions team member I want a dashboard that displays all competitions in different states so I can manage and keep track of them
+...
+...               INFUND-3004 As a Competition Executive I want the competition to automatically open based on the date that has been provided in the competition open field in the setup phase.
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    the user closes the browser
-Force Tags        CompAdmin    CompSetup
+Force Tags        CompAdmin
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
 Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
+
+*** Variables ***
+@{database}       pymysql    ${database_name}    ${database_user}    ${database_password}    ${database_host}    ${database_port}
 
 *** Test Cases ***
 Live Competitions
@@ -61,13 +66,26 @@ Upcoming competitions calculations
     [Documentation]    INFUND-3832
     ...
     ...    INFUND-3003
+    ...    INFUND-3876
     Then the calculations should be correct    In preparation    //section[1]/ul/li
     And the calculations should be correct    Ready to open    //section[2]/ul/li
-    And the calculations should be correct    Upcoming    //section/ul/li
+    And the calculations should be correct    Upcoming    //ul[@class="list-overview"]
 
 Upcoming competitions ready for open
     [Documentation]    INFUND-3003
     Then The user should see the text in the page    Sarcasm Stupendousness
+
+Competition Opens automatically on date
+    [Documentation]    INFUND-3004
+    [Tags]    MySQL
+    [Setup]    Connect to Database    @{database}
+    Given the user should see the text in the page    Ready to open
+    And The competition is ready to open
+    When the Open date changes in the database to one day before
+    And the user navigates to the page    ${SERVER}/management/dashboard/live
+    Then the user should see the text in the page    Open
+    And The competition should be open
+    [Teardown]    execute sql string    UPDATE `ifs`.`milestone` SET `DATE`='2018-02-24 00:00:00' WHERE `id`='9';
 
 Search existing applications
     [Documentation]    INFUND-3829
@@ -116,3 +134,20 @@ check calculations on one page
     ${NO_OF_COMP_Page_one}=    Get Matching Xpath Count    //section/div/ul/li
     ${length_summary}=    Get text    css=.heading-xlarge    #gets the total number
     Should Be Equal As Integers    ${length_summary}    ${NO_OF_COMP_Page_one}
+
+get yesterday
+    ${today} =    get time
+    ${yesterday} =    Subtract Time From Date    ${today}    1 day
+    [Return]    ${yesterday}
+
+The competition is ready to open
+    Then element should contain    jQuery=section:nth-child(4)    Sarcasm Stupendousness
+
+The Open date changes in the database to one day before
+    ${yesterday} =    get yesterday
+    When execute sql string    UPDATE `ifs`.`milestone` SET `DATE`='${yesterday}' WHERE `id`='9';
+    And the user reloads the page
+    Then element should not contain    jQuery=section:nth-child(4)    Sarcasm Stupendousness
+
+The competition should be open
+    And element should contain    jQuery=section:nth-child(3)    Sarcasm Stupendousness

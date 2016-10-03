@@ -20,9 +20,15 @@ public class MilestoneController {
     private MilestoneService milestoneService;
 
     @RequestMapping(value = "/{competitionId}", method = RequestMethod.GET)
-    public RestResult<List<MilestoneResource>> getAllDatesByCompetitionId(
+    public RestResult<List<MilestoneResource>> getAllMilestonesByCompetitionId(
             @PathVariable("competitionId") final Long competitionId){
-        return milestoneService.getAllDatesByCompetitionId(competitionId).toGetResponse();
+        return milestoneService.getAllMilestonesByCompetitionId(competitionId).toGetResponse();
+    }
+
+    @RequestMapping(value = "/{competitionId}/getByType", method = RequestMethod.GET)
+    public RestResult<MilestoneResource> getMilestoneByTypeAndCompetitionId(@RequestParam final MilestoneType type,
+                                                                            @PathVariable("competitionId") final Long competitionId) {
+        return milestoneService.getMilestoneByTypeAndCompetitionId(type, competitionId).toGetResponse();
     }
 
     @RequestMapping(value = "/{competitionId}", method = RequestMethod.POST)
@@ -32,7 +38,13 @@ public class MilestoneController {
     }
 
     @RequestMapping(value = "/{competitionId}", method = RequestMethod.PUT)
-    public RestResult<Void> saveMilestone(@RequestBody List<MilestoneResource> milestones, @PathVariable("competitionId") final Long competitionId) {
-         return milestoneService.update(competitionId, milestones).toPutResponse();
+    public RestResult<Void> saveMilestones(@RequestBody final List<MilestoneResource> milestones,
+                                           @PathVariable("competitionId") final Long competitionId) {
+         return milestoneService.updateMilestones(competitionId, milestones).toPutResponse();
+    }
+
+    @RequestMapping(value = "/", method = RequestMethod.PUT)
+    public RestResult<Void> saveMilestone(@RequestBody final MilestoneResource milestone) {
+        return milestoneService.updateMilestone(milestone).toPutResponse();
     }
  }

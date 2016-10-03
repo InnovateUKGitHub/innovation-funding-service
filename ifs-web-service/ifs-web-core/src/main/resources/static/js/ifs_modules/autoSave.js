@@ -16,6 +16,7 @@ IFS.core.autoSave = (function(){
         },
         init : function(){
             s = this.settings;
+            jQuery('[data-autosave]').attr('data-save-status','done');
             jQuery('body').on('change keyup', s.textareas, function(e){
                 if(e.type == 'keyup'){
                   //wait until the user stops typing
@@ -59,12 +60,13 @@ IFS.core.autoSave = (function(){
               var applicationId = jQuery("#application_id").val();
               var saveType = form.attr('data-autosave');
               var jsonObj;
-
+              var fieldInfo;
+              var dateField;
               switch(saveType){
                   case 'application':
-                        var dateField = field.is('[data-date]');
+                        dateField = field.is('[data-date]');
                         if(dateField){
-                          var fieldInfo = field.closest('.date-group').find('input[type="hidden"]');
+                          fieldInfo = field.closest('.date-group').find('input[type="hidden"]');
                           jsonObj = {
                             applicationId: applicationId,
                             value: field.attr('data-date'),
@@ -87,6 +89,24 @@ IFS.core.autoSave = (function(){
                           fundingDecision: field.val()
                         };
                         break;
+                  case 'compSetup':
+                        dateField = field.is('[data-date]');
+                        var objectId = form.attr('data-objectid');
+                        if(dateField){
+                          fieldInfo = field.closest('.date-group').find('input[type="hidden"]');
+                          jsonObj = {
+                            objectId: objectId,
+                            value: field.attr('data-date'),
+                            fieldName: fieldInfo.prop('name')
+                          };
+                        } else {
+                          jsonObj = {
+                            objectId: objectId,
+                            fieldName: field.prop('name'),
+                            value: field.val()
+                          };
+                        }
+                        break;
                   case 'assessorFeedback':
                         jsonObj = {
                           value : field.val()
@@ -100,14 +120,21 @@ IFS.core.autoSave = (function(){
         getUrl : function(field, form){
             var saveType = form.attr('data-autosave');
             var url;
+            var competitionId;
+
             switch(saveType){
                 case 'application':
                   var applicationId = jQuery("#application_id").val();
                   url ='/application/'+applicationId+'/form/saveFormElement';
                   break;
                 case 'fundingDecision':
-                  var competitionId = field.attr('data-competition');
+                  competitionId = field.attr('data-competition');
                   url = '/management/funding/' + competitionId;
+                  break;
+                case 'compSetup':
+                  competitionId = form.attr('data-competition');
+                  var section = form.attr('data-section');
+                  url = '/management/competition/setup/' + competitionId + '/section/' + section + '/saveFormElement';
                   break;
                 case 'assessorFeedback':
                   var formInputId = field.closest('.question').prop('id').replace('form-input-','');
@@ -122,6 +149,7 @@ IFS.core.autoSave = (function(){
         processAjax : function(field){
           return function(){
             var form = field.closest('[data-autosave]');
+            form.attr('data-save-status','progress');
             var data = IFS.core.autoSave.getPostObject(field,form);
             var url = IFS.core.autoSave.getUrl(field,form);
             var defer = jQuery.Deferred();
@@ -182,6 +210,7 @@ IFS.core.autoSave = (function(){
                     autoSaveInfo.html('<span class="error-message">'+errorMessage+'</span>');
                 }
             }).always(function(){
+                form.attr('data-save-status','done');
                 defer.resolve();
            });
            return defer.promise();

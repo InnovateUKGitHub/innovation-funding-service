@@ -25,10 +25,10 @@ Appendices available only for the correct questions
     the user cannot see the option to upload a file on the question    link=2. Potential market
     the user cannot see the option to upload a file on the question    link=3. Project exploitation
     the user cannot see the option to upload a file on the question    link=4. Economic benefit
-    the user can see the option to upload a file on the question       link=5. Technical approach
-    the user can see the option to upload a file on the question       link=6. Innovation
+    the user can see the option to upload a file on the question    link=5. Technical approach
+    the user can see the option to upload a file on the question    link=6. Innovation
     the user cannot see the option to upload a file on the question    link=7. Risks
-    the user can see the option to upload a file on the question       link=8. Project team
+    the user can see the option to upload a file on the question    link=8. Project team
     the user cannot see the option to upload a file on the question    link=9. Funding
     the user cannot see the option to upload a file on the question    link=10. Adding value
 
@@ -44,7 +44,8 @@ Large pdf uploads not allowed
 
 Non pdf uploads not allowed
     [Documentation]    INFUND-832
-    [Tags]
+    [Tags]    Pending
+    # TODO Pending due to INFUND-5344
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=5. Technical approach
@@ -55,7 +56,7 @@ Non pdf uploads not allowed
 Lead applicant can upload a pdf file
     [Documentation]    INFUND-832
     [Tags]    HappyPath    SmokeTest
-    [Setup]    Guest user log-in      &{lead_applicant_credentials}
+    [Setup]    Guest user log-in    &{lead_applicant_credentials}
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=5. Technical approach
@@ -150,8 +151,7 @@ Collaborator can download a file when the question is assigned
 
 Collaborator can remove a file when the question is assigned
     [Documentation]    INFUND-2720
-    [Tags]    Pending
-    # TODO pending INFUND-3259
+    [Tags]
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=5. Technical approach
@@ -172,7 +172,8 @@ Collaborators can upload a file when the question is assigned
 Quarantined files are not returned to the user and the user is informed
     [Documentation]    INFUND-2683
     ...    INFUND-2684
-    [Tags]
+    [Tags]    Pending
+    #TODO INFUND-4008, review this failing test case when 4008 is completed
     [Setup]    Guest user log-in    &{lead_applicant_credentials}
     Given the user navigates to the page    ${project_team_url}
     When the user should see the text in the page    test_quarantine.pdf

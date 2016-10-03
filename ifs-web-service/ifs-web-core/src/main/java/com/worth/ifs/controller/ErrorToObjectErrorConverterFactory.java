@@ -25,11 +25,11 @@ public class ErrorToObjectErrorConverterFactory {
     }
 
     public static ErrorToObjectErrorConverter toObject(String objectName) {
-        return e -> Optional.of(new ObjectError(objectName, new String[]{e.getErrorKey()}, e.getArguments().toArray(), e.getErrorMessage()));
+        return e -> Optional.of(new ObjectError(objectName, new String[]{e.getErrorKey()}, e.getArguments().toArray(), null));
     }
 
     public static ErrorToObjectErrorConverter asGlobalErrors() {
-        return e -> Optional.of(new ObjectError("", new String[]{e.getErrorKey()}, e.getArguments().toArray(), e.getErrorMessage()));
+        return e -> Optional.of(new ObjectError("", new String[]{e.getErrorKey()}, e.getArguments().toArray(), null));
     }
 
     public static ErrorToObjectErrorConverter mappingErrorKeyToField(String errorKey, String targetField) {
@@ -46,6 +46,6 @@ public class ErrorToObjectErrorConverterFactory {
     }
 
     private static FieldError newFieldError(Error e, String fieldName, Object rejectedValue) {
-        return new FieldError("", fieldName, rejectedValue, true, new String[] {e.getErrorKey()}, e.getArguments().toArray(), e.getErrorMessage());
+        return new FieldError("", fieldName, rejectedValue, true, new String[] {e.getErrorKey()}, e.getArguments().toArray(), null);
     }
 }

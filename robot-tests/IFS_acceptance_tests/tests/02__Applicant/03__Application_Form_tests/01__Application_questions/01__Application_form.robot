@@ -33,8 +33,7 @@ Autosave in the form questions
 
 Word count works
     [Documentation]    INFUND-198
-    [Tags]    Pending     HappyPath
-    # Pending due to chromedriver
+    [Tags]    HappyPath
     When the Applicant edits the Project summary
     Then the word count should be correct for the Project summary
     And the Applicant edits the Project description question (300 words)

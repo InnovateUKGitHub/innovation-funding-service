@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+<main id="content">
+	
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader('Application questions', '/prototypes/5085-application-process')" th:remove="tag" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+	<div class="hgroup" style="padding-top: 20px">
+		<p class="subtitle no-margin">Connected digital additive manufacturing</p>
+		<h1 class="heading-xlarge no-margin">Application finances</h1>
+	</div>
+
+	<div class="panel-indent">
+		<p>
+			Each partner is required to complete the following finance sections, selected by the template for this competition.
+		</p>
+	</div>
+
+	<form>
+		<fieldset>
+			<legend class="visuallyhidden">Finances</legend>
+			<div class="form-group">
+				<fieldset class="inline">
+					<h3 class="heading-small">Finances form</h3>
+					<label class="block-label" for="full-finances">
+						<input id="full-finances" name="finance-size" value="full" type="radio" />
+						Full application finances
+					</label>
+					<label class="block-label" for="light-finances">
+						<input id="light-finances" name="finance-size" value="light" type="radio" checked="checked" />
+						Light finances
+					</label>
+				</fieldset>
+			</div>
+			<div class="form-group">
+				<fieldset class="inline">
+					<h3 class="heading-small">Include Project Growth Table</h3>
+					<label class="block-label" for="project-growth-yes">
+						<input id="project-growth-yes" name="include-project-growth" value="yes" type="radio" />
+						Yes
+					</label>
+					<label class="block-label" for="project-growth-no">
+						<input id="project-growth-no" name="include-project-growth" value="no" type="radio" checked="checked" />
+						No
+					</label>
+				</fieldset>
+			</div>
+			<div class="extra-margin">
+				<a role="button" tabindex="0" class="button" href="/prototypes/5085-application-process">Done</a>
+			</div>
+		</fieldset>
+	</form>
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<script type="text/javascript">
+
+</script>
+</body>
+</html>

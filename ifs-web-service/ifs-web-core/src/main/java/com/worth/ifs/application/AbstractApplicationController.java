@@ -37,10 +37,11 @@ import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.form.service.FormInputResponseService;
 import com.worth.ifs.form.service.FormInputService;
-import com.worth.ifs.invite.constant.InviteStatusConstants;
+import com.worth.ifs.invite.constant.InviteStatus;
 import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.service.InviteRestService;
+import com.worth.ifs.model.OrganisationDetailsModelPopulator;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
@@ -53,6 +54,8 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 
@@ -62,6 +65,7 @@ import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 public abstract class AbstractApplicationController extends BaseController {
     public static final String MARK_AS_COMPLETE = "mark_as_complete";
     public static final String MARK_SECTION_AS_COMPLETE = "mark_section_as_complete";
+    public static final String SUBMIT_SECTION = "submit-section";
     public static final String MARK_SECTION_AS_INCOMPLETE = "mark_section_as_incomplete";
     public static final String MARK_AS_INCOMPLETE = "mark_as_incomplete";
     public static final String UPLOAD_FILE = "upload_file";
@@ -80,6 +84,10 @@ public abstract class AbstractApplicationController extends BaseController {
     public static final String APPLICATION_START_DATE = "application.startDate";
     public static final String QUESTION_URL = "/question/";
     public static final String SECTION_URL = "/section/";
+
+    public static final String TERMS_AGREED_KEY = "termsAgreed";
+    public static final String STATE_AID_AGREED_KEY = "stateAidAgreed";
+
     private static final Log LOG = LogFactory.getLog(AbstractApplicationController.class);
 
     @Autowired
@@ -129,6 +137,9 @@ public abstract class AbstractApplicationController extends BaseController {
 
     @Autowired
     protected FinanceHandler financeHandler;
+
+    @Autowired
+    protected OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
 
     protected Long extractAssigneeProcessRoleIdFromAssignSubmit(HttpServletRequest request) {
         Long assigneeId = null;
@@ -327,7 +338,7 @@ public abstract class AbstractApplicationController extends BaseController {
         return pendingAssignableUsersResult.handleSuccessOrFailure(
         		failure -> new ArrayList<>(0),
         		success -> success.stream().flatMap(item -> item.getInviteResources().stream())
-                    .filter(item -> !InviteStatusConstants.ACCEPTED.equals(item.getStatus()))
+                    .filter(item -> !InviteStatus.OPENED.equals(item.getStatus()))
                     .collect(Collectors.toList()));
 	}
 
@@ -398,7 +409,6 @@ public abstract class AbstractApplicationController extends BaseController {
     private List<QuestionResource> getQuestionsBySection(final List<Long> questionIds, final List<QuestionResource> questions) {
         return simpleFilter(questions, q -> questionIds.contains(q.getId()));
     }
-
 
     protected void addCompletedDetails(Model model, ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
         Future<Set<Long>> markedAsComplete = getMarkedAsCompleteDetails(application, userOrganisation); // List of question ids
@@ -583,5 +593,30 @@ public abstract class AbstractApplicationController extends BaseController {
             model.addAttribute("nextUrl", nextUrl);
             model.addAttribute("nextText", nextText);
         }
+    }
+
+    protected String print(final Long applicationId,
+                        Model model, HttpServletRequest request) {
+        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
+        ApplicationResource application = applicationService.getById(applicationId);
+        CompetitionResource competition = competitionService.getById(application.getCompetition());
+
+        List<FormInputResponseResource> responses = formInputResponseService.getByApplication(applicationId);
+        model.addAttribute("responses", formInputResponseService.mapFormInputResponsesToFormInput(responses));
+        model.addAttribute("currentApplication", application);
+        model.addAttribute("currentCompetition", competition);
+
+        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
+        Optional<OrganisationResource> userOrganisation = getUserOrganisation(user.getId(), userApplicationRoles);
+        model.addAttribute("userOrganisation", userOrganisation.orElse(null));
+
+        organisationDetailsModelPopulator.populateModel(model, application.getId(), userApplicationRoles);
+        addQuestionsDetails(model, application, null);
+        addUserDetails(model, application, user.getId());
+        addApplicationInputs(application, model);
+        addMappedSectionsDetails(model, application, competition, Optional.empty(), userOrganisation);
+        financeOverviewModelManager.addFinanceDetails(model, competition.getId(), applicationId);
+
+        return "/application/print";
     }
 }

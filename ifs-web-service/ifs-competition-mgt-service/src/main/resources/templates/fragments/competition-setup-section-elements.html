@@ -64,7 +64,8 @@
             </div>
         </th:block>
         <th:block th:if="${editable and (competitionSetupForm.questionToUpdate != null and competitionSetupForm.questionToUpdate.id == question.id)}">
-            <form method="post" th:object="${competitionSetupForm}" th:action="@{${question.id}}" novalidate="novalidate">
+            <form method="post" th:object="${competitionSetupForm}" th:action="@{${question.id} + '#edit-question'}" novalidate="novalidate"
+                  data-autosave="compSetup" data-th-attr="data-competition=${competition.id}, data-objectId=${question.id}" data-section="application">
                 <input type="hidden"
                        th:name="questionToUpdate.id"
                        th:value="${question.id}" />
@@ -84,6 +85,7 @@
                                th:name="questionToUpdate.title"
                                th:value="${question.title}"
                                maxlength="255"/>
+                        <span class="autosave-info" />
                     </div>
                     <div th:class="${#fields.hasErrors('questionToUpdate.subTitle')}? 'form-group error':'form-group'">
                         <label class="form-label" for="question.subTitle">
@@ -98,6 +100,7 @@
                                th:name="questionToUpdate.subTitle"
                                th:value="${question.subTitle}"
                                maxlength="255"/>
+                        <span class="autosave-info" />
                     </div>
                     <div th:class="${#fields.hasErrors('questionToUpdate.guidanceTitle')}? 'form-group error':'form-group'">
                         <label class="form-label" for="question.guidanceTitle">
@@ -113,6 +116,7 @@
                                th:name="questionToUpdate.guidanceTitle"
                                th:value="${question.guidanceTitle}"
                                maxlength="255"/>
+                        <span class="autosave-info" />
                     </div>
                     <div th:class="${#fields.hasErrors('questionToUpdate.guidance')}? 'form-group error':'form-group'">
                         <label class="form-label" for="question.guidance">
@@ -131,6 +135,7 @@
                                       ifs:utext="${question.guidance}">
                             </textarea>
                         </div>
+                        <span class="autosave-info" />
                     </div>
                     <div th:class="${#fields.hasErrors('questionToUpdate.maxWords')}? 'form-group error':'form-group'">
                         <label class="form-label" for="question.maxWords">
@@ -146,6 +151,7 @@
                                required="required"
                                th:name="questionToUpdate.maxWords"
                                th:value="${question.maxWords}"/>
+                        <span class="autosave-info" />
                     </div>
                     <div class="grid-row">
                         <div class="column-half">
@@ -160,21 +166,25 @@
                                         <input  th:name="questionToUpdate.scored" th:checked="${!question.scored}" value="0" type="radio" />
                                         No
                                     </label>
+                                    <span class="autosave-info" />
                                 </fieldset>
                             </div>
                         </div>
                         <div class="column-half">
-                            <fieldset class="inline">
-                                <legend class="form-label-bold">Allow appendix?</legend>
-                                <label class="block-label">
-                                    <input th:name="questionToUpdate.appendix" th:checked="${question.appendix}" value="1" type="radio" />
-                                    Yes
-                                </label>
-                                <label class="block-label">
-                                    <input th:name="questionToUpdate.appendix" th:checked="${!question.appendix}" value="0" type="radio" />
-                                    No
-                                </label>
-                            </fieldset>
+                            <div class="form-group">
+                                <fieldset class="inline">
+                                    <legend class="form-label-bold">Allow appendix?</legend>
+                                    <label class="block-label">
+                                        <input th:name="questionToUpdate.appendix" th:checked="${question.appendix}" value="1" type="radio" />
+                                        Yes
+                                    </label>
+                                    <label class="block-label">
+                                        <input th:name="questionToUpdate.appendix" th:checked="${!question.appendix}" value="0" type="radio" />
+                                        No
+                                    </label>
+                                    <span class="autosave-info" />
+                                </fieldset>
+                            </div>
                         </div>
                     </div>
                 </div>

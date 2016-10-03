@@ -27,6 +27,7 @@ import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.form.service.FormInputRestService;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.OrganisationSize;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -57,8 +58,10 @@ import static com.worth.ifs.form.builder.FormInputResourceBuilder.newFormInputRe
 import static com.worth.ifs.form.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static java.lang.String.format;
+import static java.util.Collections.nCopies;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -139,7 +142,10 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                 .withId(1L, 2L, 3L, 4L)
                 .withFormInputTypeTitle(SCORE_INPUT_TYPE)
                 .build(4);
-        List<QuestionResource> questions = QuestionResourceBuilder.newQuestionResource().withId(32L, 33L, 1L, 20L, 21L, 22L, 23L, 10L, 30L, 31L).build(10);
+        List<QuestionResource> questions = QuestionResourceBuilder.newQuestionResource()
+                .withId(32L, 33L, 1L, 20L, 21L, 22L, 23L, 10L, 30L, 31L)
+                .withShortName("Question short name")
+                .build(10);
 
         ApplicationResource app = applications.get(0);
         Set<Long> sections = newHashSet(1L, 2L);
@@ -150,13 +156,14 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         when(assessmentService.getById(assessment.getId())).thenReturn(assessment);
         when(assessorFormInputResponseService.getAllAssessorFormInputResponses(assessment.getId())).thenReturn(assessorResponses);
         when(formInputService.findAssessmentInputsByQuestion(anyLong())).thenReturn(formInputs);
+        when(questionService.getById(32L)).thenReturn(questions.get(0));
         Map<Long, AssessmentOverviewRowViewModel> assessorResponsesMap = new HashMap<>();
         questions.forEach(question -> assessorResponsesMap.put(question.getId(), new AssessmentOverviewRowViewModel(question, formInputs, assessorResponses)));
 
         FileEntryResource fileEntry = newFileEntryResource().build();
-        FormInputResource formInput = newFormInputResource().withId(1L).build();
+        FormInputResource formInput = newFormInputResource().withId(1L).withQuestion(32L).build();
         setupFormInputAndFileEntry(fileEntry, formInput, app);
-        List<AppendixResource> appendices = setUpAppendices(fileEntry, formInput, app);
+        List<AppendixResource> appendices = setUpAppendices(fileEntry, formInput, app, questions.get(0));
 
         mockMvc.perform(get("/" + assessment.getId()))
                 .andExpect(status().isOk())
@@ -207,7 +214,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         Long assessmentId = 1L;
         Long competitionId = 2L;
         String reason = "reason";
-        String comment = "comment";
+        String comment = String.join(" ", nCopies(100, "comment"));
 
         AssessmentResource assessment = newAssessmentResource()
                 .with(id(assessmentId))
@@ -235,7 +242,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         Long assessmentId = 1L;
         Long applicationId = 2L;
         String reason = "";
-        String comment = "comment";
+        String comment = String.join(" ", nCopies(100, "comment"));
 
         AssessmentResource assessment = newAssessmentResource()
                 .with(id(assessmentId))
@@ -260,6 +267,8 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("form", expectedForm))
                 .andExpect(model().attributeExists("model"))
+                .andExpect(model().hasErrors())
+                .andExpect(model().attributeHasFieldErrors("form", "rejectReason"))
                 .andExpect(view().name("assessment/reject-invitation-confirm"))
                 .andReturn();
 
@@ -270,10 +279,130 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
 
         AssessmentOverviewForm form = (AssessmentOverviewForm) result.getModelAndView().getModel().get("form");
 
+        assertEquals(reason, form.getRejectReason());
+        assertEquals(comment, form.getRejectComment());
+
         BindingResult bindingResult = form.getBindingResult();
         assertEquals(0, bindingResult.getGlobalErrorCount());
         assertEquals(1, bindingResult.getFieldErrorCount());
-        assertEquals("NotEmpty", bindingResult.getFieldError("rejectReason").getCode());
+        assertTrue(bindingResult.hasFieldErrors("rejectReason"));
+        assertEquals("Please enter a reason", bindingResult.getFieldError("rejectReason").getDefaultMessage());
+
+        InOrder inOrder = Mockito.inOrder(assessmentService, applicationService);
+        inOrder.verify(assessmentService, calls(1)).getById(assessmentId);
+        inOrder.verify(applicationService, calls(1)).getById(applicationId);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void rejectInvitation_exceedsCharacterSizeLimit() throws Exception {
+        Long assessmentId = 1L;
+        Long applicationId = 2L;
+        String reason = "reason";
+        String comment = RandomStringUtils.random(5001);
+
+        AssessmentResource assessment = newAssessmentResource()
+                .with(id(assessmentId))
+                .withApplication(applicationId)
+                .build();
+
+        ApplicationResource application = newApplicationResource().build();
+
+        when(assessmentService.getById(assessmentId)).thenReturn(assessment);
+        when(applicationService.getById(applicationId)).thenReturn(application);
+
+        // The non-js confirmation view should be returned with the comment pre-populated in the form and an error for the missing reason
+
+        AssessmentOverviewForm expectedForm = new AssessmentOverviewForm();
+        expectedForm.setRejectReason(reason);
+        expectedForm.setRejectComment(comment);
+
+        MvcResult result = mockMvc.perform(post("/{assessmentId}/reject", assessmentId)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("rejectReason", reason)
+                .param("rejectComment", comment))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("form", expectedForm))
+                .andExpect(model().attributeExists("model"))
+                .andExpect(model().hasErrors())
+                .andExpect(model().attributeHasFieldErrors("form", "rejectComment"))
+                .andExpect(view().name("assessment/reject-invitation-confirm"))
+                .andReturn();
+
+        RejectAssessmentViewModel model = (RejectAssessmentViewModel) result.getModelAndView().getModel().get("model");
+
+        assertEquals(assessmentId, model.getAssessmentId());
+        assertEquals(application, model.getApplication());
+
+        AssessmentOverviewForm form = (AssessmentOverviewForm) result.getModelAndView().getModel().get("form");
+
+        assertEquals(reason, form.getRejectReason());
+        assertEquals(comment, form.getRejectComment());
+
+        BindingResult bindingResult = form.getBindingResult();
+        assertEquals(0, bindingResult.getGlobalErrorCount());
+        assertEquals(1, bindingResult.getFieldErrorCount());
+        assertTrue(bindingResult.hasFieldErrors("rejectComment"));
+        assertEquals("This field cannot contain more than {1} characters", bindingResult.getFieldError("rejectComment").getDefaultMessage());
+        assertEquals(5000, bindingResult.getFieldError("rejectComment").getArguments()[1]);
+
+        InOrder inOrder = Mockito.inOrder(assessmentService, applicationService);
+        inOrder.verify(assessmentService, calls(1)).getById(assessmentId);
+        inOrder.verify(applicationService, calls(1)).getById(applicationId);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void rejectInvitation_exceedsWordLimit() throws Exception {
+        Long assessmentId = 1L;
+        Long applicationId = 2L;
+        String reason = "reason";
+        String comment = String.join(" ", nCopies(101, "comment"));
+
+        AssessmentResource assessment = newAssessmentResource()
+                .with(id(assessmentId))
+                .withApplication(applicationId)
+                .build();
+
+        ApplicationResource application = newApplicationResource().build();
+
+        when(assessmentService.getById(assessmentId)).thenReturn(assessment);
+        when(applicationService.getById(applicationId)).thenReturn(application);
+
+        // The non-js confirmation view should be returned with the comment pre-populated in the form and an error for the missing reason
+
+        AssessmentOverviewForm expectedForm = new AssessmentOverviewForm();
+        expectedForm.setRejectReason(reason);
+        expectedForm.setRejectComment(comment);
+
+        MvcResult result = mockMvc.perform(post("/{assessmentId}/reject", assessmentId)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("rejectReason", reason)
+                .param("rejectComment", comment))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("form", expectedForm))
+                .andExpect(model().attributeExists("model"))
+                .andExpect(model().hasErrors())
+                .andExpect(model().attributeHasFieldErrors("form", "rejectComment"))
+                .andExpect(view().name("assessment/reject-invitation-confirm"))
+                .andReturn();
+
+        RejectAssessmentViewModel model = (RejectAssessmentViewModel) result.getModelAndView().getModel().get("model");
+
+        assertEquals(assessmentId, model.getAssessmentId());
+        assertEquals(application, model.getApplication());
+
+        AssessmentOverviewForm form = (AssessmentOverviewForm) result.getModelAndView().getModel().get("form");
+
+        assertEquals(reason, form.getRejectReason());
+        assertEquals(comment, form.getRejectComment());
+
+        BindingResult bindingResult = form.getBindingResult();
+        assertEquals(0, bindingResult.getGlobalErrorCount());
+        assertEquals(1, bindingResult.getFieldErrorCount());
+        assertTrue(bindingResult.hasFieldErrors("rejectComment"));
+        assertEquals("Maximum word count exceeded. Please reduce your word count to {1}.", bindingResult.getFieldError("rejectComment").getDefaultMessage());
+        assertEquals(100, bindingResult.getFieldError("rejectComment").getArguments()[1]);
 
         InOrder inOrder = Mockito.inOrder(assessmentService, applicationService);
         inOrder.verify(assessmentService, calls(1)).getById(assessmentId);
@@ -286,7 +415,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         Long assessmentId = 1L;
         Long applicationId = 2L;
         String reason = "reason";
-        String comment = "comment";
+        String comment = String.join(" ", nCopies(100, "comment"));
 
         AssessmentResource assessment = newAssessmentResource()
                 .with(id(assessmentId))
@@ -312,6 +441,8 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("form", expectedForm))
                 .andExpect(model().attributeExists("model"))
+                .andExpect(model().hasErrors())
+                .andExpect(model().attributeHasFieldErrors("form"))
                 .andExpect(view().name("assessment/reject-invitation-confirm"))
                 .andReturn();
 
@@ -325,7 +456,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         BindingResult bindingResult = form.getBindingResult();
         assertEquals(1, bindingResult.getGlobalErrorCount());
         assertEquals(0, bindingResult.getFieldErrorCount());
-        assertEquals("Only assessments which are Open can be rejected.", bindingResult.getGlobalError().getDefaultMessage());
+        assertEquals(ASSESSMENT_REJECTION_FAILED.name(), bindingResult.getGlobalError().getCode());
 
         InOrder inOrder = Mockito.inOrder(assessmentService, applicationService);
         inOrder.verify(assessmentService, calls(1)).getById(assessmentId);
@@ -405,7 +536,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         when(fileEntryRestService.findOne(formInputResponse.getFileEntry())).thenReturn(restSuccess(fileEntry));
     }
 
-    private List<AppendixResource> setUpAppendices(FileEntryResource fileEntry, FormInputResource formInput, ApplicationResource app) {
-        return singletonList(new AppendixResource(app.getId(), formInput.getId(), "test", fileEntry));
+    private List<AppendixResource> setUpAppendices(FileEntryResource fileEntry, FormInputResource formInput, ApplicationResource app, QuestionResource appendixQuestion) {
+        return singletonList(new AppendixResource(app.getId(), formInput.getId(), appendixQuestion.getShortName(), fileEntry));
     }
 }

@@ -37,29 +37,29 @@ public class InviteProjectServiceSecurityTest extends BaseServiceSecurityTest<In
 
     @Test
     public void testAcceptProjectInviteOnlyAllowedForSystemRegistrar() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> service.acceptProjectInvite("hash", 1L), SYSTEM_REGISTRATION_USER);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.acceptProjectInvite("hash", 1L), SYSTEM_REGISTRATION_USER);
     }
 
     @Test
     public void testCheckUserExistingByInviteHashOnlyAllowedForSystemRegistrar() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> service.checkUserExistingByInviteHash("hash"), SYSTEM_REGISTRATION_USER);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.checkUserExistingByInviteHash("hash"), SYSTEM_REGISTRATION_USER);
     }
 
     @Test
     public void testGetInviteByHashOnlyAllowedForSystemRegistrar() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> service.getInviteByHash("hash"), SYSTEM_REGISTRATION_USER);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getInviteByHash("hash"), SYSTEM_REGISTRATION_USER);
     }
 
     @Test
     public void testGetUserByInviteHashOnlyAllowedForSystemRegistrar() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> service.getUserByInviteHash("hash"), SYSTEM_REGISTRATION_USER);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getUserByInviteHash("hash"), SYSTEM_REGISTRATION_USER);
     }
 
     @Test
     public void testSaveFinanceContact() {
         final InviteProjectResource invite = newInviteProjectResource().build();
         assertAccessDenied(
-                () -> service.saveFinanceContactInvite(invite),
+                () -> classUnderTest.saveProjectInvite(invite),
                 () -> {
                     verify(projectInvitePermissionRules).partnersOnProjectCanSaveInvite(any(InviteProjectResource.class), any(UserResource.class));
                 });
@@ -68,13 +68,13 @@ public class InviteProjectServiceSecurityTest extends BaseServiceSecurityTest<In
     @Test
     public void testGetInvitesByProject() {
         long projectId = 1L;
-        ServiceResult<List<InviteProjectResource>> invitesByProject = service.getInvitesByProject(projectId);
+        ServiceResult<List<InviteProjectResource>> invitesByProject = classUnderTest.getInvitesByProject(projectId);
         verify(projectInvitePermissionRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).partnersOnProjectCanViewInvite(any(InviteProjectResource.class), any(UserResource.class));
         assertTrue(invitesByProject.getSuccessObject().isEmpty());
     }
 
     @Override
-    protected Class<? extends InviteProjectService> getServiceClass() {
+    protected Class<? extends InviteProjectService> getClassUnderTest() {
         return TestInviteProjectService.class;
     }
 
@@ -83,7 +83,7 @@ public class InviteProjectServiceSecurityTest extends BaseServiceSecurityTest<In
         static final int ARRAY_SIZE_FOR_POST_FILTER_TESTS = 2;
 
         @Override
-        public ServiceResult<Void> saveFinanceContactInvite(@P("inviteProjectResource") InviteProjectResource inviteProjectResource) {
+        public ServiceResult<Void> saveProjectInvite(@P("inviteProjectResource") InviteProjectResource inviteProjectResource)  {
             return null;
         }
 

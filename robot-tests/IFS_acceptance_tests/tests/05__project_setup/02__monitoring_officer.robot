@@ -6,6 +6,8 @@ Documentation     INFUND-2630 As a Competitions team member I want to be able to
 ...               INFUND-2633 As a Competitions team member I want to send an email to the project manager so that they have the contact details of the Monitoring Officer I have assigned to their project
 ...
 ...               INFUND-2634 As a partner I want to be able to view details of the assigned Monitoring Officer for my project so I can contact them
+...
+...               INFUND-2621 As a contributor I want to be able to review the current Project Setup status of all partners in my project so I can get an indication of the overall status of the consortium
 Suite Setup       Run Keywords    delete the emails from both test mailboxes
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -22,7 +24,7 @@ ${Successful_Monitoring_Officer_Page}    ${server}/project-setup-management/proj
 
 *** Test Cases ***
 Before Monitoring Officer is assigned
-    [Documentation]    INFUND-2634
+    [Documentation]    INFUND-2634, INFUND-2621
     [Tags]    HappyPath
     [Setup]    Log in as user    steve.smith@empire.com    Passw0rd
     Given the user navigates to the page    ${project_in_setup_page}
@@ -31,6 +33,9 @@ Before Monitoring Officer is assigned
     When the user clicks the button/link    link=Monitoring Officer
     Then the user should see the text in the page    Your project has not yet been assigned a Monitoring Officer.
     And the user should not see the text in the page    A Monitoring Officer has been assigned.
+    When the user navigates to the page    ${project_in_setup_page}
+    And the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(2)
 
 Comp admin can view the Supporting information details on MO page
     [Documentation]    INFUND-2630
@@ -114,11 +119,11 @@ MO details(email step)
     ...    INFUND-2633
     [Tags]    Email
     # Note that assigning a monitoring officer will send emails out to both the new MO and the PM - this test checks for both emails
-    When Open mailbox and confirm received email    ${test_mailbox_two}+monitoringofficer@gmail.com    ${test_mailbox_two_password}    has been assigned to you
-    And Open mailbox and confirm received email    worth.email.test@gmail.com    testtest1    has been assigned a Monitoring officer
+    When Open mailbox and confirm received email    ${test_mailbox_two}@gmail.com    ${test_mailbox_two_password}    has been assigned to you    New Monitoring Officer assignment
+    And Open mailbox and confirm received email    worth.email.test@gmail.com    testtest1    has been assigned a Monitoring officer    Monitoring Officer assigned to your project
 
 MO details can be edited and viewed in the Project setup status page
-    [Documentation]    INFUND-2630
+    [Documentation]    INFUND-2630, INFUND-2621
     ...
     ...    INFUND-2634
     [Tags]    HappyPath
@@ -137,6 +142,9 @@ MO details can be edited and viewed in the Project setup status page
     And the user should see the text in the page    Grace Harper
     And the user should see the text in the page    ${test_mailbox_two}+monitoringofficer@gmail.com
     And the user should see the text in the page    08549731414
+    When the user navigates to the page    ${project_in_setup_page}
+    And the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(2)
 
 MO details edit(email step)
     [Documentation]    INFUND-2630
@@ -144,11 +152,11 @@ MO details edit(email step)
     ...    INFUND-2634
     [Tags]    Email
     # Note that assigning a monitoring officer will send emails out to both the new MO and the PM - this test checks for both emails
-    When Open mailbox and confirm received email    ${test_mailbox_two}@gmail.com    ${test_mailbox_two_password}    has been assigned to you
-    And Open mailbox and confirm received email    worth.email.test@gmail.com    testtest1    has been assigned a Monitoring officer
+    When Open mailbox and confirm received email    ${test_mailbox_two}+monitoringofficer@gmail.com    ${test_mailbox_two_password}    has been assigned to you    New Monitoring Officer assignment
+    And Open mailbox and confirm received email    worth.email.test@gmail.com    testtest1    has been assigned a Monitoring officer    Monitoring Officer assigned to your project
 
 MO details accessible/seen by all partners
-    [Documentation]    INFUND-2634
+    [Documentation]    INFUND-2634, INFUND-2621
     [Tags]    HappyPath
     Given Log in as user    jessica.doe@ludlow.co.uk    Passw0rd
     When the user navigates to the page    ${project_in_setup_page}
@@ -159,6 +167,9 @@ MO details accessible/seen by all partners
     And the user should see the text in the page    Grace Harper
     And the user should see the text in the page    ${test_mailbox_two}+monitoringofficer@gmail.com
     And the user should see the text in the page    08549731414
+    When the user navigates to the page    ${project_in_setup_page}
+    And the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(2)
     Then Logout as user
     When Log in as user    steve.smith@empire.com    Passw0rd
     And the user navigates to the page    ${project_in_setup_page}
@@ -169,6 +180,9 @@ MO details accessible/seen by all partners
     And the user should see the text in the page    Grace Harper
     And the user should see the text in the page    ${test_mailbox_two}+monitoringofficer@gmail.com
     And the user should see the text in the page    08549731414
+    When the user navigates to the page    ${project_in_setup_page}
+    And the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(2)
 
 *** Keywords ***
 standard verification for email address follows

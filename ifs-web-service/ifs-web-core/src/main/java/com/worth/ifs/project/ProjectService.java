@@ -4,10 +4,11 @@ import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
+import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.project.resource.ProjectTeamStatusResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
-import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 import org.springframework.core.io.ByteArrayResource;
 
@@ -25,8 +26,6 @@ public interface ProjectService {
     List<OrganisationResource> getPartnerOrganisationsForProject(Long projectId);
 
     ProjectResource getById(Long projectId);
-
-    SpendProfileResource getSpendProfile(Long projectId, Long organisationId);
 
     ProjectResource getByApplicationId(Long applicationId);
 
@@ -68,13 +67,40 @@ public interface ProjectService {
 
     ServiceResult<Void> removeExploitationPlanDocument(Long projectId);
 
+    ServiceResult<Void> acceptOrRejectOtherDocuments(Long projectId, Boolean approved);
+
     boolean isUserLeadPartner(Long projectId, Long userId);
 
     List<ProjectUserResource> getLeadPartners(Long projectId);
 
-    boolean isUserPartner(Long projectId, Long userId);
-
     List<ProjectUserResource> getPartners(Long projectId);
 
-    ServiceResult<Boolean> isOtherDocumentSubmitAllowed(Long projectId);
+    Boolean isOtherDocumentSubmitAllowed(Long projectId);
+
+    ServiceResult<Void> setPartnerDocumentsSubmitted(Long projectId);
+
+    Optional<ByteArrayResource> getSignedGrantOfferLetterFile(Long projectId);
+
+    Optional<FileEntryResource> getSignedGrantOfferLetterFileDetails(Long projectId);
+
+    Optional<ByteArrayResource> getAdditionalContractFile(Long projectId);
+
+    Optional<FileEntryResource> getAdditionalContractFileDetails(Long projectId);
+
+    Optional<ByteArrayResource> getGeneratedGrantOfferFile(Long projectId);
+
+    Optional<FileEntryResource> getGeneratedGrantOfferFileDetails(Long projectId);
+
+    ServiceResult<FileEntryResource> addSignedGrantOfferLetter(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes);
+
+    ServiceResult<FileEntryResource> addGeneratedGrantOfferLetter(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes);
+
+    ProjectTeamStatusResource getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId);
+
+    ServiceResult<Void> inviteFinanceContact (Long projectId, InviteProjectResource inviteProjectResource);
+
+    ServiceResult<Void> saveProjectInvite(InviteProjectResource inviteProjectResource);
+
+    ServiceResult<List<InviteProjectResource>> getInvitesByProject (Long projectId);
+
 }

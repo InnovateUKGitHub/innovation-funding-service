@@ -15,8 +15,8 @@ import org.springframework.test.annotation.Rollback;
 import java.math.BigDecimal;
 import java.util.List;
 
-import static com.worth.ifs.project.finance.domain.CostTimePeriod.TimeUnit.DAY;
-import static com.worth.ifs.project.finance.domain.CostTimePeriod.TimeUnit.MONTH;
+import static com.worth.ifs.project.finance.domain.TimeUnit.DAY;
+import static com.worth.ifs.project.finance.domain.TimeUnit.MONTH;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -57,6 +57,7 @@ public class SpendProfileRepositoryIntegrationTest extends BaseRepositoryIntegra
         Application application = applicationRepository.findOne(1L);
 
         Project project = new Project(null, application, null, null, null, "A name", null);
+
         projectRepository.save(project);
 
         Organisation organisation = organisationRepository.findOne(1L);
@@ -64,7 +65,7 @@ public class SpendProfileRepositoryIntegrationTest extends BaseRepositoryIntegra
         List<Cost> eligibleCosts = asList(new Cost("1.20"), new Cost("3.40"));
         List<Cost> spendProfileFigures = asList(new Cost("5.60"), new Cost("7.80"));
 
-        SpendProfile saved = repository.save(new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileFigures));
+        SpendProfile saved = repository.save(new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileFigures, false));
 
         // clear the Hibernate cache
         flushAndClearSession();
@@ -100,6 +101,7 @@ public class SpendProfileRepositoryIntegrationTest extends BaseRepositoryIntegra
         Application application = applicationRepository.findOne(1L);
 
         Project project = new Project(null, application, null, null, null, "A name", null);
+
         projectRepository.save(project);
 
         Organisation organisation = organisationRepository.findOne(1L);
@@ -110,7 +112,7 @@ public class SpendProfileRepositoryIntegrationTest extends BaseRepositoryIntegra
                 new Cost("5.60").withCategory(labourCostCategory).withTimePeriod(0, DAY, 1, MONTH),
                 new Cost("7.80").withCategory(materialsCostCategory).withTimePeriod(0, DAY, 1, MONTH));
 
-        SpendProfile saved = repository.save(new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileFigures));
+        SpendProfile saved = repository.save(new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileFigures, false));
 
         // clear the Hibernate cache
         flushAndClearSession();
@@ -128,29 +130,29 @@ public class SpendProfileRepositoryIntegrationTest extends BaseRepositoryIntegra
         List<BigDecimal> expectedEligibleCostValues = simpleMap(eligibleCosts, Cost::getValue);
         List<BigDecimal> actualEligibleCostValues = simpleMap(retrievedEligibles.getCosts(), Cost::getValue);
         assertEquals(expectedEligibleCostValues, actualEligibleCostValues);
-        assertEquals(labourCostCategory.getName(), retrievedEligibles.getCosts().get(0).getCostCategory().get().getName());
-        assertEquals(materialsCostCategory.getName(), retrievedEligibles.getCosts().get(1).getCostCategory().get().getName());
-        assertFalse(retrievedEligibles.getCosts().get(0).getCostTimePeriod().isPresent());
-        assertFalse(retrievedEligibles.getCosts().get(1).getCostTimePeriod().isPresent());
+        assertEquals(labourCostCategory.getName(), retrievedEligibles.getCosts().get(0).getCostCategory().getName());
+        assertEquals(materialsCostCategory.getName(), retrievedEligibles.getCosts().get(1).getCostCategory().getName());
+        assertNull(retrievedEligibles.getCosts().get(0).getCostTimePeriod());
+        assertNull(retrievedEligibles.getCosts().get(1).getCostTimePeriod());
 
         List<BigDecimal> expectedSpendProfileCostValues = simpleMap(spendProfileFigures, Cost::getValue);
 
         List<BigDecimal> actualSpendProfileCostValues = simpleMap(retrievedFigures.getCosts(), Cost::getValue);
         assertEquals(expectedSpendProfileCostValues, actualSpendProfileCostValues);
-        assertEquals(labourCostCategory.getName(), retrievedFigures.getCosts().get(0).getCostCategory().get().getName());
-        assertEquals(materialsCostCategory.getName(), retrievedFigures.getCosts().get(1).getCostCategory().get().getName());
-        assertTrue(retrievedFigures.getCosts().get(0).getCostTimePeriod().isPresent());
-        assertTrue(retrievedFigures.getCosts().get(1).getCostTimePeriod().isPresent());
+        assertEquals(labourCostCategory.getName(), retrievedFigures.getCosts().get(0).getCostCategory().getName());
+        assertEquals(materialsCostCategory.getName(), retrievedFigures.getCosts().get(1).getCostCategory().getName());
+        assertNotNull(retrievedFigures.getCosts().get(0).getCostTimePeriod());
+        assertNotNull(retrievedFigures.getCosts().get(1).getCostTimePeriod());
 
-        assertEquals(Integer.valueOf(0), retrievedFigures.getCosts().get(0).getCostTimePeriod().get().getOffsetAmount());
-        assertEquals(DAY, retrievedFigures.getCosts().get(0).getCostTimePeriod().get().getOffsetUnit());
-        assertEquals(Integer.valueOf(1), retrievedFigures.getCosts().get(0).getCostTimePeriod().get().getDurationAmount());
-        assertEquals(MONTH, retrievedFigures.getCosts().get(0).getCostTimePeriod().get().getDurationUnit());
+        assertEquals(Integer.valueOf(0), retrievedFigures.getCosts().get(0).getCostTimePeriod().getOffsetAmount());
+        assertEquals(DAY, retrievedFigures.getCosts().get(0).getCostTimePeriod().getOffsetUnit());
+        assertEquals(Integer.valueOf(1), retrievedFigures.getCosts().get(0).getCostTimePeriod().getDurationAmount());
+        assertEquals(MONTH, retrievedFigures.getCosts().get(0).getCostTimePeriod().getDurationUnit());
 
-        assertEquals(Integer.valueOf(0), retrievedFigures.getCosts().get(1).getCostTimePeriod().get().getOffsetAmount());
-        assertEquals(DAY, retrievedFigures.getCosts().get(1).getCostTimePeriod().get().getOffsetUnit());
-        assertEquals(Integer.valueOf(1), retrievedFigures.getCosts().get(1).getCostTimePeriod().get().getDurationAmount());
-        assertEquals(MONTH, retrievedFigures.getCosts().get(1).getCostTimePeriod().get().getDurationUnit());
+        assertEquals(Integer.valueOf(0), retrievedFigures.getCosts().get(1).getCostTimePeriod().getOffsetAmount());
+        assertEquals(DAY, retrievedFigures.getCosts().get(1).getCostTimePeriod().getOffsetUnit());
+        assertEquals(Integer.valueOf(1), retrievedFigures.getCosts().get(1).getCostTimePeriod().getDurationAmount());
+        assertEquals(MONTH, retrievedFigures.getCosts().get(1).getCostTimePeriod().getDurationUnit());
     }
 
     @Test
@@ -168,6 +170,7 @@ public class SpendProfileRepositoryIntegrationTest extends BaseRepositoryIntegra
         Application application = applicationRepository.findOne(1L);
 
         Project project = new Project(null, application, null, null, null, "A name", null);
+
         projectRepository.save(project);
 
         Organisation organisation = organisationRepository.findOne(1L);
@@ -175,7 +178,7 @@ public class SpendProfileRepositoryIntegrationTest extends BaseRepositoryIntegra
         List<Cost> eligibleCosts = singletonList(new Cost("1.20").withCategory(labourCostCategory));
         List<Cost> spendProfileFigures = singletonList(new Cost("5.60").withCategory(labourCostCategory).withTimePeriod(0, DAY, 1, MONTH));
 
-        SpendProfile saved = repository.save(new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileFigures));
+        SpendProfile saved = repository.save(new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileFigures, false));
 
         // clear the Hibernate cache
         flushAndClearSession();
@@ -206,21 +209,21 @@ public class SpendProfileRepositoryIntegrationTest extends BaseRepositoryIntegra
         List<BigDecimal> expectedEligibleCostValues = asList(new BigDecimal("99.99"), new BigDecimal("3.40"));
         List<BigDecimal> actualEligibleCostValues = simpleMap(retrievedEligibles.getCosts(), Cost::getValue);
         assertEquals(expectedEligibleCostValues, actualEligibleCostValues);
-        assertEquals(labourCostCategory.getName(), retrievedEligibles.getCosts().get(0).getCostCategory().get().getName());
-        assertEquals(materialsCostCategory.getName(), retrievedEligibles.getCosts().get(1).getCostCategory().get().getName());
-        assertFalse(retrievedEligibles.getCosts().get(0).getCostTimePeriod().isPresent());
-        assertFalse(retrievedEligibles.getCosts().get(1).getCostTimePeriod().isPresent());
+        assertEquals(labourCostCategory.getName(), retrievedEligibles.getCosts().get(0).getCostCategory().getName());
+        assertEquals(materialsCostCategory.getName(), retrievedEligibles.getCosts().get(1).getCostCategory().getName());
+        assertNull(retrievedEligibles.getCosts().get(0).getCostTimePeriod());
+        assertNull(retrievedEligibles.getCosts().get(1).getCostTimePeriod());
 
         List<BigDecimal> expectedSpendProfileCostValues = singletonList(new BigDecimal("7.80"));
         List<BigDecimal> actualSpendProfileCostValues = simpleMap(retrievedFigures.getCosts(), Cost::getValue);
         assertEquals(expectedSpendProfileCostValues, actualSpendProfileCostValues);
-        assertEquals(materialsCostCategory.getName(), retrievedFigures.getCosts().get(0).getCostCategory().get().getName());
-        assertTrue(retrievedFigures.getCosts().get(0).getCostTimePeriod().isPresent());
+        assertEquals(materialsCostCategory.getName(), retrievedFigures.getCosts().get(0).getCostCategory().getName());
+        assertNotNull(retrievedFigures.getCosts().get(0).getCostTimePeriod());
 
-        assertEquals(Integer.valueOf(0), retrievedFigures.getCosts().get(0).getCostTimePeriod().get().getOffsetAmount());
-        assertEquals(DAY, retrievedFigures.getCosts().get(0).getCostTimePeriod().get().getOffsetUnit());
-        assertEquals(Integer.valueOf(1), retrievedFigures.getCosts().get(0).getCostTimePeriod().get().getDurationAmount());
-        assertEquals(MONTH, retrievedFigures.getCosts().get(0).getCostTimePeriod().get().getDurationUnit());
+        assertEquals(Integer.valueOf(0), retrievedFigures.getCosts().get(0).getCostTimePeriod().getOffsetAmount());
+        assertEquals(DAY, retrievedFigures.getCosts().get(0).getCostTimePeriod().getOffsetUnit());
+        assertEquals(Integer.valueOf(1), retrievedFigures.getCosts().get(0).getCostTimePeriod().getDurationAmount());
+        assertEquals(MONTH, retrievedFigures.getCosts().get(0).getCostTimePeriod().getDurationUnit());
     }
 
     @Test
@@ -235,6 +238,7 @@ public class SpendProfileRepositoryIntegrationTest extends BaseRepositoryIntegra
         Application application = applicationRepository.findOne(1L);
 
         Project project = new Project(null, application, null, null, null, "A name", null);
+
         projectRepository.save(project);
 
         Organisation organisation = organisationRepository.findOne(1L);
@@ -242,7 +246,7 @@ public class SpendProfileRepositoryIntegrationTest extends BaseRepositoryIntegra
         List<Cost> eligibleCosts = asList(new Cost("1.20"), new Cost("3.40"));
         List<Cost> spendProfileFigures = asList(new Cost("5.60"), new Cost("7.80"));
 
-        SpendProfile saved = repository.save(new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileFigures));
+        SpendProfile saved = repository.save(new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileFigures, false));
 
         // clear the Hibernate cache
         flushAndClearSession();

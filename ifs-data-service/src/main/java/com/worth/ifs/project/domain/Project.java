@@ -2,20 +2,22 @@ package com.worth.ifs.project.domain;
 
 import com.worth.ifs.address.domain.Address;
 import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.invite.domain.ProcessActivity;
+import com.worth.ifs.invite.domain.ProjectParticipantRole;
 import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.resource.UserRoleType;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 
-import static com.worth.ifs.user.resource.UserRoleType.roleNames;
 import static com.worth.ifs.util.CollectionFunctions.getOnlyElement;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static java.util.stream.Collectors.toList;
@@ -45,7 +47,9 @@ public class Project implements ProcessActivity {
 
     private String name;
 
-    private LocalDateTime submittedDate;
+    private LocalDateTime documentsSubmittedDate;
+
+    private LocalDateTime offerSubmittedDate;
 
     @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProjectUser> projectUsers = new ArrayList<>();
@@ -58,16 +62,37 @@ public class Project implements ProcessActivity {
     @JoinColumn(name="exploitationPlanFileEntryId", referencedColumnName="id")
     private FileEntry exploitationPlan;
 
+    @OneToOne
+    @JoinColumn(name="signedGrantOfferFileEntryId", referencedColumnName = "id")
+    private FileEntry signedGrantOfferLetter;
+
+    @OneToOne
+    @JoinColumn(name="grantOfferLetterFileEntryId", referencedColumnName = "id")
+    private FileEntry grantOfferLetter;
+
+    @OneToOne
+    @JoinColumn(name="additionalContractFileEntryId", referencedColumnName = "id")
+    private FileEntry additionalContractFile;
+
+    @NotNull
+    private boolean offerRejected;
+
+    private Boolean otherDocumentsApproved;
+
+
     public Project() {}
 
-    public Project(Long id, Application application, LocalDate targetStartDate, Address address, Long durationInMonths, String name, LocalDateTime submittedDate) {
+    public Project(Long id, Application application, LocalDate targetStartDate, Address address,
+
+                   Long durationInMonths, String name, LocalDateTime documentsSubmittedDate) {
+
         this.id = id;
         this.application = application;
         this.targetStartDate = targetStartDate;
         this.address = address;
         this.durationInMonths = durationInMonths;
         this.name = name;
-        this.submittedDate = submittedDate;
+        this.documentsSubmittedDate = documentsSubmittedDate;
     }
 
     public void addProjectUser(ProjectUser projectUser) {
@@ -78,8 +103,8 @@ public class Project implements ProcessActivity {
         return projectUsers.remove(projectUser);
     }
 
-    public ProjectUser getExistingProjectUserWithRoleForOrganisation(UserRoleType roleType, Organisation organisation) {
-        List<ProjectUser> matchingUser = simpleFilter(projectUsers, projectUser -> projectUser.getRole().isOfType(roleType) && projectUser.getOrganisation().equals(organisation));
+    public ProjectUser getExistingProjectUserWithRoleForOrganisation(ProjectParticipantRole role, Organisation organisation) {
+        List<ProjectUser> matchingUser = simpleFilter(projectUsers, projectUser -> projectUser.getRole()==role && projectUser.getOrganisation().equals(organisation));
 
         if (matchingUser.isEmpty()) {
             return null;
@@ -88,12 +113,12 @@ public class Project implements ProcessActivity {
         return getOnlyElement(matchingUser);
     }
 
-    public boolean isProjectDetailsSubmitted() {
-        return submittedDate != null;
-    }
-
     public Long getId() {
         return id;
+    }
+
+    public String getFormattedId() {
+        return ApplicationResource.formatter.format(id);
     }
 
     public void setId(Long id) {
@@ -148,8 +173,8 @@ public class Project implements ProcessActivity {
         return projectUsers.stream().filter(filter).collect(toList());
     }
 
-    public List<ProjectUser> getProjectUsersWithRole(UserRoleType... roles){
-        return getProjectUsers(pu -> roleNames(roles).contains(pu.getRole().getName()));
+    public List<ProjectUser> getProjectUsersWithRole(ProjectParticipantRole... roles){
+        return getProjectUsers(pu -> Arrays.stream(roles).anyMatch(pu.getRole()::equals));
     }
 
     public List<Organisation> getOrganisations(){
@@ -165,12 +190,20 @@ public class Project implements ProcessActivity {
         this.projectUsers.addAll(projectUsers);
     }
 
-    public LocalDateTime getSubmittedDate() {
-        return submittedDate;
+    public LocalDateTime getDocumentsSubmittedDate() {
+        return documentsSubmittedDate;
     }
 
-    public void setSubmittedDate(LocalDateTime submittedDate) {
-        this.submittedDate = submittedDate;
+    public void setDocumentsSubmittedDate(LocalDateTime documentsSubmittedDate) {
+        this.documentsSubmittedDate = documentsSubmittedDate;
+    }
+
+    public LocalDateTime getOfferSubmittedDate() {
+        return offerSubmittedDate;
+    }
+
+    public void setOfferSubmittedDate(LocalDateTime offerSubmittedDate) {
+        this.offerSubmittedDate = offerSubmittedDate;
     }
 
     public FileEntry getCollaborationAgreement() {
@@ -187,5 +220,45 @@ public class Project implements ProcessActivity {
 
     public void setExploitationPlan(FileEntry exploitationPlan) {
         this.exploitationPlan = exploitationPlan;
+    }
+
+    public FileEntry getSignedGrantOfferLetter() {
+        return signedGrantOfferLetter;
+    }
+
+    public void setSignedGrantOfferLetter(FileEntry signedGrantOfferLetter) {
+        this.signedGrantOfferLetter = signedGrantOfferLetter;
+    }
+
+    public FileEntry getAdditionalContractFile() {
+        return additionalContractFile;
+    }
+
+    public void setAdditionalContractFile(FileEntry additionalContractFile) {
+        this.additionalContractFile = additionalContractFile;
+    }
+
+    public boolean isOfferRejected() {
+        return offerRejected;
+    }
+
+    public void setOfferRejected(boolean offerRejected) {
+        this.offerRejected = offerRejected;
+    }
+
+    public FileEntry getGrantOfferLetter() {
+        return grantOfferLetter;
+    }
+
+    public void setGrantOfferLetter(FileEntry grantOfferLetter) {
+        this.grantOfferLetter = grantOfferLetter;
+    }
+
+    public Boolean getOtherDocumentsApproved() {
+        return otherDocumentsApproved;
+    }
+
+    public void setOtherDocumentsApproved(Boolean otherDocumentsApproved) {
+        this.otherDocumentsApproved = otherDocumentsApproved;
     }
 }

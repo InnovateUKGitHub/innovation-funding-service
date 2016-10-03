@@ -16,9 +16,7 @@
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
     
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Technology inspired'}, ${(param.status != null and param.status[0] == 'accepted' ? '/prototypes/1627-admin-view-project-status-grid?status=setup&#38;stage=5' : '/prototypes/1627-admin-view-project-status-grid?status=setup&#38;stage=3')})" th:unless="${param.status != null and param.status[0] == 'reject'}" th:remove="tag" />
-
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Technology inspired'}, ${'/prototypes/1627-admin-view-project-status-grid?status=setup&#38;stage=5&#38;reject=docs'})" th:if="${param.status != null and param.status[0] == 'reject'}" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition dashboard'}, ${'/prototypes/4151-admin-competition-dash'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 	
@@ -33,7 +31,7 @@
 			<h2 class="heading-small no-margin-top">The grant offer letter has been received and accepted</h2>
 		</div>
 
-		<p>The grant offer letter provided by Innovate UK has been received. Your consortium has completed project set up and will soon be able to complete the process.</p>
+		<p>The grant offer letter provided by Innovate UK has been received. Your consortium has completed project setup and will soon be able to complete the process.</p>
 	</th:block>
 
 	<th:block th:if="${param.status != null and param.status[0] == 'GOLRejected'}">
@@ -46,7 +44,7 @@
 	</th:block>
 
 	<th:block th:if="${param.status == null}">
-		<p>The grant offer letter has been provided by Innovate UK, and has been built from the information provided during project set up.</p>
+		<p>The grant offer letter has been provided by Innovate UK, and has been built from the information provided during project setup.</p>
 	</th:block>
 
 	<th:block th:if="${param.status != null and param.status[0] == 'GOLSent'}">
@@ -65,7 +63,8 @@
 			<p>The grant offer letter has been created from the information supplied by the applicants.</p>
 
 			<div class="uploaded-file" id="gol-uploaded" th:unless="${param.action != null and param.action[0] == 'removeGOL'}">
-				<a href="#">Grant offer letter 2016-04-28a.PDF</a> <a th:href="@{?action=removeGOL}" class="extra-margin-left" id="gol-remove">Remove</a>
+				<a href="#">Grant offer letter 2016-04-28a.PDF</a> 
+				<!-- <a th:href="@{?action=removeGOL}" class="extra-margin-left" id="gol-remove">Remove</a> -->
 			</div>
 
 			<th:block th:if="${param.action != null and param.action[0] == 'removeGOL'}">

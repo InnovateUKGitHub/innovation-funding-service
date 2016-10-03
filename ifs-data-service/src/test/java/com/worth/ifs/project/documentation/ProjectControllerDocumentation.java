@@ -3,14 +3,15 @@ package com.worth.ifs.project.documentation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.bankdetails.resource.BankDetailsResource;
+import com.worth.ifs.bankdetails.resource.BankDetailsStatusResource;
+import com.worth.ifs.bankdetails.resource.ProjectBankDetailsStatusSummary;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestErrorResponse;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder;
+import com.worth.ifs.project.constant.ProjectActivityStates;
 import com.worth.ifs.project.controller.ProjectController;
-import com.worth.ifs.project.resource.MonitoringOfficerResource;
-import com.worth.ifs.project.resource.ProjectResource;
-import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.project.resource.*;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,24 +20,33 @@ import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.test.web.servlet.MvcResult;
 
 import javax.servlet.http.HttpServletRequest;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static com.worth.ifs.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
+import static com.worth.ifs.bankdetails.builder.BankDetailsStatusResourceBuilder.newBankDetailsStatusResource;
+import static com.worth.ifs.bankdetails.builder.ProjectBankDetailsStatusSummaryBuilder.newProjectBankDetailsStatusSummary;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.error.Error.fieldError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.documentation.BankDetailsDocs.bankDetailsResourceFields;
+import static com.worth.ifs.documentation.BankDetailsDocs.projectBankDetailsStatusSummaryFields;
 import static com.worth.ifs.documentation.MonitoringOfficerDocs.monitoringOfficerResourceFields;
 import static com.worth.ifs.documentation.ProjectDocs.projectResourceBuilder;
 import static com.worth.ifs.documentation.ProjectDocs.projectResourceFields;
+import static com.worth.ifs.documentation.ProjectTeamStatusDocs.projectTeamStatusResourceFields;
 import static com.worth.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
+import static com.worth.ifs.project.builder.ProjectLeadStatusResourceBuilder.newProjectLeadStatusResource;
+import static com.worth.ifs.project.builder.ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource;
+import static com.worth.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
-import static com.worth.ifs.util.JsonMappingUtil.toJson;
+import static com.worth.ifs.project.constant.ProjectActivityStates.COMPLETE;
+import static com.worth.ifs.project.constant.ProjectActivityStates.PENDING;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static com.worth.ifs.util.JsonMappingUtil.toJson;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.isA;
@@ -352,7 +362,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
 
     @Test
     public void setApplicationDetailsSubmittedDateButDetailsNotFilledIn() throws Exception {
-        when(projectServiceMock.saveProjectSubmitDateTime(isA(Long.class), isA(LocalDateTime.class))).thenReturn(serviceFailure(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_SUBMITTED_IF_INCOMPLETE));
+        when(projectServiceMock.submitProjectDetails(isA(Long.class), isA(LocalDateTime.class))).thenReturn(serviceFailure(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_SUBMITTED_IF_INCOMPLETE));
         mockMvc.perform(post("/project/{projectId}/setApplicationDetailsSubmitted", 123L))
                 .andExpect(status().isBadRequest())
                 .andDo(this.document.snippets(
@@ -363,7 +373,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
 
     @Test
     public void setApplicationDetailsSubmittedDate() throws Exception {
-        when(projectServiceMock.saveProjectSubmitDateTime(isA(Long.class), isA(LocalDateTime.class))).thenReturn(serviceSuccess());
+        when(projectServiceMock.submitProjectDetails(isA(Long.class), isA(LocalDateTime.class))).thenReturn(serviceSuccess());
         mockMvc.perform(post("/project/{projectId}/setApplicationDetailsSubmitted", 123L))
                 .andExpect(status().isOk())
                 .andDo(this.document.snippets(
@@ -399,7 +409,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
     }
 
     @Test
-    public void updateBanksDetail() throws Exception {
+    public void submitBanksDetail() throws Exception {
         Long projectId = 1L;
         Long organisationId = 1L;
         OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource().build();
@@ -410,10 +420,10 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                 .withOrganiationAddress(organisationAddressResource)
                 .build();
 
-        when(bankDetailsServiceMock.updateBankDetails(bankDetailsResource)).thenReturn(serviceSuccess());
+        when(bankDetailsServiceMock.submitBankDetails(bankDetailsResource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(
-                post("/project/{projectId}/bank-details", projectId).
+                put("/project/{projectId}/bank-details", projectId).
                         contentType(APPLICATION_JSON).
                         content(toJson(bankDetailsResource)))
                 .andExpect(status().isOk())
@@ -438,12 +448,12 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                 .withOrganiationAddress(organisationAddressResource)
                 .build();
 
-        Error invalidSortCodeError = fieldError("sortCode", "123", "Pattern");
-        Error invalidAccountNumberError = fieldError("accountNumber", "1234567", "Pattern");
+        Error invalidSortCodeError = fieldError("sortCode", "123", "validation.standard.sortcode.format", "", "", "\\d{6}");
+        Error invalidAccountNumberError = fieldError("accountNumber", "1234567", "validation.standard.accountnumber.format", "", "", "\\d{8}");
 
         RestErrorResponse expectedErrors = new RestErrorResponse(asList(invalidSortCodeError, invalidAccountNumberError));
 
-        when(bankDetailsServiceMock.updateBankDetails(bankDetailsResource)).thenReturn(serviceSuccess());
+        when(bankDetailsServiceMock.submitBankDetails(bankDetailsResource)).thenReturn(serviceSuccess());
         mockMvc.perform(
                 post("/project/{projectId}/bank-details", projectId).
                         contentType(APPLICATION_JSON).
@@ -495,5 +505,113 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                         )))
                 .andReturn();
         assertTrue(mvcResult.getResponse().getContentAsString().equals("false"));
+    }
+
+    @Test
+    public void setPartnerDocumentsSubmittedDate() throws Exception {
+        when(projectServiceMock.saveDocumentsSubmitDateTime(isA(Long.class), isA(LocalDateTime.class))).thenReturn(serviceSuccess());
+        mockMvc.perform(post("/project/{projectId}/partner/documents/submit", 123L))
+                .andExpect(status().isOk())
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project for which the documents are being submitted to.")
+                        )));
+    }
+
+
+    @Test
+    public void getTeamStatus() throws Exception {
+        ProjectTeamStatusResource projectTeamStatusResource = buildTeamStatus();
+        when(projectServiceMock.getProjectTeamStatus(123L, Optional.empty())).thenReturn(serviceSuccess(projectTeamStatusResource));
+        mockMvc.perform(get("/project/{projectId}/team-status", 123L)).
+                andExpect(status().isOk()).
+                andExpect(content().json(toJson(projectTeamStatusResource))).
+                andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project that the Project Users are being requested from")
+                        ),
+                        responseFields(projectTeamStatusResourceFields)));
+    }
+
+    @Test
+    public void getBankDetailsProjectSummary() throws  Exception {
+        Long projectId = 123L;
+        List<BankDetailsStatusResource> bankDetailsStatusResources = newBankDetailsStatusResource().withOrganisationId(1L, 2L, 3L).withOrganisationName("ABC Ltd.", "XYZ Ltd.", "University of Sheffield").withBankDetailsStatus(PENDING, COMPLETE, COMPLETE).build(3);
+        final ProjectBankDetailsStatusSummary bankDetailsStatusSummary = newProjectBankDetailsStatusSummary().withCompetitionId(1L).withProjectId(2L).withBankDetailsStatusResources(bankDetailsStatusResources).build();
+        when(bankDetailsServiceMock.getProjectBankDetailsStatusSummary(projectId)).thenReturn(serviceSuccess(bankDetailsStatusSummary));
+        mockMvc.perform(get("/project/{projectId}/bank-details/status-summary", projectId)).
+                andExpect(status().isOk()).
+                andExpect(content().json(toJson(bankDetailsStatusSummary))).
+                andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of project that bank details status summary is requested for")
+                        ),
+                        responseFields(projectBankDetailsStatusSummaryFields)
+                ));
+    }
+    public void getTeamStatusWithFilterByUserId() throws Exception {
+        ProjectTeamStatusResource projectTeamStatusResource = buildTeamStatus();
+        when(projectServiceMock.getProjectTeamStatus(123L, Optional.of(456L))).thenReturn(serviceSuccess(projectTeamStatusResource));
+        mockMvc.perform(get("/project/{projectId}/team-status", 123L).
+                param("filterByUserId", "456")).
+                andExpect(status().isOk()).
+                andExpect(content().json(toJson(projectTeamStatusResource))).
+                andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project that the Project Users are being requested from")
+                        ),
+                        requestParameters(
+                                parameterWithName("filterByUserId").description("Optional id of a user with which the partner organisations " +
+                                        "will be filtered by, such that the non-lead partner organisations will only include organisations that " +
+                                        "this user is a partner in")
+                        ),
+                        responseFields(projectTeamStatusResourceFields)));
+    }
+
+    private ProjectTeamStatusResource buildTeamStatus(){
+        ProjectLeadStatusResource projectLeadStatusResource = newProjectLeadStatusResource().build();
+        List<ProjectPartnerStatusResource> partnerStatuses = newProjectPartnerStatusResource().build(3);
+
+        projectLeadStatusResource.setName("Nomensa");
+        partnerStatuses.get(0).setName("Acme Corp");
+        partnerStatuses.get(1).setName("Hive IT");
+        partnerStatuses.get(2).setName("Worth IT Systems");
+
+        projectLeadStatusResource.setSpendProfileStatus(ProjectActivityStates.COMPLETE);
+        partnerStatuses.get(0).setSpendProfileStatus(ProjectActivityStates.COMPLETE);
+        partnerStatuses.get(1).setSpendProfileStatus(ProjectActivityStates.NOT_STARTED);
+        partnerStatuses.get(2).setSpendProfileStatus(PENDING);
+
+        projectLeadStatusResource.setBankDetailsStatus(ProjectActivityStates.COMPLETE);
+        partnerStatuses.get(0).setBankDetailsStatus(PENDING);
+        partnerStatuses.get(1).setBankDetailsStatus(ProjectActivityStates.NOT_REQUIRED);
+        partnerStatuses.get(2).setBankDetailsStatus(ProjectActivityStates.NOT_STARTED);
+
+        projectLeadStatusResource.setOtherDocumentsStatus(ProjectActivityStates.COMPLETE);
+        partnerStatuses.get(0).setOtherDocumentsStatus(PENDING);
+        partnerStatuses.get(1).setOtherDocumentsStatus(PENDING);
+        partnerStatuses.get(2).setOtherDocumentsStatus(ProjectActivityStates.COMPLETE);
+
+        projectLeadStatusResource.setProjectDetailsStatus(ProjectActivityStates.COMPLETE);
+        partnerStatuses.get(0).setProjectDetailsStatus(ProjectActivityStates.COMPLETE);
+        partnerStatuses.get(1).setProjectDetailsStatus(ProjectActivityStates.COMPLETE);
+        partnerStatuses.get(2).setProjectDetailsStatus(ProjectActivityStates.COMPLETE);
+
+        projectLeadStatusResource.setFinanceChecksStatus(PENDING);
+        partnerStatuses.get(0).setFinanceChecksStatus(PENDING);
+        partnerStatuses.get(1).setFinanceChecksStatus(PENDING);
+        partnerStatuses.get(2).setFinanceChecksStatus(PENDING);
+
+        projectLeadStatusResource.setMonitoringOfficerStatus(PENDING);
+        partnerStatuses.get(0).setMonitoringOfficerStatus(ProjectActivityStates.COMPLETE);
+        partnerStatuses.get(1).setMonitoringOfficerStatus(PENDING);
+        partnerStatuses.get(2).setMonitoringOfficerStatus(ProjectActivityStates.COMPLETE);
+
+        projectLeadStatusResource.setGrantOfferLetterStatus(PENDING);
+        partnerStatuses.get(0).setGrantOfferLetterStatus(PENDING);
+        partnerStatuses.get(1).setGrantOfferLetterStatus(PENDING);
+        partnerStatuses.get(2).setGrantOfferLetterStatus(PENDING);
+
+        return newProjectTeamStatusResource().withPartnerStatuses(partnerStatuses).build();
     }
 }

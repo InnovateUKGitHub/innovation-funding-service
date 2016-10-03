@@ -19,6 +19,8 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.AsyncRestTemplate;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Arrays;
+
 import static com.worth.ifs.authentication.service.RestIdentityProviderService.ServiceFailures.DUPLICATE_EMAIL_ADDRESS;
 import static com.worth.ifs.authentication.service.RestIdentityProviderService.ServiceFailures.UNABLE_TO_CREATE_USER;
 import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
@@ -44,8 +46,6 @@ public class RestIdentityProviderServiceTest extends BaseUnitTestMocksTest  {
 
     private AbstractRestTemplateAdaptor adaptor;
 
-
-
     @Before
     public void setupServiceWithMockTemplateAndSpringSecurity() {
         final RestTemplateAdaptorFactory factory = new RestTemplateAdaptorFactory();
@@ -67,14 +67,12 @@ public class RestIdentityProviderServiceTest extends BaseUnitTestMocksTest  {
         successResponse.setUuid("new-uid");
         ResponseEntity<String> successResponseEntity = new ResponseEntity<>(asJson(successResponse), CREATED);
 
-
         when(mockRestTemplate.postForEntity("http://idprest/user", adaptor.jsonEntity(createRequest), String.class)).thenReturn(successResponseEntity);
 
         ServiceResult<String> result = service.createUserRecordWithUid("email@example.com", "thepassword");
         assertTrue(result.isSuccess());
         assertEquals("new-uid", result.getSuccessObject());
     }
-
 
     @Test
     public void testCreateUserRecordWithUidButDuplicateEmailFailureResponseReturned() throws JsonProcessingException {
@@ -128,6 +126,21 @@ public class RestIdentityProviderServiceTest extends BaseUnitTestMocksTest  {
         ServiceResult<String> result = service.updateUserPassword("existing-uid", "newpassword");
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(internalServerErrorError()));
+    }
+
+    @Test
+    public void testWeakPasswordError() throws JsonProcessingException {
+        CreateUserResource createRequest = new CreateUserResource("email@example.com", "Password123");
+        IdentityProviderError[] errorResponse = new IdentityProviderError[]{new IdentityProviderError(RestIdentityProviderService.INVALID_PASSWORD_KEY, Arrays.asList(new String[]{"blacklisted"}))};
+        ResponseEntity<String> errorResponseEntity = new ResponseEntity<>(asJson(errorResponse), BAD_REQUEST);
+
+        when(mockRestTemplate.postForEntity("http://idprest/user", adaptor.jsonEntity(createRequest), String.class)).thenReturn(errorResponseEntity);
+
+        ServiceResult<String> result = service.createUserRecordWithUid("email@example.com", "Password123");
+        assertTrue(result.isFailure());
+        assertEquals(result.getFailure().getErrors().size(), 1);
+        Error expectedError = result.getFailure().getErrors().get(0);
+        assertEquals(expectedError.getFieldName(), "password");
     }
 
     private String asJson(Object object) throws JsonProcessingException {

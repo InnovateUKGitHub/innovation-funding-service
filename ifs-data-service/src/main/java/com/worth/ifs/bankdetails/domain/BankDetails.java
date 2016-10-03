@@ -26,7 +26,7 @@ public class BankDetails {
     @JoinColumn(name = "projectId" , referencedColumnName = "id")
     private Project project;
 
-    @OneToOne (cascade = CascadeType.ALL, orphanRemoval = true)   // Using cascade because entries with type "BANK_DETAILS" should be added/removed via bank details
+    @OneToOne (cascade = CascadeType.ALL)   // Using cascade because entries with type "BANK_DETAILS" should be added/removed via bank details
     @JoinColumn(name = "organisationAddressId", referencedColumnName = "id")
     private OrganisationAddress organisationAddress;
 
@@ -185,5 +185,12 @@ public class BankDetails {
 
     public void setVerificationConditions(List<VerificationCondition> verificationConditions) {
         this.verificationConditions = verificationConditions;
+    }
+
+    @Transient
+    public boolean isApproved(){
+        // Note that this criteria is temporary and will be adusted when we decide on thresholds.
+        // It will likely be moved into a property file so it can be adjusted without code change.
+        return manualApproval || (verified && registrationNumberMatched && companyNameScore > 6 && addressScore > 6);
     }
 }

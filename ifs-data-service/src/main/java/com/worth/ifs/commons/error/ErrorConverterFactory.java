@@ -24,7 +24,7 @@ public class ErrorConverterFactory {
     }
 
     public static ErrorConverter asGlobalErrors() {
-        return e -> Optional.of(globalError(e.getErrorKey(), e.getErrorMessage()));
+        return e -> Optional.of(globalError(e.getErrorKey()));
     }
 
     public static ErrorConverter mappingErrorKeyToField(String errorKey, String targetField) {

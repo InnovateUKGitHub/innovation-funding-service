@@ -14,13 +14,16 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.worth.ifs.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
+import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static com.worth.ifs.project.builder.ProjectUserBuilder.newProjectUser;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
+import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
 import static com.worth.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
+import static java.util.Arrays.asList;
 import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -36,7 +39,6 @@ public class BankDetailsPermissionRulesTest extends BasePermissionRulesTest<Bank
     private UserResource projectFinanceUser;
     private ProjectResource project;
     private Role partnerRole;
-    private Role projectFinanceRole;
     private List<ProjectUser> partnerProjectUser;
     private OrganisationResource organisationResource;
     private BankDetailsResource bankDetailsResource;
@@ -44,62 +46,63 @@ public class BankDetailsPermissionRulesTest extends BasePermissionRulesTest<Bank
     @Before
     public void setUp(){
         user = newUserResource().build();
-        projectFinanceUser = newUserResource().build();
         project = newProjectResource().build();
         partnerRole = newRole().build();
-        projectFinanceRole = newRole().build();
+        projectFinanceUser = newUserResource().withRolesGlobal(asList(newRoleResource().withType(PROJECT_FINANCE).build())).build();
         partnerProjectUser = newProjectUser().build(1);
         organisationResource = newOrganisationResource().build();
         bankDetailsResource = newBankDetailsResource().withOrganisation(organisationResource.getId()).withProject(project.getId()).build();
 
         when(roleRepositoryMock.findOneByName(PARTNER.getName())).thenReturn(partnerRole);
-        when(roleRepositoryMock.findOneByName(PROJECT_FINANCE.getName())).thenReturn(projectFinanceRole);
     }
 
     @Test
     public void testPartnersCanSeeBankDetailsOfTheirOwnOrg() {
-        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRoleId(project.getId(), user.getId(), partnerRole.getId())).thenReturn(partnerProjectUser);
-        when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRoleId(project.getId(), user.getId(), organisationResource.getId(), partnerRole.getId())).thenReturn(partnerProjectUser.get(0));
+        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(project.getId(), user.getId(), PROJECT_PARTNER)).thenReturn(partnerProjectUser);
+        when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(project.getId(), user.getId(), organisationResource.getId(), PROJECT_PARTNER)).thenReturn(partnerProjectUser.get(0));
         assertTrue(rules.partnersCanSeeTheirOwnOrganisationsBankDetails(bankDetailsResource, user));
     }
 
     @Test
     public void testNonPartnersCannotSeeBankDetails() {
-        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRoleId(project.getId(), user.getId(), partnerRole.getId())).thenReturn(Collections.emptyList());
+        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(project.getId(), user.getId(), PROJECT_PARTNER)).thenReturn(Collections.emptyList());
         assertFalse(rules.partnersCanSeeTheirOwnOrganisationsBankDetails(bankDetailsResource, user));
     }
 
     @Test
     public void testPartnersCannotSeeBankDetailsOfAnotherOrganisation() {
-        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRoleId(project.getId(), user.getId(), partnerRole.getId())).thenReturn(partnerProjectUser);
-        when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRoleId(project.getId(), user.getId(), organisationResource.getId(), partnerRole.getId())).thenReturn(null);
+        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(project.getId(), user.getId(), PROJECT_PARTNER)).thenReturn(partnerProjectUser);
+        when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(project.getId(), user.getId(), organisationResource.getId(), PROJECT_PARTNER)).thenReturn(null);
         assertFalse(rules.partnersCanSeeTheirOwnOrganisationsBankDetails(bankDetailsResource, user));
     }
 
     @Test
     public void testPartnersCanUpdateTheirOwnOrganisationBankDetails(){
-        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRoleId(project.getId(), user.getId(), partnerRole.getId())).thenReturn(partnerProjectUser);
-        when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRoleId(project.getId(), user.getId(), organisationResource.getId(), partnerRole.getId())).thenReturn(partnerProjectUser.get(0));
-        assertTrue(rules.partnersCanUpdateTheirOwnOrganisationsBankDetails(bankDetailsResource, user));
+        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(project.getId(), user.getId(), PROJECT_PARTNER)).thenReturn(partnerProjectUser);
+        when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(project.getId(), user.getId(), organisationResource.getId(), PROJECT_PARTNER)).thenReturn(partnerProjectUser.get(0));
+        assertTrue(rules.partnersCanSubmitTheirOwnOrganisationsBankDetails(bankDetailsResource, user));
     }
 
     @Test
     public void testNonPartnersCannotUpdateBankDetails(){
-        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRoleId(project.getId(), user.getId(), partnerRole.getId())).thenReturn(Collections.emptyList());
-        assertFalse(rules.partnersCanUpdateTheirOwnOrganisationsBankDetails(bankDetailsResource, user));
+        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(project.getId(), user.getId(), PROJECT_PARTNER)).thenReturn(Collections.emptyList());
+        assertFalse(rules.partnersCanSubmitTheirOwnOrganisationsBankDetails(bankDetailsResource, user));
     }
 
     @Test
     public void testPartnersCannotUpdateBankDetailsOfAnotherOrg(){
-        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRoleId(project.getId(), user.getId(), partnerRole.getId())).thenReturn(partnerProjectUser);
-        when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRoleId(project.getId(), user.getId(), organisationResource.getId(), partnerRole.getId())).thenReturn(null);
-        assertFalse(rules.partnersCanUpdateTheirOwnOrganisationsBankDetails(bankDetailsResource, user));
+        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(project.getId(), user.getId(), PROJECT_PARTNER)).thenReturn(partnerProjectUser);
+        when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(project.getId(), user.getId(), organisationResource.getId(), PROJECT_PARTNER)).thenReturn(null);
+        assertFalse(rules.partnersCanSubmitTheirOwnOrganisationsBankDetails(bankDetailsResource, user));
     }
 
     @Test
     public void testProjectFinanceUserCanSeeAllBankDetailsForAllOrganisations(){
-        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRoleId(project.getId(), projectFinanceUser.getId(), projectFinanceRole.getId())).thenReturn(partnerProjectUser);
-        when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRoleId(project.getId(), projectFinanceUser.getId(), organisationResource.getId(), projectFinanceRole.getId())).thenReturn(partnerProjectUser.get(0));
-        rules.projectFinanceUsersCanSeeAllBankDetailsOnAllProjects(bankDetailsResource, user);
+        assertTrue(rules.projectFinanceUsersCanSeeAllBankDetailsOnAllProjects(bankDetailsResource, projectFinanceUser));
+    }
+
+    @Test
+    public void testProjectFinanceUserCanUpdateBankDetailsForAllOrganisations(){
+        assertTrue(rules.projectFinanceUsersCanUpdateAnyOrganisationsBankDetails(bankDetailsResource, projectFinanceUser));
     }
 }

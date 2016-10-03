@@ -1,13 +1,14 @@
 package com.worth.ifs.invite.resource;
 
-import com.worth.ifs.invite.constant.InviteStatusConstants;
+import com.worth.ifs.invite.constant.InviteStatus;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
  * DTO to transfer Project Invite related Entities
  */
-public class InviteProjectResource {
+public class InviteProjectResource extends InviteResource {
 
     private Long id;
     private Long user;
@@ -19,7 +20,10 @@ public class InviteProjectResource {
     private Long organisation;
     private String projectName;
     private String hash;
-    private InviteStatusConstants status;
+    private InviteStatus status;
+    private String leadOrganisation;
+    private Long inviteOrganisation;
+    private String inviteOrganisationName;
     private String leadApplicant;
     private String competitionName;
 
@@ -28,7 +32,7 @@ public class InviteProjectResource {
         // no-arg constructor
     }
 
-    public InviteProjectResource(Long id, Long user, String name, String email, Long project, Long organisation, Long applicationId, String hash, InviteStatusConstants status, String leadApplicant, String competitionName) {
+    public InviteProjectResource(Long id, Long user, String name, String email, Long project, Long organisation, Long applicationId, String hash, InviteStatus status, String leadApplicant, String competitionName) {
         this.id = id;
         this.user = user;
         this.name = name;
@@ -88,9 +92,33 @@ public class InviteProjectResource {
 
     public void setHash(String hash) { this.hash = hash; }
 
-    public InviteStatusConstants getStatus() { return status; }
+    public InviteStatus getStatus() { return status; }
 
-    public void setStatus(InviteStatusConstants status) { this.status = status; }
+    public void setStatus(InviteStatus status) { this.status = status; }
+
+    public String getLeadOrganisation() {
+        return leadOrganisation;
+    }
+
+    public void setLeadOrganisation(String leadOrganisation) {
+        this.leadOrganisation = leadOrganisation;
+    }
+
+    public String getInviteOrganisationName() {
+        return inviteOrganisationName;
+    }
+
+    public void setInviteOrganisationName(String inviteOrganisationName) {
+        this.inviteOrganisationName = inviteOrganisationName;
+    }
+
+    public Long getInviteOrganisation() {
+        return inviteOrganisation;
+    }
+
+    public void setInviteOrganisation(Long inviteOrganisation) {
+        this.inviteOrganisation = inviteOrganisation;
+    }
 
     public String getLeadApplicant() {
         return leadApplicant;
@@ -128,6 +156,9 @@ public class InviteProjectResource {
                 .append(projectName, that.projectName)
                 .append(hash, that.hash)
                 .append(status, that.status)
+                .append(leadOrganisation, that.leadOrganisation)
+                .append(inviteOrganisation, that.inviteOrganisation)
+                .append(inviteOrganisationName, that.inviteOrganisationName)
                 .append(leadApplicant, that.leadApplicant)
                 .append(competitionName, that.competitionName)
                 .isEquals();
@@ -147,8 +178,33 @@ public class InviteProjectResource {
                 .append(projectName)
                 .append(hash)
                 .append(status)
+                .append(leadOrganisation)
+                .append(inviteOrganisation)
+                .append(inviteOrganisationName)
                 .append(leadApplicant)
                 .append(competitionName)
                 .toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("id", id)
+                .append("user", user)
+                .append("name", name)
+                .append("nameConfirmed", nameConfirmed)
+                .append("email", email)
+                .append("project", project)
+                .append("applicationId", applicationId)
+                .append("organisation", organisation)
+                .append("projectName", projectName)
+                .append("hash", hash)
+                .append("status", status)
+                .append("leadOrganisation", leadOrganisation)
+                .append("inviteOrganisation", inviteOrganisation)
+                .append("inviteOrganisationName", inviteOrganisationName)
+                .append("leadApplicant", leadApplicant)
+                .append("competitionName", competitionName)
+                .toString();
     }
 }

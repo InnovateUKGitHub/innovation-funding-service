@@ -3,7 +3,6 @@ package com.worth.ifs.documentation;
 import com.worth.ifs.competition.builder.CompetitionResourceBuilder;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import static com.google.common.primitives.Longs.asList;
@@ -37,6 +36,7 @@ public class CompetitionResourceDocs {
             fieldWithPath("pafCode").description("the paf code entered during competition setup"),
             fieldWithPath("budgetCode").description("the budget code entered during competition setup"),
             fieldWithPath("code").description("the unique competition code entered during competition setup"),
+            fieldWithPath("resubmission").description("indicates if the competition has the ability to do a resubmission"),
             fieldWithPath("multiStream").description("indicates if the competition has multiple streams"),
             fieldWithPath("streamName").description("the name of the stream"),
             fieldWithPath("collaborationLevel").description("collaboration level (single, collaborative...)"),
@@ -45,9 +45,7 @@ public class CompetitionResourceDocs {
             fieldWithPath("sectionSetupStatus").description("the completion status of competition setup sections"),
             fieldWithPath("activityCode").description("the activity code entered during competition setup"),
             fieldWithPath("innovateBudget").description("the innovate budget entered during competition setup"),
-            fieldWithPath("funder").description("the funder entered during competition setup"),
-            fieldWithPath("funderBudget").description("the funder budget entered during competition setup"),
-            fieldWithPath("coFunders").description("the Co-Funders for this competition")
+            fieldWithPath("funders").description("the funders for this competition")
     };
 
     public static final CompetitionResourceBuilder competitionResourceBuilder = newCompetitionResource()
@@ -74,7 +72,5 @@ public class CompetitionResourceDocs {
             .withBudgetCode("BUDGET-456")
             .withActivityCode("Activity-Code")
             .withInnovateBudget("INNOVATE-Budget")
-            .withFunder("funder, funder")
-            .withMilestones(asList(1L, 2L, 3L))
-            .withFunderBudget(new BigDecimal(1234), new BigDecimal(23423));
+            .withMilestones(asList(1L, 2L, 3L));
 }

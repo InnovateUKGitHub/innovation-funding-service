@@ -9,8 +9,8 @@
 
 <div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
-
+<div th:if="${param.userRole == null}" th:include="fragments/layout :: global-header" th:remove="tag" />
+<div th:if="${param.userRole != null and param.userRole[0] == 'admin'}" th:include="prototypes/fragments/layout :: prototype-admin-header" th:with="status='loggedIn',userRole='admin',user='James Danek'" th:remove="tag" />
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />

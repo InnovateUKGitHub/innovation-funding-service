@@ -16,8 +16,9 @@ Documentation     -INFUND-172: As a lead applicant and I am on the application s
 ...
 ...
 ...               INFUND-1786 As a lead applicant I would like view the submitting an application terms and conditions page so that I know what I am agreeing to
+Suite Setup       new account complete all but one
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        Applicant    Submit
+Force Tags        Applicant
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/keywords/Login_actions.robot
@@ -26,16 +27,8 @@ Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
 
 *** Variables ***
-${submit_application_name}    Robot submit test application
-
 
 *** Test Cases ***
-Set up an application to submit
-    [Documentation]    INFUND-205
-    [Tags]    HappyPath
-    new account complete all but one
-    # please note that this test case has been moved out of suite setup as it isn't required for smoke testing, but should still run for HappyPath and full test runs
-
 Submit button disabled when the application is incomplete
     [Documentation]    INFUND-195
     [Tags]    Email    HappyPath
@@ -47,7 +40,7 @@ Submit button disabled when finance section is incomplete
     [Documentation]    INFUND-927
     [Tags]    Email    HappyPath
     Given the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link=Robot submit test application
+    And the user clicks the button/link    link=${application_name}
     Given the user clicks the button/link    link=Your finances
     When the user clicks the button/link    jQuery=button:contains("Edit")
     And the user clicks the button/link    link= Application Overview
@@ -65,29 +58,29 @@ Submit flow (complete application)
     ...    INFUND-4010
     [Tags]    HappyPath    Email    SmokeTest
     [Setup]    Delete the emails from both test mailboxes
+    Given guest user log-in    ${submit_test_email}    Passw0rd123
     Given the user navigates to the page    ${SERVER}
-    And the user clicks the button/link    link=${submit_application_name}
+    And the user clicks the button/link    link=${application_name}
     When the user clicks the button/link    link=Review & submit
     And the user should be redirected to the correct page    summary
-    Then the applicant accepts the terms and conditions
     And the applicant clicks the submit button and the clicks cancel in the submit modal
     And the applicant clicks the submit and then clicks the "close button" in the modal
     And the applicant clicks Yes in the submit modal
     Then the user should be redirected to the correct page    submit
     And the user should see the text in the page    Application submitted
-    And the user should see the text in the page    you will be notified of our decision by December 2016
+    And the user should see the text in the page    you will be notified of our decision by December
 
 The applicant should get a confirmation email
     [Documentation]    INFUND-1887
-    [Tags]    Email    HappyPath
-    Then the user should get a confirmation email
+    [Tags]    Email    HappyPath    SmokeTest
+    Then the user should get a confirmation email    ${test_mailbox_one}@gmail.com    ${test_mailbox_one_password}    Congratulations, you have successfully submitted an application for funding to Innovate    Successful submission of application
 
 Submitted application is read only
     [Documentation]    INFUND-1938
-    [Tags]    Email
+    [Tags]    Email    SmokeTest
     Given the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link=Robot submit test application
-    When the user clicks the button/link    Link=View application
+    And the user clicks the button/link    link=${application_name}
+    When the user clicks the button/link    link=View application
     And the user is on the page    summary
     Then the user can check that the sections are read only
 
@@ -96,7 +89,7 @@ Status of the submitted application
     [Tags]    Email
     When the user navigates to the page    ${DASHBOARD_URL}
     Then the user should see the text in the page    Application submitted
-    And the user clicks the button/link    Link=Robot submit test application
+    And the user clicks the button/link    Link=${application_name}
     And the user should see the element    Link=View application
     And the user should see the element    Link=Print Application
     When the user clicks the button/link    Link=Print Application
@@ -118,7 +111,7 @@ the applicant clicks the submit button and the clicks cancel in the submit modal
 
 The user can check that the sections are read only
     the user navigates to the page    ${dashboard_url}
-    the user clicks the button/link    link=Robot submit test application
+    the user clicks the button/link    link=${application_name}
     the user clicks the button/link    link=View application
     the user clicks the button/link    css=.section-overview section:nth-of-type(1) .collapsible:nth-of-type(4)
     the user should not see the element    jQuery=button:contains("Edit")
@@ -127,29 +120,22 @@ The user can check that the sections are read only
     the user clicks the button/link    css=.section-overview section:nth-of-type(3) .collapsible:nth-of-type(1)
     the user should not see the element    jQuery=.button:contains("Edit")
 
-the user should get a confirmation email
-    Open Mailbox    server=imap.googlemail.com    user=${test_mailbox_one}@gmail.com    password=${test_mailbox_one_password}
-    ${LATEST} =    wait for email
-    ${HTML}=    get email body    ${LATEST}
-    log    ${HTML}
-    ${MATCHES1}=    Get Matches From Email    ${LATEST}    Congratulations, you have successfully submitted an application for funding to Innovate
-    log    ${MATCHES1}
-    Should Not Be Empty    ${MATCHES1}
-    Delete All Emails
-    close mailbox
-
 the submit button should be disabled
-    the user selects the checkbox    id=agree-terms-page
     Element Should Be Disabled    jQuery=button:contains("Submit application")
 
 the applicant accepts the terms and conditions
     the user selects the checkbox    id=agree-terms-page
+    the user selects the checkbox    id=agree-state-aid-page
 
 The user marks the finances as complete
-    Given the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link=Robot submit test application
-    Given the user clicks the button/link    link=Your finances
-    When the user clicks the button/link    jQuery=button:contains("Mark all as complete")
+    the user navigates to the page    ${DASHBOARD_URL}
+    the user clicks the button/link    link=${application_name}
+    the user clicks the button/link    link=Your finances
+    the user selects the checkbox          id=agree-terms-page
+    the user selects the checkbox          id=agree-state-aid-page
+    the user moves focus to the element    jQuery=button:contains("Mark all as complete")
+    the user clicks the button/link    jQuery=button:contains("Mark all as complete")
+    Sleep    1s
 
 the applicant marks the first section as complete
     the user clicks the button/link    link=Application Overview
@@ -160,6 +146,7 @@ the applicant marks the first section as complete
     Input Text    id=application_details-startdate_year    2018
     Clear Element Text    id=application_details-startdate_month
     Input Text    id=application_details-startdate_month    11
+    the user clicks the button/link    jQuery=label:contains(No) input
     the user clicks the button/link    name=mark_as_complete
 
 the applicant clicks the submit and then clicks the "close button" in the modal

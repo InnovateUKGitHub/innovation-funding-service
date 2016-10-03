@@ -66,6 +66,17 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
     }
 
     @Test
+    public void submitBankDetails() {
+        when(bankDetailsRestService.submitBankDetails(projectResource.getId(), bankDetailsResource)).thenReturn(restSuccess());
+
+        ServiceResult<Void> result = service.submitBankDetails(projectResource.getId(), bankDetailsResource);
+
+        assertTrue(result.isSuccess());
+
+        verify(bankDetailsRestService).submitBankDetails(projectResource.getId(), bankDetailsResource);
+    }
+
+    @Test
     public void getBankDetailsByProjectAndOrganisation() {
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectResource.getId(), organisationResource.getId())).thenReturn(restSuccess(bankDetailsResource));
 

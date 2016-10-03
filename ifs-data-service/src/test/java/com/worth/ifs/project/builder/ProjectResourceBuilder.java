@@ -6,7 +6,6 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.project.resource.ProjectResource;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -61,15 +60,35 @@ public class ProjectResourceBuilder extends BaseBuilder<ProjectResource, Project
         return with(project -> project.setAddress(address));
     }
 
+    public ProjectResourceBuilder withCollaborationAgreement(Long collaborationAgreement) {
+        return with (project -> project.setCollaborationAgreement(collaborationAgreement));
+    }
+
+    public ProjectResourceBuilder withExploitationPlan(Long exploitationPlan) {
+        return with (project -> project.setExploitationPlan(exploitationPlan));
+    }
+
+    public ProjectResourceBuilder withSignedGrantOfferLetter(Long grantOfferLetter) {
+        return with (project -> project.setSignedGrantOfferLetter(grantOfferLetter));
+    }
+
+    public ProjectResourceBuilder withGrantOfferLetter(Long grantOfferLetter) {
+        return with (project -> project.setGrantOfferLetter(grantOfferLetter));
+    }
+
+    public ProjectResourceBuilder withAdditionalContractFile(Long additionalContractFile) {
+        return with (project -> project.setAdditionalContractFile(additionalContractFile));
+    }
+
+    public ProjectResourceBuilder withOtherDocumentsApproved(Boolean otherDocumentsApproved) {
+        return with(project -> project.setOtherDocumentsApproved(otherDocumentsApproved));
+    }
+
     public ProjectResourceBuilder withProjectUsers(List<Long>... projectUsers) {
         return withArray((userList, project) -> project.setProjectUsers(userList), projectUsers);
     }
 
     public ProjectResourceBuilder withDuration(Long... durations) {
         return withArray((duration, project) -> project.setDurationInMonths(duration), durations);
-    }
-
-    public ProjectResourceBuilder withSubmittedDate(LocalDateTime... submittedDates){
-        return withArray((submittedDate, project) -> project.setSubmittedDate(submittedDate), submittedDates);
     }
 }

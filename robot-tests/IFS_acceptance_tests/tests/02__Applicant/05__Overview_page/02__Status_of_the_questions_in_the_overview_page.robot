@@ -51,6 +51,7 @@ the applicant assigns the Project Summary question from the overview page
     [Arguments]    ${assignee_name}
     the user clicks the button/link    jQuery=#section-1 .section:nth-child(2) .assign-button button
     the user clicks the button/link    jQuery=#section-1 .section:nth-child(2) button:contains("${assignee_name}")
+    Sleep    500ms   # otherwise it stops while Assigning..
 
 the applicant assigns the Project Summary
     [Arguments]    ${assignee_name}
@@ -58,7 +59,7 @@ the applicant assigns the Project Summary
     the user clicks the button/link    jQuery=button:contains("${assignee_name}")
 
 a blue flag should be visible for the Project Summary in overview page
-    the user should see the element    jQuery=#section-1 .section:nth-child(2) .assigned
+    Wait Until Element Is Visible    jQuery=#section-1 .section:nth-child(2) .assigned
 
 the blue flag should not be visible
     the user should not see the element    jQuery=#section-1 .section:nth-child(2) .assigned

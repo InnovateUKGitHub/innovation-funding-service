@@ -1,19 +1,5 @@
 package com.worth.ifs.competition.transactional;
 
-import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
-import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import com.worth.ifs.competition.resource.MilestoneType;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -23,7 +9,20 @@ import com.worth.ifs.competition.mapper.MilestoneMapper;
 import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.competition.repository.MilestoneRepository;
 import com.worth.ifs.competition.resource.MilestoneResource;
+import com.worth.ifs.competition.resource.MilestoneType;
 import com.worth.ifs.transactional.BaseTransactionalService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 
 /**
  * Service for operations around the usage and processing of Milestones
@@ -43,12 +42,17 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
     private MilestoneMapper milestoneMapper;
 
     @Override
-    public ServiceResult<List<MilestoneResource>> getAllDatesByCompetitionId(Long id) {
+    public ServiceResult<List<MilestoneResource>> getAllMilestonesByCompetitionId(Long id) {
         return serviceSuccess ((List<MilestoneResource>) milestoneMapper.mapToResource(milestoneRepository.findAllByCompetitionId(id)));
     }
 
     @Override
-    public ServiceResult<Void> update(Long id, List<MilestoneResource> milestones) {
+    public ServiceResult<MilestoneResource> getMilestoneByTypeAndCompetitionId(MilestoneType type, Long id) {
+        return serviceSuccess(milestoneMapper.mapToResource(milestoneRepository.findByTypeAndCompetitionId(type, id)));
+    }
+
+    @Override
+    public ServiceResult<Void> updateMilestones(Long id, List<MilestoneResource> milestones) {
         
     	Competition competition = competitionRepository.findById(id);
     	
@@ -60,7 +64,14 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
             milestoneEntities.forEach(m -> milestoneRepository.save(m));
             return serviceSuccess();
         }
+
         return serviceFailure(messages.getErrors());
+    }
+
+    @Override
+    public ServiceResult<Void> updateMilestone(MilestoneResource milestoneResource) {
+        milestoneRepository.save(milestoneMapper.mapToDomain(milestoneResource));
+        return serviceSuccess();
     }
 
     @Override
@@ -78,13 +89,13 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
         ValidationMessages vm = new ValidationMessages();
 
         milestones.sort((c1, c2) -> c1.getType().compareTo(c2.getType()));
-        
+
         milestones.forEach(m -> {
         	if(m.getDate() == null) {
-        		Error error = new Error("error.milestone.nulldate", "Milestones must have dates specified", HttpStatus.BAD_REQUEST);
+        		Error error = new Error("error.milestone.nulldate", HttpStatus.BAD_REQUEST);
         		vm.addError(error);
         	} else if(m.getDate().isBefore(LocalDateTime.now())) {
-        		Error error = new Error("error.milestone.pastdate", "Milestones cannot be in the past", HttpStatus.BAD_REQUEST);
+        		Error error = new Error("error.milestone.pastdate", HttpStatus.BAD_REQUEST);
         		vm.addError(error);
         	}
         });
@@ -95,11 +106,10 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
         	
         	if(current.getDate() != null && previous.getDate() != null) {
         		if(previous.getDate().isAfter(current.getDate())) {
-        			Error error = new Error("error.milestone.nonsequential", "Milestones must be in date order", HttpStatus.BAD_REQUEST);
+        			Error error = new Error("error.milestone.nonsequential", HttpStatus.BAD_REQUEST);
             		vm.addError(error);
         		}
         	}
-
         }
         return vm;
     }

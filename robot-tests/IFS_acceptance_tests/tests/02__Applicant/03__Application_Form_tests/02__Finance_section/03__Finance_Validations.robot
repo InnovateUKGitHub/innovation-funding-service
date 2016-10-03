@@ -6,7 +6,7 @@ Suite Setup       Run keywords    log in and create new application if there is 
 ...               AND    Applicant navigates to the finances of the Robot application
 ...               AND    The user enters the funding level
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        Finances    Applicant
+Force Tags        Applicant
 Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../../resources/variables/User_credentials.robot
@@ -20,16 +20,17 @@ Mark as complete with empty other funding row should be impossible
     [Tags]
     [Setup]    Run keywords    the user clicks the button/link    jQuery=label:contains(Yes) input
     ...    AND    the user clicks the button/link    jQuery=label:contains(Yes) input
-    ...    AND    Focus    jQuery=button:contains('Add another source of funding')
+    ...    AND    the user moves focus to the element    jQuery=button:contains('Add another source of funding')
     ...    AND    the user clicks the button/link    jQuery=button:contains('Add another source of funding')
     When the user marks the finances as complete
-    Then the user should see the element    css=.error-summary-list
+    Then the user should see the element    css=.error
 
 Other funding client side
     [Tags]
     [Setup]    the user should see the element    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
     When the user enters invalid inputs in the other funding fields    ${EMPTY}    132020    -6565
     Then the user gets the expected validation errors    Invalid secured date    Funding source cannot be blank
+    And the user moves focus to the element    jQuery=label:contains(Yes) input
     And the user should see an error    This field should be 1 or higher
 
 Other funding server side
@@ -64,7 +65,7 @@ Labour client side
     Given the user clicks the button/link    jQuery=button:contains("Labour")
     When the user enters text to a text field    css=[name^="labour-labourDaysYearly"]    -1
     And the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input    ${EMPTY}
-    Then the user gets the expected validation errors    This field should be 1 or higher    This field cannot be left blank
+    Then the user should see an error           This field should be 1 or higher
     When the user enters text to a text field    css=[name^="labour-labourDaysYearly"]    366
     And the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input    12121212121212121212121212
     And the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(4) input    123456789101112
@@ -128,6 +129,7 @@ Materials client side
     Given the user clicks the button/link    jQuery=button:contains("Materials")
     When the user enters text to a text field    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    1234567810111213141516171819202122
     And the user enters text to a text field    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    -1
+    the user moves focus to the element    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(4) input
     Then the user gets the expected validation errors    You must enter a value less than 10 digits    This field should be 1 or higher
     [Teardown]
 
@@ -281,14 +283,14 @@ user selects the admin costs
     focus    css=.app-submit-btn
 
 the field with the wrong input should be saved
+    the user should see the element    css=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
     ${input_value} =    Get Value    css=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
     Should Be Equal As Strings    ${input_value}    -1
 
 the user reloads the page with validation errors
-    Mouse Out    css=input
-    Focus    jQuery=button:contains("Mark all as complete")
+    the user moves focus to the element    jQuery=button:contains("Mark all as complete")
     sleep    300ms
-    Reload Page
+    the user reloads the page
     sleep    300ms
     run keyword and ignore error    confirm action
     run keyword and ignore error    confirm action
@@ -296,23 +298,22 @@ the user reloads the page with validation errors
 
 the user enters invalid inputs in the other funding fields
     [Arguments]    ${SOURCE}    ${DATE}    ${FUNDING}
-    Input Text    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    ${SOURCE}
-    Input Text    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    ${DATE}
-    Input Text    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    ${FUNDING}
-    Mouse out    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(3) input
-    Focus    jQuery=button:contains("Mark all as complete")
+    the user enters text to a text field    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    ${SOURCE}
+    the user enters text to a text field    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    ${DATE}
+    the user enters text to a text field    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    ${FUNDING}
+    the user moves the mouse away from the element    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(3) input
+    the user moves focus to the element    jQuery=button:contains("Mark all as complete")
 
 Remove row
     [Arguments]    ${section}    ${close button}
-    Focus    ${close button}
+    the user moves focus to the element    ${close button}
     sleep    300ms
     the user clicks the button/link    ${close button}
     the user clicks the button/link    ${section}
 
 The user gets the expected validation errors
     [Arguments]    ${ERROR1}    ${ERROR2}
-    Mouse Out    css=input
-    Focus    jQuery=button:contains("Mark all as complete")
+    the user moves focus to the element    jQuery=button:contains("Mark all as complete")
     sleep    300ms
     Then the user should see an error    ${ERROR1}
     And the user should see an error    ${ERROR2}
@@ -322,4 +323,4 @@ the user selects a radio button
 
 The user enters the funding level
     the user selects the radio button    financePosition-organisationSize    SMALL
-    Input Text    id=cost-financegrantclaim    20
+    the user enters text to a text field    id=cost-financegrantclaim    20

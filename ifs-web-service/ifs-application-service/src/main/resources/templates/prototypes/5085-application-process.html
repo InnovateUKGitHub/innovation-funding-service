@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+<main id="content">
+	
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader('Competition setup', '/prototypes/2469-comp-setup')" th:remove="tag" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+	<div class="hgroup" style="padding-top: 20px">
+		<p class="subtitle no-margin">Connected digital additive manufacturing</p>
+		<h1 class="heading-xlarge no-margin">Application process</h1>
+	</div>
+
+	<h2 class="heading-medium extra-margin">Programme competition questions</h2>
+
+	<p>Here you can review and amend the application and assessment questions and guidance for this competition.
+		Any changes you make will be applied to this competition, but will not affect the default template for this competition type.</p>
+
+	<p>If you're happy with the default questions for this competition type, mark this section as done and continue.</p>
+
+	<div class="grid-row">
+		<div class="column-half">
+			<div class="comp-setup-questions">
+				<h3 class="heading-small no-margin">Assessed questions</h3>
+				<ol class="list-number">
+					<li><a href="/prototypes/5154-question-details">Business opportunity</a></li>
+					<li><a href="#">Project exploitation</a></li>
+					<li><a href="#">Economic benefit</a></li>
+					<li><a href="#">Technical approach</a></li>
+					<li><a href="#">Innovation</a></li>
+					<li><a href="#">Potential market</a></li>
+					<li><a href="#">Risks</a></li>
+					<li><a href="#">Project team</a></li>
+					<li><a href="#">Funding</a></li>
+					<li><a href="#">Adding value</a></li>
+				</ol>
+			</div>
+		</div>
+		<div class="column-half">
+			<div class="comp-setup-questions">
+				<h3 class="heading-small no-margin">Application details</h3>
+				<ul>
+					<li><a href="/prototypes/5209-application-details">Application details</a></li>
+					<li><a href="/prototypes/5211-project-summary">Project summary</a></li>
+					<li><a href="#">Public description</a></li>
+					<li><a href="/prototypes/5210-project-scope">Scope</a></li>
+				</ul>
+			</div>
+			<div class="comp-setup-questions">
+				<h3 class="heading-small no-margin">Finances</h3>
+				<ul>
+					<li><a href="/prototypes/5089-application-finances">Finances</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<div class="extra-margin">
+		<a role="button" tabindex="0" class="button" href="/prototypes/2469-comp-setup">Done</a>
+	</div>
+
+	<ul class="pagination">
+		<li class="prev">
+			<a rel="next" title="Navigate to previous part" href="/prototypes/2469-comp-setup?section=milestones">
+				<span class="pagination-label">Previous</span>
+				<span class="pagination-part-title">Milestones</span>
+			</a>
+		</li>
+	    <li class="next">
+	        <a rel="next" title="Navigate to next part" href="/prototypes/5090-assessors-required">
+	            <span class="pagination-label">Next</span>
+	            <span class="pagination-part-title">Assessors</span>
+	        </a>
+	    </li>
+	</ul>
+
+	<div class="extra-margin">
+		<a href="/prototypes/2469-comp-setup" class="button-secondary">Return to setup overview</a>
+	</div>
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<script type="text/javascript">
+
+</script>
+</body>
+</html>

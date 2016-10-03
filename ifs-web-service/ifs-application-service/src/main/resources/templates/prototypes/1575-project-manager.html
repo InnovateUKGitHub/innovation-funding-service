@@ -17,23 +17,23 @@
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Project manager'})" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Project Manager'})" th:remove="tag" />
 	
-	<form action="/prototypes/1575-project-details">
+	<form>
 
 		<fieldset>
 
-			<h2 class="heading-medium">Project manager</h2>
+			<h2 class="heading-medium">Project Manager</h2>
 
-			<legend class="visuallyhidden">Project manager</legend>
+			<legend class="visuallyhidden">Project Manager</legend>
 
-			<p class="form-hint">Who will be the project manager for your project?</p>
+			<p class="form-hint">Who will be the Project Manager for your project?</p>
 				
-			<p>As lead partner you must choose a project manager for the duration of your project. We need this information now so that your Monitoring Officer can contact the project manager.</p>
+			<p>As lead partner you must choose a Project Manager for the duration of your project. We need this information now so that your Monitoring Officer can contact the Project Manager.</p>
 		
 			<div class="form-group extra-margin">
 				<label for="pm-name-1" class="block-label">
-					<input id="pm-name-1" type="radio" name="pm-name-group" value="John Smith" />
+					<input id="pm-name-1" type="radio" name="pm-name-group" value="John Smith" checked="checked" />
 					John Smith
 				</label>
 				
@@ -58,7 +58,48 @@
 
 		<div th:include="prototypes/fragments/project-setup :: prototype-add-users('pm')" th:remove="tag" />
 
-		<button class="button button-large extra-margin" style="display: none;" id="pm-cta">Save</button>
+		<p>If you add a new team member this section will remain in a pending state until they have accepted. Once the team member has created their account you can assign them the role of Project Manager.</p>
+
+		<div class="extra-margin">
+			<a href="#" class="button button-large" data-js-modal="modal-assign" id="pm-cta">Assign</a>
+		</div>
+
+		<div class="modal-assign" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+			<button class="js-close close" aria-label="Close Popup">X</button>
+			<div>
+
+				<h2 class="heading-medium no-margin">Assign Project Manager</h2>
+
+				<p>This will assign <span id="project-manager">[name]</span> as the Project Manager for this project.</p>
+
+				<hr />
+
+				<div class="alignright-button">
+					<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
+					<a href="/prototypes/1575-project-details" class="button">Assign Project Manager</a>
+				</div>
+
+			</div>
+		</div>
+
+		<div class="modal-pending" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+			<button class="js-close close" aria-label="Close Popup">X</button>
+			<div>
+
+				<h2 class="heading-medium no-margin">Project Manager cannot be assigned</h2>
+
+				<p><span id="project-manager-pending">[name]</span> has been invited to create an account. This must be completed before they can be assigned as your Project Manager.</p>
+
+				<hr />
+
+				<div class="alignright-button">
+					<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
+					<a href="#" class="button js-close">OK</a>
+				</div>
+
+			</div>
+		</div>
+
 
 	</form>
 
@@ -75,8 +116,10 @@
 	// <![CDATA[
 	jQuery(document).ready(function(){
 
-		jQuery('#add-pm').on('click',function(e){ 
 
+		jQuery('#add-pm').on('click',function(e){
+//			jQuery('#pm-table').show();
+//			jQuery('#pm-cta').hide();
 			if(jQuery(this).is(':checked')){
 				jQuery('#pm-table').show();
 			}else{
@@ -89,31 +132,48 @@
 
 			var pmContact = jQuery('#name-pm1').val();
 
-			jQuery('#pm-name').text(pmContact + ' (Pending)')
-			jQuery("#pm-name-invite").attr('checked', 'checked');
+			jQuery('#pm-name').text(pmContact + ' (Pending)');
+			jQuery('#pm-name-invite').val(pmContact + ' (Pending)');
+			jQuery('#pm-name-invite').prop('checked', true).trigger('click');
 			jQuery('#pm-table').hide();
 			jQuery('#invited-pm').show();
-			jQuery('#pm-cta').text('Send invitation');
+//			jQuery('#pm-cta').text('Send invitation');
 			jQuery('#pm-cta').show();
 			jQuery('#add-pm').text('Change team member');
 		});
 
-		jQuery('input').on('click',function(e){ 
-			if(jQuery(this).is(':checked')){
+		jQuery('#project-manager').text(jQuery('input:radio[name="pm-name-group"]:checked').val());
 
-				if(jQuery(this).attr('id') != 'pm-name-invite'){
-					jQuery('#pm-cta').text('Save');
-				}else{
-					jQuery('#pm-cta').text('Send invitation');
-				}
+		jQuery('#pm-name-1, #pm-name-2').on('click', function() {
+			jQuery('#project-manager').text(jQuery('input:radio[name="pm-name-group"]:checked').val());
+			jQuery('#pm-cta').attr('data-js-modal', 'modal-assign');
+			jQuery('#pm-table').hide();
 
-				if(jQuery(this).attr('id') != 'add-pm'){
-					jQuery('#pm-table').hide();
-				}
-				
-				jQuery('#pm-cta').show();
-			}
 		});
+
+		jQuery('#pm-name-invite').on('click', function() {
+			jQuery('#project-manager-pending').text(jQuery('#name-pm1').val());
+			jQuery('#pm-cta').attr('data-js-modal', 'modal-pending');
+			jQuery('#pm-table').hide();
+
+		});
+
+//		jQuery('input').on('click',function(e){
+//			if(jQuery(this).is(':checked')){
+//
+////				if(jQuery(this).attr('id') != 'pm-name-invite'){
+////					jQuery('#pm-cta').text('Save');
+////				}else{
+////					jQuery('#pm-cta').text('Send invitation');
+////				}
+//
+//				if(jQuery(this).attr('id') != 'add-pm'){
+//					jQuery('#pm-table').hide();
+//				}
+//
+//				jQuery('#pm-cta').show();
+//			}
+//		});
 
 
 	});

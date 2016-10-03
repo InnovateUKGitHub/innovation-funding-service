@@ -13,7 +13,12 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${(param.edit == null ? 'Back':'Your profile')}, ${(param.edit == null ? '/prototypes/1360-assessor-invite-start' : '/prototypes/1178-assessor-profile-details')})" th:remove="tag" />
+
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${(param.edit == null ? 'Back':'Your profile')}, ${(param.edit == null ? '/prototypes/1360-assessor-invite-start' : '/prototypes/1178-assessor-profile-details')})" th:remove="tag" th:unless="${param.version != null and param.version[0] == 'v2'}" />
+
+    <th:block th:if="${param.version != null and param.version[0] == 'v2'}">
+		<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${(param.edit == null ? 'Back':'Your profile')}, ${(param.edit == null ? '/prototypes/1360-assessor-invite-start?version=v2' : '/prototypes/1178-assessor-profile-details?version=v2')})" th:remove="tag" />
+	</th:block>
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
@@ -53,28 +58,7 @@
 				<input class="form-control" id="last-name" name="last-name" type="text" th:value="${(param.edit == null ? '':'Bloggs')}"/>
 			</div>
 
-			<h3 class="heading-small">Gender</h3>
-			<fieldset class="inline">
-                <legend class="visuallyhidden">Gender</legend>
-                <div class="form-group">
-                  <label class="block-label" for="gender-female">
-                    <input id="gender-female" type="radio" name="gender-group" value="Female" />
-                    Female
-                  </label>
-                  <label class="block-label" for="gender-male">
-
-                    <input id="gender-male" type="radio" name="gender-group" value="Male" checked="checked" th:unless="${param.edit == null}"/>
-
-                    <input id="gender-male" type="radio" name="gender-group" value="Male" th:unless="${param.edit != null}"/>
-                    Male
-                  </label>
-                   <label class="block-label" for="gender-no-answer">
-                    <input id="gender-no-answer" type="radio" name="gender-group" value="Prefer not to say" />
-                    Prefer not to say
-                  </label>
-                </div>
-            </fieldset>
-
+			<div th:include="prototypes/fragments/diversity :: diversity-questions" th:remove="tag" />
 
 			<div class="form-group" th:unless="${param.edit != null}">
 				<label class="form-label" for="postcode-check">
@@ -192,12 +176,19 @@
 		</fieldset>
 
 		<div th:if="${param.edit == null}" th:remove="tag">
-			<button class="button button-large extra-margin" name="create-account" formaction="/prototypes/1177-assessor-skills" type="submit">Continue</button>
+
+			<th:block th:if="${param.version != null and param.version[0] == 'v2'}">
+				<input type="hidden" name="version" value="v2" />
+				<input type="hidden" name="user" value="assessor" />
+			</th:block>
+
+			<button class="button button-large extra-margin" name="create-account" th:formaction="${(param.version != null and param.version[0] == 'v2' ? '/prototypes/643-signup-create-acc': '/prototypes/1177-assessor-skills')}" type="submit">Continue</button>
 		</div>
 
 		<div th:if="${param.edit != null}" th:remove="tag">
 			<button class="button button-large extra-margin" formaction="/prototypes/1178-assessor-profile-details" type="submit">Save changes</button>
 		</div>
+
 
 	</form>
 

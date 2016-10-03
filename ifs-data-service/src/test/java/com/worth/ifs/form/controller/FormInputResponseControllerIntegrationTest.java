@@ -14,9 +14,10 @@ import org.springframework.test.annotation.Rollback;
 import java.util.List;
 import java.util.Optional;
 
-import static com.worth.ifs.commons.error.CommonErrors.forbiddenError;
+import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION;
 import static com.worth.ifs.commons.error.Error.fieldError;
-import static com.worth.ifs.security.SecuritySetter.addBasicSecurityUser;
+import static com.worth.ifs.commons.security.SecuritySetter.addBasicSecurityUser;
+import static java.util.Collections.nCopies;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
@@ -66,8 +67,8 @@ public class FormInputResponseControllerIntegrationTest extends BaseControllerIn
 
         RestResult<ValidationMessages> result = controller.saveQuestionResponse(jsonObj);
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(forbiddenError("This action is not permitted.")));
-        setLoggedInUser(getSteveSmith());
+        assertTrue(result.getFailure().is(GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION));
+        loginSteveSmith();
         List<FormInputResponseResource> responses = controller.findResponsesByApplication(applicationId).getSuccessObject();
         Optional<FormInputResponseResource> response = responses.stream().filter(r -> r.getFormInput().equals(formInputId)).findFirst();
 
@@ -89,7 +90,7 @@ public class FormInputResponseControllerIntegrationTest extends BaseControllerIn
 
         ValidationMessages errors = controller.saveQuestionResponse(jsonObj).getSuccessObject();
         assertThat(errors.getErrors(), hasSize(1));
-        assertThat(errors.getErrors(), hasItem(fieldError("value", "", "Please enter some text")));
+        assertThat(errors.getErrors(), hasItem(fieldError("value", "", "validation.field.please.enter.some.text")));
     }
 
     @Test
@@ -102,16 +103,13 @@ public class FormInputResponseControllerIntegrationTest extends BaseControllerIn
         jsonObj.put("applicationId", 1);
         jsonObj.put("formInputId", 1);
 
-        String value = "";
-        for(int i=0; i<=501; i++) {
-            value+=" word";
-        }
+        String value = String.join(" ", nCopies(501, "word"));
 
         jsonObj.put("value", value);
 
         ValidationMessages errors = controller.saveQuestionResponse(jsonObj).getSuccessObject();
         assertThat(errors.getErrors(), hasSize(1));
-        assertThat(errors.getErrors(), hasItem(fieldError("value", value, "Maximum word count exceeded")));
+        assertThat(errors.getErrors(), hasItem(fieldError("value", value, "validation.field.max.word.count", "", "400")));
     }
 
     @Test

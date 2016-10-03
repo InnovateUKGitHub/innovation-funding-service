@@ -4,32 +4,33 @@
 
 <!-- ======== Assessment - pagination ======= -->
 <div th:fragment="assessment-pagination">
-    <ul class="pagination" th:unless="${#strings.isEmpty(navigation.previousUrl) and #strings.isEmpty(navigation.nextUrl)}">
-        <li class="prev" th:unless="${#strings.isEmpty(navigation.previousUrl)}">
-            <a th:href="@{${navigation.previousUrl}}" rel="prev" title="Navigate to previous part">
-                <span class="pagination-label">Previous</span>
-                <span class="pagination-part-title" th:text="${navigation.previousText}" />
-            </a>
-        </li>
-        <li class="next" th:unless="${#strings.isEmpty(navigation.nextUrl)}">
-            <a th:href="@{${navigation.nextUrl}}" rel="next" title="Navigate to next part">
-                <span class="pagination-label">Next</span>
-                <span class="pagination-part-title" th:text="${navigation.nextText}" />
-            </a>
-        </li>
-    </ul>
+    <nav class="pagination" th:unless="${#strings.isEmpty(navigation.previousUrl) and #strings.isEmpty(navigation.nextUrl)}">
+        <ul>
+            <li class="prev" th:unless="${#strings.isEmpty(navigation.previousUrl)}">
+                <a th:href="@{${navigation.previousUrl}}" rel="prev" title="Navigate to previous part">
+                    <span class="pagination-label">Previous</span>
+                    <span class="pagination-part-title" th:text="${navigation.previousText}" />
+                </a>
+            </li>
+            <li class="next" th:unless="${#strings.isEmpty(navigation.nextUrl)}">
+                <a th:href="@{${navigation.nextUrl}}" rel="next" title="Navigate to next part">
+                    <span class="pagination-label">Next</span>
+                    <span class="pagination-part-title" th:text="${navigation.nextText}" />
+                </a>
+            </li>
+        </ul>
+    </nav>
 </div>
 
 
 <!-- ======== Assessment - sub header back to assessment overview ======= -->
 <div th:fragment="assessment-header-sub">
     <div class="sub-header">
-       <a th:if="${linkTitle != null and linkUrl != null}"
-          th:class="${linkClass != null ? linkClass : ''}"
-          th:href="${linkUrl}"
-          th:text="${linkTitle}" />
-          <div class="deadline" th:if="${daysPercentage != null and daysLeft != null}">Days left to submit&nbsp;&nbsp;
-          <div th:include="fragments/elements :: pie-small" th:with="daysPercentage=${daysPercentage},daysLeft=${daysLeft}" th:remove="tag" />
+        <nav>
+            <a th:if="${linkTitle != null and linkUrl != null}" th:class="${linkClass != null ? linkClass : ''}" th:href="${linkUrl}" th:text="${linkTitle}" />
+        </nav>
+        <div class="deadline" th:if="${daysPercentage != null and daysLeft != null}">Days left to submit&nbsp;&nbsp;
+            <div th:include="fragments/elements :: pie-small" th:with="daysPercentage=${daysPercentage},daysLeft=${daysLeft}" th:remove="tag" />
         </div>
     </div>
 </div>
@@ -103,58 +104,61 @@
 </div>
 
 
-<!-- ======== Assessment - reject competition modal ======= -->
-<div th:fragment="assessment-reject-competition-modal (competitionId)">
+<!-- ======== Assessor - reject competition modal ======= -->
+<div th:fragment="assessor-reject-competition-modal (inviteHash)">
     <div class="reject-competition-modal" role="dialog" aria-hidden="true">
-        <form action="#" method="post" novalidate="novalidate">
-            <div th:include="fragments/modals :: close-button" th:remove="tag" />
-            <div class="form-group">
-                <label class="form-label">Please select a reason for rejecting the competition</label>
-                <select class="form-control" required="required">
-                    <option value="">Select a reason</option>
-                    <option value="not-available">Not available</option>
-                    <option value="conflict-of-interest">Conflict of interest</option>
-                    <option value="not-my-area-of-interest">Not my area of expertise</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label class="form-label">Use this space to provide more information</label>
-                <textarea class="form-control width-full" rows="4"></textarea>
-            </div>
-            <button class="button large button-warning extra-margin" name="submit-app-details">Reject</button>
-        </form>
+        <div th:include="fragments/modals :: close-button" th:remove="tag" />
+        <div th:include="fragments/assessment :: assessor-reject-competition-form (inviteHash=${inviteHash})" th:remove="tag" />
     </div>
 </div>
 
 
-<!-- =================== Assessment - Modal reject ============================== -->
-<div th:fragment="prototype-modal-comp-reject">
-    <div class="modal-reject-assessment" role="dialog" aria-hidden="true" style="margin-top: -174px;">
-        <button class="js-close close" aria-label="Close Popup">X</button>
-        <div>
-            <form method="post" th:action="${backTo}">
-
-                <div class="form-group">
-
-                    <label for="reject-reason" class="form-label">Please select a reason for rejecting the competition</label>
-                    <select name="decisionReason" id="reject-reason" required="required" class="form-control">
-                        <option value="none">Please select one reason</option>
-                        <option value="not-available">Not available</option>
-                        <option value="conflict-of-interest">Conflict of interest</option>
-                        <option value="not-my-area-of-interest">Not my area of expertise</option>
-
-
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="rejection-observations" class="form-label">Use this space to provide more information</label>
-                    <textarea id="rejection-observations" name="observations" class="form-control"></textarea>
-                </div>
-                <button class="button button-warning large" name="reject" value="rejected" type="submit">Reject</button>
-            </form>
-            <!--<a role="button" tabindex="0" class="button" th:href="@{/application/{id}/submit(id=${currentApplication.getId()})}">Yes, I want to submit my application</a>-->
+<!-- ======== Assessor - reject competition form for modal and non-js page ======= -->
+<div th:fragment="assessor-reject-competition-form (inviteHash)">
+    <form action="#" th:action="@{/invite/competition/{inviteHash}/reject(inviteHash=${inviteHash})}" method="post" th:object="${form}" novalidate="novalidate">
+        <div class="error-summary" th:if="${#fields.hasErrors('global')}">
+            <h2 class="heading-medium error-summary-heading">We were unable to reject the competition:</h2>
+            <ul class="error-summary-list">
+                <li th:each="err : ${#fields.globalErrors()}" th:text="${err}"></li>
+            </ul>
         </div>
-    </div>
+
+        <div class="form-group" th:classappend="${#fields.hasErrors('rejectReason')}? error">
+            <label class="form-label" th:for="${#ids.next('rejectReason')}">
+                Please select a reason for rejecting the competition
+                <span th:if="${#fields.hasErrors('rejectReason')}" th:remove="tag">
+                    <span class="error-message"  th:each="err : ${#fields.errors('rejectReason')}" th:text="${err}" />
+                </span>
+            </label>
+            <select class="form-control" data-required-errormessage="The reason cannot be blank" th:errorclass="field-error" required="required" th:field="*{rejectReason}">
+                <option value="">Select a reason</option>
+                <option th:each="reason : ${rejectionReasons}"
+                        th:value="${reason.id}"
+                        th:text="${reason.reason}"
+                        value="1">Not available</option>
+            </select>
+        </div>
+        <div class="form-group word-count" th:classappend="${#fields.hasErrors('rejectComment')}? error">
+            <label class="form-label" th:for="${#ids.next('rejectComment')}">
+                Use this space to provide more information
+                <span th:if="${#fields.hasErrors('rejectComment')}" th:remove="tag">
+                    <span class="error-message"  th:each="err : ${#fields.errors('rejectComment')}" th:text="${err}" />
+                </span>
+            </label>
+            <textarea
+                class="form-control width-full"
+                data-max_words="100"
+                data-maxwordslength="100"
+                data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 100."
+                th:errorclass="field-error"
+                rows="4"
+                th:field="*{rejectComment}"></textarea>
+            <div class="textarea-footer" th:with="rejectComment=*{rejectComment}">
+                <div th:include="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, rejectComment)})" th:remove="tag"/>
+            </div>
+        </div>
+        <button class="button large button-warning extra-margin" name="submit-app-details">Reject</button>
+    </form>
 </div>
 
 
@@ -171,35 +175,45 @@
 <!-- ======== Assessment - reject assessment form for modal and non-js page ======= -->
 <div th:fragment="assessment-reject-application-form (assessmentId)">
     <form action="#" th:action="@{/{assessmentId}/reject(assessmentId=${assessmentId})}" method="post" th:object="${form}" novalidate="novalidate">
-        <div class="error-summary" th:if="${#fields.hasErrors('*')}">
+        <div class="error-summary" th:if="${#fields.hasErrors('global')}">
             <h2 class="heading-medium error-summary-heading">We were unable to reject the assessment:</h2>
             <ul class="error-summary-list">
-                <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+                <li th:each="err : ${#fields.errors('global')}" th:text="${err}"></li>
             </ul>
         </div>
 
         <div class="form-group" th:classappend="${#fields.hasErrors('rejectReason')}? error">
-            <label class="form-label" th:for="${#ids.next('rejectReason')}">
+            <label class="form-label" th:for="rejectReason">
                 Please select a reason for rejecting the application
                 <span th:if="${#fields.hasErrors('rejectReason')}" th:remove="tag">
                     <span class="error-message"  th:each="err : ${#fields.errors('rejectReason')}" th:text="${err}" />
                 </span>
             </label>
-            <select class="form-control" th:errorclass="field-error" required="required" th:field="*{rejectReason}">
+            <select class="form-control" data-required-errormessage="Please enter a reason" th:errorclass="field-error" required="required" th:field="*{rejectReason}">
                 <option value="">Select a reason</option>
                 <option value="conflict-of-interest">Conflict of interest</option>
                 <option value="not-my-area-of-interest">Not my area of expertise</option>
                 <option value="too-many-assessments">Too many assessments</option>
             </select>
         </div>
-        <div class="form-group" th:classappend="${#fields.hasErrors('rejectComment')}? error">
-            <label class="form-label" th:for="${#ids.next('rejectComment')}">
+        <div class="form-group word-count" th:classappend="${#fields.hasErrors('rejectComment')}? error">
+            <label class="form-label" th:for="rejectComment">
                 Use this space to provide more information
                 <span th:if="${#fields.hasErrors('rejectComment')}" th:remove="tag">
                     <span class="error-message"  th:each="err : ${#fields.errors('rejectComment')}" th:text="${err}" />
                 </span>
             </label>
-            <textarea class="form-control width-full" th:errorclass="field-error" rows="4" th:field="*{rejectComment}"></textarea>
+            <textarea
+                class="form-control width-full"
+                data-max_words="100"
+                data-maxwordslength="100"
+                data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 100."
+                th:errorclass="field-error"
+                rows="4"
+                th:field="*{rejectComment}"></textarea>
+            <div class="textarea-footer" th:with="rejectComment=*{rejectComment}">
+                <div th:include="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, rejectComment)})" th:remove="tag"/>
+            </div>
         </div>
         <button class="button large button-warning extra-margin" name="submit-app-details">Reject</button>
     </form>

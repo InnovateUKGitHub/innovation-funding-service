@@ -11,7 +11,7 @@ import com.worth.ifs.application.transactional.QuestionService;
 import com.worth.ifs.application.transactional.SectionService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.rest.ValidationMessages;
-import com.worth.ifs.security.SecuritySetter;
+import com.worth.ifs.commons.security.SecuritySetter;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,7 +21,7 @@ import org.springframework.test.annotation.Rollback;
 import java.util.List;
 import java.util.Optional;
 
-import static com.worth.ifs.security.SecuritySetter.addBasicSecurityUser;
+import static com.worth.ifs.commons.security.SecuritySetter.addBasicSecurityUser;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.core.AllOf.allOf;
@@ -132,8 +132,7 @@ public class SectionControllerIntegrationTest extends BaseControllerIntegrationT
         assertThat(messages.getErrors(),
                 contains(
                         allOf(
-                                hasProperty("errorKey", is("")),
-                                hasProperty("errorMessage", is("You should provide at least 1 source of other funding"))
+                                hasProperty("errorKey", is("validation.finance.min.row.other.funding.single"))
                         )
                 )
         );

@@ -2,6 +2,7 @@ package com.worth.ifs.commons.pojo;
 
 import com.openpojo.reflection.PojoClass;
 import com.openpojo.reflection.PojoClassFilter;
+import com.openpojo.reflection.filters.FilterEnum;
 import com.openpojo.reflection.impl.PojoClassFactory;
 import com.openpojo.validation.Validator;
 import com.openpojo.validation.ValidatorBuilder;
@@ -24,10 +25,12 @@ import com.worth.ifs.authentication.resource.CreateUserResource;
 import com.worth.ifs.authentication.resource.UpdateUserResource;
 import com.worth.ifs.bankdetails.domain.BankDetails;
 import com.worth.ifs.bankdetails.resource.BankDetailsResource;
+import com.worth.ifs.bankdetails.resource.BankDetailsStatusResource;
+import com.worth.ifs.bankdetails.resource.ProjectBankDetailsStatusSummary;
 import com.worth.ifs.commons.rest.LocalDateResource;
 import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.competition.resource.CompetitionCoFunderResource;
 import com.worth.ifs.competition.resource.CompetitionCountResource;
+import com.worth.ifs.competition.resource.CompetitionFunderResource;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.FinanceRowMetaField;
@@ -36,17 +39,18 @@ import com.worth.ifs.form.domain.FormInputType;
 import com.worth.ifs.form.domain.FormValidator;
 import com.worth.ifs.invite.domain.InviteOrganisation;
 import com.worth.ifs.invite.resource.InviteProjectResource;
+import com.worth.ifs.invite.resource.RejectionReasonResource;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
 import com.worth.ifs.project.domain.Project;
-import com.worth.ifs.project.domain.ProjectUser;
-import com.worth.ifs.project.resource.MonitoringOfficerResource;
-import com.worth.ifs.project.resource.ProjectResource;
-import com.worth.ifs.project.resource.ProjectUserResource;
-import com.worth.ifs.project.resource.SpendProfileResource;
-import com.worth.ifs.project.resource.SpendProfileTableResource;
+import com.worth.ifs.project.finance.resource.*;
+import com.worth.ifs.project.resource.*;
+import com.worth.ifs.project.status.resource.CompetitionProjectsStatusResource;
+import com.worth.ifs.project.status.resource.ProjectStatusResource;
+import com.worth.ifs.registration.resource.UserRegistrationResource;
 import com.worth.ifs.token.domain.Token;
 import com.worth.ifs.token.resource.TokenResource;
 import com.worth.ifs.user.domain.OrganisationType;
+import com.worth.ifs.user.resource.EthnicityResource;
 import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
 import org.junit.Assert;
 import org.junit.Before;
@@ -58,7 +62,7 @@ import java.util.List;
 
 public class POJOTest {
     // Configured for expectation, so we know when a class gets added or removed.
-    private static final int EXPECTED_RESOURCES = 35;
+    private static final int EXPECTED_RESOURCES = 39;
 
     // The package to test
     private static final String POJO_PACKAGE = "com.worth.ifs";
@@ -91,18 +95,33 @@ public class POJOTest {
             Project.class,
             ProjectResource.class,
             InviteProjectResource.class,
-            ProjectUser.class,
             ProjectUserResource.class,
             AddressType.class,
             AddressTypeResource.class,
             BankDetails.class,
             BankDetailsResource.class,
             MonitoringOfficerResource.class,
+            CostCategoryGroupResource.class,
+            CostCategoryResource.class,
+            CostGroupResource.class,
+            CostResource.class,
+            CostTimePeriodResource.class,
+            CostCategoryTypeResource.class,
             SpendProfileResource.class,
             SpendProfileTableResource.class,
-            CompetitionCoFunderResource.class,
+            CompetitionFunderResource.class,
             CompetitionCountResource.class,
-            LocalDateResource.class
+            LocalDateResource.class,
+            RejectionReasonResource.class,
+            ProjectLeadStatusResource.class,
+            ProjectPartnerStatusResource.class,
+            ProjectTeamStatusResource.class,
+            ProjectBankDetailsStatusSummary.class,
+            BankDetailsStatusResource.class,
+            ProjectStatusResource.class,
+            CompetitionProjectsStatusResource.class,
+            EthnicityResource.class,
+            UserRegistrationResource.class
     );
 
     @Before
@@ -134,7 +153,7 @@ public class POJOTest {
 
     @Test
     public void testPojoStructureAndBehavior() {
-        validator.validateRecursively(POJO_PACKAGE, new FilterPackages(classesToTest));
+        validator.validateRecursively(POJO_PACKAGE, new FilterPackages(classesToTest), new FilterEnum());
     }
 
     private static class FilterPackages implements  PojoClassFilter {

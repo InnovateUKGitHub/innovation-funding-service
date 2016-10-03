@@ -76,9 +76,36 @@
 		</tbody>
 	</table>
 
+	<div class="extra-margin">
+
+		<a href="#" class="button button-large" data-js-modal="modal-project-details" th:unless="${param.user != null and param.user[0] == 'nonLead'}">Submit project details</a>
+		
+
+		<div class="modal-project-details" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+	        <button class="js-close close" aria-label="Close Popup">X</button>
+	        <div>
+
+				<h2 class="heading-medium no-margin">Submit project details</h2>
+
+				<p>Are you sure that you wish to submit your project details to Innovate UK?</p>
+
+				<hr />
+
+            	<div class="alignright-button">
+					<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a> 
+            		<a href="/prototypes/1588-project-status?stage=level2" class="button">Submit</a>
+            	</div>
+
+	        </div>
+	    </div>
+
+
+	</div>
+
+
 	<h2 class="heading-medium">Finance contacts</h2>
 
-	<p>Each partner must provide a finance contact who will be sent any queries from us around partner finances.</p>
+	<p>Each partner must provide a finance contact. They will be responsible for queries from us around partner finances.</p>
 
 	<table>
 		<thead>
@@ -87,7 +114,7 @@
 				<th scope="col" style="width: 45%">Finance contact</th>
 				<!-- <th scope="col" style="width: 15%">Turnover</th>
 				<th scope="col" style="width: 15%">Staff headcount</th> -->
-				<th scope="col" style="width: 10%">Complete</th>
+				<th scope="col" style="width: 10%">Submitted</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -147,31 +174,6 @@
 		</tbody>
 	</table>
 
-	<div class="extra-margin">
-
-		<a href="#" class="button button-large" data-js-modal="modal-project-details" th:unless="${param.user != null and param.user[0] == 'nonLead'}">Submit project details</a>
-		
-
-		<div class="modal-project-details" role="dialog" aria-hidden="true" style="margin-top: -174px;">
-	        <button class="js-close close" aria-label="Close Popup">X</button>
-	        <div>
-
-				<h2 class="heading-medium no-margin">Submit project details</h2>
-
-				<p>Are you sure that you wish to submit your project details to Innovate UK?</p>
-
-				<hr />
-
-            	<div class="alignright-button">
-					<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a> 
-            		<a href="/prototypes/1588-project-status?stage=level2" class="button">Submit</a>
-            	</div>
-
-	        </div>
-	    </div>
-
-
-	</div>
 
 	
 	<!-- END OFHARDCODED PROTOTYPE HTML -->

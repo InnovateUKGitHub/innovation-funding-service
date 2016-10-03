@@ -14,6 +14,7 @@ import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -44,6 +45,7 @@ public class ProjectOtherDocumentsController {
     @Autowired
     private ProjectService projectService;
 
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
     @RequestMapping(method = GET)
     public String viewOtherDocumentsPage(@PathVariable("projectId") Long projectId, Model model,
                                          @ModelAttribute("loggedInUser") UserResource loggedInUser) {
@@ -52,15 +54,26 @@ public class ProjectOtherDocumentsController {
         return doViewOtherDocumentsPage(projectId, model, loggedInUser, form);
     }
 
-    @RequestMapping(value = "/ready", method = RequestMethod.GET)
-    public String projectDetail(Model model, @PathVariable("projectId") final Long projectId,
-                                @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
+    @RequestMapping(value = "/confirm", method = GET)
+    public String viewConfirmDocumentsPage(@PathVariable("projectId") Long projectId, Model model,
+                                         @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+        ProjectOtherDocumentsViewModel viewModel = getOtherDocumentsViewModel(projectId, loggedInUser);
+        model.addAttribute("model", viewModel);
+        model.addAttribute("currentUser", loggedInUser);
 
-        ProjectOtherDocumentsForm form = new ProjectOtherDocumentsForm();
-        return doViewOtherDocumentsPage(projectId, model, loggedInUser, form);
+        return "project/other-documents-confirm";
     }
 
 
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
+    @RequestMapping(value = "/submit", method = RequestMethod.POST)
+    public String submitPatnerDocuments(Model model, @PathVariable("projectId") final Long projectId) {
+        projectService.setPartnerDocumentsSubmitted(projectId).getSuccessObjectOrThrowException();
+        return redirectToOtherDocumentsPage(projectId);
+    }
+
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
     @RequestMapping(value = "/collaboration-agreement", method = GET)
     public
     @ResponseBody
@@ -73,6 +86,7 @@ public class ProjectOtherDocumentsController {
         return returnFileIfFoundOrThrowNotFoundException(projectId, content, fileDetails);
     }
 
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
     @RequestMapping(params = "uploadCollaborationAgreementClicked", method = POST)
     public String uploadCollaborationAgreementFile(
             @PathVariable("projectId") final Long projectId,
@@ -91,6 +105,7 @@ public class ProjectOtherDocumentsController {
         });
     }
 
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
     @RequestMapping(params = "removeCollaborationAgreementClicked", method = POST)
     public String removeCollaborationAgreementFile(@PathVariable("projectId") final Long projectId,
                                                    @ModelAttribute(FORM_ATTR) ProjectOtherDocumentsForm form,
@@ -103,6 +118,7 @@ public class ProjectOtherDocumentsController {
                 () -> projectService.removeCollaborationAgreementDocument(projectId));
     }
 
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
     @RequestMapping(value = "/exploitation-plan", method = GET)
     public
     @ResponseBody
@@ -114,6 +130,7 @@ public class ProjectOtherDocumentsController {
         return returnFileIfFoundOrThrowNotFoundException(projectId, content, fileDetails);
     }
 
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
     @RequestMapping(params = "uploadExploitationPlanClicked", method = POST)
     public String uploadExploitationPlanFile(
             @PathVariable("projectId") final Long projectId,
@@ -132,6 +149,7 @@ public class ProjectOtherDocumentsController {
         });
     }
 
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
     @RequestMapping(params = "removeExploitationPlanClicked", method = POST)
     public String removeExploitationPlanFile(@PathVariable("projectId") final Long projectId,
                                              @ModelAttribute(FORM_ATTR) ProjectOtherDocumentsForm form,
@@ -146,10 +164,15 @@ public class ProjectOtherDocumentsController {
 
     private String doViewOtherDocumentsPage(Long projectId, Model model, UserResource loggedInUser, ProjectOtherDocumentsForm form) {
         ProjectOtherDocumentsViewModel viewModel = getOtherDocumentsViewModel(projectId, loggedInUser);
+
         model.addAttribute("model", viewModel);
         model.addAttribute("form", form);
+        model.addAttribute("currentUser", loggedInUser);
+
         return "project/other-documents";
     }
+
+
 
     private String performActionOrBindErrorsToField(Long projectId, ValidationHandler validationHandler, Model model, UserResource loggedInUser, String fieldName, ProjectOtherDocumentsForm form, Supplier<FailingOrSucceedingResult<?, ?>> actionFn) {
 
@@ -170,21 +193,20 @@ public class ProjectOtherDocumentsController {
 
         boolean leadPartner = projectService.isUserLeadPartner(projectId, loggedInUser.getId());
 
-        boolean isSubmitAllowed = projectService.isOtherDocumentSubmitAllowed(projectId).isSuccess() ? true : false;
+        boolean isSubmitAllowed = projectService.isOtherDocumentSubmitAllowed(projectId);
 
         // TODO DW - these rejection messages to be covered in other stories
         List<String> rejectionReasons = emptyList();
 
-        // TODO DW - these flags to be covered in other stories
-        boolean otherDocumentsApproved = false;
-        boolean otherDocumentsSubmitted = false;
+        boolean otherDocumentsSubmitted = project.getDocumentsSubmittedDate() != null;
+        boolean otherDocumentsApproved = otherDocumentsSubmitted;
 
         return new ProjectOtherDocumentsViewModel(projectId, project.getName(),
                 collaborationAgreement.map(FileDetailsViewModel::new).orElse(null),
                 exploitationPlan.map(FileDetailsViewModel::new).orElse(null),
                 partnerOrganisationNames, rejectionReasons,
                 leadPartner, otherDocumentsSubmitted, otherDocumentsApproved,
-                isSubmitAllowed);
+                isSubmitAllowed, project.getDocumentsSubmittedDate());
     }
 
     private ResponseEntity<ByteArrayResource> returnFileIfFoundOrThrowNotFoundException(Long projectId, Optional<ByteArrayResource> content, Optional<FileEntryResource> fileDetails) {

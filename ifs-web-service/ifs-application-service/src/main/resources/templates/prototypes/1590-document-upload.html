@@ -24,7 +24,13 @@
 
 	<th:block th:if="${param.status != null and param.status[0] == 'approved'}">
 		<div class="success-alert extra-margin-bottom">
-			<h3 class="heading-small no-margin-top">These documents have been approved by Innovate UK.</h3>
+			<h3 class="heading-small no-margin-top">These documents have been approved by Innovate UK</h3>
+		</div>
+	</th:block>
+
+	<th:block th:if="${param.status != null and param.status[0] == 'submittedApproved'}">
+		<div class="success-alert extra-margin-bottom">
+			<h3 class="heading-small no-margin-top">The other documents have been reviewed and approved by Innovate UK</h3>
 		</div>
 	</th:block>
 	
@@ -36,14 +42,11 @@
 
 		<div th:if="${param.status != null and param.status[0] == 'reject'}" th:remove="tag">
 			<div class="warning-alert extra-margin-bottom">
-				<h3 class="heading-small">These documents have been returned to the project team, the following reason was given;</h3>
-				<ul class="list-bullet">
-					<li>the collaboration agreement only has 2 signatures when there are 3 partners</li>
-				</ul>
+				<h3 class="heading-small no-margin-top">These documents have been returned as they have not been approved. A member of Innovate UK should be in contact to discuss their requirements</h3>
 			</div>
 		</div>
 
-		<th:block th:unless="${param.status != null and param.status[0] == 'submitted' or param.status != null and param.status[0] == 'approved'}">
+		<th:block th:unless="${param.status != null and param.status[0] == 'submitted' or param.status != null and param.status[0] == 'approved' or param.status != null and param.status[0] == 'submittedApproved'}">
 			<p>As the lead partner in this project you must supply additional documents to support your grant application.</p>
 			
 			<p>These documents are:</p>
@@ -187,6 +190,14 @@
 			</div>
 
 		</fieldset>
+
+		<div th:if="${param.user != null and param.user[0] == 'nonLead'}">
+
+			<p>The Project Manager must upload both documents for submission. If we need further clarification we will contact the Project Manager.</p>
+
+			<a href="#" class="button button-large disabled">Submit partner documents</a>
+
+		</div>
 
 		<div th:if="${param.user == null and param.status == null or param.user == null and param.status != null and param.status[0] == 'reject'}">
 

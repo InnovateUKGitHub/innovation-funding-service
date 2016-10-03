@@ -54,6 +54,14 @@ small {
 .bordered {
 	border:1px solid $border-colour;
 }
+.border-right,
+.cell-border-right td,
+.cell-border-right th {
+    border-right: 1px solid $border-colour;
+}
+table small {
+	display: block;
+}
 
 /* SG
 
@@ -248,7 +256,10 @@ col.border {
 	padding:20px;
 }
 
-
+td.cell-error {
+	background: $red;
+	color: #fff;
+}
 
 span.yes{
 	@extend %icon-tick;

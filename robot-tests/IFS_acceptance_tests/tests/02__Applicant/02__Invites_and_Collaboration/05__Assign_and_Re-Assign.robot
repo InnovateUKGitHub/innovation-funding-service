@@ -12,7 +12,7 @@ Documentation     INFUND-262: As a (lead) applicant, I want to see which fields 
 ...               INFUND-3288: Assigning questions more than once leads to an internal server error
 Suite Teardown    TestTeardown User closes the browser
 Test Teardown
-Force Tags        Applicant    Collaboration
+Force Tags        Applicant
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -65,7 +65,7 @@ Collaborator should see the terms and conditions from the overview page
     ...    This test depends on the previous test suite to run first
     [Tags]    Email
     Given the user clicks the button/link    link=Application Overview
-    When The user clicks the button/link    link= View conditions of grant offer
+    When The user clicks the button/link    link= view conditions of grant offer
     Then the user should see the text in the page    Terms and Conditions of an Innovate UK Grant Award
     And the user should see the text in the page    Entire Agreement
 
@@ -75,7 +75,7 @@ Collaborator should see the review button instead of the review and submit
     ...    This test depends on the previous test suite to run first
     [Tags]    Email    HappyPath
     Given the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link= Assign test
+    And the user clicks the button/link    link=Assign test
     Then the user should not see the element    jQuery=.button:contains("Review & submit")
     And the user clicks the button/link    jQuery=.button:contains("Review")
     And the user should see the text in the page    All sections must be marked as complete before the application can be submitted. Only the lead applicant is able to submit the application
@@ -187,6 +187,8 @@ Lead marks finances as complete and collaborator should be able to edit them
     Given the user clicks the button/link    link= Assign test
     And the user clicks the button/link    link=Your finances
     And the user enters the funding level
+    And the user selects the checkbox       id=agree-terms-page
+    And the user selects the checkbox       id=agree-state-aid-page
     When the user clicks the button/link    jQuery=.button:contains("Mark all as complete")
     And the user should see the text in the page    Project details
     Then Collaborator should be able to edit finances again
@@ -239,7 +241,7 @@ the user enters the funding level
     When the user enters text to a text field    id=cost-financegrantclaim    20
     focus    jQuery=.button:contains("Mark all as complete")
 
-Given the applicant changes the name of the application
+the applicant changes the name of the application
     Given the user clicks the button/link    link= Connected digital additive manufacturing
     And the user clicks the button/link    link= Application details
     And the user enters text to a text field    id=application_details-title    Assign test

@@ -6,7 +6,6 @@ import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.resource.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.xmlbeans.impl.jam.internal.elements.VoidClassImpl;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -97,6 +96,16 @@ public class CompetitionsRestServiceImpl extends BaseRestService implements Comp
     @Override
     public RestResult<Void> initApplicationForm(Long competitionId, Long competitionTypeId) {
         return postWithRestResult(String.format("%s/%s/initialise-form/%s", competitionsRestURL, competitionId, competitionTypeId), Void.class);
+    }
+
+    @Override
+    public RestResult<Void> markAsSetup(Long competitionId) {
+        return postWithRestResult(String.format("%s/%s/mark-as-setup", competitionsRestURL, competitionId), Void.class);
+    }
+
+    @Override
+    public RestResult<Void> returnToSetup(Long competitionId) {
+        return postWithRestResult(String.format("%s/%s/return-to-setup", competitionsRestURL, competitionId), Void.class);
     }
 
 }

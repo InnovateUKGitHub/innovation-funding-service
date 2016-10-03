@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Prototype index page'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+
+</head>
+<body class="app-dashboard">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+
+<header role="banner" id="global-header" class="">
+  <div class="header-wrapper">
+    <div class="header-global">
+
+        <div th:include="fragments/elements :: header-logo"></div>
+    </div>
+  </div>
+</header>
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+	<div th:include="prototypes/fragments/layout :: prototype-sprint-nav" th:with="sprint='sprint15'"  th:remove="tag" />
+
+	
+	<section class="grid-row">
+		<div class="row">
+			<h1 class="heading-large">Sprint 15</h1>
+
+			<section>
+				
+				<h2 class="heading-medium">Assessor account creation</h2>
+
+				<ul class="list-bullet">
+					<li>
+						<h3 class="heading-small">INFUND-5395</h3>
+						<p>Update the account creation path to allow for technical requirements</p>
+						<ol class="list-number">
+							<li>
+								<a href="/prototypes/1360-assessor-email-invite?version=v2">Email received by invited user to become assessor</a> 
+							</li>
+							<li>
+								<a href="/prototypes/865-assessor-comp-invite?version=v2">Accept invite</a>
+							</li>
+							<li>
+								<a href="/prototypes/1360-assessor-invite-start?version=v2">Create account</a>
+							</li>
+							<li>
+								<a href="/prototypes/1176-assessor-create-acc?version=v2">Create assessor account</a>
+							</li>
+							<li>
+								<a href="/prototypes/643-signup-create-acc?version=v2&#38;user=assessor">Sign in</a>
+							</li>
+							<li>
+								<a href="/prototypes/865-assessor-dashboard-invites?accepted=yes&#38;user=assessor&#38;version=v2">Dashboard</a>
+								<ul class="list-bullet">
+									<li>
+										<a href="/prototypes/1176-assessor-contracts?version=v2">Contract</a>
+									</li>
+									<li>
+										<a href="/prototypes/1247-assessor-doi?&#38;version=v2">DOI</a>
+									</li>
+									<li>
+										<a href="/prototypes/1177-assessor-skills?version=v2">Skills</a>
+									</li>
+								</ul>
+							</li>
+							
+
+						</ol>
+					</li>
+				</ul>
+
+			</section>
+
+			<section>
+				
+				<h2 class="heading-medium">Internal user - project set up</h2>
+
+				<ul class="list-bullet">
+					
+					<li>
+						<h3 class="heading-small">INFUND-5163</h3>
+						<p>PSU work around</p>
+						<ul class="list-bullet">
+							<li>
+								<a href="/prototypes/5163-project-finances">INFUND-5166</a> Create a view for a cutdown finance checks dashboard
+							</li>
+							<li>
+								<a href="/prototypes/5163-project-eligibility">INFUND-5167</a> Create a view for finance checks to be reviewed
+							</li>
+							<li>
+								<a href="/prototypes/5163-project-eligibility?status=approved">INFUND-5168</a> Create a view for approved finance checks
+							</li>
+							<li>
+								<a href="/prototypes/5163-academic-eligibility">INFUND-5169</a> Create a view for academic finance checks
+							</li>
+							<li>
+								<a href="/prototypes/5163-academic-eligibility?status=approved">INFUND-5170</a> Create a view for approved academic finance checks
+							</li>
+							<li>
+								<a href="/prototypes/5163-project-finances?status=approved">INFUND-5171</a> Create a view for a cutdown finance checks approved dashboard
+							</li>
+						</ul>
+					</li>
+
+				</ul>
+
+			</section>
+				
+			<section>
+				
+				<h2 class="heading-medium">Partner view</h2>
+
+				<ul class="list-bullet">
+					<li><a href="/prototypes/2113-dashboard?status=successful">INFUND-5204</a> Create a dashboard view for the applicant when they have completed project setup</li>
+
+					<li><a href="/prototypes/1588-project-status?stage=level7&#38;status=setup-complete">INFUND-5205</a> Create a view of project setup for partners after project setup has been complete</li>
+				</ul>
+
+			</section>
+
+			<section>
+
+				<h2 class="heading-medium">Internal admin</h2>
+
+				<ul class="list-bullet">
+
+					<li>
+						<h3 class="heading-small">INFUND-870</h3>
+						<p>As a Competition Administrator I want to manually allocate a new assessor to an application when an appointed assessor declines so that I can have the correctly designated number of assessor for each application</p>
+						
+						<ul class="list-bullet">
+							<li>
+								<a href="/prototypes/5229-assessor-profile">INFUND-5229</a> Create a view allowing comp team to view details on assessors
+							</li>
+							<li>
+								<a href="/prototypes/5231-assessor-doi">INFUND-5231</a> Create a view of a partial DOI
+							</li>
+						</ul>
+
+					</li>
+
+					<li>
+						<h3 class="heading-small">INFUND-3104</h3>
+						<p>Internal invite users</p>
+						<ul class="list-bullet">
+							<li>
+								<a href="/prototypes/5079-ifs-admin">INFUND-5079</a> Create a view for an initial admin section of IFS
+							</li>
+							<li>
+								<a href="/prototypes/5080-invite-team-member">INFUND-5080</a> Create a view for inviting a team member
+							</li>
+							<li>
+								<a href="/prototypes/3115-comp-dashboard?userRole=admin">INFUND-5081</a> Create a view of dashboard with admin header
+							</li>
+							<li>
+								<a href="/prototypes/5080-invite-team-member?status=invalidEmailAddress">INFUND-5083</a> Create a view for inviting a team member with error message
+							</li>
+						</ul>
+					</li>
+					<li>
+						<h3 class="heading-small">INFUND-3105</h3>
+						<p>Internal users invited</p>
+						<ul class="list-bullet">
+							<li>
+								<a href="/prototypes/3746-internal-email-invite">INFUND-3746</a> Create a view for an email from admin inviting into system
+							</li>
+							<li>
+								<a href="/prototypes/3747-internal-create-acc">INFUND-3747</a> Create a view for creating an account internally
+							</li>
+							<li>
+								<a href="/prototypes/3748-internal-sign-in">INFUND-3748</a> Create a view for sign in internal
+							</li>
+						</ul>
+					</li>
+
+				</ul>
+
+			</section>
+
+			<section>
+				
+				<h2 class="heading-medium">Internal user - Assessor invites and assessor management</h2>
+
+				<ul class="list-bullet">
+					<li>
+						<h3 class="heading-small">INFUND-5062</h3>
+						<p>Revise allocation prototypes to bring in line with IFS processes, terminology and design</p>
+						<ul class="list-bullet">
+							<li>
+								<a href="/prototypes/5062-manage-assessors">INFUND-5254</a> Create a view allowing a comp exec to find assessors for a competition
+							</li>
+						</ul>
+					</li>
+				</ul>
+
+			</section>
+			
+			
+
+			<section>
+
+				<h2 class="heading-medium">Internal user - competition setup</h2>
+
+				<ul class="list-bullet">
+
+					<li>
+						<h3 class="heading-small">INFUND-5053</h3>
+						<p>Revise application questions section</p>
+						<ul class="list-bullet">
+							<li>
+								<a href="/prototypes/5085-application-process">INFUND-5085</a> Create a view for a combined application landing page
+							</li>
+							<li>
+								<a href="/prototypes/5154-question-details?status=edit">INFUND-5087</a> Create a view for editable state of assessor question
+							</li>
+							<li>
+								<a href="/prototypes/5154-question-details">INFUND-5154</a> Create a view for assessor question details
+							</li>
+							<li>
+								<a href="/prototypes/5209-application-details">INFUND-5209</a> Create a view for application details
+							</li>
+							<li>
+								<a href="/prototypes/5210-project-scope">INFUND-5210</a> Create a view for project scope
+							</li>
+							<li>
+								<a href="/prototypes/5210-project-scope?status=edit">INFUND-5210</a> Create a view for editing project scope
+							</li>
+							<li>
+								<a href="/prototypes/5211-project-summary">INFUND-5211</a> Create a view for project summary
+							</li>
+							<li>
+								<a href="/prototypes/5211-project-summary?status=edit">INFUND-5211</a> Create a view for editing project summary
+							</li>
+							<li>
+								<a href="/prototypes/2469-comp-setup">INFUND-5212</a> Create a view for new layout of competition setup overview
+							</li>
+						</ul>
+					</li>
+					<li>
+						<h3 class="heading-small">INFUND-4605</h3>
+						<p>Finances section</p>
+						<ul class="list-bullet">
+							<li>
+								<a href="/prototypes/5085-application-process">INFUND-5088</a> Create a view for moving finance section into application question section
+							</li>
+							<li>
+								<a href="/prototypes/5089-application-finances">INFUND-5089</a> Create a view for finances section
+							</li>
+						</ul>
+					</li>
+					<li>
+						<h3 class="heading-small">INFUND-4603</h3>
+						<p>Assessor tab</p>
+						<ul class="list-bullet">
+							<li>
+								<a href="/prototypes/5090-assessors-required">INFUND-5090</a> Create a view for showing the number of assessors required
+							</li>
+						</ul>
+					</li>
+				</ul>
+
+			</section>
+		</div>
+	</section>
+
+			
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<div th:include="prototypes/fragments/layout :: prototype-js" th:remove="tag" />
+
+</body>
+</html>

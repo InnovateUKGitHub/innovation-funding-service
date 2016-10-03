@@ -37,7 +37,7 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Technology inspired'}, ${'/prototypes/1627-admin-view-project-status-grid?status=setup'})" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition dashboard'}, ${'/prototypes/4151-admin-competition-dash'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 	
@@ -126,7 +126,7 @@
 				            	</div>
 				            	<div class="column-half alignright-button">
 				            		<input type="hidden" id="stage" name="stage" value="1" />
-				            		<button formaction="/prototypes/1627-admin-view-project-status-grid?status=setup&#38;stage=1" class="button">Assign Monitoring Officer</button>
+				            		<button formaction="/prototypes/4151-admin-competition-dash" class="button">Assign Monitoring Officer</button>
 				            	</div>
 				            </div>
 

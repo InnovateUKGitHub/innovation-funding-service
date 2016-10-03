@@ -10,7 +10,7 @@
         <h2 class="subtitle">Directory of front end code to show user journeys</h2>
     </header>
 
-    <ul class="inline-nav cf extra-margin">
+    <ul class="inline-nav extra-margin">
         <li th:class="${(sprint == 'sprint1' ? 'selected' : '')}"><a href="/prototypes/index">1</a></li>
         <li th:class="${(sprint == 'sprint2' ? 'selected' : '')}"><a href="/prototypes/index-sprint2">2</a></li>
         <li th:class="${(sprint == 'sprint3' ? 'selected' : '')}"><a href="/prototypes/index-sprint3">3</a></li>
@@ -23,11 +23,53 @@
         <li th:class="${(sprint == 'sprint10' ? 'selected' : '')}"><a href="/prototypes/index-sprint10">10</a></li>
         <li th:class="${(sprint == 'sprint11' ? 'selected' : '')}"><a href="/prototypes/index-sprint11">11</a></li>
         <li th:class="${(sprint == 'sprint12' ? 'selected' : '')}"><a href="/prototypes/index-sprint12">12</a></li>
-        <li th:class="${(sprint == 'sprint13' ? 'selected' : '')}"><a href="/prototypes/index-sprint13">13 <small>(<strong>Current sprint</strong>)</small></a></li>
+        <li th:class="${(sprint == 'sprint13' ? 'selected' : '')}"><a href="/prototypes/index-sprint13">13</a></li>
+        <li th:class="${(sprint == 'sprint14' ? 'selected' : '')}"><a href="/prototypes/index-sprint14">14</a></li>
+        <li th:class="${(sprint == 'sprint15' ? 'selected' : '')}"><a href="/prototypes/index-sprint15">15 <small>(<strong>Current sprint</strong>)</small></a></li>
         <li style="float: right" th:class="${(sprint == 'demo' ? 'selected' : '')}"><a href="/prototypes/index-demo">Demo</a></li>
     </ul>
 </div>
 
+<!-- ===========================Place: main <header>  =========================== -->
+
+<div th:fragment="prototype-admin-header">
+    <header role="banner" id="global-header">
+        <div th:include="fragments/elements :: notification" th:remove="tag" />
+        <div class="header-wrapper">
+            <div class="header-global header-admin">
+
+                <p class="innovate-title">Innovation Funding Service</p>
+
+                <th:block th:if="${status == 'loggedIn'}">
+
+                    <span class="admin-user-name" th:text="${user}">James Danek</span>
+                    <ul class="navigation-list navigation-right">
+                        <li th:if="${userRole == 'admin'}">
+                            <a href="/prototypes/5079-ifs-admin">Admin</a>
+                        </li>
+                        <li>
+                            <a href="/prototypes/3115-comp-dashboard?user=admin">Dashboard</a>
+                        </li>
+                        <li>
+                            <a href="#">Account</a>
+                        </li>
+                        <li>
+                            <a href="/prototypes/3748-internal-sign-in">Sign out</a>
+                        </li>
+                    </ul>
+
+                </th:block>
+            </div>
+        </div>
+    </header>
+
+    <div class="grid-container phase-banner">
+        <p>
+            <strong class="phase-tag">BETA</strong>
+            <span>This is a new service – your <a href="mailto:IFSfeedback@innovateuk.gov.uk">feedback</a> will help us to improve it.</span>
+        </p>
+    </div>
+</div>
 
 <!-- ===========================Place: main <header>  =========================== --> 
 
@@ -43,11 +85,12 @@
 	<div class="sub-header">
         <div class="deadline">Days left to submit&nbsp;&nbsp;
 		    <div class="pie-container">
-		        <div class="pie small"><svg viewBox="0 0 32 32"><title>100%</title><circle r="16" cx="16" cy="16" stroke-dasharray="100 100"></circle></svg></div>
-		        <div class="pie-overlay">
-		            <div>0</div>
-		        </div>
-		    </div>
+                <div class="pie small" aria-hidden="true"><svg viewBox="0 0 32 32"><title>1%</title><circle r="16" cx="16" cy="16" stroke-dasharray="10 100"></circle></svg></div>
+                <div class="pie-overlay">
+                    <span class="day">2</span>
+                    <span class="visuallyhidden">Days left</span>
+                </div>
+            </div>
     	</div>
         <a href="/prototypes/635-application-overview" class="link-back">Application overview</a>
     </div>
@@ -75,9 +118,10 @@
     <div class="sub-header">
         <div class="deadline">Days left to submit&nbsp;&nbsp;
             <div class="pie-container">
-                <div class="pie small"><svg viewBox="0 0 32 32"><title>100%</title><circle r="16" cx="16" cy="16" stroke-dasharray="100 100"></circle></svg></div>
+                <div class="pie small" aria-hidden="true"><svg viewBox="0 0 32 32"><title>1%</title><circle r="16" cx="16" cy="16" stroke-dasharray="10 100"></circle></svg></div>
                 <div class="pie-overlay">
-                    <div>0</div>
+                    <span class="day">2</span>
+                    <span class="visuallyhidden">Days left</span>
                 </div>
             </div>
         </div>

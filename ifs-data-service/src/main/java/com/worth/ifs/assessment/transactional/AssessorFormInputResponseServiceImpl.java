@@ -3,24 +3,23 @@ package com.worth.ifs.assessment.transactional;
 import com.worth.ifs.assessment.mapper.AssessorFormInputResponseMapper;
 import com.worth.ifs.assessment.repository.AssessorFormInputResponseRepository;
 import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
-import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.transactional.FormInputService;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import org.apache.commons.lang3.StringUtils;
-import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
-import static com.worth.ifs.commons.error.CommonFailureKeys.FORM_WORD_LIMIT_EXCEEDED;
+import static com.worth.ifs.commons.error.Error.fieldError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
+import static com.worth.ifs.util.StringFunctions.countWords;
 import static java.time.LocalDateTime.now;
 
 /**
@@ -82,11 +81,8 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
         Integer wordLimit = formInputResource.getWordCount();
 
         if (value != null && wordLimit != null && wordLimit > 0) {
-            // clean any HTML markup from the value
-            String cleaned = Jsoup.parse(value).text();
-
-            if (cleaned.split("\\s+").length > formInputResource.getWordCount()) {
-                return serviceFailure(new Error(FORM_WORD_LIMIT_EXCEEDED));
+            if (countWords(value) > formInputResource.getWordCount()) {
+                return serviceFailure(fieldError("value", value, "validation.field.max.word.count", "", wordLimit));
             }
         }
         return serviceSuccess();

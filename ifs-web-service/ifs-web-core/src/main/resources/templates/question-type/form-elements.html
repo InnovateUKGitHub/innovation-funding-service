@@ -276,12 +276,14 @@
             <div th:unless="${readonly} or ${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)} or ${!userIsLeadApplicant}"
                  th:include="question-type/form-elements :: assign-buttons" th:remove="tag"/>
 
-            <!--/* if  readonly we show the edit form button */-->
-            <div th:if="${readonly and userIsLeadApplicant}" th:include="question-type/form-elements :: form-edit-question-button"
-                 th:remove="tag"/>
-            <!--/*  we show mark as complete buttons and the question should be assigned to you or */-->
-            <div th:if="${userIsLeadApplicant}" th:include="question-type/form-elements :: form-mark-as-complete-buttons"
-                 th:remove="tag"/>
+            <div th:if="${competitionIsOpen} == null or ${competitionIsOpen}" th:remove="tag">
+                <!--/* if  readonly we show the edit form button */-->
+                <div th:if="${readonly and userIsLeadApplicant}" th:include="question-type/form-elements :: form-edit-question-button"
+                     th:remove="tag"/>
+                <!--/*  we show mark as complete buttons and the question should be assigned to you or */-->
+                <div th:if="${userIsLeadApplicant}" th:include="question-type/form-elements :: form-mark-as-complete-buttons"
+                     th:remove="tag"/>
+            </div>
         </div>
     </div>
 </div>
@@ -323,10 +325,10 @@
               <select name="assign_question" class="prog-menu">
                   <div th:remove="tag" th:each="assignableUser : ${assignableUsers}">
                       <option th:value="${question.getId()}+'_'+${assignableUser.getId()}"
-                              th:unless="${(questionAssignee?.assignee == assignableUser.getId()) or ((questionAssignee?.assignee == null) and (leadApplicant?.getId() == assignableUser.getId()))}"
+                              th:unless="${(questionAssignee?.assigneeUserId == assignableUser.getUser()) or ((questionAssignee?.assignee == null) and (leadApplicant?.getId() == assignableUser.getUser()))}"
                               th:text="${assignableUser.userName}"
                               />
-                      <option th:if="${(questionAssignee?.assignee == assignableUser.getId()) or ((questionAssignee?.assignee == null) and (leadApplicant?.getId() == assignableUser.getId()))}"
+                      <option th:if="${(questionAssignee?.assigneeUserId == assignableUser.getUser()) or ((questionAssignee?.assignee == null) and (leadApplicant?.getId() == assignableUser.getUser()))}"
                               th:text="${assignableUser?.userName}"
                               selected="selected"
                               disabled="disabled"/>
@@ -395,6 +397,7 @@
                 type="submit"
                 name="mark_section_as_complete"
                 th:value="${currentSection.getId()}"
+                id="mark-all-as-complete"
                 th:class="button">Mark all as complete
         </button>
         <button th:unless="${readonly}"
@@ -402,6 +405,7 @@
                 type="submit"
                 name="mark_section_as_incomplete"
                 th:value="${currentSection.getId()}"
+                id="edit-section"
                 th:class="buttonlink">Edit
         </button>
     </div>
@@ -426,8 +430,8 @@
 <div th:fragment="form-word-count (maxWords, currentWordsLeft)">
     <div th:unless="${maxWords == 0}" th:remove="tag">
 		<span class="count-label">
-				<span class="count-down" aria-live="polite" th:if="${currentWordsLeft}" th:classappend="${currentWordsLeft &lt; 0}? negative : positive">Words remaining: <div th:text="${currentWordsLeft}" th:remove="tag" /> </span>
-				<span class="count-down" aria-live="polite" th:unless="${currentWordsLeft}" th:classappend="${maxWords &lt; 0}? negative : positive" >Words remaining: <div th:text="${maxWords}" th:remove="tag" /> </span>
+				<span class="count-down" aria-live="polite" th:unless="${currentWordsLeft == null}" th:classappend="${currentWordsLeft &lt; 0}? negative : positive">Words remaining: <div th:text="${currentWordsLeft}" th:remove="tag" /> </span>
+				<span class="count-down" aria-live="polite" th:if="${currentWordsLeft == null}" th:classappend="${maxWords &lt; 0}? negative : positive" >Words remaining: <div th:text="${maxWords}" th:remove="tag" /> </span>
 		</span>
     </div>
 </div>

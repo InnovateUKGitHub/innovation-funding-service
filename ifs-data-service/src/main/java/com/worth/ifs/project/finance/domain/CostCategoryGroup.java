@@ -18,12 +18,13 @@ public class CostCategoryGroup {
     private Long id;
 
     @OneToMany(cascade = ALL, mappedBy = "costCategoryGroup", orphanRemoval = true)
+    @OrderBy("id ASC")
     private List<CostCategory> costCategories = new ArrayList<>();
 
     @Column(nullable = false)
     private String description;
 
-    CostCategoryGroup() {
+    public CostCategoryGroup() {
         // for ORM use
     }
 

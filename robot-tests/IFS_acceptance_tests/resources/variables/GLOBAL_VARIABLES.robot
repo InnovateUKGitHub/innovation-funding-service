@@ -58,7 +58,7 @@ ${CONFIRM_ORGANISATION_URL}    ${SERVER}/organisation/create/confirm-organisatio
 ${PROJECT_FINANCE_DASHBOARD_URL}    ${SERVER}/management/projectfinancedashboard
 ${SUCCESSFUL_PROJECT_PAGE}    ${server}/project-setup/project/4
 ${SUCCESSFUL_PROJECT_PAGE_DETAILS}    ${server}/project-setup/project/1/details
-${project_in_setup_page}     ${server}/project-setup/project/1
+${project_in_setup_page}    ${server}/project-setup/project/1
 ${project_start_date_page}    ${server}/project-setup/project/1/details/start-date
 ${project_address_page}    ${server}/project-setup/project/1/details/project-address
 ${project_manager_page}    ${server}/project-setup/project/1/details/start-date
@@ -91,12 +91,33 @@ ${test_mailbox_one_password}    testtest1
 ${test_mailbox_two_password}    testtest1
 ${Providing_Sustainable_Childcare_Application_Overview}    ${server}/management/competition/1/application/2
 ${unsuccessful_login_message}    Your sign in was unsuccessful because of the following issue(s)
-${test_title}      test title
+${test_title}     test title
 ${unique_email_number}    1
-${smoke_test}    0
+${smoke_test}     0
+${submit_test_email}    ${test_mailbox_one}+submittest@gmail.com
+${application_name}    Submit test application
+
+${docker}    0
 
 # Assessor variables
 ${Assessment_overview_9}    ${server}/assessment/9
-${Assessment_overview_11}    ${server}/assessment/11
+${Assessment_summary_complete_9}    ${server}/assessment/9/summary
 ${Application_question_url}    ${server}/assessment/9/question/47
+${Application_question_168}    ${server}/assessment/9/question/168
+${Application_question_169}    ${server}/assessment/9/question/169
+${Application_question_170}    ${server}/assessment/9/question/170
 ${Finance_summar_9_url}    ${server}/assessment/9/finances
+${Assessor_competition_dashboard}    ${server}/assessment/assessor/dashboard
+${Assessor_application_dashboard}    ${server}/assessment/assessor/dashboard/competition/2
+${Assessment_overview_11}    ${server}/assessment/11
+${Assessment_summary_Pending_12}    ${server}/assessment/12/summary
+${Assessment_summary_open_11}    ${server}/assessment/11/summary
+
+
+# Database variables
+${database_name}    ifs
+${database_user}    root
+${database_password}    password
+${database_host}    ifs-database
+${database_port}    3306
+

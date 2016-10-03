@@ -24,7 +24,6 @@ public class Error implements Serializable {
     private String fieldName;
     private Object fieldRejectedValue;
     private List<Object> arguments;
-    private String errorMessage;
 
     @JsonIgnore
     private HttpStatus statusCode;
@@ -46,24 +45,15 @@ public class Error implements Serializable {
     }
 
     public Error(ErrorTemplate errorTemplate, List<Object> arguments) {
-        this(errorTemplate.getErrorKey(), errorTemplate.getErrorMessage(), arguments, errorTemplate.getCategory());
+        this(errorTemplate.getErrorKey(), arguments, errorTemplate.getCategory());
     }
 
     public Error(String messageKey, HttpStatus statusCode) {
         this(messageKey, emptyList(), statusCode);
     }
 
-    public Error(String messageKey, String readableErrorMessage, HttpStatus statusCode) {
-        this(messageKey, readableErrorMessage, emptyList(), statusCode);
-    }
-
     public Error(String messageKey, List<Object> arguments, HttpStatus statusCode) {
-        this(messageKey, null, arguments, statusCode);
-    }
-
-    public Error(String messageKey, String readableErrorMessage, List<Object> arguments, HttpStatus statusCode) {
         this.errorKey = messageKey;
-        this.errorMessage = readableErrorMessage;
         this.arguments = simpleMap(arguments, argument -> argument + "");
         this.statusCode = statusCode;
     }
@@ -72,16 +62,8 @@ public class Error implements Serializable {
         this(messageKey, emptyList(), statusCode);
     }
 
-    public Error(Enum<?> messageKey, String readableErrorMessage, HttpStatus statusCode) {
-        this(messageKey, readableErrorMessage, emptyList(), statusCode);
-    }
-
     public Error(Enum<?> messageKey, List<Object> arguments, HttpStatus statusCode) {
-        this(messageKey, null, arguments, statusCode);
-    }
-
-    public Error(Enum<?> messageKey, String readableErrorMessage, List<Object> arguments, HttpStatus statusCode) {
-        this(messageKey.name(), readableErrorMessage, arguments, statusCode);
+        this(messageKey.name(), arguments, statusCode);
     }
 
     public HttpStatus getStatusCode() {
@@ -96,32 +78,35 @@ public class Error implements Serializable {
         return arguments;
     }
 
-    public String getErrorMessage() {
-        return errorMessage;
-    }
-
     /**
      * A convenience method to create a field error
      */
-    public static Error fieldError(String fieldName, Object fieldRejectedValue, String messageOrCode) {
-        return fieldError(fieldName, fieldRejectedValue, messageOrCode, emptyList());
+    public static Error fieldError(String fieldName, Object fieldRejectedValue, String errorKey) {
+        return fieldError(fieldName, fieldRejectedValue, errorKey, emptyList());
     }
 
     /**
      * A convenience method to create a field error with arguments
      */
-    public static Error fieldError(String fieldName, Object fieldRejectedValue, String messageOrCode, Object... arguments) {
-        return fieldError(fieldName, fieldRejectedValue, messageOrCode, asList(arguments));
+    public static Error fieldError(String fieldName, Object fieldRejectedValue, String errorKey, Object... arguments) {
+        return fieldError(fieldName, fieldRejectedValue, errorKey, asList(arguments));
     }
 
     /**
      * A convenience method to create a field error
      */
-    public static Error fieldError(String fieldName, Object fieldRejectedValue, String messageOrCode, List<Object> arguments) {
-        Error error = new Error(messageOrCode, messageOrCode, arguments, NOT_ACCEPTABLE);
+    public static Error fieldError(String fieldName, Object fieldRejectedValue, String errorKey, List<Object> arguments) {
+        Error error = new Error(errorKey, arguments, NOT_ACCEPTABLE);
         error.fieldName = fieldName;
         error.fieldRejectedValue = fieldRejectedValue;
         return error;
+    }
+
+    /**
+     * A convenience method to create a field error with existing Error object
+     */
+    public static Error fieldError(String fieldName, Error error) {
+        return fieldError(fieldName, error.getFieldRejectedValue(), error.getErrorKey(), error.getArguments());
     }
 
     /**
@@ -134,8 +119,22 @@ public class Error implements Serializable {
     /**
      * A convenience method to create a global (non-field) error
      */
-    public static Error globalError(String errorKey, String messageOrCode) {
-        return new Error(errorKey, messageOrCode, NOT_ACCEPTABLE);
+    public static Error globalError(ErrorTemplate errorTemplate) {
+        return new Error(errorTemplate, NOT_ACCEPTABLE);
+    }
+
+    /**
+     * A convenience method to create a global (non-field) error
+     */
+    public static Error globalError(String errorKey, List<Object> arguments) {
+        return new Error(errorKey, arguments, NOT_ACCEPTABLE);
+    }
+
+    /**
+     * A convenience method to create a global (non-field) error
+     */
+    public static Error globalError(ErrorTemplate errorTemplate, List<Object> arguments) {
+        return new Error(errorTemplate, arguments, NOT_ACCEPTABLE);
     }
 
     public String getFieldName() {
@@ -168,7 +167,6 @@ public class Error implements Serializable {
                 .append(fieldName, error.fieldName)
                 .append(fieldRejectedValue, error.fieldRejectedValue)
                 .append(arguments, error.arguments)
-                .append(errorMessage, error.errorMessage)
                 .append(statusCode, error.statusCode)
                 .isEquals();
     }
@@ -180,7 +178,6 @@ public class Error implements Serializable {
                 .append(fieldName)
                 .append(fieldRejectedValue)
                 .append(arguments)
-                .append(errorMessage)
                 .append(statusCode)
                 .toHashCode();
     }
@@ -192,7 +189,6 @@ public class Error implements Serializable {
                 .append("fieldName", fieldName)
                 .append("fieldRejectedValue", fieldRejectedValue)
                 .append("arguments", arguments)
-                .append("errorMessage", errorMessage)
                 .append("statusCode", statusCode)
                 .toString();
     }

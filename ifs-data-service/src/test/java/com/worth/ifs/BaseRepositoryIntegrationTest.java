@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
  * Created by dwatson on 02/10/15.
  */
 @Transactional
-public abstract class BaseRepositoryIntegrationTest<RepositoryType> extends BaseIntegrationTest {
+public abstract class BaseRepositoryIntegrationTest<RepositoryType> extends BaseAuthenticationAwareIntegrationTest {
 
     protected RepositoryType repository;
 

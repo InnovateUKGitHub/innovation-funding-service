@@ -1,15 +1,18 @@
 package com.worth.ifs.assessment.model;
 
+import com.worth.ifs.assessment.service.CompetitionParticipantRestService;
 import com.worth.ifs.assessment.viewmodel.AssessorDashboardActiveCompetitionViewModel;
 import com.worth.ifs.assessment.viewmodel.AssessorDashboardUpcomingCompetitionViewModel;
 import com.worth.ifs.assessment.viewmodel.AssessorDashboardViewModel;
+import com.worth.ifs.invite.resource.CompetitionParticipantResource;
+import com.worth.ifs.invite.resource.CompetitionParticipantRoleResource;
+import com.worth.ifs.invite.resource.ParticipantStatusResource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Build the model for the Assessor Dashboard view.
@@ -17,27 +20,42 @@ import static java.util.Arrays.asList;
 @Component
 public class AssessorDashboardModelPopulator {
 
-    public AssessorDashboardViewModel populateModel() {
-        return new AssessorDashboardViewModel(getInvitations(), getActiveCompetitions(), getUpcomingCompetitions());
+    @Autowired
+    private CompetitionParticipantRestService competitionParticipantRestService;
+
+    public AssessorDashboardViewModel populateModel(Long userId) {
+        List<CompetitionParticipantResource> participantResourceList = competitionParticipantRestService
+                .getParticipants(userId, CompetitionParticipantRoleResource.ASSESSOR, ParticipantStatusResource.ACCEPTED).getSuccessObject();
+
+        return new AssessorDashboardViewModel(getActiveCompetitions(participantResourceList), getUpcomingCompetitions(participantResourceList));
     }
 
-    private List<AssessorDashboardUpcomingCompetitionViewModel> getInvitations() {
-        return new ArrayList<>();
+
+    private List<AssessorDashboardActiveCompetitionViewModel> getActiveCompetitions(List<CompetitionParticipantResource> participantResourceList) {
+        return participantResourceList.stream()
+                .filter(CompetitionParticipantResource::isInAssessment)
+                .map(cpr ->
+                     new AssessorDashboardActiveCompetitionViewModel(
+                            cpr.getCompetitionId(),
+                            cpr.getCompetitionName(),
+                            1,
+                            2,
+                            cpr.getAssessmentEndDate().toLocalDate(),
+                            cpr.getAssessmentDaysLeft(),
+                            cpr.getAssessmentDaysLeftPercentage())
+                )
+                .collect(toList());
     }
 
-    private List<AssessorDashboardActiveCompetitionViewModel> getActiveCompetitions() {
-        Long competitionId = 2L;
-        String displayLabel = "Juggling Craziness";
-        Integer progressAssessed = 1;
-        Integer progressTotal = 2;
-        LocalDate deadline = LocalDate.parse("2016-12-31");
-        long daysLeft = 16L;
-        long daysLeftPercentage = 20L;
-
-        return asList(new AssessorDashboardActiveCompetitionViewModel(competitionId, displayLabel, progressAssessed, progressTotal, deadline, daysLeft, daysLeftPercentage));
-    }
-
-    private List<AssessorDashboardUpcomingCompetitionViewModel> getUpcomingCompetitions() {
-        return new ArrayList<>();
+    private List<AssessorDashboardUpcomingCompetitionViewModel> getUpcomingCompetitions(List<CompetitionParticipantResource> participantResources) {
+        return participantResources.stream()
+                .filter(CompetitionParticipantResource::isAnUpcomingAssessment)
+                .map( p -> new AssessorDashboardUpcomingCompetitionViewModel(
+                        p.getCompetitionId(),
+                        p.getCompetitionName(),
+                        p.getAssessmentStartDate().toLocalDate(),
+                        p.getAssessmentEndDate().toLocalDate())
+                )
+                .collect(toList());
     }
 }

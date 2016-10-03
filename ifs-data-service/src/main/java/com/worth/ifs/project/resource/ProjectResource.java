@@ -18,17 +18,28 @@ public class ProjectResource {
     private LocalDate targetStartDate;
     private AddressResource address;
     private String name;
-    private LocalDateTime submittedDate;
+    private LocalDateTime documentsSubmittedDate;
+    private LocalDateTime offerSubmittedDate;
     private List<Long> projectUsers;
     private Long collaborationAgreement;
     private Long exploitationPlan;
+    private Long signedGrantOfferLetter;
+    private Long grantOfferLetter;
+    private Long additionalContractFile;
+    private boolean offerRejected;
+    private Boolean otherDocumentsApproved;
 
     @Digits(integer = MAX_DURATION_IN_MONTHS_DIGITS, fraction = 0, message="{validation.application.details.duration.in.months.max.digits}")
     private Long durationInMonths;
 
     @JsonIgnore
-    public boolean isProjectDetailsSubmitted(){
-        return submittedDate != null;
+    public boolean isPartnerDocumentsSubmitted(){
+        return documentsSubmittedDate != null;
+    }
+
+    @JsonIgnore
+    public boolean isOfferSubmitted(){
+        return offerSubmittedDate != null;
     }
 
     public Long getId() {
@@ -92,12 +103,20 @@ public class ProjectResource {
         this.application = application;
     }
 
-    public LocalDateTime getSubmittedDate() {
-        return submittedDate;
+    public LocalDateTime getDocumentsSubmittedDate() {
+        return documentsSubmittedDate;
     }
 
-    public void setSubmittedDate(LocalDateTime submittedDate) {
-        this.submittedDate = submittedDate;
+    public void setDocumentsSubmittedDate(LocalDateTime documentsSubmittedDate) {
+        this.documentsSubmittedDate = documentsSubmittedDate;
+    }
+
+    public LocalDateTime getOfferSubmittedDate() {
+        return offerSubmittedDate;
+    }
+
+    public void setOfferSubmittedDate(LocalDateTime offerSubmittedDate) {
+        this.offerSubmittedDate = offerSubmittedDate;
     }
 
     public Long getCollaborationAgreement() {
@@ -114,5 +133,45 @@ public class ProjectResource {
 
     public void setExploitationPlan(Long exploitationPlan) {
         this.exploitationPlan = exploitationPlan;
+    }
+
+    public Long getSignedGrantOfferLetter() {
+        return signedGrantOfferLetter;
+    }
+
+    public void setSignedGrantOfferLetter(Long signedGrantOfferLetter) {
+        this.signedGrantOfferLetter = signedGrantOfferLetter;
+    }
+
+    public Long getAdditionalContractFile() {
+        return additionalContractFile;
+    }
+
+    public void setAdditionalContractFile(Long additionalContractFile) {
+        this.additionalContractFile = additionalContractFile;
+    }
+
+    public boolean isOfferRejected() {
+        return offerRejected;
+    }
+
+    public void setOfferRejected(boolean offerRejected) {
+        this.offerRejected = offerRejected;
+    }
+
+    public Long getGrantOfferLetter() {
+        return grantOfferLetter;
+    }
+
+    public void setGrantOfferLetter(Long grantOfferLetter) {
+        this.grantOfferLetter = grantOfferLetter;
+    }
+
+    public Boolean getOtherDocumentsApproved() {
+        return otherDocumentsApproved;
+    }
+
+    public void setOtherDocumentsApproved(Boolean otherDocumentsApproved) {
+        this.otherDocumentsApproved = otherDocumentsApproved;
     }
 }

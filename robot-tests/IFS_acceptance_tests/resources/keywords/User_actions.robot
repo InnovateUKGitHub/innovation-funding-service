@@ -7,6 +7,7 @@ Resource          ../../resources/keywords/Login_actions.robot
 *** Keywords ***
 The user navigates to the page
     [Arguments]    ${TARGET_URL}
+    Wait for autosave
     Go To    ${TARGET_URL}
     Run Keyword And Ignore Error    Confirm Action
     # Error checking
@@ -22,8 +23,17 @@ The user navigates to the page
     # Wait Until Page Contains Element    link=Contact Us
     # Page Should Contain Link    href=${SERVER}/info/contact
 
+The user navigates to the assessor page
+    [Arguments]    ${TARGET_URL}
+    Wait for autosave
+    Go To    ${TARGET_URL}
+    # Error checking
+    Page Should Not Contain    Error
+    Page Should Not Contain    something went wrong
+
 The user navigates to the page without the usual headers
     [Arguments]    ${TARGET_URL}
+    Wait for autosave
     Go To    ${TARGET_URL}
     # Error checking
     Page Should Not Contain    Error
@@ -33,6 +43,7 @@ The user navigates to the page without the usual headers
 
 The user navigates to the page and gets a custom error message
     [Arguments]    ${TARGET_URL}    ${CUSTOM_ERROR_MESSAGE}
+    Wait for autosave
     Go To    ${TARGET_URL}
     Page Should Contain    ${CUSTOM_ERROR_MESSAGE}
 
@@ -78,8 +89,10 @@ the user should be redirected to the correct page without error checking
     Page Should Contain    BETA
 
 the user reloads the page
+    sleep    1s
+    Wait for autosave
+    Run Keyword And Ignore Error    Confirm Action
     Reload Page
-    run keyword and ignore error    confirm action
     # Error checking
     Page Should Not Contain    Error
     Page Should Not Contain    something went wrong
@@ -115,6 +128,7 @@ the user unselects the checkbox
 
 the user selects the radio button
     [Arguments]    ${RADIO_BUTTON}    ${RADIO_BUTTON_OPTION}
+    the user should see the element    ${RADIO_BUTTON}
     Select Radio Button    ${RADIO_BUTTON}    ${RADIO_BUTTON_OPTION}
     # Error checking
     Page Should Not Contain    Error
@@ -127,7 +141,21 @@ the user selects the radio button
 
 the user sees that the radio button is selected
     [Arguments]    ${RADIO_BUTTON}    ${SELECTION}
+    wait until element is visible    ${RADIO_BUTTON}
     Radio Button Should Be Set To    ${RADIO_BUTTON}    ${SELECTION}
+    # Error checking
+    Page Should Not Contain    Error
+    Page Should Not Contain    something went wrong
+    Page Should Not Contain    Page or resource not found
+    Page Should Not Contain    You do not have the necessary permissions for your request
+    # Header checking (INFUND-1892)
+    Element Should Be Visible    id=global-header
+    Page Should Contain    BETA
+
+the user sees that the radio button is not selected
+    [Arguments]    ${RADIO_BUTTON}
+    wait until element is visible    ${RADIO_BUTTON}
+    Radio Button Should Not Be Selected    ${RADIO_BUTTON}
     # Error checking
     Page Should Not Contain    Error
     Page Should Not Contain    something went wrong
@@ -150,6 +178,32 @@ the user selects the option from the drop-down menu
     # Header checking (INFUND-1892)
     Element Should Be Visible    id=global-header
     Page Should Contain    BETA
+
+the user moves focus to the element
+    [Arguments]    ${element}
+    # Error checking
+    Page Should Not Contain    Error
+    Page Should Not Contain    something went wrong
+    Page Should Not Contain    Page or resource not found
+    Page Should Not Contain    You do not have the necessary permissions for your request
+    # Header checking (INFUND-1892)
+    Element Should Be Visible    id=global-header
+    Page Should Contain    BETA
+    wait until element is visible    ${element}
+    focus    ${element}
+
+the user moves the mouse away from the element
+    [Arguments]    ${element}
+    # Error checking
+    Page Should Not Contain    Error
+    Page Should Not Contain    something went wrong
+    Page Should Not Contain    Page or resource not found
+    Page Should Not Contain    You do not have the necessary permissions for your request
+    # Header checking (INFUND-1892)
+    Element Should Be Visible    id=global-header
+    Page Should Contain    BETA
+    wait until element is visible    ${element}
+    mouse out    ${element}
 
 the user should see the dropdown option selected
     [Arguments]    ${option}    ${drop-down}
@@ -201,6 +255,7 @@ Switch to the first browser
     Switch browser    1
 
 Create new application
+    Wait for autosave
     go to    ${CREATE_APPLICATION_PAGE}
     Input Text    id=application_name    Form test application
     Click Element    css=#content > form > input
@@ -213,13 +268,36 @@ The user enters text to a text field
     Clear Element Text    ${TEXT_FIELD}
     input text    ${TEXT_FIELD}    ${TEXT_INPUT}
     Mouse Out    ${TEXT_FIELD}
+    Wait for autosave
+
+the user sees the text in the element
+    [Arguments]    ${element}    ${text}
+    wait until element is visible    ${element}
+    Wait Until Keyword Succeeds    10    500ms    element should contain    ${element}    ${text}
+
+the user sees the text in the text field
+    [Arguments]    ${textfield}    ${text}
+    wait until element is visible    ${textfield}
+    wait until keyword succeeds    10    500ms    textfield should contain    ${textfield}    ${text}
+
+the user clears the text from the element
+    [Arguments]    ${element}
+    wait until element is visible    ${element}
+    clear element text    ${element}
+    Page Should Not Contain    Error
+    Page Should Not Contain    something went wrong
+    Page Should Not Contain    Page or resource not found
+    Page Should Not Contain    You do not have the necessary permissions for your request
+    # Header checking    (INFUND-1892)
+    Element Should Be Visible    id=global-header
+    Page Should Contain    BETA
 
 The user clicks the button/link
     [Arguments]    ${BUTTON}
     wait until element is visible    ${BUTTON}
     Focus    ${BUTTON}
+    wait for autosave
     click element    ${BUTTON}
-    run keyword and ignore error    confirm action
 
 The user should see the text in the page
     [Arguments]    ${VISIBLE_TEXT}
@@ -228,6 +306,10 @@ The user should see the text in the page
     Page Should Not Contain    Page or resource not found
     Page Should Not Contain    You do not have the necessary permissions for your request
     Page Should Not Contain    something went wrong
+
+The user should see permissions error message
+    wait until page contains    You do not have the necessary permissions for your request
+    Page Should Contain    You do not have the necessary permissions for your request
 
 The user should not see the text in the page
     [Arguments]    ${NOT_VISIBLE_TEXT}
@@ -244,7 +326,7 @@ The user should see an error
     [Arguments]    ${ERROR_TEXT}
     Run Keyword And Ignore Error    Mouse Out    css=input
     Run Keyword And Ignore Error    Focus    jQuery=Button:contains("Mark as complete")
-    sleep    300ms
+    sleep    100ms
     wait until page contains element    css=.error-message
     Wait Until Page Contains    ${ERROR_TEXT}
 
@@ -293,6 +375,7 @@ the user assigns the question to the collaborator
     Reload Page
 
 The user goes back to the previous page
+    Wait for autosave
     Go Back
 
 browser validations have been disabled
@@ -316,13 +399,40 @@ The element should be disabled
     Element Should Be Disabled    ${ELEMENT}
 
 the user opens the mailbox and verifies the email from
+    [Arguments]    ${receiver}
+    run keyword if    ${docker}==1    the user opens the mailbox and verifies the local email from    ${receiver}
+    run keyword if    ${docker}!=1    the user opens the mailbox and verifies the remote email from    ${receiver}
+
+the user opens the mailbox and verifies the remote email from
+    [Arguments]    ${receiver}
     Open Mailbox    server=imap.googlemail.com    user=${test_mailbox_one}@gmail.com    password=${test_mailbox_one_password}
-    ${LATEST} =    wait for email
-    ${HTML}=    get email body    ${LATEST}
+    ${WHICH EMAIL} =    wait for email    toemail=${receiver}    subject=Please verify your email address
+    ${EMAIL_MATCH} =    Get Matches From Email    ${WHICH_EMAIL}    sign into your account and start your application
+    log    ${EMAIL_MATCH}
+    Should Not Be Empty    ${EMAIL_MATCH}
+    ${HTML}=    get email body    ${WHICH EMAIL}
     log    ${HTML}
-    ${LINK}=    Get Links From Email    ${LATEST}
+    ${LINK}=    Get Links From Email    ${WHICH EMAIL}
     log    ${LINK}
-    ${VERIFY_EMAIL}=    Get From List    ${LINK}    1
+    ${VERIFY_EMAIL} =    Get From List    ${LINK}    1
+    log    ${VERIFY_EMAIL}
+    go to    ${VERIFY_EMAIL}
+    Capture Page Screenshot
+    Delete All Emails
+    close mailbox
+
+the user opens the mailbox and verifies the local email from
+    [Arguments]    ${receiver}
+    Open Mailbox    server=ifs-local-dev    port=9876    user=smtp    password=smtp    is_secure=False
+    ${WHICH EMAIL} =    wait for email    toemail=${receiver}    subject=Please verify your email address
+    ${EMAIL_MATCH} =    Get Matches From Email    ${WHICH_EMAIL}    sign into your account and start your application
+    log    ${EMAIL_MATCH}
+    Should Not Be Empty    ${EMAIL_MATCH}
+    ${HTML}=    get email body    ${WHICH EMAIL}
+    log    ${HTML}
+    ${LINK}=    Get Links From Email    ${WHICH EMAIL}
+    log    ${LINK}
+    ${VERIFY_EMAIL} =    Get From List    ${LINK}    1
     log    ${VERIFY_EMAIL}
     go to    ${VERIFY_EMAIL}
     Capture Page Screenshot
@@ -330,6 +440,10 @@ the user opens the mailbox and verifies the email from
     close mailbox
 
 the user opens the mailbox and verifies the email
+    run keyword if    ${docker}==1    the user opens the local mailbox and verifies the email
+    run keyword if    ${docker}!=1    the user opens the remote mailbox and verifies the email
+
+the user opens the remote mailbox and verifies the email
     Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
     ${LATEST} =    wait for email
     ${HTML}=    get email body    ${LATEST}
@@ -343,8 +457,40 @@ the user opens the mailbox and verifies the email
     Delete All Emails
     close mailbox
 
+the user opens the local mailbox and verifies the email
+    Open Mailbox    server=ifs-local-dev    port=9876    user=smtp    password=smtp    is_secure=False
+    ${LATEST} =    wait for email
+    ${HTML}=    get email body    ${LATEST}
+    log    ${HTML}
+    ${LINK}=    Get Links From Email    ${LATEST}
+    log    ${LINK}
+    ${VERIFY_EMAIL}=    Get From List    ${LINK}    1
+    log    ${VERIFY_EMAIL}
+    go to    ${VERIFY_EMAIL}
+    Capture Page Screenshot
+    Delete All Emails
+    close mailbox
+
 the user opens the mailbox and accepts the invitation to collaborate
+    run keyword if    ${docker}==1    the user opens the local mailbox and accepts the invitation to collaborate
+    run keyword if    ${docker}!=1    the user opens the remote mailbox and accepts the invitation to collaborate
+
+the user opens the remote mailbox and accepts the invitation to collaborate
     Open Mailbox    server=imap.googlemail.com    user=${test_mailbox_one}@gmail.com    password=${test_mailbox_one_password}
+    ${LATEST} =    wait for email
+    ${HTML}=    get email body    ${LATEST}
+    log    ${HTML}
+    ${LINK}=    Get Links From Email    ${LATEST}
+    log    ${LINK}
+    ${IFS_LINK}=    Get From List    ${LINK}    1
+    log    ${IFS_LINK}
+    go to    ${IFS_LINK}
+    Capture Page Screenshot
+    Delete All Emails
+    close mailbox
+
+the user opens the local mailbox and accepts the invitation to collaborate
+    Open Mailbox    server=ifs-local-dev    port=9876    user=smtp    password=smtp    is_secure=False
     ${LATEST} =    wait for email
     ${HTML}=    get email body    ${LATEST}
     log    ${HTML}
@@ -392,6 +538,10 @@ the user cannot see the option to upload a file on the page
     the user should not see the text in the page    Upload
 
 Delete the emails from both test mailboxes
+    run keyword if    ${docker}==1    delete the emails from the local test mailbox    # Note that all emails come through to the same local mailbox, so we only need to delete from one mailbox here
+    run keyword if    ${docker}!=1    delete the emails from both remote test mailboxes
+
+delete the emails from both remote test mailboxes
     Open Mailbox    server=imap.googlemail.com    user=${test_mailbox_one}@gmail.com    password=${test_mailbox_one_password}
     Delete All Emails
     close mailbox
@@ -400,16 +550,58 @@ Delete the emails from both test mailboxes
     close mailbox
 
 Delete the emails from the main test mailbox
+    run keyword if    ${docker}==1    delete the emails from the local test mailbox
+    run keyword if    ${docker}!=1    delete the emails from the main remote test mailbox
+
+delete the emails from the main remote test mailbox
     Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
     Delete All Emails
     close mailbox
 
+delete the emails from the local test mailbox
+    Open Mailbox    server=ifs-local-dev    port=9876    user=smtp    password=smtp    is_secure=False
+    Delete All Emails
+    close mailbox
+
 Delete the emails from both main test mailboxes
+    run keyword if    ${docker}==1    delete the emails from the local test mailbox    # Note that all emails come through to the same local mailbox, so we only need to delete from one mailbox here
+    run keyword if    ${docker}!=1    delete the emails from both main remote test mailboxes
+
+delete the emails from both main remote test mailboxes
     Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
     Delete All Emails
     close mailbox
     Open Mailbox    server=imap.googlemail.com    user=worth.email.test.two@gmail.com    password=testtest1
     Delete All Emails
+    close mailbox
+
+the user should get a confirmation email
+    [Arguments]    ${receiver}    ${password}    ${content}    ${subject}
+    run keyword if    ${docker}==1    the user should get a local confirmation email    ${receiver}    ${content}    ${subject}
+    run keyword if    ${docker}!=1    the user should get a remote confirmation email    ${receiver}    ${password}    ${content}    ${subject}
+
+the user should get a remote confirmation email
+    [Arguments]    ${receiver}    ${password}    ${content}    ${subject}
+    Open Mailbox    server=imap.googlemail.com    user=${receiver}    password=${password}
+    ${WHICH EMAIL} =    wait for email    toemail=${receiver}    subject=${subject}
+    ${HTML}=    get email body    ${WHICH EMAIL}
+    log    ${HTML}
+    ${MATCHES1}=    Get Matches From Email    ${WHICH EMAIL}    ${content}
+    log    ${MATCHES1}
+    Should Not Be Empty    ${MATCHES1}
+    Delete All Emails
+    close mailbox
+
+the user should get a local confirmation email
+    [Arguments]    ${receiver}    ${content}    ${subject}
+    Open Mailbox    server=ifs-local-dev    port=9876    user=smtp    password=smtp    is_secure=False
+    ${WHICH EMAIL} =    wait for email    toemail=${receiver}    subject=${subject}
+    ${HTML}=    get email body    ${WHICH EMAIL}
+    log    ${HTML}
+    ${MATCHES1}=    Get Matches From Email    ${WHICH EMAIL}    ${content}
+    log    ${MATCHES1}
+    Should Not Be Empty    ${MATCHES1}
+    #    Delete All Emails
     close mailbox
 
 the user enters the details and clicks the create account
@@ -505,17 +697,17 @@ we create a new user
     The user clicks the button/link    jQuery=.button:contains("Save")
     The user enters the details and clicks the create account    ${EMAIL_INVITED}
     The user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
-    And the user opens the mailbox and verifies the email from
+    And the user opens the mailbox and verifies the email from    ${EMAIL_INVITED}
     The user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     The user clicks the button/link    jQuery=.button:contains("Sign in")
     The guest user inserts user email & password    ${EMAIL_INVITED}    Passw0rd123
     The guest user clicks the log-in button
     the user closes the browser
 
-
 the lead applicant invites a registered user
     [Arguments]    ${EMAIL_LEAD}    ${EMAIL_INVITED}
     run keyword if    ${smoke_test}!=1    invite a registered user    ${EMAIL_LEAD}    ${EMAIL_INVITED}
+    run keyword if    ${smoke_test}==1    invite a new academic    ${EMAIL_LEAD}    ${EMAIL_INVITED}
 
 invite a registered user
     [Arguments]    ${EMAIL_LEAD}    ${EMAIL_INVITED}
@@ -532,7 +724,7 @@ invite a registered user
     the user clicks the button/link    jQuery=.button:contains("Save")
     the user enters the details and clicks the create account    ${EMAIL_LEAD}
     the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
-    the user opens the mailbox and verifies the email from
+    the user opens the mailbox and verifies the email from    ${EMAIL_INVITED}
     the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     the user clicks the button/link    jQuery=.button:contains("Sign in")
     the guest user inserts user email & password    ${EMAIL_LEAD}    Passw0rd123
@@ -547,15 +739,43 @@ invite a registered user
     the user closes the browser
     the guest user opens the browser
 
-
-
+invite a new academic
+    [Arguments]    ${EMAIL_LEAD}    ${EMAIL_INVITED}
+    guest user log-in    ${EMAIL_LEAD}    Passw0rd123
+    the user clicks the button/link    link=${application_name}
+    the user clicks the button/link    link=view team members and add collaborators
+    the user clicks the button/link    jQuery=.button:contains("Invite new contributors")
+    the user clicks the button/link    jQuery=.button:contains("Add additional partner organisation")
+    the user enters text to a text field    name=organisations[1].organisationName    university of liverpool
+    the user enters text to a text field    name=organisations[1].invites[0].personName    Academic User
+    the user enters text to a text field    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(2) input    ${EMAIL_INVITED}
+    the user clicks the button/link    jQuery=.button:contains("Save Changes")
 
 Open mailbox and confirm received email
-    [Arguments]    ${USER}    ${PASSWORD}    ${PATTERN}
+    [Arguments]    ${receiver}    ${PASSWORD}    ${PATTERN}    ${subject}
+    run keyword if    ${docker}==1    open local mailbox and confirm received email    ${receiver}    ${PATTERN}    ${subject}
+    run keyword if    ${docker}!=1    open remote mailbox and confirm received email    ${receiver}    ${PASSWORD}    ${PATTERN}    ${subject}
+
+open remote mailbox and confirm received email
+    [Arguments]    ${receiver}    ${PASSWORD}    ${PATTERN}    ${subject}
     [Documentation]    This Keyword searches the correct email using regex
-    Open Mailbox    server=imap.googlemail.com    user=${USER}    password=${PASSWORD}
-    ${WHICH_EMAIL}=    wait for email    toEmail=${USER}    timeout=150
+    Open Mailbox    server=imap.googlemail.com    user=${receiver}    password=${PASSWORD}
+    ${WHICH_EMAIL}=    wait for email    subject=${subject}
+    ${HTML}=    get email body    ${WHICH EMAIL}
+    log    ${HTML}
     ${EMAIL_MATCH}=    Get Matches From Email    ${WHICH_EMAIL}    ${PATTERN}
+    log    ${EMAIL_MATCH}
     Should Not Be Empty    ${EMAIL_MATCH}
-    Delete All Emails
+    close mailbox
+
+open local mailbox and confirm received email
+    [Arguments]    ${receiver}    ${PATTERN}    ${subject}
+    [Documentation]    This Keyword searches the correct email using regex
+    Open Mailbox    server=ifs-local-dev    port=9876    user=smtp    password=smtp    is_secure=False
+    ${WHICH_EMAIL}=    wait for email    subject=${subject}
+    ${HTML}=    get email body    ${WHICH EMAIL}
+    log    ${HTML}
+    ${EMAIL_MATCH} =    Get Matches From Email    ${WHICH_EMAIL}    ${PATTERN}
+    log    ${EMAIL_MATCH}
+    Should Not Be Empty    ${EMAIL_MATCH}
     close mailbox

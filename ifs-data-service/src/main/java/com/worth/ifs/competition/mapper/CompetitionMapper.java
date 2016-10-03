@@ -25,7 +25,7 @@ import org.mapstruct.Mappings;
         MilestoneMapper.class,
         CompetitionTypeMapper.class,
         SectionMapper.class,
-        CompetitionCoFunderMapper.class
+        CompetitionFunderMapper.class
     }
 )
 public abstract class CompetitionMapper extends BaseMapper<Competition, CompetitionResource, Long> {
@@ -39,7 +39,7 @@ public abstract class CompetitionMapper extends BaseMapper<Competition, Competit
     public abstract CompetitionResource mapToResource(Competition domain);
 
     @Mappings({
-            @Mapping(target = "status", ignore=true)
+            @Mapping(target = "setupComplete", ignore = true)
     })
     public abstract Competition mapToDomain(CompetitionResource domain);
 

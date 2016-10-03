@@ -1,7 +1,9 @@
 package com.worth.ifs.project.domain;
 
+import com.worth.ifs.invite.domain.Participant;
+import com.worth.ifs.invite.domain.ProjectInvite;
+import com.worth.ifs.invite.domain.ProjectParticipantRole;
 import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -12,32 +14,36 @@ import javax.persistence.*;
  * ProjectUser defines a User's role on a Project and in relation to a particular Organisation.
  */
 @Entity
-public class ProjectUser {
+public class ProjectUser extends Participant<Project, ProjectInvite, ProjectParticipantRole> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name="userId", referencedColumnName="id")
+    @JoinColumn(name = "userId", referencedColumnName = "id")
     private User user;
 
     @ManyToOne
-    @JoinColumn(name="projectId", referencedColumnName="id")
+    @JoinColumn(name = "projectId", referencedColumnName = "id")
     private Project project;
 
-    @ManyToOne
-    @JoinColumn(name="roleId", referencedColumnName="id")
-    private Role role;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "project_role")
+    private ProjectParticipantRole role;
 
     @ManyToOne
-    @JoinColumn(name="organisationId", referencedColumnName="id")
+    @JoinColumn(name = "organisationId", referencedColumnName = "id")
     private Organisation organisation;
 
-    public ProjectUser(){
-    	// no-arg constructor
+    @ManyToOne
+    @JoinColumn(name = "invite_id", referencedColumnName = "id")
+    private ProjectInvite invite;
+
+    public ProjectUser() {
+        // no-arg constructor
     }
 
-    public ProjectUser(Long id, User user, Project project, Role role, Organisation organisation) {
+    public ProjectUser(Long id, User user, Project project, ProjectParticipantRole role, Organisation organisation) {
         this.id = id;
         this.user = user;
         this.project = project;
@@ -45,14 +51,18 @@ public class ProjectUser {
         this.organisation = organisation;
     }
 
-    public ProjectUser(User user, Project project, Role role, Organisation organisation) {
+    public ProjectUser(User user, Project project, ProjectParticipantRole role, Organisation organisation) {
         this.user = user;
         this.project = project;
         this.role = role;
         this.organisation = organisation;
     }
 
-    public Role getRole() {
+    @Override
+    public ProjectInvite getInvite() { return invite; }
+
+    @Override
+    public ProjectParticipantRole getRole() {
         return role;
     }
 
@@ -60,7 +70,8 @@ public class ProjectUser {
         return user;
     }
 
-    public Project getProject() {
+    @Override
+    public Project getProcess() {
         return project;
     }
 
@@ -70,14 +81,6 @@ public class ProjectUser {
 
     public Long getId() {
         return id;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-    public void setProject(Project project) {
-        this.project = project;
     }
 
     public void setOrganisation(Organisation organisation) {
@@ -94,6 +97,10 @@ public class ProjectUser {
 
     public boolean isPartner() {
         return getRole().isPartner();
+    }
+
+    public boolean isFinanceContact() {
+        return getRole().isFinanceContact();
     }
 
     @Override

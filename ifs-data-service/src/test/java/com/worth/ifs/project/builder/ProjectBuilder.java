@@ -3,11 +3,11 @@ package com.worth.ifs.project.builder;
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.address.domain.Address;
 import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -15,7 +15,8 @@ import static com.worth.ifs.BuilderAmendFunctions.setField;
 import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
 
-public class ProjectBuilder extends BaseBuilder<Project, ProjectBuilder> {
+public class
+ProjectBuilder extends BaseBuilder<Project, ProjectBuilder> {
 
     private ProjectBuilder(List<BiConsumer<Integer, Project>> multiActions) {
         super(multiActions);
@@ -47,24 +48,36 @@ public class ProjectBuilder extends BaseBuilder<Project, ProjectBuilder> {
         return withArray((add, project) -> project.setAddress(add), address);
     }
 
+    public ProjectBuilder withCollaborationAgreement(FileEntry collaborationAgreement) {
+        return with (project -> project.setCollaborationAgreement(collaborationAgreement));
+    }
+
+    public ProjectBuilder withExploitationPlan(FileEntry exploitationPlan) {
+        return with (project -> project.setExploitationPlan(exploitationPlan));
+    }
+
+    public ProjectBuilder withGrantOfferLetter(FileEntry grantOfferLetter) {
+        return with (project -> project.setSignedGrantOfferLetter(grantOfferLetter));
+    }
+
+    public ProjectBuilder withAdditionalContractFile(FileEntry additionalContractFile) {
+        return with (project -> project.setAdditionalContractFile(additionalContractFile));
+    }
+
     public ProjectBuilder withDuration(Long... durations) {
         return withArray((duration, project) -> project.setDurationInMonths(duration), durations);
+    }
+
+    public ProjectBuilder withName(String... names) {
+        return withArray((name, project) -> project.setName(name), names);
     }
 
     public ProjectBuilder withApplication(Application... application){
         return withArray((app, project) -> project.setApplication(app), application);
     }
 
-    public ProjectBuilder withName(String... names){
-        return withArray((name, project) -> project.setName(name), names);
-    }
-
     public ProjectBuilder withProjectUsers(List<ProjectUser>... projectUsers){
         return withArray((users, project) -> project.setProjectUsers(users), projectUsers);
-    }
-
-    public ProjectBuilder withSubmittedDate(LocalDateTime... submittedDate){
-        return withArray((subDate, project) -> project.setSubmittedDate(subDate), submittedDate);
     }
 
     @Override
@@ -72,7 +85,7 @@ public class ProjectBuilder extends BaseBuilder<Project, ProjectBuilder> {
 
         // add Hibernate-style backlinks to the Project Users
         project.getProjectUsers().forEach(pu -> {
-            pu.setProject(project);
+            setField("project", project, pu);
         });
     }
 }

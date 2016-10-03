@@ -2,6 +2,8 @@ package com.worth.ifs.user.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.worth.ifs.user.resource.Disability;
+import com.worth.ifs.user.resource.Gender;
 import com.worth.ifs.user.resource.UserRoleType;
 import com.worth.ifs.user.resource.UserStatus;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -57,6 +59,19 @@ public class User implements Serializable {
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
     private List<Role> roles = new ArrayList<>();
+
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
+    @Enumerated(EnumType.STRING)
+    private Disability disability;
+
+    @ManyToOne
+    @JoinColumn(name="ethnicity_id", referencedColumnName = "id")
+    private Ethnicity ethnicity;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
+    private Profile profile;
 
     public User() {
         // no-arg constructor
@@ -162,8 +177,7 @@ public class User implements Serializable {
         }
 
         stringBuilder
-                .append(lastName)
-                .toString();
+                .append(lastName);
 
         return stringBuilder.toString();
     }
@@ -237,4 +251,35 @@ public class User implements Serializable {
         this.status = status;
     }
 
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
+
+    public Disability getDisability() {
+        return disability;
+    }
+
+    public void setDisability(Disability disability) {
+        this.disability = disability;
+    }
+
+    public Ethnicity getEthnicity() {
+        return ethnicity;
+    }
+
+    public void setEthnicity(Ethnicity ethnicity) {
+        this.ethnicity = ethnicity;
+    }
+    public Profile getProfile() {
+        return profile;
+    }
+
+    public void setProfile(Profile profile) {
+        this.profile = profile;
+        profile.setUser(this);
+    }
 }

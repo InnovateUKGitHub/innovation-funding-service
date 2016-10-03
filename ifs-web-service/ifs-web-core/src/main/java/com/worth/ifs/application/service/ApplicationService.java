@@ -1,11 +1,11 @@
 package com.worth.ifs.application.service;
 
-import java.util.List;
-import java.util.Map;
-
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.user.resource.OrganisationResource;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Interface for CRUD operations on {@link ApplicationResource} related data.
@@ -23,4 +23,5 @@ public interface ApplicationService {
     int getAssignedQuestionsCount(Long applicantId, Long processRoleId);
     RestResult<ApplicationResource> findByProcessRoleId(Long id);
     OrganisationResource getLeadOrganisation(Long applicationId);
+    void removeCollaborator(Long applicationInviteId);
 }

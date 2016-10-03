@@ -13,13 +13,15 @@ import com.worth.ifs.monitoringofficer.viewmodel.ProjectMonitoringOfficerViewMod
 import com.worth.ifs.project.builder.ProjectResourceBuilder;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.project.resource.ProjectTeamStatusResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import org.junit.Test;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -33,8 +35,12 @@ import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
+import static com.worth.ifs.project.builder.ProjectLeadStatusResourceBuilder.newProjectLeadStatusResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+import static com.worth.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
+import static com.worth.ifs.project.constant.ProjectActivityStates.COMPLETE;
+import static com.worth.ifs.project.constant.ProjectActivityStates.PENDING;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static com.worth.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
 import static java.util.Arrays.asList;
@@ -84,8 +90,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
             withName("My Project").
             withApplication(applicationId).
             withAddress(projectAddress).
-            withTargetStartDate(LocalDate.of(2017, 01, 05)).
-            withSubmittedDate(LocalDateTime.of(2016, 07, 04, 11, 2));
+            withTargetStartDate(LocalDate.of(2017, 01, 05));
 
     @Test
     public void testViewMonitoringOfficerPage() throws Exception {
@@ -154,9 +159,16 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
     @Test
     public void testViewMonitoringOfficerPageButProjectDetailsNotYetSubmitted() throws Exception {
 
-        ProjectResource project = projectBuilder.withSubmittedDate().build();
+        ProjectResource project = projectBuilder.build();
+
+        ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
+                withProjectLeadStatus(newProjectLeadStatusResource().
+                        withProjectDetailsStatus(PENDING).
+                        build()).
+                build();
 
         when(projectService.getById(123L)).thenReturn(project);
+        when(projectService.getProjectTeamStatus(123L, Optional.empty())).thenReturn(teamStatus);
 
         mockMvc.perform(get("/project/123/monitoring-officer")).
                 andExpect(view().name("forbidden")).
@@ -228,9 +240,16 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
     @Test
     public void testEditMonitoringOfficerPageButProjectDetailsNotYetSubmitted() throws Exception {
 
-        ProjectResource project = projectBuilder.withSubmittedDate().build();
+        ProjectResource project = projectBuilder.build();
+
+        ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
+                withProjectLeadStatus(newProjectLeadStatusResource().
+                        withProjectDetailsStatus(PENDING).
+                        build()).
+                build();
 
         when(projectService.getById(123L)).thenReturn(project);
+        when(projectService.getProjectTeamStatus(123L, Optional.empty())).thenReturn(teamStatus);
 
         mockMvc.perform(get("/project/123/monitoring-officer/edit")).
                 andExpect(view().name("forbidden")).
@@ -302,20 +321,32 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
         assertEquals("", form.getPhoneNumber());
 
         BindingResult bindingResult = form.getBindingResult();
-        assertEquals(5, bindingResult.getFieldErrorCount());
+        assertEquals(6, bindingResult.getFieldErrorCount());
         assertEquals("NotEmpty", bindingResult.getFieldError("firstName").getCode());
         assertEquals("NotEmpty", bindingResult.getFieldError("lastName").getCode());
         assertEquals("Email", bindingResult.getFieldError("emailAddress").getCode());
-        assertTrue(asList("NotEmpty", "Size").contains(bindingResult.getFieldErrors("phoneNumber").get(0).getCode()));
-        assertTrue(asList("NotEmpty", "Size").contains(bindingResult.getFieldErrors("phoneNumber").get(1).getCode()));
+
+        List<FieldError> phoneNumberErrors = new ArrayList<>(bindingResult.getFieldErrors("phoneNumber"));
+        phoneNumberErrors.sort((o1, o2) -> o1.getCode().compareTo(o2.getCode()));
+
+        assertEquals("NotEmpty", phoneNumberErrors.get(0).getCode());
+        assertEquals("Pattern", phoneNumberErrors.get(1).getCode());
+        assertEquals("Size", phoneNumberErrors.get(2).getCode());
     }
 
     @Test
     public void testConfirmMonitoringOfficerButProjectDetailsNotYetSubmitted() throws Exception {
 
-        ProjectResource project = projectBuilder.withSubmittedDate().build();
+        ProjectResource project = projectBuilder.build();
+
+        ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
+                withProjectLeadStatus(newProjectLeadStatusResource().
+                        withProjectDetailsStatus(PENDING).
+                        build()).
+                build();
 
         when(projectService.getById(123L)).thenReturn(project);
+        when(projectService.getProjectTeamStatus(123L, Optional.empty())).thenReturn(teamStatus);
 
         mockMvc.perform(post("/project/123/monitoring-officer/confirm").
                 param("firstName", "First").
@@ -329,7 +360,14 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
     @Test
     public void testAssignMonitoringOfficer() throws Exception {
 
+        ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
+                withProjectLeadStatus(newProjectLeadStatusResource().
+                        withProjectDetailsStatus(COMPLETE).
+                        build()).
+                build();
+
         when(projectService.getById(123L)).thenReturn(projectBuilder.build());
+        when(projectService.getProjectTeamStatus(123L, Optional.empty())).thenReturn(teamStatus);
 
         when(projectService.updateMonitoringOfficer(123L, "First", "Last", "asdf@asdf.com", "1234567890")).thenReturn(serviceSuccess());
 
@@ -390,9 +428,16 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
     @Test
     public void testAssignMonitoringOfficerButProjectDetailsNotYetSubmitted() throws Exception {
 
-        ProjectResource project = projectBuilder.withSubmittedDate().build();
+        ProjectResource project = projectBuilder.build();
+
+        ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
+                withProjectLeadStatus(newProjectLeadStatusResource().
+                        withProjectDetailsStatus(PENDING).
+                        build()).
+                build();
 
         when(projectService.getById(123L)).thenReturn(project);
+        when(projectService.getProjectTeamStatus(123L, Optional.empty())).thenReturn(teamStatus);
 
         mockMvc.perform(post("/project/123/monitoring-officer/assign").
                 param("firstName", "First").
@@ -442,11 +487,16 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
 
         BindingResult bindingResult = form.getBindingResult();
 
-        assertEquals(4, bindingResult.getFieldErrorCount());
+        assertEquals(5, bindingResult.getFieldErrorCount());
         assertEquals("NotEmpty", bindingResult.getFieldError("firstName").getCode());
         assertEquals("NotEmpty", bindingResult.getFieldError("lastName").getCode());
         assertEquals("Email", bindingResult.getFieldError("emailAddress").getCode());
-        assertEquals("Size", bindingResult.getFieldError("phoneNumber").getCode());
+
+        List<FieldError> phoneNumberErrors = new ArrayList<>(bindingResult.getFieldErrors("phoneNumber"));
+        phoneNumberErrors.sort((o1, o2) -> o1.getCode().compareTo(o2.getCode()));
+
+        assertEquals("Pattern", phoneNumberErrors.get(0).getCode());
+        assertEquals("Size", phoneNumberErrors.get(1).getCode());
     }
 
     private void assertMonitoringOfficerFormPrepopulatedFromExistingMonitoringOfficer(Map<String, Object> modelMap) {
@@ -459,6 +509,12 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
 
     private void setupViewMonitoringOfficerTestExpectations(ProjectResource project, boolean existingMonitoringOfficer) {
 
+        ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
+                withProjectLeadStatus(newProjectLeadStatusResource().
+                        withProjectDetailsStatus(COMPLETE).
+                        build()).
+                build();
+
         Optional<MonitoringOfficerResource> monitoringOfficerToUse = existingMonitoringOfficer ? Optional.of(mo) : Optional.empty();
         when(projectService.getMonitoringOfficerForProject(projectId)).thenReturn(monitoringOfficerToUse);
 
@@ -467,7 +523,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
         when(competitionService.getById(competitionId)).thenReturn(competition);
         when(applicationSummaryService.getCompetitionSummaryByCompetitionId(competitionId)).thenReturn(competitionSummary);
         when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(newOrganisationResource().withName("Partner Org 1", "Partner Org 2").build(2));
-
+        when(projectService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(teamStatus);
         List<ProjectUserResource> projectUsers = newProjectUserResource().with(id(999L)).withUserName("Dave Smith").
                 withRoleName(PROJECT_MANAGER.getName()).build(1);
 

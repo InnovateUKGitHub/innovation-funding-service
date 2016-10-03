@@ -41,14 +41,14 @@ public class OrganisationServiceSecurityTest extends BaseServiceSecurityTest<Org
     }
 
     @Override
-    protected Class<? extends OrganisationService> getServiceClass() {
+    protected Class<? extends OrganisationService> getClassUnderTest() {
         return TestOrganisationService.class;
     }
 
     @Test
     public void testFindByApplicationId() {
 
-        ServiceResult<Set<OrganisationResource>> results = service.findByApplicationId(1L);
+        ServiceResult<Set<OrganisationResource>> results = classUnderTest.findByApplicationId(1L);
         assertEquals(0, results.getSuccessObject().size());
 
         verify(rules, times(2)).systemRegistrationUserCanSeeOrganisationsNotYetConnectedToApplications(isA(OrganisationResource.class), eq(getLoggedInUser()));
@@ -62,7 +62,7 @@ public class OrganisationServiceSecurityTest extends BaseServiceSecurityTest<Org
 
     @Test
     public void testFindById() {
-        assertAccessDenied(() -> service.findById(1L), () -> {
+        assertAccessDenied(() -> classUnderTest.findById(1L), () -> {
             verify(rules).systemRegistrationUserCanSeeOrganisationsNotYetConnectedToApplications(isA(OrganisationResource.class), eq(getLoggedInUser()));
             verify(rules).memberOfOrganisationCanViewOwnOrganisation(isA(OrganisationResource.class), eq(getLoggedInUser()));
             verify(rules).usersCanViewOrganisationsOnTheirOwnApplications(isA(OrganisationResource.class), eq(getLoggedInUser()));
@@ -75,7 +75,7 @@ public class OrganisationServiceSecurityTest extends BaseServiceSecurityTest<Org
 
     @Test
     public void testCreate() {
-        assertAccessDenied(() -> service.create(newOrganisationResource().build()), () -> {
+        assertAccessDenied(() -> classUnderTest.create(newOrganisationResource().build()), () -> {
             verify(rules).systemRegistrationUserCanCreateOrganisations(isA(OrganisationResource.class), eq(getLoggedInUser()));
             verifyNoMoreInteractions(rules);
         });
@@ -83,9 +83,10 @@ public class OrganisationServiceSecurityTest extends BaseServiceSecurityTest<Org
 
     @Test
     public void testUpdate() {
-        assertAccessDenied(() -> service.update(newOrganisationResource().build()), () -> {
+        assertAccessDenied(() -> classUnderTest.update(newOrganisationResource().build()), () -> {
             verify(rules).systemRegistrationUserCanUpdateOrganisationsNotYetConnectedToApplicationsOrUsers(isA(OrganisationResource.class), eq(getLoggedInUser()));
             verify(rules).memberOfOrganisationCanUpdateOwnOrganisation(isA(OrganisationResource.class), eq(getLoggedInUser()));
+            verify(rules).projectFinanceUserCanUpdateAnyOrganisation(isA(OrganisationResource.class), eq(getLoggedInUser()));
             verifyNoMoreInteractions(rules);
         });
     }
@@ -95,9 +96,10 @@ public class OrganisationServiceSecurityTest extends BaseServiceSecurityTest<Org
 
         when(lookup.findOrganisationById(123L)).thenReturn(newOrganisationResource().build());
 
-        assertAccessDenied(() -> service.addAddress(123L, REGISTERED, newAddressResource().build()), () -> {
+        assertAccessDenied(() -> classUnderTest.addAddress(123L, REGISTERED, newAddressResource().build()), () -> {
             verify(rules).systemRegistrationUserCanUpdateOrganisationsNotYetConnectedToApplicationsOrUsers(isA(OrganisationResource.class), eq(getLoggedInUser()));
             verify(rules).memberOfOrganisationCanUpdateOwnOrganisation(isA(OrganisationResource.class), eq(getLoggedInUser()));
+            verify(rules).projectFinanceUserCanUpdateAnyOrganisation(isA(OrganisationResource.class), eq(getLoggedInUser()));
             verifyNoMoreInteractions(rules);
         });
     }
@@ -105,7 +107,7 @@ public class OrganisationServiceSecurityTest extends BaseServiceSecurityTest<Org
     @Test
     public void testSearchAcademic() {
 
-        ServiceResult<List<OrganisationSearchResult>> results = service.searchAcademic("Univer", 10);
+        ServiceResult<List<OrganisationSearchResult>> results = classUnderTest.searchAcademic("Univer", 10);
         assertEquals(0, results.getSuccessObject().size());
 
         verify(rules, times(2)).systemRegistrationUserCanSeeOrganisationSearchResults(isA(OrganisationSearchResult.class), eq(getLoggedInUser()));
@@ -114,7 +116,7 @@ public class OrganisationServiceSecurityTest extends BaseServiceSecurityTest<Org
 
     @Test
     public void testGetSearchOrganisation() {
-        assertAccessDenied(() -> service.getSearchOrganisation(1L), () -> {
+        assertAccessDenied(() -> classUnderTest.getSearchOrganisation(1L), () -> {
             verify(rules).systemRegistrationUserCanSeeOrganisationSearchResults(isA(OrganisationSearchResult.class), eq(getLoggedInUser()));
             verifyNoMoreInteractions(rules);
         });
@@ -143,6 +145,11 @@ public class OrganisationServiceSecurityTest extends BaseServiceSecurityTest<Org
 
         @Override
         public ServiceResult<OrganisationResource> update(OrganisationResource organisationResource) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<OrganisationResource> updateOrganisationNameAndRegistration(Long organisationId, String organisationName, String registrationNumber) {
             return null;
         }
 

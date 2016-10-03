@@ -4,6 +4,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 
 /**
  * Form for the initial details competition setup section.
@@ -13,16 +14,18 @@ public class InitialDetailsForm extends CompetitionSetupForm {
     @NotNull(message = "{validation.initialdetailsform.executiveuserid.required}")
     private Long executiveUserId;
 
+    private LocalDateTime openingDate;
+
     @NotNull(message = "{validation.initialdetailsform.openingdateday.required}")
     @Range(min=1, max=31, message= "{validation.initialdetailsform.openingdateday.range}")
     private Integer openingDateDay;
 
     @NotNull(message = "{validation.initialdetailsform.openingdatemonth.required}")
-    @Range(min=1, max=12, message= "{validation.InitialDetailsForm.openingdatemonth.range}")
+    @Range(min=1, max=12, message= "{validation.initialdetailsform.openingdatemonth.range}")
     private Integer openingDateMonth;
 
     @NotNull(message = "{validation.initialdetailsform.openingdateyear.required}")
-    @Range(min=1900, max=9000, message= "{validation.InitialDetailsForm.openingdateyear.range}")
+    @Range(min=1900, max=9999, message= "{validation.initialdetailsform.openingdateyear.range}")
     private Integer openingDateYear;
 
     @NotEmpty(message = "{validation.standard.title.required}")
@@ -46,6 +49,14 @@ public class InitialDetailsForm extends CompetitionSetupForm {
 
     public void setExecutiveUserId(Long executiveUserId) {
         this.executiveUserId = executiveUserId;
+    }
+
+    public LocalDateTime getOpeningDate() {
+        return openingDate;
+    }
+
+    public void setOpeningDate(LocalDateTime openingDate) {
+        this.openingDate = openingDate;
     }
 
     public Integer getOpeningDateDay() {

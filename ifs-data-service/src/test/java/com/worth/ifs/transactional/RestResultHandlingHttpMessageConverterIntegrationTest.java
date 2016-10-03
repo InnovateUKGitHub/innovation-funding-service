@@ -8,7 +8,7 @@ import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestErrorResponse;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.UserAuthenticationService;
-import com.worth.ifs.security.SecuritySetter;
+import com.worth.ifs.commons.security.SecuritySetter;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.mapper.UserMapper;
 import com.worth.ifs.user.repository.UserRepository;
@@ -27,7 +27,7 @@ import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
 import java.util.concurrent.Future;
 
-import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_FORBIDDEN;
+import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION;
 import static com.worth.ifs.commons.security.UidAuthenticationService.AUTH_TOKEN;
 import static com.worth.ifs.commons.service.HttpHeadersUtils.getJSONHeaders;
 import static org.junit.Assert.*;
@@ -92,7 +92,7 @@ public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseW
 
             assertEquals(FORBIDDEN, e.getStatusCode());
             RestErrorResponse restErrorResponse = new ObjectMapper().readValue(e.getResponseBodyAsString(), RestErrorResponse.class);
-            Error expectedError = new Error(GENERAL_FORBIDDEN, "This action is not permitted.", null);
+            Error expectedError = new Error(GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION.name(), null);
             RestErrorResponse expectedResponse = new RestErrorResponse(expectedError);
             assertEquals(expectedResponse, restErrorResponse);
         }

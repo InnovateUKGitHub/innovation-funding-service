@@ -12,7 +12,6 @@ import com.worth.ifs.validator.util.ValidationUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.HtmlUtils;
@@ -34,9 +33,6 @@ public class FormInputResponseController {
 
     @Autowired
     private ValidationUtil validationUtil;
-
-    @Autowired
-    private MessageSource messageSource;
 
     private static final Log LOG = LogFactory.getLog(FormInputResponseController.class);
 
@@ -71,7 +67,7 @@ public class FormInputResponseController {
             formInputResponseRepository.save(response);
             LOG.debug("Single question saved!");
 
-            return new ValidationMessages(messageSource, null, bindingResult);
+            return new ValidationMessages(bindingResult);
         });
 
         return result.toPutWithBodyResponse();

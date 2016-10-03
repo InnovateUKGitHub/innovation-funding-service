@@ -14,17 +14,17 @@
                 
                 <p>To receive Innovate UK funding, your academic organisation must apply for funding through the Je-S system. To find out more about the Je-S requirements and processes please go to the <a href="#">Je-S website</a>.</p>
 
-                <p>All finances need to be provided before this application can be submitted. If there are any finances outstanding at the competition deadline this application will not be submitted into this competition.</p>
+                <p>You cannot submit this application into a competition if there are any outstanding finances at the competition deadline.</p>
 
                 <h3 class="heading-small">Your project costs</h3>
 
-                <p>Provide key figures from the Je-S form here to allow your partners to see the overall project costs and contribution required from Innovate UK.</p>
+                <p>Provide your main figures from the Je-S form here.  This will allow your partners to see the overall project costs and contribution required from Innovate UK.</p>
 
                 <p>Enter the figures from the following fields on the Je-S form:</p>
 
             </th:block>
 
-            <div class="form-group">
+            <div class="form-group" th:unless="${type == 'checks'}">
                 <label class="form-label" for="tsb-ref">
                     <span class="form-label-bold">TSB reference
                         <span class="form-hint">This number is found at the top of your Je-S form.</span>
@@ -33,6 +33,7 @@
                 </label>
                 <input class="form-control" id="tsb-ref" type="text" th:value="${(user == 'internal' ? 'BBT-564' : '')}" th:readonly="${param.status == null or param.status[0] != 'edit-academic'}" />
             </div>
+
         </fieldset>
         <fieldset class="form-inline">
             <h2 class="heading-medium no-margin">Financial resources</h2>
@@ -44,7 +45,7 @@
                     <span class="form-label-bold">Directly incurred
                     </span>
                 </span>
-                <span class="form-text form-label-bold">TSB Contribution (please refer to the TSB contribution column).</span>
+                <span class="form-text form-label-bold">TSB contribution (please refer to the TSB contribution column).</span>
             </div>
 
             <div class="form-group">
@@ -52,7 +53,11 @@
                     <span>Staff
                     </span>
                 </label>
-                <input class="form-control" id="staff" type="text" th:value="${(user == 'internal' ? '&pound;50,000' : '')}" th:readonly="${param.status == null or param.status[0] != 'edit-academic'}"/>
+
+                <input class="form-control" id="staff" type="text" th:value="${(user == 'internal' ? '&pound;50,000' : '')}" th:readonly="${param.status == null or param.status[0] != 'edit-academic'}" th:unless="${type == 'checks'}"/>
+
+                <input class="form-control" id="staff" type="text" th:value="${(user == 'internal' and param.status != null and param.status[0] == 'approved' ? '&pound;50,000' : '')}" th:unless="${type != 'checks'}"/>
+
             </div>
 
             <div class="form-group">
@@ -60,7 +65,11 @@
                     <span>Travel and subsistence
                     </span>
                 </label>
-                <input class="form-control" id="travel" type="text" th:value="${(user == 'internal' ? '&pound;1,000' : '')}" th:readonly="${param.status == null or param.status[0] != 'edit-academic'}" />
+                <input class="form-control" id="travel" type="text" th:value="${(user == 'internal' ? '&pound;1,000' : '')}" th:readonly="${param.status == null or param.status[0] != 'edit-academic'}" th:unless="${type == 'checks'}" />
+
+                <input class="form-control" id="travel" type="text" th:value="${(user == 'internal' and param.status != null and param.status[0] == 'approved' ? '&pound;1,000' : '')}" th:unless="${type != 'checks'}" />
+
+
             </div>
 
             <div class="form-group">
@@ -68,7 +77,9 @@
                     <span>Other costs
                     </span>
                 </label>
-                <input class="form-control" id="other" type="text" th:value="${(user == 'internal' ? '&pound;0' : '')}" th:readonly="${param.status == null or param.status[0] != 'edit-academic'}" />
+                <input class="form-control" id="other" type="text" th:value="${(user == 'internal' ? '&pound;0' : '')}" th:readonly="${param.status == null or param.status[0] != 'edit-academic'}" th:unless="${type == 'checks'}" />
+
+                <input class="form-control" id="other" type="text" th:value="${(user == 'internal' and param.status != null and param.status[0] == 'approved' ? '&pound;0' : '')}" th:unless="${type != 'checks'}" />
             </div>
 
             <div class="form-group">
@@ -76,7 +87,11 @@
                     <span class="form-label-bold">Subtotal
                     </span>
                 </span>
-                <span class="form-control" th:text="${(user == 'internal' ? '&pound;50,000' : '*Calculated figure from above numbers*')}">*Calculated figure from above numbers*</span>
+
+                <span class="form-control" th:text="${(user == 'internal' ? '&pound;50,000' : '*Calculated figure from above numbers*')}" th:unless="${type == 'checks'}">*Calculated figure from above numbers*</span>
+
+                <span class="form-control" th:text="${(user == 'internal' and param.status != null and param.status[0] == 'approved' ? '&pound;50,000' : '*Calculated figure from above numbers*')}" th:unless="${type != 'checks'}">*Calculated figure from above numbers*</span>
+
             </div>
         </fieldset>
 
@@ -97,7 +112,9 @@
                     <span>Investigators
                     </span>
                 </label>
-                <input class="form-control" id="investigators" type="text" th:value="${(user == 'internal' ? '&pound;2,000' : '')}" th:readonly="${param.status == null or param.status[0] != 'edit-academic'}" />
+                <input class="form-control" id="investigators" type="text" th:value="${(user == 'internal' ? '&pound;2,000' : '')}" th:readonly="${param.status == null or param.status[0] != 'edit-academic'}" th:unless="${type == 'checks'}"/>
+
+                <input class="form-control" id="investigators" type="text" th:value="${(user == 'internal' and param.status != null and param.status[0] == 'approved' ? '&pound;2,000' : '')}" th:unless="${type != 'checks'}" />
             </div>
 
             <div class="form-group">
@@ -105,7 +122,11 @@
                     <span>Estates costs
                     </span>
                 </label>
-                <input class="form-control" id="estates" type="text" th:value="${(user == 'internal' ? '&pound;2,000' : '')}" th:readonly="${param.status == null or param.status[0] != 'edit-academic'}" />
+                <input class="form-control" id="estates" type="text" th:value="${(user == 'internal' ? '&pound;2,000' : '')}" th:readonly="${param.status == null or param.status[0] != 'edit-academic'}" th:unless="${type == 'checks'}"/>
+
+                <input class="form-control" id="estates" type="text" th:value="${(user == 'internal' and param.status != null and param.status[0] == 'approved' ? '&pound;2,000' : '')}" th:readonly="${param.status == null or param.status[0] != 'edit-academic'}" th:unless="${type != 'checks'}"/>
+
+
             </div>
 
             <div class="form-group">
@@ -113,7 +134,9 @@
                     <span>Other costs
                     </span>
                 </label>
-                <input class="form-control" id="other-direct" type="text" th:value="${(user == 'internal' ? '&pound;2,000' : '')}" th:readonly="${param.status == null or param.status[0] != 'edit-academic'}" />
+                <input class="form-control" id="other-direct" type="text" th:value="${(user == 'internal' ? '&pound;2,000' : '')}" th:readonly="${param.status == null or param.status[0] != 'edit-academic'}" th:unless="${type == 'checks'}"/>
+
+                <input class="form-control" id="other-direct" type="text" th:value="${(user == 'internal' and param.status != null and param.status[0] == 'approved' ? '&pound;2,000' : '')}" th:unless="${type != 'checks'}"/>
             </div>
 
             <div class="form-group">
@@ -121,7 +144,9 @@
                     <span class="form-label-bold">Subtotal
                     </span>
                 </span>
-                <span class="form-control" th:text="${(user == 'internal' ? '&pound;6,000' : '*Calculated figure from above numbers*')}">*Calculated figure from above numbers*</span>
+                <span class="form-control" th:text="${(user == 'internal' ? '&pound;6,000' : '*Calculated figure from above numbers*')}" th:unless="${type == 'checks'}">*Calculated figure from above numbers*</span>
+
+                <span class="form-control" th:text="${(user == 'internal' and param.status != null and param.status[0] == 'approved' ? '&pound;6,000' : '*Calculated figure from above numbers*')}" th:unless="${type != 'checks'}">*Calculated figure from above numbers*</span>
             </div>
         </fieldset>
 
@@ -133,7 +158,9 @@
                     <span class="form-label-bold">Indirect costs
                     </span>
                 </label>
-                <input class="form-control" id="indirect" type="text" th:value="${(user == 'internal' ? '&pound;1,000' : '')}" th:readonly="${param.status == null or param.status[0] != 'edit-academic'}" />
+                <input class="form-control" id="indirect" type="text" th:value="${(user == 'internal' ? '&pound;1,000' : '')}" th:readonly="${param.status == null or param.status[0] != 'edit-academic'}" th:unless="${type == 'checks'}" />
+
+                <input class="form-control" id="indirect" type="text" th:value="${(user == 'internal' and param.status != null and param.status[0] == 'approved' ? '&pound;1,000' : '')}" th:unless="${type != 'checks'}" />
             </div>
 
          </fieldset>
@@ -153,7 +180,9 @@
                     <span>Staff
                     </span>
                 </label>
-                <input class="form-control" id="exceptions-staff" type="text" th:value="${(user == 'internal' ? '&pound;1,000' : '')}" th:readonly="${param.status == null or param.status[0] != 'edit-academic'}" />
+                <input class="form-control" id="exceptions-staff" type="text" th:value="${(user == 'internal' ? '&pound;1,000' : '')}" th:readonly="${param.status == null or param.status[0] != 'edit-academic'}" th:unless="${type == 'checks'}" />
+
+                <input class="form-control" id="exceptions-staff" type="text" th:value="${(user == 'internal' and param.status != null and param.status[0] == 'approved' ? '&pound;1,000' : '')}" th:unless="${type != 'checks'}" />
             </div>
 
             <div class="form-group">
@@ -161,7 +190,9 @@
                     <span>Other costs
                     </span>
                 </label>
-                <input class="form-control" id="exceptions-other-direct" type="text" th:value="${(user == 'internal' ? '&pound;1,000' : '')}" th:readonly="${param.status == null or param.status[0] != 'edit-academic'}" />
+                <input class="form-control" id="exceptions-other-direct" type="text" th:value="${(user == 'internal' ? '&pound;1,000' : '')}" th:readonly="${param.status == null or param.status[0] != 'edit-academic'}" th:unless="${type == 'checks'}" />
+
+                <input class="form-control" id="exceptions-other-direct" type="text" th:value="${(user == 'internal' and param.status != null and param.status[0] == 'approved' ? '&pound;1,000' : '')}"  th:unless="${type != 'checks'}" />
             </div>
 
             <div class="form-group">
@@ -169,7 +200,9 @@
                     <span class="form-label-bold">Subtotal
                     </span>
                 </span>
-                <span class="form-control" th:text="${(user == 'internal' ? '&pound;2,000' : '*Calculated figure from above numbers*')}">*Calculated figure from above numbers*</span>
+                <span class="form-control" th:text="${(user == 'internal' ? '&pound;2,000' : '*Calculated figure from above numbers*')}" th:unless="${type == 'checks'}">*Calculated figure from above numbers*</span>
+
+                <span class="form-control" th:text="${(user == 'internal' and param.status != null and param.status[0] == 'approved' ? '&pound;2,000' : '*Calculated figure from above numbers*')}" th:unless="${type != 'checks'}">*Calculated figure from above numbers *</span>
             </div>
 
             <div class="form-group totals">
@@ -177,7 +210,9 @@
                     <span class="form-label-bold">Total
                     </span>
                 </span>
-                <span class="form-control" th:text="${(user == 'internal' ? '&pound;60,000' : '*Calculated figure from above numbers*')}">*&pound; Calculated figure from above numbers*</span>
+                <span class="form-control" th:text="${(user == 'internal' ? '&pound;60,000' : '*Calculated figure from above numbers*')}" th:unless="${type == 'checks'}">*&pound; Calculated figure from above numbers*</span>
+
+                <span class="form-control" th:text="${(user == 'internal' and param.status != null and param.status[0] == 'approved' ? '&pound;60,000' : '*Calculated figure from above numbers*')}" th:unless="${type != 'checks'}">*&pound; Calculated figure from above numbers*</span>
             </div>
 
           </fieldset>
@@ -186,7 +221,7 @@
 
     </form>
     
-    <div class="alignright extra-margin" th:unless="${param.status != null and param.status[0] == 'approved' or user == 'partner' or type == 'partnerView'}">
+    <div class="alignright extra-margin" th:unless="${param.status != null and param.status[0] == 'approved' or user == 'partner' or type == 'partnerView' or type == 'checks'}">
         <th:block th:if="${param.status == null or param.status[0] != 'edit-academic'}">
             <a th:href="@{'?status=edit-academic'}" class="button button-secondary">Edit</a>
         </th:block>

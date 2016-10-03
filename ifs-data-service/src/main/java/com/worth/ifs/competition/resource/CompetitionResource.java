@@ -6,12 +6,13 @@ import com.worth.ifs.application.resource.ApplicationResource;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static java.time.temporal.ChronoUnit.DAYS;
 
 public class CompetitionResource {
     public static final ChronoUnit CLOSING_SOON_CHRONOUNIT = ChronoUnit.HOURS;
@@ -24,7 +25,7 @@ public class CompetitionResource {
     private List<Long> questions = new ArrayList<>();
     private List<Long> sections = new ArrayList<>();
     private List<Long> milestones = new ArrayList<>();
-    private List<CompetitionCoFunderResource> coFunders = new ArrayList<>();
+    private List<CompetitionFunderResource> funders = new ArrayList<>();
 
     private String name;
     private String description;
@@ -54,7 +55,8 @@ public class CompetitionResource {
     private String budgetCode;
     private String code;
 
-    private boolean multiStream;
+    private Boolean resubmission;
+    private Boolean multiStream;
     private String streamName;
     private CollaborationLevel collaborationLevel;
     private LeadApplicantType leadApplicantType;
@@ -64,9 +66,6 @@ public class CompetitionResource {
 
     private String activityCode;
     private String innovateBudget;
-    private String funder;
-    private BigDecimal funderBudget;
-
 
     public CompetitionResource() {
         // no-arg constructor
@@ -164,15 +163,16 @@ public class CompetitionResource {
     }
 
     public String assementEndDateDisplay() {
-        if (getAssessmentEndDate() != null) {
-            return getAssessmentEndDate().format(ASSESSMENT_DATE_FORMAT);
-        }
-        return "";
+        return displayDate(getAssessmentEndDate(), ASSESSMENT_DATE_FORMAT);
     }
 
     public String startDateDisplay() {
-        if (getStartDate() != null) {
-            return getStartDate().format(START_DATE_FORMAT);
+        return displayDate(getStartDate(), START_DATE_FORMAT);
+    }
+
+    private String displayDate(LocalDateTime date, DateTimeFormatter formatter) {
+        if (date != null) {
+            return date.format(formatter);
         }
         return "";
     }
@@ -199,17 +199,17 @@ public class CompetitionResource {
 
     @JsonIgnore
     public long getDaysLeft() {
-        return getDaysBetween(LocalDateTime.now(), this.endDate);
+        return DAYS.between(LocalDateTime.now(), this.endDate);
     }
 
     @JsonIgnore
     public long getAssessmentDaysLeft() {
-        return getDaysBetween(LocalDateTime.now(), this.assessmentEndDate);
+        return DAYS.between(LocalDateTime.now(), this.assessmentEndDate);
     }
 
     @JsonIgnore
     public long getTotalDays() {
-        return getDaysBetween(this.startDate, this.endDate);
+        return DAYS.between(this.startDate, this.endDate);
     }
 
     @JsonIgnore
@@ -218,12 +218,9 @@ public class CompetitionResource {
         return isOpen() && hoursToGo < CLOSING_SOON_AMOUNT;
     }
 
-
-    /* Keep it D.R.Y */
-
     @JsonIgnore
     public long getAssessmentTotalDays() {
-        return getDaysBetween(this.assessmentStartDate, this.assessmentEndDate);
+        return DAYS.between(this.assessmentStartDate, this.assessmentEndDate);
     }
 
     @JsonIgnore
@@ -254,11 +251,7 @@ public class CompetitionResource {
         this.questions = questions;
     }
 
-    private long getDaysBetween(LocalDateTime dateA, LocalDateTime dateB) {
-        return ChronoUnit.DAYS.between(dateA, dateB);
-    }
-
-    private long getDaysLeftPercentage(long daysLeft, long totalDays) {
+    private static long getDaysLeftPercentage(long daysLeft, long totalDays) {
         if (daysLeft <= 0) {
             return 100;
         }
@@ -393,12 +386,20 @@ public class CompetitionResource {
         this.milestones = milestones;
     }
 
-    public boolean isMultiStream() {
+    public Boolean isMultiStream() {
         return multiStream;
     }
 
-    public void setMultiStream(boolean multiStream) {
+    public void setMultiStream(Boolean multiStream) {
         this.multiStream = multiStream;
+    }
+
+    public Boolean getResubmission() {
+        return resubmission;
+    }
+
+    public void setResubmission(Boolean resubmission) {
+        this.resubmission = resubmission;
     }
 
     public String getStreamName() {
@@ -434,7 +435,7 @@ public class CompetitionResource {
     }
 
     public enum Status {
-        COMPETITION_SETUP, COMPETITION_SETUP_FINISHED, NOT_STARTED, OPEN, CLOSED, IN_ASSESSMENT, FUNDERS_PANEL, ASSESSOR_FEEDBACK, PROJECT_SETUP
+        COMPETITION_SETUP,READY_TO_OPEN,OPEN,CLOSED,IN_ASSESSMENT,FUNDERS_PANEL,ASSESSOR_FEEDBACK,PROJECT_SETUP
     }
 
     public String getActivityCode() {
@@ -453,27 +454,11 @@ public class CompetitionResource {
         this.innovateBudget = innovateBudget;
     }
 
-    public String getFunder() {
-        return funder;
+    public List<CompetitionFunderResource> getFunders() {
+        return funders;
     }
 
-    public void setFunder(String funder) {
-        this.funder = funder;
-    }
-
-    public BigDecimal getFunderBudget() {
-        return funderBudget;
-    }
-
-    public void setFunderBudget(BigDecimal funderBudget) {
-        this.funderBudget = funderBudget;
-    }
-
-    public List<CompetitionCoFunderResource> getCoFunders() {
-        return coFunders;
-    }
-
-    public void setCoFunders(List<CompetitionCoFunderResource> coFunders) {
-        this.coFunders = coFunders;
+    public void setFunders(List<CompetitionFunderResource> funders) {
+        this.funders = funders;
     }
 }

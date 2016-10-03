@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.worth.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
+import static com.worth.ifs.commons.error.CommonErrors.forbiddenError;
+import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -22,9 +24,10 @@ public class AssessorFormInputResponseControllerIntegrationTest extends BaseCont
     }
 
     @Test
-    public void testGetAllAssessorFormInputResponses() throws Exception {
+    public void getAllAssessorFormInputResponses() throws Exception {
         Long assessmentId = 1L;
 
+        loginPaulPlum();
         RestResult<List<AssessorFormInputResponseResource>> found = controller.getAllAssessorFormInputResponses(assessmentId);
 
         assertTrue(found.isSuccess());
@@ -33,10 +36,22 @@ public class AssessorFormInputResponseControllerIntegrationTest extends BaseCont
     }
 
     @Test
-    public void testGetAllAssessorFormInputResponsesByAssessmentAndQuestion() throws Exception {
+    public void getAllAssessorFormInputResponses_notAssessor() throws Exception {
+        Long assessmentId = 1L;
+
+        loginSteveSmith();
+        RestResult<List<AssessorFormInputResponseResource>> result = controller.getAllAssessorFormInputResponses(assessmentId);
+
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(forbiddenError(GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION)));
+    }
+
+    @Test
+    public void getAllAssessorFormInputResponsesByAssessmentAndQuestion() throws Exception {
         Long assessmentId = 1L;
         Long questionId = 1L;
 
+        loginPaulPlum();
         RestResult<List<AssessorFormInputResponseResource>> found = controller.getAllAssessorFormInputResponsesByAssessmentAndQuestion(assessmentId, questionId);
 
         assertTrue(found.isSuccess());
@@ -47,13 +62,26 @@ public class AssessorFormInputResponseControllerIntegrationTest extends BaseCont
     }
 
     @Test
-    public void update() throws Exception {
+    public void getAllAssessorFormInputResponsesByAssessmentAndQuestion_notAssessor() throws Exception {
+        Long assessmentId = 1L;
+        Long questionId = 1L;
+
+        loginSteveSmith();
+        RestResult<List<AssessorFormInputResponseResource>> result = controller.getAllAssessorFormInputResponsesByAssessmentAndQuestion(assessmentId, questionId);
+
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(forbiddenError(GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION)));
+    }
+
+    @Test
+    public void updateFormInputResponse() throws Exception {
         Long assessmentId = 1L;
         Long questionId = 1L;
         Long formInputId = 169L;
         String oldValue = "This is the feedback from Professor Plum for Business opportunity.";
         String newValue = "Feedback";
 
+        loginPaulPlum();
         RestResult<List<AssessorFormInputResponseResource>> allResponsesBeforeResult = controller.getAllAssessorFormInputResponsesByAssessmentAndQuestion(assessmentId, questionId);
         assertTrue(allResponsesBeforeResult.isSuccess());
         List<AssessorFormInputResponseResource> allResponsesBefore = allResponsesBeforeResult.getSuccessObject();
@@ -77,5 +105,23 @@ public class AssessorFormInputResponseControllerIntegrationTest extends BaseCont
         assertTrue(updated.isPresent());
 
         assertEquals(newValue, updated.get().getValue());
+    }
+
+    @Test
+    public void updateFormInputResponse_notTheFormOwner() throws Exception {
+        Long assessmentId = 1L;
+        Long formInputId = 169L;
+        String newValue = "Feedback";
+
+        AssessorFormInputResponseResource updatedAssessorResponse = newAssessorFormInputResponseResource()
+                .withAssessment(assessmentId)
+                .withFormInput(formInputId)
+                .withValue(newValue)
+                .build();
+
+        loginSteveSmith();
+        RestResult<Void> updateResult = controller.updateFormInputResponse(updatedAssessorResponse);
+        assertTrue(updateResult.isFailure());
+        assertTrue(updateResult.getFailure().is(forbiddenError(GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION)));
     }
 }

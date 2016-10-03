@@ -126,22 +126,25 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
         return contentObject(new RestErrorResponse(error));
     }
 
-    protected void assertResponseErrorMessageEqual(String expectedMessage, Error expectedError, MvcResult mvcResult) throws IOException {
+    protected void assertResponseErrorKeyEqual(String expectedKey, Error expectedError, MvcResult mvcResult) throws IOException {
         String content = mvcResult.getResponse().getContentAsString();
         RestErrorResponse restErrorResponse = new ObjectMapper().readValue(content, RestErrorResponse.class);
-        assertErrorMessageEqual(expectedMessage, expectedError, restErrorResponse);
+        assertErrorKeyEqual(expectedKey, expectedError, restErrorResponse);
     }
 
-    private void assertErrorMessageEqual(String expectedMessage, Error expectedError, RestErrorResponse restErrorResponse) {
-        assertEquals(expectedMessage, restErrorResponse.getErrors().get(0).getErrorMessage());
-        assertEqualsUpNoIncludingStatusCode(restErrorResponse, expectedError);
+    private void assertErrorKeyEqual(String expectedErrorKey, Error expectedError, RestErrorResponse restErrorResponse) {
+        assertEquals(expectedErrorKey, restErrorResponse.getErrors().get(0).getErrorKey());
+        assertEqualsUpNoIncludingStatusCode(expectedErrorKey, restErrorResponse, expectedError);
     }
 
     protected void assertEqualsUpNoIncludingStatusCode(final RestErrorResponse restErrorResponse, final Error expectedError){
+        assertEqualsUpNoIncludingStatusCode(restErrorResponse.getErrors().get(0).getErrorKey(), restErrorResponse, expectedError);
+    }
+
+    protected void assertEqualsUpNoIncludingStatusCode(String expectedErrorKey, final RestErrorResponse restErrorResponse, final Error expectedError){
         assertTrue(restErrorResponse.getErrors().size() == 1);
-        assertEquals(restErrorResponse.getErrors().get(0).getErrorMessage(), expectedError.getErrorMessage());
         assertEquals(restErrorResponse.getErrors().get(0).getArguments() , expectedError.getArguments());
-        assertEquals(restErrorResponse.getErrors().get(0).getErrorKey() , expectedError.getErrorKey());
+        assertEquals(expectedErrorKey , expectedError.getErrorKey());
     }
 
     /**
@@ -288,7 +291,7 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
     /**
      * A useful shorthand way of testing a Controller method for simple getting of a file's details (a FileEntryResource)
      */
-    protected <T> ResultActions assertGetFileDetails(String url, Object[] urlParams, Map<String, String> requestParams, T serviceToCall, BiFunction<T, FileEntryResource, ServiceResult<FileEntryResource>> getFileFn) throws Exception {
+    protected <T> ResultActions assertGetFileDetails(String url, Object[] urlParams, Map<String, String> requestParams, T serviceToCall, Function<T, ServiceResult<FileEntryResource>> getFileFn) throws Exception {
 
         FileEntryResource fileToReturn = newFileEntryResource().
                 with(id(456L)).
@@ -297,7 +300,7 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
                 withMediaType("text/plain").
                 build();
 
-        when(getFileFn.apply(serviceToCall, fileToReturn)).thenReturn(serviceSuccess(fileToReturn));
+        when(getFileFn.apply(serviceToCall)).thenReturn(serviceSuccess(fileToReturn));
 
         MockHttpServletRequestBuilder mainRequest = get(url, urlParams).
                 header("IFS_AUTH_TOKEN", "123abc");
@@ -307,7 +310,7 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
                 andExpect(status().isOk()).
                 andExpect(content().json(toJson(fileToReturn)));
 
-        getFileFn.apply(verify(serviceToCall), fileToReturn);
+        getFileFn.apply(verify(serviceToCall));
 
         return resultActions;
     }
@@ -336,14 +339,14 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
     /**
      * A useful shorthand way of testing a Controller method for simple getting of a file's contents (binary data)
      */
-    protected <T> ResultActions assertGetFileContents(String url, Object[] urlParams, Map<String, String> requestParams, T serviceToCall, BiFunction<T, FileEntryResource, ServiceResult<FileAndContents>> getFileFn) throws Exception {
+    protected <T> ResultActions assertGetFileContents(String url, Object[] urlParams, Map<String, String> requestParams, T serviceToCall, Function<T, ServiceResult<FileAndContents>> getFileFn) throws Exception {
 
         FileEntryResource expectedFileEntryResource = newFileEntryResource().build();
 
         Supplier<InputStream> inputStreamSupplier = () -> new ByteArrayInputStream("The returned binary file data".getBytes());
 
         FileAndContents getResult = new BasicFileAndContents(expectedFileEntryResource, inputStreamSupplier);
-        when(getFileFn.apply(serviceToCall, expectedFileEntryResource)).thenReturn(serviceSuccess(getResult));
+        when(getFileFn.apply(serviceToCall)).thenReturn(serviceSuccess(getResult));
 
         MockHttpServletRequestBuilder mainRequest = get(url, urlParams).
                 header("IFS_AUTH_TOKEN", "123abc");

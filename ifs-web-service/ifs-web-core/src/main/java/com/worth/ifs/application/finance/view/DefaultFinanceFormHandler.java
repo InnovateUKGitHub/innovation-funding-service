@@ -75,9 +75,9 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
         List<Error> getFinanceRowItemErrors = flattenLists(simpleMap(invalidItems, validationMessages ->
                 simpleMap(validationMessages.getErrors(), e -> {
                     if(StringUtils.hasText(e.getErrorKey())){
-                        return fieldError("formInput[cost-" + validationMessages.getObjectId() + "-" + e.getFieldName() + "]", e.getFieldRejectedValue(), e.getErrorMessage());
+                        return fieldError("formInput[cost-" + validationMessages.getObjectId() + "-" + e.getFieldName() + "]", e.getFieldRejectedValue(), e.getErrorKey(), e.getArguments());
                     }else{
-                        return fieldError("formInput[cost-" + validationMessages.getObjectId() + "]", e.getFieldRejectedValue(), e.getErrorMessage());
+                        return fieldError("formInput[cost-" + validationMessages.getObjectId() + "]", e.getFieldRejectedValue(), e.getErrorKey(), e.getArguments());
                     }
                 })
         ));
@@ -89,9 +89,9 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
         storedItemErrors.forEach((costId, validationMessages) ->
             validationMessages.getErrors().stream().forEach(e -> {
                 if(StringUtils.hasText(e.getErrorKey())){
-                    errors.addError(fieldError("formInput[cost-" + costId + "-" + e.getFieldName() + "]", e.getFieldRejectedValue(), e.getErrorMessage()));
+                    errors.addError(fieldError("formInput[cost-" + costId + "-" + e.getFieldName() + "]", e.getFieldRejectedValue(), e.getErrorKey(), e.getArguments()));
                 }else{
-                    errors.addError(fieldError("formInput[cost-" + costId + "]", e.getFieldRejectedValue(), e.getErrorMessage()));
+                    errors.addError(fieldError("formInput[cost-" + costId + "]", e.getFieldRejectedValue(), e.getErrorKey(), e.getArguments()));
                 }
             })
         );
@@ -349,7 +349,7 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
                 return messages.getSuccessObject();
             } else {
                 messages.getSuccessObject().getErrors().stream()
-                        .peek(e -> LOG.debug(String.format("Got cost item Field error: %s  / %s", e.getErrorKey(), e.getErrorMessage())));
+                        .peek(e -> LOG.debug(String.format("Got cost item Field error: %s", e.getErrorKey())));
                 return messages.getSuccessObject();
             }
         }

@@ -96,8 +96,7 @@ Invalid email no @ symbol
     And the user should see an error    Please enter a valid email address
 
 User can not login with the invalid email
-    [Tags]    Pending
-    # TODO Pending due to INFUND-3995
+    [Tags]
     Then the user cannot login with the invalid email    ${invalid_email_no_at}
 
 Valid account creation
@@ -123,7 +122,7 @@ Email duplication check
     And the user enters text to a text field    id=password    ${correct_password}
     And the user enters text to a text field    id=retypedPassword    ${correct_password}
     And the user submits their information
-    Then the user should see an error    Email address is already in use
+    Then the user should see an error    The email address is already registered with us. Please sign into your account
     And the user logs out if they are logged in
 
 *** Keywords ***

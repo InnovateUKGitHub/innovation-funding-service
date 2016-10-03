@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.LongNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.worth.ifs.Application;
 import com.worth.ifs.application.finance.service.FinanceRowService;
 import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.form.ApplicationForm;
@@ -59,18 +60,21 @@ import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.worth.ifs.application.resource.SectionType.FINANCE;
 import static com.worth.ifs.commons.error.Error.fieldError;
 import static com.worth.ifs.commons.error.ErrorConverterFactory.toField;
 import static com.worth.ifs.commons.rest.ValidationMessages.*;
+import static com.worth.ifs.controller.ErrorLookupHelper.lookupErrorMessageResourceBundleEntries;
+import static com.worth.ifs.controller.ErrorLookupHelper.lookupErrorMessageResourceBundleEntry;
 import static com.worth.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.HttpUtils.requestParameterPresent;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
+import static org.springframework.util.StringUtils.hasText;
 
 /**
  * This controller will handle all requests that are related to the application form.
@@ -222,7 +226,6 @@ public class ApplicationFormController extends AbstractApplicationController {
             List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
             List<FormInputResource> formInputs = formInputService.findApplicationInputsByQuestion(questionId);
 
-
             if (params.containsKey(ASSIGN_QUESTION_PARAM)) {
                 assignQuestion(applicationId, request);
                 cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
@@ -239,7 +242,7 @@ public class ApplicationFormController extends AbstractApplicationController {
 
             /* End save action */
 
-            if (errors.hasErrors()) {
+            if (errors.hasErrors() && isMarkQuestionRequest(params)) {
 
                 validationHandler.addAnyErrors(errors);
 
@@ -336,20 +339,27 @@ public class ApplicationFormController extends AbstractApplicationController {
         boolean ignoreEmpty = (!params.containsKey(MARK_AS_COMPLETE)) && (!params.containsKey(MARK_SECTION_AS_COMPLETE));
 
         ValidationMessages errors = new ValidationMessages();
+        SectionResource selectedSection = null;
+        if (sectionId != null) {
+            selectedSection = getSelectedSection(competition.getSections(), sectionId);
+            if (isMarkSectionAsCompleteRequest(params)) {
+                application.setStateAidAgreed(form.isStateAidAgreed());
+            } else if (isMarkSectionAsIncompleteRequest(params) && selectedSection.getType() == SectionType.FINANCE) {
+                application.setStateAidAgreed(Boolean.FALSE);
+            }
+        }
 
         // Prevent saving question when it's a unmark question request (INFUND-2936)
         if(!isMarkQuestionAsInCompleteRequest(params)) {
             if (question != null) {
                 errors.addAll(saveQuestionResponses(request, singletonList(question), user.getId(), processRole.getId(), application.getId(), ignoreEmpty));
             } else {
-                SectionResource selectedSection = getSelectedSection(competition.getSections(), sectionId);
                 List<QuestionResource> questions = simpleMap(selectedSection.getQuestions(), questionService::getById);
                 errors.addAll(saveQuestionResponses(request, questions, user.getId(), processRole.getId(), application.getId(), ignoreEmpty));
             }
         }
 
         errors.addAll(validationApplicationStartDate(request));
-
         setApplicationDetails(application, form.getApplication());
 
         if(userIsLeadApplicant(application, user.getId())) {
@@ -368,9 +378,19 @@ public class ApplicationFormController extends AbstractApplicationController {
             errors.addAll(handleMarkSectionRequest(application, competition, sectionId, request, response, processRole, errors));
         }
 
+        if (errors.hasErrors()) {
+            errors.setErrors(sortValidationMessages(errors));
+        }
         cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
 
         return errors;
+    }
+
+    private List<Error> sortValidationMessages(ValidationMessages errors) {
+        List<Error> sortedErrors = errors.getErrors().stream().filter(error ->
+                error.getErrorKey().equals("application.validation.MarkAsCompleteFailed")).collect(toList());
+        sortedErrors.addAll(errors.getErrors());
+        return sortedErrors.parallelStream().distinct().collect(toList());
     }
 
     private void logSaveApplicationDetails(Map<String, String[]> params) {
@@ -409,12 +429,11 @@ public class ApplicationFormController extends AbstractApplicationController {
         applicationMessages.forEach(validationMessage ->
             validationMessage.getErrors().stream()
                 .filter(Objects::nonNull)
-                .filter(e -> StringUtils.hasText(e.getErrorMessage()))
+                .filter(e -> hasText(e.getErrorKey()))
                 .forEach(e -> {
-                            e.toString();
                             if (validationMessage.getObjectName().equals("target")) {
-                                if (StringUtils.hasText(e.getErrorKey())) {
-                                    toFieldErrors.addError(fieldError("formInput[application." + validationMessage.getObjectId() + "-" + e.getFieldName() + "]", e.getFieldRejectedValue(), e.getErrorMessage()));
+                                if (hasText(e.getErrorKey())) {
+                                    toFieldErrors.addError(fieldError("formInput[application." + validationMessage.getObjectId() + "-" + e.getFieldName() + "]", e.getFieldRejectedValue(), e.getErrorKey()));
                                     if (e.getErrorKey().equals("durationInMonths")) {
                                         application.setDurationInMonths(null);
                                     }
@@ -451,16 +470,16 @@ public class ApplicationFormController extends AbstractApplicationController {
         financeErrorsMark.forEach(validationMessage ->
             validationMessage.getErrors().stream()
                 .filter(Objects::nonNull)
-                .filter(e -> StringUtils.hasText(e.getErrorMessage()))
+                .filter(e -> hasText(e.getErrorKey()))
                 .forEach(e -> {
                     if (validationMessage.getObjectName().equals("costItem")) {
-                        if (StringUtils.hasText(e.getErrorKey())) {
-                            toFieldErrors.addError(fieldError("formInput[cost-" + validationMessage.getObjectId() + "-" + e.getFieldName() + "]", e.getFieldRejectedValue(), e.getErrorMessage()));
+                        if (hasText(e.getErrorKey())) {
+                            toFieldErrors.addError(fieldError("formInput[cost-" + validationMessage.getObjectId() + "-" + e.getFieldName() + "]", e));
                         } else {
-                            toFieldErrors.addError(fieldError("formInput[cost-" + validationMessage.getObjectId() + "]", e.getFieldRejectedValue(), e.getErrorMessage()));
+                            toFieldErrors.addError(fieldError("formInput[cost-" + validationMessage.getObjectId() + "]", e));
                         }
                     } else {
-                        toFieldErrors.addError(fieldError("formInput[" + validationMessage.getObjectId() + "]", e.getFieldRejectedValue(), e.getErrorMessage()));
+                        toFieldErrors.addError(fieldError("formInput[" + validationMessage.getObjectId() + "]", e));
                     }
                 })
         );
@@ -501,6 +520,14 @@ public class ApplicationFormController extends AbstractApplicationController {
         return params.containsKey(MARK_SECTION_AS_INCOMPLETE);
     }
 
+    private boolean isMarkSectionAsCompleteRequest(@NotNull Map<String, String[]> params){
+        return params.containsKey(MARK_SECTION_AS_COMPLETE);
+    }
+
+    private boolean isSubmitSectionRequest(@NotNull Map<String, String[]> params){
+        return params.containsKey(SUBMIT_SECTION);
+    }
+
     private SectionResource getSelectedSection(List<Long> sectionIds, Long sectionId) {
         return sectionIds.stream()
                 .map(sectionService::getById)
@@ -531,7 +558,7 @@ public class ApplicationFormController extends AbstractApplicationController {
             }
 
             if (errorsSoFar.hasFieldErrors(questionId + "")) {
-                markAsCompleteErrors.add(new ValidationMessages(fieldError(questionId + "", "", "Please enter valid data before marking a question as complete.")));
+                markAsCompleteErrors.add(new ValidationMessages(fieldError(questionId + "", "", "mark.as.complete.invalid.data.exists")));
             }
 
             return markAsCompleteErrors;
@@ -563,6 +590,11 @@ public class ApplicationFormController extends AbstractApplicationController {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
+        SectionResource section = sectionService.getById(sectionId);
+        if (section.getType() == SectionType.FINANCE &&
+                !validFinanceTermsForMarkAsComplete(request, form, bindingResult, section, application, competition, user, model)) {
+            return APPLICATION_FORM;
+        }
 
         Map<String, String[]> params = request.getParameterMap();
 
@@ -577,20 +609,40 @@ public class ApplicationFormController extends AbstractApplicationController {
         model.addAttribute("form", form);
 
         if(saveApplicationErrors.hasErrors()){
-
             validationHandler.addAnyErrors(saveApplicationErrors);
-
-            SectionResource section = sectionService.getById(sectionId);
-            addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), Optional.ofNullable(section), model, form);
-            addOrganisationAndUserFinanceDetails(competition.getId(), application.getId(), user, model, form);
-            addNavigation(section, applicationId, model);
-            List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
-            Optional<OrganisationResource> userOrganisation = getUserOrganisation(user.getId(), userApplicationRoles);
-            addCompletedDetails(model, application, userOrganisation);
+            setReturnToApplicationFormData(section, application, competition, user, model, form, applicationId);
             return APPLICATION_FORM;
         } else {
             return getRedirectUrl(request, applicationId);
         }
+    }
+
+    private void setReturnToApplicationFormData(SectionResource section, ApplicationResource application, CompetitionResource competition,
+                                                UserResource user, Model model, ApplicationForm form, Long applicationId) {
+        addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), Optional.ofNullable(section), model, form);
+        addOrganisationAndUserFinanceDetails(competition.getId(), application.getId(), user, model, form);
+        addNavigation(section, applicationId, model);
+        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
+        Optional<OrganisationResource> userOrganisation = getUserOrganisation(user.getId(), userApplicationRoles);
+        addCompletedDetails(model, application, userOrganisation);
+    }
+
+    private boolean validFinanceTermsForMarkAsComplete(HttpServletRequest request, ApplicationForm form,
+                                       BindingResult bindingResult, SectionResource section, ApplicationResource application,
+                                       CompetitionResource competition, UserResource user, Model model
+                                       ) {
+        if (isMarkSectionAsCompleteRequest(request.getParameterMap())) {
+            if (!form.isTermsAgreed()) {
+                bindingResult.rejectValue(TERMS_AGREED_KEY, "APPLICATION_AGREE_TERMS_AND_CONDITIONS");
+                setReturnToApplicationFormData(section, application, competition, user, model, form, application.getId());
+                return false;
+            } else if (!form.isStateAidAgreed()) {
+                bindingResult.rejectValue(STATE_AID_AGREED_KEY, "APPLICATION_AGREE_STATE_AID_CONDITIONS");
+                setReturnToApplicationFormData(section, application, competition, user, model, form, application.getId());
+                return false;
+            }
+        }
+        return true;
     }
 
     private void logSaveApplicationBindingErrors(ValidationHandler validationHandler) {
@@ -604,7 +656,6 @@ public class ApplicationFormController extends AbstractApplicationController {
             bindingResult.getGlobalErrors().forEach(e -> LOG.debug("Remote validation global: " + e.getObjectName()+ " v: " + e.getCode() + " v: " + e.getDefaultMessage()));
         }
     }
-
 
     private ValidationMessages saveQuestionResponses(HttpServletRequest request,
                                                           List<QuestionResource> questions,
@@ -722,24 +773,46 @@ public class ApplicationFormController extends AbstractApplicationController {
             application.setName(updatedApplication.getName());
         }
 
+        setResubmissionDetails(application, updatedApplication);
+
         if (updatedApplication.getStartDate() != null) {
             LOG.debug("setApplicationDetails date 123: " + updatedApplication.getStartDate().toString());
             if (updatedApplication.getStartDate().isEqual(LocalDate.MIN)
                     || updatedApplication.getStartDate().isBefore(LocalDate.now())) {
                 // user submitted a empty date field or date before today
                 application.setStartDate(null);
-            }else{
+            } else{
                 application.setStartDate(updatedApplication.getStartDate());
             }
-        }else{
+        } else {
             application.setStartDate(null);
         }
+
         if (updatedApplication.getDurationInMonths() != null) {
             LOG.debug("setApplicationDetails: " + updatedApplication.getDurationInMonths());
             application.setDurationInMonths(updatedApplication.getDurationInMonths());
         }
         else {
             application.setDurationInMonths(null);
+        }
+    }
+
+    /**
+     * Set the submitted details relating to resubmission of applications.
+     * @param application
+     * @param updatedApplication
+     */
+    private void setResubmissionDetails(ApplicationResource application, ApplicationResource updatedApplication) {
+        if (updatedApplication.getResubmission() != null) {
+            LOG.debug("setApplicationDetails: resubmission " + updatedApplication.getResubmission());
+            application.setResubmission(updatedApplication.getResubmission());
+            if (updatedApplication.getResubmission()) {
+                application.setPreviousApplicationNumber(updatedApplication.getPreviousApplicationNumber());
+                application.setPreviousApplicationTitle(updatedApplication.getPreviousApplicationTitle());
+            } else {
+                application.setPreviousApplicationNumber(null);
+                application.setPreviousApplicationTitle(null);
+            }
         }
     }
 
@@ -764,7 +837,7 @@ public class ApplicationFormController extends AbstractApplicationController {
 
             errors = storeFieldResult.getErrors();
             fieldId = storeFieldResult.getFieldId();
-            
+
             if (!errors.isEmpty()) {
                 return this.createJsonObjectNode(false, errors, fieldId);
             } else {
@@ -781,7 +854,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         List<Object> args = new ArrayList<>();
         args.add(ex.getErrorMessage());
         if(e.getClass().equals(IntegerNumberFormatException.class) || e.getClass().equals(BigDecimalNumberFormatException.class)){
-            errors.add(messageSource.getMessage(e.getMessage(), args.toArray(), Locale.UK));
+            errors.add(lookupErrorMessageResourceBundleEntry(messageSource, e.getMessage(), args));
         }else{
             LOG.error("Got a exception on autosave : "+ e.getMessage());
             LOG.debug("Autosave exception: ", e);
@@ -816,15 +889,20 @@ public class ApplicationFormController extends AbstractApplicationController {
                         .stream()
                         .peek(e -> LOG.debug(String.format("Compare: %s => %s ", fieldName.toLowerCase(), e.getFieldName().toLowerCase())))
                         .filter(e -> fieldNameParts[1].toLowerCase().contains(e.getFieldName().toLowerCase())) // filter out the messages that are related to other fields.
-                        .map(e -> e.getErrorMessage())
-                        .collect(Collectors.toList());
+                        .map(this::lookupErrorMessage)
+                        .collect(toList());
                 return new StoreFieldResult(validationMessages.getObjectId(), errors);
             }
         } else {
             Long formInputId = Long.valueOf(inputIdentifier);
             ValidationMessages saveErrors = formInputResponseService.save(userId, applicationId, formInputId, value, false);
-            return new StoreFieldResult(simpleMap(saveErrors.getErrors(), Error::getErrorMessage));
+            List<String> lookedUpErrorMessages = lookupErrorMessageResourceBundleEntries(messageSource, saveErrors);
+            return new StoreFieldResult(lookedUpErrorMessages);
         }
+    }
+
+    private String lookupErrorMessage(Error e) {
+        return lookupErrorMessageResourceBundleEntry(messageSource, e);
     }
 
     private ObjectNode createJsonObjectNode(boolean success, List<String> errors, Long fieldId) {
@@ -859,7 +937,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         } else if (fieldName.startsWith("application.durationInMonths")) {
             Long durationInMonth = Long.valueOf(value);
             if (durationInMonth < 1L || durationInMonth > 36L) {
-                errors.add("Please enter a valid duration between 1 and 36 months");
+                errors.add("Your project should last between 1 and 36 months");
                 application.setDurationInMonths(durationInMonth);
             } else {
                 application.setDurationInMonths(durationInMonth);
@@ -867,6 +945,15 @@ public class ApplicationFormController extends AbstractApplicationController {
             }
         } else if (fieldName.startsWith(APPLICATION_START_DATE)) {
             errors = this.saveApplicationStartDate(application, fieldName, value);
+        } else if (fieldName.equals("application.resubmission")) {
+            application.setResubmission(Boolean.valueOf(value));
+            applicationService.save(application);
+        } else if (fieldName.equals("application.previousApplicationNumber")) {
+            application.setPreviousApplicationNumber(value);
+            applicationService.save(application);
+        } else if (fieldName.equals("application.previousApplicationTitle")) {
+            application.setPreviousApplicationTitle(value);
+            applicationService.save(application);
         }
         return errors;
     }
@@ -894,7 +981,6 @@ public class ApplicationFormController extends AbstractApplicationController {
         applicationService.save(application);
         return errors;
     }
-
 
     private void assignQuestion(@PathVariable(APPLICATION_ID) final Long applicationId,
                                HttpServletRequest request) {

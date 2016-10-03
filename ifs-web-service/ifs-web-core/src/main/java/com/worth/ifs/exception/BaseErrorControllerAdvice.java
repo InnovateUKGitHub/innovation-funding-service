@@ -15,6 +15,9 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
+
+import static com.worth.ifs.util.MapFunctions.asMap;
 
 public abstract class BaseErrorControllerAdvice {
 
@@ -29,54 +32,62 @@ public abstract class BaseErrorControllerAdvice {
     @Value("${logout.url}")
     private String logoutUrl;
 
-    protected ModelAndView createExceptionModelAndView(Exception e, String pageName, HttpServletRequest req, List<Object> arguments, HttpStatus status){
-        return createExceptionModelAndView(e, "error.title.status." + status.value(), pageName, req, arguments, status);
+    protected ModelAndView createErrorModelAndViewWithStatus(Exception e, HttpServletRequest req, List<Object> arguments, HttpStatus status) {
+        return createErrorModelAndViewWithStatusAndView(e, req, arguments, status, "error");
     }
 
-    protected ModelAndView createExceptionModelAndView(Exception e, String title, String pageName, HttpServletRequest req, List<Object> arguments, HttpStatus status){
-        return createExceptionModelAndView(e, title, null, pageName, req, arguments, status);
+    protected ModelAndView createErrorModelAndViewWithStatusAndView(Exception e, HttpServletRequest req, List<Object> arguments, HttpStatus status, String viewTemplate) {
+        return createModelAndView(e, req, arguments, status, true, "error.title.status." + status.value(), null, viewTemplate);
     }
 
-    protected ModelAndView createExceptionModelAndViewWithTitleAndMessage(Exception e, String titleKey, String messageForUserKey, HttpServletRequest req, List<Object> arguments, HttpStatus status) {
-        return createExceptionModelAndView(e, titleKey, messageForUserKey, "title-and-message-error", req, arguments, status);
+    protected ModelAndView createErrorModelAndViewWithTitleAndMessage(Exception e, HttpServletRequest req, List<Object> arguments, HttpStatus status, String titleKey, String messageKey) {
+        return createModelAndView(e, req, arguments, status, false, titleKey, messageKey, "title-and-message-error");
     }
 
-    protected ModelAndView createExceptionModelAndView(Exception e, String titleKey, String messageForUserKey, String pageName, HttpServletRequest req, List<Object> arguments, HttpStatus status){
+    protected ModelAndView createErrorModelAndViewWithUrlTitleAndMessage(Exception e, HttpServletRequest req, List<Object> arguments, HttpStatus status, String titleKey, String messageKey) {
+        return createModelAndView(e, req, arguments, status, true, titleKey, messageKey, "title-and-message-error");
+    }
 
-        String errorTitle = MessageUtil.getFromMessageBundle(messageSource, titleKey, "Unknown Error...", req.getLocale());
-        String messageForUser = MessageUtil.getFromMessageBundle(messageSource, messageForUserKey, "Unknown Error...", req.getLocale());
+    protected ModelAndView createErrorModelAndViewWithUrlTitleMessageAndView(Exception e, HttpServletRequest req, List<Object> arguments, HttpStatus status, String titleKey, String messageKey, String viewTemplate) {
+        return createModelAndView(e, req, arguments, status, true, titleKey, messageKey, viewTemplate);
+    }
 
-        ModelAndView mav = new ModelAndView();
-        mav.addObject("exception", e);
-        mav.addObject("title", errorTitle);
-        mav.addObject("messageForUser", messageForUser);
-        mav.addObject("errorMessageClass", status.name().toLowerCase());
-
-        if(env.acceptsProfiles("debug")) {
-            mav.addObject("stacktrace", ExceptionUtils.getStackTrace(e));
-            String msg = MessageUtil.getFromMessageBundle(messageSource, e.getClass().getName(), e.getMessage(), arguments.toArray(), req.getLocale());
-            mav.addObject("message", msg);
-        }
-
-        mav.addObject("url", req.getRequestURL().toString());
-        mav.setViewName(pageName);
-
+    private ModelAndView createModelAndView(Exception e, HttpServletRequest req, List<Object> arguments, HttpStatus status, boolean showUrl, String titleKey, String messageKey, String viewTemplate) {
+        String title = MessageUtil.getFromMessageBundle(messageSource, titleKey, "Unknown Error...", req.getLocale());
+        String message = messageKey == null ? null : MessageUtil.getFromMessageBundle(messageSource, messageKey, "Unknown Error...", null == arguments ? new Object[0] : arguments.toArray(), req.getLocale());
+        ModelAndView mav = new ModelAndView(viewTemplate, asMap("title", title, "messageForUser", message, "errorMessageClass", getErrorMessageClass(status)));
         // Needed here because postHandle of MenuLinkHandlerInterceptior may not be hit when there is an error.
-        if(!(mav.getView() instanceof RedirectView || mav.getViewName().startsWith("redirect:") )) {
+        if (!(mav.getView() instanceof RedirectView || mav.getViewName().startsWith("redirect:"))) {
             addUserDashboardLink(mav);
             MenuLinksHandlerInterceptor.addLogoutLink(mav, logoutUrl);
         }
-
+        if (showUrl) {
+            mav.addObject("url", req.getRequestURL().toString());
+        }
+        mav.addAllObjects(populateExceptionMap(e, req, arguments));
         LOG.error("Error caught and returning error page.  Original error:", e);
-
         return mav;
     }
 
+    private Map<String, Object> populateExceptionMap(Exception e, HttpServletRequest req, List<Object> arguments) {
+        Map<String, Object> result = asMap("exception", e);
+        if (env.acceptsProfiles("debug")) {
+            result.put("stacktrace", ExceptionUtils.getStackTrace(e));
+            result.put("message", MessageUtil.getFromMessageBundle(messageSource, e.getClass().getName(), e.getMessage(), arguments.toArray(), req.getLocale()));
+        }
+        return result;
+    }
+
+    private String getErrorMessageClass(HttpStatus status) {
+        return status.name().toLowerCase();
+    }
+
     /**
-     *  We cannot crate dashboard link here because user may not be logged in or have a role, so send them on main page
+     * We cannot crate dashboard link here because user may not be logged in or have a role, so send them on main page
+     *
      * @param modelAndView
      */
-    public static void addUserDashboardLink(ModelAndView modelAndView) {
+    private void addUserDashboardLink(ModelAndView modelAndView) {
         modelAndView.getModelMap().addAttribute(MenuLinksHandlerInterceptor.USER_DASHBOARD_LINK, "/");
     }
 }

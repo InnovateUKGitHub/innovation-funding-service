@@ -2,8 +2,8 @@ package com.worth.ifs.application.security;
 
 import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.application.resource.ApplicationStatusResource;
-import com.worth.ifs.security.PermissionRule;
-import com.worth.ifs.security.PermissionRules;
+import com.worth.ifs.commons.security.PermissionRule;
+import com.worth.ifs.commons.security.PermissionRules;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 

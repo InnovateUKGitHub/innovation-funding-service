@@ -1,27 +1,39 @@
 package com.worth.ifs.invite.domain;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+import com.worth.ifs.user.domain.User;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
 
 /**
- * Participant in a {@link ProcessActivity}
+ * A Participant in a {@link ProcessActivity}.
  */
-public abstract class Participant<T extends ProcessActivity, I extends Invite<T,I>> {
+@MappedSuperclass
+public abstract class Participant<P extends ProcessActivity, I extends Invite<P,I>, R extends ParticipantRole<P>> {
 
-    @Enumerated(EnumType.STRING)
+    @Column(name = "participant_status_id")
     private ParticipantStatus status;
 
     protected Participant() {
         this.status = ParticipantStatus.PENDING;
     }
 
-    public abstract T getProcess();
-
-    public abstract I getInvite();
+    public abstract Long getId();
 
     public ParticipantStatus getStatus() {
         return status;
     }
+
+    public abstract P getProcess();
+
+    public abstract I getInvite();
+
+    public abstract R getRole();
+
+    // TODO make this Optional<User>
+    public abstract User getUser();
 
     protected void setStatus(ParticipantStatus newStatus) {
         switch (newStatus) {
@@ -36,5 +48,25 @@ public abstract class Participant<T extends ProcessActivity, I extends Invite<T,
         }
 
         this.status = newStatus;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Participant<?, ?, ?> that = (Participant<?, ?, ?>) o;
+
+        return new EqualsBuilder()
+                .append(status, that.status)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(status)
+                .toHashCode();
     }
 }

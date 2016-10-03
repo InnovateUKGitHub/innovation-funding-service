@@ -8,6 +8,7 @@ import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.project.resource.ProjectTeamStatusResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import org.junit.Test;
 import org.springframework.core.io.ByteArrayResource;
@@ -18,6 +19,7 @@ import java.util.Optional;
 
 import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static com.worth.ifs.address.resource.OrganisationAddressType.REGISTERED;
+import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_REST_RESULT_UNEXPECTED_STATUS_CODE;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.projectResourceListType;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.projectUserResourceList;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
@@ -237,7 +239,7 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
         // now run the method under test
         RestResult<Optional<FileEntryResource>> result = service.getCollaborationAgreementFileDetails(123L);
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(new Error(NOT_ACCEPTABLE, "Unexpected status code " + NOT_ACCEPTABLE, NOT_ACCEPTABLE)));
+        assertTrue(result.getFailure().is(new Error(GENERAL_REST_RESULT_UNEXPECTED_STATUS_CODE, NOT_ACCEPTABLE)));
     }
 
     @Test
@@ -277,7 +279,7 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
         // now run the method under test
         RestResult<Optional<ByteArrayResource>> result = service.getCollaborationAgreementFile(123L);
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(new Error(NOT_ACCEPTABLE, "Unexpected status code " + NOT_ACCEPTABLE, NOT_ACCEPTABLE)));
+        assertTrue(result.getFailure().is(new Error(GENERAL_REST_RESULT_UNEXPECTED_STATUS_CODE, NOT_ACCEPTABLE)));
     }
 
     @Test
@@ -349,7 +351,7 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
         // now run the method under test
         RestResult<Optional<FileEntryResource>> result = service.getExploitationPlanFileDetails(123L);
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(new Error(NOT_ACCEPTABLE, "Unexpected status code " + NOT_ACCEPTABLE, NOT_ACCEPTABLE)));
+        assertTrue(result.getFailure().is(new Error(GENERAL_REST_RESULT_UNEXPECTED_STATUS_CODE, NOT_ACCEPTABLE)));
     }
 
     @Test
@@ -389,7 +391,7 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
         // now run the method under test
         RestResult<Optional<ByteArrayResource>> result = service.getExploitationPlanFile(123L);
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(new Error(NOT_ACCEPTABLE, "Unexpected status code " + NOT_ACCEPTABLE, NOT_ACCEPTABLE)));
+        assertTrue(result.getFailure().is(new Error(GENERAL_REST_RESULT_UNEXPECTED_STATUS_CODE, NOT_ACCEPTABLE)));
     }
 
     @Test
@@ -404,4 +406,100 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
 
         setupDeleteWithRestResultVerifications(expectedUrl);
     }
+
+    @Test
+    public void testAcceptOrRejectOtherDocuments() {
+
+        setupPostWithRestResultExpectations(projectRestURL + "/" + 123L + "/partner/documents/approved/" + true, OK);
+
+        // now run the method under test
+        RestResult<Void> result = service.acceptOrRejectOtherDocuments(123L, true);
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void testSetPartnerDocumentsSubmitted(){
+        setupPostWithRestResultExpectations(projectRestURL + "/" + 123L + "/partner/documents/submit", null, OK);
+
+        RestResult<Void> result = service.setPartnerDocumentsSubmitted(123L);
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void testGetProjectTeamStatus(){
+        String expectedUrl = projectRestURL + "/123/team-status";
+
+        setupGetWithRestResultExpectations(expectedUrl, ProjectTeamStatusResource.class, null, OK);
+
+        RestResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(123L, Optional.empty());
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void testGetProjectTeamStatusWithFilterByUserId(){
+        String expectedUrl = projectRestURL + "/123/team-status?filterByUserId=456";
+
+        setupGetWithRestResultExpectations(expectedUrl, ProjectTeamStatusResource.class, null, OK);
+
+        RestResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(123L, Optional.of(456L));
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void testGetSignedGrantOfferLetterFileContent() {
+
+        String expectedUrl = projectRestURL + "/123/signed-grant-offer";
+        ByteArrayResource returnedFileContents = new ByteArrayResource("Retrieved content".getBytes());
+
+        setupGetWithRestResultExpectations(expectedUrl, ByteArrayResource.class, returnedFileContents, OK);
+
+        // now run the method under test
+        ByteArrayResource retrievedFileEntry = service.getSignedGrantOfferLetterFile(123L).getSuccessObject().get();
+
+        assertEquals(returnedFileContents, retrievedFileEntry);
+    }
+
+    @Test
+    public void testGetSignedGrantOfferLetterFileContentEmptyIfNotFound() {
+
+        String expectedUrl = projectRestURL + "/123/signed-grant-offer";
+
+        setupGetWithRestResultExpectations(expectedUrl, ByteArrayResource.class, null, NOT_FOUND);
+
+        // now run the method under test
+        Optional<ByteArrayResource> retrievedFileEntry = service.getSignedGrantOfferLetterFile(123L).getSuccessObject();
+
+        assertFalse(retrievedFileEntry.isPresent());
+    }
+    @Test
+    public void testGetGeneratedGrantOfferLetterFileContent() {
+
+        String expectedUrl = projectRestURL + "/123/grant-offer";
+        ByteArrayResource returnedFileContents = new ByteArrayResource("Retrieved content".getBytes());
+
+        setupGetWithRestResultExpectations(expectedUrl, ByteArrayResource.class, returnedFileContents, OK);
+
+        // now run the method under test
+        ByteArrayResource retrievedFileEntry = service.getGrantOfferFile(123L).getSuccessObject().get();
+
+        assertEquals(returnedFileContents, retrievedFileEntry);
+    }
+
+    @Test
+    public void testGetGeneratedGrantOfferLetterFileContentEmptyIfNotFound() {
+
+        String expectedUrl = projectRestURL + "/123/grant-offer";
+
+        setupGetWithRestResultExpectations(expectedUrl, ByteArrayResource.class, null, NOT_FOUND);
+
+        // now run the method under test
+        Optional<ByteArrayResource> retrievedFileEntry = service.getGrantOfferFile(123L).getSuccessObject();
+
+        assertFalse(retrievedFileEntry.isPresent());
+    }
+
 }

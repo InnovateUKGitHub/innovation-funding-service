@@ -15,6 +15,7 @@ import com.worth.ifs.project.viewmodel.BankDetailsViewModel;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -46,6 +47,7 @@ public class BankDetailsController extends AddressLookupBaseController {
     @Autowired
     private OrganisationAddressRestService organisationAddressRestService;
 
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_BANK_DETAILS_SECTION')")
     @RequestMapping(method = RequestMethod.GET)
     public String bankDetails(Model model,
                               @PathVariable("projectId") final Long projectId,
@@ -61,8 +63,9 @@ public class BankDetailsController extends AddressLookupBaseController {
         return doViewBankDetails(model, form, projectResource, bankDetailsResourceRestResult, loggedInUser);
     }
 
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_BANK_DETAILS_SECTION')")
     @RequestMapping(method = RequestMethod.POST)
-    public String updateBankDetails(Model model,
+    public String submitBankDetails(Model model,
                                     @Valid @ModelAttribute(FORM_ATTR_NAME) BankDetailsForm form,
                                     @SuppressWarnings("unused") BindingResult bindingResult,
                                     ValidationHandler validationHandler,
@@ -77,7 +80,7 @@ public class BankDetailsController extends AddressLookupBaseController {
         OrganisationAddressResource organisationAddressResource = getOrganisationAddressResourceOrNull(form, organisationResource, BANK_DETAILS);
 
         BankDetailsResource bankDetailsResource = buildBankDetailsResource(projectId, organisationResource, organisationAddressResource, form);
-        ServiceResult<Void> updateResult = bankDetailsRestService.updateBankDetails(projectId, bankDetailsResource).toServiceResult();
+        ServiceResult<Void> updateResult = bankDetailsRestService.submitBankDetails(projectId, bankDetailsResource).toServiceResult();
 
         if (updateResult.isFailure()) {
             validationHandler.addAnyErrors(updateResult, asGlobalErrors());
@@ -87,6 +90,7 @@ public class BankDetailsController extends AddressLookupBaseController {
         return redirectToBankDetails(projectId);
     }
 
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_BANK_DETAILS_SECTION')")
     @RequestMapping(value = "/confirm", method = RequestMethod.POST)
     public String confirmBankDetails(Model model,
                                     @Valid @ModelAttribute(FORM_ATTR_NAME) BankDetailsForm form,
@@ -105,6 +109,7 @@ public class BankDetailsController extends AddressLookupBaseController {
         return doViewConfirmBankDetails(model, form, projectResource, bankDetailsResourceRestResult, loggedInUser);
     }
 
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_BANK_DETAILS_SECTION')")
     @RequestMapping(params = SEARCH_ADDRESS, method = RequestMethod.POST)
     public String searchAddress(Model model,
                                 @PathVariable("projectId") Long projectId,
@@ -123,6 +128,7 @@ public class BankDetailsController extends AddressLookupBaseController {
         return doViewBankDetails(model, form, project, bankDetailsResourceRestResult, loggedInUser);
     }
 
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_BANK_DETAILS_SECTION')")
     @RequestMapping(params = SELECT_ADDRESS, method = RequestMethod.POST)
     public String selectAddress(Model model,
                                 @PathVariable("projectId") Long projectId,
@@ -135,6 +141,7 @@ public class BankDetailsController extends AddressLookupBaseController {
         return doViewBankDetails(model, form, project, bankDetailsResourceRestResult, loggedInUser);
     }
 
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_BANK_DETAILS_SECTION')")
     @RequestMapping(params = MANUAL_ADDRESS, method = RequestMethod.POST)
     public String manualAddress(Model model,
                                 @ModelAttribute(FORM_ATTR_NAME) BankDetailsForm form,

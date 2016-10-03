@@ -11,7 +11,7 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.competition.resource.CompetitionResource.Status;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
-import com.worth.ifs.invite.constant.InviteStatusConstants;
+import com.worth.ifs.invite.constant.InviteStatus;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
@@ -125,11 +125,11 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
-        ApplicationInviteResource inv1 = inviteResource("kirk", "teamA", InviteStatusConstants.CREATED);
-        ApplicationInviteResource inv2 = inviteResource("spock", "teamA", InviteStatusConstants.SEND);
-        ApplicationInviteResource inv3 = inviteResource("bones", "teamA",  InviteStatusConstants.ACCEPTED);
+        ApplicationInviteResource inv1 = inviteResource("kirk", "teamA", InviteStatus.CREATED);
+        ApplicationInviteResource inv2 = inviteResource("spock", "teamA", InviteStatus.SENT);
+        ApplicationInviteResource inv3 = inviteResource("bones", "teamA",  InviteStatus.OPENED);
 
-        ApplicationInviteResource inv4 = inviteResource("picard", "teamB", InviteStatusConstants.CREATED);
+        ApplicationInviteResource inv4 = inviteResource("picard", "teamB", InviteStatus.CREATED);
        
         InviteOrganisationResource inviteOrgResource1 = inviteOrganisationResource(inv1, inv2, inv3);
         InviteOrganisationResource inviteOrgResource2 = inviteOrganisationResource(inv4);
@@ -162,9 +162,9 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
-        ApplicationInviteResource inv1 = inviteResource("kirk", "teamA", InviteStatusConstants.CREATED);
+        ApplicationInviteResource inv1 = inviteResource("kirk", "teamA", InviteStatus.CREATED);
 
-        ApplicationInviteResource inv2 = inviteResource("picard", "", InviteStatusConstants.CREATED);
+        ApplicationInviteResource inv2 = inviteResource("picard", "", InviteStatus.CREATED);
        
        InviteOrganisationResource inviteOrgResource1 = inviteOrganisationResource(inv1);
        InviteOrganisationResource inviteOrgResource2 = inviteOrganisationResource(inv2);
@@ -197,9 +197,9 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
 
-        ApplicationInviteResource inv1 = inviteResource("kirk", "teamA", InviteStatusConstants.CREATED);
+        ApplicationInviteResource inv1 = inviteResource("kirk", "teamA", InviteStatus.CREATED);
 
-        ApplicationInviteResource inv2 = inviteResource("picard", organisations.get(0).getName(), InviteStatusConstants.CREATED);
+        ApplicationInviteResource inv2 = inviteResource("picard", organisations.get(0).getName(), InviteStatus.CREATED);
        
         InviteOrganisationResource inviteOrgResource1 = inviteOrganisationResource(inv1);
         InviteOrganisationResource inviteOrgResource2 = inviteOrganisationResource(inv2);
@@ -229,7 +229,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
 		return ior;
 	}
 
-	private ApplicationInviteResource inviteResource(String name, String organisation, InviteStatusConstants status) {
+	private ApplicationInviteResource inviteResource(String name, String organisation, InviteStatus status) {
         ApplicationInviteResource invRes = new ApplicationInviteResource();
 		invRes.setName(name);
 		invRes.setInviteOrganisationName(organisation);
@@ -295,11 +295,9 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         ApplicationResource app = applications.get(0);
 
         when(env.acceptsProfiles("debug")).thenReturn(true);
-        when(messageSource.getMessage(ObjectNotFoundException.class.getName(), null, Locale.ENGLISH)).thenReturn(
-                testMessageSource().getMessage(ObjectNotFoundException.class.getName(), null, Locale.ENGLISH));
+        when(messageSource.getMessage(ObjectNotFoundException.class.getName(), null, Locale.ENGLISH)).thenReturn("Not found");
         when(applicationService.getById(app.getId())).thenReturn(app);
-        when(applicationService.getById(1234l)).thenThrow(new ObjectNotFoundException(testMessageSource().getMessage
-                (ObjectNotFoundException.class.getName(), null, Locale.ENGLISH), Arrays.asList(1234l)));
+        when(applicationService.getById(1234l)).thenThrow(new ObjectNotFoundException("1234 not found", Collections.singletonList(1234L)));
 
         List<Object> arguments = new ArrayList<>();
         arguments.add("Application");
@@ -310,8 +308,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 .andExpect(view().name("404"))
                 .andExpect(model().attribute("url", "http://localhost/application/1234"))
                 .andExpect(model().attribute("exception", new InstanceOf(ObjectNotFoundException.class)))
-                .andExpect(model().attribute("message",
-                        testMessageSource().getMessage(ObjectNotFoundException.class.getName(), arguments.toArray(), Locale.ENGLISH)))
+                .andExpect(model().attribute("message","1234 not found"))
                 .andExpect(model().attributeExists("stacktrace"));
     }
 
@@ -358,17 +355,6 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
 
     }
 
-    @Test
-    public void testApplicationSubmitWithoutAgreeingToTerms() throws Exception {
-
-        mockMvc.perform(post("/application/1/submit"))
-                .andExpect(redirectedUrl("/application/1/confirm-submit"));
-          
-        verify(cookieFlashMessageFilter).setFlashMessage(isA(HttpServletResponse.class), eq("agreeToTerms"));
-        verifyNoMoreInteractions(userAuthenticationService, applicationService);
-        verify(applicationService, never()).updateStatus(any(Long.class), any(Long.class));
-    }
-    
     @Test
     public void testApplicationSubmitAgreeingToTerms() throws Exception {
         ApplicationResource app = newApplicationResource().withId(1L).withCompetitionStatus(Status.OPEN).build();

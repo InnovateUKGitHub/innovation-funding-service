@@ -26,7 +26,70 @@
 		<strong>Nomensa</strong></p>
 	</div>
 
-	<div th:include="prototypes/fragments/applicant-view :: prototype-applicant-create-acc(${'/prototypes/635-application-overview-collaborator'})" th:remove="tag" /> 
+	<!--<div th:include="prototypes/fragments/applicant-view :: prototype-applicant-create-acc(${'/prototypes/635-application-overview-collaborator'})" th:remove="tag" /> -->
+	<h2 class="heading-medium">Your details</h2>
+	<form>
+		<fieldset>
+			<legend class="visuallyhidden">Your details</legend>
+			<div class="form-group">
+				<label class="form-label" for="title">
+					<span class="form-label-bold">Title</span>
+				</label>
+				<select class="form-control width-medium" id="title" name="title">
+					<option value="">Mr</option>
+					<option value="">Miss</option>
+					<option value="">Mrs</option>
+					<option value="">Ms</option>
+					<option value="">Dr</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<label class="form-label" for="first-name">
+					<span class="form-label-bold">First name</span>
+				</label>
+				<input class="form-control" id="first-name" name="first-name" type="text" />
+			</div>
+			<div class="form-group">
+				<label class="form-label" for="last-name">
+					<span class="form-label-bold">Last name</span>
+				</label>
+				<input class="form-control" id="last-name" name="last-name" type="text" />
+			</div>
+
+			<div th:include="prototypes/fragments/diversity :: diversity-questions" th:remove="tag" />
+
+			<div class="form-group">
+				<label class="form-label" for="phone-number">
+					<span class="form-label-bold">Phone number</span>
+					<span class="form-hint">We may use this to contact you about the application</span>
+				</label>
+				<input class="form-control" id="phone-number" name="phone-number" type="text" />
+			</div>
+			<div class="form-group">
+				<h3 class="heading-small">Email</h3>
+				<p class="form-hint">You will need this to sign into your account, the provided email is:<br /><strong>andy.jones@nomensa.com</strong></p>
+			</div>
+			<div class="form-group">
+				<label class="form-label" for="password">
+					<span class="form-label-bold">Password</span>
+				</label>
+				<input class="form-control" id="password" name="password" type="password" />
+			</div>
+			<div class="form-group">
+				<label class="form-label" for="retype-password">
+					<span class="form-label-bold">Re-type password</span>
+				</label>
+				<input class="form-control" id="retype-password" name="retype-password" type="password" />
+			</div>
+			<div class="form-block">
+				<label class="block-label" for="terms-conditions">
+					<input id="terms-conditions" type="checkbox" value="terms-conditions"/>
+					I agree to the <a href="#">terms and conditions</a>
+				</label>
+			</div>
+		</fieldset>
+		<button class="button button-large extra-margin" name="create-account" formaction="/prototypes/1177-assessor-skills" type="submit">Create account</button>
+	</form>
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 

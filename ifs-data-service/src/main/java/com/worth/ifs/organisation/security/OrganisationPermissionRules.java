@@ -2,8 +2,8 @@ package com.worth.ifs.organisation.security;
 
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.organisation.resource.OrganisationSearchResult;
-import com.worth.ifs.security.PermissionRule;
-import com.worth.ifs.security.PermissionRules;
+import com.worth.ifs.commons.security.PermissionRule;
+import com.worth.ifs.commons.security.PermissionRules;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
@@ -90,6 +90,11 @@ public class OrganisationPermissionRules {
             "users during the registration process")
     public boolean systemRegistrationUserCanSeeOrganisationSearchResults(OrganisationSearchResult organisation, UserResource user) {
         return isSystemRegistrationUser(user);
+    }
+
+    @PermissionRule(value = "UPDATE", description = "A project finance user can update any Organisation")
+    public boolean projectFinanceUserCanUpdateAnyOrganisation(OrganisationResource organisation, UserResource user) {
+        return isProjectFinanceUser(user);
     }
 
     private boolean isMemberOfOrganisation(OrganisationResource organisation, UserResource user) {

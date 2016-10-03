@@ -50,9 +50,6 @@ public class ApplicationController extends AbstractApplicationController {
     private ApplicationOverviewModelPopulator applicationOverviewModelPopulator;
 
     @Autowired
-    private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
-
-    @Autowired
     private AssessorFeedbackRestService assessorFeedbackRestService;
 
     public static String redirectToApplication(ApplicationResource application){
@@ -150,13 +147,8 @@ public class ApplicationController extends AbstractApplicationController {
     }
 
     @RequestMapping(value = "/{applicationId}/submit", method = RequestMethod.POST)
-    public String applicationSubmit(ApplicationForm form, Model model, @RequestParam(value = "agreeTerms", required = false) boolean agreeTerms, @PathVariable("applicationId") final Long applicationId,
+    public String applicationSubmit(ApplicationForm form, Model model, @PathVariable("applicationId") final Long applicationId,
                                     HttpServletRequest request, HttpServletResponse response){
-    	if(!agreeTerms) {
-    		cookieFlashMessageFilter.setFlashMessage(response, "agreeToTerms");
-    		return "redirect:/application/" + applicationId + "/confirm-submit";
-    	}
-    	
     	UserResource user = userAuthenticationService.getAuthenticatedUser(request);
     	ApplicationResource application = applicationService.getById(applicationId);
     	
@@ -255,6 +247,15 @@ public class ApplicationController extends AbstractApplicationController {
         return getFileResponseEntity(resource, fileDetails);
     }
 
+    /**
+     * Printable version of the application
+     */
+    @RequestMapping(value="/{applicationId}/print")
+    public String printApplication(@PathVariable("applicationId") Long applicationId,
+                                             Model model, HttpServletRequest request) {
+        return print(applicationId, model, request);
+    }
+
     private String doAssignQuestionAndReturnSectionFragment(Model model,
                                                             Long applicationId,
                                                             Optional<Long> sectionId,
@@ -303,7 +304,6 @@ public class ApplicationController extends AbstractApplicationController {
                     .findAny();
     }
 
-
     /**
      * Assign a question to a user
      *
@@ -327,35 +327,6 @@ public class ApplicationController extends AbstractApplicationController {
     private void doAssignQuestion(@PathVariable("applicationId") Long applicationId, HttpServletRequest request, HttpServletResponse response) {
         assignQuestion(request, applicationId);
         cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
-    }
-
-    /**
-     * Printable version of the application
-     */
-    @RequestMapping(value="/{applicationId}/print")
-    public String print(@PathVariable("applicationId") final Long applicationId,
-            Model model, HttpServletRequest request) {
-        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-        ApplicationResource application = applicationService.getById(applicationId);
-        CompetitionResource competition = competitionService.getById(application.getCompetition());
-
-        List<FormInputResponseResource> responses = formInputResponseService.getByApplication(applicationId);
-        model.addAttribute("responses", formInputResponseService.mapFormInputResponsesToFormInput(responses));
-        model.addAttribute("currentApplication", application);
-        model.addAttribute("currentCompetition", competition);
-
-        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
-        Optional<OrganisationResource> userOrganisation = getUserOrganisation(user.getId(), userApplicationRoles);
-        model.addAttribute("userOrganisation", userOrganisation.orElse(null));
-
-        organisationDetailsModelPopulator.populateModel(model, application.getId(), userApplicationRoles);
-        addQuestionsDetails(model, application, null);
-        addUserDetails(model, application, user.getId());
-        addApplicationInputs(application, model);
-        addMappedSectionsDetails(model, application, competition, Optional.empty(), userOrganisation);
-        financeOverviewModelManager.addFinanceDetails(model, competition.getId(), applicationId);
-
-        return "/application/print";
     }
 
     private void addApplicationAndSectionsInternalWithOrgDetails(final ApplicationResource application, final CompetitionResource competition, final Long userId, final Model model, final ApplicationForm form) {

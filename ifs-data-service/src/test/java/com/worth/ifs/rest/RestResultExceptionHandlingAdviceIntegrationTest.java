@@ -1,6 +1,6 @@
 package com.worth.ifs.rest;
 
-import com.worth.ifs.BaseIntegrationTest;
+import com.worth.ifs.commons.BaseIntegrationTest;
 import com.worth.ifs.commons.rest.RestResult;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,14 +30,14 @@ public class RestResultExceptionHandlingAdviceIntegrationTest extends BaseIntegr
     public void testFailureMethodReturnsFailureNormally() {
         RestResult<String> result = applicableController.failingMethod();
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(internalServerErrorError("Failure")));
+        assertTrue(result.getFailure().is(internalServerErrorError()));
     }
 
     @Test
     public void testNullReturningMethodReturnsDefaultFailure() {
         RestResult<String> result = applicableController.nullReturningMethod();
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(internalServerErrorError("An unexpected error occurred")));
+        assertTrue(result.getFailure().is(internalServerErrorError()));
     }
 
     @Test

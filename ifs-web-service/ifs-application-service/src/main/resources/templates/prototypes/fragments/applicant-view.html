@@ -5,7 +5,7 @@
 <!-- ========Applicant view - sign in - create account content====== -->
 <div th:fragment="prototype-signin(url)">
     <h1 class="heading-large">Sign in</h1>
-    <form action="#" method="POST">
+    <form action="#" method="GET">
         <fieldset>
             <legend class="visuallyhidden">Sign in</legend>
             <div class="form-group">
@@ -18,7 +18,7 @@
                 <input class="form-control form-control-3-4" type="password" id="id_password" name="password" value="" />
             </div><!-- .form-group -->
         </fieldset>
-        <input class="button" th:formaction="${url}" value="Sign in" type="submit" />
+        <a th:href="${url}" class="button button-large">Sign in</a>
     </form>
 </div>
 
@@ -241,10 +241,10 @@
                         <th>Total</th>
                         <td class="numeric">&nbsp;</td>
                         <td class="numeric"><strong>&pound;280,000</strong></td>
-                        <td class="numeric">&nbsp;</td>
-                        <td class="numeric">&nbsp;</td>
-                        <td class="numeric">&nbsp;</td>
-                        <td class="numeric">&nbsp;</td>
+                        <td class="numeric"><strong>&pound;280,000</strong></td>
+                        <td class="numeric"><strong>&pound;280,000</strong></td>
+                        <td class="numeric"><strong>&pound;280,000</strong></td>
+                        <td class="numeric"><strong>&pound;280,000</strong></td>
                     </tr>
                 </tfoot>
                 <tbody>

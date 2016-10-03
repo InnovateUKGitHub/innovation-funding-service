@@ -1,14 +1,14 @@
 package com.worth.ifs.competitionsetup.service.formpopulator;
 
-import org.springframework.stereotype.Service;
-
+import com.worth.ifs.competition.form.enumerable.ResearchParticipationAmount;
 import com.worth.ifs.competition.resource.CollaborationLevel;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.LeadApplicantType;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.form.EligibilityForm;
-import com.worth.ifs.competition.form.enumerable.ResearchParticipationAmount;
+import com.worth.ifs.competitionsetup.utils.CompetitionUtils;
+import org.springframework.stereotype.Service;
 
 /**
  * Form populator for the eligibility competition setup section.
@@ -33,12 +33,11 @@ public class EligibilityFormPopulator implements CompetitionSetupFormPopulator {
 		}
 		
 		if(competitionResource.isMultiStream()) {
-			competitionSetupForm.setMultipleStream("yes");
 			competitionSetupForm.setStreamName(competitionResource.getStreamName());
-		} else {
-			competitionSetupForm.setMultipleStream("no");
 		}
-		
+
+		competitionSetupForm.setMultipleStream(CompetitionUtils.booleanToText(competitionResource.isMultiStream()));
+
 		CollaborationLevel level = competitionResource.getCollaborationLevel();
 		if(level != null) {
 			competitionSetupForm.setSingleOrCollaborative(level.getCode());
@@ -49,7 +48,10 @@ public class EligibilityFormPopulator implements CompetitionSetupFormPopulator {
 			competitionSetupForm.setLeadApplicantType(type.getCode());
 		}
 
+        competitionSetupForm.setResubmission(CompetitionUtils.booleanToText(competitionResource.getResubmission()));
+
 		return competitionSetupForm;
 	}
+
 
 }

@@ -26,8 +26,8 @@ Log in create a new invite application invite academic collaborators and accept 
     ...    AND    the user closes the browser
 
 new account complete all but one
-    create new account for submitting
-    create new submit application
+    Run keyword if    ${smoke_test}!=1    create new account for submitting
+    Run keyword if    ${smoke_test}!=1    create new submit application
     the user marks every section but one as complete
 
 create new account for submitting
@@ -44,11 +44,14 @@ create new account for submitting
     And the user clicks the button/link    jQuery=.button:contains("Save")
     And the user enters text to a text field    name=email    ${test_mailbox_one}+submittest@gmail.com
     And the user fills the create account form    Temur    Ketsbaia
-    When the user opens the mailbox and verifies the email from
+    When the user opens the mailbox and verifies the email from    ${test_mailbox_one}+submittest@gmail.com
     And the user clicks the button/link    jQuery=.button:contains("Sign in")
-    Then Guest user log-in    ${test_mailbox_one}+submit@gmail.com    Passw0rd123
+
 
 the user marks every section but one as complete
+    Guest user log-in    ${submit_test_email}    Passw0rd123
+    the user navigates to the page    ${server}
+    the user clicks the button/link    link=${application_name}
     the user clicks the button/link    link=Project summary
     the user marks the section as complete    11
     the user marks the section as complete    12
@@ -96,7 +99,7 @@ create new submit application
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     And the user clicks the button/link    jQuery=.button:contains("Begin application")
     And the user clicks the button/link    link=Application details
-    And the user enters text to a text field    id=application_details-title    Robot submit test application
+    And the user enters text to a text field    id=application_details-title    ${application_name}
     And the user clicks the button/link    jQuery=button:contains("Save and return")
 
 Create new invite application with the same user
@@ -124,8 +127,8 @@ Create new academic application with the same user
 Invite and accept the invitation
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
-    And the user should see the text in the page    View team members and add collaborators
-    When the user clicks the button/link    link=View team members and add collaborators
+    And the user should see the text in the page    view team members and add collaborators
+    When the user clicks the button/link    link=view team members and add collaborators
     And the user clicks the button/link    jQuery=.button:contains("Invite new contributors")
     And the user clicks the button/link    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
     Input Text    name=organisations[1].organisationName    Academic Test
@@ -154,7 +157,7 @@ Invite and accept the invitation
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
     And the user clicks the button/link    jQuery=.button:contains("Save")
     And the user fills the create account form    Arsene    Wenger
-    And the user opens the mailbox and verifies the email from
+    And the user opens the mailbox and verifies the email from    ${test_mailbox_one}+academictest@gmail.com
     And the user clicks the button/link    jQuery=.button:contains("Sign in")
     And guest user log-in    ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
 
@@ -187,12 +190,16 @@ the user marks finances as complete
     the user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains(No) input
     the user selects the radio button    financePosition-organisationSize    LARGE
     the user enters text to a text field    id=cost-financegrantclaim    20
-    Focus    jQuery=button:contains("Mark all as complete")
+    the user selects the checkbox           id=agree-terms-page
+    the user selects the checkbox           id=agree-state-aid-page
+    the user moves focus to the element    jQuery=button:contains("Mark all as complete")
     the user clicks the button/link    jQuery=button:contains("Mark all as complete")
     Sleep    1s
 
 the user marks the finances as complete
-    Focus    jQuery=button:contains("Mark all as complete")
+    the user selects the checkbox          id=agree-terms-page
+    the user selects the checkbox          id=agree-state-aid-page
+    the user moves focus to the element    jQuery=button:contains("Mark all as complete")
     the user clicks the button/link    jQuery=button:contains("Mark all as complete")
     Sleep    1s
 

@@ -1,6 +1,7 @@
 package com.worth.ifs.bankdetails;
 
 import com.worth.ifs.bankdetails.resource.BankDetailsResource;
+import com.worth.ifs.bankdetails.resource.ProjectBankDetailsStatusSummary;
 import com.worth.ifs.commons.service.ServiceResult;
 
 /**
@@ -8,6 +9,8 @@ import com.worth.ifs.commons.service.ServiceResult;
  */
 public interface BankDetailsService {
     BankDetailsResource getByProjectIdAndBankDetailsId(final Long projectId, final Long bankDetailsId);
+    ServiceResult<Void> submitBankDetails(final Long projectId, final BankDetailsResource bankDetailsResource);
     ServiceResult<Void> updateBankDetails(final Long projectId, final BankDetailsResource bankDetailsResource);
     BankDetailsResource getBankDetailsByProjectAndOrganisation(final Long projectId, final Long organisationId);
+    ProjectBankDetailsStatusSummary getBankDetailsByProject(final Long projectId);
 }

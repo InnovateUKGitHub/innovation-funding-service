@@ -7,7 +7,7 @@ public class AcademicCost implements FinanceRowItem {
     private Long id;
     private String name;
 
-    @DecimalMin("0")
+    @DecimalMin(value = "0", message = VALUE_MUST_BE_HIGHER_MESSAGE)
     private BigDecimal cost;
 
     private String item;

@@ -5,10 +5,11 @@ import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.exception.InviteAlreadyAcceptedException;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
-import com.worth.ifs.invite.constant.InviteStatusConstants;
+import com.worth.ifs.invite.constant.InviteStatus;
 import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.registration.form.RegistrationForm;
@@ -155,7 +156,7 @@ public class RegistrationController {
         String inviteHash = CookieUtil.getCookieValue(request, AcceptInviteController.INVITE_HASH);
         if(StringUtils.hasText(inviteHash)){
             RestResult<ApplicationInviteResource> invite = inviteRestService.getInviteByHash(inviteHash);
-            if(invite.isSuccess() && InviteStatusConstants.SEND.equals(invite.getSuccessObject().getStatus())){
+            if(invite.isSuccess() && InviteStatus.SENT.equals(invite.getSuccessObject().getStatus())){
                 ApplicationInviteResource inviteResource = invite.getSuccessObject();
                 registrationForm.setEmail(inviteResource.getEmail());
                 model.addAttribute("invitee", true);
@@ -274,15 +275,24 @@ public class RegistrationController {
         if(!bindingResult.hasFieldErrors(EMAIL_FIELD_NAME) && StringUtils.hasText(email)) {
             RestResult<UserResource> existingUserSearch = userService.findUserByEmailForAnonymousUserFlow(email);
             if (!HttpStatus.NOT_FOUND.equals(existingUserSearch.getStatusCode())) {
-                bindingResult.addError(new FieldError(EMAIL_FIELD_NAME, EMAIL_FIELD_NAME, email, false, null, null, "Email address is already in use"));
+                ValidationMessages.rejectValue(bindingResult, EMAIL_FIELD_NAME, "validation.standard.email.exists");
             }
         }
     }
 
+
     private void addEnvelopeErrorsToBindingResultErrors(List<Error> errors, BindingResult bindingResult) {
         errors.forEach(
-                error -> bindingResult.reject("registration."+error.getErrorKey())
+                error -> rejectField(error, bindingResult)
         );
+    }
+
+    private void rejectField(Error error, BindingResult bindingResult) {
+        if (StringUtils.hasText(error.getFieldName())) {
+            bindingResult.rejectValue(error.getFieldName(), "registration."+error.getErrorKey());
+        } else {
+            bindingResult.reject("registration."+error.getErrorKey());
+        }
     }
 
     private RestResult<UserResource> createUser(RegistrationForm registrationForm, Long organisationId, Long competitionId) {

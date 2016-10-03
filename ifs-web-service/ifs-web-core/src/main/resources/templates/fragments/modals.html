@@ -1,13 +1,12 @@
-
 <!-- close button -->
-<div th:fragment="close-button">
-	<button class="js-close close" type="button" aria-label="Close Popup">X</button>
+<div th:fragment="close-button" xmlns:th="http://www.w3.org/1999/xhtml">
+    <button class="js-close close" type="button" aria-label="Close Popup">X</button>
 </div>
 
 <!-- overlay -->
 
 <div th:fragment="modal-overlay">
-	<div class="modal-overlay js-close" aria-hidden="true"></div>
+    <div class="modal-overlay js-close" aria-hidden="true"></div>
 </div>
 
 
@@ -15,7 +14,7 @@
 
 <div th:fragment="modal-confirm-submit (messageTitle, message, submitLink, submitText, cancelText)">
     <div class="modal-confirm-submit" role="dialog" aria-hidden="true">
-        <div th:include="fragments/modals :: close-button" th:remove="tag" />
+        <div th:include="fragments/modals :: close-button" th:remove="tag"/>
         <h2 th:text="${messageTitle}" class="heading-medium no-margin"></h2>
         <p th:text="${message}"></p>
         <div>
@@ -28,29 +27,30 @@
 <!-- confirm submit application modal -->
 
 <div th:fragment="modal-confirm-submit-application (messageTitle, message, submitLink, submitText, cancelText)">
-	<form method="post" th:action="${submitLink}">
-	    <div class="modal-confirm-submit-application" role="dialog" aria-hidden="true">
-	        <div th:include="fragments/modals :: close-button" th:remove="tag" />
-	        <h2 th:text="${messageTitle}" class="heading-medium no-margin"></h2>
-	        <p th:text="${message}"></p>
-	        <input id="agree-terms" name="agreeTerms" type="hidden" value="yes"/>
-	        <div>
-	      		<input type="submit" tabindex="0" class="button large" th:value="${submitText}" />
-	            <button type="button" tabindex="1" class="js-close button buttonlink large" th:text="${cancelText}"></button>
-	        </div>
-	    </div>
-	</form>
+    <form method="post" th:action="${submitLink}">
+        <div class="modal-confirm-submit-application" role="dialog" aria-hidden="true">
+            <div th:include="fragments/modals :: close-button" th:remove="tag"/>
+            <h2 th:text="${messageTitle}" class="heading-medium no-margin"></h2>
+            <p th:text="${message}"></p>
+            <div>
+                <input type="submit" tabindex="0" class="button large" th:value="${submitText}"/>
+                <button type="button" tabindex="1" class="js-close button buttonlink large"
+                        th:text="${cancelText}"></button>
+            </div>
+        </div>
+    </form>
 </div>
 
 <!-- confirm submit modal -->
 
 <div th:fragment="modal-confirm-submit-post (messageTitle, message, submitName, submitText, cancelText)">
     <div class="modal-confirm-submit" role="dialog" aria-hidden="true">
-        <div th:include="fragments/modals :: close-button" th:remove="tag" />
+        <div th:include="fragments/modals :: close-button" th:remove="tag"/>
         <h2 th:text="${messageTitle}" class="heading-medium no-margin"></h2>
         <p th:text="${message}"></p>
         <div>
-            <button role="button" tabindex="0" class="button large" th:name="${submitName}" type="submit" th:text="${submitText}"></button>
+            <button role="button" tabindex="0" class="button large" th:name="${submitName}" type="submit"
+                    th:text="${submitText}"></button>
             <button class="js-close button buttonlink large" type="button" th:text="${cancelText}"></button>
         </div>
     </div>
@@ -59,19 +59,19 @@
 <!-- public funding decision modal window -->
 <div th:fragment="modal-publish-funding-decision">
     <div class="modal-publish-funding-decision" role="dialog" aria-hidden="true">
-        <div th:include="fragments/modals :: close-button" th:remove="tag" />
+        <div th:include="fragments/modals :: close-button" th:remove="tag"/>
 
-		<h2 class="heading-medium no-margin">Notify applicants</h2>
-		<p>Are you sure you wish to inform applicants if they have been successful in gaining funding.</p>
-		<p>This step cannot be undone.</p>
-		<hr/>
-		<div class="grid-row extra-margin">
-           	<div class="column-half">
-           		<button type="button" class="js-close buttonlink large">Cancel</button>
-           	</div>
-           	<div class="column-half alignright-button">
-           		<button class="button large" name="publish" value="publish" type="submit">Notify applicants</button>
-           	</div>
+        <h2 class="heading-medium no-margin">Notify applicants</h2>
+        <p>Are you sure you wish to inform applicants if they have been successful in gaining funding.</p>
+        <p>This step cannot be undone.</p>
+        <hr/>
+        <div class="grid-row extra-margin">
+            <div class="column-half">
+                <button type="button" class="js-close buttonlink large">Cancel</button>
+            </div>
+            <div class="column-half alignright-button">
+                <button class="button large" name="publish" value="publish" type="submit">Notify applicants</button>
+            </div>
         </div>
     </div>
 </div>
@@ -79,20 +79,21 @@
 <!-- Publish assessor feedback modal window -->
 <div th:fragment="modal-submit-assessor-feedback">
     <div class="modal-submit-assessor-feedback" role="dialog" aria-hidden="true">
-        <div th:include="fragments/modals :: close-button" th:remove="tag" />
+        <div th:include="fragments/modals :: close-button" th:remove="tag"/>
 
         <h2 class="heading-medium no-margin">Publish assessor feedback</h2>
         <p>Are you sure you wish to inform applicants if they have been successful in gaining funding.</p>
         <p>This step cannot be undone.</p>
         <hr/>
         <div class="grid-row extra-margin">
-	        <form method="post" action="#" id="submit-assessor-feedback-form" th:action="@{/competition/{competitionId}/assessorfeedbacksubmit(competitionId=${competitionSummary.getCompetitionId()})}">
-	            <div class="column-half">
-	                <button type="button" class="js-close buttonlink large">Cancel</button>
-	            </div>
-	            <div class="column-half alignright-button">
-	                <button class="button large" name="publish" value="publish" type="submit">Notify applicants</button>
-	            </div>
+            <form method="post" action="#" id="submit-assessor-feedback-form"
+                  th:action="@{/competition/{competitionId}/assessorfeedbacksubmit(competitionId=${competitionSummary.getCompetitionId()})}">
+                <div class="column-half">
+                    <button type="button" class="js-close buttonlink large">Cancel</button>
+                </div>
+                <div class="column-half alignright-button">
+                    <button class="button large" name="publish" value="publish" type="submit">Notify applicants</button>
+                </div>
             </form>
         </div>
     </div>
@@ -101,77 +102,202 @@
 
 <!-- save monotiring officer -->
 <div th:fragment="modal-assign-mo">
-	<div class="modal-assign-mo" role="dialog" aria-hidden="true">
-		<div th:include="fragments/modals :: close-button" th:remove="tag" />
-			<h2 class="heading-medium no-margin">Assign Monitoring Officer</h2>
-			<p>This will notify the Project Manager and Monitoring Officer of this appointment. The Monitoring Officer will be visible to all members of the consortium.</p>
-			<hr />
-			<div class="grid-row extra-margin">
-					<div class="column-half">
-							<button type="button" class="js-close buttonlink large">Cancel</button>
-					</div>
-					<div class="column-half alignright-button">
-							<input type="hidden" id="stage" name="stage" value="1" />
-							<button th:formaction="@{/project/{projectId}/monitoring-officer/assign(projectId=${model.projectId})}" class="button">Assign Monitoring Officer</button>
-					</div>
-			</div>
-	</div>
+    <div class="modal-assign-mo" role="dialog" aria-hidden="true">
+        <div th:include="fragments/modals :: close-button" th:remove="tag"/>
+        <h2 class="heading-medium no-margin">Assign Monitoring Officer</h2>
+        <p>This will notify the Project Manager and Monitoring Officer of this appointment. The Monitoring Officer will
+            be visible to all members of the consortium.</p>
+        <hr/>
+        <div class="grid-row extra-margin">
+            <div class="column-half">
+                <button type="button" class="js-close buttonlink large">Cancel</button>
+            </div>
+            <div class="column-half alignright-button">
+                <input type="hidden" id="stage" name="stage" value="1"/>
+                <button th:formaction="@{/project/{projectId}/monitoring-officer/assign(projectId=${model.projectId})}"
+                        class="button">Assign Monitoring Officer
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- save project details -->
 <div th:fragment="modal-project-details">
-	<div class="modal-project-details" role="dialog" aria-hidden="true">
-				<div th:include="fragments/modals :: close-button" th:remove="tag" />
-				<h2 class="heading-medium no-margin">Submit project details</h2>
-				<p>Are you sure that you wish to submit your project details to Innovate UK?</p>
-				<hr/>
-				<div class="grid-row">
-					<div class="column-half">
-							<button type="button" class="js-close button buttonlink large">Cancel</button>
-					</div>
-					<form class="column-half alignright-button"  th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}+'/submit'}" method="post">
-						<button class="button large" name="submit-app-details" >Submit</button>
-					</form>
-			</div>
-	</div>
+    <div class="modal-project-details" role="dialog" aria-hidden="true">
+        <div th:include="fragments/modals :: close-button" th:remove="tag"/>
+        <h2 class="heading-medium no-margin">Submit project details</h2>
+        <p>Are you sure that you wish to submit your project details to Innovate UK?</p>
+        <hr/>
+        <div class="grid-row">
+            <div class="column-half">
+                <button type="button" class="js-close button buttonlink large">Cancel</button>
+            </div>
+            <form class="column-half alignright-button"
+                  th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}+'/submit'}" method="post">
+                <button class="button large" name="submit-app-details">Submit</button>
+            </form>
+        </div>
+    </div>
 </div>
 <!-- save project details -->
 <div th:fragment="modal-bank-details">
-<div class="modal-bank" role="dialog" aria-hidden="true" >
-		<div th:include="fragments/modals :: close-button" th:remove="tag" />
+    <div class="modal-bank" role="dialog" aria-hidden="true">
+        <div th:include="fragments/modals :: close-button" th:remove="tag"/>
 
-		<h2 class="heading-medium no-margin">Submit Bank Details</h2>
-		<p>Are you sure you wish to submit your bank details?</p>
-		<p>After you submit, your bank details will be reviewed by Innovate UK. We may contact you to clarify any issues before we perform finance checks.</p>
-		<hr />
-		<div class="grid-row">
-			<div class="column-half">
-					<button type="button" class="js-close button buttonlink large">Cancel</button>
-			</div>
-			<div class="column-half alignright-button" method="post">
-				<button class="button large" name="submit-app-details">Submit</button>
-			</div>
-		</div>
+        <h2 class="heading-medium no-margin">Submit Bank Details</h2>
+        <p>Are you sure you wish to submit your bank details?</p>
+        <p>After you submit, your bank details will be reviewed by Innovate UK. We may contact you to clarify any issues
+            before we perform finance checks.</p>
+        <hr/>
+        <div class="grid-row">
+            <div class="column-half">
+                <button type="button" class="js-close button buttonlink large">Cancel</button>
+            </div>
+            <div class="column-half alignright-button" method="post">
+                <button class="button large" name="submit-app-details">Submit</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- save finance checks -->
 <div th:fragment="generate-spend-profile">
-<div class="generate-spend-profile" role="dialog" aria-hidden="true" >
-		<div th:include="fragments/modals :: close-button" th:remove="tag" />
+    <div class="generate-spend-profile" role="dialog" aria-hidden="true">
+        <div th:include="fragments/modals :: close-button" th:remove="tag"/>
 
-		<h2 class="heading-medium no-margin">Generate spend profile</h2>
-		<p>This will generate a flat profile spend for all project partners. This assumes that finance checks have been completed for all partners and this section will be locked.</p>
-		<p>Partners will be notified that they can now create their spend profile.</p>
-		<hr />
-		<div class="grid-row">
-			<div class="column-half">
-					<button type="button" class="js-close button buttonlink large">Cancel</button>
-			</div>
-			<div class="column-half alignright-button" method="post">
-				<button class="button large" name="submit-app-details">Generate spend profile</button>
-			</div>
-		</div>
-</div>
+        <h2 class="heading-medium no-margin">Generate spend profile</h2>
+        <p>This will generate a flat profile spend for all project partners. This assumes that finance checks have
+            been completed for all partners and this section will be locked.</p>
+        <p>Partners will be notified that they can now create their spend profile.</p>
+        <hr/>
+        <div class="grid-row">
+            <div class="column-half">
+                <button type="button" class="js-close button buttonlink large">Cancel</button>
+            </div>
+            <div class="column-half alignright-button" method="post">
+                <button class="button large" name="submit-app-details">Generate spend profile</button>
+            </div>
+        </div>
+    </div>
+
 </div>
 
+<!-- save partner documents -->
+<div th:fragment="modal-partner-documents">
+    <div class="modal-partner-documents" role="dialog" aria-hidden="true">
+        <div th:include="fragments/modals :: close-button" th:remove="tag"/>
+        <h2 class="heading-medium no-margin">Submit partner documents</h2>
+        <p>Are you sure that you wish to submit your documents to Innovate UK?</p>
+        <hr/>
+        <div class="grid-row">
+            <div class="column-half">
+                <button type="button" class="js-close button buttonlink large">Cancel</button>
+            </div>
+            <form class="column-half alignright-button"
+                  th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}+'/submit'}" method="post">
+                <button class="button large" name="submit-other-documents">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- change bank details as internal user -->
+<div th:fragment="modal-partner-change-bank-details">
+    <div class="modal-partner-change-bank-details" role="dialog" aria-hidden="true">
+        <div th:include="fragments/modals :: close-button" th:remove="tag"/>
+        <h2 class="heading-medium no-margin">Update bank account details</h2>
+        <p>Please confirm that any updates match the information supplied by the finance contact. After this update has been completed, previously supplied details will be overwritten.</p>
+        <hr/>
+        <div class="alignright-button">
+            <button type="button" class="js-close button buttonlink large">Cancel</button>
+            <button class="button large" name="submit-change-bank-details">Update bank account details</button>
+        </div>
+    </div>
+</div>
+<div th:fragment="modal-partner-confirm-bank-details">
+    <div class="modal-partner-confirm-bank-details" role="dialog" aria-hidden="true">
+        <div th:include="fragments/modals :: close-button" th:remove="tag"/>
+        <h2 class="heading-medium no-margin">Update bank account details</h2>
+        <p>You must confirm that updates match the information supplied by the finance contact. This action will overwrite your previous bank account details.</p>
+        <p>Experian checks will be made on updated account details.</p>
+        <hr/>
+        <div class="alignright-button">
+          <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post">
+            <button type="button" class="js-close button buttonlink large">Cancel</button>
+            <button class="button large" name="submit-change-bank-details">Update bank account details</button>
+          </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<!-- Accept Documents On Review -->
+<div th:fragment="modal-accept-docs">
+    <div class="modal-accept-docs" role="dialog" aria-hidden="true">
+        <div th:include="fragments/modals :: close-button" th:remove="tag"/>
+        <h2 class="heading-medium no-margin">Accept documents</h2>
+        <p>Once the documents are accepted, the project team can complete any remaining stages of the project set up
+            process.</p>
+        <hr/>
+        <div class="grid-row">
+            <div class="column-half">
+                <button type="button" class="js-close button buttonlink large">Cancel</button>
+            </div>
+            <form class="column-half alignright-button"
+                  th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post">
+                <button class="button large" name="approved" value="true">Accept Documents</button>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+<!-- Reject Documents On Review -->
+<div th:fragment="modal-reject-docs">
+    <div class="modal-reject-docs" role="dialog" aria-hidden="true">
+        <div th:include="fragments/modals :: close-button" th:remove="tag"/>
+        <h2 class="heading-medium no-margin">Reject documents</h2>
+        <p>If these documents are rejected, the project manager will be informed along with the reason for rejection.
+            They will then need to provide new versions of the documents before the project can begin.</p>
+        <hr/>
+        <div class="grid-row form-group">
+            <div class="column-half">
+                <button type="button" class="js-close button buttonlink large">Cancel</button>
+            </div>
+            <div class="column-half alignright-button">
+              <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${form}" method="post">
+                <button class="button large button-warning" name="approved" value="false">Reject Documents</button>
+              </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Confirmation on removing collaborators -->
+<div th:fragment="modal-submit-remove-collaborator" th:if="${userIsLead}">
+    <div class="modal-submit-remove-collaborator" role="dialog" aria-hidden="true">
+        <div th:include="fragments/modals :: close-button" th:remove="tag"/>
+
+        <h2 class="heading-medium no-margin">Removing collaborator</h2>
+        <p>Are you sure you wish to remove this collaborator form this application.</p>
+        <p>This step cannot be undone.</p>
+        <hr/>
+        <div class="grid-row extra-margin">
+            <form method="post"
+                  th:action="@{/application/{appId}/contributors/remove(appId = ${currentApplication.getId()})}"
+                  th:object="${removeContributorForm}" id="submit-remove-collaborator-form">
+                <input type="hidden" value="" name="applicationInviteId"/>
+                <div class="column-half">
+                    <button type="button" class="js-close buttonlink large">Cancel</button>
+                </div>
+                <div class="column-half alignright-button">
+                    <button class="button large" name="publish" value="publish" type="submit">Remove</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>

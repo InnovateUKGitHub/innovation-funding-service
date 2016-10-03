@@ -11,8 +11,8 @@ import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.finance.view.*;
 import com.worth.ifs.application.resource.*;
 import com.worth.ifs.application.service.*;
-import com.worth.ifs.bankdetails.BankDetailsService;
 import com.worth.ifs.assessment.service.CompetitionInviteRestService;
+import com.worth.ifs.bankdetails.BankDetailsService;
 import com.worth.ifs.bankdetails.service.BankDetailsRestService;
 import com.worth.ifs.commons.security.UserAuthentication;
 import com.worth.ifs.commons.security.UserAuthenticationService;
@@ -25,16 +25,18 @@ import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.form.service.FormInputResponseService;
 import com.worth.ifs.form.service.FormInputService;
-import com.worth.ifs.invite.constant.InviteStatusConstants;
+import com.worth.ifs.invite.constant.InviteStatus;
 import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.service.InviteOrganisationRestService;
 import com.worth.ifs.invite.service.InviteRestService;
+import com.worth.ifs.invite.service.RejectionReasonRestService;
 import com.worth.ifs.model.OrganisationDetailsModelPopulator;
 import com.worth.ifs.organisation.service.OrganisationAddressRestService;
 import com.worth.ifs.project.ProjectService;
 import com.worth.ifs.project.finance.ProjectFinanceService;
 import com.worth.ifs.project.service.ProjectRestService;
+import com.worth.ifs.project.status.ProjectStatusService;
 import com.worth.ifs.user.resource.*;
 import com.worth.ifs.user.service.OrganisationRestService;
 import com.worth.ifs.user.service.OrganisationTypeRestService;
@@ -49,8 +51,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.springframework.context.MessageSource;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -179,6 +179,10 @@ public class BaseUnitTest {
     public BankDetailsService bankDetailsService;
     @Mock
     public ApplicationSummaryService applicationSummaryService;
+    @Mock
+    public RejectionReasonRestService rejectionReasonRestService;
+    @Mock
+    public ProjectStatusService projectStatusServiceMock;
 
     @Spy
     @InjectMocks
@@ -626,7 +630,7 @@ public class BaseUnitTest {
         InviteOrganisationResource inviteOrganisation = new InviteOrganisationResource(2L, "Invited Organisation Ltd", null, null);
 
         invite = new ApplicationInviteResource();
-        invite.setStatus(InviteStatusConstants.SEND);
+        invite.setStatus(InviteStatus.SENT);
         invite.setApplication(1L);
         invite.setName("Some Invitee");
         invite.setHash(INVITE_HASH);
@@ -644,7 +648,7 @@ public class BaseUnitTest {
         when(inviteRestService.getInviteOrganisationByHash(INVITE_HASH)).thenReturn(restSuccess(new InviteOrganisationResource()));
 
         acceptedInvite = new ApplicationInviteResource();
-        acceptedInvite.setStatus(InviteStatusConstants.ACCEPTED);
+        acceptedInvite.setStatus(InviteStatus.OPENED);
         acceptedInvite.setApplication(1L);
         acceptedInvite.setName("Some Invitee");
         acceptedInvite.setHash(ACCEPTED_INVITE_HASH);
@@ -652,7 +656,7 @@ public class BaseUnitTest {
         when(inviteRestService.getInviteByHash(eq(ACCEPTED_INVITE_HASH))).thenReturn(restSuccess(acceptedInvite));
 
         existingUserInvite = new ApplicationInviteResource();
-        existingUserInvite.setStatus(InviteStatusConstants.SEND);
+        existingUserInvite.setStatus(InviteStatus.SENT);
         existingUserInvite.setApplication(1L);
         existingUserInvite.setName("Some Invitee");
         existingUserInvite.setHash(INVITE_HASH_EXISTING_USER);
@@ -674,13 +678,6 @@ public class BaseUnitTest {
                 }).build(1);
 
         when(questionService.findQuestionStatusesByQuestionAndApplicationId(1l, application.getId())).thenReturn(questionStatusResources);
-    }
-
-    @Bean(name = "messageSource")
-    public MessageSource testMessageSource() {
-        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
-        messageSource.setBasename("messages");
-        return messageSource;
     }
 
     private QuestionResource setupQuestionResource(Long id, String name, QuestionResourceBuilder questionResourceBuilder) {

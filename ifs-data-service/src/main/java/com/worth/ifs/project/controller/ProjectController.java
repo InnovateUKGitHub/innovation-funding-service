@@ -3,20 +3,20 @@ package com.worth.ifs.project.controller;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.bankdetails.resource.BankDetailsResource;
+import com.worth.ifs.bankdetails.resource.ProjectBankDetailsStatusSummary;
 import com.worth.ifs.bankdetails.transactional.BankDetailsService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.transactional.FileHttpHeadersValidator;
-import com.worth.ifs.invite.resource.InviteResource;
+import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.project.resource.ProjectTeamStatusResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
-import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
-import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -31,6 +31,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.worth.ifs.file.controller.FileControllerUtils.*;
+import static java.util.Optional.ofNullable;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 /**
@@ -102,13 +103,13 @@ public class ProjectController {
 
     @RequestMapping(value = "/{projectId}/invite-finance-contact", method = POST)
     public RestResult<Void> inviteFinanceContact(@PathVariable("projectId") final Long projectId,
-                                                 @RequestBody @Valid final ApplicationInviteResource inviteResource) {
+                                                 @RequestBody @Valid final InviteProjectResource inviteResource) {
        return projectService.inviteFinanceContact(projectId, inviteResource).toPostResponse();
     }
 
     @RequestMapping(value = "/{projectId}/invite-project-manager", method = POST)
     public RestResult<Void> inviteProjectManager(@PathVariable("projectId") final Long projectId,
-                                                 @RequestBody @Valid final ApplicationInviteResource inviteResource) {
+                                                 @RequestBody @Valid final InviteProjectResource inviteResource) {
         return projectService.inviteProjectManager(projectId, inviteResource).toPostResponse();
     }
 
@@ -119,7 +120,7 @@ public class ProjectController {
 
     @RequestMapping(value = "/{projectId}/setApplicationDetailsSubmitted", method = POST)
     public RestResult<Void> setApplicationDetailsSubmitted(@PathVariable("projectId") final Long projectId){
-        return projectService.saveProjectSubmitDateTime(projectId, LocalDateTime.now()).toPostResponse();
+        return projectService.submitProjectDetails(projectId, LocalDateTime.now()).toPostResponse();
     }
 
     @RequestMapping(value = "/{projectId}/isSubmitAllowed", method = GET)
@@ -146,13 +147,18 @@ public class ProjectController {
         return projectService.getOrganisationByProjectAndUser(projectId, userId).toGetResponse();
     }
 
+    @RequestMapping(value = "/{projectId}/bank-details", method = PUT)
+    public RestResult<Void> submitBanksDetail(@PathVariable("projectId") final Long projectId, @RequestBody @Valid final BankDetailsResource bankDetailsResource) {
+        return bankDetailsService.submitBankDetails(bankDetailsResource).toPutResponse();
+    }
+
     @RequestMapping(value = "/{projectId}/bank-details", method = POST)
-    public RestResult<Void> updateBanksDetail(@RequestBody @Valid final BankDetailsResource bankDetailsResource) {
+    public RestResult<Void> updateBanksDetail(@PathVariable("projectId") final Long projectId, @RequestBody @Valid final BankDetailsResource bankDetailsResource) {
         return bankDetailsService.updateBankDetails(bankDetailsResource).toPostResponse();
     }
 
     @RequestMapping(value = "/{projectId}/bank-details", method = GET, params = "bankDetailsId")
-    public RestResult<BankDetailsResource> getBankDetails(@RequestParam("bankDetailsId") final Long bankDetailsId) {
+    public RestResult<BankDetailsResource> getBankDetails(@PathVariable("projectId") final Long projectId, @RequestParam("bankDetailsId") final Long bankDetailsId) {
         return bankDetailsService.getById(bankDetailsId).toGetResponse();
     }
 
@@ -160,6 +166,11 @@ public class ProjectController {
     public RestResult<BankDetailsResource> getBankDetailsByOrganisationId(@PathVariable("projectId") final Long projectId,
                                                                           @RequestParam("organisationId") final Long organisationId){
         return bankDetailsService.getByProjectAndOrganisation(projectId, organisationId).toGetResponse();
+    }
+
+    @RequestMapping(value = "/{projectId}/bank-details/status-summary", method = GET)
+    public RestResult<ProjectBankDetailsStatusSummary> getBankDetailsProjectSummary(@PathVariable("projectId") final Long projectId) {
+        return bankDetailsService.getProjectBankDetailsStatusSummary(projectId).toGetResponse();
     }
 
     @RequestMapping(value = "/{projectId}/collaboration-agreement", method = POST, produces = "application/json")
@@ -256,6 +267,13 @@ public class ProjectController {
         return projectService.deleteExploitationPlanFile(projectId).toDeleteResponse();
     }
 
+    @RequestMapping(value = "/{projectId}/partner/documents/approved/{approved}", method = POST)
+    public RestResult<Void> acceptOrRejectOtherDocuments(@PathVariable("projectId") long projectId, @PathVariable("approved") Boolean approved) {
+
+        return projectService.acceptOrRejectOtherDocuments(projectId, approved).toPostResponse();
+
+    }
+
     @RequestMapping(value = "/{projectId}/partner/documents/ready", method = GET)
     public RestResult<Boolean>isOtherDocumentsSubmitAllowed(@PathVariable("projectId") final Long projectId,
                                                             HttpServletRequest request) {
@@ -264,10 +282,21 @@ public class ProjectController {
         return projectService.isOtherDocumentsSubmitAllowed(projectId, authenticatedUser.getId()).toGetResponse();
     }
 
+    @RequestMapping(value = "/{projectId}/partner/documents/submit", method = POST)
+    public RestResult<Void>setPartnerDocumentsSubmitted(@PathVariable("projectId") final Long projectId) {
+        return projectService.saveDocumentsSubmitDateTime(projectId, LocalDateTime.now()).toPostResponse();
+    }
+
     @RequestMapping(value = "/{projectId}/partners", method = POST)
     public RestResult<Void> addPartner(@PathVariable(value = "projectId")Long projectId,
                                        @RequestParam(value = "userId", required = true) Long userId,
                                        @RequestParam(value = "organisationId", required = true) Long organisationId) {
         return projectService.addPartner(projectId, userId, organisationId).toPostResponse();
+    }
+
+    @RequestMapping(value = "/{projectId}/team-status", method = GET)
+    public RestResult<ProjectTeamStatusResource> getTeamStatus(@PathVariable(value = "projectId") Long projectId,
+                                                               @RequestParam(value = "filterByUserId", required = false) Long filterByUserId){
+        return projectService.getProjectTeamStatus(projectId, ofNullable(filterByUserId)).toGetResponse();
     }
 }

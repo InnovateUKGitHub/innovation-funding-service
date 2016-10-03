@@ -216,20 +216,20 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         competition.setInnovationArea(areaId);
 
         //With one co-funder
-        competition.setCoFunders(CompetitionCoFundersFixture.getNewTestCoFundersResouces(1, competition.getId()));
+        competition.setFunders(CompetitionCoFundersFixture.getNewTestCoFundersResouces(1, competition.getId()));
         RestResult<CompetitionResource> saveResult = controller.saveCompetition(competition, competition.getId());
         assertTrue("Assert save is success", saveResult.isSuccess());
         getAllCompetitions(3);
         CompetitionResource savedCompetition = saveResult.getSuccessObject();
-        assertEquals(1, savedCompetition.getCoFunders().size());
+        assertEquals(1, savedCompetition.getFunders().size());
 
         // Now re-insert with 2 co-funders
-        competition.setCoFunders(CompetitionCoFundersFixture.getNewTestCoFundersResouces(2, competition.getId()));
+        competition.setFunders(CompetitionCoFundersFixture.getNewTestCoFundersResouces(2, competition.getId()));
         saveResult = controller.saveCompetition(competition, competition.getId());
         assertTrue("Assert save is success", saveResult.isSuccess());
         savedCompetition = saveResult.getSuccessObject();
         // we should expect in total two co-funders.
-        assertEquals(2, savedCompetition.getCoFunders().size());
+        assertEquals(2, savedCompetition.getFunders().size());
     }
 
     @Rollback
@@ -307,7 +307,38 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         assertEquals(Boolean.FALSE, competitionsResult.getSuccessObject().getSectionSetupStatus().get(CompetitionSetupSection.INITIAL_DETAILS));
     }
 
+    @Rollback
+    @Test
+    public void testMarkAsSetup() throws Exception {
+        getAllCompetitions(2);
 
+        // Create new competition
+        CompetitionResource competition = createNewCompetition();
+
+        getAllCompetitions(3);
+
+        controller.markAsSetup(competition.getId()).getSuccessObject();
+
+        RestResult<CompetitionResource> competitionsResult = controller.getCompetitionById(competition.getId());
+        competitionsResult.getSuccessObject().getCompetitionStatus().equals(CompetitionResource.Status.READY_TO_OPEN);
+    }
+
+    @Rollback
+    @Test
+    public void testReturnToSetup() throws Exception {
+        getAllCompetitions(2);
+
+        // Create new competition
+        CompetitionResource competition = createNewCompetition();
+
+        getAllCompetitions(3);
+
+        controller.markAsSetup(competition.getId()).getSuccessObject();
+        controller.returnToSetup(competition.getId()).getSuccessObject();
+
+        RestResult<CompetitionResource> competitionsResult = controller.getCompetitionById(competition.getId());
+        competitionsResult.getSuccessObject().getCompetitionStatus().equals(CompetitionResource.Status.COMPETITION_SETUP);
+    }
     @Rollback
     @Test
     public void testCompetitionSearch() throws Exception {
@@ -359,7 +390,7 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         List<CompetitionResource> existingComps = getAllCompetitions(2);
 
         CompetitionResource notStartedCompetition = createWithDates(oneDayAhead, twoDaysAhead, threeDaysAhead, fourDaysAhead, fiveDaysAhead, sixDaysAhead);
-        assertThat(notStartedCompetition.getCompetitionStatus(), equalTo(CompetitionResource.Status.NOT_STARTED));
+        assertThat(notStartedCompetition.getCompetitionStatus(), equalTo(CompetitionResource.Status.READY_TO_OPEN));
 
         CompetitionResource openCompetition = createWithDates(oneDayAgo, oneDayAhead, twoDaysAhead, threeDaysAhead, fourDaysAhead, fiveDaysAhead);
         assertThat(openCompetition.getCompetitionStatus(), equalTo(CompetitionResource.Status.OPEN));
@@ -472,7 +503,7 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
 
        //TODO replace with controller endpoint for competition setup finished
        Competition compEntity = competitionRepository.findById(comp.getId());
-       compEntity.setStatus(CompetitionResource.Status.COMPETITION_SETUP_FINISHED);
+       compEntity.setSetupComplete(true);
        competitionRepository.save(compEntity);
        flushAndClearSession();
 

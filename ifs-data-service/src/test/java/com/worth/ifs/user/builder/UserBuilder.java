@@ -1,10 +1,10 @@
 package com.worth.ifs.user.builder;
 
 import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.user.domain.Role;
-import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.domain.*;
+import com.worth.ifs.user.resource.Disability;
+import com.worth.ifs.user.resource.Gender;
+import com.worth.ifs.user.domain.*;
 import com.worth.ifs.user.resource.UserStatus;
 
 import java.util.List;
@@ -18,7 +18,7 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
 /**
- * Builder for Organisation entities.
+ * Builder for User entities.
  */
 public class UserBuilder extends BaseBuilder<User, UserBuilder> {
 
@@ -59,6 +59,18 @@ public class UserBuilder extends BaseBuilder<User, UserBuilder> {
         return withArray((lastName, user) -> setField("lastName", lastName, user), lastNames);
     }
 
+    public UserBuilder withDisability(Disability... disabilities) {
+        return withArray((disability, user) -> setField("disability", disability, user), disabilities);
+    }
+
+    public UserBuilder withEthnicity(Ethnicity... ethnicities) {
+        return withArray((ethnicity, user) -> setField("ethnicity", ethnicity, user), ethnicities);
+    }
+
+    public UserBuilder withGender(Gender... genders) {
+        return withArray((gender, user) -> setField("gender", gender, user), genders);
+    }
+
     public UserBuilder withPhoneNumber(String... phoneNumbers) {
         return withArray((phoneNumber, user) -> setField("phoneNumber", phoneNumber, user), phoneNumbers);
     }
@@ -67,7 +79,7 @@ public class UserBuilder extends BaseBuilder<User, UserBuilder> {
         return withArray((title, user) -> setField("title", title, user), titles);
     }
 
-    public UserBuilder withid(Long... ids) {
+    public UserBuilder withId(Long... ids) {
         return withArray((id, object) -> setField("id", id, object), ids);
     }
 
@@ -85,6 +97,10 @@ public class UserBuilder extends BaseBuilder<User, UserBuilder> {
 
     public UserBuilder withUid(String... uids) {
         return withArray((uid, object) -> setField("uid", uid, object), uids);
+    }
+
+    public UserBuilder withProfile(Profile... profiles) {
+        return withArray((profile, user) -> setField("profile", profile, user), profiles);
     }
 
     @Override

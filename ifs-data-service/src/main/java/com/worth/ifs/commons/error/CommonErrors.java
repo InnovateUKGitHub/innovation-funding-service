@@ -9,6 +9,7 @@ import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.util.CollectionFunctions.simpleJoiner;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.springframework.http.HttpStatus.*;
 
 /**
@@ -32,39 +33,31 @@ public final class CommonErrors {
     }
 
     public static Error lengthRequiredError(long maxFileSizeBytes) {
-        return new Error(LENGTH_REQUIRED, "Please supply a valid Content-Length HTTP header.  Maximum " + maxFileSizeBytes, LENGTH_REQUIRED);
+        return new Error(LENGTH_REQUIRED, singletonList(maxFileSizeBytes), LENGTH_REQUIRED);
     }
 
     public static Error payloadTooLargeError(long maxFileSizeBytes) {
-        return new Error(PAYLOAD_TOO_LARGE, "File upload was too large.  Max filesize in bytes is " + maxFileSizeBytes, PAYLOAD_TOO_LARGE);
+        return new Error(PAYLOAD_TOO_LARGE, singletonList(maxFileSizeBytes), PAYLOAD_TOO_LARGE);
     }
 
     public static Error unsupportedMediaTypeByNameError(List<String> validMediaTypes) {
-        return new Error(UNSUPPORTED_MEDIA_TYPE, "Please supply a valid Content-Type HTTP header.  Valid types are " + simpleJoiner(validMediaTypes, ", "), UNSUPPORTED_MEDIA_TYPE);
+        return new Error(UNSUPPORTED_MEDIA_TYPE, singletonList(simpleJoiner(validMediaTypes, ", ")), UNSUPPORTED_MEDIA_TYPE);
     }
 
     public static Error unsupportedMediaTypeError(List<MediaType> validMediaTypes) {
         return unsupportedMediaTypeByNameError(simpleMap(validMediaTypes, Object::toString));
     }
 
-    public static Error badRequestError(String message) {
-        return new Error(BAD_REQUEST, message, BAD_REQUEST);
-    }
-
-    public static Error badRequestErrorWithKey(String key) {
-        return new Error(key, BAD_REQUEST);
+    public static Error badRequestError(String errorKey) {
+        return new Error(errorKey, BAD_REQUEST);
     }
 
     public static Error internalServerErrorError() {
-        return internalServerErrorError(null);
+        return new Error(GENERAL_UNEXPECTED_ERROR, INTERNAL_SERVER_ERROR);
     }
 
-    public static Error internalServerErrorError(String message) {
-        return new Error(GENERAL_UNEXPECTED_ERROR, message, INTERNAL_SERVER_ERROR);
-    }
-
-    public static Error forbiddenError(String message) {
-        return new Error(GENERAL_FORBIDDEN, message, FORBIDDEN);
+    public static Error forbiddenError() {
+        return new Error(GENERAL_FORBIDDEN, FORBIDDEN);
     }
 
     public static Error forbiddenError(Enum<?> key) {
@@ -81,7 +74,7 @@ public final class CommonErrors {
         allArguments.add(clazz.getSimpleName());
         allArguments.addAll(arguments);
 
-        return new Error(GENERAL_INCORRECT_TYPE.getErrorKey(), clazz.getSimpleName() + " was of an incorrect type", allArguments, GENERAL_INCORRECT_TYPE.getCategory());
+        return new Error(GENERAL_INCORRECT_TYPE.getErrorKey(), allArguments, GENERAL_INCORRECT_TYPE.getCategory());
     }
 
     public static Error incorrectTypeError(Class<?> clazz, Object... arguments) {

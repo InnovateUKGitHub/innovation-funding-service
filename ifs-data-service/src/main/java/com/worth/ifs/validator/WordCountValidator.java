@@ -6,6 +6,8 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 
+import static com.worth.ifs.commons.rest.ValidationMessages.rejectValue;
+
 /**
  * This class validates the FormInputResponse, it checks if the maximum word count has been exceeded.
  */
@@ -18,9 +20,11 @@ public class WordCountValidator extends BaseValidator {
         LOG.debug("do WordCount validation ");
         FormInputResponse response = (FormInputResponse) target;
 
-        if (response.getWordCount() > response.getFormInput().getWordCount()) {
+        int maxWordCount = response.getFormInput().getWordCount();
+
+        if (response.getWordCount() > maxWordCount) {
             LOG.debug("NotEmpty validation message for: " + response.getId());
-            errors.rejectValue("value", "response.wordCount", "Maximum word count exceeded");
+            rejectValue(errors, "value", "validation.field.max.word.count", "", maxWordCount);
         }
     }
 }

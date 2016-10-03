@@ -160,7 +160,7 @@
         <th:block th:unless="${param.status != null and param.status[0] == 'noCompHouse'}">
             <div class="form-group">
                 <label class="form-label" for="companies-house-number">
-                    <span class="form-label-bold">Companies house number</span>
+                    <span class="form-label-bold">Companies House number</span>
                 </label>
                 <p class="form-hint">For example: 1548965</p>
                 <input class="form-control" id="companies-house-number" name="companies-house-number" value="6567388" type="text" />
@@ -464,6 +464,12 @@
                     <div class="form-group">
                         <label for="query" class="form-label-bold">Query</label>
                         <textarea name="query" id="query" cols="30" rows="10" class="width-full" required="required"></textarea>
+                        <div class="count-label alignright">
+                            <small>
+                                <span class="count-message">Words remaining:</span>
+                                <span class="count-down positive" aria-live="polite">400</span>
+                            </small>
+                        </div>
                     </div>
 
                 </th:block>
@@ -482,6 +488,12 @@
                     <div class="form-group">
                         <label for="noteDetails" class="form-label-bold">Note</label>
                         <textarea name="noteDetails" id="query" cols="30" rows="10" class="width-full" required="required"></textarea>
+                        <div class="count-label alignright">
+                            <small>
+                                <span class="count-message">Words remaining:</span>
+                                <span class="count-down positive" aria-live="polite">400</span>
+                            </small>
+                        </div>
                     </div>
 
                 </th:block>
@@ -628,6 +640,12 @@
                 <div class="form-group">
                     <label for="response" class="form-label-bold" th:text="${(queryType == 'query' ? 'Response' : 'Add your comment')}">RESPONSE LABEL</label>
                     <textarea name="response" id="response" cols="30" rows="10" class="width-full" required="required"></textarea>
+                    <div class="count-label alignright">
+                        <small>
+                            <span class="count-message">Words remaining:</span>
+                            <span class="count-down positive" aria-live="polite">400</span>
+                        </small>
+                    </div>
                 </div>
 
             </fieldset>

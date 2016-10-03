@@ -1,13 +1,13 @@
 package com.worth.ifs.transactional;
 
-import com.worth.ifs.BaseIntegrationTest;
+import com.worth.ifs.commons.BaseIntegrationTest;
 import com.worth.ifs.commons.service.ServiceResult;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.annotation.Rollback;
 
-import static com.worth.ifs.commons.error.CommonErrors.forbiddenError;
+import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -26,6 +26,6 @@ public class SpringSecurityServiceResultExceptionHandlingInterceptorTest extends
 
         ServiceResult<String> result = testService.accessDeniedMethod();
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(forbiddenError("This action is not permitted.")));
+        assertTrue(result.getFailure().is(GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION));
     }
 }

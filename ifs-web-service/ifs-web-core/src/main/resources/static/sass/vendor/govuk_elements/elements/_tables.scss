@@ -18,12 +18,12 @@ table {
     border-bottom: 1px solid $border-colour;
   }
 
-  th {
+  th[scope="col"] {
     font-weight: 700;
     // Right align headings for numeric content
     &.numeric {
       text-align: right;
-    } 
+    }
   }
 
   // Use tabular numbers for numeric table cells
@@ -31,4 +31,8 @@ table {
     @include core-16($tabular-numbers: true);
     text-align: right;
   }
+
+}
+.border-right {
+    border-right: 1px solid $border-colour;
 }

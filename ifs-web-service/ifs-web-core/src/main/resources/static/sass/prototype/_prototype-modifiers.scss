@@ -24,6 +24,10 @@
 
 .extra-margin-top{
 	margin-top: 30px;
+	
+	&.medium{
+		margin-top: 10px;
+	}
 }
 
 .extra-margin-right{
@@ -44,6 +48,38 @@
 	}
 }
 
+/*-- Setting percentage widths --*/
+
+$columns: 20;
+
+@for $i from 1 through $columns{
+	.width-#{$i * 5}-percent{
+		width: ($i * 5) * 1%;
+		box-sizing: border-box;
+		padding-right: 1em;
+	}
+	
+	@include media-down(mobile) {
+		.width-#{$i * 5}-percent{
+			width: 100%;
+		}
+	}
+
+}
+
+
+
+/*--- Dark headers ---*/
+
+.dark-view{
+	background: $secondary-text-colour;
+	color: white;
+}
+
+h2.dark-view{
+	padding: 0.5em;
+}
+
 /*--- Inline lists ---*/
 
 .list-inline{
@@ -52,13 +88,30 @@
 	}
 }
 
+/*--- Responsive shoe and hide ---*/
+.show-mobile{
+	display: none !important;
+}
+
+.hide-mobile{
+	display: block !important;
+}
+
+@include media-down(mobile) {
+	.show-mobile{
+		display: initial !important;
+	}
+
+	.hide-mobile{
+		display: none !important;
+	}
+}
 
 /*--- Assign team dropdown js issue ---*/
 
 .assign-team{
 	display: none;
 }
-
 
 /*---  ---*/
 .total-cost{
@@ -136,7 +189,21 @@ table{
 /*--- Full width pages for comp administrators ---*/
 
 .full-width{
+
+	#global-header{
+		.header-wrapper{
+			max-width: 95%;
+			min-width: 960px;
+		}
+	}
+
+	.grid-container{
+		max-width: 95%;
+		min-width: 960px;
+	}
+
 	#content{
+
 		max-width: 95%;
 		min-width: 960px;
 
@@ -144,12 +211,10 @@ table{
 			min-width: 90%;
 		}
 
-		.phase-banner,
-		.sub-header,
+		//.phase-banner,
+		//.sub-header,
 		.hgroup,
-		.centralise,
-		.user-feedback,
-		.inline-nav{
+		.centralise{
 			@extend %site-width-container;
   			@extend %contain-floats;
   			box-sizing: border-box;
@@ -168,6 +233,7 @@ table{
 }
 
 /*--- Contrain areas within full width layout ---*/
+
 .full-width{
 	.constrain-width{
 		max-width: 1400px;
@@ -243,6 +309,24 @@ ul.underline{
 		}
 	}
 }
+
+
+/*--- Inline Nav ---*/
+
+ul.inline-nav{
+	li a{
+		text-decoration: none;
+		color: $black;
+	}
+	li{
+		&.not-selected{
+			background: $grey-3;
+			margin-right: 2px;
+			margin-left: 2px;
+		}
+	}
+}
+
 
 		
 /*--- Controlling visibility of hidden panels for js and non-js ---*/

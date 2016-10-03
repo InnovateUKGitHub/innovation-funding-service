@@ -1,10 +1,11 @@
 package com.worth.ifs.util;
 
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 
 import java.util.Optional;
 
-import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
+import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_UNABLE_TO_PARSE_LONG;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 
@@ -27,7 +28,7 @@ public final class ParsingFunctions {
         try {
             return serviceSuccess(Long.parseLong(string));
         } catch (NumberFormatException e) {
-            return serviceFailure(internalServerErrorError("Unable to parse as Long - " + string));
+            return serviceFailure(new Error(GENERAL_UNABLE_TO_PARSE_LONG, string));
         }
     }
 }

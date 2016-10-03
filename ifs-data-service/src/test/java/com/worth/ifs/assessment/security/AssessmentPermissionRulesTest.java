@@ -12,15 +12,14 @@ import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAsse
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static com.worth.ifs.user.resource.UserRoleType.ASSESSOR;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<AssessmentPermissionRules> {
 
-    private UserResource applicantUser;
     private UserResource assessorUser;
+    private UserResource otherUser;
     private AssessmentResource assessment;
 
     @Override
@@ -30,25 +29,17 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
 
     @Before
     public void setup() {
-        Long processRoleId = 1L;
-        Long userId = 2L;
 
-        applicantUser = newUserResource().build();
-        assessorUser = newUserResource().withId(userId).build();
+        assessorUser = newUserResource().build();
+        otherUser = newUserResource().build();
 
         ProcessRole processRole = newProcessRole()
-                .withUser(newUser().with(id(userId)).build())
-                .withRole(ASSESSOR)
+                .withUser(newUser().with(id(assessorUser.getId())).build())
                 .build();
 
         assessment = newAssessmentResource().withProcessRole(processRole.getId()).build();
 
-        when(processRoleRepositoryMock.findOne(processRoleId)).thenReturn(processRole);
-    }
-
-    @Test
-    public void compAdminCanReadAssessment() {
-        assertTrue("a compadmin should be able to read an assessment", rules.userCanReadAssessment(assessment, compAdminUser()));
+        when(processRoleRepositoryMock.findOne(processRole.getId())).thenReturn(processRole);
     }
 
     @Test
@@ -58,7 +49,7 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
 
     @Test
     public void otherUsersCanNotReadAssessment() {
-        assertFalse("other users should not be able to read any assessments", rules.userCanReadAssessment(assessment, applicantUser));
+        assertFalse("other users should not be able to read any assessments", rules.userCanReadAssessment(assessment, otherUser));
     }
 
     @Test
@@ -67,12 +58,7 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
     }
 
     @Test
-    public void compAdminsCanNotUpdateAssessments() {
-        assertFalse("competition admins should not able to update assessments", rules.userCanUpdateAssessment(assessment, compAdminUser()));
-    }
-
-    @Test
-    public void OtherUsersCanNotUpdateAssessments() {
-        assertFalse("other users should not able to update assessments", rules.userCanUpdateAssessment(assessment, applicantUser));
+    public void otherUsersCanNotUpdateAssessments() {
+        assertFalse("other users should not able to update assessments", rules.userCanUpdateAssessment(assessment, otherUser));
     }
 }

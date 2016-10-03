@@ -52,7 +52,7 @@ public class AssessorFormInputResponseResourceBuilder extends BaseBuilder<Assess
     }
 
     public AssessorFormInputResponseResourceBuilder withValue(String... values) {
-        return withArray((value, assessorFormInputResponse) -> setField("value", value, assessorFormInputResponse), values);
+        return withArray(BuilderAmendFunctions::setValue, values);
     }
 
     public AssessorFormInputResponseResourceBuilder withFormInputMaxWordCount(Integer... formInputMaxWordCounts) {

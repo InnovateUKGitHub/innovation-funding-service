@@ -1,6 +1,7 @@
 package com.worth.ifs.bankdetails;
 
 import com.worth.ifs.bankdetails.resource.BankDetailsResource;
+import com.worth.ifs.bankdetails.resource.ProjectBankDetailsStatusSummary;
 import com.worth.ifs.bankdetails.service.BankDetailsRestService;
 import com.worth.ifs.commons.service.ServiceResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,11 @@ public class BankDetailsServiceImpl implements BankDetailsService {
     }
 
     @Override
+    public ServiceResult<Void> submitBankDetails(Long projectId, BankDetailsResource bankDetailsResource) {
+        return bankDetailsRestService.submitBankDetails(projectId, bankDetailsResource).toServiceResult();
+    }
+
+    @Override
     public ServiceResult<Void> updateBankDetails(Long projectId, BankDetailsResource bankDetailsResource) {
         return bankDetailsRestService.updateBankDetails(projectId, bankDetailsResource).toServiceResult();
     }
@@ -32,5 +38,10 @@ public class BankDetailsServiceImpl implements BankDetailsService {
     @Override
     public BankDetailsResource getBankDetailsByProjectAndOrganisation(Long projectId, Long organisationId) {
         return bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public ProjectBankDetailsStatusSummary getBankDetailsByProject(Long projectId) {
+        return bankDetailsRestService.getBankDetailsStatusSummaryByProject(projectId).getSuccessObjectOrThrowException();
     }
 }
