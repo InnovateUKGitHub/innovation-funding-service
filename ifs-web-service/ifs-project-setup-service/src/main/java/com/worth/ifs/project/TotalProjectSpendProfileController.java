@@ -23,7 +23,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import static com.worth.ifs.util.CollectionFunctions.simpleMapValue;
 
 /**
- * This controller will handle all requests that are related to spend profile.
+ * This controller will handle all requests that are related to the reviewing and submitting of total project spend profiles.
  */
 @Controller
 @RequestMapping("/" + TotalProjectSpendProfileController.BASE_DIR + "/{projectId}/spend-profile/total")
@@ -62,12 +62,12 @@ public class TotalProjectSpendProfileController {
 
     private TotalSpendProfileViewModel buildTotalViewModel(final Long projectId) {
         ProjectResource projectResource = projectService.getById(projectId);
-        TotalProjectSpendTableViewModel tableView = buildTableViewModel(projectId);
+        TotalProjectSpendProfileTableViewModel tableView = buildTableViewModel(projectId);
         SpendProfileSummaryModel summary  = spendProfileTableCalculator.createSpendProfileSummary(projectResource, tableView.getMonthlyCostsPerOrganisationMap(), tableView.getMonths());
         return new TotalSpendProfileViewModel(projectResource, tableView, summary);
     }
 
-    private TotalProjectSpendTableViewModel buildTableViewModel(final Long projectId) {
+    private TotalProjectSpendProfileTableViewModel buildTableViewModel(final Long projectId) {
         List<OrganisationResource> organisations = projectService.getPartnerOrganisationsForProject(projectId);
         Map<String, SpendProfileTableResource> organisationSpendProfiles = organisations.stream().collect(Collectors.toMap(OrganisationResource::getName, organisation -> {
             return projectFinanceService.getSpendProfileTable(projectId, organisation.getId());
@@ -89,7 +89,7 @@ public class TotalProjectSpendProfileController {
         BigDecimal totalOfAllEligibleTotals = spendProfileTableCalculator.calculateTotalOfAllEligibleTotals(eligibleCostPerOrganisationMap);
 
 
-        return new TotalProjectSpendTableViewModel(months, monthlyCostsPerOrganisationMap, eligibleCostPerOrganisationMap, organisationToActualTotal, totalForEachMonth, totalOfAllActualTotals, totalOfAllEligibleTotals);
+        return new TotalProjectSpendProfileTableViewModel(months, monthlyCostsPerOrganisationMap, eligibleCostPerOrganisationMap, organisationToActualTotal, totalForEachMonth, totalOfAllActualTotals, totalOfAllEligibleTotals);
 
     }
 

@@ -18,7 +18,7 @@ import static java.util.stream.Collectors.toList;
 import static com.worth.ifs.util.CollectionFunctions.simpleMapValue;
 
 /**
- * TODO
+ * Component for calculating row and column totals for spend profile tables.
  */
 @Component
 public class SpendProfileTableCalculator {

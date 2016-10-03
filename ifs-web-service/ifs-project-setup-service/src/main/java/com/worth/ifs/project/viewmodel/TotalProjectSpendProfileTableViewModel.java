@@ -17,9 +17,9 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
- * TODO
+ * View model for total spend project spend table. Shows all organisations spend profile totals in one table.
  */
-public class TotalProjectSpendTableViewModel {
+public class TotalProjectSpendProfileTableViewModel {
 
     /*
     * Dynamically holds the months for the duration of the project
@@ -36,7 +36,7 @@ public class TotalProjectSpendTableViewModel {
     private BigDecimal totalOfAllActualTotals;
     private BigDecimal totalOfAllEligibleTotals;
 
-    public TotalProjectSpendTableViewModel(List<LocalDateResource> months, Map<String, List<BigDecimal>> monthlyCostsPerOrganisationMap, Map<String, BigDecimal> eligibleCostPerOrganisationMap, Map<String, BigDecimal> organisationToActualTotal, List<BigDecimal> totalForEachMonth, BigDecimal totalOfAllActualTotals, BigDecimal totalOfAllEligibleTotals) {
+    public TotalProjectSpendProfileTableViewModel(List<LocalDateResource> months, Map<String, List<BigDecimal>> monthlyCostsPerOrganisationMap, Map<String, BigDecimal> eligibleCostPerOrganisationMap, Map<String, BigDecimal> organisationToActualTotal, List<BigDecimal> totalForEachMonth, BigDecimal totalOfAllActualTotals, BigDecimal totalOfAllEligibleTotals) {
         this.months = months;
         this.monthlyCostsPerOrganisationMap = monthlyCostsPerOrganisationMap;
         this.eligibleCostPerOrganisationMap = eligibleCostPerOrganisationMap;
