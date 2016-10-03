@@ -53,6 +53,7 @@ ${MANAGE_CONTRIBUTORS_URL}    ${SERVER}/application/1/contributors/invite
 ${COMP_MANAGEMENT_APPLICATIONS_LIST}    ${SERVER}/management/competition/1
 ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}    ${SERVER}/management/competition/1/application/1
 ${COMP_MANAGEMENT_COMP_SETUP}    ${SERVER}/management/competition/setup/8
+${COMP_MANAGEMENT_PROJECT_SETUP}    ${SERVER}/management/dashboard/projectSetup
 ${NEWLY_CREATED_APPLICATION_YOUR_FINANCES_URL}    ${SERVER}/application/24/form/section/7
 ${CONFIRM_ORGANISATION_URL}    ${SERVER}/organisation/create/confirm-organisation
 ${PROJECT_FINANCE_DASHBOARD_URL}    ${SERVER}/management/projectfinancedashboard
