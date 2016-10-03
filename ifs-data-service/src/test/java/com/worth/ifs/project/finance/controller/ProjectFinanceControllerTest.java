@@ -81,7 +81,7 @@ public class ProjectFinanceControllerTest extends BaseControllerMockMVCTest<Proj
 
 
     @Test
-    public void getSpendProfileCSV() throws Exception {
+    public void getSpendProfileCsv() throws Exception {
 
         Long projectId = 1L;
         Long organisationId = 1L;

@@ -465,3 +465,17 @@ include::{snippets}/project/get-team-status-with-filter-by-user-id/response-fiel
 ===== Curl Example
 include::{snippets}/project/get-team-status-with-filter-by-user-id/curl-request.adoc[]
 include::{snippets}/project/get-team-status-with-filter-by-user-id/curl-request.adoc[]
+
+
+=== Get Spend Profile CSV
+==== Success
+===== Request
+include::{snippets}/project/get-spend-profile-csv/http-request.adoc[]
+include::{snippets}/project/get-spend-profile-csv/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/get-spend-profile-csv/http-response.adoc[]
+include::{snippets}/project/get-spend-profile-csv/response-fields.adoc[]
+
+===== Curl Example
+include::{snippets}/project/get-spend-profile-csv/curl-request.adoc[]

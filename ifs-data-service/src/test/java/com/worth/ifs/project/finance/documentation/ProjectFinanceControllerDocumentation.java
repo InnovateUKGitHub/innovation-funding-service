@@ -102,7 +102,7 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
     }
 
     @Test
-    public void getSpendProfileCSV()  throws Exception {
+    public void getSpendProfileCsv()  throws Exception {
         Long projectId = 1L;
         Long organisationId = 1L;
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
