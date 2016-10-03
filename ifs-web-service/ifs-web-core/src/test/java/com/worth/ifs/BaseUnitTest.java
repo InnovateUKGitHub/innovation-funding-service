@@ -183,10 +183,9 @@ public class BaseUnitTest {
     @Mock
     public RejectionReasonRestService rejectionReasonRestService;
     @Mock
-    public ProjectStatusService projectStatusServiceMock;
-    @Mock
     public FinanceCheckService financeCheckServiceMock;
-
+    @Mock
+    public ProjectStatusService projectStatusServiceMock;
 
     @Spy
     @InjectMocks

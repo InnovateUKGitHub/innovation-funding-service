@@ -1,22 +1,28 @@
 package com.worth.ifs.project.financecheck.form;
 
-import com.worth.ifs.project.finance.resource.FinanceCheckResource;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public class FinanceCheckForm {
-    private FinanceCheckResource financeCheckResource;
+    private List<CostFormField> costs = new ArrayList<>();
 
     public FinanceCheckForm() {
     }
 
-    public FinanceCheckForm(FinanceCheckResource financeCheckResource) {
-        this.financeCheckResource = financeCheckResource;
+    public FinanceCheckForm(List<CostFormField> costs) {
+        this.costs = costs;
     }
 
-    public FinanceCheckResource getFinanceCheckResource() {
-        return financeCheckResource;
+    public List<CostFormField> getCosts() {
+        return costs;
     }
 
-    public void setFinanceCheckResource(FinanceCheckResource financeCheckResource) {
-        this.financeCheckResource = financeCheckResource;
+    public void setCosts(List<CostFormField> costs) {
+        this.costs = costs;
+    }
+
+    public Optional<CostFormField> getCostFormByCategoryName(String categoryName){
+        return costs.stream().filter(c -> c.getCostCategoryName().equals(categoryName)).findFirst();
     }
 }

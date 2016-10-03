@@ -4,6 +4,5 @@ import com.worth.ifs.project.finance.domain.FinanceCheck;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 public interface FinanceCheckRepository extends PagingAndSortingRepository<FinanceCheck, Long> {
-
-    FinanceCheck findByProjectAndOrganisation(Long projectId, Long organisationId);
+    FinanceCheck findByProjectIdAndOrganisationId(Long projectId, Long organisationId);
 }

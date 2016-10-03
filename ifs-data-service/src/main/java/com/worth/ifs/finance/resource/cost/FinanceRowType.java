@@ -3,7 +3,7 @@ package com.worth.ifs.finance.resource.cost;
 /**
  * FinanceRow types are used to identify the different categories that costs can have
  */
-public enum FinanceRowType {
+public enum FinanceRowType implements CostCategoryGenerator {
     LABOUR("labour", true, "Labour"),
     OVERHEADS("overheads", true, "Overheads"),
     MATERIALS("materials", true, "Materials"),
@@ -47,6 +47,10 @@ public enum FinanceRowType {
 
     public boolean isSpendCostCategory() {
         return spendCostCategory;
+    }
+
+    public String getLabel() {
+        return null;
     }
 
     public String getName() {

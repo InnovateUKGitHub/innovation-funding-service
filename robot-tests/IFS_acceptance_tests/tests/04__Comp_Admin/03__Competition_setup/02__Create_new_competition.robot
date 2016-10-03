@@ -654,7 +654,7 @@ the user fills the milestones with valid data
     input text    name=milestoneEntries[NOTIFICATIONS].year    2019
     input text    name=milestoneEntries[RELEASE_FEEDBACK].day    22
     input text    name=milestoneEntries[RELEASE_FEEDBACK].month    1
-    input text    name=milestoneEntries[RELEASE_FEEDBACK].year    2020
+    input text    name=milestoneEntries[RELEASE_FEEDBACK].year    2019
     Focus    jQuery=button:contains(Done)
     sleep    500ms
 

@@ -29,14 +29,13 @@ public class FinanceCheckController {
     @RequestMapping("/{projectId}" + FINANCE_CHECK_ORGANISATION_PATH + "/{organisationId}" + FINANCE_CHECK_PATH)
     public RestResult<FinanceCheckResource> getFinanceCheck(@PathVariable("projectId") final Long projectId,
                                                             @PathVariable("organisationId") final Long organisationId) {
-
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         return financeCheckService.getByProjectAndOrganisation(projectOrganisationCompositeId).toGetResponse();
     }
 
     @RequestMapping(value = FINANCE_CHECK_PATH, method = POST)
-    public RestResult<FinanceCheckResource> updateSpendProfile(@RequestBody FinanceCheckResource financeCheckResource) {
-        return financeCheckService.save(financeCheckResource).toPostCreateResponse();
+    public RestResult<Void> updateSpendProfile(@RequestBody FinanceCheckResource financeCheckResource) {
+        return financeCheckService.save(financeCheckResource).toPostResponse();
     }
 
     @RequestMapping(value = "/{projectId}" + FINANCE_CHECK_ORGANISATION_PATH + "/{organisationId}" + FINANCE_CHECK_PATH, method = POST)

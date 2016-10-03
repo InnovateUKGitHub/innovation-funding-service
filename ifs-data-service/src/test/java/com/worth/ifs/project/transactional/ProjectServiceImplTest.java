@@ -29,12 +29,10 @@ import com.worth.ifs.project.resource.*;
 import com.worth.ifs.user.domain.*;
 import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import com.worth.ifs.user.resource.UserRoleType;
-import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.File;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -42,7 +40,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -1345,53 +1342,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         return fileEntryResourcesToGet;
     }
 
-    private void assertGetFileContents(Consumer<FileEntry> fileSetter, Supplier<ServiceResult<FileAndContents>> getFileContentsFn) {
-
-        FileEntry fileToGet = newFileEntry().build();
-        Supplier<InputStream> inputStreamSupplier = () -> null;
-
-        FileEntryResource fileResourceToGet = newFileEntryResource().build();
-
-        fileSetter.accept(fileToGet);
-        when(fileServiceMock.getFileByFileEntryId(fileToGet.getId())).thenReturn(serviceSuccess(inputStreamSupplier));
-        when(fileEntryMapperMock.mapToResource(fileToGet)).thenReturn(fileResourceToGet);
-
-        ServiceResult<FileAndContents> result = getFileContentsFn.get();
-        assertTrue(result.isSuccess());
-        assertEquals(fileResourceToGet, result.getSuccessObject().getFileEntry());
-        assertEquals(inputStreamSupplier, result.getSuccessObject().getContentsSupplier());
-    }
-
-    private void assertCreateFile(Supplier<FileEntry> fileGetter, BiFunction<FileEntryResource, Supplier<InputStream>, ServiceResult<FileEntryResource>> createFileFn) {
-
-        FileEntryResource fileToCreate = newFileEntryResource().build();
-        Supplier<InputStream> inputStreamSupplier = () -> null;
-
-        FileEntry createdFile = newFileEntry().build();
-        FileEntryResource createdFileResource = newFileEntryResource().build();
-
-        when(fileServiceMock.createFile(fileToCreate, inputStreamSupplier)).thenReturn(serviceSuccess(Pair.of(new File("blah"), createdFile)));
-        when(fileEntryMapperMock.mapToResource(createdFile)).thenReturn(createdFileResource);
-
-        ServiceResult<FileEntryResource> result = createFileFn.apply(fileToCreate, inputStreamSupplier);
-        assertTrue(result.isSuccess());
-        assertEquals(createdFileResource, result.getSuccessObject());
-        assertEquals(createdFile, fileGetter.get());
-    }
-
-    private void assertGetFileDetails(Consumer<FileEntry> fileSetter, Supplier<ServiceResult<FileEntryResource>> getFileDetailsFn) {
-        FileEntry fileToGet = newFileEntry().build();
-
-        FileEntryResource fileResourceToGet = newFileEntryResource().build();
-
-        fileSetter.accept(fileToGet);
-        when(fileEntryMapperMock.mapToResource(fileToGet)).thenReturn(fileResourceToGet);
-
-        ServiceResult<FileEntryResource> result = getFileDetailsFn.get();
-        assertTrue(result.isSuccess());
-        assertEquals(fileResourceToGet, result.getSuccessObject());
-    }
-
     private void assertDeleteFile(Supplier<FileEntry> fileGetter, Consumer<FileEntry> fileSetter, Supplier<ServiceResult<Void>> deleteFileFn) {
         FileEntry fileToDelete = newFileEntry().build();
 
@@ -1403,23 +1353,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         assertNull(fileGetter.get());
 
         verify(fileServiceMock).deleteFile(fileToDelete.getId());
-    }
-
-    private void assertUpdateFile(Supplier<FileEntry> fileGetter, BiFunction<FileEntryResource, Supplier<InputStream>, ServiceResult<Void>> updateFileFn) {
-        FileEntryResource fileToUpdate = newFileEntryResource().build();
-        Supplier<InputStream> inputStreamSupplier = () -> null;
-
-        FileEntry updatedFile = newFileEntry().build();
-        FileEntryResource updatedFileResource = newFileEntryResource().build();
-
-        when(fileServiceMock.updateFile(fileToUpdate, inputStreamSupplier)).thenReturn(serviceSuccess(Pair.of(new File("blah"), updatedFile)));
-        when(fileEntryMapperMock.mapToResource(updatedFile)).thenReturn(updatedFileResource);
-
-        ServiceResult<Void> result = updateFileFn.apply(fileToUpdate, inputStreamSupplier);
-        assertTrue(result.isSuccess());
-        assertEquals(updatedFile, fileGetter.get());
-
-        verify(fileServiceMock).updateFile(fileToUpdate, inputStreamSupplier);
     }
 
     private Project createProjectExpectationsFromOriginalApplication(Application application) {

@@ -10,6 +10,7 @@ import com.worth.ifs.user.domain.Organisation;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -46,6 +47,8 @@ public class Project implements ProcessActivity {
 
     private LocalDateTime documentsSubmittedDate;
 
+    private LocalDateTime offerSubmittedDate;
+
     @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProjectUser> projectUsers = new ArrayList<>();
 
@@ -60,12 +63,30 @@ public class Project implements ProcessActivity {
     @JoinColumn(name="exploitationPlanFileEntryId", referencedColumnName="id")
     private FileEntry exploitationPlan;
 
+    @OneToOne
+    @JoinColumn(name="signedGrantOfferFileEntryId", referencedColumnName = "id")
+    private FileEntry signedGrantOfferLetter;
+
+    @OneToOne
+    @JoinColumn(name="grantOfferLetterFileEntryId", referencedColumnName = "id")
+    private FileEntry grantOfferLetter;
+
+    @OneToOne
+    @JoinColumn(name="additionalContractFileEntryId", referencedColumnName = "id")
+    private FileEntry additionalContractFile;
+
+    @NotNull
+    private boolean offerRejected;
+
     private Boolean otherDocumentsApproved;
+
 
     public Project() {}
 
     public Project(Long id, Application application, LocalDate targetStartDate, Address address,
+
                    Long durationInMonths, String name, LocalDateTime documentsSubmittedDate) {
+
         this.id = id;
         this.application = application;
         this.targetStartDate = targetStartDate;
@@ -191,6 +212,14 @@ public class Project implements ProcessActivity {
         this.documentsSubmittedDate = documentsSubmittedDate;
     }
 
+    public LocalDateTime getOfferSubmittedDate() {
+        return offerSubmittedDate;
+    }
+
+    public void setOfferSubmittedDate(LocalDateTime offerSubmittedDate) {
+        this.offerSubmittedDate = offerSubmittedDate;
+    }
+
     public FileEntry getCollaborationAgreement() {
         return collaborationAgreement;
     }
@@ -205,6 +234,38 @@ public class Project implements ProcessActivity {
 
     public void setExploitationPlan(FileEntry exploitationPlan) {
         this.exploitationPlan = exploitationPlan;
+    }
+
+    public FileEntry getSignedGrantOfferLetter() {
+        return signedGrantOfferLetter;
+    }
+
+    public void setSignedGrantOfferLetter(FileEntry signedGrantOfferLetter) {
+        this.signedGrantOfferLetter = signedGrantOfferLetter;
+    }
+
+    public FileEntry getAdditionalContractFile() {
+        return additionalContractFile;
+    }
+
+    public void setAdditionalContractFile(FileEntry additionalContractFile) {
+        this.additionalContractFile = additionalContractFile;
+    }
+
+    public boolean isOfferRejected() {
+        return offerRejected;
+    }
+
+    public void setOfferRejected(boolean offerRejected) {
+        this.offerRejected = offerRejected;
+    }
+
+    public FileEntry getGrantOfferLetter() {
+        return grantOfferLetter;
+    }
+
+    public void setGrantOfferLetter(FileEntry grantOfferLetter) {
+        this.grantOfferLetter = grantOfferLetter;
     }
 
     public Boolean getOtherDocumentsApproved() {

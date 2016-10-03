@@ -93,7 +93,7 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
         }
 
         @Override
-        public ServiceResult<FinanceCheckResource> save(FinanceCheckResource toUpdate) {
+        public ServiceResult<Void> save(FinanceCheckResource toUpdate) {
             return null;
         }
 

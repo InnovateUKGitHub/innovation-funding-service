@@ -18,6 +18,11 @@ import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.BasicFileAndContents;
 import com.worth.ifs.file.service.FileAndContents;
 import com.worth.ifs.file.transactional.FileService;
+import com.worth.ifs.finance.domain.ApplicationFinance;
+import com.worth.ifs.finance.domain.FinanceRow;
+import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
+import com.worth.ifs.finance.repository.FinanceRowRepository;
+import com.worth.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
 import com.worth.ifs.invite.domain.ProjectParticipantRole;
 import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.notifications.resource.ExternalUserNotificationTarget;
@@ -33,8 +38,10 @@ import com.worth.ifs.project.domain.MonitoringOfficer;
 import com.worth.ifs.project.domain.PartnerOrganisation;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
-import com.worth.ifs.project.finance.domain.SpendProfile;
+import com.worth.ifs.project.finance.domain.*;
+import com.worth.ifs.project.finance.repository.FinanceCheckRepository;
 import com.worth.ifs.project.finance.repository.SpendProfileRepository;
+import com.worth.ifs.project.finance.transactional.CostCategoryTypeStrategy;
 import com.worth.ifs.project.finance.workflow.financechecks.configuration.FinanceCheckWorkflowHandler;
 import com.worth.ifs.project.mapper.MonitoringOfficerMapper;
 import com.worth.ifs.project.mapper.ProjectMapper;
@@ -57,6 +64,7 @@ import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -138,6 +146,18 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     @Autowired
     private FinanceCheckWorkflowHandler financeCheckWorkflowHandler;
 
+    @Autowired
+    private CostCategoryTypeStrategy costCategoryTypeStrategy;
+
+    @Autowired
+    private FinanceCheckRepository financeCheckRepository;
+
+    @Autowired
+    private ApplicationFinanceRepository applicationFinanceRepository;
+
+    @Autowired
+    private FinanceRowRepository financeRowRepository;
+
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
@@ -207,7 +227,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
             if (address.getOrganisations() == null || address.getOrganisations().size() == 0) {
                 AddressType addressType = addressTypeRepository.findOne(organisationAddressType.getOrdinal());
                 List<OrganisationAddress> existingOrgAddresses = organisationAddressRepository.findByOrganisationIdAndAddressType(leadOrganisation.getId(), addressType);
-                existingOrgAddresses.stream().forEach(oA -> organisationAddressRepository.delete(oA));
+                existingOrgAddresses.forEach(oA -> organisationAddressRepository.delete(oA));
                 OrganisationAddress organisationAddress = new OrganisationAddress(leadOrganisation, newAddress, addressType);
                 organisationAddressRepository.save(organisationAddress);
             }
@@ -445,7 +465,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                         return serviceFailure(badRequestError("project does not contain organisation"));
                     }
                     List<ProjectUser> partners = project.getProjectUsersWithRole(PROJECT_PARTNER);
-                    if (partners.stream().map(p -> p.getUser().getId()).collect(toList()).contains(userId)){
+                    if (partners.stream().map(p -> p.getUser().getId()).collect(toList()).contains(userId)) {
                         return serviceSuccess(); // Already a partner
                     } else {
                         ProjectUser pu = new ProjectUser(user, project, PROJECT_PARTNER, organisation);
@@ -560,8 +580,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     private ServiceResult<Void> validateInMonitoringOfficerAssignableState(final Long projectId) {
 
-        return getProject(projectId).andOnSuccess(project ->
-               {
+        return getProject(projectId).andOnSuccess(project -> {
             if (!projectDetailsWorkflowHandler.isSubmitted(project)) {
                 return serviceFailure(PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED);
             } else {
@@ -595,7 +614,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     @Override
     public ServiceResult<OrganisationResource> getOrganisationByProjectAndUser(Long projectId, Long userId) {
         ProjectUser projectUser = projectUserRepository.findByProjectIdAndRoleAndUserId(projectId, PROJECT_PARTNER, userId);
-        if(projectUser != null && projectUser.getOrganisation() != null) {
+        if (projectUser != null && projectUser.getOrganisation() != null) {
             return serviceSuccess(organisationMapper.mapToResource(organisationRepository.findOne(projectUser.getOrganisation().getId())));
         } else {
             return serviceFailure(new Error(CANNOT_FIND_ORG_FOR_GIVEN_PROJECT_AND_USER, NOT_FOUND));
@@ -627,13 +646,11 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     @Override
     public ServiceResult<Void> inviteFinanceContact(Long projectId, InviteProjectResource inviteResource) {
-
         return inviteContact(projectId, inviteResource, INVITE_FINANCE_CONTACT);
     }
 
     @Override
     public ServiceResult<Void> inviteProjectManager(Long projectId, InviteProjectResource inviteResource) {
-
         return inviteContact(projectId, inviteResource, INVITE_PROJECT_MANAGER);
     }
 
@@ -842,7 +859,8 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
             return saveProjectResult.
                     andOnSuccess(newProject -> createProcessEntriesForNewProject(newProject).
-                    andOnSuccessReturn(() -> projectMapper.mapToResource(newProject)));
+                            andOnSuccess(() -> generateFinanceCheckEntitiesForNewProject(newProject)).
+                            andOnSuccessReturn(() -> projectMapper.mapToResource(newProject)));
         });
     }
 
@@ -872,6 +890,45 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         } else {
             return serviceFailure(PROJECT_SETUP_UNABLE_TO_CREATE_PROJECT_PROCESSES);
         }
+    }
+
+    private ServiceResult<Void> generateFinanceCheckEntitiesForNewProject(Project newProject) {
+        List<Organisation> organisations = getPartnerOrganisations(newProject.getId());
+
+        organisations.forEach(organisation -> costCategoryTypeStrategy.getOrCreateCostCategoryTypeForSpendProfile(newProject.getId(), organisation.getId()).
+                andOnSuccessReturn(costCategoryType -> createFinanceCheckFrom(newProject, organisation, costCategoryType)).
+                andOnSuccessReturn(this::populateFinanceCheck));
+        return serviceSuccess();
+    }
+
+    private FinanceCheck createFinanceCheckFrom(Project newProject, Organisation organisation, CostCategoryType costCategoryType) {
+        List<Cost> costs = new ArrayList<>();
+        List<CostCategory> costCategories = costCategoryType.getCostCategories();
+        CostGroup costGroup = new CostGroup("finance-check", costs);
+        costCategories.forEach(costCategory -> {
+            Cost cost = new Cost(new BigDecimal(0.0));
+            costs.add(cost);
+            cost.setCostCategory(costCategory);
+        });
+        costGroup.setCosts(costs);
+
+        FinanceCheck financeCheck = new FinanceCheck(newProject, costGroup);
+        financeCheck.setOrganisation(organisation);
+        financeCheck.setProject(newProject);
+        return financeCheckRepository.save(financeCheck);
+    }
+
+    private FinanceCheck populateFinanceCheck(FinanceCheck financeCheck) {
+        Organisation organisation = financeCheck.getOrganisation();
+        Application application = financeCheck.getProject().getApplication();
+        if (OrganisationTypeEnum.isResearch(organisation.getOrganisationType().getId())) {
+            ApplicationFinance applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(application.getId(), organisation.getId());
+            List<FinanceRow> financeRows = financeRowRepository.findByApplicationFinanceId(applicationFinance.getId());
+            financeCheck.getCostGroup().getCosts().forEach(
+                    c -> c.setValue(AcademicCostCategoryGenerator.findCost(c.getCostCategory(), financeRows))
+            );
+        }
+        return financeCheckRepository.save(financeCheck);
     }
 
     private ServiceResult<ProjectUser> createPartnerProjectUser(Project project, User user, Organisation organisation) {

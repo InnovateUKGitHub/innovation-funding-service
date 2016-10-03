@@ -14,6 +14,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
 /**
@@ -35,6 +36,10 @@ public class ProjectUsersHelper {
         List<ProjectUser> projectUserObjs = getProjectUsersByProjectId(projectId);
         List<ProjectUserResource> projectRoles = simpleMap(projectUserObjs, projectUserMapper::mapToResource);
         return getPartnerOrganisations(projectRoles);
+    }
+
+    public Optional<ProjectUser> getFinanceContact(Long projectId, Long organisationId) {
+        return simpleFindFirst(getProjectUsersByProjectId(projectId), pr -> pr.isFinanceContact() && pr.getOrganisation().getId().equals(organisationId));
     }
 
     private List<ProjectUser> getProjectUsersByProjectId(Long projectId) {

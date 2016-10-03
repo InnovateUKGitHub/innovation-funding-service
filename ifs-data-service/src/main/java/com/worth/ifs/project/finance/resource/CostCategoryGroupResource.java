@@ -1,10 +1,15 @@
 package com.worth.ifs.project.finance.resource;
 
+import com.worth.ifs.project.finance.domain.CostCategory;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.SortedMap;
+import java.util.function.Function;
+
+import static com.worth.ifs.util.CollectionFunctions.toSortedMap;
 
 public class CostCategoryGroupResource {
 
@@ -34,30 +39,33 @@ public class CostCategoryGroupResource {
         return costCategories;
     }
 
+    public SortedMap<String, List<CostCategoryResource>> orderedLabelledCostCategories(){
+        return toSortedMap(getCostCategories(), cc -> cc.getLabel() != null ? cc.getLabel() : "", Function.identity());
+    }
+
     public void setCostCategories(List<CostCategoryResource> costCategories) {
         this.costCategories = costCategories;
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-
         if (o == null || getClass() != o.getClass()) return false;
 
         CostCategoryGroupResource that = (CostCategoryGroupResource) o;
 
-        return new EqualsBuilder()
-                .append(id, that.id)
-                .append(description, that.description)
-                .append(costCategories, that.costCategories)
-                .isEquals();
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        if (description != null ? !description.equals(that.description) : that.description != null) return false;
+        return costCategories != null ? costCategories.equals(that.costCategories) : that.costCategories == null;
+
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(id)
-                .append(description)
-                .toHashCode();
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (costCategories != null ? costCategories.hashCode() : 0);
+        return result;
     }
 }
