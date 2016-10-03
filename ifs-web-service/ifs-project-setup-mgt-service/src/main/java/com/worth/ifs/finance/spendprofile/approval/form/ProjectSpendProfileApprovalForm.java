@@ -9,7 +9,7 @@ public class ProjectSpendProfileApprovalForm extends BaseBindingResultTarget {
 
     private Boolean approvedByLeadTechnologist;
 
-    public ProjectSpendProfileApprovalForm(Boolean approvedByLeadTechnologist) {
+    public void setApprovedByLeadTechnologist(Boolean approvedByLeadTechnologist) {
         this.approvedByLeadTechnologist = approvedByLeadTechnologist;
     }
 
