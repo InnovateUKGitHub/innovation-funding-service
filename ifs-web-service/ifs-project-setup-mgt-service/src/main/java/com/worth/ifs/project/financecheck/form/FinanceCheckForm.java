@@ -25,4 +25,8 @@ public class FinanceCheckForm {
     public Optional<CostFormField> getCostFormByCategoryName(String categoryName){
         return costs.stream().filter(c -> c.getCostCategoryName().equals(categoryName)).findFirst();
     }
+
+    public Long getTotalCost(){
+        return costs.stream().mapToLong(c -> c.getValue().toBigInteger().longValue()).sum();
+    }
 }
