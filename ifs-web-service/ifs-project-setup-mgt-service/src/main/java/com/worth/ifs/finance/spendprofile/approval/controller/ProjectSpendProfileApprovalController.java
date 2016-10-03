@@ -67,7 +67,6 @@ public class ProjectSpendProfileApprovalController {
                                            Model model,
                                            @SuppressWarnings("unused") BindingResult bindingResult,
                                            ValidationHandler validationHandler) {
-
         Supplier<String> failureView = () -> doViewSpendProfileApproval(projectId, model);
         ServiceResult<Void> generateResult = projectFinanceService.approveOrRejectSpendProfile(projectId, approvalType);
 
@@ -77,7 +76,6 @@ public class ProjectSpendProfileApprovalController {
     }
 
     private String doViewSpendProfileApproval(Long projectId, Model model) {
-
         ProjectSpendProfileApprovalViewModel viewModel = populateSpendProfileApprovalViewModel(projectId);
 
         model.addAttribute("model", viewModel);
@@ -86,7 +84,6 @@ public class ProjectSpendProfileApprovalController {
     }
 
     private ProjectSpendProfileApprovalViewModel populateSpendProfileApprovalViewModel(Long projectId) {
-
         ProjectResource project = projectService.getById(projectId);
         ApplicationResource application = applicationService.getById(project.getApplication());
         CompetitionSummaryResource competitionSummary = applicationSummaryService.getCompetitionSummaryByCompetitionId(application.getCompetition());
@@ -98,9 +95,6 @@ public class ProjectSpendProfileApprovalController {
         Boolean isRejected = approvalType.equals(ApprovalType.REJECTED);
         Boolean isNotApprovedOrRejected = approvalType.equals(ApprovalType.UNSET);
 
-        OrganisationResource organisationResource = new OrganisationResource();
-        organisationResource.setName("Test");
-        organisationResource.setId(23L);
         List<OrganisationResource> organisationResources = projectService.getPartnerOrganisationsForProject(projectId);
 
         return new ProjectSpendProfileApprovalViewModel(competitionSummary, leadTechnologist, isApproved, isRejected, isNotApprovedOrRejected, organisationResources);

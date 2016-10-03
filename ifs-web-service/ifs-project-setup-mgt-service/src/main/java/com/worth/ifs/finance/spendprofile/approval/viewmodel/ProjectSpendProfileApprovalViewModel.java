@@ -2,6 +2,7 @@ package com.worth.ifs.finance.spendprofile.approval.viewmodel;
 
 import com.worth.ifs.application.resource.CompetitionSummaryResource;
 import com.worth.ifs.user.resource.OrganisationResource;
+import org.apache.commons.lang3.builder.EqualsBuilder;
 
 import java.util.List;
 
@@ -51,5 +52,23 @@ public class ProjectSpendProfileApprovalViewModel {
 
     public List<OrganisationResource> getOrganisations() {
         return organisations;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ProjectSpendProfileApprovalViewModel that = (ProjectSpendProfileApprovalViewModel) o;
+
+        return new EqualsBuilder()
+                .append(competitionSummary, that.competitionSummary)
+                .append(leadTechnologist, that.leadTechnologist)
+                .append(isApproved, that.isApproved)
+                .append(isRejected, that.isRejected)
+                .append(isNotApprovedOrRejected, that.isNotApprovedOrRejected)
+                .append(organisations, that.organisations)
+                .isEquals();
     }
 }
