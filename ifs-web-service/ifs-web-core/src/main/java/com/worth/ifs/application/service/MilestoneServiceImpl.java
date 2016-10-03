@@ -24,13 +24,18 @@ public class MilestoneServiceImpl implements MilestoneService{
     private MilestoneRestService milestoneRestService;
 
     @Override
-    public List<MilestoneResource> getAllDatesByCompetitionId(Long competitionId) {
-        return milestoneRestService.getAllDatesByCompetitionId(competitionId).getSuccessObjectOrThrowException();
+    public List<MilestoneResource> getAllMilestonesByCompetitionId(Long competitionId) {
+        return milestoneRestService.getAllMilestonesByCompetitionId(competitionId).getSuccessObjectOrThrowException();
     }
 
     @Override
-    public List<Error> update(List<MilestoneResource> milestones, Long competitionId) {
-       RestResult<Void> result = milestoneRestService.update(milestones, competitionId);
+    public MilestoneResource getMilestoneByTypeAndCompetitionId(MilestoneType type, Long competitionId) {
+        return milestoneRestService.getMilestoneByTypeAndCompetitionId(type, competitionId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public List<Error> updateMilestones(List<MilestoneResource> milestones, Long competitionId) {
+       RestResult<Void> result = milestoneRestService.updateMilestones(milestones, competitionId);
        if(result.isFailure()) {
     	   return result.getFailure().getErrors();
        }
@@ -38,8 +43,16 @@ public class MilestoneServiceImpl implements MilestoneService{
     }
 
     @Override
-    public MilestoneResource create(MilestoneType type, Long competitionId)
-    {
+    public List<Error> updateMilestone(MilestoneResource milestone) {
+        RestResult<Void> result = milestoneRestService.updateMilestone(milestone);
+        if(result.isFailure()) {
+            return result.getFailure().getErrors();
+        }
+        return new ArrayList<>();
+    }
+
+    @Override
+    public MilestoneResource create(MilestoneType type, Long competitionId) {
         return milestoneRestService.create(type, competitionId).getSuccessObjectOrThrowException();
     }
 }

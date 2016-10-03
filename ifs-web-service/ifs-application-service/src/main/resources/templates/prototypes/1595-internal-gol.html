@@ -31,7 +31,7 @@
 			<h2 class="heading-small no-margin-top">The grant offer letter has been received and accepted</h2>
 		</div>
 
-		<p>The grant offer letter provided by Innovate UK has been received. Your consortium has completed project set up and will soon be able to complete the process.</p>
+		<p>The grant offer letter provided by Innovate UK has been received. Your consortium has completed project setup and will soon be able to complete the process.</p>
 	</th:block>
 
 	<th:block th:if="${param.status != null and param.status[0] == 'GOLRejected'}">
@@ -44,7 +44,7 @@
 	</th:block>
 
 	<th:block th:if="${param.status == null}">
-		<p>The grant offer letter has been provided by Innovate UK, and has been built from the information provided during project set up.</p>
+		<p>The grant offer letter has been provided by Innovate UK, and has been built from the information provided during project setup.</p>
 	</th:block>
 
 	<th:block th:if="${param.status != null and param.status[0] == 'GOLSent'}">

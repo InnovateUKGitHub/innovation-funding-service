@@ -1,16 +1,15 @@
 package com.worth.ifs.competition.service;
 
-import static com.worth.ifs.commons.service.ParameterizedTypeReferences.milestoneResourceListType;
-
-import java.util.List;
-
-import com.worth.ifs.competition.resource.MilestoneType;
-import org.springframework.stereotype.Service;
-
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.competition.domain.Milestone;
 import com.worth.ifs.competition.resource.MilestoneResource;
+import com.worth.ifs.competition.resource.MilestoneType;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.milestoneResourceListType;
 
 /**
  * MilestoneRestServiceImpl is a utility for CRUD operations on {@link Milestone}.
@@ -23,13 +22,23 @@ public class MilestoneRestServiceImpl extends BaseRestService implements Milesto
     private String milestonesRestURL = "/milestone";
 
     @Override
-    public RestResult<List<MilestoneResource>> getAllDatesByCompetitionId(Long competitionId) {
+    public RestResult<List<MilestoneResource>> getAllMilestonesByCompetitionId(Long competitionId) {
         return getWithRestResult(milestonesRestURL + "/" + competitionId, milestoneResourceListType());
     }
 
     @Override
-    public RestResult<Void> update(List<MilestoneResource> milestones, Long competitionId) {
+    public RestResult<MilestoneResource> getMilestoneByTypeAndCompetitionId(MilestoneType type, Long competitionId) {
+        return getWithRestResult(milestonesRestURL + "/" + competitionId + "/getByType?type=" + type, MilestoneResource.class);
+    }
+
+    @Override
+    public RestResult<Void> updateMilestones(List<MilestoneResource> milestones, Long competitionId) {
         return putWithRestResult(milestonesRestURL + "/" + competitionId, milestones, Void.class);
+    }
+
+    @Override
+    public RestResult<Void> updateMilestone(MilestoneResource milestone) {
+        return putWithRestResult(milestonesRestURL + "/", milestone, Void.class);
     }
 
     @Override

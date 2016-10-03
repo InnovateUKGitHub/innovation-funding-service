@@ -70,6 +70,9 @@ public class User implements Serializable {
     @JoinColumn(name="ethnicity_id", referencedColumnName = "id")
     private Ethnicity ethnicity;
 
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
+    private Profile profile;
+
     public User() {
         // no-arg constructor
     }
@@ -174,8 +177,7 @@ public class User implements Serializable {
         }
 
         stringBuilder
-                .append(lastName)
-                .toString();
+                .append(lastName);
 
         return stringBuilder.toString();
     }
@@ -271,5 +273,13 @@ public class User implements Serializable {
 
     public void setEthnicity(Ethnicity ethnicity) {
         this.ethnicity = ethnicity;
+    }
+    public Profile getProfile() {
+        return profile;
+    }
+
+    public void setProfile(Profile profile) {
+        this.profile = profile;
+        profile.setUser(this);
     }
 }

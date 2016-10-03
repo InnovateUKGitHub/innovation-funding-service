@@ -8,6 +8,7 @@ import com.worth.ifs.controller.ValidationHandlerMethodArgumentResolver;
 import com.worth.ifs.exception.ErrorControllerAdvice;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.invite.formatter.RejectionReasonFormatter;
+import com.worth.ifs.user.formatter.EthnicityFormatter;
 import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -62,6 +63,7 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
 
         FormattingConversionService formattingConversionService = new FormattingConversionService();
         formattingConversionService.addFormatter(new RejectionReasonFormatter());
+        formattingConversionService.addFormatter(new EthnicityFormatter());
 
         MockMvc mockMvc = MockMvcBuilders
                 .standaloneSetup(controller)
