@@ -55,8 +55,6 @@ public class TotalProjectSpendProfileController {
         return "redirect:/project/"+projectId;
     }
 
-
-
     private TotalSpendProfileViewModel buildTotalViewModel(final Long projectId) {
         ProjectResource projectResource = projectService.getById(projectId);
         TotalProjectSpendProfileTableViewModel tableView = buildTableViewModel(projectId);
