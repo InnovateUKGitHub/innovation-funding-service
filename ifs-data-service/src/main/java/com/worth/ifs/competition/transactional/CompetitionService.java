@@ -35,9 +35,9 @@ public interface CompetitionService {
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<CompetitionResource>> findUpcomingCompetitions();
 
-    @PreAuthorize("hasAuthority('comp_admin')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     ServiceResult<CompetitionSearchResult> searchCompetitions(String searchQuery, int page, int size);
 
-    @PreAuthorize("hasAuthority('comp_admin')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     ServiceResult<CompetitionCountResource> countCompetitions();
 }
