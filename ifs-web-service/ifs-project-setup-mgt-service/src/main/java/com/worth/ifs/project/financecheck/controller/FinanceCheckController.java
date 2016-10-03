@@ -9,15 +9,15 @@ import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
-import com.worth.ifs.project.financecheck.form.FinanceCheckSummaryForm;
-import com.worth.ifs.project.financecheck.viewmodel.ProjectFinanceCheckSummaryViewModel;
 import com.worth.ifs.project.ProjectService;
 import com.worth.ifs.project.finance.ProjectFinanceService;
 import com.worth.ifs.project.finance.resource.FinanceCheckResource;
 import com.worth.ifs.project.financecheck.FinanceCheckService;
 import com.worth.ifs.project.financecheck.form.CostFormField;
 import com.worth.ifs.project.financecheck.form.FinanceCheckForm;
+import com.worth.ifs.project.financecheck.form.FinanceCheckSummaryForm;
 import com.worth.ifs.project.financecheck.viewmodel.FinanceCheckViewModel;
+import com.worth.ifs.project.financecheck.viewmodel.ProjectFinanceCheckSummaryViewModel;
 import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
@@ -41,6 +41,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.util.CollectionFunctions.*;
+import static java.math.RoundingMode.HALF_EVEN;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -238,8 +239,7 @@ public class FinanceCheckController {
             return BigDecimal.ZERO;
         }
 
-        return totalFundingSought.divide(projectTotal).multiply(new BigDecimal("100"));
-
+        return totalFundingSought.multiply(BigDecimal.valueOf(100)).divide(projectTotal, 0, HALF_EVEN);
     }
 
     private <T extends Enum> T getEnumForIndex(Class<T> enums, int index) {
