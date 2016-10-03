@@ -139,6 +139,19 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     }
 
     @Test
+    public void testProjectFinanceUserCanSeeApplicationFinanceTotals() {
+
+        ApplicationResource applicationResource = newApplicationResource().build();
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.equals(projectFinanceUser())) {
+                assertTrue(rules.projectFinanceUserCanSeeApplicationFinancesTotals(applicationResource, user));
+            } else {
+                assertFalse(rules.projectFinanceUserCanSeeApplicationFinancesTotals(applicationResource, user));
+            }
+        });
+    }
+
+    @Test
     public void onlyUsersPartOfTheApplicationCanChangeApplicationResourceTest() {
         assertTrue(rules.applicantCanUpdateApplicationResource(applicationResource1, leadOnApplication1));
         assertTrue(rules.applicantCanUpdateApplicationResource(applicationResource1, user2));

@@ -31,9 +31,12 @@
     </thead>
     <tbody>
       <tr th:each="partner : ${model.bankDetailsStatusResources}">
-          <td>
+          <td th:if="${!isCompAdminUser}">
             <a th:unless="${partner.bankDetailsStatus.name() == 'NOT_STARTED' || partner.bankDetailsStatus.name() == 'NOT_REQUIRED'}" th:href="@{organisation/{organisationId}/review-bank-details(organisationId=${partner.organisationId})}" th:text="${partner.organisationName}" />
             <span th:if="${partner.bankDetailsStatus.name() == 'NOT_STARTED' || partner.bankDetailsStatus.name() == 'NOT_REQUIRED'}" th:text="${partner.organisationName}" />
+          </td>
+          <td th:else="${isCompAdminUser}">
+            <div th:text="${partner.organisationName}" />
           </td>
           <td>
             <th:block th:include="project/fragments :: bankDetailsStatus(${partner.bankDetailsStatus.name()})" />
