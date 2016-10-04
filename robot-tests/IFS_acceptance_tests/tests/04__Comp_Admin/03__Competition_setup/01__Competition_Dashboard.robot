@@ -85,7 +85,7 @@ Competition Opens automatically on date
     And the user navigates to the page    ${SERVER}/management/dashboard/live
     Then the user should see the text in the page    Open
     And The competition should be open
-    [Teardown]    execute sql string    UPDATE `ifs`.`milestone` SET `DATE`='2018-02-24 00:00:00' WHERE `id`='9';
+    [Teardown]    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='2018-02-24 00:00:00' WHERE `id`='9';
 
 Search existing applications
     [Documentation]    INFUND-3829
@@ -145,7 +145,7 @@ The competition is ready to open
 
 The Open date changes in the database to one day before
     ${yesterday} =    get yesterday
-    When execute sql string    UPDATE `ifs`.`milestone` SET `DATE`='${yesterday}' WHERE `id`='9';
+    When execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${yesterday}' WHERE `id`='9';
     And the user reloads the page
     Then element should not contain    jQuery=section:nth-child(4)    Sarcasm Stupendousness
 
