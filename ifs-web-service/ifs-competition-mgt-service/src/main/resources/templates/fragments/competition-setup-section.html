@@ -286,7 +286,8 @@
                                th:class="${#fields.hasErrors('funders[__${iteration.index}__].funderBudget') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
                                th:id="${iteration.index}+'-funderBudget'"
                                th:field="${competitionSetupForm.funders[__${iteration.index}__].funderBudget}" value=""
-                               data-required-errormessage="Please enter a budget" />
+                               data-required-errormessage="Please enter a budget"
+                               data-min-errormessage="Please enter a valid number"/>
                         <input type="hidden"
                                th:field="${competitionSetupForm.funders[__${iteration.index}__].coFunder}"
                                th:value="${iteration.index != 0}"/>

@@ -145,5 +145,5 @@ the days remaining should be correct
 the assessment start period changes in the db
     ${today}=    get time
     ${yesterday} =    Subtract Time From Date    ${today}    1 day
-    When execute sql string    UPDATE `ifs`.`milestone` SET `DATE`='${yesterday}' WHERE `id`='30';
+    When execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${yesterday}' WHERE `id`='30';
     And reload page
