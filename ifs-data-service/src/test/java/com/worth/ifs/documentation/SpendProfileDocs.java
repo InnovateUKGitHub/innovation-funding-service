@@ -14,6 +14,11 @@ public class SpendProfileDocs {
             fieldWithPath("validationMessages").description("Validation messages pertaining to spend profile table"),
     };
 
+    public static final FieldDescriptor[] spendProfileCSVFields = {
+            fieldWithPath("csvData").description("Spend profile in the CSV format"),
+            fieldWithPath("fileName").description("CSV file name consisting of partner name and data and time of the download"),
+       };
+
     public static final FieldDescriptor[] spendProfileResourceFields = {
             fieldWithPath("id").description("Id of the Spend Profile Resource"),
             fieldWithPath("organisation").description("Organisation Id of the Spend Profile"),
