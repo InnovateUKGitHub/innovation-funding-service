@@ -9,6 +9,7 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.user.resource.BusinessType;
 import com.worth.ifs.user.resource.ProfileResource;
 import com.worth.ifs.user.resource.UserResource;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -88,6 +89,24 @@ public class AssessorRegistrationProfileControllerTest  extends BaseControllerMo
         verify(userService).updateProfile(1L, profile);
     }
 
+    @Ignore
+    @Test
+    public void submitProfileSkills_invalid() throws Exception {
+        String skillAreas = "skill1 skill2 skill3";
+
+        AssessorRegistrationSkillsForm expectedForm = new AssessorRegistrationSkillsForm();
+        expectedForm.setSkillAreas(skillAreas);
+
+        mockMvc.perform(post("/registration/skills")
+                .contentType(APPLICATION_FORM_URLENCODED)
+                .param("skillAreas", skillAreas))
+                .andExpect(model().attributeExists("form"))
+                .andExpect(model().attributeExists("model"))
+                .andExpect(model().hasErrors())
+                .andExpect(model().attributeHasFieldErrors("form", "assessorType"))
+                .andExpect(view().name("registration/skills"))
+                .andReturn();
+    }
 
     @Test
     public void profileDeclaration() throws Exception {

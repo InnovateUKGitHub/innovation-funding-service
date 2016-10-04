@@ -5,6 +5,7 @@ import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.token.domain.Token;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.ProfileResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Test;
 
@@ -16,6 +17,7 @@ import static com.worth.ifs.commons.error.CommonFailureKeys.USERS_EMAIL_VERIFICA
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.token.resource.TokenType.VERIFY_EMAIL_ADDRESS;
+import static com.worth.ifs.user.builder.ProfileResourceBuilder.newProfileResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.controller.UserController.URL_PASSWORD_RESET;
 import static com.worth.ifs.user.controller.UserController.URL_VERIFY_EMAIL;
@@ -265,15 +267,21 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
     @Test
     public void updateUserProfile() throws Exception {
-        final UserResource user = newUserResource().build();
+        UserResource user = newUserResource().build();
+        ProfileResource profile = newProfileResource().build();
+        Long userId = 1L;
+
+        when(userServiceMock.getUserById(userId)).thenReturn(serviceSuccess(user));
         when(userProfileServiceMock.updateProfile(user)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/user/updateDetails")
+        mockMvc.perform(put("/user/id/{id}/updateProfile", userId)
                 .contentType(APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(user)))
+                .content(new ObjectMapper().writeValueAsString(profile)))
                 .andExpect(status().isOk());
 
+        verify(userServiceMock, times(1)).getUserById(userId);
         verify(userProfileServiceMock, times(1)).updateProfile(user);
-        verifyNoMoreInteractions(registrationServiceMock);
+        verifyNoMoreInteractions(userServiceMock);
+        verifyNoMoreInteractions(userProfileServiceMock);
     }
 }
