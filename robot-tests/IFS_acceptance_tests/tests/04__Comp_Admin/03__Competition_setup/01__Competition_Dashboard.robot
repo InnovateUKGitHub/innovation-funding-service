@@ -8,6 +8,8 @@ Documentation     INFUND-3830: As a Competitions team member I want to view all 
 ...               INFUND-3829 As a Competitions team member I want a dashboard that displays all competitions in different states so I can manage and keep track of them
 ...
 ...               INFUND-3004 As a Competition Executive I want the competition to automatically open based on the date that has been provided in the competition open field in the setup phase.
+...
+...               INFUND-2610 As an internal user I want to be able to view and access all projects that have been successful within a competition so that I can track the project setup process
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
@@ -43,9 +45,7 @@ Live competition calculations
     And the calculations should be correct    Live    //section/ul/li
 
 Project setup Competitions
-    [Documentation]    INFUND-3831
-    ...
-    ...    INFUND-3003
+    [Documentation]    INFUND-3831, INFUND-3003, INFUND-2610
     When the user clicks the button/link    jQuery=a:contains(Project set up)    # We have used the JQuery selector for the link because the title will change according to the competitions number
     Then the user should see the text in the page    Project set up
     And the user should see the text in the page    Killer Riffs
@@ -55,6 +55,30 @@ Project setup competition calculations
     [Documentation]    INFUND-3831
     Then the calculations should be correct    Project set up    //section[1]/ul/li
     And the calculations should be correct    Project set up    //section/ul/li
+
+PS projects title and lead
+    [Documentation]    INFUND-2610
+    Given the user navigates to the page    ${COMP_MANAGEMENT_PROJECT_SETUP}
+    And the user should see the element     link=Killer Riffs
+    When the user clicks the button/link    link=Killer Riffs
+    Then the user should see the element    jQuery=h2:contains("Projects in setup")
+    And the user should see the element     jQuery=tr:nth-child(1) th:contains("best riffs")
+    And the user should see the element     jQuery=tr:nth-child(1) th:contains("Lead: Vitruvius Stonework Limited")
+    And the user should see the element     jQuery=tr:nth-child(2) th:contains("better riffs")
+    And the user should see the element     jQuery=tr:nth-child(2) th:contains("Lead: Guitar Gods Ltd")
+    And the user should see the element     jQuery=tr:nth-child(3) th:contains("awesome riffs")
+    And the user should see the element     jQuery=tr:nth-child(3) th:contains("Lead: Big Riffs And Insane Solos Ltd")
+
+PS projects status
+    [Documentation]    INFUND-2610
+    Given the user navigates to the page        ${COMP_MANAGEMENT_PROJECT_SETUP}
+    And the user clicks the button/link         link=Killer Riffs
+    Then the user should see the element        jQuery=tr:nth-child(1):contains("best riffs")
+    And the user should see the element         jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(1)
+    And the user should see the element         jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(3)
+    And the user should see the element         jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(4)
+    And the user should see the element         jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
+    [Teardown]  The user navigates to the page  ${COMP_ADMINISTRATOR_DASHBOARD}
 
 Upcoming competitions
     [Documentation]    INFUND-3832
