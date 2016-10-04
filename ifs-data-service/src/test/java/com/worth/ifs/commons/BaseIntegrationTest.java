@@ -33,7 +33,7 @@ public abstract class BaseIntegrationTest extends BaseTest {
      *
      * @param user
      */
-    protected void setLoggedInUser(UserResource user) {
+    protected static void setLoggedInUser(UserResource user) {
         SecurityContextHolder.getContext().setAuthentication(new UserAuthentication(user));
     }
 

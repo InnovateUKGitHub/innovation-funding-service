@@ -5,15 +5,18 @@ import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.assessment.transactional.CompetitionInviteService;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestErrorResponse;
+import com.worth.ifs.commons.security.UserAuthentication;
 import com.worth.ifs.invite.domain.CompetitionInvite;
 import com.worth.ifs.invite.domain.CompetitionParticipant;
 import com.worth.ifs.invite.resource.CompetitionInviteResource;
 import com.worth.ifs.invite.resource.CompetitionRejectionResource;
 import com.worth.ifs.invite.resource.RejectionReasonResource;
+import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.Optional;
@@ -24,6 +27,7 @@ import static com.worth.ifs.commons.error.Error.fieldError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.invite.builder.RejectionReasonResourceBuilder.newRejectionReasonResource;
+import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.util.JsonMappingUtil.fromJson;
 import static com.worth.ifs.util.JsonMappingUtil.toJson;
 import static java.util.Collections.nCopies;
@@ -83,16 +87,26 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
 
     @Test
     public void acceptInvite() throws Exception {
-        when(competitionInviteService.acceptInvite("hash")).thenReturn(serviceSuccess());
+        UserResource userResource = newUserResource().withId(7L).build();
+        login(userResource);
+        when(competitionInviteService.acceptInvite("hash", userResource)).thenReturn(serviceSuccess());
+
         mockMvc.perform(post("/competitioninvite/acceptInvite/{inviteHash}", "hash").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
-        verify(competitionInviteService, times(1)).acceptInvite("hash");
+
+        verify(competitionInviteService, times(1)).acceptInvite("hash", userResource);
     }
 
+    public static void login(UserResource userResource) {
+        SecurityContextHolder.getContext().setAuthentication(new UserAuthentication(userResource));
+    }
 
     @Test
     public void acceptInvite_hashNotExists() throws Exception {
-        when(competitionInviteService.acceptInvite("hashNotExists")).thenReturn(serviceFailure(notFoundError(CompetitionParticipant.class, "hashNotExists")));
+        UserResource userResource = newUserResource().withId(7L).build();
+        login(userResource);
+
+        when(competitionInviteService.acceptInvite("hashNotExists", userResource)).thenReturn(serviceFailure(notFoundError(CompetitionParticipant.class, "hashNotExists")));
 
         MvcResult result = mockMvc.perform(post("/competitioninvite/acceptInvite/{inviteHash}", "hashNotExists")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -102,7 +116,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
         RestErrorResponse response = fromJson(result.getResponse().getContentAsString(), RestErrorResponse.class);
         assertEqualsUpNoIncludingStatusCode(response, notFoundError(CompetitionParticipant.class, "hashNotExists"));
 
-        verify(competitionInviteService, times(1)).acceptInvite("hashNotExists");
+        verify(competitionInviteService, times(1)).acceptInvite("hashNotExists", userResource);
     }
 
     @Test
@@ -121,14 +135,17 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
     }
 
     private void acceptFailure(Error expectedError) throws Exception {
-        when(competitionInviteService.acceptInvite("hash")).thenReturn(serviceFailure(expectedError));
+        UserResource userResource = newUserResource().withId(7L).build();
+        login(userResource);
+
+        when(competitionInviteService.acceptInvite("hash", userResource)).thenReturn(serviceFailure(expectedError));
 
         mockMvc.perform(post("/competitioninvite/acceptInvite/{inviteHash}", "hash")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(toJson(new RestErrorResponse(expectedError))));
 
-        verify(competitionInviteService, times(1)).acceptInvite("hash");
+        verify(competitionInviteService, times(1)).acceptInvite("hash", userResource);
     }
 
     @Test
