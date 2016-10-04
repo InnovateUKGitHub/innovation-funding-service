@@ -12,11 +12,13 @@ import com.worth.ifs.project.resource.SpendProfileTableResource;
 import com.worth.ifs.user.domain.Organisation;
 import org.junit.Assert;
 import org.junit.Test;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.springframework.http.HttpStatus;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -37,8 +39,13 @@ import static com.worth.ifs.util.MapFunctions.asMap;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
+import static org.hamcrest.core.IsNull.notNullValue;
+import static org.hamcrest.core.IsNull.nullValue;
+
+
 
 public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFinanceServiceImpl> {
 
@@ -397,12 +404,12 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         Long projectId = 1L;
         Project projectInDb = new Project();
         when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDb);
+        assertThat(projectInDb.getSpendProfileSubmittedDate(), nullValue());
 
         ServiceResult<Void> result = service.completeSpendProfilesReview(projectId);
 
-        verify(projectRepositoryMock).save(projectInDb);
         assertTrue(result.isSuccess());
-        assertTrue(projectInDb.getSpendProfileSubmittedDate() != null);
+        assertThat(projectInDb.getSpendProfileSubmittedDate(), notNullValue());
     }
 
     private SpendProfile createSpendProfile(Project projectInDB, Map<String, BigDecimal> eligibleCostsMap, Map<String, List<BigDecimal>> spendProfileCostsMap) {

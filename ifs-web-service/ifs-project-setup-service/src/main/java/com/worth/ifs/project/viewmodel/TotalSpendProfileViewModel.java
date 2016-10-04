@@ -1,6 +1,9 @@
 package com.worth.ifs.project.viewmodel;
 
 import com.worth.ifs.project.resource.ProjectResource;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
  * View model for the review and submit project spend profile.
@@ -27,31 +30,34 @@ public class TotalSpendProfileViewModel {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
+
         if (o == null || getClass() != o.getClass()) return false;
 
         TotalSpendProfileViewModel that = (TotalSpendProfileViewModel) o;
 
-        if (project != null ? !project.equals(that.project) : that.project != null) return false;
-        if (table != null ? !table.equals(that.table) : that.table != null) return false;
-        return summary != null ? summary.equals(that.summary) : that.summary == null;
-
+        return new EqualsBuilder()
+                .append(project, that.project)
+                .append(table, that.table)
+                .append(summary, that.summary)
+                .isEquals();
     }
 
     @Override
     public int hashCode() {
-        int result = project != null ? project.hashCode() : 0;
-        result = 31 * result + (table != null ? table.hashCode() : 0);
-        result = 31 * result + (summary != null ? summary.hashCode() : 0);
-        return result;
+        return new HashCodeBuilder(17, 37)
+                .append(project)
+                .append(table)
+                .append(summary)
+                .toHashCode();
     }
 
     @Override
     public String toString() {
-        return "TotalSpendProfileViewModel{" +
-                "project=" + project +
-                ", table=" + table +
-                ", summary=" + summary +
-                '}';
+        return new ToStringBuilder(this)
+                .append("project", project)
+                .append("table", table)
+                .append("summary", summary)
+                .toString();
     }
 }
 

@@ -81,47 +81,45 @@ public class TotalProjectSpendProfileTableViewModel {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
+
         if (o == null || getClass() != o.getClass()) return false;
 
         TotalProjectSpendProfileTableViewModel that = (TotalProjectSpendProfileTableViewModel) o;
 
-        if (months != null ? !months.equals(that.months) : that.months != null) return false;
-        if (monthlyCostsPerOrganisationMap != null ? !monthlyCostsPerOrganisationMap.equals(that.monthlyCostsPerOrganisationMap) : that.monthlyCostsPerOrganisationMap != null)
-            return false;
-        if (eligibleCostPerOrganisationMap != null ? !eligibleCostPerOrganisationMap.equals(that.eligibleCostPerOrganisationMap) : that.eligibleCostPerOrganisationMap != null)
-            return false;
-        if (organisationToActualTotal != null ? !organisationToActualTotal.equals(that.organisationToActualTotal) : that.organisationToActualTotal != null)
-            return false;
-        if (totalForEachMonth != null ? !totalForEachMonth.equals(that.totalForEachMonth) : that.totalForEachMonth != null)
-            return false;
-        if (totalOfAllActualTotals != null ? !totalOfAllActualTotals.equals(that.totalOfAllActualTotals) : that.totalOfAllActualTotals != null)
-            return false;
-        return totalOfAllEligibleTotals != null ? totalOfAllEligibleTotals.equals(that.totalOfAllEligibleTotals) : that.totalOfAllEligibleTotals == null;
-
+        return new EqualsBuilder()
+                .append(months, that.months)
+                .append(monthlyCostsPerOrganisationMap, that.monthlyCostsPerOrganisationMap)
+                .append(eligibleCostPerOrganisationMap, that.eligibleCostPerOrganisationMap)
+                .append(organisationToActualTotal, that.organisationToActualTotal)
+                .append(totalForEachMonth, that.totalForEachMonth)
+                .append(totalOfAllActualTotals, that.totalOfAllActualTotals)
+                .append(totalOfAllEligibleTotals, that.totalOfAllEligibleTotals)
+                .isEquals();
     }
 
     @Override
     public int hashCode() {
-        int result = months != null ? months.hashCode() : 0;
-        result = 31 * result + (monthlyCostsPerOrganisationMap != null ? monthlyCostsPerOrganisationMap.hashCode() : 0);
-        result = 31 * result + (eligibleCostPerOrganisationMap != null ? eligibleCostPerOrganisationMap.hashCode() : 0);
-        result = 31 * result + (organisationToActualTotal != null ? organisationToActualTotal.hashCode() : 0);
-        result = 31 * result + (totalForEachMonth != null ? totalForEachMonth.hashCode() : 0);
-        result = 31 * result + (totalOfAllActualTotals != null ? totalOfAllActualTotals.hashCode() : 0);
-        result = 31 * result + (totalOfAllEligibleTotals != null ? totalOfAllEligibleTotals.hashCode() : 0);
-        return result;
+        return new HashCodeBuilder(17, 37)
+                .append(months)
+                .append(monthlyCostsPerOrganisationMap)
+                .append(eligibleCostPerOrganisationMap)
+                .append(organisationToActualTotal)
+                .append(totalForEachMonth)
+                .append(totalOfAllActualTotals)
+                .append(totalOfAllEligibleTotals)
+                .toHashCode();
     }
 
     @Override
     public String toString() {
-        return "TotalProjectSpendProfileTableViewModel{" +
-                "months=" + months +
-                ", monthlyCostsPerOrganisationMap=" + monthlyCostsPerOrganisationMap +
-                ", eligibleCostPerOrganisationMap=" + eligibleCostPerOrganisationMap +
-                ", organisationToActualTotal=" + organisationToActualTotal +
-                ", totalForEachMonth=" + totalForEachMonth +
-                ", totalOfAllActualTotals=" + totalOfAllActualTotals +
-                ", totalOfAllEligibleTotals=" + totalOfAllEligibleTotals +
-                '}';
+        return new ToStringBuilder(this)
+                .append("months", months)
+                .append("monthlyCostsPerOrganisationMap", monthlyCostsPerOrganisationMap)
+                .append("eligibleCostPerOrganisationMap", eligibleCostPerOrganisationMap)
+                .append("organisationToActualTotal", organisationToActualTotal)
+                .append("totalForEachMonth", totalForEachMonth)
+                .append("totalOfAllActualTotals", totalOfAllActualTotals)
+                .append("totalOfAllEligibleTotals", totalOfAllEligibleTotals)
+                .toString();
     }
 }

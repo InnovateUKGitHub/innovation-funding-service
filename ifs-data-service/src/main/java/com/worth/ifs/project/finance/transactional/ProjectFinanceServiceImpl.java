@@ -146,11 +146,9 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
     @Override
     public ServiceResult<Void> completeSpendProfilesReview(Long projectId) {
-        return getProject(projectId).andOnSuccess(project -> {
-            project.setSpendProfileSubmittedDate(LocalDateTime.now());
-            projectRepository.save(project);
-            return serviceSuccess();
-        });
+        return getProject(projectId).andOnSuccessReturnVoid(project ->
+            project.setSpendProfileSubmittedDate(LocalDateTime.now())
+        );
     }
 
     private ServiceResult<Void> validateSpendProfileCosts(SpendProfileTableResource table) {
@@ -221,7 +219,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
                 projectOrganisationCompositeId.getProjectId(), projectOrganisationCompositeId.getOrganisationId());
 
         if(spendProfile.getProject().getSpendProfileSubmittedDate() != null) {
-            return serviceFailure(new Error(SPEND_PROFILE_HAS_BEEN_SUBMITTED_AND_CANNOT_BE_EDITED, HttpStatus.BAD_REQUEST));
+            return serviceFailure(new Error(SPEND_PROFILE_HAS_BEEN_SUBMITTED_AND_CANNOT_BE_EDITED));
         }
 
         spendProfile.setMarkedAsComplete(markAsComplete);
