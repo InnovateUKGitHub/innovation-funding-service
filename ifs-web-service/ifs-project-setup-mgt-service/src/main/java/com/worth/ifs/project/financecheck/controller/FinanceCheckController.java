@@ -56,6 +56,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 @Controller
 @RequestMapping("/project/{projectId}/finance-check")
 public class FinanceCheckController {
+
     private static final String FORM_ATTR_NAME = "form";
 
     @Autowired
@@ -94,11 +95,11 @@ public class FinanceCheckController {
                          @PathVariable("organisationId") Long organisationId,
                          @ModelAttribute(FORM_ATTR_NAME) @Valid FinanceCheckForm form,
                          @SuppressWarnings("unused") BindingResult bindingResult,
-                         ValidationHandler validationHandler,
-                         Model model){
+                         ValidationHandler validationHandler) {
+
         return validationHandler.failNowOrSucceedWith(
                 () -> redirectToFinanceCheckForm(projectId, organisationId),
-                () -> updateFinanceCheck(projectId, organisationId, getFinanceCheckResource(projectId, organisationId), form));
+                () -> updateFinanceCheck(projectId, getFinanceCheckResource(projectId, organisationId), form));
     }
 
     @RequestMapping(method = GET)
@@ -129,7 +130,7 @@ public class FinanceCheckController {
         Supplier<String> failureView = () -> doViewFinanceCheckForm(projectId, organisationId, model);
 
         ServiceResult<Void> updateResult = doUpdateFinanceCheck(getFinanceCheckResource(projectId, organisationId), form);
-        ServiceResult<Void> approveResult = updateResult.andOnSuccess(() -> projectFinanceService.approveFinanceCheck(projectId, organisationId));
+        ServiceResult<Void> approveResult = updateResult.andOnSuccess(() -> financeCheckService.approveFinanceCheck(projectId, organisationId));
 
         return validationHandler.addAnyErrors(approveResult).failNowOrSucceedWith(failureView, () ->
                 redirectToFinanceCheckForm(projectId, organisationId)
@@ -161,7 +162,7 @@ public class FinanceCheckController {
         boolean isResearch = OrganisationTypeEnum.isResearch(organisationResource.getOrganisationType());
         Optional<ProjectUserResource> financeContact = getFinanceContact(projectId, organisationId);
 
-        FinanceCheckProcessResource financeCheckStatus = projectFinanceService.getFinanceCheckApprovalStatus(projectId, organisationId);
+        FinanceCheckProcessResource financeCheckStatus = financeCheckService.getFinanceCheckApprovalStatus(projectId, organisationId);
         boolean financeChecksApproved = APPROVED.equals(financeCheckStatus.getCurrentState());
         String approverName = financeCheckStatus.getInternalParticipant() != null ? financeCheckStatus.getInternalParticipant().getName() : null;
         LocalDate approvalDate = financeCheckStatus.getModifiedDate().toLocalDate();
@@ -189,7 +190,7 @@ public class FinanceCheckController {
         return financeCheckService.getByProjectAndOrganisation(key);
     }
 
-    private String updateFinanceCheck(Long projectId, Long organisationId, FinanceCheckResource currentFinanceCheckResource, FinanceCheckForm financeCheckForm){
+    private String updateFinanceCheck(Long projectId, FinanceCheckResource currentFinanceCheckResource, FinanceCheckForm financeCheckForm){
         // TODO map by name once form is dynamic
         doUpdateFinanceCheck(currentFinanceCheckResource, financeCheckForm);
 
