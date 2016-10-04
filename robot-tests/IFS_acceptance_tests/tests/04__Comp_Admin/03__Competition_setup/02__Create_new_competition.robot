@@ -414,6 +414,13 @@ Milestones: Client side validations
     [Tags]    HappyPath
     When the user fills the milestones with valid data
     Then The user should not see the text in the page    please enter a future date that is after the previous milestone
+    Then The user should not see the text in the page    please enter a valid date
+
+Milestones: Autosave
+    [Tags]    Pending
+    When the user clicks the button/link    link=Competition set up
+    And the user clicks the button/link    link=Milestones
+    Then the user should see the correct inputs in the Milestones form
 
 Milestones: Correct Weekdays should show
     [Documentation]    INFUND-2993
@@ -520,9 +527,9 @@ the user should not see the error any more
     [Arguments]    ${ERROR_TEXT}
     run keyword and ignore error    mouse out    css=input
     Focus    jQuery=.button:contains("Done")
+    Wait for autosave
     Wait Until Element Does Not Contain    css=.error-message    ${ERROR_TEXT}
     sleep    500ms
-    Wait for autosave
 
 the total should be correct
     [Arguments]    ${Total}
@@ -734,3 +741,18 @@ the users waits until the page is autosaved
     Focus    jQuery=button:contains(Done)
     sleep    1s
     Wait For Autosave
+
+the user should see the correct inputs in the Milestones form
+    Element Should Contain    css=tr:nth-of-type(1) td:nth-of-type(2)    Thu
+    Element Should Contain    css=tr:nth-of-type(2) td:nth-of-type(2)    Fri
+    Element Should Contain    css=tr:nth-of-type(3) td:nth-of-type(2)    Sat
+    Element Should Contain    css=tr:nth-of-type(4) td:nth-of-type(2)    Sun
+    Element Should Contain    css=tr:nth-of-type(5) td:nth-of-type(2)    Mon
+    Element Should Contain    css=tr:nth-of-type(6) td:nth-of-type(2)    Tue
+    Element Should Contain    css=tr:nth-of-type(7) td:nth-of-type(2)    Wed
+    Element Should Contain    css=tr:nth-of-type(8) td:nth-of-type(2)    Thu
+    Element Should Contain    css=tr:nth-of-type(9) td:nth-of-type(2)    Fri
+    Element Should Contain    css=tr:nth-of-type(10) td:nth-of-type(2)    Sat
+    Element Should Contain    css=tr:nth-of-type(11) td:nth-of-type(2)    Sun
+    Element Should Contain    css=tr:nth-of-type(12) td:nth-of-type(2)    Mon
+    Element Should Contain    css=tr:nth-of-type(13) td:nth-of-type(2)    Tue
