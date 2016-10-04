@@ -131,7 +131,7 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
     }
 
     @Test
-    public void getSpendProfileCSVWhenSpendProfileDataNotInDb()  throws Exception {
+    public void getSpendProfileCsvWhenSpendProfileDataNotInDb()  throws Exception {
         Long projectId = 1L;
         Long organisationId = 1L;
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
@@ -148,7 +148,7 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
     }
 
     @Test
-    public void getSpendProfileCSVWhenIOException()  throws Exception {
+    public void getSpendProfileCsvWhenIoException()  throws Exception {
         Long projectId = 1L;
         Long organisationId = 1L;
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
