@@ -75,13 +75,16 @@
 <div th:fragment="prototype-assesor-row-invite">
    
     <ul class="tabular-list__row">
-        <li class="width-third">
+
+        <li class="width-25-percent">
             <h3 class="heading-small no-margin"><a href="#" th:text="${name}">NAME</a></h3>
-            <p class="no-margin" th:text="${position}">POSITION</p>
+        </li>
+
+        <li class="width-20-percent">
             <p class="no-margin-top" th:text="${org}">ORG</p>
         </li>
         
-        <li class="width-third">
+        <li class="width-20-percent">
 
             <th:block th:if="${status == null}">
 
@@ -97,11 +100,15 @@
             </th:block>
 
         </li>
+        
+        <li class="width-15-percent">
+            <span class="yes">Yes</span>
+        </li>
 
-        <li class="width-third alignright">
+        <li class="width-20-percent alignright">
 
             <th:block th:if="${status == null}">
-                <a th:href="${'/prototypes/4607-manage-assessors-invite?status=invite-individual&#38;name='+name}" class="button invite-individual">Invite individual</a>
+                <a th:href="${'/prototypes/4607-manage-assessors-invite?status=invite-individual&#38;name='+name+'&#38;version=v2'}" class="button invite-individual">Invite individual</a>
             </th:block>
             
             <th:block th:if="${status != null}">
@@ -400,7 +407,7 @@
                     </label>
                 </li>
                 <li id="assessor-contract" class="width-15-percent">Contract and DOI</li>
-                <li class="width-20-percent alignright"><a href="/prototypes/4607-manage-assessors-invite?status=invite-group" class="button button-secondary disabled" id="invite-group">Invite group</a></li>
+                <li class="width-20-percent alignright"><a href="/prototypes/4607-manage-assessors-invite?status=invite-group&#38;version=v2" class="button button-secondary disabled" id="invite-group">Invite group</a></li>
             </ul>
 
             <th:block th:if="${param.status != null and param.status[0] == 'invite-new'}">
@@ -411,11 +418,11 @@
 
             <div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-invite" th:with="row=2,name=${'Christopher Soames'},org=${'Public Health England'},position=${'Senior Adviser on technology deployment'},status=${param.status != null and param.status[0] == 'invite-group' ? 'Invite sent ' + #dates.format(#dates.createNow(), 'dd/MM/yyyy'): null}" th:remove="tag" />
 
-            <div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-invite" th:with="row=3,name=${'Martin Trollope'},org=${'Cardiff University'},position=${'Reader, Healthcare outcome measurement'},status=${'Invite declined'},msg=${'Invite declined as person is too busy'}" th:remove="tag" />
+            <div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-invite" th:with="row=3,name=${'Martin Trollope'},org=${'Cardiff University'},position=${'Reader, Healthcare outcome measurement'},status=${null},msg=${'Invite declined as person is too busy'}" th:remove="tag" />
 
-            <div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-invite" th:with="row=4,name=${'Chantel Secrete'},org=${'University College London'},position=${'Reader, Technology Interventions'},status=${'Invite sent 12/02/2016'}" th:remove="tag" />
+            <div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-invite" th:with="row=4,name=${'Chantel Secrete'},org=${'University College London'},position=${'Reader, Technology Interventions'},status=${null}" th:remove="tag" />
 
-            <div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-invite" th:with="row=5,name=${'Richard Turner'},org=${'Reading University'},position=${'Lecturer of physics'},status=${'Invite accepted'}" th:remove="tag" />
+            <div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-invite" th:with="row=5,name=${'Richard Turner'},org=${'Reading University'},position=${'Lecturer of physics'},status=${null}" th:remove="tag" />
 
             <div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assessor-pagination"  th:remove="tag" />
 
