@@ -7,6 +7,7 @@ import com.worth.ifs.finance.builder.ApplicationFinanceResourceBuilder;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.project.builder.SpendProfileResourceBuilder;
 import com.worth.ifs.project.finance.resource.FinanceCheckResource;
+import com.worth.ifs.project.finance.resource.FinanceCheckState;
 import com.worth.ifs.project.financecheck.form.FinanceCheckForm;
 import com.worth.ifs.project.financecheck.viewmodel.FinanceCheckViewModel;
 import com.worth.ifs.project.financecheck.viewmodel.ProjectFinanceCheckSummaryViewModel;
@@ -63,6 +64,7 @@ public class FinanceCheckControllerTest extends BaseControllerMockMVCTest<Financ
         when(projectFinanceService.getFinanceCheckApprovalStatus(projectId, organisationId)).thenReturn(
                 newFinanceCheckProcessResource().
                         withCanApprove(true).
+                        withState(FinanceCheckState.APPROVED).
                         withInternalParticipant(newUserResource().withFirstName("Mr").withLastName("Approver").build()).
                         withModifiedDate(LocalDateTime.of(2016, 10, 04, 12, 13, 14)).
                         build());
