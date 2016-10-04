@@ -30,7 +30,6 @@ import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 
 /**
@@ -54,7 +53,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     @Override
     public ServiceResult<FinanceCheckResource> getByProjectAndOrganisation(ProjectOrganisationCompositeId key) {
         return find(financeCheckRepository.findByProjectIdAndOrganisationId(key.getProjectId(), key.getOrganisationId()),
-                notFoundError(FinanceCheck.class, id)).
+                notFoundError(FinanceCheck.class, key)).
                 andOnSuccessReturn(this::mapToResource);
     }
 
