@@ -29,6 +29,8 @@ import java.util.Optional;
 
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.application.builder.CompetitionSummaryResourceBuilder.newCompetitionSummaryResource;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.project.builder.CostGroupResourceBuilder.newCostGroupResource;
 import static com.worth.ifs.project.builder.FinanceCheckResourceBuilder.newFinanceCheckResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static com.worth.ifs.project.finance.builder.FinanceCheckProcessResourceBuilder.newFinanceCheckProcessResource;
@@ -36,9 +38,8 @@ import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisa
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.util.CollectionFunctions.mapWithIndex;
 import static junit.framework.TestCase.assertFalse;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -61,7 +62,7 @@ public class FinanceCheckControllerTest extends BaseControllerMockMVCTest<Financ
 
         when(organisationService.getOrganisationById(organisationId)).thenReturn(organisationResource);
         when(financeCheckServiceMock.getByProjectAndOrganisation(key)).thenReturn(newFinanceCheckResource().build());
-        when(projectFinanceService.getFinanceCheckApprovalStatus(projectId, organisationId)).thenReturn(
+        when(financeCheckServiceMock.getFinanceCheckApprovalStatus(projectId, organisationId)).thenReturn(
                 newFinanceCheckProcessResource().
                         withCanApprove(true).
                         withState(FinanceCheckState.APPROVED).
@@ -178,6 +179,26 @@ public class FinanceCheckControllerTest extends BaseControllerMockMVCTest<Financ
                 .andExpect(view().name("project/financecheck/summary"))
         ;
 
+    }
+
+    @Test
+    public void testApproveFinanceCheck() throws Exception {
+
+        FinanceCheckResource financeCheck = newFinanceCheckResource().
+                withCostGroup(newCostGroupResource().build()).
+                build();
+
+        when(financeCheckServiceMock.update(financeCheck)).thenReturn(serviceSuccess());
+        when(financeCheckServiceMock.approveFinanceCheck(123L, 456L)).thenReturn(serviceSuccess());
+        when(financeCheckServiceMock.getByProjectAndOrganisation(new ProjectOrganisationCompositeId(123L, 456L))).thenReturn(financeCheck);
+
+        mockMvc.perform(post("/project/{projectId}/finance-check/organisation/{organisationId}", 123L, 456L).
+                param("approve", "true"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/project/123/finance-check/organisation/456"));
+
+        verify(financeCheckServiceMock).update(financeCheck);
+        verify(financeCheckServiceMock).approveFinanceCheck(123L, 456L);
     }
 
     private <T extends Enum> T getEnumForIndex(Class<T> enums, int index) {
