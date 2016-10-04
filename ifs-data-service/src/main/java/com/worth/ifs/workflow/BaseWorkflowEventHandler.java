@@ -1,6 +1,7 @@
 package com.worth.ifs.workflow;
 
 import com.worth.ifs.invite.domain.ProcessActivity;
+import com.worth.ifs.user.domain.User;
 import com.worth.ifs.workflow.domain.ActivityState;
 import com.worth.ifs.workflow.domain.ActivityType;
 import com.worth.ifs.workflow.domain.Process;
@@ -64,12 +65,23 @@ public abstract class BaseWorkflowEventHandler<ProcessType extends Process<Parti
             LOG.debug("STATE: " + state.getId() + " transition: " + transition + " message: " + message + " transition: " + transition + " stateMachine " + stateMachine.getClass().getName());
 
             ProcessType processToUpdate = getOrCreateProcess(message);
+            getParticipant(message).ifPresent(processToUpdate::setParticipant);
+            getInternalParticipant(message).ifPresent(processToUpdate::setInternalParticipant);
+
             ActivityState newState = activityStateRepository.findOneByActivityTypeAndState(getActivityType(), state.getId().getBackingState());
             processToUpdate.setActivityState(newState);
             processToUpdate.setProcessEvent(message.getPayload().getType());
 
             getProcessRepository().save(processToUpdate);
         }
+    }
+
+    protected Optional<ParticipantType> getParticipant(Message<EventType> message) {
+        return getOptionalParameterFromMessage("participant", message);
+    }
+
+    protected Optional<User> getInternalParticipant(Message<EventType> message) {
+        return getOptionalParameterFromMessage("internalParticipant", message);
     }
 
     protected boolean fireEvent(MessageBuilder<EventType> event, TargetType target) {
@@ -108,6 +120,10 @@ public abstract class BaseWorkflowEventHandler<ProcessType extends Process<Parti
         });
 
         return processToUpdate;
+    }
+
+    protected <T> Optional<T> getOptionalParameterFromMessage(String parameterName, Message<EventType> message) {
+        return Optional.ofNullable((T) message.getHeaders().get(parameterName));
     }
 
     protected abstract ProcessType createNewProcess(TargetType target, ParticipantType participant);

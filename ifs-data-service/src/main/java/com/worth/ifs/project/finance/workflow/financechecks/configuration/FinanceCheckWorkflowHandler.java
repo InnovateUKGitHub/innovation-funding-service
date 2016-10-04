@@ -102,12 +102,12 @@ public class FinanceCheckWorkflowHandler extends BaseWorkflowEventHandler<Financ
                 .setHeader("participant", originalLeadApplicantProjectUser);
     }
 
-    private MessageBuilder<FinanceCheckOutcomes> financeCheckFiguresEditedEvent(PartnerOrganisation partnerOrganisation, User internalUser,
+    private MessageBuilder<FinanceCheckOutcomes> financeCheckFiguresEditedEvent(PartnerOrganisation partnerOrganisation, User financeTeamMember,
                                                                                 FinanceCheckOutcomes event) {
         return MessageBuilder
                 .withPayload(event)
                 .setHeader("target", partnerOrganisation)
-                .setHeader("internalParticipant", internalUser);
+                .setHeader("internalParticipant", financeTeamMember);
     }
 
     private MessageBuilder<FinanceCheckOutcomes> approveFinanceCheckMessage(User financeTeamMember, PartnerOrganisation partnerOrganisation) {

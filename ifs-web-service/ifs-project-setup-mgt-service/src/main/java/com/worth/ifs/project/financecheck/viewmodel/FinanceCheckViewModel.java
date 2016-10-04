@@ -13,26 +13,26 @@ public class FinanceCheckViewModel {
     private String financeContactName;
     private String financeContactEmail;
     private boolean isResearch;
-    private boolean isApproved;
+    private boolean financeChecksApproved;
     private String approverName;
     private LocalDate approvalDate;
 
     FinanceCheckViewModel() {
     }
 
-    public FinanceCheckViewModel(Long projectId, Long organisationId, String financeContactName, String financeContactEmail, boolean isResearch, boolean isApproved, String approverName, LocalDate approvalDate) {
+    public FinanceCheckViewModel(Long projectId, Long organisationId, String financeContactName, String financeContactEmail, boolean isResearch, boolean financeChecksApproved, String approverName, LocalDate approvalDate) {
         this.projectId = projectId;
         this.organisationId = organisationId;
         this.financeContactName = financeContactName;
         this.financeContactEmail = financeContactEmail;
         this.isResearch = isResearch;
-        this.isApproved = isApproved;
+        this.financeChecksApproved = financeChecksApproved;
         this.approverName = approverName;
         this.approvalDate = approvalDate;
     }
 
-    public FinanceCheckViewModel(Long projectId, Long organisationId, boolean isResearch, boolean isApproved, String approverName, LocalDate approvalDate) {
-        this(projectId, organisationId, null, null, isResearch, isApproved, approverName, approvalDate);
+    public FinanceCheckViewModel(Long projectId, Long organisationId, boolean isResearch, boolean financeChecksApproved, String approverName, LocalDate approvalDate) {
+        this(projectId, organisationId, null, null, isResearch, financeChecksApproved, approverName, approvalDate);
     }
 
     public String getFinanceContactName() {
@@ -47,12 +47,12 @@ public class FinanceCheckViewModel {
         return isResearch;
     }
 
-    public boolean isApproved() {
-        return isApproved;
+    public boolean isFinanceChecksApproved() {
+        return financeChecksApproved;
     }
 
-    public void setApproved(boolean approved) {
-        isApproved = approved;
+    public void setFinanceChecksApproved(boolean financeChecksApproved) {
+        this.financeChecksApproved = financeChecksApproved;
     }
 
     public String getApproverName() {
@@ -71,12 +71,12 @@ public class FinanceCheckViewModel {
         return organisationId;
     }
 
-    public boolean isShowApprovedMessage() {
-        return isApproved;
+    public boolean isShowFinanceChecksApprovedMessage() {
+        return financeChecksApproved;
     }
 
     public boolean isShowApproveButton() {
-        return !isApproved;
+        return !financeChecksApproved;
     }
 
     @Override
@@ -89,7 +89,7 @@ public class FinanceCheckViewModel {
 
         return new EqualsBuilder()
                 .append(isResearch, that.isResearch)
-                .append(isApproved, that.isApproved)
+                .append(financeChecksApproved, that.financeChecksApproved)
                 .append(financeContactName, that.financeContactName)
                 .append(financeContactEmail, that.financeContactEmail)
                 .append(approverName, that.approverName)
@@ -103,7 +103,7 @@ public class FinanceCheckViewModel {
                 .append(financeContactName)
                 .append(financeContactEmail)
                 .append(isResearch)
-                .append(isApproved)
+                .append(financeChecksApproved)
                 .append(approverName)
                 .append(approvalDate)
                 .toHashCode();
@@ -115,7 +115,7 @@ public class FinanceCheckViewModel {
                 .append("financeContactName", financeContactName)
                 .append("financeContactEmail", financeContactEmail)
                 .append("isResearch", isResearch)
-                .append("isApproved", isApproved)
+                .append("isApproved", financeChecksApproved)
                 .append("approverName", approverName)
                 .append("approvalDate", approvalDate)
                 .toString();

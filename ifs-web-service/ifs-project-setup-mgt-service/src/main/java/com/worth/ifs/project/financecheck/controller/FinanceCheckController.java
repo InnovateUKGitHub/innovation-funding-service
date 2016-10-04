@@ -43,6 +43,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.project.finance.resource.FinanceCheckState.APPROVED;
 import static com.worth.ifs.util.CollectionFunctions.*;
 import static java.math.RoundingMode.HALF_EVEN;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -155,6 +156,7 @@ public class FinanceCheckController {
         Optional<ProjectUserResource> financeContact = getFinanceContact(projectId, organisationId);
 
         FinanceCheckProcessResource financeCheckStatus = projectFinanceService.getFinanceCheckApprovalStatus(projectId, organisationId);
+        boolean financeChecksApproved = APPROVED.equals(financeCheckStatus.getCurrentState());
         String approverName = financeCheckStatus.getInternalParticipant() != null ? financeCheckStatus.getInternalParticipant().getName() : null;
         LocalDate approvalDate = financeCheckStatus.getModifiedDate().toLocalDate();
 
@@ -162,9 +164,9 @@ public class FinanceCheckController {
 
         if (financeContact.isPresent()) {
             financeCheckViewModel = new FinanceCheckViewModel(projectId, organisationId, financeContact.get().getUserName(), financeContact.get().getEmail(), isResearch,
-                    financeCheckStatus.isCanApprove(), approverName, approvalDate);
+                    financeChecksApproved, approverName, approvalDate);
         } else {
-            financeCheckViewModel = new FinanceCheckViewModel(projectId, organisationId, isResearch, financeCheckStatus.isCanApprove(), approverName, approvalDate);
+            financeCheckViewModel = new FinanceCheckViewModel(projectId, organisationId, isResearch, financeChecksApproved, approverName, approvalDate);
         }
 
         model.addAttribute("model", financeCheckViewModel);

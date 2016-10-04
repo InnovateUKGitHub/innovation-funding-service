@@ -70,7 +70,7 @@ public class FinanceCheckControllerTest extends BaseControllerMockMVCTest<Financ
         assertEquals("Mr Approver", financeCheckViewModel.getApproverName());
         assertNull(financeCheckViewModel.getFinanceContactEmail());
         assertNull(financeCheckViewModel.getFinanceContactName());
-        assertTrue(financeCheckViewModel.isApproved());
+        assertTrue(financeCheckViewModel.isFinanceChecksApproved());
         assertFalse(financeCheckViewModel.isResearch());
 
         FinanceCheckForm form = (FinanceCheckForm) result.getModelAndView().getModel().get("form");
