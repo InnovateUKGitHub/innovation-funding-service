@@ -11,6 +11,7 @@ import com.worth.ifs.project.finance.workflow.financechecks.resource.FinanceChec
 import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
 import com.worth.ifs.project.transactional.AbstractProjectServiceImpl;
 import com.worth.ifs.user.mapper.UserMapper;
+import com.worth.ifs.util.GraphBuilderContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -109,18 +110,17 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     }
 
     private FinanceCheckResource mapToResource(FinanceCheck fc) {
-        Map<Object, Object> ctx = new HashMap<>();
         FinanceCheckResource financeCheckResource = new FinanceCheckResource();
         financeCheckResource.setId(fc.getId());
         financeCheckResource.setOrganisation(fc.getOrganisation().getId());
         financeCheckResource.setProject(fc.getProject().getId());
-        financeCheckResource.setCostGroup(mapCostGroupToResource(fc.getCostGroup(), ctx));
+        financeCheckResource.setCostGroup(mapCostGroupToResource(fc.getCostGroup(), new GraphBuilderContext()));
         return financeCheckResource;
     }
 
 
-    private CostGroupResource mapCostGroupToResource(CostGroup cg, Map<Object, Object> ctx) {
-        return resource(ctx, cg, CostGroupResource::new, cgr -> {
+    private CostGroupResource mapCostGroupToResource(CostGroup cg, GraphBuilderContext ctx) {
+        return ctx.resource(cg, CostGroupResource::new, cgr -> {
             cgr.setId(cg.getId());
             cgr.setDescription(cg.getDescription());
             List<CostResource> costResources = simpleMap(cg.getCosts(), c -> mapCostsToCostResource(c, ctx));
@@ -128,8 +128,8 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         });
     }
 
-    private CostResource mapCostsToCostResource(Cost c, Map<Object, Object> ctx) {
-        return resource(ctx, c, CostResource::new, cr -> {
+    private CostResource mapCostsToCostResource(Cost c, GraphBuilderContext ctx) {
+        return ctx.resource(c, CostResource::new, cr -> {
             cr.setId(c.getId());
             cr.setValue(c.getValue());
             CostCategoryResource costCategoryResource = mapCostCategoryToCostCategoryResource(c.getCostCategory(), ctx);
@@ -137,8 +137,8 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         });
     }
 
-    private CostCategoryResource mapCostCategoryToCostCategoryResource(CostCategory cc, Map<Object, Object> ctx) {
-        return resource(ctx, cc, CostCategoryResource::new, ccr -> {
+    private CostCategoryResource mapCostCategoryToCostCategoryResource(CostCategory cc, GraphBuilderContext ctx) {
+        return ctx.resource(cc, CostCategoryResource::new, ccr -> {
             ccr.setLabel(cc.getLabel());
             ccr.setId(cc.getId());
             CostCategoryGroupResource costCategoryGroupResource = mapCostCategoryGroupToCostCategoryGroupResource(cc.getCostCategoryGroup(), ctx);
@@ -147,25 +147,13 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     }
 
-    private CostCategoryGroupResource mapCostCategoryGroupToCostCategoryGroupResource(CostCategoryGroup ccg, Map<Object, Object> ctx) {
-        return resource(ctx, ccg, CostCategoryGroupResource::new, ccgr -> {
+    private CostCategoryGroupResource mapCostCategoryGroupToCostCategoryGroupResource(CostCategoryGroup ccg, GraphBuilderContext ctx) {
+        return ctx.resource(ccg, CostCategoryGroupResource::new, ccgr -> {
             ccgr.setId(ccg.getId());
             List<CostCategoryResource> costCategoryResources = simpleMap(ccg.getCostCategories(), cc -> mapCostCategoryToCostCategoryResource(cc, ctx));
             ccgr.setCostCategories(costCategoryResources);
             ccgr.setDescription(ccg.getDescription());
         });
-    }
-
-    private <T> T resource(Map<Object, Object> ctx, Object domain, Supplier<T> constructor, Consumer<T> populator) {
-        if (domain == null) {
-            return null;
-        }
-        if (!ctx.containsKey(domain)) {
-            T resource = constructor.get();
-            ctx.put(domain, resource);
-            populator.accept(resource);
-        }
-        return (T) ctx.get(domain);
     }
 
 }
