@@ -17,8 +17,8 @@
     <div class="grid-row">
       <div class="column-two-thirds">
         <div class="page-title">
-          <p class="subtitle no-margin" th:text="'competitionId : competitionName'" />
-          <h1 class="heading-xlarge">Partner Org Name <small>(Lead Partner status)</small></h1>
+          <p class="subtitle no-margin" th:text="|${model.formattedCompetitionNumber}: ${model.competitionName}|" />
+          <h1 class="heading-xlarge" th:text="${model.organisationName}">Partner Org Name <small th:if="${model.isLeadPartner}">(Lead Partner status)</small></h1>
         </div>
       </div>
       <div class="column-third alignright extra-margin">

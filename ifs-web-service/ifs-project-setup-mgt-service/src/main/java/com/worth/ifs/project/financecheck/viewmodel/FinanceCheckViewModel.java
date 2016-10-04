@@ -8,8 +8,12 @@ import java.time.LocalDate;
 
 public class FinanceCheckViewModel {
 
+    private String formattedCompetitionNumber;
+    private String competitionName;
     private Long projectId;
     private Long organisationId;
+    private String organisationName;
+    private boolean isLeadPartner;
     private String financeContactName;
     private String financeContactEmail;
     private boolean isResearch;
@@ -17,10 +21,11 @@ public class FinanceCheckViewModel {
     private String approverName;
     private LocalDate approvalDate;
 
-    FinanceCheckViewModel() {
-    }
-
-    public FinanceCheckViewModel(Long projectId, Long organisationId, String financeContactName, String financeContactEmail, boolean isResearch, boolean financeChecksApproved, String approverName, LocalDate approvalDate) {
+    public FinanceCheckViewModel(String formattedCompetitionNumber, String competitionName, String organisationName, boolean isLeadPartner, Long projectId, Long organisationId, String financeContactName, String financeContactEmail, boolean isResearch, boolean financeChecksApproved, String approverName, LocalDate approvalDate) {
+        this.formattedCompetitionNumber = formattedCompetitionNumber;
+        this.competitionName = competitionName;
+        this.organisationName = organisationName;
+        this.isLeadPartner = isLeadPartner;
         this.projectId = projectId;
         this.organisationId = organisationId;
         this.financeContactName = financeContactName;
@@ -31,8 +36,8 @@ public class FinanceCheckViewModel {
         this.approvalDate = approvalDate;
     }
 
-    public FinanceCheckViewModel(Long projectId, Long organisationId, boolean isResearch, boolean financeChecksApproved, String approverName, LocalDate approvalDate) {
-        this(projectId, organisationId, null, null, isResearch, financeChecksApproved, approverName, approvalDate);
+    public FinanceCheckViewModel(String formattedCompetitionNumber, String competitionName, String organisationName, boolean isLeadPartner, Long projectId, Long organisationId, boolean isResearch, boolean financeChecksApproved, String approverName, LocalDate approvalDate) {
+        this(formattedCompetitionNumber, competitionName, organisationName, isLeadPartner, projectId, organisationId, null, null, isResearch, financeChecksApproved, approverName, approvalDate);
     }
 
     public String getFinanceContactName() {
@@ -49,10 +54,6 @@ public class FinanceCheckViewModel {
 
     public boolean isFinanceChecksApproved() {
         return financeChecksApproved;
-    }
-
-    public void setFinanceChecksApproved(boolean financeChecksApproved) {
-        this.financeChecksApproved = financeChecksApproved;
     }
 
     public String getApproverName() {
@@ -79,6 +80,22 @@ public class FinanceCheckViewModel {
         return !financeChecksApproved;
     }
 
+    public String getFormattedCompetitionNumber() {
+        return formattedCompetitionNumber;
+    }
+
+    public String getCompetitionName() {
+        return competitionName;
+    }
+
+    public String getOrganisationName() {
+        return organisationName;
+    }
+
+    public boolean isLeadPartner() {
+        return isLeadPartner;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -88,8 +105,14 @@ public class FinanceCheckViewModel {
         FinanceCheckViewModel that = (FinanceCheckViewModel) o;
 
         return new EqualsBuilder()
+                .append(isLeadPartner, that.isLeadPartner)
                 .append(isResearch, that.isResearch)
                 .append(financeChecksApproved, that.financeChecksApproved)
+                .append(formattedCompetitionNumber, that.formattedCompetitionNumber)
+                .append(competitionName, that.competitionName)
+                .append(projectId, that.projectId)
+                .append(organisationId, that.organisationId)
+                .append(organisationName, that.organisationName)
                 .append(financeContactName, that.financeContactName)
                 .append(financeContactEmail, that.financeContactEmail)
                 .append(approverName, that.approverName)
@@ -100,6 +123,12 @@ public class FinanceCheckViewModel {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
+                .append(formattedCompetitionNumber)
+                .append(competitionName)
+                .append(projectId)
+                .append(organisationId)
+                .append(organisationName)
+                .append(isLeadPartner)
                 .append(financeContactName)
                 .append(financeContactEmail)
                 .append(isResearch)
@@ -112,10 +141,16 @@ public class FinanceCheckViewModel {
     @Override
     public String toString() {
         return new ToStringBuilder(this)
+                .append("formattedCompetitionNumber", formattedCompetitionNumber)
+                .append("competitionName", competitionName)
+                .append("projectId", projectId)
+                .append("organisationId", organisationId)
+                .append("organisationName", organisationName)
+                .append("isLeadPartner", isLeadPartner)
                 .append("financeContactName", financeContactName)
                 .append("financeContactEmail", financeContactEmail)
                 .append("isResearch", isResearch)
-                .append("isApproved", financeChecksApproved)
+                .append("financeChecksApproved", financeChecksApproved)
                 .append("approverName", approverName)
                 .append("approvalDate", approvalDate)
                 .toString();

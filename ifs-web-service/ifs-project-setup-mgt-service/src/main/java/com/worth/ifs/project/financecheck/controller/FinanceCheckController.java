@@ -42,6 +42,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import static com.worth.ifs.application.resource.ApplicationResource.formatter;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.project.finance.resource.FinanceCheckState.APPROVED;
 import static com.worth.ifs.util.CollectionFunctions.*;
@@ -150,6 +151,11 @@ public class FinanceCheckController {
     }
 
     private String doViewFinanceCheckForm(Long projectId, Long organisationId, Model model){
+        
+        ProjectResource project = projectService.getById(projectId);
+        ApplicationResource application = applicationService.getById(project.getApplication());
+        String competitionName = application.getCompetitionName();
+        String formattedCompId = formatter.format(application.getCompetition());
 
         OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
         boolean isResearch = OrganisationTypeEnum.isResearch(organisationResource.getOrganisationType());
@@ -163,10 +169,10 @@ public class FinanceCheckController {
         FinanceCheckViewModel financeCheckViewModel;
 
         if (financeContact.isPresent()) {
-            financeCheckViewModel = new FinanceCheckViewModel(projectId, organisationId, financeContact.get().getUserName(), financeContact.get().getEmail(), isResearch,
+            financeCheckViewModel = new FinanceCheckViewModel(formattedCompId, competitionName, organisationResource.getName(), false, projectId, organisationId, financeContact.get().getUserName(), financeContact.get().getEmail(), isResearch,
                     financeChecksApproved, approverName, approvalDate);
         } else {
-            financeCheckViewModel = new FinanceCheckViewModel(projectId, organisationId, isResearch, financeChecksApproved, approverName, approvalDate);
+            financeCheckViewModel = new FinanceCheckViewModel(formattedCompId, competitionName, organisationResource.getName(), false, projectId, organisationId, isResearch, financeChecksApproved, approverName, approvalDate);
         }
 
         model.addAttribute("model", financeCheckViewModel);
@@ -235,9 +241,9 @@ public class FinanceCheckController {
         );
 
         BigDecimal projectTotal = calculateTotalForAllOrganisations(applicationFinanceResourceList,
-                applicationFinanceResource -> applicationFinanceResource.getTotal());
+                ApplicationFinanceResource::getTotal);
         BigDecimal totalFundingSought =  calculateTotalForAllOrganisations(applicationFinanceResourceList,
-                applicationFinanceResource -> applicationFinanceResource.getTotalFundingSought());
+                ApplicationFinanceResource::getTotalFundingSought);
 
         return new ProjectFinanceCheckSummaryViewModel(
                 projectId, competitionSummary, organisationRows,
@@ -245,7 +251,7 @@ public class FinanceCheckController {
                 projectTotal,
                 totalFundingSought,
                 calculateTotalForAllOrganisations(applicationFinanceResourceList,
-                        applicationFinanceResource -> applicationFinanceResource.getTotalOtherFunding()),
+                        ApplicationFinanceResource::getTotalOtherFunding),
                 calculateGrantPercentage(projectTotal, totalFundingSought),
                 anySpendProfile.isPresent());
     }
