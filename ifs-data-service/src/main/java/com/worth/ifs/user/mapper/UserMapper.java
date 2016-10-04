@@ -15,16 +15,11 @@ import org.mapstruct.Mappings;
             OrganisationMapper.class,
             RoleMapper.class,
             ProcessRoleMapper.class,
-            EthnicityMapper.class
+            EthnicityMapper.class,
+            ProfileMapper.class
         }
 )
 public abstract class UserMapper extends BaseMapper<User, UserResource, Long> {
-
-    @Mappings({
-            @Mapping(target="profile", ignore=true), // TODO we should add profile (or the id) to the resource
-    })
-    @Override
-    public abstract User mapToDomain(UserResource resource);
 
     @Mappings({
             @Mapping(target = "password", ignore = true ),

@@ -1,14 +1,26 @@
 package com.worth.ifs.assessment.form;
 
+import com.worth.ifs.commons.validation.constraints.WordCount;
+import com.worth.ifs.user.resource.BusinessType;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 public class AssessorRegistrationSkillsForm {
 
+    @Size(max = 5000, message = "{validation.field.too.many.characters}")
+    @WordCount(max = 100, message = "{validation.field.max.word.count}")
     private String skillAreas;
-    private String assessorType;
+
+    @NotNull(message = "{validation.standard.assessortype.required}")
+    private BusinessType assessorType;
 
     public AssessorRegistrationSkillsForm() {
     }
 
-    public AssessorRegistrationSkillsForm(String skillAreas, String assessorType) {
+    public AssessorRegistrationSkillsForm(String skillAreas, BusinessType assessorType) {
         this.skillAreas = skillAreas;
         this.assessorType = assessorType;
     }
@@ -21,11 +33,33 @@ public class AssessorRegistrationSkillsForm {
         this.skillAreas = skillAreas;
     }
 
-    public String getAssessorType() {
+    public BusinessType getAssessorType() {
         return assessorType;
     }
 
-    public void setAssessorType(String assessorType) {
+    public void setAssessorType(BusinessType assessorType) {
         this.assessorType = assessorType;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AssessorRegistrationSkillsForm that = (AssessorRegistrationSkillsForm) o;
+
+        return new EqualsBuilder()
+                .append(skillAreas, that.skillAreas)
+                .append(assessorType, that.assessorType)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(skillAreas)
+                .append(assessorType)
+                .toHashCode();
     }
 }

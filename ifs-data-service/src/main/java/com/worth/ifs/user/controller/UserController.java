@@ -5,6 +5,7 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.token.domain.Token;
 import com.worth.ifs.token.transactional.TokenService;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.ProfileResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.resource.UserRoleType;
 import com.worth.ifs.user.transactional.RegistrationService;
@@ -154,5 +155,13 @@ public class UserController {
     @RequestMapping(value = "/updateDetails", method = POST)
     public RestResult<Void> updateDetails(@RequestBody UserResource userResource) {
         return userProfileService.updateProfile(userResource).toPutResponse();
+    }
+
+    @RequestMapping(value = "/id/{id}/updateProfile", method = PUT)
+    public RestResult<Void> updateProfile(@PathVariable("id") Long id,
+                                          @RequestBody ProfileResource profile) {
+        UserResource user = userService.getUserById(id).getSuccessObject();
+        user.setProfile(profile);
+        return userProfileService.updateProfile(user).toPutResponse();
     }
 }

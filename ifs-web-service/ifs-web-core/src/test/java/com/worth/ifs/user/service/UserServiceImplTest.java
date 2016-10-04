@@ -2,6 +2,8 @@ package com.worth.ifs.user.service;
 
 import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.commons.error.exception.GeneralUnexpectedErrorException;
+import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.user.resource.ProfileResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.resource.UserRoleType;
 import org.junit.Before;
@@ -15,6 +17,8 @@ import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
+import static com.worth.ifs.user.builder.ProfileResourceBuilder.newProfileResource;
+import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.AdditionalMatchers.not;
@@ -87,5 +91,17 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         assertEquals(2, found.size());
         assertEquals(Long.valueOf(1), found.get(0).getId());
         assertEquals(Long.valueOf(2), found.get(1).getId());
+    }
+
+    @Test
+    public void test_updateProfile() throws Exception {
+        Long userId = 1L;
+        ProfileResource profile = newProfileResource().build();
+        UserResource expected = newUserResource().withId(userId).withProfile(profile).build();
+
+        when(userRestService.updateProfile(userId, profile)).thenReturn(restSuccess(expected));
+
+        UserResource result = service.updateProfile(userId, profile).getSuccessObject();
+        assertEquals(profile, result.getProfile());
     }
 }

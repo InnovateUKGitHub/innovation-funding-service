@@ -262,4 +262,18 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
                 .contentType(APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
+
+    @Test
+    public void updateUserProfile() throws Exception {
+        final UserResource user = newUserResource().build();
+        when(userProfileServiceMock.updateProfile(user)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/user/updateDetails")
+                .contentType(APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(user)))
+                .andExpect(status().isOk());
+
+        verify(userProfileServiceMock, times(1)).updateProfile(user);
+        verifyNoMoreInteractions(registrationServiceMock);
+    }
 }

@@ -5,6 +5,7 @@ import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.user.controller.UserController;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.ProcessRoleResource;
+import com.worth.ifs.user.resource.ProfileResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.resource.UserRoleType;
 import org.apache.commons.logging.Log;
@@ -194,5 +195,10 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
         user.setPhoneNumber(phoneNumber);
         String url = userRestURL + "/updateDetails";
         return postWithRestResult(url, user, UserResource.class);
+    }
+
+    @Override
+    public RestResult<UserResource> updateProfile(Long id, ProfileResource profile) {
+        return putWithRestResult(format("%s/id/%s/updateProfile", userRestURL, id), profile, UserResource.class);
     }
 }

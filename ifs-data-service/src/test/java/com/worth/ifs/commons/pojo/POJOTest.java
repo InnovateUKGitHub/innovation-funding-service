@@ -50,7 +50,9 @@ import com.worth.ifs.registration.resource.UserRegistrationResource;
 import com.worth.ifs.token.domain.Token;
 import com.worth.ifs.token.resource.TokenResource;
 import com.worth.ifs.user.domain.OrganisationType;
+import com.worth.ifs.user.resource.ContractResource;
 import com.worth.ifs.user.resource.EthnicityResource;
+import com.worth.ifs.user.resource.ProfileResource;
 import com.worth.ifs.workflow.resource.ProcessOutcomeResource;
 import org.junit.Assert;
 import org.junit.Before;
@@ -121,7 +123,9 @@ public class POJOTest {
             ProjectStatusResource.class,
             CompetitionProjectsStatusResource.class,
             EthnicityResource.class,
-            UserRegistrationResource.class
+            UserRegistrationResource.class,
+            ContractResource.class,
+            ProfileResource.class
     );
 
     @Before

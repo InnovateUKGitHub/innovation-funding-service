@@ -49,6 +49,7 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
         existingUserResource.setTitle(updatedUserResource.getTitle());
         existingUserResource.setLastName(updatedUserResource.getLastName());
         existingUserResource.setFirstName(updatedUserResource.getFirstName());
+        existingUserResource.setProfile(updatedUserResource.getProfile());
         User existingUser = userMapper.mapToDomain(existingUserResource);
         return serviceSuccess(userRepository.save(existingUser)).andOnSuccessReturnVoid();
     }

@@ -5,7 +5,7 @@ import com.worth.ifs.commons.util.AuditableEntity;
 import javax.persistence.*;
 
 /**
- * A contract with main text and two appendicies. The current contact is signed by assessors on registraion (as part of
+ * A contract with main text and three appendices. The current contact is signed by assessors on registration (as part of
  * their {@link Profile}) and again in subsequent years.
  * <p>
  * There must be only one <em>current</em> contract.
@@ -32,7 +32,7 @@ public class Contract extends AuditableEntity {
     @Column(name = "annex_3")
     private String annexThree;
 
-    Contract() {
+    public Contract() {
         // default constructor
     }
 
