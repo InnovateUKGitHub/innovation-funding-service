@@ -240,26 +240,23 @@ public class FinanceCheckController {
                         getEnumForIndex(ProjectFinanceCheckSummaryViewModel.QueriesRaised.class, i))
         );
 
-        BigDecimal projectTotal = calculateTotalForAllOrganisations(applicationFinanceResourceList,
-                ApplicationFinanceResource::getTotal);
-        BigDecimal totalFundingSought =  calculateTotalForAllOrganisations(applicationFinanceResourceList,
-                ApplicationFinanceResource::getTotalFundingSought);
+        BigDecimal projectTotal = calculateTotalForAllOrganisations(applicationFinanceResourceList, ApplicationFinanceResource::getTotal);
+        BigDecimal totalFundingSought =  calculateTotalForAllOrganisations(applicationFinanceResourceList, ApplicationFinanceResource::getTotalFundingSought);
+        BigDecimal totalOtherFunding = calculateTotalForAllOrganisations(applicationFinanceResourceList, ApplicationFinanceResource::getTotalOtherFunding);
 
         return new ProjectFinanceCheckSummaryViewModel(
                 projectId, competitionSummary, organisationRows,
-                project.getTargetStartDate(), project.getDurationInMonths().intValue(),
+                project.getTargetStartDate(),
+                project.getDurationInMonths().intValue(),
                 projectTotal,
                 totalFundingSought,
-                calculateTotalForAllOrganisations(applicationFinanceResourceList,
-                        ApplicationFinanceResource::getTotalOtherFunding),
+                totalOtherFunding,
                 calculateGrantPercentage(projectTotal, totalFundingSought),
                 anySpendProfile.isPresent());
     }
 
-    private BigDecimal calculateTotalForAllOrganisations(List<ApplicationFinanceResource> applicationFinanceResourceList,
-                                                         Function<ApplicationFinanceResource, BigDecimal> keyExtractor) {
-
-        return applicationFinanceResourceList.stream().map(keyExtractor).reduce(BigDecimal.ZERO, BigDecimal::add);
+    private BigDecimal calculateTotalForAllOrganisations(List<ApplicationFinanceResource> applicationFinanceResourceList, Function<ApplicationFinanceResource, BigDecimal> keyExtractor) {
+        return applicationFinanceResourceList.stream().map(keyExtractor).reduce(BigDecimal.ZERO, BigDecimal::add).setScale(0, HALF_EVEN);
     }
 
     private BigDecimal calculateGrantPercentage(BigDecimal projectTotal, BigDecimal totalFundingSought) {
