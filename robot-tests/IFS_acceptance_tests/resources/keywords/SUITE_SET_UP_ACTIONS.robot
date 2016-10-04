@@ -39,7 +39,7 @@ create new account for submitting
     And the user enters text to a text field    id=organisationSearchName    Hive IT
     And the user clicks the button/link    jQuery=.button:contains("Search")
     And the user clicks the button/link    link=HIVE IT LIMITED
-    And the user selects the checkbox    useSearchResultAddress
+    And the user selects the checkbox    id=address-same
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
     And the user clicks the button/link    jQuery=.button:contains("Save")
     And the user enters text to a text field    name=email    ${test_mailbox_one}+submittest@gmail.com
