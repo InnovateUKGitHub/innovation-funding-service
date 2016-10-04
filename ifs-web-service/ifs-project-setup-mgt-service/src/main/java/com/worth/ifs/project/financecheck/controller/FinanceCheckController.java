@@ -42,6 +42,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.CollectionFunctions.*;
 import static java.math.RoundingMode.HALF_EVEN;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -124,7 +125,9 @@ public class FinanceCheckController {
                                        ValidationHandler validationHandler) {
 
         Supplier<String> failureView = () -> doViewFinanceCheckForm(projectId, organisationId, model);
-        ServiceResult<Void> approveResult = projectFinanceService.approveFinanceCheck(projectId, organisationId);
+
+        ServiceResult<Void> updateResult = doUpdateFinanceCheck(getFinanceCheckResource(projectId, organisationId), form);
+        ServiceResult<Void> approveResult = updateResult.andOnSuccess(() -> projectFinanceService.approveFinanceCheck(projectId, organisationId));
 
         return validationHandler.addAnyErrors(approveResult).failNowOrSucceedWith(failureView, () ->
                 redirectToFinanceCheckForm(projectId, organisationId)
@@ -180,12 +183,19 @@ public class FinanceCheckController {
 
     private String updateFinanceCheck(Long projectId, Long organisationId, FinanceCheckResource currentFinanceCheckResource, FinanceCheckForm financeCheckForm){
         // TODO map by name once form is dynamic
+        doUpdateFinanceCheck(currentFinanceCheckResource, financeCheckForm);
+
+        return redirectToViewFinanceCheckSummary(projectId);
+    }
+
+    private ServiceResult<Void> doUpdateFinanceCheck(FinanceCheckResource currentFinanceCheckResource, FinanceCheckForm financeCheckForm) {
         for(int i = 0; i < financeCheckForm.getCosts().size(); i++){
             currentFinanceCheckResource.getCostGroup().getCosts().get(i).setValue(financeCheckForm.getCosts().get(i).getValue());
         }
-        financeCheckService.update(currentFinanceCheckResource);
 
-        return redirectToViewFinanceCheckSummary(projectId);
+        // TODO - deal with update failures if they occur
+        financeCheckService.update(currentFinanceCheckResource);
+        return serviceSuccess();
     }
 
     private String doViewFinanceCheckSummary(Long projectId, Model model, FinanceCheckSummaryForm form) {
