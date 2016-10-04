@@ -3,6 +3,7 @@ package com.worth.ifs.project.finance.domain;
 import com.worth.ifs.project.domain.PartnerOrganisation;
 import com.worth.ifs.project.domain.ProjectUser;
 import com.worth.ifs.project.finance.resource.FinanceCheckState;
+import com.worth.ifs.user.domain.User;
 import com.worth.ifs.workflow.domain.ActivityState;
 import com.worth.ifs.workflow.domain.Process;
 
@@ -30,6 +31,12 @@ public class FinanceCheckProcess extends Process<ProjectUser, PartnerOrganisatio
 
     public FinanceCheckProcess(ProjectUser participant, PartnerOrganisation target, ActivityState originalState) {
         this.participant = participant;
+        this.target = target;
+        this.setActivityState(originalState);
+    }
+
+    public FinanceCheckProcess(User internalParticipant, PartnerOrganisation target, ActivityState originalState) {
+        this.internalParticipant = internalParticipant;
         this.target = target;
         this.setActivityState(originalState);
     }

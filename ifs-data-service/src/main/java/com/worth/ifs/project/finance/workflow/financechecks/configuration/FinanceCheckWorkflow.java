@@ -39,7 +39,7 @@ public class FinanceCheckWorkflow extends StateMachineConfigurerAdapter<FinanceC
     public void configure(StateMachineStateConfigurer<FinanceCheckState, FinanceCheckOutcomes> states) throws Exception {
         states.withStates()
                 .initial(PENDING)
-                .states(EnumSet.of(PENDING, READY_TO_SUBMIT, APPROVED))
+                .states(EnumSet.of(PENDING, READY_TO_APPROVE, APPROVED))
                 .choice(DECIDE_IF_READY_TO_APPROVE)
                 .end(APPROVED);
     }
@@ -58,17 +58,17 @@ public class FinanceCheckWorkflow extends StateMachineConfigurerAdapter<FinanceC
                 .target(DECIDE_IF_READY_TO_APPROVE)
                 .and()
             .withExternal()
-                .source(READY_TO_SUBMIT)
+                .source(READY_TO_APPROVE)
                 .event(FINANCE_CHECK_FIGURES_EDITED)
                 .target(DECIDE_IF_READY_TO_APPROVE)
                 .and()
             .withChoice()
                 .source(DECIDE_IF_READY_TO_APPROVE)
-                .first(READY_TO_SUBMIT, allFinanceCheckFiguresEnteredGuard)
+                .first(READY_TO_APPROVE, allFinanceCheckFiguresEnteredGuard)
                 .last(PENDING)
                 .and()
             .withExternal()
-                .source(READY_TO_SUBMIT)
+                .source(READY_TO_APPROVE)
                 .event(APPROVE)
                 .target(APPROVED)
                 .guard(allFinanceCheckFiguresEnteredGuard);

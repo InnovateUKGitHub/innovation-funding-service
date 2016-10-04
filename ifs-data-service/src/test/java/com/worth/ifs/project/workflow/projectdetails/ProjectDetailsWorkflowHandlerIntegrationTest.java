@@ -32,10 +32,7 @@ import static com.worth.ifs.project.resource.ProjectDetailsOutcomes.*;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static com.worth.ifs.util.CollectionFunctions.combineLists;
 import static com.worth.ifs.workflow.domain.ActivityType.PROJECT_SETUP_PROJECT_DETAILS;
-import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 public class ProjectDetailsWorkflowHandlerIntegrationTest extends
@@ -294,8 +291,6 @@ public class ProjectDetailsWorkflowHandlerIntegrationTest extends
         ActivityState readyToSubmitState = new ActivityState(PROJECT_SETUP_PROJECT_DETAILS, State.READY_TO_SUBMIT);
         ProjectDetailsProcess readyToSubmitProcess = new ProjectDetailsProcess(projectUser, project, readyToSubmitState);
 
-        ActivityState submittedState = new ActivityState(PROJECT_SETUP_PROJECT_DETAILS, State.SUBMITTED);
-
         when(projectDetailsProcessRepositoryMock.findOneByTargetId(project.getId())).thenReturn(readyToSubmitProcess);
 
         // now call the method under test
@@ -405,10 +400,6 @@ public class ProjectDetailsWorkflowHandlerIntegrationTest extends
         assertEquals(expectedEvent.getType(), process.getProcessEvent());
     }
 
-    private void verifyNoMoreInteractionsWithMocks() {
-        verifyNoMoreInteractions(activityStateRepositoryMock, projectDetailsProcessRepositoryMock);
-    }
-
     @Override
     protected Class getBaseActionType() {
         return BaseProjectDetailsAction.class;
@@ -422,10 +413,5 @@ public class ProjectDetailsWorkflowHandlerIntegrationTest extends
     @Override
     protected Class<ProjectDetailsProcessRepository> getProcessRepositoryType() {
         return ProjectDetailsProcessRepository.class;
-    }
-
-    @Override
-    protected List<Class<? extends Repository>> getRepositoriesToMock() {
-        return asList(ActivityStateRepository.class, ProjectDetailsProcessRepository.class);
     }
 }
