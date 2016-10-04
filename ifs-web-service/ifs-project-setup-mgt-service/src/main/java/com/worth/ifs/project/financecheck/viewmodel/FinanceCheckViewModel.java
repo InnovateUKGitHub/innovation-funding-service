@@ -24,6 +24,8 @@ public class FinanceCheckViewModel {
     public FinanceCheckViewModel(String formattedCompetitionNumber, String competitionName, String organisationName, boolean isLeadPartner, String financeContactName, String financeContactEmail, boolean isResearch, boolean isApproved, String approverName, LocalDate approvalDate) {
         this.formattedCompetitionNumber = formattedCompetitionNumber;
         this.competitionName = competitionName;
+        this.organisationName = organisationName;
+        this.isLeadPartner = isLeadPartner;
         this.financeContactName = financeContactName;
         this.financeContactEmail = financeContactEmail;
         this.isResearch = isResearch;
@@ -104,6 +106,22 @@ public class FinanceCheckViewModel {
         this.competitionName = competitionName;
     }
 
+    public String getOrganisationName() {
+        return organisationName;
+    }
+
+    public void setOrganisationName(String organisationName) {
+        this.organisationName = organisationName;
+    }
+
+    public boolean isLeadPartner() {
+        return isLeadPartner;
+    }
+
+    public void setLeadPartner(boolean leadPartner) {
+        isLeadPartner = leadPartner;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -113,10 +131,12 @@ public class FinanceCheckViewModel {
         FinanceCheckViewModel that = (FinanceCheckViewModel) o;
 
         return new EqualsBuilder()
+                .append(isLeadPartner, that.isLeadPartner)
                 .append(isResearch, that.isResearch)
                 .append(isApproved, that.isApproved)
                 .append(formattedCompetitionNumber, that.formattedCompetitionNumber)
                 .append(competitionName, that.competitionName)
+                .append(organisationName, that.organisationName)
                 .append(financeContactName, that.financeContactName)
                 .append(financeContactEmail, that.financeContactEmail)
                 .append(approverName, that.approverName)
@@ -129,6 +149,8 @@ public class FinanceCheckViewModel {
         return new HashCodeBuilder(17, 37)
                 .append(formattedCompetitionNumber)
                 .append(competitionName)
+                .append(organisationName)
+                .append(isLeadPartner)
                 .append(financeContactName)
                 .append(financeContactEmail)
                 .append(isResearch)
@@ -143,6 +165,8 @@ public class FinanceCheckViewModel {
         return new ToStringBuilder(this)
                 .append("formattedCompetitionNumber", formattedCompetitionNumber)
                 .append("competitionName", competitionName)
+                .append("organisationName", organisationName)
+                .append("isLeadPartner", isLeadPartner)
                 .append("financeContactName", financeContactName)
                 .append("financeContactEmail", financeContactEmail)
                 .append("isResearch", isResearch)

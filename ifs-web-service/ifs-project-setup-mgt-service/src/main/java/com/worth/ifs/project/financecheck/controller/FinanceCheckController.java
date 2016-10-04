@@ -42,6 +42,7 @@ import java.util.function.Supplier;
 
 import static com.worth.ifs.application.resource.ApplicationResource.formatter;
 import static com.worth.ifs.util.CollectionFunctions.*;
+import static java.math.RoundingMode.HALF_EVEN;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -201,26 +202,23 @@ public class FinanceCheckController {
                         getEnumForIndex(ProjectFinanceCheckSummaryViewModel.QueriesRaised.class, i))
         );
 
-        BigDecimal projectTotal = calculateTotalForAllOrganisations(applicationFinanceResourceList,
-                applicationFinanceResource -> applicationFinanceResource.getTotal());
-        BigDecimal totalFundingSought =  calculateTotalForAllOrganisations(applicationFinanceResourceList,
-                applicationFinanceResource -> applicationFinanceResource.getTotalFundingSought());
+        BigDecimal projectTotal = calculateTotalForAllOrganisations(applicationFinanceResourceList, ApplicationFinanceResource::getTotal);
+        BigDecimal totalFundingSought =  calculateTotalForAllOrganisations(applicationFinanceResourceList, ApplicationFinanceResource::getTotalFundingSought);
+        BigDecimal totalOtherFunding = calculateTotalForAllOrganisations(applicationFinanceResourceList, ApplicationFinanceResource::getTotalOtherFunding);
 
         return new ProjectFinanceCheckSummaryViewModel(
                 projectId, competitionSummary, organisationRows,
-                project.getTargetStartDate(), project.getDurationInMonths().intValue(),
+                project.getTargetStartDate(),
+                project.getDurationInMonths().intValue(),
                 projectTotal,
                 totalFundingSought,
-                calculateTotalForAllOrganisations(applicationFinanceResourceList,
-                        applicationFinanceResource -> applicationFinanceResource.getTotalOtherFunding()),
+                totalOtherFunding,
                 calculateGrantPercentage(projectTotal, totalFundingSought),
                 anySpendProfile.isPresent());
     }
 
-    private BigDecimal calculateTotalForAllOrganisations(List<ApplicationFinanceResource> applicationFinanceResourceList,
-                                                         Function<ApplicationFinanceResource, BigDecimal> keyExtractor) {
-
-        return applicationFinanceResourceList.stream().map(keyExtractor).reduce(BigDecimal.ZERO, BigDecimal::add);
+    private BigDecimal calculateTotalForAllOrganisations(List<ApplicationFinanceResource> applicationFinanceResourceList, Function<ApplicationFinanceResource, BigDecimal> keyExtractor) {
+        return applicationFinanceResourceList.stream().map(keyExtractor).reduce(BigDecimal.ZERO, BigDecimal::add).setScale(0, HALF_EVEN);
     }
 
     private BigDecimal calculateGrantPercentage(BigDecimal projectTotal, BigDecimal totalFundingSought) {
@@ -229,7 +227,7 @@ public class FinanceCheckController {
             return BigDecimal.ZERO;
         }
 
-        return totalFundingSought.divide(projectTotal).multiply(new BigDecimal("100"));
+        return totalFundingSought.multiply(BigDecimal.valueOf(100)).divide(projectTotal, 0, HALF_EVEN);
 
     }
 
