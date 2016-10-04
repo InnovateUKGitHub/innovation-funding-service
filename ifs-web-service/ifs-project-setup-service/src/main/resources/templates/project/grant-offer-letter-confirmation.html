@@ -4,8 +4,8 @@
     <div th:include="fragments/layout :: head" th:with="pageTitle='Grant Offer Letter'" th:remove="tag" />
 </head>
 <body th:with="context='project'" class="project-detail gol">
-<div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
-<div th:include="fragments/modals :: modal-confirm-grant-offer-letter" th:remove="tag"/>
+<div th:if="${userIsLead}" th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
+<div th:if="${userIsLead}" th:include="fragments/modals :: modal-confirm-grant-offer-letter" th:remove="tag"/>
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
 <div th:include="fragments/layout :: global-header" th:remove="tag" />
 

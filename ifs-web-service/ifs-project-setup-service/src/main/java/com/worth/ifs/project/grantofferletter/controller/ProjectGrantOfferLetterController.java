@@ -53,6 +53,17 @@ public class ProjectGrantOfferLetterController {
         return createGrantOfferLetterPage(projectId, model, loggedInUser, form);
     }
 
+    @RequestMapping(value="/confirmation", method = GET)
+    public String confirmation(@PathVariable("projectId") Long projectId) {
+        return "grant-offer-letter-confirmation";
+    }
+
+    @RequestMapping(params = "confirmSubmit", method = POST)
+    public String submit(@PathVariable("projectId") Long projectId) {
+        //TODO
+        return "redirect:/project/" + projectId;
+    }
+
     @RequestMapping(params = "uploadSignedGrantOfferLetterClicked", method = POST)
     public String uploadGrantOfferLetterFile(
             @PathVariable("projectId") final Long projectId,
