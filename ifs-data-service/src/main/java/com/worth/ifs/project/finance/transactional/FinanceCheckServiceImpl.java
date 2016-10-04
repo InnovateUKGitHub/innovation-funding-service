@@ -5,16 +5,21 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.project.finance.domain.Cost;
 import com.worth.ifs.project.finance.domain.CostGroup;
 import com.worth.ifs.project.finance.domain.FinanceCheck;
+import com.worth.ifs.project.finance.repository.FinanceCheckProcessRepository;
 import com.worth.ifs.project.finance.repository.FinanceCheckRepository;
 import com.worth.ifs.project.finance.resource.CostGroupResource;
 import com.worth.ifs.project.finance.resource.CostResource;
 import com.worth.ifs.project.finance.resource.FinanceCheckResource;
 import com.worth.ifs.project.finance.workflow.financechecks.configuration.FinanceCheckWorkflowHandler;
+import com.worth.ifs.project.finance.workflow.financechecks.resource.FinanceCheckProcessResource;
 import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
 import com.worth.ifs.project.transactional.AbstractProjectServiceImpl;
+import com.worth.ifs.user.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,6 +43,12 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     @Autowired
     private FinanceCheckWorkflowHandler financeCheckWorkflowHandler;
+
+    @Autowired
+    private FinanceCheckProcessRepository financeCheckProcessRepository;
+
+    @Autowired
+    private UserMapper userMapper;
 
     @Override
     public ServiceResult<FinanceCheckResource> getByProjectAndOrganisation(ProjectOrganisationCompositeId key) {
@@ -70,6 +81,19 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
                getPartnerOrganisation(projectId, organisationId).andOnSuccessReturn(partnerOrg ->
                financeCheckWorkflowHandler.approveFinanceCheckFigures(partnerOrg, currentUser)).
                andOnSuccess(workflowResult -> workflowResult ? serviceSuccess() : serviceFailure(FINANCE_CHECKS_CANNOT_PROGRESS_WORKFLOW)));
+    }
+
+    @Override
+    public ServiceResult<FinanceCheckProcessResource> getFinanceCheckApprovalStatus(Long projectId, Long organisationId) {
+
+        return getPartnerOrganisation(projectId, organisationId).andOnSuccessReturn(partnerOrganisation ->
+               financeCheckProcessRepository.findOneByTargetId(partnerOrganisation.getId())).andOnSuccessReturn(process ->
+               new FinanceCheckProcessResource(
+                       process.getActivityState(),
+                       projectUserMapper.mapToResource(process.getParticipant()),
+                       userMapper.mapToResource(process.getInternalParticipant()),
+                       LocalDateTime.ofInstant(process.getLastModified().toInstant(), ZoneId.systemDefault()),
+                       false));
     }
 
     private FinanceCheck mapToDomain(FinanceCheckResource financeCheckResource){

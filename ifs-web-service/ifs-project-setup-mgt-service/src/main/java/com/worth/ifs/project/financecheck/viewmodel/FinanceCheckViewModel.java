@@ -17,7 +17,7 @@ public class FinanceCheckViewModel {
     private String approverName;
     private LocalDate approvalDate;
 
-    public FinanceCheckViewModel() {
+    FinanceCheckViewModel() {
     }
 
     public FinanceCheckViewModel(Long projectId, Long organisationId, String financeContactName, String financeContactEmail, boolean isResearch, boolean isApproved, String approverName, LocalDate approvalDate) {
@@ -31,12 +31,8 @@ public class FinanceCheckViewModel {
         this.approvalDate = approvalDate;
     }
 
-    public FinanceCheckViewModel(Long projectId, Long organisationId, String financeContactName, String financeContactEmail, boolean isResearch) {
-        this(projectId, organisationId, financeContactName, financeContactEmail, isResearch, false, null, null);
-    }
-
-    public FinanceCheckViewModel(Long projectId, Long organisationId, boolean isResearch) {
-        this(projectId, organisationId, null, null, isResearch, false, null, null);
+    public FinanceCheckViewModel(Long projectId, Long organisationId, boolean isResearch, boolean isApproved, String approverName, LocalDate approvalDate) {
+        this(projectId, organisationId, null, null, isResearch, isApproved, approverName, approvalDate);
     }
 
     public String getFinanceContactName() {

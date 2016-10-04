@@ -2,6 +2,7 @@ package com.worth.ifs.project.finance;
 
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.project.finance.service.ProjectFinanceRestService;
+import com.worth.ifs.project.finance.workflow.financechecks.resource.FinanceCheckProcessResource;
 import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.project.resource.SpendProfileTableResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,5 +47,10 @@ public class ProjectFinanceServiceImpl implements ProjectFinanceService {
     @Override
     public ServiceResult<Void> approveFinanceCheck(Long projectId, Long organisationId) {
         return projectFinanceRestService.approveFinanceCheck(projectId, organisationId).toServiceResult();
+    }
+
+    @Override
+    public FinanceCheckProcessResource getFinanceCheckApprovalStatus(Long projectId, Long organisationId) {
+        return projectFinanceRestService.getFinanceCheckApprovalStatus(projectId, organisationId).getSuccessObjectOrThrowException();
     }
 }

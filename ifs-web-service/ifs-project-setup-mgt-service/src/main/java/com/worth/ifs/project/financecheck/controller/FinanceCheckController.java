@@ -12,6 +12,7 @@ import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.project.ProjectService;
 import com.worth.ifs.project.finance.ProjectFinanceService;
 import com.worth.ifs.project.finance.resource.FinanceCheckResource;
+import com.worth.ifs.project.finance.workflow.financechecks.resource.FinanceCheckProcessResource;
 import com.worth.ifs.project.financecheck.FinanceCheckService;
 import com.worth.ifs.project.financecheck.form.CostFormField;
 import com.worth.ifs.project.financecheck.form.FinanceCheckForm;
@@ -35,6 +36,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -144,15 +146,24 @@ public class FinanceCheckController {
     }
 
     private String doViewFinanceCheckForm(Long projectId, Long organisationId, Model model){
+
         OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
         boolean isResearch = OrganisationTypeEnum.isResearch(organisationResource.getOrganisationType());
         Optional<ProjectUserResource> financeContact = getFinanceContact(projectId, organisationId);
+
+        FinanceCheckProcessResource financeCheckStatus = projectFinanceService.getFinanceCheckApprovalStatus(projectId, organisationId);
+        String approverName = financeCheckStatus.getInternalParticipant() != null ? financeCheckStatus.getInternalParticipant().getName() : null;
+        LocalDate approvalDate = financeCheckStatus.getModifiedDate().toLocalDate();
+
         FinanceCheckViewModel financeCheckViewModel;
-        if(financeContact.isPresent()){
-            financeCheckViewModel = new FinanceCheckViewModel(projectId, organisationId, financeContact.get().getUserName(), financeContact.get().getEmail(), isResearch);
+
+        if (financeContact.isPresent()) {
+            financeCheckViewModel = new FinanceCheckViewModel(projectId, organisationId, financeContact.get().getUserName(), financeContact.get().getEmail(), isResearch,
+                    financeCheckStatus.isCanApprove(), approverName, approvalDate);
         } else {
-            financeCheckViewModel = new FinanceCheckViewModel(projectId, organisationId, isResearch);
+            financeCheckViewModel = new FinanceCheckViewModel(projectId, organisationId, isResearch, financeCheckStatus.isCanApprove(), approverName, approvalDate);
         }
+
         model.addAttribute("model", financeCheckViewModel);
         return "project/financecheck/partner-project-eligibility";
     }

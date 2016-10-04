@@ -2,6 +2,7 @@ package com.worth.ifs.project.finance.service;
 
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
+import com.worth.ifs.project.finance.workflow.financechecks.resource.FinanceCheckProcessResource;
 import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.project.resource.SpendProfileTableResource;
 import org.springframework.stereotype.Service;
@@ -46,5 +47,11 @@ public class ProjectFinanceRestServiceImpl extends BaseRestService implements Pr
     public RestResult<Void> approveFinanceCheck(Long projectId, Long organisationId) {
         String url = projectFinanceRestURL + "/" + projectId + "/partner-organisation/" + organisationId + "/finance-check/approve";
         return postWithRestResult(url, Void.class);
+    }
+
+    @Override
+    public RestResult<FinanceCheckProcessResource> getFinanceCheckApprovalStatus(Long projectId, Long organisationId) {
+        String url = projectFinanceRestURL + "/" + projectId + "/partner-organisation/" + organisationId + "/finance-check/status";
+        return getWithRestResult(url, FinanceCheckProcessResource.class);
     }
 }

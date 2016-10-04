@@ -5,11 +5,11 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.CompetitionSummaryResource;
 import com.worth.ifs.finance.builder.ApplicationFinanceResourceBuilder;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
-import com.worth.ifs.project.financecheck.viewmodel.ProjectFinanceCheckSummaryViewModel;
 import com.worth.ifs.project.builder.SpendProfileResourceBuilder;
 import com.worth.ifs.project.finance.resource.FinanceCheckResource;
 import com.worth.ifs.project.financecheck.form.FinanceCheckForm;
 import com.worth.ifs.project.financecheck.viewmodel.FinanceCheckViewModel;
+import com.worth.ifs.project.financecheck.viewmodel.ProjectFinanceCheckSummaryViewModel;
 import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.SpendProfileResource;
@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -29,11 +30,14 @@ import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newAp
 import static com.worth.ifs.application.builder.CompetitionSummaryResourceBuilder.newCompetitionSummaryResource;
 import static com.worth.ifs.project.builder.FinanceCheckResourceBuilder.newFinanceCheckResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+import static com.worth.ifs.project.finance.builder.FinanceCheckProcessResourceBuilder.newFinanceCheckProcessResource;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.util.CollectionFunctions.mapWithIndex;
 import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -42,21 +46,31 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class FinanceCheckControllerTest extends BaseControllerMockMVCTest<FinanceCheckController> {
     @Test
     public void testView() throws Exception {
+
         Long projectId = 123L;
         Long organisationId = 456L;
         ProjectOrganisationCompositeId key = new ProjectOrganisationCompositeId(projectId, organisationId);
         OrganisationResource organisationResource = newOrganisationResource().withId(organisationId).withOrganisationType(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId()).build();
+
         when(organisationService.getOrganisationById(organisationId)).thenReturn(organisationResource);
         when(financeCheckServiceMock.getByProjectAndOrganisation(key)).thenReturn(newFinanceCheckResource().build());
+        when(projectFinanceService.getFinanceCheckApprovalStatus(projectId, organisationId)).thenReturn(
+                newFinanceCheckProcessResource().
+                        withCanApprove(true).
+                        withInternalParticipant(newUserResource().withFirstName("Mr").withLastName("Approver").build()).
+                        withModifiedDate(LocalDateTime.of(2016, 10, 04, 12, 13, 14)).
+                        build());
+
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + organisationId)).
                 andExpect(view().name("project/financecheck/partner-project-eligibility")).
                 andReturn();
+
         FinanceCheckViewModel financeCheckViewModel = (FinanceCheckViewModel) result.getModelAndView().getModel().get("model");
-        assertNull(financeCheckViewModel.getApprovalDate());
-        assertNull(financeCheckViewModel.getApprovalDate());
+        assertEquals(LocalDate.of(2016, 10, 04), financeCheckViewModel.getApprovalDate());
+        assertEquals("Mr Approver", financeCheckViewModel.getApproverName());
         assertNull(financeCheckViewModel.getFinanceContactEmail());
         assertNull(financeCheckViewModel.getFinanceContactName());
-        assertFalse(financeCheckViewModel.isApproved());
+        assertTrue(financeCheckViewModel.isApproved());
         assertFalse(financeCheckViewModel.isResearch());
 
         FinanceCheckForm form = (FinanceCheckForm) result.getModelAndView().getModel().get("form");

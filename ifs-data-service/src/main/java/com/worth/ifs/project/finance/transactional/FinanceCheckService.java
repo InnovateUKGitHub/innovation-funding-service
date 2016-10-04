@@ -4,6 +4,7 @@ import com.worth.ifs.commons.security.SecuredBySpring;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.project.finance.domain.FinanceCheck;
 import com.worth.ifs.project.finance.resource.FinanceCheckResource;
+import com.worth.ifs.project.finance.workflow.financechecks.resource.FinanceCheckProcessResource;
 import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -27,4 +28,8 @@ public interface FinanceCheckService {
     @PreAuthorize("hasAuthority('project_finance')")
     @SecuredBySpring(value = "APPROVE", securedType = FinanceCheck.class, description = "Project finance users have the ability to approve Finance Checks" )
     ServiceResult<Void> approve(Long projectId, Long organisationId);
+
+    @PreAuthorize("hasAuthority('project_finance')")
+    @SecuredBySpring(value = "VIEW", securedType = FinanceCheck.class, description = "Project finance users have the ability to view the current status of Finance Checks approvals" )
+    ServiceResult<FinanceCheckProcessResource> getFinanceCheckApprovalStatus(Long projectId, Long organisationId);
 }
