@@ -4,6 +4,7 @@ import com.worth.ifs.BaseServiceSecurityTest;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.project.finance.transactional.ProjectFinanceService;
 import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
+import com.worth.ifs.project.resource.SpendProfileCSVResource;
 import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.project.resource.SpendProfileTableResource;
 import com.worth.ifs.user.resource.RoleResource;
@@ -63,6 +64,23 @@ public class ProjectFinanceServiceSecurityTest extends BaseServiceSecurityTest<P
         assertAccessDenied(() -> classUnderTest.getSpendProfileTable(projectOrganisationCompositeId),
                 () -> {
 
+                    verify(projectFinancePermissionRules).partnersCanViewTheirOwnSpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
+                    verify(projectFinancePermissionRules).projectFinanceUserCanViewAnySpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
+                    verify(projectFinancePermissionRules).projectManagerCanViewAnySpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
+                    verifyNoMoreInteractions(projectFinancePermissionRules);
+                });
+    }
+
+    @Test
+    public void testGetSpendProfileCSV() {
+
+        Long projectId = 1L;
+        Long organisationId = 1L;
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        assertAccessDenied(() -> classUnderTest.getSpendProfileCSV(projectOrganisationCompositeId),
+                () -> {
                     verify(projectFinancePermissionRules).partnersCanViewTheirOwnSpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
                     verify(projectFinancePermissionRules).projectFinanceUserCanViewAnySpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
                     verify(projectFinancePermissionRules).projectManagerCanViewAnySpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
@@ -151,6 +169,11 @@ public class ProjectFinanceServiceSecurityTest extends BaseServiceSecurityTest<P
 
         @Override
         public ServiceResult<Void> markSpendProfile(ProjectOrganisationCompositeId projectOrganisationCompositeId, Boolean complete) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<SpendProfileCSVResource> getSpendProfileCSV(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
             return null;
         }
     }
