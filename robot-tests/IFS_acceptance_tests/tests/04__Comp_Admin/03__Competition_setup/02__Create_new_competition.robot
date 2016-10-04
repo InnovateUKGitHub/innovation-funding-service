@@ -25,12 +25,15 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...
 ...               INFUND-4468 As a Competitions team member I want to include additional criteria in Competitions Setup so that the "Ready to Open" state cannot be set until these conditions are met
 ...
-...
 ...               INFUND-3001 As a Competitions team member I want the service to automatically save my edits while I work through Initial Details section in Competition Setup the so that I do not lose my changes
 ...
 ...               INFUND-4581 As a Competitions team member I want the service to automatically save my edits while I work through Funding Information section in Competition Setup the so that I do not lose my changes
 ...
-...               INFUND-4725 As a Competitions team member I want to be guided to complete all mandatory information in the Initial Details section so that I can access the correct details in the other sections in Competition Setup. \ INFUND-4582 As a Competitions team member I want the service to automatically save my edits while I work through Eligibility section in Competition Setup the so that I do not lose my changes
+...               INFUND-4725 As a Competitions team member I want to be guided to complete all mandatory information in the Initial Details section so that I can access the correct details in the other sections in Competition Setup.
+...
+...               INFUND-4582 As a Competitions team member I want the service to automatically save my edits while I work through Eligibility section in Competition Setup the so that I do not lose my changes
+...
+...               INFUND-4892 As a Competitions team member I want to be prevented from making amendments to some Competition Setup details so that I do not affect affect other setup details that have been saved so far for this competition
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin
@@ -147,8 +150,9 @@ Initial details: Autosave
     and the user clicks the button/link    link=Initial Details
     Then the user should see the correct values in the initial details form
 
-Initial details should not allow to mark as complete when date is in past
+Initial details should not allow dates in the past
     [Documentation]    INFUND-4682
+    ...
     Given the user enters text to a text field    id=openingDateDay    01
     And the user enters text to a text field    Id=openingDateMonth    12
     And the user enters text to a text field    id=openingDateYear    2015
@@ -174,13 +178,17 @@ Initial details mark as done
     And the user should see the text in the page    NO
     And the user should see the element    jQuery=.button:contains("Edit")
 
-Initial details can be edited again
+Initial details can be edited again except from Comp Type and Date
     [Documentation]    INFUND-2985
     ...
     ...    INFUND-3182
+    ...
+    ...    INFUND-4892
     [Tags]    HappyPath
     When the user clicks the button/link    jQuery=.button:contains("Edit")
     And the user enters text to a text field    id=title    Test competition
+    And The element should be disabled    id=competitionTypeId
+    And The element should be disabled    id=openingDateDay
     And the user clicks the button/link    jQuery=.button:contains("Done")
     Then the user should see the text in the page    1/12/2017
     And the user should see the text in the page    Competition Technologist One
