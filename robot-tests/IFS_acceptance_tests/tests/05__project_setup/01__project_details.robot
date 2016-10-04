@@ -227,7 +227,7 @@ Partners nominate finance contacts
 
 Option to invite a finance contact
     [Documentation]    INFUND-3579
-    [Tags]
+    [Tags]    HappyPath
     [Setup]    Log in as user    steve.smith@empire.com    Passw0rd
     Given the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Project details
