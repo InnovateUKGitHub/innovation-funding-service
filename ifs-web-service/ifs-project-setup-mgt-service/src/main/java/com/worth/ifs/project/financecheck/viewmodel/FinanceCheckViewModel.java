@@ -71,6 +71,14 @@ public class FinanceCheckViewModel {
         return organisationId;
     }
 
+    public boolean isShowApprovedMessage() {
+        return isApproved;
+    }
+
+    public boolean isShowApproveButton() {
+        return !isApproved;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
