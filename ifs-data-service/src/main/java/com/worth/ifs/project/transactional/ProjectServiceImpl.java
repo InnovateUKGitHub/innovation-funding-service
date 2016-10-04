@@ -35,12 +35,14 @@ import com.worth.ifs.organisation.mapper.OrganisationMapper;
 import com.worth.ifs.organisation.repository.OrganisationAddressRepository;
 import com.worth.ifs.project.constant.ProjectActivityStates;
 import com.worth.ifs.project.domain.MonitoringOfficer;
+import com.worth.ifs.project.domain.PartnerOrganisation;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
 import com.worth.ifs.project.finance.domain.*;
 import com.worth.ifs.project.finance.repository.FinanceCheckRepository;
 import com.worth.ifs.project.finance.repository.SpendProfileRepository;
 import com.worth.ifs.project.finance.transactional.CostCategoryTypeStrategy;
+import com.worth.ifs.project.finance.workflow.financechecks.configuration.FinanceCheckWorkflowHandler;
 import com.worth.ifs.project.mapper.MonitoringOfficerMapper;
 import com.worth.ifs.project.mapper.ProjectMapper;
 import com.worth.ifs.project.mapper.ProjectUserMapper;
@@ -54,11 +56,9 @@ import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.OrganisationTypeEnum;
-import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -144,16 +144,19 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     private ProjectDetailsWorkflowHandler projectDetailsWorkflowHandler;
 
     @Autowired
-    private FinanceRowRepository financeRowRepository;
-
-    @Autowired
-    private FinanceCheckRepository financeCheckRepository;
+    private FinanceCheckWorkflowHandler financeCheckWorkflowHandler;
 
     @Autowired
     private CostCategoryTypeStrategy costCategoryTypeStrategy;
 
     @Autowired
+    private FinanceCheckRepository financeCheckRepository;
+
+    @Autowired
     private ApplicationFinanceRepository applicationFinanceRepository;
+
+    @Autowired
+    private FinanceRowRepository financeRowRepository;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -190,7 +193,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         return getProject(projectId).
                 andOnSuccess(this::validateIfProjectAlreadySubmitted).
                 andOnSuccess(project -> validateProjectManager(project, projectManagerUserId).
-                        andOnSuccess(leadPartner -> createOrUpdateProjectManagerForProject(project, leadPartner)));
+                andOnSuccess(leadPartner -> createOrUpdateProjectManagerForProject(project, leadPartner)));
     }
 
     @Override
@@ -206,8 +209,8 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         return getProject(projectId).
                 andOnSuccess(this::validateIfProjectAlreadySubmitted).
                 andOnSuccess(project -> validateProjectOrganisationFinanceContact(project, organisationId, financeContactUserId).
-                        andOnSuccess(projectUser -> createFinanceContactProjectUser(projectUser.getUser(), project, projectUser.getOrganisation()).
-                                andOnSuccessReturnVoid(financeContact -> addFinanceContactToProject(project, financeContact))));
+                andOnSuccess(projectUser -> createFinanceContactProjectUser(projectUser.getUser(), project, projectUser.getOrganisation()).
+                andOnSuccessReturnVoid(financeContact -> addFinanceContactToProject(project, financeContact))));
     }
 
     @Override
@@ -231,11 +234,10 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
             project.setAddress(newAddress);
         }
 
-        if (projectDetailsWorkflowHandler.projectAddressAdded(project, getCurrentlyLoggedInPartner(project))) {
-            return serviceSuccess();
-        } else {
-            return serviceFailure(PROJECT_SETUP_CANNOT_PROGRESS_WORKFLOW);
-        }
+
+        return getCurrentlyLoggedInPartner(project).andOnSuccessReturn(user ->
+               projectDetailsWorkflowHandler.projectAddressAdded(project, user)).andOnSuccess(workflowResult ->
+               workflowResult ? serviceSuccess() : serviceFailure(PROJECT_SETUP_CANNOT_PROGRESS_WORKFLOW));
     }
 
     @Override
@@ -260,16 +262,15 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     @Override
     public ServiceResult<Void> submitProjectDetails(final Long projectId, LocalDateTime date) {
 
-        return getProject(projectId).andOnSuccess(project -> {
-
-            ProjectUser projectUser = getCurrentlyLoggedInPartner(project);
+        return getProject(projectId).andOnSuccess(project ->
+                getCurrentlyLoggedInPartner(project).andOnSuccess(projectUser -> {
 
             if (projectDetailsWorkflowHandler.submitProjectDetails(project, projectUser)) {
                 return serviceSuccess();
             } else {
                 return serviceFailure(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_SUBMITTED_IF_INCOMPLETE);
             }
-        });
+        }));
     }
 
     @Override
@@ -286,8 +287,8 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
         return getProject(projectId).andOnSuccess(project ->
                 retrieveUploadedDocuments(projectId).handleSuccessOrFailure(
-                        failure -> serviceFailure(PROJECT_SETUP_OTHER_DOCUMENTS_MUST_BE_UPLOADED_BEFORE_SUBMIT),
-                        success -> setDocumentsSubmittedDate(project, date)));
+                    failure -> serviceFailure(PROJECT_SETUP_OTHER_DOCUMENTS_MUST_BE_UPLOADED_BEFORE_SUBMIT),
+                    success -> setDocumentsSubmittedDate(project, date)));
     }
 
     private ServiceResult<Void> setDocumentsSubmittedDate(Project project, LocalDateTime date) {
@@ -300,12 +301,12 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
         ServiceResult<Project> project = getProject(projectId);
         Optional<ProjectUser> projectManager = getExistingProjectManager(project.getSuccessObject());
-
+        
         return retrieveUploadedDocuments(projectId).handleSuccessOrFailure(
                 failure -> serviceSuccess(false),
                 success -> projectManager.isPresent() && projectManager.get().getUser().getId().equals(userId) ?
-                        serviceSuccess(true) :
-                        serviceSuccess(false));
+                            serviceSuccess(true) :
+                            serviceSuccess(false));
     }
 
     @Override
@@ -634,11 +635,9 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
         project.addProjectUser(financeContact);
 
-        if (projectDetailsWorkflowHandler.projectFinanceContactAdded(project, getCurrentlyLoggedInPartner(project))) {
-            return serviceSuccess();
-        } else {
-            return serviceFailure(PROJECT_SETUP_CANNOT_PROGRESS_WORKFLOW);
-        }
+        return getCurrentlyLoggedInPartner(project).andOnSuccessReturn(partnerUser ->
+            projectDetailsWorkflowHandler.projectFinanceContactAdded(project, partnerUser)).andOnSuccess(workflowResult ->
+            workflowResult ? serviceSuccess() : serviceFailure(PROJECT_SETUP_CANNOT_PROGRESS_WORKFLOW));
     }
 
     private ServiceResult<ProjectUser> createFinanceContactProjectUser(User user, Project project, Organisation organisation) {
@@ -668,7 +667,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         List<Organisation> partnerOrganisationsToInclude =
                 simpleFilter(allPartnerOrganisations, partner ->
                         partner.getId().equals(leadOrganisation.getId()) ||
-                                (partnerUserForFilterUser.map(pu -> partner.getId().equals(pu.getOrganisation().getId())).orElse(true)));
+                        (partnerUserForFilterUser.map(pu -> partner.getId().equals(pu.getOrganisation().getId())).orElse(true)));
 
         List<ProjectPartnerStatusResource> projectPartnerStatusResources =
                 simpleMap(partnerOrganisationsToInclude, partner -> getProjectPartnerStatus(project, partner));
@@ -687,7 +686,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         OrganisationTypeEnum organisationType = OrganisationTypeEnum.getFromId(partnerOrganisation.getOrganisationType().getId());
 
         ProjectActivityStates bankDetailsStatus = createBankDetailStatus(project, bankDetails, partnerOrganisation);
-        ProjectActivityStates financeChecksStatus = createFinanceCheckStatus(bankDetailsStatus);
+        ProjectActivityStates financeChecksStatus = createFinanceCheckStatus(project, partnerOrganisation, bankDetailsStatus);
         ProjectActivityStates leadProjectDetailsSubmitted = createProjectDetailsStatus(project);
         ProjectActivityStates monitoringOfficerStatus = createMonitoringOfficerStatus(monitoringOfficer, leadProjectDetailsSubmitted);
         ProjectActivityStates spendProfileStatus = createSpendProfileStatus(financeChecksStatus, spendProfile);
@@ -846,7 +845,15 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
             ServiceResult<List<ProjectUser>> projectUserCollection = aggregate(correspondingProjectUsers);
 
             ServiceResult<Project> saveProjectResult = projectUserCollection.andOnSuccessReturn(projectUsers -> {
-                projectUsers.forEach(project::addProjectUser);
+
+                List<Organisation> uniqueOrganisations =
+                        removeDuplicates(simpleMap(projectUsers, ProjectUser::getOrganisation));
+
+                List<PartnerOrganisation> partnerOrganisations = simpleMap(uniqueOrganisations, org ->
+                        new PartnerOrganisation(project, org, org.getId().equals(leadApplicantRole.getOrganisation().getId())));
+
+                project.setProjectUsers(projectUsers);
+                project.setPartnerOrganisations(partnerOrganisations);
                 return projectRepository.save(project);
             });
 
@@ -861,6 +868,23 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
         ProjectUser originalLeadApplicantProjectUser = newProject.getProjectUsers().get(0);
 
+        ServiceResult<Void> projectDetailsProcess = createProjectDetailsProcess(newProject, originalLeadApplicantProjectUser);
+        ServiceResult<Void> financeCheckProcesses = createFinanceCheckProcesses(newProject.getPartnerOrganisations(), originalLeadApplicantProjectUser);
+
+        return processAnyFailuresOrSucceed(projectDetailsProcess, financeCheckProcesses);
+    }
+
+    private ServiceResult<Void> createFinanceCheckProcesses(List<PartnerOrganisation> partnerOrganisations, ProjectUser originalLeadApplicantProjectUser) {
+
+        List<ServiceResult<Void>> results = simpleMap(partnerOrganisations, partnerOrganisation ->
+                financeCheckWorkflowHandler.projectCreated(partnerOrganisation, originalLeadApplicantProjectUser) ?
+                        serviceSuccess() :
+                        serviceFailure(PROJECT_SETUP_UNABLE_TO_CREATE_PROJECT_PROCESSES));
+
+        return aggregate(results).andOnSuccessReturnVoid();
+    }
+
+    private ServiceResult<Void> createProjectDetailsProcess(Project newProject, ProjectUser originalLeadApplicantProjectUser) {
         if (projectDetailsWorkflowHandler.projectCreated(newProject, originalLeadApplicantProjectUser)) {
             return serviceSuccess();
         } else {
@@ -907,8 +931,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         return financeCheckRepository.save(financeCheck);
     }
 
-
-
     private ServiceResult<ProjectUser> createPartnerProjectUser(Project project, User user, Organisation organisation) {
         return createProjectUserForRole(project, user, organisation, PROJECT_PARTNER);
     }
@@ -946,24 +968,9 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
             return serviceSuccess();
         });
 
-        return setProjectManagerResult.andOnSuccess(() -> {
-
-            if (projectDetailsWorkflowHandler.projectManagerAdded(project, leadPartnerUser)) {
-                return serviceSuccess();
-            } else {
-                return serviceFailure(PROJECT_SETUP_CANNOT_PROGRESS_WORKFLOW);
-            }
-        });
-    }
-
-    private ProjectUser getCurrentlyLoggedInPartner(Project project) {
-        return getCurrentlyLoggedInProjectUser(project, PROJECT_PARTNER);
-    }
-
-    private ProjectUser getCurrentlyLoggedInProjectUser(Project project, ProjectParticipantRole role) {
-        UserResource currentUser = (UserResource) SecurityContextHolder.getContext().getAuthentication().getDetails();
-        return simpleFindFirst(project.getProjectUsers(), pu ->
-                pu.getUser().getId().equals(currentUser.getId()) && pu.getRole().equals(role)).get();
+        return setProjectManagerResult.andOnSuccessReturn(result ->
+               projectDetailsWorkflowHandler.projectManagerAdded(project, leadPartnerUser)).andOnSuccess(workflowResult ->
+               workflowResult ? serviceSuccess() : serviceFailure(PROJECT_SETUP_CANNOT_PROGRESS_WORKFLOW));
     }
 
     private Optional<ProjectUser> getExistingProjectManager(Project project) {

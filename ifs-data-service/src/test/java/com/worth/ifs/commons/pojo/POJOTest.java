@@ -43,6 +43,7 @@ import com.worth.ifs.invite.resource.RejectionReasonResource;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.finance.resource.*;
+import com.worth.ifs.project.finance.workflow.financechecks.resource.FinanceCheckProcessResource;
 import com.worth.ifs.project.resource.*;
 import com.worth.ifs.project.status.resource.CompetitionProjectsStatusResource;
 import com.worth.ifs.project.status.resource.ProjectStatusResource;
@@ -122,7 +123,8 @@ public class POJOTest {
             CompetitionProjectsStatusResource.class,
             EthnicityResource.class,
             UserRegistrationResource.class,
-            FinanceCheckResource.class
+            FinanceCheckResource.class,
+            FinanceCheckProcessResource.class
     );
 
     @Before
