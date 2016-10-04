@@ -315,6 +315,10 @@ CompAdmin approves other documents
     [Tags]    HappyPath
     Given the user navigates to the page              ${SERVER}/project-setup-management/project/1/partner/documents
     And the user should see the text in the page      Other documents
+    And the user should see the text in the page      Vitruvius Stonework Limited
+    And the user should see the text in the page      Ludlow
+    And the user should see the text in the page      EGGS
+    And the user should see the text in the page      worth.email.test+projectlead@gmail.com
     Then the user should see the element              jQuery=button:contains("Accept documents")
     And the user should see the element               jQuery=button:contains("Reject documents")
     When the user clicks the button/link              jQuery=button:contains("Accept documents")
