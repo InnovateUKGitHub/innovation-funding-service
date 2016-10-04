@@ -42,12 +42,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class FinanceCheckControllerTest extends BaseControllerMockMVCTest<FinanceCheckController> {
     @Test
     public void testView() throws Exception {
+        Long competitionId = 1L;
         Long projectId = 123L;
         Long organisationId = 456L;
+        Long applicationId = 789L;
         ProjectOrganisationCompositeId key = new ProjectOrganisationCompositeId(projectId, organisationId);
         OrganisationResource organisationResource = newOrganisationResource().withId(organisationId).withOrganisationType(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId()).build();
+        ApplicationResource applicationResource = newApplicationResource().withId(applicationId).build();
+        ProjectResource projectResource = newProjectResource().withId(projectId).withApplication(applicationResource).build();
+        when(applicationService.getById(applicationId)).thenReturn(newApplicationResource().withId(applicationId).withCompetition(competitionId).build());
+        when(projectService.getById(projectId)).thenReturn(projectResource);
         when(organisationService.getOrganisationById(organisationId)).thenReturn(organisationResource);
         when(financeCheckServiceMock.getByProjectAndOrganisation(key)).thenReturn(newFinanceCheckResource().build());
+
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + organisationId)).
                 andExpect(view().name("project/financecheck/partner-project-eligibility")).
                 andReturn();

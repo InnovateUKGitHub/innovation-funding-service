@@ -9,6 +9,8 @@ import java.time.LocalDate;
 public class FinanceCheckViewModel {
     private String formattedCompetitionNumber;
     private String competitionName;
+    private String organisationName;
+    private boolean isLeadPartner;
     private String financeContactName;
     private String financeContactEmail;
     private boolean isResearch;
@@ -19,7 +21,7 @@ public class FinanceCheckViewModel {
     public FinanceCheckViewModel() {
     }
 
-    public FinanceCheckViewModel(String formattedCompetitionNumber, String competitionName, String financeContactName, String financeContactEmail, boolean isResearch, boolean isApproved, String approverName, LocalDate approvalDate) {
+    public FinanceCheckViewModel(String formattedCompetitionNumber, String competitionName, String organisationName, boolean isLeadPartner, String financeContactName, String financeContactEmail, boolean isResearch, boolean isApproved, String approverName, LocalDate approvalDate) {
         this.formattedCompetitionNumber = formattedCompetitionNumber;
         this.competitionName = competitionName;
         this.financeContactName = financeContactName;
@@ -30,12 +32,12 @@ public class FinanceCheckViewModel {
         this.approvalDate = approvalDate;
     }
 
-    public FinanceCheckViewModel(String formattedCompetitionNumber, String competitionName, String financeContactName, String financeContactEmail, boolean isResearch) {
-        this(formattedCompetitionNumber, competitionName, financeContactName, financeContactEmail, isResearch, false, null, null);
+    public FinanceCheckViewModel(String formattedCompetitionNumber, String competitionName, String organisationName, boolean isLeadPartner, String financeContactName, String financeContactEmail, boolean isResearch) {
+        this(formattedCompetitionNumber, competitionName, organisationName, isLeadPartner, financeContactName, financeContactEmail, isResearch, false, null, null);
     }
 
-    public FinanceCheckViewModel(String formattedCompetitionNumber, String competitionName, boolean isResearch) {
-        this(formattedCompetitionNumber, competitionName, null, null, isResearch, false, null, null);
+    public FinanceCheckViewModel(String formattedCompetitionNumber, String competitionName, String organisationName, boolean isLeadPartner, boolean isResearch) {
+        this(formattedCompetitionNumber, competitionName, organisationName, isLeadPartner, null, null, isResearch, false, null, null);
     }
 
     public String getFinanceContactName() {

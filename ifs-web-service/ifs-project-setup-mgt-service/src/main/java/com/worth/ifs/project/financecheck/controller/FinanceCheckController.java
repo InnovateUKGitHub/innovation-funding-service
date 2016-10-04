@@ -136,11 +136,12 @@ public class FinanceCheckController {
         OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
         boolean isResearch = OrganisationTypeEnum.isResearch(organisationResource.getOrganisationType());
         Optional<ProjectUserResource> financeContact = getFinanceContact(projectId, organisationId);
+
         FinanceCheckViewModel financeCheckViewModel;
         if(financeContact.isPresent()){
-            financeCheckViewModel = new FinanceCheckViewModel(formattedCompId, competitionName, financeContact.get().getUserName(), financeContact.get().getEmail(), isResearch);
+            financeCheckViewModel = new FinanceCheckViewModel(formattedCompId, competitionName, organisationResource.getName(), false, financeContact.get().getUserName(), financeContact.get().getEmail(), isResearch);
         } else {
-            financeCheckViewModel = new FinanceCheckViewModel(formattedCompId, competitionName, isResearch);
+            financeCheckViewModel = new FinanceCheckViewModel(formattedCompId, competitionName, organisationResource.getName(), false, isResearch);
         }
         model.addAttribute("model", financeCheckViewModel);
         return "project/financecheck/partner-project-eligibility";
