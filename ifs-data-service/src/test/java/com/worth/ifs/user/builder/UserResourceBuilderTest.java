@@ -1,20 +1,14 @@
 package com.worth.ifs.user.builder;
 
-import com.worth.ifs.user.domain.*;
-import com.worth.ifs.user.resource.Disability;
-import com.worth.ifs.user.resource.Gender;
-import com.worth.ifs.user.resource.UserStatus;
+import com.worth.ifs.user.domain.Affiliation;
+import com.worth.ifs.user.resource.*;
 import org.junit.Test;
 
 import java.util.List;
 
 import static com.worth.ifs.user.builder.AffiliationBuilder.newAffiliation;
-import static com.worth.ifs.user.builder.EthnicityBuilder.newEthnicity;
-import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
-import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
-import static com.worth.ifs.user.builder.ProfileBuilder.newProfile;
-import static com.worth.ifs.user.builder.RoleBuilder.newRole;
-import static com.worth.ifs.user.builder.UserBuilder.newUser;
+import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
+import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.domain.AffiliationType.*;
 import static com.worth.ifs.user.resource.Disability.NOT_STATED;
 import static com.worth.ifs.user.resource.Disability.YES;
@@ -25,26 +19,7 @@ import static com.worth.ifs.user.resource.UserStatus.INACTIVE;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 
-/**
- * Test the initial setup of the builder
- */
-public class UserBuilderTest {
-
-    @Test
-    public void testUsersBuiltWithInitialSetOfValuesDefined() {
-
-        List<User> users = newUser().build(2);
-        Long initialId = users.get(0).getId();
-
-        assertEquals(Long.valueOf(initialId), users.get(0).getId());
-        assertEquals(Long.valueOf(initialId + 1), users.get(1).getId());
-
-        assertEquals("User " + initialId, users.get(0).getName());
-        assertEquals("User " + (initialId + 1), users.get(1).getName());
-
-        assertEquals("user" + initialId + "@example.com", users.get(0).getEmail());
-        assertEquals("user" + (initialId + 1) + "@example.com", users.get(1).getEmail());
-    }
+public class UserResourceBuilderTest {
 
     @Test
     public void buildOne() {
@@ -58,16 +33,15 @@ public class UserBuilderTest {
         UserStatus expectedStatus = ACTIVE;
         String expectedUid = "Uid";
         String expectedEmail = "test@test.com";
-        List<ProcessRole> expectedProcessRoles = newProcessRole().build(2);
-        List<Organisation> expectedOrganisations = newOrganisation().build(2);
-        List<Role> expectedRoles = newRole().build(2);
+        List<Long> expectedProcessRoles = asList(100L, 101L);
+        List<Long> expectedOrganisations = asList(200L, 201L);
+        List<RoleResource> expectedRoles = newRoleResource().build(2);
         Gender expectedGender = FEMALE;
         Disability expectedDisability = NOT_STATED;
-        Ethnicity expectedEthnicity = newEthnicity().build();
-        Profile expectedProfile = newProfile().build();
+        Long expectedEthnicity = 1L;
         List<Affiliation> expectedAffiliations = newAffiliation().withAffiliationType(EMPLOYER, FAMILY_FINANCIAL).build(2);
 
-        User user = newUser()
+        UserResource user = newUserResource()
                 .withId(expectedId)
                 .withTitle(expectedTitle)
                 .withFirstName(expectedFirstName)
@@ -77,14 +51,13 @@ public class UserBuilderTest {
                 .withImageUrl(expectedImageUrl)
                 .withStatus(expectedStatus)
                 .withUid(expectedUid)
-                .withEmailAddress(expectedEmail)
+                .withEmail(expectedEmail)
                 .withProcessRoles(expectedProcessRoles)
                 .withOrganisations(expectedOrganisations)
-                .withRoles(expectedRoles)
+                .withRolesGlobal(expectedRoles)
                 .withGender(expectedGender)
                 .withDisability(expectedDisability)
                 .withEthnicity(expectedEthnicity)
-                .withProfile(expectedProfile)
                 .withAffiliations(expectedAffiliations)
                 .build();
 
@@ -104,7 +77,6 @@ public class UserBuilderTest {
         assertEquals(expectedGender, user.getGender());
         assertEquals(expectedDisability, user.getDisability());
         assertEquals(expectedEthnicity, user.getEthnicity());
-        assertEquals(expectedProfile, user.getProfile());
         assertEquals(expectedAffiliations, user.getAffiliations());
     }
 
@@ -120,19 +92,18 @@ public class UserBuilderTest {
         UserStatus[] expectedStatuss = {ACTIVE, INACTIVE};
         String[] expectedUids = {"Uid1", "Uid2"};
         String[] expectedEmails = {"email1@test.com", "email2@test.com"};
-        List<List<ProcessRole>> expectedProcessRoles = asList(newProcessRole().build(2), newProcessRole().build(2));
-        List<List<Organisation>> expectedOrganisations = asList(newOrganisation().build(2), newOrganisation().build(2));
-        List<List<Role>> expectedRoles = asList(newRole().build(2), newRole().build(2));
+        List<List<Long>> expectedProcessRoles = asList(asList(100L, 101L), asList(102L, 103L));
+        List<List<Long>> expectedOrganisations = asList(asList(200L, 201L), asList(202L, 203L));
+        List<List<RoleResource>> expectedRoles = asList(newRoleResource().build(2), newRoleResource().build(2));
         Gender[] expectedGenders = {FEMALE, MALE};
         Disability[] expectedDisabilities = {NOT_STATED, YES};
-        Ethnicity[] expectedEthnicities = newEthnicity().buildArray(2, Ethnicity.class);
-        Profile[] expectedProfiles = newProfile().buildArray(2, Profile.class);
+        Long[] expectedEthnicities = {1L, 2L};
         List<List<Affiliation>> expectedAffiliations = asList(
                 newAffiliation().withAffiliationType(EMPLOYER, FAMILY_FINANCIAL).build(2),
                 newAffiliation().withAffiliationType(PERSONAL_FINANCIAL, FAMILY_FINANCIAL).build(2)
         );
 
-        List<User> users = newUser()
+        List<UserResource> users = newUserResource()
                 .withId(expectedIds)
                 .withTitle(expectedTitles)
                 .withFirstName(expectedFirstNames)
@@ -142,19 +113,18 @@ public class UserBuilderTest {
                 .withImageUrl(expectedImageUrls)
                 .withStatus(expectedStatuss)
                 .withUid(expectedUids)
-                .withEmailAddress(expectedEmails)
+                .withEmail(expectedEmails)
                 .withProcessRoles(expectedProcessRoles.get(0), expectedProcessRoles.get(1))
                 .withOrganisations(expectedOrganisations.get(0), expectedOrganisations.get(1))
-                .withRoles(expectedRoles.get(0), expectedRoles.get(1))
+                .withRolesGlobal(expectedRoles.get(0), expectedRoles.get(1))
                 .withGender(expectedGenders)
                 .withDisability(expectedDisabilities)
                 .withEthnicity(expectedEthnicities)
-                .withProfile(expectedProfiles)
                 .withAffiliations(expectedAffiliations.get(0), expectedAffiliations.get(1))
                 .build(2);
 
 
-        User first = users.get(0);
+        UserResource first = users.get(0);
 
         assertEquals(expectedIds[0], first.getId());
         assertEquals(expectedTitles[0], first.getTitle());
@@ -172,10 +142,9 @@ public class UserBuilderTest {
         assertEquals(expectedGenders[0], first.getGender());
         assertEquals(expectedDisabilities[0], first.getDisability());
         assertEquals(expectedEthnicities[0], first.getEthnicity());
-        assertEquals(expectedProfiles[0], first.getProfile());
         assertEquals(expectedAffiliations.get(0), first.getAffiliations());
 
-        User second = users.get(1);
+        UserResource second = users.get(1);
 
         assertEquals(expectedIds[1], second.getId());
         assertEquals(expectedTitles[1], second.getTitle());
@@ -193,7 +162,7 @@ public class UserBuilderTest {
         assertEquals(expectedGenders[1], second.getGender());
         assertEquals(expectedDisabilities[1], second.getDisability());
         assertEquals(expectedEthnicities[1], second.getEthnicity());
-        assertEquals(expectedProfiles[1], second.getProfile());
         assertEquals(expectedAffiliations.get(1), second.getAffiliations());
     }
+
 }

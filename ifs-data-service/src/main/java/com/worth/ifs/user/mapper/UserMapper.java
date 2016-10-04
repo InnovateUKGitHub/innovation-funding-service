@@ -12,22 +12,23 @@ import org.mapstruct.Mappings;
 @Mapper(
         config = GlobalMapperConfig.class,
         uses = {
-            OrganisationMapper.class,
-            RoleMapper.class,
-            ProcessRoleMapper.class,
-            EthnicityMapper.class
+                AffiliationMapper.class,
+                OrganisationMapper.class,
+                RoleMapper.class,
+                ProcessRoleMapper.class,
+                EthnicityMapper.class
         }
 )
 public abstract class UserMapper extends BaseMapper<User, UserResource, Long> {
 
     @Mappings({
-            @Mapping(target="profile", ignore=true), // TODO we should add profile (or the id) to the resource
+            @Mapping(target = "profile", ignore = true), // TODO we should add profile (or the id) to the resource
     })
     @Override
     public abstract User mapToDomain(UserResource resource);
 
     @Mappings({
-            @Mapping(target = "password", ignore = true ),
+            @Mapping(target = "password", ignore = true),
     })
     @Override
     public abstract UserResource mapToResource(User domain);

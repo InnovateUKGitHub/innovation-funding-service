@@ -26,7 +26,8 @@ public class UserDocs {
             fieldWithPath("roles").description("roles that the user is associated with"),
             fieldWithPath("gender").description("gender of the user"),
             fieldWithPath("disability").description("disability of the user"),
-            fieldWithPath("ethnicity").description("ethnic group of the user")
+            fieldWithPath("ethnicity").description("ethnic group of the user"),
+            fieldWithPath("affiliations").description("affiliation of the user describing personal and family appointments held, personal affiliations, other financial interests, and family financial interests")
     };
 
 }

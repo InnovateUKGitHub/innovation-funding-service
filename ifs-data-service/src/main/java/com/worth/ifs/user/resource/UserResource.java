@@ -31,9 +31,10 @@ public class UserResource {
     private Gender gender;
     private Disability disability;
     private Long ethnicity;
+    private List<AffiliationResource> affiliations;
 
     public UserResource() {
-    	// no-arg constructor
+        // no-arg constructor
     }
 
     public Long getId() {
@@ -63,7 +64,7 @@ public class UserResource {
     @JsonIgnore
     public String getName() {
         StringBuilder stringBuilder = new StringBuilder();
-        if(StringUtils.hasText(firstName)){
+        if (StringUtils.hasText(firstName)) {
             stringBuilder.append(firstName)
                     .append(" ");
         }
@@ -157,9 +158,13 @@ public class UserResource {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
+        if (this == o) {
+            return true;
+        }
 
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         UserResource that = (UserResource) o;
 
@@ -181,6 +186,7 @@ public class UserResource {
                 .append(gender, that.gender)
                 .append(disability, that.disability)
                 .append(ethnicity, that.ethnicity)
+                .append(affiliations, that.affiliations)
                 .isEquals();
     }
 
@@ -204,6 +210,7 @@ public class UserResource {
                 .append(gender)
                 .append(disability)
                 .append(ethnicity)
+                .append(affiliations)
                 .toHashCode();
     }
 
@@ -241,5 +248,13 @@ public class UserResource {
 
     public void setEthnicity(Long ethnicity) {
         this.ethnicity = ethnicity;
+    }
+
+    public List<AffiliationResource> getAffiliations() {
+        return affiliations;
+    }
+
+    public void setAffiliations(List<AffiliationResource> affiliations) {
+        this.affiliations = affiliations;
     }
 }
