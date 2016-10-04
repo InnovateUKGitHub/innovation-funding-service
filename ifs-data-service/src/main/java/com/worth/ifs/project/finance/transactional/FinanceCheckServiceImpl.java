@@ -1,19 +1,21 @@
 package com.worth.ifs.project.finance.transactional;
 
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.project.finance.domain.Cost;
-import com.worth.ifs.project.finance.domain.CostGroup;
-import com.worth.ifs.project.finance.domain.FinanceCheck;
+import com.worth.ifs.project.finance.domain.*;
+import com.worth.ifs.project.finance.mapper.CostCategoryMapper;
 import com.worth.ifs.project.finance.repository.FinanceCheckRepository;
-import com.worth.ifs.project.finance.resource.CostGroupResource;
-import com.worth.ifs.project.finance.resource.CostResource;
-import com.worth.ifs.project.finance.resource.FinanceCheckResource;
+import com.worth.ifs.project.finance.resource.*;
 import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -63,33 +65,64 @@ public class FinanceCheckServiceImpl implements FinanceCheckService {
     }
 
     private FinanceCheckResource mapToResource(FinanceCheck fc) {
+        Map<Object, Object> ctx  = new HashMap<>();
         FinanceCheckResource financeCheckResource = new FinanceCheckResource();
         financeCheckResource.setId(fc.getId());
         financeCheckResource.setOrganisation(fc.getOrganisation().getId());
         financeCheckResource.setProject(fc.getProject().getId());
-        financeCheckResource.setCostGroup(mapCostGroupToResource(fc.getCostGroup()));
+        financeCheckResource.setCostGroup(mapCostGroupToResource(fc.getCostGroup(), ctx));
         return financeCheckResource;
     }
 
-    private CostGroupResource mapCostGroupToResource(CostGroup costGroup){
-        CostGroupResource costGroupResource = new CostGroupResource();
-        if(costGroup != null) {
-            costGroupResource.setId(costGroup.getId());
-            costGroupResource.setDescription(costGroup.getDescription());
-            costGroupResource.setCosts(mapCostsToCostResource(costGroup.getCosts()));
-        }
-        return costGroupResource;
-    }
 
-    private List<CostResource> mapCostsToCostResource(List<Cost> costs){
-        if(costs == null){
-            return emptyList();
-        }
-        return simpleMap(costs, c -> {
-            CostResource cr = new CostResource();
-            cr.setId(c.getId());
-            cr.setValue(c.getValue());
-            return cr;
+
+    private CostGroupResource mapCostGroupToResource(CostGroup cg, Map<Object, Object> ctx){
+        return resource(ctx, cg, CostGroupResource::new, cgr -> {
+            cgr.setId(cg.getId());
+            cgr.setDescription(cg.getDescription());
+            List<CostResource> costResources = simpleMap(cg.getCosts(), c -> mapCostsToCostResource(c, ctx));
+            cgr.setCosts(costResources);
         });
     }
+
+    private CostResource mapCostsToCostResource(Cost c, Map<Object, Object> ctx){
+            return resource(ctx, c, CostResource::new, cr -> {
+                cr.setId(c.getId());
+                cr.setValue(c.getValue());
+                CostCategoryResource costCategoryResource = mapCostCategoryToCostCategoryResource(c.getCostCategory(), ctx);
+                cr.setCostCategory(costCategoryResource);
+        });
+    }
+
+    private CostCategoryResource mapCostCategoryToCostCategoryResource(CostCategory cc, Map<Object, Object> ctx){
+        return resource(ctx, cc, CostCategoryResource::new,  ccr -> {
+                ccr.setLabel(cc.getLabel());
+                ccr.setId(cc.getId());
+                CostCategoryGroupResource costCategoryGroupResource = mapCostCategoryGroupToCostCategoryGroupResource(cc.getCostCategoryGroup(), ctx);
+                ccr.setCostCategoryGroup(costCategoryGroupResource);
+        });
+
+    }
+
+    private CostCategoryGroupResource mapCostCategoryGroupToCostCategoryGroupResource(CostCategoryGroup ccg, Map<Object, Object> ctx){
+        return resource(ctx, ccg, CostCategoryGroupResource::new, ccgr -> {
+            ccgr.setId(ccg.getId());
+            List<CostCategoryResource> costCategoryResources = simpleMap(ccg.getCostCategories(), cc -> mapCostCategoryToCostCategoryResource(cc, ctx));
+            ccgr.setCostCategories(costCategoryResources);
+            ccgr.setDescription(ccg.getDescription());
+        });
+    }
+
+    private <T> T resource(Map<Object, Object> ctx, Object domain, Supplier<T> constructor, Consumer<T> populator){
+        if (domain == null){
+            return null;
+        }
+        if (!ctx.containsKey(domain)){
+            T resource = constructor.get();
+            ctx.put(domain, resource);
+            populator.accept(resource);
+        }
+        return (T)ctx.get(domain);
+    }
+
 }

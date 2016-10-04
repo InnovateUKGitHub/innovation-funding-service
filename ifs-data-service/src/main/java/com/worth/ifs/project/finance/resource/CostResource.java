@@ -1,5 +1,7 @@
 package com.worth.ifs.project.finance.resource;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.math.BigDecimal;
 
 public class CostResource {
@@ -30,6 +32,7 @@ public class CostResource {
         this.value = value;
     }
 
+    @JsonIgnore
     public CostGroupResource getCostGroup() {
         return costGroup;
     }
