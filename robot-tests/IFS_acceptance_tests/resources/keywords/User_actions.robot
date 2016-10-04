@@ -760,7 +760,7 @@ open remote mailbox and confirm received email
     [Arguments]    ${receiver}    ${PASSWORD}    ${PATTERN}    ${subject}
     [Documentation]    This Keyword searches the correct email using regex
     Open Mailbox    server=imap.googlemail.com    user=${receiver}    password=${PASSWORD}
-    ${WHICH_EMAIL}=    wait for email    toEmail=${receiver}    subject=${subject}
+    ${WHICH_EMAIL}=    wait for email    subject=${subject}
     ${HTML}=    get email body    ${WHICH EMAIL}
     log    ${HTML}
     ${EMAIL_MATCH}=    Get Matches From Email    ${WHICH_EMAIL}    ${PATTERN}
@@ -772,7 +772,7 @@ open local mailbox and confirm received email
     [Arguments]    ${receiver}    ${PATTERN}    ${subject}
     [Documentation]    This Keyword searches the correct email using regex
     Open Mailbox    server=ifs-local-dev    port=9876    user=smtp    password=smtp    is_secure=False
-    ${WHICH_EMAIL}=    wait for email    toEmail=${receiver}    subject=${subject}
+    ${WHICH_EMAIL}=    wait for email    subject=${subject}
     ${HTML}=    get email body    ${WHICH EMAIL}
     log    ${HTML}
     ${EMAIL_MATCH} =    Get Matches From Email    ${WHICH_EMAIL}    ${PATTERN}
