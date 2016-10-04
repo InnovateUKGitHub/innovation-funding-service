@@ -412,7 +412,7 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected ProjectUsersHelper projectUsersHelperMock;
 
     @Mock
-    protected FinanceCheckWorkflowHandler financeCheckWorkflowHandler;
+    protected FinanceCheckWorkflowHandler financeCheckWorkflowHandlerMock;
 
     @Mock
     protected PartnerOrganisationRepository partnerOrganisationRepositoryMock;
