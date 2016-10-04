@@ -295,6 +295,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
     private ProjectSpendProfileViewModel buildExpectedProjectSpendProfileViewModel(Long organisationId, ProjectResource projectResource, SpendProfileTableResource expectedTable) {
 
         OrganisationResource organisationResource = OrganisationResourceBuilder.newOrganisationResource()
+                .withId(organisationId)
                 .withName("Org1")
                 .build();
 
