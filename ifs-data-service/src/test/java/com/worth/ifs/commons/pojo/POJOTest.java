@@ -124,6 +124,7 @@ public class POJOTest {
             CompetitionProjectsStatusResource.class,
             EthnicityResource.class,
             UserRegistrationResource.class,
+            SpendProfileCSVResource.class,
             ContractResource.class,
             ProfileResource.class
     );

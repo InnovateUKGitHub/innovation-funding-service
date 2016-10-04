@@ -2,6 +2,7 @@ package com.worth.ifs.project.finance.service;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.project.resource.SpendProfileCSVResource;
 import com.worth.ifs.project.resource.SpendProfileTableResource;
 import org.junit.Test;
 
@@ -57,5 +58,19 @@ public class ProjectFinanceRestServiceImplTest extends BaseRestServiceUnitTest<P
         RestResult<Void> result = service.markSpendProfile(projectId, organisationId,  complete);
 
         assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void getSpendProfileCSV() {
+
+        Long projectId = 1L;
+        Long organisationId = 1L;
+
+        setupGetWithRestResultExpectations(projectFinanceRestURL + "/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile-csv", SpendProfileCSVResource.class, null);
+
+        RestResult<SpendProfileCSVResource> result = service.getSpendProfileCSV(projectId, organisationId);
+
+        assertTrue(result.isSuccess());
+
     }
 }

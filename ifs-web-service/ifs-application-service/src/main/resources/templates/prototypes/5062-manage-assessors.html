@@ -4,7 +4,7 @@
     <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
-<body th:class="${(param.view != null and param.view[0] == 'full' ? 'app-overview full-width' : 'app-overview ')}">
+<body class="full-width">
 
 <div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
@@ -18,12 +18,12 @@
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
-	<div th:include="prototypes/fragments/manage-assessors :: prototype-assessor-intro" th:remove="tag" />
+	<div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assessor-intro" th:remove="tag" />
 
 	<ul class="inline-nav">
 		<li th:class="${(param.tab == null or param.tab[0] == 'find' ? 'selected' : 'not-selected' )}"><a th:href="@{'?tab=find'}"><strong>Find</strong></a></li>
 		<li th:class="${(param.tab != null and param.tab[0] == 'invite' ? 'selected' : 'not-selected' )}"><a th:href="@{'?tab=invite'}"><strong>Invite</strong></a></li>
-		<li th:class="${(param.tab != null and param.tab[0] == 'assign' ? 'selected' : 'not-selected' )}"><a th:href="@{'?tab=assign'}"><strong>Assign</strong></a></li>
+		<li th:class="${(param.tab != null and param.tab[0] == 'overview' ? 'selected' : 'not-selected' )}"><a th:href="@{'?tab=overview'}"><strong>Manage</strong></a></li>
 	</ul>
 
 	
@@ -83,13 +83,13 @@
 			if(jQuery(this).hasClass('added')){
 
 				jQuery(this).removeClass('added');
-				jQuery(this).text('+ Add to invite list');
+				jQuery(this).text('Add');
 
 
 			}else{
 
 				jQuery(this).addClass('added');
-				jQuery(this).text('- Remove from invite list');
+				jQuery(this).text('Remove');
 
 			}
 

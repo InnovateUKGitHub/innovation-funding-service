@@ -13,7 +13,7 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition eligibility'}, ${'/prototypes/920-comp-eligibility'})" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition eligibility'}, ${'/prototypes/920-comp-eligibility'})" th:remove="tag" th:unless="${param.user != null and param.user[0] == 'assessor'}"/>
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
@@ -46,7 +46,9 @@
 		</section>
 		<section class="column-half">
 			
-			<div th:include="prototypes/fragments/applicant-view :: prototype-signin(${'/prototypes/650-create-application'})" th:remove="tag" /> 
+			<div th:include="prototypes/fragments/applicant-view :: prototype-signin(${'/prototypes/650-create-application?status'})" th:remove="tag" th:unless="${param.user != null and param.user[0] == 'assessor'}" /> 
+
+            <th:block th:if="${param.user != null and param.user[0] == 'assessor'}" th:include="prototypes/fragments/applicant-view :: prototype-signin(${'/prototypes/865-assessor-dashboard-invites?accepted=yes&#38;user=assessor&#38;version=v2'})" /> 
 
 		</section>
 	</div>
