@@ -10,7 +10,7 @@
 
         <main id="content">
             <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
-            <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl='javascript:history.back()'" th:remove="tag"/>
+            <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Back to assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}" th:remove="tag" />
 
             <div class="hgroup">
                 <h1 class="heading-xlarge">Declaration of interest</h1>
@@ -219,7 +219,7 @@
                     </label>
                 </div>
 
-                <button class="button button-large extra-margin" type="submit">Continue</button>
+                <button class="button button-large extra-margin" type="submit">Save and continue</button>
             </form>
 
             <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>
