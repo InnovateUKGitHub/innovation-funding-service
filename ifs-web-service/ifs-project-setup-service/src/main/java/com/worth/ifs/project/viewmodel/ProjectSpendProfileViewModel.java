@@ -2,6 +2,7 @@ package com.worth.ifs.project.viewmodel;
 
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.SpendProfileTableResource;
+import com.worth.ifs.user.resource.OrganisationResource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -20,6 +21,7 @@ public class ProjectSpendProfileViewModel {
     private Long projectId;
     private Long organisationId;
     private String projectName;
+    private String organisationName;
     private LocalDate targetProjectStartDate;
     private Long durationInMonths;
     private SpendProfileSummaryModel summary;
@@ -30,13 +32,14 @@ public class ProjectSpendProfileViewModel {
     private BigDecimal totalOfAllActualTotals;
     private BigDecimal totalOfAllEligibleTotals;
 
-    public ProjectSpendProfileViewModel(ProjectResource project, Long organisationId, SpendProfileTableResource table,
+    public ProjectSpendProfileViewModel(ProjectResource project, OrganisationResource organisationResource, SpendProfileTableResource table,
                                         SpendProfileSummaryModel summary, Boolean markedAsComplete,
                                         Map<String, BigDecimal> categoryToActualTotal, List<BigDecimal> totalForEachMonth,
                                         BigDecimal totalOfAllActualTotals, BigDecimal totalOfAllEligibleTotals) {
         this.projectId = project.getId();
-        this.organisationId = organisationId;
+        this.organisationId = organisationResource.getId();
         this.projectName = project.getName();
+        this.organisationName = organisationResource.getName();
         this.targetProjectStartDate = project.getTargetStartDate();
         this.durationInMonths = project.getDurationInMonths();
         this.summary = summary;
@@ -54,6 +57,10 @@ public class ProjectSpendProfileViewModel {
 
     public String getProjectName() {
         return projectName;
+    }
+
+    public String getOrganisationName() {
+        return organisationName;
     }
 
     public LocalDate getTargetProjectStartDate() {
@@ -169,6 +176,7 @@ public class ProjectSpendProfileViewModel {
                 .append(projectId, viewModel.projectId)
                 .append(organisationId, viewModel.organisationId)
                 .append(projectName, viewModel.projectName)
+                .append(organisationName, viewModel.organisationName)
                 .append(targetProjectStartDate, viewModel.targetProjectStartDate)
                 .append(durationInMonths, viewModel.durationInMonths)
                 .append(summary, viewModel.summary)
@@ -207,6 +215,7 @@ public class ProjectSpendProfileViewModel {
                 .append("projectId", projectId)
                 .append("organisationId", organisationId)
                 .append("projectName", projectName)
+                .append("organisationName", organisationName)
                 .append("targetProjectStartDate", targetProjectStartDate)
                 .append("durationInMonths", durationInMonths)
                 .append("summary", summary)
