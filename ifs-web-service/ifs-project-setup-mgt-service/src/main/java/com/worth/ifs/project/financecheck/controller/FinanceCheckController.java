@@ -229,15 +229,17 @@ public class FinanceCheckController {
         Optional<SpendProfileResource> anySpendProfile = projectFinanceService.getSpendProfile(projectId, partnerOrganisations.get(0).getId());
         List<ApplicationFinanceResource> applicationFinanceResourceList = financeService.getApplicationFinanceTotals(application.getId());
 
-        List<ProjectFinanceCheckSummaryViewModel.FinanceCheckOrganisationRow> organisationRows = mapWithIndex(partnerOrganisations, (i, org) ->
-
-                new ProjectFinanceCheckSummaryViewModel.FinanceCheckOrganisationRow(
-                        org.getId(), org.getName(),
-                        getEnumForIndex(ProjectFinanceCheckSummaryViewModel.Viability.class, i),
-                        getEnumForIndex(ProjectFinanceCheckSummaryViewModel.RagStatus.class, i),
-                        getEnumForIndex(ProjectFinanceCheckSummaryViewModel.Eligibility.class, i),
-                        getEnumForIndex(ProjectFinanceCheckSummaryViewModel.RagStatus.class, i + 1),
-                        getEnumForIndex(ProjectFinanceCheckSummaryViewModel.QueriesRaised.class, i))
+        List<ProjectFinanceCheckSummaryViewModel.FinanceCheckOrganisationRow> organisationRows = mapWithIndex(partnerOrganisations, (i, org) -> {
+                    FinanceCheckProcessResource financeCheckStatus = projectFinanceService.getFinanceCheckApprovalStatus(projectId, org.getId());
+                    boolean financeChecksApproved = APPROVED.equals(financeCheckStatus.getCurrentState());
+                    return new ProjectFinanceCheckSummaryViewModel.FinanceCheckOrganisationRow(
+                            org.getId(), org.getName(),
+                            getEnumForIndex(ProjectFinanceCheckSummaryViewModel.Viability.class, i),
+                            getEnumForIndex(ProjectFinanceCheckSummaryViewModel.RagStatus.class, i),
+                            financeChecksApproved ? ProjectFinanceCheckSummaryViewModel.Eligibility.APPROVED : ProjectFinanceCheckSummaryViewModel.Eligibility.REVIEW,
+                            getEnumForIndex(ProjectFinanceCheckSummaryViewModel.RagStatus.class, i + 1),
+                            getEnumForIndex(ProjectFinanceCheckSummaryViewModel.QueriesRaised.class, i));
+                }
         );
 
         BigDecimal projectTotal = calculateTotalForAllOrganisations(applicationFinanceResourceList, ApplicationFinanceResource::getTotal);
