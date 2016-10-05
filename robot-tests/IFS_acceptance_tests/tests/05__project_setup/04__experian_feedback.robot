@@ -57,7 +57,7 @@ The user can change address and companies house details
     And the user should be redirected to the correct page    ${server}/project-setup-management/project/1/organisation/31/review-bank-details/change
     And the text box should be editable          id=company-name
     When the user enters text to a text field    id=street    Montrose House 2
-    And the user enters text to a text field     id=company-name    Vitruvius Stonework Limited
+    And the user enters text to a text field     id=company-name    Vitruvius Stonework not Limited
     And the user enters text to a text field     id=companies-house-number    60674011
 
 Bank account number and sort code validations client side
@@ -87,7 +87,7 @@ Bank account number and sort code validations server side
 
 The user cancels bank details changes
     [Documentation]    INFUND-4054
-    [Tags]
+    [Tags]    HappyPath
     When the user clicks the button/link          link=Cancel bank account changes
     Then the user should be redirected to the correct page           ${server}/project-setup-management/project/1/organisation/31/review-bank-details
     When the user clicks the button/link          link=Change bank account details
