@@ -69,12 +69,12 @@
       </tbody>
   </table>
 
-    <form method="POST" th:action="@{/project/{projectId}/finance-check/generate(projectId=${model.projectId})}" th:if="${model.showGenerateSpendProfilesButton}">
+    <form method="POST" th:action="@{/project/{projectId}/finance-check/generate(projectId=${model.projectId})}" th:if="${model.showEnabledGenerateSpendProfilesButton or model.showDisabledGenerateSpendProfilesButton}">
         <h3 class="heading-medium">Generate spend profile</h3>
         <p>To get your spend profile, both viability and eligibility sections above must be approved for all partners.</p>
         <p>This will then create individual flat profile spends for partners. Partners can edit their profile spends during the course of the project.</p>
 
-        <a th:href="@{/project/{projectId}/finance-check/generate/confirm(projectId=${model.projectId})}" data-js-modal="generate-spend-profile" class="button">Generate Spend Profile</a>
+        <a th:href="@{/project/{projectId}/finance-check/generate/confirm(projectId=${model.projectId})}" data-js-modal="generate-spend-profile" class="button" th:disabled="${model.showDisabledGenerateSpendProfilesButton}">Generate Spend Profile</a>
         <div th:include="fragments/modals :: generate-spend-profile" th:remove="tag" />
     </form>
 

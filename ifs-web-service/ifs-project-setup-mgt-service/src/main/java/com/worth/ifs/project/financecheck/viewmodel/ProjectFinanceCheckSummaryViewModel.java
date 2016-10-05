@@ -178,8 +178,12 @@ public class ProjectFinanceCheckSummaryViewModel {
         return totalPercentageGrant;
     }
 
-    public boolean isShowGenerateSpendProfilesButton() {
+    public boolean isShowEnabledGenerateSpendProfilesButton() {
         return financeChecksAllApproved && !spendProfilesGenerated;
+    }
+
+    public boolean isShowDisabledGenerateSpendProfilesButton() {
+        return !financeChecksAllApproved && !spendProfilesGenerated;
     }
 
     public boolean isShowSpendProfilesGeneratedMessage() {
