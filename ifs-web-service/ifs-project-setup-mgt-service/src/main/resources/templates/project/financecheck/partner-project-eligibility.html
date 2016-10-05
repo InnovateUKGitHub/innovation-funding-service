@@ -149,7 +149,8 @@
         </th:block>
     </form>
     <th:block th:unless="${model.showApproveButton}">
-      <a class="button button-secondary extra-margin" th:href="@{/project/{projectId}/finance-check(projectId=${model.projectId})}">Return to finance checks</a>
+      <hr/>
+      <a class="button button-secondary" th:href="@{/project/{projectId}/finance-check(projectId=${model.projectId})}">Return to finance checks</a>
     </th:block>
 
 
