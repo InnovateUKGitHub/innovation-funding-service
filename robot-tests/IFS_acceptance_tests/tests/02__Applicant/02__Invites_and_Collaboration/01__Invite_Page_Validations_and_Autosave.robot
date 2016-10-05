@@ -19,7 +19,6 @@ Resource          ../../../resources/keywords/User_actions.robot
 
 *** Variables ***
 ${INVITE_COLLABORATORS2_PAGE}    ${SERVER}/application/3/contributors/invite?newApplication
-${APPLICATION_3_TEAM_PAGE}    ${SERVER}/application/3/contributors
 
 *** Test Cases ***
 lead applicant can add/remove partners
