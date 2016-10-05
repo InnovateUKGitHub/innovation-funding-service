@@ -189,13 +189,12 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
                 .withAddress(newAddressResource().build())
                 .withContract(contract)
                 .build();
-        userOne.setProfile(profile);
         userOne.setFirstName("Some");
         userOne.setLastName("How");
 
         setLoggedInUser(userOne);
 
-        RestResult<Void> restResult = controller.updateDetails(userOne);
+        RestResult<Void> restResult = controller.updateProfile(1L, profile);
         assertTrue(restResult.isSuccess());
     }
 
