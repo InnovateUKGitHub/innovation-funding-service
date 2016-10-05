@@ -44,12 +44,12 @@
     </thead>
     <tbody>
       <tr>
-        <td th:text="${model.projectStartDate}" />
+        <td th:text="${#temporals.format(model.projectStartDate, 'd MMM yyyy')}" />
         <td th:text="${model.durationInMonths+' months'}" />
-        <td class="numeric">&pound; <th:block th:text="${model.totalProjectCost}" /></td>
-        <td class="numeric">&pound; <th:block th:text="${model.grantAppliedFor}" /></td>
+        <td class="numeric">&pound; <th:block th:text="${#numbers.formatInteger(model.totalProjectCost,1,'COMMA')}" /></td>
+        <td class="numeric">&pound; <th:block th:text="${#numbers.formatInteger(model.grantAppliedFor,1,'COMMA')}" /></td>
         <td th:text="${model.otherPublicSectorFunding}" class="numeric" />
-        <td th:text="${model.totalPercentageGrant}" class="numeric" />
+        <td th:text="${model.totalPercentageGrant+'%'}" class="numeric" />
       </tr>
     </tbody>
   </table>
