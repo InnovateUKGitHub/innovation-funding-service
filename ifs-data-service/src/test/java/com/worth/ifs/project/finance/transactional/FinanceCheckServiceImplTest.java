@@ -3,10 +3,16 @@ package com.worth.ifs.project.finance.transactional;
 import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.project.domain.PartnerOrganisation;
+import com.worth.ifs.project.finance.domain.FinanceCheck;
+import com.worth.ifs.project.finance.repository.FinanceCheckRepository;
+import com.worth.ifs.project.finance.resource.FinanceCheckResource;
+import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Test;
+import org.mockito.Mock;
 
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.FINANCE_CHECKS_CANNOT_PROGRESS_WORKFLOW;
 import static com.worth.ifs.project.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
@@ -16,14 +22,18 @@ import static org.mockito.Mockito.when;
 
 public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceCheckServiceImpl> {
 
-    @Test
-    public void testGenerateFinanceCheck(){
-        // TODO RP
-    }
+    @Mock
+    private FinanceCheckRepository financeCheckRepositoryMock;
 
     @Test
-    public void testSaveFinanceCheck() {
-        // TODO RP
+    public void testSaveFinanceCheckNotFound() {
+        Long projectId = 1L;
+        Long organisationId = 1L;
+        ProjectOrganisationCompositeId compositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        when(financeCheckRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(null);
+        ServiceResult<FinanceCheckResource> result = service.getByProjectAndOrganisation(compositeId);
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(notFoundError(FinanceCheck.class, compositeId)));
     }
 
     @Test

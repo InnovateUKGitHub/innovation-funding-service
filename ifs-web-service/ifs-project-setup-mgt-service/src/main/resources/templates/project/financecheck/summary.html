@@ -10,7 +10,8 @@
 <div th:include="fragments/layout :: global-header" th:remove="tag" />
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+  <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+  <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Competition Dashboard',linkClass='link-back',linkUrl=@{/competition/{competitionId}/status(competitionId=${model.competitionSummary.competitionId})}" th:remove="tag" />
 
   <div class="grid-row">
       <div class="column-two-thirds">
@@ -54,39 +55,19 @@
   </table>
   <h3 class="heading-medium">Progress</h3>
   <table>
-      <colgroup>
-          <col span="3" />
-          <col class="border" />
-          <col/>
-          <col class="border" />
-          <col span="2" />
-      </colgroup>
       <thead>
         <tr>
           <th scope="col">Organisation</th>
-          <th scope="col" class="aligncentre">Viability</th>
-          <th scope="col" class="aligncentre">RAG</th>
-          <th scope="col" class="aligncentre">Eligibility</th>
-          <th scope="col" class="aligncentre">RAG</th>
-          <th scope="col" class="aligncentre">Queries raised</th>
-          <th scope="col" class="aligncentre">Notes</th>
+          <th scope="col">Eligibility</th>
         </tr>
       </thead>
       <tbody>
         <tr th:each="orgDetails : ${model.partnerOrganisationDetails}">
             <th scope="row" th:text="${orgDetails.name}" />
-            <td class="aligncentre"><a href="#" th:text="${#strings.toLowerCase(orgDetails.viability.name())}" /></td>
-            <td class="aligncentre" th:text="${#strings.toLowerCase(orgDetails.viabilityRagStatus.name())}"></td>
-            <td class="aligncentre"><a href="#" th:text="${#strings.toLowerCase(orgDetails.eligibility.name())}" /></td>
-            <td class="aligncentre" th:text="${#strings.toLowerCase(orgDetails.eligibilityRagStatus.name())}"></td>
-            <td class="aligncentre"><a href="#" th:text="${orgDetails.queriesRaised.name() == AWAITING_RESPONSE ? 'Awaiting response' : 'view'}" /></td>
-            <td class="aligncentre"><a href="#">View</a></td>
+            <td><a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}(projectId=${model.projectId},organisationId=${orgDetails.id})}" th:text="${#strings.toLowerCase(orgDetails.eligibility.name())}" /></td>
         </tr>
       </tbody>
   </table>
-  <p class="extra-margin">
-    <a href="#">Project finance overview</a>
-  </p>
 
     <form method="POST" th:action="@{/project/{projectId}/finance-check/generate(projectId=${model.projectId})}" th:if="${model.showGenerateSpendProfilesButton}">
         <h3 class="heading-medium">Generate spend profile</h3>

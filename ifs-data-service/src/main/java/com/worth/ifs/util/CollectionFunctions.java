@@ -728,7 +728,7 @@ public final class CollectionFunctions {
 
     public static <S, T> T unique(Collection<S> collectionToSearch, Function<S, T> property) {
         List<T> distinct = collectionToSearch.stream().map(property).distinct().collect(toList());
-        if (distinct.size() != 0) {
+        if (distinct.size() != 1) {
             throw new IllegalArgumentException("Collection to search:" + collectionToSearch + " does not have a unique property:" + property);
         } else {
             return distinct.get(0);

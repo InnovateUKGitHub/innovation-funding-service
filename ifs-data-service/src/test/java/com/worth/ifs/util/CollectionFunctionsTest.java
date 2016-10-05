@@ -1,5 +1,6 @@
 package com.worth.ifs.util;
 
+import com.google.common.base.Functions;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Test;
 
@@ -9,6 +10,7 @@ import java.util.function.Function;
 
 import static com.worth.ifs.util.CollectionFunctions.containsAll;
 import static com.worth.ifs.util.CollectionFunctions.toSortedMap;
+import static com.worth.ifs.util.CollectionFunctions.unique;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -647,6 +649,20 @@ public class CollectionFunctionsTest {
         List<String> nullList = null;
         SortedMap<String, List<String>> sortedMap = toSortedMap(nullList, identity(), identity());
         assertEquals(new TreeMap<String,List<String>>(), sortedMap);
+    }
+
+    @Test
+    public void testUnique(){
+        List<String> uniqueList = asList("one", "one", "one");
+        assertEquals("one", unique(uniqueList, identity()));
+        List<String> notUniqueList = asList("one", "two", "three");
+        try {
+            unique(notUniqueList, identity());
+            fail("Should have thrown and IllegalArgumentException");
+        } catch (IllegalArgumentException e){
+            // Expected
+        }
+
     }
 }
 
