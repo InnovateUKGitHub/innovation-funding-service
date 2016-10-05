@@ -47,22 +47,24 @@
     </ul> -->
 
     <ul class="tabular-list__row">
-        <li class="width-25-percent" aria-describedby="assessor-name">
-            <a href="#" th:text="${name}">NAME</a> <br />
+        <li class="width-25-percent">
+            <a href="#" th:text="${name}" class="heading-small" aria-describedby="assessor-name">NAME</a> <br />
         </li>
 
-        <li class="width-20-percent" aria-describedby="assessor-org">
-            <span th:text="${org}"></span>
+        <li class="width-20-percent" >
+            <strong class="show-mobile">Organisation:</strong> <span th:text="${org}" aria-describedby="assessor-org">ORG</span>
         </li>
 
-        <li class="width-10-percent" aria-describedby="assessor-type">
-            <span th:text="${type}"></span>
+        <li class="width-10-percent" >
+            <strong class="show-mobile">Type:</strong>  <span th:text="${type}" aria-describedby="assessor-type">TYPE</span>
         </li>
        
-        <li class="width-25-percent" aria-describedby="assessor-area" th:text="${area}">Electronics, sensors &#38; photonics, Materials</li>
+        <li class="width-25-percent" aria-describedby="assessor-area">
+             <strong class="show-mobile">Area:</strong>  <span th:text="${area}" aria-describedby="assessor-area">AREA</span>
+        </li>
 
          <li class="width-10-percent" aria-describedby="assessor-contract">
-            <span><span class="yes">Yes</span></span>
+           <strong class="show-mobile">Contract and DOI:</strong>  <span><span class="yes">Yes</span></span>
         </li>
 
         <li class="width-10-percent alignright"><a href="#" class="button button-secondary add-to-invite">Add</a></li>
@@ -77,11 +79,11 @@
     <ul class="tabular-list__row">
 
         <li class="width-25-percent">
-            <h3 class="heading-small no-margin"><a href="#" th:text="${name}">NAME</a></h3>
+            <a href="#" th:text="${name}" class="heading-small">NAME</a>
         </li>
 
         <li class="width-20-percent">
-            <p class="no-margin-top" th:text="${org}">ORG</p>
+            <strong class="show-mobile">Organisation</strong> <span th:text="${org}">ORG</span>
         </li>
         
         <li class="width-20-percent">
@@ -102,7 +104,7 @@
         </li>
         
         <li class="width-15-percent">
-            <span class="yes">Yes</span>
+            <strong class="show-mobile">Contract and DOI:</strong>  <span class="yes">Yes</span>
         </li>
 
         <li class="width-20-percent alignright">
@@ -174,17 +176,18 @@
 <div th:fragment="prototype-assesor-row-assign-assessor">
     <ul class="tabular-list__row">
         <li class="width-20-percent">
-            <h3 class="heading-small no-margin"><a href="#" th:text="${name}">NAME</a></h3>
+            <a href="#" th:text="${name}" class="heading-small">NAME</a>
         </li>
         <li class="width-10-percent">
-             <p class="no-margin" th:text="${busType}">TYPE</p>
+             <strong class="show-mobile">Type:</strong> <span class="no-margin" th:text="${busType}">TYPE</span>
         </li>
-
-        <li class="width-20-percent" th:text="${area}">
-            INNOVATION AREA
+        <li class="width-20-percent">
+            <strong class="show-mobile">Innovation area:</strong> <span th:text="${area}">INNOVATION AREA</span>
         </li>
 
         <li class="width-15-percent">
+
+            <strong class="show-mobile">Contract and DOI:</strong> 
             
             <th:block th:if="${contract == 'yes'}">
                 <span class="yes">Yes</span>
@@ -237,47 +240,54 @@
 
                     <div class="column-half">
                         
-                        <label for="filterInnovationType">Type</label>
+                        <div class="form-group">
+                            <label for="filterInnovationType">Type</label>
+                            
+                            <select name="filterInnovationType" id="filterInnovationType" class="form-control">
+                            
+                                <option th:if="${param.filterInnovationType != null}" th:remove="tag">
+                                    <option th:text="${param.filterInnovationType[0]}" selected="selected">TEST</option>
+                                </option>
+                            
+                                <option th:if="${param.filterInnovationType == null}" th:remove="tag">
+                                    <option selected="selected">Any</option>
+                                </option>
+                            
+                                <option value="Business">Business</option>
+                                <option value="Academic">Academic</option>
+                            </select>
+                        </div>
 
-                        <select name="filterInnovationType" id="filterInnovationType" class="form-control">
-
-                            <option th:if="${param.filterInnovationType != null}" th:remove="tag">
-                                <option th:text="${param.filterInnovationType[0]}" selected="selected">TEST</option>
-                            </option>
-
-                            <option th:if="${param.filterInnovationType == null}" th:remove="tag">
-                                <option selected="selected">Any</option>
-                            </option>
-
-                            <option value="Business">Business</option>
-                            <option value="Academic">Academic</option>
-                        </select>
                     </div>
 
                     <div class="column-half">
-                        <label for="filterInnovationArea" th:text="${(site == 'rc' ? 'Research area' : 'Innovation area')}">RESEARCH AREA</label>
-
-                        <select name="filterInnovationArea" id="filterInnovationArea" class="form-control">
-
-                            <option th:if="${param.filterInnovationArea != null}" th:remove="tag">
-                                <option th:text="${param.filterInnovationArea[0]}" selected="selected">TEST</option>
-                            </option>
-
-                            <option th:if="${param.filterInnovationArea == null}" th:remove="tag">
-                                <option selected="selected">---</option>
-                            </option>
-
-                            <div th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-options" th:remove="tag" />
-                        </select>
+                        <div class="form-group">
+                            <label for="filterInnovationArea" th:text="${(site == 'rc' ? 'Research area' : 'Innovation area')}">RESEARCH AREA</label>
+                            
+                            <select name="filterInnovationArea" id="filterInnovationArea" class="form-control">
+                            
+                                <option th:if="${param.filterInnovationArea != null}" th:remove="tag">
+                                    <option th:text="${param.filterInnovationArea[0]}" selected="selected">TEST</option>
+                                </option>
+                            
+                                <option th:if="${param.filterInnovationArea == null}" th:remove="tag">
+                                    <option selected="selected">---</option>
+                                </option>
+                            
+                                <div th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-options" th:remove="tag" />
+                            </select>
+                        </div>
                     </div>
                     
                 </div>
 
-                <div class="grid-row extra-margin-top">
+                <div class="grid-row">
                     
                     <div class="column-half">
-                         <label class="form-label" for="filterSearch" th:text="${(site == 'rc' ? 'Name and/or organisation' : 'Keyword')}">FILTER SEARCH</label>
-                         <input type="text" class="form-control" id="filterSearch" name="filterSearch" />
+                         <div class="form-group">
+                             <label class="form-label" for="filterSearch" th:text="${(site == 'rc' ? 'Name and/or organisation' : 'Keyword')}">FILTER SEARCH</label>
+                             <input type="text" class="form-control" id="filterSearch" name="filterSearch" />
+                         </div>
                     </div>
 
                     <div class="column-quarter">
@@ -419,10 +429,10 @@
 
         <div class="tabular-list" id="assessors-invite">
             <ul class="tabular-list__row-header">
-                <li class="width-25-percent">
+                <li class="width-25-percent hide-mobile">
                     Assessor name
                 </li>
-                <li class="width-20-percent">
+                <li class="width-20-percent hide-mobile">
                     Organisation
                 </li>
                 <li class="width-20-percent">
@@ -431,7 +441,7 @@
                         Include all for group invite
                     </label>
                 </li>
-                <li id="assessor-contract" class="width-15-percent">Contract and DOI</li>
+                <li id="assessor-contract" class="width-15-percent  hide-mobile">Contract and DOI</li>
                 <li class="width-20-percent alignright"><a href="/prototypes/4607-manage-assessors-invite?status=invite-group&#38;version=v2" class="button button-secondary disabled" id="invite-group">Invite group</a></li>
             </ul>
 
@@ -472,57 +482,66 @@
 
                 <div class="column-third">
                     
-                    <label for="filterInnovationType">Type</label>
+                    <div class="form-group">
+                        <label for="filterInnovationType">Type</label>
+                        
+                        <select name="filterInnovationType" id="filterInnovationType" class="form-control">
+                        
+                            <option th:if="${param.filterInnovationType != null}" th:remove="tag">
+                                <option th:text="${param.filterInnovationType[0]}" selected="selected">TEST</option>
+                            </option>
+                        
+                            <option th:if="${param.filterInnovationType == null}" th:remove="tag">
+                                <option selected="selected">Any</option>
+                            </option>
+                        
+                            <option value="Business">Business</option>
+                            <option value="Academic">Academic</option>
+                        </select>
+                    </div>
 
-                    <select name="filterInnovationType" id="filterInnovationType" class="form-control">
-
-                        <option th:if="${param.filterInnovationType != null}" th:remove="tag">
-                            <option th:text="${param.filterInnovationType[0]}" selected="selected">TEST</option>
-                        </option>
-
-                        <option th:if="${param.filterInnovationType == null}" th:remove="tag">
-                            <option selected="selected">Any</option>
-                        </option>
-
-                        <option value="Business">Business</option>
-                        <option value="Academic">Academic</option>
-                    </select>
                 </div>
 
                 <div class="column-third">
-                    <label for="filterInnovationArea" th:text="${(site == 'rc' ? 'Research area' : 'Innovation area')}">RESEARCH AREA</label>
-
-                    <select name="filterInnovationArea" id="filterInnovationArea" class="form-control">
-
-                        <option th:if="${param.filterInnovationArea != null}" th:remove="tag">
-                            <option th:text="${param.filterInnovationArea[0]}" selected="selected">TEST</option>
-                        </option>
-
-                        <option th:if="${param.filterInnovationArea == null}" th:remove="tag">
-                            <option selected="selected">---</option>
-                        </option>
-
-                        <div th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-options" th:remove="tag" />
-                    </select>
+                    <div class="form-group">
+                        <label for="filterInnovationArea" th:text="${(site == 'rc' ? 'Research area' : 'Innovation area')}">RESEARCH AREA</label>
+                        
+                        <select name="filterInnovationArea" id="filterInnovationArea" class="form-control">
+                        
+                            <option th:if="${param.filterInnovationArea != null}" th:remove="tag">
+                                <option th:text="${param.filterInnovationArea[0]}" selected="selected">TEST</option>
+                            </option>
+                        
+                            <option th:if="${param.filterInnovationArea == null}" th:remove="tag">
+                                <option selected="selected">---</option>
+                            </option>
+                        
+                            <div th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-options" th:remove="tag" />
+                        </select>
+                    </div>
                 </div>
 
                 <div class="column-third">
-                    <label class="form-label" for="filterStatus">Status</label>
-                     <select name="filterStatus" id="filterStatus" class="form-control width-full">
-                         <option value="All">All</option>
-                         <option value="Invite accepted">Invite accepted</option>
-                         <option value="Invite sent">Invite sent</option>
-                         <option value="Invite declined">Invite declined</option>
-                     </select>
+                    <div class="form-group">
+                        <label class="form-label" for="filterStatus">Status</label>
+                         <select name="filterStatus" id="filterStatus" class="form-control width-full">
+                             <option value="All">All</option>
+                             <option value="Invite accepted">Invite accepted</option>
+                             <option value="Invite sent">Invite sent</option>
+                             <option value="Invite declined">Invite declined</option>
+                         </select>
+                    </div>
                 </div>
                 
             </div>
 
-            <div class="grid-row extra-margin-top">
+            <div class="grid-row">
                 
                 <div class="column-third">
-                     <label class="form-label" for="filterSearch" th:text="${(site == 'rc' ? 'Name and/or organisation' : 'Keyword')}">FILTER SEARCH</label>
-                     <input type="text" class="form-control" id="filterSearch" name="filterSearch" />
+                     <div class="form-group">
+                         <label class="form-label" for="filterSearch" th:text="${(site == 'rc' ? 'Name and/or organisation' : 'Keyword')}">FILTER SEARCH</label>
+                         <input type="text" class="form-control" id="filterSearch" name="filterSearch" />
+                     </div>
                 </div>
 
                 <div class="column-third">
