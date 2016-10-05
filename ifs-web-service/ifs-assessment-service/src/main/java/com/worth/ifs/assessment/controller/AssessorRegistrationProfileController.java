@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.validation.Valid;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
@@ -52,10 +53,11 @@ public class AssessorRegistrationProfileController {
 
     @RequestMapping(value = "skills", method = RequestMethod.POST)
     public String submitSkills(Model model,
-                               @ModelAttribute(FORM_ATTR_NAME) AssessorRegistrationSkillsForm form,
+                               @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                               @Valid @ModelAttribute(FORM_ATTR_NAME) AssessorRegistrationSkillsForm form,
                                @SuppressWarnings("unused") BindingResult bindingResult,
-                               ValidationHandler validationHandler,
-                               @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+                               ValidationHandler validationHandler
+                               ) {
 
         Supplier<String> failureView = () -> doViewYourSkills(model);
 

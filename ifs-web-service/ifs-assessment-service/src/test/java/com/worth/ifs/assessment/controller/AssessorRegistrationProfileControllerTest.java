@@ -1,6 +1,7 @@
 package com.worth.ifs.assessment.controller;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
+import com.worth.ifs.assessment.form.AssessorRegistrationForm;
 import com.worth.ifs.assessment.form.AssessorRegistrationSkillsForm;
 import com.worth.ifs.assessment.model.AssessorRegistrationDeclarationModelPopulator;
 import com.worth.ifs.assessment.model.AssessorRegistrationSkillsModelPopulator;
@@ -16,11 +17,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.validation.BindingResult;
 
 import static com.worth.ifs.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.user.builder.ProfileResourceBuilder.newProfileResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
@@ -89,23 +94,32 @@ public class AssessorRegistrationProfileControllerTest  extends BaseControllerMo
         verify(userService).updateProfile(1L, profile);
     }
 
-    @Ignore
     @Test
-    public void submitProfileSkills_invalid() throws Exception {
+    public void submitProfileSkills_incomplete() throws Exception {
         String skillAreas = "skill1 skill2 skill3";
 
-        AssessorRegistrationSkillsForm expectedForm = new AssessorRegistrationSkillsForm();
-        expectedForm.setSkillAreas(skillAreas);
-
-        mockMvc.perform(post("/registration/skills")
+        MvcResult result = mockMvc.perform(post("/registration/skills")
                 .contentType(APPLICATION_FORM_URLENCODED)
                 .param("skillAreas", skillAreas))
+                .andExpect(status().isOk())
                 .andExpect(model().attributeExists("form"))
                 .andExpect(model().attributeExists("model"))
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasFieldErrors("form", "assessorType"))
-                .andExpect(view().name("registration/skills"))
+                .andExpect(view().name("registration/innovation-areas"))
                 .andReturn();
+
+
+        AssessorRegistrationSkillsForm form = (AssessorRegistrationSkillsForm) result.getModelAndView().getModel().get("form");
+        assertEquals(skillAreas, form.getSkillAreas());
+
+        BindingResult bindingResult = form.getBindingResult();
+
+        assertTrue(bindingResult.hasErrors());
+        assertEquals(0, bindingResult.getGlobalErrorCount());
+        assertEquals(1, bindingResult.getFieldErrorCount());
+        assertTrue(bindingResult.hasFieldErrors("assessorType"));
+        assertEquals("Please select an assessor type", bindingResult.getFieldError("assessorType").getDefaultMessage());
     }
 
     @Test

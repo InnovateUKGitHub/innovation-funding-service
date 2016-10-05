@@ -1,6 +1,7 @@
 package com.worth.ifs.assessment.form;
 
 import com.worth.ifs.commons.validation.constraints.WordCount;
+import com.worth.ifs.controller.BaseBindingResultTarget;
 import com.worth.ifs.user.resource.BusinessType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -8,7 +9,10 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-public class AssessorRegistrationSkillsForm {
+/**
+ * Form field model for the registration of Assessor's Skill Areas
+ */
+public class AssessorRegistrationSkillsForm extends BaseBindingResultTarget {
 
     @Size(max = 5000, message = "{validation.field.too.many.characters}")
     @WordCount(max = 100, message = "{validation.field.max.word.count}")
@@ -16,14 +20,6 @@ public class AssessorRegistrationSkillsForm {
 
     @NotNull(message = "{validation.standard.assessortype.required}")
     private BusinessType assessorType;
-
-    public AssessorRegistrationSkillsForm() {
-    }
-
-    public AssessorRegistrationSkillsForm(String skillAreas, BusinessType assessorType) {
-        this.skillAreas = skillAreas;
-        this.assessorType = assessorType;
-    }
 
     public String getSkillAreas() {
         return skillAreas;
