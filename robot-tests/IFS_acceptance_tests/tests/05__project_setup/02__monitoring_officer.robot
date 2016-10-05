@@ -83,7 +83,7 @@ MO client-side validation
     And the user moves focus away from an element for MO    id=phoneNumber
     And the user should not see the text in the page    Please enter a phone number
     And the user should not see the text in the page    Please enter a valid phone number
-    # Pending due to INFUND-4101
+    # Todo Pending due to INFUND-4101
     #    And the user enters text to a text field    id=phoneNumber    0123
     #    Then the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
     #    And the user clicks the button/link    jQuery=.modal-assign-mo button:contains("Assign Monitoring Officer")
@@ -204,7 +204,7 @@ standard verification for Phone number follows
     the user should see an error    Please enter a phone number
     the user enters text to a text field    id=phoneNumber    invalidphone
     the user should see an error    Please enter a valid phone number
-    # Pending due to INFUND-2101
+    # Todo Pending due to INFUND-4101
     #    And the user enters text to a text field    id=phoneNumber    0123
     #    Then the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
     #    And the user clicks the button/link    jQuery=.modal-assign-mo button:contains("Assign Monitoring Officer")

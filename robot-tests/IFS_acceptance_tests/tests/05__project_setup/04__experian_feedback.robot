@@ -49,7 +49,6 @@ The user has the options to edit the details and to approve the bank details
     Then the user should see the element    link=Change bank account details
     And the user should see the element    jQuery=.button:contains("Approve bank account details")
 
-
 The user can change address and companies house details
     [Documentation]    INFUND-4054
     [Tags]    HappyPath
@@ -104,10 +103,10 @@ The user updates bank account details
     When the user clicks the button/link          link=Change bank account details
     Then the user sees the text in the text field    id=street    Montrose House 2
 
-
 The user approves the bank details
     [Documentation]    INFUND-4054
     [Tags]    HappyPath    Pending
+    # Todo there was no comment/ticket number
     When the user clicks the button/link    jQuery=.button:contains("Approve bank account details")
     And the user clicks the button/link    link=Cancel
     Then the user should see the element    jQuery=.button:contains("Approve bank account details")    #Checking here that the option is still available
@@ -116,7 +115,6 @@ The user approves the bank details
     Then the user should not see the element    jQuery=.button:contains("Approve bank account details")
     And the user should see the text in the page    Bank account details approved
     [Teardown]    logout as user
-
 
 Other internal users cannot access this page
     [Documentation]    INFUND-3763
@@ -131,9 +129,6 @@ Project partners cannot access this page
     [Setup]    guest user log-in    steve.smith@empire.com    Passw0rd
     the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/1/organisation/31/review-bank-details    You do not have the necessary permissions for your your request
     [Teardown]    logout as user
-
-
-
 
 
 *** Keywords ***
