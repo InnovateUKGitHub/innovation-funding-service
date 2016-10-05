@@ -320,9 +320,9 @@
         <p>After your submission of the signed Grant offer letter Innovate UK will review signed document</p>
         <hr/>
         <div class="alignright-button">
-            <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post">
+            <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)} + '/submit'}" method="post">
                 <button type="button" class="js-close button buttonlink large">Cancel</button>
-                <button class="button large" name="confirmSubmit">Confirm Submission</button>
+                <button class="button large" type="submit">Confirm Submission</button>
             </form>
         </div>
     </div>

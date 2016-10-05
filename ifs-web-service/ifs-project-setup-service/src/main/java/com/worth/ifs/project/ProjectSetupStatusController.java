@@ -86,8 +86,9 @@ public class ProjectSetupStatusController {
         ProjectTeamStatusResource teamStatus = projectService.getProjectTeamStatus(projectId, Optional.empty());
         ProjectSetupSectionPartnerAccessor statusAccessor = new ProjectSetupSectionPartnerAccessor(teamStatus);
         boolean projectDetailsSubmitted = statusAccessor.isProjectDetailsSubmitted();
+        boolean grantOfferLetterSubmitted = project.getOfferSubmittedDate() != null;
 
-        return new ProjectSetupStatusViewModel(project, competition, monitoringOfficer, bankDetails, funded, organisation.getId(), projectDetailsSubmitted);
+        return new ProjectSetupStatusViewModel(project, competition, monitoringOfficer, bankDetails, funded, organisation.getId(), projectDetailsSubmitted, grantOfferLetterSubmitted);
     }
 
     private boolean isApplicationFunded(ProjectResource project, OrganisationResource organisation){

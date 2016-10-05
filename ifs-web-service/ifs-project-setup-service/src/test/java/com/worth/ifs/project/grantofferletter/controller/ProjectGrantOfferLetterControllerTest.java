@@ -21,9 +21,11 @@ import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
@@ -132,9 +134,9 @@ public class ProjectGrantOfferLetterControllerTest extends BaseControllerMockMVC
 
         FileEntryResource createdFileDetails = newFileEntryResource().withName("A name").build();
 
-        MockMultipartFile uploadedFile = new MockMultipartFile("grantOfferLetterFile", "filename.txt", "text/plain", "My content!".getBytes());
+        MockMultipartFile uploadedFile = new MockMultipartFile("grantOfferLetter", "filename.txt", "text/plain", "My content!".getBytes());
 
-        when(projectService.addGrantOfferLetter(123L, "text/plain", 11, "filename.txt", "My content!".getBytes())).
+        when(projectService.addGeneratedGrantOfferLetter(123L, "text/plain", 11, "filename.txt", "My content!".getBytes())).
                 thenReturn(serviceSuccess(createdFileDetails));
 
         mockMvc.perform(
@@ -145,6 +147,24 @@ public class ProjectGrantOfferLetterControllerTest extends BaseControllerMockMVC
                 andExpect(view().name("redirect:/project/123/offer"));
     }
 
+    @Test
+    public void testConfirmationView() throws Exception {
+        mockMvc.perform(get("/project/123/offer/confirmation")).
+                andExpect(status().isOk()).
+                andExpect(view().name("project/grant-offer-letter-confirmation"));
+    }
+
+    @Test
+    public void testSubmitOfferLetter() throws Exception {
+        long projectId = 123L;
+
+        when(projectService.submitGrantOfferLetter(projectId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/" + projectId + "/offer/submit")).
+                andExpect(status().is3xxRedirection());
+
+        verify(projectService).submitGrantOfferLetter(projectId);
+    }
 
     @Override
     protected ProjectGrantOfferLetterController supplyControllerUnderTest() {

@@ -19,12 +19,13 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
     private boolean projectDetailsSubmitted;
     private boolean partnerDocumentsSubmitted;
     private boolean monitoringOfficerAssigned;
+    private boolean grantOfferLetterSubmitted;
     private String monitoringOfficerName;
     private BankDetailsResource bankDetails;
     private boolean isFunded;
     private Long organisationId;
 
-    public ProjectSetupStatusViewModel(ProjectResource project, CompetitionResource competition, Optional<MonitoringOfficerResource> monitoringOfficerResource, Optional<BankDetailsResource> bankDetails, boolean isFunded, Long organisationId, boolean projectDetailsSubmitted) {
+    public ProjectSetupStatusViewModel(ProjectResource project, CompetitionResource competition, Optional<MonitoringOfficerResource> monitoringOfficerResource, Optional<BankDetailsResource> bankDetails, boolean isFunded, Long organisationId, boolean projectDetailsSubmitted, boolean grantOfferLetterSubmitted) {
         this.projectId = project.getId();
         this.projectName = project.getName();
         this.applicationId = project.getApplication();
@@ -36,6 +37,7 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
         this.bankDetails = bankDetails.orElse(null);
         this.isFunded = isFunded;
         this.organisationId = organisationId;
+        this.grantOfferLetterSubmitted = grantOfferLetterSubmitted;
     }
 
     public Long getProjectId() {
@@ -80,5 +82,9 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
 
     public Long getOrganisationId() {
         return organisationId;
+    }
+
+    public boolean isGrantOfferLetterSubmitted() {
+        return grantOfferLetterSubmitted;
     }
 }

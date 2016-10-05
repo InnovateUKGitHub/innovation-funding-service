@@ -80,7 +80,6 @@ public class Project implements ProcessActivity {
     public Project() {}
 
     public Project(Long id, Application application, LocalDate targetStartDate, Address address,
-
                    Long durationInMonths, String name, LocalDateTime documentsSubmittedDate) {
 
         this.id = id;

@@ -54,13 +54,14 @@ public class ProjectGrantOfferLetterController {
     }
 
     @RequestMapping(value="/confirmation", method = GET)
-    public String confirmation(@PathVariable("projectId") Long projectId) {
-        return "grant-offer-letter-confirmation";
+    public String confirmation(@PathVariable("projectId") Long projectId, Model model) {
+        model.addAttribute("projectId", projectId);
+        return BASE_DIR + "/grant-offer-letter-confirmation";
     }
 
-    @RequestMapping(params = "confirmSubmit", method = POST)
+    @RequestMapping(value="/submit", method = POST)
     public String submit(@PathVariable("projectId") Long projectId) {
-        //TODO
+        projectService.submitGrantOfferLetter(projectId);
         return "redirect:/project/" + projectId;
     }
 
@@ -177,7 +178,7 @@ public class ProjectGrantOfferLetterController {
                 leadPartner, grantOfferFileDetails.map(FileDetailsViewModel::new).orElse(null),
                 signedGrantOfferLetterFile.map(FileDetailsViewModel::new).orElse(null),
                 additionalContractFile.map(FileDetailsViewModel::new).orElse(null),
-                project.getOfferSubmittedDate(), project.isOfferRejected());
+                project.getOfferSubmittedDate(), project.isOfferRejected(), false);
     }
 
     private String performActionOrBindErrorsToField(Long projectId, ValidationHandler validationHandler, Model model, UserResource loggedInUser, String fieldName, ProjectGrantOfferLetterForm form, Supplier<FailingOrSucceedingResult<?, ?>> actionFn) {

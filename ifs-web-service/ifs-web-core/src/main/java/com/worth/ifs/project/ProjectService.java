@@ -91,6 +91,8 @@ public interface ProjectService {
 
     ServiceResult<FileEntryResource> addGeneratedGrantOfferLetter(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes);
 
+    ServiceResult<Void> submitGrantOfferLetter(Long projectId);
+
     ProjectTeamStatusResource getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId);
 
 }

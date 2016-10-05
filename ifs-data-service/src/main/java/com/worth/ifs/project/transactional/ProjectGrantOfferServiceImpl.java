@@ -18,6 +18,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.InputStream;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
@@ -161,6 +163,11 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
                 andOnSuccess(project -> fileService.updateFile(fileEntryResource, inputStreamSupplier).
                         andOnSuccessReturnVoid(fileDetails -> linkGrantOfferLetterFileToProject(project, fileDetails, true)));
 
+    }
+
+    @Override
+    public ServiceResult<Void> submitGrantOfferLetter(Long projectId) {
+        return getProject(projectId).andOnSuccessReturnVoid(project -> project.setOfferSubmittedDate(LocalDateTime.now()));
     }
 
     private FileEntryResource linkAdditionalContractFileToProject(Project project, Pair<File, FileEntry> fileDetails) {

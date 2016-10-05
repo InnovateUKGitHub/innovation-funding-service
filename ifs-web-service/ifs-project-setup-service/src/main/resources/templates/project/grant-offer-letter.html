@@ -20,7 +20,7 @@
 
     <th:block th:if="${model.submitted}">
       <th:block th:unless="${model.offerAccepted or model.offerRejected}">
-          <p>The signed grant offer letter has been received by Innovate UK, and is awaiting review.</p>\
+          <p>The signed grant offer letter has been received by Innovate UK, and is awaiting review.</p>
           <p>The unsigned grant offer letter is available for your records.</p>
       </th:block>
 
@@ -43,7 +43,7 @@
           <p>Annex 2 contains any additional contracts that were agreed upon during the application. By signing the grant offer letter you also agree to the condition stated in Annex 2.</p>
           <p><a th:href="@{/project/{id}/offer/additional-contract(id=${model.projectId})}" th:text="${model.additionalContractFile?.filename}">Grant offer letter 2016-07-28a.PDF</a></p>
 
-        <div class="upload-section">
+        <div th:unless="${model.submitted}" class="upload-section">
             <h2 class="heading-small no-margin">Upload signed grant offer letter</h2>
             The project manager is required to provide a signed copy of the grant offer letter.
             <details>
@@ -79,7 +79,7 @@
             </form>
         </div>
 
-        <a th:href="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)} + '/confirmation'}" data-js-modal="modal-confirm-grant-offer-letter" class="button">Submit signed offer letter</a>
+        <a th:unless="${model.submitted}" th:href="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)} + '/confirmation'}" data-js-modal="modal-confirm-grant-offer-letter" class="button">Submit signed offer letter</a>
 
     </th:block>
 
