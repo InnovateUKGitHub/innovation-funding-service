@@ -3,6 +3,7 @@ package com.worth.ifs.project.finance;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.project.finance.service.ProjectFinanceRestService;
 import com.worth.ifs.project.finance.workflow.financechecks.resource.FinanceCheckProcessResource;
+import com.worth.ifs.project.resource.SpendProfileCSVResource;
 import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.project.resource.SpendProfileTableResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,11 @@ public class ProjectFinanceServiceImpl implements ProjectFinanceService {
     @Override
     public SpendProfileTableResource getSpendProfileTable(Long projectId, Long organisationId) {
         return projectFinanceRestService.getSpendProfileTable(projectId, organisationId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public SpendProfileCSVResource getSpendProfileCSV(Long projectId, Long organisationId) {
+        return projectFinanceRestService.getSpendProfileCSV(projectId, organisationId).getSuccessObjectOrThrowException();
     }
 
     @Override

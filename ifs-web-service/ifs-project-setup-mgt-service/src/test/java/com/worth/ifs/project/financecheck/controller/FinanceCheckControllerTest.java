@@ -40,6 +40,7 @@ import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.util.CollectionFunctions.mapWithIndex;
 import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -94,6 +95,8 @@ public class FinanceCheckControllerTest extends BaseControllerMockMVCTest<Financ
         Long projectId = 123L;
         Long organisationId = 456L;
         FinanceCheckResource financeCheckResource = newFinanceCheckResource().build();
+        when(financeCheckServiceMock.getByProjectAndOrganisation(new ProjectOrganisationCompositeId(projectId, organisationId))).thenReturn(financeCheckResource);
+        when(financeCheckServiceMock.update(financeCheckResource)).thenReturn(serviceSuccess());
         MvcResult result = mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + organisationId).
                 contentType(MediaType.APPLICATION_FORM_URLENCODED)).
                 andExpect(status().is3xxRedirection()).
@@ -155,6 +158,13 @@ public class FinanceCheckControllerTest extends BaseControllerMockMVCTest<Financ
         when(financeService.getApplicationFinanceTotals(applicationResource.getId())).
                 thenReturn(applicationFinanceResourceList);
 
+        when(projectFinanceService.getFinanceCheckApprovalStatus(isA(Long.class), isA(Long.class))).thenReturn(newFinanceCheckProcessResource().
+                withCanApprove(true).
+                withState(FinanceCheckState.APPROVED).
+                withInternalParticipant(newUserResource().withFirstName("Mr").withLastName("Approver").build()).
+                withModifiedDate(LocalDateTime.of(2016, 10, 04, 12, 13, 14)).
+                build());
+
         // Expected Results
         List<ProjectFinanceCheckSummaryViewModel.FinanceCheckOrganisationRow> expectedOrganisationRows = mapWithIndex(organisationResourceList, (i, org) ->
 
@@ -162,7 +172,7 @@ public class FinanceCheckControllerTest extends BaseControllerMockMVCTest<Financ
                         org.getId(), org.getName(),
                         getEnumForIndex(ProjectFinanceCheckSummaryViewModel.Viability.class, i),
                         getEnumForIndex(ProjectFinanceCheckSummaryViewModel.RagStatus.class, i),
-                        getEnumForIndex(ProjectFinanceCheckSummaryViewModel.Eligibility.class, i),
+                        ProjectFinanceCheckSummaryViewModel.Eligibility.APPROVED,
                         getEnumForIndex(ProjectFinanceCheckSummaryViewModel.RagStatus.class, i + 1),
                         getEnumForIndex(ProjectFinanceCheckSummaryViewModel.QueriesRaised.class, i))
         );
