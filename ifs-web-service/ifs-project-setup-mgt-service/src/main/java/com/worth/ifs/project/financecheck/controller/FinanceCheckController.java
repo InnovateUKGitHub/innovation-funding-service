@@ -19,10 +19,7 @@ import com.worth.ifs.project.financecheck.form.FinanceCheckForm;
 import com.worth.ifs.project.financecheck.form.FinanceCheckSummaryForm;
 import com.worth.ifs.project.financecheck.viewmodel.FinanceCheckViewModel;
 import com.worth.ifs.project.financecheck.viewmodel.ProjectFinanceCheckSummaryViewModel;
-import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
-import com.worth.ifs.project.resource.ProjectResource;
-import com.worth.ifs.project.resource.ProjectUserResource;
-import com.worth.ifs.project.resource.SpendProfileResource;
+import com.worth.ifs.project.resource.*;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import com.worth.ifs.user.resource.UserResource;
@@ -44,9 +41,12 @@ import java.util.function.Supplier;
 
 import static com.worth.ifs.application.resource.ApplicationResource.formatter;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.project.constant.ProjectActivityStates.COMPLETE;
+import static com.worth.ifs.project.constant.ProjectActivityStates.NOT_REQUIRED;
 import static com.worth.ifs.project.finance.resource.FinanceCheckState.APPROVED;
 import static com.worth.ifs.util.CollectionFunctions.*;
 import static java.math.RoundingMode.HALF_EVEN;
+import static java.util.Arrays.asList;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -225,6 +225,10 @@ public class FinanceCheckController {
         ApplicationResource application = applicationService.getById(project.getApplication());
         CompetitionSummaryResource competitionSummary = applicationSummaryService.getCompetitionSummaryByCompetitionId(application.getCompetition());
         List<OrganisationResource> partnerOrganisations = projectService.getPartnerOrganisationsForProject(projectId);
+        ProjectTeamStatusResource projectTeamStatus = projectService.getProjectTeamStatus(projectId, Optional.empty());
+
+        boolean financeChecksAllApproved = !simpleFindFirst(projectTeamStatus.getPartnerStatuses(), s ->
+                !asList(COMPLETE, NOT_REQUIRED).contains(s.getFinanceChecksStatus())).isPresent();
 
         Optional<SpendProfileResource> anySpendProfile = projectFinanceService.getSpendProfile(projectId, partnerOrganisations.get(0).getId());
 
@@ -253,7 +257,7 @@ public class FinanceCheckController {
                 totalFundingSought,
                 totalOtherFunding,
                 calculateGrantPercentage(projectTotal, totalFundingSought),
-                anySpendProfile.isPresent());
+                anySpendProfile.isPresent(), financeChecksAllApproved);
     }
 
     private BigDecimal calculateTotalForAllOrganisations(List<ApplicationFinanceResource> applicationFinanceResourceList, Function<ApplicationFinanceResource, BigDecimal> keyExtractor) {
