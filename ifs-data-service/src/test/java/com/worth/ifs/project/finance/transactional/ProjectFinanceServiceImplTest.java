@@ -2,13 +2,12 @@ package com.worth.ifs.project.finance.transactional;
 
 import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.rest.LocalDateResource;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.project.builder.ProjectBuilder;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.finance.domain.*;
-import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
-import com.worth.ifs.project.resource.ProjectUserResource;
-import com.worth.ifs.project.resource.SpendProfileTableResource;
+import com.worth.ifs.project.resource.*;
 import com.worth.ifs.user.domain.Organisation;
 import org.junit.Assert;
 import org.junit.Test;
@@ -17,6 +16,7 @@ import org.mockito.Mock;
 import org.springframework.http.HttpStatus;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -24,6 +24,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.*;
+import java.util.stream.IntStream;
 
 import static com.worth.ifs.LambdaMatcher.createLambdaMatcher;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
@@ -35,9 +37,11 @@ import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjec
 import static com.worth.ifs.project.finance.domain.TimeUnit.MONTH;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.MapFunctions.asMap;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -133,6 +137,40 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         verify(spendProfileRepositoryMock).save(spendProfileExpectations(expectedOrganisation2Profile));
         verifyNoMoreInteractions(spendProfileRepositoryMock);
     }
+
+
+
+    @Test
+    public void testGenerateSpendProfileCSV() {
+        Long projectId = 123L;
+        Long organisationId = 456L;
+        Project project = newProject().withId(projectId).withDuration(3L).withTargetStartDate(LocalDate.of(2018, 3, 1)).build();
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        SpendProfile spendProfileInDB = createSpendProfile(project,
+                // eligible costs
+                asMap(
+                        "Labour", new BigDecimal("100"),
+                        "Materials", new BigDecimal("180"),
+                        "Other costs", new BigDecimal("55")),
+
+                // Spend Profile costs
+                asMap(
+                        "Labour", asList(new BigDecimal("30"), new BigDecimal("30"), new BigDecimal("50")),
+                        "Materials", asList(new BigDecimal("70"), new BigDecimal("50"), new BigDecimal("60")),
+                        "Other costs", asList(new BigDecimal("50"), new BigDecimal("5"), new BigDecimal("0")))
+        );
+
+        Organisation organisation1 = newOrganisation().withId(organisationId).withName("TEST").build();
+        when(organisationRepositoryMock.findOne(organisation1.getId())).thenReturn(organisation1);
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(spendProfileInDB);
+
+        Date date = new Date() ;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        ServiceResult<SpendProfileCSVResource> serviceResult = service.getSpendProfileCSV(projectOrganisationCompositeId);
+        assertTrue(serviceResult.getSuccessObject().getFileName().startsWith("TEST_Spend_Profile_"+dateFormat.format(date)));
+    }
+
 
     @Test
     public void saveSpendProfileWhenCostsAreFractional() {
@@ -604,5 +642,36 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
     @Override
     protected ProjectFinanceServiceImpl supplyServiceUnderTest() {
         return new ProjectFinanceServiceImpl();
+    }
+
+    private SpendProfileTableResource buildSpendProfileTableResource(Project project) {
+
+        SpendProfileTableResource expectedTable = new SpendProfileTableResource();
+
+        expectedTable.setMarkedAsComplete(false);
+
+        expectedTable.setMonths(asList(
+                new LocalDateResource(2018, 3, 1),
+                new LocalDateResource(2018, 4, 1),
+                new LocalDateResource(2018, 5, 1)
+        ));
+
+        expectedTable.setEligibleCostPerCategoryMap(asMap(
+                "Labour", new BigDecimal("100"),
+                "Materials", new BigDecimal("150"),
+                "Other costs", new BigDecimal("55")));
+
+        expectedTable.setMonthlyCostsPerCategoryMap(asMap(
+                "Labour", asList(new BigDecimal("30"), new BigDecimal("30"), new BigDecimal("40")),
+                "Materials", asList(new BigDecimal("70"), new BigDecimal("50"), new BigDecimal("60")),
+                "Other costs", asList(new BigDecimal("50"), new BigDecimal("5"), new BigDecimal("0"))));
+
+
+        List<LocalDate> months = IntStream.range(0, project.getDurationInMonths().intValue()).mapToObj(project.getTargetStartDate()::plusMonths).collect(toList());
+        List<LocalDateResource> monthResources = simpleMap(months, LocalDateResource::new);
+
+        expectedTable.setMonths(monthResources);
+
+        return expectedTable;
     }
 }

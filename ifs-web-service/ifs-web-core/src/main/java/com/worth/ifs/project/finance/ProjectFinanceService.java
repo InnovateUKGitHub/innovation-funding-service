@@ -1,6 +1,7 @@
 package com.worth.ifs.project.finance;
 
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.project.resource.SpendProfileCSVResource;
 import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.project.resource.SpendProfileTableResource;
 
@@ -16,6 +17,8 @@ public interface ProjectFinanceService {
     Optional<SpendProfileResource> getSpendProfile(Long projectId, Long organisationId);
 
     SpendProfileTableResource getSpendProfileTable(Long projectId, Long organisationId);
+
+    SpendProfileCSVResource getSpendProfileCSV(Long projectId, Long organisationId);
 
     ServiceResult<Void> saveSpendProfile(Long projectId, Long organisationId, SpendProfileTableResource table);
 

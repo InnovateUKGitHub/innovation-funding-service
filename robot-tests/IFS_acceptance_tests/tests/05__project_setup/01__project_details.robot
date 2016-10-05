@@ -13,7 +13,6 @@ Documentation     INFUND-2612 As a partner I want to have a overview of where I 
 ...               INFUND-2621 As a contributor I want to be able to review the current Project Setup status of all partners in my project so I can get an indication of the overall status of the consortium
 ...
 ...               INFUND-4583 As a partner I want to be able to continue with Project Setup once I have supplied my Project Details so that I don't have to wait until all partner details are submitted before providing further information
-
 Suite Setup       Run Keywords    delete the emails from both test mailboxes
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -47,15 +46,15 @@ Non-lead partner can see the project setup page
     And the user should see the text in the page    Other documents
     And the user should see the text in the page    Grant offer letter
     And the user should see the text in the page    What's the status of each of my partners?
-    When the user clicks the button/link            link=What's the status of each of my partners?
-    Then the user navigates to the page             ${project_in_setup_page}/team-status
+    When the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user navigates to the page    ${project_in_setup_page}/team-status
     And the user should see the text in the page    Project team status
-    And the user should see the element             jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(1)
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(1)
 
 Non-lead partner can click the Dashboard link
     [Documentation]    INFUND-4426
     [Tags]
-    [Setup]  the user navigates to the page    ${project_in_setup_page}
+    [Setup]    the user navigates to the page    ${project_in_setup_page}
     When the user clicks the button/link    link=Dashboard
     Then the user should not see an error in the page
     And the user should see the text in the page    Projects in setup
@@ -64,7 +63,7 @@ Non-lead partner can click the Dashboard link
 Non-lead partner can see the application overview
     [Documentation]    INFUND-2612
     [Tags]    HappyPath
-    [Setup]  the user navigates to the page    ${project_in_setup_page}
+    [Setup]    the user navigates to the page    ${project_in_setup_page}
     And the user should see the text in the page    Other documents
     When the user clicks the button/link    link=View application and feedback
     Then the user should see the text in the page    Congratulations, your application has been successful
@@ -88,15 +87,15 @@ Lead partner can see the project setup page
     And the user should see the text in the page    Other documents
     And the user should see the text in the page    Grant offer letter
     And the user should see the text in the page    What's the status of each of my partners?
-    When the user clicks the button/link            link=What's the status of each of my partners?
-    Then the user navigates to the page             ${project_in_setup_page}/team-status
+    When the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user navigates to the page    ${project_in_setup_page}/team-status
     And the user should see the text in the page    Project team status
-    And the user should see the element             jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(1)
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(1)
 
 Lead partner can click the Dashboard link
     [Documentation]    INFUND-4426
     [Tags]
-    [Setup]  the user navigates to the page    ${project_in_setup_page}
+    [Setup]    the user navigates to the page    ${project_in_setup_page}
     When the user clicks the button/link    link=Dashboard
     Then the user should not see an error in the page
     And the user should see the text in the page    Projects in setup
@@ -131,7 +130,7 @@ Submit button is disabled if the details are not fully filled out
 Lead partner can change the Start Date
     [Documentation]    INFUND-2614
     [Tags]    Pending    HappyPath
-    #TODO INFUND-5224   Pending due to Month saving failing
+    #TODO INFUND-5224    Pending due to Month saving failing
     Given the user clicks the button/link    link=Start date
     And the duration should be visible
     When the user enters text to a text field    id=projectStartDate_year    2013
@@ -191,15 +190,13 @@ Lead partner can change the project address
     And the user clicks the button/link    jQuery=.button:contains("Save")
     Then the user should see the text in the page    1, Bath, BA1 5LR
 
-
 Project details can be submitted with PM, project address and start date
     [Documentation]    INFUND-4583
     [Tags]    HappyPath
     Given the user should see the element    css=#start-date-status.yes
     And the user should see the element    css=#project-address-status.yes
     And the user should see the element    css=#project-manager-status.yes
-    Then Wait Until Element Is Enabled    jQuery=.button:contains("Submit project details")
-
+    Submit project details button should be enabled
 
 Partners nominate finance contacts
     [Documentation]    INFUND-2620
@@ -228,12 +225,9 @@ Partners nominate finance contacts
     And the matching status checkbox is updated    project-details-finance    2    yes
     [Teardown]    logout as user
 
-
-
-
 Option to invite a finance contact
     [Documentation]    INFUND-3579
-    [Tags]
+    [Tags]    HappyPath
     [Setup]    Log in as user    steve.smith@empire.com    Passw0rd
     Given the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Project details
@@ -246,7 +240,6 @@ Option to invite a finance contact
     Then the user should not see the element    id=invite-finance-contact    # testing that the element disappears when the option is deselected
     [Teardown]    the user selects the radio button    financeContact    new
 
-
 Inviting finance contact server side validations
     [Documentation]    INFUND-3579
     [Tags]    Pending
@@ -254,7 +247,6 @@ Inviting finance contact server side validations
     When the user clicks the button/link    id=invite-finance-contact
     Then the user should see the text in the page    Please enter a contact name
     And the user should see the text in the page    Please enter an email address
-
 
 Inviting finance contact client side validations
     [Documentation]    INFUND-3579
@@ -269,7 +261,6 @@ Inviting finance contact client side validations
     Then the user should not see the text in the page    Please enter a valid email address
     And the user should not see an error in the page
 
-
 Partner invites a finance contact
     [Documentation]    INFUND-3579
     [Tags]    HappyPath
@@ -277,7 +268,6 @@ Partner invites a finance contact
     And the user enters text to a text field    id=email-finance-contact1    ${test_mailbox_one}+invitedfinancecontact@gmail.com
     And the user clicks the button/link    id=invite-finance-contact
     Then the user should be redirected to the correct page    ${project_in_setup_page}
-
 
 Invited finance contact receives an email
     [Documentation]    INFUND-3524
@@ -289,16 +279,15 @@ Lead partner chooses an existing finance contact
     [Documentation]    INFUND-2620
     [Tags]    HappyPath
     # note that this test is still necessary until we are able to accept the invite, in an upcoming story
-     Then the user navigates to the page    ${project_in_setup_page}
-     And the user clicks the button/link    link=Project details
-     Then the user should see the text in the page    Finance contacts
-     And the user should see the text in the page    Partner
-     And the user clicks the button/link    link=Vitruvius Stonework Limited
-     And the user selects the radio button    financeContact    financeContact1
-     And the user clicks the button/link    jQuery=.button:contains("Save")
-     Then the user should be redirected to the correct page    ${project_in_setup_page}
-     And the matching status checkbox is updated    project-details-finance    3    yes
-
+    Then the user navigates to the page    ${project_in_setup_page}
+    And the user clicks the button/link    link=Project details
+    Then the user should see the text in the page    Finance contacts
+    And the user should see the text in the page    Partner
+    And the user clicks the button/link    link=Vitruvius Stonework Limited
+    And the user selects the radio button    financeContact    financeContact1
+    And the user clicks the button/link    jQuery=.button:contains("Save")
+    Then the user should be redirected to the correct page    ${project_in_setup_page}
+    And the matching status checkbox is updated    project-details-finance    3    yes
 
 Non-lead partner cannot change start date, project manager or project address
     [Tags]
@@ -438,3 +427,6 @@ the user changes the start date back again
     the user clicks the button/link    link=Start date
     the user enters text to a text field    id=projectStartDate_year    2017
     the user clicks the button/link    jQuery=.button:contains("Save")
+
+Submit project details button should be enabled
+    Then Wait Until Element Is Enabled    jQuery=.button:contains("Submit project details")
