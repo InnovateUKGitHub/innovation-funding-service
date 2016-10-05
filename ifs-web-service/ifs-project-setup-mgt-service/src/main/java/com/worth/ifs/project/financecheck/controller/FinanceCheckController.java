@@ -9,6 +9,7 @@ import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
+import com.worth.ifs.project.PartnerOrganisationService;
 import com.worth.ifs.project.ProjectService;
 import com.worth.ifs.project.finance.ProjectFinanceService;
 import com.worth.ifs.project.finance.resource.FinanceCheckResource;
@@ -19,10 +20,7 @@ import com.worth.ifs.project.financecheck.form.FinanceCheckForm;
 import com.worth.ifs.project.financecheck.form.FinanceCheckSummaryForm;
 import com.worth.ifs.project.financecheck.viewmodel.FinanceCheckViewModel;
 import com.worth.ifs.project.financecheck.viewmodel.ProjectFinanceCheckSummaryViewModel;
-import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
-import com.worth.ifs.project.resource.ProjectResource;
-import com.worth.ifs.project.resource.ProjectUserResource;
-import com.worth.ifs.project.resource.SpendProfileResource;
+import com.worth.ifs.project.resource.*;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import com.worth.ifs.user.resource.UserResource;
@@ -78,6 +76,9 @@ public class FinanceCheckController {
 
     @Autowired
     OrganisationService organisationService;
+
+    @Autowired
+    PartnerOrganisationService partnerOrganisationService;
 
     @RequestMapping(value = "/organisation/{organisationId}", method = GET)
     public String view(@PathVariable("projectId") final Long projectId, @PathVariable("organisationId") Long organisationId,
@@ -151,7 +152,11 @@ public class FinanceCheckController {
     }
 
     private String doViewFinanceCheckForm(Long projectId, Long organisationId, Model model){
-        
+        populateFinanceCheckModel(projectId, organisationId, model);
+        return "project/financecheck/partner-project-eligibility";
+    }
+
+    private void populateFinanceCheckModel(Long projectId, Long organisationId, Model model){
         ProjectResource project = projectService.getById(projectId);
         ApplicationResource application = applicationService.getById(project.getApplication());
         String competitionName = application.getCompetitionName();
@@ -166,17 +171,16 @@ public class FinanceCheckController {
         String approverName = financeCheckStatus.getInternalParticipant() != null ? financeCheckStatus.getInternalParticipant().getName() : null;
         LocalDate approvalDate = financeCheckStatus.getModifiedDate().toLocalDate();
 
-        FinanceCheckViewModel financeCheckViewModel;
+        boolean isLeadPartner = isLeadPartner(projectId, organisationId);
 
-        if (financeContact.isPresent()) {
-            financeCheckViewModel = new FinanceCheckViewModel(formattedCompId, competitionName, organisationResource.getName(), false, projectId, organisationId, financeContact.get().getUserName(), financeContact.get().getEmail(), isResearch,
-                    financeChecksApproved, approverName, approvalDate);
-        } else {
-            financeCheckViewModel = new FinanceCheckViewModel(formattedCompId, competitionName, organisationResource.getName(), false, projectId, organisationId, isResearch, financeChecksApproved, approverName, approvalDate);
+        FinanceCheckViewModel financeCheckViewModel = new FinanceCheckViewModel(formattedCompId, competitionName, organisationResource.getName(), isLeadPartner, projectId, organisationId, isResearch, financeChecksApproved, approverName, approvalDate);
+
+        if (financeContact.isPresent()) { // Internal users may still view finance contact page without finance contact being set.  They will see a message warning about this on template.
+            financeCheckViewModel.setFinanceContactName(financeContact.get().getUserName());
+            financeCheckViewModel.setFinanceContactEmail(financeContact.get().getEmail());
         }
 
         model.addAttribute("model", financeCheckViewModel);
-        return "project/financecheck/partner-project-eligibility";
     }
 
     private Optional<ProjectUserResource> getFinanceContact(Long projectId, Long organisationId){
@@ -275,5 +279,15 @@ public class FinanceCheckController {
 
     private String redirectToViewFinanceCheckSummary(Long projectId) {
         return "redirect:/project/" + projectId + "/finance-check";
+    }
+
+    private boolean isLeadPartner(Long projectId, Long organisationId) {
+        ServiceResult<List<PartnerOrganisationResource>> result = partnerOrganisationService.getPartnerOrganisations(projectId);
+        if(result.isSuccess()) {
+            Optional<PartnerOrganisationResource> partnerOrganisationResource = simpleFindFirst(result.getSuccessObject(), PartnerOrganisationResource::isLeadOrganisation);
+            return partnerOrganisationResource.isPresent() && partnerOrganisationResource.get().getOrganisation().equals(organisationId);
+        } else {
+            return false;
+        }
     }
 }

@@ -33,6 +33,7 @@ import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.invite.service.RejectionReasonRestService;
 import com.worth.ifs.model.OrganisationDetailsModelPopulator;
 import com.worth.ifs.organisation.service.OrganisationAddressRestService;
+import com.worth.ifs.project.PartnerOrganisationService;
 import com.worth.ifs.project.ProjectService;
 import com.worth.ifs.project.finance.ProjectFinanceService;
 import com.worth.ifs.project.financecheck.FinanceCheckService;
@@ -186,7 +187,8 @@ public class BaseUnitTest {
     public FinanceCheckService financeCheckServiceMock;
     @Mock
     public ProjectStatusService projectStatusServiceMock;
-
+    @Mock
+    public PartnerOrganisationService partnerOrganisationServiceMock;
     @Spy
     @InjectMocks
     private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;

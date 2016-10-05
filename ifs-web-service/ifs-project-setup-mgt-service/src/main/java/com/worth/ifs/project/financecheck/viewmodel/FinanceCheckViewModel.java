@@ -96,6 +96,14 @@ public class FinanceCheckViewModel {
         return isLeadPartner;
     }
 
+    public void setFinanceContactName(String financeContactName) {
+        this.financeContactName = financeContactName;
+    }
+
+    public void setFinanceContactEmail(String financeContactEmail) {
+        this.financeContactEmail = financeContactEmail;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -11,6 +11,7 @@ import com.worth.ifs.project.finance.resource.FinanceCheckState;
 import com.worth.ifs.project.financecheck.form.FinanceCheckForm;
 import com.worth.ifs.project.financecheck.viewmodel.FinanceCheckViewModel;
 import com.worth.ifs.project.financecheck.viewmodel.ProjectFinanceCheckSummaryViewModel;
+import com.worth.ifs.project.resource.PartnerOrganisationResource;
 import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.SpendProfileResource;
@@ -29,16 +30,16 @@ import java.util.Optional;
 
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.application.builder.CompetitionSummaryResourceBuilder.newCompetitionSummaryResource;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.project.builder.FinanceCheckResourceBuilder.newFinanceCheckResource;
+import static com.worth.ifs.project.builder.PartnerOrganisationResourceBuilder.newPartnerOrganisationResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static com.worth.ifs.project.finance.builder.FinanceCheckProcessResourceBuilder.newFinanceCheckProcessResource;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.util.CollectionFunctions.mapWithIndex;
 import static junit.framework.TestCase.assertFalse;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -56,6 +57,8 @@ public class FinanceCheckControllerTest extends BaseControllerMockMVCTest<Financ
         OrganisationResource organisationResource = newOrganisationResource().withId(organisationId).withOrganisationType(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId()).build();
         ApplicationResource applicationResource = newApplicationResource().withId(applicationId).build();
         ProjectResource projectResource = newProjectResource().withId(projectId).withApplication(applicationResource).build();
+        List<PartnerOrganisationResource> partnerOrganisationResources = newPartnerOrganisationResource().withProject(projectId).build(3);
+
         when(applicationService.getById(applicationId)).thenReturn(newApplicationResource().withId(applicationId).withCompetition(competitionId).build());
         when(projectService.getById(projectId)).thenReturn(projectResource);
 
@@ -68,6 +71,7 @@ public class FinanceCheckControllerTest extends BaseControllerMockMVCTest<Financ
                         withInternalParticipant(newUserResource().withFirstName("Mr").withLastName("Approver").build()).
                         withModifiedDate(LocalDateTime.of(2016, 10, 04, 12, 13, 14)).
                         build());
+        when(partnerOrganisationServiceMock.getPartnerOrganisations(projectId)).thenReturn(serviceSuccess(partnerOrganisationResources));
 
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + organisationId)).
                 andExpect(view().name("project/financecheck/partner-project-eligibility")).
