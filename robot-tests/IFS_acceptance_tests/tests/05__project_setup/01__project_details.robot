@@ -327,16 +327,13 @@ Project details read only after submission
     And The user should not see the element    link=Start date
     And The user should not see the element    link=Project address
     And The user should not see the element    link=Project manager
-    And The user should not see the element    link=Ludlow
-    And The user should not see the element    link=EGGS
-    And The user should not see the element    link=Cheeseco
 
 All partners can view submitted project details
     [Documentation]    INFUND-3382, INFUND-2621
     [Setup]    the user logs out if they are logged in
     When guest user log-in    jessica.doe@ludlow.co.uk    Passw0rd
     And the user navigates to the page    ${SUCCESSFUL_PROJECT_PAGE_DETAILS}
-    Then the user should not see the element    link=Ludlow
+    Then the user should see the text in the page    Ludlow
     And all the fields are completed
     And the user should see the text in the page    ${project_details_submitted_message}
     Then the user navigates to the page    ${project_in_setup_page}
@@ -345,7 +342,7 @@ All partners can view submitted project details
     Then the user logs out if they are logged in
     When guest user log-in    steve.smith@empire.com    Passw0rd
     And the user navigates to the page    ${SUCCESSFUL_PROJECT_PAGE_DETAILS}
-    Then the user should not see the element    link=Vitruvius Stonework Limited
+    Then the user should see the text in the page    Vitruvius Stonework Limited
     And all the fields are completed
     And the user should see the text in the page    ${project_details_submitted_message}
     When the user navigates to the page    ${project_in_setup_page}
