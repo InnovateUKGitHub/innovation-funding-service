@@ -28,6 +28,8 @@ public class ProjectDetailsViewModel {
     private boolean projectDetailsSubmitted;
     private ProjectUserResource projectManager;
     private boolean submissionAllowed;
+    private boolean isFinanceContactSubmitted;
+
     private Map<Long, ProjectUserResource> financeContactsByOrganisationId;
     private boolean userLeadPartner;
 
@@ -44,6 +46,7 @@ public class ProjectDetailsViewModel {
 
         List<ProjectUserResource> financeRoles = simpleFilter(projectUsers, ProjectUserResource::isFinanceContact);
         this.financeContactsByOrganisationId = simpleToMap(financeRoles, ProjectUserResource::getOrganisation, Function.identity());
+        this.isFinanceContactSubmitted = usersPartnerOrganisations.stream().anyMatch(organisation -> financeContactsByOrganisationId.containsKey(organisation));
         this.userLeadPartner = userIsLeadPartner;
     }
 
@@ -71,6 +74,10 @@ public class ProjectDetailsViewModel {
         return financeContactsByOrganisationId.get(organisationId);
     }
 
+    public Map<Long, ProjectUserResource> getFinanceContactsByOrganisationId() {
+        return financeContactsByOrganisationId;
+    }
+
     public boolean isUserLeadPartner() {
         return userLeadPartner;
     }
@@ -89,5 +96,17 @@ public class ProjectDetailsViewModel {
 
     public boolean isSubmissionAllowed() {
         return submissionAllowed;
+    }
+
+    public boolean isFinanceContactSubmitted() {
+        return isFinanceContactSubmitted;
+    }
+
+    public boolean isSubmitProjectDetailsAllowed() {
+        return userLeadPartner && submissionAllowed && !projectDetailsSubmitted;
+    }
+
+    public boolean isAnySectionIncomplete() {
+        return userLeadPartner && !submissionAllowed && !projectDetailsSubmitted;
     }
 }
