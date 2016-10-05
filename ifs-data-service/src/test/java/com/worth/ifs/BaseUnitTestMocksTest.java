@@ -64,6 +64,7 @@ import com.worth.ifs.organisation.repository.OrganisationAddressRepository;
 import com.worth.ifs.organisation.transactional.OrganisationService;
 import com.worth.ifs.project.finance.repository.CostCategoryRepository;
 import com.worth.ifs.project.finance.repository.CostCategoryTypeRepository;
+import com.worth.ifs.project.finance.repository.FinanceCheckProcessRepository;
 import com.worth.ifs.project.finance.repository.SpendProfileRepository;
 import com.worth.ifs.project.finance.transactional.FinanceCheckService;
 import com.worth.ifs.project.finance.transactional.ProjectFinanceService;
@@ -420,6 +421,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected FinanceCheckService financeCheckServiceMock;
+
+    @Mock
+    protected FinanceCheckProcessRepository financeCheckProcessRepository;
 
     @Before
     public void setupMockInjection() {

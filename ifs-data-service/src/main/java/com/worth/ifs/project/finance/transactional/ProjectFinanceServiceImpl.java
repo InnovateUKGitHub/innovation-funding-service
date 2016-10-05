@@ -9,8 +9,10 @@ import com.worth.ifs.project.finance.domain.*;
 import com.worth.ifs.project.finance.mapper.CostCategoryTypeMapper;
 import com.worth.ifs.project.finance.repository.CostCategoryRepository;
 import com.worth.ifs.project.finance.repository.CostCategoryTypeRepository;
+import com.worth.ifs.project.finance.repository.FinanceCheckProcessRepository;
 import com.worth.ifs.project.finance.repository.SpendProfileRepository;
 import com.worth.ifs.project.finance.resource.CostCategoryTypeResource;
+import com.worth.ifs.project.finance.resource.FinanceCheckState;
 import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
 import com.worth.ifs.project.resource.ProjectUserResource;
@@ -65,6 +67,9 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     @Autowired
     private CostCategoryRepository costCategoryRepository;
 
+    @Autowired
+    private FinanceCheckProcessRepository financeCheckProcessRepository;
+
 
     @Autowired
     private SpendProfileCostCategorySummaryStrategy spendProfileCostCategorySummaryStrategy;
@@ -73,11 +78,27 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     public ServiceResult<Void> generateSpendProfile(Long projectId) {
 
         return getProject(projectId).andOnSuccess(project ->
+               validateSpendProfileCanBeGenerated(project).andOnSuccess(() ->
                projectService.getProjectUsers(projectId).andOnSuccess(projectUsers -> {
                    List<Long> organisationIds = removeDuplicates(simpleMap(projectUsers, ProjectUserResource::getOrganisation));
                    return generateSpendProfileForPartnerOrganisations(project, organisationIds);
-               })
+               }))
         );
+    }
+
+    private ServiceResult<Void> validateSpendProfileCanBeGenerated(Project project) {
+
+        List<FinanceCheckProcess> financeCheckProcesses = simpleMap(project.getPartnerOrganisations(), po ->
+                financeCheckProcessRepository.findOneByTargetId(po.getId()));
+
+        Optional<FinanceCheckProcess> existingNonApprovedFinanceCheck = simpleFindFirst(financeCheckProcesses, process ->
+                !FinanceCheckState.APPROVED.equals(process.getActivityState()));
+
+        if (!existingNonApprovedFinanceCheck.isPresent()) {
+            return serviceSuccess();
+        } else {
+            return serviceFailure(SPEND_PROFILE_CANNOT_BE_GENERATED_UNTIL_ALL_FINANCE_CHECKS_APPROVED);
+        }
     }
 
     @Override
