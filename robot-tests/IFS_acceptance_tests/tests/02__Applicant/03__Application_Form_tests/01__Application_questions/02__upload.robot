@@ -72,15 +72,6 @@ Lead applicant can view a file
     Then the user should not see an error in the page
     [Teardown]    The user goes back to the previous page
 
-Lead applicant can download a pdf file
-    [Documentation]    INFUND-2720
-    [Tags]    Pending    HappyPath
-    # TODO Pending until download functionality has been plugged in
-    Given the user should see the text in the page    ${valid_pdf}
-    When the user downloads the file from the link    ${valid_pdf}    ${download_link}
-    Then the file should be downloaded    ${valid_pdf}
-    [Teardown]    Remove File    ${valid_pdf}
-
 Collaborators can view a file
     [Documentation]    INFUND-2306
     [Tags]    HappyPath    SmokeTest
@@ -92,15 +83,6 @@ Collaborators can view a file
     When the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
     [Teardown]    The user goes back to the previous page
-
-Collaborators can download a pdf file
-    [Documentation]    INFUND-2720
-    [Tags]    Pending
-    # TODO Pending until download functionality has been plugged in
-    Given the user should see the text in the page    ${valid_pdf}
-    When the user downloads the file from the link    ${valid_pdf}    ${download_link}
-    Then the file should be downloaded    ${valid_pdf}
-    [Teardown]    Remove File    ${valid_pdf}
 
 Collaborators cannot upload a file if not assigned
     [Documentation]    INFUND-3007
@@ -140,14 +122,6 @@ Collaborators can view a file when the question is assigned
     When the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
     [Teardown]    The user goes back to the previous page
-
-Collaborator can download a file when the question is assigned
-    [Documentation]    INFUND-2720
-    [Tags]    Pending
-    # TODO Pending until download functionality has been plugged in
-    Given the user should see the text in the page    ${valid_pdf}
-    When the user downloads the file from the link    ${valid_pdf}    ${download_link}
-    Then the file should be downloaded    ${valid_pdf}
 
 Collaborator can remove a file when the question is assigned
     [Documentation]    INFUND-2720
