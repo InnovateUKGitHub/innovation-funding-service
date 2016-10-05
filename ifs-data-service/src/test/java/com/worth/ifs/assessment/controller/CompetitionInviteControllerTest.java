@@ -5,7 +5,6 @@ import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.assessment.transactional.CompetitionInviteService;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestErrorResponse;
-import com.worth.ifs.commons.security.UserAuthentication;
 import com.worth.ifs.invite.domain.CompetitionInvite;
 import com.worth.ifs.invite.domain.CompetitionParticipant;
 import com.worth.ifs.invite.resource.CompetitionInviteResource;
@@ -16,7 +15,6 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.Optional;
@@ -95,10 +93,6 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
                 .andExpect(status().isOk());
 
         verify(competitionInviteService, times(1)).acceptInvite("hash", userResource);
-    }
-
-    public static void login(UserResource userResource) {
-        SecurityContextHolder.getContext().setAuthentication(new UserAuthentication(userResource));
     }
 
     @Test

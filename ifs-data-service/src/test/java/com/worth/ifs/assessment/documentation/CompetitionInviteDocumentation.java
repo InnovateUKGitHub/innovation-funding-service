@@ -3,7 +3,6 @@ package com.worth.ifs.assessment.documentation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.assessment.controller.CompetitionInviteController;
-import com.worth.ifs.assessment.controller.CompetitionInviteControllerTest;
 import com.worth.ifs.invite.resource.CompetitionInviteResource;
 import com.worth.ifs.invite.resource.CompetitionRejectionResource;
 import com.worth.ifs.user.resource.UserResource;
@@ -83,7 +82,7 @@ public class CompetitionInviteDocumentation extends BaseControllerMockMVCTest<Co
         String hash = "invitehash";
         UserResource user = newUserResource().build();
 
-        CompetitionInviteControllerTest.login(user);
+        login(user);
 
         when(competitionInviteServiceMock.acceptInvite(hash, user)).thenReturn(serviceSuccess());
 
