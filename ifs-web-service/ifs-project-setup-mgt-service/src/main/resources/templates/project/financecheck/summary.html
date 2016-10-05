@@ -48,8 +48,8 @@
         <td th:text="${model.durationInMonths+' months'}" />
         <td class="numeric">&pound; <th:block th:text="${#numbers.formatInteger(model.totalProjectCost,1,'COMMA')}" /></td>
         <td class="numeric">&pound; <th:block th:text="${#numbers.formatInteger(model.grantAppliedFor,1,'COMMA')}" /></td>
-        <td th:text="${model.otherPublicSectorFunding}" class="numeric" />
-        <td th:text="${model.totalPercentageGrant+'%'}" class="numeric" />
+        <td class="numeric">&pound; <th:block th:text="${#numbers.formatInteger(model.otherPublicSectorFunding,1,'COMMA')}" /></td>
+        <td th:text="${#numbers.formatInteger(model.totalPercentageGrant,1,'NONE')+'%'}" class="numeric" />
       </tr>
     </tbody>
   </table>
