@@ -107,15 +107,17 @@ Initial details correct state aid status
     ...    INFUND-2983
     ...
     ...    INFUND-3888
+    ...
+    ...    INFUND-4979
     [Tags]    Pending
-    #This ticket marked as pending because atm there is only one competition type. We should recheck this in sprint15
+    #TODO This ticket marked as pending because atm there is no SBRI competition type. We should recheck this in sprint17
     When the user selects the option from the drop-down menu    SBRI    id=competitionTypeId
     Then the user should see the element    css=.no
     When the user selects the option from the drop-down menu    Special    id=competitionTypeId
     Then the user should see the element    css=.no
     When the user selects the option from the drop-down menu    Additive Manufacturing    id=competitionTypeId
     Then the user should see the element    css=.yes
-    When the user selects the option from the drop-down menu    Programme    id=competitionTypeId
+    When the user selects the option from the drop-down menu    Sector    id=competitionTypeId
     Then the user should see the element    css=.yes
 
 Initial details client-side validations
@@ -154,7 +156,6 @@ Initial details: Autosave
 
 Initial details should not allow dates in the past
     [Documentation]    INFUND-4682
-    ...
     Given the user enters text to a text field    id=openingDateDay    01
     And the user enters text to a text field    Id=openingDateMonth    12
     And the user enters text to a text field    id=openingDateYear    2015
