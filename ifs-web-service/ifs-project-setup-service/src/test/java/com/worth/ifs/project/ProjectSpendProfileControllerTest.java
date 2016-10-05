@@ -13,6 +13,7 @@ import com.worth.ifs.project.validation.SpendProfileCostValidator;
 import com.worth.ifs.project.viewmodel.ProjectSpendProfileViewModel;
 import com.worth.ifs.project.viewmodel.SpendProfileSummaryModel;
 import com.worth.ifs.project.viewmodel.SpendProfileSummaryYearModel;
+import com.worth.ifs.user.builder.OrganisationResourceBuilder;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.RoleResource;
 import com.worth.ifs.user.resource.UserRoleType;
@@ -292,6 +293,14 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
     }
 
     private ProjectSpendProfileViewModel buildExpectedProjectSpendProfileViewModel(Long organisationId, ProjectResource projectResource, SpendProfileTableResource expectedTable) {
+
+        OrganisationResource organisationResource = OrganisationResourceBuilder.newOrganisationResource()
+                .withId(organisationId)
+                .withName("Org1")
+                .build();
+
+        when(organisationService.getOrganisationById(organisationId)).thenReturn(organisationResource);
+
         List<SpendProfileSummaryYearModel> years = createSpendProfileSummaryYears();
 
         SpendProfileSummaryModel summary = new SpendProfileSummaryModel(years);
@@ -310,7 +319,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         BigDecimal expectedTotalOfAllEligibleTotals = new BigDecimal("305");
 
         // Assert that the view model is populated with the correct values
-        return new ProjectSpendProfileViewModel(projectResource, organisationId, expectedTable,
+        return new ProjectSpendProfileViewModel(projectResource, organisationResource, expectedTable,
                 summary, false, expectedCategoryToActualTotal, expectedTotalForEachMonth,
                 expectedTotalOfAllActualTotals, expectedTotalOfAllEligibleTotals);
     }
