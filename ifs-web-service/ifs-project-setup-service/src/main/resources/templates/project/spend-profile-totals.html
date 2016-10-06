@@ -4,8 +4,6 @@
     <div th:include="fragments/layout :: head" th:with="pageTitle='Spend Profile'" th:remove="tag" />
 </head>
 <body th:class="${(param.view != null and param.view[0] == 'full' ? 'app-overview full-width' : 'app-overview ')}">
-<div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
-<div th:include="fragments/modals :: modal-confirm-spend-profile-totals (projectId=${model.project.id})" th:remove="tag"/>
 <div th:include="fragments/layout :: body-start" th:remove="tag"/>
 <div th:include="fragments/layout :: global-header" th:remove="tag"/>
 
@@ -21,6 +19,19 @@
             <h1 class="heading-xlarge">Spend profile</h1>
         </div>
 
+        <form th:object="${form}" th:action="@{/project/{id}/spend-profile/total(id=${projectId})}" method="POST" >
+            <div class="error-summary" th:if="${#fields.hasErrors('*')}">
+                <h2 class="heading-medium error-summary-heading">
+                    Unable to submit spend profiles.
+                </h2>
+                Please review
+                <ul class="error-summary-list">
+                    <li th:each="err : ${#fields.allErrors()}" th:text="${err}"></li>
+                </ul>
+            </div>
+            <div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
+            <div th:include="fragments/modals :: modal-confirm-spend-profile-totals (projectId=${model.project.id})" th:remove="tag"/>
+        </form>
         <div class="centralise">
             <dl class="standard-definition-list">
                 <dt>Project start date</dt>

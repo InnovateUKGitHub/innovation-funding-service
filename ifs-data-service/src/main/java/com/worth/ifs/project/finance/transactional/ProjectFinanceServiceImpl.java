@@ -166,9 +166,18 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
     @Override
     public ServiceResult<Void> completeSpendProfilesReview(Long projectId) {
-        return getProject(projectId).andOnSuccessReturnVoid(project ->
-            project.setSpendProfileSubmittedDate(LocalDateTime.now())
-        );
+        return getProject(projectId).andOnSuccess(project -> {
+            if (project.getSpendProfileSubmittedDate() != null) {
+                return serviceFailure(new Error(SPEND_PROFILES_HAVE_ALREADY_BEEN_SUBMITTED));
+            }
+
+            if (project.getSpendProfiles().stream().anyMatch(spendProfile -> !spendProfile.isMarkedAsComplete())) {
+                return serviceFailure(new Error(SPEND_PROFILES_MUST_BE_COMPLETE_BEFORE_SUBMISSION));
+            }
+
+            project.setSpendProfileSubmittedDate(LocalDateTime.now());
+            return serviceSuccess();
+        });
     }
 
     private ServiceResult<Void> validateSpendProfileCosts(SpendProfileTableResource table) {

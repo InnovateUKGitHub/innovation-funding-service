@@ -441,6 +441,10 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
     public void testCompleteSpendProfilesReview() {
         Long projectId = 1L;
         Project projectInDb = new Project();
+        projectInDb.setOfferSubmittedDate(null);
+        SpendProfile spendProfileInDb = new SpendProfile();
+        spendProfileInDb.setMarkedAsComplete(true);
+        projectInDb.setSpendProfiles(asList(spendProfileInDb));
         when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDb);
         assertThat(projectInDb.getSpendProfileSubmittedDate(), nullValue());
 

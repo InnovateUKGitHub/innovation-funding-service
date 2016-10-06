@@ -1,7 +1,10 @@
 package com.worth.ifs.project;
 
 import com.worth.ifs.commons.rest.LocalDateResource;
+import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.project.finance.ProjectFinanceService;
+import com.worth.ifs.project.form.SpendProfileForm;
+import com.worth.ifs.project.form.TotalSpendProfileForm;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.SpendProfileTableResource;
 import com.worth.ifs.project.util.SpendProfileTableCalculator;
@@ -11,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -30,6 +35,8 @@ import static com.worth.ifs.util.CollectionFunctions.simpleMapValue;
 public class TotalProjectSpendProfileController {
 
     public static final String BASE_DIR = "project";
+    private static final String FORM_ATTR_NAME = "form";
+    private static final String SPEND_PROFILE_TOTALS_TEMPLATE = BASE_DIR + "/spend-profile-totals";
 
     @Autowired
     private ProjectService projectService;
@@ -41,7 +48,8 @@ public class TotalProjectSpendProfileController {
     @RequestMapping(method = GET)
     public String totals(Model model, @PathVariable("projectId") final Long projectId) {
         model.addAttribute("model", buildTotalViewModel(projectId));
-        return BASE_DIR + "/spend-profile-totals";
+        model.addAttribute(FORM_ATTR_NAME, new TotalSpendProfileForm());
+        return SPEND_PROFILE_TOTALS_TEMPLATE;
     }
 
     @RequestMapping(value="confirmation", method = GET)
@@ -50,9 +58,20 @@ public class TotalProjectSpendProfileController {
     }
 
     @RequestMapping(method = POST)
-    public String submitForReview(@PathVariable("projectId") final Long projectId) {
-        projectFinanceService.completeSpendProfilesReview(projectId);
-        return "redirect:/project/"+projectId;
+    public String submitForReview(@PathVariable("projectId") final Long projectId,
+                                  @ModelAttribute(FORM_ATTR_NAME) TotalSpendProfileForm form,
+                                  @SuppressWarnings("unused") BindingResult bindingResult,
+                                  ValidationHandler validationHandler,
+                                  Model model) {
+        return validationHandler.performActionOrBindErrorsToField("",
+            () -> {
+                model.addAttribute("model", buildTotalViewModel(projectId));
+                model.addAttribute(FORM_ATTR_NAME, form);
+                return SPEND_PROFILE_TOTALS_TEMPLATE;
+            },
+            () -> "redirect:/project/" + projectId,
+            () ->  projectFinanceService.completeSpendProfilesReview(projectId));
+
     }
 
     private TotalSpendProfileViewModel buildTotalViewModel(final Long projectId) {
