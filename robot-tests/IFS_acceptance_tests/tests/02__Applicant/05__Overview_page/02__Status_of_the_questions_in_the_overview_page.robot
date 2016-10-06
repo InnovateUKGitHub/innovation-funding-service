@@ -11,6 +11,7 @@ Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
 Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
+Resource          ../../resources/keywords/EMAIL_KEYWORDS.robot
 
 *** Test Cases ***
 Status changes when we assign a question
@@ -51,7 +52,7 @@ the applicant assigns the Project Summary question from the overview page
     [Arguments]    ${assignee_name}
     the user clicks the button/link    jQuery=#section-1 .section:nth-child(2) .assign-button button
     the user clicks the button/link    jQuery=#section-1 .section:nth-child(2) button:contains("${assignee_name}")
-    Sleep    500ms   # otherwise it stops while Assigning..
+    Sleep    500ms    # otherwise it stops while Assigning..
 
 the applicant assigns the Project Summary
     [Arguments]    ${assignee_name}
