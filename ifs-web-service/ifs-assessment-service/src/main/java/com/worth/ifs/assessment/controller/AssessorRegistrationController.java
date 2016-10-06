@@ -136,23 +136,22 @@ public class AssessorRegistrationController {
     }
 
     private void validateAddressForm(AssessorRegistrationForm assessorRegistrationForm, BindingResult bindingResult) {
-        if(postcodeIsSelected(assessorRegistrationForm)) {
+        if (postcodeIsSelected(assessorRegistrationForm)) {
             validator.validate(assessorRegistrationForm.getAddressForm().getSelectedPostcode(), bindingResult);
-        }
-        else {
-            FieldError fieldError = new FieldError("address","address","Please enter your address details");
+        } else {
+            FieldError fieldError = new FieldError("address", "address", "Please enter your address details");
             bindingResult.addError(fieldError);
         }
         assessorRegistrationForm.getAddressForm().setTriedToSave(true);
     }
 
     private boolean postcodeIsSelected(AssessorRegistrationForm assessorRegistrationForm) {
-        if(assessorRegistrationForm.getAddressForm() == null) {
+        if (assessorRegistrationForm.getAddressForm() == null) {
             return false;
         }
         return assessorRegistrationForm.getAddressForm().getSelectedPostcode() != null;
     }
-    
+
     private void addAddressOptions(AssessorRegistrationForm registrationForm) {
         if (StringUtils.hasText(registrationForm.getAddressForm().getPostcodeInput())) {
             AddressForm addressForm = registrationForm.getAddressForm();
@@ -171,8 +170,7 @@ public class AssessorRegistrationController {
                         Integer.parseInt(
                                 addressForm.getSelectedPostcodeIndex()));
                 addressForm.setSelectedPostcode(selectedAddress);
-            }
-            catch(IndexOutOfBoundsException e) {
+            } catch (IndexOutOfBoundsException e) {
                 LOG.info(e);
             }
         }
