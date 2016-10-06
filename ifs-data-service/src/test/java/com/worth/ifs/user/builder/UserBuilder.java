@@ -4,6 +4,7 @@ import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.user.domain.*;
 import com.worth.ifs.user.resource.Disability;
 import com.worth.ifs.user.resource.Gender;
+import com.worth.ifs.user.domain.*;
 import com.worth.ifs.user.resource.UserStatus;
 
 import java.util.List;
@@ -96,6 +97,10 @@ public class UserBuilder extends BaseBuilder<User, UserBuilder> {
 
     public UserBuilder withUid(String... uids) {
         return withArray((uid, object) -> setField("uid", uid, object), uids);
+    }
+
+    public UserBuilder withProfile(Profile... profiles) {
+        return withArray((profile, user) -> setField("profile", profile, user), profiles);
     }
 
     @Override

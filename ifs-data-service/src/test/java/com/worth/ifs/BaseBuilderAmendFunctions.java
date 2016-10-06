@@ -2,6 +2,8 @@ package com.worth.ifs;
 
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -161,6 +163,17 @@ public class BaseBuilderAmendFunctions {
         newList.addAll(value);
 
         return setField(fieldName, newList, instance);
+    }
+
+    public static <T> T createDefault(Class<T> clazz) {
+            try {
+                Constructor<T> constructor = clazz.getDeclaredConstructor();
+                constructor.setAccessible(true);
+                return constructor.newInstance();
+
+            } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
+                throw new IllegalStateException("Attempt to invoke non-existent default constructor on " + clazz.getName());
+        }
     }
 
     public static Function<Integer, Integer> zeroBasedIndexes() {

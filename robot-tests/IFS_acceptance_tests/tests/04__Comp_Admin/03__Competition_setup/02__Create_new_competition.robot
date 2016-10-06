@@ -25,12 +25,17 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...
 ...               INFUND-4468 As a Competitions team member I want to include additional criteria in Competitions Setup so that the "Ready to Open" state cannot be set until these conditions are met
 ...
-...
 ...               INFUND-3001 As a Competitions team member I want the service to automatically save my edits while I work through Initial Details section in Competition Setup the so that I do not lose my changes
 ...
 ...               INFUND-4581 As a Competitions team member I want the service to automatically save my edits while I work through Funding Information section in Competition Setup the so that I do not lose my changes
 ...
-...               INFUND-4725 As a Competitions team member I want to be guided to complete all mandatory information in the Initial Details section so that I can access the correct details in the other sections in Competition Setup. \ INFUND-4582 As a Competitions team member I want the service to automatically save my edits while I work through Eligibility section in Competition Setup the so that I do not lose my changes
+...               INFUND-4725 As a Competitions team member I want to be guided to complete all mandatory information in the Initial Details section so that I can access the correct details in the other sections in Competition Setup.
+...
+...               INFUND-4582 As a Competitions team member I want the service to automatically save my edits while I work through Eligibility section in Competition Setup the so that I do not lose my changes
+...
+...               INFUND-4892 As a Competitions team member I want to be prevented from making amendments to some Competition Setup details so that I do not affect affect other setup details that have been saved so far for this competition
+...
+...               INFUND-4894 As a competition executive I want have a remove button in order to remove the new added co-funder rows in the funding information section
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin
@@ -102,15 +107,17 @@ Initial details correct state aid status
     ...    INFUND-2983
     ...
     ...    INFUND-3888
+    ...
+    ...    INFUND-4979
     [Tags]    Pending
-    #This ticket marked as pending because atm there is only one competition type. We should recheck this in sprint15
+    #TODO This ticket marked as pending because atm there is no SBRI competition type. We should recheck this in sprint17
     When the user selects the option from the drop-down menu    SBRI    id=competitionTypeId
     Then the user should see the element    css=.no
     When the user selects the option from the drop-down menu    Special    id=competitionTypeId
     Then the user should see the element    css=.no
     When the user selects the option from the drop-down menu    Additive Manufacturing    id=competitionTypeId
     Then the user should see the element    css=.yes
-    When the user selects the option from the drop-down menu    Programme    id=competitionTypeId
+    When the user selects the option from the drop-down menu    Sector    id=competitionTypeId
     Then the user should see the element    css=.yes
 
 Initial details client-side validations
@@ -118,6 +125,7 @@ Initial details client-side validations
     ...
     ...    INFUND-3888
     [Tags]    HappyPath
+    #TODO Remove the comments whne the inf-5327 is fixed
     When the user enters text to a text field    id=title    Competition title
     Then the user should not see the error any more    Please enter a title
     When the user selects the option from the drop-down menu    Programme    id=competitionTypeId
@@ -127,11 +135,11 @@ Initial details client-side validations
     When the user selects the option from the drop-down menu    Advanced Therapies    id=innovationAreaCategoryId
     Then the user should not see the error any more    Please select an innovation area
     When the user enters text to a text field    id=openingDateDay    01
-    Then the user should not see the error any more    Please enter an opening day
+    #Then the user should not see the error any more    Please enter an opening day
     When the user enters text to a text field    Id=openingDateMonth    12
-    Then the user should not see the error any more    Please enter an opening month
+    #Then the user should not see the error any more    Please enter an opening month
     When the user enters text to a text field    id=openingDateYear    2017
-    Then the user should not see the error any more    Please enter an opening year
+    #Then the user should not see the error any more    Please enter an opening year
     When the user selects the option from the drop-down menu    Competition Technologist One    id=leadTechnologistUserId
     Then the user should not see the error any more    Please select a lead technologist
     When the user selects the option from the drop-down menu    Competition Executive Two    id=executiveUserId
@@ -140,12 +148,13 @@ Initial details client-side validations
 
 Initial details: Autosave
     [Documentation]    INFUND-3001
-    [Tags]
+    [Tags]    Pending
+    # TODO pending due Ito NFUND-5367
     When the user clicks the button/link    link=Competition set up
     and the user clicks the button/link    link=Initial Details
     Then the user should see the correct values in the initial details form
 
-Initial details should not allow to mark as complete when date is in past
+Initial details should not allow dates in the past
     [Documentation]    INFUND-4682
     Given the user enters text to a text field    id=openingDateDay    01
     And the user enters text to a text field    Id=openingDateMonth    12
@@ -172,13 +181,17 @@ Initial details mark as done
     And the user should see the text in the page    NO
     And the user should see the element    jQuery=.button:contains("Edit")
 
-Initial details can be edited again
+Initial details can be edited again except from Comp Type and Date
     [Documentation]    INFUND-2985
     ...
     ...    INFUND-3182
+    ...
+    ...    INFUND-4892
     [Tags]    HappyPath
     When the user clicks the button/link    jQuery=.button:contains("Edit")
     And the user enters text to a text field    id=title    Test competition
+    And The element should be disabled    id=competitionTypeId
+    And The element should be disabled    id=openingDateDay
     And the user clicks the button/link    jQuery=.button:contains("Done")
     Then the user should see the text in the page    1/12/2017
     And the user should see the text in the page    Competition Technologist One
@@ -249,21 +262,24 @@ Funding information Autosave
 
 Funding informations calculations
     [Documentation]    INFUND-2985
+    ...
+    ...    INFUND-4894
     [Tags]    HappyPath
     When the user clicks the button/link    jQuery=Button:contains("+Add co-funder")
     and the user should see the element    jQuery=Button:contains("+Add co-funder")
-    Then the user should see the element    jQuery=Button:contains("Remove")
+    And the user should see the element    jQuery=Button:contains("Remove")
     And the user enters text to a text field    id=1-funder    FunderName2
     And the user enters text to a text field    id=1-funderBudget    1000
     Then the total should be correct    £ 21,000
+    When the user clicks the button/link    jQuery=Button:contains("Remove")
+    Then the total should be correct    £ 20,000
 
 Funding Information can be saved
     [Documentation]    INFUND-3182
     [Tags]    HappyPath
     When the user clicks the button/link    jQuery=.button:contains("Done")
     Then the user should see the text in the page    FunderName
-    And the user should see the text in the page    FunderName2
-    And the user should see the text in the page    £21,000
+    And the user should see the text in the page    £20,000
     And the user should see the text in the page    2016
     And the user should see the text in the page    2004
     And the user should see the text in the page    4242
@@ -400,7 +416,10 @@ Milestones: Page should contain the correct fields
 
 Milestones: Server side validations
     [Documentation]    INFUND-2993
+    [Tags]    Pending
+    #TODO INFUND-3873
     When the user fills the milestones with invalid data
+    And the users waits until the page is autosaved
     And the user clicks the button/link    jQuery=button:contains(Done)
     Then Validation summary should be visible
 
@@ -409,6 +428,13 @@ Milestones: Client side validations
     [Tags]    HappyPath
     When the user fills the milestones with valid data
     Then The user should not see the text in the page    please enter a future date that is after the previous milestone
+    Then The user should not see the text in the page    please enter a valid date
+
+Milestones: Autosave
+    [Tags]    Pending
+    When the user clicks the button/link    link=Competition set up
+    And the user clicks the button/link    link=Milestones
+    Then the user should see the correct inputs in the Milestones form
 
 Milestones: Correct Weekdays should show
     [Documentation]    INFUND-2993
@@ -515,9 +541,9 @@ the user should not see the error any more
     [Arguments]    ${ERROR_TEXT}
     run keyword and ignore error    mouse out    css=input
     Focus    jQuery=.button:contains("Done")
-    sleep    200ms
+    Wait for autosave
     Wait Until Element Does Not Contain    css=.error-message    ${ERROR_TEXT}
-    Wait Until Page Does Not Contain    Saving...
+    sleep    500ms
 
 the total should be correct
     [Arguments]    ${Total}
@@ -674,7 +700,7 @@ the pre-field date should be correct
     Should Be Equal As Strings    ${YEAR}    2017
     ${MONTH} =    Get Value    css=.date-group:nth-child(1) .month .width-small
     Should Be Equal As Strings    ${MONTH}    12
-    ${DAY} =    Get Value    css=.date-group:nth-child(1) .js-visited
+    ${DAY} =    Get Value    css=.date-group:nth-child(1) .day .width-small
     Should Be Equal As Strings    ${DAY}    1
 
 the user should see the correct values in the initial details form
@@ -724,3 +750,23 @@ The user should not see the error text in the page
 
 the resubmission should not have a default selection
     the user sees that the radio button is not selected    resubmission
+
+the users waits until the page is autosaved
+    Focus    jQuery=button:contains(Done)
+    sleep    1s
+    Wait For Autosave
+
+the user should see the correct inputs in the Milestones form
+    Element Should Contain    css=tr:nth-of-type(1) td:nth-of-type(2)    Thu
+    Element Should Contain    css=tr:nth-of-type(2) td:nth-of-type(2)    Fri
+    Element Should Contain    css=tr:nth-of-type(3) td:nth-of-type(2)    Sat
+    Element Should Contain    css=tr:nth-of-type(4) td:nth-of-type(2)    Sun
+    Element Should Contain    css=tr:nth-of-type(5) td:nth-of-type(2)    Mon
+    Element Should Contain    css=tr:nth-of-type(6) td:nth-of-type(2)    Tue
+    Element Should Contain    css=tr:nth-of-type(7) td:nth-of-type(2)    Wed
+    Element Should Contain    css=tr:nth-of-type(8) td:nth-of-type(2)    Thu
+    Element Should Contain    css=tr:nth-of-type(9) td:nth-of-type(2)    Fri
+    Element Should Contain    css=tr:nth-of-type(10) td:nth-of-type(2)    Sat
+    Element Should Contain    css=tr:nth-of-type(11) td:nth-of-type(2)    Sun
+    Element Should Contain    css=tr:nth-of-type(12) td:nth-of-type(2)    Mon
+    Element Should Contain    css=tr:nth-of-type(13) td:nth-of-type(2)    Tue

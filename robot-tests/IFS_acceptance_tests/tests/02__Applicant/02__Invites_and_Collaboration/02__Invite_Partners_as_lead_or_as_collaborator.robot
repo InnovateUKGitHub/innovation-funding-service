@@ -108,7 +108,7 @@ Business organisation (partner accepts invitation)
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
     And the user clicks the button/link    jQuery=.button:contains("Save")
     And the user fills the create account form    Adrian    Booth
-    And the user opens the mailbox and verifies the email from
+    And the user opens the mailbox and verifies the email from    ${TEST_MAILBOX_ONE}+inviteorg2@gmail.com
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
 
 Partner should be able to log-in and see the new company name
@@ -122,7 +122,6 @@ Partner should be able to log-in and see the new company name
 Partner can invite others to his own organisation
     [Documentation]    INFUND-2335
     [Tags]    Email
-    #Given guest user log-in    ${test_mailbox_one}+inviteorg1@gmail.com    Passw0rd123
     When the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Invite robot test application
     And the user clicks the button/link    link=view team members and add collaborators
@@ -191,7 +190,7 @@ Registered partner should not create new org but should follow the create accoun
     And the user should see the element    link=email the application lead
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     And the user fills the create account form    Roger    Axe
-    And the user opens the mailbox and verifies the email from
+    And the user opens the mailbox and verifies the email from    ${TEST_MAILBOX_ONE}+inviteorg2@gmail.com
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
 
 *** Keywords ***
@@ -254,9 +253,6 @@ the user can invite another person to their own organisation
 
 the user cannot invite another person to a different organisation
     the user should not see the element    jQuery=li:nth-child(1) button:contains("Add another person")
-    #This comments should be removed after the review
-    #${OTHER_ORG}=    Get WebElement    jQuery=li:has(input[value='HIVE IT LIMITED'])
-    #the user should see the element    jQuery=li[data-invite-org=${OTHER_ORG.get_attribute('data-invite-org')}] tr:nth-of-type(1) td:nth-child(2) [readonly]
 
 pending partners should be visible in the page
     the user should see the element    xpath=//span[contains(text(),"Fannie May")]//following::small

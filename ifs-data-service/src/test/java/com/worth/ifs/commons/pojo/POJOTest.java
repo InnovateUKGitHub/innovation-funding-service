@@ -25,6 +25,8 @@ import com.worth.ifs.authentication.resource.CreateUserResource;
 import com.worth.ifs.authentication.resource.UpdateUserResource;
 import com.worth.ifs.bankdetails.domain.BankDetails;
 import com.worth.ifs.bankdetails.resource.BankDetailsResource;
+import com.worth.ifs.bankdetails.resource.BankDetailsStatusResource;
+import com.worth.ifs.bankdetails.resource.ProjectBankDetailsStatusSummary;
 import com.worth.ifs.commons.rest.LocalDateResource;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.resource.CompetitionCountResource;
@@ -114,10 +116,13 @@ public class POJOTest {
             ProjectLeadStatusResource.class,
             ProjectPartnerStatusResource.class,
             ProjectTeamStatusResource.class,
+            ProjectBankDetailsStatusSummary.class,
+            BankDetailsStatusResource.class,
             ProjectStatusResource.class,
             CompetitionProjectsStatusResource.class,
             EthnicityResource.class,
-            UserRegistrationResource.class
+            UserRegistrationResource.class,
+            SpendProfileCSVResource.class
     );
 
     @Before

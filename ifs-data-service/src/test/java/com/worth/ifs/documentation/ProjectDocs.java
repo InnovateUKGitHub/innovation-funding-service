@@ -28,6 +28,8 @@ public class ProjectDocs {
             fieldWithPath("additionalContractFile").description("Id of the File Entry that contains tadditional contract file"),
             fieldWithPath("grantOfferLetter").description("Id of the File Entry that contains the generated Grant Offer Letter"),
             fieldWithPath("offerRejected").description("Flag to indicate if grant offer has been rejected"),
+            fieldWithPath("otherDocumentsApproved").description("Flag which indicates if Other Documents - Collaboration agreement and Exploitation plan, are approved or not"),
+
 
     };
 
