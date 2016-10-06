@@ -5,19 +5,12 @@ import com.worth.ifs.assessment.mapper.AssessmentMapper;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.assessment.resource.AssessmentOutcomes;
 import com.worth.ifs.assessment.resource.AssessmentResource;
-import com.worth.ifs.assessment.resource.AssessmentStates;
-import com.worth.ifs.security.BasePermissionRules;
 import com.worth.ifs.commons.security.PermissionRule;
 import com.worth.ifs.commons.security.PermissionRules;
-import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.mapper.UserMapper;
+import com.worth.ifs.security.BasePermissionRules;
 import com.worth.ifs.user.resource.UserResource;
-import com.worth.ifs.workflow.domain.ActivityState;
-import com.worth.ifs.workflow.domain.ProcessOutcome;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.Optional;
 
 /**
  * Provides the permissions around CRUD operations for {@link com.worth.ifs.assessment.domain.Assessment} resources.
@@ -49,10 +42,9 @@ public class AssessmentPermissionRules extends BasePermissionRules {
     private boolean assessorHasRejectedAssessment(final AssessmentResource assessmentResource) {
         Assessment assessment = assessmentRepository.findOne(assessmentResource.getId());
 
-        if(assessment.getLastOutcome()!=null) {
+        if (assessment.getLastOutcome() != null) {
             return assessment.getLastOutcome().getOutcomeType().equals(AssessmentOutcomes.REJECT.getType());
-        }
-        else {
+        } else {
             return false;
         }
     }
