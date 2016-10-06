@@ -25,6 +25,7 @@ Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
 Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
+Resource          ../../resources/keywords/EMAIL_KEYWORDS.robot
 
 *** Variables ***
 
@@ -131,8 +132,8 @@ The user marks the finances as complete
     the user navigates to the page    ${DASHBOARD_URL}
     the user clicks the button/link    link=${application_name}
     the user clicks the button/link    link=Your finances
-    the user selects the checkbox          id=agree-terms-page
-    the user selects the checkbox          id=agree-state-aid-page
+    the user selects the checkbox    id=agree-terms-page
+    the user selects the checkbox    id=agree-state-aid-page
     the user moves focus to the element    jQuery=button:contains("Mark all as complete")
     the user clicks the button/link    jQuery=button:contains("Mark all as complete")
     Sleep    1s

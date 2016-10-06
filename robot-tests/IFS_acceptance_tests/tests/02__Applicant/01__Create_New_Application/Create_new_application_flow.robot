@@ -17,6 +17,7 @@ Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
+Resource          ../../resources/keywords/EMAIL_KEYWORDS.robot
 
 *** Variables ***
 ${APPLICATION_DETAILS_APPLICATION8}    ${SERVER}/application/8/form/question/9
@@ -30,7 +31,7 @@ Non registered users CH route
     ...    INFUND-1920
     ...
     ...    INFUND-1785
-    [Tags]    HappyPath   SmokeTest
+    [Tags]    HappyPath    SmokeTest
     [Setup]    The guest user opens the browser
     Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
     When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
