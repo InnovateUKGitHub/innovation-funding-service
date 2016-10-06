@@ -191,7 +191,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         Organisation organisation1 = newOrganisation().withId(organisationId).withName("TEST").build();
         when(organisationRepositoryMock.findOne(organisation1.getId())).thenReturn(organisation1);
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
-        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(spendProfileInDB);
+        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(Optional.of(spendProfileInDB));
 
         Date date = new Date() ;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -357,7 +357,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         SpendProfile spendProfileInDB = new SpendProfile(null, null, null, Collections.emptyList(), spendProfileFigures, false);
 
-        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(spendProfileInDB);
+        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(Optional.of(spendProfileInDB));
 
         // Before the call (ie before the SpendProfile is updated), ensure that the values are set to 1
         assertCostForCategoryForGivenMonth(spendProfileInDB, "Labour", 0, BigDecimal.ONE);
@@ -419,7 +419,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
 
-        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(spendProfileInDB);
+        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(Optional.of(spendProfileInDB));
 
         ServiceResult<Void> result = service.markSpendProfile(projectOrganisationCompositeId, true);
 
@@ -457,7 +457,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
 
-        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(spendProfileInDB);
+        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(Optional.of(spendProfileInDB));
 
         ServiceResult<Void> result = service.markSpendProfile(projectOrganisationCompositeId, true);
 

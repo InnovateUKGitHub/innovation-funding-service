@@ -5,7 +5,6 @@ import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.LocalDateResource;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.organisation.transactional.OrganisationService;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.finance.domain.*;
 import com.worth.ifs.project.finance.mapper.CostCategoryTypeMapper;
@@ -19,7 +18,6 @@ import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.repository.OrganisationRepository;
-import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.util.CollectionFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -243,8 +241,13 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
     private ServiceResult<Void> saveSpendProfileData(ProjectOrganisationCompositeId projectOrganisationCompositeId, SpendProfileTableResource table, boolean markAsComplete) {
 
-        SpendProfile spendProfile = spendProfileRepository.findOneByProjectIdAndOrganisationId(
-                projectOrganisationCompositeId.getProjectId(), projectOrganisationCompositeId.getOrganisationId());
+        Optional<SpendProfile> spendProfileOptional = spendProfileRepository.findOneByProjectIdAndOrganisationId(projectOrganisationCompositeId.getProjectId(), projectOrganisationCompositeId.getOrganisationId());
+
+        if(!spendProfileOptional.isPresent()){
+            return serviceFailure(SPEND_PROFILE_DOES_NOT_EXIST);
+        }
+
+        SpendProfile spendProfile = spendProfileOptional.get();
 
         spendProfile.setMarkedAsComplete(markAsComplete);
 
@@ -294,7 +297,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
             String category = entry.getKey();
             List<BigDecimal> monthlyCosts = entry.getValue();
 
-            BigDecimal actualTotalCost = monthlyCosts.stream().reduce(BigDecimal.ZERO, (d1, d2) -> d1.add(d2));
+            BigDecimal actualTotalCost = monthlyCosts.stream().reduce(BigDecimal.ZERO, BigDecimal::add);
             BigDecimal expectedTotalCost = eligibleCostPerCategoryMap.get(category);
 
             if (actualTotalCost.compareTo(expectedTotalCost) == 1) {
@@ -408,9 +411,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         ArrayList<String> byCategory = new ArrayList<>();
         spendProfileTableResource.getMonthlyCostsPerCategoryMap().forEach((category, values)-> {
             byCategory.add(category);
-            values.forEach(val -> {
-                byCategory.add(val.toString());
-            });
+            values.forEach(val -> byCategory.add(val.toString()));
             byCategory.add(categoryToActualTotal.get(category).toString());
             byCategory.add(spendProfileTableResource.getEligibleCostPerCategoryMap().get(category).toString());
             rows.add(byCategory.stream().toArray(String[]::new));
@@ -441,7 +442,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
     private Map<String, BigDecimal> buildSpendProfileActualTotalsForAllCategories(SpendProfileTableResource table) {
         return CollectionFunctions.simpleLinkedMapValue(table.getMonthlyCostsPerCategoryMap(),
-                (List<BigDecimal> monthlyCosts) -> monthlyCosts.stream().reduce(BigDecimal.ZERO, (d1, d2) -> d1.add(d2)));
+                (List<BigDecimal> monthlyCosts) -> monthlyCosts.stream().reduce(BigDecimal.ZERO, BigDecimal::add));
     }
 
     private List<BigDecimal> buildTotalForEachMonth(SpendProfileTableResource table) {
@@ -463,7 +464,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     }
 
     private BigDecimal buildTotalOfTotals(Map<String, BigDecimal> input) {
-        return input.values().stream().reduce(BigDecimal.ZERO, (d1, d2) -> d1.add(d2));
+        return input.values().stream().reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     private List<Cost> findMultipleMatchingCostsByCategory(CostGroup spendProfileFigures, CostCategory category) {

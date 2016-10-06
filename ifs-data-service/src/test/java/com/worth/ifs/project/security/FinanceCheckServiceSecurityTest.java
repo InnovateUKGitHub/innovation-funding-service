@@ -3,6 +3,7 @@ package com.worth.ifs.project.security;
 import com.worth.ifs.BaseServiceSecurityTest;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.project.finance.resource.FinanceCheckResource;
+import com.worth.ifs.project.finance.resource.FinanceCheckSummaryResource;
 import com.worth.ifs.project.finance.transactional.FinanceCheckService;
 import com.worth.ifs.project.finance.workflow.financechecks.resource.FinanceCheckProcessResource;
 import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
@@ -95,6 +96,11 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
 
         @Override
         public ServiceResult<FinanceCheckProcessResource> getFinanceCheckApprovalStatus(Long projectId, Long organisationId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<FinanceCheckSummaryResource> getFinanceCheckSummary(Long projectId) {
             return null;
         }
     }

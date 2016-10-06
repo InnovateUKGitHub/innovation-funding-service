@@ -11,13 +11,13 @@
 
 <main id="content">
   <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-  <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Competition Dashboard',linkClass='link-back',linkUrl=@{/competition/{competitionId}/status(competitionId=${model.competitionSummary.competitionId})}" th:remove="tag" />
+  <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Competition Dashboard',linkClass='link-back',linkUrl=@{/competition/{competitionId}/status(competitionId=${model.competitionId})}" th:remove="tag" />
 
   <div class="grid-row">
       <div class="column-two-thirds">
           <div class="page-title">
-              <div th:include="fragments/competition-management :: competition-id(competition=${model.competitionSummary})" th:remove="tag" />
-              <h1 class="heading-xlarge" th:text="${model.competitionSummary.competitionName}" />
+              <div th:include="fragments/competition-management :: competition-id-simple(${model.competitionId})" th:remove="tag" />
+              <h1 class="heading-xlarge" th:text="${model.competitionName}" />
           </div>
       </div>
       <div class="column-third alignright extra-margin">
@@ -62,7 +62,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr th:each="orgDetails : ${model.partnerOrganisationDetails}">
+        <tr th:each="orgDetails : ${model.partnerStatusResources}">
             <th scope="row" th:text="${orgDetails.name}" />
             <td><a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}(projectId=${model.projectId},organisationId=${orgDetails.id})}" th:text="${#strings.toLowerCase(orgDetails.eligibility.name())}" /></td>
         </tr>

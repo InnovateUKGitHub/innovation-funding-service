@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 /**
- * View model backing the internal Finance Team members view of the Spend Profile summary page
+ * View model backing the internal Finance Team members view of the Finance Check summary page
  */
 public class ProjectFinanceCheckSummaryViewModel {
 

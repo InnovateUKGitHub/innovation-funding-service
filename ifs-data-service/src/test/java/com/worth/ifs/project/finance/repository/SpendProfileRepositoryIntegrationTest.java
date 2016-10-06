@@ -252,7 +252,7 @@ public class SpendProfileRepositoryIntegrationTest extends BaseRepositoryIntegra
         flushAndClearSession();
 
         // and retrieve from the db again - ensure its value is retained
-        SpendProfile retrieved = repository.findOneByProjectIdAndOrganisationId(project.getId(), organisation.getId());
+        SpendProfile retrieved = repository.findOneByProjectIdAndOrganisationId(project.getId(), organisation.getId()).get();
         assertNotSame(saved, retrieved);
         assertEquals(costCategoryType.getId(), retrieved.getCostCategoryType().getId());
         assertEquals(project.getId(), retrieved.getProject().getId());
