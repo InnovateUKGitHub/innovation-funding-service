@@ -20,11 +20,13 @@
 
 	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Assessor profile'}, ${null})" th:remove="tag" />
 
-	<h1 class="heading-large">Innovation area and skills</h1>
+	<h1 class="heading-large" th:text="${param.name != null ? param.name[0] : 'John Smith'}">ASSESSOR NAME</h1>
+
+	<h2 class="heading-medium">Innovation area and skills</h2>
 	
-	<div class="grid-row">
+	<div class="grid-row no-margin-top">
 		<div class="column-half">
-			<h2 class="heading-medium no-margin-bottom">Innovation areas</h2>
+			<h2 class="heading-medium no-margin">Innovation areas</h2>
 			<ul class="list-bullet">
 				<li>Digital sciences</li>
 				<li>Information &#38; communications technology (ICT)</li>
@@ -32,7 +34,7 @@
 		</div>
 
 		<div class="column-half">
-			<h2 class="heading-medium no-margin-bottom">Type</h2>
+			<h2 class="heading-medium no-margin">Type</h2>
 			<ul class="list-bullet">
 				<li>Business</li>
 			</ul>
