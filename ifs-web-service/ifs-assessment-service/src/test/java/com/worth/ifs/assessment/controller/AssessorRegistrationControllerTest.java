@@ -34,6 +34,7 @@ import static com.worth.ifs.assessment.builder.CompetitionInviteResourceBuilder.
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
+import static java.lang.String.format;
 import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -161,7 +162,7 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
                 .param("addressForm.selectedPostcode.postcode", postcode))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(model().attribute("form", expectedForm))
-                .andExpect(redirectedUrl("/registration/skills"));
+                .andExpect(redirectedUrl( format("/invite-accept/competition/%s/accept", inviteHash) ));
 
         verify(assessorService).createAssessorByInviteHash(inviteHash, expectedForm);
     }
