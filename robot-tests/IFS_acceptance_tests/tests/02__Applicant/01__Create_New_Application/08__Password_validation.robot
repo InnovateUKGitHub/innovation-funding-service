@@ -13,7 +13,7 @@ Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
 Resource          ../../../resources/variables/EMAIL_VARIABLES.robot
 Resource          ../../../resources/variables/PASSWORD_VARIABLES.robot
-Resource          ../../resources/keywords/EMAIL_KEYWORDS.robot
+Resource          ../../../resources/keywords/EMAIL_KEYWORDS.robot
 
 *** Test Cases ***
 Password from the blacklist

@@ -23,7 +23,7 @@ Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
 Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
-Resource          ../../resources/keywords/EMAIL_KEYWORDS.robot
+Resource          ../../../resources/keywords/EMAIL_KEYWORDS.robot
 
 *** Variables ***
 ${application_name}    Invite robot test application

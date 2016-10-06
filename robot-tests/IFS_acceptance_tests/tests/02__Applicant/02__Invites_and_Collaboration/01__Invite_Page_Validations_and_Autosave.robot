@@ -16,7 +16,8 @@ Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
-Resource          ../../resources/keywords/EMAIL_KEYWORDS.robot
+Resource          ../../../resources/keywords/EMAIL_KEYWORDS.robot
+Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
 
 *** Variables ***
 ${INVITE_COLLABORATORS2_PAGE}    ${SERVER}/application/3/contributors/invite?newApplication
