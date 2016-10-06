@@ -49,16 +49,4 @@ public class ProjectFinanceRestServiceImpl extends BaseRestService implements Pr
     public RestResult<Void> markSpendProfile(Long projectId, Long organisationId, Boolean complete) {
         return postWithRestResult(projectFinanceRestURL + "/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile/complete/" + complete, Void.class);
     }
-
-    @Override
-    public RestResult<Void> approveFinanceCheck(Long projectId, Long organisationId) {
-        String url = projectFinanceRestURL + "/" + projectId + "/partner-organisation/" + organisationId + "/finance-check/approve";
-        return postWithRestResult(url, Void.class);
-    }
-
-    @Override
-    public RestResult<FinanceCheckProcessResource> getFinanceCheckApprovalStatus(Long projectId, Long organisationId) {
-        String url = projectFinanceRestURL + "/" + projectId + "/partner-organisation/" + organisationId + "/finance-check/status";
-        return getWithRestResult(url, FinanceCheckProcessResource.class);
-    }
 }

@@ -2,7 +2,6 @@ package com.worth.ifs.project.finance.transactional;
 
 import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.commons.error.Error;
-import com.worth.ifs.commons.rest.LocalDateResource;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.project.builder.ProjectBuilder;
 import com.worth.ifs.project.domain.Project;
@@ -14,6 +13,10 @@ import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.project.resource.SpendProfileCSVResource;
 import com.worth.ifs.project.resource.SpendProfileTableResource;
 import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.workflow.domain.ActivityState;
+import com.worth.ifs.workflow.resource.State;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -23,7 +26,6 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.IntStream;
 
 import static com.worth.ifs.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.LambdaMatcher.createLambdaMatcher;
@@ -35,16 +37,17 @@ import static com.worth.ifs.project.builder.CostCategoryGroupBuilder.newCostCate
 import static com.worth.ifs.project.builder.CostCategoryResourceBuilder.newCostCategoryResource;
 import static com.worth.ifs.project.builder.CostCategoryTypeBuilder.newCostCategoryType;
 import static com.worth.ifs.project.builder.CostCategoryTypeResourceBuilder.newCostCategoryTypeResource;
+import static com.worth.ifs.project.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static com.worth.ifs.project.builder.ProjectBuilder.newProject;
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static com.worth.ifs.project.finance.domain.TimeUnit.MONTH;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
+import static com.worth.ifs.user.builder.UserBuilder.newUser;
+import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.MapFunctions.asMap;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
-import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -62,14 +65,21 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         Long projectId = 123L;
 
-        Project project = newProject().withId(projectId).withDuration(3L).build();
+        Project project = newProject().
+                withId(projectId).
+                withDuration(3L).
+                withPartnerOrganisations(newPartnerOrganisation().build(2)).
+                build();
+
+        UserResource loggedInUser = newUserResource().build();
+        setLoggedInUser(loggedInUser);
+
         Organisation organisation1 = newOrganisation().build();
         Organisation organisation2 = newOrganisation().build();
 
         // First cost category type and everything that goes with it.
         CostCategory type1Cat1 = newCostCategory().withName(LABOUR.getName()).build();
         CostCategoryResource type1Cat1Resource = newCostCategoryResource().withName(type1Cat1.getName()).with(id(type1Cat1.getId())).build();
-
 
         CostCategory type1Cat2 = newCostCategory().withName(MATERIALS.getName()).build();
         CostCategoryResource type1Cat2Resource = newCostCategoryResource().withName(type1Cat2.getName()).with(id(type1Cat2.getId())).build();
@@ -110,6 +120,10 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         when(costCategoryRepositoryMock.findOne(type2Cat1.getId())).thenReturn(type2Cat1);
         when(costCategoryTypeRepositoryMock.findOne(costCategoryType1.getId())).thenReturn(costCategoryType1);
         when(costCategoryTypeRepositoryMock.findOne(costCategoryType2.getId())).thenReturn(costCategoryType2);
+        when(financeCheckProcessRepository.findOneByTargetId(project.getPartnerOrganisations().get(0).getId())).thenReturn(
+                new FinanceCheckProcess((User) null, null, new ActivityState(null, State.ACCEPTED)));
+        when(financeCheckProcessRepository.findOneByTargetId(project.getPartnerOrganisations().get(1).getId())).thenReturn(
+                new FinanceCheckProcess((User) null, null, new ActivityState(null, State.ACCEPTED)));
 
         // setup expectations for getting project users to infer the partner organisations
         List<ProjectUserResource> projectUsers =
@@ -141,8 +155,13 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
                 new Cost("67").withCategory(type1Cat2).withTimePeriod(1, MONTH, 1, MONTH),
                 new Cost("67").withCategory(type1Cat2).withTimePeriod(2, MONTH, 1, MONTH));
 
+        User generatedBy = newUser().build();
+        when(userRepositoryMock.findOne(loggedInUser.getId())).thenReturn(generatedBy);
+
+        Calendar generatedDate = Calendar.getInstance();
+
         SpendProfile expectedOrganisation1Profile = new SpendProfile(organisation1, project, costCategoryType1,
-                expectedOrganisation1EligibleCosts, expectedOrganisation1SpendProfileFigures, false);
+                expectedOrganisation1EligibleCosts, expectedOrganisation1SpendProfileFigures, generatedBy, generatedDate, false);
 
         List<Cost> expectedOrganisation2EligibleCosts = singletonList(
                 new Cost("301").withCategory(type2Cat1));
@@ -153,7 +172,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
                 new Cost("100").withCategory(type2Cat1).withTimePeriod(2, MONTH, 1, MONTH));
 
         SpendProfile expectedOrganisation2Profile = new SpendProfile(organisation2, project, costCategoryType2,
-                expectedOrganisation2EligibleCosts, expectedOrganisation2SpendProfileFigures, false);
+                expectedOrganisation2EligibleCosts, expectedOrganisation2SpendProfileFigures, generatedBy, generatedDate, false);
 
         when(spendProfileRepositoryMock.save(spendProfileExpectations(expectedOrganisation1Profile))).thenReturn(null);
         when(spendProfileRepositoryMock.save(spendProfileExpectations(expectedOrganisation2Profile))).thenReturn(null);
@@ -166,6 +185,97 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         verifyNoMoreInteractions(spendProfileRepositoryMock);
     }
 
+    @Test
+    public void testGenerateSpendProfileButNotAllFinanceChecksCompleted() {
+
+        Long projectId = 123L;
+
+        Project project = newProject().
+                withId(projectId).
+                withDuration(3L).
+                withPartnerOrganisations(newPartnerOrganisation().build(2)).
+                build();
+
+        UserResource loggedInUser = newUserResource().build();
+        setLoggedInUser(loggedInUser);
+
+        Organisation organisation1 = newOrganisation().build();
+        Organisation organisation2 = newOrganisation().build();
+
+        // First cost category type and everything that goes with it.
+        CostCategory type1Cat1 = newCostCategory().withName(LABOUR.getName()).build();
+        CostCategoryResource type1Cat1Resource = newCostCategoryResource().withName(type1Cat1.getName()).with(id(type1Cat1.getId())).build();
+
+        CostCategory type1Cat2 = newCostCategory().withName(MATERIALS.getName()).build();
+        CostCategoryResource type1Cat2Resource = newCostCategoryResource().withName(type1Cat2.getName()).with(id(type1Cat2.getId())).build();
+
+        CostCategoryType costCategoryType1 =
+                newCostCategoryType()
+                        .withName("Type 1")
+                        .withCostCategoryGroup(
+                                newCostCategoryGroup()
+                                        .withDescription("Group 1")
+                                        .withCostCategories(asList(type1Cat1, type1Cat2))
+                                        .build())
+                        .build();
+
+        CostCategoryTypeResource costCategoryType1Resource = newCostCategoryTypeResource().with(id(costCategoryType1.getId())).build();
+
+        // Second cost category type and everything that goes with it.
+        CostCategory type2Cat1 = newCostCategory().withName(ACADEMIC.getName()).build();
+        CostCategoryResource type2Cat1Resource = newCostCategoryResource().withName(type2Cat1.getName()).with(id(type2Cat1.getId())).build();
+
+        CostCategoryType costCategoryType2 = newCostCategoryType()
+                .withName("Type 2")
+                .withCostCategoryGroup(
+                        newCostCategoryGroup()
+                                .withDescription("Group 2")
+                                .withCostCategories(asList(type2Cat1))
+                                .build())
+                .build();
+
+        CostCategoryTypeResource costCategoryType2Resource = newCostCategoryTypeResource().with(id(costCategoryType2.getId())).build();
+
+        // set basic repository lookup expectations
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(organisationRepositoryMock.findOne(organisation1.getId())).thenReturn(organisation1);
+        when(organisationRepositoryMock.findOne(organisation2.getId())).thenReturn(organisation2);
+        when(costCategoryRepositoryMock.findOne(type1Cat1.getId())).thenReturn(type1Cat1);
+        when(costCategoryRepositoryMock.findOne(type1Cat2.getId())).thenReturn(type1Cat2);
+        when(costCategoryRepositoryMock.findOne(type2Cat1.getId())).thenReturn(type2Cat1);
+        when(costCategoryTypeRepositoryMock.findOne(costCategoryType1.getId())).thenReturn(costCategoryType1);
+        when(costCategoryTypeRepositoryMock.findOne(costCategoryType2.getId())).thenReturn(costCategoryType2);
+        when(financeCheckProcessRepository.findOneByTargetId(project.getPartnerOrganisations().get(0).getId())).thenReturn(
+                new FinanceCheckProcess((User) null, null, new ActivityState(null, State.READY_TO_SUBMIT)));
+        when(financeCheckProcessRepository.findOneByTargetId(project.getPartnerOrganisations().get(1).getId())).thenReturn(
+                new FinanceCheckProcess((User) null, null, new ActivityState(null, State.ACCEPTED)));
+
+        // setup expectations for getting project users to infer the partner organisations
+        List<ProjectUserResource> projectUsers =
+                newProjectUserResource().withOrganisation(organisation1.getId(), organisation2.getId()).build(2);
+        when(projectServiceMock.getProjectUsers(projectId)).thenReturn(serviceSuccess(projectUsers));
+
+        // setup expectations for finding finance figures per Cost Category from which to generate the spend profile
+        when(spendProfileCostCategorySummaryStrategy.getCostCategorySummaries(project.getId(), organisation1.getId())).thenReturn(serviceSuccess(
+                new SpendProfileCostCategorySummaries(
+                        asList(
+                                new SpendProfileCostCategorySummary(type1Cat1Resource, new BigDecimal("100.00"), project.getDurationInMonths()),
+                                new SpendProfileCostCategorySummary(type1Cat2Resource, new BigDecimal("200.00"), project.getDurationInMonths())),
+                        costCategoryType1Resource)));
+
+        when(spendProfileCostCategorySummaryStrategy.getCostCategorySummaries(project.getId(), organisation2.getId())).thenReturn(serviceSuccess(
+                new SpendProfileCostCategorySummaries(
+                        singletonList(new SpendProfileCostCategorySummary(type2Cat1Resource, new BigDecimal("300.66"), project.getDurationInMonths())),
+                        costCategoryType2Resource)));
+
+        ServiceResult<Void> generateResult = service.generateSpendProfile(projectId);
+        assertTrue(generateResult.isFailure());
+        assertTrue(generateResult.getFailure().is(SPEND_PROFILE_CANNOT_BE_GENERATED_UNTIL_ALL_FINANCE_CHECKS_APPROVED));
+
+        verify(spendProfileRepositoryMock, never()).save(isA(SpendProfile.class));
+        verify(spendProfileRepositoryMock, never()).save(isA(SpendProfile.class));
+        verifyNoMoreInteractions(spendProfileRepositoryMock);
+    }
 
 
     @Test
@@ -198,7 +308,6 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         ServiceResult<SpendProfileCSVResource> serviceResult = service.getSpendProfileCSV(projectOrganisationCompositeId);
         assertTrue(serviceResult.getSuccessObject().getFileName().startsWith("TEST_Spend_Profile_"+dateFormat.format(date)));
     }
-
 
     @Test
     public void saveSpendProfileWhenCostsAreFractional() {
@@ -355,7 +464,10 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         List<Cost> spendProfileFigures = buildCostsForCategories(Arrays.asList("Labour", "Materials", "Other costs"), 3);
 
-        SpendProfile spendProfileInDB = new SpendProfile(null, null, null, Collections.emptyList(), spendProfileFigures, false);
+        User generatedBy = newUser().build();
+        Calendar generatedDate = Calendar.getInstance();
+
+        SpendProfile spendProfileInDB = new SpendProfile(null, null, null, Collections.emptyList(), spendProfileFigures, generatedBy, generatedDate, false);
 
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(Optional.of(spendProfileInDB));
 
@@ -473,7 +585,10 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         List<Cost> spendProfileFigures = buildCostsForCategoriesWithGivenValues(spendProfileCostsMap, 3, costCategoryType.getCostCategoryGroup());
 
-        SpendProfile spendProfileInDB = new SpendProfile(null, projectInDB, costCategoryType, eligibleCosts, spendProfileFigures, true);
+        User generatedBy = newUser().build();
+        Calendar generatedDate = Calendar.getInstance();
+
+        SpendProfile spendProfileInDB = new SpendProfile(null, projectInDB, costCategoryType, eligibleCosts, spendProfileFigures, generatedBy, generatedDate, true);
 
         return spendProfileInDB;
 
@@ -613,6 +728,9 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
             CostGroup expectedSpendFigures = expectedSpendProfile.getSpendProfileFigures();
             CostGroup actualSpendFigures = spendProfile.getSpendProfileFigures();
             assertCostGroupsEqual(expectedSpendFigures, actualSpendFigures);
+
+            assertEquals(expectedSpendProfile.getGeneratedBy(), spendProfile.getGeneratedBy());
+            assertTrue(spendProfile.getGeneratedDate().getTimeInMillis() - expectedSpendProfile.getGeneratedDate().getTimeInMillis() < 100);
         });
     }
 
@@ -657,36 +775,5 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
     @Override
     protected ProjectFinanceServiceImpl supplyServiceUnderTest() {
         return new ProjectFinanceServiceImpl();
-    }
-
-    private SpendProfileTableResource buildSpendProfileTableResource(Project project) {
-
-        SpendProfileTableResource expectedTable = new SpendProfileTableResource();
-
-        expectedTable.setMarkedAsComplete(false);
-
-        expectedTable.setMonths(asList(
-                new LocalDateResource(2018, 3, 1),
-                new LocalDateResource(2018, 4, 1),
-                new LocalDateResource(2018, 5, 1)
-        ));
-
-        expectedTable.setEligibleCostPerCategoryMap(asMap(
-                "Labour", new BigDecimal("100"),
-                "Materials", new BigDecimal("150"),
-                "Other costs", new BigDecimal("55")));
-
-        expectedTable.setMonthlyCostsPerCategoryMap(asMap(
-                "Labour", asList(new BigDecimal("30"), new BigDecimal("30"), new BigDecimal("40")),
-                "Materials", asList(new BigDecimal("70"), new BigDecimal("50"), new BigDecimal("60")),
-                "Other costs", asList(new BigDecimal("50"), new BigDecimal("5"), new BigDecimal("0"))));
-
-
-        List<LocalDate> months = IntStream.range(0, project.getDurationInMonths().intValue()).mapToObj(project.getTargetStartDate()::plusMonths).collect(toList());
-        List<LocalDateResource> monthResources = simpleMap(months, LocalDateResource::new);
-
-        expectedTable.setMonths(monthResources);
-
-        return expectedTable;
     }
 }

@@ -3,7 +3,9 @@ package com.worth.ifs.project.builder;
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.project.finance.resource.CostGroupResource;
 import com.worth.ifs.project.resource.SpendProfileResource;
+import com.worth.ifs.user.resource.UserResource;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -52,4 +54,11 @@ public class SpendProfileResourceBuilder extends BaseBuilder<SpendProfileResourc
         return with((spendProfileResource) -> spendProfileResource.setSpendProfileFigures(spendProfileFigures));
     }
 
+    public SpendProfileResourceBuilder withGeneratedBy(UserResource user){
+        return with((spendProfileResource) -> spendProfileResource.setGeneratedBy(user));
+    }
+
+    public SpendProfileResourceBuilder withGeneratedDate(Calendar date){
+        return with((spendProfileResource) -> spendProfileResource.setGeneratedDate(date));
+    }
 }

@@ -2,14 +2,17 @@ package com.worth.ifs.project.finance.domain;
 
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.domain.User;
 import org.junit.Test;
 
 import java.math.BigDecimal;
+import java.util.Calendar;
 import java.util.List;
 
 import static com.worth.ifs.BaseBuilderAmendFunctions.name;
 import static com.worth.ifs.project.builder.ProjectBuilder.newProject;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
+import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
@@ -30,7 +33,10 @@ public class SpendProfileTest {
         Organisation organisation = newOrganisation().withName("My Org").build();
         Project project = newProject().with(name("My Proj")).build();
 
-        SpendProfile spendProfile = new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileCosts, false);
+        User generatedBy = newUser().build();
+        Calendar generatedDate = Calendar.getInstance();
+
+        SpendProfile spendProfile = new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileCosts, generatedBy, generatedDate, false);
 
         assertEquals(organisation, spendProfile.getOrganisation());
         assertEquals(project, spendProfile.getProject());

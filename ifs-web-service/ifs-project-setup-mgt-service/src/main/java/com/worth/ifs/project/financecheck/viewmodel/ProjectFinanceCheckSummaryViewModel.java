@@ -3,6 +3,7 @@ package com.worth.ifs.project.financecheck.viewmodel;
 import com.worth.ifs.application.resource.CompetitionSummaryResource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -120,12 +121,16 @@ public class ProjectFinanceCheckSummaryViewModel {
     private BigDecimal otherPublicSectorFunding;
     private BigDecimal totalPercentageGrant;
     private boolean spendProfilesGenerated;
+    private boolean financeChecksAllApproved;
+    private String spendProfileGeneratedBy;
+    private LocalDate spendProfileGeneratedDate;
 
     public ProjectFinanceCheckSummaryViewModel(
             Long projectId, CompetitionSummaryResource competitionSummary,
             List<FinanceCheckOrganisationRow> partnerOrganisationDetails,
             LocalDate projectStartDate, int durationInMonths, BigDecimal totalProjectCost, BigDecimal grantAppliedFor,
-            BigDecimal otherPublicSectorFunding, BigDecimal totalPercentageGrant, boolean spendProfilesGenerated) {
+            BigDecimal otherPublicSectorFunding, BigDecimal totalPercentageGrant, boolean spendProfilesGenerated,
+            boolean financeChecksAllApproved, String spendProfileGeneratedBy, LocalDate spendProfileGeneratedDate) {
 
         this.projectId = projectId;
         this.competitionSummary = competitionSummary;
@@ -137,6 +142,9 @@ public class ProjectFinanceCheckSummaryViewModel {
         this.otherPublicSectorFunding = otherPublicSectorFunding;
         this.totalPercentageGrant = totalPercentageGrant;
         this.spendProfilesGenerated = spendProfilesGenerated;
+        this.financeChecksAllApproved = financeChecksAllApproved;
+        this.spendProfileGeneratedBy = spendProfileGeneratedBy;
+        this.spendProfileGeneratedDate = spendProfileGeneratedDate;
     }
 
     public Long getProjectId() {
@@ -175,12 +183,24 @@ public class ProjectFinanceCheckSummaryViewModel {
         return totalPercentageGrant;
     }
 
-    public boolean isShowGenerateSpendProfilesButton() {
-        return !spendProfilesGenerated;
+    public boolean isShowEnabledGenerateSpendProfilesButton() {
+        return financeChecksAllApproved && !spendProfilesGenerated;
+    }
+
+    public boolean isShowDisabledGenerateSpendProfilesButton() {
+        return !financeChecksAllApproved && !spendProfilesGenerated;
     }
 
     public boolean isShowSpendProfilesGeneratedMessage() {
         return spendProfilesGenerated;
+    }
+
+    public String getSpendProfileGeneratedBy() {
+        return spendProfileGeneratedBy;
+    }
+
+    public LocalDate getSpendProfileGeneratedDate() {
+        return spendProfileGeneratedDate;
     }
 
     @Override
@@ -194,6 +214,7 @@ public class ProjectFinanceCheckSummaryViewModel {
         return new EqualsBuilder()
                 .append(durationInMonths, that.durationInMonths)
                 .append(spendProfilesGenerated, that.spendProfilesGenerated)
+                .append(financeChecksAllApproved, that.financeChecksAllApproved)
                 .append(projectId, that.projectId)
                 .append(competitionSummary, that.competitionSummary)
                 .append(partnerOrganisationDetails, that.partnerOrganisationDetails)
@@ -209,7 +230,33 @@ public class ProjectFinanceCheckSummaryViewModel {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(projectId)
+                .append(competitionSummary)
+                .append(partnerOrganisationDetails)
+                .append(projectStartDate)
+                .append(durationInMonths)
+                .append(totalProjectCost)
                 .append(grantAppliedFor)
+                .append(otherPublicSectorFunding)
+                .append(totalPercentageGrant)
+                .append(spendProfilesGenerated)
+                .append(financeChecksAllApproved)
                 .toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("projectId", projectId)
+                .append("competitionSummary", competitionSummary)
+                .append("partnerOrganisationDetails", partnerOrganisationDetails)
+                .append("projectStartDate", projectStartDate)
+                .append("durationInMonths", durationInMonths)
+                .append("totalProjectCost", totalProjectCost)
+                .append("grantAppliedFor", grantAppliedFor)
+                .append("otherPublicSectorFunding", otherPublicSectorFunding)
+                .append("totalPercentageGrant", totalPercentageGrant)
+                .append("spendProfilesGenerated", spendProfilesGenerated)
+                .append("financeChecksAllApproved", financeChecksAllApproved)
+                .toString();
     }
 }

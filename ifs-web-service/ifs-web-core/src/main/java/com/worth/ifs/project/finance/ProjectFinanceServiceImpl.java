@@ -49,14 +49,4 @@ public class ProjectFinanceServiceImpl implements ProjectFinanceService {
     public ServiceResult<Void> markSpendProfile(Long projectId, Long organisationId, Boolean complete) {
         return projectFinanceRestService.markSpendProfile(projectId, organisationId, complete).toServiceResult();
     }
-
-    @Override
-    public ServiceResult<Void> approveFinanceCheck(Long projectId, Long organisationId) {
-        return projectFinanceRestService.approveFinanceCheck(projectId, organisationId).toServiceResult();
-    }
-
-    @Override
-    public FinanceCheckProcessResource getFinanceCheckApprovalStatus(Long projectId, Long organisationId) {
-        return projectFinanceRestService.getFinanceCheckApprovalStatus(projectId, organisationId).getSuccessObjectOrThrowException();
-    }
 }

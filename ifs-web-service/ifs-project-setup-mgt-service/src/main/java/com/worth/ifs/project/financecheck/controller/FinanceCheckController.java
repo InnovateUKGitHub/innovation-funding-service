@@ -22,6 +22,7 @@ import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.OrganisationTypeEnum;
+import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -49,6 +50,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 @Controller
 @RequestMapping("/project/{projectId}/finance-check")
 public class FinanceCheckController {
+
     private static final String FORM_ATTR_NAME = "form";
 
     @Autowired
@@ -64,15 +66,15 @@ public class FinanceCheckController {
     private FinanceCheckService financeCheckService;
 
     @Autowired
-    OrganisationService organisationService;
+    private OrganisationService organisationService;
 
     @Autowired
-    PartnerOrganisationService partnerOrganisationService;
+    private PartnerOrganisationService partnerOrganisationService;
 
     @RequestMapping(value = "/organisation/{organisationId}", method = GET)
-    public String view(@PathVariable("projectId") final Long projectId,
-                       @PathVariable("organisationId") Long organisationId,
+    public String view(@PathVariable("projectId") final Long projectId, @PathVariable("organisationId") Long organisationId,
                        @ModelAttribute(FORM_ATTR_NAME) FinanceCheckForm form,
+                       @ModelAttribute("loggedInUser") UserResource loggedInUser,
                        Model model){
         FinanceCheckResource financeCheckResource = getFinanceCheckResource(projectId, organisationId);
         populateExitingFinanceCheckDetailsInForm(financeCheckResource, form);
@@ -84,8 +86,8 @@ public class FinanceCheckController {
                          @PathVariable("organisationId") Long organisationId,
                          @ModelAttribute(FORM_ATTR_NAME) @Valid FinanceCheckForm form,
                          @SuppressWarnings("unused") BindingResult bindingResult,
-                         ValidationHandler validationHandler,
-                         Model model){
+                         ValidationHandler validationHandler) {
+
         return validationHandler.failNowOrSucceedWith(
                 () -> redirectToFinanceCheckForm(projectId, organisationId),
                 () -> updateFinanceCheck(getFinanceCheckResource(projectId, organisationId), form, validationHandler));
@@ -122,7 +124,7 @@ public class FinanceCheckController {
         Supplier<String> failureView = () -> doViewFinanceCheckForm(projectId, organisationId, model);
 
         ServiceResult<Void> updateResult = doUpdateFinanceCheck(getFinanceCheckResource(projectId, organisationId), form);
-        ServiceResult<Void> approveResult = updateResult.andOnSuccess(() -> projectFinanceService.approveFinanceCheck(projectId, organisationId));
+        ServiceResult<Void> approveResult = updateResult.andOnSuccess(() -> financeCheckService.approveFinanceCheck(projectId, organisationId));
 
         return validationHandler.addAnyErrors(approveResult).failNowOrSucceedWith(failureView, () ->
                 redirectToFinanceCheckForm(projectId, organisationId)
@@ -158,7 +160,7 @@ public class FinanceCheckController {
         boolean isResearch = OrganisationTypeEnum.isResearch(organisationResource.getOrganisationType());
         Optional<ProjectUserResource> financeContact = getFinanceContact(projectId, organisationId);
 
-        FinanceCheckProcessResource financeCheckStatus = projectFinanceService.getFinanceCheckApprovalStatus(projectId, organisationId);
+        FinanceCheckProcessResource financeCheckStatus = financeCheckService.getFinanceCheckApprovalStatus(projectId, organisationId);
         boolean financeChecksApproved = APPROVED.equals(financeCheckStatus.getCurrentState());
         String approverName = financeCheckStatus.getInternalParticipant() != null ? financeCheckStatus.getInternalParticipant().getName() : null;
         LocalDate approvalDate = financeCheckStatus.getModifiedDate().toLocalDate();
@@ -186,13 +188,12 @@ public class FinanceCheckController {
     }
 
     private String updateFinanceCheck(FinanceCheckResource currentFinanceCheckResource, FinanceCheckForm financeCheckForm, ValidationHandler validationHandler){
-        return doUpdateFinanceCheck(currentFinanceCheckResource, financeCheckForm).handleSuccessOrFailure(
-                result -> {
-                    validationHandler.addAnyErrors(result);
-                    return redirectToFinanceCheckForm(currentFinanceCheckResource.getProject(), currentFinanceCheckResource.getOrganisation());
-                },
-                result -> redirectToViewFinanceCheckSummary(currentFinanceCheckResource.getProject())
-        );
+
+        Supplier<String> failureView = () -> redirectToFinanceCheckForm(currentFinanceCheckResource.getProject(), currentFinanceCheckResource.getOrganisation());
+        Supplier<String> successView = () -> redirectToViewFinanceCheckSummary(currentFinanceCheckResource.getProject());
+
+        ServiceResult<Void> updateResult = doUpdateFinanceCheck(currentFinanceCheckResource, financeCheckForm);
+        return validationHandler.addAnyErrors(updateResult).failNowOrSucceedWith(failureView, successView);
     }
 
     private ServiceResult<Void> doUpdateFinanceCheck(FinanceCheckResource currentFinanceCheckResource, FinanceCheckForm financeCheckForm) {
