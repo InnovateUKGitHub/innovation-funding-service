@@ -134,6 +134,8 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         assertFalse(model.isProjectDetailsSubmitted());
         assertTrue(model.isSubmissionAllowed());
         assertTrue(model.isUserLeadPartner());
+        assertTrue(model.isSubmitProjectDetailsAllowed());
+        assertFalse(model.isAnySectionIncomplete());
     }
 
     @Test

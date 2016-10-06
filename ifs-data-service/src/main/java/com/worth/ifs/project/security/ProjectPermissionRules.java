@@ -146,6 +146,13 @@ public class ProjectPermissionRules extends BasePermissionRules {
     }
 
     @PermissionRule(
+            value = "ACCEPT_REJECT_OTHER_DOCUMENTS",
+            description = "Project finance user can accept or reject Other Documents (Collaboration Agreement, Exploitation Plan)")
+    public boolean projectFinanceUserCanAcceptOrRejectOtherDocuments(ProjectResource project, UserResource user) {
+        return isProjectFinanceUser(user);
+    }
+
+    @PermissionRule(
             value = "VIEW_TEAM_STATUS",
             description = "All partners can view team status")
     public boolean partnersCanViewTeamStatus(ProjectResource project, UserResource user){

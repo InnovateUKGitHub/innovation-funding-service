@@ -104,7 +104,7 @@
                     <td>Wessex University</td>
                     <td>1</td>
                     <td>
-                        <a href="#" class="button-secondary">Assign</a>
+                        <a href="/prototypes/5386-assign-application" class="button-secondary">Assign</a>
                     </td>
                 </tr>
                 <tr>
@@ -114,7 +114,7 @@
                     <td>Plymouth University</td>
                     <td>1</td>
                     <td>
-                        <a href="#" class="button-secondary">Assign</a>
+                        <a href="/prototypes/5386-assign-application" class="button-secondary">Assign</a>
                     </td>
                 </tr>
                 <tr>
@@ -124,7 +124,7 @@
                     <td>Horizon Ltd</td>
                     <td>0</td>
                     <td>
-                        <a href="#" class="button-secondary">Assign</a>
+                        <a href="/prototypes/5386-assign-application" class="button-secondary">Assign</a>
                     </td>
                 </tr>
                 <tr>
@@ -134,7 +134,7 @@
                     <td>Zodiac Industries Ltd</td>
                     <td>5</td>
                     <td>
-                        <a href="#" class="button-secondary">Assign</a>
+                        <a href="/prototypes/5386-assign-application" class="button-secondary">Assign</a>
                     </td>
                 </tr>
                 <tr>
@@ -144,7 +144,7 @@
                     <td>Durham University</td>
                     <td>1</td>
                     <td>
-                        <a href="#" class="button-secondary">Assign</a>
+                        <a href="/prototypes/5386-assign-application" class="button-secondary">Assign</a>
                     </td>
                 </tr>
             </tbody>
@@ -221,20 +221,31 @@
                 </tr>
             </thead>
             <tbody th:if="${type == 'assigned'}">
-                <tr>
-                    <td colspan="6" style="text-align: center;"><span class="heading-small">There are currently no assessors assigned to the application</span></td>
+                <tr id="no-assessors">
+                    <td colspan="6" class="aligncenter"><span class="heading-small">There are currently no assessors assigned to the application</span></td>
                 </tr>
-            </tbody>
-            <tbody th:if="${type == 'available'}">
-                <tr>
+                <tr id="assessor-assigned">
                     <td>Bill Knightly</td>
                     <td>Cardiff University</td>
                     <td>Business</td>
                     <td>Electronics, sensors &amp; photonics, Materials</td>
-                    <td style="text-align: center;">5</td>
-                    <td style="text-align: center;">1</td>
+                    <td class="aligncenter">5</td>
+                    <td class="aligncenter">1</td>
                     <td>
-                        <a href="#" class="button-secondary">Assign</a>
+                        <a href="#" id="remove-assessor" class="button-secondary">Remove</a>
+                    </td>
+                </tr>
+            </tbody>
+            <tbody th:if="${type == 'available'}">
+                <tr id="assessor-available">
+                    <td>Bill Knightly</td>
+                    <td>Cardiff University</td>
+                    <td>Business</td>
+                    <td>Electronics, sensors &amp; photonics, Materials</td>
+                    <td class="aligncenter">5</td>
+                    <td class="aligncenter">1</td>
+                    <td>
+                        <a href="#" id="assign-assessor" class="button-secondary">Assign</a>
                     </td>
                 </tr>
                 <tr>
@@ -242,8 +253,8 @@
                     <td>Public Health England</td>
                     <td>Academic</td>
                     <td>Healthcare, Regenerative medicine</td>
-                    <td style="text-align: center;">9</td>
-                    <td style="text-align: center;">1</td>
+                    <td class="aligncenter">9</td>
+                    <td class="aligncenter">1</td>
                     <td>
                         <a href="#" class="button-secondary">Assign</a>
                     </td>
@@ -253,8 +264,8 @@
                     <td>London School of Economics</td>
                     <td>Business</td>
                     <td>Analytical science</td>
-                    <td style="text-align: center;">20</td>
-                    <td style="text-align: center;">0</td>
+                    <td class="aligncenter">20</td>
+                    <td class="aligncenter">0</td>
                     <td>
                         <a href="#" class="button-secondary">Assign</a>
                     </td>
@@ -264,8 +275,8 @@
                     <td>University College London</td>
                     <td>Academic</td>
                     <td>Architectures and operating system</td>
-                    <td style="text-align: center;">15</td>
-                    <td style="text-align: center;">5</td>
+                    <td class="aligncenter">15</td>
+                    <td class="aligncenter">5</td>
                     <td>
                         <a href="#" class="button-secondary">Assign</a>
                     </td>
@@ -275,8 +286,8 @@
                     <td>Reading University</td>
                     <td>Business</td>
                     <td>Electronics, sensors &amp; photonics, Materials</td>
-                    <td style="text-align: center;">9</td>
-                    <td style="text-align: center;">1</td>
+                    <td class="aligncenter">9</td>
+                    <td class="aligncenter">1</td>
                     <td>
                         <a href="#" class="button-secondary">Assign</a>
                     </td>
@@ -286,8 +297,8 @@
                     <td>Reading University</td>
                     <td>Business</td>
                     <td>Biophysics and soft matter physics</td>
-                    <td style="text-align: center;">10</td>
-                    <td style="text-align: center;">5</td>
+                    <td class="aligncenter">10</td>
+                    <td class="aligncenter">5</td>
                     <td>
                         <a href="#" class="button-secondary">Assign</a>
                     </td>
