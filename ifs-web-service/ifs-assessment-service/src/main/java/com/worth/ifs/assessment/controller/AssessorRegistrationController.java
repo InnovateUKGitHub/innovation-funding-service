@@ -12,6 +12,8 @@ import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.form.AddressForm;
 import com.worth.ifs.invite.service.EthnicityRestService;
 import com.worth.ifs.user.resource.EthnicityResource;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -40,6 +42,7 @@ import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.fieldE
 @Controller
 @RequestMapping("/registration")
 public class AssessorRegistrationController {
+    private static final Log LOG = LogFactory.getLog(AssessorRegistrationController.class);
 
     private static final String FORM_ATTR_NAME = "form";
 
@@ -169,7 +172,9 @@ public class AssessorRegistrationController {
                                 addressForm.getSelectedPostcodeIndex()));
                 addressForm.setSelectedPostcode(selectedAddress);
             }
-            catch(IndexOutOfBoundsException e) { }
+            catch(IndexOutOfBoundsException e) {
+                LOG.info(e);
+            }
         }
 
     }
