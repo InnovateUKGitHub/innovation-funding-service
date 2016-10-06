@@ -26,6 +26,7 @@ Project Finance can see Summary Overview
 
 *** Keywords ***
 the table row has expected values
+    #TODO update selectors and values after INFUND-5476 & INFUND-5431
     the user sees the text in the element  xpath=//*[@id="content"]/table[1]/tbody/tr/td[2]    36 months
     the user sees the text in the element  xpath=//*[@id="content"]/table[1]/tbody/tr/td[3]    £ 356202.36026
     the user sees the text in the element  xpath=//*[@id="content"]/table[1]/tbody/tr/td[4]    £ 71240.472052
