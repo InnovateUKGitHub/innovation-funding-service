@@ -91,13 +91,9 @@ public class ProjectSpendProfileApprovalController {
         String leadTechnologist = competition.getLeadTechnologist() != null ? userService.findById(competition.getLeadTechnologist()).getName() : "";
         ApprovalType approvalType = projectFinanceService.getSpendProfileStatusByProjectId(projectId);
 
-        Boolean isApproved = approvalType.equals(ApprovalType.APPROVED);
-        Boolean isRejected = approvalType.equals(ApprovalType.REJECTED);
-        Boolean isNotApprovedOrRejected = approvalType.equals(ApprovalType.UNSET);
-
         List<OrganisationResource> organisationResources = projectService.getPartnerOrganisationsForProject(projectId);
 
-        return new ProjectSpendProfileApprovalViewModel(competitionSummary, leadTechnologist, isApproved, isRejected, isNotApprovedOrRejected, organisationResources);
+        return new ProjectSpendProfileApprovalViewModel(competitionSummary, leadTechnologist, approvalType, organisationResources);
     }
 
     private String redirectToViewSpendProfileApproval(Long projectId) {
