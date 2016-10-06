@@ -29,13 +29,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
-<<<<<<<HEAD
-        =======
-        >>>>>>>b506b4a1f19ba7550e6c647b770342044d93a38e
-        <<<<<<<HEAD
-        =======
-        >>>>>>>b506b4a1f19ba7550e6c647b770342044d93a38e
-        <<<<<<<HEAD
 
 public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceCheckServiceImpl> {
 
