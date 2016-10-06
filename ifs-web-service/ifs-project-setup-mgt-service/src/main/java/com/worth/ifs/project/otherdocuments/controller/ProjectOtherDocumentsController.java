@@ -1,5 +1,7 @@
 package com.worth.ifs.project.otherdocuments.controller;
 
+import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
 import com.worth.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import com.worth.ifs.file.resource.FileEntryResource;
@@ -39,6 +41,9 @@ public class ProjectOtherDocumentsController {
 
     @Autowired
     private ProjectService projectService;
+
+    @Autowired
+    private ApplicationService applicationService;
 
     @RequestMapping(method = GET)
     public String viewOtherDocumentsPage(Model model, @ModelAttribute(FORM_ATTR) ProjectPartnerDocumentsForm form,
@@ -93,6 +98,7 @@ public class ProjectOtherDocumentsController {
         Optional<FileEntryResource> exploitationPlan = projectService.getExploitationPlanFileDetails(projectId);
 
         String leadPartnerOrganisationName = projectService.getLeadOrganisation(projectId).getName();
+        ApplicationResource applicationResource = applicationService.getById(project.getApplication());
 
         Optional<ProjectUserResource> projectManager = getProjectManagerResource(project);
         String projectManagerName = projectManager.map(ProjectUserResource::getUserName).orElse("");
@@ -104,7 +110,7 @@ public class ProjectOtherDocumentsController {
                 .filter(s -> s != leadPartnerOrganisationName)
                 .collect(Collectors.toList());
 
-        return new ProjectPartnerDocumentsViewModel(projectId, project.getName(), leadPartnerOrganisationName,
+        return new ProjectPartnerDocumentsViewModel(projectId, project.getName(), applicationResource.getCompetition(), leadPartnerOrganisationName,
                 projectManagerName, projectManagerTelephone, projectManagerEmail,
                 collaborationAgreement.map(FileDetailsViewModel::new).orElse(null),
                 exploitationPlan.map(FileDetailsViewModel::new).orElse(null),

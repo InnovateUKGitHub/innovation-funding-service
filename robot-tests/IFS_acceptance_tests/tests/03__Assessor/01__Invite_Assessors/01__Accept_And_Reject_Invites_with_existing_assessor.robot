@@ -21,6 +21,7 @@ Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
 Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
+Resource          ../../../resources/keywords/MYSQL_AND_DATE_KEYWORDS.robot
 
 *** Variables ***
 ${Invitation_existing_assessor1}    ${server}/assessment/invite/competition/bcbf56004fddd137ea29d4f8434d33f62e7a7552a3a084197c7dfebce774c136c10bb26e1c6c989e
@@ -28,7 +29,6 @@ ${Invitation_for_upcoming_comp_assessor1}    ${server}/assessment/invite/competi
 ${Invitation_existing_assessor2}    ${server}/assessment/invite/competition/469ffd4952ce0a4c310ec09a1175fb5abea5bc530c2af487f32484e17a4a3776c2ec430f3d957471
 ${Invitation_nonexisting_assessor2}    ${server}/assessment/invite/competition/2abe401d357fc486da56d2d34dc48d81948521b372baff98876665f442ee50a1474a41f5a0964720 #invitation for assessor:worth.email.test+assessor2@gmail.com
 ${Upcoming_comp_assessor1_dashboard}    ${server}/assessment/assessor/dashboard
-@{database}       pymysql    ${database_name}    ${database_user}    ${database_password}    ${database_host}    ${database_port}
 
 *** Test Cases ***
 Assessor dashboard should be empty
@@ -62,7 +62,7 @@ Existing assessor: Reject invitation
     And the user should see the text in the page    Thank you for letting us know you are unable to assess applications within this competition.
     And the user shouldn't be able to accept the rejected competition
     # TODO remove the comment after 5165 is ready to test
-   # And the user shouldn't be able to reject the rejected competition
+    # And the user shouldn't be able to reject the rejected competition
 
 Existing assessor: Accept invitation
     [Documentation]    INFUND-228
@@ -80,13 +80,13 @@ Existing assessor: Accept invitation
     Then The user should see the text in the page    Assessor Dashboard
     And the user should see the element    link=Sarcasm Stupendousness
     # TODO remove the comment after 5165 is ready to test
-  #  And the user shouldn't be able to accept the accepted competition
-  #  And the user shouldn't be able to reject the accepted competition
+    #    And the user shouldn't be able to accept the accepted competition
+    #    And the user shouldn't be able to reject the accepted competition
 
 Upcoming competition should be visible
     [Documentation]    INFUND-3718
     # TODO remove the comment after 5165 is ready to test
-  #  Given the user navigates to the page    ${Upcoming_comp_assessor1_dashboard}
+    #    Given the user navigates to the page    ${Upcoming_comp_assessor1_dashboard}
     Then The user should see the element    css=.invite-to-assess
     And the user should see the text in the page    Upcoming competitions to assess
     And The user should see the text in the page    Assessment period:
@@ -94,7 +94,7 @@ Upcoming competition should be visible
 When the assessment period starts the comp moves to the comp for assessment
     [Tags]    MySQL    HappyPath
     [Setup]    Connect to Database    @{database}
-    Given the assessment start period changes in the db
+    Given the assessment start period changes in the db in the past
     Then The user should not see the text in the page    Upcoming competitions to assess
 
 Milestone date for assessment submission is visible
@@ -106,12 +106,12 @@ Number of days remaining until assessment submission
     [Documentation]    INFUND-3720
     [Tags]    MySQL
     Then the assessor should see the number of days remaining
-    And the days remaining should be correct
+    And the calculation of the remaining days should be correct    2018-12-31
 
 Calculation of the Competitions for assessment should be correct
     [Documentation]    INFUND-3716
     [Tags]    MySQL
-    Then the calculation should be correct    Competitions for assessment    //div[2]/ul/li
+    Then the total calculation in dashboard should be correct    Competitions for assessment    //div[2]/ul/li
 
 Existing assessor shouldn't be able to accept other assessor's invitation
     [Documentation]    INFUND-228
@@ -126,19 +126,13 @@ Existing assessor shouldn't be able to accept other assessor's invitation
 the assessor fills all fields with valid inputs
     Select From List By Index    id=rejectReason    2
     The user should not see the text in the page    This field cannot be left blank
-    Input Text    id=rejectComment    Unable to assess this application.
+    The user enters text to a text field    id=rejectComment    Unable to assess this application.
 
 the user shouldn't be able to accept the rejected competition
     When the user navigates to the page    ${Invitation_existing_assessor1}
     And the user clicks the button/link    jQuery=button:contains("Accept")
-    Page Should Contain    You are unable to access this page
-    Page Should Contain    You have already rejected the invitation
-
-the calculation should be correct
-    [Arguments]    ${TEXT}    ${Section_Xpath}
-    [Documentation]    This keyword uses 2 arguments. The first one is about the page's text (competition or application) and the second is about the Xpath selector.
-    ${NO_OF_COMP_OR_APPL}=    Get Matching Xpath Count    ${Section_Xpath}
-    Page Should Contain    ${TEXT} (${NO_OF_COMP_OR_APPL})
+    The user should see the text in the page    You are unable to access this page
+    The user should see the text in the page    You have already rejected the invitation
 
 the assessor should see the date for submission of assessment
     the user should see the element    css=.my-applications div:nth-child(2) .competition-deadline .day
@@ -147,39 +141,24 @@ the assessor should see the date for submission of assessment
 the assessor should see the number of days remaining
     the user should see the element    css=.my-applications div:nth-child(2) .pie-container .pie-overlay .day
 
-the days remaining should be correct
-    ${CURRENT_DATE}=    Get Current Date    result_format=%Y-%m-%d    exclude_millis=true
-    ${STARTING_DATE}=    Add Time To Date    ${CURRENT_DATE}    1 day    result_format=%Y-%m-%d    exclude_millis=true
-    ${MILESTONE_DATE}=    Convert Date    2018-12-31    result_format=%Y-%m-%d    exclude_millis=true
-    ${NO_OF_DAYS_LEFT}=    Subtract Date From Date    ${MILESTONE_DATE}    ${STARTING_DATE}    verbose    exclude_millis=true
-    ${NO_OF_DAYS_LEFT}=    Remove String    ${NO_OF_DAYS_LEFT}    days
-    ${SCREEN_NO_OF_DAYS_LEFT}=    Get Text    css=.my-applications div:nth-child(2) .pie-container .pie-overlay .day
-    Should Be Equal As Numbers    ${NO_OF_DAYS_LEFT}    ${SCREEN_NO_OF_DAYS_LEFT}
-
-the assessment start period changes in the db
-    ${today}=    get time
-    ${yesterday} =    Subtract Time From Date    ${today}    1 day
-    When execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${yesterday}' WHERE `id`='30';
-    And reload page
-
 the user shouldn't be able to reject the rejected competition
     the user navigates to the page    ${Invitation_existing_assessor1}
     the user clicks the button/link    css=form a
     the assessor fills all fields with valid inputs
     the user clicks the button/link    jQuery=button:contains("Reject")
-    Page Should Contain    We were unable to reject the competition:
-    Page Should Contain    You have already rejected the invitation for this competition.
+    The user should see the text in the page    We were unable to reject the competition:
+    The user should see the text in the page    You have already rejected the invitation for this competition.
 
 the user shouldn't be able to accept the accepted competition
     When the user navigates to the page    ${Invitation_for_upcoming_comp_assessor1}
     And the user clicks the button/link    jQuery=button:contains("Accept")
-    Page Should Contain    You are unable to access this page
-    Page Should Contain    This invite has already been accepted.
+    The user should see the text in the page    You are unable to access this page
+    The user should see the text in the page    This invite has already been accepted.
 
 the user shouldn't be able to reject the accepted competition
     When the user navigates to the page    ${Invitation_for_upcoming_comp_assessor1}
     And the user clicks the button/link    css=form a
     the assessor fills all fields with valid inputs
     the user clicks the button/link    jQuery=button:contains("Reject")
-    Page Should Contain    We were unable to reject the competition:
-    Page Should Contain    You have already accepted the invitation to assess this competition.
+    The user should see the text in the page    We were unable to reject the competition:
+    The user should see the text in the page    You have already accepted the invitation to assess this competition.

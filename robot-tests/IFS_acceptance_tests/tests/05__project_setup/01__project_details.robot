@@ -23,6 +23,7 @@ Resource          ../../resources/keywords/Login_actions.robot
 Resource          ../../resources/keywords/User_actions.robot
 Resource          ../../resources/variables/EMAIL_VARIABLES.robot
 Resource          ../../resources/keywords/SUITE_SET_UP_ACTIONS.robot
+Resource          ../../resources/keywords/EMAIL_KEYWORDS.robot
 
 *** Variables ***
 ${project_details_submitted_message}    The project details have been submitted to Innovate UK

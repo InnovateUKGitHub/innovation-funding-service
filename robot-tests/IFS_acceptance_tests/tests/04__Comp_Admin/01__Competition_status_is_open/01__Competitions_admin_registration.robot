@@ -11,12 +11,13 @@ Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
+Resource          ../../../resources/keywords/EMAIL_KEYWORDS.robot
 
 *** Test Cases ***
 If user from the list is not registered shouldn't be able to login
     [Documentation]    INFUND-2129
     [Tags]
-    [Setup]   delete the emails from the main test mailbox
+    [Setup]    delete the emails from the main test mailbox
     Given the user navigates to the page    ${LOGIN_URL}
     When the guest user enters the log in credentials    worth.email.test+admin2@gmail.com    Passw0rd
     And the user clicks the button/link    css=button[name="_eventId_proceed"]

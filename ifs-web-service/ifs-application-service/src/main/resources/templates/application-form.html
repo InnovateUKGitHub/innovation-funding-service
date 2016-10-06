@@ -38,13 +38,20 @@
 
             <div th:if="${currentSection}" th:remove="tag">
                 <p class="subtitle" th:if="${currentSection.getDescription()}" th:text="${currentSection.getDescription()}" />
-                <div th:each="question : ${sectionQuestions.get(currentSection.id)}" th:remove="tag">
-                    <div class="question" th:each="formInput, status : ${questionFormInputs?.get(question?.id)}" th:id="'form-input-'+${formInput.getId()}"
-                         th:with="formInputIndex=(${status.index}), response=(${responses.get(formInput.id)}),questionAssignee=(${questionAssignees.get(question.getId())})">
-                        <div th:replace="question-type/types :: ${formInput.formInputTypeTitle}" />
-                        <div th:replace="'finance/'+${financeView} :: ${formInput.formInputTypeTitle}" />
-                        <div th:replace="finance/finance-summary :: ${formInput.formInputTypeTitle}" />
+                <th:block th:unless="${financeView != null}">
+                    <div class="warning-alert">
+                        This competition has already closed, you are no longer able to submit your application.
                     </div>
+                </th:block>
+                <div th:each="question : ${sectionQuestions.get(currentSection.id)}" th:remove="tag">
+                    <th:block th:if="${financeView != null}">
+                        <div class="question" th:each="formInput, status : ${questionFormInputs?.get(question?.id)}" th:id="'form-input-'+${formInput.getId()}"
+                             th:with="formInputIndex=(${status.index}), response=(${responses.get(formInput.id)}),questionAssignee=(${questionAssignees.get(question.getId())})">
+                            <div th:replace="question-type/types :: ${formInput.formInputTypeTitle}" />
+                            <div th:replace="'finance/'+${financeView} :: ${formInput.formInputTypeTitle}" />
+                            <div th:replace="finance/finance-summary :: ${formInput.formInputTypeTitle}" />
+                        </div>
+                    </th:block>
                 </div>
             </div>
 

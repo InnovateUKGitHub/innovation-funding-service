@@ -105,7 +105,7 @@ Bank details submission
 Bank details for non-lead partner
     [Documentation]    INFUND-3010, INFUND-2621
     [Tags]    Experian    HappyPath    Pending
-    # Pending due to INFUND-5287
+    # Todo Pending due to INFUND-5287
     # Please note that the bank details for these Experian tests are dummy data specifically chosen to elicit certain responses from the stub.
     Given guest user log-in    pete.tom@egg.com    Passw0rd
     And the user clicks the button/link    link=00000001: best riffs
@@ -140,8 +140,6 @@ Bank details don't show for partner with no finance details
     When the user clicks the button/link    link=00000001: best riffs
     Then the user should not see the element    link=Bank details
     And the user should see the text in the page    Bank details (not required)
-
-
 
 
 *** Keywords ***
