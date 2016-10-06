@@ -1,10 +1,13 @@
 package com.worth.ifs.project.sections;
 
 import com.worth.ifs.project.resource.ProjectTeamStatusResource;
-import com.worth.ifs.user.resource.OrganisationResource;
+import com.worth.ifs.project.status.resource.ProjectStatusResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import static com.worth.ifs.project.sections.SectionAccess.ACCESSIBLE;
+import static com.worth.ifs.project.sections.SectionAccess.NOT_ACCESSIBLE;
 
 /**
  * This is a helper class for determining whether or not a given Project Setup section is available to access
@@ -15,16 +18,20 @@ public class ProjectSetupSectionInternalUser {
 
     private ProjectSetupProgressChecker projectSetupProgressChecker;
 
-    public ProjectSetupSectionInternalUser(ProjectTeamStatusResource projectTeamStatus) {
-        this.projectSetupProgressChecker = new ProjectSetupProgressChecker(projectTeamStatus);
+    public ProjectSetupSectionInternalUser(ProjectStatusResource projectStatusResource) {
+        this.projectSetupProgressChecker = new ProjectSetupProgressChecker(projectStatusResource);
+    }
+
+    public ProjectSetupSectionInternalUser(ProjectTeamStatusResource projectTeamStatusResource) {
+        this.projectSetupProgressChecker = new ProjectSetupProgressChecker(projectTeamStatusResource);
     }
 
     public SectionAccess canAccessCompaniesHouseSection(UserResource userResource) {
-        return SectionAccess.NOT_ACCESSIBLE;
+        return NOT_ACCESSIBLE;
     }
 
     public SectionAccess canAccessProjectDetailsSection(UserResource userResource) {
-        return SectionAccess.NOT_ACCESSIBLE;
+        return NOT_ACCESSIBLE;
     }
 
     public SectionAccess canAccessMonitoringOfficerSection(UserResource userResource) {
@@ -32,23 +39,23 @@ public class ProjectSetupSectionInternalUser {
             return fail("Unable to access Monitoring Officer section until Project Details are submitted");
         }
 
-        return SectionAccess.ACCESSIBLE;
+        return ACCESSIBLE;
     }
 
-    public SectionAccess canAccessBankDetailsSection(OrganisationResource organisation) {
-        return SectionAccess.NOT_ACCESSIBLE;
+    public SectionAccess canAccessBankDetailsSection(UserResource userResource) {
+        return NOT_ACCESSIBLE;
     }
 
-    public SectionAccess canAccessFinanceChecksSection(OrganisationResource organisation) {
-        return SectionAccess.NOT_ACCESSIBLE;
+    public SectionAccess canAccessFinanceChecksSection(UserResource userResource) {
+        return NOT_ACCESSIBLE;
     }
 
-    public SectionAccess canAccessSpendProfileSection(OrganisationResource organisation) {
-        return SectionAccess.NOT_ACCESSIBLE;
+    public SectionAccess canAccessSpendProfileSection(UserResource userResource) {
+        return NOT_ACCESSIBLE;
     }
 
-    public SectionAccess canAccessOtherDocumentsSection(OrganisationResource organisation) {
-        return SectionAccess.NOT_ACCESSIBLE;
+    public SectionAccess canAccessOtherDocumentsSection(UserResource userResource) {
+        return NOT_ACCESSIBLE;
     }
 
     public boolean isProjectDetailsSubmitted() {
@@ -57,19 +64,6 @@ public class ProjectSetupSectionInternalUser {
 
     private SectionAccess fail(String message) {
         LOG.info(message);
-        return SectionAccess.NOT_ACCESSIBLE;
-    }
-
-    private boolean isCompaniesHouseSectionIsUnnecessaryOrComplete(OrganisationResource organisation, String failureMessage) {
-        if (!projectSetupProgressChecker.isCompaniesHouseSectionRequired(organisation)) {
-            return true;
-        }
-
-        if (projectSetupProgressChecker.isCompaniesHouseDetailsComplete(organisation)) {
-            return true;
-        }
-
-        LOG.info(failureMessage);
-        return false;
+        return NOT_ACCESSIBLE;
     }
 }

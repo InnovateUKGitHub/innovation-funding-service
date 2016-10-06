@@ -1,11 +1,11 @@
 package com.worth.ifs.project;
 
-import com.worth.ifs.project.sections.ProjectSetupSectionInternalUser;
-import com.worth.ifs.project.sections.SectionAccess;
 import com.worth.ifs.commons.error.exception.ForbiddenActionException;
 import com.worth.ifs.commons.security.PermissionRule;
 import com.worth.ifs.commons.security.PermissionRules;
 import com.worth.ifs.project.resource.ProjectTeamStatusResource;
+import com.worth.ifs.project.sections.ProjectSetupSectionInternalUser;
+import com.worth.ifs.project.sections.SectionAccess;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.resource.UserRoleType;
 import org.apache.commons.logging.Log;
