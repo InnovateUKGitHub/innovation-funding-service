@@ -41,7 +41,6 @@ public class ProjectFinanceServiceImplTest {
         ServiceResult<Void> result = service.saveSpendProfile(projectId, organisationId, table);
 
         assertTrue(result.isSuccess());
-
     }
 
     @Test
@@ -58,7 +57,6 @@ public class ProjectFinanceServiceImplTest {
         assertTrue(result.isSuccess());
 
     }
-
 
     @Test
     public void approveOrRejectSpendProfile() {

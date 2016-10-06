@@ -197,22 +197,28 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
     @Test
     public void approveSpendProfile() {
         Long projectId = 49543L;
-        setWhenSpendProfileRepositoryMock(projectId);
+        List<SpendProfile> spendProfileList = getSpendProfilesAndSetWhenSpendProfileRepositoryMock(projectId);
 
         ServiceResult<Void> result = service.approveOrRejectSpendProfile(projectId, ApprovalType.APPROVED);
 
         assertTrue(result.isSuccess());
+        spendProfileList.forEach(spendProfile ->
+                assertEquals(ApprovalType.APPROVED, spendProfile.getApproval())
+        );
         verify(spendProfileRepositoryMock).save(anyCollection());
     }
 
     @Test
     public void rejectSpendProfile() {
         Long projectId = 4234L;
-        setWhenSpendProfileRepositoryMock(projectId);
+        List<SpendProfile> spendProfileList = getSpendProfilesAndSetWhenSpendProfileRepositoryMock(projectId);
 
         ServiceResult<Void> resultNew = service.approveOrRejectSpendProfile(projectId, ApprovalType.REJECTED);
 
         assertTrue(resultNew.isSuccess());
+        spendProfileList.forEach(spendProfile ->
+            assertEquals(ApprovalType.REJECTED, spendProfile.getApproval())
+        );
         verify(spendProfileRepositoryMock).save(anyCollection());
     }
 
@@ -670,9 +676,11 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         }
     }
 
-    private void setWhenSpendProfileRepositoryMock(Long projectId) {
+    private List<SpendProfile> getSpendProfilesAndSetWhenSpendProfileRepositoryMock(Long projectId) {
         List<SpendProfile> spendProfileList = newSpendProfile().withApproval(ApprovalType.UNSET, ApprovalType.REJECTED).build(2);
         when(spendProfileRepositoryMock.findByProjectId(projectId)).thenReturn(spendProfileList);
+
+        return spendProfileList;
     }
 
     @Override
