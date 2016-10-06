@@ -37,7 +37,6 @@ public class ProjectFinanceController {
         return projectFinanceService.approveOrRejectSpendProfile(projectId, approvalType).toPostResponse();
     }
 
-    //projectFinanceRestURL + "/" + projectId + "/spend-profile/approval
     @RequestMapping(value = "/{projectId}/spend-profile/approval", method = GET)
     public RestResult<ApprovalType> getSpendProfileStatusByProjectId(@PathVariable("projectId") final Long projectId) {
         return projectFinanceService.getSpendProfileStatusByProjectId(projectId).toGetResponse();
