@@ -7,6 +7,7 @@ Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
+Resource          ../../../resources/keywords/EMAIL_KEYWORDS.robot
 
 *** Test Cases ***
 Logged in user can create a new application

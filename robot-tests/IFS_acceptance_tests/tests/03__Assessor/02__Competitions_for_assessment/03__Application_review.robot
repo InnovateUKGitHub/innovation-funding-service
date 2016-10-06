@@ -180,7 +180,7 @@ Finance overview
 
 Validation check in the Reject application modal
     [Documentation]    INFUND-3540
-    [Tags]    Failing
+    [Tags]
     Given the user navigates to the page    ${Assessment_overview_9}
     And the user clicks the button/link    jQuery=.summary:contains("Unable to assess this application")
     And the user clicks the button/link    link=Reject this application

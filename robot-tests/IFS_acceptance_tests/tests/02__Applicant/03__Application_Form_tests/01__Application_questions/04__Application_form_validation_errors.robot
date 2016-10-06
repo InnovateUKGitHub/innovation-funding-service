@@ -66,11 +66,10 @@ Year field client side
     [Tags]    HappyPath
     [Setup]    Run keywords    the user enters text to a text field    id=application_details-title    Robot test application
     ...    AND    the user enters text to a text field    id=application_details-duration    15
-    #    The following steps are Pending due to INFUND-5283
-    #    When the applicant inserts an invalid date
-    #    Then the user should see an error    Please enter a future date
-    #    When the user enters text to a text field    id=application_details-startdate_year    ${EMPTY}
-    #    Then the user should see an error    Please enter a future date
+    When the applicant inserts an invalid date
+    Then the user should see an error    Please enter a future date
+    When the user enters text to a text field    id=application_details-startdate_year    ${EMPTY}
+    Then the user should see an error    Please enter a future date
     When the applicant inserts a valid date
     Then the applicant should not see the validation error any more
 
@@ -81,13 +80,12 @@ Duration field client side
     [Tags]
     [Setup]    Run keywords    the user enters text to a text field    id=application_details-title    Robot test application
     ...    AND    the applicant inserts a valid date
-    #    The following steps are Pending due to INFUND-5283
-    #    When the user enters text to a text field    id=application_details-duration    0
-    #    Then the user should see an error    Your project should last between 1 and 36 months
-    #    When the user enters text to a text field    id=application_details-duration    -1
-    #    Then the user should see an error    Your project should last between 1 and 36 months
-    #    When the user enters text to a text field    id=application_details-duration    ${EMPTY}
-    #    Then the user should see an error    Please enter a valid value
+    When the user enters text to a text field    id=application_details-duration    0
+    Then the user should see an error    Your project should last between 1 and 36 months
+    When the user enters text to a text field    id=application_details-duration    -1
+    Then the user should see an error    Your project should last between 1 and 36 months
+    When the user enters text to a text field    id=application_details-duration    ${EMPTY}
+    Then the user should see an error    Please enter a valid value
     And the user enters text to a text field    id=application_details-duration    15
     And the applicant should not see the validation error of the duration any more
 
@@ -127,10 +125,6 @@ Empty text area
 the applicant should not see the validation error any more
     Run Keyword And Ignore Error    Mouse Out    css=input
     Run Keyword And Ignore Error    Focus    jQuery=Button:contains("Mark as complete")
-    #Focus    css=.app-submit-btn
-    #run keyword and ignore error    mouse out    css=input
-    #Run Keyword And Ignore Error    mouse out    css=.editor
-    #Focus    css=.app-submit-btn
     sleep    300ms
     wait until element is not visible    css=.error-message
 
@@ -154,7 +148,6 @@ the applicant clears the text area of the "Project Summary"
     Clear Element Text    css=#form-input-11 .editor
     Press Key    css=#form-input-11 .editor    \\8
     Focus    css=.app-submit-btn
-    #Click Element    css=.fa-bold
     Sleep    300ms
 
 Applicant goes to the application details page of the Robot application
