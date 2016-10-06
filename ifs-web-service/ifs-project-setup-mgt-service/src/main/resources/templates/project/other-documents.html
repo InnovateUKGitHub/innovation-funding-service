@@ -38,8 +38,8 @@
         </th:block>
     </ul>
     <p>
-        <th:block th:text="${model.projectManagerName}"/><th:block th:unless="${#strings.isEmpty(model.projectManagerName)}"><br/></th:block>
-        <th:block th:text="${model.projectManagerEmail}"/><th:block th:unless="${#strings.isEmpty(model.projectManagerEmail)}"><br/></th:block>
+        <th:block th:text="${model.projectManagerName}"/><br th:unless="${#strings.isEmpty(model.projectManagerName)}" />
+        <a th:href="${'mailto:'+model.projectManagerEmail}" th:text="${model.projectManagerEmail}"/><br th:unless="${#strings.isEmpty(model.projectManagerEmail)}" />
         <th:block th:text="${model.projectManagerTelephone}"/>
     </p>
 
