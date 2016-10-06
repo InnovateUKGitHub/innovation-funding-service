@@ -5,6 +5,7 @@ import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.bankdetails.resource.BankDetailsResource;
+import com.worth.ifs.bankdetails.resource.ProjectBankDetailsStatusSummary;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestErrorResponse;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -31,6 +32,7 @@ import java.util.function.Function;
 
 import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static com.worth.ifs.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
+import static com.worth.ifs.bankdetails.builder.ProjectBankDetailsStatusSummaryBuilder.newProjectBankDetailsStatusSummary;
 import static com.worth.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE;
 import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED;
 import static com.worth.ifs.commons.error.Error.fieldError;
@@ -76,15 +78,6 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
                 .withEmail("abc.xyz@gmail.com")
                 .withPhoneNumber("078323455")
                 .build();
-
-//          Fix in task INFUND-4401 - refactor when the InviteResource is completed
-//        inviteResource = InviteResourceBuilder.newInviteResource()
-//                .withId(1L)
-//                .withName("Ben Dishman")
-//                .withEmail("abc.xyz@gmail.com")
-//                .withOrganisation(1L)
-//                .build();
-
     }
 
     @Before
@@ -149,24 +142,6 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
 
         verify(projectServiceMock).updateFinanceContact(123L, 456L, 789L);
     }
-
-//    @Test
-//    public void inviteFinanceContact() throws Exception {
-//
-//        Long projectId = 1L;
-//
-//
-//        when(projectServiceMock.inviteFinanceContact(projectId, inviteResource)).
-//                thenReturn(serviceSuccess());
-//
-//        mockMvc.perform(put("/project/{projectId}/invite-finance-contact", projectId)
-//                .contentType(APPLICATION_JSON)
-//                .content(toJson(inviteResource)))
-//                .andExpect(status().isOk());
-//
-//        verify(projectServiceMock).inviteFinanceContact(projectId, inviteResource);
-//
-//    }
 
     @Test
     public void getProjectUsers() throws Exception {
@@ -584,6 +559,17 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
     }
 
     @Test
+    public void acceptOrRejectOtherDocuments() throws Exception {
+        when(projectServiceMock.acceptOrRejectOtherDocuments(1L, true)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/1/partner/documents/approved/{approved}", true).
+                contentType(APPLICATION_JSON).accept(APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(projectServiceMock).acceptOrRejectOtherDocuments(1L, true);
+    }
+
+    @Test
     public void isOtherDocumentsSubmitAllowed() throws Exception {
 
         UserResource userResource = newUserResource()
@@ -600,5 +586,18 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
                 .andExpect(status().isOk())
                 .andExpect(content().string("true"))
                 .andReturn();
+    }
+
+    @Test
+    public void testGetBankDetailsStatusSummaryForProject() throws Exception {
+        final Long projectId = 123L;
+
+        ProjectBankDetailsStatusSummary projectBankDetailsStatusSummary = newProjectBankDetailsStatusSummary().build();
+
+        when(bankDetailsServiceMock.getProjectBankDetailsStatusSummary(projectId)).thenReturn(serviceSuccess(projectBankDetailsStatusSummary));
+
+        mockMvc.perform(get("/project/{projectId}/bank-details/status-summary", projectId)).
+                andExpect(status().isOk()).
+                andExpect(content().json(toJson(projectBankDetailsStatusSummary)));
     }
 }

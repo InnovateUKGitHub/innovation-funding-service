@@ -13,41 +13,39 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'/prototypes/1247-assessor-doi'})" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'/prototypes/1247-assessor-doi'})" th:unless="${param.version != null and param.version[0] == 'v2'}" th:remove="tag" />
+
+    <th:block th:if="${param.version != null and param.version[0] == 'v2'}" th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'/prototypes/865-assessor-dashboard-invites?accepted=yes&#38;user=assessor&#38;version=v2'})"/>
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
 	<div class="hgroup no-margin-top" style="padding-top: 20px; margin-bottom: 30px">
         <h1 class="heading-large no-margin">Terms of contract</h1>
     </div>
-	
-	<p>Please read through all of the terms of service before agreeing. You will be unable to accept these terms unless you have reached the bottom of the details.</p>
 
-    <div class="boxed" style="max-height: 500px" id="terms-container">
+	<p>Please read through all of the terms of service before agreeing.</p>
 
-		<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-terms" th:remove="tag" />
-
-    </div>
+	<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-terms" th:remove="tag" />
 
 	<p class="form-hint extra-margin">
-		You can access these terms of contract at any time from your profile. <a href="#">Download terms of contract</a>
+		You can access these terms of contract at any time from your profile. <a href="#">Download terms of contract</a>.
 	</p>
-	
+
 	<form>
 
 		<fieldset>
-			
+
 			<legend class="visuallyhidden">Confirm terms and conditions</legend>
 
 			<div class="form-block">
 				<label class="block-label" for="confirm-assessor-terms">
-					<input id="confirm-assessor-terms" type="checkbox" value="" /> 
+					<input id="confirm-assessor-terms" type="checkbox" value="" />
 					I agree to the terms of contract for becoming an assessor
 				</label>
 			</div>
-			
+
 			<div class="form-block extra-margin">
-				<a class="button button-large disabled" href="/prototypes/865-assessor-dashboard-invites?accepted=yes" id="continue">Continue</a>
+				<a class="button button-large disabled" th:href="${(param.version != null and param.version[0] == 'v2' ? '/prototypes/865-assessor-dashboard-invites?accepted=yes&#38;user=assessor&#38;version=v2':'/prototypes/865-assessor-dashboard-invites?accepted=yes')}" id="continue">Save and continue</a>
 			</div>
 		</fieldset>
 
@@ -67,7 +65,7 @@
 <script src="/js/ifs_prototype/jquery.waypoints.min.js" type="text/javascript"></script>
 <script type="text/javascript">
 	// <![CDATA[
-	jQuery('.disabled').on('click',function(e){ 
+	jQuery('.disabled').on('click',function(e){
         e.preventDefault();
     });
 
@@ -75,7 +73,7 @@
     jQuery('#end-of-terms').waypoint(function() {
         jQuery('#continue').removeClass('disabled');
     }, { context: '#terms-container' });
-	
+
 
 	$('#continue').click(function (e) {
 	  e.preventDefault();

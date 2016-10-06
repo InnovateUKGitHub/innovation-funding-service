@@ -4,6 +4,7 @@ import com.worth.ifs.bankdetails.resource.BankDetailsResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.project.resource.MonitoringOfficerResource;
 import com.worth.ifs.project.resource.ProjectResource;
+import com.worth.ifs.project.sections.SectionAccess;
 
 import java.util.Optional;
 
@@ -22,10 +23,25 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
     private boolean grantOfferLetterSubmitted;
     private String monitoringOfficerName;
     private BankDetailsResource bankDetails;
-    private boolean isFunded;
     private Long organisationId;
+    private boolean leadPartner;
+    private SectionAccess companiesHouseSection;
+    private SectionAccess projectDetailsSection;
+    private SectionAccess monitoringOfficerSection;
+    private SectionAccess bankDetailsSection;
+    private SectionAccess financeChecksSection;
+    private SectionAccess spendProfileSection;
+    private SectionAccess otherDocumentsSection;
+    private SectionAccess grantOfferLetterSection;
 
-    public ProjectSetupStatusViewModel(ProjectResource project, CompetitionResource competition, Optional<MonitoringOfficerResource> monitoringOfficerResource, Optional<BankDetailsResource> bankDetails, boolean isFunded, Long organisationId, boolean projectDetailsSubmitted, boolean grantOfferLetterSubmitted) {
+    public ProjectSetupStatusViewModel(ProjectResource project, CompetitionResource competition,
+                                       Optional<MonitoringOfficerResource> monitoringOfficerResource,
+                                       Optional<BankDetailsResource> bankDetails, Long organisationId,
+                                       boolean projectDetailsSubmitted, boolean leadPartner, boolean grantOfferLetterSubmitted,
+                                       SectionAccess companiesHouseSection, SectionAccess projectDetailsSection,
+                                       SectionAccess monitoringOfficerSection, SectionAccess bankDetailsSection,
+                                       SectionAccess financeChecksSection, SectionAccess spendProfileSection,
+                                       SectionAccess otherDocumentsSection, SectionAccess grantOfferLetterSection) {
         this.projectId = project.getId();
         this.projectName = project.getName();
         this.applicationId = project.getApplication();
@@ -35,9 +51,17 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
         this.monitoringOfficerAssigned = monitoringOfficerResource.isPresent();
         this.monitoringOfficerName = monitoringOfficerResource.map(mo -> mo.getFullName()).orElse("");
         this.bankDetails = bankDetails.orElse(null);
-        this.isFunded = isFunded;
         this.organisationId = organisationId;
         this.grantOfferLetterSubmitted = grantOfferLetterSubmitted;
+        this.leadPartner = leadPartner;
+        this.companiesHouseSection = companiesHouseSection;
+        this.projectDetailsSection = projectDetailsSection;
+        this.monitoringOfficerSection = monitoringOfficerSection;
+        this.bankDetailsSection = bankDetailsSection;
+        this.financeChecksSection = financeChecksSection;
+        this.spendProfileSection = spendProfileSection;
+        this.otherDocumentsSection = otherDocumentsSection;
+        this.grantOfferLetterSection = grantOfferLetterSection;
     }
 
     public Long getProjectId() {
@@ -76,15 +100,51 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
         return bankDetails;
     }
 
-    public boolean isFunded() {
-        return isFunded;
-    }
-
     public Long getOrganisationId() {
         return organisationId;
     }
 
     public boolean isGrantOfferLetterSubmitted() {
         return grantOfferLetterSubmitted;
+    }
+
+    public boolean isLeadPartner() {
+        return leadPartner;
+    }
+
+    public boolean isNonLeadPartner() {
+        return !isLeadPartner();
+    }
+
+    public SectionAccess getCompaniesHouseSection() {
+        return companiesHouseSection;
+    }
+
+    public SectionAccess getProjectDetailsSection() {
+        return projectDetailsSection;
+    }
+
+    public SectionAccess getMonitoringOfficerSection() {
+        return monitoringOfficerSection;
+    }
+
+    public SectionAccess getBankDetailsSection() {
+        return bankDetailsSection;
+    }
+
+    public SectionAccess getFinanceChecksSection() {
+        return financeChecksSection;
+    }
+
+    public SectionAccess getSpendProfileSection() {
+        return spendProfileSection;
+    }
+
+    public SectionAccess getOtherDocumentsSection() {
+        return otherDocumentsSection;
+    }
+
+    public SectionAccess getGrantOfferLetterSection() {
+        return grantOfferLetterSection;
     }
 }

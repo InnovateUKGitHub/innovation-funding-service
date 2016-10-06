@@ -80,6 +80,10 @@ public class ProjectResourceBuilder extends BaseBuilder<ProjectResource, Project
         return with (project -> project.setAdditionalContractFile(additionalContractFile));
     }
 
+    public ProjectResourceBuilder withOtherDocumentsApproved(Boolean otherDocumentsApproved) {
+        return with(project -> project.setOtherDocumentsApproved(otherDocumentsApproved));
+    }
+
     public ProjectResourceBuilder withProjectUsers(List<Long>... projectUsers) {
         return withArray((userList, project) -> project.setProjectUsers(userList), projectUsers);
     }

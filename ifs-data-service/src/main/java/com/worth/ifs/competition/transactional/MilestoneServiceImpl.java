@@ -42,12 +42,17 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
     private MilestoneMapper milestoneMapper;
 
     @Override
-    public ServiceResult<List<MilestoneResource>> getAllDatesByCompetitionId(Long id) {
+    public ServiceResult<List<MilestoneResource>> getAllMilestonesByCompetitionId(Long id) {
         return serviceSuccess ((List<MilestoneResource>) milestoneMapper.mapToResource(milestoneRepository.findAllByCompetitionId(id)));
     }
 
     @Override
-    public ServiceResult<Void> update(Long id, List<MilestoneResource> milestones) {
+    public ServiceResult<MilestoneResource> getMilestoneByTypeAndCompetitionId(MilestoneType type, Long id) {
+        return serviceSuccess(milestoneMapper.mapToResource(milestoneRepository.findByTypeAndCompetitionId(type, id)));
+    }
+
+    @Override
+    public ServiceResult<Void> updateMilestones(Long id, List<MilestoneResource> milestones) {
         
     	Competition competition = competitionRepository.findById(id);
     	
@@ -59,7 +64,14 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
             milestoneEntities.forEach(m -> milestoneRepository.save(m));
             return serviceSuccess();
         }
+
         return serviceFailure(messages.getErrors());
+    }
+
+    @Override
+    public ServiceResult<Void> updateMilestone(MilestoneResource milestoneResource) {
+        milestoneRepository.save(milestoneMapper.mapToDomain(milestoneResource));
+        return serviceSuccess();
     }
 
     @Override
@@ -77,7 +89,7 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
         ValidationMessages vm = new ValidationMessages();
 
         milestones.sort((c1, c2) -> c1.getType().compareTo(c2.getType()));
-        
+
         milestones.forEach(m -> {
         	if(m.getDate() == null) {
         		Error error = new Error("error.milestone.nulldate", HttpStatus.BAD_REQUEST);
@@ -98,7 +110,6 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
             		vm.addError(error);
         		}
         	}
-
         }
         return vm;
     }

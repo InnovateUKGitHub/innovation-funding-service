@@ -72,6 +72,20 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
     }
 
     @Test
+    public void testCompAdminsCanAcceptOrRejectDocuments() {
+
+        ProjectResource project = newProjectResource().build();
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.equals(compAdminUser())) {
+                assertTrue(rules.competitionAdminCanAcceptOrRejectOtherDocuments(project, user));
+            } else {
+                assertFalse(rules.competitionAdminCanAcceptOrRejectOtherDocuments(project, user));
+            }
+        });
+    }
+
+    @Test
     public void testProjectFinanceUsersCanViewProjects() {
 
         ProjectResource project = newProjectResource().build();

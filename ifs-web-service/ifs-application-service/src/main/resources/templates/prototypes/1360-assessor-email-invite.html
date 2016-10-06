@@ -92,7 +92,9 @@
 						
 						<p style="margin: 0 0 1em 0;">Assessment period: <b>21 August to 13 September 2016</b></p>
 
-						<p style="margin: 0 0 1em 0;"><a href="/prototypes/865-assessor-comp-invite">Please visit our new online Innovation funding service to respond to this request</a></p>
+						<p style="margin: 0 0 1em 0;">
+							<a th:href="${(param.version != null and param.version[0] == 'v2' ? '/prototypes/865-assessor-comp-invite?version=v2': '/prototypes/865-assessor-comp-invite')}">Please visit our new online Innovation funding service to respond to this request</a>
+						</p>
 
 						<p style="margin: 0 0 1em 0;">Yours sincerely,</p>
 

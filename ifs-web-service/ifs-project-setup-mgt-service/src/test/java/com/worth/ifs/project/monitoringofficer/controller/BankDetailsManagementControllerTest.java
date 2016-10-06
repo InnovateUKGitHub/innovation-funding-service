@@ -4,6 +4,7 @@ import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.address.resource.AddressTypeResource;
 import com.worth.ifs.bankdetails.controller.BankDetailsManagementController;
 import com.worth.ifs.bankdetails.resource.BankDetailsResource;
+import com.worth.ifs.bankdetails.resource.ProjectBankDetailsStatusSummary;
 import com.worth.ifs.bankdetails.viewmodel.BankDetailsReviewViewModel;
 import com.worth.ifs.bankdetails.viewmodel.ChangeBankDetailsViewModel;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
@@ -21,6 +22,7 @@ import java.util.Map;
 import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static com.worth.ifs.address.resource.OrganisationAddressType.BANK_DETAILS;
 import static com.worth.ifs.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
+import static com.worth.ifs.bankdetails.builder.ProjectBankDetailsStatusSummaryBuilder.newProjectBankDetailsStatusSummary;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
@@ -237,5 +239,14 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
         Map<String, Object> modelMap = result.getModelAndView().getModel();
         BankDetailsReviewViewModel model = (BankDetailsReviewViewModel) modelMap.get("model");
         assertEquals(model, updatedOrganisationDetailsViewModel);
+    }
+
+    @Test
+    public void testViewPartnerBankDetails() throws  Exception {
+        Long projectId = 123L;
+        final ProjectBankDetailsStatusSummary bankDetailsStatusSummary = newProjectBankDetailsStatusSummary().build();
+        when(bankDetailsService.getBankDetailsByProject(projectId)).thenReturn(bankDetailsStatusSummary);
+        MvcResult result = mockMvc.perform(get("/project/" + projectId + "/review-all-bank-details")).andExpect(status().isOk()).andExpect(view().name("project/bank-details-status")).andReturn();
+        assertEquals(bankDetailsStatusSummary, result.getModelAndView().getModel().get("model"));
     }
 }
