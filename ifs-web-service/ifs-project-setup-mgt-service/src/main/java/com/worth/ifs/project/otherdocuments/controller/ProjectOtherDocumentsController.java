@@ -1,6 +1,7 @@
 package com.worth.ifs.project.otherdocuments.controller;
 
 import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
+import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.project.ProjectService;
@@ -15,6 +16,7 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -49,11 +51,15 @@ public class ProjectOtherDocumentsController {
 
     @RequestMapping(method = POST)
     public String acceptOrRejectOtherDocuments(Model model, @ModelAttribute(FORM_ATTR) ProjectPartnerDocumentsForm form,
+                                               BindingResult bindingResult,
+                                               ValidationHandler validationhandler,
                                                @PathVariable("projectId") Long projectId,
                                                @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        projectService.acceptOrRejectOtherDocuments(projectId, form.isApproved());
-        return doViewOtherDocumentsPage(model, form, projectId, loggedInUser);
+        return validationhandler.performActionOrBindErrorsToField("approved",
+                () -> doViewOtherDocumentsPage(model, form, projectId, loggedInUser),
+                () -> doViewOtherDocumentsPage(model, form, projectId, loggedInUser),
+                () -> projectService.acceptOrRejectOtherDocuments(projectId, form.isApproved()));
     }
 
     @RequestMapping(value = "/collaboration-agreement", method = GET)
@@ -83,6 +89,7 @@ public class ProjectOtherDocumentsController {
 
         ProjectPartnerDocumentsViewModel viewModel = getOtherDocumentsViewModel(form, projectId, loggedInUser);
         model.addAttribute("model", viewModel);
+        model.addAttribute(FORM_ATTR, form);
         return "project/other-documents";
     }
 

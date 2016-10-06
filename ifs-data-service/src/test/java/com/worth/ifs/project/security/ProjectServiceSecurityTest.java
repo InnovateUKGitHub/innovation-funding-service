@@ -366,6 +366,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         assertAccessDenied(() -> classUnderTest.acceptOrRejectOtherDocuments(123L, true), () -> {
             verify(projectPermissionRules).competitionAdminCanAcceptOrRejectOtherDocuments(project, getLoggedInUser());
+            verify(projectPermissionRules).projectFinanceUserCanAcceptOrRejectOtherDocuments(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
         });
     }
