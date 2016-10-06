@@ -210,3 +210,39 @@ the user should get a local confirmation email
     Should Not Be Empty    ${MATCHES1}
     #    Delete All Emails
     close mailbox
+
+the user opens the remote mailbox and clicks the reset link
+    [Arguments]    ${receiver}
+    Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
+    #    ${LATEST} =    wait for email
+    ${WHICH EMAIL} =    wait for email    toemail=${receiver}    subject=Reset your password
+    ${HTML}=    get email body    ${WHICH EMAIL}
+    log    ${HTML}
+    ${LINK}=    Get Links From Email    ${WHICH EMAIL}
+    log    ${LINK}
+    ${VERIFY_EMAIL}=    Get From List    ${LINK}    1
+    log    ${VERIFY_EMAIL}
+    go to    ${VERIFY_EMAIL}
+    Capture Page Screenshot
+    Delete All Emails
+    close mailbox
+
+the user opens the mailbox and clicks the reset link
+    [Arguments]    ${receiver}
+    run keyword if    ${docker}==1    the user opens the local mailbox and clicks the reset link    ${receiver}
+    run keyword if    ${docker}!=1    the user opens the remote mailbox and clicks the reset link    ${receiver}
+
+the user opens the local mailbox and clicks the reset link
+    [Arguments]    ${receiver}
+    Open Mailbox    server=ifs-local-dev    port=9876    user=smtp    password=smtp    is_secure=False
+    ${WHICH EMAIL} =    wait for email    toemail=${receiver}    subject=Reset your password
+    ${HTML}=    get email body    ${WHICH EMAIL}
+    log    ${HTML}
+    ${LINK}=    Get Links From Email    ${WHICH EMAIL}
+    log    ${LINK}
+    ${VERIFY_EMAIL}=    Get From List    ${LINK}    1
+    log    ${VERIFY_EMAIL}
+    go to    ${VERIFY_EMAIL}
+    Capture Page Screenshot
+    Delete All Emails
+    close mailbox
