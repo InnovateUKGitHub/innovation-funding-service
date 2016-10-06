@@ -207,7 +207,7 @@ public class FinanceCheckControllerTest extends BaseControllerMockMVCTest<Financ
                 BigDecimal.ZERO,
                 BigDecimal.ZERO,
                 anySpendProfile.isPresent(),
-                expectedFinanceChecksApproved);
+                expectedFinanceChecksApproved, spendProfileGeneratedBy, spendProfileGeneratedDate);
 
         mockMvc.perform(get("/project/{projectId}/finance-check", projectResource.getId()))
                 .andExpect(status().isOk())

@@ -6,6 +6,7 @@ import com.worth.ifs.organisation.mapper.OrganisationMapper;
 import com.worth.ifs.project.finance.domain.SpendProfile;
 import com.worth.ifs.project.mapper.ProjectMapper;
 import com.worth.ifs.project.resource.SpendProfileResource;
+import com.worth.ifs.user.mapper.UserMapper;
 import org.mapstruct.Mapper;
 
 @Mapper(
@@ -14,7 +15,8 @@ import org.mapstruct.Mapper;
                 OrganisationMapper.class,
                 ProjectMapper.class,
                 CostCategoryTypeMapper.class,
-                CostGroupMapper.class
+                CostGroupMapper.class,
+                UserMapper.class
         }
 )
 public abstract class SpendProfileMapper extends BaseMapper<SpendProfile, SpendProfileResource, Long> {

@@ -13,6 +13,7 @@ import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.project.resource.SpendProfileTableResource;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.workflow.domain.ActivityState;
 import com.worth.ifs.workflow.resource.State;
 import org.junit.Assert;
@@ -39,6 +40,8 @@ import static com.worth.ifs.project.builder.ProjectBuilder.newProject;
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static com.worth.ifs.project.finance.domain.TimeUnit.MONTH;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
+import static com.worth.ifs.user.builder.UserBuilder.newUser;
+import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
 import static com.worth.ifs.util.MapFunctions.asMap;
 import static java.util.Arrays.asList;
@@ -65,6 +68,9 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
                 withDuration(3L).
                 withPartnerOrganisations(newPartnerOrganisation().build(2)).
                 build();
+
+        UserResource loggedInUser = newUserResource().build();
+        setLoggedInUser(loggedInUser);
 
         Organisation organisation1 = newOrganisation().build();
         Organisation organisation2 = newOrganisation().build();
@@ -147,8 +153,13 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
                 new Cost("67").withCategory(type1Cat2).withTimePeriod(1, MONTH, 1, MONTH),
                 new Cost("67").withCategory(type1Cat2).withTimePeriod(2, MONTH, 1, MONTH));
 
+        User generatedBy = newUser().build();
+        when(userRepositoryMock.findOne(loggedInUser.getId())).thenReturn(generatedBy);
+
+        Calendar generatedDate = Calendar.getInstance();
+
         SpendProfile expectedOrganisation1Profile = new SpendProfile(organisation1, project, costCategoryType1,
-                expectedOrganisation1EligibleCosts, expectedOrganisation1SpendProfileFigures, false);
+                expectedOrganisation1EligibleCosts, expectedOrganisation1SpendProfileFigures, generatedBy, generatedDate, false);
 
         List<Cost> expectedOrganisation2EligibleCosts = singletonList(
                 new Cost("301").withCategory(type2Cat1));
@@ -159,7 +170,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
                 new Cost("100").withCategory(type2Cat1).withTimePeriod(2, MONTH, 1, MONTH));
 
         SpendProfile expectedOrganisation2Profile = new SpendProfile(organisation2, project, costCategoryType2,
-                expectedOrganisation2EligibleCosts, expectedOrganisation2SpendProfileFigures, false);
+                expectedOrganisation2EligibleCosts, expectedOrganisation2SpendProfileFigures, generatedBy, generatedDate, false);
 
         when(spendProfileRepositoryMock.save(spendProfileExpectations(expectedOrganisation1Profile))).thenReturn(null);
         when(spendProfileRepositoryMock.save(spendProfileExpectations(expectedOrganisation2Profile))).thenReturn(null);
@@ -182,6 +193,9 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
                 withDuration(3L).
                 withPartnerOrganisations(newPartnerOrganisation().build(2)).
                 build();
+
+        UserResource loggedInUser = newUserResource().build();
+        setLoggedInUser(loggedInUser);
 
         Organisation organisation1 = newOrganisation().build();
         Organisation organisation2 = newOrganisation().build();
@@ -252,41 +266,12 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
                         singletonList(new SpendProfileCostCategorySummary(type2Cat1Resource, new BigDecimal("300.66"), project.getDurationInMonths())),
                         costCategoryType2Resource)));
 
-        List<Cost> expectedOrganisation1EligibleCosts = asList(
-                new Cost("100").withCategory(type1Cat1),
-                new Cost("200").withCategory(type1Cat2));
-
-        List<Cost> expectedOrganisation1SpendProfileFigures = asList(
-                new Cost("34").withCategory(type1Cat1).withTimePeriod(0, MONTH, 1, MONTH),
-                new Cost("33").withCategory(type1Cat1).withTimePeriod(1, MONTH, 1, MONTH),
-                new Cost("33").withCategory(type1Cat1).withTimePeriod(2, MONTH, 1, MONTH),
-                new Cost("66").withCategory(type1Cat2).withTimePeriod(0, MONTH, 1, MONTH),
-                new Cost("67").withCategory(type1Cat2).withTimePeriod(1, MONTH, 1, MONTH),
-                new Cost("67").withCategory(type1Cat2).withTimePeriod(2, MONTH, 1, MONTH));
-
-        SpendProfile expectedOrganisation1Profile = new SpendProfile(organisation1, project, costCategoryType1,
-                expectedOrganisation1EligibleCosts, expectedOrganisation1SpendProfileFigures, false);
-
-        List<Cost> expectedOrganisation2EligibleCosts = singletonList(
-                new Cost("301").withCategory(type2Cat1));
-
-        List<Cost> expectedOrganisation2SpendProfileFigures = asList(
-                new Cost("101").withCategory(type2Cat1).withTimePeriod(0, MONTH, 1, MONTH),
-                new Cost("100").withCategory(type2Cat1).withTimePeriod(1, MONTH, 1, MONTH),
-                new Cost("100").withCategory(type2Cat1).withTimePeriod(2, MONTH, 1, MONTH));
-
-        SpendProfile expectedOrganisation2Profile = new SpendProfile(organisation2, project, costCategoryType2,
-                expectedOrganisation2EligibleCosts, expectedOrganisation2SpendProfileFigures, false);
-
-        when(spendProfileRepositoryMock.save(spendProfileExpectations(expectedOrganisation1Profile))).thenReturn(null);
-        when(spendProfileRepositoryMock.save(spendProfileExpectations(expectedOrganisation2Profile))).thenReturn(null);
-
         ServiceResult<Void> generateResult = service.generateSpendProfile(projectId);
         assertTrue(generateResult.isFailure());
         assertTrue(generateResult.getFailure().is(SPEND_PROFILE_CANNOT_BE_GENERATED_UNTIL_ALL_FINANCE_CHECKS_APPROVED));
 
-        verify(spendProfileRepositoryMock, never()).save(spendProfileExpectations(expectedOrganisation1Profile));
-        verify(spendProfileRepositoryMock, never()).save(spendProfileExpectations(expectedOrganisation2Profile));
+        verify(spendProfileRepositoryMock, never()).save(isA(SpendProfile.class));
+        verify(spendProfileRepositoryMock, never()).save(isA(SpendProfile.class));
         verifyNoMoreInteractions(spendProfileRepositoryMock);
     }
 
@@ -445,7 +430,10 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         List<Cost> spendProfileFigures = buildCostsForCategories(Arrays.asList("Labour", "Materials", "Other costs"), 3);
 
-        SpendProfile spendProfileInDB = new SpendProfile(null, null, null, Collections.emptyList(), spendProfileFigures, false);
+        User generatedBy = newUser().build();
+        Calendar generatedDate = Calendar.getInstance();
+
+        SpendProfile spendProfileInDB = new SpendProfile(null, null, null, Collections.emptyList(), spendProfileFigures, generatedBy, generatedDate, false);
 
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(spendProfileInDB);
 
@@ -563,7 +551,10 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         List<Cost> spendProfileFigures = buildCostsForCategoriesWithGivenValues(spendProfileCostsMap, 3, costCategoryType.getCostCategoryGroup());
 
-        SpendProfile spendProfileInDB = new SpendProfile(null, projectInDB, costCategoryType, eligibleCosts, spendProfileFigures, true);
+        User generatedBy = newUser().build();
+        Calendar generatedDate = Calendar.getInstance();
+
+        SpendProfile spendProfileInDB = new SpendProfile(null, projectInDB, costCategoryType, eligibleCosts, spendProfileFigures, generatedBy, generatedDate, true);
 
         return spendProfileInDB;
 
@@ -703,6 +694,9 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
             CostGroup expectedSpendFigures = expectedSpendProfile.getSpendProfileFigures();
             CostGroup actualSpendFigures = spendProfile.getSpendProfileFigures();
             assertCostGroupsEqual(expectedSpendFigures, actualSpendFigures);
+
+            assertEquals(expectedSpendProfile.getGeneratedBy(), spendProfile.getGeneratedBy());
+            assertTrue(spendProfile.getGeneratedDate().getTimeInMillis() - expectedSpendProfile.getGeneratedDate().getTimeInMillis() < 100);
         });
     }
 

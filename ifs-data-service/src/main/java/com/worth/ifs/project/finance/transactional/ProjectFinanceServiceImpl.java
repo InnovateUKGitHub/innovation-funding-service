@@ -21,6 +21,8 @@ import com.worth.ifs.project.resource.SpendProfileTableResource;
 import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -69,6 +71,9 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
     @Autowired
     private FinanceCheckProcessRepository financeCheckProcessRepository;
+
+    @Autowired
+    private UserMapper userMapper;
 
 
     @Autowired
@@ -155,8 +160,11 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     public ServiceResult<SpendProfileResource> getSpendProfile(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
         return getSpendProfileEntity(projectOrganisationCompositeId.getProjectId(), projectOrganisationCompositeId.getOrganisationId())
                 .andOnSuccessReturn(profile -> {
+
             SpendProfileResource resource = new SpendProfileResource();
             resource.setId(profile.getId());
+            resource.setGeneratedBy(userMapper.mapToResource(profile.getGeneratedBy()));
+            resource.setGeneratedDate(profile.getGeneratedDate());
             return resource;
         });
     }
@@ -330,9 +338,13 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
     private ServiceResult<Void> generateSpendProfileForPartnerOrganisations(Project project, List<Long> organisationIds) {
 
-        List<ServiceResult<Void>> generationResults = simpleMap(organisationIds, organisationId -> spendProfileCostCategorySummaryStrategy.getCostCategorySummaries(project.getId(), organisationId).
-                andOnSuccess( spendProfileCostCategorySummaries ->
-                        generateSpendProfileForOrganisation(project.getId(), organisationId, spendProfileCostCategorySummaries )));
+        Calendar now = Calendar.getInstance();
+
+        List<ServiceResult<Void>> generationResults = simpleMap(organisationIds, organisationId ->
+                getCurrentlyLoggedInUser().andOnSuccess(user ->
+                spendProfileCostCategorySummaryStrategy.getCostCategorySummaries(project.getId(), organisationId).
+                andOnSuccess(spendProfileCostCategorySummaries ->
+                        generateSpendProfileForOrganisation(project.getId(), organisationId, spendProfileCostCategorySummaries, user, now))));
 
         return processAnyFailuresOrSucceed(generationResults);
     }
@@ -340,19 +352,22 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     private ServiceResult<Void> generateSpendProfileForOrganisation(
             Long projectId,
             Long organisationId,
-            SpendProfileCostCategorySummaries spendProfileCostCategorySummaries ) {
+            SpendProfileCostCategorySummaries spendProfileCostCategorySummaries,
+            User generatedBy,
+            Calendar generatedDate) {
 
         return find(project(projectId), organisation(organisationId)).andOnSuccess(
-                (project, organisation) -> generateSpendProfileForOrganisation(spendProfileCostCategorySummaries , project, organisation));
+                (project, organisation) -> generateSpendProfileForOrganisation(spendProfileCostCategorySummaries , project, organisation, generatedBy, generatedDate));
     }
 
-    private ServiceResult<Void> generateSpendProfileForOrganisation(SpendProfileCostCategorySummaries spendProfileCostCategorySummaries, Project project, Organisation organisation) {
-            List<Cost> eligibleCosts = generateEligibleCosts(spendProfileCostCategorySummaries);
-            List<Cost> spendProfileCosts = generateSpendProfileFigures(spendProfileCostCategorySummaries, project);
-            CostCategoryType costCategoryType = costCategoryTypeRepository.findOne(spendProfileCostCategorySummaries.getCostCategoryType().getId());
-            SpendProfile spendProfile = new SpendProfile(organisation, project,  costCategoryType, eligibleCosts, spendProfileCosts, false);
-            spendProfileRepository.save(spendProfile);
-            return serviceSuccess();
+    private ServiceResult<Void> generateSpendProfileForOrganisation(SpendProfileCostCategorySummaries spendProfileCostCategorySummaries, Project project, Organisation organisation, User generatedBy, Calendar generatedDate) {
+        List<Cost> eligibleCosts = generateEligibleCosts(spendProfileCostCategorySummaries);
+        List<Cost> spendProfileCosts = generateSpendProfileFigures(spendProfileCostCategorySummaries, project);
+        CostCategoryType costCategoryType = costCategoryTypeRepository.findOne(spendProfileCostCategorySummaries.getCostCategoryType().getId());
+
+        SpendProfile spendProfile = new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileCosts, generatedBy, generatedDate, false);
+        spendProfileRepository.save(spendProfile);
+        return serviceSuccess();
     }
 
     private List<Cost> generateSpendProfileFigures(SpendProfileCostCategorySummaries summaryPerCategory, Project project) {

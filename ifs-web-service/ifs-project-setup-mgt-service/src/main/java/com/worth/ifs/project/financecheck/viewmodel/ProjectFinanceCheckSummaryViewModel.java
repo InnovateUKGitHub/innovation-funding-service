@@ -122,12 +122,15 @@ public class ProjectFinanceCheckSummaryViewModel {
     private BigDecimal totalPercentageGrant;
     private boolean spendProfilesGenerated;
     private boolean financeChecksAllApproved;
+    private String spendProfileGeneratedBy;
+    private LocalDate spendProfileGeneratedDate;
 
     public ProjectFinanceCheckSummaryViewModel(
             Long projectId, CompetitionSummaryResource competitionSummary,
             List<FinanceCheckOrganisationRow> partnerOrganisationDetails,
             LocalDate projectStartDate, int durationInMonths, BigDecimal totalProjectCost, BigDecimal grantAppliedFor,
-            BigDecimal otherPublicSectorFunding, BigDecimal totalPercentageGrant, boolean spendProfilesGenerated, boolean financeChecksAllApproved) {
+            BigDecimal otherPublicSectorFunding, BigDecimal totalPercentageGrant, boolean spendProfilesGenerated,
+            boolean financeChecksAllApproved, String spendProfileGeneratedBy, LocalDate spendProfileGeneratedDate) {
 
         this.projectId = projectId;
         this.competitionSummary = competitionSummary;
@@ -140,6 +143,8 @@ public class ProjectFinanceCheckSummaryViewModel {
         this.totalPercentageGrant = totalPercentageGrant;
         this.spendProfilesGenerated = spendProfilesGenerated;
         this.financeChecksAllApproved = financeChecksAllApproved;
+        this.spendProfileGeneratedBy = spendProfileGeneratedBy;
+        this.spendProfileGeneratedDate = spendProfileGeneratedDate;
     }
 
     public Long getProjectId() {
@@ -188,6 +193,14 @@ public class ProjectFinanceCheckSummaryViewModel {
 
     public boolean isShowSpendProfilesGeneratedMessage() {
         return spendProfilesGenerated;
+    }
+
+    public String getSpendProfileGeneratedBy() {
+        return spendProfileGeneratedBy;
+    }
+
+    public LocalDate getSpendProfileGeneratedDate() {
+        return spendProfileGeneratedDate;
     }
 
     @Override

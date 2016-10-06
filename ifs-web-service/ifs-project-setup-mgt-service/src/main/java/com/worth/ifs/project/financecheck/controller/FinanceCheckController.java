@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -257,7 +258,9 @@ public class FinanceCheckController {
                 totalFundingSought,
                 totalOtherFunding,
                 calculateGrantPercentage(projectTotal, totalFundingSought),
-                anySpendProfile.isPresent(), financeChecksAllApproved);
+                anySpendProfile.isPresent(), financeChecksAllApproved,
+                anySpendProfile.map(p -> p.getGeneratedBy().getName()).orElse(null),
+                anySpendProfile.map(p -> LocalDate.from(p.getGeneratedDate().toInstant().atOffset(ZoneOffset.UTC))).orElse(null));
     }
 
     private BigDecimal calculateTotalForAllOrganisations(List<ApplicationFinanceResource> applicationFinanceResourceList, Function<ApplicationFinanceResource, BigDecimal> keyExtractor) {
