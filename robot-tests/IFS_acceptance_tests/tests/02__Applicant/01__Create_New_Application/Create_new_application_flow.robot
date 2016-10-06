@@ -17,7 +17,7 @@ Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
-Resource          ../../resources/keywords/EMAIL_KEYWORDS.robot
+Resource          ../../../resources/keywords/EMAIL_KEYWORDS.robot
 
 *** Variables ***
 ${APPLICATION_DETAILS_APPLICATION8}    ${SERVER}/application/8/form/question/9
