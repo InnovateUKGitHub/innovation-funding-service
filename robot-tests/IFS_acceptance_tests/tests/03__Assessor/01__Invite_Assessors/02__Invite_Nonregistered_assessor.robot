@@ -56,4 +56,4 @@ Non-registered assessor: Reject invitation
 the assessor fills in all fields
     Select From List By Index    id=rejectReason    3
     The user should not see the text in the page    This field cannot be left blank
-    Input Text    id=rejectComment    Unable to assess this application.
+    The user enters text to a text field    id=rejectComment    Unable to assess this application.
