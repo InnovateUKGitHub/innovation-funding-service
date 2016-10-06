@@ -14,6 +14,7 @@ import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.project.builder.FinanceCheckResourceBuilder.newFinanceCheckResource;
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -48,5 +49,19 @@ public class FinanceCheckServiceImplTest {
         ServiceResult result = service.update(financeCheckResource);
 
         assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void testApprove() {
+
+        FinanceCheckResource financeCheckResource = newFinanceCheckResource().build();
+
+        when(financeCheckRestServiceMock.update(financeCheckResource)).thenReturn(restSuccess());
+
+        ServiceResult result = service.update(financeCheckResource);
+
+        assertTrue(result.isSuccess());
+
+        verify(financeCheckRestServiceMock).update(financeCheckResource);
     }
 }

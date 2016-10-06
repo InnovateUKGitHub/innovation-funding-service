@@ -467,6 +467,33 @@ include::{snippets}/project/get-team-status-with-filter-by-user-id/curl-request.
 include::{snippets}/project/get-team-status-with-filter-by-user-id/curl-request.adoc[]
 
 
+=== Approve Finance Check
+==== Success
+===== Request
+include::{snippets}/project/test-approve-finance-check/http-request.adoc[]
+include::{snippets}/project/test-approve-finance-check/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/test-approve-finance-check/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/test-approve-finance-check/curl-request.adoc[]
+
+
+=== Get Finance Check Approval Status
+==== Success
+===== Request
+include::{snippets}/project/test-get-finance-check-approval-status/http-request.adoc[]
+include::{snippets}/project/test-get-finance-check-approval-status/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/test-get-finance-check-approval-status/http-response.adoc[]
+include::{snippets}/project/test-get-finance-check-approval-status/response-fields.adoc[]
+
+===== Curl Example
+include::{snippets}/project/test-get-finance-check-approval-status/curl-request.adoc[]
+
+
 === Get Spend Profile CSV
 ==== Success
 ===== Request

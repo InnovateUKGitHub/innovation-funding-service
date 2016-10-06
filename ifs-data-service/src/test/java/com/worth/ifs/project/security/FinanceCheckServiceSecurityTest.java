@@ -22,12 +22,10 @@ import static junit.framework.TestCase.fail;
 
 public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<FinanceCheckService> {
 
-
     @Test
     public void testGetFinanceCheck() {
         assertRolesCanPerform(() -> classUnderTest.getByProjectAndOrganisation(new ProjectOrganisationCompositeId(1L, 2L)), PROJECT_FINANCE);
     }
-
 
     @Test
     public void testSaveFinanceCheck() {
