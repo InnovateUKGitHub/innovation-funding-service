@@ -114,7 +114,7 @@ public class ProjectGrantOfferPermissionRulesTest extends BasePermissionRulesTes
     }
 
     @Test
-    public void testProjectManagerCannotSubmitOfferLetter() {
+    public void testNonProjectManagerCannotSubmitOfferLetter() {
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
 

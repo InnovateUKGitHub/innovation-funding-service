@@ -59,10 +59,19 @@ public class ProjectGrantOfferLetterController {
         return BASE_DIR + "/grant-offer-letter-confirmation";
     }
 
-    @RequestMapping(value="/submit", method = POST)
-    public String submit(@PathVariable("projectId") Long projectId) {
-        projectService.submitGrantOfferLetter(projectId);
-        return "redirect:/project/" + projectId;
+    @RequestMapping(params = "confirmSubmit", method = POST)
+    public String submit(@PathVariable("projectId") Long projectId,
+                         @ModelAttribute(FORM_ATTR) ProjectGrantOfferLetterForm form,
+                         @SuppressWarnings("unused") BindingResult bindingResult,
+                         ValidationHandler validationHandler,
+                         Model model,
+                         @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+
+
+        return validationHandler.performActionOrBindErrorsToField("",
+                () -> createGrantOfferLetterPage(projectId, model, loggedInUser, form),
+                () -> "redirect:/project/" + projectId,
+                () -> projectService.submitGrantOfferLetter(projectId));
     }
 
     @RequestMapping(params = "uploadSignedGrantOfferLetterClicked", method = POST)

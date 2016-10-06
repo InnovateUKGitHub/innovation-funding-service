@@ -1,5 +1,6 @@
 package com.worth.ifs.project.transactional;
 
+import com.worth.ifs.commons.error.CommonFailureKeys;
 import com.worth.ifs.commons.service.FailingOrSucceedingResult;
 import com.worth.ifs.commons.service.ServiceFailure;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -167,7 +168,13 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
 
     @Override
     public ServiceResult<Void> submitGrantOfferLetter(Long projectId) {
-        return getProject(projectId).andOnSuccessReturnVoid(project -> project.setOfferSubmittedDate(LocalDateTime.now()));
+        return getProject(projectId).andOnSuccess(project -> {
+            if (project.getSignedGrantOfferLetter() == null) {
+                return serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_MUST_BE_UPLOADED_BEFORE_SUBMIT);
+            }
+            project.setOfferSubmittedDate(LocalDateTime.now());
+            return serviceSuccess();
+        });
     }
 
     private FileEntryResource linkAdditionalContractFileToProject(Project project, Pair<File, FileEntry> fileDetails) {

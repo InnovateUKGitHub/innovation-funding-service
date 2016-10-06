@@ -160,7 +160,8 @@ public class ProjectGrantOfferLetterControllerTest extends BaseControllerMockMVC
 
         when(projectService.submitGrantOfferLetter(projectId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/project/" + projectId + "/offer/submit")).
+        mockMvc.perform(post("/project/" + projectId + "/offer").
+                param("confirmSubmit", "")).
                 andExpect(status().is3xxRedirection());
 
         verify(projectService).submitGrantOfferLetter(projectId);

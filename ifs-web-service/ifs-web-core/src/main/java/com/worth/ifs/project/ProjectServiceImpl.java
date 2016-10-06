@@ -263,12 +263,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public ServiceResult<Void> submitGrantOfferLetter(Long projectId) {
-        RestResult<Void> restResult = projectRestService.submitGrantOfferLetter(projectId);
-        //Use rest result to handle typical error keys.
-        if (restResult.isFailure()) {
-            restResult.getSuccessObjectOrThrowException();
-        }
-        return restResult.toServiceResult();
+        return projectRestService.submitGrantOfferLetter(projectId).toServiceResult();
     }
 
     private List<ProjectUserResource> getProjectUsersWithPartnerRole(Long projectId) {
