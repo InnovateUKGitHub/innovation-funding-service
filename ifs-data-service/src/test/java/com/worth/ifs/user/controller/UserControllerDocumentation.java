@@ -2,13 +2,17 @@ package com.worth.ifs.user.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
+import com.worth.ifs.user.resource.ProfileResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.documentation.ProfileDocs.profileResourceBuilder;
+import static com.worth.ifs.documentation.ProfileDocs.profileResourceFields;
 import static com.worth.ifs.documentation.UserDocs.userResourceFields;
+import static com.worth.ifs.user.builder.ProfileResourceBuilder.newProfileResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.UserRoleType.COMP_TECHNOLOGIST;
 import static java.util.Arrays.asList;
@@ -116,4 +120,23 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
                 ));
     }
 
+    @Test
+    public void updateProfile() throws Exception {
+        Long userId = 1L;
+        final UserResource userResource = newUserResource().build();
+        ProfileResource profile = profileResourceBuilder.build();
+
+        when(userServiceMock.getUserById(userId)).thenReturn(serviceSuccess(userResource));
+        when(userProfileServiceMock.updateProfile(userResource)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(put("/user/id/{id}/updateProfile", userId)
+                .contentType(APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(profile)))
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("id").description("Identifier of the user to update the profile for")
+                        ),
+                        requestFields(profileResourceFields)
+                ));
+    }
 }
