@@ -125,9 +125,14 @@
                             </label>
                         </div>
 
-                        <div class="panel-indent js-hidden" id="toggle-interest">
-                            <label class="form-label-bold">Please describe these interests?</label>
-                            <textarea class="form-control width-full" cols="30" rows="3"></textarea>
+                        <div class="panel-indent js-hidden" id="toggle-interest" th:classappend="${#fields.hasErrors('financialInterests')}? error">
+                            <label class="form-label-bold">
+                                Please describe these interests?
+                                <span th:if="${#fields.hasErrors('financialInterests')}" th:remove="tag">
+                                    <span class="error-message"  th:each="err : ${#fields.errors('financialInterests')}" th:text="${err}" />
+                                </span>
+                            </label>
+                            <textarea class="form-control width-full" cols="30" rows="3" th:field="*{financialInterests}" th:errorclass="field-error"></textarea>
                         </div>
                     </fieldset>
                 </div>
@@ -176,7 +181,7 @@
                                 </div>
                             </div>
 
-                            <p class="alignright"><button class="buttonlink" type="submit">Add another family member</button></p>
+                            <p class="alignright"><button class="buttonlink" name="addFamilyMemberAffiliation" type="submit">Add another family member</button></p>
                         </div>
                     </fieldset>
                 </div>
@@ -202,9 +207,13 @@
                             </label>
                         </div>
 
-                        <div class="panel-indent js-hidden" id="toggle-family-interest">
-                            <label class="form-label-bold">Please describe these interests</label>
-                            <textarea class="form-control width-full" cols="30" rows="3"></textarea>
+                        <div class="panel-indent js-hidden" id="toggle-family-interest" th:classappend="${#fields.hasErrors('familyFinancialInterests')}? error">
+                            <label class="form-label-bold">Please describe these interests
+                                <span th:if="${#fields.hasErrors('familyFinancialInterests')}" th:remove="tag">
+                                    <span class="error-message"  th:each="err : ${#fields.errors('familyFinancialInterests')}" th:text="${err}" />
+                                </span>
+                            </label>
+                            <textarea class="form-control width-full" cols="30" rows="3" th:field="*{familyFinancialInterests}" th:errorclass="field-error"></textarea>
                         </div>
                     </fieldset>
                 </div>

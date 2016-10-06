@@ -15,4 +15,3 @@ CREATE TABLE affiliation (
     CONSTRAINT affiliation_created_by_to_user_fk FOREIGN KEY (created_by) REFERENCES user (id),
     CONSTRAINT affiliation_modified_by_to_user_fk FOREIGN KEY (modified_by) REFERENCES user (id)
 ) DEFAULT CHARSET=utf8;
-CREATE UNIQUE INDEX user_id ON affiliation (user_id);

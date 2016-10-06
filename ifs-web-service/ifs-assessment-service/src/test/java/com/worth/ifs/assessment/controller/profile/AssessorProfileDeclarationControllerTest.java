@@ -9,6 +9,7 @@ import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
 
+import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -28,6 +29,8 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
 
     @Test
     public void getDeclaration() throws Exception {
+        loginUser(newUserResource().build());
+
         mockMvc.perform(get("/profile/declaration"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("model"))

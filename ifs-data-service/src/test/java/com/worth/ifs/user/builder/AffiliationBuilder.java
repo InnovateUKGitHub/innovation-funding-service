@@ -2,7 +2,7 @@ package com.worth.ifs.user.builder;
 
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.user.domain.Affiliation;
-import com.worth.ifs.user.domain.AffiliationType;
+import com.worth.ifs.user.resource.AffiliationType;
 import com.worth.ifs.user.domain.User;
 
 import java.util.List;

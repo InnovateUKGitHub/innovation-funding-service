@@ -1,6 +1,7 @@
 package com.worth.ifs.user.domain;
 
 import com.worth.ifs.commons.util.AuditableEntity;
+import com.worth.ifs.user.resource.AffiliationType;
 
 import javax.persistence.*;
 

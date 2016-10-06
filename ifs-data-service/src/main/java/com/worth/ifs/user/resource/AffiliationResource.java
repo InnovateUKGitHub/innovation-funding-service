@@ -1,6 +1,5 @@
 package com.worth.ifs.user.resource;
 
-import com.worth.ifs.user.domain.AffiliationType;
 import com.worth.ifs.user.domain.User;
 
 /**

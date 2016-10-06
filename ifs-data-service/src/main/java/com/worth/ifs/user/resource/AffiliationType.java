@@ -1,4 +1,6 @@
-package com.worth.ifs.user.domain;
+package com.worth.ifs.user.resource;
+
+import com.worth.ifs.user.domain.User;
 
 /**
  * The type of relationship of a {@link User}'s affiliation.

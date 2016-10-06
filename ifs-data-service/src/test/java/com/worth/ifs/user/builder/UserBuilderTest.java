@@ -15,7 +15,7 @@ import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.ProfileBuilder.newProfile;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
-import static com.worth.ifs.user.domain.AffiliationType.*;
+import static com.worth.ifs.user.resource.AffiliationType.*;
 import static com.worth.ifs.user.resource.Disability.NOT_STATED;
 import static com.worth.ifs.user.resource.Disability.YES;
 import static com.worth.ifs.user.resource.Gender.FEMALE;

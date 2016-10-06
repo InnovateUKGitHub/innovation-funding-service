@@ -9,7 +9,7 @@ import java.util.List;
 import static com.worth.ifs.user.builder.AffiliationBuilder.newAffiliation;
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static com.worth.ifs.user.domain.AffiliationType.*;
+import static com.worth.ifs.user.resource.AffiliationType.*;
 import static com.worth.ifs.user.resource.Disability.NOT_STATED;
 import static com.worth.ifs.user.resource.Disability.YES;
 import static com.worth.ifs.user.resource.Gender.FEMALE;

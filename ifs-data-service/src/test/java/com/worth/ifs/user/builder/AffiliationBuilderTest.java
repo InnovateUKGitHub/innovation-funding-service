@@ -1,7 +1,7 @@
 package com.worth.ifs.user.builder;
 
 import com.worth.ifs.user.domain.Affiliation;
-import com.worth.ifs.user.domain.AffiliationType;
+import com.worth.ifs.user.resource.AffiliationType;
 import com.worth.ifs.user.domain.User;
 import org.junit.Test;
 
@@ -9,8 +9,8 @@ import java.util.List;
 
 import static com.worth.ifs.user.builder.AffiliationBuilder.newAffiliation;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
-import static com.worth.ifs.user.domain.AffiliationType.EMPLOYER;
-import static com.worth.ifs.user.domain.AffiliationType.FAMILY_FINANCIAL;
+import static com.worth.ifs.user.resource.AffiliationType.EMPLOYER;
+import static com.worth.ifs.user.resource.AffiliationType.FAMILY_FINANCIAL;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static org.junit.Assert.assertEquals;
