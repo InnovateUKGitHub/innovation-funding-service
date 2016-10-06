@@ -152,8 +152,7 @@ Word count check: Comments for InnovateUK
 Your Feedback is not mandatory when Yes is selected
     [Documentation]    INFUND-4996
     [Tags]
-    Given The user navigates to the assessor page    ${Assessment_summary_open_11}
-    And The feedback text area is empty
+    When the user enters text to a text field    id=feedback    ${EMPTY}
     When the user selects the radio button    fundingConfirmation    true
     And The user clicks the button/link    jQuery=.button:contains(Save assessment)
     Then The user should not see the text in the page    Please enter your feedback
@@ -242,10 +241,6 @@ the days remaining should be correct
     ${SCREEN_NO_OF_DAYS_LEFT}=    Get Text    css=.sub-header .pie-overlay .day
     Should Be Equal As Numbers    ${NO_OF_DAYS_LEFT}    ${SCREEN_NO_OF_DAYS_LEFT}
 
-The feedback text area is empty
-    Clear Element Text    id=feedback
-
 the user clears the text from feedback and comment
     Clear Element Text    id=feedback
     Clear Element Text    id=comment
-
