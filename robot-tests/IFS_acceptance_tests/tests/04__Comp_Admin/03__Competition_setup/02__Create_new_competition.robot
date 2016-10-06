@@ -289,7 +289,6 @@ Funding Information can be saved
 Funding Information can be edited
     [Documentation]    INFUND-3002
     [Tags]
-    #TODO neAnd The user should see the elemented to enable this And The user should see the elementtest when the INFUND-5111 is fixed
     When the user clicks the button/link    jQuery=.button:contains("Edit")
     And the user enters text to a text field    id=funders0.funder    testFunder
     When the user clicks the button/link    jQuery=.button:contains("Done")
@@ -432,6 +431,7 @@ Milestones: Client side validations
 
 Milestones: Autosave
     [Tags]    Pending
+    #TODO INFUND-3873
     When the user clicks the button/link    link=Competition set up
     And the user clicks the button/link    link=Milestones
     Then the user should see the correct inputs in the Milestones form

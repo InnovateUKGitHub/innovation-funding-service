@@ -29,6 +29,7 @@ Lead partner can view spend profile page
     Then the user should not see an error in the page
 #    Then the user clicks the button/link    link=Vitruvius Stonework Limited    # That's for when the Lead Partner has to choose which SP to see
     And the user should see the text in the page    Your project costs have been reviewed and confirmed by Innovate UK
+    And the user should see the text in the page    Vitruvius Stonework Limited - Spend profile
 
 Lead partner can see correct project start date and duration
     [Documentation]    INFUND-3970
@@ -138,6 +139,7 @@ Non-lead partner can view spend profile page
     When the user clicks the button/link    link=Spend profile
     Then the user should not see an error in the page
     And the user should see the text in the page    Your project costs have been reviewed and confirmed by Innovate UK
+    And the user should see the text in the page    Ludlow - Spend profile
 
 Non-lead partner can see correct project start date and duration
     [Documentation]    INFUND-3970
