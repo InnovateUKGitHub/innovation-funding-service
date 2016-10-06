@@ -1,53 +1,41 @@
 package com.worth.ifs.project.finance.transactional;
 
 import com.worth.ifs.BaseServiceUnitTest;
-import com.worth.ifs.BuilderAmendFunctions;
-import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.project.builder.*;
-import com.worth.ifs.project.finance.domain.Cost;
+import com.worth.ifs.project.domain.PartnerOrganisation;
 import com.worth.ifs.project.finance.domain.CostCategory;
 import com.worth.ifs.project.finance.domain.FinanceCheck;
-import com.worth.ifs.project.finance.domain.SpendProfile;
 import com.worth.ifs.project.finance.repository.FinanceCheckRepository;
-import com.worth.ifs.project.finance.resource.CostCategoryResource;
-import com.worth.ifs.project.finance.resource.CostGroupResource;
-import com.worth.ifs.project.finance.resource.CostResource;
 import com.worth.ifs.project.finance.resource.FinanceCheckResource;
 import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
-import com.worth.ifs.project.resource.SpendProfileTableResource;
-import com.worth.ifs.user.builder.OrganisationBuilder;
-import org.apache.poi.ss.formula.functions.Finance;
-import org.junit.Ignore;
+import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.springframework.http.HttpStatus;
-
-import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 import static com.worth.ifs.BaseBuilderAmendFunctions.id;
-import static com.worth.ifs.LambdaMatcher.createLambdaMatcher;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
-import static com.worth.ifs.commons.error.CommonFailureKeys.SPEND_PROFILE_CONTAINS_FRACTIONS_IN_COST_FOR_SPECIFIED_CATEGORY_AND_MONTH;
-import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.commons.error.CommonFailureKeys.FINANCE_CHECKS_CANNOT_PROGRESS_WORKFLOW;
 import static com.worth.ifs.project.builder.CostBuilder.newCost;
 import static com.worth.ifs.project.builder.CostCategoryBuilder.newCostCategory;
-import static com.worth.ifs.project.builder.CostCategoryResourceBuilder.newCostCategoryResource;
 import static com.worth.ifs.project.builder.CostGroupBuilder.newCostGroup;
 import static com.worth.ifs.project.builder.FinanceCheckBuilder.newFinanceCheck;
-import static com.worth.ifs.project.builder.FinanceCheckResourceBuilder.newFinanceCheckResource;
+import static com.worth.ifs.project.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static com.worth.ifs.project.builder.ProjectBuilder.newProject;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
-import static com.worth.ifs.util.MapFunctions.asMap;
-import static java.util.Arrays.asList;
+import static com.worth.ifs.user.builder.UserBuilder.newUser;
+import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+<<<<<<<HEAD
+        =======
+        >>>>>>>b506b4a1f19ba7550e6c647b770342044d93a38e
+        <<<<<<<HEAD
+        =======
+        >>>>>>>b506b4a1f19ba7550e6c647b770342044d93a38e
+        <<<<<<<HEAD
 
 public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceCheckServiceImpl> {
 
@@ -104,6 +92,41 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     @Test
     public void testGetFinanceCheck() {
         // TODO RP
+    }
+
+    @Test
+    public void testApprove() {
+
+        User loggedInUser = newUser().build();
+        UserResource loggedInUserResource = newUserResource().withId(loggedInUser.getId()).build();
+        PartnerOrganisation partnerOrganisation = newPartnerOrganisation().build();
+
+        when(userRepositoryMock.findOne(loggedInUserResource.getId())).thenReturn(loggedInUser);
+        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(123L, 456L)).thenReturn(partnerOrganisation);
+        when(financeCheckWorkflowHandlerMock.approveFinanceCheckFigures(partnerOrganisation, loggedInUser)).thenReturn(true);
+
+        setLoggedInUser(loggedInUserResource);
+
+        ServiceResult<Void> result = service.approve(123L, 456L);
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void testApproveButWorkflowStepFails() {
+
+        User loggedInUser = newUser().build();
+        UserResource loggedInUserResource = newUserResource().withId(loggedInUser.getId()).build();
+        PartnerOrganisation partnerOrganisation = newPartnerOrganisation().build();
+
+        when(userRepositoryMock.findOne(loggedInUserResource.getId())).thenReturn(loggedInUser);
+        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(123L, 456L)).thenReturn(partnerOrganisation);
+        when(financeCheckWorkflowHandlerMock.approveFinanceCheckFigures(partnerOrganisation, loggedInUser)).thenReturn(false);
+
+        setLoggedInUser(loggedInUserResource);
+
+        ServiceResult<Void> result = service.approve(123L, 456L);
+        assertTrue(result.getFailure().is(FINANCE_CHECKS_CANNOT_PROGRESS_WORKFLOW));
     }
 
 

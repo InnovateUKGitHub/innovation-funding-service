@@ -24,8 +24,4 @@ public interface ProjectFinanceService {
     ServiceResult<Void> saveSpendProfile(Long projectId, Long organisationId, SpendProfileTableResource table);
 
     ServiceResult<Void> markSpendProfile(Long projectId, Long organisationId, Boolean complete);
-
-    ServiceResult<Void> approveFinanceCheck(Long projectId, Long organisationId);
-
-    FinanceCheckProcessResource getFinanceCheckApprovalStatus(Long projectId, Long organisationId);
 }
