@@ -91,6 +91,8 @@ public interface ProjectRestService {
 
     RestResult<Void> inviteFinanceContact(Long projectId, InviteProjectResource inviteResource);
 
+    RestResult<Void> inviteProjectManager(Long projectId, InviteProjectResource inviteResource);
+
     RestResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId);
 
 }

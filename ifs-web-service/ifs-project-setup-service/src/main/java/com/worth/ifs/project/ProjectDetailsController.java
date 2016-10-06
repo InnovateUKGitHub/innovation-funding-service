@@ -35,12 +35,13 @@ import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectTeamStatusResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.project.sections.ProjectSetupSectionPartnerAccessor;
-import com.worth.ifs.project.viewmodel.FinanceContactModel;
+import com.worth.ifs.project.viewmodel.ProjectUserInviteModel;
 import com.worth.ifs.project.viewmodel.ProjectDetailsAddressViewModel;
 import com.worth.ifs.project.viewmodel.ProjectDetailsStartDateForm;
 import com.worth.ifs.project.viewmodel.ProjectDetailsStartDateViewModel;
 import com.worth.ifs.project.viewmodel.ProjectDetailsViewModel;
 import com.worth.ifs.project.viewmodel.SelectFinanceContactViewModel;
+import com.worth.ifs.project.viewmodel.SelectProjectManagerViewModel;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.UserService;
@@ -61,8 +62,8 @@ import static com.worth.ifs.address.resource.OrganisationAddressType.PROJECT;
 import static com.worth.ifs.address.resource.OrganisationAddressType.REGISTERED;
 import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
-import static com.worth.ifs.project.viewmodel.FinanceContactStatus.EXISTING;
-import static com.worth.ifs.project.viewmodel.FinanceContactStatus.PENDING;
+import static com.worth.ifs.project.viewmodel.ProjectUserInviteStatus.EXISTING;
+import static com.worth.ifs.project.viewmodel.ProjectUserInviteStatus.PENDING;
 import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
 import static com.worth.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
 import static com.worth.ifs.util.CollectionFunctions.getOnlyElement;
@@ -225,26 +226,66 @@ public class ProjectDetailsController extends AddressLookupBaseController {
     public String viewProjectManager(@PathVariable("projectId") final Long projectId, Model model,
                                      @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        ProjectManagerForm form = populateOriginalProjectManagerForm(projectId);
-        return doViewProjectManager(model, projectId, loggedInUser, form);
+        ProjectManagerForm projectManagerForm = populateOriginalProjectManagerForm(projectId);
+        InviteeForm form = new InviteeForm();
+        return doViewProjectManager(model, projectId, loggedInUser, projectManagerForm, form);
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
     @RequestMapping(value = "/{projectId}/details/project-manager", method = POST)
     public String updateProjectManager(@PathVariable("projectId") final Long projectId, Model model,
-                                       @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectManagerForm form,
+                                       @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectManagerForm projectManagerForm,
+                                       @Valid @ModelAttribute(INVITE_FORM_ATTR_NAME) InviteeForm form,
                                        @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
                                        @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        Supplier<String> failureView = () -> doViewProjectManager(model, projectId, loggedInUser, form);
+        Supplier<String> failureView = () -> doViewProjectManager(model, projectId, loggedInUser, projectManagerForm, form);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
-            ServiceResult<Void> updateResult = projectService.updateProjectManager(projectId, form.getProjectManager());
+            ServiceResult<Void> updateResult = projectService.updateProjectManager(projectId, projectManagerForm.getProjectManager());
 
             return validationHandler.addAnyErrors(updateResult, toField("projectManager")).
                     failNowOrSucceedWith(failureView, () -> redirectToProjectDetails(projectId));
         });
+    }
+
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
+    @RequestMapping(value = "/{projectId}/details/invite-project-manager", method = POST)
+    public String inviteProjectManager(Model model, @PathVariable("projectId") final Long projectId,
+        @Valid @ModelAttribute(INVITE_FORM_ATTR_NAME) InviteeForm form,
+        @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
+        @ModelAttribute("loggedInUser") UserResource loggedInUser
+    ) {
+
+        ProjectManagerForm projectManagerForm = populateOriginalProjectManagerForm(projectId);
+
+        Supplier<String> failureView = () -> doViewProjectManager(model, projectId, loggedInUser, projectManagerForm, form);
+
+        if (!validateEmailIsUnique(form.getEmail()))
+        {
+            form.setEmailExistsError(form.getEmail());
+
+            return doViewProjectManager(model, projectId, loggedInUser, projectManagerForm, form);
+        }
+
+        return validationHandler.failNowOrSucceedWith(failureView, () -> {
+            Long organisation = projectService.getLeadOrganisation(projectId).getId();
+            InviteProjectResource invite = createProjectInviteResourceForNewContact (projectId, form.getName(), form.getEmail(), organisation);
+
+            ServiceResult<Void> saveResult = projectService.saveProjectInvite(invite);
+
+            InviteProjectResource savedInvite = projectService.getInvitesByProject(projectId).getSuccessObjectOrThrowException().stream()
+                .filter(i -> i.getEmail().equals(invite.getEmail())).findFirst().get();
+
+            ServiceResult<Void> inviteResult = projectService.inviteProjectManager(projectId, savedInvite);
+
+            return validationHandler.addAnyErrors(inviteResult, toField("projectManager")).
+                addAnyErrors(saveResult, toField("projectManager")).
+                failNowOrSucceedWith(failureView, () -> redirectToProjectDetails(projectId));
+
+        });
+
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
@@ -423,14 +464,25 @@ public class ProjectDetailsController extends AddressLookupBaseController {
     }
 
     private void populateProjectManagerModel(Model model, final Long projectId, ProjectManagerForm form,
-                                             ApplicationResource applicationResource) {
+                                             ApplicationResource applicationResource, UserResource loggedInUser) {
 
         ProjectResource projectResource = projectService.getById(projectId);
-        List<ProjectUserResource> leadPartners = projectService.getLeadPartners(projectId);
+        OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
 
-        model.addAttribute("allUsers", leadPartners);
-        model.addAttribute("project", projectResource);
-        model.addAttribute("app", applicationResource);
+        List<ProjectUserInviteModel> thisOrganisationUsers = projectService.getLeadPartners(projectId).stream()
+            .filter(user -> leadOrganisation.getId().equals(user.getOrganisation()))
+            .map(user -> new ProjectUserInviteModel(EXISTING, user.getUserName(), user.getUser()))
+            .collect(toList());
+        List<ProjectUserInviteModel> invitedUsers = projectService.getInvitesByProject(projectId).getSuccessObjectOrThrowException().stream()
+            .filter(invite -> leadOrganisation.getId().equals(invite.getOrganisation()))
+            .map(invite -> new ProjectUserInviteModel(PENDING, invite.getName() + " (Pending)", projectId))
+            .collect(toList());
+
+        CompetitionResource competitionResource = competitionService.getById(applicationResource.getCompetition());
+
+        SelectProjectManagerViewModel viewModel = new SelectProjectManagerViewModel(thisOrganisationUsers, invitedUsers, projectResource, loggedInUser.getId(), applicationResource, competitionResource);
+
+        model.addAttribute("model", viewModel);
         model.addAttribute(FORM_ATTR_NAME, form);
     }
 
@@ -470,12 +522,12 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
         ProjectResource projectResource = projectService.getById(projectId);
         ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
-        List<FinanceContactModel> thisOrganisationUsers = userService.getOrganisationProcessRoles(applicationResource, form.getOrganisation()).stream()
-                .map(user -> new FinanceContactModel(EXISTING, user.getUserName(), user.getUser()))
+        List<ProjectUserInviteModel> thisOrganisationUsers = userService.getOrganisationProcessRoles(applicationResource, form.getOrganisation()).stream()
+                .map(user -> new ProjectUserInviteModel(EXISTING, user.getUserName(), user.getUser()))
                 .collect(toList());
-        List<FinanceContactModel> invitedUsers = projectService.getInvitesByProject(projectId).getSuccessObjectOrThrowException().stream()
+        List<ProjectUserInviteModel> invitedUsers = projectService.getInvitesByProject(projectId).getSuccessObjectOrThrowException().stream()
                 .filter(invite -> form.getOrganisation().equals(invite.getOrganisation()))
-                .map(invite -> new FinanceContactModel(PENDING, invite.getName() + " (Pending)", projectId))
+                .map(invite -> new ProjectUserInviteModel(PENDING, invite.getName() + " (Pending)", projectId))
                 .collect(toList());
 
         CompetitionResource competitionResource = competitionService.getById(applicationResource.getCompetition());
@@ -488,7 +540,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         return "project/finance-contact";
     }
 
-    private String doViewProjectManager(Model model, Long projectId, UserResource loggedInUser, ProjectManagerForm form) {
+    private String doViewProjectManager(Model model, Long projectId, UserResource loggedInUser, ProjectManagerForm form, final InviteeForm inviteeForm) {
 
         ProjectResource projectResource = projectService.getById(projectId);
 
@@ -497,7 +549,8 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         }
 
         ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
-        populateProjectManagerModel(model, projectId, form, applicationResource);
+        model.addAttribute("inviteForm", inviteeForm);
+        populateProjectManagerModel(model, projectId, form, applicationResource, loggedInUser);
 
         return "project/project-manager";
     }

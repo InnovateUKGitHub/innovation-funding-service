@@ -1,9 +1,10 @@
 package com.worth.ifs.project;
 
-import com.worth.ifs.user.resource.UserResource;
-import org.junit.Test;
-
 import java.util.function.Consumer;
+
+import com.worth.ifs.user.resource.UserResource;
+
+import org.junit.Test;
 
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
@@ -42,7 +43,7 @@ public class ProjectDetailsControllerSecurityTest extends BaseProjectSetupContro
 
     @Test
     public void testUpdateProjectManager() {
-        assertSecured(() -> classUnderTest.updateProjectManager(123L, null, null, null, null, null));
+        assertSecured(() -> classUnderTest.updateProjectManager(123L, null, null, null, null, null, null));
     }
 
     @Test

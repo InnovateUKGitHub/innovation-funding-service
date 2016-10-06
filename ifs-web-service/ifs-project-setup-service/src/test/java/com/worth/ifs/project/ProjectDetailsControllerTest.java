@@ -1,6 +1,7 @@
 package com.worth.ifs.project;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,8 @@ import com.worth.ifs.project.viewmodel.ProjectDetailsAddressViewModel;
 import com.worth.ifs.project.viewmodel.ProjectDetailsStartDateForm;
 import com.worth.ifs.project.viewmodel.ProjectDetailsStartDateViewModel;
 import com.worth.ifs.project.viewmodel.ProjectDetailsViewModel;
+import com.worth.ifs.project.viewmodel.ProjectUserInviteModel;
+import com.worth.ifs.project.viewmodel.SelectProjectManagerViewModel;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
@@ -53,11 +56,13 @@ import static com.worth.ifs.project.builder.ProjectLeadStatusResourceBuilder.new
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static com.worth.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
+import static com.worth.ifs.project.viewmodel.ProjectUserInviteStatus.PENDING;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
@@ -146,6 +151,8 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     	ApplicationResource applicationResource = newApplicationResource().withCompetition(competitionResource.getId()).build();
         ProjectResource project = newProjectResource().withId(projectId).build();
 
+        List<InviteProjectResource> invitedUsers = newInviteProjectResource().build(2);
+
         OrganisationResource leadOrganisation = newOrganisationResource().build();
 
         List<ProjectUserResource> projectUsers = newProjectUserResource().
@@ -155,15 +162,24 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 build(1);
 
         when(applicationService.getById(project.getApplication())).thenReturn(applicationResource);
-        when(projectService.getById(project.getId())).thenReturn(project);
-        when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
-        when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrganisation);
+        when(projectService.getById(projectId)).thenReturn(project);
+        when(projectService.getProjectUsersForProject(projectId)).thenReturn(projectUsers);
+        when(projectService.getLeadOrganisation(projectId)).thenReturn(leadOrganisation);
+        when(projectService.getInvitesByProject(projectId)).thenReturn(serviceSuccess(invitedUsers));
         when(projectService.isUserLeadPartner(projectId, loggedInUser.getId())).thenReturn(true);
+
+        List<ProjectUserInviteModel> users = new ArrayList<>();
+
+        List<ProjectUserInviteModel> invites = invitedUsers.stream()
+            .filter(invite -> leadOrganisation.getId().equals(invite.getOrganisation()))
+            .map(invite -> new ProjectUserInviteModel(PENDING, invite.getName() + " (Pending)", projectId))
+            .collect(toList());
+
+        SelectProjectManagerViewModel viewModel = new SelectProjectManagerViewModel(users, invites, project, 1L, applicationResource, null);
 
         mockMvc.perform(get("/project/{id}/details/project-manager", projectId))
                 .andExpect(status().isOk())
-                .andExpect(model().attribute("project", project))
-                .andExpect(model().attribute("app", applicationResource))
+                .andExpect(model().attribute("model", viewModel))
                 .andExpect(view().name("project/project-manager"));
     }
     
@@ -202,8 +218,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         		.param("projectManager", projectManagerUserId.toString()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/project/" + projectId + "/details"));
-        
-        verify(projectService).updateProjectManager(projectId, projectManagerUserId);
+
     }
 
     @Test
