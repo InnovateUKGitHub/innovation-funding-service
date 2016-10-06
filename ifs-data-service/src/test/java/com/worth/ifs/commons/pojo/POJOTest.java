@@ -124,7 +124,9 @@ public class POJOTest {
             EthnicityResource.class,
             UserRegistrationResource.class,
             FinanceCheckResource.class,
-            FinanceCheckProcessResource.class
+            FinanceCheckProcessResource.class,
+            PartnerOrganisationResource.class,
+            SpendProfileCSVResource.class
     );
 
     @Before

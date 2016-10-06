@@ -5,18 +5,15 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.CompetitionSummaryResource;
 import com.worth.ifs.finance.builder.ApplicationFinanceResourceBuilder;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
-import com.worth.ifs.project.builder.SpendProfileResourceBuilder;
 import com.worth.ifs.project.finance.resource.FinanceCheckResource;
 import com.worth.ifs.project.finance.resource.FinanceCheckState;
 import com.worth.ifs.project.financecheck.form.FinanceCheckForm;
 import com.worth.ifs.project.financecheck.viewmodel.FinanceCheckViewModel;
 import com.worth.ifs.project.financecheck.viewmodel.ProjectFinanceCheckSummaryViewModel;
-import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
-import com.worth.ifs.project.resource.ProjectResource;
-import com.worth.ifs.project.resource.ProjectTeamStatusResource;
-import com.worth.ifs.project.resource.SpendProfileResource;
+import com.worth.ifs.project.resource.*;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.OrganisationTypeEnum;
+import com.worth.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
@@ -24,7 +21,9 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,13 +32,13 @@ import static com.worth.ifs.application.builder.CompetitionSummaryResourceBuilde
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.project.builder.CostGroupResourceBuilder.newCostGroupResource;
 import static com.worth.ifs.project.builder.FinanceCheckResourceBuilder.newFinanceCheckResource;
+import static com.worth.ifs.project.builder.PartnerOrganisationResourceBuilder.newPartnerOrganisationResource;
 import static com.worth.ifs.project.builder.ProjectLeadStatusResourceBuilder.newProjectLeadStatusResource;
 import static com.worth.ifs.project.builder.ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static com.worth.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
-import static com.worth.ifs.project.constant.ProjectActivityStates.ACTION_REQUIRED;
-import static com.worth.ifs.project.constant.ProjectActivityStates.COMPLETE;
-import static com.worth.ifs.project.constant.ProjectActivityStates.NOT_REQUIRED;
+import static com.worth.ifs.project.builder.SpendProfileResourceBuilder.newSpendProfileResource;
+import static com.worth.ifs.project.constant.ProjectActivityStates.*;
 import static com.worth.ifs.project.finance.builder.FinanceCheckProcessResourceBuilder.newFinanceCheckProcessResource;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -64,6 +63,8 @@ public class FinanceCheckControllerTest extends BaseControllerMockMVCTest<Financ
         OrganisationResource organisationResource = newOrganisationResource().withId(organisationId).withOrganisationType(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId()).build();
         ApplicationResource applicationResource = newApplicationResource().withId(applicationId).build();
         ProjectResource projectResource = newProjectResource().withId(projectId).withApplication(applicationResource).build();
+        List<PartnerOrganisationResource> partnerOrganisationResources = newPartnerOrganisationResource().withProject(projectId).build(3);
+
         when(applicationService.getById(applicationId)).thenReturn(newApplicationResource().withId(applicationId).withCompetition(competitionId).build());
         when(projectService.getById(projectId)).thenReturn(projectResource);
 
@@ -76,6 +77,7 @@ public class FinanceCheckControllerTest extends BaseControllerMockMVCTest<Financ
                         withInternalParticipant(newUserResource().withFirstName("Mr").withLastName("Approver").build()).
                         withModifiedDate(LocalDateTime.of(2016, 10, 04, 12, 13, 14)).
                         build());
+        when(partnerOrganisationServiceMock.getPartnerOrganisations(projectId)).thenReturn(serviceSuccess(partnerOrganisationResources));
 
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + organisationId)).
                 andExpect(view().name("project/financecheck/partner-project-eligibility")).
@@ -98,10 +100,11 @@ public class FinanceCheckControllerTest extends BaseControllerMockMVCTest<Financ
         Long projectId = 123L;
         Long organisationId = 456L;
         FinanceCheckResource financeCheckResource = newFinanceCheckResource().build();
-        MvcResult result = mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + organisationId).
+        when(financeCheckServiceMock.getByProjectAndOrganisation(new ProjectOrganisationCompositeId(projectId, organisationId))).thenReturn(financeCheckResource);
+        when(financeCheckServiceMock.update(financeCheckResource)).thenReturn(serviceSuccess());
+        mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + organisationId).
                 contentType(MediaType.APPLICATION_FORM_URLENCODED)).
-                andExpect(status().is3xxRedirection()).
-                andReturn();
+                andExpect(status().is3xxRedirection());
     }
 
     @Test
@@ -110,6 +113,7 @@ public class FinanceCheckControllerTest extends BaseControllerMockMVCTest<Financ
         assertSpendProfileSummarySuccess(
                 newProjectTeamStatusResource().
                         withProjectLeadStatus(newProjectLeadStatusResource().
+                                withOrganisationId(999L).
                                 withFinanceChecksStatus(COMPLETE).
                                 build()).
                         withPartnerStatuses(newProjectPartnerStatusResource().
@@ -125,6 +129,7 @@ public class FinanceCheckControllerTest extends BaseControllerMockMVCTest<Financ
                 newProjectTeamStatusResource().
                         withProjectLeadStatus(newProjectLeadStatusResource().
                                 withFinanceChecksStatus(COMPLETE).
+                                withOrganisationId(999L).
                                 build()).
                         withPartnerStatuses(newProjectPartnerStatusResource().
                                 withFinanceChecksStatus(ACTION_REQUIRED, NOT_REQUIRED).
@@ -148,14 +153,19 @@ public class FinanceCheckControllerTest extends BaseControllerMockMVCTest<Financ
                 .withDuration(3L)
                 .build();
 
-        OrganisationResource organisationResource = newOrganisationResource().build();
+        OrganisationResource organisationResource = newOrganisationResource().withId(999L).build();
         List<OrganisationResource> organisationResourceList = new ArrayList<>();
         organisationResourceList.add(organisationResource);
 
-        SpendProfileResource spendProfileResource = SpendProfileResourceBuilder.newSpendProfileResource().build();
+        UserResource spendProfileGeneratedBy = newUserResource().build();
+        Calendar spendProfileGeneratedDate = Calendar.getInstance();
+
+        SpendProfileResource spendProfileResource = newSpendProfileResource().
+                withGeneratedBy(spendProfileGeneratedBy).
+                withGeneratedDate(spendProfileGeneratedDate).
+                build();
 
         Optional<SpendProfileResource> anySpendProfile = Optional.of(spendProfileResource);
-
 
         ApplicationFinanceResource applicationFinanceResource1 = ApplicationFinanceResourceBuilder.newApplicationFinanceResource()
                 .withGrantClaimPercentage(20)
@@ -194,12 +204,12 @@ public class FinanceCheckControllerTest extends BaseControllerMockMVCTest<Financ
                         org.getId(), org.getName(),
                         getEnumForIndex(ProjectFinanceCheckSummaryViewModel.Viability.class, i),
                         getEnumForIndex(ProjectFinanceCheckSummaryViewModel.RagStatus.class, i),
-                        getEnumForIndex(ProjectFinanceCheckSummaryViewModel.Eligibility.class, i),
+                        ProjectFinanceCheckSummaryViewModel.Eligibility.APPROVED,
                         getEnumForIndex(ProjectFinanceCheckSummaryViewModel.RagStatus.class, i + 1),
                         getEnumForIndex(ProjectFinanceCheckSummaryViewModel.QueriesRaised.class, i))
         );
 
-        ProjectFinanceCheckSummaryViewModel expectedProjectSpendProfileSummaryViewModel =  new ProjectFinanceCheckSummaryViewModel(
+        ProjectFinanceCheckSummaryViewModel expectedProjectSpendProfileSummaryViewModel = new ProjectFinanceCheckSummaryViewModel(
                 projectResource.getId(), competitionSummaryResource, expectedOrganisationRows,
                 projectResource.getTargetStartDate(), projectResource.getDurationInMonths().intValue(),
                 BigDecimal.ZERO,
@@ -207,7 +217,9 @@ public class FinanceCheckControllerTest extends BaseControllerMockMVCTest<Financ
                 BigDecimal.ZERO,
                 BigDecimal.ZERO,
                 anySpendProfile.isPresent(),
-                expectedFinanceChecksApproved, spendProfileGeneratedBy, spendProfileGeneratedDate);
+                expectedFinanceChecksApproved, 
+                spendProfileGeneratedBy.getName(),
+                LocalDate.from(spendProfileGeneratedDate.toInstant().atOffset(ZoneOffset.UTC)));
 
         mockMvc.perform(get("/project/{projectId}/finance-check", projectResource.getId()))
                 .andExpect(status().isOk())

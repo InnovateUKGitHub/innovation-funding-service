@@ -26,7 +26,7 @@ public class PartnerOrganisation implements ProcessActivity {
 
     private boolean leadOrganisation;
 
-    PartnerOrganisation() {
+    public PartnerOrganisation() {
         // for ORM use
     }
 

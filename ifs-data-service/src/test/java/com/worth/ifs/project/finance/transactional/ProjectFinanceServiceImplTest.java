@@ -10,6 +10,7 @@ import com.worth.ifs.project.finance.resource.CostCategoryResource;
 import com.worth.ifs.project.finance.resource.CostCategoryTypeResource;
 import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
 import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.project.resource.SpendProfileCSVResource;
 import com.worth.ifs.project.resource.SpendProfileTableResource;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.User;
@@ -22,6 +23,7 @@ import org.mockito.Mock;
 import org.springframework.http.HttpStatus;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -273,6 +275,38 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         verify(spendProfileRepositoryMock, never()).save(isA(SpendProfile.class));
         verify(spendProfileRepositoryMock, never()).save(isA(SpendProfile.class));
         verifyNoMoreInteractions(spendProfileRepositoryMock);
+    }
+
+
+    @Test
+    public void testGenerateSpendProfileCSV() {
+        Long projectId = 123L;
+        Long organisationId = 456L;
+        Project project = newProject().withId(projectId).withDuration(3L).withTargetStartDate(LocalDate.of(2018, 3, 1)).build();
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        SpendProfile spendProfileInDB = createSpendProfile(project,
+                // eligible costs
+                asMap(
+                        "Labour", new BigDecimal("100"),
+                        "Materials", new BigDecimal("180"),
+                        "Other costs", new BigDecimal("55")),
+
+                // Spend Profile costs
+                asMap(
+                        "Labour", asList(new BigDecimal("30"), new BigDecimal("30"), new BigDecimal("50")),
+                        "Materials", asList(new BigDecimal("70"), new BigDecimal("50"), new BigDecimal("60")),
+                        "Other costs", asList(new BigDecimal("50"), new BigDecimal("5"), new BigDecimal("0")))
+        );
+
+        Organisation organisation1 = newOrganisation().withId(organisationId).withName("TEST").build();
+        when(organisationRepositoryMock.findOne(organisation1.getId())).thenReturn(organisation1);
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(spendProfileInDB);
+
+        Date date = new Date() ;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        ServiceResult<SpendProfileCSVResource> serviceResult = service.getSpendProfileCSV(projectOrganisationCompositeId);
+        assertTrue(serviceResult.getSuccessObject().getFileName().startsWith("TEST_Spend_Profile_"+dateFormat.format(date)));
     }
 
     @Test

@@ -9,7 +9,9 @@ import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
+import com.worth.ifs.project.PartnerOrganisationService;
 import com.worth.ifs.project.ProjectService;
+import com.worth.ifs.project.constant.ProjectActivityStates;
 import com.worth.ifs.project.finance.ProjectFinanceService;
 import com.worth.ifs.project.finance.resource.FinanceCheckResource;
 import com.worth.ifs.project.finance.workflow.financechecks.resource.FinanceCheckProcessResource;
@@ -41,7 +43,6 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.application.resource.ApplicationResource.formatter;
-import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.project.constant.ProjectActivityStates.COMPLETE;
 import static com.worth.ifs.project.constant.ProjectActivityStates.NOT_REQUIRED;
 import static com.worth.ifs.project.finance.resource.FinanceCheckState.APPROVED;
@@ -79,7 +80,10 @@ public class FinanceCheckController {
     private FinanceCheckService financeCheckService;
 
     @Autowired
-    OrganisationService organisationService;
+    private OrganisationService organisationService;
+
+    @Autowired
+    private PartnerOrganisationService partnerOrganisationService;
 
     @RequestMapping(value = "/organisation/{organisationId}", method = GET)
     public String view(@PathVariable("projectId") final Long projectId, @PathVariable("organisationId") Long organisationId,
@@ -100,7 +104,7 @@ public class FinanceCheckController {
 
         return validationHandler.failNowOrSucceedWith(
                 () -> redirectToFinanceCheckForm(projectId, organisationId),
-                () -> updateFinanceCheck(projectId, getFinanceCheckResource(projectId, organisationId), form));
+                () -> updateFinanceCheck(getFinanceCheckResource(projectId, organisationId), form, validationHandler));
     }
 
     @RequestMapping(method = GET)
@@ -153,7 +157,11 @@ public class FinanceCheckController {
     }
 
     private String doViewFinanceCheckForm(Long projectId, Long organisationId, Model model){
-        
+        populateFinanceCheckModel(projectId, organisationId, model);
+        return "project/financecheck/partner-project-eligibility";
+    }
+
+    private void populateFinanceCheckModel(Long projectId, Long organisationId, Model model){
         ProjectResource project = projectService.getById(projectId);
         ApplicationResource application = applicationService.getById(project.getApplication());
         String competitionName = application.getCompetitionName();
@@ -168,17 +176,16 @@ public class FinanceCheckController {
         String approverName = financeCheckStatus.getInternalParticipant() != null ? financeCheckStatus.getInternalParticipant().getName() : null;
         LocalDate approvalDate = financeCheckStatus.getModifiedDate().toLocalDate();
 
-        FinanceCheckViewModel financeCheckViewModel;
+        boolean isLeadPartner = isLeadPartner(projectId, organisationId);
 
-        if (financeContact.isPresent()) {
-            financeCheckViewModel = new FinanceCheckViewModel(formattedCompId, competitionName, organisationResource.getName(), false, projectId, organisationId, financeContact.get().getUserName(), financeContact.get().getEmail(), isResearch,
-                    financeChecksApproved, approverName, approvalDate);
-        } else {
-            financeCheckViewModel = new FinanceCheckViewModel(formattedCompId, competitionName, organisationResource.getName(), false, projectId, organisationId, isResearch, financeChecksApproved, approverName, approvalDate);
+        FinanceCheckViewModel financeCheckViewModel = new FinanceCheckViewModel(formattedCompId, competitionName, organisationResource.getName(), isLeadPartner, projectId, organisationId, isResearch, financeChecksApproved, approverName, approvalDate);
+
+        if (financeContact.isPresent()) { // Internal users may still view finance contact page without finance contact being set.  They will see a message warning about this on template.
+            financeCheckViewModel.setFinanceContactName(financeContact.get().getUserName());
+            financeCheckViewModel.setFinanceContactEmail(financeContact.get().getEmail());
         }
 
         model.addAttribute("model", financeCheckViewModel);
-        return "project/financecheck/partner-project-eligibility";
     }
 
     private Optional<ProjectUserResource> getFinanceContact(Long projectId, Long organisationId){
@@ -191,21 +198,21 @@ public class FinanceCheckController {
         return financeCheckService.getByProjectAndOrganisation(key);
     }
 
-    private String updateFinanceCheck(Long projectId, FinanceCheckResource currentFinanceCheckResource, FinanceCheckForm financeCheckForm){
-        // TODO map by name once form is dynamic
-        doUpdateFinanceCheck(currentFinanceCheckResource, financeCheckForm);
+    private String updateFinanceCheck(FinanceCheckResource currentFinanceCheckResource, FinanceCheckForm financeCheckForm, ValidationHandler validationHandler){
 
-        return redirectToViewFinanceCheckSummary(projectId);
+        Supplier<String> failureView = () -> redirectToFinanceCheckForm(currentFinanceCheckResource.getProject(), currentFinanceCheckResource.getOrganisation());
+        Supplier<String> successView = () -> redirectToViewFinanceCheckSummary(currentFinanceCheckResource.getProject());
+
+        ServiceResult<Void> updateResult = doUpdateFinanceCheck(currentFinanceCheckResource, financeCheckForm);
+        return validationHandler.addAnyErrors(updateResult).failNowOrSucceedWith(failureView, successView);
     }
 
     private ServiceResult<Void> doUpdateFinanceCheck(FinanceCheckResource currentFinanceCheckResource, FinanceCheckForm financeCheckForm) {
-        for(int i = 0; i < financeCheckForm.getCosts().size(); i++){
+        for (int i = 0; i < financeCheckForm.getCosts().size(); i++) {
             currentFinanceCheckResource.getCostGroup().getCosts().get(i).setValue(financeCheckForm.getCosts().get(i).getValue());
         }
 
-        // TODO - deal with update failures if they occur
-        financeCheckService.update(currentFinanceCheckResource);
-        return serviceSuccess();
+        return financeCheckService.update(currentFinanceCheckResource);
     }
 
     private String doViewFinanceCheckSummary(Long projectId, Model model, FinanceCheckSummaryForm form) {
@@ -235,16 +242,18 @@ public class FinanceCheckController {
 
         List<ApplicationFinanceResource> applicationFinanceResourceList = financeService.getApplicationFinanceTotals(application.getId());
 
-        List<ProjectFinanceCheckSummaryViewModel.FinanceCheckOrganisationRow> organisationRows = mapWithIndex(partnerOrganisations, (i, org) ->
+        List<ProjectFinanceCheckSummaryViewModel.FinanceCheckOrganisationRow> organisationRows = mapWithIndex(partnerOrganisations, (i, org) -> {
 
-                new ProjectFinanceCheckSummaryViewModel.FinanceCheckOrganisationRow(
-                        org.getId(), org.getName(),
-                        getEnumForIndex(ProjectFinanceCheckSummaryViewModel.Viability.class, i),
-                        getEnumForIndex(ProjectFinanceCheckSummaryViewModel.RagStatus.class, i),
-                        getEnumForIndex(ProjectFinanceCheckSummaryViewModel.Eligibility.class, i),
-                        getEnumForIndex(ProjectFinanceCheckSummaryViewModel.RagStatus.class, i + 1),
-                        getEnumForIndex(ProjectFinanceCheckSummaryViewModel.QueriesRaised.class, i))
-        );
+            boolean financeChecksApproved = ProjectActivityStates.COMPLETE.equals(projectTeamStatus.getPartnerStatusForOrganisation(org.getId()).get().getFinanceChecksStatus());
+
+            return new ProjectFinanceCheckSummaryViewModel.FinanceCheckOrganisationRow(
+                    org.getId(), org.getName(),
+                    getEnumForIndex(ProjectFinanceCheckSummaryViewModel.Viability.class, i),
+                    getEnumForIndex(ProjectFinanceCheckSummaryViewModel.RagStatus.class, i),
+                    financeChecksApproved ? ProjectFinanceCheckSummaryViewModel.Eligibility.APPROVED : ProjectFinanceCheckSummaryViewModel.Eligibility.REVIEW,
+                    getEnumForIndex(ProjectFinanceCheckSummaryViewModel.RagStatus.class, i + 1),
+                    getEnumForIndex(ProjectFinanceCheckSummaryViewModel.QueriesRaised.class, i));
+        });
 
         BigDecimal projectTotal = calculateTotalForAllOrganisations(applicationFinanceResourceList, ApplicationFinanceResource::getTotal);
         BigDecimal totalFundingSought =  calculateTotalForAllOrganisations(applicationFinanceResourceList, ApplicationFinanceResource::getTotalFundingSought);
@@ -283,5 +292,15 @@ public class FinanceCheckController {
 
     private String redirectToViewFinanceCheckSummary(Long projectId) {
         return "redirect:/project/" + projectId + "/finance-check";
+    }
+
+    private boolean isLeadPartner(Long projectId, Long organisationId) {
+        ServiceResult<List<PartnerOrganisationResource>> result = partnerOrganisationService.getPartnerOrganisations(projectId);
+        if(result.isSuccess()) {
+            Optional<PartnerOrganisationResource> partnerOrganisationResource = simpleFindFirst(result.getSuccessObject(), PartnerOrganisationResource::isLeadOrganisation);
+            return partnerOrganisationResource.isPresent() && partnerOrganisationResource.get().getOrganisation().equals(organisationId);
+        } else {
+            return false;
+        }
     }
 }

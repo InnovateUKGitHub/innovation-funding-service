@@ -72,8 +72,9 @@ public class SpendProfileRepositoryIntegrationTest extends BaseRepositoryIntegra
         List<Cost> eligibleCosts = asList(new Cost("1.20"), new Cost("3.40"));
         List<Cost> spendProfileFigures = asList(new Cost("5.60"), new Cost("7.80"));
 
-        User generatedBy = userRepository.findByEmail("project.finance1@innovateuk.test").get();
+        User generatedBy = getFinanceTeamUser();
         Calendar generatedDate = Calendar.getInstance();
+        generatedDate.set(Calendar.MILLISECOND, 0);
 
         SpendProfile saved = repository.save(new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileFigures, generatedBy, generatedDate, false));
 
@@ -86,6 +87,8 @@ public class SpendProfileRepositoryIntegrationTest extends BaseRepositoryIntegra
         assertEquals(costCategoryType.getId(), retrieved.getCostCategoryType().getId());
         assertEquals(project.getId(), retrieved.getProject().getId());
         assertEquals(organisation.getId(), retrieved.getOrganisation().getId());
+        assertEquals(generatedBy, retrieved.getGeneratedBy());
+        assertEquals(generatedDate, retrieved.getGeneratedDate());
 
         List<BigDecimal> expectedEligibleCostValues = simpleMap(eligibleCosts, Cost::getValue);
         List<BigDecimal> actualEligibleCostValues = simpleMap(retrieved.getEligibleCosts().getCosts(), Cost::getValue);
@@ -122,8 +125,9 @@ public class SpendProfileRepositoryIntegrationTest extends BaseRepositoryIntegra
                 new Cost("5.60").withCategory(labourCostCategory).withTimePeriod(0, DAY, 1, MONTH),
                 new Cost("7.80").withCategory(materialsCostCategory).withTimePeriod(0, DAY, 1, MONTH));
 
-        User generatedBy = userRepository.findByEmail("project.finance1@innovateuk.test").get();
+        User generatedBy = getFinanceTeamUser();
         Calendar generatedDate = Calendar.getInstance();
+        generatedDate.set(Calendar.MILLISECOND, 0);
 
         SpendProfile saved = repository.save(new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileFigures, generatedBy, generatedDate, false));
 
@@ -264,7 +268,7 @@ public class SpendProfileRepositoryIntegrationTest extends BaseRepositoryIntegra
         List<Cost> eligibleCosts = asList(new Cost("1.20"), new Cost("3.40"));
         List<Cost> spendProfileFigures = asList(new Cost("5.60"), new Cost("7.80"));
 
-        User generatedBy = userRepository.findByEmail("project.finance1@innovateuk.test").get();
+        User generatedBy = getFinanceTeamUser();
         Calendar generatedDate = Calendar.getInstance();
 
         SpendProfile saved = repository.save(new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileFigures, generatedBy, generatedDate, false));
@@ -286,5 +290,9 @@ public class SpendProfileRepositoryIntegrationTest extends BaseRepositoryIntegra
         List<BigDecimal> expectedSpendProfileCostValues = simpleMap(spendProfileFigures, Cost::getValue);
         List<BigDecimal> actualSpendProfileCostValues = simpleMap(retrieved.getSpendProfileFigures().getCosts(), Cost::getValue);
         assertEquals(expectedSpendProfileCostValues, actualSpendProfileCostValues);
+    }
+
+    private User getFinanceTeamUser() {
+        return userRepository.findByEmail("finance@innovateuk.gov.uk").get();
     }
 }

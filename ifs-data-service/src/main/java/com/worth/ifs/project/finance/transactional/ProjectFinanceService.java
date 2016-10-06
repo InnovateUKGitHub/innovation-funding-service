@@ -1,14 +1,10 @@
 package com.worth.ifs.project.finance.transactional;
 
 import com.worth.ifs.commons.security.NotSecured;
-import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.project.finance.domain.CostCategoryType;
-import com.worth.ifs.project.finance.resource.CostCategoryTypeResource;
-import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
-import com.worth.ifs.project.resource.ProjectResource;
-import com.worth.ifs.project.resource.SpendProfileResource;
-import com.worth.ifs.project.resource.SpendProfileTableResource;
 import com.worth.ifs.commons.security.SecuredBySpring;
+import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.project.finance.resource.CostCategoryTypeResource;
+import com.worth.ifs.project.resource.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
@@ -22,6 +18,9 @@ public interface ProjectFinanceService {
 
     @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'VIEW_SPEND_PROFILE')")
     ServiceResult<SpendProfileTableResource> getSpendProfileTable(ProjectOrganisationCompositeId projectOrganisationCompositeId);
+
+    @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'VIEW_SPEND_PROFILE')")
+    ServiceResult<SpendProfileCSVResource> getSpendProfileCSV(ProjectOrganisationCompositeId projectOrganisationCompositeId);
 
     @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'VIEW_SPEND_PROFILE')")
     ServiceResult<SpendProfileResource> getSpendProfile(ProjectOrganisationCompositeId projectOrganisationCompositeId);
