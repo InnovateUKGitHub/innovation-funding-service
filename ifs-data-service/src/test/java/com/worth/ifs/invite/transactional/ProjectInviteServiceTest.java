@@ -36,8 +36,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
 
     @Mock
     NotificationService notificationService;
-    @Mock
-    InviteProjectMapper inviteProjectMapperMock;
+
     @Mock
     InviteOrganisationMapper inviteOrganisationMapper;
 

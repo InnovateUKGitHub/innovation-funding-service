@@ -1,6 +1,7 @@
 package com.worth.ifs.project.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.worth.ifs.invite.domain.ProjectInvite;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.RoleResource;
 import com.worth.ifs.user.resource.UserResource;
@@ -17,6 +18,7 @@ public class ProjectUserResource {
     private Long organisation;
     private String email;
     private String phoneNumber;
+    private ProjectInvite invite;
 
     public ProjectUserResource(){
     	// no-arg constructor
