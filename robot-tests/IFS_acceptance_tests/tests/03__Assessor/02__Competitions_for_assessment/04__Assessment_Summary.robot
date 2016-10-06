@@ -14,6 +14,7 @@ Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
+Resource          ../../../resources/keywords/MYSQL_AND_DATE_KEYWORDS.robot
 
 *** Test Cases ***
 All the sections are present in the summary
@@ -30,8 +31,7 @@ Number of days remaining until assessment submission
     [Documentation]    INFUND-3720
     [Tags]    HappyPath
     Then The user should see the text in the page    Days left to submit
-    And the assessor should see the number of days remaining
-    And the days remaining should be correct
+    And the days remaining should be correct (Top of the page)    2016-12-31
 
 Assessment summary shows questions as incomplete
     [Documentation]    INFUND-550
@@ -112,7 +112,8 @@ Feedback validations
     And The user clicks the button/link    jQuery=.button:contains(Save assessment)
     Then The user should see an error    Please indicate your decision
     And the word count should be correct    Words remaining: -4
-    And the user clears the text from feedback and comment
+    And The user enters text to a text field    id=feedback    ${EMPTY}
+    And The user enters text to a text field    id=comment    ${EMPTY}
     Then the user selects the radio button    fundingConfirmation    false
     And The user clicks the button/link    jQuery=.button:contains(Save assessment)
     Then The user should see an error    Please enter your feedback
@@ -152,18 +153,12 @@ Word count check: Comments for InnovateUK
 Your Feedback is not mandatory when Yes is selected
     [Documentation]    INFUND-4996
     [Tags]
-    Given The user navigates to the assessor page    ${Assessment_summary_open_11}
-    And The feedback text area is empty
+    When the user enters text to a text field    id=feedback    ${EMPTY}
     When the user selects the radio button    fundingConfirmation    true
     And The user clicks the button/link    jQuery=.button:contains(Save assessment)
     Then The user should not see the text in the page    Please enter your feedback
 
 *** Keywords ***
-The assessor navigates to the summary page
-    Given the user navigates to the page    ${Assessment_overview_9}
-    When The user clicks the button/link    jQuery=.button:contains(Review assessment)
-    And The user should see the text in the page    Assessment summary
-
 the collapsible button should contain
     [Arguments]    ${BUTTON}    ${TEXT}
     Element Should Contain    ${BUTTON}    ${TEXT}
@@ -229,23 +224,3 @@ the word count should be correct
 the total scores should be correct
     Element should contain    css=div:nth-child(5) p.no-margin strong    Total: 50/50
     Element should contain    css=div:nth-child(5) p:nth-child(2) strong    100%
-
-the assessor should see the number of days remaining
-    the user should see the element    css=.sub-header .pie-overlay .day
-
-the days remaining should be correct
-    ${CURRENT_DATE}=    Get Current Date    result_format=%Y-%m-%d    exclude_millis=true
-    ${STARTING_DATE}=    Add Time To Date    ${CURRENT_DATE}    1 day    result_format=%Y-%m-%d    exclude_millis=true
-    ${MILESTONE_DATE}=    Convert Date    2016-12-31    result_format=%Y-%m-%d    exclude_millis=true
-    ${NO_OF_DAYS_LEFT}=    Subtract Date From Date    ${MILESTONE_DATE}    ${STARTING_DATE}    verbose    exclude_millis=true
-    ${NO_OF_DAYS_LEFT}=    Remove String    ${NO_OF_DAYS_LEFT}    days
-    ${SCREEN_NO_OF_DAYS_LEFT}=    Get Text    css=.sub-header .pie-overlay .day
-    Should Be Equal As Numbers    ${NO_OF_DAYS_LEFT}    ${SCREEN_NO_OF_DAYS_LEFT}
-
-The feedback text area is empty
-    Clear Element Text    id=feedback
-
-the user clears the text from feedback and comment
-    Clear Element Text    id=feedback
-    Clear Element Text    id=comment
-

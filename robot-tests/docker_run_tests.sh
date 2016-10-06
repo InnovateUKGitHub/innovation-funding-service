@@ -108,7 +108,7 @@ function startSeleniumGrid() {
       suiteCount=1
     fi
     echo ${suiteCount}
-    docker-compose -p robot up -d
+    docker-compose -p robot up -d --force-recreate
     docker-compose -p robot scale chrome=${suiteCount}
     unset suiteCount
     if [[ $quickTest -eq 1 ]]
