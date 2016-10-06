@@ -79,7 +79,7 @@
     <ul class="tabular-list__row">
 
         <li class="width-25-percent">
-            <a href="#" th:text="${name}" class="heading-small">NAME</a>
+            <a th:href="${'/prototypes/5229-assessor-profile?name='+name}" th:text="${name}" class="heading-small">NAME</a>
         </li>
 
         <li class="width-20-percent">
@@ -176,7 +176,7 @@
 <div th:fragment="prototype-assesor-row-assign-assessor">
     <ul class="tabular-list__row">
         <li class="width-20-percent">
-            <a href="#" th:text="${name}" class="heading-small">NAME</a>
+            <a th:href="${'/prototypes/5229-assessor-profile?name='+name}" th:text="${name}" class="heading-small">NAME</a>
         </li>
         <li class="width-10-percent">
              <strong class="show-mobile">Type:</strong> <span class="no-margin" th:text="${busType}">TYPE</span>
