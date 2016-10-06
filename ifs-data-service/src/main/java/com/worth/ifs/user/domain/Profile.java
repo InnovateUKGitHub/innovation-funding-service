@@ -16,7 +16,7 @@ public class Profile extends AuditableEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToOne
+    @OneToOne(optional = false)
     private User user;
 
     @ManyToOne(targetEntity = Address.class, cascade = CascadeType.ALL)
@@ -35,7 +35,7 @@ public class Profile extends AuditableEntity {
 
     private LocalDateTime contractSignedDate;
 
-    public Profile() {
+    Profile() {
         // default constructor
     }
 

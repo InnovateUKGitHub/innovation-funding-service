@@ -1,6 +1,7 @@
 package com.worth.ifs.user.transactional;
 
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.user.resource.ProfileResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -10,6 +11,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
  */
 public interface UserProfileService {
 
-    @PreAuthorize("hasPermission(#userBeingUpdated, 'UPDATE')")
-    ServiceResult<Void> updateProfile(@P("userBeingUpdated") UserResource userBeingUpdated);
+    @PreAuthorize("hasPermission(#userId, 'com.worth.ifs.user.resource.UserResource', 'UPDATE')")
+    ServiceResult<Void> updateProfile(Long userId, ProfileResource profileResource);
 }
