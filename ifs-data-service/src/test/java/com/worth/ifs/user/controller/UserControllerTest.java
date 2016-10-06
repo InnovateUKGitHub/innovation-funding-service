@@ -272,15 +272,14 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         Long userId = 1L;
 
         when(userServiceMock.getUserById(userId)).thenReturn(serviceSuccess(user));
-        when(userProfileServiceMock.updateProfile(user)).thenReturn(serviceSuccess());
+        when(userProfileServiceMock.updateProfile(userId, profile)).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/user/id/{id}/updateProfile", userId)
                 .contentType(APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(profile)))
                 .andExpect(status().isOk());
 
-        verify(userServiceMock, times(1)).getUserById(userId);
-        verify(userProfileServiceMock, times(1)).updateProfile(user);
+        verify(userProfileServiceMock, times(1)).updateProfile(userId, profile);
         verifyNoMoreInteractions(userServiceMock);
         verifyNoMoreInteractions(userProfileServiceMock);
     }

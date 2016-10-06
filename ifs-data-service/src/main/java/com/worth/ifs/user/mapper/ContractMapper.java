@@ -5,11 +5,13 @@ import com.worth.ifs.commons.mapper.GlobalMapperConfig;
 import com.worth.ifs.user.domain.Contract;
 import com.worth.ifs.user.resource.ContractResource;
 import org.mapstruct.Mapper;
+import org.mapstruct.NullValueMappingStrategy;
 
 @Mapper(
         config =  GlobalMapperConfig.class,
         uses = {
-        }
+        },
+        nullValueMappingStrategy = NullValueMappingStrategy.RETURN_NULL
 )
 public abstract class ContractMapper extends BaseMapper<Contract, ContractResource, Long> {
 
@@ -19,4 +21,5 @@ public abstract class ContractMapper extends BaseMapper<Contract, ContractResour
         }
         return object.getId();
     }
+
 }
