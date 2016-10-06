@@ -205,7 +205,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         spendProfileList.forEach(spendProfile ->
                 assertEquals(ApprovalType.APPROVED, spendProfile.getApproval())
         );
-        verify(spendProfileRepositoryMock).save(anyCollection());
+        verify(spendProfileRepositoryMock).save(spendProfileList);
     }
 
     @Test
@@ -219,7 +219,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         spendProfileList.forEach(spendProfile ->
             assertEquals(ApprovalType.REJECTED, spendProfile.getApproval())
         );
-        verify(spendProfileRepositoryMock).save(anyCollection());
+        verify(spendProfileRepositoryMock).save(spendProfileList);
     }
 
     @Test
