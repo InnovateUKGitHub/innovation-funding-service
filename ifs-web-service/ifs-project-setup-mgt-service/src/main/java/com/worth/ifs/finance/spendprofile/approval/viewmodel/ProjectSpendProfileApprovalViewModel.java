@@ -1,8 +1,10 @@
 package com.worth.ifs.finance.spendprofile.approval.viewmodel;
 
 import com.worth.ifs.application.resource.CompetitionSummaryResource;
+import com.worth.ifs.project.resource.ApprovalType;
 import com.worth.ifs.user.resource.OrganisationResource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.List;
 
@@ -13,20 +15,16 @@ public class ProjectSpendProfileApprovalViewModel {
 
     private CompetitionSummaryResource competitionSummary;
     private String leadTechnologist;
-    private Boolean isApproved;
-    private Boolean isRejected;
-    private Boolean isNotApprovedOrRejected;
+    private ApprovalType approvalType;
     private List<OrganisationResource> organisations;
 
     public ProjectSpendProfileApprovalViewModel(CompetitionSummaryResource competitionSummary,
                                                 String leadTechnologist,
-                                                Boolean isApproved, Boolean isRejected, Boolean isNotApprovedOrRejected,
+                                                ApprovalType approvalType,
                                                 List<OrganisationResource> organisations) {
         this.competitionSummary = competitionSummary;
         this.leadTechnologist = leadTechnologist;
-        this.isApproved = isApproved;
-        this.isRejected = isRejected;
-        this.isNotApprovedOrRejected = isNotApprovedOrRejected;
+        this.approvalType = approvalType;
         this.organisations = organisations;
     }
 
@@ -39,15 +37,15 @@ public class ProjectSpendProfileApprovalViewModel {
     }
 
     public Boolean getApproved() {
-        return isApproved;
+        return ApprovalType.APPROVED.equals(approvalType);
     }
 
     public Boolean getRejected() {
-        return isRejected;
+        return ApprovalType.REJECTED.equals(approvalType);
     }
 
     public Boolean getNotApprovedOrRejected() {
-        return isNotApprovedOrRejected;
+        return ApprovalType.UNSET.equals(approvalType);
     }
 
     public List<OrganisationResource> getOrganisations() {
@@ -65,10 +63,18 @@ public class ProjectSpendProfileApprovalViewModel {
         return new EqualsBuilder()
                 .append(competitionSummary, that.competitionSummary)
                 .append(leadTechnologist, that.leadTechnologist)
-                .append(isApproved, that.isApproved)
-                .append(isRejected, that.isRejected)
-                .append(isNotApprovedOrRejected, that.isNotApprovedOrRejected)
+                .append(approvalType, that.approvalType)
                 .append(organisations, that.organisations)
                 .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(competitionSummary)
+                .append(leadTechnologist)
+                .append(approvalType)
+                .append(organisations)
+                .toHashCode();
     }
 }
