@@ -8,7 +8,6 @@ import com.worth.ifs.invite.domain.*;
 import com.worth.ifs.invite.repository.CompetitionParticipantRepository;
 import com.worth.ifs.invite.repository.RejectionReasonRepository;
 import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.mapper.UserMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +30,6 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
     @Autowired
     private RejectionReasonRepository rejectionReasonRepository;
-
-    @Autowired
-    private UserMapper userMapper;
 
     @Autowired
     @Override
@@ -102,6 +98,8 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
     @Test
     public void save_accepted() {
+        User user = newUser().build();
+
         CompetitionInvite invite = CompetitionInviteBuilder
                 .newCompetitionInviteWithoutId() // can we do this for all
                 .withName("name1")
@@ -110,7 +108,8 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
                 .withCompetition(competition)
                 .withStatus(OPENED).build();
 
-        CompetitionParticipant savedParticipant = repository.save( (new CompetitionParticipant(competition, invite)).acceptAndAssignUser(userMapper.mapToDomain(getLoggedInUser()) ) );
+        CompetitionParticipant savedParticipant = repository.save(
+                (new CompetitionParticipant(competition, invite)).acceptAndAssignUser(user) );
 
         flushAndClearSession();
 
