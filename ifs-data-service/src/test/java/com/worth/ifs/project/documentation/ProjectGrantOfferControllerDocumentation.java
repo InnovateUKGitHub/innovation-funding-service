@@ -13,11 +13,19 @@ import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.documentation.ProjectDocs.projectResourceFields;
 import static java.util.Collections.emptyMap;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 
 /**
  * Api documentation for grant offer letter using ASCII docs
@@ -152,6 +160,20 @@ public class ProjectGrantOfferControllerDocumentation extends BaseControllerMock
         assertGetFileContents("/project/{projectId}/grant-offer", new Object[]{projectId},
                 emptyMap(), projectGrantOfferServiceMock, serviceCallToUpload).
                 andDo(documentFileGetContentsMethod(document));
+    }
+
+    @Test
+    public void postSubmitGrantOfferLetter() throws Exception {
+        Long projectId = 123L;
+
+        when(projectGrantOfferServiceMock.submitGrantOfferLetter(projectId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{id}/grant-offer/submit", projectId))
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("id").description("Id of the project whos offer letter is being submitted")
+                        )
+                ));
     }
 
 }
