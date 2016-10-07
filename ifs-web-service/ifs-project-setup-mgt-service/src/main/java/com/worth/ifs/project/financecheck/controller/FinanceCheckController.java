@@ -16,6 +16,7 @@ import com.worth.ifs.project.financecheck.form.CostFormField;
 import com.worth.ifs.project.financecheck.form.FinanceCheckForm;
 import com.worth.ifs.project.financecheck.form.FinanceCheckSummaryForm;
 import com.worth.ifs.project.financecheck.viewmodel.FinanceCheckViewModel;
+import com.worth.ifs.project.financecheck.viewmodel.ProjectFinanceCheckSummaryViewModel;
 import com.worth.ifs.project.resource.PartnerOrganisationResource;
 import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
 import com.worth.ifs.project.resource.ProjectResource;
@@ -206,7 +207,8 @@ public class FinanceCheckController {
 
     private String doViewFinanceCheckSummary(Long projectId, Model model) {
         FinanceCheckSummaryResource financeCheckSummaryResource = financeCheckService.getFinanceCheckSummary(projectId).getSuccessObjectOrThrowException();
-        model.addAttribute("model", financeCheckSummaryResource);
+        ProjectFinanceCheckSummaryViewModel projectFinanceCheckSummaryViewModel = new ProjectFinanceCheckSummaryViewModel(financeCheckSummaryResource);
+        model.addAttribute("model", projectFinanceCheckSummaryViewModel);
         return "project/financecheck/summary";
     }
 

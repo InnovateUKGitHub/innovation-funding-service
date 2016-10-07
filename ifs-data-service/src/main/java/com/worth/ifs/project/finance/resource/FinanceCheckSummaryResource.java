@@ -18,12 +18,15 @@ public class FinanceCheckSummaryResource {
     private BigDecimal otherPublicSectorFunding;
     private BigDecimal totalPercentageGrant;
     private boolean spendProfilesGenerated;
+    private boolean financeChecksAllApproved;
+    private String spendProfileGeneratedBy;
+    private LocalDate spendProfileGeneratedDate;
     private List<FinanceCheckPartnerStatusResource> partnerStatusResources;
 
     public FinanceCheckSummaryResource() {
     }
 
-    public FinanceCheckSummaryResource(Long projectId, Long competitionId, String competitionName, LocalDate projectStartDate, int durationInMonths, BigDecimal totalProjectCost, BigDecimal grantAppliedFor, BigDecimal otherPublicSectorFunding, BigDecimal totalPercentageGrant, boolean spendProfilesGenerated, List<FinanceCheckPartnerStatusResource> partnerStatusResources) {
+    public FinanceCheckSummaryResource(Long projectId, Long competitionId, String competitionName, LocalDate projectStartDate, int durationInMonths, BigDecimal totalProjectCost, BigDecimal grantAppliedFor, BigDecimal otherPublicSectorFunding, BigDecimal totalPercentageGrant, boolean spendProfilesGenerated, List<FinanceCheckPartnerStatusResource> partnerStatusResources, boolean financeChecksAllApproved, String spendProfileGeneratedBy, LocalDate spendProfileGeneratedDate) {
         this.projectId = projectId;
         this.competitionId = competitionId;
         this.competitionName = competitionName;
@@ -35,6 +38,9 @@ public class FinanceCheckSummaryResource {
         this.otherPublicSectorFunding = otherPublicSectorFunding;
         this.totalPercentageGrant = totalPercentageGrant;
         this.spendProfilesGenerated = spendProfilesGenerated;
+        this.financeChecksAllApproved = financeChecksAllApproved;
+        this.spendProfileGeneratedBy = spendProfileGeneratedBy;
+        this.spendProfileGeneratedDate = spendProfileGeneratedDate;
     }
 
     public Long getProjectId() {
@@ -125,11 +131,27 @@ public class FinanceCheckSummaryResource {
         this.spendProfilesGenerated = spendProfilesGenerated;
     }
 
-    public boolean isShowGenerateSpendProfilesButton() {
-        return !spendProfilesGenerated;
+    public String getSpendProfileGeneratedBy() {
+        return spendProfileGeneratedBy;
     }
 
-    public boolean isShowSpendProfilesGeneratedMessage() {
-        return spendProfilesGenerated;
+    public LocalDate getSpendProfileGeneratedDate() {
+        return spendProfileGeneratedDate;
+    }
+
+    public boolean isFinanceChecksAllApproved() {
+        return financeChecksAllApproved;
+    }
+
+    public void setFinanceChecksAllApproved(boolean financeChecksAllApproved) {
+        this.financeChecksAllApproved = financeChecksAllApproved;
+    }
+
+    public void setSpendProfileGeneratedBy(String spendProfileGeneratedBy) {
+        this.spendProfileGeneratedBy = spendProfileGeneratedBy;
+    }
+
+    public void setSpendProfileGeneratedDate(LocalDate spendProfileGeneratedDate) {
+        this.spendProfileGeneratedDate = spendProfileGeneratedDate;
     }
 }
