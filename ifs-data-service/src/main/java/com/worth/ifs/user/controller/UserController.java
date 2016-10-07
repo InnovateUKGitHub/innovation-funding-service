@@ -152,10 +152,10 @@ public class UserController {
         ).toPostCreateResponse();
     }
 
-//    @RequestMapping(value = "/updateDetails", method = POST)
-//    public RestResult<Void> updateDetails(@RequestBody UserResource userResource) {
-//        return userProfileService.updateProfile(userResource).toPutResponse();
-//    }
+    @RequestMapping(value = "/updateDetails", method = POST)
+    public RestResult<Void> updateDetails(@RequestBody UserResource userResource) {
+        return userProfileService.updateDetails(userResource).toPutResponse();
+    }
 
     @RequestMapping(value = "/id/{id}/updateProfile", method = PUT)
     public RestResult<Void> updateProfile(@PathVariable("id") Long id,

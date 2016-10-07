@@ -52,5 +52,10 @@ public class UserProfileServiceSecurityTest extends BaseServiceSecurityTest<User
         public ServiceResult<Void> updateProfile(Long userId, ProfileResource profileResource) {
             return null;
         }
+
+        @Override
+        public ServiceResult<Void> updateDetails(UserResource userResource) {
+            return null;
+        }
     }
 }

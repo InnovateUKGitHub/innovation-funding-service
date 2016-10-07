@@ -10,7 +10,10 @@ import com.worth.ifs.user.resource.ProfileResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import static com.worth.ifs.commons.error.CommonErrors.badRequestError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 /**
@@ -21,7 +24,6 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
 
     @Autowired
     UserService userService;
-
 
     @Autowired
     UserMapper userMapper;
@@ -51,20 +53,24 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
         return serviceSuccess();
     }
 
-    private ServiceResult<Void> updateUser(UserResource userResource, ProfileResource profileResource) {
-        if (userResource.getProfile() == null) {
-            userResource.setProfile(profileResource);
+    @Override
+    public ServiceResult<Void> updateDetails(UserResource userResource) {
+        if(userResource!=null) {
+            return userService.findByEmail(userResource.getEmail())
+                    .andOnSuccess(existingUser ->
+                            updateUser(existingUser, userResource));
+        } else {
+            return serviceFailure(badRequestError("User resource may not be null"));
         }
-        else {
-            final ProfileResource existingProfileResource = userResource.getProfile();
-            existingProfileResource.setBusinessType(profileResource.getBusinessType());
-            existingProfileResource.setSkillsAreas(profileResource.getSkillsAreas());
-            existingProfileResource.setContract(profileResource.getContract());
-        }
-        return serviceSuccess(
-                userRepository.save(
-                        userMapper.mapToDomain(userResource)
-                )
-        ).andOnSuccessReturnVoid();
+    }
+
+    private ServiceResult<Void> updateUser(UserResource existingUserResource, UserResource updatedUserResource){
+        existingUserResource.setPhoneNumber(updatedUserResource.getPhoneNumber());
+        existingUserResource.setTitle(updatedUserResource.getTitle());
+        existingUserResource.setLastName(updatedUserResource.getLastName());
+        existingUserResource.setFirstName(updatedUserResource.getFirstName());
+        existingUserResource.setProfile(updatedUserResource.getProfile());
+        User existingUser = userMapper.mapToDomain(existingUserResource);
+        return serviceSuccess(userRepository.save(existingUser)).andOnSuccessReturnVoid();
     }
 }

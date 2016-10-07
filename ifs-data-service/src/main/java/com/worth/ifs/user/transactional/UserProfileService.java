@@ -13,4 +13,7 @@ public interface UserProfileService {
 
     @PreAuthorize("hasPermission(#userId, 'com.worth.ifs.user.resource.UserResource', 'UPDATE')")
     ServiceResult<Void> updateProfile(Long userId, ProfileResource profileResource);
+
+    @PreAuthorize("hasPermission(#userBeingUpdated, 'UPDATE')")
+    ServiceResult<Void> updateDetails(@P("userBeingUpdated") UserResource userBeingUpdated);
 }
