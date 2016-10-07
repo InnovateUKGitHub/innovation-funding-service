@@ -3,7 +3,7 @@ Documentation     INFUND-3303: As an Assessor I want the ability to reject the a
 ...
 ...
 ...               INFUND-3720 As an Assessor I can see deadlines for the assessment of applications currently in assessment on my dashboard, so that I am reminded to deliver my work on time \ INFUND-1188 As an assessor I want to be able to review my assessments from one place so that I can work in my favoured style when reviewing
-Suite Setup
+Suite Setup       guest user log-in    felix.wilson@gmail.com    Passw0rd
 Suite Teardown    the user closes the browser
 Force Tags        Assessor
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
@@ -19,10 +19,9 @@ Assessment overview should show the expected questions
     ...
     ...    INFUND-1188
     [Tags]    HappyPath
-    [Setup]    guest user log-in    paul.plum@gmail.com    Passw0rd
     Given The user clicks the button/link    link=Juggling Craziness
     when the user clicks the button/link    link=Juggling is fun
-    Then The user should be redirected to the correct page    /assessment/9
+    Then The user should be redirected to the correct page    /assessment/11
     And the user should see four sections
 
 Number of days remaining until assessment submission
@@ -31,22 +30,22 @@ Number of days remaining until assessment submission
     Then The user should see the text in the page    Days left to submit
     And the days remaining should be correct (Top of the page)    2016-12-31
 
-Other Assessors should not be able to access this application
+Reject application from assessment overview
     [Documentation]    INFUND-3540
+    ...
+    ...     INFUND-5379
     [Tags]
-    [Setup]    guest user log-in    felix.wilson@gmail.com    Passw0rd
-    # Note: Here Assessor-Felix rejects application 8 and paul is able to assess the application.
-    When the user navigates to the page    ${Assessment_overview_11}
-    Then The user should see the element    css=#content .extra-margin details summary
-    And the user clicks the button/link    css=#content .extra-margin details summary
-    And the user clicks the button/link    css=#details-content-0 a
+    Given the user navigates to the page    ${Assessment_overview_11}
+    When the user clicks the button/link    jQuery=.summary:contains("Unable to assess this application")
+    And the user clicks the button/link    link=Reject this application
     And the user fills in rejection details
-    Then the user clicks the button/link    jQuery=button:contains("X")
-    And the user clicks the button/link    css=#details-content-0 a
-    # Then the user fills in rejection details
+    And the user clicks the button/link    jQuery=button:contains("X")
+    And the user clicks the button/link    link=Reject this application
     And the user clicks the button/link    jquery=button:contains("Reject")
-    Then The user should be redirected to the correct page    ${Assessor_competition_dashboard}
+    Then The user should be redirected to the correct page    ${Assessor_application_dashboard}
+    And The user should not see the element    link=Juggling is fun
     [Teardown]    Logout as user
+
 
 *** Keywords ***
 the user should see four sections
@@ -55,6 +54,8 @@ the user should see four sections
     the user should see the element    css=#section-17 .heading-medium
 
 the user fills in rejection details
+    And the user should see the element    id=rejectReason
+    the user selects the option from the drop-down menu    ${empty}    id=rejectReason    # Note that using this empty option will actually select the 'Select a reason' option at the top of the dropdown menu
     the user clicks the button/link    jquery=button:contains("Reject")
     The user should see an error    Please enter a reason
     Select From List By Index    id=rejectReason    1
