@@ -1,7 +1,6 @@
 package com.worth.ifs.form.resource;
 
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 
 public class FormInputResource {
@@ -9,7 +8,6 @@ public class FormInputResource {
     private Integer wordCount;
     private Long formInputType;
     private String formInputTypeTitle;
-    private List<Long> responses;
     private Long question;
     private Long competition;
     private Set<Long> inputValidators;
@@ -32,16 +30,8 @@ public class FormInputResource {
         return wordCount != null ? wordCount : 0;
     }
 
-    public List<Long> getResponses() {
-        return responses;
-    }
-
     public Long getFormInputType() {
         return formInputType;
-    }
-
-    public void setResponses(List<Long> responses) {
-        this.responses = responses;
     }
 
     public Boolean isIncludedInApplicationSummary() {

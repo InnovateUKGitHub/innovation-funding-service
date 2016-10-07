@@ -84,7 +84,6 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.function.Function.identity;
-import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.when;
@@ -457,7 +456,6 @@ public class BaseUnitTest {
         when(sectionService.getSectionByQuestionId(eq(q21Resource.getId()))).thenReturn(sectionResource3);
         when(sectionService.getSectionByQuestionId(eq(q22Resource.getId()))).thenReturn(sectionResource3);
 
-        competitionResource.setSections(sectionResources.stream().map(s -> s.getId()).collect(toList()));
         when(sectionService.filterParentSections(anyList())).thenReturn(sectionResources);
         competitionResources = singletonList(competitionResource);
         when(questionService.findByCompetition(competitionResource.getId())).thenReturn(questionList);
@@ -531,16 +529,10 @@ public class BaseUnitTest {
         organisation1.setProcessRoles(simpleMap(asList(processRole1, processRole2, processRole3, processRole4, processRole7, processRole8, processRole8), ProcessRoleResource::getId));
         organisation2.setProcessRoles(simpleMap(singletonList(processRole5), ProcessRoleResource::getId));
 
-        competitionResource.setApplications(simpleMap(applicationResources, ApplicationResource::getId));
-
         applicationResources.get(0).setCompetition(competitionResource.getId());
-        applicationResources.get(0).setProcessRoles(asList(processRole1.getId(), processRole5.getId()));
         applicationResources.get(1).setCompetition(competitionResource.getId());
-        applicationResources.get(1).setProcessRoles(singletonList(processRole2.getId()));
         applicationResources.get(2).setCompetition(competitionResource.getId());
-        applicationResources.get(2).setProcessRoles(asList(processRole3.getId(), processRole7.getId(), processRole8.getId()));
         applicationResources.get(3).setCompetition(competitionResource.getId());
-        applicationResources.get(3).setProcessRoles(singletonList(processRole4.getId()));
 
         loggedInUser.setProcessRoles(asList(processRole1.getId(), processRole2.getId(),processRole3.getId(), processRole4.getId()));
         users.get(0).setProcessRoles(asList(processRole5.getId()));

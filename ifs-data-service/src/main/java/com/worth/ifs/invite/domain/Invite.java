@@ -38,7 +38,7 @@ public abstract class Invite<T extends ProcessActivity, I extends Invite<T,I>> {
     @Email
     private  String email; // invitee
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "email", referencedColumnName = "email", insertable = false, updatable = false) // case sensitive? remove anyway
     private User user;
 

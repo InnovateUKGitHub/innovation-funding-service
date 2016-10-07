@@ -3,23 +3,18 @@ package com.worth.ifs.competition.service;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.competition.resource.CompetitionCountResource;
-import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.resource.CompetitionSearchResult;
-import com.worth.ifs.competition.resource.CompetitionTypeResource;
+import com.worth.ifs.competition.resource.*;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.worth.ifs.commons.service.ParameterizedTypeReferences.competitionResourceListType;
-import static com.worth.ifs.commons.service.ParameterizedTypeReferences.competitionTypeResourceListType;
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.*;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static java.util.Collections.singletonList;
+import static org.junit.Assert.*;
 
 /**
  *
@@ -106,33 +101,38 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
 
     @Test
     public void test_findLiveCompetitions() {
-        List<CompetitionResource> returnedResponse = newCompetitionResource().build(3);
+        List<CompetitionSearchResultItem> returnedResponse =
+                singletonList(new CompetitionSearchResultItem(1L, "Name", "", 0, "", CompetitionResource.Status.OPEN, "Comp Type"));
 
-        setupGetWithRestResultExpectations(competitionsRestURL + "/live", competitionResourceListType(), returnedResponse);
+        setupGetWithRestResultExpectations(competitionsRestURL + "/live", competitionSearchResultItemListType(), returnedResponse);
 
-        List<CompetitionResource> responses = service.findLiveCompetitions().getSuccessObject();
+        List<CompetitionSearchResultItem> responses = service.findLiveCompetitions().getSuccessObject();
         assertNotNull(responses);
         assertEquals(returnedResponse, responses);
     }
 
     @Test
     public void test_findProjectSetupCompetitions() {
-        List<CompetitionResource> returnedResponse = newCompetitionResource().build(3);
 
-        setupGetWithRestResultExpectations(competitionsRestURL + "/projectSetup", competitionResourceListType(), returnedResponse);
+        List<CompetitionSearchResultItem> returnedResponse =
+                singletonList(new CompetitionSearchResultItem(1L, "Name", "", 0, "", CompetitionResource.Status.OPEN, "Comp Type"));
 
-        List<CompetitionResource> responses = service.findProjectSetupCompetitions().getSuccessObject();
+        setupGetWithRestResultExpectations(competitionsRestURL + "/projectSetup", competitionSearchResultItemListType(), returnedResponse);
+
+        List<CompetitionSearchResultItem> responses = service.findProjectSetupCompetitions().getSuccessObject();
         assertNotNull(responses);
         assertEquals(returnedResponse, responses);
     }
 
     @Test
     public void test_findUpcomingCompetitions() {
-        List<CompetitionResource> returnedResponse = newCompetitionResource().build(3);
 
-        setupGetWithRestResultExpectations(competitionsRestURL + "/upcoming", competitionResourceListType(), returnedResponse);
+        List<CompetitionSearchResultItem> returnedResponse =
+                singletonList(new CompetitionSearchResultItem(1L, "Name", "", 0, "", CompetitionResource.Status.OPEN, "Comp Type"));
 
-        List<CompetitionResource> responses = service.findUpcomingCompetitions().getSuccessObject();
+        setupGetWithRestResultExpectations(competitionsRestURL + "/upcoming", competitionSearchResultItemListType(), returnedResponse);
+
+        List<CompetitionSearchResultItem> responses = service.findUpcomingCompetitions().getSuccessObject();
         assertNotNull(responses);
         assertEquals(returnedResponse, responses);
     }
