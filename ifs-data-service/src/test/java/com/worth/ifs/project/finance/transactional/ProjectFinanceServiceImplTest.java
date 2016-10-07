@@ -438,10 +438,10 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
     }
 
     @Test
-    public void testCompleteSpendProfilesReview() {
+    public void testCompleteSpendProfilesReviewSuccess() {
         Long projectId = 1L;
         Project projectInDb = new Project();
-        projectInDb.setOfferSubmittedDate(null);
+        projectInDb.setSpendProfileSubmittedDate(null);
         SpendProfile spendProfileInDb = new SpendProfile();
         spendProfileInDb.setMarkedAsComplete(true);
         projectInDb.setSpendProfiles(asList(spendProfileInDb));
@@ -452,6 +452,38 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         assertTrue(result.isSuccess());
         assertThat(projectInDb.getSpendProfileSubmittedDate(), notNullValue());
+    }
+
+
+    @Test
+    public void testCompleteSpendProfilesReviewFailureWhenSpendProfileIncomplete() {
+        Long projectId = 1L;
+        Project projectInDb = new Project();
+        projectInDb.setSpendProfileSubmittedDate(null);
+        SpendProfile spendProfileInDb = new SpendProfile();
+        spendProfileInDb.setMarkedAsComplete(false);
+        projectInDb.setSpendProfiles(asList(spendProfileInDb));
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDb);
+        assertThat(projectInDb.getSpendProfileSubmittedDate(), nullValue());
+
+        ServiceResult<Void> result = service.completeSpendProfilesReview(projectId);
+
+        assertTrue(result.isFailure());
+    }
+
+    @Test
+    public void testCompleteSpendProfilesReviewFailureWhenAlreadySubmitted() {
+        Long projectId = 1L;
+        Project projectInDb = new Project();
+        projectInDb.setSpendProfileSubmittedDate(LocalDateTime.now());
+        SpendProfile spendProfileInDb = new SpendProfile();
+        spendProfileInDb.setMarkedAsComplete(true);
+        projectInDb.setSpendProfiles(asList(spendProfileInDb));
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDb);
+
+        ServiceResult<Void> result = service.completeSpendProfilesReview(projectId);
+
+        assertTrue(result.isFailure());
     }
 
     private SpendProfile createSpendProfile(Project projectInDB, Map<String, BigDecimal> eligibleCostsMap, Map<String, List<BigDecimal>> spendProfileCostsMap) {
