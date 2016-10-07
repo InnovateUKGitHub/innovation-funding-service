@@ -1,20 +1,17 @@
 package com.worth.ifs.user.transactional;
 
-import com.worth.ifs.commons.service.ServiceFailure;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.transactional.BaseTransactionalService;
-import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.Affiliation;
+import com.worth.ifs.user.domain.Profile;
+import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.mapper.AffiliationMapper;
 import com.worth.ifs.user.mapper.UserMapper;
 import com.worth.ifs.user.resource.AffiliationResource;
-import com.worth.ifs.user.resource.AffiliationResource;
+import com.worth.ifs.user.resource.ProfileResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.AutoConfigurationPackage;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import com.worth.ifs.commons.error.Error;
 
 import java.util.List;
 

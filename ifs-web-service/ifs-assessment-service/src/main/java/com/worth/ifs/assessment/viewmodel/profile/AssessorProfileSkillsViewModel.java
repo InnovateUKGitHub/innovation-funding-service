@@ -1,4 +1,4 @@
-package com.worth.ifs.assessment.viewmodel;
+package com.worth.ifs.assessment.viewmodel.profile;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -6,10 +6,10 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 /**
  * Holder of model attributes for the Innovation and Skills view.
  */
-public class AssessorRegistrationSkillsViewModel {
+public class AssessorProfileSkillsViewModel {
     private String expertise;
 
-    public AssessorRegistrationSkillsViewModel(String expertise) {
+    public AssessorProfileSkillsViewModel(String expertise) {
         this.expertise = expertise;
     }
 
@@ -27,7 +27,7 @@ public class AssessorRegistrationSkillsViewModel {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        AssessorRegistrationSkillsViewModel that = (AssessorRegistrationSkillsViewModel) o;
+        AssessorProfileSkillsViewModel that = (AssessorProfileSkillsViewModel) o;
 
         return new EqualsBuilder()
                 .append(expertise, that.expertise)

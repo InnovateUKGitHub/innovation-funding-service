@@ -3,22 +3,19 @@ package com.worth.ifs.user.transactional;
 import com.worth.ifs.BaseServiceSecurityTest;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.user.resource.AffiliationResource;
-import com.worth.ifs.user.resource.UserResource;
-import com.worth.ifs.user.builder.UserResourceBuilder;
 import com.worth.ifs.user.resource.ProfileResource;
+import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.security.UserLookupStrategies;
 import com.worth.ifs.user.security.UserPermissionRules;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.security.access.method.P;
 
 import java.util.List;
 
 import static com.worth.ifs.user.builder.ProfileResourceBuilder.newProfileResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Tests around the integration of this service and Spring Security
