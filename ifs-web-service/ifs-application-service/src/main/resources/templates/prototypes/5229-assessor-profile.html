@@ -20,11 +20,13 @@
 
 	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Assessor profile'}, ${null})" th:remove="tag" />
 
-	<h1 class="heading-large">Innovation area and skills</h1>
+	<h1 class="heading-large" th:text="${param.name != null ? param.name[0] : 'John Smith'}">ASSESSOR NAME</h1>
+
+	<h2 class="heading-medium">Innovation area and skills</h2>
 	
-	<div class="grid-row">
+	<div class="grid-row no-margin-top">
 		<div class="column-half">
-			<h2 class="heading-medium no-margin-bottom">Innovation areas</h2>
+			<h2 class="heading-medium no-margin">Innovation areas</h2>
 			<ul class="list-bullet">
 				<li>Digital sciences</li>
 				<li>Information &#38; communications technology (ICT)</li>
@@ -32,7 +34,7 @@
 		</div>
 
 		<div class="column-half">
-			<h2 class="heading-medium no-margin-bottom">Type</h2>
+			<h2 class="heading-medium no-margin">Type</h2>
 			<ul class="list-bullet">
 				<li>Business</li>
 			</ul>
@@ -80,21 +82,76 @@
 	<a href="/prototypes/5230-assessor-doi" class="button button-secondary">View declaration of interest</a>
 	<a href="#" class="button button-secondary">Download CV</a>
 
-	<h2 class="heading-medium">Training <small><a href="#">Update training details</a></small></h2>
+	<th:block th:unless="${param.status != null and param.status[0] == 'updateTraining'}">
 
-	<dl class="standard-definition-list">
-		
-		<dt>Panel approved</dt>
-		<dd>Yes</dd>
+		<h2 class="heading-medium">Training <small><a th:href="@{'?status=updateTraining#update-training'}">Update training details</a></small></h2>
 
-		<dt>Training log entry</dt>
-		<dd>No</dd>
+		<dl class="standard-definition-list">
+			
+			<dt>Panel approved</dt>
+			<dd>Yes</dd>
 
-	</dl>
+			<dt>Training log entry</dt>
+			<dd>No</dd>
 
-	<h3 class="heading-small">Comments</h3>
+		</dl>
 
-	<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eaque porro fuga facilis, enim quam, sit veniam quis quidem quod eveniet delectus ea sequi nemo voluptatibus, non velit quibusdam. Qui, dolor.</p>
+		<h3 class="heading-small">Comments</h3>
+
+		<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eaque porro fuga facilis, enim quam, sit veniam quis quidem quod eveniet delectus ea sequi nemo voluptatibus, non velit quibusdam. Qui, dolor.</p>
+
+	</th:block>
+
+	<th:block th:if="${param.status != null and param.status[0] == 'updateTraining'}">
+	
+		<h2 class="heading-medium no-margin-bottom" id="update-training">Update training details</h2>
+
+		<form action="GET" class="panel-indent">
+
+			<div class="form-group">
+				<legend class="heading-small">Is the assessor panel approved?</legend>
+				<fieldset class="inline">
+					<label class="block-label" for="update-training-1">
+				    	<input id="update-training-1" name="update-training" value="Yes" type="radio" />
+				      	Yes
+				    </label>
+				    <label class="block-label" for="update-training-2">
+				      	<input id="update-training-2" name="update-training" value="No" type="radio" />
+				      	No
+				    </label>
+				</fieldset>
+			</div>
+
+			<div class="form-group">
+				<legend class="heading-small">Does the assessor require training?</legend>
+				<fieldset class="inline">
+					<label class="block-label" for="require-training-1">
+				    	<input id="require-training-1" name="require-training" value="Yes" type="radio" />
+				      	Yes
+				    </label>
+				    <label class="block-label" for="require-training-2">
+				      	<input id="require-training-2" name="require-training" value="No" type="radio" />
+				      	No
+				    </label>
+				</fieldset>
+			</div>
+
+			<div class="form-group">
+				
+				<label for="training-comments" class="form-label-bold">Comments</label>
+				<textarea name="training-comments" id="training-comments" cols="30" rows="6" class="width-full"></textarea>
+
+			</div>
+
+			<a th:href="${#httpServletRequest.requestURI}" class="button">Update</a>
+
+			<a th:href="${#httpServletRequest.requestURI}" class="button button-secondary">Cancel</a>
+
+		</form>
+
+	</th:block>
+
+	
 
 	<h2 class="heading-medium">Assessment history</h2>
 

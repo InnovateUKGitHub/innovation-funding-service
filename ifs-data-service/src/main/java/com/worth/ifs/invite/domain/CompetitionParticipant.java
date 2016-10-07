@@ -100,7 +100,9 @@ public class CompetitionParticipant extends Participant<Competition, Competition
         return rejectionReasonComment;
     }
 
-    public CompetitionParticipant accept() {
+    private CompetitionParticipant accept() {
+        if (user == null) throw new IllegalStateException("Illegal attempt to accept a CompetitionParticipant with no User");
+
         if (getInvite().getStatus() != OPENED)
             throw new IllegalStateException("Cannot accept a CompetitionParticipant that hasn't been opened");
 
@@ -112,6 +114,13 @@ public class CompetitionParticipant extends Participant<Competition, Competition
         setStatus(ACCEPTED);
 
         return this;
+    }
+
+    public CompetitionParticipant acceptAndAssignUser(User user) {
+        if (user == null) throw new NullPointerException("user cannot be null");
+        if (this.user != null) throw new IllegalStateException("Illegal attempt to reassign CompetitionParticipant.user");
+        this.user = user;
+        return accept();
     }
 
     public CompetitionParticipant reject(RejectionReason rejectionReason, Optional<String> rejectionComment) {

@@ -180,7 +180,7 @@ Finance overview
 
 Validation check in the Reject application modal
     [Documentation]    INFUND-3540
-    [Tags]    Failing
+    [Tags]
     Given the user navigates to the page    ${Assessment_overview_9}
     And the user clicks the button/link    jQuery=.summary:contains("Unable to assess this application")
     And the user clicks the button/link    link=Reject this application
@@ -216,10 +216,6 @@ I open one of the application questions
     [Arguments]    ${application_question}
     the user clicks the button/link    ${application_question}
 
-the user clears the element text field
-    [Arguments]    ${text_field}
-    Clear Element Text    ${TEXT_FIELD}
-
 the user clicks previous and goes to the page
     [Arguments]    ${page_content}
     the user clicks the button/link    css=.prev
@@ -241,37 +237,3 @@ the project cost breakdown total should be correct
     Element Should Contain    css=.form-group.project-cost-breakdown tr:nth-child(2) td:nth-child(7)    £0
     Element Should Contain    css=.form-group.project-cost-breakdown tr:nth-child(2) td:nth-child(8)    £0
     Element Should Contain    css=.form-group.project-cost-breakdown tr:nth-child(2) td:nth-child(9)    £0
-
-the collapsible button should contain
-    [Arguments]    ${BUTTON}    ${TEXT}
-    Element Should Contain    ${BUTTON}    ${TEXT}
-
-the user adds score and feedback for every question
-    Given the user navigates to the page    ${Assessment_overview_9}
-    And the user clicks the button/link    link=Scope
-    When the user selects the option from the drop-down menu    Technical feasibility studies    id=research-category
-    And the user clicks the button/link    jQuery=label:contains(Yes)
-    And The user enters text to a text field    css=#form-input-193 .editor    Testing scope feedback text
-    wait until page contains    Saving
-    the user clicks the button/link    css=.next
-    the user selects the option from the drop-down menu    20    id=assessor-question-score
-    the user enters text to a text field    css=#form-input-195 .editor    Testing how many feedback text
-    wait until page contains    Saving
-    the user clicks the button/link    css=.next
-    the user selects the option from the drop-down menu    10    id=assessor-question-score
-    the user enters text to a text field    css=#form-input-219 .editor    Testing Mediums feedback text
-    wait until page contains    Saving
-    the user clicks the button/link    css=.next
-    the user selects the option from the drop-down menu    10    id=assessor-question-score
-    the user enters text to a text field    css=#form-input-222 .editor    Testing Preferences feedback text
-    wait until page contains    Saving
-    the user clicks the button/link    css=.next
-    the user selects the option from the drop-down menu    10    id=assessor-question-score
-    the user enters text to a text field    css=#form-input-225 .editor    Testing Attire feedback text
-    wait until page contains    Saving
-    Sleep    500ms
-
-The assessor navigates to the summary page
-    Given the user navigates to the page    ${Assessment_overview_9}
-    When The user clicks the button/link    jQuery=.button:contains(Review assessment)
-    And The user should see the text in the page    Assessment summary

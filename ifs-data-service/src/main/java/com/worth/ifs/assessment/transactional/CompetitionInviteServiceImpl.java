@@ -11,6 +11,9 @@ import com.worth.ifs.invite.repository.CompetitionParticipantRepository;
 import com.worth.ifs.invite.repository.RejectionReasonRepository;
 import com.worth.ifs.invite.resource.CompetitionInviteResource;
 import com.worth.ifs.invite.resource.RejectionReasonResource;
+import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.repository.UserRepository;
+import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.transactional.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
@@ -48,6 +51,9 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @Override
     public ServiceResult<CompetitionInviteResource> getInvite(String inviteHash) {
         return getByHash(inviteHash).andOnSuccessReturn(mapper::mapToResource);
@@ -59,9 +65,10 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     }
 
     @Override
-    public ServiceResult<Void> acceptInvite(String inviteHash) {
+    public ServiceResult<Void> acceptInvite(String inviteHash, UserResource currentUser) {
+        final User user = userRepository.findOne(currentUser.getId());
         return getParticipantByInviteHash(inviteHash)
-                .andOnSuccess(this::accept)
+                .andOnSuccess(p -> accept(p, user))
                 .andOnSuccessReturnVoid();
     }
 
@@ -94,7 +101,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
         return find(competitionParticipantRepository.getByInviteHash(inviteHash), notFoundError(CompetitionParticipant.class, inviteHash));
     }
 
-    private ServiceResult<CompetitionParticipant> accept(CompetitionParticipant participant) {
+    private ServiceResult<CompetitionParticipant> accept(CompetitionParticipant participant, User user) {
         if (participant.getInvite().getStatus() != OPENED) {
             return ServiceResult.serviceFailure(new Error(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_UNOPENED_INVITE, getInviteCompetitionName(participant)));
         } else if (participant.getStatus() == ACCEPTED) {
@@ -102,7 +109,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
         } else if (participant.getStatus() == REJECTED) {
             return ServiceResult.serviceFailure(new Error(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_ALREADY_REJECTED_INVITE, getInviteCompetitionName(participant)));
         } else {
-            return ServiceResult.serviceSuccess(competitionParticipantRepository.save(participant.accept()));
+            return ServiceResult.serviceSuccess(competitionParticipantRepository.save(participant.acceptAndAssignUser(user)));
         }
     }
 

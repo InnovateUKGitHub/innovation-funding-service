@@ -1,5 +1,7 @@
 *** Settings ***
-Documentation     INFUND-43 As an applicant and I am on the application form on an open application, I will receive feedback if I my input is invalid, so I know how I should enter the question
+Documentation     INFUND-43 As an applicant and I am on the application form on an open application, I will receive feedback if I my input is invalid, so I know how I should enter the question \
+...
+...               INFUND-4694 As an applicant I want to be able to provide details of my previous submission if I am allowed to resubmit my project in the current competition so that I comply with Innovate UK competition eligibility criteria
 Suite Setup       Run keywords    log in and create new application if there is not one already
 ...               AND    Applicant goes to the application details page of the Robot application
 Suite Teardown    TestTeardown User closes the browser
@@ -64,11 +66,10 @@ Year field client side
     [Tags]    HappyPath
     [Setup]    Run keywords    the user enters text to a text field    id=application_details-title    Robot test application
     ...    AND    the user enters text to a text field    id=application_details-duration    15
-#    The following steps are Pending due to INFUND-5283
-#    When the applicant inserts an invalid date
-#    Then the user should see an error    Please enter a future date
-#    When the user enters text to a text field    id=application_details-startdate_year    ${EMPTY}
-#    Then the user should see an error    Please enter a future date
+    When the applicant inserts an invalid date
+    Then the user should see an error    Please enter a future date
+    When the user enters text to a text field    id=application_details-startdate_year    ${EMPTY}
+    Then the user should see an error    Please enter a future date
     When the applicant inserts a valid date
     Then the applicant should not see the validation error any more
 
@@ -79,30 +80,34 @@ Duration field client side
     [Tags]
     [Setup]    Run keywords    the user enters text to a text field    id=application_details-title    Robot test application
     ...    AND    the applicant inserts a valid date
-#    The following steps are Pending due to INFUND-5283
-#    When the user enters text to a text field    id=application_details-duration    0
-#    Then the user should see an error    Your project should last between 1 and 36 months
-#    When the user enters text to a text field    id=application_details-duration    -1
-#    Then the user should see an error    Your project should last between 1 and 36 months
-#    When the user enters text to a text field    id=application_details-duration    ${EMPTY}
-#    Then the user should see an error    Please enter a valid value
+    When the user enters text to a text field    id=application_details-duration    0
+    Then the user should see an error    Your project should last between 1 and 36 months
+    When the user enters text to a text field    id=application_details-duration    -1
+    Then the user should see an error    Your project should last between 1 and 36 months
+    When the user enters text to a text field    id=application_details-duration    ${EMPTY}
+    Then the user should see an error    Please enter a valid value
     And the user enters text to a text field    id=application_details-duration    15
     And the applicant should not see the validation error of the duration any more
 
 Application details server side
     [Documentation]    INFUND-2843
+    ...
+    ...    INFUND-4694
     [Tags]    Pending    HappyPath
     # TODO pending INFUND-3999
     Given the user should see the text in the page    Application details
-    When the user enters text to a text field    id=application_details-title    ${EMPTY}
-    Then the user enters text to a text field    id=application_details-startdate_day    ${EMPTY}
+    When the user clicks the button/link    jQuery=label:contains(Yes) input
+    And the user enters text to a text field    id=application_details-title    ${EMPTY}
+    And the user enters text to a text field    id=application_details-startdate_day    ${EMPTY}
     And the user enters text to a text field    id=application_details-startdate_month    ${EMPTY}
     And the user enters text to a text field    id=application_details-startdate_year    ${EMPTY}
     And the user enters text to a text field    id=application_details-duration    ${EMPTY}
-    When the user clicks the button/link    jQuery=button:contains("Mark as complete")
+    And the user clicks the button/link    jQuery=button:contains("Mark as complete")
     Then The user should see an error    Please enter the full title of the project
     And the user should see an error    Please enter a future date
     And the user should see an error    Your project should last between 1 and 36 months
+    And the user should see an error    Please enter the previous application number
+    And the user should see an error    Please enter the previous application title
     And the user should see the element    css=.error-summary-list
     [Teardown]    the user enters text to a text field    id=application_details-title    Robot test application
 
@@ -120,10 +125,6 @@ Empty text area
 the applicant should not see the validation error any more
     Run Keyword And Ignore Error    Mouse Out    css=input
     Run Keyword And Ignore Error    Focus    jQuery=Button:contains("Mark as complete")
-    #Focus    css=.app-submit-btn
-    #run keyword and ignore error    mouse out    css=input
-    #Run Keyword And Ignore Error    mouse out    css=.editor
-    #Focus    css=.app-submit-btn
     sleep    300ms
     wait until element is not visible    css=.error-message
 
@@ -147,7 +148,6 @@ the applicant clears the text area of the "Project Summary"
     Clear Element Text    css=#form-input-11 .editor
     Press Key    css=#form-input-11 .editor    \\8
     Focus    css=.app-submit-btn
-    #Click Element    css=.fa-bold
     Sleep    300ms
 
 Applicant goes to the application details page of the Robot application

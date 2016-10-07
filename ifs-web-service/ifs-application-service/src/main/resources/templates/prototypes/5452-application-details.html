@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="app-overview">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Application Overview'}, ${'/prototypes/635-application-overview'})" th:remove="tag" />
+
+
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+	<div th:include="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${'Innovate UK, Technology inspired - Application number: 12347353'}, ${'Application details'})" th:remove="tag" />
+
+	<form>
+		<button class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">Save the form</button>
+		<div class="question" id="form-input-9">
+			<div class="form-group">
+				<label class="form-label form-label-bold" for="application_details-title">
+					<span>Project title</span>
+					<span class="form-hint">Enter the full title of your project</span>
+				</label>
+				<input class="form-control width-full" type="text" id="application_details-title" required="required" data-required-errormessage="Please enter the full title of the project" name="application.name" value="A novel solution to an old problem" />
+			</div>
+			<fieldset>
+				<div class="form-group">
+					<legend>
+						<span class="form-label form-label-bold">Is this application a resubmission of a previous application?</span>
+						<span class="form-hint">Let us know if this is an application you have previously submitted to Innovate UK in another competition.</span>
+					</legend>
+					<label data-target="resubmission-details" class="block-label" for="resubmission-yes">
+						<input type="radio" value="true" required="required" id="resubmission-yes" name="application.resubmission" />
+						Yes
+					</label>
+					<label class="block-label selected focused" for="resubmission-no">
+						<input type="radio" value="false" required="required" id="resubmission-no" checked="checked" name="application.resubmission" />
+						No
+					</label>
+				</div>
+			</fieldset>
+			<div id="resubmission-details">
+				<div class="form-group">
+					<h2 class="heading-medium no-margin">Please provide the details of this previous application</h2>
+				</div>
+				<div class="form-group">
+					<label class="form-label form-label-bold" for="application_details-previousapplicationnumber">
+						<span>Previous application number</span>
+					</label>
+					<input class="form-control width-full" type="text" id="application_details-previousapplicationnumber" required="required" name="application.previousApplicationNumber" value="" />
+				</div>
+				<div class="form-group">
+					<label class="form-label form-label-bold" for="application_details-previousapplicationtitle">
+						<span>Previous application title</span>
+					</label>
+					<input class="form-control width-full" type="text" id="application_details-previousapplicationtitle" required="required" name="application.previousApplicationTitle" value="" />
+				</div>
+			</div>
+			<fieldset>
+				<div class="form-group">
+					<legend>
+						<span class="form-label form-label-bold">Estimated timescales</span>
+						<span>Project start date</span>
+						<span class="form-hint">For example: 31 12 2015</span>
+					</legend>
+					<div class="date-group" data-future-date="" data-field-group-name="application.startDate" data-field-group-id="application_details-startdate">
+						<input type="hidden" name="application.startDate" id="application_details-startdate" value="application.startDate" />
+						<div class="day">
+							<label class="form-label" for="application_details-startdate_day">
+								<div>Day</div>
+							</label>
+							<input class="form-control width-extra-small null " type="number" placeholder="DD" id="application_details-startdate_day" name="application.startDate.dayOfMonth" min="1" max="31" required="required" />
+						</div>
+						<div class="month">
+							<label class="form-label" for="application_details-startdate_month">
+								<div>Month</div>
+							</label>
+							<input class="form-control width-extra-small null " type="number" placeholder="MM" id="application_details-startdate_month" name="application.startDate.monthValue" min="1" max="12" required="required" />
+						</div>
+						<div class="year">
+							<label class="form-label" for="application_details-startdate_year">
+								<div>Year</div>
+							</label>
+							<input class="form-control width-extra-small null " type="number" placeholder="YYYY" id="application_details-startdate_year" name="application.startDate.year" required="required" />
+						</div>
+					</div>
+					<br />
+				</div>
+				<div class="form-group">
+					<div class="form-group">
+						<label class="form-label" for="application_details-duration">
+							<div>Duration in months</div>
+						</label>
+						<input class="form-control width-extra-small null " type="number" id="application_details-duration" name="application.durationInMonths" value="51" />
+					</div>
+				</div>
+			</fieldset>
+
+			<div class="form-group">
+				<h2 class="heading-small no-margin">Lead organisation</h2>
+				<div>Empire Ltd</div>
+			</div>
+			<div class="form-group">
+				<h2 class="heading-small no-margin">Partners</h2>
+				<ul class="list-bullet">
+					<li>
+						<span>Ludlow</span>
+					</li>
+					<li>
+						<span>EGGS</span>
+					</li>
+					<li>
+						<span>HIVE IT LIMITED</span>
+					</li>
+					<li>
+						<span>Worth Internet Systems</span>
+						<small>(pending)</small>
+					</li>
+				</ul>
+			</div>
+			<p>
+				<button type="submit" name="mark_as_complete" class="buttonlink" value="9">Mark as complete</button>
+			</p>
+		</div>
+
+		<input type="hidden" id="application_id" value="1" />
+		<button type="submit" class="button-secondary app-submit-btn" name="submit-section">Save and return to application overview</button>
+	</form>
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+</body>
+</html>

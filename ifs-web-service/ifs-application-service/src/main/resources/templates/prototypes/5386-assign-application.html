@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+	<style>
+		#assessor-assigned{
+			display: none;
+		}
+	</style>
+</head>
+
+<body class="full-width">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="prototypes/fragments/layout :: prototype-admin-header" th:with="status='loggedIn'" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Manage Applications'}, ${'/prototypes/5385-application-allocation'})" th:remove="tag" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+	
+	<p class="subtitle">Technology inspired, (12345A)</p>
+	<h1 class="heading-xlarge no-margin">Assign to application</h1>
+
+	<h2 class="heading-medium">94565678: The potential for glucose based contact lens monitoring in the managment of type two diabetetes</h2>
+
+	<div class="grid-row extra-margin">
+		<div class="column-quarter">
+			<h3 class="heading-small">Partners</h3>
+			<ul>
+				<li>Aptrans Ltd (Lead)</li>
+				<li>Biotech Corp</li>
+				<li>Unversity of Cardiff</li>
+			</ul>
+		</div>
+		<div class="column-quarter">
+			<h3 class="heading-small">Innovation area</h3>
+			<p>Advanced materials</p>
+		</div>
+	</div>
+	<div class="extra-margin">
+		<a href="#">Review application</a>
+	</div>
+
+	<h2 class="heading-medium">Assign Assessors</h2>
+
+	<div th:include="prototypes/fragments/manage-applications :: prototype-assessors-list-table" th:with="type='assigned'" th:remove="tag" />
+
+	<h2 class="heading-medium">Available Assessors</h2>
+
+	<div th:include="prototypes/fragments/manage-applications :: prototype-comp-search-filters" th:with="type='Assessors'" th:remove="tag" />
+
+	<div th:include="prototypes/fragments/manage-applications :: prototype-assessors-list-table" th:with="type='available'" th:remove="tag" />
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<script src="/js/ifs_prototype/jquery.waypoints.min.js" type="text/javascript"></script>
+<script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
+<script type="text/javascript">
+	// <![CDATA[
+	$(document).ready(function() {
+		$('#assign-assessor').on('click', function(event) {
+			event.preventDefault();
+			$('#assessor-assigned').show();
+			$('#assessor-available, #no-assessors').hide();
+		});
+		$('#remove-assessor').on('click', function(event) {
+			event.preventDefault();
+			$('#assessor-assigned').hide();
+			$('#assessor-available, #no-assessors').show();
+		});
+	});
+	// ]]>
+</script>
+</body>
+</html>
