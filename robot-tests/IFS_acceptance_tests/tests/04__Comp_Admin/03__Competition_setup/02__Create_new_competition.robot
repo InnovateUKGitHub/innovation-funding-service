@@ -415,8 +415,7 @@ Milestones: Page should contain the correct fields
 
 Milestones: Server side validations
     [Documentation]    INFUND-2993
-    [Tags]    Pending
-    #TODO INFUND-3873
+    [Tags]
     When the user fills the milestones with invalid data
     And the users waits until the page is autosaved
     And the user clicks the button/link    jQuery=button:contains(Done)
@@ -430,8 +429,7 @@ Milestones: Client side validations
     Then The user should not see the text in the page    please enter a valid date
 
 Milestones: Autosave
-    [Tags]    Pending
-    #TODO INFUND-3873
+    [Tags]
     When the user clicks the button/link    link=Competition set up
     And the user clicks the button/link    link=Milestones
     Then the user should see the correct inputs in the Milestones form
@@ -618,9 +616,9 @@ the user fills the milestones with invalid data
     The user enters text to a text field    name=milestoneEntries[NOTIFICATIONS].day    4
     The user enters text to a text field    name=milestoneEntries[NOTIFICATIONS].month    1
     The user enters text to a text field    name=milestoneEntries[NOTIFICATIONS].year    2019
-    The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].day    333
+    The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].day    3
     The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].month    1
-    The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].year    2019
+    The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].year    2018
 
 Validation summary should be visible
     Then The user should see the text in the page    2. Briefing event: please enter a future date that is after the previous milestone
@@ -634,7 +632,7 @@ Validation summary should be visible
     And the user should see the text in the page    10. Panel date: please enter a future date that is after the previous milestone
     And the user should see the text in the page    11. Funders panel: please enter a future date that is after the previous milestone
     And the user should see the text in the page    12. Notifications: please enter a future date that is after the previous milestone
-    And the user should see the text in the page    13. Release feedback: please enter a valid date
+    And the user should see the text in the page    13. Release feedback: please enter a future date that is after the previous milestone
 
 the user fills the milestones with valid data
     The user enters text to a text field    name=milestoneEntries[OPEN_DATE].day    10
@@ -757,16 +755,16 @@ the users waits until the page is autosaved
     Wait For Autosave
 
 the user should see the correct inputs in the Milestones form
-    Element Should Contain    css=tr:nth-of-type(1) td:nth-of-type(2)    Thu
-    Element Should Contain    css=tr:nth-of-type(2) td:nth-of-type(2)    Fri
-    Element Should Contain    css=tr:nth-of-type(3) td:nth-of-type(2)    Sat
-    Element Should Contain    css=tr:nth-of-type(4) td:nth-of-type(2)    Sun
-    Element Should Contain    css=tr:nth-of-type(5) td:nth-of-type(2)    Mon
-    Element Should Contain    css=tr:nth-of-type(6) td:nth-of-type(2)    Tue
-    Element Should Contain    css=tr:nth-of-type(7) td:nth-of-type(2)    Wed
-    Element Should Contain    css=tr:nth-of-type(8) td:nth-of-type(2)    Thu
-    Element Should Contain    css=tr:nth-of-type(9) td:nth-of-type(2)    Fri
-    Element Should Contain    css=tr:nth-of-type(10) td:nth-of-type(2)    Sat
-    Element Should Contain    css=tr:nth-of-type(11) td:nth-of-type(2)    Sun
-    Element Should Contain    css=tr:nth-of-type(12) td:nth-of-type(2)    Mon
-    Element Should Contain    css=tr:nth-of-type(13) td:nth-of-type(2)    Tue
+    Element Should Contain    css=tr:nth-of-type(1) td:nth-of-type(1)    Thu
+    Element Should Contain    css=tr:nth-of-type(2) td:nth-of-type(1)    Fri
+    Element Should Contain    css=tr:nth-of-type(3) td:nth-of-type(1)    Sat
+    Element Should Contain    css=tr:nth-of-type(4) td:nth-of-type(1)    Sun
+    Element Should Contain    css=tr:nth-of-type(5) td:nth-of-type(1)    Mon
+    Element Should Contain    css=tr:nth-of-type(6) td:nth-of-type(1)    Tue
+    Element Should Contain    css=tr:nth-of-type(7) td:nth-of-type(1)    Wed
+    Element Should Contain    css=tr:nth-of-type(8) td:nth-of-type(1)    Thu
+    Element Should Contain    css=tr:nth-of-type(9) td:nth-of-type(1)    Fri
+    Element Should Contain    css=tr:nth-of-type(10) td:nth-of-type(1)    Sat
+    Element Should Contain    css=tr:nth-of-type(11) td:nth-of-type(1)    Sun
+    Element Should Contain    css=tr:nth-of-type(12) td:nth-of-type(1)    Mon
+    Element Should Contain    css=tr:nth-of-type(13) td:nth-of-type(1)    Tue
