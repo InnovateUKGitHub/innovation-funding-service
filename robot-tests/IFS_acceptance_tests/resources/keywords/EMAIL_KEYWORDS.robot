@@ -246,3 +246,17 @@ the user opens the local mailbox and clicks the reset link
     Capture Page Screenshot
     Delete All Emails
     close mailbox
+
+the user verifies the email
+    Open Mailbox    server=imap.googlemail.com    user=${test_mailbox_one}@gmail.com    password=${test_mailbox_one_password}
+    ${LATEST} =    wait for email    fromEmail=noresponse@innovateuk.gov.uk
+    ${HTML}=    get email body    ${LATEST}
+    log    ${HTML}
+    ${LINK}=    Get Links From Email    ${LATEST}
+    log    ${LINK}
+    ${VERIFY_EMAIL}=    Get From List    ${LINK}    1
+    log    ${VERIFY_EMAIL}
+    go to    ${VERIFY_EMAIL}
+    Capture Page Screenshot
+    Delete All Emails
+    close mailbox

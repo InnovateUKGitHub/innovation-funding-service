@@ -67,17 +67,17 @@ Invite a user with the same organisation under the same organisation
 
 *** Keywords ***
 the user enters profile details
-    Wait Until Element Is Visible    id=title
-    Input Text    id=firstName    Dennis
-    Input Text    id=lastName    Bergkamp
+    The user should see the element    id=title
+    The user enters text to a text field    id=firstName    Dennis
+    The user enters text to a text field    id=lastName    Bergkamp
     focus    css=[name="create-account"]
-    Click Element    css=[name="create-account"]
+    The user clicks the button/link    css=[name="create-account"]
 
 the user should see the change in the view team members page
-    click element    link=My dashboard
-    click element    css=#content section:nth-of-type(1) li:nth-child(2) h3 a
-    click element    link=view team members and add collaborators
-    Page Should Contain Element    link= Dennis Bergkamp
+    The user clicks the button/link    link=My dashboard
+    The user clicks the button/link    css=#content section:nth-of-type(1) li:nth-child(2) h3 a
+    The user clicks the button/link    link=view team members and add collaborators
+    The user should see the element    link= Dennis Bergkamp
     Capture Page Screenshot
 
 Existing user creates a new application and invites a user from the same organisation
@@ -89,7 +89,6 @@ Existing user creates a new application and invites a user from the same organis
     And The user clicks the button/link    jquery=li:nth-child(1) button:contains('Add another person')
     And The user enters text to a text field    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input    Olivier Giroud
     And The user enters text to a text field    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(2) input    ${test_mailbox_one}+invite2@gmail.com
-    Capture Page Screenshot
     And the user clicks the button/link    jQuery=.button:contains("Begin application")
     And the user clicks the button/link    link=Application details
     And the user enters text to a text field    id=application_details-title    Invite a user with the same org@

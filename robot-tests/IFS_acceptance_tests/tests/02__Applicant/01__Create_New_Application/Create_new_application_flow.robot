@@ -168,18 +168,18 @@ the new application should be visible in the dashboard page
 the user clicks the Not on company house link
     the user clicks the button/link    name=not-in-company-house
     the user clicks the button/link    name=manual-address
-    Input Text    id=addressForm.selectedPostcode.addressLine1    street
-    Input Text    id=addressForm.selectedPostcode.town    town
-    Input Text    id=addressForm.selectedPostcode.county    country
-    Input Text    id=addressForm.selectedPostcode.postcode    post code
-    Input Text    name=organisationName    org2
+    The user enters text to a text field    id=addressForm.selectedPostcode.addressLine1    street
+    The user enters text to a text field    id=addressForm.selectedPostcode.town    town
+    The user enters text to a text field    id=addressForm.selectedPostcode.county    country
+    The user enters text to a text field    id=addressForm.selectedPostcode.postcode    post code
+    The user enters text to a text field    name=organisationName    org2
     the user clicks the button/link    jQuery=.button:contains("Continue")
 
 the user edits the competition title
     the user clicks the button/link    link=${OPEN_COMPETITION_LINK}
     the user should see the element    link=Application details
     the user clicks the button/link    link=Application details
-    Input Text    id=application_details-title    ${test_title}
+    The user enters text to a text field    id=application_details-title    ${test_title}
     the user clicks the button/link    jQuery=button:contains("Save and return")
 
 the progress indicator should show 0
