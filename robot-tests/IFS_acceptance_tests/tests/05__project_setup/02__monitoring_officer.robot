@@ -219,10 +219,10 @@ the user moves focus away from an element for MO
     focus    jQuery=.button:contains("Assign Monitoring Officer")
 
 the user edits the MO details
-    Input Text    id=firstName    Grace
-    Input Text    id=lastName    Harper
+    The user enters text to a text field    id=firstName    Grace
+    The user enters text to a text field    id=lastName    Harper
     #    Input Text    id=emailAddress    ${test_mailbox_one}+monitoringofficer@gmail.com
-    Input Text    id=phoneNumber    08549731414
+    The user enters text to a text field    id=phoneNumber    08549731414
     the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
     the user clicks the button/link    jQuery=.modal-assign-mo button:contains("Assign Monitoring Officer")
 
