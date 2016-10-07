@@ -305,9 +305,9 @@ CompAdmin can see uploaded files
     Then the user should see the element             jQuery=h2:contains("Projects in setup")
     When the user clicks the button/link             jQuery=#table-project-status tr:nth-child(1) td:nth-child(7) a
     Then the user should see the text in the page    Collaboration Agreement
-    When the user clicks the button/link             jQuery=a:nth-child(8)
+    When the user clicks the button/link             jQuery=.uploaded-file:nth-of-type(1)
     Then the user should see the file without error
-    When the user clicks the button/link             jQuery=a:nth-child(10)
+    When the user clicks the button/link             jQuery=.uploaded-file:nth-of-type(2)
     Then the user should see the file without error
 
 CompAdmin approves other documents

@@ -38,7 +38,7 @@ Re-assign is possible from the overview page
 *** Keywords ***
 the Applicant edits the Project summary
     Clear Element Text    css=#form-input-11 .editor
-    Input Text    css=#form-input-11 .editor    Check last updated date@#$
+    The user enters text to a text field    css=#form-input-11 .editor    Check last updated date@#$
     Focus    css=.app-submit-btn
     Sleep    1s
 
@@ -60,7 +60,7 @@ the applicant assigns the Project Summary
     the user clicks the button/link    jQuery=button:contains("${assignee_name}")
 
 a blue flag should be visible for the Project Summary in overview page
-    Wait Until Element Is Visible    jQuery=#section-1 .section:nth-child(2) .assigned
+    The user should see the element    jQuery=#section-1 .section:nth-child(2) .assigned
 
 the blue flag should not be visible
     the user should not see the element    jQuery=#section-1 .section:nth-child(2) .assigned
