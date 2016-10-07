@@ -3,6 +3,7 @@ package com.worth.ifs.user.service;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.ProcessRoleResource;
+import com.worth.ifs.user.resource.ProfileResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.resource.UserRoleType;
 
@@ -40,4 +41,6 @@ public interface UserRestService {
     RestResult<UserResource> createLeadApplicantForOrganisationWithCompetitionId(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId, Long competitionId);
     RestResult<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId);
     RestResult<UserResource> updateDetails(Long id, String email, String firstName, String lastName, String title, String phoneNumber);
+    RestResult<UserResource> updateProfile(Long id, ProfileResource profile);
+
 }

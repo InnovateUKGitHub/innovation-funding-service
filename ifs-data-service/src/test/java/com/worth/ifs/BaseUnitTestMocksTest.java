@@ -82,10 +82,7 @@ import com.worth.ifs.user.mapper.EthnicityMapper;
 import com.worth.ifs.user.mapper.RoleMapper;
 import com.worth.ifs.user.mapper.UserMapper;
 import com.worth.ifs.user.repository.*;
-import com.worth.ifs.user.transactional.PasswordPolicyValidator;
-import com.worth.ifs.user.transactional.RegistrationService;
-import com.worth.ifs.user.transactional.RoleService;
-import com.worth.ifs.user.transactional.UserService;
+import com.worth.ifs.user.transactional.*;
 import com.worth.ifs.workflow.mapper.ProcessOutcomeMapper;
 import org.junit.Before;
 import org.mockito.Mock;
@@ -250,6 +247,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected UserService userServiceMock;
+
+    @Mock
+    protected UserProfileService userProfileServiceMock;
 
     @Mock
     protected FinanceRowRepository financeRowRepositoryMock;

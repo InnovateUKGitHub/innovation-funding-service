@@ -12,18 +12,17 @@ import org.mapstruct.Mappings;
 @Mapper(
         config = GlobalMapperConfig.class,
         uses = {
-                AffiliationMapper.class,
-                OrganisationMapper.class,
-                RoleMapper.class,
-                ProcessRoleMapper.class,
-                EthnicityMapper.class
+            OrganisationMapper.class,
+            RoleMapper.class,
+            ProcessRoleMapper.class,
+            EthnicityMapper.class,
+            ProfileMapper.class
         }
 )
 public abstract class UserMapper extends BaseMapper<User, UserResource, Long> {
 
     @Mappings({
-            @Mapping(target = "affiliations", ignore = true),
-            @Mapping(target = "profile", ignore = true) // TODO we should add profile (or the id) to the resource
+            @Mapping(target = "affiliations", ignore = true)
     })
     @Override
     public abstract User mapToDomain(UserResource resource);

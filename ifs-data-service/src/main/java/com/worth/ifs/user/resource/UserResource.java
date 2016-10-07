@@ -31,6 +31,7 @@ public class UserResource {
     private Gender gender;
     private Disability disability;
     private Long ethnicity;
+    private ProfileResource profile;
 
     public UserResource() {
         // no-arg constructor
@@ -155,62 +156,6 @@ public class UserResource {
         this.roles = roles;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        UserResource that = (UserResource) o;
-
-        return new EqualsBuilder()
-                .append(id, that.id)
-                .append(uid, that.uid)
-                .append(title, that.title)
-                .append(firstName, that.firstName)
-                .append(lastName, that.lastName)
-                .append(inviteName, that.inviteName)
-                .append(phoneNumber, that.phoneNumber)
-                .append(imageUrl, that.imageUrl)
-                .append(email, that.email)
-                .append(password, that.password)
-                .append(status, that.status)
-                .append(organisations, that.organisations)
-                .append(processRoles, that.processRoles)
-                .append(roles, that.roles)
-                .append(gender, that.gender)
-                .append(disability, that.disability)
-                .append(ethnicity, that.ethnicity)
-                .isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(id)
-                .append(uid)
-                .append(title)
-                .append(firstName)
-                .append(lastName)
-                .append(inviteName)
-                .append(phoneNumber)
-                .append(imageUrl)
-                .append(email)
-                .append(password)
-                .append(status)
-                .append(organisations)
-                .append(processRoles)
-                .append(roles)
-                .append(gender)
-                .append(disability)
-                .append(ethnicity)
-                .toHashCode();
-    }
-
     public UserStatus getStatus() {
         return status;
     }
@@ -245,5 +190,71 @@ public class UserResource {
 
     public void setEthnicity(Long ethnicity) {
         this.ethnicity = ethnicity;
+    }
+
+    public ProfileResource getProfile() {
+        return profile;
+    }
+
+    public void setProfile(ProfileResource profile) {
+        this.profile = profile;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        UserResource that = (UserResource) o;
+
+        return new EqualsBuilder()
+                .append(id, that.id)
+                .append(uid, that.uid)
+                .append(title, that.title)
+                .append(firstName, that.firstName)
+                .append(lastName, that.lastName)
+                .append(inviteName, that.inviteName)
+                .append(phoneNumber, that.phoneNumber)
+                .append(imageUrl, that.imageUrl)
+                .append(email, that.email)
+                .append(password, that.password)
+                .append(status, that.status)
+                .append(organisations, that.organisations)
+                .append(processRoles, that.processRoles)
+                .append(roles, that.roles)
+                .append(gender, that.gender)
+                .append(disability, that.disability)
+                .append(ethnicity, that.ethnicity)
+                .append(profile, that.profile)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(id)
+                .append(uid)
+                .append(title)
+                .append(firstName)
+                .append(lastName)
+                .append(inviteName)
+                .append(phoneNumber)
+                .append(imageUrl)
+                .append(email)
+                .append(password)
+                .append(status)
+                .append(organisations)
+                .append(processRoles)
+                .append(roles)
+                .append(gender)
+                .append(disability)
+                .append(ethnicity)
+                .append(profile)
+                .toHashCode();
     }
 }

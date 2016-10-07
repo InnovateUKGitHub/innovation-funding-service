@@ -7,9 +7,7 @@ import com.worth.ifs.token.domain.Token;
 import com.worth.ifs.token.repository.TokenRepository;
 import com.worth.ifs.token.resource.TokenType;
 import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.resource.UserResource;
-import com.worth.ifs.user.resource.UserRoleType;
-import com.worth.ifs.user.resource.UserStatus;
+import com.worth.ifs.user.resource.*;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +16,10 @@ import org.springframework.beans.factory.annotation.Value;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static com.worth.ifs.commons.error.CommonFailureKeys.USERS_EMAIL_VERIFICATION_TOKEN_EXPIRED;
+import static com.worth.ifs.user.builder.ContractResourceBuilder.newContractResource;
+import static com.worth.ifs.user.builder.ProfileResourceBuilder.newProfileResource;
 import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -143,29 +144,56 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
         assertTrue(restResult.isSuccess());
     }
 
-    @Test
-    public void testUpdateUserDetailsInvalid() {
-        UserResource user = new UserResource();
-        user.setEmail("NotExistin@gUser.nl");
-        user.setFirstName("Some");
-        user.setLastName("How");
+//    @Test
+//    public void testUpdateUserDetailsInvalid() {
+//        UserResource user = new UserResource();
+//        user.setEmail("NotExistin@gUser.nl");
+//        user.setFirstName("Some");
+//        user.setLastName("How");
+//
+//        RestResult<Void> restResult = controller.updateDetails(user);
+//        assertTrue(restResult.isFailure());
+//    }
+//
+//    @Test
+//    public void testUpdateUserDetails() {
+//        loginCompAdmin();
+//        UserResource userOne = controller.getUserById(1L).getSuccessObject();
+//        setLoggedInUser(userOne);
+//
+//        userOne.setFirstName("Some");
+//        userOne.setLastName("How");
+//
+//        setLoggedInUser(userOne);
+//
+//        RestResult<Void> restResult = controller.updateDetails(userOne);
+//        assertTrue(restResult.isSuccess());
+//    }
 
-        RestResult<Void> restResult = controller.updateDetails(user);
-        assertTrue(restResult.isFailure());
-    }
-
     @Test
-    public void testUpdateUserDetails() {
+    public void testUpdateUserProfile() {
         loginCompAdmin();
         UserResource userOne = controller.getUserById(1L).getSuccessObject();
         setLoggedInUser(userOne);
 
+        ContractResource contract = newContractResource()
+                .withText("contract text")
+                .withAnnexOne("annex 1")
+                .withAnnexTwo("annex 2")
+                .withAnnexThree("annex 3")
+                .build();
+
+        ProfileResource profile = newProfileResource()
+                .withBusinessType(BusinessType.BUSINESS)
+                .withAddress(newAddressResource().build())
+                .withContract(contract)
+                .build();
         userOne.setFirstName("Some");
         userOne.setLastName("How");
 
         setLoggedInUser(userOne);
 
-        RestResult<Void> restResult = controller.updateDetails(userOne);
+        RestResult<Void> restResult = controller.updateProfile(1L, profile);
         assertTrue(restResult.isSuccess());
     }
 

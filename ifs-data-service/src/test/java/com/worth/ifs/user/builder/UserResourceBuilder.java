@@ -1,7 +1,6 @@
 package com.worth.ifs.user.builder;
 
 import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.user.domain.Affiliation;
 import com.worth.ifs.user.resource.*;
 
 import java.util.List;
@@ -94,6 +93,10 @@ public class UserResourceBuilder extends BaseBuilder<UserResource, UserResourceB
 
     public UserResourceBuilder withPassword(String... passwords) {
         return withArray((password, user) -> setField("password", password, user), passwords);
+    }
+
+    public UserResourceBuilder withProfile(ProfileResource... profiles) {
+        return withArray((profile, user) -> setField("profile", profile, user), profiles);
     }
 
     @SafeVarargs

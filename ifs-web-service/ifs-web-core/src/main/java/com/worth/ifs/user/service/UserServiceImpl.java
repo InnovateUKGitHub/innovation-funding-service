@@ -4,7 +4,9 @@ import com.worth.ifs.application.UserApplicationRole;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.user.resource.ProcessRoleResource;
+import com.worth.ifs.user.resource.ProfileResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.resource.UserRoleType;
 import org.apache.commons.logging.Log;
@@ -109,6 +111,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public RestResult<UserResource> updateDetails(Long id, String email, String firstName, String lastName, String title, String phoneNumber) {
         return userRestService.updateDetails(id, email, firstName, lastName, title, phoneNumber);
+    }
+
+    @Override
+    public ServiceResult<UserResource> updateProfile(Long id, ProfileResource profile) {
+        return userRestService.updateProfile(id, profile).toServiceResult();
     }
 
     @Override
