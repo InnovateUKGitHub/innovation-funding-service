@@ -416,7 +416,6 @@ Milestones: Page should contain the correct fields
 Milestones: Server side validations
     [Documentation]    INFUND-2993
     [Tags]
-    #TODO INFUND-3873
     When the user fills the milestones with invalid data
     And the users waits until the page is autosaved
     And the user clicks the button/link    jQuery=button:contains(Done)
@@ -431,7 +430,7 @@ Milestones: Client side validations
 
 Milestones: Autosave
     [Tags]    Pending
-    #TODO INFUND-3873
+    #TODO INFUND-4976
     When the user clicks the button/link    link=Competition set up
     And the user clicks the button/link    link=Milestones
     Then the user should see the correct inputs in the Milestones form
