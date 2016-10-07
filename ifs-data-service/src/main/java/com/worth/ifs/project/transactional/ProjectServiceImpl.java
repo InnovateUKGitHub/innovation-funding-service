@@ -26,6 +26,7 @@ import com.worth.ifs.invite.domain.ProjectParticipantRole;
 import com.worth.ifs.invite.mapper.InviteProjectMapper;
 import com.worth.ifs.invite.repository.InviteProjectRepository;
 import com.worth.ifs.invite.resource.InviteProjectResource;
+import com.worth.ifs.invite.transactional.InviteServiceImpl;
 import com.worth.ifs.notifications.resource.ExternalUserNotificationTarget;
 import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.notifications.resource.NotificationTarget;
@@ -55,6 +56,8 @@ import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -89,6 +92,8 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
 public class ProjectServiceImpl extends AbstractProjectServiceImpl implements ProjectService {
+
+    private static final Log LOG = LogFactory.getLog(ProjectServiceImpl.class);
 
     public static final String WEB_CONTEXT = "/project-setup";
     @Autowired
@@ -468,7 +473,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                     } else {
                         ProjectUser pu = new ProjectUser(user, project, PROJECT_PARTNER, organisation);
                         List<ProjectInvite> projectInvites = inviteProjectRepository.findByProjectId(projectId);
-                        Optional<ProjectInvite> projectInvite = projectInvites.stream().filter(p -> p.getUser().getId() != userId).findAny();
+                        Optional<ProjectInvite> projectInvite = projectInvites.stream().filter(p -> p.getUser().getId() == userId).findAny();
                         pu.setInvite(projectInvite.isPresent() ? projectInvite.get() : null);
 
                         if (pu.getInvite() != null) {
@@ -753,7 +758,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     private boolean handleInviteError(ProjectInvite i, ServiceFailure failure) {
-        //   LOG.error(String.format("Invite failed %s , %s (error count: %s)", i.getId(), i.getEmail(), failure.getErrors().size()));
+           LOG.error(String.format("Invite failed %s , %s (error count: %s)", i.getId(), i.getEmail(), failure.getErrors().size()));
         return true;
     }
 

@@ -1,7 +1,7 @@
 package com.worth.ifs.project.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.worth.ifs.invite.domain.ProjectInvite;
+import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.RoleResource;
 import com.worth.ifs.user.resource.UserResource;
@@ -18,13 +18,14 @@ public class ProjectUserResource {
     private Long organisation;
     private String email;
     private String phoneNumber;
-    private ProjectInvite invite;
+
+    private Long invite;
 
     public ProjectUserResource(){
     	// no-arg constructor
     }
 
-    public ProjectUserResource(Long id, UserResource user, ProjectResource project, RoleResource role, OrganisationResource organisation) {
+    public ProjectUserResource(Long id, UserResource user, ProjectResource project, RoleResource role, OrganisationResource organisation, InviteProjectResource invite) {
         this.id = id;
         this.user = user.getId();
         this.userName = user.getName();
@@ -34,6 +35,7 @@ public class ProjectUserResource {
         this.organisation = organisation.getId();
         this.email = user.getEmail();
         this.phoneNumber = user.getPhoneNumber();
+        this.invite = invite.getId();
     }
 
     public Long getId(){return id;}
@@ -110,4 +112,13 @@ public class ProjectUserResource {
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
+
+    public Long getInvite() {
+        return invite;
+    }
+
+    public void setInvite(Long invite) {
+        this.invite = invite;
+    }
+
 }
