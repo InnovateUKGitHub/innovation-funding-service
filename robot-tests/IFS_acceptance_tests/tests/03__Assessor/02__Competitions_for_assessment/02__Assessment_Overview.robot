@@ -44,6 +44,12 @@ Reject application from assessment overview
     And the user clicks the button/link    jquery=button:contains("Reject")
     Then The user should be redirected to the correct page    ${Assessor_application_dashboard}
     And The user should not see the element    link=Juggling is fun
+
+Assessor should not access the rejected application
+    [Documentation]    INFUND-5188
+    [Tags]
+    When the user navigates to the assessor page    ${Assessment_overview_11}
+    Then The user should see permissions error message
     [Teardown]    Logout as user
 
 
