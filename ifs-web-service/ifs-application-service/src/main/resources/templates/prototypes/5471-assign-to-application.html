@@ -19,7 +19,7 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Manage Applications'}, ${'/prototypes/5385-application-allocation'})" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Manage Applications'}, ${'/prototypes/5470-manage-applications'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 	
@@ -46,15 +46,19 @@
 		<a href="#">Review application</a>
 	</div>
 
-	<h2 class="heading-medium">Assign Assessors</h2>
+	<h2 class="heading-medium">Assigned(2)</h2>
 
-	<div th:include="prototypes/fragments/manage-applications :: prototype-assessors-list-table" th:with="type='assigned'" th:remove="tag" />
+	<div th:include="prototypes/fragments/manage-applications :: prototype-assessors-list3-table" th:remove="tag" />
+
+	<h2 class="heading-medium">Rejected(1)</h2>
+
+	<div th:include="prototypes/fragments/manage-applications :: prototype-assessors-list4-table" th:remove="tag" />
 
 	<h2 class="heading-medium">Available Assessors</h2>
 
 	<div th:include="prototypes/fragments/manage-applications :: prototype-comp-search-filters" th:with="type='Assessors'" th:remove="tag" />
 
-	<div th:include="prototypes/fragments/manage-applications :: prototype-assessors-list-table" th:with="type='available'" th:remove="tag" />
+	<div th:include="prototypes/fragments/manage-applications :: prototype-assessors-list2-table" th:remove="tag" />
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
@@ -65,21 +69,5 @@
 <div th:include="fragments/layout :: body-end" th:remove="tag" />
 <script src="/js/ifs_prototype/jquery.waypoints.min.js" type="text/javascript"></script>
 <script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
-<script type="text/javascript">
-	// <![CDATA[
-	$(document).ready(function() {
-		$('#assign-assessor').on('click', function(event) {
-			event.preventDefault();
-			$('#assessor-assigned').show();
-			$('#assessor-available, #no-assessors').hide();
-		});
-		$('#remove-assessor').on('click', function(event) {
-			event.preventDefault();
-			$('#assessor-assigned').hide();
-			$('#assessor-available, #no-assessors').show();
-		});
-	});
-	// ]]>
-</script>
 </body>
 </html>
