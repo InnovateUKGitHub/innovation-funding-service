@@ -279,7 +279,6 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
                         .withHash("hash")
                         .withCompetition(competition)
                         .build())
-                .withUser(newUser().withId(getPaulPlum().getId()))
                 .build());
 
         assertTrue(controller.openInvite("hash").isSuccess());
