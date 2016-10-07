@@ -415,7 +415,7 @@ Milestones: Page should contain the correct fields
 
 Milestones: Server side validations
     [Documentation]    INFUND-2993
-    [Tags]    Pending
+    [Tags]
     #TODO INFUND-3873
     When the user fills the milestones with invalid data
     And the users waits until the page is autosaved
@@ -618,9 +618,9 @@ the user fills the milestones with invalid data
     The user enters text to a text field    name=milestoneEntries[NOTIFICATIONS].day    4
     The user enters text to a text field    name=milestoneEntries[NOTIFICATIONS].month    1
     The user enters text to a text field    name=milestoneEntries[NOTIFICATIONS].year    2019
-    The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].day    333
+    The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].day    3
     The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].month    1
-    The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].year    2019
+    The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].year    2018
 
 Validation summary should be visible
     Then The user should see the text in the page    2. Briefing event: please enter a future date that is after the previous milestone
@@ -634,7 +634,7 @@ Validation summary should be visible
     And the user should see the text in the page    10. Panel date: please enter a future date that is after the previous milestone
     And the user should see the text in the page    11. Funders panel: please enter a future date that is after the previous milestone
     And the user should see the text in the page    12. Notifications: please enter a future date that is after the previous milestone
-    And the user should see the text in the page    13. Release feedback: please enter a valid date
+    And the user should see the text in the page    13. Release feedback: please enter a future date that is after the previous milestone
 
 the user fills the milestones with valid data
     The user enters text to a text field    name=milestoneEntries[OPEN_DATE].day    10
