@@ -20,7 +20,7 @@
         <dd>Agriculture and food</dd>
     </dl>       
     
-    <p class="extra-margin extra-margin-bottom">Choose a tab to find assessors, invite them to assess this competition and assign assessors to one or more applications.</p>
+    <p class="extra-margin extra-margin-bottom">Choose a tab to find, invite and assign assessors to one or more applications.</p>
 
 </div>
 
@@ -377,7 +377,7 @@
                 <h2 class="heading-small no-margin-top" th:unless="${site == 'rc'}">Invite a person to become an assessor for this competition.</h2>
                 <h2 class="heading-small no-margin-top" th:unless="${site == null}">Invite people to join the panel for this opportunity.</h2>
 
-                <p>You can invite people on your list either individually or as a group.</p>
+                <p>You can invite people on your list individually or as a group.</p>
             </div>
             <div class="column-quarter aligncentre">
                    <h3 class="heading-large no-margin">6</h3>
@@ -386,7 +386,7 @@
         </div>
 
         <details class="extra-margin-bottom" th:unless="${site == 'rc'}">
-            <summary><span class="summary">Add non-registered assessor to your list</span></summary>
+            <summary><span class="summary">Add a non-registered assessor to your list</span></summary>
             <div class="panel-indent">
                 <form th:action="${#httpServletRequest.requestURI}">
                     <fieldset>

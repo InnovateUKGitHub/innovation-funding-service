@@ -98,6 +98,8 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
     @Test
     public void save_accepted() {
+        User user = newUser().build();
+
         CompetitionInvite invite = CompetitionInviteBuilder
                 .newCompetitionInviteWithoutId() // can we do this for all
                 .withName("name1")
@@ -106,7 +108,8 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
                 .withCompetition(competition)
                 .withStatus(OPENED).build();
 
-        CompetitionParticipant savedParticipant = repository.save( (new CompetitionParticipant(competition, invite)).accept() );
+        CompetitionParticipant savedParticipant = repository.save(
+                (new CompetitionParticipant(competition, invite)).acceptAndAssignUser(user) );
 
         flushAndClearSession();
 
