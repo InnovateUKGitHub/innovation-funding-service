@@ -18,13 +18,13 @@ public class ProjectOtherDocumentsViewModel implements BasicProjectDetailsViewMo
     private boolean otherDocumentsSubmitted;
     private List<String> partnerOrganisationNames;
     private List<String> rejectionReasons;
-    private boolean approved;
+    private Boolean approved;
     private boolean leadPartner;
     private boolean submitAllowed;
     private LocalDateTime submitDate;
 
     public ProjectOtherDocumentsViewModel(Long projectId, String projectName, FileDetailsViewModel collaborationAgreementFileDetails,
-                                          FileDetailsViewModel exploitationPlanFileDetails, List<String> partnerOrganisationNames, List<String> rejectionReasons, boolean leadPartner, boolean otherDocumentsSubmitted, boolean otherDocumentsApproved, boolean submitAllowed, LocalDateTime submitDate) {
+                                          FileDetailsViewModel exploitationPlanFileDetails, List<String> partnerOrganisationNames, List<String> rejectionReasons, boolean leadPartner, boolean otherDocumentsSubmitted, Boolean otherDocumentsApproved, boolean submitAllowed, LocalDateTime submitDate) {
         this.projectId = projectId;
         this.projectName = projectName;
         this.collaborationAgreementFileDetails = collaborationAgreementFileDetails;
@@ -80,7 +80,7 @@ public class ProjectOtherDocumentsViewModel implements BasicProjectDetailsViewMo
     }
 
     public boolean isShowApprovedMessage() {
-        return approved;
+        return approved != null && approved;
     }
 
     public boolean isLeadPartner(){
@@ -92,7 +92,7 @@ public class ProjectOtherDocumentsViewModel implements BasicProjectDetailsViewMo
     }
 
     public boolean isShowDocumentsBeingReviewedMessage() {
-        return otherDocumentsSubmitted && !approved;
+        return otherDocumentsSubmitted && approved == null;
     }
 
     public boolean isSubmitAllowed() {

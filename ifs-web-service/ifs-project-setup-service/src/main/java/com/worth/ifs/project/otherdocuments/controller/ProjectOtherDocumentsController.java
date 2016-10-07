@@ -199,7 +199,7 @@ public class ProjectOtherDocumentsController {
         List<String> rejectionReasons = emptyList();
 
         boolean otherDocumentsSubmitted = project.getDocumentsSubmittedDate() != null;
-        boolean otherDocumentsApproved = otherDocumentsSubmitted;
+        Boolean otherDocumentsApproved = project.getOtherDocumentsApproved();
 
         return new ProjectOtherDocumentsViewModel(projectId, project.getName(),
                 collaborationAgreement.map(FileDetailsViewModel::new).orElse(null),
