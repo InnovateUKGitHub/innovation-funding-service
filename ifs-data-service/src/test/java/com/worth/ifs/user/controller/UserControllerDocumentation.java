@@ -123,11 +123,9 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
     @Test
     public void updateProfile() throws Exception {
         Long userId = 1L;
-        final UserResource userResource = newUserResource().build();
         ProfileResource profile = profileResourceBuilder.build();
 
-        when(userServiceMock.getUserById(userId)).thenReturn(serviceSuccess(userResource));
-        when(userProfileServiceMock.updateProfile(userResource)).thenReturn(serviceSuccess());
+        when(userProfileServiceMock.updateProfile(userId, profile)).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/user/id/{id}/updateProfile", userId)
                 .contentType(APPLICATION_JSON)
