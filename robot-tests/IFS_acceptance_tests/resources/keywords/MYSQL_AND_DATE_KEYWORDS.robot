@@ -55,3 +55,14 @@ the days remaining should be correct (Applicant's dashboard)
     ${NO_OF_DAYS_LEFT}=    Remove String    ${NO_OF_DAYS_LEFT}    days
     ${SCREEN_NO_OF_DAYS_LEFT}=    Get Text    css=.in-progress li:nth-child(1) div:nth-child(2) .pie-container .pie-overlay .day
     Should Be Equal As Numbers    ${NO_OF_DAYS_LEFT}    ${SCREEN_NO_OF_DAYS_LEFT}
+
+get yesterday
+    ${today} =    get time
+    ${yesterday} =    Subtract Time From Date    ${today}    1 day
+    [Return]    ${yesterday}
+
+Change the open date of the Sarcasm Stipendousnss in the database to one day before
+    ${yesterday} =    get yesterday
+    When execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${yesterday}' WHERE `id`='9';
+    And the user reloads the page
+    Then element should not contain    jQuery=section:nth-child(4)    Sarcasm Stupendousness
