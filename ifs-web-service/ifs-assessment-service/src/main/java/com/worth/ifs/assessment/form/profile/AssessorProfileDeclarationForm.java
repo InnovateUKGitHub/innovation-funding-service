@@ -4,7 +4,10 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.Valid;
+import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,7 +23,8 @@ public class AssessorProfileDeclarationForm {
 
     @NotNull(message = "{validation.assessorprofiledeclarationform.hasAppointments.required}")
     private Boolean hasAppointments;
-    private List<AssessorProfileAppointmentForm> appointments;
+    @Valid
+    private List<AssessorProfileAppointmentForm> appointments = new ArrayList<>();
 
     @NotNull(message = "{validation.assessorprofiledeclarationform.hasFinancialInterests.required}")
     private Boolean hasFinancialInterests;
@@ -28,19 +32,20 @@ public class AssessorProfileDeclarationForm {
 
     @NotNull(message = "{validation.assessorprofiledeclarationform.hasFamilyAffiliations.required}")
     private Boolean hasFamilyAffiliations;
-    private List<AssessorProfileFamilyAffiliationForm> familyAffiliations;
+    @Valid
+    private List<AssessorProfileFamilyAffiliationForm> familyAffiliations = new ArrayList<>();
 
     @NotNull(message = "{validation.assessorprofiledeclarationform.hasFamilyFinancialInterests.required}")
     private Boolean hasFamilyFinancialInterests;
     private String familyFinancialInterests;
 
-    @NotNull(message = "{validation.assessorprofiledeclarationform.isAccurateAccount.required}")
-    private Boolean isAccurateAccount;
+    @AssertTrue(message = "{validation.assessorprofiledeclarationform.accurateAccount.required}")
+    private Boolean accurateAccount;
 
     public AssessorProfileDeclarationForm() {
     }
 
-    public AssessorProfileDeclarationForm(String principalEmployer, String role, String professionalAffiliations, Boolean hasAppointments, List<AssessorProfileAppointmentForm> appointments, Boolean hasFinancialInterests, String financialInterests, Boolean hasFamilyAffiliations, List<AssessorProfileFamilyAffiliationForm> familyAffiliations, Boolean hasFamilyFinancialInterests, String familyFinancialInterests, Boolean isAccurateAccount) {
+    public AssessorProfileDeclarationForm(String principalEmployer, String role, String professionalAffiliations, Boolean hasAppointments, List<AssessorProfileAppointmentForm> appointments, Boolean hasFinancialInterests, String financialInterests, Boolean hasFamilyAffiliations, List<AssessorProfileFamilyAffiliationForm> familyAffiliations, Boolean hasFamilyFinancialInterests, String familyFinancialInterests, Boolean accurateAccount) {
         this.principalEmployer = principalEmployer;
         this.role = role;
         this.professionalAffiliations = professionalAffiliations;
@@ -52,7 +57,7 @@ public class AssessorProfileDeclarationForm {
         this.familyAffiliations = familyAffiliations;
         this.hasFamilyFinancialInterests = hasFamilyFinancialInterests;
         this.familyFinancialInterests = familyFinancialInterests;
-        this.isAccurateAccount = isAccurateAccount;
+        this.accurateAccount = accurateAccount;
     }
 
     public String getPrincipalEmployer() {
@@ -144,22 +149,18 @@ public class AssessorProfileDeclarationForm {
     }
 
     public Boolean getAccurateAccount() {
-        return isAccurateAccount;
+        return accurateAccount;
     }
 
     public void setAccurateAccount(Boolean accurateAccount) {
-        isAccurateAccount = accurateAccount;
+        this.accurateAccount = accurateAccount;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
+        if (this == o) return true;
 
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (o == null || getClass() != o.getClass()) return false;
 
         AssessorProfileDeclarationForm that = (AssessorProfileDeclarationForm) o;
 
@@ -175,7 +176,7 @@ public class AssessorProfileDeclarationForm {
                 .append(familyAffiliations, that.familyAffiliations)
                 .append(hasFamilyFinancialInterests, that.hasFamilyFinancialInterests)
                 .append(familyFinancialInterests, that.familyFinancialInterests)
-                .append(isAccurateAccount, that.isAccurateAccount)
+                .append(accurateAccount, that.accurateAccount)
                 .isEquals();
     }
 
@@ -193,7 +194,7 @@ public class AssessorProfileDeclarationForm {
                 .append(familyAffiliations)
                 .append(hasFamilyFinancialInterests)
                 .append(familyFinancialInterests)
-                .append(isAccurateAccount)
+                .append(accurateAccount)
                 .toHashCode();
     }
 }

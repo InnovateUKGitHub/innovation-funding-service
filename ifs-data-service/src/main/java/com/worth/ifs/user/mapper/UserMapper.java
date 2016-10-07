@@ -22,13 +22,14 @@ import org.mapstruct.Mappings;
 public abstract class UserMapper extends BaseMapper<User, UserResource, Long> {
 
     @Mappings({
-            @Mapping(target = "profile", ignore = true), // TODO we should add profile (or the id) to the resource
+            @Mapping(target = "affiliations", ignore = true),
+            @Mapping(target = "profile", ignore = true) // TODO we should add profile (or the id) to the resource
     })
     @Override
     public abstract User mapToDomain(UserResource resource);
 
     @Mappings({
-            @Mapping(target = "password", ignore = true),
+            @Mapping(target = "password", ignore = true)
     })
     @Override
     public abstract UserResource mapToResource(User domain);
@@ -40,4 +41,3 @@ public abstract class UserMapper extends BaseMapper<User, UserResource, Long> {
         return object.getId();
     }
 }
-

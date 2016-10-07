@@ -2,11 +2,14 @@ package com.worth.ifs.user.transactional;
 
 import com.worth.ifs.BaseServiceSecurityTest;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.user.resource.AffiliationResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.security.UserPermissionRules;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.access.method.P;
+
+import java.util.List;
 
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Matchers.isA;
@@ -42,6 +45,16 @@ public class UserProfileServiceSecurityTest extends BaseServiceSecurityTest<User
 
         @Override
         public ServiceResult<Void> updateProfile(@P("userBeingUpdated") UserResource userBeingUpdated) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<List<AffiliationResource>> getAffiliationsByUserId(Long userId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> updateUserAffilliations(long userId, List<AffiliationResource> userProfile) {
             return null;
         }
     }

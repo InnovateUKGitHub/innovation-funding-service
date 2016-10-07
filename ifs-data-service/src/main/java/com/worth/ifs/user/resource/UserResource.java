@@ -31,7 +31,6 @@ public class UserResource {
     private Gender gender;
     private Disability disability;
     private Long ethnicity;
-    private List<AffiliationResource> affiliations;
 
     public UserResource() {
         // no-arg constructor
@@ -186,7 +185,6 @@ public class UserResource {
                 .append(gender, that.gender)
                 .append(disability, that.disability)
                 .append(ethnicity, that.ethnicity)
-                .append(affiliations, that.affiliations)
                 .isEquals();
     }
 
@@ -210,7 +208,6 @@ public class UserResource {
                 .append(gender)
                 .append(disability)
                 .append(ethnicity)
-                .append(affiliations)
                 .toHashCode();
     }
 
@@ -248,13 +245,5 @@ public class UserResource {
 
     public void setEthnicity(Long ethnicity) {
         this.ethnicity = ethnicity;
-    }
-
-    public List<AffiliationResource> getAffiliations() {
-        return affiliations;
-    }
-
-    public void setAffiliations(List<AffiliationResource> affiliations) {
-        this.affiliations = affiliations;
     }
 }

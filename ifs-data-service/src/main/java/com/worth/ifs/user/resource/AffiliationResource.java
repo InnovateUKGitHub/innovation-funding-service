@@ -16,6 +16,19 @@ public class AffiliationResource {
     private String position;
     private String description;
 
+    public AffiliationResource() {
+    }
+
+    AffiliationResource(Long user, AffiliationType affiliationType, Boolean exists, String relation, String organisation, String position, String description) {
+        this.user = user;
+        this.affiliationType = affiliationType;
+        this.exists = exists;
+        this.relation = relation;
+        this.organisation = organisation;
+        this.position = position;
+        this.description = description;
+    }
+
     public Long getId() {
         return id;
     }

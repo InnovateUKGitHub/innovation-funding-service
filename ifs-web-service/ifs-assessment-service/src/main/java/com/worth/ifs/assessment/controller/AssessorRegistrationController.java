@@ -2,8 +2,9 @@ package com.worth.ifs.assessment.controller;
 
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.service.AddressRestService;
-import com.worth.ifs.assessment.form.AssessorRegistrationForm;
-import com.worth.ifs.assessment.model.*;
+import com.worth.ifs.assessment.form.registration.AssessorRegistrationForm;
+import com.worth.ifs.assessment.model.registration.AssessorRegistrationBecomeAnAssessorModelPopulator;
+import com.worth.ifs.assessment.model.registration.AssessorRegistrationModelPopulator;
 import com.worth.ifs.assessment.service.AssessorService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -11,11 +12,15 @@ import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.form.AddressForm;
 import com.worth.ifs.invite.service.EthnicityRestService;
 import com.worth.ifs.user.resource.EthnicityResource;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +33,7 @@ import java.util.function.Supplier;
 
 import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
+import static java.lang.String.format;
 
 /**
  * Controller to manage Assessor Registration.
@@ -98,8 +104,7 @@ public class AssessorRegistrationController {
     @RequestMapping(value = "/{inviteHash}/register", params = "manual-address", method = RequestMethod.POST)
     public String manualAddress(Model model,
                                 @ModelAttribute(FORM_ATTR_NAME) AssessorRegistrationForm registrationForm,
-                                @PathVariable("inviteHash") String inviteHash,
-                                HttpServletRequest request, HttpServletResponse response) {
+                                @PathVariable("inviteHash") String inviteHash) {
         registrationForm.setAddressForm(new AddressForm());
         registrationForm.getAddressForm().setManualAddress(true);
 
@@ -109,8 +114,7 @@ public class AssessorRegistrationController {
     @RequestMapping(value = "/{inviteHash}/register", params = "search-address", method = RequestMethod.POST)
     public String searchAddress(Model model,
                                 @ModelAttribute(FORM_ATTR_NAME) AssessorRegistrationForm registrationForm,
-                                @PathVariable("inviteHash") String inviteHash,
-                                HttpServletRequest request, HttpServletResponse response) {
+                                @PathVariable("inviteHash") String inviteHash) {
         addAddressOptions(registrationForm);
         registrationForm.getAddressForm().setTriedToSearch(true);
 
@@ -120,8 +124,7 @@ public class AssessorRegistrationController {
     @RequestMapping(value = "/{inviteHash}/register", params = "select-address", method = RequestMethod.POST)
     public String selectAddress(Model model,
                                 @ModelAttribute(FORM_ATTR_NAME) AssessorRegistrationForm registrationForm,
-                                @PathVariable("inviteHash") String inviteHash,
-                                HttpServletRequest request, HttpServletResponse response) {
+                                @PathVariable("inviteHash") String inviteHash) {
         addAddressOptions(registrationForm);
         addSelectedAddress(registrationForm);
 

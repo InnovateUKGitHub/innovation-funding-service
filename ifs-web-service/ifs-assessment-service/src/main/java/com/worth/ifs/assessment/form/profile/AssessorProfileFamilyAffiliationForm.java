@@ -2,15 +2,28 @@ package com.worth.ifs.assessment.form.profile;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.validator.constraints.NotEmpty;
 
 /**
  * Form field model for the Assessor Profile Declaration of Interest Family affiliations/Appointments, directorships or consultancies
  */
 public class AssessorProfileFamilyAffiliationForm {
 
+    @NotEmpty(message = "{validation.assessorprofilefamilyaffiliationform.relation.required}")
     private String relation;
+    @NotEmpty(message = "{validation.assessorprofilefamilyaffiliationform.organisation.required}")
     private String organisation;
+    @NotEmpty(message = "{validation.assessorprofilefamilyaffiliationform.position.required}")
     private String position;
+
+    public AssessorProfileFamilyAffiliationForm() {
+    }
+
+    public AssessorProfileFamilyAffiliationForm(String relation, String organisation, String position) {
+        this.relation = relation;
+        this.organisation = organisation;
+        this.position = position;
+    }
 
     public String getRelation() {
         return relation;

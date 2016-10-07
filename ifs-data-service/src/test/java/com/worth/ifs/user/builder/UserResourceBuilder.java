@@ -105,8 +105,4 @@ public class UserResourceBuilder extends BaseBuilder<UserResource, UserResourceB
     public final UserResourceBuilder withOrganisations(List<Long>... organisationIds) {
         return withArray((organisationIdList, user) -> user.setOrganisations(organisationIdList), organisationIds);
     }
-
-    public UserResourceBuilder withAffiliations(List<Affiliation>... affiliationsList) {
-        return withArray((affiliations, user) -> setField("affiliations", affiliations, user), affiliationsList);
-    }
 }

@@ -1,15 +1,12 @@
 package com.worth.ifs.user.builder;
 
-import com.worth.ifs.user.domain.Affiliation;
 import com.worth.ifs.user.resource.*;
 import org.junit.Test;
 
 import java.util.List;
 
-import static com.worth.ifs.user.builder.AffiliationBuilder.newAffiliation;
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static com.worth.ifs.user.resource.AffiliationType.*;
 import static com.worth.ifs.user.resource.Disability.NOT_STATED;
 import static com.worth.ifs.user.resource.Disability.YES;
 import static com.worth.ifs.user.resource.Gender.FEMALE;
@@ -39,7 +36,6 @@ public class UserResourceBuilderTest {
         Gender expectedGender = FEMALE;
         Disability expectedDisability = NOT_STATED;
         Long expectedEthnicity = 1L;
-        List<Affiliation> expectedAffiliations = newAffiliation().withAffiliationType(EMPLOYER, FAMILY_FINANCIAL).build(2);
 
         UserResource user = newUserResource()
                 .withId(expectedId)
@@ -58,7 +54,6 @@ public class UserResourceBuilderTest {
                 .withGender(expectedGender)
                 .withDisability(expectedDisability)
                 .withEthnicity(expectedEthnicity)
-                .withAffiliations(expectedAffiliations)
                 .build();
 
         assertEquals(expectedId, user.getId());
@@ -77,7 +72,6 @@ public class UserResourceBuilderTest {
         assertEquals(expectedGender, user.getGender());
         assertEquals(expectedDisability, user.getDisability());
         assertEquals(expectedEthnicity, user.getEthnicity());
-        assertEquals(expectedAffiliations, user.getAffiliations());
     }
 
     @Test
@@ -98,10 +92,6 @@ public class UserResourceBuilderTest {
         Gender[] expectedGenders = {FEMALE, MALE};
         Disability[] expectedDisabilities = {NOT_STATED, YES};
         Long[] expectedEthnicities = {1L, 2L};
-        List<List<Affiliation>> expectedAffiliations = asList(
-                newAffiliation().withAffiliationType(EMPLOYER, FAMILY_FINANCIAL).build(2),
-                newAffiliation().withAffiliationType(PERSONAL_FINANCIAL, FAMILY_FINANCIAL).build(2)
-        );
 
         List<UserResource> users = newUserResource()
                 .withId(expectedIds)
@@ -120,7 +110,6 @@ public class UserResourceBuilderTest {
                 .withGender(expectedGenders)
                 .withDisability(expectedDisabilities)
                 .withEthnicity(expectedEthnicities)
-                .withAffiliations(expectedAffiliations.get(0), expectedAffiliations.get(1))
                 .build(2);
 
 
@@ -142,7 +131,6 @@ public class UserResourceBuilderTest {
         assertEquals(expectedGenders[0], first.getGender());
         assertEquals(expectedDisabilities[0], first.getDisability());
         assertEquals(expectedEthnicities[0], first.getEthnicity());
-        assertEquals(expectedAffiliations.get(0), first.getAffiliations());
 
         UserResource second = users.get(1);
 
@@ -162,7 +150,6 @@ public class UserResourceBuilderTest {
         assertEquals(expectedGenders[1], second.getGender());
         assertEquals(expectedDisabilities[1], second.getDisability());
         assertEquals(expectedEthnicities[1], second.getEthnicity());
-        assertEquals(expectedAffiliations.get(1), second.getAffiliations());
     }
 
 }
