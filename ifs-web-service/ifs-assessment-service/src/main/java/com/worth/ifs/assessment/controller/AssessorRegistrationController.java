@@ -35,6 +35,7 @@ import java.util.function.Supplier;
 
 import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
+import static java.lang.String.format;
 
 /**
  * Controller to manage Assessor Registration.
@@ -98,7 +99,7 @@ public class AssessorRegistrationController {
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             ServiceResult<Void> result = assessorService.createAssessorByInviteHash(inviteHash, registrationForm);
             return validationHandler.addAnyErrors(result, fieldErrorsToFieldErrors(), asGlobalErrors()).
-                    failNowOrSucceedWith(failureView, () -> "redirect:/registration/skills");
+                    failNowOrSucceedWith(failureView, () -> format("redirect:/invite-accept/competition/%s/accept", inviteHash));
         });
     }
 

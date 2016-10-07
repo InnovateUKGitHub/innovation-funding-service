@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestErrorResponse;
+import com.worth.ifs.commons.security.UserAuthentication;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.BasicFileAndContents;
@@ -11,6 +12,7 @@ import com.worth.ifs.file.service.FileAndContents;
 import com.worth.ifs.file.transactional.FileHeaderAttributes;
 import com.worth.ifs.rest.ErrorControllerAdvice;
 import com.worth.ifs.rest.RestResultHandlingHttpMessageConverter;
+import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Before;
 import org.junit.Rule;
@@ -21,6 +23,7 @@ import org.springframework.restdocs.RestDocumentation;
 import org.springframework.restdocs.headers.HeaderDescriptor;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.restdocs.request.ParameterDescriptor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
@@ -532,5 +535,9 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
 
     protected Supplier<InputStream> fileUploadInputStreamExpectations() {
         return fileUploadInputStreamExpectations(dummyFileContent);
+    }
+
+    protected static void login(UserResource userResource) {
+        SecurityContextHolder.getContext().setAuthentication(new UserAuthentication(userResource));
     }
 }
