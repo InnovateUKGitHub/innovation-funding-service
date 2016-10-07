@@ -2,9 +2,12 @@ package com.worth.ifs.assessment.controller;
 
 import com.worth.ifs.assessment.transactional.CompetitionInviteService;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.invite.resource.CompetitionInviteResource;
 import com.worth.ifs.invite.resource.CompetitionRejectionResource;
+import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -20,6 +23,9 @@ public class CompetitionInviteController {
     @Autowired
     private CompetitionInviteService competitionInviteService;
 
+    @Autowired
+    private UserAuthenticationService userAuthenticationService;
+
     @RequestMapping(value = "/getInvite/{inviteHash}", method = RequestMethod.GET)
     public RestResult<CompetitionInviteResource> getInvite(@PathVariable String inviteHash) {
         return competitionInviteService.getInvite(inviteHash).toGetResponse();
@@ -32,7 +38,8 @@ public class CompetitionInviteController {
 
     @RequestMapping(value = "/acceptInvite/{inviteHash}", method = RequestMethod.POST)
     public RestResult<Void> acceptInvite(@PathVariable String inviteHash) {
-        return competitionInviteService.acceptInvite(inviteHash).toPostResponse();
+        final UserResource currentUser = (UserResource) SecurityContextHolder.getContext().getAuthentication().getDetails();
+        return competitionInviteService.acceptInvite(inviteHash, currentUser).toPostResponse();
     }
 
     @RequestMapping(value = "/rejectInvite/{inviteHash}", method = RequestMethod.POST)
