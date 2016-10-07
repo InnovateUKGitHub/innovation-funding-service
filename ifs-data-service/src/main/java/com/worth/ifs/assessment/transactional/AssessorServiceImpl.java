@@ -44,7 +44,6 @@ public class AssessorServiceImpl implements AssessorService {
             return getAssessorRoleResource().andOnSuccess(assessorRole -> {
                 userResource.setRoles(singletonList(assessorRole));
                 return createUser(userResource)
-                        .andOnSuccess(() -> acceptInvite(inviteHash))
                         .andOnSuccessReturnVoid();
             });
         });
@@ -60,9 +59,5 @@ public class AssessorServiceImpl implements AssessorService {
 
     private ServiceResult<Void> createUser(UserResource userResource) {
         return userRegistrationService.createUser(userResource).andOnSuccess(created -> userRegistrationService.activateUser(created.getId()));
-    }
-
-    private ServiceResult<Void> acceptInvite(String inviteHash) {
-        return competitionInviteService.acceptInvite(inviteHash);
     }
 }

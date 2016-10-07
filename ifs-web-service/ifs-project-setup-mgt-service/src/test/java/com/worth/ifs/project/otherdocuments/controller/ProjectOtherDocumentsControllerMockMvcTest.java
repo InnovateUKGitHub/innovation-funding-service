@@ -1,6 +1,7 @@
 package com.worth.ifs.project.otherdocuments.controller;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.application.builder.ApplicationResourceBuilder;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.file.resource.FileEntryResource;
@@ -117,12 +118,16 @@ public class ProjectOtherDocumentsControllerMockMvcTest extends BaseControllerMo
                 .withName("My Project")
                 .withOtherDocumentsApproved(true)
                 .build();
+        boolean approved = true;
 
-        setupViewOtherDocumentsTestExpectations (project);
+        setupViewOtherDocumentsTestExpectations(project);
 
-        MvcResult result = mockMvc.perform(post("/project/123/partner/documents")).
-                andExpect(view().name("project/other-documents")).
-                andReturn();
+        when(projectService.acceptOrRejectOtherDocuments(projectId, approved)).thenReturn(ServiceResult.serviceSuccess());
+
+        MvcResult result = mockMvc.perform(post("/project/123/partner/documents")
+                .param("approved", String.valueOf(approved)))
+                .andExpect(view().name("project/other-documents"))
+                .andReturn();
 
         ProjectPartnerDocumentsViewModel model = (ProjectPartnerDocumentsViewModel) result.getModelAndView().getModel().get("model");
 
