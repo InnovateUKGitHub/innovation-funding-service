@@ -2,7 +2,11 @@
 Documentation     INFUND-3303: As an Assessor I want the ability to reject the application after I have been given access to the full details so I can make Innovate UK aware.
 ...
 ...
-...               INFUND-3720 As an Assessor I can see deadlines for the assessment of applications currently in assessment on my dashboard, so that I am reminded to deliver my work on time \ INFUND-1188 As an assessor I want to be able to review my assessments from one place so that I can work in my favoured style when reviewing
+...               INFUND-3720 As an Assessor I can see deadlines for the assessment of applications currently in assessment on my dashboard, so that I am reminded to deliver my work on time
+...
+...               INFUND-1188 As an assessor I want to be able to review my assessments from one place so that I can work in my favoured style when reviewing
+...
+...               INFUND-5379 The Applications for assessment dashboard shouldn't show the rejected applications
 Suite Setup       guest user log-in    felix.wilson@gmail.com    Passw0rd
 Suite Teardown    the user closes the browser
 Force Tags        Assessor
@@ -30,12 +34,11 @@ Number of days remaining until assessment submission
     Then The user should see the text in the page    Days left to submit
     And the days remaining should be correct (Top of the page)    2016-12-31
 
-Reject application from assessment overview
+Reject application (Unable to assess this application)
     [Documentation]    INFUND-3540
     ...
-    ...     INFUND-5379
+    ...    INFUND-5379
     [Tags]
-    Given the user navigates to the page    ${Assessment_overview_11}
     When the user clicks the button/link    jQuery=.summary:contains("Unable to assess this application")
     And the user clicks the button/link    link=Reject this application
     And the user fills in rejection details
@@ -45,13 +48,11 @@ Reject application from assessment overview
     Then The user should be redirected to the correct page    ${Assessor_application_dashboard}
     And The user should not see the element    link=Juggling is fun
 
-Assessor should not access the rejected application
+Assessor should not be able to access the rejected application
     [Documentation]    INFUND-5188
     [Tags]
     When the user navigates to the assessor page    ${Assessment_overview_11}
     Then The user should see permissions error message
-    [Teardown]    Logout as user
-
 
 *** Keywords ***
 the user should see four sections
