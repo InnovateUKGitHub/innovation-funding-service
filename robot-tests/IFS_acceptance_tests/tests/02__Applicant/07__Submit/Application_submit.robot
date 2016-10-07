@@ -142,11 +142,11 @@ the applicant marks the first section as complete
     the user clicks the button/link    link=Application Overview
     the user clicks the button/link    link=Application details
     Clear Element Text    id=application_details-startdate_day
-    Input Text    id=application_details-startdate_day    18
+    The user enters text to a text field    id=application_details-startdate_day    18
     Clear Element Text    id=application_details-startdate_year
-    Input Text    id=application_details-startdate_year    2018
+    The user enters text to a text field    id=application_details-startdate_year    2018
     Clear Element Text    id=application_details-startdate_month
-    Input Text    id=application_details-startdate_month    11
+    The user enters text to a text field    id=application_details-startdate_month    11
     the user clicks the button/link    jQuery=label:contains(No) input
     the user clicks the button/link    name=mark_as_complete
 
