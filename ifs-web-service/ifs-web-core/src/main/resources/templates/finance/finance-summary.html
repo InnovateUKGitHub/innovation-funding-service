@@ -27,9 +27,8 @@
 
 
     <div th:fragment="academic_partner_breakdown" th:if="${financeTotalPerType}">
-        <div th:each="organisation : ${academicOrganisations}">
+        <div th:each="organisation : ${academicOrganisations}" th:unless="${academicFileEntries == null}">
             <h3 th:text="${organisation.name}" class="heading-medium">University</h3>
-
             <div th:if="${academicFileEntries.containsKey(organisation.id)}" th:with="applicationFinanceResource = ${academicFileEntries.get(organisation.id).left}, fileEntry = ${academicFileEntries.get(organisation.id).right}">
                 <div class="upload-section">
                     <h3 class="heading-small no-margin">Download Je-S form:</h3>
