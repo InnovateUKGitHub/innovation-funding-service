@@ -1,7 +1,10 @@
 package com.worth.ifs.assessment.transactional;
 
+import com.worth.ifs.address.domain.Address;
+import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.invite.resource.CompetitionInviteResource;
+import com.worth.ifs.registration.resource.UserRegistrationResource;
 import com.worth.ifs.registration.resource.UserRegistrationResource;
 import com.worth.ifs.user.resource.RoleResource;
 import com.worth.ifs.user.resource.UserResource;
@@ -27,23 +30,25 @@ public class AssessorServiceImpl implements AssessorService {
 
     @Override
     public ServiceResult<Void> registerAssessorByHash(String inviteHash, UserRegistrationResource userRegistrationResource) {
-        UserResource userResource = new UserResource();
-        userResource.setTitle(userRegistrationResource.getTitle());
-        userResource.setFirstName(userRegistrationResource.getFirstName());
-        userResource.setLastName(userRegistrationResource.getLastName());
-        userResource.setPhoneNumber(userRegistrationResource.getPhoneNumber());
-        userResource.setGender(userRegistrationResource.getGender());
-        userResource.setDisability(userRegistrationResource.getDisability());
-        userResource.setEthnicity(userRegistrationResource.getEthnicity().getId());
-        userResource.setPassword(userRegistrationResource.getPassword());
+//        UserResource userResource = new UserResource();
+//        userResource.setTitle(userRegistrationResource.getTitle());
+//        userResource.setFirstName(userRegistrationResource.getFirstName());
+//        userResource.setLastName(userRegistrationResource.getLastName());
+//        userResource.setPhoneNumber(userRegistrationResource.getPhoneNumber());
+//        userResource.setGender(userRegistrationResource.getGender());
+//        userResource.setDisability(userRegistrationResource.getDisability());
+//        userResource.setEthnicity(userRegistrationResource.getEthnicity().getId());
+//        userResource.setPassword(userRegistrationResource.getPassword());
+
+        // need to add the address
 
         // TODO: Handle failures gracefully and hand them back to the webservice
         // TODO: Retrieve and add assessor role through RoleService before account creation
         return retrieveInvite(inviteHash).andOnSuccess(inviteResource -> {
-            userResource.setEmail(inviteResource.getEmail());
+            userRegistrationResource.setEmail(inviteResource.getEmail());
             return getAssessorRoleResource().andOnSuccess(assessorRole -> {
-                userResource.setRoles(singletonList(assessorRole));
-                return createUser(userResource)
+                userRegistrationResource.setRoles(singletonList(assessorRole));
+                return createUser(userRegistrationResource)
                         .andOnSuccessReturnVoid();
             });
         });
@@ -57,7 +62,11 @@ public class AssessorServiceImpl implements AssessorService {
         return roleService.findByUserRoleType(ASSESSOR);
     }
 
-    private ServiceResult<Void> createUser(UserResource userResource) {
-        return userRegistrationService.createUser(userResource).andOnSuccess(created -> userRegistrationService.activateUser(created.getId()));
+//    private ServiceResult<Void> createUser(UserResource userResource, AddressResource addressResource) {
+//        return userRegistrationService.createUser(userResource, addressResource).andOnSuccess(created -> userRegistrationService.activateUser(created.getId()));
+//    }
+
+    private ServiceResult createUser(UserRegistrationResource userRegistrationResource) {
+        return userRegistrationService.createUser(userRegistrationResource).andOnSuccess(created -> userRegistrationService.activateUser(created.getId()));
     }
 }

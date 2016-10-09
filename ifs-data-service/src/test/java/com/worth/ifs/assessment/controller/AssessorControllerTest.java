@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.List;
 
+import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.Error.fieldError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
@@ -53,7 +54,13 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
                 .withDisability(NO)
                 .withEthnicity(newEthnicityResource().with(BuilderAmendFunctions.id(1L)).build())
                 .withPassword("Passw0rd123")
+                .withAddress(newAddressResource()
+                        .withAddressLine1("Electric Works")
+                        .withTown("Sheffield")
+                        .withPostcode("S1 2BJ")
+                        .build())
                 .build();
+
 
         when(assessorServiceMock.registerAssessorByHash(hash, userRegistrationResource)).thenReturn(serviceSuccess());
 
@@ -64,6 +71,8 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
 
         verify(assessorServiceMock, only()).registerAssessorByHash(hash, userRegistrationResource);
     }
+
+    // todo address validation tests
 
     @Test
     public void registerAssessorByHash_emptyFields() throws Exception {
@@ -84,10 +93,11 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
         Error disabilityError = fieldError("disability", null, "validation.standard.disability.selectionrequired", "");
         Error ethnicityError = fieldError("ethnicity", null, "validation.standard.ethnicity.selectionrequired", "");
         Error passwordError = fieldError("password", null, "validation.standard.password.required", "");
+        Error addressError = fieldError("address", null, "validation.standard.address.required", "");
 
         RestErrorResponse response = fromJson(result.getResponse().getContentAsString(), RestErrorResponse.class);
-        assertEquals(8, response.getErrors().size());
-        asList(titleError, firstNameError, lastNameError, phoneNumberError, genderError, disabilityError, ethnicityError, passwordError).forEach(e -> {
+        assertEquals(9, response.getErrors().size());
+        asList(titleError, firstNameError, lastNameError, phoneNumberError, genderError, disabilityError, ethnicityError, passwordError, addressError).forEach(e -> {
             String fieldName = e.getFieldName();
             String errorKey = e.getErrorKey();
             List<Error> matchingErrors = simpleFilter(response.getErrors(), error ->
@@ -110,6 +120,11 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
                 .withDisability(NO)
                 .withEthnicity(newEthnicityResource().with(BuilderAmendFunctions.id(1L)).build())
                 .withPassword("Passw0rd123")
+                .withAddress(newAddressResource()
+                        .withAddressLine1("Electric Works")
+                        .withTown("Sheffield")
+                        .withPostcode("S1 2BJ")
+                        .build())
                 .build();
 
         mockMvc.perform(post("/assessor/register/{hash}", "testhash")
@@ -134,6 +149,11 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
                 .withDisability(NO)
                 .withEthnicity(newEthnicityResource().with(BuilderAmendFunctions.id(1L)).build())
                 .withPassword("Passw0rd123")
+                .withAddress(newAddressResource()
+                        .withAddressLine1("Electric Works")
+                        .withTown("Sheffield")
+                        .withPostcode("S1 2BJ")
+                        .build())
                 .build();
 
         mockMvc.perform(post("/assessor/register/{hash}", "testhash")
@@ -158,6 +178,11 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
                 .withDisability(NO)
                 .withEthnicity(newEthnicityResource().with(BuilderAmendFunctions.id(1L)).build())
                 .withPassword("Passw0rd123")
+                .withAddress(newAddressResource()
+                        .withAddressLine1("Electric Works")
+                        .withTown("Sheffield")
+                        .withPostcode("S1 2BJ")
+                        .build())
                 .build();
 
         mockMvc.perform(post("/assessor/register/{hash}", "testhash")
@@ -182,6 +207,11 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
                 .withDisability(NO)
                 .withEthnicity(newEthnicityResource().with(BuilderAmendFunctions.id(1L)).build())
                 .withPassword("Passw0rd123")
+                .withAddress(newAddressResource()
+                        .withAddressLine1("Electric Works")
+                        .withTown("Sheffield")
+                        .withPostcode("S1 2BJ")
+                        .build())
                 .build();
 
         mockMvc.perform(post("/assessor/register/{hash}", "testhash")
@@ -206,6 +236,11 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
                 .withDisability(NO)
                 .withEthnicity(newEthnicityResource().with(BuilderAmendFunctions.id(1L)).build())
                 .withPassword("Passw0rd123")
+                .withAddress(newAddressResource()
+                        .withAddressLine1("Electric Works")
+                        .withTown("Sheffield")
+                        .withPostcode("S1 2BJ")
+                        .build())
                 .build();
 
         mockMvc.perform(post("/assessor/register/{hash}", "testhash")
@@ -230,6 +265,11 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
                 .withDisability(NO)
                 .withEthnicity(newEthnicityResource().with(BuilderAmendFunctions.id(1L)).build())
                 .withPassword("Passw0rd123")
+                .withAddress(newAddressResource()
+                        .withAddressLine1("Electric Works")
+                        .withTown("Sheffield")
+                        .withPostcode("S1 2BJ")
+                        .build())
                 .build();
 
         mockMvc.perform(post("/assessor/register/{hash}", "testhash")
@@ -254,6 +294,11 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
                 .withDisability(NO)
                 .withEthnicity(newEthnicityResource().with(BuilderAmendFunctions.id(1L)).build())
                 .withPassword("Passw0rd123")
+                .withAddress(newAddressResource()
+                        .withAddressLine1("Electric Works")
+                        .withTown("Sheffield")
+                        .withPostcode("S1 2BJ")
+                        .build())
                 .build();
 
         mockMvc.perform(post("/assessor/register/{hash}", "testhash")
@@ -278,6 +323,11 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
                 .withDisability(NO)
                 .withEthnicity(newEthnicityResource().with(BuilderAmendFunctions.id(1L)).build())
                 .withPassword("Passw0rd123")
+                .withAddress(newAddressResource()
+                        .withAddressLine1("Electric Works")
+                        .withTown("Sheffield")
+                        .withPostcode("S1 2BJ")
+                        .build())
                 .build();
 
         mockMvc.perform(post("/assessor/register/{hash}", "testhash")
@@ -302,6 +352,11 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
                 .withDisability(NO)
                 .withEthnicity(newEthnicityResource().with(BuilderAmendFunctions.id(1L)).build())
                 .withPassword(password)
+                .withAddress(newAddressResource()
+                        .withAddressLine1("Electric Works")
+                        .withTown("Sheffield")
+                        .withPostcode("S1 2BJ")
+                        .build())
                 .build();
 
         mockMvc.perform(post("/assessor/register/{hash}", "testhash")
@@ -326,6 +381,11 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
                 .withDisability(NO)
                 .withEthnicity(newEthnicityResource().with(BuilderAmendFunctions.id(1L)).build())
                 .withPassword(password)
+                .withAddress(newAddressResource()
+                        .withAddressLine1("Electric Works")
+                        .withTown("Sheffield")
+                        .withPostcode("S1 2BJ")
+                        .build())
                 .build();
 
         mockMvc.perform(post("/assessor/register/{hash}", "testhash")
@@ -350,6 +410,11 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
                 .withDisability(NO)
                 .withEthnicity(newEthnicityResource().with(BuilderAmendFunctions.id(1L)).build())
                 .withPassword("Passw0rd123")
+                .withAddress(newAddressResource()
+                        .withAddressLine1("Electric Works")
+                        .withTown("Sheffield")
+                        .withPostcode("S1 2BJ")
+                        .build())
                 .build();
 
         Error notFoundError = notFoundError(CompetitionInvite.class, hash);
