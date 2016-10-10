@@ -452,7 +452,18 @@ public class ProjectServiceImplTest {
         assertEquals(createdFile, result.getSuccessObject());
     }
 
+    @Test
+    public void testSubmitGrantOfferLetter() {
+        long projectId = 123L;
 
+        when(projectRestService.submitGrantOfferLetter(projectId)).thenReturn(restSuccess());
+
+        ServiceResult<Void> result = service.submitGrantOfferLetter(projectId);
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
     public void testInviteProjectFinanceUser()  throws Exception {
 
         InviteProjectResource invite = ProjectInviteResourceBuilder.newInviteProjectResource().build();

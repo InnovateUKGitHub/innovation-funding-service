@@ -82,4 +82,9 @@ public class ProjectFinanceController {
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         return projectFinanceService.markSpendProfile(projectOrganisationCompositeId, complete).toPostResponse();
     }
+
+    @RequestMapping(value = "/{projectId}/complete-spend-profiles-review", method = POST)
+    public RestResult<Void> completeSpendProfilesReview(@PathVariable("projectId") final Long projectId) {
+        return projectFinanceService.completeSpendProfilesReview(projectId).toPostResponse();
+    }
 }

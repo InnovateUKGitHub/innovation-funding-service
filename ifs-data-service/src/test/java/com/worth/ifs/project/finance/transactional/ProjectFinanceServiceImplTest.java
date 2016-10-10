@@ -11,12 +11,19 @@ import com.worth.ifs.project.resource.*;
 import com.worth.ifs.user.domain.Organisation;
 import org.junit.Assert;
 import org.junit.Test;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.springframework.http.HttpStatus;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.*;
 import java.util.stream.IntStream;
 
@@ -37,8 +44,13 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
+import static org.hamcrest.core.IsNull.notNullValue;
+import static org.hamcrest.core.IsNull.nullValue;
+
+
 
 public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFinanceServiceImpl> {
 
@@ -377,7 +389,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         List<Cost> spendProfileFigures = buildCostsForCategories(Arrays.asList("Labour", "Materials", "Other costs"), 3);
 
-        SpendProfile spendProfileInDB = new SpendProfile(null, null, null, Collections.emptyList(), spendProfileFigures, false, ApprovalType.UNSET);
+        SpendProfile spendProfileInDB = new SpendProfile(null, new Project(), null, Collections.emptyList(), spendProfileFigures, false, ApprovalType.UNSET);
 
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(spendProfileInDB);
 
@@ -485,6 +497,55 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         assertTrue(result.isSuccess());
 
+    }
+
+    @Test
+    public void testCompleteSpendProfilesReviewSuccess() {
+        Long projectId = 1L;
+        Project projectInDb = new Project();
+        projectInDb.setSpendProfileSubmittedDate(null);
+        SpendProfile spendProfileInDb = new SpendProfile();
+        spendProfileInDb.setMarkedAsComplete(true);
+        projectInDb.setSpendProfiles(asList(spendProfileInDb));
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDb);
+        assertThat(projectInDb.getSpendProfileSubmittedDate(), nullValue());
+
+        ServiceResult<Void> result = service.completeSpendProfilesReview(projectId);
+
+        assertTrue(result.isSuccess());
+        assertThat(projectInDb.getSpendProfileSubmittedDate(), notNullValue());
+    }
+
+
+    @Test
+    public void testCompleteSpendProfilesReviewFailureWhenSpendProfileIncomplete() {
+        Long projectId = 1L;
+        Project projectInDb = new Project();
+        projectInDb.setSpendProfileSubmittedDate(null);
+        SpendProfile spendProfileInDb = new SpendProfile();
+        spendProfileInDb.setMarkedAsComplete(false);
+        projectInDb.setSpendProfiles(asList(spendProfileInDb));
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDb);
+        assertThat(projectInDb.getSpendProfileSubmittedDate(), nullValue());
+
+        ServiceResult<Void> result = service.completeSpendProfilesReview(projectId);
+
+        assertTrue(result.isFailure());
+    }
+
+    @Test
+    public void testCompleteSpendProfilesReviewFailureWhenAlreadySubmitted() {
+        Long projectId = 1L;
+        Project projectInDb = new Project();
+        projectInDb.setSpendProfileSubmittedDate(LocalDateTime.now());
+        SpendProfile spendProfileInDb = new SpendProfile();
+        spendProfileInDb.setMarkedAsComplete(true);
+        projectInDb.setSpendProfiles(asList(spendProfileInDb));
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDb);
+
+        ServiceResult<Void> result = service.completeSpendProfilesReview(projectId);
+
+        assertTrue(result.isFailure());
     }
 
     private SpendProfile createSpendProfile(Project projectInDB, Map<String, BigDecimal> eligibleCostsMap, Map<String, List<BigDecimal>> spendProfileCostsMap) {
