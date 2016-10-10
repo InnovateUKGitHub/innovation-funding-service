@@ -2,6 +2,7 @@ package com.worth.ifs.project.builder;
 
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.project.finance.domain.SpendProfile;
+import com.worth.ifs.project.resource.ApprovalType;
 import com.worth.ifs.user.domain.Organisation;
 
 import java.util.List;
@@ -37,5 +38,9 @@ public class SpendProfileBuilder extends BaseBuilder<SpendProfile, SpendProfileB
 
     public SpendProfileBuilder withOrganisation(Organisation... organisations) {
         return withArray((organisation, spendProfile) -> setField("organisation", organisation, spendProfile), organisations);
+    }
+
+    public SpendProfileBuilder withApproval(ApprovalType... approvalTypes) {
+        return withArray((approvalType, spendProfile) -> setField("approval", approvalType, spendProfile), approvalTypes);
     }
 }

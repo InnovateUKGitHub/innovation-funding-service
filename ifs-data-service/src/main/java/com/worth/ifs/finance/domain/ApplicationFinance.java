@@ -18,18 +18,18 @@ public class ApplicationFinance {
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="organisationId", referencedColumnName="id")
     private Organisation organisation;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="applicationId", referencedColumnName="id")
     private Application application;
 
     @Enumerated(EnumType.STRING)
     private OrganisationSize organisationSize;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="financeFileEntryId", referencedColumnName="id")
     private FileEntry financeFileEntry;
 
