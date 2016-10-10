@@ -4,6 +4,9 @@ Documentation     INFUND-4821: As a project finance team member I want to have a
 ...               INFUND-4903: As a Project Finance team member I want to view a list of the status of all partners' bank details checks so that I can navigate from the internal dashboard
 ...
 ...               INFUND-4049: As an internal user I want to have an overview of where a project is in the Project Setup process so that I can view and manage outstanding tasks
+...
+...               INFUND-5516:  As a internal user, I want to view the Project Setup status link
+
 Suite Setup
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -52,10 +55,10 @@ Other internal users cannot see Bank details
 
 Project Finance user can view the Project setup status page
     [Documentation]    INFUND-5516
-    [Tags]
+    [Tags]  Pending
     [Setup]    Log in as user    project.finance1@innovateuk.test    Passw0rd
     Given the user navigates to the page          ${server}/project-setup-management/project/1/partner/documents
-    And the user clicks the link                  link=Project setup status
+    And the user clicks the button/link           link= Project setup status
     Then the user should not see an error in the page
     And the user should see the text in the page   Projects in setup
     [Teardown]  Logout as user
